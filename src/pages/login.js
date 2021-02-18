@@ -74,7 +74,7 @@ class login extends Component {
 
   render() {
     const { classes } = this.props;
-    const { errors, loading } = this.state;
+    const { errors } = this.state;
     return (
       <Grid container className={classes.form}>
         <Grid item sm />

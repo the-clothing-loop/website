@@ -16,7 +16,6 @@ const styles = {
 export class Chain extends Component {
   render() {
     const {
-      classes,
       chain: { name, image, description },
     } = this.props;
     return (
