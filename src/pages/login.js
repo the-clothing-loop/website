@@ -10,23 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
-const styles = {
-  form: {
-    textAlign: "center",
-  },
-  image: {
-    margin: "20px auto 20px auto",
-  },
-  pageTitle: {
-    margin: "20px auto 20px auto",
-  },
-  textField: {
-    margin: "10px auto 10px auto",
-  },
-  button: {
-    margin: "10px auto 10px auto",
-  },
-};
+const styles = (theme) => ({
+  ...theme.spreadThis,
+});
 
 class login extends Component {
   constructor() {
@@ -51,6 +37,7 @@ class login extends Component {
     axios
       .post("/login", userData)
       .then((res) => {
+        localStorage.setItem("FBIdToken", `Bearer ${res.data.token}`);
         console.log(res.data);
         this.setState({
           loading: false,
