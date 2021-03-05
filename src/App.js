@@ -16,19 +16,21 @@ import AuthRoute from "./util/AuthRoute";
 
 const theme = createMuiTheme(themeFile);
 
-let authenticated;
+// let authenticated;
 
-const token = localStorage.FBIdToken;
+// const token = localStorage.FBIdToken;
 
-if (token) {
-  const decodedToken = jwtDecode(token);
-  if (decodedToken.exp * 1000 < Date.now()) {
-    window.location.href = "/login";
-    authenticated = false;
-  } else {
-    authenticated = true;
-  }
-}
+// if (token) {
+//   const decodedToken = jwtDecode(token);
+//   if (decodedToken.exp * 1000 < Date.now()) {
+//     window.location.href = "/login";
+//     authenticated = false;
+//   } else {
+//     authenticated = true;
+//   }
+// } else {
+//   authenticated = false;
+// }
 
 function App() {
   return (
@@ -39,11 +41,11 @@ function App() {
           <div className="container">
             <Switch>
               <Route exact path="/" component={home} />
-              <AuthRoute
+              <Route
                 exact
                 path="/login"
                 component={login}
-                authenticated={authenticated}
+                // authenticated={authenticated}
               />
               <Route exact path="/signup" component={signup} />
             </Switch>

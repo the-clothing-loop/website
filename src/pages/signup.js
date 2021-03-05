@@ -10,8 +10,11 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Input from "@material-ui/core/Input";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -27,6 +30,18 @@ class signup extends Component {
       loading: false,
       errors: {},
     };
+  }
+
+  componentDidMount() {
+    axios
+      .get("/chains")
+      .then((res) => {
+        console.log(res.data);
+        this.setState({
+          chains: res.data,
+        });
+      })
+      .catch((err) => console.log(err));
   }
 
   handleSubmit = (event) => {
@@ -73,6 +88,24 @@ class signup extends Component {
   render() {
     const { classes } = this.props;
     const { errors } = this.state;
+
+    let chainsMarkup = this.state.chains ? (
+      <Select
+        id="selectChain"
+        value={this.state.chains[0].name}
+        onChange={this.handleChange}
+        input={<Input />}
+      >
+        {this.state.chains.map((chain) => (
+          <MenuItem key={chain.name} value={chain.name}>
+            {chain.name}
+          </MenuItem>
+        ))}
+      </Select>
+    ) : (
+      <p>Loading...</p>
+    );
+
     return (
       <Grid container className={classes.form}>
         <Grid item sm />
@@ -87,6 +120,7 @@ class signup extends Component {
             Sign up
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
+            {chainsMarkup}
             <TextField
               id="name"
               name="name"
