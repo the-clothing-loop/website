@@ -14,7 +14,7 @@ const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-class login extends Component {
+class Login extends Component {
   constructor() {
     super();
     this.state = {
@@ -116,8 +116,8 @@ class login extends Component {
   }
 }
 
-login.propTypes = {
+Login.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(login);
+export default withStyles(styles)(Login);
