@@ -2,22 +2,30 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import Chain from "../components/Chain";
 import db from "../util/firebase";
+import { IChain } from "../types";
 
-class home extends Component {
-  state = {
-    chains: null,
-  };
+interface IHomeState {
+  chains: IChain[] | null;
+}
+
+class Home extends Component<{}, IHomeState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      chains: null
+    };
+  }
 
   componentDidMount() {
     db.collection("chains")
       .get()
-      .then((snapshot) => {
-        const chains = snapshot.docs.map((x) => x.data());
+      .then((snapshot: any) => {
+        const chains = snapshot.docs.map((x: any) => x.data() as IChain);
         this.setState({
           chains,
         });
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error("Error getting chains: ", error);
       });
   }
@@ -38,4 +46,4 @@ class home extends Component {
   }
 }
 
-export default home;
+export default Home;
