@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
-import axios from "axios";
-import Chain from "../components/Chain"
+import Chain from "../components/Chain";
+import db from "../util/firebase";
 
 class home extends Component {
   state = {
@@ -9,21 +9,25 @@ class home extends Component {
   };
 
   componentDidMount() {
-    axios
-      .get("/chains")
-      .then((res) => {
-        console.log(res.data);
+    db.collection("chains")
+      .get()
+      .then((snapshot) => {
+        const chains = snapshot.docs.map((x) => x.data());
         this.setState({
-          chains: res.data,
+          chains,
         });
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        console.error("Error adding document: ", error);
+      });
   }
 
   render() {
     let chainsMarkup = this.state.chains ? (
-      this.state.chains.map(chain => <Chain chain={chain}/>)
-    ) : <p>Loading...</p>
+      this.state.chains.map((chain) => <Chain chain={chain} />)
+    ) : (
+      <p>Loading...</p>
+    );
     return (
       <Grid container>
         <Grid item sm={8} xs={12}>

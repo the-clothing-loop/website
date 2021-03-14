@@ -25,8 +25,6 @@ class signup extends Component {
     super();
     this.state = {
       email: "",
-      password: "",
-      confirmPassword: "",
       loading: false,
       errors: {},
     };
@@ -49,11 +47,16 @@ class signup extends Component {
     this.setState({
       loading: true,
     });
+
     const newUserData = {
       email: this.state.email,
-      password: this.state.password,
-      confirmPassword: this.state.confirmPassword,
+      address: this.state.address,
+      name: this.state.name,
+      phoneNumber: this.state.phoneNumber,
     };
+
+    console.log(newUserData);
+    
     axios
       .post("/signup", newUserData)
       .then((res) => {
