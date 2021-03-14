@@ -14,7 +14,7 @@ import NavBar from "./components/Navbar";
 
 const theme = createMuiTheme(themeFile);
 
-function App() {
+const App = () => {
   return (
     <MuiThemeProvider theme={theme}>
       <div className="App">
