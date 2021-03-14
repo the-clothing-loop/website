@@ -18,7 +18,7 @@ class home extends Component {
         });
       })
       .catch((error) => {
-        console.error("Error adding document: ", error);
+        console.error("Error getting chains: ", error);
       });
   }
 
