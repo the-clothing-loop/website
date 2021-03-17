@@ -8,6 +8,7 @@ import themeFile from "./util/theme";
 import home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
+import users from "./pages/users";
 
 // Components
 import NavBar from "./components/Navbar";
@@ -30,6 +31,7 @@ const App = () => {
                 // authenticated={authenticated}
               />
               <Route exact path="/signup" component={signup} />
+              <Route exact path="/users" component={users} />
             </Switch>
           </div>
         </Router>
