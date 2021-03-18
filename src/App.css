@@ -4,11 +4,12 @@ body{
   'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
   sans-serif;
   background-color: rgb(245, 245, 245);
+  margin:0;
 }
 
 .container{
-  margin: 80px auto 0 auto;
   max-width: 1200px;
+  box-sizing: border-box;
 }
 
 .nav-container{

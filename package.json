@@ -21,6 +21,7 @@
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "firebase": "^8.3.0",
+    "mapbox-gl": "^2.1.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
