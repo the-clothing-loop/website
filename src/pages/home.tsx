@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Chain from "../components/Chain";
 import db from "../util/firebase";
 import { IChain } from "../types";
-import Map from "../util/map.js";
+import Map from "../components/map.js";
 
 interface IHomeState {
   chains: IChain[] | null;
@@ -25,7 +25,6 @@ class Home extends Component<{}, IHomeState> {
         this.setState({
           chains,
         });
-        console.log(chains);
       })
       .catch((error: any) => {
         console.error("Error getting chains: ", error);
@@ -33,11 +32,6 @@ class Home extends Component<{}, IHomeState> {
   }
 
   render() {
-    let chainsMarkup = this.state.chains ? (
-      this.state.chains.map((chain) => <Chain chain={chain} />)
-    ) : (
-      <p>Loading...</p>
-    );
     return (
       <Grid container>
         <Map />
