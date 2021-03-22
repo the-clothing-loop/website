@@ -31,27 +31,9 @@ class login extends Component {
     });
     const userData = {
       email: this.state.email,
-      password: this.state.password,
     };
-    
-    // TODO: refactor to firebase
-    // axios
-    //   .post("/login", userData)
-    //   .then((res) => {
-    //     localStorage.setItem("FBIdToken", `Bearer ${res.data.token}`);
-    //     console.log(res.data);
-    //     this.setState({
-    //       loading: false,
-    //     });
-    //     this.props.history.push("/");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     this.setState({
-    //       errors: err.response.data,
-    //       loading: false,
-    //     });
-    //   });
+
+    // TODO: handle login without password (link based)
   };
 
   handleChange = (event) => {
@@ -86,18 +68,6 @@ class login extends Component {
               helperText={errors.email}
               error={errors.email ? true : false}
               value={this.state.email}
-              onChange={this.handleChange}
-              fullWidth
-            ></TextField>
-            <TextField
-              id="password"
-              name="password"
-              type="password"
-              label="Password"
-              className={classes.textField}
-              helperText={errors.password}
-              error={errors.password ? true : false}
-              value={this.state.password}
               onChange={this.handleChange}
               fullWidth
             ></TextField>
