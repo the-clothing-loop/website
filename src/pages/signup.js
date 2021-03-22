@@ -16,6 +16,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import getChains from "../util/firebase/chain";
+import addUser from "../util/firebase/user";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -45,33 +46,14 @@ class signup extends Component {
       loading: true,
     });
 
-    const newUserData = {
+    const newUser = {
       email: this.state.email,
       address: this.state.address,
       name: this.state.name,
       phoneNumber: this.state.phoneNumber,
     };
 
-    console.log(newUserData);
-    
-    // TODO: refactor to firebase
-    // axios
-    //   .post("/signup", newUserData)
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     localStorage.setItem("FBIdToken", `Bearer ${res.data.token}`);
-    //     this.setState({
-    //       loading: false,
-    //     });
-    //     this.props.history.push("/");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     this.setState({
-    //       errors: err.response.data,
-    //       loading: false,
-    //     });
-    //   });
+    addUser(newUser);
   };
 
   handleChange = (event) => {
