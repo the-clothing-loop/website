@@ -3,3 +3,10 @@ export interface IChain {
     description: string;
     image: string;
 }
+
+export interface IUser {
+  email: string;
+  address: string;
+  name: string;
+  phoneNumber: string;
+}

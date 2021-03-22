@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
-import Chain from "../components/Chain";
-import db from "../util/firebase";
 import { IChain } from "../types";
 import Map from "../components/map.js";
+import getChains from "../util/firebase/chain";
 
 interface IHomeState {
   chains: IChain[] | null;
@@ -18,18 +17,11 @@ class Home extends Component<{}, IHomeState> {
   }
 
   componentDidMount() {
-    db.collection("chains")
-      .get()
-      .then((snapshot: any) => {
-        const chains = snapshot.docs.map((x: any) => x.data() as IChain);
-        this.setState({
-          chains,
-        });
-        console.log(chains)
-      })
-      .catch((error: any) => {
-        console.error("Error getting chains: ", error);
+    getChains().then((chains: Array<IChain>) => {
+      this.setState({
+        chains,
       });
+    });
   }
 
   render() {
