@@ -22,3 +22,8 @@ body {
 a {
   text-decoration: none;
 }
+
+p {
+  color: red;
+  font-size: 2rem;
+}

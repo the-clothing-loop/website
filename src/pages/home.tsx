@@ -25,6 +25,7 @@ class Home extends Component<{}, IHomeState> {
         this.setState({
           chains,
         });
+        console.log(chains)
       })
       .catch((error: any) => {
         console.error("Error getting chains: ", error);
