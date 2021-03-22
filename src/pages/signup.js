@@ -15,6 +15,8 @@ import Input from "@material-ui/core/Input";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
+import getChains from "../util/firebase/chain";
+
 const styles = (theme) => ({
   ...theme.spreadThis,
 });
@@ -30,15 +32,11 @@ class signup extends Component {
   }
 
   componentDidMount() {
-    axios
-      .get("/chains")
-      .then((res) => {
-        console.log(res.data);
-        this.setState({
-          chains: res.data,
-        });
-      })
-      .catch((err) => console.log(err));
+    getChains().then((chains) => {
+      this.setState({
+        chains,
+      });
+    });
   }
 
   handleSubmit = (event) => {
@@ -56,23 +54,24 @@ class signup extends Component {
 
     console.log(newUserData);
     
-    axios
-      .post("/signup", newUserData)
-      .then((res) => {
-        console.log(res.data);
-        localStorage.setItem("FBIdToken", `Bearer ${res.data.token}`);
-        this.setState({
-          loading: false,
-        });
-        this.props.history.push("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        this.setState({
-          errors: err.response.data,
-          loading: false,
-        });
-      });
+    // TODO: refactor to firebase
+    // axios
+    //   .post("/signup", newUserData)
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     localStorage.setItem("FBIdToken", `Bearer ${res.data.token}`);
+    //     this.setState({
+    //       loading: false,
+    //     });
+    //     this.props.history.push("/");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     this.setState({
+    //       errors: err.response.data,
+    //       loading: false,
+    //     });
+    //   });
   };
 
   handleChange = (event) => {

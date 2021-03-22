@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import AppIcon from "../images/sfm_logo.png";
-import axios from "axios";
 
 // Material
 import Grid from "@material-ui/core/Grid";
@@ -34,23 +33,24 @@ class login extends Component {
       email: this.state.email,
       password: this.state.password,
     };
-    axios
-      .post("/login", userData)
-      .then((res) => {
-        localStorage.setItem("FBIdToken", `Bearer ${res.data.token}`);
-        console.log(res.data);
-        this.setState({
-          loading: false,
-        });
-        this.props.history.push("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        this.setState({
-          errors: err.response.data,
-          loading: false,
-        });
-      });
+    // TODO: refactor to firebase
+    // axios
+    //   .post("/login", userData)
+    //   .then((res) => {
+    //     localStorage.setItem("FBIdToken", `Bearer ${res.data.token}`);
+    //     console.log(res.data);
+    //     this.setState({
+    //       loading: false,
+    //     });
+    //     this.props.history.push("/");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     this.setState({
+    //       errors: err.response.data,
+    //       loading: false,
+    //     });
+    //   });
   };
 
   handleChange = (event) => {
