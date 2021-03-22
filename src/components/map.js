@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import db from "../util/firebase";
+import getChains from "../util/firebase/chain";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 
 mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_KEY}`;
@@ -15,23 +15,8 @@ const Map = () => {
   //chains data
   const [chainData, setChainData] = useState([]);
 
-  const getData = async () => {
-    return db
-      .collection("chains")
-      .get()
-      .then(async (snapshot) => {
-        const chains = await snapshot.docs.map((x) => x.data());
-        setChainData(chains);
-        return chains;
-      })
-
-      .catch((error) => {
-        console.error("Error getting chains: ", error);
-      });
-  };
-
   useEffect(async () => {
-    let chainData = await getData();
+    let chainData = await getChains();
 
     const map = new mapboxgl.Map({
       container: mapContainer.current,
