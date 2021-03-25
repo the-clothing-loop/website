@@ -7,6 +7,9 @@ import { Button } from "@material-ui/core";
 
 mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_KEY}`;
 
+// Fix for known issue with mapbox v2: https://github.com/visgl/react-map-gl/issues/1284
+mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+
 const Map = () => {
   const history = useHistory();
 
