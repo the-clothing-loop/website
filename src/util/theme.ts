@@ -22,7 +22,7 @@ const theme = {
       textAlign: "center",
     },
     image: {
-      margin: "20px auto 20px auto",
+      margin: "50px auto auto auto",
     },
     pageTitle: {
       margin: "20px auto 20px auto",
