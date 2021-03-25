@@ -1,0 +1,11 @@
+{
+    "login": "Login",
+    "home": "Home",
+    "signup": "Sign Up",
+    "email": "Email",
+    "name": "Name",
+    "address": "Address",
+    "phonenumber": "Phone number",
+    "actions": "Actions",
+    "newsletter": "Newsletter"
+}

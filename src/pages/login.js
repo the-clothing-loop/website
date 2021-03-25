@@ -3,6 +3,8 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import AppIcon from "../images/sfm_logo.png";
 
+import { withTranslation } from 'react-i18next';
+
 // Material
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -56,14 +58,14 @@ class login extends Component {
             className={classes.image}
           />
           <Typography variant="h3" className={classes.pageTitle}>
-            Login
+            {this.props.t("login")}
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
             <TextField
               id="email"
               name="email"
               type="email"
-              label="Email"
+              label={this.props.t("email")}
               className={classes.textField}
               helperText={errors.email}
               error={errors.email ? true : false}
@@ -77,7 +79,7 @@ class login extends Component {
               color="primary"
               className={classes.button}
             >
-              Login
+              {this.props.t("login")}
             </Button>
           </form>
         </Grid>
@@ -91,4 +93,4 @@ login.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(login);
+export default withTranslation()(withStyles(styles)(login));
