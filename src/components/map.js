@@ -18,13 +18,13 @@ const Map = () => {
     height: "100vh",
   });
 
-  const [chaindata, setChaindata] = useState([]);
+  const [chainData, setChainData] = useState([]);
   const [selectedChain, setSelectedChain] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     getChains().then((response) => {
-      setChaindata(response);
+      setChainData(response);
     });
   }, []);
 
@@ -35,7 +35,7 @@ const Map = () => {
       {...viewport}
       onViewportChange={(newView) => setViewport(newView)}
     >
-      {chaindata.map((chain) => (
+      {chainData.map((chain) => (
         <Marker
           key={chain.name}
           latitude={chain.latLon.latitude}
