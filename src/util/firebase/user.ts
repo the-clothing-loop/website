@@ -1,6 +1,7 @@
 import db from "./firebaseConfig";
+import { DocumentReference } from "@firebase/firestore-types";
 
-import { IUser } from "../../types";
+import { IUser, IChain } from "../../types";
 
 const addUser = (user: IUser) => {
   db.collection("users")
@@ -13,4 +14,11 @@ const addUser = (user: IUser) => {
     });
 };
 
-export default addUser;
+const getUsersForChain = async (chainReference: DocumentReference) => {
+  const snapshot = await db.collection("users").where("chainId", "==", chainReference).get()
+  return snapshot.docs.map((doc) => (
+    { id: doc.id, ...doc.data() } as IUser
+  ));
+};
+
+export { addUser, getUsersForChain };

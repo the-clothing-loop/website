@@ -8,6 +8,7 @@ import themeFile from "./util/theme";
 import home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
+import chain from "./pages/chains/chain";
 
 // Components
 import NavBar from "./components/Navbar";
@@ -30,6 +31,7 @@ const App = () => {
                 // authenticated={authenticated}
               />
               <Route path="/signup" component={signup} />
+              <Route path="/chains/:chainId" component={chain} />
             </Switch>
           </div>
         </Router>
