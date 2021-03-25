@@ -29,13 +29,13 @@ const App = () => {
                 component={login}
                 // authenticated={authenticated}
               />
-              <Route exact path="/signup" component={signup} />
+              <Route path="/signup" component={signup} />
             </Switch>
           </div>
         </Router>
       </div>
     </MuiThemeProvider>
   );
-}
+};
 
 export default App;

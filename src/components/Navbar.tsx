@@ -11,11 +11,10 @@ const Navbar = () => {
       <Toolbar className="nav-container">
         <Button color="inherit" component={Link} to="/login" >{t("login")}</Button>
         <Button color="inherit" component={Link} to="/" >{t("home")}</Button>
-        <Button color="inherit" component={Link} to="signup" >{t("signup")}</Button>
       </Toolbar>
       <LanguageSwitcher />
     </AppBar>
   );
 };
 
-export default Navbar
+export default Navbar;

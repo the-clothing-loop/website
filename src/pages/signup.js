@@ -31,15 +31,23 @@ class signup extends Component {
       email: "",
       loading: false,
       errors: {},
+      params: "",
     };
   }
 
   componentDidMount() {
-    getChains().then((chains) => {
-      this.setState({
-        chains,
+    getChains()
+      .then((chains) => {
+        this.setState({
+          chains,
+        });
+      })
+      .then(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        return this.setState({
+          params: urlParams.get("chain"),
+        });
       });
-    });
   }
 
   handleSubmit = (event) => {
@@ -75,18 +83,7 @@ class signup extends Component {
     const { errors } = this.state;
 
     let chainsMarkup = this.state.chains ? (
-      <Select
-        id="selectChain"
-        value={this.state.chains[0].name}
-        onChange={this.handleChange}
-        input={<Input />}
-      >
-        {this.state.chains.map((chain) => (
-          <MenuItem key={chain.name} value={chain.name}>
-            {chain.name}
-          </MenuItem>
-        ))}
-      </Select>
+      <h3>{this.state.params}</h3>
     ) : (
       <p>Loading...</p>
     );
