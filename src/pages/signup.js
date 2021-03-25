@@ -3,6 +3,8 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import AppIcon from "../images/sfm_logo.png";
 
+import { withTranslation } from 'react-i18next';
+
 // Material
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -100,7 +102,7 @@ class signup extends Component {
             className={classes.image}
           />
           <Typography variant="h3" className={classes.pageTitle}>
-            Sign up
+            { this.props.t("signup") }
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
             {chainsMarkup}
@@ -108,7 +110,7 @@ class signup extends Component {
               id="name"
               name="name"
               type="text"
-              label="Name"
+              label={this.props.t("name")}
               className={classes.textField}
               helperText={errors.name}
               error={errors.name ? true : false}
@@ -120,7 +122,7 @@ class signup extends Component {
               id="address"
               name="address"
               type="text"
-              label="Address"
+              label={this.props.t("address")}
               className={classes.textField}
               helperText={errors.address}
               error={errors.address ? true : false}
@@ -132,7 +134,7 @@ class signup extends Component {
               id="email"
               name="email"
               type="email"
-              label="Email"
+              label={this.props.t("email")}
               className={classes.textField}
               helperText={errors.email}
               error={errors.email ? true : false}
@@ -144,7 +146,7 @@ class signup extends Component {
               id="phoneNumber"
               name="phoneNumber"
               type="tel"
-              label="Phone number"
+              label={this.props.t("phonenumber")}
               className={classes.textField}
               helperText={errors.phoneNumber}
               error={errors.phoneNumber ? true : false}
@@ -162,7 +164,7 @@ class signup extends Component {
                     name="checkedActions"
                   />
                 }
-                label="Actions"
+                label={this.props.t("actions")}
               />
               <FormControlLabel
                 control={
@@ -172,7 +174,7 @@ class signup extends Component {
                     name="checkedNewsletter"
                   />
                 }
-                label="Newsletter"
+                label={this.props.t("newsletter")}
               />
             </FormGroup>
 
@@ -182,7 +184,7 @@ class signup extends Component {
               color="primary"
               className={classes.button}
             >
-              Sign up
+              {this.props.t("signup")}
             </Button>
           </form>
         </Grid>
@@ -196,4 +198,4 @@ signup.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(signup);
+export default withTranslation()(withStyles(styles)(signup));
