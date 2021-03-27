@@ -6,6 +6,8 @@ import { useHistory } from "react-router-dom";
 import { Button } from "@material-ui/core";
 
 mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_KEY}`;
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 const Map = () => {
   const history = useHistory();
