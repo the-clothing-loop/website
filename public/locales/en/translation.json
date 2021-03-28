@@ -1,11 +1,11 @@
 {
-    "login": "Login",
-    "home": "Home",
-    "signup": "Sign Up",
-    "email": "Email",
-    "name": "Name",
-    "address": "Address",
-    "phonenumber": "Phone number",
     "actions": "Actions",
-    "newsletter": "Newsletter"
+    "address": "Address",
+    "email": "Email",
+    "home": "Home",
+    "login": "Login",
+    "name": "Name",
+    "newsletter": "Newsletter",
+    "phonenumber": "Phone number",
+    "signup": "Sign Up"
 }
