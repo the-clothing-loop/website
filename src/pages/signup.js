@@ -17,14 +17,14 @@ import Input from "@material-ui/core/Input";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
-import getChains from "../util/firebase/chain";
-import addUser from "../util/firebase/user";
+import { getChains } from "../util/firebase/chain";
+import { addUser } from "../util/firebase/user";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-class signup extends Component {
+class SignUp extends Component {
   constructor() {
     super();
     this.state = {
@@ -191,8 +191,8 @@ class signup extends Component {
   }
 }
 
-signup.propTypes = {
+SignUp.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withTranslation()(withStyles(styles)(signup));
+export default withTranslation()(withStyles(styles)(SignUp));

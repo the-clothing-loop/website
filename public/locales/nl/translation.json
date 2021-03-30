@@ -1,11 +1,12 @@
 {
-    "login": "Log in",
-    "home": "Huis",
-    "signup": "Aanmelden",
-    "email": "Email",
-    "name": "Naam",
-    "address": "Adres",
-    "phonenumber": "Telefoonnummer",
     "actions": "Acties",
-    "newsletter": "Nieuwsbrief"
+    "address": "Adres",
+    "email": "Email",
+    "home": "Home",
+    "login": "Login",
+    "members": "Leden",
+    "name": "Naam",
+    "newsletter": "Nieuwsbrief",
+    "phonenumber": "Telefoonnummer",
+    "signup": "Aanmelden"
 }

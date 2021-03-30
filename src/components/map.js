@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import getChains from "../util/firebase/chain";
+import { getChains } from "../util/firebase/chain";
 import { useHistory } from "react-router-dom";
 import { Button } from "@material-ui/core";
 

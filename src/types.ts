@@ -5,6 +5,7 @@ export interface IChain {
 }
 
 export interface IUser {
+  id: string;
   email: string;
   address: string;
   name: string;

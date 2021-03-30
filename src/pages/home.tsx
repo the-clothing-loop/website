@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import { IChain } from "../types";
 import Map from "../components/map.js";
-import getChains from "../util/firebase/chain";
+import { getChains } from "../util/firebase/chain";
 import { withTranslation } from "react-i18next";
 
 interface IHomeState {

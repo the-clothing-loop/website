@@ -2,6 +2,14 @@ import db from "./firebaseConfig";
 
 import { IChain } from "../../types";
 
+const getChain = async (chainId: string) => {
+  const chainDoc = await db.collection("chains").doc(chainId).get()
+  return {
+    chain: chainDoc.data() as IChain,
+    chainReference: chainDoc.ref
+  };
+};
+
 const getChains = async () => {
   return await db.collection("chains")
     .get()
@@ -13,4 +21,4 @@ const getChains = async () => {
     });
 };
 
-export default getChains;
+export { getChain, getChains };
