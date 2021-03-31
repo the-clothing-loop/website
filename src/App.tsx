@@ -5,13 +5,13 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import themeFile from "./util/theme";
 
 // Pages
-import home from "./pages/home";
-import login from "./pages/login";
-import signup from "./pages/signup";
-import chain from "./pages/chains/chain";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Chain from "./pages/Chains/Chain";
 
 // Components
-import NavBar from "./components/Navbar";
+import Navbar from "./components/Navbar";
 
 const theme = createMuiTheme(themeFile);
 
@@ -20,18 +20,18 @@ const App = () => {
     <MuiThemeProvider theme={theme}>
       <div className="App">
         <Router>
-          <NavBar />
+          <Navbar />
           <div className="container">
             <Switch>
-              <Route exact path="/" component={home} />
+              <Route exact path="/" component={Home} />
               <Route
                 exact
                 path="/login"
-                component={login}
+                component={Login}
                 // authenticated={authenticated}
               />
-              <Route path="/signup" component={signup} />
-              <Route path="/chains/:chainId" component={chain} />
+              <Route path="/signup" component={Signup} />
+              <Route path="/chains/:chainId" component={Chain} />
             </Switch>
           </div>
         </Router>

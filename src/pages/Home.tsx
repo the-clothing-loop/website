@@ -5,7 +5,7 @@ import { withTranslation } from "react-i18next";
 import Grid from "@material-ui/core/Grid";
 
 // Project resources
-import Map from "../components/map.js";
+import Map from "../components/Map.js";
 import { IChain } from "../types";
 import { getChains } from "../util/firebase/chain";
 
