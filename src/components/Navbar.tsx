@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
-import { AppBar, Toolbar, Button } from "@material-ui/core";
 import { useTranslation } from 'react-i18next';
+
+// Material UI
+import { AppBar, Toolbar, Button } from "@material-ui/core";
+
+// Project resources
 import LanguageSwitcher from "./LanguageSwitcher";
 
 const Navbar = () => {

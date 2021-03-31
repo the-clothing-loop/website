@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
-import PropTypes from "prop-types";
-import AppIcon from "../images/sfm_logo.png";
-
 import { withTranslation } from 'react-i18next';
+import PropTypes from "prop-types";
 
-// Material
+// Material UI
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -16,7 +13,10 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Input from "@material-ui/core/Input";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import withStyles from "@material-ui/core/styles/withStyles";
 
+// Project resources
+import AppIcon from "../images/sfm_logo.png";
 import { getChains } from "../util/firebase/chain";
 import { addUser } from "../util/firebase/user";
 
