@@ -17,7 +17,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import { addUser } from "../util/firebase/user";
 
-const SignUp = (props) => {
+const Signup = (props) => {
   const { t } = useTranslation();
   const {chain} = useParams();
   const [submitted, setSubmitted] = useState(false);
@@ -101,4 +101,4 @@ const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-export default withTranslation()(withStyles(styles)(SignUp));
+export default withTranslation()(withStyles(styles)(Signup));

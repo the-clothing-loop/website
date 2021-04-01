@@ -1,7 +1,7 @@
 // Material
 import Grid from "@material-ui/core/Grid";
 
-const ThankYou = () => {
+const Thankyou = () => {
   return (
     <Grid container>
       <Grid item sm />
@@ -16,4 +16,4 @@ const ThankYou = () => {
   );
 };
 
-export default ThankYou;
+export default Thankyou;
