@@ -8,6 +8,7 @@ import themeFile from "./util/theme";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Thankyou from "./pages/Thankyou";
 import ChainMemberList from "./pages/Chain/ChainMemberList";
 
 // Components
@@ -31,6 +32,7 @@ const App = () => {
                 // authenticated={authenticated}
               />
               <Route path="/signup" component={Signup} />
+              <Route path="/thankyou" component={Thankyou} />
               <Route path="/chains/:chainId" component={ChainMemberList} />
             </Switch>
           </div>
