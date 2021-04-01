@@ -1,9 +1,13 @@
 import React, { Component } from "react";
-import Grid from "@material-ui/core/Grid";
-import { IChain } from "../types";
-import Map from "../components/map.js";
-import { getChains } from "../util/firebase/chain";
 import { withTranslation } from "react-i18next";
+
+// Material UI
+import Grid from "@material-ui/core/Grid";
+
+// Project resources
+import Map from "../components/Map.js";
+import { IChain } from "../types";
+import { getChains } from "../util/firebase/chain";
 
 interface IHomeState {
   chains: IChain[] | null;

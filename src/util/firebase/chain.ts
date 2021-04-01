@@ -1,5 +1,4 @@
 import db from "./firebaseConfig";
-
 import { IChain } from "../../types";
 
 const getChain = async (chainId: string) => {

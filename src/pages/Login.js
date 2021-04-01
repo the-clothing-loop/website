@@ -1,15 +1,16 @@
 import React, { Component } from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
-import PropTypes from "prop-types";
-import AppIcon from "../images/sfm_logo.png";
-
 import { withTranslation } from 'react-i18next';
+import PropTypes from "prop-types";
 
-// Material
+// Material UI
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import withStyles from "@material-ui/core/styles/withStyles";
+
+// Project resources
+import AppIcon from "../images/sfm_logo.png";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

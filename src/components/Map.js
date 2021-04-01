@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import { getChains } from "../util/firebase/chain";
-import { useHistory } from "react-router-dom";
+
+// Material UI
 import { Button } from "@material-ui/core";
+
+// Project resources
+import { getChains } from "../util/firebase/chain";
 
 mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_KEY}`;
 
