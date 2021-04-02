@@ -10,7 +10,8 @@ const getChain = async (chainId: string) => {
 };
 
 const getChains = async () => {
-  return await db.collection("chains")
+  return await db
+    .collection("chains")
     .get()
     .then((snapshot: any) => {
       return snapshot.docs.map((x: any) => x.data() as IChain);
@@ -20,4 +21,16 @@ const getChains = async () => {
     });
 };
 
-export { getChain, getChains };
+
+const addChain = (chain: IChain) => {
+  db.collection("chains")
+    .add(chain)
+    .then((docRef) => {
+      console.log(`Document successfully written with id ${docRef.id}!`);
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
+
+export { getChains, addChain, getChain };

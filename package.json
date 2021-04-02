@@ -30,6 +30,7 @@
     "react-hook-form": "^6.15.5",
     "react-i18next": "^11.8.11",
     "react-map-gl": "^6.1.10",
+    "react-mapbox-gl-geocoder": "^1.1.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0"
   },

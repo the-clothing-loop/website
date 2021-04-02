@@ -34,3 +34,16 @@ p {
   color: red;
   font-size: 0.8rem;
 }
+
+.react-geocoder > input {
+  width: 80%;
+  height: 20px;
+}
+
+.MuiGrid-container {
+  padding-top: 6%;
+}
+
+.address-details {
+  padding: 20% 2%;
+}
