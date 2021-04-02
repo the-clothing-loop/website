@@ -40,8 +40,8 @@ p {
   height: 20px;
 }
 
-.MuiGrid-container {
-  padding-top: 6%;
+.MuiGrid-item{
+  padding:2%;
 }
 
 .address-details {

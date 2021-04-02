@@ -4,8 +4,6 @@ import mapboxgl from "mapbox-gl";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 
 // Material UI
-import { getChains } from "../util/firebase/chain";
-import { useHistory } from "react-router-dom";
 import { Button } from "@material-ui/core";
 
 // Project resources
