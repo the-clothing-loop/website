@@ -21,6 +21,15 @@ body {
   margin: auto;
 }
 
+thead th {
+  font-weight: bold !important;
+}
+
+.chain-member-list {
+  margin: auto;
+  width: 1000px;
+}
+
 img#marker {
   width: 40px;
   height: 40px;

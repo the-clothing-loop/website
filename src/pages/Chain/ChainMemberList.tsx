@@ -38,9 +38,8 @@ const ChainMemberList = () => {
   });
 
   return (!chain || !users) ? null : (
-    <>
+    <div className="chain-member-list">
       <h1>{chain.name}</h1>
-      <h2>{t("members")}</h2>
       <Table>
         <TableHead>
           <TableRow>
@@ -61,7 +60,7 @@ const ChainMemberList = () => {
           ))}
         </TableBody>
       </Table>
-    </>
+    </div>
   )
 }
 
