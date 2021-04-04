@@ -45,14 +45,14 @@ const NewChainLocation = () => {
     });
 
     console.log("Selected: ", item);
-    console.log(viewport);
   };
 
+  //update the new chain description to post to db
   const handleChange = (e) => {
     setDescription(e.target.value);
-    console.log(description);
   };
 
+  //new chain data to post to db
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -64,7 +64,6 @@ const NewChainLocation = () => {
       name: state.name,
       description: description,
     };
-    console.log(newChain);
     addChain(newChain);
     setChangePage(null);
   };
@@ -94,9 +93,6 @@ const NewChainLocation = () => {
                 name="description"
                 type="text"
                 label={"description of the chain"}
-                // className={classes.textField}
-                // helperText={errors.name}
-                // error={errors.name ? true : false}
                 value={description}
                 onChange={handleChange}
                 fullWidth
