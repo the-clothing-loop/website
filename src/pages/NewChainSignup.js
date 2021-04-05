@@ -5,6 +5,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import AppIcon from "../images/sfm_logo.png";
 import { useForm } from "react-hook-form";
 import { withTranslation } from "react-i18next";
+import NewChainLocation from './NewChainLocation'
 
 // Material UI
 import Grid from "@material-ui/core/Grid";
@@ -54,7 +55,7 @@ const Signup = (props) => {
           className={classes.image}
         />
         <Typography variant="h3" className={classes.pageTitle}>
-          {t("signup")}
+          {t("start new chain")}
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <h1>{chain}</h1>
@@ -82,7 +83,7 @@ const Signup = (props) => {
             color="primary"
             className={classes.button}
           >
-            {t("signup")}
+            {t("next")}
           </Button>
         </form>
       </Grid>
@@ -91,7 +92,7 @@ const Signup = (props) => {
   );
 
   if (submitted) {
-    return <Redirect to="/thankyou" />;
+    return <NewChainLocation />;
   } else {
     return signupForm;
   }
@@ -102,4 +103,3 @@ const styles = (theme) => ({
 });
 
 export default withTranslation()(withStyles(styles)(Signup));
-

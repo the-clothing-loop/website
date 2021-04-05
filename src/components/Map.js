@@ -28,9 +28,12 @@ const Map = () => {
 
   useEffect(() => {
     getChains().then((response) => {
+      console.log(response);
       setChainData(response);
     });
   }, []);
+
+
 
   return (
     <ReactMapGL

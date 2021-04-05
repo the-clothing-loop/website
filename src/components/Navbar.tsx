@@ -7,6 +7,7 @@ import { AppBar, Toolbar, Button } from "@material-ui/core";
 // Project resources
 import LanguageSwitcher from "./LanguageSwitcher";
 
+
 const Navbar = () => {
   const { t } = useTranslation();
 
@@ -17,6 +18,7 @@ const Navbar = () => {
       <Toolbar className="nav-container">
         <Button color="inherit" component={Link} to="/login" >{t("login")}</Button>
         <Button color="inherit" component={Link} to="/" >{t("home")}</Button>
+        <Button color="inherit" component={Link} to="/newchain-signup" >{t("start new chain")}</Button>
       </Toolbar>
       <LanguageSwitcher />
     </AppBar>
