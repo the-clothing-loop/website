@@ -55,7 +55,7 @@ const Signup = (props) => {
           className={classes.image}
         />
         <Typography variant="h3" className={classes.pageTitle}>
-          {t("start new chain")}
+          {t("startNewChain")}
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <h1>{chain}</h1>
