@@ -4,9 +4,9 @@
     "email": "Email",
     "home": "Home",
     "login": "Login",
-    "members": "Leden",
     "name": "Naam",
     "newsletter": "Nieuwsbrief",
     "phonenumber": "Telefoonnummer",
-    "signup": "Aanmelden"
+    "signup": "Aanmelden",
+    "startNewChain": "Start een nieuwe ketting"
 }

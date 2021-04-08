@@ -4,9 +4,9 @@
     "email": "Email",
     "home": "Home",
     "login": "Login",
-    "members": "Members",
     "name": "Name",
     "newsletter": "Newsletter",
     "phonenumber": "Phone number",
-    "signup": "Sign Up"
+    "signup": "Sign Up",
+    "startNewChain": "Start a new chain"
 }

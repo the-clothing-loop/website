@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import { useTranslation } from "react-i18next";
 
 // Material UI
 import { Button } from "@material-ui/core";
@@ -13,6 +14,7 @@ mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_KEY}`;
 
 const Map = () => {
   const history = useHistory();
+  const { t } = useTranslation();
 
   const [viewport, setViewport] = useState({
     latitude: 52.1326,
@@ -79,7 +81,7 @@ const Map = () => {
                 history.replace(`./signup/?chain=${selectedChain.name}`);
               }}
             >
-              Sign up{" "}
+              {t("signup")}{" "}
             </Button>
           </div>
         </Popup>
