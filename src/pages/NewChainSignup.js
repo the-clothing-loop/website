@@ -10,13 +10,13 @@ import NewChainLocation from './NewChainLocation'
 // Material UI
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import { addUser } from "../util/firebase/user";
+import TextField from "../components/TextField";
 
 const Signup = (props) => {
   const { t } = useTranslation();
@@ -28,20 +28,6 @@ const Signup = (props) => {
   const onSubmit = (user) => {
     addUser(user);
     setSubmitted(true);
-  };
-
-  const formField = (fieldName) => {
-    return (
-      <TextField
-        id={fieldName}
-        name={fieldName}
-        type="text"
-        label={t(fieldName)}
-        className={classes.textField}
-        inputRef={register}
-        fullWidth
-      ></TextField>
-    );
   };
 
   let signupForm = (
@@ -59,10 +45,10 @@ const Signup = (props) => {
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <h1>{chain}</h1>
-          {formField("name")}
-          {formField("address")}
-          {formField("email")}
-          {formField("phonenumber")}
+          <TextField fieldName="name" inputRef={register} />
+          <TextField fieldName="address" inputRef={register} />
+          <TextField fieldName="email" inputRef={register} email={true} />
+          <TextField fieldName="phonenumber" inputRef={register} />
 
           <FormGroup row>
             <FormControlLabel
