@@ -33,6 +33,14 @@ const theme = {
     button: {
       margin: "10px auto 10px auto",
     },
+    root: {
+      minWidth: 275,
+    },
+    title: {
+      fontSize: 10,
+      textTransform: "uppercase",
+      fontWeight: 'bold',
+    },
   },
 };
 

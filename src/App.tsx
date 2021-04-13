@@ -11,6 +11,8 @@ import Signup from "./pages/Signup";
 import Thankyou from "./pages/Thankyou";
 import ChainMemberList from "./pages/Chain/ChainMemberList";
 import NewChainSignup from './pages/NewChainSignup';
+import NewChainLocation from './pages/NewChainLocation';
+
 
 
 // Components
@@ -37,6 +39,8 @@ const App = () => {
               <Route path="/thankyou" component={Thankyou} />
               <Route path="/chains/:chainId" component={ChainMemberList} />
               <Route path="/newchain-signup" component={NewChainSignup} /> 
+              <Route path="/newchain-location" component={NewChainLocation} /> 
+
             </Switch>
           </div>
         </Router>

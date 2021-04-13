@@ -1,135 +1,197 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Geocoder from "react-mapbox-gl-geocoder";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import { addChain } from "../util/firebase/chain";
+import { addChain, newChainLocation } from "../util/firebase/chain";
 import { Redirect } from "react-router-dom";
+import mapboxgl from "mapbox-gl";
+import { useForm } from "react-hook-form";
+import { withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 // Material
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
 import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
 
-const mapAccess = {
+const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
+  ipinfoApiAccessToken: process.env.REACT_APP_IPINFO_API_KEY,
 };
 
-const mapStyle = {
-  width: "100%",
-  height: 600,
-};
-
-const queryParams = {
-  country: "nl",
-};
-
-const NewChainLocation = () => {
-  const [state, setState] = useState({
-    viewport: {},
-    name: "",
-    loading: true,
-    addressDetails: false,
-    marker: false,
+const NewChainLocation = (props) => {
+  const styles = (theme) => ({
+    ...theme.spreadThis,
   });
 
-  const [changePage, setChangePage] = useState(!null);
+  const { t } = useTranslation();
+
+  const [viewport, setViewport] = useState([]);
+  const [marker, setMarker] = useState([]);
+  const [chain, setChain] = useState([]);
+  const [location, setLocation] = useState([]);
+  const [changePage, setChangePage] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
   const [description, setDescription] = useState("");
 
-  const onSelected = (viewport, item) => {
-    setState({
-      viewport: viewport,
-      name: item.place_name,
-      addressDetails: true,
-      marker: true,
-    });
-
-    console.log("Selected: ", item);
+  //remove access token
+  const getUserLocation = () => {
+    fetch(`https://ipinfo.io/json?token=${accessToken.ipinfoApiAccessToken}`)
+      .then((response) => response.json())
+      .then((jsonResponse) => {
+        let latitude = jsonResponse.loc.split(",")[0];
+        let longitude = jsonResponse.loc.split(",")[1];
+        console.log(jsonResponse);
+        setViewport({
+          latitude: Number(latitude),
+          longitude: Number(longitude),
+          width: "100%",
+          height: 600,
+          zoom: 10,
+        });
+      });
   };
 
-  //update the new chain description to post to db
-  const handleChange = (e) => {
-    setDescription(e.target.value);
+  //location details
+  const getLocation = async (longitude, latitude) => {
+    await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken.mapboxApiAccessToken}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setChain({
+          locality: data.features[0].place_name.split(",")[0],
+          place: data.features[0].place_name
+            .split(",")
+            .slice(1)
+            .join(","),
+        });
+      });
   };
 
-  //new chain data to post to db
+  useEffect(() => {
+    getUserLocation();
+  }, []);
+
+  //on click get location and set marker, popup and location info
+  const handleClick = async (e) => {
+    let longitude = e.lngLat[0];
+    let latitude = e.lngLat[1];
+    setLocation({ longitude: longitude, latitude: latitude });
+    setMarker({ longitude: longitude, latitude: latitude, visible: true });
+    getLocation(longitude, latitude);
+    setShowPopup(true);
+  };
+
+  //post new chain location/details to db
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const newChain = {
       latLon: {
-        latitude: state.viewport.latitude,
-        longitude: state.viewport.longitude,
+        longitude: location.longitude,
+        latitude: location.latitude,
       },
-      name: state.name,
+      name: chain.locality,
       description: description,
     };
     addChain(newChain);
-    setChangePage(null);
+    setChangePage(false);
+  };
+
+  //set new chain description
+  const handleChange = (e) => {
+    setDescription(e.target.value);
+    console.log(description);
   };
 
   return changePage ? (
     <Grid container>
-      <Grid item sm>
-        <Typography variant="h3">{"Enter new chain address"}</Typography>
-        <Typography variant="p">{"Search for address"}</Typography>
-
-        <Geocoder
-          {...mapAccess}
-          onSelected={onSelected}
-          viewport={state.viewport}
-          hideOnSelect={true}
-          queryParams={queryParams}
-          value={state.item}
-        />
-
-        {state.addressDetails ? (
-          <div className={"address-details"}>
-            <Typography variant="h4">{"selected address:"}</Typography>
-            <Typography variant="p">{state.name}</Typography>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                id="description"
-                name="description"
-                type="text"
-                label={"description of the chain"}
-                value={description}
-                onChange={handleChange}
-                fullWidth
-              ></TextField>
-              <Button type="submit" variant="contained" color="primary">
-                {"submit"}
-              </Button>{" "}
-            </form>
-          </div>
-        ) : null}
-      </Grid>
-      <Grid item sm>
+      <Grid item xs></Grid>
+      <Grid item xs={6}>
+        <Typography component="p" variant="h5">
+          {"select new chain location"}
+        </Typography>
         <ReactMapGL
-          {...mapAccess}
-          {...state.viewport}
-          {...mapStyle}
-          onViewportChange={(newViewport) =>
-            setState({ viewport: newViewport })
-          }
+          mapboxApiAccessToken={mapboxgl.accessToken}
           mapStyle="mapbox://styles/mapbox/streets-v11"
+          {...viewport}
+          {...accessToken}
+          onViewportChange={(newView) => setViewport(newView)}
+          onClick={handleClick}
         >
-          {state.marker ? (
-            <Marker
-              key={state.name}
-              latitude={state.viewport.latitude}
-              longitude={state.viewport.longitude}
-            >
-              {" "}
-              <img
-                id="marker"
-                src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
-                alt="Map Marker"
-              />
-            </Marker>
+          {marker.visible ? (
+            <div>
+              <Marker latitude={marker.latitude} longitude={marker.longitude}>
+                {" "}
+                <img
+                  id="marker"
+                  src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
+                  alt="Map Marker"
+                />
+              </Marker>
+              {showPopup ? (
+                <Popup
+                  latitude={marker.latitude}
+                  longitude={marker.longitude}
+                  closeOnClick={false}
+                  onClose={() => setShowPopup(false)}
+                >
+                  <div className={"mapboxgl-popup-content"}>
+                    <Card className={styles.root}>
+                      <CardContent>
+                        <Typography
+                          className={styles.title}
+                          color="primary.dark"
+                          component="p"
+                          variant="h4"
+                          gutterBottom
+                        >
+                          {chain.locality}
+                        </Typography>
+                        <Typography
+                          className={styles.title}
+                          color="primary.dark"
+                          component="p"
+                          variant="p"
+                          gutterBottom
+                        >
+                          {chain.place}
+                        </Typography>
+                      </CardContent>
+                      <CardActions>
+                        <form onSubmit={handleSubmit}>
+                          <TextField
+                            id={"description"}
+                            name={"description"}
+                            type="text"
+                            label={t("add description")}
+                            onChange={handleChange}
+                            fullWidth
+                          ></TextField>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            className={"chain-description"}
+                          >
+                            {"start chain"}
+                          </Button>{" "}
+                        </form>
+                      </CardActions>
+                    </Card>
+                  </div>
+                </Popup>
+              ) : null}
+            </div>
           ) : null}
         </ReactMapGL>
       </Grid>
+      <Grid item xs></Grid>
     </Grid>
   ) : (
     <Redirect to="/thankyou" />
