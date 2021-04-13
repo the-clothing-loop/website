@@ -1,6 +1,10 @@
 import db from "./firebaseConfig";
 import { IChain } from "../../types";
 
+const mapAccess = {
+  mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
+};
+
 const getChain = async (chainId: string) => {
   const chainDoc = await db
     .collection("chains")

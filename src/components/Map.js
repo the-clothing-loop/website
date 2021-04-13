@@ -6,6 +6,10 @@ import { useTranslation } from "react-i18next";
 
 // Material UI
 import { Button } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
 
 // Project resources
 import { getChains } from "../util/firebase/chain";
@@ -16,6 +20,10 @@ const Map = () => {
   const history = useHistory();
   const { t } = useTranslation();
 
+  const styles = (theme) => ({
+    ...theme.spreadThis,
+  });
+
   const [viewport, setViewport] = useState({
     latitude: 52.1326,
     longitude: 5.2913,
@@ -23,6 +31,8 @@ const Map = () => {
     width: "100vw",
     height: "100vh",
   });
+
+
 
   const [chainData, setChainData] = useState([]);
   const [selectedChain, setSelectedChain] = useState(null);
@@ -34,8 +44,6 @@ const Map = () => {
       setChainData(response);
     });
   }, []);
-
-
 
   return (
     <ReactMapGL
@@ -72,18 +80,41 @@ const Map = () => {
           onClose={() => setShowPopup(false)}
           dynamicPosition={false}
         >
-          <div className={"chain-popup"}>
-            <h2>{selectedChain.name}</h2>
-            <p>description of the chain here</p>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                history.replace(`./signup/?chain=${selectedChain.name}`);
-              }}
-            >
-              {t("signup")}{" "}
-            </Button>
-          </div>
+          <Card className={styles.root}>
+            <CardContent>
+              <Typography
+                className={styles.title}
+                color="secondary.dark"
+                component="p"
+                variant="h4"
+                gutterBottom
+              >
+                {selectedChain.name}
+              </Typography>
+              <Typography
+                variant="body2"
+                component="p"
+                className={"chain-address"}
+              >
+                {selectedChain.address}
+              </Typography>
+              <Typography variant="body2" component="p">
+                {selectedChain.description}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  history.replace(`./signup/?chain=${selectedChain.name}`);
+                }}
+              >
+                {t("signup")}
+              </Button>{" "}
+            </CardActions>
+          </Card>
         </Popup>
       ) : null}
     </ReactMapGL>

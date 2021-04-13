@@ -7,6 +7,23 @@ body {
   margin: 0;
 }
 
+/* base settings */
+a {
+  text-decoration: none;
+}
+
+.MuiTypography-h4 {
+  font-size: 1.5rem !important;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* navBar styling */
+.nav-container {
+  margin: auto;
+}
+
+/* map styling */
 .map-container {
   position: relative;
   top: 0;
@@ -35,22 +52,58 @@ img#marker {
   height: 40px;
 }
 
-a {
-  text-decoration: none;
+.mapboxgl-popup-content {
+  background: #ffffff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: auto;
+  padding: 0;
 }
 
-p {
-  color: red;
-  font-size: 0.8rem;
+.mapboxgl-popup-tip {
+  z-index: 1111;
 }
 
+/* card styling */
+.MuiCard-root {
+  padding: 5%;
+}
+
+.chain-address {
+  padding-bottom: 10%;
+}
+
+.MuiButton-containedPrimary {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
+
+.MuiCardActions-root {
+  flex-direction: column;
+}
+
+.mapboxgl-popup-close-button {
+  z-index: 11;
+}
+
+/*new chain card styling*/
+button.chain-description {
+  margin: 5% 0;
+}
+
+/* geocoder styling */
 .react-geocoder > input {
   width: 80%;
   height: 20px;
 }
 
-.MuiGrid-item{
-  padding:2%;
+.MuiGrid-item {
+  padding: 2%;
 }
 
 .address-details {
