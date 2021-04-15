@@ -5,6 +5,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import AppIcon from "../images/sfm_logo.png";
 import { useForm } from "react-hook-form";
 import { withTranslation } from "react-i18next";
+import MuiPhoneInput from "material-ui-phone-number";
 
 // Material UI
 import Grid from "@material-ui/core/Grid";
@@ -15,29 +16,33 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
-import { addUser } from "../util/firebase/user";
+import { addUser, validateNewUser } from "../util/firebase/user";
 
 const Signup = (props) => {
   const { t } = useTranslation();
-  const {chain} = useParams();
+  const { chain } = useParams();
   const [submitted, setSubmitted] = useState(false);
   const { register, handleSubmit } = useForm();
   const { classes } = props;
 
-  const onSubmit = (user) => {
+  const onSubmit = async (user) => {
     addUser(user);
+    const userValid = await validateNewUser(user.email);
+    console.log(userValid);
+    // TODO: do something with validation info for new user (e.g. display this)
     setSubmitted(true);
   };
 
-  const formField = (fieldName) => {
+  const formField = (fieldName, email = false) => {
     return (
       <TextField
         id={fieldName}
         name={fieldName}
-        type="text"
+        type={email ? "email" : "text"}
         label={t(fieldName)}
         className={classes.textField}
         inputRef={register}
+        required={true}
         fullWidth
       ></TextField>
     );
@@ -60,8 +65,13 @@ const Signup = (props) => {
           <h1>{chain}</h1>
           {formField("name")}
           {formField("address")}
-          {formField("email")}
-          {formField("phonenumber")}
+          {formField("email", true)}
+          <MuiPhoneInput
+            defaultCountry="nl"
+            fullWidth
+            label={t("phonenumber")}
+            required={true}
+          />
 
           <FormGroup row>
             <FormControlLabel
@@ -102,4 +112,3 @@ const styles = (theme) => ({
 });
 
 export default withTranslation()(withStyles(styles)(Signup));
-

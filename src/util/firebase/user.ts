@@ -14,10 +14,23 @@ const addUser = (user: IUser) => {
 };
 
 const getUsersForChain = async (chainReference: DocumentReference) => {
-  const snapshot = await db.collection("users").where("chainId", "==", chainReference).get()
-  return snapshot.docs.map((doc) => (
-    { id: doc.id, ...doc.data() } as IUser
-  ));
+  const snapshot = await db
+    .collection("users")
+    .where("chainId", "==", chainReference)
+    .get();
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IUser));
 };
 
-export { addUser, getUsersForChain };
+const getAllUsers = async () => {
+  const snapshot = await db.collection("users").get();
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IUser));
+};
+
+// Return true if user email is not in our database yet
+const validateNewUser = async (email: string) => {
+  const users = await getAllUsers();
+  const emails = users.map((user) => user.email as string);
+  return !emails.includes(email);
+};
+
+export { addUser, getUsersForChain, getAllUsers, validateNewUser };
