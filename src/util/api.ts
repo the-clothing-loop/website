@@ -3,9 +3,6 @@ const getUserLocation = (accessToken: any) => {
     .then((response) => {
       return response.json();
     })
-    .then((jsonResponse) => {
-      return jsonResponse;
-    });
 };
 
 export default getUserLocation;
