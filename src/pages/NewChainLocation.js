@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Geocoder from "react-mapbox-gl-geocoder";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import { addChain, newChainLocation } from "../util/firebase/chain";
+import { addChain } from "../util/firebase/chain";
 import { Redirect } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
 import { useForm } from "react-hook-form";
-import { withTranslation } from "react-i18next";
 import { useTranslation } from "react-i18next";
+import getUserLocation from "../util/api";
 
 // Material
 import Grid from "@material-ui/core/Grid";
@@ -37,24 +37,6 @@ const NewChainLocation = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [description, setDescription] = useState("");
 
-  //remove access token
-  const getUserLocation = () => {
-    fetch(`https://ipinfo.io/json?token=${accessToken.ipinfoApiAccessToken}`)
-      .then((response) => response.json())
-      .then((jsonResponse) => {
-        let latitude = jsonResponse.loc.split(",")[0];
-        let longitude = jsonResponse.loc.split(",")[1];
-        console.log(jsonResponse);
-        setViewport({
-          latitude: Number(latitude),
-          longitude: Number(longitude),
-          width: "100%",
-          height: 600,
-          zoom: 10,
-        });
-      });
-  };
-
   //location details
   const getLocation = async (longitude, latitude) => {
     await fetch(
@@ -74,7 +56,15 @@ const NewChainLocation = (props) => {
   };
 
   useEffect(() => {
-    getUserLocation();
+    getUserLocation(accessToken.ipinfoApiAccessToken).then((response) => {
+      setViewport({
+        latitude: Number(response.loc.split(",")[0]),
+        longitude: Number(response.loc.split(",")[1]),
+        width: "100%",
+        height: 600,
+        zoom: 10,
+      });
+    });
   }, []);
 
   //on click get location and set marker, popup and location info

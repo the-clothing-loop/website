@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { useTranslation } from "react-i18next";
+import getUserLocation from "../util/api";
 
 // Material UI
 import { Button } from "@material-ui/core";
@@ -14,7 +15,10 @@ import CardContent from "@material-ui/core/CardContent";
 // Project resources
 import { getChains } from "../util/firebase/chain";
 
-mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_KEY}`;
+const accessToken = {
+  mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
+  ipinfoApiAccessToken: process.env.REACT_APP_IPINFO_API_KEY,
+};
 
 const Map = () => {
   const history = useHistory();
@@ -24,16 +28,7 @@ const Map = () => {
     ...theme.spreadThis,
   });
 
-  const [viewport, setViewport] = useState({
-    latitude: 52.1326,
-    longitude: 5.2913,
-    zoom: 8,
-    width: "100vw",
-    height: "100vh",
-  });
-
-
-
+  const [viewport, setViewport] = useState([]);
   const [chainData, setChainData] = useState([]);
   const [selectedChain, setSelectedChain] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -42,11 +37,20 @@ const Map = () => {
     getChains().then((response) => {
       setChainData(response);
     });
+    getUserLocation(accessToken.ipinfoApiAccessToken).then((response) => {
+      setViewport({
+        latitude: Number(response.loc.split(",")[0]),
+        longitude: Number(response.loc.split(",")[1]),
+        width: "100vw",
+        height: "100vh",
+        zoom: 10,
+      });
+    });
   }, []);
 
   return (
     <ReactMapGL
-      mapboxApiAccessToken={mapboxgl.accessToken}
+      mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
       mapStyle="mapbox://styles/mapbox/streets-v11"
       {...viewport}
       onViewportChange={(newView) => setViewport(newView)}
