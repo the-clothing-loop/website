@@ -13,6 +13,11 @@ const addUser = (user: IUser) => {
     });
 };
 
+const getUser = async (userId: string) => {
+  const userDoc = await db.collection("users").doc(userId).get();
+  return userDoc.data() as IUser;
+};
+
 const getUsersForChain = async (chainReference: DocumentReference) => {
   const snapshot = await db
     .collection("users")
@@ -33,4 +38,8 @@ const validateNewUser = async (email: string) => {
   return !emails.includes(email);
 };
 
-export { addUser, getUsersForChain, getAllUsers, validateNewUser };
+const updateUser = (userId: string, user: IUser) => {
+  db.collection("users").doc(userId).set(user, { merge: true });
+};
+
+export { addUser, getUser, getUsersForChain, getAllUsers, validateNewUser, updateUser };

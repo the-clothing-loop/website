@@ -1,12 +1,17 @@
 {
     "actions": "Actions",
     "address": "Address",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "editUserDetails": "Edit user details",
     "email": "Email",
     "home": "Home",
     "login": "Login",
     "name": "Name",
     "newsletter": "Newsletter",
-    "phonenumber": "Phone number",
+    "phoneNumber": "Phone number",
+    "save": "Save",
+    "saved": "Saved succesfully!",
     "signup": "Sign Up",
     "startNewChain": "Start a new chain"
 }

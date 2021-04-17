@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "firebase": "^8.3.0",

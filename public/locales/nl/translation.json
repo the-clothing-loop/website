@@ -1,12 +1,17 @@
 {
     "actions": "Acties",
     "address": "Adres",
+    "cancel": "Annuleren",
+    "edit": "Aanpassen",
+    "editUserDetails": "Gegevens aanpassen",
     "email": "Email",
     "home": "Home",
     "login": "Login",
     "name": "Naam",
     "newsletter": "Nieuwsbrief",
-    "phonenumber": "Telefoonnummer",
+    "phoneNumber": "Telefoonnummer",
+    "save": "Opslaan",
+    "saved": "Succesvol opgeslagen!",
     "signup": "Aanmelden",
     "startNewChain": "Start een nieuwe ketting"
 }

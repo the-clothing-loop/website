@@ -12,6 +12,10 @@ a {
   text-decoration: none;
 }
 
+.success {
+  color: #067f8c;
+}
+
 .MuiTypography-h4 {
   font-size: 1.5rem !important;
   font-weight: 700;
@@ -76,7 +80,7 @@ img#marker {
   padding-bottom: 10%;
 }
 
-.MuiButton-containedPrimary {
+.card-button {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
