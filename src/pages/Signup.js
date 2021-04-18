@@ -10,13 +10,13 @@ import MuiPhoneInput from "material-ui-phone-number";
 // Material UI
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import { addUser, validateNewUser } from "../util/firebase/user";
+import TextField from "../components/TextField";
 
 const Signup = (props) => {
   const { t } = useTranslation();
@@ -31,21 +31,6 @@ const Signup = (props) => {
     console.log(userValid);
     // TODO: do something with validation info for new user (e.g. display this)
     setSubmitted(true);
-  };
-
-  const formField = (fieldName, email = false) => {
-    return (
-      <TextField
-        id={fieldName}
-        name={fieldName}
-        type={email ? "email" : "text"}
-        label={t(fieldName)}
-        className={classes.textField}
-        inputRef={register}
-        required={true}
-        fullWidth
-      ></TextField>
-    );
   };
 
   let signupForm = (
@@ -63,9 +48,9 @@ const Signup = (props) => {
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <h1>{chain}</h1>
-          {formField("name")}
-          {formField("address")}
-          {formField("email", true)}
+          <TextField fieldName="name" inputRef={register} />
+          <TextField fieldName="address" inputRef={register} />
+          <TextField fieldName="email" inputRef={register} email={true} />
           <MuiPhoneInput
             defaultCountry="nl"
             fullWidth

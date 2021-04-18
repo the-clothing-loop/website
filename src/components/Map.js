@@ -109,6 +109,7 @@ const Map = () => {
               <Button
                 variant="contained"
                 color="primary"
+                className={"card-button"}
                 onClick={(e) => {
                   e.preventDefault();
                   history.replace(`./signup/?chain=${selectedChain.name}`);

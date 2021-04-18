@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
 // Material UI
@@ -8,6 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import EditIcon from '@material-ui/icons/Edit';
 
 // Project resources
 import { getChain } from "../../util/firebase/chain";
@@ -20,6 +21,7 @@ type TParams = {
 
 const ChainMemberList = () => {
   const { t } = useTranslation();
+  const location = useLocation<any>();
   const { chainId } = useParams<TParams>();
   const [chain, setChain] = useState<IChain>();
   const [users, setUsers] = useState<IUser[]>();
@@ -40,13 +42,15 @@ const ChainMemberList = () => {
   return (!chain || !users) ? null : (
     <div className="chain-member-list">
       <h1>{chain.name}</h1>
+      {location.state ? <p className="success">{location.state.message}</p> : null}
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>{t("name")}</TableCell>
             <TableCell>{t("address")}</TableCell>
-            <TableCell>{t("phonenumber")}</TableCell>
+            <TableCell>{t("phoneNumber")}</TableCell>
             <TableCell>{t("email")}</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -56,6 +60,7 @@ const ChainMemberList = () => {
               <TableCell>{u.address}</TableCell>
               <TableCell>{u.phoneNumber}</TableCell>
               <TableCell>{u.email}</TableCell>
+              <TableCell align="right"><Link to={`/users/${u.id}/edit`}><EditIcon /></Link></TableCell>
             </TableRow>
           ))}
         </TableBody>
