@@ -36,6 +36,7 @@
     "react-phone-input-2": "^2.14.0",
     "react-phone-input-material-ui": "^2.14.1",
     "react-phone-input-mui": "^2.9.4",
+    "react-places-autocomplete": "^7.3.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0"
   },
