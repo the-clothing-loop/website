@@ -86,7 +86,6 @@ const Signup = (props) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <h1>{chain}</h1>
           <TextField fieldName="name" inputRef={register} />
-          {/* <TextField fieldName="address" inputRef={register} /> */}
           <TextField fieldName="email" inputRef={register} email={true} />
 
           <p>{"search for address:"}</p>
@@ -111,11 +110,12 @@ const Signup = (props) => {
                 fullWidth
               ></FilledInput>
               {address.details.map((el) => {
+                let name = el.id.split(".")[0];
                 return (
                   <FilledInput
                     helperText
-                    fieldName={el.id.split(".")[0]}
-                    label={t(el.id.split(".")[0])}
+                    fieldName={name}
+                    label={t(name)}
                     value={t(el.text)}
                     id={el.text}
                     name={"addressName"}
