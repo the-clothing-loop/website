@@ -71,94 +71,77 @@ const Signup = (props) => {
   };
 
   let signupForm = (
-    <Grid container className={classes.form}>
-      <Grid item sm />
-      <Grid item sm>
-        <img
-          src={AppIcon}
-          alt="SFM logo"
-          width="200"
-          className={classes.image}
-        />
-        <Typography variant="h3" className={classes.pageTitle}>
-          {t("signup")}
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <h1>{chain}</h1>
-          <TextField fieldName="name" inputRef={register} />
-          <TextField fieldName="email" inputRef={register} email={true} />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <h1>{chain}</h1>
+      <TextField fieldName="name" inputRef={register} />
+      <TextField fieldName="email" inputRef={register} email={true} />
 
-          <p>{"search for address:"}</p>
-          <Geocoder
-            {...mapAccess}
-            onSelected={onSelected}
-            viewport={state.viewport}
-            hideOnSelect={true}
-          />
+      <p>{"search for address:"}</p>
+      <Geocoder
+        {...mapAccess}
+        onSelected={onSelected}
+        viewport={state.viewport}
+        hideOnSelect={true}
+      />
 
-          {state.visible ? (
-            <div>
+      {state.visible ? (
+        <div>
+          <FilledInput
+            fieldName={"address"}
+            label={t("address")}
+            value={t(address.name)}
+            id={"addressName"}
+            name={"addressName"}
+            type={"text"}
+            className={"addressName"}
+            inputRef={register}
+            fullWidth
+          ></FilledInput>
+          {address.details.map((el) => {
+            let name = el.id.split(".")[0];
+            return (
               <FilledInput
-                fieldName={"address"}
-                label={t("address")}
-                value={t(address.name)}
-                id={"addressName"}
+                helperText
+                fieldName={name}
+                label={t(name)}
+                value={t(el.text)}
+                id={el.text}
                 name={"addressName"}
                 type={"text"}
-                className={"addressName"}
+                className={"addressDetails"}
                 inputRef={register}
-                fullWidth
               ></FilledInput>
-              {address.details.map((el) => {
-                let name = el.id.split(".")[0];
-                return (
-                  <FilledInput
-                    helperText
-                    fieldName={name}
-                    label={t(name)}
-                    value={t(el.text)}
-                    id={el.text}
-                    name={"addressName"}
-                    type={"text"}
-                    className={"addressDetails"}
-                    inputRef={register}
-                  ></FilledInput>
-                );
-              })}
-            </div>
-          ) : null}
-          <MuiPhoneInput
-            defaultCountry="nl"
-            fullWidth
-            label={t("phonenumber")}
-            required={true}
-          />
+            );
+          })}
+        </div>
+      ) : null}
+      <MuiPhoneInput
+        defaultCountry="nl"
+        fullWidth
+        label={t("phonenumber")}
+        required={true}
+      />
 
-          <FormGroup row>
-            <FormControlLabel
-              control={<Checkbox name="checkedActions" inputRef={register} />}
-              label={t("actions")}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox name="checkedNewsletter" inputRef={register} />
-              }
-              label={t("newsletter")}
-            />
-          </FormGroup>
+      <FormGroup row>
+        <FormControlLabel
+          control={<Checkbox name="checkedActions" inputRef={register} />}
+          label={t("actions")}
+        />
+        <FormControlLabel
+          control={<Checkbox name="checkedNewsletter" inputRef={register} />}
+          label={t("newsletter")}
+        />
+      </FormGroup>
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-          >
-            {t("signup")}
-          </Button>
-        </form>
-      </Grid>
-      <Grid item sm />
-    </Grid>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        className={classes.button}
+      >
+        {t("signup")}
+      </Button>
+    </form>
   );
 
   if (submitted) {

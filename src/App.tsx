@@ -10,10 +10,9 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Thankyou from "./pages/Thankyou";
 import ChainMemberList from "./pages/Chain/ChainMemberList";
-import NewChainSignup from './pages/NewChainSignup';
 import NewChainLocation from './pages/NewChainLocation';
 import UserEdit from "./pages/UserEdit";
-
+import SignupPage from "./pages/SignupPage"
 // Components
 import Navbar from "./components/Navbar";
 
@@ -34,11 +33,10 @@ const App = () => {
                 component={Login}
                 // authenticated={authenticated}
               />
-              <Route path="/signup" component={Signup} />
+              <Route path="/signup" component={SignupPage} />
               <Route path="/thankyou" component={Thankyou} />
               <Route path="/chains/:chainId" component={ChainMemberList} />
-              <Route path="/newchain-signup" component={NewChainSignup} />
-              <Route path="/newchain-location" component={NewChainLocation} />
+              <Route path="/newchain" component={NewChainLocation} />
               <Route path="/users/:userId/edit" component={UserEdit} />
             </Switch>
           </div>
