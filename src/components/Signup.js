@@ -52,16 +52,16 @@ const Signup = (redirectTo) => {
 
       return handleViewportChange({
         ...newViewport,
-        ...geocoderDefaultOverrides
+        ...geocoderDefaultOverrides,
       });
     },
     [handleViewportChange]
   );
 
   const onSubmit = async (user) => {
+    // TODO: do something with validation info for new user (e.g. display this)
     const userValid = await validateNewUser(user.email);
     addUser(user);
-    // TODO: do something with validation info for new user (e.g. display this)
     setSubmitted(true);
   };
 
@@ -112,28 +112,27 @@ const Signup = (redirectTo) => {
             </MapGL>
           </div>
 
-            <FormGroup row>
-              <FormControlLabel
-                control={<Checkbox name="checkedActions" inputRef={register} />}
-                label={t("actions")}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox name="checkedNewsletter" inputRef={register} />
-                }
-                label={t("newsletter")}
-              />
-            </FormGroup>
+          <FormGroup row>
+            <FormControlLabel
+              control={<Checkbox name="checkedActions" inputRef={register} />}
+              label={t("actions")}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox name="checkedNewsletter" inputRef={register} />
+              }
+              label={t("newsletter")}
+            />
+          </FormGroup>
 
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              {t("signup")}
-            </Button>
-
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            {t("signup")}
+          </Button>
         </form>
       </Grid>
       <Grid item sm />
