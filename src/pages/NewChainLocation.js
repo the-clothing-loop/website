@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-import Geocoder from "react-mapbox-gl-geocoder";
+import { useState, useEffect } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { addChain } from "../util/firebase/chain";
 import { Redirect } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import getUserLocation from "../util/api";
 

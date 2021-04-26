@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
@@ -11,9 +11,9 @@ import TableCell from '@material-ui/core/TableCell';
 import EditIcon from '@material-ui/icons/Edit';
 
 // Project resources
-import { getChain } from "../../util/firebase/chain";
-import { getUsersForChain } from "../../util/firebase/user";
-import { IChain, IUser } from "../../types";
+import { getChain } from "../util/firebase/chain";
+import { getUsersForChain } from "../util/firebase/user";
+import { IChain, IUser } from "../types";
 
 type TParams = {
   chainId: string;
