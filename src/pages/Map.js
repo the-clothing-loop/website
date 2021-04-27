@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import mapboxgl from "mapbox-gl";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { useTranslation } from "react-i18next";
 import getUserLocation from "../util/api";

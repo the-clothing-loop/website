@@ -14,7 +14,8 @@ const theme = {
     },
   },
 
-  spreadThis: {
+  // Styling for forms
+  form: {
     typography: {
       useNextVariants: true,
     },
@@ -31,7 +32,7 @@ const theme = {
       margin: "10px auto 10px auto",
     },
     button: {
-      margin: "10px auto 10px auto",
+      margin: "10px 10px 10px 10px",
     },
     root: {
       minWidth: 275,
@@ -41,6 +42,9 @@ const theme = {
       textTransform: "uppercase",
       fontWeight: 'bold',
     },
+    geocoder: {
+      height: "20px",
+    }
   },
 };
 

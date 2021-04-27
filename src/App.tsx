@@ -5,14 +5,15 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import themeFile from "./util/theme";
 
 // Pages
-import Home from "./pages/Home";
+import Map from "./pages/Map";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 import Thankyou from "./pages/Thankyou";
-import ChainMemberList from "./pages/Chain/ChainMemberList";
-import NewChainLocation from './pages/NewChainLocation';
+import ChainMemberList from "./pages/ChainMemberList";
+import NewChainSignup from "./pages/NewChainSignup";
+import ExistingChainSignup from "./pages/ExistingChainSignup";
+import NewChainLocation from "./pages/NewChainLocation";
 import UserEdit from "./pages/UserEdit";
-import SignupPage from "./pages/SignupPage"
+
 // Components
 import Navbar from "./components/Navbar";
 
@@ -26,14 +27,9 @@ const App = () => {
           <Navbar />
           <div className="container">
             <Switch>
-              <Route exact path="/" component={Home} />
-              <Route
-                exact
-                path="/login"
-                component={Login}
-                // authenticated={authenticated}
-              />
-              <Route path="/signup" component={SignupPage} />
+              <Route exact path="/" component={Map} />
+              <Route path="/login" component={Login} />
+              <Route path="/signup" component={ExistingChainSignup} />
               <Route path="/thankyou" component={Thankyou} />
               <Route path="/chains/:chainId" component={ChainMemberList} />
               <Route path="/newchain" component={NewChainLocation} />

@@ -1,6 +1,6 @@
 import db from "./firebaseConfig";
 import { DocumentReference } from "@firebase/firestore-types";
-import { IUser, IChain } from "../../types";
+import { IUser } from "../../types";
 
 const addUser = (user: IUser) => {
   db.collection("users")

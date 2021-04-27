@@ -1,32 +1,26 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 
 // Material UI
-import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core";
+import theme from "../util/theme";
 
 // Project resources
 import { getUser, updateUser } from "../util/firebase/user"
 import { IUser } from "../types";
 import TextField from "../components/TextField";
 
-const styles = (theme) => ({
-  ...theme.spreadThis,
-  button: {
-    margin: theme.spacing(1),
-  }
-});
-
-const UserEdit = (props) => {
+const UserEdit = () => {
   const { t } = useTranslation();
   const { userId } = useParams();
   const [user, setUser] = useState();
   const [chainId, setChainId] = useState();
-  const { classes } = props;
+  const classes = makeStyles(theme.form)();
   const { register, handleSubmit, setValue } = useForm();
   const history = useHistory();
 
@@ -76,4 +70,4 @@ const UserEdit = (props) => {
   );
 };
 
-export default withStyles(styles)(UserEdit);
+export default UserEdit;

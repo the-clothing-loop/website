@@ -1,21 +1,17 @@
-import React from "react";
 import TextField from "@material-ui/core/TextField";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from '@material-ui/core/styles';
+import theme from "../util/theme"
 import { useTranslation } from 'react-i18next';
 
-const styles = (theme: any) => ({
-  ...theme.spreadThis,
-});
-
 interface ITextFieldProps {
-  classes: any,
   fieldName: string,
   inputRef: any,
   email: boolean,
 }
 
-const StyledTextField = ({ classes, fieldName, inputRef, email } : ITextFieldProps) => {
+const StyledTextField = ({ fieldName, inputRef, email} : ITextFieldProps) => {
   const { t } = useTranslation();
+  const classes = makeStyles(theme.form as any)();
 
   return (
     <TextField
@@ -31,4 +27,4 @@ const StyledTextField = ({ classes, fieldName, inputRef, email } : ITextFieldPro
   );
 };
 
-export default withStyles(styles)(StyledTextField);
+export default StyledTextField;
