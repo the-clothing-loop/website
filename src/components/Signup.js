@@ -1,5 +1,5 @@
 // React / plugins
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -10,6 +10,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapGL from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
+import DeckGL, { GeoJsonLayer } from "deck.gl";
 
 // Material UI
 import Grid from "@material-ui/core/Grid";
@@ -33,30 +34,40 @@ const Signup = (redirectTo) => {
   const [submitted, setSubmitted] = useState(false);
   const { register, handleSubmit } = useForm();
   const classes = makeStyles(theme.form)();
-  const [viewport, setViewport] = useState({
-    latitude: 37.7577,
-    longitude: -122.4376,
-    zoom: 8,
+  const [viewport, setViewPort] = useState({
+    latitude: 0,
+    longitude: 0,
+    zoom: 2,
+    transitionDuration: 100,
   });
 
-  const [address, setAddress] = useState();
+  const [searchResultLayer, setSearchResult] = useState(null);
+
   const mapRef = useRef();
-  const handleViewportChange = useCallback(
-    (newViewport) => setViewport(newViewport),
-    []
-  );
 
-  const handleGeocoderViewportChange = useCallback(
-    (newViewport) => {
-      const geocoderDefaultOverrides = { transitionDuration: 1000 };
+  const handleGeocoderViewportChange = (viewport) => {
+    const geocoderDefaultOverrides = { transitionDuration: 1000 };
+    console.log("Updating");
 
-      return handleViewportChange({
-        ...newViewport,
-        ...geocoderDefaultOverrides,
-      });
-    },
-    [handleViewportChange]
-  );
+    return setViewPort({
+      ...viewport,
+      ...geocoderDefaultOverrides,
+    });
+  };
+
+  const handleOnResult = (event) => {
+    console.log(event.result);
+    setSearchResult(
+      new GeoJsonLayer({
+        id: "search-result",
+        data: event.result.geometry,
+        getFillColor: [255, 0, 0, 128],
+        getRadius: 1000,
+        pointRadiusMinPixels: 10,
+        pointRadiusMaxPixels: 10,
+      })
+    );
+  };
 
   const onSubmit = async (user) => {
     // TODO: do something with validation info for new user (e.g. display this)
@@ -97,19 +108,18 @@ const Signup = (redirectTo) => {
               {...viewport}
               width="100%"
               height="100%"
-              onViewportChange={handleViewportChange}
+              onViewportChange={setViewPort}
               mapboxApiAccessToken={MAPBOX_TOKEN}
             >
               <Geocoder
-                // onResult={(result) => {
-                //   setAddress(result);
-                // }}
+                // onResult={handleOnResult}
                 mapRef={mapRef}
                 onViewportChange={handleGeocoderViewportChange}
                 mapboxApiAccessToken={MAPBOX_TOKEN}
                 position="top-left"
               />
             </MapGL>
+            <DeckGL {...viewport} layers={[searchResultLayer]} />
           </div>
 
           <FormGroup row>
