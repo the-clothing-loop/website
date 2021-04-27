@@ -32,7 +32,8 @@ const App = () => {
               <Route path="/signup" component={ExistingChainSignup} />
               <Route path="/thankyou" component={Thankyou} />
               <Route path="/chains/:chainId" component={ChainMemberList} />
-              <Route path="/newchain" component={NewChainLocation} />
+              <Route path="/newchain" component={NewChainSignup} />
+              <Route path="/newchain-location" component={NewChainLocation} />
               <Route path="/users/:userId/edit" component={UserEdit} />
             </Switch>
           </div>
