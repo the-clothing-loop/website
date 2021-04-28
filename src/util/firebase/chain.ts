@@ -13,15 +13,8 @@ const getChain = async (chainId: string) => {
 };
 
 const getChains = async () => {
-  return await db
-    .collection("chains")
-    .get()
-    .then((snapshot: any) => {
-      return snapshot.docs.map((x: any) => x.data() as IChain);
-    })
-    .catch((error: any) => {
-      console.error("Error getting chains: ", error);
-    });
+  const snapshot = await db.collection("chains").get();
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IChain));
 };
 
 const addChain = (chain: IChain) => {
