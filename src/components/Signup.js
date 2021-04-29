@@ -1,5 +1,5 @@
 // React / plugins
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Redirect, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -19,23 +19,30 @@ import AppIcon from "../images/sfm_logo.png";
 import { addUser, validateNewUser } from "../util/firebase/user";
 import { TextFormField, PhoneFormField } from "./FormFields";
 import GeocoderSelector from "./GeocoderSelector";
+import { getChain } from "../util/firebase/chain";
 
 const Signup = (redirectTo) => {
   const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
+  const [chain, setChain] = useState({});
   const [geocoderResult, setGeocoderResult] = useState({});
   const { register, handleSubmit } = useForm();
-
-  const classes = makeStyles(theme)();
   const location = useLocation();
+  const classes = makeStyles(theme)();
+  
+  // Get chain id from the URL and save to state
+  useEffect( async () => {
+    const chain = await getChain(location.state.chainId)
+    setChain(chain);
+  }, []);
 
+  // Gather data from form, validate and send to firebase
   const onSubmit = async (formData) => {
     // TODO: allow only full addresses
-    console.log(location.state.chain);
     let user = {
       ...formData,
       address: geocoderResult.result.place_name,
-      chainId: location.state.chain.id,
+      chainId: chain.id,
     };
     console.log(user);
     // TODO: do something with validation info for new user (e.g. display this)
@@ -50,7 +57,7 @@ const Signup = (redirectTo) => {
       <Typography variant="h3" className={classes.pageTitle}>
         {t("signup")}
       </Typography>
-      <p>{location.state ? location.state.chain.name : ""}</p>
+      <p>{chain.name}</p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextFormField name="name" inputRef={register} email={false} />
         <TextFormField name="email" inputRef={register} email={true} />

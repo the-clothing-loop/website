@@ -115,7 +115,7 @@ const Map = () => {
                     pathname: "/signup",
                     search: `?chain=${selectedChain.name}`,
                     state: {
-                      chain: selectedChain,
+                      chainId: selectedChain.id,
                     },
                   });
                 }}

@@ -12,7 +12,7 @@ import theme from "../util/theme";
 
 // Project resources
 import { getUser, updateUser } from "../util/firebase/user";
-import { TextFormField } from "../components/FormFields";
+import { PhoneFormField, TextFormField } from "../components/FormFields";
 
 const UserEdit = () => {
   const { t } = useTranslation();
@@ -31,19 +31,18 @@ const UserEdit = () => {
     });
   };
 
-  useEffect(() => {
-    (async function () {
+  useEffect(async () => {
       try {
         const user = await getUser(userId);
+        console.log(user);
         setUser(user);
-        setChainId(user.chainId.id);
+        setChainId(user.chainId);
         const fields = ["name", "address", "email", "phoneNumber"];
         fields.forEach((field) => setValue(field, user[field]));
       } catch (error) {
         console.error(error);
       }
-    })();
-  }, [userId]);
+    }, []);
 
   return !user ? null : (
     <Grid container className={classes.form}>
@@ -54,10 +53,10 @@ const UserEdit = () => {
         </Typography>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <TextFormField fieldName="name" inputRef={register} />
-          <TextFormField fieldName="address" inputRef={register} />
-          <TextFormField fieldName="email" inputRef={register} />
-          <TextFormField fieldName="phoneNumber" inputRef={register} />
+          <TextFormField name="name" inputRef={register} />
+          <TextFormField name="address" inputRef={register} />
+          <TextFormField name="email" inputRef={register} />
+          <PhoneFormField inputRef={register} />
 
           <Button
             type="submit"
