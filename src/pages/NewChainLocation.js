@@ -42,7 +42,6 @@ const NewChainLocation = (props) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setChain({
           locality: data.features[0].place_name.split(",")[0],
           place: data.features[0].place_name

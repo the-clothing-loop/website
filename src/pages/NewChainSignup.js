@@ -26,7 +26,9 @@ const Signup = () => {
   const { register, handleSubmit } = useForm();
   const classes = makeStyles(theme)();
 
-  const onSubmit = async (formData) => {};
+  const onSubmit = () => {
+    setSubmitted(true);
+  };
 
   let signupForm = (
     <ThreeColumnLayout>
