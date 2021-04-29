@@ -131,7 +131,7 @@ const Map = () => {
                   history.push(`/chains/${selectedChain.id}`);
                 }}
               >
-                {t("viewMembers")}
+                {t("viewChain")}
               </Button>{" "}
             </CardActions>
           </Card>
