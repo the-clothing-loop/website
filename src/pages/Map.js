@@ -56,7 +56,7 @@ const Map = () => {
     >
       {chainData.map((chain) => (
         <Marker
-          key={chain.name}
+          key={chain.id}
           latitude={chain.latLon.latitude}
           longitude={chain.latLon.longitude}
           onClick={(e) => {

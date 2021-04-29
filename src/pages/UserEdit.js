@@ -31,7 +31,8 @@ const UserEdit = () => {
     });
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    (async () => {
       try {
         const user = await getUser(userId);
         console.log(user);
@@ -42,7 +43,8 @@ const UserEdit = () => {
       } catch (error) {
         console.error(error);
       }
-    }, []);
+    })();
+  }, []);
 
   return !user ? null : (
     <Grid container className={classes.form}>

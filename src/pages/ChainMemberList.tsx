@@ -27,7 +27,7 @@ const ChainMemberList = () => {
   const [users, setUsers] = useState<IUser[]>();
 
   useEffect(() => {
-    (async function () {
+    (async () => {
       try {
         const chainData  = await getChain(chainId);
         setChain(chainData);

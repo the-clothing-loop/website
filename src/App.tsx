@@ -10,7 +10,7 @@ import Login from "./pages/Login";
 import Thankyou from "./pages/Thankyou";
 import ChainMemberList from "./pages/ChainMemberList";
 import NewChainSignup from "./pages/NewChainSignup";
-import ExistingChainSignup from "./pages/ExistingChainSignup";
+import Signup from "./pages/Signup";
 import NewChainLocation from "./pages/NewChainLocation";
 import UserEdit from "./pages/UserEdit";
 
@@ -29,7 +29,7 @@ const App = () => {
             <Switch>
               <Route exact path="/" component={Map} />
               <Route path="/login" component={Login} />
-              <Route path="/signup" component={ExistingChainSignup} />
+              <Route path="/signup" component={Signup} />
               <Route path="/thankyou" component={Thankyou} />
               <Route path="/chains/:chainId" component={ChainMemberList} />
               <Route path="/newchain" component={NewChainSignup} />

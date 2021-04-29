@@ -12,16 +12,16 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
-import ThreeColumnLayout from "./ThreeColumnLayout";
+import ThreeColumnLayout from "../components/ThreeColumnLayout";
 
 // Project resources
 import AppIcon from "../images/sfm_logo.png";
 import { addUser, validateNewUser } from "../util/firebase/user";
-import { TextFormField, PhoneFormField } from "./FormFields";
-import GeocoderSelector from "./GeocoderSelector";
+import { TextFormField, PhoneFormField } from "../components/FormFields";
+import GeocoderSelector from "../components/GeocoderSelector";
 import { getChain } from "../util/firebase/chain";
 
-const Signup = (redirectTo) => {
+const Signup = () => {
   const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [chain, setChain] = useState({});
@@ -91,7 +91,7 @@ const Signup = (redirectTo) => {
   );
 
   if (submitted) {
-    return <Redirect to={redirectTo} />;
+    return <Redirect to={"/thankyou"} />;
   } else {
     return signupForm;
   }
