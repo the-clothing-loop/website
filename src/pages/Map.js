@@ -122,6 +122,17 @@ const Map = () => {
               >
                 {t("signup")}
               </Button>{" "}
+              <Button
+                variant="contained"
+                color="secondary"
+                className={"card-button"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  history.push(`/chains/${selectedChain.id}`);
+                }}
+              >
+                {t("viewMembers")}
+              </Button>{" "}
             </CardActions>
           </Card>
         </Popup>

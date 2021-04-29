@@ -82,9 +82,10 @@ img#marker {
 
 .card-button {
   position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
+  margin: 15px 15px 15px 15px;
+  /* left: 50%;
+  transform: translateX(-50%); */
+  width: 100%; 
 }
 
 .MuiCardActions-root {
