@@ -111,7 +111,13 @@ const Map = () => {
                 className={"card-button"}
                 onClick={(e) => {
                   e.preventDefault();
-                  history.replace(`./signup/?chain=${selectedChain.name}`);
+                  history.push({
+                    pathname: "/signup",
+                    search: `?chain=${selectedChain.name}`,
+                    state: {
+                      chain: selectedChain,
+                    },
+                  });
                 }}
               >
                 {t("signup")}

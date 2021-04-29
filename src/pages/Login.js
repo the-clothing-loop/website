@@ -15,7 +15,7 @@ import AppIcon from "../images/sfm_logo.png";
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const { t } = useTranslation();
-  const classes = makeStyles(theme.form)();
+  const classes = makeStyles(theme)();
 
   const onSubmit = async () => {
     // TODO: handle this

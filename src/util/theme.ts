@@ -16,36 +16,30 @@ const theme = {
 
   // Styling for forms
   form: {
-    typography: {
-      useNextVariants: true,
-    },
-    form: {
-      textAlign: "center",
-    },
-    image: {
-      margin: "20px auto auto auto",
-    },
-    pageTitle: {
-      margin: "20px auto 20px auto",
-    },
-    textField: {
-      margin: "10px auto 10px auto",
-    },
-    button: {
-      margin: "10px 10px 10px 10px",
-    },
-    root: {
-      minWidth: 275,
-    },
-    title: {
-      fontSize: 10,
-      textTransform: "uppercase",
-      fontWeight: 'bold',
-    },
-    geocoder: {
-      height: "20px",
-    }
+    textAlign: "center",
+  },
+  image: {
+    margin: "20px auto auto auto",
+  },
+  pageTitle: {
+    margin: "20px auto 20px auto",
+  },
+  textField: {
+    margin: "10px auto 10px auto",
+  },
+  button: {
+    margin: "10px 10px 10px 10px",
+  },
+  root: {
+    minWidth: 275,
+  },
+  title: {
+    fontSize: 10,
+    textTransform: "uppercase",
+    fontWeight: "bold",
+  },
+  geocoder: {
+    height: "20px",
   },
 };
-
 export default theme;
