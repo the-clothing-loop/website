@@ -1,10 +1,9 @@
 import db from "./firebaseConfig";
-import { DocumentReference } from "@firebase/firestore-types";
 import { IUser } from "../../types";
 
 const addUser = (user: IUser) => {
   db.collection("users")
-    .add({ user })
+    .add( user )
     .then((docRef) => {
       console.log(`Document successfully written with id ${docRef.id}!`);
     })
@@ -18,10 +17,10 @@ const getUser = async (userId: string) => {
   return userDoc.data() as IUser;
 };
 
-const getUsersForChain = async (chainReference: DocumentReference) => {
+const getUsersForChain = async (chainId: string) => {
   const snapshot = await db
     .collection("users")
-    .where("chainId", "==", chainReference)
+    .where("chainId", "==", chainId)
     .get();
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IUser));
 };

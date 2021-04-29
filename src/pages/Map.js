@@ -56,7 +56,7 @@ const Map = () => {
     >
       {chainData.map((chain) => (
         <Marker
-          key={chain.name}
+          key={chain.id}
           latitude={chain.latLon.latitude}
           longitude={chain.latLon.longitude}
           onClick={(e) => {
@@ -115,12 +115,23 @@ const Map = () => {
                     pathname: "/signup",
                     search: `?chain=${selectedChain.name}`,
                     state: {
-                      chain: selectedChain,
+                      chainId: selectedChain.id,
                     },
                   });
                 }}
               >
                 {t("signup")}
+              </Button>{" "}
+              <Button
+                variant="contained"
+                color="secondary"
+                className={"card-button"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  history.push(`/chains/${selectedChain.id}`);
+                }}
+              >
+                {t("viewChain")}
               </Button>{" "}
             </CardActions>
           </Card>

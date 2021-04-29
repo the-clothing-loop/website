@@ -1,8 +1,8 @@
 export interface IChain {
-    id: string;
-    name: string;
-    description: string;
-    image: string;
+  id: string;
+  name: string;
+  description: string;
+  image: string;
 }
 
 export interface IUser {
@@ -11,4 +11,5 @@ export interface IUser {
   address: string;
   name: string;
   phoneNumber: string;
+  chainId: string;
 }
