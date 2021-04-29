@@ -42,7 +42,6 @@ const ChainMemberList = () => {
     })();
   }, []);
 
-  console.log(chain);
   return !chain || !users ? null : (
     <div className="chain-member-list">
       <Card>

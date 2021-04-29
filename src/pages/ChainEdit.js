@@ -26,15 +26,11 @@ const ChainEdit = () => {
   const history = useHistory();
   const [address, setAddress] = useState();
 
-  console.log(useParams())
-console.log(chainId)
-
   const onSubmit = (formData) => {
     let chain = {
       ...formData,
       address: address,
     };
-    console.log(chain)
     updateChain(chainId, chain);
     history.push({
       pathname: `/chains/${chainId}`,

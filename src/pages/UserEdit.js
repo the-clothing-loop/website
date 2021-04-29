@@ -35,7 +35,6 @@ const UserEdit = () => {
     (async () => {
       try {
         const user = await getUser(userId);
-        console.log(user);
         setUser(user);
         setChainId(user.chainId);
         const fields = ["name", "address", "email", "phoneNumber"];
