@@ -3,6 +3,7 @@ export interface IChain {
   name: string;
   description: string;
   image: string;
+  address:string;
 }
 
 export interface IUser {

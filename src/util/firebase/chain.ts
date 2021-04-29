@@ -3,9 +3,12 @@ import { IChain } from "../../types";
 
 // Return chain data for one chain by id
 const getChain = async (chainId: string) => {
-  const snapshot = await db.collection("chains").doc(chainId).get();
-  return {id: chainId, ...snapshot.data()} as IChain;
-}
+  const snapshot = await db
+    .collection("chains")
+    .doc(chainId)
+    .get();
+  return { id: chainId, ...snapshot.data() } as IChain;
+};
 
 // Return data for all chains
 const getChains = async () => {
@@ -17,11 +20,19 @@ const addChain = (chain: IChain) => {
   db.collection("chains")
     .add(chain)
     .then((docRef) => {
-      console.log(`Document successfully written with id: ${docRef.id}! and content ${chain}`);
+      console.log(
+        `Document successfully written with id: ${docRef.id}! and content ${chain}`
+      );
     })
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
 };
 
-export { getChains, addChain, getChain };
+const updateChain = (chainId: string, chain: IChain) => {
+  db.collection("chains")
+    .doc(chainId)
+    .set(chain, { merge: true });
+};
+
+export { getChains, addChain, getChain, updateChain };
