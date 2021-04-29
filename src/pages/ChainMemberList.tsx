@@ -37,7 +37,7 @@ const ChainMemberList = () => {
         console.error(error);
       }
     })();
-  });
+  }, []);
 
   return (!chain || !users) ? null : (
     <div className="chain-member-list">
