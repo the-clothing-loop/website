@@ -13,6 +13,7 @@ import NewChainSignup from "./pages/NewChainSignup";
 import Signup from "./pages/Signup";
 import NewChainLocation from "./pages/NewChainLocation";
 import UserEdit from "./pages/UserEdit";
+import ChainEdit from './pages/ChainEdit'
 
 // Components
 import Navbar from "./components/Navbar";
@@ -31,7 +32,8 @@ const App = () => {
               <Route path="/login" component={Login} />
               <Route path="/signup" component={Signup} />
               <Route path="/thankyou" component={Thankyou} />
-              <Route path="/chains/:chainId" component={ChainMemberList} />
+              <Route exact path="/chains/:chainId" component={ChainMemberList} />
+              <Route path="/chains/:chainId/edit" component={ChainEdit} />
               <Route path="/newchain" component={NewChainSignup} />
               <Route path="/newchain-location" component={NewChainLocation} />
               <Route path="/users/:userId/edit" component={UserEdit} />

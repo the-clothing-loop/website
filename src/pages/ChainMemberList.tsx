@@ -9,6 +9,9 @@ import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import EditIcon from "@material-ui/icons/Edit";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
 
 // Project resources
 import { getChain } from "../util/firebase/chain";
@@ -29,7 +32,7 @@ const ChainMemberList = () => {
   useEffect(() => {
     (async () => {
       try {
-        const chainData  = await getChain(chainId);
+        const chainData = await getChain(chainId);
         setChain(chainData);
         const users = await getUsersForChain(chainId);
         setUsers(users);
@@ -41,10 +44,34 @@ const ChainMemberList = () => {
 
   return !chain || !users ? null : (
     <div className="chain-member-list">
-      <h1>{chain.name}</h1>
-      {location.state ? (
-        <p className="success">{location.state.message}</p>
-      ) : null}
+      <Card>
+        <CardContent>
+          <Typography variant="h3" component="h2">
+            {chain.name}
+          </Typography>
+          <Typography
+            variant="body2"
+            component="p"
+            style={{ display: "inline" }}
+          >
+            {chain.description}
+          </Typography>{" "}
+          {" | "}
+          <Typography
+            variant="body2"
+            component="p"
+            style={{ display: "inline" }}
+          >
+            {chain.address}
+          </Typography>
+          <Link to={`/chains/${chainId}/edit`}>
+            <EditIcon />
+          </Link>
+          {location.state ? (
+            <p className="success">{location.state.message}</p>
+          ) : null}
+        </CardContent>
+      </Card>
       <Table>
         <TableHead>
           <TableRow>
