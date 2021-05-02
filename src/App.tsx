@@ -8,6 +8,7 @@ import themeFile from "./util/theme";
 import Map from "./pages/Map";
 import Login from "./pages/Login";
 import Thankyou from "./pages/Thankyou";
+import Admin from "./pages/Admin";
 import ChainMemberList from "./pages/ChainMemberList";
 import NewChainSignup from "./pages/NewChainSignup";
 import Signup from "./pages/Signup";
@@ -32,6 +33,7 @@ const App = () => {
               <Route path="/login" component={Login} />
               <Route path="/signup" component={Signup} />
               <Route path="/thankyou" component={Thankyou} />
+              <Route path="/admin" component={Admin} />
               <Route exact path="/chains/:chainId" component={ChainMemberList} />
               <Route path="/chains/:chainId/edit" component={ChainEdit} />
               <Route path="/newchain" component={NewChainSignup} />

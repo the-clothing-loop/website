@@ -19,6 +19,7 @@ const Navbar = () => {
         <Button color="inherit" component={Link} to="/" >{t("home")}</Button>
         <Button color="inherit" component={Link} to="/login" >{t("login")}</Button>
         <Button color="inherit" component={Link} to="/newchain" >{t("startNewChain")}</Button>
+        <Button color="inherit" component={Link} to="/admin" >{t("admin")}</Button>
       </Toolbar>
       <LanguageSwitcher />
     </AppBar>

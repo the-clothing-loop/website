@@ -14,5 +14,8 @@
   "saved": "Succesvol opgeslagen!",
   "signup": "Aanmelden",
   "startNewChain": "Start een nieuwe ketting",
-  "viewChain": "Toon ketting"
+  "viewChain": "Toon ketting",
+  "admin": "Admin",
+  "chainName": "Ketennaam (?)",
+  "chainDescription": "Kettingbeschrijving (?)"
 }

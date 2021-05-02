@@ -14,5 +14,8 @@
   "saved": "Saved succesfully!",
   "signup": "Sign Up",
   "startNewChain": "Start a new chain",
-  "viewChain": "View chain"
+  "viewChain": "View chain",
+  "admin": "Admin",
+  "chainName": "Chain Name",
+  "chainDescription": "Chain Description"
 }
