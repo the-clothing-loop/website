@@ -1,9 +1,12 @@
+// React / plugins
 import { useState, useEffect } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import { addChain } from "../util/firebase/chain";
 import { Redirect } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
 import { useTranslation } from "react-i18next";
+
+//Project Resources
+import { addChain } from "../util/firebase/chain";
 import getUserLocation from "../util/api";
 
 // Material
@@ -14,6 +17,8 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core";
+import theme from "../util/theme";
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
@@ -26,6 +31,7 @@ const NewChainLocation = (props) => {
   });
 
   const { t } = useTranslation();
+  const classes = makeStyles(theme)();
 
   const [viewport, setViewport] = useState([]);
   const [marker, setMarker] = useState([]);
@@ -100,8 +106,8 @@ const NewChainLocation = (props) => {
     <Grid container>
       <Grid item xs></Grid>
       <Grid item xs={6}>
-        <Typography component="p" variant="h5">
-          {"select new chain location"}
+        <Typography variant="h3" className={classes.pageTitle}>
+          {t("select new chain location")}
         </Typography>
         <ReactMapGL
           mapboxApiAccessToken={mapboxgl.accessToken}
@@ -127,51 +133,50 @@ const NewChainLocation = (props) => {
                   longitude={marker.longitude}
                   closeOnClick={false}
                   onClose={() => setShowPopup(false)}
+                  className={'new-chain-popup'}
                 >
-                  <div className={"mapboxgl-popup-content"}>
-                    <Card className={styles.root}>
-                      <CardContent>
-                        <Typography
-                          className={styles.title}
-                          color="primary.dark"
-                          component="p"
-                          variant="h4"
-                          gutterBottom
+                  <Card className={styles.root}>
+                    <CardContent>
+                      <Typography
+                        className={styles.title}
+                        color="textPrimary"
+                        component="h1"
+                        variant='h5'
+                        gutterBottom
+                      >
+                        {chain.locality}
+                      </Typography>
+                      <Typography
+                        className={styles.title}
+                        color="textPrimary"
+                        component="h1"
+                        variant='caption'
+                        gutterBottom
+                      >
+                        {chain.place}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <form onSubmit={handleSubmit}>
+                        <TextField
+                          id={"description"}
+                          name={"description"}
+                          type="text"
+                          label={t("add description")}
+                          onChange={handleChange}
+                          fullWidth
+                        ></TextField>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          type="submit"
+                          className={"chain-description"}
                         >
-                          {chain.locality}
-                        </Typography>
-                        <Typography
-                          className={styles.title}
-                          color="primary.dark"
-                          component="p"
-                          variant="p"
-                          gutterBottom
-                        >
-                          {chain.place}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <form onSubmit={handleSubmit}>
-                          <TextField
-                            id={"description"}
-                            name={"description"}
-                            type="text"
-                            label={t("add description")}
-                            onChange={handleChange}
-                            fullWidth
-                          ></TextField>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            className={"chain-description"}
-                          >
-                            {"start chain"}
-                          </Button>{" "}
-                        </form>
-                      </CardActions>
-                    </Card>
-                  </div>
+                          {"start chain"}
+                        </Button>{" "}
+                      </form>
+                    </CardActions>
+                  </Card>
                 </Popup>
               ) : null}
             </div>
@@ -181,7 +186,7 @@ const NewChainLocation = (props) => {
       <Grid item xs></Grid>
     </Grid>
   ) : (
-    <Redirect to="/thankyou" />
+    <Redirect to="/newchain-signup" />
   );
 };
 
