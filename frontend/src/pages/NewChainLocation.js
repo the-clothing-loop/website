@@ -92,7 +92,7 @@ const NewChainLocation = (props) => {
       name: chain.locality,
       description: description,
     };
-    // addChain(newChain);
+    addChain(newChain);
     setChangePage(false);
   };
 
