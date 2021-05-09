@@ -15,9 +15,9 @@ import theme from "../util/theme";
 import ThreeColumnLayout from "../components/ThreeColumnLayout";
 
 // Project resources
-import AppIcon from "../images/sfm_logo.png";
 import { TextFormField, PhoneFormField } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
+import AppIcon from "../images/sfm_logo.png";
 
 const Signup = () => {
   const { t } = useTranslation();
@@ -69,7 +69,7 @@ const Signup = () => {
   );
 
   if (submitted) {
-    return <Redirect to={"/newchain-location"} />;
+    return <Redirect to={"/thankyou"} />;
   } else {
     return signupForm;
   }

@@ -56,19 +56,26 @@ img#marker {
   height: 40px;
 }
 
+.new-chain-popup {
+  position: relative !important;
+  transform: none !important;
+  float: right;
+  margin: 2%;
+}
+.new-chain-popup > .mapboxgl-popup-tip {
+  display: none;
+}
 .mapboxgl-popup-content {
   background: #ffffff;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 250px;
   height: auto;
-  padding: 0;
-}
-
-.mapboxgl-popup-tip {
-  z-index: 1111;
+  padding: 0 !important;
+  position: absolute;
+  right: 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
 }
 
 /* card styling */
@@ -85,7 +92,7 @@ img#marker {
   margin: 15px 15px 15px 15px;
   /* left: 50%;
   transform: translateX(-50%); */
-  width: 100%; 
+  width: 100%;
 }
 
 .MuiCardActions-root {

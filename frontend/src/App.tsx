@@ -34,8 +34,8 @@ const App = () => {
               <Route path="/thankyou" component={Thankyou} />
               <Route exact path="/chains/:chainId" component={ChainMemberList} />
               <Route path="/chains/:chainId/edit" component={ChainEdit} />
-              <Route path="/newchain" component={NewChainSignup} />
-              <Route path="/newchain-location" component={NewChainLocation} />
+              <Route exact path="/newchain-signup" component={NewChainSignup} />
+              <Route path="/newchain" component={NewChainLocation} />
               <Route path="/users/:userId/edit" component={UserEdit} />
             </Switch>
           </div>
