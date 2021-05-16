@@ -1,3 +1,15 @@
 rules_version = '2';
 service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow update, write: if request.auth != null && (request.auth.uid == userId || request.auth.token.role == "admin");
+      allow read if request.auth != null && (request.auth.uid == userId || request.auth.token.role == "admin" || (request.auth.token.role == "chainAdmin" && resource.data.chainId == request.auth.token.chainId));
+    }
+  }
+  match /databases/{database}/documents {
+    match /chains/{chainId} {
+      allow update, write: if request.auth != null && ((request.auth.token.chainId == chainId && request.auth.token.role == "chainAdmin") || request.auth.token.role == "admin");
+      allow read;
+    }
+  }
 }
