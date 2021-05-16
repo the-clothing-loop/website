@@ -12,4 +12,9 @@ service cloud.firestore {
       allow read;
     }
   }
+  match /databases/{database}/documents {
+    match /mail/{mailId} {
+      allow read, update, write: if false;
+    }
+  }
 }
