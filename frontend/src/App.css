@@ -62,7 +62,7 @@ img#marker {
   float: right;
   margin: 2%;
 }
-.new-chain-popup > .mapboxgl-popup-tip {
+.mapboxgl-popup-tip {
   display: none;
 }
 .mapboxgl-popup-content {
@@ -73,9 +73,21 @@ img#marker {
   height: auto;
   padding: 0 !important;
   position: absolute;
-  right: 0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
+}
+
+.mapboxgl-popup {
+  position: absolute !important;
+  bottom: 15%;
+  transform: translateX(-50%) !important;
+  left: 50% !important;
+}
+
+.filter-wrapper {
+  background-color: white;
+  position: relative;
+  width: max-content;
 }
 
 /* card styling */
@@ -120,4 +132,17 @@ button.chain-description {
 
 .address-details {
   padding: 20% 2%;
+}
+
+/*table styling*/
+th {
+  text-transform: uppercase;
+  font-size: 1rem !important;
+}
+
+table {
+  width: 90% !important;
+  transform: translateX(-50%);
+  position: relative;
+  left: 50%;
 }
