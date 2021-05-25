@@ -84,7 +84,7 @@ const ChainMemberList = () => {
         </TableHead>
         <TableBody>
           {users.map((u: IUser) => (
-            <TableRow key={u.id}>
+            <TableRow key={u.uid}>
               <TableCell>{u.name}</TableCell>
               <TableCell>{u.address}</TableCell>
               <TableCell>{u.phoneNumber}</TableCell>

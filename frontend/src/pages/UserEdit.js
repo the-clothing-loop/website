@@ -34,7 +34,7 @@ const UserEdit = () => {
   useEffect(() => {
     (async () => {
       try {
-        const user = await getUser(userId);
+        const user = await getUserById(userId);
         setUser(user);
         setChainId(user.chainId);
         const fields = ["name", "address", "email", "phoneNumber"];
