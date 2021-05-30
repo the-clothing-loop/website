@@ -90,7 +90,7 @@ const ChainMemberList = () => {
               <TableCell>{u.phoneNumber}</TableCell>
               <TableCell>{u.email}</TableCell>
               <TableCell align="right">
-                <Link to={`/users/${u.id}/edit`}>
+                <Link to={`/users/${u.uid}/edit`}>
                   <EditIcon />
                 </Link>
               </TableCell>

@@ -12,7 +12,8 @@ import theme from "../util/theme";
 // Project resources
 import AppIcon from "../images/sfm_logo.png";
 
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
