@@ -1,8 +1,6 @@
-const getUserLocation = (accessToken: string) => {
-  return fetch(`https://ipinfo.io/json?token=${accessToken}`)
-    .then((response) => {
-      return response.json();
-    })
+const getUserLocation = async (accessToken: string) => {
+  const response = await fetch(`https://ipinfo.io/json?token=${accessToken}`);
+  return response.json();
 };
 
 export default getUserLocation;

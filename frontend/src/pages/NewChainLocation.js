@@ -43,19 +43,17 @@ const NewChainLocation = (props) => {
 
   //location details
   const getLocation = async (longitude, latitude) => {
-    await fetch(
+    const response = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken.mapboxApiAccessToken}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setChain({
-          locality: data.features[0].place_name.split(",")[0],
-          place: data.features[0].place_name
-            .split(",")
-            .slice(1)
-            .join(","),
-        });
-      });
+    );
+    const data = await response.json();
+    setChain({
+      locality: data.features[0].place_name.split(",")[0],
+      place: data.features[0].place_name
+        .split(",")
+        .slice(1)
+        .join(","),
+    });
   };
 
   useEffect(() => {

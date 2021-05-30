@@ -13,20 +13,18 @@ const getChain = async (chainId: string) => {
 // Return data for all chains
 const getChains = async () => {
   const snapshot = await db.collection("chains").get();
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IChain));
+  return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as IChain));
 };
 
-const addChain = (chain: IChain) => {
-  db.collection("chains")
-    .add(chain)
-    .then((docRef) => {
-      console.log(
-        `Document successfully written with id: ${docRef.id}! and content ${chain}`
-      );
-    })
-    .catch((error) => {
-      console.error("Error writing document: ", error);
-    });
+const addChain = async (chain: IChain) => {
+  try {
+    const docRef = await db.collection("chains").add(chain);
+    console.log(
+      `Document successfully written with id: ${docRef.id}! and content ${chain}`
+    );
+  } catch (error) {
+    console.error("Error writing document: ", error);
+  }
 };
 
 const updateChain = (chainId: string, chain: IChain) => {

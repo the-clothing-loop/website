@@ -32,20 +32,27 @@ const Map = () => {
   const [selectedChain, setSelectedChain] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  useEffect(() => {
-    getChains().then((response) => {
-      setChainData(response);
-    });
-    getUserLocation(accessToken.ipinfoApiAccessToken).then((response) => {
+  useEffect(async () => {
+    const chainResponse = await getChains();
+    setChainData(chainResponse);
+    const userLocationResponse = await getUserLocation(accessToken.ipinfoApiAccessToken);
+    if (userLocationResponse.loc) {
       setViewport({
-        latitude: Number(response.loc.split(",")[0]),
-        longitude: Number(response.loc.split(",")[1]),
+        latitude: Number(userLocationResponse.loc.split(",")[0]),
+        longitude: Number(userLocationResponse.loc.split(",")[1]),
         width: "100vw",
         height: "100vh",
         zoom: 10,
       });
-    });
+    } else {
+      console.error("Couldn't receive location");
+      console.error(userLocationResponse);
+    }
   }, []);
+
+  if (!accessToken.mapboxApiAccessToken || !accessToken.ipinfoApiAccessToken) {
+    return <div>Access tokens not configured</div>;
+  }
 
   return (
     <ReactMapGL
