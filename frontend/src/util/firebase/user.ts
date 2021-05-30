@@ -2,6 +2,7 @@ import db from "./firebaseConfig";
 import { IUser } from "../../types";
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/functions";
 
 const createUserCallable = firebase.functions().httpsCallable('createUser');
 const updateUserCallable = firebase.functions().httpsCallable('updateUser');
