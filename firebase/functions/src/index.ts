@@ -12,9 +12,10 @@ const ADMIN_EMAILS = [
 
 const VERIFY_URL = "https://clothingchain.com/verify-email";
 const VERIFY_SUBJECT = "Verify e-mail for clothing chain";
+const REGION = "europe-west1";
 
 export const createUser =
-  functions.https.onRequest(
+  functions.region(REGION).https.onRequest(
       async (request: functions.Request, response: functions.Response) => {
         const [
           email,
@@ -87,7 +88,7 @@ export const createUser =
       });
 
 export const updateUser =
-  functions.https.onRequest(
+  functions.region(REGION).https.onRequest(
       async (request: functions.Request, response: functions.Response) => {
         const [
           uid,
@@ -139,7 +140,7 @@ export const updateUser =
       });
 
 export const getUserById =
-  functions.https.onRequest(
+  functions.region(REGION).https.onRequest(
       async (request: functions.Request, response: functions.Response) => {
         const idToken = request.body.idToken;
         const uid = request.body.uid;
@@ -157,14 +158,14 @@ export const getUserById =
             address: userData.get("address"),
             checkedNewsletter: userData.get("checkedNewsletter"),
             checkedActionsNewsletter: userData.get("checkedActionsNewsletter"),
-          })).status(200).send();
+          })).status(200).end();
         } else {
           response.status(403).end();
         }
       });
 
 export const getUserByEmail =
-  functions.https.onRequest(
+  functions.region(REGION).https.onRequest(
       async (request: functions.Request, response: functions.Response) => {
         const idToken = request.body.idToken;
         const email = request.body.email;
@@ -182,7 +183,7 @@ export const getUserByEmail =
             address: userData.get("address"),
             checkedNewsletter: userData.get("checkedNewsletter"),
             checkedActionsNewsletter: userData.get("checkedActionsNewsletter"),
-          }));
+          })).end();
         } else {
           response.status(403).end();
         }
