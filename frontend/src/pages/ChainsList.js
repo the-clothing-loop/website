@@ -17,56 +17,45 @@ import { Typography } from "@material-ui/core";
 const ChainsList = () => {
   const { t } = useTranslation();
   const [chains, setChains] = useState();
-  const [sortedChains, setSortedChains] = useState();
 
   //TODO get host details and render infos
 
   useEffect(() => {
-    getChains().then((response) => setChains(response));
+    getChains().then((response) => {
+      let sortedChains = response.sort((a, b) => a.name.localeCompare(b.name));
+      return setChains(sortedChains);
+    });
   }, []);
 
-  const sortArray = () => {
-    if (chains == null) {
-      return chains;
-    } else {
-      let sortedArray = chains.sort((a, b) => a.name.localeCompare(b.name));
-      setSortedChains(sortedArray);
-      return sortedArray;
-    }
-  };
-
-  useEffect(() => {
-    sortArray();
-  }, [chains]);
-
   return chains ? (
-    <Table>
-      <TableHead>
-        {" "}
-        <Typography variant="h3" component="h2">
-          All Chains{" "}
-        </Typography>
-        <TableRow>
-          <TableCell>{"chain name"}</TableCell>
-          <TableCell>{"active users"}</TableCell>
-          <TableCell>{"host name"}</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {chains.map((chain) => (
-          <TableRow key={chain.id}>
-            <TableCell>{chain.name}</TableCell>
+    <div>
+      <Typography variant="h3" component="h2" align='center'>
+        All Chains
+      </Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>{"chain name"}</TableCell>
             <TableCell>{"active users"}</TableCell>
             <TableCell>{"host name"}</TableCell>
-            <TableCell align="right">
-              <Link to={`/chains/${chain.id}/information`}>
-                <KeyboardArrowRightIcon />
-              </Link>
-            </TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {chains.map((chain) => (
+            <TableRow key={chain.id}>
+              <TableCell>{chain.name}</TableCell>
+              <TableCell>{"active users"}</TableCell>
+              <TableCell>{"host name"}</TableCell>
+              <TableCell align="right">
+                <Link to={`/chains/${chain.id}/information`}>
+                  <KeyboardArrowRightIcon />
+                </Link>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   ) : null;
 };
 
