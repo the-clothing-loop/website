@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 // Material UI
@@ -19,17 +19,15 @@ const ChainsList = () => {
   const [chains, setChains] = useState();
 
   //TODO get host details and render infos
-
-  useEffect(() => {
-    getChains().then((response) => {
-      let sortedChains = response.sort((a, b) => a.name.localeCompare(b.name));
-      return setChains(sortedChains);
-    });
+  useEffect(async () => {
+    let chains = await getChains();
+    let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
+    setChains(sortedChains);
   }, []);
 
   return chains ? (
     <div>
-      <Typography variant="h3" component="h2" align='center'>
+      <Typography variant="h3" component="h2" align="center">
         All Chains
       </Typography>
       <Table>
