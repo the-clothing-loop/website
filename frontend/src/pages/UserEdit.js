@@ -11,7 +11,7 @@ import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
 
 // Project resources
-import { getUser, updateUser } from "../util/firebase/user";
+import { getUserById, updateUser } from "../util/firebase/user";
 import { PhoneFormField, TextFormField } from "../components/FormFields";
 
 const UserEdit = () => {
@@ -34,7 +34,7 @@ const UserEdit = () => {
   useEffect(() => {
     (async () => {
       try {
-        const user = await getUser(userId);
+        const user = await getUserById(userId);
         setUser(user);
         setChainId(user.chainId);
         const fields = ["name", "address", "email", "phoneNumber"];

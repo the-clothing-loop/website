@@ -16,7 +16,7 @@ import ThreeColumnLayout from "../components/ThreeColumnLayout";
 
 // Project resources
 import AppIcon from "../images/sfm_logo.png";
-import { addUser, validateNewUser } from "../util/firebase/user";
+import { createUser, validateNewUser } from "../util/firebase/user";
 import { TextFormField, PhoneFormField } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { getChain } from "../util/firebase/chain";
@@ -46,8 +46,7 @@ const Signup = () => {
     };
     console.log(user);
     // TODO: do something with validation info for new user (e.g. display this)
-    const userValid = await validateNewUser(user.email);
-    addUser(user);
+    await createUser(user);
     setSubmitted(true);
   };
 

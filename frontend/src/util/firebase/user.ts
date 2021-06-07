@@ -1,44 +1,45 @@
 import db from "./firebaseConfig";
 import { IUser } from "../../types";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/functions";
 
-const addUser = (user: IUser) => {
-  db.collection("users")
-    .add( user )
-    .then((docRef) => {
-      console.log(`Document successfully written with id ${docRef.id}!`);
-    })
-    .catch((error) => {
-      console.error("Error writing document: ", error);
-    });
+const createUserCallable = firebase.functions().httpsCallable('createUser');
+const updateUserCallable = firebase.functions().httpsCallable('updateUser');
+const getUserByIdCallable = firebase.functions().httpsCallable('getUserById');
+const getUserByEmailCallable = firebase.functions().httpsCallable('getUserByEmail');
+
+const createUser = async (user: IUser, password: string): Promise<void> => {
+    await createUserCallable({ password, ...user });
 };
 
-const getUser = async (userId: string) => {
-  const userDoc = await db.collection("users").doc(userId).get();
-  return userDoc.data() as IUser;
+const getUserById = async (userId: string): Promise<IUser> => {
+    return (await getUserByIdCallable({
+      uid: userId,
+      idToken: await firebase.auth().currentUser?.getIdToken(true)
+    })).data as IUser;
 };
 
-const getUsersForChain = async (chainId: string) => {
-  const snapshot = await db
-    .collection("users")
-    .where("chainId", "==", chainId)
-    .get();
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IUser));
+const getUserByEmail = async (email: string): Promise<IUser> => {
+    return (await getUserByEmailCallable({
+      email: email,
+      idToken: await firebase.auth().currentUser?.getIdToken(true)
+    })).data as IUser;
 };
 
-const getAllUsers = async () => {
-  const snapshot = await db.collection("users").get();
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IUser));
+const getUsersForChain = async (chainId: string): Promise<IUser[]> => {
+    const idToken = await firebase.auth().currentUser?.getIdToken(true)
+    const snapshot = await db
+        .collection("users")
+        .where("chainId", "==", chainId)
+        .get();
+    var userRetrieval = snapshot.docs.map(async (doc: any) => (await getUserByIdCallable({ uid: doc.id, idToken })).data);
+    return (await Promise.all(userRetrieval)) as IUser[];
 };
 
-// Return true if user email is not in our database yet
-const validateNewUser = async (email: string) => {
-  const users = await getAllUsers();
-  const emails = users.map((user) => user.email as string);
-  return !emails.includes(email);
+const updateUser = async (user: IUser): Promise<void> => {
+    const idToken = await firebase.auth().currentUser?.getIdToken(true)
+    await updateUserCallable({ idToken, ...user });
 };
 
-const updateUser = (userId: string, user: IUser) => {
-  db.collection("users").doc(userId).set(user, { merge: true });
-};
-
-export { addUser, getUser, getUsersForChain, getAllUsers, validateNewUser, updateUser };
+export { createUser, getUserById, getUserByEmail, getUsersForChain, updateUser };

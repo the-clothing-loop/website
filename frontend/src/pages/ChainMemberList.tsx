@@ -84,13 +84,13 @@ const ChainMemberList = () => {
         </TableHead>
         <TableBody>
           {users.map((u: IUser) => (
-            <TableRow key={u.id}>
+            <TableRow key={u.uid}>
               <TableCell>{u.name}</TableCell>
               <TableCell>{u.address}</TableCell>
               <TableCell>{u.phoneNumber}</TableCell>
               <TableCell>{u.email}</TableCell>
               <TableCell align="right">
-                <Link to={`/users/${u.id}/edit`}>
+                <Link to={`/users/${u.uid}/edit`}>
                   <EditIcon />
                 </Link>
               </TableCell>

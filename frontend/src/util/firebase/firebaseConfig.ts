@@ -1,17 +1,17 @@
 // Firebase admin
 import firebase from "firebase/app";
 import "firebase/firestore";
-import dotenv from "dotenv";
-dotenv.config();
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: "fir-map-304420.firebaseapp.com",
-  projectId: "firebase-map-304420",
-  storageBucket: "firebase-map-304420.appspot.com",
-  messagingSenderId: "200800205098",
-  appId: "1:200800205098:web:216dbaf88f8d323ba50653",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
+
+console.debug(firebaseConfig);
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);

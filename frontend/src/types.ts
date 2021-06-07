@@ -7,10 +7,13 @@ export interface IChain {
 }
 
 export interface IUser {
-  id: string;
+  uid: string;
   email: string;
   address: string;
   name: string;
   phoneNumber: string;
   chainId: string;
+  emailVerified: boolean;
+  checkedNewsletter: boolean;
+  checkedActionsNewsletter: boolean;
 }
