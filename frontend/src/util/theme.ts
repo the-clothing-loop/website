@@ -41,5 +41,19 @@ const theme = {
   geocoder: {
     height: "20px",
   },
+
+  /*styling for table*/
+  root2: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    width: 400,
+  },
+  input: {
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
 };
 export default theme;

@@ -13,7 +13,10 @@ import NewChainSignup from "./pages/NewChainSignup";
 import Signup from "./pages/Signup";
 import NewChainLocation from "./pages/NewChainLocation";
 import UserEdit from "./pages/UserEdit";
-import ChainEdit from './pages/ChainEdit'
+import ChainEdit from "./pages/ChainEdit";
+import ChainsList from "./pages/ChainsList";
+import ChainInformation from "./pages/ChainInformation";
+import About from "./pages/About";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -31,12 +34,22 @@ const App = () => {
               <Route exact path="/" component={Map} />
               <Route path="/login" component={Login} />
               <Route path="/signup" component={Signup} />
+              <Route exact path="/about" component={About} />
               <Route path="/thankyou" component={Thankyou} />
-              <Route exact path="/chains/:chainId" component={ChainMemberList} />
+              <Route
+                exact
+                path="/chains/:chainId"
+                component={ChainMemberList}
+              />
               <Route path="/chains/:chainId/edit" component={ChainEdit} />
               <Route exact path="/newchain-signup" component={NewChainSignup} />
               <Route path="/newchain" component={NewChainLocation} />
               <Route path="/users/:userId/edit" component={UserEdit} />
+              <Route exact path="/chains" component={ChainsList} />
+              <Route
+                path="/chains/:chainId/information"
+                component={ChainInformation}
+              />
             </Switch>
           </div>
         </Router>

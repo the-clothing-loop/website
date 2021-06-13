@@ -97,7 +97,6 @@ const NewChainLocation = (props) => {
   //set new chain description
   const handleChange = (e) => {
     setDescription(e.target.value);
-    console.log(description);
   };
 
   return changePage ? (
@@ -131,7 +130,7 @@ const NewChainLocation = (props) => {
                   longitude={marker.longitude}
                   closeOnClick={false}
                   onClose={() => setShowPopup(false)}
-                  className={'new-chain-popup'}
+                  className={"new-chain-popup"}
                 >
                   <Card className={styles.root}>
                     <CardContent>
@@ -139,7 +138,7 @@ const NewChainLocation = (props) => {
                         className={styles.title}
                         color="textPrimary"
                         component="h1"
-                        variant='h5'
+                        variant="h5"
                         gutterBottom
                       >
                         {chain.locality}
@@ -148,7 +147,7 @@ const NewChainLocation = (props) => {
                         className={styles.title}
                         color="textPrimary"
                         component="h1"
-                        variant='caption'
+                        variant="caption"
                         gutterBottom
                       >
                         {chain.place}
