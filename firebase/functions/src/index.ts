@@ -10,48 +10,42 @@ const ADMIN_EMAILS = [
   "timstokman@gmail.com",
 ];
 
-const VERIFY_URL = "https://clothingchain.com/verify-email";
+const VERIFY_URL = "https://localhost/verify-email";
 const VERIFY_SUBJECT = "Verify e-mail for clothing chain";
 const REGION = "europe-west1";
 
 export const createUser =
   functions.region(REGION).https.onRequest(
       async (request: functions.Request, response: functions.Response) => {
-        const [
-          email,
-          chainId,
-          name,
-          phoneNumber,
-          checkedNewsletter,
-          checkedActionsNewsletter,
-          address,
-          password,
-        ] = [
-          request.body.email,
-          request.body.chainId,
-          request.body.name,
-          request.body.phoneNumber,
-          request.body.checkedNewsletter === true,
-          request.body.checkedActionsNewsletter === true,
-          request.body.address,
-          request.body.password,
-        ];
-        if (await admin.auth().getUserByEmail(email)) {
-          functions.logger.error("Trying to create user that already exists");
-          response.status(500).end();
-          return;
-        }
         try {
+          functions.logger.debug("createUser parameters", request.body);
+          const [
+            email,
+            chainId,
+            name,
+            phoneNumber,
+            checkedNewsletter,
+            checkedActionsNewsletter,
+            address,
+          ] = [
+            request.body.email,
+            request.body.chainId,
+            request.body.name,
+            request.body.phoneNumber,
+            request.body.checkedNewsletter === true,
+            request.body.checkedActionsNewsletter === true,
+            request.body.address,
+          ];
           const userRecord =
                   await admin.auth()
                       .createUser({
                         email: email,
                         phoneNumber: phoneNumber,
-                        password: password,
                         displayName: name,
                         disabled: false,
                       });
-          const verificationEmail =
+          functions.logger.debug("created user", userRecord);
+          const verificationLink =
               await admin.auth()
                   .generateEmailVerificationLink(
                       email,
@@ -59,6 +53,8 @@ export const createUser =
                         handleCodeInApp: false,
                         url: `${VERIFY_URL}?email=${email}`,
                       });
+          const verificationEmail = `Click here <a href="${verificationLink}">here</a> to verify your e-mail`;
+          functions.logger.debug("sending verification email", verificationEmail);
           await db.collection("mail")
               .add({
                 to: email,
@@ -67,6 +63,7 @@ export const createUser =
                   html: verificationEmail,
                 },
               });
+          functions.logger.debug("Adding user supplemental information to firebase");
           await db.collection("users")
               .doc(userRecord.uid)
               .set({
@@ -76,43 +73,45 @@ export const createUser =
                 checkedActionsNewsletter,
               });
           if (ADMIN_EMAILS.includes(email)) {
+            functions.logger.debug(`Adding user ${email} as admin`);
             await admin.auth()
                 .setCustomUserClaims(userRecord.uid, {role: "admin"});
           }
           // TODO: Subscribe user in mailchimp if needed
           await response.status(200).end();
-        } catch (error) {
-          functions.logger.error("Error creating user: ", error);
-          response.status(500).end();
+        } catch (e) {
+          functions.logger.error(e);
+          throw e;
         }
       });
 
 export const updateUser =
   functions.region(REGION).https.onRequest(
       async (request: functions.Request, response: functions.Response) => {
-        const [
-          uid,
-          chainId,
-          name,
-          phoneNumber,
-          checkedNewsletter,
-          checkedActionsNewsletter,
-          address,
-          idToken,
-        ] = [
-          request.body.uid,
-          request.body.chainId,
-          request.body.name,
-          request.body.phoneNumber,
-          request.body.checkedNewsletter === true,
-          request.body.checkedActionsNewsletter === true,
-          request.body.address,
-          request.body.idToken,
-        ];
-        const claims = await admin.auth().verifyIdToken(idToken);
+        try {
+          functions.logger.debug("updateUser parameters", request.body);
+          const [
+            uid,
+            chainId,
+            name,
+            phoneNumber,
+            checkedNewsletter,
+            checkedActionsNewsletter,
+            address,
+            idToken,
+          ] = [
+            request.body.uid,
+            request.body.chainId,
+            request.body.name,
+            request.body.phoneNumber,
+            request.body.checkedNewsletter === true,
+            request.body.checkedActionsNewsletter === true,
+            request.body.address,
+            request.body.idToken,
+          ];
+          const claims = await admin.auth().verifyIdToken(idToken);
 
-        if (claims.uid === uid || claims.role === "admin") {
-          try {
+          if (claims.uid === uid || claims.role === "admin") {
             const userRecord =
                       await admin.auth()
                           .updateUser(
@@ -122,6 +121,7 @@ export const updateUser =
                                 displayName: name,
                                 disabled: false,
                               });
+            functions.logger.debug("updated user", userRecord);
             await db.collection("users")
                 .doc(userRecord.uid)
                 .set({
@@ -132,16 +132,17 @@ export const updateUser =
                 });
             // TODO: Update user in mailchimp if needed
             await response.status(200).end();
-          } catch (error) {
-            functions.logger.info("Error updating user: ", error);
-            response.status(500).end();
           }
+        } catch (e) {
+          functions.logger.error(e);
+          throw e;
         }
       });
 
 export const getUserById =
   functions.region(REGION).https.onRequest(
       async (request: functions.Request, response: functions.Response) => {
+        functions.logger.debug("getUserById parameters", request.body);
         const idToken = request.body.idToken;
         const uid = request.body.uid;
         const claims = await admin.auth().verifyIdToken(idToken);
@@ -167,6 +168,7 @@ export const getUserById =
 export const getUserByEmail =
   functions.region(REGION).https.onRequest(
       async (request: functions.Request, response: functions.Response) => {
+        functions.logger.debug("getUserByEmail parameters", request.body);
         const idToken = request.body.idToken;
         const email = request.body.email;
         const claims = await admin.auth().verifyIdToken(idToken);
