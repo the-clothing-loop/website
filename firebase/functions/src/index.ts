@@ -10,7 +10,8 @@ const ADMIN_EMAILS = [
   "timstokman@gmail.com",
 ];
 
-const VERIFY_URL = "https://localhost/verify-email";
+const BASE_DOMAIN = "http://localhost:3000";
+const VERIFY_URL = BASE_DOMAIN + "/verify-email";
 const VERIFY_SUBJECT = "Verify e-mail for clothing chain";
 const REGION = "europe-west1";
 
