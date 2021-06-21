@@ -31,10 +31,10 @@ const App = () => {
           <Navbar />
           <div className="container">
             <Switch>
-              <Route exact path="/" component={Map} />
+              <Route exact path="/" component={About} />
               <Route path="/login" component={Login} />
               <Route path="/signup" component={Signup} />
-              <Route exact path="/about" component={About} />
+              <Route exact path="/map" component={Map} />
               <Route path="/thankyou" component={Thankyou} />
               <Route
                 exact
@@ -42,8 +42,8 @@ const App = () => {
                 component={ChainMemberList}
               />
               <Route path="/chains/:chainId/edit" component={ChainEdit} />
-              <Route exact path="/newchain-signup" component={NewChainSignup} />
-              <Route path="/newchain" component={NewChainLocation} />
+              <Route exact path="/newchain-location" component={NewChainLocation} />
+              <Route path="/newchain" component={NewChainSignup} />
               <Route path="/users/:userId/edit" component={UserEdit} />
               <Route exact path="/chains" component={ChainsList} />
               <Route

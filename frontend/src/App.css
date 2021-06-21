@@ -57,9 +57,8 @@ img#marker {
 }
 
 .new-chain-popup {
-  position: relative !important;
   transform: none !important;
-  float: right;
+  position: absolute;
   margin: 2%;
 }
 .mapboxgl-popup-tip {
@@ -69,7 +68,7 @@ img#marker {
   background: #ffffff;
   display: flex;
   flex-direction: column;
-  width: 250px;
+  width: 400px;
   height: auto;
   padding: 0 !important;
   position: absolute;
@@ -88,6 +87,8 @@ img#marker {
   background-color: white;
   position: relative;
   width: max-content;
+  display: flex;
+  flex-direction: column;
 }
 
 /* card styling */
@@ -95,24 +96,36 @@ img#marker {
   padding: 5%;
 }
 
-.chain-address {
-  padding-bottom: 10%;
+.MuiCardContent-root {
+  display: flex;
+  flex-direction: column;
+}
+
+.MuiCardContent-root p {
+  margin-bottom: 5%;
 }
 
 .card-button {
   position: relative;
   margin: 15px 15px 15px 15px;
-  /* left: 50%;
-  transform: translateX(-50%); */
   width: 100%;
-}
-
-.MuiCardActions-root {
-  flex-direction: column;
 }
 
 .mapboxgl-popup-close-button {
   z-index: 11;
+}
+
+.chain-categories {
+  width: 100%;
+  display: flex;
+  padding-top: 5%;
+}
+.chain-categories p {
+  padding: 2% 4%;
+  border-radius: 5px;
+  background-color: #e5e0f1;
+  display: flex;
+  margin-right: 2%;
 }
 
 /*new chain card styling*/

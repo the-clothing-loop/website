@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import theme from "../util/theme";
 import { useTranslation } from "react-i18next";
 import MuiPhoneInput from "material-ui-phone-number";
+import { useState } from "react";
 
 const TextFormField = ({ name, inputRef, email }) => {
   const { t } = useTranslation();
@@ -22,17 +23,24 @@ const TextFormField = ({ name, inputRef, email }) => {
   );
 };
 
-const PhoneFormField = ({ inputRef }) => {
+const PhoneFormField = (props) => {
   const { t } = useTranslation();
+
+  const handleChange = (e) => {
+    props.onChange(e);
+  };
+
   return (
     <MuiPhoneInput
       defaultCountry="nl"
+      regions={"europe"}
       fullWidth
       label={t("phoneNumber")}
       required={true}
       name="phoneNumber"
-      inputRef={inputRef}
+      onChange={handleChange}
+      phoneNumber={props.value}
     />
   );
 };
-export { TextFormField , PhoneFormField};
+export { TextFormField, PhoneFormField };
