@@ -10,13 +10,15 @@ const ADMIN_EMAILS = [
   "timstokman@gmail.com",
 ];
 
-const VERIFY_URL = "https://clothingchain.com/verify-email";
+const BASE_DOMAIN = "http://localhost:3000";
+const VERIFY_URL = BASE_DOMAIN + "/verify-email";
 const VERIFY_SUBJECT = "Verify e-mail for clothing chain";
 const REGION = "europe-west1";
 
 export const createUser =
-  functions.region(REGION).https.onRequest(
-      async (request: functions.Request, response: functions.Response) => {
+  functions.region(REGION).https.onCall(
+      async (data: any) => {
+        functions.logger.debug("createUser parameters", data);
         const [
           email,
           chainId,
@@ -25,71 +27,64 @@ export const createUser =
           checkedNewsletter,
           checkedActionsNewsletter,
           address,
-          password,
         ] = [
-          request.body.email,
-          request.body.chainId,
-          request.body.name,
-          request.body.phoneNumber,
-          request.body.checkedNewsletter === true,
-          request.body.checkedActionsNewsletter === true,
-          request.body.address,
-          request.body.password,
+          data.email,
+          data.chainId,
+          data.name,
+          data.phoneNumber,
+          data.checkedNewsletter === true,
+          data.checkedActionsNewsletter === true,
+          data.address,
         ];
-        if (await admin.auth().getUserByEmail(email)) {
-          functions.logger.error("Trying to create user that already exists");
-          response.status(500).end();
-          return;
-        }
-        try {
-          const userRecord =
-                  await admin.auth()
-                      .createUser({
-                        email: email,
-                        phoneNumber: phoneNumber,
-                        password: password,
-                        displayName: name,
-                        disabled: false,
-                      });
-          const verificationEmail =
-              await admin.auth()
-                  .generateEmailVerificationLink(
-                      email,
-                      {
-                        handleCodeInApp: false,
-                        url: `${VERIFY_URL}?email=${email}`,
-                      });
-          await db.collection("mail")
-              .add({
-                to: email,
-                message: {
-                  subject: VERIFY_SUBJECT,
-                  html: verificationEmail,
-                },
-              });
-          await db.collection("users")
-              .doc(userRecord.uid)
-              .set({
-                chainId,
-                address,
-                checkedNewsletter,
-                checkedActionsNewsletter,
-              });
-          if (ADMIN_EMAILS.includes(email)) {
+        const userRecord =
+                await admin.auth()
+                    .createUser({
+                      email: email,
+                      phoneNumber: phoneNumber,
+                      displayName: name,
+                      disabled: false,
+                    });
+        functions.logger.debug("created user", userRecord);
+        const verificationLink =
             await admin.auth()
-                .setCustomUserClaims(userRecord.uid, {role: "admin"});
-          }
-          // TODO: Subscribe user in mailchimp if needed
-          await response.status(200).end();
-        } catch (error) {
-          functions.logger.error("Error creating user: ", error);
-          response.status(500).end();
+                .generateEmailVerificationLink(
+                    email,
+                    {
+                      handleCodeInApp: false,
+                      url: `${VERIFY_URL}?email=${email}`,
+                    });
+        const verificationEmail = `Click here <a href="${verificationLink}">here</a> to verify your e-mail`;
+        functions.logger.debug("sending verification email", verificationEmail);
+        await db.collection("mail")
+            .add({
+              to: email,
+              message: {
+                subject: VERIFY_SUBJECT,
+                html: verificationEmail,
+              },
+            });
+        functions.logger.debug("Adding user supplemental information to firebase");
+        await db.collection("users")
+            .doc(userRecord.uid)
+            .set({
+              chainId,
+              address,
+              checkedNewsletter,
+              checkedActionsNewsletter,
+            });
+        if (ADMIN_EMAILS.includes(email)) {
+          functions.logger.debug(`Adding user ${email} as admin`);
+          await admin.auth()
+              .setCustomUserClaims(userRecord.uid, {role: "admin"});
         }
+        // TODO: Subscribe user in mailchimp if needed
+        return {};
       });
 
 export const updateUser =
-  functions.region(REGION).https.onRequest(
-      async (request: functions.Request, response: functions.Response) => {
+  functions.region(REGION).https.onCall(
+      async (data: any, context: functions.https.CallableContext) => {
+        functions.logger.debug("updateUser parameters", data);
         const [
           uid,
           chainId,
@@ -98,57 +93,51 @@ export const updateUser =
           checkedNewsletter,
           checkedActionsNewsletter,
           address,
-          idToken,
         ] = [
-          request.body.uid,
-          request.body.chainId,
-          request.body.name,
-          request.body.phoneNumber,
-          request.body.checkedNewsletter === true,
-          request.body.checkedActionsNewsletter === true,
-          request.body.address,
-          request.body.idToken,
+          data.uid,
+          data.chainId,
+          data.name,
+          data.phoneNumber,
+          data.checkedNewsletter === true,
+          data.checkedActionsNewsletter === true,
+          data.address,
         ];
-        const claims = await admin.auth().verifyIdToken(idToken);
 
-        if (claims.uid === uid || claims.role === "admin") {
-          try {
-            const userRecord =
-                      await admin.auth()
-                          .updateUser(
-                              uid,
-                              {
-                                phoneNumber: phoneNumber,
-                                displayName: name,
-                                disabled: false,
-                              });
-            await db.collection("users")
-                .doc(userRecord.uid)
-                .set({
-                  chainId,
-                  address,
-                  checkedNewsletter,
-                  checkedActionsNewsletter,
-                });
-            // TODO: Update user in mailchimp if needed
-            await response.status(200).end();
-          } catch (error) {
-            functions.logger.info("Error updating user: ", error);
-            response.status(500).end();
-          }
+        if (context.auth?.uid === uid || context.auth?.token?.role === "admin") {
+          const userRecord =
+                    await admin.auth()
+                        .updateUser(
+                            uid,
+                            {
+                              phoneNumber: phoneNumber,
+                              displayName: name,
+                              disabled: false,
+                            });
+          functions.logger.debug("updated user", userRecord);
+          await db.collection("users")
+              .doc(userRecord.uid)
+              .set({
+                chainId,
+                address,
+                checkedNewsletter,
+                checkedActionsNewsletter,
+              });
+          // TODO: Update user in mailchimp if needed
+          return {};
+        } else {
+          throw new functions.https.HttpsError("permission-denied", "You don't have permission to update this user");
         }
       });
 
 export const getUserById =
-  functions.region(REGION).https.onRequest(
-      async (request: functions.Request, response: functions.Response) => {
-        const idToken = request.body.idToken;
-        const uid = request.body.uid;
-        const claims = await admin.auth().verifyIdToken(idToken);
+  functions.region(REGION).https.onCall(
+      async (data: any, context: functions.https.CallableContext) => {
+        functions.logger.debug("getUserById parameters", data);
+        const uid = data.uid;
         const user = await admin.auth().getUser(uid);
-        if (user && (claims.uid === uid || claims.role === "admin")) {
+        if (user && (context.auth?.uid === uid || context.auth?.token?.role === "admin")) {
           const userData = await db.collection("users").doc(uid).get();
-          response.send(JSON.stringify({
+          return {
             uid: user.uid,
             email: user.email,
             name: user.displayName,
@@ -158,22 +147,21 @@ export const getUserById =
             address: userData.get("address"),
             checkedNewsletter: userData.get("checkedNewsletter"),
             checkedActionsNewsletter: userData.get("checkedActionsNewsletter"),
-          })).status(200).end();
+          };
         } else {
-          response.status(403).end();
+          throw new functions.https.HttpsError("permission-denied", "You don't have permission to retrieve information about this user");
         }
       });
 
 export const getUserByEmail =
-  functions.region(REGION).https.onRequest(
-      async (request: functions.Request, response: functions.Response) => {
-        const idToken = request.body.idToken;
-        const email = request.body.email;
-        const claims = await admin.auth().verifyIdToken(idToken);
+  functions.region(REGION).https.onCall(
+      async (data: any, context: functions.https.CallableContext) => {
+        functions.logger.debug("getUserByEmail parameters", data);
+        const email = data.email;
         const user = await admin.auth().getUserByEmail(email);
-        if (user && (claims.uid === user.uid || claims.role === "admin")) {
+        if (user && (context.auth?.uid === user.uid || context?.auth?.token?.role === "admin")) {
           const userData = await db.collection("users").doc(user.uid).get();
-          response.send(JSON.stringify({
+          return {
             uid: user.uid,
             email: user.email,
             name: user.displayName,
@@ -183,8 +171,8 @@ export const getUserByEmail =
             address: userData.get("address"),
             checkedNewsletter: userData.get("checkedNewsletter"),
             checkedActionsNewsletter: userData.get("checkedActionsNewsletter"),
-          })).end();
+          };
         } else {
-          response.status(403).end();
+          throw new functions.https.HttpsError("permission-denied", "You don't have permission to retrieve information about this user");
         }
       });

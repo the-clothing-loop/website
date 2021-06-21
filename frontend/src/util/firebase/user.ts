@@ -4,13 +4,15 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/functions";
 
-const createUserCallable = firebase.functions().httpsCallable('createUser');
-const updateUserCallable = firebase.functions().httpsCallable('updateUser');
-const getUserByIdCallable = firebase.functions().httpsCallable('getUserById');
-const getUserByEmailCallable = firebase.functions().httpsCallable('getUserByEmail');
+const functions = firebase.app().functions(process.env.REACT_APP_FIREBASE_REGION);
 
-const createUser = async (user: IUser, password: string): Promise<void> => {
-    await createUserCallable({ password, ...user });
+const createUserCallable = functions.httpsCallable('createUser');
+const updateUserCallable = functions.httpsCallable('updateUser');
+const getUserByIdCallable = functions.httpsCallable('getUserById');
+const getUserByEmailCallable = functions.httpsCallable('getUserByEmail');
+
+const createUser = async (user: IUser): Promise<void> => {
+    await createUserCallable(user);
 };
 
 const getUserById = async (userId: string): Promise<IUser> => {

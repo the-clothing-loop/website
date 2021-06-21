@@ -21,15 +21,16 @@ const Login = () => {
   const classes = makeStyles(theme)();
 
   const onSubmit = async (data) => {
+    const continueUrl = `${process.env.REACT_APP_BASE_DOMAIN}/signin?email=${encodeURI(data.email)}`;
     await firebase.auth()
                   .sendSignInLinkToEmail(
                     data.email,
                     {
-                      handleCodeInApp: false,
-                      url: `https://clothinchain.com/signin?email=${data.email}`
+                      handleCodeInApp: true,
+                      url: continueUrl
                     }
                   );
-    window.localStorage.set('emailForSignIn', data.email);
+    window.localStorage.setItem('emailForSignIn', data.email);
   };
 
   return (
@@ -46,7 +47,7 @@ const Login = () => {
           {t("login")}
         </Typography>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
-          <TextField {...register('email')} email={true} />
+          <TextField name="email" inputRef={register} />
           <Button
             type="submit"
             variant="contained"

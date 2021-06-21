@@ -31,10 +31,12 @@ const Signup = () => {
   const classes = makeStyles(theme)();
   
   // Get chain id from the URL and save to state
-  useEffect( async () => {
-    const chain = await getChain(location.state.chainId)
-    setChain(chain);
-  }, []);
+  useEffect(async () => {
+    if (location.state && location.state.chainId) {
+      const chain = await getChain(location.state.chainId)
+      setChain(chain);
+    }
+  }, [location]);
 
   // Gather data from form, validate and send to firebase
   const onSubmit = async (formData) => {
@@ -58,8 +60,8 @@ const Signup = () => {
       </Typography>
       <p>{chain.name}</p>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <TextFormField name="name" inputRef={register} email={false} />
-        <TextFormField name="email" inputRef={register} email={true} />
+        <TextFormField name="name" inputRef={register} />
+        <TextFormField name="email" inputRef={register} />
         <PhoneFormField inputRef={register} />
         <GeocoderSelector onResult={setGeocoderResult} />
         <div>
