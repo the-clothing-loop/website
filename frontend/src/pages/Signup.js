@@ -60,8 +60,8 @@ const Signup = () => {
       </Typography>
       <p>{chain.name}</p>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <TextFormField name="name" inputRef={register} email={false} />
-        <TextFormField name="email" inputRef={register} email={true} />
+        <TextFormField name="name" inputRef={register} />
+        <TextFormField name="email" inputRef={register} />
         <PhoneFormField inputRef={register} />
         <GeocoderSelector onResult={setGeocoderResult} />
         <div>

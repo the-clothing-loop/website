@@ -11,8 +11,8 @@ const updateUserCallable = functions.httpsCallable('updateUser');
 const getUserByIdCallable = functions.httpsCallable('getUserById');
 const getUserByEmailCallable = functions.httpsCallable('getUserByEmail');
 
-const createUser = async (user: IUser, password: string): Promise<void> => {
-    await createUserCallable({ password, ...user });
+const createUser = async (user: IUser): Promise<void> => {
+    await createUserCallable(user);
 };
 
 const getUserById = async (userId: string): Promise<IUser> => {
