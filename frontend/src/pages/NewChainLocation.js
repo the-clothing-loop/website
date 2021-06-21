@@ -19,11 +19,21 @@ import CardContent from "@material-ui/core/CardContent";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
   ipinfoApiAccessToken: process.env.REACT_APP_IPINFO_API_KEY,
 };
+
+const categories = [
+  { gender: "women" },
+  { gender: "men" },
+  { gender: "no gender" },
+];
 
 const NewChainLocation = (props) => {
   const styles = (theme) => ({
@@ -40,6 +50,7 @@ const NewChainLocation = (props) => {
   const [changePage, setChangePage] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [description, setDescription] = useState("");
+  const [chainCategories, setChainCategories] = useState([]);
 
   //location details
   const getLocation = async (longitude, latitude) => {
@@ -89,15 +100,28 @@ const NewChainLocation = (props) => {
       },
       name: chain.locality,
       description: description,
+      categories: { gender: chainCategories.map((cat) => `${cat}`) },
+      published: false,
     };
+
     addChain(newChain);
     setChangePage(false);
   };
 
   //set new chain description
+  const handleCheck = (e) => {
+    if (e.target.checked) {
+      setChainCategories([...chainCategories, e.target.value]);
+    } else {
+      setChainCategories(chainCategories.filter((id) => id !== e.target.value));
+    }
+  };
+
   const handleChange = (e) => {
     setDescription(e.target.value);
   };
+  console.log("chain cat", chainCategories);
+  console.log("desc", description);
 
   return changePage ? (
     <Grid container>
@@ -163,6 +187,18 @@ const NewChainLocation = (props) => {
                           onChange={handleChange}
                           fullWidth
                         ></TextField>
+                        <FormControl>
+                          <FormGroup>
+                            {categories.map((cat) => (
+                              <FormControlLabel
+                                control={<Checkbox onChange={handleCheck} />}
+                                label={cat.gender}
+                                value={cat.gender}
+                                key={cat.gender}
+                              />
+                            ))}
+                          </FormGroup>
+                        </FormControl>
                         <Button
                           variant="contained"
                           color="primary"
@@ -183,7 +219,7 @@ const NewChainLocation = (props) => {
       <Grid item xs></Grid>
     </Grid>
   ) : (
-    <Redirect to="/newchain-signup" />
+    <Redirect to="/thankyou" />
   );
 };
 

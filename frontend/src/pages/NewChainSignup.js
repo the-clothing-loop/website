@@ -69,7 +69,7 @@ const Signup = () => {
   );
 
   if (submitted) {
-    return <Redirect to={"/thankyou"} />;
+    return <Redirect to={"/newchain-location"} />;
   } else {
     return signupForm;
   }
