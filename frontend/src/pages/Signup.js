@@ -29,11 +29,12 @@ const Signup = () => {
   const { register, handleSubmit } = useForm();
   const location = useLocation();
   const classes = makeStyles(theme)();
-  
+  const [phone, setPhone] = useState("");
+
   // Get chain id from the URL and save to state
   useEffect(async () => {
     if (location.state && location.state.chainId) {
-      const chain = await getChain(location.state.chainId)
+      const chain = await getChain(location.state.chainId);
       setChain(chain);
     }
   }, [location]);
@@ -41,8 +42,10 @@ const Signup = () => {
   // Gather data from form, validate and send to firebase
   const onSubmit = async (formData) => {
     // TODO: allow only full addresses
+
     let user = {
       ...formData,
+      phoneNumber: phone,
       address: geocoderResult.result.place_name,
       chainId: chain.id,
     };
@@ -51,6 +54,10 @@ const Signup = () => {
     await createUser(user);
     setSubmitted(true);
   };
+
+  function handleChange(e) {
+    setPhone(e);
+  }
 
   let signupForm = (
     <ThreeColumnLayout>
@@ -62,7 +69,7 @@ const Signup = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextFormField name="name" inputRef={register} />
         <TextFormField name="email" inputRef={register} />
-        <PhoneFormField inputRef={register} />
+        <PhoneFormField onChange={handleChange} value={phone} />
         <GeocoderSelector onResult={setGeocoderResult} />
         <div>
           <FormGroup row>
