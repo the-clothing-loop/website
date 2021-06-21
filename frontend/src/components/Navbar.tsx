@@ -18,6 +18,7 @@ const Navbar = () => {
       <Toolbar className="nav-container">
         <Button color="inherit" component={Link} to="/" >{t("home")}</Button>
         <Button color="inherit" component={Link} to="/login" >{t("login")}</Button>
+        <Button color="inherit" component={Link} to="/signup" >{t("signup")}</Button>
         <Button color="inherit" component={Link} to="/newchain" >{t("startNewChain")}</Button>
         <Button color="inherit" component={Link} to="/about" >{t("about")}</Button>
       </Toolbar>
