@@ -249,7 +249,7 @@ const Map = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   history.push({
-                    pathname: "/signup",
+                    pathname: "/users/signup",
                     search: `?chain=${selectedChain.name}`,
                     state: {
                       chainId: selectedChain.id,
@@ -265,7 +265,7 @@ const Map = () => {
                 className={"card-button"}
                 onClick={(e) => {
                   e.preventDefault();
-                  history.push(`/chains/${selectedChain.id}`);
+                  history.push(`/chains/members/${selectedChain.id}`);
                 }}
               >
                 {t("viewChain")}

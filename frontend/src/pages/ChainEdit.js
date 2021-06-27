@@ -33,7 +33,7 @@ const ChainEdit = () => {
     };
     updateChain(chainId, chain);
     history.push({
-      pathname: `/chains/${chainId}`,
+      pathname: `/chains/members/${chainId}`,
       state: { message: t("saved") },
     });
     console.log("submitted");
@@ -68,7 +68,7 @@ const ChainEdit = () => {
           >
             {t("save")}
           </Button>
-          <Button variant="contained" href={`/chains/${chainId}`}>
+          <Button variant="contained" href={`/chains/members/${chainId}`}>
             {t("cancel")}
           </Button>
         </form>

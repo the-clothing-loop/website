@@ -45,7 +45,7 @@ const ChainsList = () => {
               <TableCell>{"active users"}</TableCell>
               <TableCell>{"host name"}</TableCell>
               <TableCell align="right">
-                <Link to={`/chains/${chain.id}/information`}>
+                <Link to={`/chains/information/${chain.id}`}>
                   <KeyboardArrowRightIcon />
                 </Link>
               </TableCell>

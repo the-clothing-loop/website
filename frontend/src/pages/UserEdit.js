@@ -26,7 +26,7 @@ const UserEdit = () => {
   const onSubmit = (user) => {
     updateUser(userId, user);
     history.push({
-      pathname: `/chains/${chainId}`,
+      pathname: `/chains/members/${chainId}`,
       state: { message: t("saved") },
     });
   };
@@ -67,7 +67,7 @@ const UserEdit = () => {
           >
             {t("save")}
           </Button>
-          <Button variant="contained" href={`/chains/${chainId}`}>
+          <Button variant="contained" href={`/chains/members/${chainId}`}>
             {t("cancel")}
           </Button>
         </form>

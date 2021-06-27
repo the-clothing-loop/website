@@ -18,14 +18,14 @@ const Navbar = () => {
         <Button color="inherit" component={Link} to="/">
           {t("home")}
         </Button>
-        <Button color="inherit" component={Link} to="/map">
-          {t("map")}
+        <Button color="inherit" component={Link} to="/chains/find">
+          {t("find chain")}
         </Button>
-        <Button color="inherit" component={Link} to="/login">
-          {t("login")}
-        </Button>
-        <Button color="inherit" component={Link} to="/newchain">
+        <Button color="inherit" component={Link} to="/chains/new-signup">
           {t("startNewChain")}
+        </Button>
+        <Button color="inherit" component={Link} to="/users/login">
+          {t("login")}
         </Button>
       </Toolbar>
       <LanguageSwitcher />

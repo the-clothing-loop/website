@@ -32,24 +32,17 @@ const App = () => {
           <div className="container">
             <Switch>
               <Route exact path="/" component={About} />
-              <Route path="/login" component={Login} />
-              <Route path="/signup" component={Signup} />
-              <Route exact path="/map" component={Map} />
-              <Route path="/thankyou" component={Thankyou} />
-              <Route
-                exact
-                path="/chains/:chainId"
-                component={ChainMemberList}
-              />
-              <Route path="/chains/:chainId/edit" component={ChainEdit} />
-              <Route exact path="/newchain-location" component={NewChainLocation} />
-              <Route path="/newchain" component={NewChainSignup} />
-              <Route path="/users/:userId/edit" component={UserEdit} />
+              <Route exact path="/thankyou" component={Thankyou} />
+              <Route exact path="/users/login" component={Login} />
+              <Route exact path="/users/signup" component={Signup} />
+              <Route exact path="/users/edit/:userId" component={UserEdit} />
+              <Route exact path="/chains/find" component={Map} />
+              <Route exact path="/chains/edit/:chainId" component={ChainEdit} />
+              <Route exact path="/chains/members/:chainId" component={ChainMemberList} />
+              <Route exact path="/chains/new-location" component={NewChainLocation} />
+              <Route exact path="/chains/new-signup" component={NewChainSignup} />
+              <Route exact path="/chains/information/:chainId" component={ChainInformation} />
               <Route exact path="/chains" component={ChainsList} />
-              <Route
-                path="/chains/:chainId/information"
-                component={ChainInformation}
-              />
             </Switch>
           </div>
         </Router>
