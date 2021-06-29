@@ -1,6 +1,6 @@
 // React / plugins
 import { useState, useEffect } from "react";
-import { Redirect, useLocation } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -27,17 +27,17 @@ const Signup = () => {
   const [chain, setChain] = useState({});
   const [geocoderResult, setGeocoderResult] = useState({});
   const { register, handleSubmit } = useForm();
-  const location = useLocation();
   const classes = makeStyles(theme)();
   const [phone, setPhone] = useState("");
+  const { chainId } = useParams();
 
   // Get chain id from the URL and save to state
   useEffect(async () => {
-    if (location.state && location.state.chainId) {
-      const chain = await getChain(location.state.chainId);
+    if (chainId) {
+      const chain = await getChain(chainId);
       setChain(chain);
     }
-  }, [location]);
+  }, [chainId]);
 
   // Gather data from form, validate and send to firebase
   const onSubmit = async (formData) => {
@@ -69,7 +69,7 @@ const Signup = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextFormField name="name" inputRef={register} />
         <TextFormField name="email" inputRef={register} />
-        <PhoneFormField onChange={handleChange} value={phone} />
+        <PhoneFormField name="phoneNumber" value={phone} />
         <GeocoderSelector onResult={setGeocoderResult} />
         <div>
           <FormGroup row>

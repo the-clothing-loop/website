@@ -249,8 +249,7 @@ const Map = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   history.push({
-                    pathname: "/users/signup",
-                    search: `?chain=${selectedChain.name}`,
+                    pathname: `/users/signup/${selectedChain.name}`,
                     state: {
                       chainId: selectedChain.id,
                     },

@@ -34,7 +34,7 @@ const App = () => {
               <Route exact path="/" component={About} />
               <Route exact path="/thankyou" component={Thankyou} />
               <Route exact path="/users/login" component={Login} />
-              <Route exact path="/users/signup" component={Signup} />
+              <Route exact path="/users/signup/:chainId" component={Signup} />
               <Route exact path="/users/edit/:userId" component={UserEdit} />
               <Route exact path="/chains/find" component={Map} />
               <Route exact path="/chains/edit/:chainId" component={ChainEdit} />
