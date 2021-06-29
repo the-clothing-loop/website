@@ -34,19 +34,30 @@ const Signup = () => {
   const [geocoderResult, setGeocoderResult] = useState({});
   const history = useHistory();
   const classes = makeStyles(theme)();
+  const [checked, setChecked] = useState({
+    actions: false,
+    newsletter: false,
+  });
 
-  const phoneRegExp = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
+  const handleChange = (event) => {
+    setChecked({ ...checked, [event.target.name]: event.target.checked });
+  };
+
+  const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
   const validate = Yup.object({
     name: Yup.string()
-      .min(2, "Must be 15 characters or less")
+      .min(2, "Must be more than 2 characters")
       .required("Required"),
 
     email: Yup.string().email("Please enter a valid e-mail address"),
+
     phoneNumber: Yup.string()
-      //TODO check phone validation
-      .matches(phoneRegExp, "Phone number is not valid")
+      .matches(phoneRegExp, {
+        message: "Please enter valid number",
+      })
       .required("Required"),
+
     newsletter: Yup.boolean(),
     actions: Yup.boolean(),
   });
@@ -56,16 +67,18 @@ const Signup = () => {
       initialValues={{
         name: "",
         email: "",
-        phoneNumber: "",
+        phoneNumber: 0,
         newsletter: false,
         actions: false,
       }}
       validationSchema={validate}
       onSubmit={(values) => {
         values.address = geocoderResult.result.place_name;
+        values.newsletter = checked.newsletter;
+        values.actions = checked.actions;
         //TODO do something on submit - post data to Firebase
         //check if user is already on db and redirect to relevant page
-
+        
         history.push("/newchain-location");
       }}
     >
@@ -106,8 +119,16 @@ const Signup = () => {
                 label="Newsletter"
                 name="newsletter"
                 type="checkbox"
+                state={checked.newsletter}
+                onChange={handleChange}
               />
-              <CheckboxField label="Actions" name="actions" type="checkbox" />
+              <CheckboxField
+                label="Actions"
+                name="actions"
+                type="checkbox"
+                state={checked.actions}
+                onChange={handleChange}
+              />
               <Button
                 type="submit"
                 variant="contained"
