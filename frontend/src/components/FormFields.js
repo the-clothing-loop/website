@@ -3,7 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import theme from "../util/theme";
 import { useTranslation } from "react-i18next";
 import MuiPhoneInput from "material-ui-phone-number";
-import { useState } from "react";
+import Checkbox from "@material-ui/core/Checkbox";
+import { ErrorMessage, useField } from "formik";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const TextFormField = ({ name, inputRef, email }) => {
   const { t } = useTranslation();
@@ -23,24 +26,63 @@ const TextFormField = ({ name, inputRef, email }) => {
   );
 };
 
-const PhoneFormField = (props) => {
+const PhoneFormField = ({ label, ...props }) => {
   const { t } = useTranslation();
 
-  const handleChange = (e) => {
-    props.onChange(e);
-  };
+  const [field, meta] = useField(props);
 
   return (
-    <MuiPhoneInput
-      defaultCountry="nl"
-      regions={"europe"}
-      fullWidth
-      label={t("phoneNumber")}
-      required={true}
-      name="phoneNumber"
-      onChange={handleChange}
-      phoneNumber={props.value}
-    />
+    <div>
+      {" "}
+      <MuiPhoneInput
+        defaultCountry="nl"
+        regions={"europe"}
+        fullWidth
+        label={label}
+        required={true}
+        htmlFor={field.name}
+        {...field}
+        {...props}
+      />
+      <ErrorMessage name={field.name} />
+    </div>
   );
 };
-export { TextFormField, PhoneFormField };
+
+const TextForm = ({ label, ...props }) => {
+  const [field, meta] = useField(props);
+  const { t } = useTranslation();
+  const classes = makeStyles(theme)();
+
+  return (
+    <div>
+      {/* <label htmlFor={field.name}>{t(label)}</label> */}
+      <TextField
+        {...field}
+        {...props}
+        autoComplete="off"
+        label={label}
+        fullWidth
+      />
+      <ErrorMessage component="div" name={field.name} className="error" />
+    </div>
+  );
+};
+
+const CheckboxField = ({ label, state, ...props }) => {
+  const [field, meta] = useField(props);
+  const { t } = useTranslation();
+
+  return (
+    <FormGroup row>
+      <FormControlLabel
+        control={<Checkbox checked={state} name={field.name} />}
+        {...field}
+        {...props}
+        label={label}
+      />
+    </FormGroup>
+  );
+};
+
+export { TextFormField, PhoneFormField, TextForm, CheckboxField };
