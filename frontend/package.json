@@ -23,6 +23,7 @@
     "deck.gl": "^8.4.13",
     "dotenv": "^8.2.0",
     "firebase": "^8.3.0",
+    "formik": "^2.2.9",
     "i18next": "^20.1.0",
     "i18next-browser-languagedetector": "^6.1.0",
     "i18next-http-backend": "^1.2.0",
@@ -41,7 +42,8 @@
     "react-phone-input-mui": "^2.9.4",
     "react-places-autocomplete": "^7.3.0",
     "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "yup": "^0.32.9"
   },
   "scripts": {
     "start": "react-scripts start",
