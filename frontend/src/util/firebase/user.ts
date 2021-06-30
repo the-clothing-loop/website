@@ -11,8 +11,8 @@ const updateUserCallable = functions.httpsCallable('updateUser');
 const getUserByIdCallable = functions.httpsCallable('getUserById');
 const getUserByEmailCallable = functions.httpsCallable('getUserByEmail');
 
-const createUser = async (user: IUser): Promise<void> => {
-    await createUserCallable(user);
+const createUser = async (user: IUser): Promise<string> => {
+    return (await createUserCallable(user)).data.id;
 };
 
 const getUserById = async (userId: string): Promise<IUser> => {
@@ -35,8 +35,8 @@ const getUsersForChain = async (chainId: string): Promise<IUser[]> => {
         .collection("users")
         .where("chainId", "==", chainId)
         .get();
-    var userRetrieval = snapshot.docs.map(async (doc: any) => (await getUserByIdCallable({ uid: doc.id, idToken })).data);
-    return (await Promise.all(userRetrieval)) as IUser[];
+    var userRetrieval = snapshot.docs.map(async (doc: any): Promise<IUser> => (await getUserByIdCallable({ uid: doc.id, idToken })).data);
+    return await Promise.all(userRetrieval);
 };
 
 const updateUser = async (user: IUser): Promise<void> => {

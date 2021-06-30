@@ -19,10 +19,12 @@ const ChainsList = () => {
   const [chains, setChains] = useState();
 
   //TODO get host details and render infos
-  useEffect(async () => {
-    let chains = await getChains();
-    let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
-    setChains(sortedChains);
+  useEffect(() => {
+    (async () => {
+      let chains = await getChains();
+      let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
+      setChains(sortedChains);
+    })();
   }, []);
 
   return chains ? (

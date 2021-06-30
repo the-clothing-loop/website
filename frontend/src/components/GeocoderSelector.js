@@ -6,7 +6,7 @@ import Geocoder from "react-map-gl-geocoder";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
 
-const GeocoderSelector = ({ onResult, label, ...props }) => {
+const GeocoderSelector = ({ onResult, ...props }) => {
   const [viewport, setViewPort] = useState({
     latitude: 0,
     longitude: 0,

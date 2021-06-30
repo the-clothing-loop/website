@@ -2,18 +2,21 @@ export interface IChain {
   id: string;
   name: string;
   description: string;
-  image: string;
-  address:string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  categories: { gender: [string] };
+  published: boolean;
 }
 
 export interface IUser {
-  uid: string;
+  uid: string | null;
   email: string;
   address: string;
   name: string;
   phoneNumber: string;
-  chainId: string;
+  chainId: string | null;
   emailVerified: boolean;
-  checkedNewsletter: boolean;
-  checkedActionsNewsletter: boolean;
+  newsletter: boolean;
+  actionsNewsletter: boolean;
 }

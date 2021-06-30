@@ -11,7 +11,6 @@ const ADMIN_EMAILS = [
 ];
 
 const BASE_DOMAIN = "http://localhost:3000";
-const VERIFY_URL = BASE_DOMAIN + "/verify-email";
 const VERIFY_SUBJECT = "Verify e-mail for clothing chain";
 const REGION = "europe-west1";
 const ROLE_ADMIN = "admin";
@@ -53,7 +52,7 @@ export const createUser =
                   email,
                   {
                     handleCodeInApp: false,
-                    url: `${VERIFY_URL}?email=${email}`,
+                    url: BASE_DOMAIN,
                   });
         const verificationEmail = `Click here <a href="${verificationLink}">here</a> to verify your e-mail`;
         functions.logger.debug("sending verification email", verificationEmail);
@@ -86,7 +85,7 @@ export const createUser =
 
 export const createChain =
   functions.region(REGION).https.onCall(
-      async (data: any) => {
+      async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("createChain parameters", data);
 
         const [
@@ -94,20 +93,32 @@ export const createChain =
           name,
           description,
           address,
+          latitude,
+          longitude,
+          categories,
+          published,
         ] = [
           data.uid,
           data.name,
           data.description,
           data.address,
+          data.latitude,
+          data.longitude,
+          data.categories,
+          data.published,
         ];
 
         const user = await admin.auth().getUser(uid);
         const userData = await db.collection("users").doc(uid).get();
-        if (!userData.get("chainId") && !user.customClaims?.role) {
+        if ((!userData.get("chainId") && !user.customClaims?.chainId && !user.customClaims?.role) || context.auth?.token.role === ROLE_ADMIN) {
           const chainData = await db.collection("chains").add({
             name,
             description,
             address,
+            latitude,
+            longitude,
+            categories,
+            published,
           });
           db.collection("users").doc(uid).update("chainId", chainData.id);
           await admin.auth().setCustomUserClaims(uid, {chainId: chainData.id, role: ROLE_CHAINADMIN});
