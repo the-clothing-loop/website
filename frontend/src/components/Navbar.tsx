@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
 
 // Material UI
 import { AppBar, Toolbar, Button } from "@material-ui/core";
 
 // Project resources
 import LanguageSwitcher from "./LanguageSwitcher";
+import { AuthContext } from "../components/AuthProvider";
 
 const Navbar = () => {
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
 
   return (
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
@@ -18,15 +21,20 @@ const Navbar = () => {
         <Button color="inherit" component={Link} to="/">
           {t("home")}
         </Button>
-        <Button color="inherit" component={Link} to="/map">
-          {t("map")}
+        <Button color="inherit" component={Link} to="/chains/find">
+          {t("findChain")}
         </Button>
-        <Button color="inherit" component={Link} to="/login">
-          {t("login")}
-        </Button>
-        <Button color="inherit" component={Link} to="/newchain">
+        <Button color="inherit" component={Link} to="/chains/new-signup">
           {t("startNewChain")}
         </Button>
+        { user ?
+          <Button color="inherit" component={Link} to="/users/logout">
+            {t("logout")}
+          </Button> :
+          <Button color="inherit" component={Link} to="/users/login">
+            {t("login")}
+          </Button> 
+        }
       </Toolbar>
       <LanguageSwitcher />
     </AppBar>

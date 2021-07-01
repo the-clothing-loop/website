@@ -19,10 +19,12 @@ const ChainsList = () => {
   const [chains, setChains] = useState();
 
   //TODO get host details and render infos
-  useEffect(async () => {
-    let chains = await getChains();
-    let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
-    setChains(sortedChains);
+  useEffect(() => {
+    (async () => {
+      let chains = await getChains();
+      let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
+      setChains(sortedChains);
+    })();
   }, []);
 
   return chains ? (
@@ -45,7 +47,7 @@ const ChainsList = () => {
               <TableCell>{"active users"}</TableCell>
               <TableCell>{"host name"}</TableCell>
               <TableCell align="right">
-                <Link to={`/chains/${chain.id}/information`}>
+                <Link to={`/chains/information/${chain.id}`}>
                   <KeyboardArrowRightIcon />
                 </Link>
               </TableCell>

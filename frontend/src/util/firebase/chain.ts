@@ -1,5 +1,24 @@
 import db from "./firebaseConfig";
 import { IChain } from "../../types";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/functions";
+
+const functions = firebase.app().functions(process.env.REACT_APP_FIREBASE_REGION);
+
+const createChainCallable = functions.httpsCallable('createChain');
+const addUserToChainCallable = functions.httpsCallable('addUserToChain');
+
+export interface ICreateChain {
+  name: string;
+  description: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  categories: { gender: [string] };
+  published: boolean;
+  uid: string;
+}
 
 // Return chain data for one chain by id
 const getChain = async (chainId: string) => {
@@ -16,16 +35,16 @@ const getChains = async () => {
   return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as IChain));
 };
 
-const addChain = async (chain: IChain) => {
-  try {
-    const docRef = await db.collection("chains").add(chain);
-    console.log(
-      `Document successfully written with id: ${docRef.id}! and content ${chain}`
-    );
-  } catch (error) {
-    console.error("Error writing document: ", error);
-  }
+const createChain = async (chain: ICreateChain): Promise<string> => {
+  return (await createChainCallable(chain)).data.id;
 };
+
+const addUserToChain = async (chainId: string, userId: string) => {
+  await addUserToChainCallable({
+    uid: userId,
+    chainId
+  });
+}
 
 const updateChain = (chainId: string, chain: IChain) => {
   db.collection("chains")
@@ -33,4 +52,4 @@ const updateChain = (chainId: string, chain: IChain) => {
     .set(chain, { merge: true });
 };
 
-export { getChains, addChain, getChain, updateChain };
+export { getChains, createChain, getChain, updateChain, addUserToChain };

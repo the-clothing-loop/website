@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,6 @@ import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
-import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -25,6 +24,8 @@ import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 
 // Project resources
 import { getChains } from "../util/firebase/chain";
+import { AuthContext } from "../components/AuthProvider";
+import { addUserToChain } from "../util/firebase/chain";
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
@@ -40,6 +41,7 @@ const categories = [
 const Map = () => {
   const history = useHistory();
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
 
   const styles = (theme) => ({
     ...theme.spreadThis,
@@ -56,26 +58,28 @@ const Map = () => {
   const [gender, setGender] = useState([]);
   const [filteredChains, setFilteredChains] = useState([]);
 
-  useEffect(async () => {
-    const chainResponse = await getChains();
-    setChainData(chainResponse);
-    setFilteredChains(chainResponse);
+  useEffect(() => {
+    (async () => {
+      const chainResponse = await getChains();
+      setChainData(chainResponse);
+      setFilteredChains(chainResponse);
 
-    const userLocationResponse = await getUserLocation(
-      accessToken.ipinfoApiAccessToken
-    );
-    if (userLocationResponse.loc) {
-      setViewport({
-        latitude: Number(userLocationResponse.loc.split(",")[0]),
-        longitude: Number(userLocationResponse.loc.split(",")[1]),
-        width: "100vw",
-        height: "100vh",
-        zoom: 10,
-      });
-    } else {
-      console.error("Couldn't receive location");
-      console.error(userLocationResponse);
-    }
+      const userLocationResponse = await getUserLocation(
+        accessToken.ipinfoApiAccessToken
+      );
+      if (userLocationResponse.loc) {
+        setViewport({
+          latitude: Number(userLocationResponse.loc.split(",")[0]),
+          longitude: Number(userLocationResponse.loc.split(",")[1]),
+          width: "100vw",
+          height: "100vh",
+          zoom: 10,
+        });
+      } else {
+        console.error("Couldn't receive location");
+        console.error(userLocationResponse);
+      }
+    })();
   }, []);
 
   const handleChange = (e) => {
@@ -124,12 +128,27 @@ const Map = () => {
   //render location on result selection
   const handleSelect = () => {
     setViewport({
-      latitude: value.latLon.latitude,
-      longitude: value.latLon.longitude,
+      latitude: value.latitude,
+      longitude: value.longitude,
       width: "100vw",
       height: "100vh",
       zoom: 8,
     });
+  };
+
+  const signupToChain = async (e) => {
+    e.preventDefault();
+    if (user) {
+      await addUserToChain(selectedChain.id, user.uid);
+      history.push({ pathname: "/thankyou" });
+    } else {
+      history.push({
+        pathname: `/users/signup/${selectedChain.id}`,
+        state: {
+          chainId: selectedChain.id,
+        },
+      });
+    }
   };
 
   return (
@@ -175,8 +194,8 @@ const Map = () => {
         chain.published ? (
           <Marker
             key={chain.id}
-            latitude={chain.latLon.latitude}
-            longitude={chain.latLon.longitude}
+            latitude={chain.latitude}
+            longitude={chain.longitude}
             onClick={(e) => {
               e.preventDefault();
               setSelectedChain(chain);
@@ -195,8 +214,8 @@ const Map = () => {
 
       {selectedChain && showPopup ? (
         <Popup
-          latitude={selectedChain.latLon.latitude}
-          longitude={selectedChain.latLon.longitude}
+          latitude={selectedChain.latitude}
+          longitude={selectedChain.longitude}
           closeOnClick={false}
           onClose={() => setShowPopup(false)}
           dynamicPosition={false}
@@ -246,17 +265,7 @@ const Map = () => {
                 variant="contained"
                 color="primary"
                 className={"card-button"}
-                onClick={(e) => {
-                  e.preventDefault();
-                  history.push({
-                    pathname: "/signup",
-                    search: `?chain=${selectedChain.name}`,
-                    state: {
-                      chainId: selectedChain.id,
-                    },
-                  });
-                }}
-              >
+                onClick={(e) => signupToChain(e)}>
                 {t("signup")}
               </Button>{" "}
               <Button
@@ -265,7 +274,7 @@ const Map = () => {
                 className={"card-button"}
                 onClick={(e) => {
                   e.preventDefault();
-                  history.push(`/chains/${selectedChain.id}`);
+                  history.push(`/chains/members/${selectedChain.id}`);
                 }}
               >
                 {t("viewChain")}

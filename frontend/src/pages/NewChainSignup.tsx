@@ -1,47 +1,36 @@
 // React / plugins
-import { useState } from "react";
-import { Redirect } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { Redirect } from "react-router-dom";
 
 // Material UI
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { makeStyles, TextField } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
 import ThreeColumnLayout from "../components/ThreeColumnLayout";
-import { useHistory } from "react-router-dom";
 
 // Project resources
 import {
-  TextFormField,
   PhoneFormField,
   TextForm,
   CheckboxField,
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
+import { AuthContext } from "../components/AuthProvider";
 import AppIcon from "../images/sfm_logo.png";
-import { boolean } from "yup/lib/locale";
+import { createUser } from "../util/firebase/user";
+import { IUser } from "../types";
 
 const Signup = () => {
   const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
-  const [geocoderResult, setGeocoderResult] = useState({});
-  const history = useHistory();
-  const classes = makeStyles(theme)();
-  const [checked, setChecked] = useState({
-    actions: false,
-    newsletter: false,
-  });
-
-  const handleChange = (event) => {
-    setChecked({ ...checked, [event.target.name]: event.target.checked });
-  };
+  const [geocoderResult, setGeocoderResult] = useState({result: {place_name: ""}});
+  const [userId, setUserId] = useState("");
+  const classes = makeStyles(theme as any)();
+  const { user } = useContext(AuthContext);
 
   const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
@@ -49,37 +38,43 @@ const Signup = () => {
     name: Yup.string()
       .min(2, "Must be more than 2 characters")
       .required("Required"),
-
     email: Yup.string().email("Please enter a valid e-mail address"),
-
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
-        message: "Please enter valid number",
+        message: "Please enter valid phonenumber",
       })
       .required("Required"),
-
     newsletter: Yup.boolean(),
-    actions: Yup.boolean(),
+    actionsNewsletter: Yup.boolean(),
   });
+
+  if (submitted) {
+    return <Redirect to={`/chains/new-location/${userId}`} />;
+  }
+
+  if (user) {
+    return <Redirect to={`/chains/new-location/${user.uid}`} />;
+  }
 
   return (
     <Formik
       initialValues={{
         name: "",
         email: "",
-        phoneNumber: 0,
+        phoneNumber: "",
         newsletter: false,
-        actions: false,
+        actionsNewsletter: false,
       }}
       validationSchema={validate}
-      onSubmit={(values) => {
-        values.address = geocoderResult.result.place_name;
-        values.newsletter = checked.newsletter;
-        values.actions = checked.actions;
-        //TODO do something on submit - post data to Firebase
-        //check if user is already on db and redirect to relevant page
-        
-        history.push("/newchain-location");
+      onSubmit={async (values) => {
+        const user = {
+          address: geocoderResult.result.place_name,
+          chainId: null,
+          ...values
+        };
+        console.log(`creating user: ${JSON.stringify(user)}`);
+        setUserId(await createUser(user));
+        setSubmitted(true);
       }}
     >
       {(formik) => (
@@ -111,7 +106,7 @@ const Signup = () => {
               <PhoneFormField
                 label="Phone number"
                 name="phoneNumber"
-                onChange={(e) => formik.setFieldValue("phoneNumber", e)}
+                onChange={(e: string) => formik.setFieldValue("phoneNumber", e)}
               />
               <GeocoderSelector name="address" onResult={setGeocoderResult} />
 
@@ -119,15 +114,11 @@ const Signup = () => {
                 label="Newsletter"
                 name="newsletter"
                 type="checkbox"
-                state={checked.newsletter}
-                onChange={handleChange}
               />
               <CheckboxField
-                label="Actions"
-                name="actions"
+                label="Actions newsletter"
+                name="actionsNewsletter"
                 type="checkbox"
-                state={checked.actions}
-                onChange={handleChange}
               />
               <Button
                 type="submit"

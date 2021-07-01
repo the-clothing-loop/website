@@ -69,14 +69,14 @@ const TextForm = ({ label, ...props }) => {
   );
 };
 
-const CheckboxField = ({ label, state, ...props }) => {
+const CheckboxField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   const { t } = useTranslation();
 
   return (
     <FormGroup row>
       <FormControlLabel
-        control={<Checkbox checked={state} name={field.name} />}
+        control={<Checkbox name={field.name} />}
         {...field}
         {...props}
         label={label}

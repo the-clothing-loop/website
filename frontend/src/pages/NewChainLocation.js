@@ -1,12 +1,12 @@
 // React / plugins
 import { useState, useEffect } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import { Redirect } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
 import { useTranslation } from "react-i18next";
 
 //Project Resources
-import { addChain } from "../util/firebase/chain";
+import { createChain } from "../util/firebase/chain";
 import getUserLocation from "../util/api";
 
 // Material
@@ -35,7 +35,7 @@ const categories = [
   { gender: "no gender" },
 ];
 
-const NewChainLocation = (props) => {
+const NewChainLocation = () => {
   const styles = (theme) => ({
     ...theme.spreadThis,
   });
@@ -51,6 +51,7 @@ const NewChainLocation = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [description, setDescription] = useState("");
   const [chainCategories, setChainCategories] = useState([]);
+  const { userId } = useParams();
 
   //location details
   const getLocation = async (longitude, latitude) => {
@@ -68,7 +69,8 @@ const NewChainLocation = (props) => {
   };
 
   useEffect(() => {
-    getUserLocation(accessToken.ipinfoApiAccessToken).then((response) => {
+    (async () => {
+      const response = await getUserLocation(accessToken.ipinfoApiAccessToken);
       setViewport({
         latitude: Number(response.loc.split(",")[0]),
         longitude: Number(response.loc.split(",")[1]),
@@ -76,7 +78,7 @@ const NewChainLocation = (props) => {
         height: 600,
         zoom: 10,
       });
-    });
+    })();
   }, []);
 
   //on click get location and set marker, popup and location info
@@ -90,21 +92,21 @@ const NewChainLocation = (props) => {
   };
 
   //post new chain location/details to db
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newChain = {
-      latLon: {
-        longitude: location.longitude,
-        latitude: location.latitude,
-      },
+      longitude: location.longitude,
+      latitude: location.latitude,
       name: chain.locality,
+      address: chain.locality,
       description: description,
-      categories: { gender: chainCategories.map((cat) => `${cat}`) },
+      categories: { gender: chainCategories },
       published: false,
+      uid: userId
     };
-
-    addChain(newChain);
+    console.log(`creating chain: ${JSON.stringify(newChain)}, ${userId}`);
+    await createChain(newChain);
     setChangePage(false);
   };
 
@@ -120,8 +122,6 @@ const NewChainLocation = (props) => {
   const handleChange = (e) => {
     setDescription(e.target.value);
   };
-  console.log("chain cat", chainCategories);
-  console.log("desc", description);
 
   return changePage ? (
     <Grid container>

@@ -64,7 +64,7 @@ const ChainMemberList = () => {
           >
             {chain.address}
           </Typography>
-          <Link to={`/chains/${chainId}/edit`}>
+          <Link to={`/chains/edit/${chainId}`}>
             <EditIcon />
           </Link>
           {location.state ? (
@@ -90,7 +90,7 @@ const ChainMemberList = () => {
               <TableCell>{u.phoneNumber}</TableCell>
               <TableCell>{u.email}</TableCell>
               <TableCell align="right">
-                <Link to={`/users/${u.uid}/edit`}>
+                <Link to={`/users/edit/${u.uid}`}>
                   <EditIcon />
                 </Link>
               </TableCell>
