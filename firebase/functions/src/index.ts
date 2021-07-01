@@ -230,6 +230,7 @@ export const getUserById =
             address: userData.get("address"),
             newsletter: userData.get("newsletter"),
             actionsNewsletter: userData.get("actionsNewsletter"),
+            role: user.customClaims?.role,
           };
         } else {
           throw new functions.https.HttpsError("permission-denied", "You don't have permission to retrieve information about this user");
@@ -256,6 +257,7 @@ export const getUserByEmail =
             address: userData.get("address"),
             newsletter: userData.get("newsletter"),
             actionsNewsletter: userData.get("actionsNewsletter"),
+            role: user.customClaims?.role,
           };
         } else {
           throw new functions.https.HttpsError("permission-denied", "You don't have permission to retrieve information about this user");

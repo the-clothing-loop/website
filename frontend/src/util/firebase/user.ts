@@ -11,7 +11,17 @@ const updateUserCallable = functions.httpsCallable('updateUser');
 const getUserByIdCallable = functions.httpsCallable('getUserById');
 const getUserByEmailCallable = functions.httpsCallable('getUserByEmail');
 
-const createUser = async (user: IUser): Promise<string> => {
+interface ICreateUser {
+  email: string;
+  address: string;
+  name: string;
+  phoneNumber: string;
+  chainId: string | null;
+  newsletter: boolean;
+  actionsNewsletter: boolean;
+}
+
+const createUser = async (user: ICreateUser): Promise<string> => {
   return (await createUserCallable(user)).data.id;
 };
 

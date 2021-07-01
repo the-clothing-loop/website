@@ -19,4 +19,5 @@ export interface IUser {
   emailVerified: boolean;
   newsletter: boolean;
   actionsNewsletter: boolean;
+  role: string | null;
 }

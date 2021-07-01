@@ -68,8 +68,6 @@ const Signup = () => {
       validationSchema={validate}
       onSubmit={async (values) => {
         const user = {
-          uid: "",
-          emailVerified: false,
           address: geocoderResult.result.place_name,
           chainId: null,
           ...values
