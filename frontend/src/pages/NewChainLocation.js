@@ -103,9 +103,10 @@ const NewChainLocation = () => {
       description: description,
       categories: { gender: chainCategories },
       published: false,
+      uid: userId
     };
     console.log(`creating chain: ${JSON.stringify(newChain)}, ${userId}`);
-    await createChain(newChain, userId);
+    await createChain(newChain);
     setChangePage(false);
   };
 

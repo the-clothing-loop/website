@@ -9,6 +9,17 @@ const functions = firebase.app().functions(process.env.REACT_APP_FIREBASE_REGION
 const createChainCallable = functions.httpsCallable('createChain');
 const addUserToChainCallable = functions.httpsCallable('addUserToChain');
 
+export interface ICreateChain {
+  name: string;
+  description: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  categories: { gender: [string] };
+  published: boolean;
+  uid: string;
+}
+
 // Return chain data for one chain by id
 const getChain = async (chainId: string) => {
   const snapshot = await db
@@ -24,8 +35,8 @@ const getChains = async () => {
   return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as IChain));
 };
 
-const createChain = async (chain: IChain, userId: string): Promise<string> => {
-  return (await createChainCallable({ uid: userId, ...chain })).data.id;
+const createChain = async (chain: ICreateChain): Promise<string> => {
+  return (await createChainCallable(chain)).data.id;
 };
 
 const addUserToChain = async (chainId: string, userId: string) => {
