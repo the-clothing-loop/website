@@ -110,7 +110,8 @@ export const createChain =
 
         const user = await admin.auth().getUser(uid);
         const userData = await db.collection("users").doc(uid).get();
-        if ((!userData.get("chainId") && !user.customClaims?.chainId && !user.customClaims?.role) || context.auth?.token.role === ROLE_ADMIN) {
+        if ((!userData.get("chainId") && !user.customClaims?.chainId && user.customClaims?.role !== ROLE_CHAINADMIN) ||
+            context.auth?.token.role === ROLE_ADMIN) {
           const chainData = await db.collection("chains").add({
             name,
             description,
@@ -121,7 +122,12 @@ export const createChain =
             published,
           });
           db.collection("users").doc(uid).update("chainId", chainData.id);
-          await admin.auth().setCustomUserClaims(uid, {chainId: chainData.id, role: ROLE_CHAINADMIN});
+          await admin.auth().setCustomUserClaims(
+              uid,
+              {
+                chainId: chainData.id,
+                role: user.customClaims?.role ?? ROLE_CHAINADMIN,
+              });
           return {id: chainData.id};
         } else {
           throw new functions.https.HttpsError("permission-denied", "You don't have permission to change this user's chain");
@@ -143,12 +149,16 @@ export const addUserToChain =
 
         if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
           const userReference = db.collection("users").doc(uid);
-          await userReference.update("chainId", chainId);
-          // When switching chains, you're no longer an chain-admin
-          if (context.auth?.token?.role === ROLE_CHAINADMIN) {
-            await admin.auth().setCustomUserClaims(uid, {chainId: chainId});
+          if ((await userReference.get()).get("chainId") === chainId) {
+            functions.logger.warn(`user ${uid} is already member of chain ${chainId}`);
           } else {
-            await admin.auth().setCustomUserClaims(uid, {chainId: chainId, role: context.auth?.token?.role});
+            await userReference.update("chainId", chainId);
+            // When switching chains, you're no longer an chain-admin
+            if (context.auth?.token?.role === ROLE_CHAINADMIN) {
+              await admin.auth().setCustomUserClaims(uid, {chainId: chainId});
+            } else {
+              await admin.auth().setCustomUserClaims(uid, {chainId: chainId, role: context.auth?.token?.role});
+            }
           }
         } else {
           throw new functions.https.HttpsError("permission-denied", "You don't have permission to change this user's chain");
@@ -186,10 +196,13 @@ export const updateUser =
                             disabled: false,
                           });
           functions.logger.debug("updated user", userRecord);
-          const userReference = db.collection("users").doc(userRecord.uid);
-          await userReference.update("address", address);
-          await userReference.update("newsletter", newsletter);
-          await userReference.update("actionsNewsletter", actionsNewsletter);
+          await db.collection("users")
+              .doc(userRecord.uid)
+              .set({
+                address,
+                newsletter,
+                actionsNewsletter,
+              }, {merge: true});
           // TODO: Update user in mailchimp if needed
           return {};
         } else {

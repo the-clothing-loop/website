@@ -12,36 +12,33 @@ const getUserByIdCallable = functions.httpsCallable('getUserById');
 const getUserByEmailCallable = functions.httpsCallable('getUserByEmail');
 
 const createUser = async (user: IUser): Promise<string> => {
-    return (await createUserCallable(user)).data.id;
+  return (await createUserCallable(user)).data.id;
 };
 
 const getUserById = async (userId: string): Promise<IUser> => {
-    return (await getUserByIdCallable({
-      uid: userId,
-      idToken: await firebase.auth().currentUser?.getIdToken(true)
-    })).data as IUser;
+  return (await getUserByIdCallable({
+    uid: userId
+  })).data as IUser;
 };
 
 const getUserByEmail = async (email: string): Promise<IUser> => {
-    return (await getUserByEmailCallable({
-      email: email,
-      idToken: await firebase.auth().currentUser?.getIdToken(true)
-    })).data as IUser;
+  return (await getUserByEmailCallable({
+    email: email
+  })).data as IUser;
 };
 
 const getUsersForChain = async (chainId: string): Promise<IUser[]> => {
-    const idToken = await firebase.auth().currentUser?.getIdToken(true)
-    const snapshot = await db
-        .collection("users")
-        .where("chainId", "==", chainId)
-        .get();
-    var userRetrieval = snapshot.docs.map(async (doc: any): Promise<IUser> => (await getUserByIdCallable({ uid: doc.id, idToken })).data);
-    return await Promise.all(userRetrieval);
+  const idToken = await firebase.auth().currentUser?.getIdToken(true)
+  const snapshot = await db
+      .collection("users")
+      .where("chainId", "==", chainId)
+      .get();
+  var userRetrieval = snapshot.docs.map(async (doc: any): Promise<IUser> => (await getUserByIdCallable({ uid: doc.id, idToken })).data);
+  return await Promise.all(userRetrieval);
 };
 
 const updateUser = async (user: IUser): Promise<void> => {
-    const idToken = await firebase.auth().currentUser?.getIdToken(true)
-    await updateUserCallable({ idToken, ...user });
+  await updateUserCallable(user);
 };
 
 export { createUser, getUserById, getUserByEmail, getUsersForChain, updateUser };
