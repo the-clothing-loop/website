@@ -54,7 +54,7 @@ export const createUser =
                     handleCodeInApp: false,
                     url: BASE_DOMAIN,
                   });
-        const verificationEmail = `Click here <a href="${verificationLink}">here</a> to verify your e-mail`;
+        const verificationEmail = `Click <a href="${verificationLink}">here</a> to verify your e-mail`;
         functions.logger.debug("sending verification email", verificationEmail);
         await db.collection("mail")
             .add({
