@@ -4,13 +4,15 @@ service cloud.firestore {
     match /users/{userId} {
       allow update, write: if request.auth != null && request.auth.token.role == "admin";
       allow read: if request.auth != null && (request.auth.uid == userId || request.auth.token.role == "admin" || (request.auth.token.role == "chainAdmin" && resource.data.chainId == request.auth.token.chainId));
+      allow delete: if request.auth != null && request.auth.token.role == "admin";
     }
     match /chains/{chainId} {
       allow update, write: if request.auth != null && ((request.auth.token.chainId == chainId && request.auth.token.role == "chainAdmin" && resource.data.published) || request.auth.token.role == "admin");
       allow read;
+      allow delete: if request.auth != null && request.auth.token.role == "admin";
     }
     match /mail/{mailId} {
-      allow read, update, write: if false;
+      allow read, update, write, delete: if false;
     }
   }
 }
