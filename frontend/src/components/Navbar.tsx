@@ -12,10 +12,7 @@ import { AuthContext } from "../components/AuthProvider";
 
 const Navbar = () => {
   const { t } = useTranslation();
-  // const { user } = useContext(AuthContext);
   const { user, userData } = useContext(AuthContext);
-
-  console.log(userData);
 
   return (
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
