@@ -7,6 +7,7 @@ import { Redirect, useParams } from "react-router-dom";
 
 // Material UI
 import Typography from "@material-ui/core/Typography";
+import { Alert } from "@material-ui/lab";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
@@ -30,6 +31,7 @@ const Signup = () => {
   const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [geocoderResult, setGeocoderResult] = useState({result: {place_name: ""}});
+  const [error, setError] = useState("");
   const classes = makeStyles(theme as any)();
 
   const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
@@ -62,15 +64,20 @@ const Signup = () => {
   const onSubmit = async (formData: any) => {
     // TODO: allow only full addresses
 
-    let user = {
-      ...formData,
-      address: geocoderResult.result.place_name,
-      chainId: chainId,
-    };
-    console.log(`creating user: ${JSON.stringify(user)}`);
-    // TODO: do something with validation info for new user (e.g. display this)
-    await createUser(user);
-    setSubmitted(true);
+    try {
+      let user = {
+        ...formData,
+        address: geocoderResult.result.place_name,
+        chainId: chainId,
+      };
+      console.log(`creating user: ${JSON.stringify(user)}`);
+      // TODO: do something with validation info for new user (e.g. display this)
+      await createUser(user);
+      setSubmitted(true);
+    } catch (e) {
+      console.error(`Error creating user: ${JSON.stringify(e)}`);
+      setError(e.message);
+    }
   };
 
   if (submitted) {
@@ -132,6 +139,7 @@ const Signup = () => {
                   name="actionsNewsletter"
                   type="checkbox"
                 />
+                { error ? <Alert severity="error">{error}</Alert> : null }
                 <Button
                   type="submit"
                   variant="contained"

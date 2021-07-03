@@ -22,7 +22,12 @@ interface ICreateUser {
 }
 
 const createUser = async (user: ICreateUser): Promise<string> => {
-  return (await createUserCallable(user)).data.id;
+  const result = (await createUserCallable(user)).data as { id: string | undefined, validationError: { codePrefix: string, errorInfo: { code: string, message: string }} | undefined };
+  if (result.validationError) {
+    console.error(JSON.stringify(result.validationError));
+    throw result.validationError.errorInfo;
+  }
+  return result.id as string;
 };
 
 const getUserById = async (userId: string): Promise<IUser> => {

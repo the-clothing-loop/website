@@ -11,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
 import ThreeColumnLayout from "../components/ThreeColumnLayout";
+import { Alert } from "@material-ui/lab";
 
 // Project resources
 import {
@@ -22,7 +23,6 @@ import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../components/AuthProvider";
 import AppIcon from "../images/sfm_logo.png";
 import { createUser } from "../util/firebase/user";
-import { IUser } from "../types";
 
 const Signup = () => {
   const { t } = useTranslation();
@@ -31,6 +31,7 @@ const Signup = () => {
   const [userId, setUserId] = useState("");
   const classes = makeStyles(theme as any)();
   const { user } = useContext(AuthContext);
+  const [error, setError] = useState("");
 
   const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
@@ -73,8 +74,13 @@ const Signup = () => {
           ...values
         };
         console.log(`creating user: ${JSON.stringify(user)}`);
-        setUserId(await createUser(user));
-        setSubmitted(true);
+        try {
+          setUserId(await createUser(user));
+          setSubmitted(true);
+        } catch (e) {
+          console.error(`Error creating user: ${JSON.stringify(e)}`);
+          setError(e.message);
+        }
       }}
     >
       {(formik) => (
@@ -120,6 +126,7 @@ const Signup = () => {
                 name="actionsNewsletter"
                 type="checkbox"
               />
+              { error ? <Alert severity="error">{error}</Alert> : null }
               <Button
                 type="submit"
                 variant="contained"

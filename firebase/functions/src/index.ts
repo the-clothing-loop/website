@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import {UserRecord} from "firebase-functions/lib/providers/auth";
 
 admin.initializeApp();
 
@@ -15,6 +16,17 @@ const VERIFY_SUBJECT = "Verify e-mail for clothing chain";
 const REGION = "europe-west1";
 const ROLE_ADMIN = "admin";
 const ROLE_CHAINADMIN = "chainAdmin";
+
+// https://github.com/firebase/firebase-js-sdk/issues/1881
+// If we want to use try/catch with auth functions, we have to wrap it in this
+// Auth functions return a "clojure" promise which has a different catch implementation
+function wrapInECMAPromise<T>(fn: () => Promise<T>): Promise<T> {
+  return new Promise((resolve, reject) => {
+    return fn()
+        .then((res) => resolve(res))
+        .catch((err) => reject(err));
+  });
+}
 
 export const createUser =
   functions.region(REGION).https.onCall(
@@ -37,14 +49,21 @@ export const createUser =
           data.actionsNewsletter,
           data.address,
         ];
-        const userRecord =
-              await admin.auth()
-                  .createUser({
-                    email: email,
-                    phoneNumber: phoneNumber,
-                    displayName: name,
-                    disabled: false,
-                  });
+        let userRecord = null as null | UserRecord;
+        try {
+          userRecord =
+              await wrapInECMAPromise<UserRecord>(
+                  () => admin.auth()
+                      .createUser({
+                        email: email,
+                        phoneNumber: phoneNumber,
+                        displayName: name,
+                        disabled: false,
+                      }));
+        } catch (e) {
+          functions.logger.warn(`Error creating user: ${JSON.stringify(e)}`);
+          return {"validationError": e};
+        }
         functions.logger.debug("created user", userRecord);
         const verificationLink =
           await admin.auth()
@@ -54,7 +73,10 @@ export const createUser =
                     handleCodeInApp: false,
                     url: BASE_DOMAIN,
                   });
-        const verificationEmail = `Click <a href="${verificationLink}">here</a> to verify your e-mail`;
+        const verificationEmail =
+            `Hi ${name},<br><br>` +
+            `Click <a href="${verificationLink}">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>` +
+            "Regards,<br>The clothing-loop team!";
         functions.logger.debug("sending verification email", verificationEmail);
         await db.collection("mail")
             .add({
@@ -96,7 +118,6 @@ export const createChain =
           latitude,
           longitude,
           categories,
-          published,
         ] = [
           data.uid,
           data.name,
@@ -105,7 +126,6 @@ export const createChain =
           data.latitude,
           data.longitude,
           data.categories,
-          data.published,
         ];
 
         const user = await admin.auth().getUser(uid);
@@ -119,7 +139,7 @@ export const createChain =
             latitude,
             longitude,
             categories,
-            published,
+            published: false,
           });
           db.collection("users").doc(uid).update("chainId", chainData.id);
           await admin.auth().setCustomUserClaims(
