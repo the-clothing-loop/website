@@ -10,7 +10,7 @@ const ADMIN_EMAILS = [
   "timstokman@gmail.com",
 ];
 
-const BASE_DOMAIN = "http://localhost:3000";
+const BASE_DOMAIN = "https://www.clothingloop.org";
 const VERIFY_SUBJECT = "Verify e-mail for clothing chain";
 const REGION = "europe-west1";
 const ROLE_ADMIN = "admin";
