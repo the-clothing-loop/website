@@ -44,6 +44,7 @@
     "react-places-autocomplete": "^7.3.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "worker-loader": "^3.0.8",
     "yup": "^0.32.9"
   },
   "scripts": {
