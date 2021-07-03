@@ -24,7 +24,7 @@
       object-src 'self'; 
       form-action 'self' https://*.list-manage.com/ https://*.googleapis.com; 
       connect-src 'self' https://*.mapbox.com https://*.googleapis.com https://ipinfo.io https://*.cloudfunctions.net; 
-      img-src 'self' 'unsafe-inline' https://*.iconfinder.com; 
+      img-src 'self' 'unsafe-inline' https://*.iconfinder.com https://*.mapbox.com; 
       style-src 'self' 'unsafe-inline' https://*.mapbox.com; 
       font-src 'self'; 
       media-src 'self'; 
