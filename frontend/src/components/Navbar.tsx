@@ -37,13 +37,13 @@ const Navbar = () => {
           </Button>
         )}
 
-        {userData != null && userData.role === "admin" ? (
+        {userData?.role === "admin" ? (
           <Button color="inherit" component={Link} to="/chains">
             {t("admin")}
           </Button>
         ) : null}
 
-        {userData != null && userData.role === "chainAdmin" ? (
+        {userData?.role === "chainAdmin" ? (
           <Button
             color="inherit"
             component={Link}
