@@ -2,7 +2,6 @@ import { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { useTranslation } from "react-i18next";
-import getUserLocation from "../util/api";
 
 // Material UI
 import { Button } from "@material-ui/core";
@@ -28,8 +27,7 @@ import { AuthContext } from "../components/AuthProvider";
 import { addUserToChain } from "../util/firebase/chain";
 
 const accessToken = {
-  mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
-  ipinfoApiAccessToken: process.env.REACT_APP_IPINFO_API_KEY,
+  mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY
 };
 
 const categories = [
@@ -64,21 +62,19 @@ const Map = () => {
       setChainData(chainResponse);
       setFilteredChains(chainResponse);
 
-      const userLocationResponse = await getUserLocation(
-        accessToken.ipinfoApiAccessToken
-      );
-      if (userLocationResponse.loc) {
-        setViewport({
-          latitude: Number(userLocationResponse.loc.split(",")[0]),
-          longitude: Number(userLocationResponse.loc.split(",")[1]),
-          width: "100vw",
-          height: "100vh",
-          zoom: 10,
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setViewport({
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+            width: "100vw",
+            height: "100vh",
+            zoom: 10,
+          });
+        },
+        (err) => {
+          console.error(`Couldn't receive location: ${err.message}`);
         });
-      } else {
-        console.error("Couldn't receive location");
-        console.error(userLocationResponse);
-      }
     })();
   }, []);
 
@@ -109,7 +105,7 @@ const Map = () => {
     setFilteredChains(filteredArray);
   }, [gender]);
 
-  if (!accessToken.mapboxApiAccessToken || !accessToken.ipinfoApiAccessToken) {
+  if (!accessToken.mapboxApiAccessToken) {
     return <div>Access tokens not configured</div>;
   }
 
