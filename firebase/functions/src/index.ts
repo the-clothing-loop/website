@@ -9,6 +9,7 @@ const db = admin.firestore();
 const ADMIN_EMAILS = [
   "pim.sauter@gmail.com",
   "timstokman@gmail.com",
+  "mail@giuliamummolo.com",
 ];
 
 const BASE_DOMAIN = "http://localhost:3000";
