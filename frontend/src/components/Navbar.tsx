@@ -14,6 +14,7 @@ const Navbar = () => {
   const { t } = useTranslation();
   const { user, userData } = useContext(AuthContext);
 
+  
   return (
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
     // Note: Not supported by IE 11. See https://material-ui.com/components/app-bar/#fixed-placement
