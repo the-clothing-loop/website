@@ -103,7 +103,6 @@ const NewChainLocation = () => {
       address: chain.locality,
       description: description,
       categories: { gender: chainCategories },
-      published: false,
       uid: userId
     };
     console.log(`creating chain: ${JSON.stringify(newChain)}, ${userId}`);
