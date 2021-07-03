@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useContext, useRef } from "react";
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 
 // Material UI
 import { AppBar, Toolbar, Button } from "@material-ui/core";
@@ -14,7 +13,6 @@ const Navbar = () => {
   const { t } = useTranslation();
   const { user, userData } = useContext(AuthContext);
 
-  
   return (
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
     // Note: Not supported by IE 11. See https://material-ui.com/components/app-bar/#fixed-placement
