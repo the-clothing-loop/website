@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import Alert from "@material-ui/lab/Alert";
 import { useTranslation } from "react-i18next";
 
-export const LoginEmailFinished = () => {
+const LoginEmailFinished = () => {
   const [finished, setFinished] = useState(false);
   const [error, setError] = useState("");
   const { email } = useParams<{ email: string }>();
@@ -42,3 +42,5 @@ export const LoginEmailFinished = () => {
     return <Alert severity="info">{t("finishingLoggingIn")}</Alert>;
   }
 };
+
+export default LoginEmailFinished;
