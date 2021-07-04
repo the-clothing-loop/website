@@ -11,7 +11,7 @@ import { AuthContext } from "../components/AuthProvider";
 
 const Navbar = () => {
   const { t } = useTranslation();
-  const { user, userData } = useContext(AuthContext);
+  const { userData } = useContext(AuthContext);
 
   return (
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
@@ -27,15 +27,6 @@ const Navbar = () => {
         <Button color="inherit" component={Link} to="/chains/new-signup">
           {t("startNewChain")}
         </Button>
-        {user ? (
-          <Button color="inherit" component={Link} to="/users/logout">
-            {t("logout")}
-          </Button>
-        ) : (
-          <Button color="inherit" component={Link} to="/users/login">
-            {t("login")}
-          </Button>
-        )}
 
         {userData?.role === "admin" ? (
           <Button color="inherit" component={Link} to="/chains">
@@ -52,6 +43,16 @@ const Navbar = () => {
             {t("admin")}
           </Button>
         ) : null}
+
+        {userData ? (
+          <Button color="inherit" component={Link} to="/users/logout">
+            {t("logout")}
+          </Button>
+        ) : (
+          <Button color="inherit" component={Link} to="/users/login">
+            {t("login")}
+          </Button>
+        )}
       </Toolbar>
       <LanguageSwitcher />
     </AppBar>
