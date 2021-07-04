@@ -18,7 +18,7 @@ import ChainEdit from "./pages/ChainEdit";
 import ChainsList from "./pages/ChainsList";
 import ChainInformation from "./pages/ChainInformation";
 import About from "./pages/About";
-import {LoginEmailFinished}  from "./pages/LoginEmailFinished";
+import LoginEmailFinished from "./pages/LoginEmailFinished";
 
 // Components
 import Navbar from "./components/Navbar";

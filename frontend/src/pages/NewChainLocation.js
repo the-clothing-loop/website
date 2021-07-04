@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 
 //Project Resources
 import { createChain } from "../util/firebase/chain";
-import getUserLocation from "../util/api";
 
 // Material
 import Grid from "@material-ui/core/Grid";
@@ -24,9 +23,11 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
-  ipinfoApiAccessToken: process.env.REACT_APP_IPINFO_API_KEY,
 };
 
 const categories = [
@@ -69,16 +70,19 @@ const NewChainLocation = () => {
   };
 
   useEffect(() => {
-    (async () => {
-      const response = await getUserLocation(accessToken.ipinfoApiAccessToken);
-      setViewport({
-        latitude: Number(response.loc.split(",")[0]),
-        longitude: Number(response.loc.split(",")[1]),
-        width: "100%",
-        height: 600,
-        zoom: 10,
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setViewport({
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+          width: "100vw",
+          height: "100vh",
+          zoom: 10,
+        });
+      },
+      (err) => {
+        console.error(`Couldn't receive location: ${err.message}`);
       });
-    })();
   }, []);
 
   //on click get location and set marker, popup and location info
