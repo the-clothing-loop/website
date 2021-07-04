@@ -1,7 +1,7 @@
 // React / plugins
 import { useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { Formik, Form } from "formik";
+import { Formik, Form} from "formik";
 import * as Yup from "yup";
 import { Redirect } from "react-router-dom";
 
@@ -27,13 +27,16 @@ import { createUser } from "../util/firebase/user";
 const Signup = () => {
   const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
-  const [geocoderResult, setGeocoderResult] = useState({result: {place_name: ""}});
+  const [geocoderResult, setGeocoderResult] = useState({
+    result: { place_name: "" },
+  });
   const [userId, setUserId] = useState("");
   const classes = makeStyles(theme as any)();
   const { user } = useContext(AuthContext);
   const [error, setError] = useState("");
 
-  const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
+  //Phone Number Validation Format with E.164
+  const phoneRegExp = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
   const validate = Yup.object({
     name: Yup.string()
@@ -42,9 +45,10 @@ const Signup = () => {
     email: Yup.string().email("Please enter a valid e-mail address"),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
-        message: "Please enter valid phonenumber",
+        message: "Please enter valid phone number",
       })
-      .required("Required"),
+      .max(15)
+      .required("Please enter a valid phone number"),
     newsletter: Yup.boolean(),
     actionsNewsletter: Yup.boolean(),
   });
@@ -71,19 +75,20 @@ const Signup = () => {
         const user = {
           address: geocoderResult.result.place_name,
           chainId: null,
-          ...values
+          ...values,
         };
+
         console.log(`creating user: ${JSON.stringify(user)}`);
-        try {
-          setUserId(await createUser(user));
-          setSubmitted(true);
-        } catch (e) {
-          console.error(`Error creating user: ${JSON.stringify(e)}`);
-          setError(e.message);
-        }
+        // try {
+        //   setUserId(await createUser(user));
+        //   setSubmitted(true);
+        // } catch (e) {
+        //   console.error(`Error creating user: ${JSON.stringify(e)}`);
+        //   setError(e.message);
+        // }
       }}
     >
-      {(formik) => (
+      {({ errors, touched, setFieldValue }) => (
         <ThreeColumnLayout>
           <div>
             <img
@@ -97,23 +102,35 @@ const Signup = () => {
             </Typography>{" "}
             <Form>
               <TextForm
+                required
                 label="Name"
                 name="name"
                 type="text"
                 className={classes.textField}
+                error={errors.name && touched.name ? { errors } : null}
+                helperText={errors.name && touched.name ? errors.name : null}
               />
 
               <TextForm
+                required
                 label="Email"
                 name="email"
                 type="email"
                 className={classes.textField}
+                error={errors.email && touched.email ? { errors } : null}
+                helperText={errors.email && touched.email ? errors.email : null}
               />
               <PhoneFormField
                 label="Phone number"
                 name="phoneNumber"
-                onChange={(e: string) => formik.setFieldValue("phoneNumber", e)}
+                error={
+                  errors.phoneNumber && touched.phoneNumber ? { errors } : null
+                }
+                onChange={(e: string) =>
+                  setFieldValue("phoneNumber", e.replace(/\s/g, ""))
+                }
               />
+
               <GeocoderSelector name="address" onResult={setGeocoderResult} />
 
               <CheckboxField
@@ -126,7 +143,7 @@ const Signup = () => {
                 name="actionsNewsletter"
                 type="checkbox"
               />
-              { error ? <Alert severity="error">{error}</Alert> : null }
+              {error ? <Alert severity="error">{error}</Alert> : null}
               <Button
                 type="submit"
                 variant="contained"
