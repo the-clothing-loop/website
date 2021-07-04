@@ -70,6 +70,13 @@ const NewChainLocation = () => {
   };
 
   useEffect(() => {
+    setViewport({
+      latitude: 0,
+      longitude: 0,
+      width: "100vw",
+      height: "100vh",
+      zoom: 1,
+    });
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setViewport({

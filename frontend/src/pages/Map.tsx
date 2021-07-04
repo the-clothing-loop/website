@@ -20,11 +20,14 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
+import { makeStyles } from "@material-ui/core";
 
 // Project resources
 import { getChains } from "../util/firebase/chain";
 import { AuthContext } from "../components/AuthProvider";
 import { addUserToChain } from "../util/firebase/chain";
+import { IChain, IViewPort } from "../types";
+import theme from "../util/theme";
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY
@@ -41,20 +44,18 @@ const Map = () => {
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
 
-  const styles = (theme) => ({
-    ...theme.spreadThis,
-  });
+  const classes = makeStyles(theme as any)();
 
-  const [viewport, setViewport] = useState([]);
-  const [chainData, setChainData] = useState([]);
-  const [selectedChain, setSelectedChain] = useState(null);
+  const [viewport, setViewport] = useState<IViewPort | {}>({});
+  const [chainData, setChainData] = useState<IChain[]>([]);
+  const [selectedChain, setSelectedChain] = useState<IChain | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState<IChain | null>(null);
 
-  const [gender, setGender] = useState([]);
-  const [filteredChains, setFilteredChains] = useState([]);
+  const [gender, setGender] = useState<string[]>([]);
+  const [filteredChains, setFilteredChains] = useState<IChain[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -62,6 +63,13 @@ const Map = () => {
       setChainData(chainResponse);
       setFilteredChains(chainResponse);
 
+      setViewport({
+        latitude: 0,
+        longitude: 0,
+        width: "100vw",
+        height: "100vh",
+        zoom: 1,
+      });
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           setViewport({
@@ -78,7 +86,7 @@ const Map = () => {
     })();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e: {target: {checked: boolean, value: any}}) => {
     if (e.target.checked) {
       setGender([...gender, e.target.value]);
     } else {
@@ -110,7 +118,7 @@ const Map = () => {
   }
 
   //get search term from input
-  const onChange = (e) => {
+  const onChange = (e: any) => {
     setSearchTerm(e.target.value);
 
     chainData.filter((val) => {
@@ -124,24 +132,24 @@ const Map = () => {
   //render location on result selection
   const handleSelect = () => {
     setViewport({
-      latitude: value.latitude,
-      longitude: value.longitude,
+      latitude: value?.latitude,
+      longitude: value?.longitude,
       width: "100vw",
       height: "100vh",
       zoom: 8,
     });
   };
 
-  const signupToChain = async (e) => {
+  const signupToChain = async (e: any) => {
     e.preventDefault();
     if (user) {
-      await addUserToChain(selectedChain.id, user.uid);
+      await addUserToChain(selectedChain!.id, user.uid);
       history.push({ pathname: "/thankyou" });
     } else {
       history.push({
-        pathname: `/users/signup/${selectedChain.id}`,
+        pathname: `/users/signup/${selectedChain?.id}`,
         state: {
-          chainId: selectedChain.id,
+          chainId: selectedChain?.id,
         },
       });
     }
@@ -152,19 +160,19 @@ const Map = () => {
       mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
       mapStyle="mapbox://styles/mapbox/streets-v11"
       {...viewport}
-      onViewportChange={(newView) => setViewport(newView)}
+      onViewportChange={(newView: IViewPort) => setViewport(newView)}
     >
       <div className={"filter-wrapper"}>
-        <Paper component="form" className={styles.root2}>
+        <Paper component="form" className={classes.root2}>
           <InputBase
-            className={styles.input}
+            className={classes.input}
             placeholder="Search For Chain"
             inputProps={{ "aria-label": "search for chain" }}
             onChange={onChange}
           />
           <IconButton
             type="submit"
-            className={styles.iconButton}
+            className={classes.iconButton}
             aria-label="search"
           >
             <SearchIcon />
@@ -192,14 +200,14 @@ const Map = () => {
             key={chain.id}
             latitude={chain.latitude}
             longitude={chain.longitude}
-            onClick={(e) => {
-              e.preventDefault();
-              setSelectedChain(chain);
-              setShowPopup(true);
-            }}
           >
             {" "}
             <img
+              onClick={(e: any) => {
+                e.preventDefault();
+                setSelectedChain(chain);
+                setShowPopup(true);
+              }}
               id="marker"
               src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
               alt="Map Marker"
@@ -216,10 +224,10 @@ const Map = () => {
           onClose={() => setShowPopup(false)}
           dynamicPosition={false}
         >
-          <Card className={styles.root}>
+          <Card className={classes.root}>
             <CardContent>
               <Typography
-                className={styles.title}
+                className={classes.title}
                 component="p"
                 variant="h4"
                 gutterBottom

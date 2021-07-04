@@ -21,3 +21,11 @@ export interface IUser {
   actionsNewsletter: boolean;
   role: "admin" | "chainAdmin" | null;
 }
+
+export interface IViewPort {
+  longitude: number;
+  latitude: number;
+  width: string;
+  height: string;
+  zoom: number;
+}
