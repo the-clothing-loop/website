@@ -79,13 +79,13 @@ const Signup = () => {
         };
 
         console.log(`creating user: ${JSON.stringify(user)}`);
-        // try {
-        //   setUserId(await createUser(user));
-        //   setSubmitted(true);
-        // } catch (e) {
-        //   console.error(`Error creating user: ${JSON.stringify(e)}`);
-        //   setError(e.message);
-        // }
+        try {
+          setUserId(await createUser(user));
+          setSubmitted(true);
+        } catch (e) {
+          console.error(`Error creating user: ${JSON.stringify(e)}`);
+          setError(e.message);
+        }
       }}
     >
       {({ errors, touched, setFieldValue }) => (
