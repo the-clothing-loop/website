@@ -93,7 +93,6 @@ const Signup = () => {
       {({ errors, touched, setFieldValue }) => (
         <ThreeColumnLayout>
           <div>
-            {console.log(errors)}
             <img
               src={AppIcon}
               alt="SFM logo"
