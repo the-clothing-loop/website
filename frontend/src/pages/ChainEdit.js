@@ -14,7 +14,6 @@ import theme from "../util/theme";
 
 // Project resources
 import { getChain, updateChain } from "../util/firebase/chain";
-import { IChain } from "../types";
 import { TextFormField } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 
