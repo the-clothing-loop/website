@@ -1,7 +1,7 @@
 // React / plugins
 import { useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { Formik, Form} from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Redirect } from "react-router-dom";
 
@@ -42,7 +42,9 @@ const Signup = () => {
     name: Yup.string()
       .min(2, "Must be more than 2 characters")
       .required("Required"),
-    email: Yup.string().email("Please enter a valid e-mail address"),
+    email: Yup.string()
+      .email("Please enter a valid e-mail address")
+      .required("Required"),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
         message: "Please enter valid phone number",
@@ -91,6 +93,7 @@ const Signup = () => {
       {({ errors, touched, setFieldValue }) => (
         <ThreeColumnLayout>
           <div>
+            {console.log(errors)}
             <img
               src={AppIcon}
               alt="SFM logo"
@@ -107,7 +110,7 @@ const Signup = () => {
                 name="name"
                 type="text"
                 className={classes.textField}
-                error={errors.name && touched.name ? { errors } : null}
+                error={touched.name && Boolean(errors.name)}
                 helperText={errors.name && touched.name ? errors.name : null}
               />
 
@@ -117,15 +120,13 @@ const Signup = () => {
                 name="email"
                 type="email"
                 className={classes.textField}
-                error={errors.email && touched.email ? { errors } : null}
+                error={touched.email && Boolean(errors.email)}
                 helperText={errors.email && touched.email ? errors.email : null}
               />
               <PhoneFormField
                 label="Phone number"
                 name="phoneNumber"
-                error={
-                  errors.phoneNumber && touched.phoneNumber ? { errors } : null
-                }
+                error={touched.phoneNumber && Boolean(errors.phoneNumber)}
                 onChange={(e: string) =>
                   setFieldValue("phoneNumber", e.replace(/\s/g, ""))
                 }

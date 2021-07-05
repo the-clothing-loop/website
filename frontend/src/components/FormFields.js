@@ -50,15 +50,14 @@ const PhoneFormField = ({ label, ...props }) => {
 const TextForm = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   const { t } = useTranslation();
-  const classes = makeStyles(theme)();
 
   return (
     <div>
-            <TextField
+      <TextField
         {...field}
         {...props}
         autoComplete="off"
-        label={label}
+        label={t(label)}
         fullWidth
       />
     </div>
