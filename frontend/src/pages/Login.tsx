@@ -16,6 +16,7 @@ import AppIcon from "../images/sfm_logo.png";
 
 import firebase from "firebase/app";
 import "firebase/auth";
+import { Helmet } from "react-helmet";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -39,7 +40,11 @@ const Login = () => {
     }
   };
 
-  return (
+  return <>
+    <Helmet>
+      <title>Clothing-loop | Login</title>
+      <meta name="description" content="Login"/>
+    </Helmet>
     <Grid container className={classes.form}>
       <Grid item sm />
       <Grid item sm>
@@ -67,7 +72,7 @@ const Login = () => {
       </Grid>
       <Grid item sm />
     </Grid>
-  );
+  </>;
 };
 
 export default Login;

@@ -1,19 +1,24 @@
 // Material
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import { Helmet } from "react-helmet";
 
 // Project resources
 import AppIcon from "../images/sfm_logo.png";
 
-const About = () => {
-  return (
+const Home = () => {
+  return <>
+    <Helmet>
+        <title>Clothing-loop | Home</title>
+        <meta name="description" content="Home"/>
+    </Helmet>
     <Grid container>
       <Grid item sm />
       <Grid item sm>
         <div className={"text-wrapper"}>
           <img src={AppIcon} alt="SFM logo" width="200" />
           <Typography component="h1" variant="h3">
-            {"About This Project"}
+            {"Home"}
           </Typography>{" "}
           <Typography component="p">
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -43,7 +48,7 @@ const About = () => {
       </Grid>
       <Grid item sm />
     </Grid>
-  );
+  </>;
 };
 
-export default About;
+export default Home;

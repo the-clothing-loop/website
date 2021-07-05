@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 // Material UI
 import Card from "@material-ui/core/Card";
@@ -25,7 +26,11 @@ const ChainInformation = () => {
     getChain(chainId).then((response) => setChain(response));
   }, []);
 
-  return chain ? (
+  return chain ? <>
+    <Helmet>
+      <title>Clothing-chain | Chain details</title>
+      <meta name="description" content="Chain details" />
+    </Helmet>
     <div className={"chain-details"}>
       <Card>
         <CardContent>
@@ -65,7 +70,7 @@ const ChainInformation = () => {
         </TableBody>
       </Table>
     </div>
-  ) : null;
+  </> : null;
 };
 
 export default ChainInformation;

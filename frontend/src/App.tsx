@@ -6,7 +6,7 @@ import { AuthProvider } from "./components/AuthProvider";
 import themeFile from "./util/theme";
 
 // Pages
-import Map from "./pages/Map";
+import FindChain from "./pages/FindChain";
 import Login from "./pages/Login";
 import Thankyou from "./pages/Thankyou";
 import ChainMemberList from "./pages/ChainMemberList";
@@ -17,7 +17,7 @@ import UserEdit from "./pages/UserEdit";
 import ChainEdit from "./pages/ChainEdit";
 import ChainsList from "./pages/ChainsList";
 import ChainInformation from "./pages/ChainInformation";
-import About from "./pages/About";
+import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
 
 // Components
@@ -35,14 +35,14 @@ const App = () => {
             <Navbar />
             <div className="container">
               <Switch>
-                <Route exact path="/" component={About} />
+                <Route exact path="/" component={Home} />
                 <Route exact path="/thankyou" component={Thankyou} />
                 <Route exact path="/users/login-email-finished/:email" component={LoginEmailFinished} />
                 <Route exact path="/users/login" component={Login} />
                 <Route exact path="/users/logout" component={Logout} />
                 <Route exact path="/users/signup/:chainId" component={Signup} />
                 <Route exact path="/users/edit/:userId" component={UserEdit} />
-                <Route exact path="/chains/find" component={Map} />
+                <Route exact path="/chains/find" component={FindChain} />
                 <Route exact path="/chains/edit/:chainId" component={ChainEdit} />
                 <Route exact path="/chains/members/:chainId" component={ChainMemberList} />
                 <Route exact path="/chains/new-location/:userId" component={NewChainLocation} />

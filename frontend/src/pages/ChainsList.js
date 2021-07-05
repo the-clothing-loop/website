@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 // Material UI
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
@@ -27,7 +28,11 @@ const ChainsList = () => {
     })();
   }, []);
 
-  return chains ? (
+  return chains ? <>
+    <Helmet>
+      <title>Clothing-chain | Chain list</title>
+      <meta name="description" content="Chain list" />
+    </Helmet>
     <div>
       <Typography variant="h3" component="h2" align="center">
         All Chains
@@ -56,7 +61,7 @@ const ChainsList = () => {
         </TableBody>
       </Table>
     </div>
-  ) : null;
+  </> : null;
 };
 
 export default ChainsList;

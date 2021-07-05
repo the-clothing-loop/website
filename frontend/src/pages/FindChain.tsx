@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 // Material UI
 import { Button } from "@material-ui/core";
@@ -39,7 +40,7 @@ const categories = [
   { gender: "no gender" },
 ];
 
-const Map = () => {
+const FindChain = () => {
   const history = useHistory();
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
@@ -155,7 +156,11 @@ const Map = () => {
     }
   };
 
-  return (
+  return <>
+    <Helmet>
+      <title>Clothing-chain | Find chain</title>
+      <meta name="description" content="Find chain" />
+    </Helmet>
     <ReactMapGL
       mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
       mapStyle="mapbox://styles/mapbox/streets-v11"
@@ -288,7 +293,7 @@ const Map = () => {
         </Popup>
       ) : null}
     </ReactMapGL>
-  );
+  </>;
 };
 
-export default Map;
+export default FindChain;
