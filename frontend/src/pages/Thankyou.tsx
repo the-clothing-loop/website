@@ -1,8 +1,13 @@
 // Material
 import Grid from "@material-ui/core/Grid";
+import { Helmet } from "react-helmet";
 
 const Thankyou = () => {
-  return (
+  return <>
+    <Helmet>
+      <title>Clothing-chain | Thank you</title>
+      <meta name="description" content="Thank you"/>
+    </Helmet>
     <Grid container>
       <Grid item sm />
       <Grid item sm>
@@ -13,7 +18,7 @@ const Thankyou = () => {
       </Grid>
       <Grid item sm />
     </Grid>
-  );
+  </>;
 };
 
 export default Thankyou;

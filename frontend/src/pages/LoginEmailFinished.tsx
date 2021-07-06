@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Alert from "@material-ui/lab/Alert";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 const LoginEmailFinished = () => {
   const [finished, setFinished] = useState(false);
@@ -16,6 +17,7 @@ const LoginEmailFinished = () => {
         var emailStored = window.localStorage.getItem("emailForSignIn");
         if (!emailStored || emailStored !== email) {
           setError(t("noEmailProvidedLoggingIn"));
+          console.error(`Email stored: ${emailStored}`);
         } else {
           try {
             await firebase
@@ -29,18 +31,17 @@ const LoginEmailFinished = () => {
         }
       }
     })();
-  });
+  }, [email]);
 
-  if (finished) {
-    return <Alert severity="success">{t("userIsLoggedIn")}</Alert>;
-  } else if (error) {
-    return(
-    <Alert severity="error">
-      {t("errorLoggingIn")}: {error}
-    </Alert>);
-  } else {
-    return <Alert severity="info">{t("finishingLoggingIn")}</Alert>;
-  }
+  return <>
+    <Helmet>
+      <title>Clothing-loop | Login finishing</title>
+      <meta name="description" content="Login finishing"/>
+    </Helmet>
+    { finished && <Alert severity="success">{t("userIsLoggedIn")}</Alert> }
+    { error && <Alert severity="error">{t("errorLoggingIn")}: {error}</Alert> }
+    { !finished && !error && <Alert severity="info">{t("finishingLoggingIn")}</Alert> }
+  </>;
 };
 
 export default LoginEmailFinished;

@@ -3,6 +3,7 @@ import "firebase/auth";
 import { useEffect, useState } from "react";
 import Alert from "@material-ui/lab/Alert";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 export const Logout = () => {
   const [done, setDone] = useState(false);
@@ -12,11 +13,14 @@ export const Logout = () => {
       await firebase.auth().signOut();
       setDone(true);
     })();
-  });
+  }, []);
 
-  if (done) {
-    return <Alert severity="success">{t("userSignedOut")}</Alert>;
-  } else {
-    return <Alert severity="info">{t("userSigningOut")}</Alert>;
-  }
+  return <>
+    <Helmet>
+      <title>Clothing-loop | Logout</title>
+      <meta name="description" content="Logout"/>
+    </Helmet>
+    { done && <Alert severity="success">{t("userSignedOut")}</Alert> }
+    { !done && <Alert severity="info">{t("userSigningOut")}</Alert> }
+  </>;
 }

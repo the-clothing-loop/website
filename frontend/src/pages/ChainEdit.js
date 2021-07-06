@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
+import { Helmet } from "react-helmet";
 
 // Material UI
 import Grid from "@material-ui/core/Grid";
@@ -13,7 +14,6 @@ import theme from "../util/theme";
 
 // Project resources
 import { getChain, updateChain } from "../util/firebase/chain";
-import { IChain } from "../types";
 import { TextFormField } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 
@@ -44,7 +44,11 @@ const ChainEdit = () => {
     setChain(chain);
   }, []);
 
-  return !chain ? null : (
+  return !chain ? null : <>
+    <Helmet>
+      <title>Clothing-chain | Edit chain details</title>
+      <meta name="description" content="Edit chain details" />
+    </Helmet>
     <Grid container className={classes.form}>
       <Grid item sm />
       <Grid item sm>
@@ -75,7 +79,7 @@ const ChainEdit = () => {
       </Grid>
       <Grid item sm />
     </Grid>
-  );
+  </>;
 };
 
 export default ChainEdit;

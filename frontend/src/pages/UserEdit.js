@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
+import { Helmet } from "react-helmet";
 
 // Material UI
 import Grid from "@material-ui/core/Grid";
@@ -45,7 +46,11 @@ const UserEdit = () => {
     })();
   }, []);
 
-  return !user ? null : (
+  return !user ? null : <>
+    <Helmet>
+      <title>Clothing-chain | Edit user</title>
+      <meta name="description" content="Edit user"/>
+    </Helmet>
     <Grid container className={classes.form}>
       <Grid item sm />
       <Grid item sm>
@@ -74,7 +79,7 @@ const UserEdit = () => {
       </Grid>
       <Grid item sm />
     </Grid>
-  );
+  </>;
 };
 
 export default UserEdit;

@@ -24,9 +24,12 @@ export const AuthProvider = ({ children }: any) => {
       if (user?.uid && user?.uid !== previousUid) {
         setUserData(await getUserById(user.uid));
         setPreviousUid(user.uid);
+      } else {
+        setUserData(null);
+        setPreviousUid("");
       }
     });
-  });
+  }, []);
   const contextValue = {
     user,
     userData,

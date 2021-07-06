@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Redirect, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 // Material UI
 import Typography from "@material-ui/core/Typography";
@@ -83,7 +84,11 @@ const Signup = () => {
   if (submitted) {
     return <Redirect to={"/thankyou"} />;
   } else {
-    return (
+    return <>
+      <Helmet>
+        <title>Clothing-chain | Signup user</title>
+        <meta name="description" content="Signup user"/>
+      </Helmet>
       <Formik
         initialValues={{
           name: "",
@@ -153,7 +158,7 @@ const Signup = () => {
           </ThreeColumnLayout>
         )}
       </Formik>
-    );
+    </>;
   }
 };
 

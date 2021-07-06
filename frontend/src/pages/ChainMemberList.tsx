@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 // Material UI
 import Table from "@material-ui/core/Table";
@@ -42,7 +43,11 @@ const ChainMemberList = () => {
     })();
   }, []);
 
-  return !chain || !users ? null : (
+  return !chain || !users ? null : <>
+    <Helmet>
+      <title>Clothing-chain | Chain members</title>
+      <meta name="description" content="Chain members" />
+    </Helmet>
     <div className="chain-member-list">
       <Card>
         <CardContent>
@@ -99,7 +104,7 @@ const ChainMemberList = () => {
         </TableBody>
       </Table>
     </div>
-  );
+  </>;
 };
 
 export default ChainMemberList;
