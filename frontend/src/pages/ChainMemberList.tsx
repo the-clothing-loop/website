@@ -36,9 +36,7 @@ const ChainMemberList = () => {
   const [publishedValue, setPublishedValue] = useState({ published: true });
   const [error, setError] = useState("");
 
-  const handleChange = async (e: {
-    target: { checked: boolean; name: any };
-  }) => {
+  const handleChange = (e: { target: { checked: boolean; name: any } }) => {
     setPublishedValue({ ...publishedValue, [e.target.name]: e.target.checked });
 
     const updatedChainData = {
@@ -47,13 +45,14 @@ const ChainMemberList = () => {
 
     console.log(`updating chain data: ${JSON.stringify(updatedChainData)}`);
     try {
-      await updateChain(chainId, updatedChainData);
+      updateChain(chainId, updatedChainData);
     } catch (e) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
       setError(e.message);
     }
   };
 
+  console.log(location);
   useEffect(() => {
     (async () => {
       try {

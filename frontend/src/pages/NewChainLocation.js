@@ -4,6 +4,8 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { Redirect, useParams } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
 import { useTranslation } from "react-i18next";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 
 //Project Resources
 import { createChain } from "../util/firebase/chain";
@@ -13,25 +15,23 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { Helmet } from "react-helmet";
+import { CheckboxField, TextForm } from "../components/FormFields";
+import { Alert } from "@material-ui/lab";
+import { CardContent } from "@material-ui/core";
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
-mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
 
-const categories = [
+const categoriesList = [
   { gender: "women" },
   { gender: "men" },
-  { gender: "no gender" },
+  { gender: "mix" },
 ];
 
 const NewChainLocation = () => {
@@ -47,9 +47,10 @@ const NewChainLocation = () => {
   const [location, setLocation] = useState([]);
   const [changePage, setChangePage] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
-  const [description, setDescription] = useState("");
-  const [chainCategories, setChainCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
   const { userId } = useParams();
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   //location details
   const getLocation = async (longitude, latitude) => {
@@ -57,8 +58,9 @@ const NewChainLocation = () => {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken.mapboxApiAccessToken}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
     );
     const data = await response.json();
+
     setChain({
-      locality: data.features[0].place_name.split(",")[0],
+      locality: data.features[0].place_name,
       place: data.features[0].place_name
         .split(",")
         .slice(1)
@@ -71,22 +73,24 @@ const NewChainLocation = () => {
       latitude: 0,
       longitude: 0,
       width: "100vw",
-      height: "100vh",
+      height: "80vh",
       zoom: 1,
     });
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setViewport({
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
           width: "100vw",
-          height: "100vh",
+          height: "80vh",
           zoom: 10,
         });
       },
       (err) => {
         console.error(`Couldn't receive location: ${err.message}`);
-      });
+      }
+    );
   }, []);
 
   //on click get location and set marker, popup and location info
@@ -99,128 +103,165 @@ const NewChainLocation = () => {
     setShowPopup(true);
   };
 
-  //post new chain location/details to db
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const newChain = {
-      longitude: location.longitude,
-      latitude: location.latitude,
-      name: chain.locality,
-      address: chain.locality,
-      description: description,
-      categories: { gender: chainCategories },
-      uid: userId
-    };
-    console.log(`creating chain: ${JSON.stringify(newChain)}, ${userId}`);
-    await createChain(newChain);
-    setChangePage(false);
-  };
-
-  //set new chain description
+  //set new chain categories
   const handleCheck = (e) => {
     if (e.target.checked) {
-      setChainCategories([...chainCategories, e.target.value]);
+      setCategories([...categories, e.target.value]);
     } else {
-      setChainCategories(chainCategories.filter((id) => id !== e.target.value));
+      setCategories(categories.filter((id) => id !== e.target.value));
     }
   };
 
-  const handleChange = (e) => {
-    setDescription(e.target.value);
-  };
+  const validate = Yup.object({
+    name: Yup.string()
+      .min(2, "Must be more than 2 characters")
+      .required("Required"),
+    description: Yup.string()
+      .min(2, "Must be more than 2 characters")
+      .required("Required"),
+  });
 
-  return changePage ? <>
-    <Helmet>
-      <title>Clothing-chain | Create new chain</title>
-      <meta name="description" content="Create new chain"/>
-    </Helmet>
-    <ReactMapGL
-      mapboxApiAccessToken={mapboxgl.accessToken}
-      mapStyle="mapbox://styles/mapbox/streets-v11"
-      {...viewport}
-      {...accessToken}
-      onViewportChange={(newView) => setViewport(newView)}
-      onClick={handleClick}
-    >
-      {marker.visible ? (
-        <div>
-          <Marker latitude={marker.latitude} longitude={marker.longitude}>
-            {" "}
-            <img
-              id="marker"
-              src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
-              alt="Map Marker"
-            />
-          </Marker>
-          {showPopup ? (
-            <Popup
+  if (submitted) {
+    return <Redirect to={`/thankyou`} />;
+  }
+
+  return changePage ? (
+    <>
+      <Helmet>
+        <title>Clothing-chain | Create new chain</title>
+        <meta name="description" content="Create new chain" />
+      </Helmet>{" "}
+      <Typography variant="h3" align="center">
+        {"select new chain location"}
+      </Typography>
+      <ReactMapGL
+        mapboxApiAccessToken={mapboxgl.accessToken}
+        mapStyle="mapbox://styles/mapbox/streets-v11"
+        {...viewport}
+        {...accessToken}
+        onViewportChange={(newView) => setViewport(newView)}
+        onClick={handleClick}
+      >
+        {marker.visible ? (
+          <div>
+            <Marker
+              className={"new-chain"}
               latitude={marker.latitude}
               longitude={marker.longitude}
-              closeOnClick={false}
-              onClose={() => setShowPopup(false)}
-              className={"new-chain-popup"}
             >
-              <Card className={styles.root}>
-                <CardContent>
-                  <Typography
-                    className={styles.title}
-                    color="textPrimary"
-                    component="h1"
-                    variant="h5"
-                    gutterBottom
-                  >
-                    {chain.locality}
-                  </Typography>
-                  <Typography
-                    className={styles.title}
-                    color="textPrimary"
-                    component="h1"
-                    variant="caption"
-                    gutterBottom
-                  >
-                    {chain.place}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <form onSubmit={handleSubmit}>
-                    <TextField
-                      id={"description"}
-                      name={"description"}
-                      type="text"
-                      label={t("add description")}
-                      onChange={handleChange}
-                      fullWidth
-                    ></TextField>
-                    <FormControl>
-                      <FormGroup>
-                        {categories.map((cat) => (
-                          <FormControlLabel
-                            control={<Checkbox onChange={handleCheck} />}
-                            label={cat.gender}
-                            value={cat.gender}
-                            key={cat.gender}
-                          />
-                        ))}
-                      </FormGroup>
-                    </FormControl>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                      className={"chain-description"}
-                    >
-                      {"start chain"}
-                    </Button>{" "}
-                  </form>
-                </CardActions>
-              </Card>
-            </Popup>
-          ) : null}
-        </div>
-      ) : null}
-    </ReactMapGL>
-  </> : (
+              {" "}
+              <img
+                id="marker"
+                src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
+                alt="Map Marker"
+              />
+            </Marker>
+            {showPopup ? (
+              <Popup
+                latitude={marker.latitude}
+                longitude={marker.longitude}
+                closeOnClick={false}
+                onClose={() => setShowPopup(false)}
+                className={"new-chain-popup"}
+              >
+                <Formik
+                  initialValues={{
+                    name: "",
+                    description: "",
+                  }}
+                  validationSchema={validate}
+                  onSubmit={async (values) => {
+                    const newChain = {
+                      ...values,
+                      latitude: location.latitude,
+                      longitude: location.longitude,
+                      categories: { gender: categories },
+                      address: chain.locality,
+                      published: false,
+                      uid: userId,
+                    };
+
+                    console.log(`creating chain: ${JSON.stringify(newChain)}`);
+                    try {
+                      await createChain(newChain);
+                      setChangePage(false);
+                    } catch (e) {
+                      console.error(
+                        `Error creating chain: ${JSON.stringify(e)}`
+                      );
+                      setError(e.message);
+                    }
+                  }}
+                >
+                  {({ errors, touched }) => (
+                    <Card>
+                      <CardActions>
+                        <CardContent>
+                          <Form className={"new-chain-location-form"}>
+                            <Typography variant="h4">
+                              {"enter chain information"}
+                            </Typography>
+                            <TextForm
+                              required
+                              label="Name"
+                              name="name"
+                              type="text"
+                              error={touched.name && Boolean(errors.name)}
+                              helperText={
+                                errors.name && touched.name ? errors.name : null
+                              }
+                            />
+
+                            <TextForm
+                              required
+                              label="Description"
+                              name="description"
+                              type="description"
+                              error={
+                                touched.description &&
+                                Boolean(errors.description)
+                              }
+                              helperText={
+                                errors.description && touched.description
+                                  ? errors.description
+                                  : null
+                              }
+                            />
+
+                            {categoriesList.map((cat) => (
+                              <CheckboxField
+                                control={<Checkbox onChange={handleCheck} />}
+                                label={cat.gender}
+                                value={cat.gender}
+                                key={cat.gender}
+                                name={cat.gender}
+                              />
+                            ))}
+
+                            {error ? (
+                              <Alert severity="error">{error}</Alert>
+                            ) : null}
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                              // className={classes.button}
+                            >
+                              {t("submit")}
+                            </Button>
+                          </Form>
+                        </CardContent>
+                      </CardActions>
+                    </Card>
+                  )}
+                </Formik>
+              </Popup>
+            ) : null}
+          </div>
+        ) : null}
+      </ReactMapGL>
+    </>
+  ) : (
     <Redirect to="/thankyou" />
   );
 };

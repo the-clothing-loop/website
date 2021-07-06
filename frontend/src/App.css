@@ -56,10 +56,20 @@ img#marker {
   height: 40px;
 }
 
-.new-chain-popup {
+.new-chain-popup > .mapboxgl-popup-content {
+  position: relative;
+  top: 2%;
+  height: 100%;
+  left: 100%;
+}
+
+.new-chain-popup > .mapboxgl-popup-content > .MuiCard-root {
+  height: 100%;
+}
+
+.mapboxgl-popup {
   transform: none !important;
-  position: absolute;
-  margin: 2%;
+  left: 0 !important;
 }
 .mapboxgl-popup-tip {
   display: none;
@@ -103,6 +113,20 @@ img#marker {
 
 .MuiCardContent-root p {
   margin-bottom: 5%;
+}
+
+.MuiCardActions-root {
+  padding: 0 !important;
+}
+
+form.new-chain-location-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+form > div {
+  padding: 3% 2%;
 }
 
 .card-button {
@@ -175,6 +199,6 @@ table {
 }
 
 .chain-edit-btn {
-  position: relative;
-  text-align: right;
+  position: absolute;
+  right: 5%;
 }
