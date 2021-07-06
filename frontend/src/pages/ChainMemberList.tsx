@@ -52,7 +52,6 @@ const ChainMemberList = () => {
     }
   };
 
-  console.log(location);
   useEffect(() => {
     (async () => {
       try {
