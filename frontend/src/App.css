@@ -159,3 +159,22 @@ table {
   position: relative;
   left: 50%;
 }
+
+/*admin pages settings*/
+.chain-categories-admin p {
+  padding: 1% 1%;
+  border-radius: 5px;
+  background-color: #e5e0f1;
+  display: flex;
+  width: max-content;
+  margin-right: 2%;
+}
+
+.chain-categories-admin {
+  display: flex;
+}
+
+.chain-edit-btn {
+  position: absolute;
+  right: 5%;
+}
