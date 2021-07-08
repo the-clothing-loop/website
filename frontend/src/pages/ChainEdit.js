@@ -29,7 +29,7 @@ const ChainEdit = () => {
   const [coordinates, setCoordinates] = useState();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [categoriesState, setCategoriesState] = useState({});
+  const [categories, setCategories] = useState({});
 
   const validate = Yup.object({
     name: Yup.string().min(2, "Must be more than 2 characters"),
@@ -38,13 +38,13 @@ const ChainEdit = () => {
 
   const handleChange = (e) => {
     if (e.target.checked) {
-      setCategoriesState({
-        ...categoriesState,
+      setCategories({
+        ...categories,
         [e.target.name]: true,
       });
     } else {
-      setCategoriesState({
-        ...categoriesState,
+      setCategories({
+        ...categories,
         [e.target.name]: false,
       });
     }
@@ -57,8 +57,8 @@ const ChainEdit = () => {
       latitude: coordinates.latitude,
       longitude: coordinates.longitude,
       categories: {
-        gender: Object.keys(categoriesState).filter((e) => {
-          return categoriesState[e] === true;
+        gender: Object.keys(categories).filter((e) => {
+          return categories[e] === true;
         }),
       },
     };
@@ -95,7 +95,7 @@ const ChainEdit = () => {
       longitude: chain.longitude,
     });
 
-    setCategoriesState(mapCat(chain.categories.gender));
+    setCategories(mapCat(chain.categories.gender));
   }, []);
 
   return !chain ? null : (
@@ -145,19 +145,19 @@ const ChainEdit = () => {
                 name="woman"
                 label="woman"
                 onChange={handleChange}
-                checked={categoriesState.woman ? true : false}
+                checked={categories.woman ? true : false}
               />
               <CheckboxField
                 name="men"
                 label="men"
                 onChange={handleChange}
-                checked={categoriesState.men ? true : false}
+                checked={categories.men ? true : false}
               />
               <CheckboxField
                 name="mix"
                 label="mix"
                 onChange={handleChange}
-                checked={categoriesState.mix ? true : false}
+                checked={categories.mix ? true : false}
               />
 
               <GeocoderSelector
