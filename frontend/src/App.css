@@ -175,6 +175,6 @@ table {
 }
 
 .chain-edit-btn {
-  position: absolute;
-  right: 5%;
+  position: relative;
+  text-align: right;
 }

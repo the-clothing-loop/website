@@ -31,14 +31,10 @@ import { IChain, IViewPort } from "../types";
 import theme from "../util/theme";
 
 const accessToken = {
-  mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY
+  mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
 
-const categories = [
-  { gender: "women" },
-  { gender: "men" },
-  { gender: "no gender" },
-];
+const categories = [{ gender: "women" }, { gender: "men" }, { gender: "mix" }];
 
 const FindChain = () => {
   const history = useHistory();
@@ -83,11 +79,12 @@ const FindChain = () => {
         },
         (err) => {
           console.error(`Couldn't receive location: ${err.message}`);
-        });
+        }
+      );
     })();
   }, []);
 
-  const handleChange = (e: {target: {checked: boolean, value: any}}) => {
+  const handleChange = (e: { target: { checked: boolean; value: any } }) => {
     if (e.target.checked) {
       setGender([...gender, e.target.value]);
     } else {
@@ -156,144 +153,147 @@ const FindChain = () => {
     }
   };
 
-  return <>
-    <Helmet>
-      <title>Clothing-chain | Find chain</title>
-      <meta name="description" content="Find chain" />
-    </Helmet>
-    <ReactMapGL
-      mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
-      mapStyle="mapbox://styles/mapbox/streets-v11"
-      {...viewport}
-      onViewportChange={(newView: IViewPort) => setViewport(newView)}
-    >
-      <div className={"filter-wrapper"}>
-        <Paper component="form" className={classes.root2}>
-          <InputBase
-            className={classes.input}
-            placeholder="Search For Chain"
-            inputProps={{ "aria-label": "search for chain" }}
-            onChange={onChange}
-          />
-          <IconButton
-            type="submit"
-            className={classes.iconButton}
-            aria-label="search"
-          >
-            <SearchIcon />
-          </IconButton>
-        </Paper>
-        {value ? <Button onClick={handleSelect}>{value.name}</Button> : null}
-
-        <FormControl>
-          <FormGroup>
-            {categories.map((cat) => (
-              <FormControlLabel
-                control={<Checkbox onChange={handleChange} />}
-                label={cat.gender}
-                value={cat.gender}
-                key={cat.gender}
-              />
-            ))}
-          </FormGroup>
-        </FormControl>
-      </div>
-
-      {filteredChains.map((chain) =>
-        chain.published ? (
-          <Marker
-            key={chain.id}
-            latitude={chain.latitude}
-            longitude={chain.longitude}
-          >
-            {" "}
-            <img
-              onClick={(e: any) => {
-                e.preventDefault();
-                setSelectedChain(chain);
-                setShowPopup(true);
-              }}
-              id="marker"
-              src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
-              alt="Map Marker"
+  return (
+    <>
+      <Helmet>
+        <title>Clothing-chain | Find chain</title>
+        <meta name="description" content="Find chain" />
+      </Helmet>
+      <ReactMapGL
+        mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
+        mapStyle="mapbox://styles/mapbox/streets-v11"
+        {...viewport}
+        onViewportChange={(newView: IViewPort) => setViewport(newView)}
+      >
+        <div className={"filter-wrapper"}>
+          <Paper component="form" className={classes.root2}>
+            <InputBase
+              className={classes.input}
+              placeholder="Search For Chain"
+              inputProps={{ "aria-label": "search for chain" }}
+              onChange={onChange}
             />
-          </Marker>
-        ) : null
-      )}
+            <IconButton
+              type="submit"
+              className={classes.iconButton}
+              aria-label="search"
+            >
+              <SearchIcon />
+            </IconButton>
+          </Paper>
+          {value ? <Button onClick={handleSelect}>{value.name}</Button> : null}
 
-      {selectedChain && showPopup ? (
-        <Popup
-          latitude={selectedChain.latitude}
-          longitude={selectedChain.longitude}
-          closeOnClick={false}
-          onClose={() => setShowPopup(false)}
-          dynamicPosition={false}
-        >
-          <Card className={classes.root}>
-            <CardContent>
-              <Typography
-                className={classes.title}
-                component="p"
-                variant="h4"
-                gutterBottom
-              >
-                {selectedChain.name}
-              </Typography>
-              <Typography
-                variant="body2"
-                component="p"
-                className={"chain-address"}
-              >
-                <LocationOnOutlinedIcon />
-                {selectedChain.address}
-              </Typography>
-              <Typography variant="body2" component="p">
-                {selectedChain.description}
-              </Typography>
-              <Divider variant="middle" />
-              <div className={"chain-categories"}>
-                {selectedChain.categories
-                  ? selectedChain.categories.gender.map((category) => {
-                      return (
-                        <Typography
-                          variant="body2"
-                          component="p"
-                          display="inline"
-                        >
-                          <LocalOfferOutlinedIcon display="inline" />
-                          {category}
-                        </Typography>
-                      );
-                    })
-                  : null}
-              </div>
-            </CardContent>
+          <FormControl>
+            <FormGroup>
+              {categories.map((cat) => (
+                <FormControlLabel
+                  control={<Checkbox onChange={handleChange} />}
+                  label={cat.gender}
+                  value={cat.gender}
+                  key={cat.gender}
+                />
+              ))}
+            </FormGroup>
+          </FormControl>
+        </div>
 
-            <CardActions>
-              <Button
-                variant="contained"
-                color="primary"
-                className={"card-button"}
-                onClick={(e) => signupToChain(e)}>
-                {t("signup")}
-              </Button>{" "}
-              <Button
-                variant="contained"
-                color="secondary"
-                className={"card-button"}
-                onClick={(e) => {
+        {filteredChains.map((chain) =>
+          chain.published ? (
+            <Marker
+              key={chain.id}
+              latitude={chain.latitude}
+              longitude={chain.longitude}
+            >
+              {" "}
+              <img
+                onClick={(e: any) => {
                   e.preventDefault();
-                  history.push(`/chains/members/${selectedChain.id}`);
+                  setSelectedChain(chain);
+                  setShowPopup(true);
                 }}
-              >
-                {t("viewChain")}
-              </Button>{" "}
-            </CardActions>
-          </Card>
-        </Popup>
-      ) : null}
-    </ReactMapGL>
-  </>;
+                id="marker"
+                src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
+                alt="Map Marker"
+              />
+            </Marker>
+          ) : null
+        )}
+
+        {selectedChain && showPopup ? (
+          <Popup
+            latitude={selectedChain.latitude}
+            longitude={selectedChain.longitude}
+            closeOnClick={false}
+            onClose={() => setShowPopup(false)}
+            dynamicPosition={false}
+          >
+            <Card className={classes.root}>
+              <CardContent>
+                <Typography
+                  className={classes.title}
+                  component="p"
+                  variant="h4"
+                  gutterBottom
+                >
+                  {selectedChain.name}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  component="p"
+                  className={"chain-address"}
+                >
+                  <LocationOnOutlinedIcon />
+                  {selectedChain.address}
+                </Typography>
+                <Typography variant="body2" component="p">
+                  {selectedChain.description}
+                </Typography>
+                <Divider variant="middle" />
+                <div className={"chain-categories"}>
+                  {selectedChain.categories
+                    ? selectedChain.categories.gender.map((category) => {
+                        return (
+                          <Typography
+                            variant="body2"
+                            component="p"
+                            display="inline"
+                          >
+                            <LocalOfferOutlinedIcon display="inline" />
+                            {category}
+                          </Typography>
+                        );
+                      })
+                    : null}
+                </div>
+              </CardContent>
+
+              <CardActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={"card-button"}
+                  onClick={(e) => signupToChain(e)}
+                >
+                  {t("signup")}
+                </Button>{" "}
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className={"card-button"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    history.push(`/chains/members/${selectedChain.id}`);
+                  }}
+                >
+                  {t("viewChain")}
+                </Button>{" "}
+              </CardActions>
+            </Card>
+          </Popup>
+        ) : null}
+      </ReactMapGL>
+    </>
+  );
 };
 
 export default FindChain;

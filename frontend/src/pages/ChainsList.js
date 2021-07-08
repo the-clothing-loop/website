@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 // Material UI
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
@@ -28,34 +29,40 @@ const ChainsList = () => {
   }, []);
 
   return chains ? (
-    <div>
-      <Typography variant="h3" component="h2" align="center">
-        All Chains
-      </Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>{"chain name"}</TableCell>
-            <TableCell>{"active users"}</TableCell>
-            <TableCell>{"host name"}</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {chains.map((chain) => (
-            <TableRow key={chain.id}>
-              <TableCell>{chain.name}</TableCell>
+    <>
+      <Helmet>
+        <title>Clothing-chain | Chain list</title>
+        <meta name="description" content="Chain list" />
+      </Helmet>
+      <div>
+        <Typography variant="h3" component="h2" align="center">
+          All Chains
+        </Typography>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>{"chain name"}</TableCell>
               <TableCell>{"active users"}</TableCell>
               <TableCell>{"host name"}</TableCell>
-              <TableCell align="right">
-                <Link to={`/chains/members/${chain.id}`}>
-                  <KeyboardArrowRightIcon />
-                </Link>
-              </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHead>
+          <TableBody>
+            {chains.map((chain) => (
+              <TableRow key={chain.id}>
+                <TableCell>{chain.name}</TableCell>
+                <TableCell>{"active users"}</TableCell>
+                <TableCell>{"host name"}</TableCell>
+                <TableCell align="right">
+                  <Link to={`/chains/members/${chain.id}`}>
+                    <KeyboardArrowRightIcon />
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   ) : null;
 };
 
