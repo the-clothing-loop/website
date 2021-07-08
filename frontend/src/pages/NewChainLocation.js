@@ -112,6 +112,27 @@ const NewChainLocation = () => {
     }
   };
 
+  const handleSubmit = async (values) => {
+    const newChain = {
+      ...values,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      categories: { gender: categories },
+      address: chain.locality,
+      published: false,
+      uid: userId,
+    };
+
+    console.log(`creating chain: ${JSON.stringify(newChain)}`);
+    try {
+      await createChain(newChain);
+      setChangePage(false);
+    } catch (e) {
+      console.error(`Error creating chain: ${JSON.stringify(e)}`);
+      setError(e.message);
+    }
+  };
+
   const validate = Yup.object({
     name: Yup.string()
       .min(2, "Must be more than 2 characters")
@@ -170,28 +191,7 @@ const NewChainLocation = () => {
                     description: "",
                   }}
                   validationSchema={validate}
-                  onSubmit={async (values) => {
-                    const newChain = {
-                      ...values,
-                      latitude: location.latitude,
-                      longitude: location.longitude,
-                      categories: { gender: categories },
-                      address: chain.locality,
-                      published: false,
-                      uid: userId,
-                    };
-
-                    console.log(`creating chain: ${JSON.stringify(newChain)}`);
-                    try {
-                      await createChain(newChain);
-                      setChangePage(false);
-                    } catch (e) {
-                      console.error(
-                        `Error creating chain: ${JSON.stringify(e)}`
-                      );
-                      setError(e.message);
-                    }
-                  }}
+                  onSubmit={handleSubmit}
                 >
                   {({ errors, touched }) => (
                     <Card>
