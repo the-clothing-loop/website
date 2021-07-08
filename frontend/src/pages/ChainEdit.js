@@ -50,6 +50,33 @@ const ChainEdit = () => {
     }
   };
 
+  const handleSubmit = async (values) => {
+    const newChainData = {
+      ...values,
+      address: address,
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+      categories: {
+        gender: Object.keys(categoriesState).filter((e) => {
+          return categoriesState[e] === true;
+        }),
+      },
+    };
+
+    console.log(`updating chain information: ${JSON.stringify(newChainData)}`);
+    try {
+      await updateChain(chainId, newChainData);
+      setSubmitted(true);
+      history.push({
+        pathname: `/chains/members/${chainId}`,
+        state: { message: t("saved") },
+      });
+    } catch (e) {
+      console.error(`Error creating user: ${JSON.stringify(e)}`);
+      setError(e.message);
+    }
+  };
+
   //refactor db data from array to obj
   const mapCat = (array) => {
     return {
@@ -83,34 +110,7 @@ const ChainEdit = () => {
           description: chain.description,
         }}
         validationSchema={validate}
-        onSubmit={async (values) => {
-          const newChainData = {
-            ...values,
-            address: address,
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude,
-            categories: {
-              gender: Object.keys(categoriesState).filter((e) => {
-                return categoriesState[e] === true;
-              }),
-            },
-          };
-
-          console.log(
-            `updating chain information: ${JSON.stringify(newChainData)}`
-          );
-          try {
-            await updateChain(chainId, newChainData);
-            setSubmitted(true);
-            history.push({
-              pathname: `/chains/members/${chainId}`,
-              state: { message: t("saved") },
-            });
-          } catch (e) {
-            console.error(`Error creating user: ${JSON.stringify(e)}`);
-            setError(e.message);
-          }
-        }}
+        onSubmit={handleSubmit}
       >
         {({ errors, touched }) => (
           <ThreeColumnLayout>
