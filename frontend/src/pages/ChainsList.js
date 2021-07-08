@@ -28,40 +28,42 @@ const ChainsList = () => {
     })();
   }, []);
 
-  return chains ? <>
-    <Helmet>
-      <title>Clothing-chain | Chain list</title>
-      <meta name="description" content="Chain list" />
-    </Helmet>
-    <div>
-      <Typography variant="h3" component="h2" align="center">
-        All Chains
-      </Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>{"chain name"}</TableCell>
-            <TableCell>{"active users"}</TableCell>
-            <TableCell>{"host name"}</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {chains.map((chain) => (
-            <TableRow key={chain.id}>
-              <TableCell>{chain.name}</TableCell>
+  return chains ? (
+    <>
+      <Helmet>
+        <title>Clothing-chain | Chain list</title>
+        <meta name="description" content="Chain list" />
+      </Helmet>
+      <div>
+        <Typography variant="h3" component="h2" align="center">
+          All Chains
+        </Typography>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>{"chain name"}</TableCell>
               <TableCell>{"active users"}</TableCell>
               <TableCell>{"host name"}</TableCell>
-              <TableCell align="right">
-                <Link to={`/chains/information/${chain.id}`}>
-                  <KeyboardArrowRightIcon />
-                </Link>
-              </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  </> : null;
+          </TableHead>
+          <TableBody>
+            {chains.map((chain) => (
+              <TableRow key={chain.id}>
+                <TableCell>{chain.name}</TableCell>
+                <TableCell>{"active users"}</TableCell>
+                <TableCell>{"host name"}</TableCell>
+                <TableCell align="right">
+                  <Link to={`/chains/members/${chain.id}`}>
+                    <KeyboardArrowRightIcon />
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
+  ) : null;
 };
 
 export default ChainsList;

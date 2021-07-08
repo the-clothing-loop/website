@@ -4,10 +4,12 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/functions";
 
-const functions = firebase.app().functions(process.env.REACT_APP_FIREBASE_REGION);
+const functions = firebase
+  .app()
+  .functions(process.env.REACT_APP_FIREBASE_REGION);
 
-const createChainCallable = functions.httpsCallable('createChain');
-const addUserToChainCallable = functions.httpsCallable('addUserToChain');
+const createChainCallable = functions.httpsCallable("createChain");
+const addUserToChainCallable = functions.httpsCallable("addUserToChain");
 
 export interface ICreateChain {
   name: string;
@@ -32,7 +34,9 @@ const getChain = async (chainId: string) => {
 // Return data for all chains
 const getChains = async () => {
   const snapshot = await db.collection("chains").get();
-  return snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as IChain));
+  return snapshot.docs.map(
+    (doc: any) => ({ id: doc.id, ...doc.data() } as IChain)
+  );
 };
 
 const createChain = async (chain: ICreateChain): Promise<string> => {
@@ -42,14 +46,14 @@ const createChain = async (chain: ICreateChain): Promise<string> => {
 const addUserToChain = async (chainId: string, userId: string) => {
   await addUserToChainCallable({
     uid: userId,
-    chainId
+    chainId,
   });
-}
+};
 
-const updateChain = (chainId: string, chain: IChain) => {
-  db.collection("chains")
+const updateChain = (chainId: string, chain: {}): Promise<void> => {
+  return db
+    .collection("chains")
     .doc(chainId)
     .set(chain, { merge: true });
 };
-
-export { getChains, createChain, getChain, updateChain, addUserToChain };
+export { getChains, createChain, getChain, addUserToChain, updateChain };
