@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-
 // Material UI
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import Table from "@material-ui/core/Table";
