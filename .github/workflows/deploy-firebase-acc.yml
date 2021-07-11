@@ -1,5 +1,6 @@
 name: Deploy Firebase Acceptance
 on:
+  workflow_dispatch:
   push:
     branches-ignore:
       - main
