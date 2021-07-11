@@ -1,9 +1,8 @@
 name: Deploy Firebase Acceptance
 on:
   push:
-    branches:
-      - '**'
-      - '!main'
+    branches-ignore:
+      - main
 
 jobs:
   deploy:
