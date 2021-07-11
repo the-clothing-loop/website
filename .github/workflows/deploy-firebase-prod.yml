@@ -12,21 +12,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build-prod
       - name: Configure
         uses: w9jds/firebase-action@master
         with:
           args: --project $FIREBASE_PROJECT_ID functions:config:set clothingloop.base_domain=$BASE_DOMAIN clothingloop.region=$REGION clothingloop.admin_emails=$ADMIN_EMAILS
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
-          REGION: ${{ secrets.REGION }}
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
+          BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          REGION: ${{ secrets.REGION }}
       - name: Deploy
         uses: w9jds/firebase-action@master
         with:
           args: deploy --project $FIREBASE_PROJECT_ID
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_PATH: ./firebase/functions
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          PROJECT_PATH: ./firebase/functions
