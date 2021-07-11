@@ -5,6 +5,8 @@ import {UserRecord} from "firebase-functions/lib/providers/auth";
 admin.initializeApp();
 
 const db = admin.firestore();
+const region = functions.config().clothingloop.region as string;
+const adminEmails = (functions.config().clothingloop.admin_emails as string).split(";");
 
 const ROLE_ADMIN = "admin";
 const ROLE_CHAINADMIN = "chainAdmin";
@@ -21,7 +23,7 @@ function wrapInECMAPromise<T>(fn: () => Promise<T>): Promise<T> {
 }
 
 export const createUser =
-  functions.region(functions.config().clothingloop.region).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any) => {
         functions.logger.debug("createUser parameters", data);
         const [
@@ -87,7 +89,7 @@ export const createUser =
               newsletter,
               actionsNewsletter,
             });
-        if (functions.config().clothingloop.admin_emails.split(";").includes(email)) {
+        if (adminEmails.includes(email)) {
           functions.logger.debug(`Adding user ${email} as admin`);
           await admin.auth().setCustomUserClaims(userRecord.uid, {role: ROLE_ADMIN, chainId: chainId});
         } else {
@@ -98,7 +100,7 @@ export const createUser =
       });
 
 export const createChain =
-  functions.region(functions.config().clothingloop.region).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("createChain parameters", data);
 
@@ -147,7 +149,7 @@ export const createChain =
       });
 
 export const addUserToChain =
-  functions.region(functions.config().clothingloop.region).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("updateUserToChain parameters", data);
 
@@ -178,7 +180,7 @@ export const addUserToChain =
       });
 
 export const updateUser =
-  functions.region(functions.config().clothingloop.region).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("updateUser parameters", data);
         const [
@@ -223,7 +225,7 @@ export const updateUser =
       });
 
 export const getUserById =
-  functions.region(functions.config().clothingloop.region).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("getUserById parameters", data);
         const uid = data.uid;
@@ -250,7 +252,7 @@ export const getUserById =
       });
 
 export const getUserByEmail =
-  functions.region(functions.config().clothingloop.region).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("getUserByEmail parameters", data);
         const email = data.email;
