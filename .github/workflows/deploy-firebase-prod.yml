@@ -22,9 +22,9 @@ jobs:
           REGION: ${{ secrets.REGION }}
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
       - name: Deploy
-        working-directory: ./firebase/functions
         uses: w9jds/firebase-action@master
         with:
           args: deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        working-directory: ./firebase/functions
