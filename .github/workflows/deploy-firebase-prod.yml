@@ -1,5 +1,4 @@
 name: Deploy Firebase
-environment: clothing-loop-prod
 on:
   push:
     branches:
@@ -9,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: clothing-loop-prod
     steps:
       - name: Checkout
         uses: actions/checkout@v1
