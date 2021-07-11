@@ -1,0 +1,29 @@
+name: Deploy Firebase
+on:
+  push:
+    branches:
+      - master
+      - firebase-pipeline
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v1
+      - name: Set Configuration
+        uses: w9jds/firebase-action@master
+        with:
+          args: functions:config:set clothingloop.base_domain=$BASE_DOMAIN clothingloop.region=$REGION clothingloop.admin_emails=$ADMIN_EMAILS
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
+          REGION: ${{ secrets.REGION }}
+          ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
+      - name: Deploy to Firebase
+        working-directory: ./firebase/functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
