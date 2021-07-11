@@ -1,13 +1,13 @@
-name: Deploy Firebase Production
+name: Deploy Firebase Acceptance
 on:
   push:
     branches:
-      - main
+      - '!main'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: clothing-loop-prod
+    environment: clothing-loop-acc
     steps:
       - name: Checkout
         uses: actions/checkout@v1
