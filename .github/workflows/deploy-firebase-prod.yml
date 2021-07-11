@@ -15,16 +15,18 @@ jobs:
       - name: Configure
         uses: w9jds/firebase-action@master
         with:
-          args: functions:config:set clothingloop.base_domain=$BASE_DOMAIN clothingloop.region=$REGION clothingloop.admin_emails=$ADMIN_EMAILS
+          args: --project $FIREBASE_PROJECT_ID functions:config:set clothingloop.base_domain=$BASE_DOMAIN clothingloop.region=$REGION clothingloop.admin_emails=$ADMIN_EMAILS
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
           REGION: ${{ secrets.REGION }}
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
       - name: Deploy
         uses: w9jds/firebase-action@master
         with:
-          args: deploy
+          args: deploy --project $FIREBASE_PROJECT_ID
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./firebase/functions
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
