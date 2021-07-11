@@ -24,6 +24,7 @@ jobs:
           BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          PROJECT_PATH: ./firebase/functions
           REGION: ${{ secrets.REGION }}
       - name: Deploy
         uses: w9jds/firebase-action@master
