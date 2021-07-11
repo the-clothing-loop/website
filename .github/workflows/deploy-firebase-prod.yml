@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
         working-directory: ./firebase/functions
       - name: Build
         run: npm run build
