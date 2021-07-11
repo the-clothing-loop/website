@@ -1,4 +1,5 @@
 name: Deploy Firebase
+environment: clothing-loop-prod
 on:
   push:
     branches:
@@ -21,6 +22,7 @@ jobs:
           REGION: ${{ secrets.REGION }}
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
       - name: Deploy
+        working-directory: ./firebase/functions
         uses: w9jds/firebase-action@master
         with:
           args: deploy
