@@ -5,16 +5,9 @@ import {UserRecord} from "firebase-functions/lib/providers/auth";
 admin.initializeApp();
 
 const db = admin.firestore();
+const region = functions.config().clothingloop.region as string;
+const adminEmails = (functions.config().clothingloop.admin_emails as string).split(";");
 
-const ADMIN_EMAILS = [
-  "pim.sauter@gmail.com",
-  "timstokman@gmail.com",
-  "mail@giuliamummolo.com",
-];
-
-const BASE_DOMAIN = "https://www.clothingloop.org";
-const VERIFY_SUBJECT = "Verify e-mail for clothing chain";
-const REGION = "europe-west1";
 const ROLE_ADMIN = "admin";
 const ROLE_CHAINADMIN = "chainAdmin";
 
@@ -30,7 +23,7 @@ function wrapInECMAPromise<T>(fn: () => Promise<T>): Promise<T> {
 }
 
 export const createUser =
-  functions.region(REGION).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any) => {
         functions.logger.debug("createUser parameters", data);
         const [
@@ -72,7 +65,7 @@ export const createUser =
                   email,
                   {
                     handleCodeInApp: false,
-                    url: BASE_DOMAIN,
+                    url: functions.config().clothingloop.base_domain,
                   });
         const verificationEmail =
             `Hi ${name},<br><br>` +
@@ -83,7 +76,7 @@ export const createUser =
             .add({
               to: email,
               message: {
-                subject: VERIFY_SUBJECT,
+                subject: "Verify e-mail for clothing chain",
                 html: verificationEmail,
               },
             });
@@ -96,7 +89,7 @@ export const createUser =
               newsletter,
               actionsNewsletter,
             });
-        if (ADMIN_EMAILS.includes(email)) {
+        if (adminEmails.includes(email)) {
           functions.logger.debug(`Adding user ${email} as admin`);
           await admin.auth().setCustomUserClaims(userRecord.uid, {role: ROLE_ADMIN, chainId: chainId});
         } else {
@@ -107,7 +100,7 @@ export const createUser =
       });
 
 export const createChain =
-  functions.region(REGION).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("createChain parameters", data);
 
@@ -156,7 +149,7 @@ export const createChain =
       });
 
 export const addUserToChain =
-  functions.region(REGION).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("updateUserToChain parameters", data);
 
@@ -187,7 +180,7 @@ export const addUserToChain =
       });
 
 export const updateUser =
-  functions.region(REGION).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("updateUser parameters", data);
         const [
@@ -232,7 +225,7 @@ export const updateUser =
       });
 
 export const getUserById =
-  functions.region(REGION).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("getUserById parameters", data);
         const uid = data.uid;
@@ -259,7 +252,7 @@ export const getUserById =
       });
 
 export const getUserByEmail =
-  functions.region(REGION).https.onCall(
+  functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("getUserByEmail parameters", data);
         const email = data.email;
