@@ -31,7 +31,16 @@ const accessToken = {
 const categoriesList = [
   { gender: "women" },
   { gender: "men" },
-  { gender: "mix" },
+  { gender: "kid" },
+];
+
+const sizesList = [
+  { size: "xs" },
+  { size: "s" },
+  { size: "m" },
+  { size: "l" },
+  { size: "xl" },
+  { size: "xxl" },
 ];
 
 const NewChainLocation = () => {
@@ -47,10 +56,11 @@ const NewChainLocation = () => {
   const [location, setLocation] = useState([]);
   const [changePage, setChangePage] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
-  const [categories, setCategories] = useState([]);
   const { userId } = useParams();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [sizes, setSizes] = useState([]);
+  const [genders, setGenders] = useState([]);
 
   //location details
   const getLocation = async (longitude, latitude) => {
@@ -104,7 +114,7 @@ const NewChainLocation = () => {
   };
 
   //set new chain categories
-  const handleCheck = (e) => {
+  const handleCheck = (e, categories, setCategories) => {
     if (e.target.checked) {
       setCategories([...categories, e.target.value]);
     } else {
@@ -117,7 +127,7 @@ const NewChainLocation = () => {
       ...values,
       latitude: location.latitude,
       longitude: location.longitude,
-      categories: { gender: categories },
+      categories: { gender: genders, size: sizes },
       address: chain.locality,
       published: false,
       uid: userId,
@@ -228,15 +238,43 @@ const NewChainLocation = () => {
                               }
                             />
 
-                            {categoriesList.map((cat) => (
-                              <CheckboxField
-                                control={<Checkbox onChange={handleCheck} />}
-                                label={cat.gender}
-                                value={cat.gender}
-                                key={cat.gender}
-                                name={cat.gender}
-                              />
-                            ))}
+                            <div style={{ display: "flex" }}>
+                              <div>
+                                {categoriesList.map((value, i) => (
+                                  <CheckboxField
+                                    control={
+                                      <Checkbox
+                                        onChange={(e) =>
+                                          handleCheck(e, genders, setGenders)
+                                        }
+                                      />
+                                    }
+                                    label={value.gender}
+                                    value={value.gender}
+                                    key={`${value.gender}-${i}`}
+                                    name={value.gender}
+                                  />
+                                ))}
+                              </div>
+
+                              <div>
+                                {sizesList.map((value, i) => (
+                                  <CheckboxField
+                                    control={
+                                      <Checkbox
+                                        onChange={(e) =>
+                                          handleCheck(e, sizes, setSizes)
+                                        }
+                                      />
+                                    }
+                                    label={value.size}
+                                    value={value.size}
+                                    key={`${value.size}-${i}`}
+                                    name={value.size}
+                                  />
+                                ))}
+                              </div>
+                            </div>
 
                             {error ? (
                               <Alert severity="error">{error}</Alert>
