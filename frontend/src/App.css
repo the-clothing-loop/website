@@ -202,3 +202,39 @@ table {
   position: relative;
   text-align: right;
 }
+
+/*map filters*/
+input[type="checkbox"] {
+  display: none;
+}
+
+input[type="checkbox"] + label {
+  -webkit-transition: all 500ms ease;
+  transition: all 500ms ease;
+  cursor: pointer;
+  background-color: #5ce1e627;
+  border: solid 2px #5ce1e6;
+  display: inline-block;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 0 20px;
+  height: max-content;
+  font-size: 14px;
+  line-height: 50px;
+  border-radius: 25px;
+}
+
+input[type="checkbox"]:checked + label {
+  -webkit-transition: all 500ms ease;
+  transition: all 500ms ease;
+  background-color: #5ce1e6;
+  color: white;
+  border-color: #5ce1e6;
+}
+
+.inputs-wrapper{
+  display: flex;
+  flex-direction: row;
+}
