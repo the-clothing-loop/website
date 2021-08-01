@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
 // Material UI
-import { Button } from "@material-ui/core";
+import { Button, formatMs } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -16,8 +16,6 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
@@ -29,12 +27,14 @@ import { AuthContext } from "../components/AuthProvider";
 import { addUserToChain } from "../util/firebase/chain";
 import { IChain, IViewPort } from "../types";
 import theme from "../util/theme";
+import { getUserById } from "../util/firebase/user";
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
 
-const categories = [{ gender: "women" }, { gender: "men" }, { gender: "mix" }];
+const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+const genders = ["women", "men", "kid"];
 
 const FindChain = () => {
   const history = useHistory();
@@ -51,14 +51,25 @@ const FindChain = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [value, setValue] = useState<IChain | null>(null);
 
-  const [gender, setGender] = useState<string[]>([]);
   const [filteredChains, setFilteredChains] = useState<IChain[]>([]);
+
+  const [userId, setUserId] = useState("");
+  const [role, setRole] = useState<string | null>(null);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
 
   useEffect(() => {
     (async () => {
       const chainResponse = await getChains();
       setChainData(chainResponse);
       setFilteredChains(chainResponse);
+
+      //get user role
+      if (user) {
+        setUserId(user.uid);
+        const userRole = await getUserById(user.uid);
+        setRole(userRole.role);
+      }
 
       setViewport({
         latitude: 0,
@@ -84,32 +95,51 @@ const FindChain = () => {
     })();
   }, []);
 
-  const handleChange = (e: { target: { checked: boolean; value: any } }) => {
-    if (e.target.checked) {
-      setGender([...gender, e.target.value]);
+  //get selected categories
+  const handleChange = (
+    e: any,
+    value: any,
+    categories: any,
+    setCategories: any
+  ) => {
+    if (!categories.includes(value)) {
+      setCategories([...categories, value]);
     } else {
-      setGender(gender.filter((id) => id !== e.target.value));
+      setCategories(categories.filter((id: any) => id !== value));
     }
   };
 
+  //filter selected categories
   useEffect(() => {
-    if (gender.length === 0) {
-      setFilteredChains(chainData);
-      return;
-    }
+    const findCommonElementsArrays = (arr1: any, arr2: any) =>
+      arr1.some((item: any) => arr2.includes(item));
 
-    let filteredArray = chainData.filter((chain) => {
-      if (!chain.categories) {
-        return false; //TODO: do something if a chain has no categories
+    let filteredChains = chainData.filter((chain, i) => {
+      if (!selectedGenders.length) {
+        return true;
       }
 
-      return gender.some((category) => {
-        return chain.categories.gender.includes(category);
-      });
+      return (
+        chain.categories &&
+        chain.categories.gender &&
+        findCommonElementsArrays(chain.categories.gender, selectedGenders)
+      );
     });
 
-    setFilteredChains(filteredArray);
-  }, [gender]);
+    filteredChains = filteredChains.filter((chain) => {
+      if (!selectedSizes.length) {
+        return true;
+      }
+
+      return (
+        chain.categories &&
+        chain.categories.size &&
+        findCommonElementsArrays(chain.categories.size, selectedSizes)
+      );
+    });
+
+    setFilteredChains(filteredChains);
+  }, [selectedGenders, selectedSizes]);
 
   if (!accessToken.mapboxApiAccessToken) {
     return <div>Access tokens not configured</div>;
@@ -153,6 +183,11 @@ const FindChain = () => {
     }
   };
 
+  const viewChain = (e: any) => {
+    e.preventDefault();
+    history.push(`/chains/members/${selectedChain?.id}`);
+  };
+
   return (
     <>
       <Helmet>
@@ -182,17 +217,58 @@ const FindChain = () => {
             </IconButton>
           </Paper>
           {value ? <Button onClick={handleSelect}>{value.name}</Button> : null}
+          <FormControl>
+            <FormGroup style={{ display: "inline" }}>
+              <Typography>categories</Typography>
+              <div className={"inputs-wrapper"}>
+                {genders.map((value, i) => (
+                  <div key={value}>
+                    <input
+                      key={`input-${value}-${i}`}
+                      id={`${value}`}
+                      type="checkbox"
+                      name={value}
+                      onChange={(e: any) =>
+                        handleChange(
+                          e,
+                          value,
+                          selectedGenders,
+                          setSelectedGenders
+                        )
+                      }
+                    ></input>
+                    <label
+                      key={`label-${value}-${i}`}
+                      htmlFor={`${value}`}
+                    >{`${value}'s clothing`}</label>
+                  </div>
+                ))}
+              </div>
+            </FormGroup>
+          </FormControl>
 
           <FormControl>
-            <FormGroup>
-              {categories.map((cat) => (
-                <FormControlLabel
-                  control={<Checkbox onChange={handleChange} />}
-                  label={cat.gender}
-                  value={cat.gender}
-                  key={cat.gender}
-                />
-              ))}
+            <FormGroup style={{ display: "inline" }}>
+              <Typography>sizes</Typography>
+              <div className={"inputs-wrapper"}>
+                {sizes.map((value, i) => (
+                  <div>
+                    <input
+                      key={`input-${value}-${i}`}
+                      id={`${value}`}
+                      type="checkbox"
+                      name={value}
+                      onChange={(e: any) =>
+                        handleChange(e, value, selectedSizes, setSelectedSizes)
+                      }
+                    ></input>
+                    <label
+                      key={`label-${value}-${i}`}
+                      htmlFor={`${value}`}
+                    >{`${value}`}</label>
+                  </div>
+                ))}
+              </div>
             </FormGroup>
           </FormControl>
         </div>
@@ -250,16 +326,32 @@ const FindChain = () => {
                 </Typography>
                 <Divider variant="middle" />
                 <div className={"chain-categories"}>
-                  {selectedChain.categories
-                    ? selectedChain.categories.gender.map((category) => {
+                  {selectedChain.categories.gender
+                    ? selectedChain.categories.gender.map((category, i) => {
                         return (
                           <Typography
-                            variant="body2"
+                            variant="body1"
                             component="p"
                             display="inline"
+                            key={i}
                           >
                             <LocalOfferOutlinedIcon display="inline" />
-                            {category}
+                            {`${category}'s clothing`}
+                          </Typography>
+                        );
+                      })
+                    : null}
+                  {selectedChain.categories.size
+                    ? selectedChain.categories.size.map((size, i) => {
+                        return (
+                          <Typography
+                            variant="body1"
+                            component="p"
+                            display="block"
+                            key={i}
+                          >
+                            <LocalOfferOutlinedIcon display="inline" />
+                            {size}
                           </Typography>
                         );
                       })
@@ -267,27 +359,40 @@ const FindChain = () => {
                 </div>
               </CardContent>
 
-              <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={"card-button"}
-                  onClick={(e) => signupToChain(e)}
-                >
-                  {t("signup")}
-                </Button>{" "}
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={"card-button"}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    history.push(`/chains/members/${selectedChain.id}`);
-                  }}
-                >
-                  {t("viewChain")}
-                </Button>{" "}
-              </CardActions>
+              {role === "admin" ? (
+                <CardActions>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={"card-button"}
+                    onClick={(e) => signupToChain(e)}
+                    key={"btn-signup"}
+                  >
+                    {t("signup")}
+                  </Button>{" "}
+                  <Button
+                    key={"btn-view"}
+                    variant="contained"
+                    color="secondary"
+                    className={"card-button"}
+                    onClick={(e) => viewChain(e)}
+                  >
+                    {t("viewChain")}
+                  </Button>{" "}
+                </CardActions>
+              ) : (
+                <CardActions>
+                  <Button
+                    key={"btn-signup"}
+                    variant="contained"
+                    color="primary"
+                    className={"card-button"}
+                    onClick={(e) => signupToChain(e)}
+                  >
+                    {t("signup")}
+                  </Button>{" "}
+                </CardActions>
+              )}
             </Card>
           </Popup>
         ) : null}
