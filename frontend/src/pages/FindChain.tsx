@@ -207,19 +207,25 @@ const FindChain = () => {
               placeholder="Search For Chain"
               inputProps={{ "aria-label": "search for chain" }}
               onChange={onChange}
+              key={"search-input"}
             />
             <IconButton
               type="submit"
               className={classes.iconButton}
               aria-label="search"
+              key={"search-btn"}
             >
               <SearchIcon />
             </IconButton>
           </Paper>
-          {value ? <Button onClick={handleSelect}>{value.name}</Button> : null}
+          {value ? (
+            <Button key={`${value}-btn`} onClick={handleSelect}>
+              {value.name}
+            </Button>
+          ) : null}
           <FormControl>
             <FormGroup style={{ display: "inline" }}>
-              <Typography>categories</Typography>
+              <Typography variant="h4">categories</Typography>
               <div className={"inputs-wrapper"}>
                 {genders.map((value, i) => (
                   <div key={value}>
@@ -249,10 +255,10 @@ const FindChain = () => {
 
           <FormControl>
             <FormGroup style={{ display: "inline" }}>
-              <Typography>sizes</Typography>
+              <Typography variant="h4">sizes</Typography>
               <div className={"inputs-wrapper"}>
                 {sizes.map((value, i) => (
-                  <div>
+                  <div key={value}>
                     <input
                       key={`input-${value}-${i}`}
                       id={`${value}`}
