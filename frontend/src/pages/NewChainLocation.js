@@ -249,7 +249,7 @@ const NewChainLocation = () => {
                                         }
                                       />
                                     }
-                                    label={value.gender}
+                                    label={`${value.gender}'s clothing`}
                                     value={value.gender}
                                     key={`${value.gender}-${i}`}
                                     name={value.gender}
