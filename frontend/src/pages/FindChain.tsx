@@ -249,11 +249,15 @@ const FindChain = () => {
             </IconButton>
           </Paper>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> keys update
           {value ? (
             <Button key={`${value}-btn`} onClick={handleSelect}>
               {value.name}
             </Button>
           ) : null}
+<<<<<<< HEAD
           <FormControl>
             <FormGroup style={{ display: "inline" }}>
               <Typography variant="h4">categories</Typography>
@@ -261,9 +265,11 @@ const FindChain = () => {
                 {categories.genders.map((value, i) => (
 =======
           {value ? <Button onClick={handleSelect}>{value.name}</Button> : null}
+=======
+>>>>>>> keys update
           <FormControl>
             <FormGroup style={{ display: "inline" }}>
-              <Typography>categories</Typography>
+              <Typography variant="h4">categories</Typography>
               <div className={"inputs-wrapper"}>
                 {genders.map((value, i) => (
 >>>>>>> chain filters logic update
@@ -295,6 +301,7 @@ const FindChain = () => {
           <FormControl>
             <FormGroup style={{ display: "inline" }}>
 <<<<<<< HEAD
+<<<<<<< HEAD
               <Typography variant="h4">sizes</Typography>
               <div className={"inputs-wrapper"}>
                 {categories.sizes.map((value, i) => (
@@ -305,6 +312,12 @@ const FindChain = () => {
                 {sizes.map((value, i) => (
                   <div>
 >>>>>>> chain filters logic update
+=======
+              <Typography variant="h4">sizes</Typography>
+              <div className={"inputs-wrapper"}>
+                {sizes.map((value, i) => (
+                  <div key={value}>
+>>>>>>> keys update
                     <input
                       key={`input-${value}-${i}`}
                       id={`${value}`}
