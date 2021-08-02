@@ -9,6 +9,7 @@ import * as Yup from "yup";
 
 //Project Resources
 import { createChain } from "../util/firebase/chain";
+import categories from "../util/categories";
 
 // Material
 import Typography from "@material-ui/core/Typography";
@@ -27,21 +28,6 @@ mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
-
-const categoriesList = [
-  { gender: "women" },
-  { gender: "men" },
-  { gender: "kid" },
-];
-
-const sizesList = [
-  { size: "xs" },
-  { size: "s" },
-  { size: "m" },
-  { size: "l" },
-  { size: "xl" },
-  { size: "xxl" },
-];
 
 const NewChainLocation = () => {
   const styles = (theme) => ({
@@ -107,9 +93,11 @@ const NewChainLocation = () => {
   const handleClick = async (e) => {
     let longitude = e.lngLat[0];
     let latitude = e.lngLat[1];
+
     setLocation({ longitude: longitude, latitude: latitude });
     setMarker({ longitude: longitude, latitude: latitude, visible: true });
     getLocation(longitude, latitude);
+
     setShowPopup(true);
   };
 
@@ -240,7 +228,7 @@ const NewChainLocation = () => {
 
                             <div style={{ display: "flex" }}>
                               <div>
-                                {categoriesList.map((value, i) => (
+                                {categories.genders.map((value, i) => (
                                   <CheckboxField
                                     control={
                                       <Checkbox
@@ -249,16 +237,16 @@ const NewChainLocation = () => {
                                         }
                                       />
                                     }
-                                    label={`${value.gender}'s clothing`}
-                                    value={value.gender}
-                                    key={`${value.gender}-${i}`}
-                                    name={value.gender}
+                                    label={`${value}'s clothing`}
+                                    value={value}
+                                    key={`${value}-${i}`}
+                                    name={value}
                                   />
                                 ))}
                               </div>
 
                               <div>
-                                {sizesList.map((value, i) => (
+                                {categories.sizes.map((value, i) => (
                                   <CheckboxField
                                     control={
                                       <Checkbox
@@ -267,10 +255,10 @@ const NewChainLocation = () => {
                                         }
                                       />
                                     }
-                                    label={value.size}
-                                    value={value.size}
-                                    key={`${value.size}-${i}`}
-                                    name={value.size}
+                                    label={value}
+                                    value={value}
+                                    key={`${value}-${i}`}
+                                    name={value}
                                   />
                                 ))}
                               </div>
