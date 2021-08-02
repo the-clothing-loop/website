@@ -28,21 +28,12 @@ import { addUserToChain } from "../util/firebase/chain";
 import { IChain, IViewPort } from "../types";
 import theme from "../util/theme";
 import { getUserById } from "../util/firebase/user";
-<<<<<<< HEAD
 import categories from "../util/categories";
-=======
->>>>>>> chain filters logic update
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
 
-<<<<<<< HEAD
-=======
-const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
-const genders = ["women", "men", "kid"];
-
->>>>>>> chain filters logic update
 const FindChain = () => {
   const history = useHistory();
   const { t } = useTranslation();
@@ -118,11 +109,7 @@ const FindChain = () => {
 
   //filter selected categories
   useEffect(() => {
-<<<<<<< HEAD
     const hasCommonElements = (arr1: any, arr2: any) =>
-=======
-    const findCommonElementsArrays = (arr1: any, arr2: any) =>
->>>>>>> chain filters logic update
       arr1.some((item: any) => arr2.includes(item));
 
     let filteredChains = chainData.filter((chain, i) => {
@@ -133,7 +120,6 @@ const FindChain = () => {
       return (
         chain.categories &&
         chain.categories.gender &&
-<<<<<<< HEAD
         hasCommonElements(chain.categories.gender, selectedGenders)
       );
     });
@@ -150,24 +136,6 @@ const FindChain = () => {
       );
     });
 
-=======
-        findCommonElementsArrays(chain.categories.gender, selectedGenders)
-      );
-    });
-
-    filteredChains = filteredChains.filter((chain) => {
-      if (!selectedSizes.length) {
-        return true;
-      }
-
-      return (
-        chain.categories &&
-        chain.categories.size &&
-        findCommonElementsArrays(chain.categories.size, selectedSizes)
-      );
-    });
-
->>>>>>> chain filters logic update
     setFilteredChains(filteredChains);
   }, [selectedGenders, selectedSizes]);
 
@@ -248,31 +216,16 @@ const FindChain = () => {
               <SearchIcon />
             </IconButton>
           </Paper>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> keys update
           {value ? (
             <Button key={`${value}-btn`} onClick={handleSelect}>
               {value.name}
             </Button>
           ) : null}
-<<<<<<< HEAD
           <FormControl>
             <FormGroup style={{ display: "inline" }}>
               <Typography variant="h4">categories</Typography>
               <div className={"inputs-wrapper"}>
                 {categories.genders.map((value, i) => (
-=======
-          {value ? <Button onClick={handleSelect}>{value.name}</Button> : null}
-=======
->>>>>>> keys update
-          <FormControl>
-            <FormGroup style={{ display: "inline" }}>
-              <Typography variant="h4">categories</Typography>
-              <div className={"inputs-wrapper"}>
-                {genders.map((value, i) => (
->>>>>>> chain filters logic update
                   <div key={value}>
                     <input
                       key={`input-${value}-${i}`}
@@ -300,24 +253,10 @@ const FindChain = () => {
 
           <FormControl>
             <FormGroup style={{ display: "inline" }}>
-<<<<<<< HEAD
-<<<<<<< HEAD
               <Typography variant="h4">sizes</Typography>
               <div className={"inputs-wrapper"}>
                 {categories.sizes.map((value, i) => (
                   <div key={value}>
-=======
-              <Typography>sizes</Typography>
-              <div className={"inputs-wrapper"}>
-                {sizes.map((value, i) => (
-                  <div>
->>>>>>> chain filters logic update
-=======
-              <Typography variant="h4">sizes</Typography>
-              <div className={"inputs-wrapper"}>
-                {sizes.map((value, i) => (
-                  <div key={value}>
->>>>>>> keys update
                     <input
                       key={`input-${value}-${i}`}
                       id={`${value}`}
@@ -328,10 +267,7 @@ const FindChain = () => {
                       }
                     ></input>
                     <label
-<<<<<<< HEAD
                       style={{ textTransform: "uppercase" }}
-=======
->>>>>>> chain filters logic update
                       key={`label-${value}-${i}`}
                       htmlFor={`${value}`}
                     >{`${value}`}</label>
