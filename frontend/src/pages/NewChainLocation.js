@@ -94,11 +94,13 @@ const NewChainLocation = () => {
     let longitude = e.lngLat[0];
     let latitude = e.lngLat[1];
 
-    setLocation({ longitude: longitude, latitude: latitude });
-    setMarker({ longitude: longitude, latitude: latitude, visible: true });
-    getLocation(longitude, latitude);
-
     setShowPopup(true);
+
+    if (!showPopup) {
+      setLocation({ longitude: longitude, latitude: latitude });
+      setMarker({ longitude: longitude, latitude: latitude, visible: true });
+      getLocation(longitude, latitude);
+    }
   };
 
   //set new chain categories
@@ -271,7 +273,6 @@ const NewChainLocation = () => {
                               type="submit"
                               variant="contained"
                               color="primary"
-                              // className={classes.button}
                             >
                               {t("submit")}
                             </Button>
