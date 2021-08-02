@@ -16,6 +16,7 @@ import { getChain, updateChain } from "../util/firebase/chain";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { TextForm, CheckboxField } from "../components/FormFields";
 import ThreeColumnLayout from "../components/ThreeColumnLayout";
+import categories from "../util/categories";
 
 const ChainEdit = () => {
   const { t } = useTranslation();
@@ -29,14 +30,16 @@ const ChainEdit = () => {
   const [coordinates, setCoordinates] = useState();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [categories, setCategories] = useState({});
+  // const [categories, setCategories] = useState({});
+  const [sizes, setSizes] = useState({});
+  const [genders, setGenders] = useState({});
 
   const validate = Yup.object({
     name: Yup.string().min(2, "Must be more than 2 characters"),
     description: Yup.string().min(2, "Must be more than 2 characters"),
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e, categories, setCategories) => {
     if (e.target.checked) {
       setCategories({
         ...categories,
@@ -50,6 +53,12 @@ const ChainEdit = () => {
     }
   };
 
+  const getValues = (obj) => {
+    return Object.keys(obj).filter((e) => {
+      return obj[e] === true;
+    });
+  };
+
   const handleSubmit = async (values) => {
     const newChainData = {
       ...values,
@@ -57,9 +66,8 @@ const ChainEdit = () => {
       latitude: coordinates.latitude,
       longitude: coordinates.longitude,
       categories: {
-        gender: Object.keys(categories).filter((e) => {
-          return categories[e] === true;
-        }),
+        gender: getValues(genders),
+        size: getValues(sizes),
       },
     };
 
@@ -78,11 +86,22 @@ const ChainEdit = () => {
   };
 
   //refactor db data from array to obj
-  const mapCat = (array) => {
+  const mapGenders = (array) => {
     return {
       men: array.includes("men"),
-      woman: array.includes("woman"),
-      mix: array.includes("mix"),
+      woman: array.includes("women"),
+      children: array.includes("children"),
+    };
+  };
+
+  const mapSizes = (array) => {
+    return {
+      xs: array.includes("xs"),
+      s: array.includes("s"),
+      m: array.includes("m"),
+      l: array.includes("l"),
+      xl: array.includes("xl"),
+      xxl: array.includes("xxl"),
     };
   };
 
@@ -95,7 +114,8 @@ const ChainEdit = () => {
       longitude: chain.longitude,
     });
 
-    setCategories(mapCat(chain.categories.gender));
+    setGenders(mapGenders(chain.categories.gender));
+    setSizes(mapSizes(chain.categories.size));
   }, []);
 
   return !chain ? null : (
@@ -141,24 +161,35 @@ const ChainEdit = () => {
                 }
               />
 
-              <CheckboxField
-                name="woman"
-                label="woman"
-                onChange={handleChange}
-                checked={categories.woman ? true : false}
-              />
-              <CheckboxField
-                name="men"
-                label="men"
-                onChange={handleChange}
-                checked={categories.men ? true : false}
-              />
-              <CheckboxField
-                name="mix"
-                label="mix"
-                onChange={handleChange}
-                checked={categories.mix ? true : false}
-              />
+              <div style={{ display: "flex" }}>
+                <div>
+                  <Typography component="p">categories</Typography>
+                  {categories.genders.map((value) => {
+                    return (
+                      <CheckboxField
+                        name={value}
+                        label={`${value}'s clothing`}
+                        onChange={(e) => handleChange(e, genders, setGenders)}
+                        checked={genders[value] ? true : false}
+                      />
+                    );
+                  })}
+                </div>
+
+                <div>
+                  <Typography component="p">sizes</Typography>
+                  {categories.sizes.map((value) => {
+                    return (
+                      <CheckboxField
+                        name={value}
+                        label={value}
+                        onChange={(e) => handleChange(e, sizes, setSizes)}
+                        checked={sizes[value] ? true : false}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
 
               <GeocoderSelector
                 onResult={(e) => {
