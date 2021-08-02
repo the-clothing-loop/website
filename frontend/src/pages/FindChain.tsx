@@ -28,13 +28,11 @@ import { addUserToChain } from "../util/firebase/chain";
 import { IChain, IViewPort } from "../types";
 import theme from "../util/theme";
 import { getUserById } from "../util/firebase/user";
+import categories from "../util/categories";
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
-
-const sizes = ["xs", "s", "m", "l", "xl", "xxl"];
-const genders = ["women", "men", "children"];
 
 const FindChain = () => {
   const history = useHistory();
@@ -227,7 +225,7 @@ const FindChain = () => {
             <FormGroup style={{ display: "inline" }}>
               <Typography variant="h4">categories</Typography>
               <div className={"inputs-wrapper"}>
-                {genders.map((value, i) => (
+                {categories.genders.map((value, i) => (
                   <div key={value}>
                     <input
                       key={`input-${value}-${i}`}
@@ -257,7 +255,7 @@ const FindChain = () => {
             <FormGroup style={{ display: "inline" }}>
               <Typography variant="h4">sizes</Typography>
               <div className={"inputs-wrapper"}>
-                {sizes.map((value, i) => (
+                {categories.sizes.map((value, i) => (
                   <div key={value}>
                     <input
                       key={`input-${value}-${i}`}
