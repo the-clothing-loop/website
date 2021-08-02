@@ -91,7 +91,7 @@ const ChainEdit = () => {
       obj[element] = array.includes(element);
     });
     return obj;
-  };
+  }
 
   useEffect(async () => {
     const chain = await getChain(chainId);
@@ -104,6 +104,7 @@ const ChainEdit = () => {
 
     setGenders(convertArrayToObject(chain.categories.gender));
     setSizes(convertArrayToObject(chain.categories.size));
+
   }, []);
 
   return !chain ? null : (
