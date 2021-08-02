@@ -33,8 +33,8 @@ const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
 
-const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
-const genders = ["women", "men", "kid"];
+const sizes = ["xs", "s", "m", "l", "xl", "xxl"];
+const genders = ["women", "men", "children"];
 
 const FindChain = () => {
   const history = useHistory();
@@ -111,7 +111,7 @@ const FindChain = () => {
 
   //filter selected categories
   useEffect(() => {
-    const findCommonElementsArrays = (arr1: any, arr2: any) =>
+    const hasCommonElements = (arr1: any, arr2: any) =>
       arr1.some((item: any) => arr2.includes(item));
 
     let filteredChains = chainData.filter((chain, i) => {
@@ -122,7 +122,7 @@ const FindChain = () => {
       return (
         chain.categories &&
         chain.categories.gender &&
-        findCommonElementsArrays(chain.categories.gender, selectedGenders)
+        hasCommonElements(chain.categories.gender, selectedGenders)
       );
     });
 
@@ -134,7 +134,7 @@ const FindChain = () => {
       return (
         chain.categories &&
         chain.categories.size &&
-        findCommonElementsArrays(chain.categories.size, selectedSizes)
+        hasCommonElements(chain.categories.size, selectedSizes)
       );
     });
 
@@ -269,6 +269,7 @@ const FindChain = () => {
                       }
                     ></input>
                     <label
+                      style={{ textTransform: "uppercase" }}
                       key={`label-${value}-${i}`}
                       htmlFor={`${value}`}
                     >{`${value}`}</label>
