@@ -30,7 +30,6 @@ const ChainEdit = () => {
   const [coordinates, setCoordinates] = useState();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  // const [categories, setCategories] = useState({});
   const [sizes, setSizes] = useState({});
   const [genders, setGenders] = useState({});
 
@@ -86,23 +85,12 @@ const ChainEdit = () => {
   };
 
   //refactor db data from array to obj
-  const mapGenders = (array) => {
-    return {
-      men: array.includes("men"),
-      woman: array.includes("women"),
-      children: array.includes("children"),
-    };
-  };
-
-  const mapSizes = (array) => {
-    return {
-      xs: array.includes("xs"),
-      s: array.includes("s"),
-      m: array.includes("m"),
-      l: array.includes("l"),
-      xl: array.includes("xl"),
-      xxl: array.includes("xxl"),
-    };
+  const convertArrayToObject = (array) => {
+    let obj = {};
+    array.forEach((element) => {
+      obj[element] = array.includes(element);
+    });
+    return obj;
   };
 
   useEffect(async () => {
@@ -114,8 +102,8 @@ const ChainEdit = () => {
       longitude: chain.longitude,
     });
 
-    setGenders(mapGenders(chain.categories.gender));
-    setSizes(mapSizes(chain.categories.size));
+    setGenders(convertArrayToObject(chain.categories.gender));
+    setSizes(convertArrayToObject(chain.categories.size));
   }, []);
 
   return !chain ? null : (
