@@ -42,11 +42,13 @@ const NewChainLocation = () => {
   const [location, setLocation] = useState([]);
   const [changePage, setChangePage] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
+
   const { userId } = useParams();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [sizes, setSizes] = useState([]);
   const [genders, setGenders] = useState([]);
+
 
   //location details
   const getLocation = async (longitude, latitude) => {
@@ -265,6 +267,7 @@ const NewChainLocation = () => {
                                 ))}
                               </div>
                             </div>
+
 
                             {error ? (
                               <Alert severity="error">{error}</Alert>
