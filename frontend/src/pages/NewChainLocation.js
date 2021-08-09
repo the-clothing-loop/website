@@ -9,6 +9,7 @@ import * as Yup from "yup";
 
 //Project Resources
 import { createChain } from "../util/firebase/chain";
+import categories from "../util/categories";
 
 // Material
 import Typography from "@material-ui/core/Typography";
@@ -28,12 +29,6 @@ const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
 
-const categoriesList = [
-  { gender: "women" },
-  { gender: "men" },
-  { gender: "mix" },
-];
-
 const NewChainLocation = () => {
   const styles = (theme) => ({
     ...theme.spreadThis,
@@ -47,10 +42,13 @@ const NewChainLocation = () => {
   const [location, setLocation] = useState([]);
   const [changePage, setChangePage] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
-  const [categories, setCategories] = useState([]);
+
   const { userId } = useParams();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [sizes, setSizes] = useState([]);
+  const [genders, setGenders] = useState([]);
+
 
   //location details
   const getLocation = async (longitude, latitude) => {
@@ -97,14 +95,18 @@ const NewChainLocation = () => {
   const handleClick = async (e) => {
     let longitude = e.lngLat[0];
     let latitude = e.lngLat[1];
-    setLocation({ longitude: longitude, latitude: latitude });
-    setMarker({ longitude: longitude, latitude: latitude, visible: true });
-    getLocation(longitude, latitude);
+
     setShowPopup(true);
+
+    if (!showPopup) {
+      setLocation({ longitude: longitude, latitude: latitude });
+      setMarker({ longitude: longitude, latitude: latitude, visible: true });
+      getLocation(longitude, latitude);
+    }
   };
 
   //set new chain categories
-  const handleCheck = (e) => {
+  const handleCheck = (e, categories, setCategories) => {
     if (e.target.checked) {
       setCategories([...categories, e.target.value]);
     } else {
@@ -117,7 +119,7 @@ const NewChainLocation = () => {
       ...values,
       latitude: location.latitude,
       longitude: location.longitude,
-      categories: { gender: categories },
+      categories: { gender: genders, size: sizes },
       address: chain.locality,
       published: false,
       uid: userId,
@@ -228,15 +230,44 @@ const NewChainLocation = () => {
                               }
                             />
 
-                            {categoriesList.map((cat) => (
-                              <CheckboxField
-                                control={<Checkbox onChange={handleCheck} />}
-                                label={cat.gender}
-                                value={cat.gender}
-                                key={cat.gender}
-                                name={cat.gender}
-                              />
-                            ))}
+                            <div style={{ display: "flex" }}>
+                              <div>
+                                {categories.genders.map((value, i) => (
+                                  <CheckboxField
+                                    control={
+                                      <Checkbox
+                                        onChange={(e) =>
+                                          handleCheck(e, genders, setGenders)
+                                        }
+                                      />
+                                    }
+                                    label={`${value}'s clothing`}
+                                    value={value}
+                                    key={`${value}-${i}`}
+                                    name={value}
+                                  />
+                                ))}
+                              </div>
+
+                              <div>
+                                {categories.sizes.map((value, i) => (
+                                  <CheckboxField
+                                    control={
+                                      <Checkbox
+                                        onChange={(e) =>
+                                          handleCheck(e, sizes, setSizes)
+                                        }
+                                      />
+                                    }
+                                    label={value}
+                                    value={value}
+                                    key={`${value}-${i}`}
+                                    name={value}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+
 
                             {error ? (
                               <Alert severity="error">{error}</Alert>
@@ -245,7 +276,6 @@ const NewChainLocation = () => {
                               type="submit"
                               variant="contained"
                               color="primary"
-                              // className={classes.button}
                             >
                               {t("submit")}
                             </Button>
