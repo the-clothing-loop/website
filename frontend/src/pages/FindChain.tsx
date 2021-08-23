@@ -285,7 +285,7 @@ const FindChain = () => {
                     >
                       <Typography
                         variant="body2"
-                        className='input-label-typography'
+                        className="input-label-typography"
                       >{`${value}`}</Typography>
                     </label>
                   </div>

@@ -48,7 +48,6 @@ const NewChainLocation = () => {
   const [sizes, setSizes] = useState([]);
   const [genders, setGenders] = useState([]);
 
-
   //location details
   const getLocation = async (longitude, latitude) => {
     const response = await fetch(
@@ -153,7 +152,7 @@ const NewChainLocation = () => {
         <title>Clothing-chain | Create new chain</title>
         <meta name="description" content="Create new chain" />
       </Helmet>{" "}
-      <div style={{padding:'1% 0'}}>
+      <div style={{ padding: "1% 0" }}>
         <Typography variant="h3" align="center">
           {"select new chain location"}
         </Typography>
@@ -164,7 +163,7 @@ const NewChainLocation = () => {
         </Typography>
       </div>
       <ReactMapGL
-      style={{padding:'0 10%'}}
+        style={{ padding: "0 10%" }}
         mapboxApiAccessToken={mapboxgl.accessToken}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         {...viewport}
@@ -331,7 +330,6 @@ const NewChainLocation = () => {
                                 </div>
                               </div>
                             </div>
-
 
                             {error ? (
                               <Alert severity="error">{error}</Alert>
