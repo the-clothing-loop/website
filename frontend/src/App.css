@@ -89,30 +89,34 @@ img#marker {
 .mapboxgl-popup {
   position: absolute !important;
   bottom: 15%;
-  transform: translateX(-50%) !important;
+  transform: translateX(-60%) !important;
   left: 50% !important;
 }
 
 .filter-wrapper {
-  background-color: white;
+  background-color: rgb(245, 245, 245);
   position: relative;
   width: max-content;
   display: flex;
   flex-direction: column;
+  border-radius: 8px;
+}
+
+.filter-form {
+  display: inline;
+  border-bottom: 1px solid #e8eaed;
+  border-top: 1px solid #e8eaed;
+  margin-top: 8px;
+  position: relative;
+  padding: 5% 1%;
+  border-radius: 8px;
+  background-color: rgb(255, 255, 255);
 }
 
 /* card styling */
-.MuiCard-root {
-  padding: 5%;
-}
-
 .MuiCardContent-root {
   display: flex;
   flex-direction: column;
-}
-
-.MuiCardContent-root p {
-  margin-bottom: 5%;
 }
 
 .MuiCardActions-root {
@@ -123,10 +127,6 @@ form.new-chain-location-form {
   width: 100%;
   display: flex;
   flex-direction: column;
-}
-
-form > div {
-  padding: 3% 2%;
 }
 
 .card-button {
@@ -172,31 +172,70 @@ button.chain-description {
 }
 
 /*table styling*/
-th {
-  text-transform: uppercase;
-  font-size: 1rem !important;
+table {
+  margin-bottom: 2%;
+}
+th,
+h6 {
+  text-transform: capitalize;
+  display: inline-block;
 }
 
-table {
-  width: 90% !important;
-  transform: translateX(-50%);
-  position: relative;
-  left: 50%;
+.MuiTableContainer-root {
+  background-color: transparent !important;
+}
+
+tr {
+  background-color: #fff;
+}
+
+.table-row-head {
+  background-color: transparent;
+}
+
+.table-row-head > th {
+  border-bottom: none !important;
+  font-size: small;
+  color: gray;
+}
+
+.MuiPaper-elevation1 {
+  box-shadow: none !important;
+}
+
+thead {
+  border-bottom: 1px solid rgba(224, 224, 224, 1);
+}
+
+.table-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 1% 0;
+}
+
+.table-container {
+  padding: 0 5%;
+}
+
+.dot-active {
+  height: 20px;
+  width: 20px;
+  background-color: #69f0ae;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5%;
+}
+
+.dot-not-active {
+  height: 20px;
+  width: 20px;
+  background-color: #ff8a80;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5%;
 }
 
 /*admin pages settings*/
-.chain-categories-admin p {
-  padding: 1% 1%;
-  border-radius: 5px;
-  background-color: #e5e0f1;
-  display: flex;
-  width: max-content;
-  margin-right: 2%;
-}
-
-.chain-categories-admin {
-  display: flex;
-}
 
 .chain-edit-btn {
   position: relative;
@@ -204,29 +243,30 @@ table {
 }
 
 /*map filters*/
-input[type="checkbox"] {
+input[type="checkbox"].map-cat-input {
   display: none;
 }
 
-input[type="checkbox"] + label {
+input[type="checkbox"].map-cat-input + label {
   -webkit-transition: all 500ms ease;
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
   transition: all 500ms ease;
   cursor: pointer;
   background-color: #5ce1e627;
   border: solid 2px #5ce1e6;
   display: inline-block;
-  -moz-user-select: -moz-none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
   user-select: none;
-  padding: 0 20px;
+  padding: 5px 5px;
   height: max-content;
   font-size: 14px;
-  line-height: 50px;
+  line-height: 40px;
   border-radius: 25px;
+  margin: 0 5px;
 }
 
-input[type="checkbox"]:checked + label {
+input[type="checkbox"].map-cat-input:checked + label {
   -webkit-transition: all 500ms ease;
   transition: all 500ms ease;
   background-color: #5ce1e6;
@@ -234,7 +274,14 @@ input[type="checkbox"]:checked + label {
   border-color: #5ce1e6;
 }
 
-.inputs-wrapper{
+.input-label-typography {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.inputs-wrapper {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
