@@ -20,6 +20,7 @@ import Divider from "@material-ui/core/Divider";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import { makeStyles } from "@material-ui/core";
+import Chip from "@material-ui/core/Chip";
 
 // Project resources
 import { getChains } from "../util/firebase/chain";
@@ -199,11 +200,15 @@ const FindChain = () => {
         onViewportChange={(newView: IViewPort) => setViewport(newView)}
       >
         <div className={"filter-wrapper"}>
-          <Paper component="form" className={classes.root2}>
+          <Paper
+            component="form"
+            className={classes.root2}
+            style={{ borderRadius: "8px", border: "1px solid #DADCE0" }}
+          >
             <InputBase
               className={classes.input}
-              placeholder="Search For Chain"
-              inputProps={{ "aria-label": "search for chain" }}
+              placeholder="Search Clothing Loop"
+              inputProps={{ "aria-label": "search for clothing loop" }}
               onChange={onChange}
               key={"search-input"}
             />
@@ -222,12 +227,13 @@ const FindChain = () => {
             </Button>
           ) : null}
           <FormControl>
-            <FormGroup style={{ display: "inline" }}>
-              <Typography variant="h4">categories</Typography>
+            <FormGroup className="filter-form">
+              <Typography variant="body1">Categories</Typography>
               <div className={"inputs-wrapper"}>
                 {categories.genders.map((value, i) => (
                   <div key={value}>
                     <input
+                      className="map-cat-input"
                       key={`input-${value}-${i}`}
                       id={`${value}`}
                       type="checkbox"
@@ -241,10 +247,9 @@ const FindChain = () => {
                         )
                       }
                     ></input>
-                    <label
-                      key={`label-${value}-${i}`}
-                      htmlFor={`${value}`}
-                    >{`${value}'s clothing`}</label>
+                    <label key={`label-${value}-${i}`} htmlFor={`${value}`}>
+                      <Typography variant="body2">{`${value}'s clothing`}</Typography>
+                    </label>
                   </div>
                 ))}
               </div>
@@ -252,12 +257,13 @@ const FindChain = () => {
           </FormControl>
 
           <FormControl>
-            <FormGroup style={{ display: "inline" }}>
-              <Typography variant="h4">sizes</Typography>
+            <FormGroup className="filter-form">
+              <Typography variant="body1">Sizes</Typography>
               <div className={"inputs-wrapper"}>
                 {categories.sizes.map((value, i) => (
                   <div key={value}>
                     <input
+                      className="map-cat-input"
                       key={`input-${value}-${i}`}
                       id={`${value}`}
                       type="checkbox"
@@ -267,10 +273,21 @@ const FindChain = () => {
                       }
                     ></input>
                     <label
-                      style={{ textTransform: "uppercase" }}
+                      style={{
+                        textTransform: "uppercase",
+                        width: "40px",
+                        height: "40px",
+                        padding: "0",
+                        textAlign: "center",
+                      }}
                       key={`label-${value}-${i}`}
                       htmlFor={`${value}`}
-                    >{`${value}`}</label>
+                    >
+                      <Typography
+                        variant="body2"
+                        className='input-label-typography'
+                      >{`${value}`}</Typography>
+                    </label>
                   </div>
                 ))}
               </div>
@@ -308,7 +325,10 @@ const FindChain = () => {
             onClose={() => setShowPopup(false)}
             dynamicPosition={false}
           >
-            <Card className={classes.root}>
+            <Card
+              className={classes.root}
+              style={{ borderRadius: "8px", padding: "10px 10px 15px" }}
+            >
               <CardContent>
                 <Typography
                   className={classes.title}
@@ -321,43 +341,43 @@ const FindChain = () => {
                 <Typography
                   variant="body2"
                   component="p"
-                  className={"chain-address"}
+                  style={{ padding: "2% 0" }}
                 >
-                  <LocationOnOutlinedIcon />
                   {selectedChain.address}
                 </Typography>
-                <Typography variant="body2" component="p">
+                <Typography
+                  variant="body2"
+                  component="p"
+                  style={{ padding: "2% 0" }}
+                >
                   {selectedChain.description}
                 </Typography>
-                <Divider variant="middle" />
+                <Divider />
                 <div className={"chain-categories"}>
                   {selectedChain.categories.gender
                     ? selectedChain.categories.gender.map((category, i) => {
                         return (
-                          <Typography
-                            variant="body1"
-                            component="p"
-                            display="inline"
+                          <Chip
                             key={i}
-                          >
-                            <LocalOfferOutlinedIcon display="inline" />
-                            {`${category}'s clothing`}
-                          </Typography>
+                            label={`${category}'s clothing`}
+                            color="primary"
+                            style={{ marginRight: "1%" }}
+                          />
                         );
                       })
                     : null}
                   {selectedChain.categories.size
                     ? selectedChain.categories.size.map((size, i) => {
                         return (
-                          <Typography
-                            variant="body1"
-                            component="p"
-                            display="block"
+                          <Chip
                             key={i}
-                          >
-                            <LocalOfferOutlinedIcon display="inline" />
-                            {size}
-                          </Typography>
+                            label={size}
+                            color="primary"
+                            style={{
+                              marginRight: "1%",
+                              textTransform: "uppercase",
+                            }}
+                          />
                         );
                       })
                     : null}

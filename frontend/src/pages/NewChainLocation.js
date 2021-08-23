@@ -16,9 +16,8 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
-import Checkbox from "@material-ui/core/Checkbox";
 import { Helmet } from "react-helmet";
-import { CheckboxField, TextForm } from "../components/FormFields";
+import { TextForm } from "../components/FormFields";
 import { Alert } from "@material-ui/lab";
 import { CardContent } from "@material-ui/core";
 
@@ -70,8 +69,8 @@ const NewChainLocation = () => {
     setViewport({
       latitude: 0,
       longitude: 0,
-      width: "100vw",
-      height: "80vh",
+      width: "80vw",
+      height: "70vh",
       zoom: 1,
     });
 
@@ -80,8 +79,8 @@ const NewChainLocation = () => {
         setViewport({
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
-          width: "100vw",
-          height: "80vh",
+          width: "80vw",
+          height: "70vh",
           zoom: 10,
         });
       },
@@ -154,10 +153,18 @@ const NewChainLocation = () => {
         <title>Clothing-chain | Create new chain</title>
         <meta name="description" content="Create new chain" />
       </Helmet>{" "}
-      <Typography variant="h3" align="center">
-        {"select new chain location"}
-      </Typography>
+      <div style={{padding:'1% 0'}}>
+        <Typography variant="h3" align="center">
+          {"select new chain location"}
+        </Typography>
+        <Typography component="p" align="center">
+          {
+            "click on the map to select the location for the new clothing loop chain and fill up the form with all the relevant information"
+          }
+        </Typography>
+      </div>
       <ReactMapGL
+      style={{padding:'0 10%'}}
         mapboxApiAccessToken={mapboxgl.accessToken}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         {...viewport}
@@ -204,6 +211,7 @@ const NewChainLocation = () => {
                               {"enter chain information"}
                             </Typography>
                             <TextForm
+                              key="name"
                               required
                               label="Name"
                               name="name"
@@ -215,6 +223,7 @@ const NewChainLocation = () => {
                             />
 
                             <TextForm
+                              key="description"
                               required
                               label="Description"
                               name="description"
@@ -230,41 +239,96 @@ const NewChainLocation = () => {
                               }
                             />
 
-                            <div style={{ display: "flex" }}>
-                              <div>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <Typography
+                                component="p"
+                                style={{
+                                  textAlign: "left",
+                                  textTransform: "capitalize",
+                                }}
+                              >
+                                categories
+                              </Typography>
+                              <div style={{ display: "flex", padding: "2% 0" }}>
                                 {categories.genders.map((value, i) => (
-                                  <CheckboxField
-                                    control={
-                                      <Checkbox
-                                        onChange={(e) =>
-                                          handleCheck(e, genders, setGenders)
-                                        }
-                                      />
-                                    }
-                                    label={`${value}'s clothing`}
-                                    value={value}
-                                    key={`${value}-${i}`}
-                                    name={value}
-                                  />
+                                  <div key={value}>
+                                    <input
+                                      className="map-cat-input"
+                                      key={`input-${value}-${i}`}
+                                      id={`${value}`}
+                                      type="checkbox"
+                                      name={value}
+                                      value={value}
+                                      onChange={(e) =>
+                                        handleCheck(e, genders, setGenders)
+                                      }
+                                    ></input>
+                                    <label
+                                      key={`label-${value}-${i}`}
+                                      htmlFor={`${value}`}
+                                    >
+                                      <Typography
+                                        variant="body2"
+                                        style={{ textAlign: "center" }}
+                                      >{`${value}'s clothing`}</Typography>
+                                    </label>
+                                  </div>
                                 ))}
                               </div>
 
                               <div>
-                                {categories.sizes.map((value, i) => (
-                                  <CheckboxField
-                                    control={
-                                      <Checkbox
+                                <Typography
+                                  component="p"
+                                  style={{
+                                    textAlign: "left",
+                                    textTransform: "capitalize",
+                                  }}
+                                >
+                                  sizes
+                                </Typography>
+                                <div
+                                  className={"inputs-wrapper"}
+                                  style={{ display: "flex", padding: "2% 0" }}
+                                >
+                                  {categories.sizes.map((value, i) => (
+                                    <div key={`wrapper-${i}`}>
+                                      <input
+                                        className="map-cat-input"
+                                        key={`input-${value}-${i}`}
+                                        id={`${value}`}
+                                        type="checkbox"
+                                        name={value}
+                                        value={value}
                                         onChange={(e) =>
                                           handleCheck(e, sizes, setSizes)
                                         }
-                                      />
-                                    }
-                                    label={value}
-                                    value={value}
-                                    key={`${value}-${i}`}
-                                    name={value}
-                                  />
-                                ))}
+                                      ></input>
+                                      <label
+                                        style={{
+                                          textTransform: "uppercase",
+                                          width: "40px",
+                                          height: "40px",
+                                          padding: "0",
+                                          textAlign: "center",
+                                        }}
+                                        key={`label-${value}-${i}`}
+                                        htmlFor={`${value}`}
+                                      >
+                                        <Typography
+                                          variant="body2"
+                                          className="input-label-typography"
+                                        >
+                                          {value}
+                                        </Typography>
+                                      </label>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                             </div>
 

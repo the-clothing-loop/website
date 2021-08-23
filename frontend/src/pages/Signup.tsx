@@ -27,11 +27,13 @@ import { getChain } from "../util/firebase/chain";
 import { IChain } from "../types";
 
 const Signup = () => {
-  const { chainId } = useParams<{chainId: string}>();
+  const { chainId } = useParams<{ chainId: string }>();
   const [chain, setChain] = useState<IChain | null>(null);
   const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
-  const [geocoderResult, setGeocoderResult] = useState({result: {place_name: ""}});
+  const [geocoderResult, setGeocoderResult] = useState({
+    result: { place_name: "" },
+  });
   const [error, setError] = useState("");
   const classes = makeStyles(theme as any)();
 
@@ -84,81 +86,88 @@ const Signup = () => {
   if (submitted) {
     return <Redirect to={"/thankyou"} />;
   } else {
-    return <>
-      <Helmet>
-        <title>Clothing-chain | Signup user</title>
-        <meta name="description" content="Signup user"/>
-      </Helmet>
-      <Formik
-        initialValues={{
-          name: "",
-          email: "",
-          phoneNumber: "",
-          newsletter: false,
-          actionsNewsletter: false,
-        }}
-        validationSchema={validate}
-        onSubmit={async (v) => onSubmit(v)}
-      >
-        {(formik) => (
-          <ThreeColumnLayout>
-            <div>
-              <img
-                src={AppIcon}
-                alt="SFM logo"
-                width="200"
-                className={classes.image}
-              />
-              <Typography variant="h3" className={classes.pageTitle}>
-                {t("signup")}
-              </Typography>{" "}
-              <p>{chain?.name}</p>
-              <Form>
-                <TextForm
-                  label="Name"
-                  name="name"
-                  type="text"
-                  className={classes.textField}
+    return (
+      <>
+        <Helmet>
+          <title>Clothing-chain | Signup user</title>
+          <meta name="description" content="Signup user" />
+        </Helmet>
+        <Formik
+          initialValues={{
+            name: "",
+            email: "",
+            phoneNumber: "",
+            newsletter: false,
+            actionsNewsletter: false,
+          }}
+          validationSchema={validate}
+          onSubmit={async (v) => onSubmit(v)}
+        >
+          {(formik) => (
+            <ThreeColumnLayout>
+              <div>
+                <img
+                  src={AppIcon}
+                  alt="SFM logo"
+                  width="200"
+                  className={classes.image}
                 />
-
-                <TextForm
-                  label="Email"
-                  name="email"
-                  type="email"
-                  className={classes.textField}
-                />
-                <PhoneFormField
-                  label="Phone number"
-                  name="phoneNumber"
-                  onChange={(e: string) => formik.setFieldValue("phoneNumber", e)}
-                />
-                <GeocoderSelector name="address" onResult={setGeocoderResult} />
-
-                <CheckboxField
-                  label="Newsletter"
-                  name="newsletter"
-                  type="checkbox"
-                />
-                <CheckboxField
-                  label="Actions newsletter"
-                  name="actionsNewsletter"
-                  type="checkbox"
-                />
-                { error ? <Alert severity="error">{error}</Alert> : null }
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
+                <Typography variant="h3" className={classes.pageTitle}>
                   {t("signup")}
-                </Button>
-              </Form>
-            </div>
-          </ThreeColumnLayout>
-        )}
-      </Formik>
-    </>;
+                </Typography>{" "}
+                <p>{chain?.name}</p>
+                <Form>
+                  <TextForm
+                    label="Name"
+                    name="name"
+                    type="text"
+                    className={classes.textField}
+                  />
+
+                  <TextForm
+                    label="Email"
+                    name="email"
+                    type="email"
+                    className={classes.textField}
+                  />
+                  <PhoneFormField
+                    label="Phone number"
+                    name="phoneNumber"
+                    onChange={(e: string) =>
+                      formik.setFieldValue("phoneNumber", e)
+                    }
+                  />
+                  <GeocoderSelector
+                    name="address"
+                    onResult={setGeocoderResult}
+                  />
+
+                  <CheckboxField
+                    label="Newsletter"
+                    name="newsletter"
+                    type="checkbox"
+                  />
+                  <CheckboxField
+                    label="Actions newsletter"
+                    name="actionsNewsletter"
+                    type="checkbox"
+                  />
+                  {error ? <Alert severity="error">{error}</Alert> : null}
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    {t("signup")}
+                  </Button>
+                </Form>
+              </div>
+            </ThreeColumnLayout>
+          )}
+        </Formik>
+      </>
+    );
   }
 };
 
