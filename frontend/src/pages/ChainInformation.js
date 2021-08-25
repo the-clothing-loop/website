@@ -28,8 +28,8 @@ const ChainInformation = () => {
 
   return chain ? <>
     <Helmet>
-      <title>Clothing-chain | Chain details</title>
-      <meta name="description" content="Chain details" />
+      <title>Clothing-Loop | Loop Details</title>
+      <meta name="description" content="Loop Details" />
     </Helmet>
     <div className={"chain-details"}>
       <Card>

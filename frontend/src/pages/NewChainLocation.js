@@ -149,8 +149,8 @@ const NewChainLocation = () => {
   return changePage ? (
     <>
       <Helmet>
-        <title>Clothing-chain | Create new chain</title>
-        <meta name="description" content="Create new chain" />
+        <title>Clothing-Loop | Create New Loop</title>
+        <meta name="description" content="Create New Loop" />
       </Helmet>{" "}
       <div style={{ padding: "1% 0" }}>
         <Typography variant="h3" align="center">
@@ -259,7 +259,7 @@ const NewChainLocation = () => {
                                     <input
                                       className="map-cat-input"
                                       key={`input-${value}-${i}`}
-                                      id={`${value}`}
+                                      id={value}
                                       type="checkbox"
                                       name={value}
                                       value={value}
@@ -269,7 +269,7 @@ const NewChainLocation = () => {
                                     ></input>
                                     <label
                                       key={`label-${value}-${i}`}
-                                      htmlFor={`${value}`}
+                                      htmlFor={value}
                                     >
                                       <Typography
                                         variant="body2"
@@ -299,7 +299,7 @@ const NewChainLocation = () => {
                                       <input
                                         className="map-cat-input"
                                         key={`input-${value}-${i}`}
-                                        id={`${value}`}
+                                        id={value}
                                         type="checkbox"
                                         name={value}
                                         value={value}
@@ -316,7 +316,7 @@ const NewChainLocation = () => {
                                           textAlign: "center",
                                         }}
                                         key={`label-${value}-${i}`}
-                                        htmlFor={`${value}`}
+                                        htmlFor={value}
                                       >
                                         <Typography
                                           variant="body2"

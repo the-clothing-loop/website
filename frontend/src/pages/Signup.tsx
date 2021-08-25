@@ -89,7 +89,7 @@ const Signup = () => {
     return (
       <>
         <Helmet>
-          <title>Clothing-chain | Signup user</title>
+          <title>Clothing-Loop | Signup user</title>
           <meta name="description" content="Signup user" />
         </Helmet>
         <Formik
@@ -101,7 +101,7 @@ const Signup = () => {
             actionsNewsletter: false,
           }}
           validationSchema={validate}
-          onSubmit={async (v) => onSubmit(v)}
+          onSubmit={(v) => onSubmit(v)}
         >
           {(formik) => (
             <ThreeColumnLayout>

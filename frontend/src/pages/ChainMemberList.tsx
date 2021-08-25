@@ -63,7 +63,6 @@ const ChainMemberList = () => {
     }
   };
 
-
   //pagination
   const handleChangePage = (e: any, newPage: any) => {
     setPage(newPage);
@@ -82,26 +81,22 @@ const ChainMemberList = () => {
         const chainUsers = await getUsersForChain(chainId);
         setUsers(chainUsers);
         setPublishedValue({ published: chainData.published });
-
-        const adminData: any = users?.filter((user: IUser) => {
-          if (user.role === "chainAdmin") {
-            return setAdmin(user);
-          }
-        });
       } catch (error) {
         console.error(error);
       }
     })();
   }, []);
 
+  useEffect(() => {
+    setAdmin(users?.find((user: IUser) => user.role === "chainAdmin"));
+  }, [users]);
+
   console.log(admin);
-
-
   return !chain || !users ? null : (
     <>
       <Helmet>
-        <title>Clothing-Loop | Loop members</title>
-        <meta name="description" content="Loop members" />
+        <title>Clothing-Loop | Loop Members</title>
+        <meta name="description" content="Loop Members" />
       </Helmet>
       <div className="chain-member-list">
         <Card>
@@ -182,7 +177,7 @@ const ChainMemberList = () => {
         </Card>
         {admin ? (
           <div>
-            <Typography variant="h6">{"host contacts"}</Typography>
+            <Typography variant="h6">{"admin contacts"}</Typography>
 
             <Table>
               <TableHead>

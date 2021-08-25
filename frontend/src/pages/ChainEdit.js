@@ -109,9 +109,9 @@ const ChainEdit = () => {
   return !chain ? null : (
     <>
       <Helmet>
-        <title>Clothing-chain | Edit chain details</title>
-        <meta name="description" content="Edit chain details" />
-      </Helmet>{" "}
+        <title>Clothing-Loop | Edit Loop details</title>
+        <meta name="description" content="Edit Loop details" />
+      </Helmet>
       <Formik
         initialValues={{
           name: chain.name,
@@ -164,18 +164,15 @@ const ChainEdit = () => {
                           <input
                             className="map-cat-input"
                             key={`input-${value}-${i}`}
-                            id={`${value}`}
+                            id={value}
                             type="checkbox"
                             name={value}
                             onChange={(e) =>
                               handleChange(e, genders, setGenders)
                             }
-                            checked={genders[value] ? true : false}
+                            checked={!!genders[value]}
                           ></input>
-                          <label
-                            key={`label-${value}-${i}`}
-                            htmlFor={`${value}`}
-                          >
+                          <label key={`label-${value}-${i}`} htmlFor={value}>
                             <Typography variant="body2">{`${value}'s clothing`}</Typography>
                           </label>
                         </div>
@@ -197,16 +194,16 @@ const ChainEdit = () => {
                         <div key={value}>
                           <input
                             className="map-cat-input"
-                            key={`input-${value}-${i}`}
-                            id={`${value}`}
+                            key={value}
+                            id={value}
                             type="checkbox"
                             name={value}
                             onChange={(e) => handleChange(e, sizes, setSizes)}
-                            checked={sizes[value] ? true : false}
+                            checked={!!sizes[value]}
                           ></input>
                           <label
                             key={`label-${value}-${i}`}
-                            htmlFor={`${value}`}
+                            htmlFor={value}
                             style={{
                               textTransform: "uppercase",
                               width: "40px",

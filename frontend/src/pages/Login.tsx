@@ -52,7 +52,7 @@ const Login = () => {
 
   return <>
     <Helmet>
-      <title>Clothing-loop | Login</title>
+      <title>Clothing-Loop | Login</title>
       <meta name="description" content="Login"/>
     </Helmet>
     <Grid container className={classes.form}>

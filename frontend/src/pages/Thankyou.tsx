@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet";
 const Thankyou = () => {
   return <>
     <Helmet>
-      <title>Clothing-chain | Thank you</title>
+      <title>Clothing-Loop | Thank you</title>
       <meta name="description" content="Thank you"/>
     </Helmet>
     <Grid container>

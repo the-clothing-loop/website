@@ -35,7 +35,7 @@ const LoginEmailFinished = () => {
 
   return <>
     <Helmet>
-      <title>Clothing-loop | Login finishing</title>
+      <title>Clothing-Loop | Login finishing</title>
       <meta name="description" content="Login finishing"/>
     </Helmet>
     { finished && <Alert severity="success">{t("userIsLoggedIn")}</Alert> }

@@ -66,8 +66,8 @@ const Signup = () => {
 
   return <>
     <Helmet>
-      <title>Clothing-chain | Create user for new chain</title>
-      <meta name="description" content="Create user for new chain"/>
+      <title>Clothing-Loop | Create user for new loop</title>
+      <meta name="description" content="Create user for new loop"/>
     </Helmet>
     <Formik
       initialValues={{

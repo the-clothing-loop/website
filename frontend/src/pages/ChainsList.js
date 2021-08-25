@@ -11,14 +11,14 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import { Button } from "@material-ui/core";
 import TablePagination from "@material-ui/core/TablePagination";
-import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
 import TableContainer from "@material-ui/core/TableContainer";
+import Alert from "@material-ui/lab/Alert";
 
 // Project resources
 import { getChains } from "../util/firebase/chain";
 import { Typography } from "@material-ui/core";
-import { getUsersForChain, getUserById } from "../util/firebase/user";
+import { getUsersForChain } from "../util/firebase/user";
 
 const rows = ["name", "location", "status", "active users"];
 
@@ -29,6 +29,7 @@ const ChainsList = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [error, setError] = useState("");
 
   const handleChangePage = (e, newPage) => {
     setPage(newPage);
@@ -50,6 +51,9 @@ const ChainsList = () => {
           activeUsers = getUsersForChainRes.length;
           chain.activeUsers = activeUsers;
         } catch (error) {
+          setError(
+            `an error occurred when trying to get all active users`
+          );
           console.error("error in getting users for chain with id", chain.id);
         }
       }
@@ -61,8 +65,8 @@ const ChainsList = () => {
   return chains ? (
     <>
       <Helmet>
-        <title>Clothing-Loop | Loops list</title>
-        <meta name="description" content="Chain list" />
+        <title>Clothing-Loop | Loops List</title>
+        <meta name="description" content="Loops List" />
       </Helmet>
       <div className="table-container">
         <div className="table-head">
@@ -71,6 +75,7 @@ const ChainsList = () => {
             {"export data"}
           </Button>
         </div>
+        {error ? <Alert severity="error">{error}</Alert> : null}
         <TableContainer component={Paper}>
           <Table aria-label="simple table">
             <TableHead>

@@ -190,8 +190,8 @@ const FindChain = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-chain | Find chain</title>
-        <meta name="description" content="Find chain" />
+        <title>Clothing-Loop | Find Loop</title>
+        <meta name="description" content="Find Loop" />
       </Helmet>
       <ReactMapGL
         mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
@@ -247,7 +247,7 @@ const FindChain = () => {
                         )
                       }
                     ></input>
-                    <label key={`label-${value}-${i}`} htmlFor={`${value}`}>
+                    <label key={`label-${value}-${i}`} htmlFor={value}>
                       <Typography variant="body2">{`${value}'s clothing`}</Typography>
                     </label>
                   </div>
@@ -281,7 +281,7 @@ const FindChain = () => {
                         textAlign: "center",
                       }}
                       key={`label-${value}-${i}`}
-                      htmlFor={`${value}`}
+                      htmlFor={value}
                     >
                       <Typography
                         variant="body2"

@@ -48,7 +48,7 @@ const UserEdit = () => {
 
   return !user ? null : <>
     <Helmet>
-      <title>Clothing-chain | Edit user</title>
+      <title>Clothing-Loop | Edit user</title>
       <meta name="description" content="Edit user"/>
     </Helmet>
     <Grid container className={classes.form}>
