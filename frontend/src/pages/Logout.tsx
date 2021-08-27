@@ -17,7 +17,7 @@ export const Logout = () => {
 
   return <>
     <Helmet>
-      <title>Clothing-loop | Logout</title>
+      <title>Clothing-Loop | Logout</title>
       <meta name="description" content="Logout"/>
     </Helmet>
     { done && <Alert severity="success">{t("userSignedOut")}</Alert> }

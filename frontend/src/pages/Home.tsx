@@ -9,7 +9,7 @@ import AppIcon from "../images/sfm_logo.png";
 const Home = () => {
   return <>
     <Helmet>
-        <title>Clothing-loop | Home</title>
+        <title>Clothing-Loop | Home</title>
         <meta name="description" content="Home"/>
     </Helmet>
     <Grid container>

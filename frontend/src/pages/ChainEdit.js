@@ -109,9 +109,9 @@ const ChainEdit = () => {
   return !chain ? null : (
     <>
       <Helmet>
-        <title>Clothing-chain | Edit chain details</title>
-        <meta name="description" content="Edit chain details" />
-      </Helmet>{" "}
+        <title>Clothing-Loop | Edit Loop details</title>
+        <meta name="description" content="Edit Loop details" />
+      </Helmet>
       <Formik
         initialValues={{
           name: chain.name,
@@ -149,33 +149,80 @@ const ChainEdit = () => {
                 }
               />
 
-              <div style={{ display: "flex" }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
                 <div>
-                  <Typography component="p">categories</Typography>
-                  {categories.genders.map((value) => {
-                    return (
-                      <CheckboxField
-                        name={value}
-                        label={`${value}'s clothing`}
-                        onChange={(e) => handleChange(e, genders, setGenders)}
-                        checked={genders[value] ? true : false}
-                      />
-                    );
-                  })}
+                  <Typography
+                    component="p"
+                    style={{ textAlign: "left", textTransform: "capitalize" }}
+                  >
+                    categories
+                  </Typography>
+                  <div style={{ display: "flex", padding: "2% 0" }}>
+                    {categories.genders.map((value, i) => {
+                      return (
+                        <div key={value}>
+                          <input
+                            className="map-cat-input"
+                            key={`input-${value}-${i}`}
+                            id={value}
+                            type="checkbox"
+                            name={value}
+                            onChange={(e) =>
+                              handleChange(e, genders, setGenders)
+                            }
+                            checked={!!genders[value]}
+                          ></input>
+                          <label key={`label-${value}-${i}`} htmlFor={value}>
+                            <Typography variant="body2">{`${value}'s clothing`}</Typography>
+                          </label>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <div>
-                  <Typography component="p">sizes</Typography>
-                  {categories.sizes.map((value) => {
-                    return (
-                      <CheckboxField
-                        name={value}
-                        label={value}
-                        onChange={(e) => handleChange(e, sizes, setSizes)}
-                        checked={sizes[value] ? true : false}
-                      />
-                    );
-                  })}
+                  <Typography
+                    component="p"
+                    style={{ textAlign: "left", textTransform: "capitalize" }}
+                  >
+                    sizes
+                  </Typography>
+                  <div style={{ display: "flex", padding: "2% 0" }}>
+                    {categories.sizes.map((value, i) => {
+                      return (
+                        <div key={value}>
+                          <input
+                            className="map-cat-input"
+                            key={value}
+                            id={value}
+                            type="checkbox"
+                            name={value}
+                            onChange={(e) => handleChange(e, sizes, setSizes)}
+                            checked={!!sizes[value]}
+                          ></input>
+                          <label
+                            key={`label-${value}-${i}`}
+                            htmlFor={value}
+                            style={{
+                              textTransform: "uppercase",
+                              width: "40px",
+                              height: "40px",
+                              padding: "0",
+                              textAlign: "center",
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              className="input-label-typography"
+                            >
+                              {value}
+                            </Typography>
+                          </label>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
