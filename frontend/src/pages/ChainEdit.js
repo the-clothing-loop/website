@@ -123,7 +123,7 @@ const ChainEdit = () => {
         {({ errors, touched }) => (
           <ThreeColumnLayout>
             <Typography variant="h3" className={classes.pageTitle}>
-              {t("edit chain information")}
+              {t("edit loop details")}
             </Typography>
             <Form>
               <TextForm

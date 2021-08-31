@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -23,6 +23,7 @@ import Chip from "@material-ui/core/Chip";
 import { getChain, updateChain } from "../util/firebase/chain";
 import { getUsersForChain } from "../util/firebase/user";
 import { IChain, IUser } from "../types";
+import { AuthContext } from "../components/AuthProvider";
 
 type TParams = {
   chainId: string;
@@ -34,6 +35,7 @@ const ChainMemberList = () => {
   const { t } = useTranslation();
   const location = useLocation<any>();
   const { chainId } = useParams<TParams>();
+  const { userData } = useContext<any>(AuthContext);
 
   const [chain, setChain] = useState<IChain>();
   const [users, setUsers] = useState<IUser[]>();
@@ -91,7 +93,7 @@ const ChainMemberList = () => {
     setAdmin(users?.find((user: IUser) => user.role === "chainAdmin"));
   }, [users]);
 
-  console.log(admin);
+  console.log(userData)
   return !chain || !users ? null : (
     <>
       <Helmet>
@@ -144,7 +146,7 @@ const ChainMemberList = () => {
             <Divider style={{ margin: "2% 0" }} />
 
             <div className={"chain-categories-admin"}>
-              {chain.categories.gender
+              {chain.categories?.gender
                 ? chain.categories.gender.map((gender, i) => {
                     return (
                       <Chip
@@ -157,7 +159,7 @@ const ChainMemberList = () => {
                   })
                 : null}
 
-              {chain.categories.size
+              {chain.categories?.size
                 ? chain.categories.size.map((size, i) => {
                     return (
                       <Chip
@@ -198,11 +200,13 @@ const ChainMemberList = () => {
                   <TableCell>{admin.address}</TableCell>
                   <TableCell>{admin.phoneNumber}</TableCell>
                   <TableCell>{admin.email}</TableCell>
-                  <TableCell align="right">
-                    <Link to={`/users/edit/${admin.uid}`}>
-                      <EditIcon />
-                    </Link>
-                  </TableCell>
+                  {userData?.role === "admin" ? (
+                    <TableCell align="right">
+                      <Link to={`/users/edit/${admin.uid}`}>
+                        <EditIcon />
+                      </Link>
+                    </TableCell>
+                  ) : null}
                 </TableRow>
               </TableBody>
             </Table>
@@ -232,11 +236,13 @@ const ChainMemberList = () => {
                   <TableCell>{u.address}</TableCell>
                   <TableCell>{u.phoneNumber}</TableCell>
                   <TableCell>{u.email}</TableCell>
-                  <TableCell align="right">
-                    <Link to={`/users/edit/${u.uid}`}>
-                      <EditIcon />
-                    </Link>
-                  </TableCell>
+                  {userData?.role === "admin" ? (
+                    <TableCell align="right">
+                      <Link to={`/users/edit/${u.uid}`}>
+                        <EditIcon />
+                      </Link>
+                    </TableCell>
+                  ) : null}
                 </TableRow>
               ))}
           </TableBody>
