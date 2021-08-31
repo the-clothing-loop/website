@@ -25,7 +25,7 @@ const Navbar = () => {
           {t("findChain")}
         </Button>
         <Button color="inherit" component={Link} to="/chains/new-signup">
-          {t("startNewChain")}
+          {("start new loop")}
         </Button>
 
         {userData?.role === "admin" ? (

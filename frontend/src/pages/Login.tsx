@@ -13,7 +13,7 @@ import theme from "../util/theme";
 import Alert from "@material-ui/lab/Alert";
 
 // Project resources
-import AppIcon from "../images/sfm_logo.png";
+import AppIcon from "../images/clothing-loop.png"
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -61,7 +61,7 @@ const Login = () => {
         <img
           src={AppIcon}
           alt="SFM logo"
-          width="200"
+          width="500"
           className={classes.image}
         />
         <Typography variant="h3" className={classes.pageTitle}>

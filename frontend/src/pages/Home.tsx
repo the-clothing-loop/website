@@ -4,51 +4,56 @@ import Typography from "@material-ui/core/Typography";
 import { Helmet } from "react-helmet";
 
 // Project resources
-import AppIcon from "../images/sfm_logo.png";
+import AppIcon from "../images/clothing-loop.png";
+import ProjectImg from "../images/Naamloze-presentatie.jpeg";
 
 const Home = () => {
-  return <>
-    <Helmet>
+  return (
+    <>
+      <Helmet>
         <title>Clothing-Loop | Home</title>
-        <meta name="description" content="Home"/>
-    </Helmet>
-    <Grid container>
-      <Grid item sm />
-      <Grid item sm>
-        <div className={"text-wrapper"}>
-          <img src={AppIcon} alt="SFM logo" width="200" />
-          <Typography component="h1" variant="h3">
-            {"Home"}
-          </Typography>{" "}
-          <Typography component="p">
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum." Section
-            1.10.32 of "de Finibus Bonorum et Malorum", written by Cicero in 45
-            BC "Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-            quae ab illo inventore veritatis et quasi architecto beatae vitae
-            dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-            aspernatur aut odit aut fugit, sed quia consequuntur magni dolores
-            eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est,
-            qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,
-            sed quia non numquam eius modi tempora incidunt ut labore et dolore
-            magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis
-            nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut
-            aliquid ex ea commodi consequatur? Quis autem vel eum iure
-            reprehenderit qui in ea voluptate velit esse quam nihil molestiae
-            consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla
-            pariatur?"
-          </Typography>{" "}
-        </div>
+        <meta name="description" content="Home" />
+      </Helmet>
+      <Grid container>
+        <Grid item sm />
+        <Grid item sm>
+          <div className={"text-wrapper"}>
+            <img src={AppIcon} alt="SFM logo" width="500" />
+            <img src={ProjectImg} alt="Project Img" width="500" />
+            <Typography  component="p" className='intro-text'>
+              The Clothing Loop makes it easy and fun to share pre-loved clothes
+              by connecting people in local communities that share a bag of
+              clothes.
+            </Typography>
+            <Typography component="p">
+              We are buying more and more garments and wearing them shorter and
+              shorter. The Clothing Loop tackles this growing problem – while
+              connecting people in the neighborhood in a fun and sustainable
+              way. The idea of the Clothing Loop is simple: (large) bags filled
+              with clothing travel a route past all participants in a particular
+              city or neighborhood. Do you receive the bag at home? Then you can
+              take out what you like and put back something that is still in
+              good condition, but ready for a new owner. If you want, you can
+              share a photo with your new addition in the corresponding WhatsApp
+              group. Then you take the bag to the next neighbor on the list. We
+              started a year ago in Amsterdam in the Netherlands as a
+              corona-proof, local alternative for clothing swap events and now
+              have more than 7500 participants spread over more than 210 chains
+              across the country. The success has now been picked up by numerous
+              (national) media (see for example: NOS). Our goal is to spread
+              this initiative globally. To this end, we are building an online
+              platform where anyone, anywhere can start or join a chain.{" "}
+              <span>
+                The Clothing Loop has been adopted by the global Slow Fashion
+                Movement.
+              </span>
+            </Typography>{" "}
+          </div>
+        </Grid>
+        <Grid item sm />
       </Grid>
-      <Grid item sm />
-    </Grid>
-  </>;
+    </>
+  );
 };
 
 export default Home;

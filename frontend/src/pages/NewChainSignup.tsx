@@ -22,7 +22,7 @@ import {
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../components/AuthProvider";
-import AppIcon from "../images/sfm_logo.png";
+import AppIcon from "../images/clothing-loop.png"
 import { createUser } from "../util/firebase/user";
 
 const Signup = () => {
@@ -101,7 +101,7 @@ const Signup = () => {
             <img
               src={AppIcon}
               alt="SFM logo"
-              width="200"
+              width="500"
               className={classes.image}
             />
             <Typography variant="h3" className={classes.pageTitle}>

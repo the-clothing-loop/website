@@ -17,8 +17,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import Divider from "@material-ui/core/Divider";
-import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
-import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import { makeStyles } from "@material-ui/core";
 import Chip from "@material-ui/core/Chip";
 
@@ -402,7 +400,7 @@ const FindChain = () => {
                     className={"card-button"}
                     onClick={(e) => viewChain(e)}
                   >
-                    {t("viewChain")}
+                    {t("view")}
                   </Button>{" "}
                 </CardActions>
               ) : (

@@ -26,7 +26,19 @@ a {
 .nav-container {
   margin: auto;
 }
+/* about page styling*/
+.text-wrapper p.intro-text {
+  font-size: 1.2rem;
+  text-align: justify;
+  font-weight: bold;
+  padding: 2% 0;
+}
 
+.text-wrapper > span {
+  display: inline-block;
+  font-style: italic;
+  padding: 1% 0;
+}
 /* map styling */
 .map-container {
   position: relative;
