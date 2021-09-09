@@ -7,7 +7,7 @@ admin.initializeApp();
 const db = admin.firestore();
 const region = functions.config().clothingloop.region as string;
 const adminEmails = (
-	functions.config().clothingloop.admin_emails as string
+  functions.config().clothingloop.admin_emails as string
 ).split(";");
 
 const ROLE_ADMIN = "admin";
@@ -17,137 +17,137 @@ const ROLE_CHAINADMIN = "chainAdmin";
 // If we want to use try/catch with auth functions, we have to wrap it in this
 // Auth functions return a "clojure" promise which has a different catch implementation
 function wrapInECMAPromise<T>(fn: () => Promise<T>): Promise<T> {
-	return new Promise((resolve, reject) => {
-		return fn()
-			.then((res) => resolve(res))
-			.catch((err) => reject(err));
+  return new Promise((resolve, reject) => {
+    return fn()
+		  .then((res) => resolve(res))
+		  .catch((err) => reject(err));
 	});
 }
 
 export const createUser = functions
-	.region(region)
-	.https.onCall(async (data: any) => {
-		functions.logger.debug("createUser parameters", data);
-		const [
-			email,
-			chainId,
-			name,
-			phoneNumber,
-			newsletter,
-			actionsNewsletter,
-			address,
-			dataConsent,
-		] = [
-			data.email,
-			data.chainId,
-			data.name,
-			data.phoneNumber,
-			data.newsletter,
-			data.actionsNewsletter,
-			data.address,
-			data.dataConsent,
-		];
-		let userRecord = null as null | UserRecord;
-		try {
-			userRecord = await wrapInECMAPromise<UserRecord>(() =>
-				admin.auth().createUser({
-					email: email,
-					phoneNumber: phoneNumber,
-					displayName: name,
-					disabled: false,
-				})
-			);
-		} catch (e) {
-			functions.logger.warn(`Error creating user: ${JSON.stringify(e)}`);
-			return { validationError: e };
-		}
-		functions.logger.debug("created user", userRecord);
-		const verificationLink = await admin
-			.auth()
-			.generateEmailVerificationLink(email, {
-				handleCodeInApp: false,
-				url: functions.config().clothingloop.base_domain,
-			});
-		const verificationEmail =
-			`Hi ${name},<br><br>` +
-			`Click <a href="${verificationLink}">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>` +
-			"Regards,<br>The clothing-loop team!";
-		functions.logger.debug("sending verification email", verificationEmail);
-		await db.collection("mail").add({
-			to: email,
-			message: {
-				subject: "Verify e-mail for clothing chain",
-				html: verificationEmail,
-			},
-		});
-		functions.logger.debug("Adding user supplemental information to firebase");
-		await db.collection("users").doc(userRecord.uid).set({
-			chainId,
-			address,
-			newsletter,
-			actionsNewsletter,
-			dataConsent,
-		});
-		if (adminEmails.includes(email)) {
-			functions.logger.debug(`Adding user ${email} as admin`);
-			await admin.auth().setCustomUserClaims(userRecord.uid, {
-				role: ROLE_ADMIN,
-				chainId: chainId,
-			});
-		} else {
-			await admin
-				.auth()
-				.setCustomUserClaims(userRecord.uid, { chainId: chainId });
-		}
+  .region(region)
+  .https.onCall(async (data: any) => {
+	  functions.logger.debug("createUser parameters", data);
+	  const [
+		  email,
+		  chainId,
+		  name,
+		  phoneNumber,
+		  newsletter,
+		  actionsNewsletter,
+		  address,
+		  dataConsent,
+	  ] = [
+		  data.email,
+		  data.chainId,
+		  data.name,
+		  data.phoneNumber,
+		  data.newsletter,
+		  data.actionsNewsletter,
+		  data.address,
+		  data.dataConsent,
+	  ];
+	  let userRecord = null as null | UserRecord;
+	  try {
+		  userRecord = await wrapInECMAPromise<UserRecord>(() =>
+			  admin.auth().createUser({
+				  email: email,
+				  phoneNumber: phoneNumber,
+				  displayName: name,
+				  disabled: false,
+			  })
+		  );
+	  } catch (e) {
+		  functions.logger.warn(`Error creating user: ${JSON.stringify(e)}`);
+		  return { validationError: e };
+	  }
+	  functions.logger.debug("created user", userRecord);
+	  const verificationLink = await admin
+		  .auth()
+		  .generateEmailVerificationLink(email, {
+			  handleCodeInApp: false,
+			  url: functions.config().clothingloop.base_domain,
+		  });
+	  const verificationEmail =
+		  `Hi ${name},<br><br>` +
+		  `Click <a href="${verificationLink}">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>` +
+		  "Regards,<br>The clothing-loop team!";
+	  functions.logger.debug("sending verification email", verificationEmail);
+	  await db.collection("mail").add({
+		  to: email,
+		  message: {
+			  subject: "Verify e-mail for clothing chain",
+			  html: verificationEmail,
+		  },
+	  });
+	  functions.logger.debug("Adding user supplemental information to firebase");
+	  await db.collection("users").doc(userRecord.uid).set({
+		  chainId,
+		  address,
+		  newsletter,
+		  actionsNewsletter,
+		  dataConsent,
+	  });
+	  if (adminEmails.includes(email)) {
+		  functions.logger.debug(`Adding user ${email} as admin`);
+		  await admin.auth().setCustomUserClaims(userRecord.uid, {
+			  role: ROLE_ADMIN,
+			  chainId: chainId,
+		  });
+	  } else {
+		  await admin
+			  .auth()
+			  .setCustomUserClaims(userRecord.uid, { chainId: chainId });
+	  }
 		// TODO: Subscribe user in mailchimp if needed
-		return { id: userRecord.uid };
-	});
+	  return { id: userRecord.uid };
+  });
 
 export const createChain = functions
-	.region(region)
-	.https.onCall(async (data: any, context: functions.https.CallableContext) => {
-		functions.logger.debug("createChain parameters", data);
+  .region(region)
+  .https.onCall(async (data: any, context: functions.https.CallableContext) => {
+	  functions.logger.debug("createChain parameters", data);
 
-		const [uid, name, description, address, latitude, longitude, categories] = [
-			data.uid,
-			data.name,
-			data.description,
-			data.address,
-			data.latitude,
-			data.longitude,
-			data.categories,
-		];
+	  const [uid, name, description, address, latitude, longitude, categories] = [
+		  data.uid,
+		  data.name,
+		  data.description,
+		  data.address,
+		  data.latitude,
+		  data.longitude,
+		  data.categories,
+	  ];
 
-		const user = await admin.auth().getUser(uid);
-		const userData = await db.collection("users").doc(uid).get();
-		if (
-			(!userData.get("chainId") &&
-				!user.customClaims?.chainId &&
-				user.customClaims?.role !== ROLE_CHAINADMIN) ||
-			context.auth?.token.role === ROLE_ADMIN
-		) {
-			const chainData = await db.collection("chains").add({
-				name,
-				description,
-				address,
-				latitude,
-				longitude,
-				categories,
-				published: false,
-			});
-			db.collection("users").doc(uid).update("chainId", chainData.id);
-			await admin.auth().setCustomUserClaims(uid, {
-				chainId: chainData.id,
-				role: user.customClaims?.role ?? ROLE_CHAINADMIN,
-			});
-			return { id: chainData.id };
-		} else {
-			throw new functions.https.HttpsError(
-				"permission-denied",
-				"You don't have permission to change this user's chain"
-			);
-		}
-	});
+	  const user = await admin.auth().getUser(uid);
+	  const userData = await db.collection("users").doc(uid).get();
+	  if (
+		  (!userData.get("chainId") &&
+			  !user.customClaims?.chainId &&
+			  user.customClaims?.role !== ROLE_CHAINADMIN) ||
+		  context.auth?.token.role === ROLE_ADMIN
+	  ) {
+		  const chainData = await db.collection("chains").add({
+			  name,
+			  description,
+			  address,
+			  latitude,
+			  longitude,
+			  categories,
+			  published: false,
+		  });
+		  db.collection("users").doc(uid).update("chainId", chainData.id);
+		  await admin.auth().setCustomUserClaims(uid, {
+			  chainId: chainData.id,
+			  role: user.customClaims?.role ?? ROLE_CHAINADMIN,
+		  });
+		  return { id: chainData.id };
+	  } else {
+		  throw new functions.https.HttpsError(
+			  "permission-denied",
+			  "You don't have permission to change this user's chain"
+		  );
+	  }
+  });
 
 export const addUserToChain = functions
 	.region(region)
