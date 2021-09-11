@@ -1,15 +1,15 @@
 import TextField from "@material-ui/core/TextField";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import theme from "../util/theme";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import MuiPhoneInput from "material-ui-phone-number";
 import Checkbox from "@material-ui/core/Checkbox";
-import {useField} from "formik";
+import { useField } from "formik";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const TextFormField = ({name, inputRef, email}) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const classes = makeStyles(theme)();
 
   return (
@@ -27,7 +27,7 @@ const TextFormField = ({name, inputRef, email}) => {
 };
 
 const PhoneFormField = ({label, ...props}) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const [field, meta] = useField(props);
   return (
