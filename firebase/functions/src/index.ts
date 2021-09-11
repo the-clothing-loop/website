@@ -206,14 +206,14 @@ export const updateUser =
 
         if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
           const userRecord =
-                 await admin.auth()
-                     .updateUser(
-                         uid,
-                         {
-                           phoneNumber: phoneNumber,
-                           displayName: name,
-                           disabled: false,
-                         });
+                  await admin.auth()
+                      .updateUser(
+                          uid,
+                          {
+                            phoneNumber: phoneNumber,
+                            displayName: name,
+                            disabled: false,
+                          });
           functions.logger.debug("updated user", userRecord);
           await db.collection("users")
               .doc(userRecord.uid)
