@@ -68,7 +68,7 @@ const Signup = () => {
   return <>
     <Helmet>
       <title>Clothing-Loop | Create user for new loop</title>
-      <meta name="description" content="Create user for new loop" />
+      <meta name="description" content="Create user for new loop"/>
     </Helmet>
     <Formik
       initialValues={{
@@ -127,9 +127,7 @@ const Signup = () => {
                 type="email"
                 className={classes.textField}
                 error={touched.email && Boolean(errors.email)}
-                helperText={
-                  errors.email && touched.email ? errors.email : null
-                }
+                helperText={errors.email && touched.email ? errors.email : null}
               />
               <PhoneFormField
                 label="Phone number"

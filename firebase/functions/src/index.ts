@@ -48,31 +48,31 @@ export const createUser =
         let userRecord = null as null | UserRecord;
         try {
           userRecord =
-            await wrapInECMAPromise<UserRecord>(
-                () => admin.auth()
-                    .createUser({
-                      email: email,
-                      phoneNumber: phoneNumber,
-                      displayName: name,
-                      disabled: false,
-                    }));
+              await wrapInECMAPromise<UserRecord>(
+                  () => admin.auth()
+                      .createUser({
+                        email: email,
+                        phoneNumber: phoneNumber,
+                        displayName: name,
+                        disabled: false,
+                      }));
         } catch (e) {
           functions.logger.warn(`Error creating user: ${JSON.stringify(e)}`);
           return {"validationError": e};
         }
         functions.logger.debug("created user", userRecord);
         const verificationLink =
-        await admin.auth()
-            .generateEmailVerificationLink(
-                email,
-                {
-                  handleCodeInApp: false,
-                  url: functions.config().clothingloop.base_domain,
-                });
+          await admin.auth()
+              .generateEmailVerificationLink(
+                  email,
+                  {
+                    handleCodeInApp: false,
+                    url: functions.config().clothingloop.base_domain,
+                  });
         const verificationEmail =
-      `Hi ${name},<br><br>` +
-      `Click <a href="${verificationLink}">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>` +
-      "Regards,<br>The clothing-loop team!";
+            `Hi ${name},<br><br>` +
+            `Click <a href="${verificationLink}">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>` +
+            "Regards,<br>The clothing-loop team!";
         functions.logger.debug("sending verification email", verificationEmail);
         await db.collection("mail")
             .add({
@@ -84,7 +84,8 @@ export const createUser =
             });
         functions.logger.debug("Adding user supplemental information to firebase");
         await db.collection("users")
-            .doc(userRecord.uid).set({
+            .doc(userRecord.uid)
+            .set({
               chainId,
               address,
               newsletter,
@@ -93,14 +94,9 @@ export const createUser =
             });
         if (adminEmails.includes(email)) {
           functions.logger.debug(`Adding user ${email} as admin`);
-          await admin.auth().setCustomUserClaims(userRecord.uid, {
-            role: ROLE_ADMIN,
-            chainId: chainId,
-          });
+          await admin.auth().setCustomUserClaims(userRecord.uid, {role: ROLE_ADMIN, chainId: chainId});
         } else {
-          await admin
-              .auth()
-              .setCustomUserClaims(userRecord.uid, {chainId: chainId});
+          await admin.auth().setCustomUserClaims(userRecord.uid, {chainId: chainId});
         }
         // TODO: Subscribe user in mailchimp if needed
         return {id: userRecord.uid};
@@ -110,6 +106,7 @@ export const createChain =
   functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
         functions.logger.debug("createChain parameters", data);
+
         const [
           uid,
           name,
@@ -211,7 +208,8 @@ export const updateUser =
           const userRecord =
             await admin.auth()
                 .updateUser(
-                    uid, {
+                    uid,
+                    {
                       phoneNumber: phoneNumber,
                       displayName: name,
                       disabled: false,
@@ -240,9 +238,7 @@ export const getUserById =
         const user = await admin.auth().getUser(uid);
         if (user && (context.auth?.uid === uid ||
                   context.auth?.token?.role === ROLE_ADMIN ||
-                  (context.auth?.token?.role === ROLE_CHAINADMIN &&
-                  context.auth.token?.chainId === user.customClaims?.chainId))
-        ) {
+                  (context.auth?.token?.role === ROLE_CHAINADMIN && context.auth.token?.chainId === user.customClaims?.chainId))) {
           const userData = await db.collection("users").doc(uid).get();
           return {
             uid: user.uid,
@@ -258,10 +254,7 @@ export const getUserById =
             role: user.customClaims?.role,
           };
         } else {
-          throw new functions.https.HttpsError(
-              "permission-denied",
-              "You don't have permission to retrieve information about this user"
-          );
+          throw new functions.https.HttpsError("permission-denied", "You don't have permission to retrieve information about this user");
         }
       });
 
@@ -273,9 +266,7 @@ export const getUserByEmail =
         const user = await admin.auth().getUserByEmail(email);
         if (user && (context.auth?.uid === user.uid ||
                 context.auth?.token?.role === ROLE_ADMIN ||
-                (context.auth?.token?.role === ROLE_CHAINADMIN &&
-                context.auth.token?.chainId === user.customClaims?.chainId))
-        ) {
+                (context.auth?.token?.role === ROLE_CHAINADMIN && context.auth.token?.chainId === user.customClaims?.chainId))) {
           const userData = await db.collection("users").doc(user.uid).get();
           return {
             uid: user.uid,

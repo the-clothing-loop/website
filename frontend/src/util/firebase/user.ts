@@ -76,5 +76,5 @@ export {
   getUserById,
   getUserByEmail,
   getUsersForChain,
-  updateUser
+  updateUser,
 };
