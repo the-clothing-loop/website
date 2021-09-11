@@ -206,14 +206,14 @@ export const updateUser =
 
         if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
           const userRecord =
-            await admin.auth()
-                .updateUser(
-                    uid,
-                    {
-                      phoneNumber: phoneNumber,
-                      displayName: name,
-                      disabled: false,
-                    });
+                 await admin.auth()
+                     .updateUser(
+                         uid,
+                         {
+                           phoneNumber: phoneNumber,
+                           displayName: name,
+                           disabled: false,
+                         });
           functions.logger.debug("updated user", userRecord);
           await db.collection("users")
               .doc(userRecord.uid)
@@ -237,8 +237,8 @@ export const getUserById =
         const uid = data.uid;
         const user = await admin.auth().getUser(uid);
         if (user && (context.auth?.uid === uid ||
-                  context.auth?.token?.role === ROLE_ADMIN ||
-                  (context.auth?.token?.role === ROLE_CHAINADMIN && context.auth.token?.chainId === user.customClaims?.chainId))) {
+                   context.auth?.token?.role === ROLE_ADMIN ||
+                   (context.auth?.token?.role === ROLE_CHAINADMIN && context.auth.token?.chainId === user.customClaims?.chainId))) {
           const userData = await db.collection("users").doc(uid).get();
           return {
             uid: user.uid,
@@ -265,8 +265,8 @@ export const getUserByEmail =
         const email = data.email;
         const user = await admin.auth().getUserByEmail(email);
         if (user && (context.auth?.uid === user.uid ||
-                context.auth?.token?.role === ROLE_ADMIN ||
-                (context.auth?.token?.role === ROLE_CHAINADMIN && context.auth.token?.chainId === user.customClaims?.chainId))) {
+                   context.auth?.token?.role === ROLE_ADMIN ||
+                   (context.auth?.token?.role === ROLE_CHAINADMIN && context.auth.token?.chainId === user.customClaims?.chainId))) {
           const userData = await db.collection("users").doc(user.uid).get();
           return {
             uid: user.uid,
