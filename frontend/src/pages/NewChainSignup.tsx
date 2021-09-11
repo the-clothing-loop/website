@@ -37,8 +37,7 @@ const Signup = () => {
   const [error, setError] = useState("");
 
   //Phone Number Validation Format with E.164
-  const phoneRegExp =
-    /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  const phoneRegExp = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
   const validate = Yup.object({
     name: Yup.string()
@@ -66,117 +65,114 @@ const Signup = () => {
     return <Redirect to={`/chains/new-location/${user.uid}`} />;
   }
 
-  return (
-    <>
-      <Helmet>
-        <title>Clothing-Loop | Create user for new loop</title>
-        <meta name="description" content="Create user for new loop" />
-      </Helmet>
-      <Formik
-        initialValues={{
-          name: "",
-          email: "",
-          phoneNumber: "",
-          newsletter: false,
-          actionsNewsletter: false,
-          dataConsent: false,
-        }}
-        validationSchema={validate}
-        onSubmit={async (values) => {
-          const user = {
-            address: geocoderResult.result.place_name,
-            chainId: null,
-            ...values,
-          };
+  return <>
+    <Helmet>
+      <title>Clothing-Loop | Create user for new loop</title>
+      <meta name="description" content="Create user for new loop" />
+    </Helmet>
+    <Formik
+      initialValues={{
+        name: "",
+        email: "",
+        phoneNumber: "",
+        newsletter: false,
+        actionsNewsletter: false,
+        dataConsent: false,
+      }}
+      validationSchema={validate}
+      onSubmit={async (values) => {
+        const user = {
+          address: geocoderResult.result.place_name,
+          chainId: null,
+          ...values,
+        };
 
-          console.log(`creating user: ${JSON.stringify(user)}`);
-          try {
-            setUserId(await createUser(user));
-            setSubmitted(true);
-          } catch (e) {
-            console.error(`Error creating user: ${JSON.stringify(e)}`);
-            setError(e.message);
-            console.log(e.message);
-          }
-        }}
-      >
-        {({ errors, touched, setFieldValue }) => (
-          <ThreeColumnLayout>
-            <div>
-              <img
-                src={AppIcon}
-                alt="SFM logo"
-                width="500"
-                className={classes.image}
+        console.log(`creating user: ${JSON.stringify(user)}`);
+        try {
+          setUserId(await createUser(user));
+          setSubmitted(true);
+        } catch (e) {
+          console.error(`Error creating user: ${JSON.stringify(e)}`);
+          setError(e.message);
+        }
+      }}
+    >
+      {({ errors, touched, setFieldValue }) => (
+        <ThreeColumnLayout>
+          <div>
+            <img
+              src={AppIcon}
+              alt="SFM logo"
+              width="500"
+              className={classes.image}
+            />
+            <Typography variant="h3" className={classes.pageTitle}>
+              {t("signup")}
+            </Typography>{" "}
+            <Form>
+              <TextForm
+                required
+                label="Name"
+                name="name"
+                type="text"
+                className={classes.textField}
+                error={touched.name && Boolean(errors.name)}
+                helperText={errors.name && touched.name ? errors.name : null}
               />
-              <Typography variant="h3" className={classes.pageTitle}>
+
+              <TextForm
+                required
+                label="Email"
+                name="email"
+                type="email"
+                className={classes.textField}
+                error={touched.email && Boolean(errors.email)}
+                helperText={
+                  errors.email && touched.email ? errors.email : null
+                }
+              />
+              <PhoneFormField
+                label="Phone number"
+                name="phoneNumber"
+                error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                onChange={(e: string) =>
+                  setFieldValue("phoneNumber", e.replace(/\s/g, ""))
+                }
+              />
+
+              <GeocoderSelector name="address" onResult={setGeocoderResult} />
+
+              <CheckboxField
+                label="Newsletter"
+                name="newsletter"
+                type="checkbox"
+              />
+              <CheckboxField
+                label="Actions newsletter"
+                name="actionsNewsletter"
+                type="checkbox"
+              />
+              <CheckboxField
+                label="Data use consent"
+                name="dataConsent"
+                type="checkbox"
+                req={true}
+              />
+              {error ? <Alert severity="error">{error}</Alert> : null}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
                 {t("signup")}
-              </Typography>{" "}
-              <Form>
-                <TextForm
-                  required
-                  label="Name"
-                  name="name"
-                  type="text"
-                  className={classes.textField}
-                  error={touched.name && Boolean(errors.name)}
-                  helperText={errors.name && touched.name ? errors.name : null}
-                />
-
-                <TextForm
-                  required
-                  label="Email"
-                  name="email"
-                  type="email"
-                  className={classes.textField}
-                  error={touched.email && Boolean(errors.email)}
-                  helperText={
-                    errors.email && touched.email ? errors.email : null
-                  }
-                />
-                <PhoneFormField
-                  label="Phone number"
-                  name="phoneNumber"
-                  error={touched.phoneNumber && Boolean(errors.phoneNumber)}
-                  onChange={(e: string) =>
-                    setFieldValue("phoneNumber", e.replace(/\s/g, ""))
-                  }
-                />
-
-                <GeocoderSelector name="address" onResult={setGeocoderResult} />
-
-                <CheckboxField
-                  label="Newsletter"
-                  name="newsletter"
-                  type="checkbox"
-                />
-                <CheckboxField
-                  label="Actions newsletter"
-                  name="actionsNewsletter"
-                  type="checkbox"
-                />
-                <CheckboxField
-                  label="Data use consent"
-                  name="dataConsent"
-                  type="checkbox"
-                  req={true}
-                />
-                {error ? <Alert severity="error">{error}</Alert> : null}
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  {t("signup")}
-                </Button>
-              </Form>
-            </div>
-          </ThreeColumnLayout>
-        )}
-      </Formik>
-    </>
-  );
+              </Button>
+            </Form>
+          </div>
+        </ThreeColumnLayout>
+      )}
+    </Formik>
+  </>
 };
 
 export default Signup;

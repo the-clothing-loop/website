@@ -25,7 +25,6 @@ import AppIcon from "../images/clothing-loop.png";
 import { createUser } from "../util/firebase/user";
 import { getChain } from "../util/firebase/chain";
 import { IChain } from "../types";
-import { uptime } from "process";
 
 const Signup = () => {
   const { chainId } = useParams<{ chainId: string }>();
@@ -38,7 +37,7 @@ const Signup = () => {
   const [error, setError] = useState("");
   const classes = makeStyles(theme as any)();
 
-  const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s./0-9]*$/g;
+  const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
   const validate = Yup.object({
     name: Yup.string()

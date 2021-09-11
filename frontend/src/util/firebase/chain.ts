@@ -24,7 +24,10 @@ export interface ICreateChain {
 
 // Return chain data for one chain by id
 const getChain = async (chainId: string) => {
-  const snapshot = await db.collection("chains").doc(chainId).get();
+  const snapshot = await db
+    .collection("chains")
+    .doc(chainId)
+    .get();
   return { id: chainId, ...snapshot.data() } as IChain;
 };
 
@@ -48,6 +51,9 @@ const addUserToChain = async (chainId: string, userId: string) => {
 };
 
 const updateChain = (chainId: string, chain: {}): Promise<void> => {
-  return db.collection("chains").doc(chainId).set(chain, { merge: true });
+  return db
+    .collection("chains")
+    .doc(chainId)
+    .set(chain, { merge: true });
 };
 export { getChains, createChain, getChain, addUserToChain, updateChain };

@@ -28,8 +28,8 @@ const createUser = async (user: ICreateUser): Promise<string> => {
   const result = (await createUserCallable(user)).data as {
     id: string | undefined;
     validationError:
-    | { codePrefix: string; errorInfo: { code: string; message: string } }
-    | undefined;
+      | { codePrefix: string; errorInfo: { code: string; message: string } }
+      | undefined;
   };
   if (result.validationError) {
     console.error(JSON.stringify(result.validationError));
@@ -71,4 +71,10 @@ const updateUser = async (user: IUser): Promise<void> => {
   await updateUserCallable(user);
 };
 
-export { createUser, getUserById, getUserByEmail, getUsersForChain, updateUser };
+export {
+  createUser,
+  getUserById,
+  getUserByEmail,
+  getUsersForChain,
+  updateUser
+};
