@@ -6,9 +6,7 @@ admin.initializeApp();
 
 const db = admin.firestore();
 const region = functions.config().clothingloop.region as string;
-const adminEmails = (
-  functions.config().clothingloop.admin_emails as string
-).split(";");
+const adminEmails = (functions.config().clothingloop.admin_emails as string).split(";");
 
 const ROLE_ADMIN = "admin";
 const ROLE_CHAINADMIN = "chainAdmin";
