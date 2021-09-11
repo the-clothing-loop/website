@@ -1,5 +1,5 @@
 import db from "./firebaseConfig";
-import {IUser} from "../../types";
+import { IUser } from "../../types";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/functions";
@@ -28,8 +28,8 @@ const createUser = async (user: ICreateUser): Promise<string> => {
   const result = (await createUserCallable(user)).data as {
     id: string | undefined;
     validationError:
-      | {codePrefix: string; errorInfo: {code: string; message: string}}
-      | undefined;
+    | { codePrefix: string; errorInfo: { code: string; message: string } }
+    | undefined;
   };
   if (result.validationError) {
     console.error(JSON.stringify(result.validationError));
@@ -62,7 +62,7 @@ const getUsersForChain = async (chainId: string): Promise<IUser[]> => {
     .get();
   var userRetrieval = snapshot.docs.map(
     async (doc: any): Promise<IUser> =>
-      (await getUserByIdCallable({uid: doc.id, idToken})).data
+      (await getUserByIdCallable({ uid: doc.id, idToken })).data
   );
   return await Promise.all(userRetrieval);
 };
@@ -71,4 +71,4 @@ const updateUser = async (user: IUser): Promise<void> => {
   await updateUserCallable(user);
 };
 
-export {createUser, getUserById, getUserByEmail, getUsersForChain, updateUser};
+export { createUser, getUserById, getUserByEmail, getUsersForChain, updateUser };

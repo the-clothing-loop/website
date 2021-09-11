@@ -1,18 +1,18 @@
 // React / plugins
-import {useState, useContext} from "react";
-import {useTranslation} from "react-i18next";
-import {Formik, Form} from "formik";
+import { useState, useContext } from "react";
+import { useTranslation } from "react-i18next";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import {Redirect} from "react-router-dom";
-import {Helmet} from "react-helmet";
+import { Redirect } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 // Material UI
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import {makeStyles} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
 import ThreeColumnLayout from "../components/ThreeColumnLayout";
-import {Alert} from "@material-ui/lab";
+import { Alert } from "@material-ui/lab";
 
 // Project resources
 import {
@@ -21,19 +21,19 @@ import {
   CheckboxField,
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
-import {AuthContext} from "../components/AuthProvider";
+import { AuthContext } from "../components/AuthProvider";
 import AppIcon from "../images/clothing-loop.png";
-import {createUser} from "../util/firebase/user";
+import { createUser } from "../util/firebase/user";
 
 const Signup = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [geocoderResult, setGeocoderResult] = useState({
-    result: {place_name: ""},
+    result: { place_name: "" },
   });
   const [userId, setUserId] = useState("");
   const classes = makeStyles(theme as any)();
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [error, setError] = useState("");
 
   //Phone Number Validation Format with E.164
@@ -100,7 +100,7 @@ const Signup = () => {
           }
         }}
       >
-        {({errors, touched, setFieldValue}) => (
+        {({ errors, touched, setFieldValue }) => (
           <ThreeColumnLayout>
             <div>
               <img

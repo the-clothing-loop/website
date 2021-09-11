@@ -1,16 +1,16 @@
 // React / plugins
-import {useState, useEffect} from "react";
-import {useTranslation} from "react-i18next";
-import {Formik, Form} from "formik";
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import {Redirect, useParams} from "react-router-dom";
-import {Helmet} from "react-helmet";
+import { Redirect, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 // Material UI
 import Typography from "@material-ui/core/Typography";
-import {Alert} from "@material-ui/lab";
+import { Alert } from "@material-ui/lab";
 import Button from "@material-ui/core/Button";
-import {makeStyles} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
 import ThreeColumnLayout from "../components/ThreeColumnLayout";
 
@@ -22,18 +22,18 @@ import {
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import AppIcon from "../images/clothing-loop.png";
-import {createUser} from "../util/firebase/user";
-import {getChain} from "../util/firebase/chain";
-import {IChain} from "../types";
-import {uptime} from "process";
+import { createUser } from "../util/firebase/user";
+import { getChain } from "../util/firebase/chain";
+import { IChain } from "../types";
+import { uptime } from "process";
 
 const Signup = () => {
-  const {chainId} = useParams<{chainId: string}>();
+  const { chainId } = useParams<{ chainId: string }>();
   const [chain, setChain] = useState<IChain | null>(null);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [geocoderResult, setGeocoderResult] = useState({
-    result: {place_name: ""},
+    result: { place_name: "" },
   });
   const [error, setError] = useState("");
   const classes = makeStyles(theme as any)();
