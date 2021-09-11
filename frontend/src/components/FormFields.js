@@ -67,8 +67,7 @@ const TextForm = ({label, ...props}) => {
 const CheckboxField = ({label, ...props}) => {
   const [field, meta] = useField(props);
   const {t} = useTranslation();
-  console.log(props);
-
+  
   return (
     <FormGroup row>
       <FormControlLabel
