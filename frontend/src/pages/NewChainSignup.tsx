@@ -89,7 +89,7 @@ const Signup = () => {
         try {
           setUserId(await createUser(user));
           setSubmitted(true);
-        } catch (e) {
+        } catch (e: any) {
           console.error(`Error creating user: ${JSON.stringify(e)}`);
           setError(e.message);
         }
