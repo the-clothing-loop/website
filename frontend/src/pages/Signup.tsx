@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Redirect, useParams } from "react-router-dom";
+import { Link, Redirect, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 // Material UI
@@ -46,7 +46,7 @@ const Signup = () => {
     email: Yup.string().email("Please enter a valid e-mail address"),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
-        message: "Please enter valid phonenumber",
+        message: "Please enter valid phone number",
       })
       .required("Required"),
     newsletter: Yup.boolean(),
@@ -77,7 +77,7 @@ const Signup = () => {
       // TODO: do something with validation info for new user (e.g. display this)
       await createUser(user);
       setSubmitted(true);
-    } catch (e) {
+    } catch (e: any) {
       console.error(`Error creating user: ${JSON.stringify(e)}`);
       setError(e.message);
     }
@@ -152,6 +152,7 @@ const Signup = () => {
                     name="actionsNewsletter"
                     type="checkbox"
                   />
+                  <p>Data will be used in accordance with our <Link to="privacypolicy" target="blank">Privacy Policy</Link></p>
                   {error ? <Alert severity="error">{error}</Alert> : null}
                   <Button
                     type="submit"
