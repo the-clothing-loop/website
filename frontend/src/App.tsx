@@ -19,6 +19,7 @@ import ChainsList from "./pages/ChainsList";
 import ChainInformation from "./pages/ChainInformation";
 import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -49,6 +50,7 @@ const App = () => {
                 <Route exact path="/chains/new-signup" component={NewChainSignup} />
                 <Route exact path="/chains/information/:chainId" component={ChainInformation} />
                 <Route exact path="/chains" component={ChainsList} />
+                <Route exact path="/chains/privacypolicy" component={PrivacyPolicy} />
               </Switch>
             </div>
           </Router>

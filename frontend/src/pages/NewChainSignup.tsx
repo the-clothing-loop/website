@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 // Material UI
@@ -89,7 +89,7 @@ const Signup = () => {
         try {
           setUserId(await createUser(user));
           setSubmitted(true);
-        } catch (e) {
+        } catch (e: any) {
           console.error(`Error creating user: ${JSON.stringify(e)}`);
           setError(e.message);
         }
@@ -148,6 +148,7 @@ const Signup = () => {
                 name="actionsNewsletter"
                 type="checkbox"
               />
+              <p>Data will be used in accordance with our <Link to="privacypolicy" target="blank">Privacy Policy</Link></p>
               {error ? <Alert severity="error">{error}</Alert> : null}
               <Button
                 type="submit"
