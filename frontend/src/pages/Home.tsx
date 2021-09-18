@@ -6,7 +6,7 @@ import { Helmet } from "react-helmet";
 // Project resources
 import AppIcon from "../images/clothing-loop.png";
 import ProjectImg from "../images/Naamloze-presentatie.jpeg";
-
+import Footer from "../components/Footer";
 const Home = () => {
   return (
     <>
@@ -20,7 +20,7 @@ const Home = () => {
           <div className={"text-wrapper"}>
             <img src={AppIcon} alt="SFM logo" width="500" />
             <img src={ProjectImg} alt="Project Img" width="500" />
-            <Typography  component="p" className='intro-text'>
+            <Typography component="p" className="intro-text">
               The Clothing Loop makes it easy and fun to share pre-loved clothes
               by connecting people in local communities that share a bag of
               clothes.
@@ -48,6 +48,7 @@ const Home = () => {
                 Movement.
               </span>
             </Typography>{" "}
+            <Footer />
           </div>
         </Grid>
         <Grid item sm />

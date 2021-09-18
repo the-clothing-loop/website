@@ -80,4 +80,19 @@ const CheckboxField = ({ label, ...props }) => {
   );
 };
 
-export { TextFormField, PhoneFormField, TextForm, CheckboxField };
+const TextArea = ({ label, ...props }) => {
+  const [field, meta] = useField(props);
+  return (
+    <TextField
+      id="outlined-multiline-static"
+      multiline
+      rows={4}
+      variant="outlined"
+      {...props}
+      {...field}
+      label={label}
+    />
+  );
+};
+
+export { TextFormField, PhoneFormField, TextForm, CheckboxField, TextArea };

@@ -20,6 +20,8 @@ import ChainInformation from "./pages/ChainInformation";
 import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Contacts from "./pages/Contacts.js";
+
 
 // Components
 import Navbar from "./components/Navbar";
@@ -38,19 +40,44 @@ const App = () => {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/thankyou" component={Thankyou} />
-                <Route exact path="/users/login-email-finished/:email" component={LoginEmailFinished} />
+                <Route
+                  exact
+                  path="/users/login-email-finished/:email"
+                  component={LoginEmailFinished}
+                />
                 <Route exact path="/users/login" component={Login} />
                 <Route exact path="/users/logout" component={Logout} />
                 <Route exact path="/users/signup/:chainId" component={Signup} />
                 <Route exact path="/users/edit/:userId" component={UserEdit} />
                 <Route exact path="/chains/find" component={FindChain} />
-                <Route exact path="/chains/edit/:chainId" component={ChainEdit} />
-                <Route exact path="/chains/members/:chainId" component={ChainMemberList} />
-                <Route exact path="/chains/new-location/:userId" component={NewChainLocation} />
-                <Route exact path="/chains/new-signup" component={NewChainSignup} />
-                <Route exact path="/chains/information/:chainId" component={ChainInformation} />
+                <Route
+                  exact
+                  path="/chains/edit/:chainId"
+                  component={ChainEdit}
+                />
+                <Route
+                  exact
+                  path="/chains/members/:chainId"
+                  component={ChainMemberList}
+                />
+                <Route
+                  exact
+                  path="/chains/new-location/:userId"
+                  component={NewChainLocation}
+                />
+                <Route
+                  exact
+                  path="/chains/new-signup"
+                  component={NewChainSignup}
+                />
+                <Route
+                  exact
+                  path="/chains/information/:chainId"
+                  component={ChainInformation}
+                />
                 <Route exact path="/chains" component={ChainsList} />
                 <Route exact path="/chains/privacypolicy" component={PrivacyPolicy} />
+                <Route exact path="/contacts" component={Contacts} />
               </Switch>
             </div>
           </Router>
