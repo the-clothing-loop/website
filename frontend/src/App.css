@@ -297,3 +297,36 @@ input[type="checkbox"].map-cat-input:checked + label {
   flex-direction: row;
   justify-content: space-between;
 }
+
+/*contact form*/
+form.contact-form {
+  display: flex;
+  flex-direction: column;
+}
+
+form.contact-form > * {
+  padding: 2% 0;
+}
+
+/*footer*/
+
+.footer {
+  text-align: center;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+
+}
+
+.footer > * {
+  padding: 2% 0;
+}
+
+.footer > a {
+  color: inherit;
+}
+
+.footer a > svg {
+  height: 50px;
+  width: 50px;
+}

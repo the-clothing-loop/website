@@ -25,15 +25,13 @@ const Navbar = () => {
           {t("findChain")}
         </Button>
         <Button color="inherit" component={Link} to="/chains/new-signup">
-          {("start new loop")}
+          {"start new loop"}
         </Button>
-
         {userData?.role === "admin" ? (
           <Button color="inherit" component={Link} to="/chains">
             {t("admin")}
           </Button>
         ) : null}
-
         {userData?.role === "chainAdmin" ? (
           <Button
             color="inherit"
@@ -43,7 +41,6 @@ const Navbar = () => {
             {t("admin")}
           </Button>
         ) : null}
-
         {userData ? (
           <Button color="inherit" component={Link} to="/users/logout">
             {t("logout")}
@@ -53,6 +50,9 @@ const Navbar = () => {
             {t("login")}
           </Button>
         )}
+        <Button color="inherit" component={Link} to="/contacts">
+          {t("contacts")}
+        </Button>{" "}
       </Toolbar>
       <LanguageSwitcher />
     </AppBar>
