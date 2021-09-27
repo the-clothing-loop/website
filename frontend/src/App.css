@@ -7,7 +7,6 @@ body {
   margin: 0;
 }
 
-/* base settings */
 a {
   text-decoration: none;
 }
@@ -22,11 +21,10 @@ a {
   text-transform: uppercase;
 }
 
-/* navBar styling */
 .nav-container {
   margin: auto;
 }
-/* about page styling*/
+
 .text-wrapper p.intro-text {
   font-size: 1.2rem;
   text-align: justify;
@@ -39,7 +37,7 @@ a {
   font-style: italic;
   padding: 1% 0;
 }
-/* map styling */
+
 .map-container {
   position: relative;
   top: 0;
@@ -125,7 +123,6 @@ img#marker {
   background-color: rgb(255, 255, 255);
 }
 
-/* card styling */
 .MuiCardContent-root {
   display: flex;
   flex-direction: column;
@@ -164,12 +161,10 @@ form.new-chain-location-form {
   margin-right: 2%;
 }
 
-/*new chain card styling*/
 button.chain-description {
   margin: 5% 0;
 }
 
-/* geocoder styling */
 .react-geocoder > input {
   width: 100%;
   height: 20px;
@@ -183,10 +178,10 @@ button.chain-description {
   padding: 20% 2%;
 }
 
-/*table styling*/
 table {
   margin-bottom: 2%;
 }
+
 th,
 h6 {
   text-transform: capitalize;
@@ -247,14 +242,11 @@ thead {
   margin-right: 5%;
 }
 
-/*admin pages settings*/
-
 .chain-edit-btn {
   position: relative;
   text-align: right;
 }
 
-/*map filters*/
 input[type="checkbox"].map-cat-input {
   display: none;
 }
@@ -298,7 +290,6 @@ input[type="checkbox"].map-cat-input:checked + label {
   justify-content: space-between;
 }
 
-/*contact form*/
 form.contact-form {
   display: flex;
   flex-direction: column;
@@ -308,14 +299,11 @@ form.contact-form > * {
   padding: 2% 0;
 }
 
-/*footer*/
-
 .footer {
   text-align: center;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-
 }
 
 .footer > * {

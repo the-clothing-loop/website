@@ -21,14 +21,14 @@ const Navbar = () => {
         <Button color="inherit" component={Link} to="/">
           {t("home")}
         </Button>
-        <Button color="inherit" component={Link} to="/chains/find">
-          {t("findChain")}
+        <Button color="inherit" component={Link} to="/loops/find">
+          {t("find loops")}
         </Button>
-        <Button color="inherit" component={Link} to="/chains/new-signup">
+        <Button color="inherit" component={Link} to="/loops/new-signup">
           {"start new loop"}
         </Button>
         {userData?.role === "admin" ? (
-          <Button color="inherit" component={Link} to="/chains">
+          <Button color="inherit" component={Link} to="/loops">
             {t("admin")}
           </Button>
         ) : null}
@@ -36,7 +36,7 @@ const Navbar = () => {
           <Button
             color="inherit"
             component={Link}
-            to={`/chains/members/${userData.chainId}`}
+            to={`/loops/members/${userData.chainId}`}
           >
             {t("admin")}
           </Button>

@@ -59,7 +59,7 @@ const ChainMemberList = () => {
     console.log(`updating chain data: ${JSON.stringify(updatedChainData)}`);
     try {
       await updateChain(chainId, updatedChainData);
-    } catch (e) {
+    } catch (e:any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
       setError(e.message);
     }
@@ -93,7 +93,6 @@ const ChainMemberList = () => {
     setAdmin(users?.find((user: IUser) => user.role === "chainAdmin"));
   }, [users]);
 
-  console.log(userData)
   return !chain || !users ? null : (
     <>
       <Helmet>
@@ -112,7 +111,7 @@ const ChainMemberList = () => {
               style={{ textTransform: "uppercase", fontWeight: "bold" }}
             >
               {chain.name}
-              <Link to={`/chains/edit/${chainId}`} className="chain-edit-btn">
+              <Link to={`/loops/edit/${chainId}`} className="chain-edit-btn">
                 <EditIcon style={{ float: "right" }} />
               </Link>
             </Typography>

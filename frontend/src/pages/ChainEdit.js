@@ -75,7 +75,7 @@ const ChainEdit = () => {
       await updateChain(chainId, newChainData);
       setSubmitted(true);
       history.push({
-        pathname: `/chains/members/${chainId}`,
+        pathname: `/loops/members/${chainId}`,
         state: { message: t("saved") },
       });
     } catch (e) {
@@ -245,7 +245,7 @@ const ChainEdit = () => {
                 {t("submit")}
               </Button>
               <Button
-                onClick={() => history.push(`/chains/members/${chainId}`)}
+                onClick={() => history.push(`/loops/members/${chainId}`)}
                 variant="contained"
                 color="primary"
                 className={classes.button}

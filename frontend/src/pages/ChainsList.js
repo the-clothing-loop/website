@@ -125,7 +125,7 @@ const ChainsList = () => {
                         color="primary"
                         onClick={(e) => {
                           e.preventDefault();
-                          history.push(`/chains/members/${chain.id}`);
+                          history.push(`/loops/members/${chain.id}`);
                         }}
                       >
                         {"view"}

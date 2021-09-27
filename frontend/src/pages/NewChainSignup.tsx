@@ -57,11 +57,11 @@ const Signup = () => {
   });
 
   if (submitted) {
-    return <Redirect to={`/chains/new-location/${userId}`} />;
+    return <Redirect to={`/loops/new-location/${userId}`} />;
   }
 
   if (user) {
-    return <Redirect to={`/chains/new-location/${user.uid}`} />;
+    return <Redirect to={`/loops/new-location/${user.uid}`} />;
   }
 
   return <>
