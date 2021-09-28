@@ -182,7 +182,7 @@ const FindChain = () => {
 
   const viewChain = (e: any) => {
     e.preventDefault();
-    history.push(`/chains/members/${selectedChain?.id}`);
+    history.push(`/loops/members/${selectedChain?.id}`);
   };
 
   return (

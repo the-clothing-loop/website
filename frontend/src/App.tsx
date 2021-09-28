@@ -49,34 +49,29 @@ const App = () => {
                 <Route exact path="/users/logout" component={Logout} />
                 <Route exact path="/users/signup/:chainId" component={Signup} />
                 <Route exact path="/users/edit/:userId" component={UserEdit} />
-                <Route exact path="/chains/find" component={FindChain} />
+                <Route exact path="/loops/find" component={FindChain} />
                 <Route
                   exact
-                  path="/chains/edit/:chainId"
+                  path="/loops/edit/:chainId"
                   component={ChainEdit}
                 />
                 <Route
                   exact
-                  path="/chains/members/:chainId"
+                  path="/loops/members/:chainId"
                   component={ChainMemberList}
                 />
                 <Route
                   exact
-                  path="/chains/new-location/:userId"
+                  path="/loops/new-location/:userId"
                   component={NewChainLocation}
                 />
                 <Route
                   exact
-                  path="/chains/new-signup"
+                  path="/loops/new-signup"
                   component={NewChainSignup}
                 />
-                <Route
-                  exact
-                  path="/chains/information/:chainId"
-                  component={ChainInformation}
-                />
-                <Route exact path="/chains" component={ChainsList} />
-                <Route exact path="/chains/privacypolicy" component={PrivacyPolicy} />
+                <Route exact path="/loops" component={ChainsList} />
+                <Route exact path="/loops/privacypolicy" component={PrivacyPolicy} />
                 <Route exact path="/contacts" component={Contacts} />
               </Switch>
             </div>
