@@ -45,7 +45,6 @@ const FindChain = () => {
   const [selectedChain, setSelectedChain] = useState<IChain | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const [searchTerm, setSearchTerm] = useState("");
   const [value, setValue] = useState<IChain | null>(null);
 
   const [filteredChains, setFilteredChains] = useState<IChain[]>([]);
@@ -144,14 +143,31 @@ const FindChain = () => {
 
   //get search term from input
   const onChange = (e: any) => {
-    setSearchTerm(e.target.value);
+    let searchTerm: string = e.target.value;
 
+    //if no search term, show nothing
+    if (searchTerm == ""){
+      return setValue(null);
+    }
+
+    //find matches
+    let matches: IChain[] = [];
+    let matchesLength: number = 0;
     chainData.filter((val) => {
-      if (searchTerm == "") {
-      } else if (val.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-        return setValue(val);
+      if (val.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+        matches.push(val);
+        matchesLength++;
       }
     });
+
+    //show one match or not found
+    if (matchesLength == 0) {
+      let noMatches = {} as IChain;
+      noMatches.id = "-1";
+      setValue(noMatches);
+    } else {
+      setValue(matches[0]);
+    }
   };
 
   //render location on result selection
@@ -220,9 +236,16 @@ const FindChain = () => {
             </IconButton>
           </Paper>
           {value ? (
-            <Button key={`${value}-btn`} onClick={handleSelect}>
-              {value.name}
-            </Button>
+            (value.id == "-1") ?
+              <Button key={"-1"} style={{cursor: "auto"}}>
+                <div>
+                  No Matches Found<br/>
+                  <Link to="/loops/new-signup">Start a new loop</Link> or <Link to="/">go to home page</Link>
+                </div>
+              </Button> :
+              <Button key={`${value}-btn`} onClick={handleSelect}>
+                {value.name}
+              </Button>
           ) : null}
           <FormControl>
             <FormGroup className="filter-form">
