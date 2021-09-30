@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
