@@ -150,23 +150,17 @@ const FindChain = () => {
       return setValue(null);
     }
 
-    //find matches
-    let matches: IChain[] = [];
-    let matchesLength: number = 0;
-    chainData.filter((val) => {
-      if (val.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-        matches.push(val);
-        matchesLength++;
-      }
-    });
+    //find the match
+    let match: IChain | undefined;
+    match = chainData.find(val => val.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    //show one match or not found
-    if (matchesLength == 0) {
+    //show the match or not found
+    if (match) {
+      setValue(match);
+    } else {
       let noMatches = {} as IChain;
       noMatches.id = "-1";
       setValue(noMatches);
-    } else {
-      setValue(matches[0]);
     }
   };
 
