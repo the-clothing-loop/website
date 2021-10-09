@@ -1,320 +1,394 @@
-html,
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  background-color: rgb(245, 245, 245);
-  margin: 0;
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+@media only screen and (min-width: 481px) {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    font-family: "Montserrat", sans-serif;
+    background-color: rgb(245, 245, 245);
+    margin: 0;
+  }
+
+  a {
+    text-decoration: none;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .success {
+    color: #067f8c;
+  }
+
+  .MuiTypography-h4 {
+    font-size: 1.5rem !important;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .nav-container {
+    margin: auto;
+  }
+
+  .text-wrapper p.intro-text {
+    font-size: 1.2rem;
+    text-align: justify;
+    font-weight: bold;
+    padding: 2% 0;
+  }
+
+  .text-wrapper > span {
+    display: inline-block;
+    font-style: italic;
+    padding: 1% 0;
+  }
+
+  .map-container {
+    position: relative;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .nav-container {
+    margin: auto;
+  }
+
+  thead th {
+    font-weight: bold !important;
+  }
+
+  .chain-member-list {
+    margin: auto;
+    width: 1000px;
+  }
+
+  img#marker {
+    width: 40px;
+    height: 40px;
+  }
+
+  .new-chain-popup > .mapboxgl-popup-content {
+    position: relative;
+    top: 2%;
+    height: 100%;
+    left: 100%;
+  }
+
+  .new-chain-popup > .mapboxgl-popup-content > .MuiCard-root {
+    height: 100%;
+  }
+
+  .mapboxgl-popup {
+    transform: none !important;
+    left: 0 !important;
+  }
+  .mapboxgl-popup-tip {
+    display: none;
+  }
+  .mapboxgl-popup-content {
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: auto;
+    padding: 0 !important;
+    position: absolute;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
+  }
+
+  .mapboxgl-popup {
+    position: absolute !important;
+    bottom: 15%;
+    transform: translateX(-60%) !important;
+    left: 50% !important;
+  }
+
+  .filter-wrapper {
+    background-color: rgb(245, 245, 245);
+    position: relative;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+  }
+
+  .filter-form {
+    display: inline;
+    border-bottom: 1px solid #e8eaed;
+    border-top: 1px solid #e8eaed;
+    margin-top: 8px;
+    position: relative;
+    padding: 5% 1%;
+    border-radius: 8px;
+    background-color: rgb(255, 255, 255);
+  }
+
+  .MuiCardContent-root {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .MuiCardActions-root {
+    padding: 0 !important;
+  }
+
+  form.new-chain-location-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-button {
+    position: relative;
+    margin: 15px 15px 15px 15px;
+    width: 100%;
+  }
+
+  .mapboxgl-popup-close-button {
+    z-index: 11;
+  }
+
+  .chain-categories {
+    width: 100%;
+    display: flex;
+    padding-top: 5%;
+  }
+  .chain-categories p {
+    padding: 2% 4%;
+    border-radius: 5px;
+    background-color: #e5e0f1;
+    display: flex;
+    margin-right: 2%;
+  }
+
+  button.chain-description {
+    margin: 5% 0;
+  }
+
+  .react-geocoder > input {
+    width: 100%;
+    height: 20px;
+  }
+
+  .MuiGrid-item {
+    padding: 2%;
+  }
+
+  .address-details {
+    padding: 20% 2%;
+  }
+
+  table {
+    margin-bottom: 2%;
+  }
+
+  th,
+  h6 {
+    text-transform: capitalize;
+    display: inline-block;
+  }
+
+  .MuiTableContainer-root {
+    background-color: transparent !important;
+  }
+
+  tr {
+    background-color: #fff;
+  }
+
+  .table-row-head {
+    background-color: transparent;
+  }
+
+  .table-row-head > th {
+    border-bottom: none !important;
+    font-size: small;
+    color: gray;
+  }
+
+  .MuiPaper-elevation1 {
+    box-shadow: none !important;
+  }
+
+  thead {
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+  }
+
+  .table-head {
+    display: flex;
+    justify-content: space-between;
+    padding: 1% 0;
+  }
+
+  .table-container {
+    padding: 0 5%;
+  }
+
+  .dot-active {
+    height: 20px;
+    width: 20px;
+    background-color: #69f0ae;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5%;
+  }
+
+  .dot-not-active {
+    height: 20px;
+    width: 20px;
+    background-color: #ff8a80;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5%;
+  }
+
+  .chain-edit-btn {
+    position: relative;
+    text-align: right;
+  }
+
+  input[type="checkbox"].map-cat-input {
+    display: none;
+  }
+
+  input[type="checkbox"].map-cat-input + label {
+    -webkit-transition: all 500ms ease;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    transition: all 500ms ease;
+    cursor: pointer;
+    background-color: #5ce1e627;
+    border: solid 2px #5ce1e6;
+    display: inline-block;
+    user-select: none;
+    padding: 5px 5px;
+    height: max-content;
+    font-size: 14px;
+    line-height: 40px;
+    border-radius: 25px;
+    margin: 0 5px;
+  }
+
+  input[type="checkbox"].map-cat-input:checked + label {
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+    background-color: #5ce1e6;
+    color: white;
+    border-color: #5ce1e6;
+  }
+
+  .input-label-typography {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .inputs-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  form.contact-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  form.contact-form > * {
+    padding: 2% 0;
+  }
+
+  .footer {
+    text-align: center;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .footer > * {
+    padding: 2% 0;
+  }
+
+  .footer > a {
+    color: inherit;
+  }
+
+  .footer a > svg {
+    height: 50px;
+    width: 50px;
+  }
+
+  .landing-page-wrapper {
+    position: absolute;
+    top: 0;
+    z-index: 11111;
+    background-color: black;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .landing-page-logo {
+    font-family: "Montserrat", sans-serif;
+    color: #ffffff;
+    position: absolute;
+    font-size: 3rem !important;
+    padding: 1%;
+  }
+
+  .landing-page-text {
+    color: #ffffff;
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: 20%;
+    text-transform: capitalize;
+  }
 }
 
-a {
-  text-decoration: none;
-}
+@media only screen and (max-width: 480px) {
+  body {
+    margin: 0;
+  }
+  
+  header.MuiPaper-root,
+  .landing-page-wrapper > video {
+    display: none;
+  }
 
-.success {
-  color: #067f8c;
-}
+  .landing-page-wrapper {
+    background-color: black;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
 
-.MuiTypography-h4 {
-  font-size: 1.5rem !important;
-  font-weight: 700;
-  text-transform: uppercase;
-}
+  }
 
-.nav-container {
-  margin: auto;
-}
+  .landing-page-wrapper h1 {
+    text-transform: uppercase;
+    font-family: Montserrat, sans-serif;
+    font-weight: 300;
+    font-size: 1.8rem;
+    line-height: 1.167;
+    color: #ffffff;
+    position: relative;
+    top:50%;
+  }
 
-.text-wrapper p.intro-text {
-  font-size: 1.2rem;
-  text-align: justify;
-  font-weight: bold;
-  padding: 2% 0;
-}
-
-.text-wrapper > span {
-  display: inline-block;
-  font-style: italic;
-  padding: 1% 0;
-}
-
-.map-container {
-  position: relative;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  height: 100%;
-  width: 100%;
-}
-
-.nav-container {
-  margin: auto;
-}
-
-thead th {
-  font-weight: bold !important;
-}
-
-.chain-member-list {
-  margin: auto;
-  width: 1000px;
-}
-
-img#marker {
-  width: 40px;
-  height: 40px;
-}
-
-.new-chain-popup > .mapboxgl-popup-content {
-  position: relative;
-  top: 2%;
-  height: 100%;
-  left: 100%;
-}
-
-.new-chain-popup > .mapboxgl-popup-content > .MuiCard-root {
-  height: 100%;
-}
-
-.mapboxgl-popup {
-  transform: none !important;
-  left: 0 !important;
-}
-.mapboxgl-popup-tip {
-  display: none;
-}
-.mapboxgl-popup-content {
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  width: 400px;
-  height: auto;
-  padding: 0 !important;
-  position: absolute;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
-}
-
-.mapboxgl-popup {
-  position: absolute !important;
-  bottom: 15%;
-  transform: translateX(-60%) !important;
-  left: 50% !important;
-}
-
-.filter-wrapper {
-  background-color: rgb(245, 245, 245);
-  position: relative;
-  width: max-content;
-  display: flex;
-  flex-direction: column;
-  border-radius: 8px;
-}
-
-.filter-form {
-  display: inline;
-  border-bottom: 1px solid #e8eaed;
-  border-top: 1px solid #e8eaed;
-  margin-top: 8px;
-  position: relative;
-  padding: 5% 1%;
-  border-radius: 8px;
-  background-color: rgb(255, 255, 255);
-}
-
-.MuiCardContent-root {
-  display: flex;
-  flex-direction: column;
-}
-
-.MuiCardActions-root {
-  padding: 0 !important;
-}
-
-form.new-chain-location-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.card-button {
-  position: relative;
-  margin: 15px 15px 15px 15px;
-  width: 100%;
-}
-
-.mapboxgl-popup-close-button {
-  z-index: 11;
-}
-
-.chain-categories {
-  width: 100%;
-  display: flex;
-  padding-top: 5%;
-}
-.chain-categories p {
-  padding: 2% 4%;
-  border-radius: 5px;
-  background-color: #e5e0f1;
-  display: flex;
-  margin-right: 2%;
-}
-
-button.chain-description {
-  margin: 5% 0;
-}
-
-.react-geocoder > input {
-  width: 100%;
-  height: 20px;
-}
-
-.MuiGrid-item {
-  padding: 2%;
-}
-
-.address-details {
-  padding: 20% 2%;
-}
-
-table {
-  margin-bottom: 2%;
-}
-
-th,
-h6 {
-  text-transform: capitalize;
-  display: inline-block;
-}
-
-.MuiTableContainer-root {
-  background-color: transparent !important;
-}
-
-tr {
-  background-color: #fff;
-}
-
-.table-row-head {
-  background-color: transparent;
-}
-
-.table-row-head > th {
-  border-bottom: none !important;
-  font-size: small;
-  color: gray;
-}
-
-.MuiPaper-elevation1 {
-  box-shadow: none !important;
-}
-
-thead {
-  border-bottom: 1px solid rgba(224, 224, 224, 1);
-}
-
-.table-head {
-  display: flex;
-  justify-content: space-between;
-  padding: 1% 0;
-}
-
-.table-container {
-  padding: 0 5%;
-}
-
-.dot-active {
-  height: 20px;
-  width: 20px;
-  background-color: #69f0ae;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 5%;
-}
-
-.dot-not-active {
-  height: 20px;
-  width: 20px;
-  background-color: #ff8a80;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 5%;
-}
-
-.chain-edit-btn {
-  position: relative;
-  text-align: right;
-}
-
-input[type="checkbox"].map-cat-input {
-  display: none;
-}
-
-input[type="checkbox"].map-cat-input + label {
-  -webkit-transition: all 500ms ease;
-  -moz-user-select: -moz-none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  transition: all 500ms ease;
-  cursor: pointer;
-  background-color: #5ce1e627;
-  border: solid 2px #5ce1e6;
-  display: inline-block;
-  user-select: none;
-  padding: 5px 5px;
-  height: max-content;
-  font-size: 14px;
-  line-height: 40px;
-  border-radius: 25px;
-  margin: 0 5px;
-}
-
-input[type="checkbox"].map-cat-input:checked + label {
-  -webkit-transition: all 500ms ease;
-  transition: all 500ms ease;
-  background-color: #5ce1e6;
-  color: white;
-  border-color: #5ce1e6;
-}
-
-.input-label-typography {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.inputs-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-form.contact-form {
-  display: flex;
-  flex-direction: column;
-}
-
-form.contact-form > * {
-  padding: 2% 0;
-}
-
-.footer {
-  text-align: center;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.footer > * {
-  padding: 2% 0;
-}
-
-.footer > a {
-  color: inherit;
-}
-
-.footer a > svg {
-  height: 50px;
-  width: 50px;
+  .landing-page-wrapper h4 {
+    font-family: Montserrat, sans-serif;
+    font-weight: 300;
+    font-size: 1.2rem;
+    line-height: 1.167;
+    color: #ffffff;
+    padding: 5% 0;
+    position: relative;
+    top:50%;
+  }
 }

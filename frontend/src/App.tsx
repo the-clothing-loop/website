@@ -16,11 +16,11 @@ import NewChainLocation from "./pages/NewChainLocation";
 import UserEdit from "./pages/UserEdit";
 import ChainEdit from "./pages/ChainEdit";
 import ChainsList from "./pages/ChainsList";
-import ChainInformation from "./pages/ChainInformation";
 import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Contacts from "./pages/Contacts.js";
+import LandingPage from './pages/LandingPage'
 
 
 // Components
@@ -38,7 +38,7 @@ const App = () => {
             <Navbar />
             <div className="container">
               <Switch>
-                <Route exact path="/" component={Home} />
+                <Route exact path="/about" component={Home} />
                 <Route exact path="/thankyou" component={Thankyou} />
                 <Route
                   exact
@@ -73,6 +73,7 @@ const App = () => {
                 <Route exact path="/loops" component={ChainsList} />
                 <Route exact path="/loops/privacypolicy" component={PrivacyPolicy} />
                 <Route exact path="/contacts" component={Contacts} />
+                <Route exact path="/" component={LandingPage} />
               </Switch>
             </div>
           </Router>

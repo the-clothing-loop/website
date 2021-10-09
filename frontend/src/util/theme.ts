@@ -14,6 +14,10 @@ const theme = {
     },
   },
 
+  typography: {
+    fontFamily: ["Montserrat", "sans-serif"].join(","),
+  },
+
   // Styling for forms
   form: {
     textAlign: "center",
