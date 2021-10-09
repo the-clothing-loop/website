@@ -74,7 +74,6 @@ const App = () => {
                 <Route exact path="/loops/privacypolicy" component={PrivacyPolicy} />
                 <Route exact path="/contacts" component={Contacts} />
                 <Route exact path="/" component={LandingPage} />
-
               </Switch>
             </div>
           </Router>
