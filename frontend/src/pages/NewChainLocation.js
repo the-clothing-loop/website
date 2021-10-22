@@ -215,7 +215,7 @@ const NewChainLocation = () => {
                               className="explanatory-text"
                             >
                               {
-                                "please provide more information about the clothing loop by filling out the required fields below."
+                                "More information on the new clothing loop:"
                               }
                             </Typography>
                             <TextForm
@@ -265,6 +265,7 @@ const NewChainLocation = () => {
                               <Typography
                                 component="p"
                                 className="explanatory-text"
+                                style={{fontSize:'0.875rem'}}
                               >
                                 {"multiple categories can be selected"}
                               </Typography>
@@ -308,6 +309,7 @@ const NewChainLocation = () => {
                                 <Typography
                                   component="p"
                                   className="explanatory-text"
+                                  style={{fontSize:'0.875rem'}}
                                 >
                                   {
                                     "multiple sizes can be selected, standard sizing is S-M-L"
