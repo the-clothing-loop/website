@@ -22,7 +22,7 @@ import {
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../components/AuthProvider";
-import AppIcon from "../images/clothing-loop.png"
+import AppIcon from "../images/clothing-loop.png";
 import { createUser } from "../util/firebase/user";
 
 const Signup = () => {
@@ -64,106 +64,120 @@ const Signup = () => {
     return <Redirect to={`/loops/new-location/${user.uid}`} />;
   }
 
-  return <>
-    <Helmet>
-      <title>Clothing-Loop | Create user for new loop</title>
-      <meta name="description" content="Create user for new loop"/>
-    </Helmet>
-    <Formik
-      initialValues={{
-        name: "",
-        email: "",
-        phoneNumber: "",
-        newsletter: false,
-        actionsNewsletter: false,
-      }}
-      validationSchema={validate}
-      onSubmit={async (values) => {
-        const user = {
-          address: geocoderResult.result.place_name,
-          chainId: null,
-          ...values,
-        };
+  return (
+    <>
+      <Helmet>
+        <title>Clothing-Loop | Create user for new loop</title>
+        <meta name="description" content="Create user for new loop" />
+      </Helmet>
+      <Formik
+        initialValues={{
+          name: "",
+          email: "",
+          phoneNumber: "",
+          newsletter: false,
+          actionsNewsletter: false,
+        }}
+        validationSchema={validate}
+        onSubmit={async (values) => {
+          const user = {
+            address: geocoderResult.result.place_name,
+            chainId: null,
+            ...values,
+          };
 
-        console.log(`creating user: ${JSON.stringify(user)}`);
-        try {
-          setUserId(await createUser(user));
-          setSubmitted(true);
-        } catch (e: any) {
-          console.error(`Error creating user: ${JSON.stringify(e)}`);
-          setError(e.message);
-        }
-      }}
-    >
-      {({ errors, touched, setFieldValue }) => (
-        <ThreeColumnLayout>
-          <div>
-            <img
-              src={AppIcon}
-              alt="SFM logo"
-              width="500"
-              className={classes.image}
-            />
-            <Typography variant="h3" className={classes.pageTitle}>
-              {t("signup")}
-            </Typography>{" "}
-            <Form>
-              <TextForm
-                required
-                label="Name"
-                name="name"
-                type="text"
-                className={classes.textField}
-                error={touched.name && Boolean(errors.name)}
-                helperText={errors.name && touched.name ? errors.name : null}
+          console.log(`creating user: ${JSON.stringify(user)}`);
+          try {
+            setUserId(await createUser(user));
+            setSubmitted(true);
+          } catch (e:any) {
+            console.error(`Error creating user: ${JSON.stringify(e)}`);
+            setError(e.message);
+          }
+        }}
+      >
+        {({ errors, touched, setFieldValue }) => (
+          <ThreeColumnLayout>
+            <div>
+              <img
+                src={AppIcon}
+                alt="SFM logo"
+                width="500"
+                className={classes.image}
               />
-
-              <TextForm
-                required
-                label="Email"
-                name="email"
-                type="email"
-                className={classes.textField}
-                error={touched.email && Boolean(errors.email)}
-                helperText={errors.email && touched.email ? errors.email : null}
-              />
-              <PhoneFormField
-                label="Phone number"
-                name="phoneNumber"
-                error={touched.phoneNumber && Boolean(errors.phoneNumber)}
-                onChange={(e: string) =>
-                  setFieldValue("phoneNumber", e.replace(/\s/g, ""))
-                }
-              />
-
-              <GeocoderSelector name="address" onResult={setGeocoderResult} />
-
-              <CheckboxField
-                label="Newsletter"
-                name="newsletter"
-                type="checkbox"
-              />
-              <CheckboxField
-                label="Actions newsletter"
-                name="actionsNewsletter"
-                type="checkbox"
-              />
-              <p>Data will be used in accordance with our <Link to="privacypolicy" target="blank">Privacy Policy</Link></p>
-              {error ? <Alert severity="error">{error}</Alert> : null}
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-              >
+              <Typography variant="h3" className={classes.pageTitle}>
                 {t("signup")}
-              </Button>
-            </Form>
-          </div>
-        </ThreeColumnLayout>
-      )}
-    </Formik>
-  </>;
+              </Typography>
+              <Typography component="p" className="explanatory-text">
+                {
+                  "Please fill out the information below to start a new clothing loop. Firstly, we need your personal information to get in touch with you."
+                }
+              </Typography>
+              <Form>
+                <TextForm
+                  required
+                  label="Name"
+                  name="name"
+                  type="text"
+                  className={classes.textField}
+                  error={touched.name && Boolean(errors.name)}
+                  helperText={errors.name && touched.name ? errors.name : null}
+                />
+
+                <TextForm
+                  required
+                  label="Email"
+                  name="email"
+                  type="email"
+                  className={classes.textField}
+                  error={touched.email && Boolean(errors.email)}
+                  helperText={
+                    errors.email && touched.email ? errors.email : null
+                  }
+                />
+                <PhoneFormField
+                  label="Phone number"
+                  name="phoneNumber"
+                  error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                  onChange={(e: string) =>
+                    setFieldValue("phoneNumber", e.replace(/\s/g, ""))
+                  }
+                />
+
+                <GeocoderSelector name="address" onResult={setGeocoderResult} />
+
+                <CheckboxField
+                  label="Newsletter"
+                  name="newsletter"
+                  type="checkbox"
+                />
+                <CheckboxField
+                  label="Actions newsletter"
+                  name="actionsNewsletter"
+                  type="checkbox"
+                />
+                <p>
+                  Data will be used in accordance with our{" "}
+                  <Link to="privacypolicy" target="blank">
+                    Privacy Policy
+                  </Link>
+                </p>
+                {error ? <Alert severity="error">{error}</Alert> : null}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                >
+                  {t("signup")}
+                </Button>
+              </Form>
+            </div>
+          </ThreeColumnLayout>
+        )}
+      </Formik>
+    </>
+  );
 };
 
 export default Signup;

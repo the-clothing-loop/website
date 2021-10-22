@@ -110,7 +110,12 @@ const UserEdit = () => {
         {({ formik, setFieldValue }) => (
           <ThreeColumnLayout>
             <Typography variant="h3" className={classes.pageTitle}>
-              {t("edit user information")}
+              {`edit ${user.name} contacts`}
+            </Typography>
+            <Typography component="p" className="explanatory-text">
+              {
+                "Update user contacts by replacing the relevant fields below with the new information."
+              }
             </Typography>
             <Form>
               <TextForm

@@ -17,6 +17,9 @@ const theme = {
   typography: {
     fontFamily: ["Montserrat", "sans-serif"].join(","),
   },
+  body2: {
+    fontSize: 0.8,
+  },
 
   // Styling for forms
   form: {
@@ -45,6 +48,7 @@ const theme = {
   geocoder: {
     height: "20px",
   },
+
 
   /*styling for table*/
   root2: {

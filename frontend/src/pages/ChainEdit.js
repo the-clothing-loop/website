@@ -123,7 +123,12 @@ const ChainEdit = () => {
         {({ errors, touched }) => (
           <ThreeColumnLayout>
             <Typography variant="h3" className={classes.pageTitle}>
-              {t("edit loop details")}
+              {`edit ${chain.name} information`}
+            </Typography>
+            <Typography component="p" className="explanatory-text">
+              {
+                "Update loop information by replacing the relevant fields below with the new details. Sizes and categories can only be added but not removed."
+              }
             </Typography>
             <Form>
               <TextForm
