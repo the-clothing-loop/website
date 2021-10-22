@@ -17,6 +17,11 @@
     font-family: "Montserrat", sans-serif;
   }
 
+  p.explanatory-text {
+    font-size: 12px;
+    color: grey;
+  }
+
   .success {
     color: #067f8c;
   }
@@ -54,17 +59,44 @@
     width: 100%;
   }
 
+  form.MuiPaper-root {
+    border-radius: "8px";
+    border: "1px solid #DADCE0";
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+  }
+
   .nav-container {
     margin: auto;
   }
 
-  thead th {
-    font-weight: bold !important;
+  .chain-page-details {
+    border-bottom: 1px solid #e8eaed;
+    border-top: 1px solid #e8eaed;
+    margin-top: 8px;
+    position: relative;
+    border-radius: 8px;
+    background-color: rgb(255, 255, 255);
+    height: max-content;
   }
 
-  .chain-member-list {
-    margin: auto;
-    width: 1000px;
+  .chain-members-page {
+    display: grid;
+    grid-template-columns: 30% auto;
+    column-gap: 1%;
+    padding: 1%;
+  }
+
+  .admin-list {
+    border-bottom: 1px solid #e8eaed;
+    border-top: 1px solid #e8eaed;
+    margin-top: 8px;
+    position: relative;
+    padding: 0 1%;
+    border-radius: 8px;
+    background-color: rgb(255, 255, 255);
   }
 
   img#marker {
@@ -75,8 +107,8 @@
   .new-chain-popup > .mapboxgl-popup-content {
     position: relative;
     top: 2%;
-    height: 100%;
     left: 100%;
+    height: max-content;
   }
 
   .new-chain-popup > .mapboxgl-popup-content > .MuiCard-root {
@@ -112,10 +144,22 @@
   .filter-wrapper {
     background-color: rgb(245, 245, 245);
     position: relative;
-    width: max-content;
+    width: 25%;
     display: flex;
     flex-direction: column;
     border-radius: 8px;
+    left: 10px;
+    top: 10px;
+    padding: 1%;
+  }
+
+  .explanatory-text > p {
+    padding: 2%;
+  }
+
+  .form-text {
+    text-align: left;
+    padding: 2% 0;
   }
 
   .filter-form {
@@ -142,6 +186,10 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+  }
+
+  form.new-chain-location-form > * {
+    padding: 2% 0;
   }
 
   .card-button {
@@ -221,8 +269,6 @@
   }
 
   .table-head {
-    display: flex;
-    justify-content: space-between;
     padding: 1% 0;
   }
 
@@ -356,7 +402,7 @@
   body {
     margin: 0;
   }
-  
+
   header.MuiPaper-root,
   .landing-page-wrapper > video {
     display: none;
@@ -367,7 +413,6 @@
     width: 100vw;
     height: 100vh;
     text-align: center;
-
   }
 
   .landing-page-wrapper h1 {
@@ -378,7 +423,7 @@
     line-height: 1.167;
     color: #ffffff;
     position: relative;
-    top:50%;
+    top: 50%;
   }
 
   .landing-page-wrapper h4 {
@@ -389,6 +434,6 @@
     color: #ffffff;
     padding: 5% 0;
     position: relative;
-    top:50%;
+    top: 50%;
   }
 }

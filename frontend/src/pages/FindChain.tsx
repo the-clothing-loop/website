@@ -146,13 +146,15 @@ const FindChain = () => {
     let searchTerm: string = e.target.value;
 
     //if no search term, show nothing
-    if (searchTerm == ""){
+    if (searchTerm == "") {
       return setValue(null);
     }
 
     //find the match
     let match: IChain | undefined;
-    match = chainData.find(val => val.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    match = chainData.find((val) =>
+      val.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     //show the match or not found
     if (match) {
@@ -208,11 +210,15 @@ const FindChain = () => {
         onViewportChange={(newView: IViewPort) => setViewport(newView)}
       >
         <div className={"filter-wrapper"}>
-          <Paper
-            component="form"
-            className={classes.root2}
-            style={{ borderRadius: "8px", border: "1px solid #DADCE0" }}
-          >
+          <div className='explanatory-text'>
+            <Typography component="p" variant="body2">
+              {
+                "Search for Loops in your preferred area using the search bar below. To view a specific Loop, click the marker on the map."
+              }
+            </Typography>
+          </div>
+
+          <Paper component="form" className={classes.root2}>
             <InputBase
               className={classes.input}
               placeholder="Search Clothing Loop"
@@ -230,20 +236,31 @@ const FindChain = () => {
             </IconButton>
           </Paper>
           {value ? (
-            (value.id == "-1") ?
-              <Button key={"-1"} style={{cursor: "auto"}}>
+            value.id == "-1" ? (
+              <Button key={"-1"} style={{ cursor: "auto" }}>
                 <div>
-                  No Matches Found<br/>
-                  <Link to="/loops/new-signup">Start a new loop</Link> or <Link to="/">go to home page</Link>
+                  No Matches Found
+                  <br />
+                  <Link to="/loops/new-signup">Start a new loop</Link> or{" "}
+                  <Link to="/">go to home page</Link>
                 </div>
-              </Button> :
+              </Button>
+            ) : (
               <Button key={`${value}-btn`} onClick={handleSelect}>
                 {value.name}
               </Button>
+            )
           ) : null}
           <FormControl>
+            <div className='explanatory-text'>
+              <Typography component="p" variant="body2">
+                {
+                  "Filter Loops by categories and sizes using the options below."
+                }
+              </Typography>
+            </div>
             <FormGroup className="filter-form">
-              <Typography variant="body1">Categories</Typography>
+              <Typography component="p" variant='body1'>Categories</Typography>
               <div className={"inputs-wrapper"}>
                 {categories.genders.map((value, i) => (
                   <div key={value}>

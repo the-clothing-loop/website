@@ -4,6 +4,9 @@ import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapGL from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
 
+//material UI
+import Typography from "@material-ui/core/Typography";
+
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
 
 const GeocoderSelector = ({ onResult, ...props }) => {
@@ -34,10 +37,16 @@ const GeocoderSelector = ({ onResult, ...props }) => {
 
   return (
     <div>
-      <div style={{ height: "50vh" }}>
-        <p style={{ textAlign: "left", marginTop: "30px" }}>
-          {"Please enter your address:"}
-        </p>
+      <div style={{ height: "50vh", padding: "5% 0" }}>
+        <Typography
+          className="form-text"
+          component="p"
+          className="explanatory-text"
+          style={{textAlign:'left'}}
+        >
+          {" "}
+          {"Please enter your address using the search bar below:"}
+        </Typography>
         <MapGL
           mapStyle="mapbox://styles/mapbox/streets-v11"
           ref={mapRef}
