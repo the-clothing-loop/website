@@ -21,7 +21,7 @@ import {
   CheckboxField,
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
-import AppIcon from "../images/clothing-loop.png"
+import AppIcon from "../images/clothing-loop.png";
 import { createUser } from "../util/firebase/user";
 import { getChain } from "../util/firebase/chain";
 import { IChain } from "../types";
@@ -77,7 +77,7 @@ const Signup = () => {
       // TODO: do something with validation info for new user (e.g. display this)
       await createUser(user);
       setSubmitted(true);
-    } catch (e: any) {
+    } catch (e:any) {
       console.error(`Error creating user: ${JSON.stringify(e)}`);
       setError(e.message);
     }
@@ -113,23 +113,31 @@ const Signup = () => {
                   className={classes.image}
                 />
                 <Typography variant="h3" className={classes.pageTitle}>
-                  {t("signup")}
-                </Typography>{" "}
-                <p>{chain?.name}</p>
+                  {t("Signup to ")}
+                  {chain?.name}
+                </Typography>
+                <Typography component="p" className="explanatory-text">
+                  {
+                    "please fill out the information below to join the selected clothing loop"
+                  }
+                </Typography>
+
                 <Form>
                   <TextForm
                     label="Name"
                     name="name"
                     type="text"
+                    required
                     className={classes.textField}
                   />
-
                   <TextForm
                     label="Email"
                     name="email"
                     type="email"
+                    required
                     className={classes.textField}
                   />
+
                   <PhoneFormField
                     label="Phone number"
                     name="phoneNumber"
@@ -152,7 +160,12 @@ const Signup = () => {
                     name="actionsNewsletter"
                     type="checkbox"
                   />
-                  <p>Data will be used in accordance with our <Link to="privacypolicy" target="blank">Privacy Policy</Link></p>
+                  <p>
+                    Data will be used in accordance with our{" "}
+                    <Link to="privacypolicy" target="blank">
+                      Privacy Policy
+                    </Link>
+                  </p>
                   {error ? <Alert severity="error">{error}</Alert> : null}
                   <Button
                     type="submit"

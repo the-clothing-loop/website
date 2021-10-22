@@ -154,16 +154,20 @@ const NewChainLocation = () => {
       </Helmet>{" "}
       <div style={{ padding: "1% 0" }}>
         <Typography variant="h3" align="center">
-          {"select new chain location"}
+          {"new clothing loop location"}
         </Typography>
-        <Typography component="p" align="center">
+        <Typography component="p" align="center" className="explanatory-text">
           {
-            "click on the map to select the location for the new clothing loop chain and fill up the form with all the relevant information"
+            "To select the location of the new clothing loop, please click on the map. Then fill out the required information to best describe the clothing loop and submit."
           }
         </Typography>
       </div>
       <ReactMapGL
-        style={{ padding: "0 10%" }}
+        style={{
+          position: "relative",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
         mapboxApiAccessToken={mapboxgl.accessToken}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         {...viewport}
@@ -206,8 +210,13 @@ const NewChainLocation = () => {
                       <CardActions>
                         <CardContent>
                           <Form className={"new-chain-location-form"}>
-                            <Typography variant="h4">
-                              {"enter chain information"}
+                            <Typography
+                              component="p"
+                              className="explanatory-text"
+                            >
+                              {
+                                "More information on the new clothing loop:"
+                              }
                             </Typography>
                             <TextForm
                               key="name"
@@ -253,7 +262,14 @@ const NewChainLocation = () => {
                               >
                                 categories
                               </Typography>
-                              <div style={{ display: "flex", padding: "2% 0" }}>
+                              <Typography
+                                component="p"
+                                className="explanatory-text"
+                                style={{fontSize:'0.875rem'}}
+                              >
+                                {"multiple categories can be selected"}
+                              </Typography>
+                              <div style={{ display: "flex", padding: "5% 0" }}>
                                 {categories.genders.map((value, i) => (
                                   <div key={value}>
                                     <input
@@ -290,9 +306,18 @@ const NewChainLocation = () => {
                                 >
                                   sizes
                                 </Typography>
+                                <Typography
+                                  component="p"
+                                  className="explanatory-text"
+                                  style={{fontSize:'0.875rem'}}
+                                >
+                                  {
+                                    "multiple sizes can be selected, standard sizing is S-M-L"
+                                  }
+                                </Typography>
                                 <div
                                   className={"inputs-wrapper"}
-                                  style={{ display: "flex", padding: "2% 0" }}
+                                  style={{ display: "flex", padding: "5% 0" }}
                                 >
                                   {categories.sizes.map((value, i) => (
                                     <div key={`wrapper-${i}`}>

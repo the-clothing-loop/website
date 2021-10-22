@@ -99,86 +99,139 @@ const ChainMemberList = () => {
         <title>Clothing-Loop | Loop Members</title>
         <meta name="description" content="Loop Members" />
       </Helmet>
-      <div className="chain-member-list">
-        <Card>
-          <CardContent>
-            {location.state ? (
-              <p className="success">{location.state.message}</p>
-            ) : null}
-            <Typography
-              variant="body1"
-              component="p"
-              style={{ textTransform: "uppercase", fontWeight: "bold" }}
-            >
-              {chain.name}
-              <Link to={`/loops/edit/${chainId}`} className="chain-edit-btn">
-                <EditIcon style={{ float: "right" }} />
-              </Link>
-            </Typography>
+      <div className="chain-members-page">
+        <div className="chain-page-details">
+          <Card>
+            <CardContent>
+              {location.state ? (
+                <p className="success">{location.state.message}</p>
+              ) : null}
+              <Typography
+                variant="h4"
+                style={{ textTransform: "uppercase", fontWeight: "bold" }}
+              >
+                {chain.name}
+                <Link to={`/loops/edit/${chainId}`} className="chain-edit-btn">
+                  <EditIcon style={{ float: "right" }} />
+                </Link>
+              </Typography>
 
-            <Typography
-              variant="body2"
-              component="p"
-              style={{ display: "inline" }}
-            >
-              {chain.address}
-            </Typography>
+              <Typography
+                variant="body2"
+                component="p"
+                style={{ display: "inline" }}
+              >
+                {chain.address}
+              </Typography>
 
-            <div className="switch-wrapper">
-              <Switch
-                checked={publishedValue.published}
-                onChange={handleChange}
-                name="published"
-                inputProps={{ "aria-label": "secondary checkbox" }}
-              />
-              {publishedValue.published ? (
-                <Typography variant="body2" component="p">
-                  {"published"}
-                </Typography>
-              ) : (
-                <Typography variant="body2" component="p">
-                  {"unpublished"}
-                </Typography>
-              )}
-              {error ? <Alert severity="error">{error}</Alert> : null}
+              <Divider style={{ margin: "2% 0" }} />
+
+              <div className={"chain-categories-admin"}>
+                <div>
+                  <Typography component="p">{"Categories"}</Typography>
+                  {chain.categories?.gender
+                    ? chain.categories.gender.map((gender, i) => {
+                        return (
+                          <Chip
+                            key={i}
+                            label={`${gender}'s clothing`}
+                            color="primary"
+                            style={{ marginRight: "1%" }}
+                          />
+                        );
+                      })
+                    : null}
+                </div>
+                <div>
+                  <Typography component="p">{"Sizes"}</Typography>
+
+                  {chain.categories?.size
+                    ? chain.categories.size.map((size, i) => {
+                        return (
+                          <Chip
+                            key={i}
+                            label={size}
+                            color="primary"
+                            style={{
+                              textTransform: "uppercase",
+                              marginRight: "1%",
+                            }}
+                          />
+                        );
+                      })
+                    : null}
+                </div>
+              </div>
+
+              <div className="switch-wrapper">
+                <Switch
+                  checked={publishedValue.published}
+                  onChange={handleChange}
+                  name="published"
+                  inputProps={{ "aria-label": "secondary checkbox" }}
+                />
+                {publishedValue.published ? (
+                  <Typography variant="body2" component="p">
+                    {"published"}
+                  </Typography>
+                ) : (
+                  <Typography variant="body2" component="p">
+                    {"unpublished"}
+                  </Typography>
+                )}
+                {error ? <Alert severity="error">{error}</Alert> : null}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="chain-members-page-list">
+          {admin ? (
+            <div className="admin-list">
+              <Typography variant="h4">{"admin contacts"}</Typography>
+              <Typography component="p" variant="body2">
+                {
+                  "Displayed below, the contact information of this loop Admin. To make any change, click on the edit icon."
+                }
+              </Typography>
+
+              <Table>
+                <TableHead>
+                  <TableRow className="table-row-head">
+                    {rows.map((row, i) => {
+                      return (
+                        <TableCell component="th" key={i}>
+                          {row}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  <TableRow key={admin.uid}>
+                    <TableCell>{admin.name}</TableCell>
+                    <TableCell>{admin.address}</TableCell>
+                    <TableCell>{admin.phoneNumber}</TableCell>
+                    <TableCell>{admin.email}</TableCell>
+                    {userData?.role === "admin" ? (
+                      <TableCell align="right">
+                        <Link to={`/users/edit/${admin.uid}`}>
+                          <EditIcon />
+                        </Link>
+                      </TableCell>
+                    ) : null}
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
-            <Divider style={{ margin: "2% 0" }} />
-
-            <div className={"chain-categories-admin"}>
-              {chain.categories?.gender
-                ? chain.categories.gender.map((gender, i) => {
-                    return (
-                      <Chip
-                        key={i}
-                        label={`${gender}'s clothing`}
-                        color="primary"
-                        style={{ marginRight: "1%" }}
-                      />
-                    );
-                  })
-                : null}
-
-              {chain.categories?.size
-                ? chain.categories.size.map((size, i) => {
-                    return (
-                      <Chip
-                        key={i}
-                        label={size}
-                        color="primary"
-                        style={{
-                          textTransform: "uppercase",
-                          marginRight: "1%",
-                        }}
-                      />
-                    );
-                  })
-                : null}
-            </div>
-          </CardContent>
-        </Card>
-        {admin ? (
-          <div>
-            <Typography variant="h6">{"admin contacts"}</Typography>
+          ) : null}
+          <div className="admin-list">
+            <Typography variant="h4">{`${users.length} active users`}</Typography>
+            <Typography component="p" variant="body2">
+              {
+                "Displayed below, the list of all users for this loop. To make any change, click on the edit icon."
+              }
+            </Typography>
 
             <Table>
               <TableHead>
@@ -192,69 +245,38 @@ const ChainMemberList = () => {
                   })}
                 </TableRow>
               </TableHead>
-
               <TableBody>
-                <TableRow key={admin.uid}>
-                  <TableCell>{admin.name}</TableCell>
-                  <TableCell>{admin.address}</TableCell>
-                  <TableCell>{admin.phoneNumber}</TableCell>
-                  <TableCell>{admin.email}</TableCell>
-                  {userData?.role === "admin" ? (
-                    <TableCell align="right">
-                      <Link to={`/users/edit/${admin.uid}`}>
-                        <EditIcon />
-                      </Link>
-                    </TableCell>
-                  ) : null}
-                </TableRow>
+                {users
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((u: IUser) => (
+                    <TableRow key={u.uid}>
+                      <TableCell>{u.name}</TableCell>
+                      <TableCell>{u.address}</TableCell>
+                      <TableCell>{u.phoneNumber}</TableCell>
+                      <TableCell>{u.email}</TableCell>
+                      {userData?.role === "admin" ? (
+                        <TableCell align="right">
+                          <Link to={`/users/edit/${u.uid}`}>
+                            <EditIcon />
+                          </Link>
+                        </TableCell>
+                      ) : null}
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
+
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={users.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
           </div>
-        ) : null}
-
-        <Typography variant="h6">{`${users.length} active users`}</Typography>
-
-        <Table>
-          <TableHead>
-            <TableRow className="table-row-head">
-              {rows.map((row, i) => {
-                return (
-                  <TableCell component="th" key={i}>
-                    {row}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((u: IUser) => (
-                <TableRow key={u.uid}>
-                  <TableCell>{u.name}</TableCell>
-                  <TableCell>{u.address}</TableCell>
-                  <TableCell>{u.phoneNumber}</TableCell>
-                  <TableCell>{u.email}</TableCell>
-                  {userData?.role === "admin" ? (
-                    <TableCell align="right">
-                      <Link to={`/users/edit/${u.uid}`}>
-                        <EditIcon />
-                      </Link>
-                    </TableCell>
-                  ) : null}
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={users.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
+        </div>
       </div>
     </>
   );

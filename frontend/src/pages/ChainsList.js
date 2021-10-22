@@ -51,9 +51,7 @@ const ChainsList = () => {
           activeUsers = getUsersForChainRes.length;
           chain.activeUsers = activeUsers;
         } catch (error) {
-          setError(
-            `an error occurred when trying to get all active users`
-          );
+          setError(`an error occurred when trying to get all active users`);
           console.error("error in getting users for chain with id", chain.id);
         }
       }
@@ -71,9 +69,15 @@ const ChainsList = () => {
       <div className="table-container">
         <div className="table-head">
           <Typography variant="h5">{`${chains.length} Clothing Loops`}</Typography>
-          <Button variant="outlined" color="primary">
-            {"export data"}
-          </Button>
+          <Typography
+            component="p"
+            variant="body2"
+            className="explanatory-text"
+          >
+            {
+              "All available clothing loops are listed below. To select a specific clothing loop and make any change, click on 'view'."
+            }
+          </Typography>
         </div>
         {error ? <Alert severity="error">{error}</Alert> : null}
         <TableContainer component={Paper}>
