@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Link, Redirect, useParams } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 // Material UI
@@ -38,6 +38,7 @@ const Signup = () => {
   const classes = makeStyles(theme as any)();
   const [newsletterOpen, setNewsletterOpen] = useState(false);
   const [actionsNewsletterOpen, setActionsNewsletterOpen] = useState(false);
+  const [privacyPolicyOpen, setPrivacyPolicyOpen] = useState(false);
 
   const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
@@ -93,6 +94,11 @@ const Signup = () => {
   const actionsNewsletterClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     setActionsNewsletterOpen(true);
+  }
+
+  const privacyPolicyClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    setPrivacyPolicyOpen(true);
   }
 
   if (submitted) {
@@ -173,10 +179,7 @@ const Signup = () => {
                     type="checkbox"
                   />
                   <p>
-                    Data will be used in accordance with our{" "}
-                    <Link to="privacypolicy" target="blank">
-                      Privacy Policy
-                    </Link>
+                    Data will be used in accordance with our <a href="#privacyPolicy" onClick={privacyPolicyClick} id="newsletterPopup">Privacy Policy</a>
                   </p>
                   {error ? <Alert severity="error">{error}</Alert> : null}
                   <Button
@@ -240,6 +243,42 @@ const Signup = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setActionsNewsletterOpen(false)} autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={privacyPolicyOpen}
+        onClose={() => setPrivacyPolicyOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Privacy Policy"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            We are buying more and more garments and wearing them shorter and
+            shorter. The Clothing Loop tackles this growing problem – while
+            connecting people in the neighborhood in a fun and sustainable
+            way. The idea of the Clothing Loop is simple: (large) bags filled
+            with clothing travel a route past all participants in a particular
+            city or neighborhood. Do you receive the bag at home? Then you can
+            take out what you like and put back something that is still in
+            good condition, but ready for a new owner. If you want, you can
+            share a photo with your new addition in the corresponding WhatsApp
+            group. Then you take the bag to the next neighbor on the list. We
+            started a year ago in Amsterdam in the Netherlands as a
+            corona-proof, local alternative for clothing swap events and now
+            have more than 7500 participants spread over more than 210 chains
+            across the country. The success has now been picked up by numerous
+            (national) media (see for example: NOS). Our goal is to spread
+            this initiative globally. To this end, we are building an online
+            platform where anyone, anywhere can start or join a chain.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPrivacyPolicyOpen(false)} autoFocus>
             Close
           </Button>
         </DialogActions>
