@@ -10,7 +10,7 @@ import { Helmet } from "react-helmet";
 import Typography from "@material-ui/core/Typography";
 import { Alert } from "@material-ui/lab";
 import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
 import theme from "../util/theme";
 import ThreeColumnLayout from "../components/ThreeColumnLayout";
 
@@ -36,6 +36,8 @@ const Signup = () => {
   });
   const [error, setError] = useState("");
   const classes = makeStyles(theme as any)();
+  const [newsletterOpen, setNewsletterOpen] = useState(false);
+  const [actionsNewsletterOpen, setActionsNewsletterOpen] = useState(false);
 
   const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
@@ -82,6 +84,16 @@ const Signup = () => {
       setError(e.message);
     }
   };
+
+  const newsletterClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    setNewsletterOpen(true);
+  }
+
+  const actionsNewsletterClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    setActionsNewsletterOpen(true);
+  }
 
   if (submitted) {
     return <Redirect to={"/thankyou"} />;
@@ -151,12 +163,12 @@ const Signup = () => {
                   />
 
                   <CheckboxField
-                    label="Newsletter"
+                    label={<>Subscribe to <a href="#newsletter" onClick={newsletterClick} id="newsletterPopup">The Clothing Loop Newsletter</a></>}
                     name="newsletter"
                     type="checkbox"
                   />
                   <CheckboxField
-                    label="Actions newsletter"
+                    label={<>Subscribe to <a href="#actionsNewsletter" onClick={actionsNewsletterClick} id="actionsNewsletterPopup">Slow Fashion Movement Newsletter</a></>}
                     name="actionsNewsletter"
                     type="checkbox"
                   />
@@ -180,6 +192,58 @@ const Signup = () => {
             </ThreeColumnLayout>
           )}
         </Formik>
+      <Dialog
+        open={newsletterOpen}
+        onClose={() => setNewsletterOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"The Clothing Loop Newsletter"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Pellentesque ullamcorper eget nisi sed facilisis. 
+            Proin feugiat a risus ac iaculis. Nunc commodo nulla id magna faucibus, et elementum diam ultrices. 
+            Suspendisse et lorem aliquam sapien finibus cursus. Nam id arcu sem. 
+            Quisque facilisis odio et erat pretium, ac interdum diam posuere. 
+            Nunc vulputate molestie quam, sit amet finibus velit mattis eget. Pellentesque molestie malesuada tincidunt. 
+            Proin a luctus mauris. Donec tortor justo, hendrerit sit amet turpis ac, interdum consectetur magna.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setNewsletterOpen(false)} autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={actionsNewsletterOpen}
+        onClose={() => setActionsNewsletterOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Slow Fashion Movement Newsletter"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Pellentesque ullamcorper eget nisi sed facilisis. 
+            Proin feugiat a risus ac iaculis. Nunc commodo nulla id magna faucibus, et elementum diam ultrices. 
+            Suspendisse et lorem aliquam sapien finibus cursus. Nam id arcu sem. 
+            Quisque facilisis odio et erat pretium, ac interdum diam posuere. 
+            Nunc vulputate molestie quam, sit amet finibus velit mattis eget. Pellentesque molestie malesuada tincidunt. 
+            Proin a luctus mauris. Donec tortor justo, hendrerit sit amet turpis ac, interdum consectetur magna.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setActionsNewsletterOpen(false)} autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       </>
     );
   }
