@@ -126,7 +126,7 @@ const ChainsList = () => {
                     <TableCell align="left">
                       <Button
                         variant="contained"
-                        color="primary"
+                        color="secondary"
                         onClick={(e) => {
                           e.preventDefault();
                           history.push(`/loops/members/${chain.id}`);

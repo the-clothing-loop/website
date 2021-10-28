@@ -18,7 +18,7 @@ const Navbar = () => {
     // Note: Not supported by IE 11. See https://material-ui.com/components/app-bar/#fixed-placement
     <AppBar position="sticky">
       <Toolbar className="nav-container">
-        <Button color="inherit" component={Link} to="/">
+        <Button color="inherit" component={Link} to="/about">
           {t("home")}
         </Button>
         <Button color="inherit" component={Link} to="/loops/find">
@@ -58,5 +58,6 @@ const Navbar = () => {
     </AppBar>
   );
 };
+
 
 export default Navbar;

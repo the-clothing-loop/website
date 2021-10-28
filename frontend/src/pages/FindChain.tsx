@@ -19,6 +19,9 @@ import FormGroup from "@material-ui/core/FormGroup";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core";
 import Chip from "@material-ui/core/Chip";
+import GpsFixedIcon from "@mui/icons-material/GpsFixed";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 // Project resources
 import { getChains } from "../util/firebase/chain";
@@ -71,16 +74,17 @@ const FindChain = () => {
         latitude: 0,
         longitude: 0,
         width: "100vw",
-        height: "100vh",
+        height: "95vh",
         zoom: 1,
       });
+
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           setViewport({
             latitude: pos.coords.latitude,
             longitude: pos.coords.longitude,
             width: "100vw",
-            height: "100vh",
+            height: "95vh",
             zoom: 10,
           });
         },
@@ -172,7 +176,7 @@ const FindChain = () => {
       latitude: value?.latitude,
       longitude: value?.longitude,
       width: "100vw",
-      height: "100vh",
+      height: "95vh",
       zoom: 8,
     });
   };
@@ -197,6 +201,31 @@ const FindChain = () => {
     history.push(`/loops/members/${selectedChain?.id}`);
   };
 
+  const handleLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setViewport({
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+          width: "100vw",
+          height: "95vh",
+          zoom: 10,
+        });
+      },
+      (err) => {
+        console.error(`Couldn't receive location: ${err.message}`);
+      }
+    );
+  };
+
+  const mapZoom = (viewport: IViewPort | {}, operation: string) => {
+    if ("zoom" in viewport) {
+      operation === "+"
+        ? setViewport({ ...viewport, zoom: viewport.zoom + 1 })
+        : setViewport({ ...viewport, zoom: viewport.zoom - 1 });
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -210,7 +239,7 @@ const FindChain = () => {
         onViewportChange={(newView: IViewPort) => setViewport(newView)}
       >
         <div className={"filter-wrapper"}>
-          <div className='explanatory-text'>
+          <div className="explanatory-text">
             <Typography component="p" variant="body2">
               {
                 "Search for Loops in your preferred area using the search bar below. To view a specific Loop, click the marker on the map."
@@ -252,7 +281,7 @@ const FindChain = () => {
             )
           ) : null}
           <FormControl>
-            <div className='explanatory-text'>
+            <div className="explanatory-text">
               <Typography component="p" variant="body2">
                 {
                   "Filter Loops by categories and sizes using the options below."
@@ -260,7 +289,9 @@ const FindChain = () => {
               </Typography>
             </div>
             <FormGroup className="filter-form">
-              <Typography component="p" variant='body1'>Categories</Typography>
+              <Typography component="p" variant="body1">
+                Categories
+              </Typography>
               <div className={"inputs-wrapper"}>
                 {categories.genders.map((value, i) => (
                   <div key={value}>
@@ -442,7 +473,7 @@ const FindChain = () => {
                   <Button
                     key={"btn-signup"}
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     className={"card-button"}
                     onClick={(e) => signupToChain(e)}
                   >
@@ -453,6 +484,24 @@ const FindChain = () => {
             </Card>
           </Popup>
         ) : null}
+
+        <div className="map-actions">
+          <Button className="map-action-btn" onClick={() => handleLocation()}>
+            <GpsFixedIcon fontSize="medium" />
+          </Button>
+          <Button
+            className="map-action-btn"
+            onClick={() => mapZoom(viewport, "+")}
+          >
+            <AddIcon fontSize="medium" />
+          </Button>
+          <Button
+            className="map-action-btn"
+            onClick={() => mapZoom(viewport, "-")}
+          >
+            <RemoveIcon fontSize="medium" />{" "}
+          </Button>
+        </div>
       </ReactMapGL>
     </>
   );
