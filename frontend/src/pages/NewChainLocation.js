@@ -221,7 +221,7 @@ const NewChainLocation = () => {
                             <TextForm
                               key="name"
                               required
-                              label="Name"
+                              label="Loop Name"
                               name="name"
                               type="text"
                               error={touched.name && Boolean(errors.name)}
@@ -362,7 +362,7 @@ const NewChainLocation = () => {
                             <Button
                               type="submit"
                               variant="contained"
-                              color="primary"
+                              color="secondary"
                             >
                               {t("submit")}
                             </Button>

@@ -17,9 +17,13 @@
     "web-vitals": "^1.0.1"
   },
   "dependencies": {
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
+    "@mui/icons-material": "^5.0.5",
+    "@mui/material": "^5.0.5",
     "@types/react-helmet": "^6.1.1",
     "axios": "^0.21.1",
     "deck.gl": "^8.4.13",

@@ -124,11 +124,11 @@ const Signup = () => {
                 className={classes.image}
               />
               <Typography variant="h3" className={classes.pageTitle}>
-                {t("signup")}
+                {t("Start new loop")}
               </Typography>
               <Typography component="p" className="explanatory-text">
                 {
-                  "Please fill out the information below to start a new clothing loop. Firstly, we need your personal information to get in touch with you."
+                  "Fill out the information below to start a new clothing loop. This process is divided into two steps. Firstly, we need your personal information to get in touch with you. Once submitted, you will be able to select a location for the new loop."
                 }
               </Typography>
               <Form>
@@ -181,7 +181,7 @@ const Signup = () => {
                 <Button
                   type="submit"
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   className={classes.button}
                 >
                   {t("signup")}

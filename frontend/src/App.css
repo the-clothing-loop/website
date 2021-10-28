@@ -310,8 +310,8 @@
     -webkit-user-select: none;
     transition: all 500ms ease;
     cursor: pointer;
-    background-color: #5ce1e627;
-    border: solid 2px #5ce1e6;
+    background-color: #067f8c21;
+    border: solid 2px #067f8c;
     display: inline-block;
     user-select: none;
     padding: 5px 5px;
@@ -325,9 +325,9 @@
   input[type="checkbox"].map-cat-input:checked + label {
     -webkit-transition: all 500ms ease;
     transition: all 500ms ease;
-    background-color: #5ce1e6;
+    background-color: #067f8c;
     color: white;
-    border-color: #5ce1e6;
+    border-color: #067f8c;
   }
 
   .input-label-typography {
@@ -395,6 +395,53 @@
     width: 100%;
     bottom: 20%;
     text-transform: capitalize;
+  }
+
+  .language-switcher-wrapper {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  .map-actions {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 5%;
+    right: 10px;
+  }
+
+  button.map-action-btn {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: 0.16s ease-out;
+    display: block;
+    background-color: #fff;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    min-width: min-content;
+  }
+
+  button.map-action-btn:nth-of-type(1) {
+    margin-bottom: 5%;
+  }
+
+  button.map-action-btn:nth-of-type(2) {
+    border-radius: 8px 8px 0px 0px;
+  }
+
+  button.map-action-btn:nth-of-type(3) {
+    border-radius: 0px 0px 8px 8px;
+  }
+
+  .map-action-btn svg {
+    color: #3c3c3bd3;
+    top: 50%;
+    bottom: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
   }
 }
 

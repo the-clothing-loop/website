@@ -185,7 +185,7 @@ const Signup = () => {
                   <Button
                     type="submit"
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     className={classes.button}
                   >
                     {t("signup")}
