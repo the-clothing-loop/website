@@ -102,7 +102,7 @@ export const createUser =
 export const createChain =
   functions.region(region).https.onCall(
       async (data: any, context: functions.https.CallableContext) => {
-        functions.logger.debug("createChain parameters", data);
+        functions.logger.debug("createChain parameters:", data);
 
         const [
           uid,
@@ -111,6 +111,7 @@ export const createChain =
           address,
           latitude,
           longitude,
+          coordinates,
           categories,
         ] = [
           data.uid,
@@ -119,9 +120,10 @@ export const createChain =
           data.address,
           data.latitude,
           data.longitude,
+          data.coordinates,
           data.categories,
         ];
-
+        
         const user = await admin.auth().getUser(uid);
         const userData = await db.collection("users").doc(uid).get();
         if ((!userData.get("chainId") && !user.customClaims?.chainId && user.customClaims?.role !== ROLE_CHAINADMIN) ||
@@ -132,6 +134,7 @@ export const createChain =
             address,
             latitude,
             longitude,
+            coordinates,
             categories,
             published: false,
           });

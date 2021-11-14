@@ -17,6 +17,7 @@ export interface ICreateChain {
   address: string;
   latitude: number;
   longitude: number;
+  coordinates: string;
   categories: { gender: [string] };
   published: boolean;
   uid: string;
