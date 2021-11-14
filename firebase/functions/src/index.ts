@@ -123,7 +123,7 @@ export const createChain =
           data.coordinates,
           data.categories,
         ];
-        
+
         const user = await admin.auth().getUser(uid);
         const userData = await db.collection("users").doc(uid).get();
         if ((!userData.get("chainId") && !user.customClaims?.chainId && user.customClaims?.role !== ROLE_CHAINADMIN) ||
