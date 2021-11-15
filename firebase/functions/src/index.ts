@@ -277,3 +277,49 @@ export const getUserByEmail =
           throw new functions.https.HttpsError("permission-denied", "You don't have permission to retrieve information about this user");
         }
       });
+
+export const contactMail =
+  functions.region(region).https.onCall(
+      async (data: any, context: functions.https.CallableContext) => {
+        functions.logger.debug("contactMail parameters", data);
+
+        const [
+          name,
+          email,
+          message,
+        ] = [
+          data.name,
+          data.email,
+          data.message,
+        ];
+
+        //send user message to the clothing loop team
+        await db.collection("mail").add({
+          to: functions.config().contactmail.to,
+          cc: functions.config().contactmail.cc.split(";"),
+          message: {
+            subject: `ClothingLoop Contact Form - ${name}`,
+            html: ` <h3>Name</h3>
+                    <p>${name}</p>
+                    <h3>Email</h3>
+                    <p>${email}</p>
+                    <h3>${message}</h3>
+            `,
+          },
+        })
+
+        //send confirmation mail to the user
+        await db.collection("mail").add({
+          to: email,
+          message: {
+            subject: "We Recieved Your Message",
+            html: ` <h1>Thank you ${name} for your message!</h1>
+                    <p>We recieved your message. Somebody will contact you soon.</p>
+                    <h2>Your Message</h2>
+                    <p>${message}</p>
+                    <br>
+                    <p>ClothingLoop</p>
+            `,
+          }
+        })
+      });
