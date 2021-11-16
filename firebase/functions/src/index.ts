@@ -293,7 +293,7 @@ export const contactMail =
           data.message,
         ];
 
-        //send user message to the clothing loop team
+        // send user message to the clothing loop team
         await db.collection("mail").add({
           to: functions.config().contactmail.to,
           cc: functions.config().contactmail.cc.split(";"),
@@ -308,7 +308,7 @@ export const contactMail =
           },
         });
 
-        //send confirmation mail to the user
+        // send confirmation mail to the user
         await db.collection("mail").add({
           to: email,
           message: {
@@ -320,6 +320,6 @@ export const contactMail =
                     <br>
                     <p>ClothingLoop</p>
             `,
-          }
+          },
         });
       });
