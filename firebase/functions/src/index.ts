@@ -306,7 +306,7 @@ export const contactMail =
                     <h3>${message}</h3>
             `,
           },
-        })
+        });
 
         //send confirmation mail to the user
         await db.collection("mail").add({
@@ -321,5 +321,5 @@ export const contactMail =
                     <p>ClothingLoop</p>
             `,
           }
-        })
+        });
       });
