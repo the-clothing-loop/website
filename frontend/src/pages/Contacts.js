@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
 import Button from "@material-ui/core/Button";
+import { Alert } from "@material-ui/lab";
 
 //Plugins
 import { useState } from "react";
@@ -17,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import AppIcon from "../images/clothing-loop.png";
 import { TextForm, TextArea } from "../components/FormFields";
 import Footer from "../components/Footer";
+import { contactMail } from "../util/firebase/mail";
 
 const Contacts = () => {
   const classes = makeStyles(theme);
@@ -31,6 +33,22 @@ const Contacts = () => {
     email: Yup.string().email("Please enter a valid e-mail address"),
     message: Yup.string().min(2, "Must be more than 2 characters"),
   });
+
+  const handleSubmit = async (mail) => {
+    console.log(`sending mail: ${JSON.stringify(mail)}`);
+
+    try {
+      await contactMail(mail);
+      setSubmitted(true);
+    } catch (e) {
+      console.error(`Error sending mail: ${JSON.stringify(e)}`);
+      setError(e.message);
+    }
+  };
+
+  if (submitted) {
+    return <Redirect to={`/thankyou`} />;
+  }
 
   return (
     <>
@@ -56,9 +74,9 @@ const Contacts = () => {
                 message: "",
               }}
               validationSchema={validate}
-              onSubmit={(v) => console.log(v)}
+              onSubmit={handleSubmit}
             >
-              {(formik) => (
+              {({ errors, touched }) => (
                 <Form className="contact-form">
                   <TextForm
                     label="Name"
@@ -67,6 +85,7 @@ const Contacts = () => {
                     className={classes.textField}
                     required
                   />
+                  {touched.name && errors.name && <div>{errors.name}</div>}
                   <TextForm
                     label="Email"
                     name="email"
@@ -74,12 +93,17 @@ const Contacts = () => {
                     className={classes.textField}
                     required
                   />
+                  {touched.email && errors.email && <div>{errors.email}</div>}
                   <TextArea
                     label="Message"
                     name="message"
                     type="text"
                     required
                   />
+                  {touched.message && errors.message && <div>{errors.message}</div>}
+                  {error ? (
+                    <Alert severity="error">{error}</Alert>
+                  ) : null}
                   <Button
                     type="submit"
                     variant="contained"

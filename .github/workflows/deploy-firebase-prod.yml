@@ -18,7 +18,7 @@ jobs:
       - name: Configure
         uses: w9jds/firebase-action@master
         with:
-          args: functions:config:set clothingloop.base_domain="$BASE_DOMAIN" clothingloop.region="$REGION" clothingloop.admin_emails="$ADMIN_EMAILS"
+          args: functions:config:set clothingloop.base_domain="$BASE_DOMAIN" clothingloop.region="$REGION" clothingloop.admin_emails="$ADMIN_EMAILS" clothingloop.contact_emails="$CONTACT_EMAILS"
         env:
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
           BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
@@ -26,6 +26,7 @@ jobs:
           PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           PROJECT_PATH: ./firebase/functions
           REGION: ${{ secrets.REGION }}
+          CONTACT_EMAILS: ${{ secrets.CONTACT_EMAILS }}
       - name: Deploy
         uses: w9jds/firebase-action@master
         with:
