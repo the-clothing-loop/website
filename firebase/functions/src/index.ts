@@ -295,8 +295,7 @@ export const contactMail =
 
         // send user message to the clothing loop team
         await db.collection("mail").add({
-          to: functions.config().contactmail.to,
-          cc: functions.config().contactmail.cc.split(";"),
+          to: functions.config().clothingloop.contact_emails.split(";"),
           message: {
             subject: `ClothingLoop Contact Form - ${name}`,
             html: ` <h3>Name</h3>
@@ -313,13 +312,14 @@ export const contactMail =
         await db.collection("mail").add({
           to: email,
           message: {
-            subject: "We Recieved Your Message",
-            html: ` <h1>Thank you ${name} for your message!</h1>
-                    <p>We recieved your message. Somebody will contact you soon.</p>
-                    <h5>Your Message</h5>
+            subject: "Thank you for contacting Clothing-Loop",
+            html: ` <p>Hi ${name},</p>
+                    <p>Thank you for your message!</p>
+                    <p>You wrote:</p>
                     <p>${message}</p>
-                    <br>
-                    <p>ClothingLoop</p>
+                    <p>We will contact you as soon as possible.</p>
+                    <p>Regards,</p>
+                    <p>The clothing-loop team!</p>
             `,
           },
         });
