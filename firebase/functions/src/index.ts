@@ -303,7 +303,8 @@ export const contactMail =
                     <p>${name}</p>
                     <h3>Email</h3>
                     <p>${email}</p>
-                    <h3>${message}</h3>
+                    <h3>Message</h3>
+                    <p>${message}</p>
             `,
           },
         });
@@ -315,7 +316,7 @@ export const contactMail =
             subject: "We Recieved Your Message",
             html: ` <h1>Thank you ${name} for your message!</h1>
                     <p>We recieved your message. Somebody will contact you soon.</p>
-                    <h2>Your Message</h2>
+                    <h5>Your Message</h5>
                     <p>${message}</p>
                     <br>
                     <p>ClothingLoop</p>
