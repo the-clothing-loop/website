@@ -12,6 +12,7 @@ const theme = {
       dark: "#C58C41",
       contrastText: "#fff",
     },
+    divider:  "#FFC737"
   },
 
   typography: {

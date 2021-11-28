@@ -356,19 +356,18 @@
     position: relative;
     left: 50%;
     transform: translateX(-50%);
+    padding: 1rem 4rem;
   }
 
-  .footer > * {
-    padding: 2% 0;
-  }
-
-  .footer > a {
+  .footer a {
     color: inherit;
+    font-size: 1.3rem;
   }
 
   .footer a > svg {
-    height: 50px;
-    width: 50px;
+    color: inherit;
+    font-size: 3rem;
+    margin-left: 1.5rem;
   }
 
   .landing-page-wrapper {
