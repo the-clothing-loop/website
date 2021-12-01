@@ -10,7 +10,7 @@ import { Button, Divider, Box } from "@material-ui/core";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import FacebookIcon from "@material-ui/icons/Facebook";
 
-const Footer = (props: any) => {
+const Footer = () => {
   const { t } = useTranslation();
   return (
     <Box
