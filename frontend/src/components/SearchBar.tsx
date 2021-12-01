@@ -19,7 +19,6 @@ import TextField from "@mui/material/TextField";
 import theme from "../util/theme";
 import categories from "../util/categories";
 import { IChain } from "../types";
-import { setFlagsFromString } from "v8";
 
 interface IProps {
   data: any;
@@ -40,7 +39,6 @@ const SearchBar: React.FC<IProps> = ({
   const [value, setValue] = useState<IChain | null>(null);
   const [filteredData, setFilteredData] = useState("");
   const [noResultFound, setNoResultFound] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const chainData = data;
