@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, FunctionComponent } from "react";
 import { useHistory } from "react-router-dom";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { useTranslation } from "react-i18next";
@@ -124,8 +124,8 @@ const FindChain = () => {
       </Helmet>
       <SearchBar
         data={chainData}
-        setData={setFilteredChains}
-        setViewport={setViewport}
+        setData={() => setFilteredChains}
+        setViewport={() => setViewport}
       />
       <ReactMapGL
         mapboxApiAccessToken={accessToken.mapboxApiAccessToken}

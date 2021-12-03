@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -18,12 +18,12 @@ import TextField from "@mui/material/TextField";
 //project resources
 import theme from "../util/theme";
 import categories from "../util/categories";
-import { IChain } from "../types";
+import { IChain, IViewPort } from "../types";
 
 interface IProps {
-  data: any;
-  setData: any;
-  setViewport: any;
+  data: IChain[];
+  setData: (el: IChain | IChain[] | undefined) => void;
+  setViewport: (el: IViewPort) => void;
 }
 
 const SearchBar: React.FC<IProps> = ({
@@ -37,7 +37,7 @@ const SearchBar: React.FC<IProps> = ({
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
   const [value, setValue] = useState<IChain | null>(null);
-  const [filteredData, setFilteredData] = useState("");
+  const [filteredData, setFilteredData] = useState<IChain[]>([]);
   const [noResultFound, setNoResultFound] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -64,55 +64,48 @@ const SearchBar: React.FC<IProps> = ({
     const hasCommonElements = (arr1: any, arr2: any) =>
       arr1.some((item: any) => arr2.includes(item));
 
-    let filteredChains = chainData.filter((chain: any, i: any) => {
-      if (!selectedGenders.length) {
-        return true;
-      }
-
-      return (
-        chain.categories &&
-        chain.categories.gender &&
-        hasCommonElements(chain.categories.gender, selectedGenders)
-      );
-    });
-
-    filteredChains = filteredChains.filter((chain: any) => {
-      if (!selectedSizes.length) {
-        return true;
-      }
-
-      return (
-        chain.categories &&
-        chain.categories.size &&
-        hasCommonElements(chain.categories.size, selectedSizes)
-      );
-    });
-
-    filterData(filteredChains);
-
-    //if no search term, show nothing
-    if (searchTerm == "") {
-      return setValue(null);
-    }
-
-    let match: IChain | undefined;
-    match = filteredChains.find((val: any) =>
-      val.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    //show the match or not found
-    if (match) {
-      setViewport({
-        latitude: match?.latitude,
-        longitude: match?.longitude,
-        width: "100vw",
-        height: "95vh",
-        zoom: 8,
+    if (chainData instanceof Array) {
+      let filteredChains: Array<IChain>;
+      filteredChains = chainData.filter((chain: IChain, i: any) => {
+        return (
+          (!selectedSizes.length ||
+            (chain.categories &&
+              chain.categories.size &&
+              hasCommonElements(chain.categories.size, selectedSizes))) &&
+          (!selectedGenders.length ||
+            (chain.categories &&
+              chain.categories.gender &&
+              hasCommonElements(chain.categories.gender, selectedGenders)))
+        );
       });
-    } else {
-      setValue(null);
       filterData(filteredChains);
-      setNoResultFound(true);
+
+      //if no search term, show nothing
+      if (searchTerm == "") {
+        return setValue(null);
+      }
+
+      if (filteredChains instanceof Array) {
+        var match: IChain | undefined;
+        match = filteredChains.find((val: any) =>
+          val.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+
+      //show the match or not found
+      if (match) {
+        setViewport({
+          latitude: match?.latitude,
+          longitude: match?.longitude,
+          width: "100vw",
+          height: "95vh",
+          zoom: 8,
+        });
+      } else {
+        setValue(null);
+        filterData(filteredChains);
+        setNoResultFound(true);
+      }
     }
   };
 
@@ -122,11 +115,13 @@ const SearchBar: React.FC<IProps> = ({
   };
 
   const backAction = () => {
-    setSearchTerm("");
-    setSelectedGenders([]);
-    setSelectedSizes([]);
-    filterData(chainData);
-    setNoResultFound(false);
+    if (chainData instanceof Array) {
+      setSearchTerm("");
+      setSelectedGenders([]);
+      setSelectedSizes([]);
+      filterData(chainData);
+      setNoResultFound(false);
+    }
   };
 
   return (
