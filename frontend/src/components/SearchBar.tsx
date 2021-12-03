@@ -22,7 +22,7 @@ import { IChain, IViewPort } from "../types";
 
 interface IProps {
   data: IChain[];
-  setData: (el: IChain | IChain[] | undefined) => void;
+  setData: (el: IChain[]) => void;
   setViewport: (el: IViewPort) => void;
 }
 
