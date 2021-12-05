@@ -59,15 +59,6 @@
     width: 100%;
   }
 
-  form.MuiPaper-root {
-    border-radius: "8px";
-    border: "1px solid #DADCE0";
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-  }
-
   .nav-container {
     margin: auto;
   }
@@ -99,58 +90,26 @@
     background-color: rgb(255, 255, 255);
   }
 
-  img#marker {
-    width: 40px;
-    height: 40px;
-  }
-
-  .new-chain-popup > .mapboxgl-popup-content {
-    position: relative;
-    top: 2%;
-    left: 100%;
-    height: max-content;
-  }
-
-  .new-chain-popup > .mapboxgl-popup-content > .MuiCard-root {
-    height: 100%;
-  }
-
-  .mapboxgl-popup {
-    transform: none !important;
-    left: 0 !important;
-  }
-  .mapboxgl-popup-tip {
-    display: none;
-  }
   .mapboxgl-popup-content {
-    background: #ffffff;
-    display: flex;
-    flex-direction: column;
-    width: 400px;
-    height: auto;
+    background: transparent !important;
     padding: 0 !important;
-    position: absolute;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
   }
 
-  .mapboxgl-popup {
-    position: absolute !important;
-    bottom: 15%;
-    transform: translateX(-60%) !important;
-    left: 50% !important;
+  .mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+  .mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
+  .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
+    border-bottom-color: #d5ecdf !important;
   }
-
-  .filter-wrapper {
-    background-color: rgb(245, 245, 245);
-    position: relative;
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    border-radius: 8px;
-    left: 10px;
-    top: 10px;
-    padding: 1%;
+  .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
+  .mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
+  .mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
+    border-top-color: #d5ecdf !important;
+  }
+  .mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
+    border-right-color: #d5ecdf !important;
+  }
+  .mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+    border-left-color: #d5ecdf !important;
   }
 
   .explanatory-text > p {
@@ -192,12 +151,6 @@
     padding: 2% 0;
   }
 
-  .card-button {
-    position: relative;
-    margin: 15px 15px 15px 15px;
-    width: 100%;
-  }
-
   .mapboxgl-popup-close-button {
     z-index: 11;
   }
@@ -205,14 +158,8 @@
   .chain-categories {
     width: 100%;
     display: flex;
+    flex-direction: column;
     padding-top: 5%;
-  }
-  .chain-categories p {
-    padding: 2% 4%;
-    border-radius: 5px;
-    background-color: #e5e0f1;
-    display: flex;
-    margin-right: 2%;
   }
 
   button.chain-description {
@@ -396,12 +343,6 @@
     text-transform: capitalize;
   }
 
-  .language-switcher-wrapper {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-  }
-
   .map-actions {
     display: flex;
     flex-direction: column;
@@ -441,6 +382,35 @@
     bottom: 50%;
     transform: translate(-50%, -50%);
     position: absolute;
+  }
+
+  /* MUI classes styling */
+  .css-1kty9di-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+    color: #f7c86f !important;
+  }
+
+  .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused
+    .MuiOutlinedInput-notchedOutline {
+    border-color: transparent;
+  }
+
+  .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+    border-color: transparent !important;
+    border-radius: 0px !important;
+  }
+
+  span.css-10hburv-MuiTypography-root {
+    font-family: Montserrat, sans-serif;
+  }
+
+  div.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+    font-family: Montserrat, sans-serif;
+    text-transform: capitalize;
+  }
+
+  div.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper {
+    border-radius: 0px 0px 4px 4px !important;
+    margin-top: 1px;
   }
 }
 
