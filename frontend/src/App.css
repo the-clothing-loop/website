@@ -298,25 +298,6 @@
     padding: 2% 0;
   }
 
-  .footer {
-    text-align: center;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 1rem 4rem;
-  }
-
-  .footer a {
-    color: inherit;
-    font-size: 1.3rem;
-  }
-
-  .footer a > svg {
-    color: inherit;
-    font-size: 3rem;
-    margin-left: 1.5rem;
-  }
-
   .landing-page-wrapper {
     position: absolute;
     top: 0;

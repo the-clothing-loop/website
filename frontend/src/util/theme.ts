@@ -268,5 +268,42 @@ const theme = {
       justifyContent: "center",
     },
   },
+
+  footer: {
+    backgroundColor: teal,
+    color: white,
+    width: "100%",
+    height: "10rem",
+    position: "absolute",
+    bottom: 0,
+    padding: "0 5%",
+
+    "& a": {
+      color: "inherit",
+      fontSize: "1.3em",
+    },
+  },
+
+  footerNav: {
+    color: "inherit",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    padding: "0 5%",
+    height: "6rem",
+  },
+
+  socialMediaLinkContainer: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    height: "4rem",
+  },
+
+  socialMediaLink: {
+    color: "inherit",
+    fontSize: "2.5rem",
+    marginLeft: "1.5rem",
+  },
 };
 export default theme;
