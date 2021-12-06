@@ -19,10 +19,10 @@ const Footer = () => {
           {t("About")}
         </Button>
         <Button component={Link} to="/">
-          {t("FAQs")}
+          {t("FAQ")}
         </Button>
         <Button component={Link} to="/">
-          {t("Help")}
+          {t("Connect")}
         </Button>
       </div>
       <Divider />
