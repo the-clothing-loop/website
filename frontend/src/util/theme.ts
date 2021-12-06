@@ -26,7 +26,7 @@ const theme = {
       dark: bronze,
       contrastText: black,
     },
-    divider:  "#FFC737"
+    divider: yellow
   },
 
   typography: {

@@ -8,7 +8,6 @@ import theme from "../util/theme";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import FacebookIcon from "@material-ui/icons/Facebook";
 
-
 const Footer = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
@@ -29,15 +28,15 @@ const Footer = () => {
       <Divider />
       <div className={classes.socialMediaLinkContainer}
       >
-        <a href="https://www.instagram.com/ketting_kledingruil/">
+        <a href="https://www.instagram.com/ketting_kledingruil/" target="_blank">
           <InstagramIcon className={classes.socialMediaLink} />
         </a>
-        <a href="facebook.com/groups/868282617266730/">
+        <a href="facebook.com/groups/868282617266730/" target="_blank">
           <FacebookIcon className={classes.socialMediaLink} />
         </a>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Footer;
