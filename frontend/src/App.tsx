@@ -33,14 +33,7 @@ const App = () => {
   return (
     <MuiThemeProvider theme={theme}>
       <AuthProvider>
-        <div
-          className="App"
-          style={{
-            position: "relative",
-            minHeight: "100vh",
-            paddingBottom: "12rem"
-          }}
-        >
+        <div className="App">
           <Router>
             <Navbar />
             <div className="container">

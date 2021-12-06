@@ -12,6 +12,12 @@
     margin: 0;
   }
 
+  .App {
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 10rem;
+  }
+
   a {
     text-decoration: none;
     font-family: "Montserrat", sans-serif;
