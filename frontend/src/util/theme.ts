@@ -9,6 +9,7 @@ const aqua = " #D5ECDF";
 const lightBlue = "#98D9DE";
 const turquoise = "#518D7E";
 const bronze = "#C58C41";
+const grey = "#A5A5A5";
 
 const font = ["Montserrat", "sans-serif"].join(",");
 
@@ -34,9 +35,19 @@ const theme = {
   body2: {
     fontSize: 0.8,
   },
+  p: {
+    fontSize: "0.875rem",
+  },
+  a: {
+    color: bronze,
+    display: "inline",
+    fontSize: "0.875rem",
+    textDecoration: "underline",
+    padding: "0 3px",
+  },
 
   em: {
-    color: "#8f96a3",
+    color: "#5e636e",
     fontStyle: "inherit",
     float: "left",
     fontWeight: "400",
@@ -102,21 +113,39 @@ const theme = {
   // Styling for forms
   form: {
     textAlign: "center",
+    backgroundColor: aqua,
   },
-  formControl: {
-    margin: "1% !important",
+  formContainer: {
+    padding: " 5%",
   },
   image: {
     margin: "20px auto auto auto",
   },
   pageTitle: {
     margin: "20px auto 20px auto",
+    fontFamily: font,
+    fontSize: "1.5rem",
+  },
+  loopName: {
+    fontFamily: font,
+    textTransform: "uppercase",
+    fontWeight: "bold",
+    fontSize: "2rem ",
   },
   textField: {
-    margin: "10px auto 10px auto",
+    margin: "5px auto 5px auto",
+    border: "none",
   },
   button: {
     margin: "10px 10px 10px 10px",
+  },
+  root: {
+    minWidth: 275,
+  },
+  title: {
+    fontSize: 10,
+    textTransform: "uppercase",
+    fontWeight: "bold",
   },
   card: {
     minWidth: "400px",
@@ -155,6 +184,7 @@ const theme = {
     height: "20px",
   },
 
+  /*styling for table*/
   root2: {
     backgroundColor: teal,
     alignItems: "center",
@@ -170,6 +200,10 @@ const theme = {
 
   checkbox: {
     color: `${yellow} !important`,
+  },
+
+  actionsWrapper: {
+    display: "flex",
   },
 
   input: {
@@ -222,6 +256,23 @@ const theme = {
   simpleSelect: {
     textTransform: "uppercase",
     color: `${white} !important`,
+  },
+
+  formSelect: {
+    margin: "5px auto 5px auto",
+    border: "none",
+    width: "100%",
+    borderBottom: "1px solid gray",
+    borderRadius: "0 !important",
+    padding: "0 ",
+    marginTop: "16px",
+  },
+
+  label: {
+    color: "grey",
+    fontStyle: "italic",
+    fontWeight: "lighter",
+    paddingLeft: "16px",
   },
 
   listItemText: {

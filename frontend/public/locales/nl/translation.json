@@ -43,5 +43,12 @@
   "search": "Zoeken",
   "noResultsFound": "Geen resultaten gevonden",
   "noLoopsFoundIn": "Geen ketting gevonden in",
-  "close": "Dichtbij"
+  "close": "Dichtbij",
+  "interestedSizes": "Geïnteresseerde maten",
+  "subscribeTo": "Abboneer op ",
+  "agreeToOur": "Ga akkoord met onze ",
+  "childrenSizes": "Kindermaten",
+  "womenSizes": "Damesmaten",
+  "menSizes": "Herenmaten",
+  "next" : "Volgend"
 }

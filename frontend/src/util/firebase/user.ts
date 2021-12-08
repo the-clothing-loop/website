@@ -20,7 +20,7 @@ interface ICreateUser {
   phoneNumber: string;
   chainId: string | null;
   newsletter: boolean;
-  actionsNewsletter: boolean;
+  interestedSizes: string[];
 }
 
 const createUser = async (user: ICreateUser): Promise<string> => {

@@ -17,7 +17,7 @@ const TextFormField = ({ name, inputRef, email }) => {
       id={name}
       name={name}
       type={email ? "email" : "text"}
-      label={t(name)}
+      label={t("name")}
       className={classes.textField}
       inputRef={inputRef}
       required={true}
@@ -35,9 +35,8 @@ const PhoneFormField = ({ label, ...props }) => {
       <MuiPhoneInput
         defaultCountry="nl"
         regions={"europe"}
-        placeholder="Enter phone number"
         fullWidth
-        label="phone"
+        label={t("phoneNumber")}
         required={true}
         htmlFor={field.name}
         {...field}
@@ -64,17 +63,24 @@ const TextForm = ({ label, ...props }) => {
   );
 };
 
-const CheckboxField = ({ label, ...props }) => {
+const CheckboxField = ({ required, label, ...props }) => {
   const [field, meta] = useField(props);
   const { t } = useTranslation();
-
+  const classes = makeStyles(theme)();
   return (
-    <FormGroup row>
+    <FormGroup >
       <FormControlLabel
-        control={<Checkbox name={field.name} />}
+        control={
+          <Checkbox
+            required={required ? true : false}
+            name={field.name}
+            className={classes.checkbox}
+          />
+        }
         {...field}
         {...props}
         label={label}
+        required={required ? true : false}
       />
     </FormGroup>
   );

@@ -15,7 +15,7 @@ import theme from "../util/theme";
 import { getChain, updateChain } from "../util/firebase/chain";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { TextForm, CheckboxField } from "../components/FormFields";
-import ThreeColumnLayout from "../components/ThreeColumnLayout";
+import {ThreeColumnLayout} from "../components/Layouts";
 import categories from "../util/categories";
 
 const ChainEdit = () => {

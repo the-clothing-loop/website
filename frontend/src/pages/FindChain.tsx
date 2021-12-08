@@ -124,8 +124,8 @@ const FindChain = () => {
       </Helmet>
       <SearchBar
         data={chainData}
-        setData={() => setFilteredChains}
-        setViewport={() => setViewport}
+        setData={setFilteredChains}
+        setViewport={setViewport}
       />
       <ReactMapGL
         mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
