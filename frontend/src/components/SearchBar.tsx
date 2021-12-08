@@ -14,6 +14,7 @@ import Paper from "@material-ui/core/Paper";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
+import SizesDropdown from "./SizesDropdown";
 
 //project resources
 import theme from "../util/theme";
@@ -136,7 +137,10 @@ const SearchBar: React.FC<IProps> = ({
           value={searchTerm}
         />
 
-        <FormControl className={classes.formControl}>
+        <FormControl
+          className={classes.formControl}
+          style={{ marginRight: "1%" }}
+        >
           <Select
             displayEmpty
             className={classes.select}
@@ -169,39 +173,14 @@ const SearchBar: React.FC<IProps> = ({
           </Select>
         </FormControl>
 
-        <FormControl className={classes.formControl}>
-          <Select
-            className={classes.select}
-            labelId="demo-multiple-checkbox-label"
-            id="demo-multiple-checkbox"
-            multiple
-            displayEmpty
-            value={selectedSizes}
-            onChange={(e: any) => handleChange(e, setSelectedSizes)}
-            input={<OutlinedInput label={t("sizes")} />}
-            renderValue={(selected) => {
-              if (selected.length === 0) {
-                return <em className={classes.em}>{t("sizes")}</em>;
-              }
-
-              return selected.join(", ");
-            }}
-          >
-            {categories.sizes.map((value: any) => (
-              <MenuItem key={value} value={value}>
-                <Checkbox
-                  className={classes.checkbox}
-                  checked={selectedSizes.includes(value) ? true : false}
-                />
-                <ListItemText
-                  primary={value}
-                  className={classes.listItemTextSizes}
-                  style={{ textTransform: "uppercase" }}
-                />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <SizesDropdown
+          className={classes.select}
+          setSizes={setSelectedSizes}
+          genders={selectedGenders}
+          sizes={selectedSizes}
+          label={t("sizes")}
+          fullWidth={false}
+        />
 
         <Button
           className={classes.submitBtn}

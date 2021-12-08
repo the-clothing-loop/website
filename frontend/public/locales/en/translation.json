@@ -43,5 +43,12 @@
   "search": "Search",
   "noResultsFound": "No results found",
   "noLoopsFoundIn": "No loops found in",
-  "close": "close"
+  "close": "close",
+  "interestedSizes": "Interested sizes",
+  "subscribeTo" : "Subscribe to ",
+  "agreeToOur": "Agree to our ",
+  "childrenSizes": "Children's sizes",
+  "womenSizes": "Women's sizes",
+  "menSizes": "Men's sizes",
+  "next" : "Next"
 }

@@ -18,8 +18,8 @@ export interface IUser {
   chainId: string | null;
   emailVerified: boolean;
   newsletter: boolean;
-  actionsNewsletter: boolean;
   role: "admin" | "chainAdmin" | null;
+  interestedSizes: string[];
 }
 
 export interface IViewPort {

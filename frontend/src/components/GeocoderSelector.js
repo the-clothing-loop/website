@@ -38,15 +38,7 @@ const GeocoderSelector = ({ onResult, ...props }) => {
   return (
     <div>
       <div style={{ height: "50vh", padding: "5% 0" }}>
-        <Typography
-          className="form-text"
-          component="p"
-          className="explanatory-text"
-          style={{textAlign:'left'}}
-        >
-          {" "}
-          {"Please enter your address using the search bar below:"}
-        </Typography>
+
         <MapGL
           mapStyle="mapbox://styles/mapbox/streets-v11"
           ref={mapRef}
