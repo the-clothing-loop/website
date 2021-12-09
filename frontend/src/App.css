@@ -10,6 +10,12 @@
     margin: 0;
   }
 
+  .app {
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 10rem;
+  }
+
   a {
     text-decoration: none;
     font-family: "Montserrat", sans-serif;
@@ -300,26 +306,6 @@
 
   form.contact-form > * {
     padding: 2% 0;
-  }
-
-  .footer {
-    text-align: center;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .footer > * {
-    padding: 2% 0;
-  }
-
-  .footer > a {
-    color: inherit;
-  }
-
-  .footer a > svg {
-    height: 50px;
-    width: 50px;
   }
 
   .landing-page-wrapper {

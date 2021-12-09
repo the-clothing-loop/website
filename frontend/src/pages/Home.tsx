@@ -48,7 +48,6 @@ const Home = () => {
                 Movement.
               </span>
             </Typography>{" "}
-            <Footer />
           </div>
         </Grid>
         <Grid item sm />

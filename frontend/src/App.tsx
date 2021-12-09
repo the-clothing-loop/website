@@ -24,6 +24,7 @@ import LandingPage from './pages/LandingPage'
 
 // Components
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import { Logout } from "./pages/Logout";
 
 const theme = createMuiTheme(themeFile);
@@ -32,7 +33,7 @@ const App = () => {
   return (
     <MuiThemeProvider theme={theme}>
       <AuthProvider>
-        <div className="App">
+        <div className="app">
           <Router>
             <Navbar />
             <div className="container">
@@ -74,6 +75,7 @@ const App = () => {
                 <Route exact path="/" component={LandingPage} />
               </Switch>
             </div>
+           <Footer />
           </Router>
         </div>
       </AuthProvider>
