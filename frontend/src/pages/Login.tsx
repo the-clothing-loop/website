@@ -2,9 +2,9 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { Link } from "react-router-dom";
 
 // Material UI
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -13,7 +13,8 @@ import theme from "../util/theme";
 import Alert from "@material-ui/lab/Alert";
 
 // Project resources
-import AppIcon from "../images/clothing-loop.png";
+import { TwoColumnLayout } from "../components/Layouts";
+import img from "../images/Naamloze-presentatie.jpeg";
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -54,52 +55,63 @@ const Login = () => {
         <title>Clothing-Loop | Login</title>
         <meta name="description" content="Login" />
       </Helmet>
-      <Grid container className={classes.form}>
-        <Grid item sm />
-        <Grid item sm>
-          <img
-            src={AppIcon}
-            alt="SFM logo"
-            width="500"
-            className={classes.image}
-          />
-          <Typography variant="h3" className={classes.pageTitle}>
-            {t("login")}
+
+      <TwoColumnLayout img={img}>
+        <Typography variant="h3" className={classes.pageTitle}>
+          {t("login")}
+        </Typography>
+        <div className={classes.pageDescription}>
+          <Typography component="p" className={classes.p}>
+            {t("areYouALoopAdmin")}
           </Typography>
-          <Typography component="p" className="explanatory-text">
-            {
-              "Login using the email address used to signup to The Clothing Loop. You'll receive an email with a link to securely login."
-            }
+          <br />
+          <Typography component="p" className={classes.p}>
+            {t("notPartOfTheClothingLoopYet")}
           </Typography>
-          <Formik
-            initialValues={{
-              email: "",
-            }}
-            validationSchema={validate}
-            onSubmit={async (v) => onSubmit(v)}
-          >
-            {(formik) => (
-              <Form>
-                <TextField {...formik.getFieldProps("email")} />
-                {formik.submitCount > 0 && formik.errors.email && (
-                  <Alert severity="error">{formik.errors.email}</Alert>
-                )}
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  {t("login")}
-                </Button>
-              </Form>
-            )}
-          </Formik>
-          {error && <Alert severity="error">{error}</Alert>}
-          {submitted && <Alert severity="info">{t("loginEmailSent")}</Alert>}
-        </Grid>
-        <Grid item sm />
-      </Grid>
+          <Link className={classes.a} to="../../loops/find">
+            {t("joinAnExistingLoop")}
+          </Link>
+          <Typography component="p" className={classes.p}>
+            {t("or")}
+          </Typography>
+          <Link className={classes.a} to="../../loops/new-signup">
+            {t("startNewLoop")}
+          </Link>
+        </div>
+
+        <Formik
+          initialValues={{
+            email: "",
+          }}
+          validationSchema={validate}
+          onSubmit={async (v) => onSubmit(v)}
+        >
+          {(formik) => (
+            <Form>
+              <TextField
+                {...formik.getFieldProps("email")}
+                label={t("email")}
+                required
+                style={{ width: "80%" }}
+              />
+              {formik.submitCount > 0 && formik.errors.email && (
+                <Alert severity="error">{formik.errors.email}</Alert>
+              )}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                fullWidth
+              >
+                {t("login")}
+              </Button>
+            </Form>
+          )}
+        </Formik>
+        {error && <Alert severity="error">{error}</Alert>}
+        {submitted && <Alert severity="info">{t("loginEmailSent")}</Alert>}
+      </TwoColumnLayout>
     </>
   );
 };

@@ -27,7 +27,7 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
   const [privacyPolicyOpen, setPrivacyPolicyOpen] = useState(false);
 
   return (
-    <div>
+    <div style={{padding:'2% 0'}}>
       <CheckboxField
         required={false}
         label={

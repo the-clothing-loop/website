@@ -11,6 +11,10 @@ interface IThreeColumnsLayout {
   children: any;
 }
 
+interface IOneColumnLayout {
+  children: any;
+}
+
 // Standard responsive three column grid used in the app
 const ThreeColumnLayout: React.FC<IThreeColumnsLayout> = ({ children }) => {
   const classes = makeStyles(theme as any)();
@@ -33,7 +37,7 @@ const TwoColumnLayout: React.FC<ITwoColumnsLayout> = ({ children, img }) => {
     <div className={classes.formContainer}>
       <Grid container className={classes.form}>
         <Grid item sm>
-          <img src={img} />
+          <img src={img} className={classes.formImg}/>
         </Grid>
         <Grid item sm>
           {children}
@@ -43,4 +47,18 @@ const TwoColumnLayout: React.FC<ITwoColumnsLayout> = ({ children, img }) => {
   );
 };
 
-export { ThreeColumnLayout, TwoColumnLayout };
+const OneColumnLayout: React.FC<IOneColumnLayout> = ({ children }) => {
+  const classes = makeStyles(theme as any)();
+
+  return (
+    <div className={classes.formContainer}>
+      <Grid container className={classes.singleForm}>
+        <Grid item sm>
+          {children}
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
+
+export { ThreeColumnLayout, TwoColumnLayout, OneColumnLayout };
