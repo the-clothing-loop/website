@@ -29,9 +29,6 @@ const Geocoding = () => {
     }
   }, []);
 
-  console.log(results);
-  console.log(address);
-
   return (
     <div id="geocoding" ref={geoRef as React.RefObject<HTMLDivElement>}></div>
   );

@@ -15,7 +15,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Switch from "@material-ui/core/Switch";
 import { Alert } from "@material-ui/lab";
-import TablePagination from "@material-ui/core/TablePagination";
+import TablePagination from "@mui/material/TablePagination";
+import TableContainer from "@material-ui/core/TableContainer";
 import Divider from "@material-ui/core/Divider";
 import Chip from "@material-ui/core/Chip";
 
@@ -59,7 +60,7 @@ const ChainMemberList = () => {
     console.log(`updating chain data: ${JSON.stringify(updatedChainData)}`);
     try {
       await updateChain(chainId, updatedChainData);
-    } catch (e:any) {
+    } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
       setError(e.message);
     }
@@ -193,7 +194,47 @@ const ChainMemberList = () => {
                   "Displayed below, the contact information of this loop Admin. To make any change, click on the edit icon."
                 }
               </Typography>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow className="table-row-head">
+                      {rows.map((row, i) => {
+                        return (
+                          <TableCell component="th" key={i}>
+                            {row}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  </TableHead>
 
+                  <TableBody>
+                    <TableRow key={admin.uid}>
+                      <TableCell>{admin.name}</TableCell>
+                      <TableCell>{admin.address}</TableCell>
+                      <TableCell>{admin.phoneNumber}</TableCell>
+                      <TableCell>{admin.email}</TableCell>
+                      {userData?.role === "admin" ? (
+                        <TableCell align="right">
+                          <Link to={`/users/edit/${admin.uid}`}>
+                            <EditIcon />
+                          </Link>
+                        </TableCell>
+                      ) : null}
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+          ) : null}
+          <div className="admin-list">
+            <Typography variant="h4">{`${users.length} active users`}</Typography>
+            <Typography component="p" variant="body2">
+              {
+                "Displayed below, the list of all users for this loop. To make any change, click on the edit icon."
+              }
+            </Typography>
+            <TableContainer>
               <Table>
                 <TableHead>
                   <TableRow className="table-row-head">
@@ -206,75 +247,37 @@ const ChainMemberList = () => {
                     })}
                   </TableRow>
                 </TableHead>
-
                 <TableBody>
-                  <TableRow key={admin.uid}>
-                    <TableCell>{admin.name}</TableCell>
-                    <TableCell>{admin.address}</TableCell>
-                    <TableCell>{admin.phoneNumber}</TableCell>
-                    <TableCell>{admin.email}</TableCell>
-                    {userData?.role === "admin" ? (
-                      <TableCell align="right">
-                        <Link to={`/users/edit/${admin.uid}`}>
-                          <EditIcon />
-                        </Link>
-                      </TableCell>
-                    ) : null}
-                  </TableRow>
+                  {users
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((u: IUser) => (
+                      <TableRow key={u.uid}>
+                        <TableCell>{u.name}</TableCell>
+                        <TableCell>{u.address}</TableCell>
+                        <TableCell>{u.phoneNumber}</TableCell>
+                        <TableCell>{u.email}</TableCell>
+                        {userData?.role === "admin" ? (
+                          <TableCell align="right">
+                            <Link to={`/users/edit/${u.uid}`}>
+                              <EditIcon />
+                            </Link>
+                          </TableCell>
+                        ) : null}
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
-            </div>
-          ) : null}
-          <div className="admin-list">
-            <Typography variant="h4">{`${users.length} active users`}</Typography>
-            <Typography component="p" variant="body2">
-              {
-                "Displayed below, the list of all users for this loop. To make any change, click on the edit icon."
-              }
-            </Typography>
 
-            <Table>
-              <TableHead>
-                <TableRow className="table-row-head">
-                  {rows.map((row, i) => {
-                    return (
-                      <TableCell component="th" key={i}>
-                        {row}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {users
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((u: IUser) => (
-                    <TableRow key={u.uid}>
-                      <TableCell>{u.name}</TableCell>
-                      <TableCell>{u.address}</TableCell>
-                      <TableCell>{u.phoneNumber}</TableCell>
-                      <TableCell>{u.email}</TableCell>
-                      {userData?.role === "admin" ? (
-                        <TableCell align="right">
-                          <Link to={`/users/edit/${u.uid}`}>
-                            <EditIcon />
-                          </Link>
-                        </TableCell>
-                      ) : null}
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={users.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={users.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableContainer>
           </div>
         </div>
       </div>
