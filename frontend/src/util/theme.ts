@@ -65,7 +65,21 @@ const theme = {
 
     "& .MuiButtonBase-root": {
       fontSize: "1rem",
+      marginRight: "1rem",
     },
+  },
+
+  headerNav: {
+    minHeight: "4rem",
+    display: "flex",
+    alignItems: "center",
+  },
+
+  headerRight: {
+    flex: "1",
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
 
   buttonContained: {
@@ -74,6 +88,13 @@ const theme = {
     margin: "15px 15px 15px 15px",
     backgroundColor: yellow,
     color: "#fff",
+  },
+
+  logo: {
+    fontSize: "1.8rem",
+    margin: "0 3rem",
+    color: bronze,
+    textTransform: "uppercase",
   },
 
   buttonOutlined: {
