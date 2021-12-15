@@ -62,6 +62,10 @@ const theme = {
         textTransform: "uppercase",
       },
     },
+
+    "& .MuiButtonBase-root": {
+      fontSize: "1rem",
+    },
   },
 
   buttonContained: {
