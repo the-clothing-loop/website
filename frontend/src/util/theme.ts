@@ -17,7 +17,7 @@ const theme = {
     primary: {
       light: aqua,
       main: yellow,
-      dark: teal,
+      dark: bronze,
       contrastText: white,
     },
     secondary: {

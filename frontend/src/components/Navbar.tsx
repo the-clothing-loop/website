@@ -25,25 +25,36 @@ const Navbar = () => {
       </Link>
       <div className={classes.headerRight}>
         <div className={classes.headerNav}>
-          <Button color="inherit" component={Link} to="/about">
-            {t("home")}
-          </Button>
-          <Button
-            color="inherit"
-            component={Link}
-            to="/loops"
-            className={classes.buttonCta}
-          >
-            {t("findLoops")}
-          </Button>
-          <Button
-            color="inherit"
-            component={Link}
-            to="/loops/new-signup"
-            className={classes.buttonCta}
-          >
-            {t("startNewLoop")}
-          </Button>
+          {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
+            <Button
+              color="primary"
+              variant="contained"
+              component={Link}
+              to="#"
+            >
+              {t("download")}
+            </Button>
+          ) : null }
+          {userData === null ? (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/loops"
+              className={classes.buttonCta}
+            >
+              {t("findLoops")}
+            </Button>
+          ) : null }
+          {userData === null ? (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/loops/new-signup"
+              className={classes.buttonCta}
+            >
+              {t("startNewLoop")}
+            </Button>
+          ) : null }
           {userData?.role === "admin" ? (
             <Button color="inherit" component={Link} to="/loops">
               {t("admin")}
@@ -67,9 +78,6 @@ const Navbar = () => {
               {t("login")}
             </Button>
           )}
-          <Button color="inherit" component={Link} to="/contacts">
-            {t("contacts")}
-          </Button>{" "}
         </div>
         <LanguageSwitcher />
       </div>
