@@ -20,9 +20,9 @@ const Navbar = () => {
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
     // Note: Not supported by IE 11. See https://material-ui.com/components/app-bar/#fixed-placement
     <AppBar position="sticky" className={classes.header}>
-      <Typography variant="h3" className={classes.logo}>
+      <Link to="/about" className={classes.logo}>
         The Clothing Loop
-      </Typography>
+      </Link>
       <div className={classes.headerRight}>
         <div className={classes.headerNav}>
           <Button color="inherit" component={Link} to="/about">
