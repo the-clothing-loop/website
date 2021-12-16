@@ -25,7 +25,7 @@
   "startNewChain": "Start a new chain",
   "viewChain": "View chain",
   "findLoops": "Find loops",
-  "startNewLoop": "Start new loop",
+  "startNewLoop": "Start a new loop",
   "admin": "Admin",
   "contacts": "Contacts",
   "searchLocation": "Search Location",
@@ -45,10 +45,17 @@
   "noLoopsFoundIn": "No loops found in",
   "close": "close",
   "interestedSizes": "Interested sizes",
-  "subscribeTo" : "Subscribe to ",
+  "subscribeTo": "Subscribe to ",
   "agreeToOur": "Agree to our ",
   "childrenSizes": "Children's sizes",
   "womenSizes": "Women's sizes",
   "menSizes": "Men's sizes",
-  "next" : "Next"
+  "next": "Next",
+  "enterYourAddress": "Enter your address",
+  "areYouALoopAdmin": "Are you a Loop Admin? Enter your email below to login.",
+  "notPartOfTheClothingLoopYet": "Not part of The Clothing Loop yet,",
+  "joinAnExistingLoop": "join an existing Loop",
+  "or": "or",
+  "thankYouForJoining": "Thank you for joining The Clothing Loop!",
+  "youWillReceiveAnEmail": "You will shortly receive a confirmation email with the next steps."
 }

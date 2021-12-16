@@ -50,5 +50,12 @@
   "childrenSizes": "Kindermaten",
   "womenSizes": "Damesmaten",
   "menSizes": "Herenmaten",
-  "next" : "Volgend"
+  "next": "Volgend",
+  "enterYourAddress": "Voer je adres in",
+  "areYouALoopAdmin": "Bent u een ketenbeheerder? Vul hieronder uw e-mailadres in om in te loggen.",
+  "notPartOfTheClothingLoopYet": "Nog geen onderdeel van The Clothing Loop,",
+  "joinAnExistingLoop": "aansluiten bij een bestaande keten",
+  "or": "of",
+  "thankYouForJoining": "Bedankt voor je deelname aan The Clothing Loop!",
+  "youWillReceiveAnEmail": "U ontvangt binnenkort een bevestigingsmail met de vervolgstappen."
 }

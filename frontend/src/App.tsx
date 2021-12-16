@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import { createTheme } from "@mui/material/styles";
 import { AuthProvider } from "./components/AuthProvider";
 import themeFile from "./util/theme";
 
@@ -19,15 +19,14 @@ import ChainsList from "./pages/ChainsList";
 import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
 import Contacts from "./pages/Contacts.js";
-import LandingPage from './pages/LandingPage'
-
+import LandingPage from "./pages/LandingPage";
 
 // Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Logout } from "./pages/Logout";
 
-const theme = createMuiTheme(themeFile);
+const theme = createTheme(themeFile);
 
 const App = () => {
   return (
@@ -75,7 +74,7 @@ const App = () => {
                 <Route exact path="/" component={LandingPage} />
               </Switch>
             </div>
-           <Footer />
+            <Footer />
           </Router>
         </div>
       </AuthProvider>

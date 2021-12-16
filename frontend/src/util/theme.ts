@@ -11,7 +11,7 @@ const turquoise = "#518D7E";
 const bronze = "#C58C41";
 const grey = "#A5A5A5";
 
-const font = ["Montserrat", "sans-serif"].join(",");
+const font = ["Montserrat"].join(",");
 
 const theme = {
   palette: {
@@ -27,11 +27,11 @@ const theme = {
       dark: bronze,
       contrastText: black,
     },
-    divider: yellow
+    divider: yellow,
   },
 
   typography: {
-    fontFamily: font,
+    fontFamily: ["Montserrat"].join(","),
   },
   body2: {
     fontSize: 0.8,
@@ -48,7 +48,7 @@ const theme = {
   },
 
   em: {
-    color: "#5e636e",
+    color: "rgba(0, 0, 0, 0.6)",
     fontStyle: "inherit",
     float: "left",
     fontWeight: "400",
@@ -62,10 +62,10 @@ const theme = {
     backgroundColor: teal,
     boxShadow: "none",
     display: "flex",
-    justifyContent: " flex-end",
     flexDirection: "row",
     alignItems: "center",
     zIndex: "1111",
+    height: "10vh",
 
     "& div.language-switcher-wrapper": {
       paddingRight: "2%",
@@ -77,18 +77,20 @@ const theme = {
 
   buttonContained: {
     position: "relative",
-    width: "100%",
     margin: "15px 15px 15px 15px",
     backgroundColor: yellow,
     color: "#fff",
+    width: "9rem",
+    height: "2.625rem",
   },
 
   buttonOutlined: {
     position: "relative",
     margin: "15px 15px 15px 15px",
-    width: "100%",
     border: `1px solid ${yellow}`,
     color: "black",
+    width: "9rem",
+    height: "2.625rem",
   },
 
   submitBtn: {
@@ -105,6 +107,10 @@ const theme = {
     backgroundColor: turquoise,
     color: yellow,
     border: `1px solid ${bronze}`,
+    margin: "0 2%",
+    minWidth: "max-content",
+    width: "9rem",
+    height: "2.625rem",
   },
 
   menuItem: {
@@ -115,9 +121,46 @@ const theme = {
   form: {
     textAlign: "center",
     backgroundColor: aqua,
+    borderRadius: "4px",
+    boxShadow:
+      "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
+  },
+
+  formGrid: {
+    display: "grid",
+    gridTemplateRows: "58px 58px 58px 58px 58px auto",
+  },
+
+  singleForm: {
+    textAlign: "center",
+    backgroundColor: aqua,
+    borderRadius: "4px",
+    boxShadow:
+      "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
+
+    position: "relative",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%)",
+    width: "50%",
+    padding: "2% 5%",
   },
   formContainer: {
-    padding: " 5%",
+    padding: " 0 5%",
+    position: "relative",
+    top: "50%",
+    transform: "translateY(-50%)",
+  },
+
+  formImg: {
+    position: "relative",
+    top: "50%",
+    transform: "translateY(-50%)",
+  },
+
+  formSubmitActions: {
+    display: "flex",
+    justifyContent: "space-around",
   },
   image: {
     margin: "20px auto auto auto",
@@ -126,6 +169,7 @@ const theme = {
     margin: "20px auto 20px auto",
     fontFamily: font,
     fontSize: "1.5rem",
+    textTransform: "uppercase",
   },
   loopName: {
     fontFamily: font,
@@ -138,7 +182,13 @@ const theme = {
     border: "none",
   },
   button: {
-    margin: "10px 10px 10px 10px",
+    margin: "5% 0",
+    width: "9rem",
+    height: "2.625rem",
+    display: "block",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
   },
   root: {
     minWidth: 275,
@@ -183,6 +233,26 @@ const theme = {
   },
   geocoder: {
     height: "20px",
+  },
+
+  pageGrid: {
+    backgroundColor: aqua,
+    textAlign: "center",
+    height: "50vh",
+    margin: " 5%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    borderRadius: " 5px",
+  },
+
+  pageDescription: {
+    textAlign: "left",
+    padding: "5% 0",
+
+    "& p": {
+      display: "inline",
+    },
   },
 
   /*styling for table*/
@@ -252,6 +322,16 @@ const theme = {
     "& div#demo-multiple-checkbox": {
       padding: "10px !important",
     },
+
+    "&:before": {
+      borderColor: yellow,
+    },
+    "&:after": {
+      borderColor: yellow,
+    },
+    "&:not(.Mui-disabled):hover::before": {
+      borderColor: yellow,
+    },
   },
 
   simpleSelect: {
@@ -263,14 +343,14 @@ const theme = {
     margin: "5px auto 5px auto",
     border: "none",
     width: "100%",
-    borderBottom: "1px solid gray",
+    borderBottom: "1px solid rgba(255, 255, 255, 0.7);",
     borderRadius: "0 !important",
     padding: "0 ",
     marginTop: "16px",
   },
 
   label: {
-    color: "grey",
+    color: "rgba(0, 0, 0, 0.6)",
     fontStyle: "italic",
     fontWeight: "lighter",
     paddingLeft: "16px",
@@ -325,9 +405,11 @@ const theme = {
     color: white,
     width: "100%",
     height: "10rem",
-    position: "absolute",
+    position: "relative",
     bottom: 0,
     padding: "0 5%",
+    boxShadow: " 0px -4px 3px rgba(0, 0, 0, 0.2)",
+    zIndex: "11",
 
     "& a": {
       color: "inherit",

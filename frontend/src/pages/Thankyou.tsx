@@ -1,28 +1,38 @@
 // Material
-import Grid from "@material-ui/core/Grid";
 import { Helmet } from "react-helmet";
+import { makeStyles } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 //Project resources
-import AppIcon from "../images/clothing-loop.png";
+import theme from "../util/theme";
 
-const Thankyou = () => {
+const Thankyou = (props: any) => {
+  const { t } = useTranslation();
+  const classes = makeStyles(theme as any)();
+
+  console.log(props);
+
   return (
     <>
       <Helmet>
         <title>Clothing-Loop | Thank you</title>
         <meta name="description" content="Thank you" />
       </Helmet>
-      <Grid container>
-        <Grid item sm />
-        <Grid item sm>
-          <div>
-            <img src={AppIcon} alt="SFM logo" width="500" />
-            <h1>Your request has been successfully submitted!</h1>
-            <p>You will shortly receive an email confirmation.</p>
-          </div>
-        </Grid>
-        <Grid item sm />
-      </Grid>
+
+      <div className={classes.pageGrid}>
+        <h1
+          style={{
+            textTransform: "uppercase",
+            color: "#C58C41",
+          }}
+        >
+          The Clothing Loop
+        </h1>
+        <div>
+          <h3>{t("thankYouForJoining")}</h3>
+          <p>{t("youWillReceiveAnEmail")}</p>
+        </div>
+      </div>
     </>
   );
 };

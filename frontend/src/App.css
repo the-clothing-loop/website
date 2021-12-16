@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
 @media only screen and (min-width: 481px) {
   * {
     box-sizing: border-box;
@@ -5,9 +7,13 @@
 
   html,
   body {
-    font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat";
     background-color: rgb(245, 245, 245);
     margin: 0;
+  }
+
+  .container {
+    height: 85vh;
   }
 
   .app {
@@ -143,6 +149,7 @@
 
   .MuiCardActions-root {
     padding: 0 !important;
+    justify-content: space-around;
   }
 
   form.new-chain-location-form {
@@ -338,7 +345,7 @@
     display: flex;
     flex-direction: column;
     position: absolute;
-    bottom: 5%;
+    bottom: 35%;
     right: 10px;
   }
 
@@ -380,6 +387,10 @@
     color: #f7c86f !important;
   }
 
+  .css-1v4ccyo.Mui-focused.MuiOutlinedInput-notchedOutline {
+    border-color: transparent !important;
+  }
+
   .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused
     .MuiOutlinedInput-notchedOutline {
     border-color: transparent;
@@ -418,6 +429,7 @@
 
   div#demo-multiple-checkbox {
     padding: 10px !important;
+    padding-left: 0 !important;
   }
 
   fieldset.MuiOutlinedInput-notchedOutline {
@@ -433,6 +445,86 @@
     margin-top: 0;
     text-transform: uppercase;
     color: white;
+  }
+
+  input#outlined-basic {
+    padding: 2%;
+    margin-left: 30px;
+  }
+
+  div.geocoder-wrapper > canvas.mapboxgl-canvas,
+  div.geocoder-wrapper > .mapboxgl-ctrl-bottom-left,
+  div.geocoder-wrapper > .mapboxgl-ctrl-bottom-right,
+  div.geocoder-wrapper > .mapboxgl-marker,
+  div.geocoder-wrapper > .mapboxgl-marker-anchor-center,
+  div.geocoder-wrapper > .mapboxgl-ctrl-geocoder--icon-search {
+    display: none !important;
+  }
+
+  div.geocoding-map {
+    overflow: visible !important;
+  }
+
+  div.geocoding-map > .mapboxgl-canvas-container > canvas.mapboxgl-canvas {
+    display: none !important;
+  }
+
+  div.geocoding-map > .mapboxgl-canvas-container > .mapboxgl-marker {
+    display: none !important;
+  }
+
+  div.geocoding-map
+    > .mapboxgl-control-container
+    > .mapboxgl-ctrl-top-left
+    > .mapboxgl-ctrl-geocoder
+    > svg {
+    display: none !important;
+  }
+
+  div.geocoding-map > .mapboxgl-control-container > .mapboxgl-ctrl-bottom-left,
+  div.geocoding-map
+    > .mapboxgl-control-container
+    > .mapboxgl-ctrl-bottom-right {
+    display: none !important;
+  }
+
+  div.geocoding-map > .mapboxgl-control-container > .mapboxgl-ctrl-top-left {
+    width: 100% !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+  }
+
+  div.geocoding-map
+    > .mapboxgl-control-container
+    > .mapboxgl-ctrl-top-left
+    > .mapboxgl-ctrl-geocoder {
+    width: 100% !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    font-family: "Montserrat", sans-serif !important;
+    font-size: 1rem !important;
+  }
+
+  div.geocoding-map
+    > .mapboxgl-control-container
+    > .mapboxgl-ctrl-top-left
+    > .mapboxgl-ctrl-geocoder
+    > input.mapboxgl-ctrl-geocoder--input {
+    border-radius: 0px;
+    background-color: transparent !important;
+    width: 100% !important;
+    padding-left: 0;
+    margin-top: 10px;
+  }
+
+  .mapboxgl-ctrl-geocoder--icon-close {
+    margin-top: 12px !important;
+  }
+
+  button.mapboxgl-ctrl-geocoder--button {
+    background-color: #d5ecdf !important;
   }
 }
 
