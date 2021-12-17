@@ -32,7 +32,7 @@ export const createUser =
           name,
           phoneNumber,
           newsletter,
-          actionsNewsletter,
+          interestedSizes,
           address,
         ] = [
           data.email,
@@ -40,7 +40,7 @@ export const createUser =
           data.name,
           data.phoneNumber,
           data.newsletter,
-          data.actionsNewsletter,
+          data.interestedSizes,
           data.address,
         ];
         let userRecord = null as null | UserRecord;
@@ -87,7 +87,7 @@ export const createUser =
               chainId,
               address,
               newsletter,
-              actionsNewsletter,
+              interestedSizes,
             });
         if (adminEmails.includes(email)) {
           functions.logger.debug(`Adding user ${email} as admin`);
@@ -188,14 +188,14 @@ export const updateUser =
           name,
           phoneNumber,
           newsletter,
-          actionsNewsletter,
+          interestedSizes,
           address,
         ] = [
           data.uid,
           data.name,
           data.phoneNumber,
           data.newsletter,
-          data.actionsNewsletter,
+          data.interestedSizes,
           data.address,
         ];
 
@@ -215,7 +215,7 @@ export const updateUser =
               .set({
                 address,
                 newsletter,
-                actionsNewsletter,
+                interestedSizes,
               }, {merge: true});
           // TODO: Update user in mailchimp if needed
           return {};
@@ -243,7 +243,7 @@ export const getUserById =
             chainId: userData.get("chainId"),
             address: userData.get("address"),
             newsletter: userData.get("newsletter"),
-            actionsNewsletter: userData.get("actionsNewsletter"),
+            interestedSizes: userData.get("interestedSizes"),
             role: user.customClaims?.role,
           };
         } else {
@@ -270,7 +270,7 @@ export const getUserByEmail =
             chainId: userData.get("chainId"),
             address: userData.get("address"),
             newsletter: userData.get("newsletter"),
-            actionsNewsletter: userData.get("actionsNewsletter"),
+            interestedSizes: userData.get("interestedSizes"),
             role: user.customClaims?.role,
           };
         } else {

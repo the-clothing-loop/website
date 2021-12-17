@@ -14,7 +14,8 @@ import theme from "../util/theme";
 
 // Project resources
 import { getUserById, updateUser } from "../util/firebase/user";
-import ThreeColumnLayout from "../components/ThreeColumnLayout";
+import { ThreeColumnLayout } from "../components/Layouts";
+
 import {
   PhoneFormField,
   TextForm,
@@ -50,7 +51,6 @@ const UserEdit = () => {
       })
       .required("Required"),
     newsletter: Yup.boolean(),
-    actionsNewsletter: Yup.boolean(),
   });
 
   const onSubmit = async (values) => {
@@ -100,7 +100,6 @@ const UserEdit = () => {
           email: user.email,
           phoneNumber: user.phoneNumber,
           newsletter: user.newsletter,
-          actionsNewsletter: user.actionsNewsletter,
           address: address,
           uid: userId,
         }}
@@ -149,12 +148,6 @@ const UserEdit = () => {
                 name="newsletter"
                 type="checkbox"
               />
-              <CheckboxField
-                label="Actions newsletter"
-                name="actionsNewsletter"
-                type="checkbox"
-              />
-
               <Button
                 type="submit"
                 variant="contained"

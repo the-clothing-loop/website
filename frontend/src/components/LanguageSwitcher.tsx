@@ -28,8 +28,8 @@ const LanguageSwitcher = () => {
       {languages ? (
         <FormControl fullWidth>
           <Select
-            labelId="simple-select-label"
-            id="simple-select"
+            labelId="language-switcher-select-label"
+            id="language-switcher-select"
             value={selected}
             label="Languages"
             onChange={handleChange}

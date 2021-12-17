@@ -25,7 +25,7 @@ const LoginEmailFinished = () => {
               .signInWithEmailLink(email, window.location.href);
             window.localStorage.removeItem("emailForSignIn");
             setFinished(true);
-          } catch (e) {
+          } catch (e:any) {
             setError(e);
           }
         }

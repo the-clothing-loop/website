@@ -3,6 +3,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapGL from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
+import { useTranslation } from "react-i18next";
 
 //material UI
 import Typography from "@material-ui/core/Typography";
@@ -17,6 +18,7 @@ const GeocoderSelector = ({ onResult, ...props }) => {
   });
 
   const mapRef = useRef();
+  const { t } = useTranslation();
 
   const handleViewportChange = useCallback(
     (newViewport) => setViewPort(newViewport),
@@ -36,18 +38,13 @@ const GeocoderSelector = ({ onResult, ...props }) => {
   );
 
   return (
-    <div>
-      <div style={{ height: "50vh", padding: "5% 0" }}>
-        <Typography
-          className="form-text"
-          component="p"
-          className="explanatory-text"
-          style={{textAlign:'left'}}
-        >
-          {" "}
-          {"Please enter your address using the search bar below:"}
-        </Typography>
+    <div style={{ height: "58px", width: "100%" }} className="geocoder-wrapper">
+      <div
+        style={{ height: "58px", padding: "2% 0" }}
+        className="geocoder-wrapper-2"
+      >
         <MapGL
+          className="geocoding-map"
           mapStyle="mapbox://styles/mapbox/streets-v11"
           ref={mapRef}
           {...viewport}
@@ -57,11 +54,13 @@ const GeocoderSelector = ({ onResult, ...props }) => {
           mapboxApiAccessToken={MAPBOX_TOKEN}
         >
           <Geocoder
+            className="address-geocoder"
             onResult={useCallback((result) => onResult(result), [])}
             mapRef={mapRef}
             onViewportChange={handleGeocoderViewportChange}
             mapboxApiAccessToken={MAPBOX_TOKEN}
             position="top-left"
+            placeholder={t("enterYourAddress")}
           />
         </MapGL>
       </div>

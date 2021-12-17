@@ -26,8 +26,7 @@ const Footer = () => {
         </Button>
       </div>
       <Divider />
-      <div className={classes.socialMediaLinkContainer}
-      >
+      <div className={classes.socialMediaLinkContainer}>
         <a href="https://www.instagram.com/ketting_kledingruil/" target="_blank">
           <InstagramIcon className={classes.socialMediaLink} />
         </a>

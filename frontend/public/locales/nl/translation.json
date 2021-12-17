@@ -44,5 +44,19 @@
   "search": "Zoeken",
   "noResultsFound": "Geen resultaten gevonden",
   "noLoopsFoundIn": "Geen ketting gevonden in",
-  "close": "Dichtbij"
+  "close": "Dichtbij",
+  "interestedSizes": "Geïnteresseerde maten",
+  "subscribeTo": "Abboneer op ",
+  "agreeToOur": "Ga akkoord met onze ",
+  "childrenSizes": "Kindermaten",
+  "womenSizes": "Damesmaten",
+  "menSizes": "Herenmaten",
+  "next": "Volgend",
+  "enterYourAddress": "Voer je adres in",
+  "areYouALoopAdmin": "Bent u een ketenbeheerder? Vul hieronder uw e-mailadres in om in te loggen.",
+  "notPartOfTheClothingLoopYet": "Nog geen onderdeel van The Clothing Loop,",
+  "joinAnExistingLoop": "aansluiten bij een bestaande keten",
+  "or": "of",
+  "thankYouForJoining": "Bedankt voor je deelname aan The Clothing Loop!",
+  "youWillReceiveAnEmail": "U ontvangt binnenkort een bevestigingsmail met de vervolgstappen."
 }

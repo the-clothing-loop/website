@@ -61,7 +61,7 @@ const FindChain = () => {
         latitude: 0,
         longitude: 0,
         width: "100vw",
-        height: "85vh",
+        height: "75vh",
         zoom: 1,
       });
     })();
@@ -124,8 +124,8 @@ const FindChain = () => {
       </Helmet>
       <SearchBar
         data={chainData}
-        setData={() => setFilteredChains}
-        setViewport={() => setViewport}
+        setData={setFilteredChains}
+        setViewport={setViewport}
       />
       <ReactMapGL
         mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
@@ -264,24 +264,25 @@ const FindChain = () => {
             </Card>
           </Popup>
         ) : null}
-        <div className="map-actions">
-          <Button className="map-action-btn" onClick={() => handleLocation()}>
-            <GpsFixedIcon fontSize="medium" />
-          </Button>
-          <Button
-            className="map-action-btn"
-            onClick={() => mapZoom(viewport, "+")}
-          >
-            <AddIcon fontSize="medium" />
-          </Button>
-          <Button
-            className="map-action-btn"
-            onClick={() => mapZoom(viewport, "-")}
-          >
-            <RemoveIcon fontSize="medium" />{" "}
-          </Button>
-        </div>
       </ReactMapGL>
+
+      <div className="map-actions">
+        <Button className="map-action-btn" onClick={() => handleLocation()}>
+          <GpsFixedIcon fontSize="medium" />
+        </Button>
+        <Button
+          className="map-action-btn"
+          onClick={() => mapZoom(viewport, "+")}
+        >
+          <AddIcon fontSize="medium" />
+        </Button>
+        <Button
+          className="map-action-btn"
+          onClick={() => mapZoom(viewport, "-")}
+        >
+          <RemoveIcon fontSize="medium" />{" "}
+        </Button>
+      </div>
     </>
   );
 };

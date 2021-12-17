@@ -3,15 +3,17 @@ import { useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 // Material UI
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import { makeStyles, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
+import {
+  makeStyles
+} from "@material-ui/core";
 import theme from "../util/theme";
-import ThreeColumnLayout from "../components/ThreeColumnLayout";
+import { ThreeColumnLayout,  OneColumnLayout } from "../components/Layouts";
 import { Alert } from "@material-ui/lab";
 
 // Project resources
@@ -22,11 +24,14 @@ import {
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../components/AuthProvider";
-import AppIcon from "../images/clothing-loop.png";
 import { createUser } from "../util/firebase/user";
+import SizesDropdown from "../components/SizesDropdown";
+import categories from "../util/categories";
+import FormActions from "../components/formActions";
 
 const Signup = () => {
   const { t } = useTranslation();
+  const history = useHistory();
   const [submitted, setSubmitted] = useState(false);
   const [geocoderResult, setGeocoderResult] = useState({
     result: { place_name: "" },
@@ -35,12 +40,11 @@ const Signup = () => {
   const classes = makeStyles(theme as any)();
   const { user } = useContext(AuthContext);
   const [error, setError] = useState("");
-  const [newsletterOpen, setNewsletterOpen] = useState(false);
-  const [actionsNewsletterOpen, setActionsNewsletterOpen] = useState(false);
-  const [privacyPolicyOpen, setPrivacyPolicyOpen] = useState(false);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
   //Phone Number Validation Format with E.164
-  const phoneRegExp = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  const phoneRegExp =
+    /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
   const validate = Yup.object({
     name: Yup.string()
@@ -56,7 +60,6 @@ const Signup = () => {
       .max(15)
       .required("Please enter a valid phone number"),
     newsletter: Yup.boolean(),
-    actionsNewsletter: Yup.boolean(),
   });
 
   if (submitted) {
@@ -67,20 +70,13 @@ const Signup = () => {
     return <Redirect to={`/loops/new-location/${user.uid}`} />;
   }
 
-  const newsletterClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handleClickAction = (
+    e: React.MouseEvent<HTMLElement>,
+    setAction: any
+  ) => {
     e.preventDefault();
-    setNewsletterOpen(true);
-  }
-
-  const actionsNewsletterClick = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    setActionsNewsletterOpen(true);
-  }
-
-  const privacyPolicyClick = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    setPrivacyPolicyOpen(true);
-  }
+    setAction(true);
+  };
 
   return (
     <>
@@ -94,7 +90,6 @@ const Signup = () => {
           email: "",
           phoneNumber: "",
           newsletter: false,
-          actionsNewsletter: false,
         }}
         validationSchema={validate}
         onSubmit={async (values) => {
@@ -102,36 +97,27 @@ const Signup = () => {
             address: geocoderResult.result.place_name,
             chainId: null,
             ...values,
+            interestedSizes: selectedSizes,
           };
 
           console.log(`creating user: ${JSON.stringify(user)}`);
           try {
             setUserId(await createUser(user));
             setSubmitted(true);
-          } catch (e:any) {
+          } catch (e: any) {
             console.error(`Error creating user: ${JSON.stringify(e)}`);
             setError(e.message);
           }
         }}
       >
         {({ errors, touched, setFieldValue }) => (
-          <ThreeColumnLayout>
+          <OneColumnLayout>
             <div>
-              <img
-                src={AppIcon}
-                alt="SFM logo"
-                width="500"
-                className={classes.image}
-              />
               <Typography variant="h3" className={classes.pageTitle}>
-                {t("Start new loop")}
+                {t("startNewLoop")}
               </Typography>
-              <Typography component="p" className="explanatory-text">
-                {
-                  "Fill out the information below to start a new clothing loop. This process is divided into two steps. Firstly, we need your personal information to get in touch with you. Once submitted, you will be able to select a location for the new loop."
-                }
-              </Typography>
-              <Form>
+
+              <Form className={classes.formGrid}>
                 <TextForm
                   required
                   label="Name"
@@ -163,122 +149,36 @@ const Signup = () => {
                 />
 
                 <GeocoderSelector name="address" onResult={setGeocoderResult} />
+                <SizesDropdown
+                  className={classes.formSelect}
+                  setSizes={setSelectedSizes}
+                  genders={categories.genders}
+                  sizes={selectedSizes}
+                  label={t("interestedSizes")}
+                  fullWidth={true}
+                />
 
-                <CheckboxField
-                  label={<>Subscribe to <a href="#newsletter" onClick={newsletterClick} id="newsletterPopup">The Clothing Loop Newsletter</a></>}
-                  name="newsletter"
-                  type="checkbox"
-                />
-                <CheckboxField
-                  label={<>Subscribe to <a href="#actionsNewsletter" onClick={actionsNewsletterClick} id="actionsNewsletterPopup">Slow Fashion Movement Newsletter</a></>}
-                  name="actionsNewsletter"
-                  type="checkbox"
-                />
-                <p>
-                  Data will be used in accordance with our <a href="#privacyPolicy" onClick={privacyPolicyClick} id="newsletterPopup">Privacy Policy</a>
-                </p>
+                <FormActions handleClick={handleClickAction} />
+
                 {error ? <Alert severity="error">{error}</Alert> : null}
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                >
-                  {t("signup")}
-                </Button>
+                <div className={classes.formSubmitActions}>
+                  <Button
+                    type="submit"
+                    className={classes.buttonOutlined}
+                    onClick={() => history.push("/loops/find")}
+                  >
+                    {" "}
+                    {t("back")}
+                  </Button>
+                  <Button type="submit" className={classes.buttonContained}>
+                    {t("next")}
+                  </Button>
+                </div>
               </Form>
             </div>
-          </ThreeColumnLayout>
+          </OneColumnLayout>
         )}
       </Formik>
-      <Dialog
-        open={newsletterOpen}
-        onClose={() => setNewsletterOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"The Clothing Loop Newsletter"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            Pellentesque ullamcorper eget nisi sed facilisis. 
-            Proin feugiat a risus ac iaculis. Nunc commodo nulla id magna faucibus, et elementum diam ultrices. 
-            Suspendisse et lorem aliquam sapien finibus cursus. Nam id arcu sem. 
-            Quisque facilisis odio et erat pretium, ac interdum diam posuere. 
-            Nunc vulputate molestie quam, sit amet finibus velit mattis eget. Pellentesque molestie malesuada tincidunt. 
-            Proin a luctus mauris. Donec tortor justo, hendrerit sit amet turpis ac, interdum consectetur magna.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setNewsletterOpen(false)} autoFocus>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={actionsNewsletterOpen}
-        onClose={() => setActionsNewsletterOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Slow Fashion Movement Newsletter"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            Pellentesque ullamcorper eget nisi sed facilisis. 
-            Proin feugiat a risus ac iaculis. Nunc commodo nulla id magna faucibus, et elementum diam ultrices. 
-            Suspendisse et lorem aliquam sapien finibus cursus. Nam id arcu sem. 
-            Quisque facilisis odio et erat pretium, ac interdum diam posuere. 
-            Nunc vulputate molestie quam, sit amet finibus velit mattis eget. Pellentesque molestie malesuada tincidunt. 
-            Proin a luctus mauris. Donec tortor justo, hendrerit sit amet turpis ac, interdum consectetur magna.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setActionsNewsletterOpen(false)} autoFocus>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={privacyPolicyOpen}
-        onClose={() => setPrivacyPolicyOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Privacy Policy"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            We are buying more and more garments and wearing them shorter and
-            shorter. The Clothing Loop tackles this growing problem – while
-            connecting people in the neighborhood in a fun and sustainable
-            way. The idea of the Clothing Loop is simple: (large) bags filled
-            with clothing travel a route past all participants in a particular
-            city or neighborhood. Do you receive the bag at home? Then you can
-            take out what you like and put back something that is still in
-            good condition, but ready for a new owner. If you want, you can
-            share a photo with your new addition in the corresponding WhatsApp
-            group. Then you take the bag to the next neighbor on the list. We
-            started a year ago in Amsterdam in the Netherlands as a
-            corona-proof, local alternative for clothing swap events and now
-            have more than 7500 participants spread over more than 210 chains
-            across the country. The success has now been picked up by numerous
-            (national) media (see for example: NOS). Our goal is to spread
-            this initiative globally. To this end, we are building an online
-            platform where anyone, anywhere can start or join a chain.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setPrivacyPolicyOpen(false)} autoFocus>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };
