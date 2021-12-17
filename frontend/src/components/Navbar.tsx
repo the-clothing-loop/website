@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 
 // Material UI
-import { AppBar, Toolbar, Button, Typography } from "@material-ui/core";
+import { AppBar, Toolbar, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 
 // Project resources
@@ -34,7 +34,7 @@ const Navbar = () => {
             >
               {t("download")}
             </Button>
-          ) : null }
+          ) : null}
           {userData === null ? (
             <Button
               color="inherit"
@@ -44,7 +44,7 @@ const Navbar = () => {
             >
               {t("findLoops")}
             </Button>
-          ) : null }
+          ) : null}
           {userData === null ? (
             <Button
               color="inherit"
@@ -54,7 +54,7 @@ const Navbar = () => {
             >
               {t("startNewLoop")}
             </Button>
-          ) : null }
+          ) : null}
           {userData?.role === "admin" ? (
             <Button color="inherit" component={Link} to="/loops">
               {t("admin")}
