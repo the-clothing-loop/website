@@ -75,8 +75,11 @@ const theme = {
     },
 
     "& .MuiButtonBase-root": {
-      fontSize: "1rem",
+      fontSize: "1.2rem",
       marginRight: "1rem",
+    },
+    "& .MuiSelect-root": {
+      fontSize: "1.2rem",
     },
   },
 
@@ -103,7 +106,7 @@ const theme = {
   },
 
   logo: {
-    fontSize: "1.8rem",
+    fontSize: "2rem",
     margin: "0 3rem",
     color: bronze,
     textTransform: "uppercase",
