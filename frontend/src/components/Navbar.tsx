@@ -20,46 +20,67 @@ const Navbar = () => {
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
     // Note: Not supported by IE 11. See https://material-ui.com/components/app-bar/#fixed-placement
     <AppBar position="sticky" className={classes.header}>
-      <Toolbar>
-        <Button color="inherit" component={Link} to="/about">
-          {t("home")}
-        </Button>
-        <Button
-          color="inherit"
-          component={Link}
-          to="/loops/new-signup"
-          className={classes.buttonCta}
-        >
-          {t("startNewLoop")}
-        </Button>
-        {userData?.role === "admin" ? (
-          <Button color="inherit" component={Link} to="/loops">
-            {t("admin")}
-          </Button>
-        ) : null}
-        {userData?.role === "chainAdmin" ? (
-          <Button
-            color="inherit"
-            component={Link}
-            to={`/loops/members/${userData.chainId}`}
-          >
-            {t("admin")}
-          </Button>
-        ) : null}
-        {userData ? (
-          <Button color="inherit" component={Link} to="/users/logout">
-            {t("logout")}
-          </Button>
-        ) : (
-          <Button color="inherit" component={Link} to="/users/login">
-            {t("login")}
-          </Button>
-        )}
-        <Button color="inherit" component={Link} to="/contacts">
-          {t("contacts")}
-        </Button>{" "}
-      </Toolbar>
-      <LanguageSwitcher />
+      <Link to="/about" className={classes.logo}>
+        The Clothing Loop
+      </Link>
+      <div className={classes.headerRight}>
+        <div className={classes.headerNav}>
+          {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
+            <Button
+              color="primary"
+              variant="contained"
+              component={Link}
+              to="#"
+            >
+              {t("download")}
+            </Button>
+          ) : null}
+          {userData === null ? (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/loops"
+              className={classes.buttonCta}
+            >
+              {t("findLoops")}
+            </Button>
+          ) : null}
+          {userData === null ? (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/loops/new-signup"
+              className={classes.buttonCta}
+            >
+              {t("startNewLoop")}
+            </Button>
+          ) : null}
+          {userData?.role === "admin" ? (
+            <Button color="inherit" component={Link} to="/loops">
+              {t("admin")}
+            </Button>
+          ) : null}
+          {userData?.role === "chainAdmin" ? (
+            <Button
+              color="inherit"
+              component={Link}
+              to={`/loops/members/${userData.chainId}`}
+            >
+              {t("admin")}
+            </Button>
+          ) : null}
+          {userData ? (
+            <Button color="inherit" component={Link} to="/users/logout">
+              {t("logout")}
+            </Button>
+          ) : (
+            <Button color="inherit" component={Link} to="/users/login">
+              {t("login")}
+            </Button>
+          )}
+        </div>
+        <LanguageSwitcher />
+      </div>
     </AppBar>
   );
 };

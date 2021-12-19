@@ -18,7 +18,7 @@ const theme = {
     primary: {
       light: aqua,
       main: yellow,
-      dark: teal,
+      dark: bronze,
       contrastText: white,
     },
     secondary: {
@@ -73,6 +73,27 @@ const theme = {
         textTransform: "uppercase",
       },
     },
+
+    "& .MuiButtonBase-root": {
+      fontSize: "1.2rem",
+      marginRight: "1rem",
+    },
+    "& .MuiSelect-root": {
+      fontSize: "1.2rem",
+    },
+  },
+
+  headerNav: {
+    minHeight: "4rem",
+    display: "flex",
+    alignItems: "center",
+  },
+
+  headerRight: {
+    flex: "1",
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
 
   buttonContained: {
@@ -82,6 +103,13 @@ const theme = {
     color: "#fff",
     width: "9rem",
     height: "2.625rem",
+  },
+
+  logo: {
+    fontSize: "2rem",
+    margin: "0 3rem",
+    color: bronze,
+    textTransform: "uppercase",
   },
 
   buttonOutlined: {
