@@ -1,3 +1,5 @@
+import { FlyToInterpolator } from "react-map-gl";
+
 export interface IChain {
   id: string;
   name: string;
@@ -28,4 +30,6 @@ export interface IViewPort {
   width: string;
   height: string;
   zoom: number;
+  transitionDuration?: number;
+  transitionInterpolator?: FlyToInterpolator;
 }

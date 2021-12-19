@@ -466,5 +466,10 @@ const theme = {
     fontSize: "2.5rem",
     marginLeft: "1.5rem",
   },
+
+  newLoopMap: {
+    cursor: "pointer",
+    filter: "drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25))",
+  },
 };
 export default theme;
