@@ -159,6 +159,12 @@ const theme = {
     gridTemplateRows: "58px 58px 58px 58px 58px auto",
   },
 
+  threeColumnsForm: {
+    height: "100%",
+    textAlign: "center",
+    backgroundColor: aqua,
+  },
+
   singleForm: {
     textAlign: "center",
     backgroundColor: aqua,
@@ -174,10 +180,20 @@ const theme = {
     padding: "2% 5%",
   },
   formContainer: {
-    padding: " 0 5%",
+    margin: " 0 5%",
     position: "relative",
     top: "50%",
     transform: "translateY(-50%)",
+  },
+  contactFormWrapper: {
+    height: "100%",
+    backgroundColor: aqua,
+
+    "& div": {
+      "& div": {
+        boxShadow: "none !important",
+      },
+    },
   },
 
   formImg: {
@@ -208,6 +224,13 @@ const theme = {
   textField: {
     margin: "5px auto 5px auto",
     border: "none",
+  },
+
+  textArea: {
+    backgroundColor: white,
+    borderRadius: "4px",
+    padding: "1%",
+    border: `1px solid ${turquoise} `,
   },
   button: {
     margin: "5% 0",
@@ -272,6 +295,8 @@ const theme = {
     flexDirection: "column",
     justifyContent: "center",
     borderRadius: " 5px",
+    boxShadow:
+      "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
   },
 
   pageDescription: {
@@ -465,6 +490,16 @@ const theme = {
     color: "inherit",
     fontSize: "2.5rem",
     marginLeft: "1.5rem",
+  },
+
+  contactsWrapper: {
+    height: "100%",
+  },
+
+  errorDiv: {
+    margin: "0 !important",
+    color: "red",
+    textAlign: "initial",
   },
 };
 export default theme;
