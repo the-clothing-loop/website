@@ -312,7 +312,7 @@
   }
 
   form.contact-form > * {
-    padding: 2% 0;
+    margin: 3% 0;
   }
 
   .landing-page-wrapper {
@@ -421,6 +421,10 @@
     padding: 10px !important;
     margin-left: 30px !important;
     font-family: "Montserrat", sans-serif;
+  }
+
+  .MuiInput-underline::before {
+    border-bottom: 1px solid #518d7e !important;
   }
 
   .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {

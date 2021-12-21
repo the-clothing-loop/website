@@ -20,6 +20,7 @@ import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
 import Contacts from "./pages/Contacts.js";
 import LandingPage from "./pages/LandingPage";
+import MessageSubmitted from "./pages/MessageSubmitted";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -39,6 +40,12 @@ const App = () => {
               <Switch>
                 <Route exact path="/about" component={Home} />
                 <Route exact path="/thankyou" component={Thankyou} />
+                <Route
+                  exact
+                  path="/message-submitted"
+                  component={MessageSubmitted}
+                />
+
                 <Route
                   exact
                   path="/users/login-email-finished/:email"
