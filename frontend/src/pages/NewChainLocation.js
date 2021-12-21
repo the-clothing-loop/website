@@ -1,5 +1,5 @@
 // React / plugins
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { Redirect, useParams } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
