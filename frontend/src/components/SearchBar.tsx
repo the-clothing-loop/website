@@ -82,7 +82,7 @@ const SearchBar: React.FC<IProps> = ({
       filterData(filteredChains);
 
       //if no search term, show nothing
-      if (searchTerm == "") {
+      if (searchTerm === "") {
         return setValue(null);
       }
 
@@ -126,7 +126,7 @@ const SearchBar: React.FC<IProps> = ({
   };
 
   return (
-    <div className={"search-bar-container"}>
+    <div>
       <Paper component="form" className={classes.root2}>
         <TextField
           id="outlined-basic"

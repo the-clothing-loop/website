@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, FunctionComponent } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { useTranslation } from "react-i18next";

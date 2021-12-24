@@ -30,8 +30,9 @@ const TextFormField = ({ name, inputRef, email }) => {
 
 const PhoneFormField = ({ label, ...props }) => {
   const { t } = useTranslation();
+  const classes = makeStyles(theme)();
 
-  const [field, meta] = useField(props);
+  const [field] = useField(props);
   return (
     <div>
       <MuiPhoneInput
@@ -43,13 +44,14 @@ const PhoneFormField = ({ label, ...props }) => {
         htmlFor={field.name}
         {...field}
         {...props}
+        className={classes.textField}
       ></MuiPhoneInput>
     </div>
   );
 };
 
 const TextForm = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
+  const [field] = useField(props);
   const { t } = useTranslation();
 
   return (
@@ -66,11 +68,10 @@ const TextForm = ({ label, ...props }) => {
 };
 
 const CheckboxField = ({ required, label, ...props }) => {
-  const [field, meta] = useField(props);
-  const { t } = useTranslation();
+  const [field] = useField(props);
   const classes = makeStyles(theme)();
   return (
-    <FormGroup >
+    <FormGroup>
       <FormControlLabel
         control={
           <Checkbox
@@ -89,7 +90,7 @@ const CheckboxField = ({ required, label, ...props }) => {
 };
 
 const TextArea = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
+  const [field] = useField(props);
   return (
     <TextField
       id="outlined-multiline-static"

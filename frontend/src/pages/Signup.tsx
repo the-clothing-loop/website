@@ -8,21 +8,18 @@ import { Helmet } from "react-helmet";
 import img from "../images/Naamloze-presentatie.jpeg";
 import GeocoderSelector from "../components/GeocoderSelector";
 import SizesDropdown from "../components/SizesDropdown";
+import PopoverOnHover from "../components/Popover";
 
 // Material UI
 import Typography from "@material-ui/core/Typography";
 import { Alert } from "@material-ui/lab";
 import Button from "@material-ui/core/Button";
-import {
-  makeStyles
-} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
 import { TwoColumnLayout } from "../components/Layouts";
 
 // Project resources
-import {
-  PhoneFormField,
-  TextForm} from "../components/FormFields";
+import { PhoneFormField, TextForm } from "../components/FormFields";
 import { createUser } from "../util/firebase/user";
 import { getChain } from "../util/firebase/chain";
 import { IChain } from "../types";
@@ -156,14 +153,19 @@ const Signup = () => {
                     onResult={setGeocoderResult}
                   />
 
-                  <SizesDropdown
-                    className={classes.formSelect}
-                    setSizes={setSelectedSizes}
-                    genders={chainGender}
-                    sizes={selectedSizes}
-                    label={t("interestedSizes")}
-                    fullWidth={true}
-                  />
+                  <div className={classes.sizesDropdownWrapper}>
+                    <SizesDropdown
+                      className={classes.formSelect}
+                      setSizes={setSelectedSizes}
+                      genders={chainGender}
+                      sizes={selectedSizes}
+                      label={t("interestedSizes")}
+                      fullWidth={true}
+                    />
+                    <PopoverOnHover
+                      message={"please select the sizes you are interested in."}
+                    />
+                  </div>
 
                   <FormActions handleClick={handleClickAction} />
 
