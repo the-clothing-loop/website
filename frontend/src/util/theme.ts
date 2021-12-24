@@ -1,6 +1,3 @@
-import { findByLabelText } from "@testing-library/dom";
-import { url } from "inspector";
-
 const black = "#3C3C3B";
 const white = "#ffff";
 const teal = "#48808B";
@@ -37,6 +34,7 @@ const theme = {
     fontSize: 0.8,
   },
   p: {
+    fontFamily: "Montserrat !important",
     fontSize: "0.875rem",
   },
   a: {
@@ -155,8 +153,9 @@ const theme = {
   },
 
   formGrid: {
-    display: "grid",
-    gridTemplateRows: "58px 58px 58px 58px 58px auto",
+    padding: "2% 0",
+    display: "flex",
+    flexDirection: "column",
   },
 
   threeColumnsForm: {
@@ -180,10 +179,8 @@ const theme = {
     padding: "2% 5%",
   },
   formContainer: {
-    margin: " 0 5%",
+    margin: " 1% 5%",
     position: "relative",
-    top: "50%",
-    transform: "translateY(-50%)",
   },
   contactFormWrapper: {
     height: "100%",
@@ -222,7 +219,7 @@ const theme = {
     fontSize: "2rem ",
   },
   textField: {
-    margin: "5px auto 5px auto",
+    marginTop: "5px",
     border: "none",
   },
 
@@ -396,7 +393,7 @@ const theme = {
     margin: "5px auto 5px auto",
     border: "none",
     width: "100%",
-    borderBottom: "1px solid rgba(255, 255, 255, 0.7);",
+    borderBottom: `1px solid ${turquoise}`,
     borderRadius: "0 !important",
     padding: "0 ",
     marginTop: "16px",
@@ -500,6 +497,41 @@ const theme = {
     margin: "0 !important",
     color: "red",
     textAlign: "initial",
+  },
+  searchBarContainer: {
+    padding: "2% 0%",
+  },
+  customLabelStyle: {
+    fontFamily: "Montserrat !important",
+  },
+
+  activeIcon: {
+    color: `${yellow} !important`,
+  },
+
+  completedIcon: {
+    color: `${yellow} !important`,
+  },
+
+  stepLabel: {
+    fontFamily: "Montserrat",
+  },
+
+  sizesFormWrapper: {
+    display: "flex !important",
+    flexDirection: "row !important",
+  },
+  popoverWrapper: {
+    display: "flex",
+    alignItems: "center",
+    paddingTop: "10px",
+  },
+
+  sizesDropdownWrapper: {
+    display: "flex",
+  },
+  icon: {
+    color: grey,
   },
 };
 export default theme;

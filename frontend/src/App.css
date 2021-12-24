@@ -7,19 +7,18 @@
 
   html,
   body {
-    font-family: "Montserrat";
+    font-family: "Montserrat" !important;
     background-color: rgb(245, 245, 245);
     margin: 0;
   }
 
   .container {
-    height: 85vh;
+    min-height: 85vh;
   }
 
   .app {
     position: relative;
     min-height: 100vh;
-    padding-bottom: 10rem;
   }
 
   a {
@@ -345,7 +344,7 @@
     display: flex;
     flex-direction: column;
     position: absolute;
-    bottom: 35%;
+    bottom: 25%;
     right: 10px;
   }
 
@@ -494,7 +493,7 @@
 
   div.geocoding-map > .mapboxgl-control-container > .mapboxgl-ctrl-top-left {
     width: 100% !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+    border-bottom: 1px solid #518d7e;
   }
 
   div.geocoding-map
@@ -529,6 +528,10 @@
 
   button.mapboxgl-ctrl-geocoder--button {
     background-color: #d5ecdf !important;
+  }
+
+  .MuiStepLabel-label {
+    font-family: "Montserrat" !important;
   }
 }
 

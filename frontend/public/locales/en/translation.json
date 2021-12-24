@@ -61,5 +61,7 @@
   "youWillReceiveAnEmail": "You will shortly receive a confirmation email with the next steps.",
   "yourMessage": "Your message",
   "thankYouForYourMessage": "Thank you for your message",
-  "weWillReplySoon": "Someone from our team will be in touch with you soon"
+  "weWillReplySoon": "Someone from our team will be in touch with you soon",
+  "selectLoopLocation": "Select Loop location",
+  "confirmation": "Confirmation"
 }

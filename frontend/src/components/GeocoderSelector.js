@@ -5,9 +5,6 @@ import MapGL from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
 import { useTranslation } from "react-i18next";
 
-//material UI
-import Typography from "@material-ui/core/Typography";
-
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
 
 const GeocoderSelector = ({ onResult, ...props }) => {
