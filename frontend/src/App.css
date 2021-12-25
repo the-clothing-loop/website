@@ -526,6 +526,12 @@
   button.mapboxgl-ctrl-geocoder--button {
     background-color: #d5ecdf !important;
   }
+
+  .mapboxgl-ctrl-geocoder {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 0.5rem;
+  }
 }
 
 @media only screen and (max-width: 480px) {

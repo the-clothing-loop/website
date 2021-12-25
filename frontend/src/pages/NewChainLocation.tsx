@@ -9,13 +9,12 @@ import Grid from "@material-ui/core/Grid";
 
 // Project resources
 import theme from "../util/theme";
+import Geocoding from "./Geocoding";
 // import { TwoColumnLayout } from "../components/Layouts";
 import { IChain, IViewPort } from "../types";
 import { number } from "yup/lib/locale";
 
-const accessToken = {
-  mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
-};
+const accessToken = process.env.REACT_APP_MAPBOX_KEY || '';
 
 type Coordinates = {
   longitude: number;
@@ -60,11 +59,7 @@ const NewChainLocation = () => {
     );
   };
 
-  const handleMapClick = (evt: MapEvent) => {
-    const longitude = evt.lngLat[0];
-    const latitude = evt.lngLat[1];
-
-    setLoopLocation({ longitude: longitude, latitude: latitude });
+  const flyToLocation = (longitude: number, latitude: number) => {
     setViewport({
       ...viewport,
       longitude: longitude,
@@ -73,7 +68,18 @@ const NewChainLocation = () => {
       transitionDuration: 500,
       transitionInterpolator: new FlyToInterpolator(),
     });
-  }
+  };
+
+  const handleGeolocationResult = ({result: {center}}: {result: {center: [number, number]} }) => {
+    flyToLocation(...center);
+  };
+
+  const handleMapClick = (evt: MapEvent) => {
+    const longitude = evt.lngLat[0];
+    const latitude = evt.lngLat[1];
+    setLoopLocation({ longitude: longitude, latitude: latitude });
+    flyToLocation(longitude, latitude);
+  };
 
   // we could use the TwoColumnLayout here
   return (
@@ -86,14 +92,16 @@ const NewChainLocation = () => {
       <div className={classes.formContainer}>
       <Grid container className={classes.form}>
         <Grid item sm>
+          <Geocoding onResult={handleGeolocationResult} />
           <ReactMapGL
-            mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
+            mapboxApiAccessToken={accessToken}
             mapStyle="mapbox://styles/mapbox/light-v10"
             {...viewport}
             onViewportChange={(newView: IViewPort) => setViewport(newView)}
             onClick={handleMapClick}
             getCursor={() => "pointer"}
             className={classes.newLoopMap}
+            width="100%"
           >
             {loopLocation !== null ? (
               <SVGOverlay redraw={redrawLoop} />
@@ -106,6 +114,6 @@ const NewChainLocation = () => {
     </div>
     </>
   );
-}
+};
 
 export default NewChainLocation;

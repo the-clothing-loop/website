@@ -4,7 +4,7 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
 
-const Geocoding = () => {
+const Geocoding = ({onResult}: {onResult: (event: any) => void}) => {
   const [address, setAddress] = useState<string>();
   const [results, setResults] = useState({});
 
@@ -24,6 +24,7 @@ const Geocoding = () => {
 
       // Add geocoder result to container.
       geocoder.on("result", (e: any) => {
+        onResult(e);
         setAddress(e.result.place_name);
       });
     }
