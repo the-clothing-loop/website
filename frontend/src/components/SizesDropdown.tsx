@@ -55,9 +55,9 @@ const SizesDropdown: React.FC<IProps> = ({
         id="demo-multiple-checkbox"
         multiple
         displayEmpty
+        variant="standard"
         value={selectedSizes}
         onChange={(e: any) => handleChange(e, setSelectedSizes)}
-        input={<OutlinedInput label={label} />}
         renderValue={(selected) => {
           if (selected.length === 0) {
             return <em className={classes.em}>{label}</em>;

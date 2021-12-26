@@ -15,6 +15,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import SizesDropdown from "./SizesDropdown";
+import InputAdornment from "@mui/material/InputAdornment";
+import Search from "@mui/icons-material/Search";
 
 //project resources
 import theme from "../util/theme";
@@ -131,10 +133,17 @@ const SearchBar: React.FC<IProps> = ({
         <TextField
           id="outlined-basic"
           placeholder={t("searchLocation")}
-          variant="outlined"
+          variant="standard"
           className={classes.input}
           onChange={onChange}
           value={searchTerm}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+          }}
         />
 
         <FormControl
@@ -147,9 +156,9 @@ const SearchBar: React.FC<IProps> = ({
             labelId="demo-multiple-checkbox-label"
             id="demo-multiple-checkbox"
             multiple
+            variant="standard"
             value={selectedGenders}
             onChange={(e: any) => handleChange(e, setSelectedGenders)}
-            input={<OutlinedInput label="Categories" />}
             renderValue={(selected) => {
               if (selected.length === 0) {
                 return <em className={classes.em}>{t("categories")}</em>;
@@ -159,7 +168,7 @@ const SearchBar: React.FC<IProps> = ({
             }}
           >
             {categories.genders.map((value: any) => (
-              <MenuItem key={value} value={value} className={"menu-item-here"}>
+              <MenuItem key={value} value={value}>
                 <Checkbox
                   className={classes.checkbox}
                   checked={selectedGenders.includes(value) ? true : false}

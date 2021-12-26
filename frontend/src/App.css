@@ -1,4 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+@font-face {
+  font-family: "Montserrat";
+  src: url("../src/fonts/Montserrat.ttf");
+}
 
 @media only screen and (min-width: 481px) {
   * {
@@ -23,7 +26,7 @@
 
   a {
     text-decoration: none;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat";
   }
 
   p.explanatory-text {
@@ -324,7 +327,7 @@
   }
 
   .landing-page-logo {
-    font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat";
     color: #ffffff;
     position: absolute;
     font-size: 3rem !important;
@@ -401,12 +404,12 @@
   }
 
   span.css-10hburv-MuiTypography-root {
-    font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat";
     font-size: 0.875rem;
   }
 
   div.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
-    font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat";
     text-transform: capitalize;
   }
 
@@ -419,7 +422,7 @@
   input.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
     padding: 10px !important;
     margin-left: 30px !important;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat";
   }
 
   .MuiInput-underline::before {
@@ -452,7 +455,7 @@
 
   input#outlined-basic {
     padding: 2%;
-    margin-left: 30px;
+    font-family: "Montserrat";
   }
 
   div.geocoder-wrapper > canvas.mapboxgl-canvas,
@@ -506,7 +509,7 @@
     border-radius: 0 !important;
     margin: 0 !important;
     max-width: 100% !important;
-    font-family: "Montserrat", sans-serif !important;
+    font-family: "Montserrat" !important;
     font-size: 1rem !important;
   }
 
@@ -554,7 +557,7 @@
 
   .landing-page-wrapper h1 {
     text-transform: uppercase;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat";
     font-weight: 300;
     font-size: 1.8rem;
     line-height: 1.167;
@@ -564,7 +567,7 @@
   }
 
   .landing-page-wrapper h4 {
-    font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat";
     font-weight: 300;
     font-size: 1.2rem;
     line-height: 1.167;

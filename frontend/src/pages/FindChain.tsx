@@ -128,6 +128,7 @@ const FindChain = () => {
         setViewport={setViewport}
       />
       <ReactMapGL
+        className={"main-map"}
         mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
         mapStyle="mapbox://styles/mapbox/light-v10"
         {...viewport}
