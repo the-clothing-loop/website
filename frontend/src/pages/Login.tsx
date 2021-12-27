@@ -109,8 +109,16 @@ const Login = () => {
             </Form>
           )}
         </Formik>
-        {error && <Alert severity="error">{error}</Alert>}
-        {submitted && <Alert severity="info">{t("loginEmailSent")}</Alert>}
+        {error && (
+          <Alert className={classes.errorAlert} severity="error">
+            {error}
+          </Alert>
+        )}
+        {submitted && (
+          <Alert className={classes.infoAlert} severity="info">
+            {t("loginEmailSent")}
+          </Alert>
+        )}
       </TwoColumnLayout>
     </>
   );

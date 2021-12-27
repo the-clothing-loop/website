@@ -120,7 +120,6 @@ const theme = {
 
   submitBtn: {
     alignSelf: "stretch",
-    margin: "1%",
 
     "&:hover": {
       backgroundColor: bronze,
@@ -152,7 +151,7 @@ const theme = {
   },
 
   formGrid: {
-    padding: "2% 0",
+    padding: "2% 5%",
     display: "flex",
     flexDirection: "column",
   },
@@ -284,10 +283,14 @@ const theme = {
   },
 
   pageGrid: {
+    transform: " translate(-50%, -50%)",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     backgroundColor: aqua,
     textAlign: "center",
-    height: "50vh",
-    margin: " 5%",
+    height: "80vh",
+    width: "80%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -307,6 +310,7 @@ const theme = {
 
   /*styling for table*/
   root2: {
+    padding: "1% 0",
     backgroundColor: teal,
     alignItems: "center",
     borderRadius: "0px",
@@ -326,6 +330,10 @@ const theme = {
     "& .css-1480iag-MuiInputBase-root-MuiInput-root::after": {
       borderBottom: "none",
     },
+
+    "& > *": {
+      marginLeft: "1% !important",
+    },
   },
 
   checkbox: {
@@ -337,7 +345,6 @@ const theme = {
   },
 
   input: {
-    margin: "1% !important",
     backgroundColor: "#fff",
     minWidth: "30rem",
     width: "30rem",
@@ -353,6 +360,10 @@ const theme = {
       "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
   },
 
+  inputAdornment: {
+    paddingLeft: "2%",
+  },
+
   iconButton: {
     padding: 10,
   },
@@ -360,7 +371,7 @@ const theme = {
   select: {
     borderRadius: "4px",
     backgroundColor: "#fff",
-    width: "15rem",
+    width: "100%",
     boxShadow:
       "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
 
@@ -388,10 +399,12 @@ const theme = {
     margin: "5px auto 5px auto",
     border: "none",
     width: "100%",
-    borderBottom: `1px solid ${turquoise}`,
     borderRadius: "0 !important",
     padding: "0 ",
     marginTop: "16px",
+  },
+  formControl: {
+    width: "15rem",
   },
 
   label: {
@@ -520,13 +533,38 @@ const theme = {
     display: "flex",
     alignItems: "center",
     paddingTop: "10px",
+    position: "absolute",
+    left: "100%",
+    top: "20%",
   },
 
   sizesDropdownWrapper: {
     display: "flex",
+    position: "relative",
   },
   icon: {
     color: grey,
+  },
+
+  confirmationWrapper: {
+    padding: "0 15%",
+
+    " & > div ": {
+      padding: "5% 0",
+    },
+  },
+
+  infoAlert: {
+    backgroundColor: "rgb(229, 246, 253)",
+    color: " rgb(1, 67, 97)",
+  },
+  errorAlert: {
+    backgroundColor: "rgb(253, 237, 237)",
+    color: "rgb(95, 33, 32)",
+  },
+  successAlert: {
+    backgroundColor: "rgb(237, 247, 237)",
+    color: "rgb(30, 70, 32)",
   },
 };
 export default theme;

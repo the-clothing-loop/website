@@ -139,17 +139,17 @@ const SearchBar: React.FC<IProps> = ({
           value={searchTerm}
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment
+                position="start"
+                className={classes.inputAdornment}
+              >
                 <Search />
               </InputAdornment>
             ),
           }}
         />
 
-        <FormControl
-          className={classes.formControl}
-          style={{ marginRight: "1%" }}
-        >
+        <FormControl className={classes.formControl}>
           <Select
             displayEmpty
             className={classes.select}
@@ -182,14 +182,16 @@ const SearchBar: React.FC<IProps> = ({
           </Select>
         </FormControl>
 
-        <SizesDropdown
-          className={classes.select}
-          setSizes={setSelectedSizes}
-          genders={selectedGenders}
-          sizes={selectedSizes}
-          label={t("sizes")}
-          fullWidth={false}
-        />
+        <div className={classes.formControl}>
+          <SizesDropdown
+            className={classes.select}
+            setSizes={setSelectedSizes}
+            genders={selectedGenders}
+            sizes={selectedSizes}
+            label={t("sizes")}
+            fullWidth={false}
+          />
+        </div>
 
         <Button
           className={classes.submitBtn}
