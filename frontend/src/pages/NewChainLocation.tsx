@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import ReactMapGL, { MapEvent, SVGOverlay, FlyToInterpolator } from "react-map-gl";
 import destination from "@turf/destination";
+import { Form, Formik } from "formik";
 
 // Material UI
-import { makeStyles } from "@material-ui/core";
+import { Button, makeStyles, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 
 // Project resources
@@ -13,6 +16,10 @@ import Geocoding from "./Geocoding";
 // import { TwoColumnLayout } from "../components/Layouts";
 import { IChain, IViewPort } from "../types";
 import { number } from "yup/lib/locale";
+import { TextForm, NumberField } from "../components/FormFields";
+import SizesDropdown from "../components/SizesDropdown";
+import FormActions from "../components/formActions";
+import categories from "../util/categories";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || '';
 
@@ -23,6 +30,8 @@ type Coordinates = {
 
 const NewChainLocation = () => {
   const classes = makeStyles(theme as any)();
+  const { t } = useTranslation();
+  const history = useHistory();
   const [loopLocation, setLoopLocation] = useState<Coordinates | null>(null);
   const [viewport, setViewport] = useState<IViewPort>({
     longitude: 0,
@@ -31,6 +40,7 @@ const NewChainLocation = () => {
     height: "40vh",
     zoom: 1,
   });
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
   const redrawLoop = ({ project }: {project: any}) => {
     const centerCoords = [loopLocation!.longitude, loopLocation!.latitude];
@@ -88,30 +98,97 @@ const NewChainLocation = () => {
         <title>Clothing Loop | Create New Loop</title>
         <meta name="description" content="Create New Loop" />
       </Helmet>
+      <Formik
+        initialValues={{}}
+        onSubmit={() => {}}
+      >
+        <div className={classes.formContainer}>
+          <Grid container className={classes.form}>
+            <Grid item xs={12}>
+              <Typography variant="h3" className={classes.pageTitle}>
+                {t("startNewLoop")}
+              </Typography>
+              <Typography>
+                Click on the map to set the approximate location of the loop
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Geocoding onResult={handleGeolocationResult} />
+              <ReactMapGL
+                mapboxApiAccessToken={accessToken}
+                mapStyle="mapbox://styles/mapbox/light-v10"
+                {...viewport}
+                onViewportChange={(newView: IViewPort) => setViewport(newView)}
+                onClick={handleMapClick}
+                getCursor={() => "pointer"}
+                className={classes.newLoopMap}
+                width="100%"
+              >
+                {loopLocation !== null ? (
+                  <SVGOverlay redraw={redrawLoop} />
+                ) : null}
+              </ReactMapGL>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form >
+                <Grid container>
+                  <Grid item xs={9}>
+                    <TextForm
+                      required
+                      label="Loop name"
+                      name="loopName"
+                      type="text"
+                      className={classes.textField}
+                      helperText=""
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <NumberField
+                      required
+                      label="Radius (km)"
+                      name="radius"
+                      className={classes.textField}
+                      type="number"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextForm
+                      required
+                      label="Description"
+                      name="description"
+                      className={classes.textField}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <SizesDropdown
+                      className={classes.formSelect}
+                      setSizes={setSelectedSizes}
+                      genders={categories.genders}
+                      sizes={selectedSizes}
+                      label={t("interestedSizes")}
+                      fullWidth={true}
+                    />
+                  </Grid>
+                </Grid>
 
-      <div className={classes.formContainer}>
-      <Grid container className={classes.form}>
-        <Grid item sm>
-          <Geocoding onResult={handleGeolocationResult} />
-          <ReactMapGL
-            mapboxApiAccessToken={accessToken}
-            mapStyle="mapbox://styles/mapbox/light-v10"
-            {...viewport}
-            onViewportChange={(newView: IViewPort) => setViewport(newView)}
-            onClick={handleMapClick}
-            getCursor={() => "pointer"}
-            className={classes.newLoopMap}
-            width="100%"
-          >
-            {loopLocation !== null ? (
-              <SVGOverlay redraw={redrawLoop} />
-            ) : null}
-          </ReactMapGL>
-        </Grid>
-        <Grid item sm>
-        </Grid>
-      </Grid>
-    </div>
+                <div className={classes.formSubmitActions}>
+                  <Button
+                    type="submit"
+                    className={classes.buttonOutlined}
+                  >
+                    {" "}
+                    {t("back")}
+                  </Button>
+                  <Button type="submit" className={classes.buttonContained}>
+                    {t("next")}
+                  </Button>
+                </div>
+              </Form>
+
+            </Grid>
+          </Grid>
+        </div>
+      </Formik>
     </>
   );
 };

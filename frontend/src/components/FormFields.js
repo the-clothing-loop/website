@@ -63,6 +63,25 @@ const TextForm = ({ label, ...props }) => {
   );
 };
 
+const NumberField = ({ label, isInteger=true, ...props}) => {
+  const [field, meta] = useField(props);
+  const { t } = useTranslation();
+  const pattern = `[0-9${isInteger ? '' : '\.,'}]*`;
+
+  return (
+    <div>
+      <TextField
+        {...field}
+        {...props}
+        autoComplete="off"
+        label={t(label)}
+        fullWidth
+        inputProps={{ inputMode: 'numeric', pattern:  pattern }}
+      />
+    </div>
+  );
+}
+
 const CheckboxField = ({ required, label, ...props }) => {
   const [field, meta] = useField(props);
   const { t } = useTranslation();
@@ -101,4 +120,4 @@ const TextArea = ({ label, ...props }) => {
   );
 };
 
-export { TextFormField, PhoneFormField, TextForm, CheckboxField, TextArea };
+export { TextFormField, PhoneFormField, TextForm, CheckboxField, TextArea, NumberField};
