@@ -7,7 +7,7 @@
 
   html,
   body {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     background-color: rgb(245, 245, 245);
     margin: 0;
   }
@@ -24,7 +24,7 @@
 
   a {
     text-decoration: none;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
   }
 
   p.explanatory-text {
@@ -71,33 +71,6 @@
 
   .nav-container {
     margin: auto;
-  }
-
-  .chain-page-details {
-    border-bottom: 1px solid #e8eaed;
-    border-top: 1px solid #e8eaed;
-    margin-top: 8px;
-    position: relative;
-    border-radius: 8px;
-    background-color: rgb(255, 255, 255);
-    height: max-content;
-  }
-
-  .chain-members-page {
-    display: grid;
-    grid-template-columns: 30% auto;
-    column-gap: 1%;
-    padding: 1%;
-  }
-
-  .admin-list {
-    border-bottom: 1px solid #e8eaed;
-    border-top: 1px solid #e8eaed;
-    margin-top: 8px;
-    position: relative;
-    padding: 0 1%;
-    border-radius: 8px;
-    background-color: rgb(255, 255, 255);
   }
 
   .mapboxgl-popup-content {
@@ -258,16 +231,11 @@
     margin-right: 5%;
   }
 
-  .chain-edit-btn {
-    position: relative;
-    text-align: right;
-  }
-
-  input[type="checkbox"].map-cat-input {
+  input[type='checkbox'].map-cat-input {
     display: none;
   }
 
-  input[type="checkbox"].map-cat-input + label {
+  input[type='checkbox'].map-cat-input + label {
     -webkit-transition: all 500ms ease;
     -moz-user-select: -moz-none;
     -ms-user-select: none;
@@ -286,7 +254,7 @@
     margin: 0 5px;
   }
 
-  input[type="checkbox"].map-cat-input:checked + label {
+  input[type='checkbox'].map-cat-input:checked + label {
     -webkit-transition: all 500ms ease;
     transition: all 500ms ease;
     background-color: #067f8c;
@@ -325,7 +293,7 @@
   }
 
   .landing-page-logo {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     color: #ffffff;
     position: absolute;
     font-size: 3rem !important;
@@ -402,12 +370,12 @@
   }
 
   span.css-10hburv-MuiTypography-root {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 0.875rem;
   }
 
   div.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     text-transform: capitalize;
   }
 
@@ -420,11 +388,11 @@
   input.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
     padding: 10px !important;
     margin-left: 30px !important;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
   }
 
   .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    text-transform: "capitalize";
+    text-transform: 'capitalize';
   }
 
   div#demo-multiple-checkbox {
@@ -503,7 +471,7 @@
     border-radius: 0 !important;
     margin: 0 !important;
     max-width: 100% !important;
-    font-family: "Montserrat", sans-serif !important;
+    font-family: 'Montserrat', sans-serif !important;
     font-size: 1rem !important;
   }
 
@@ -547,7 +515,7 @@
 
   .landing-page-wrapper h1 {
     text-transform: uppercase;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 300;
     font-size: 1.8rem;
     line-height: 1.167;
@@ -557,7 +525,7 @@
   }
 
   .landing-page-wrapper h4 {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 300;
     font-size: 1.2rem;
     line-height: 1.167;
