@@ -1,17 +1,17 @@
-import db from "./firebaseConfig";
-import { IUser } from "../../types";
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/functions";
+import db from './firebaseConfig';
+import { IUser } from '../../types';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/functions';
 
 const functions = firebase
   .app()
   .functions(process.env.REACT_APP_FIREBASE_REGION);
 
-const createUserCallable = functions.httpsCallable("createUser");
-const updateUserCallable = functions.httpsCallable("updateUser");
-const getUserByIdCallable = functions.httpsCallable("getUserById");
-const getUserByEmailCallable = functions.httpsCallable("getUserByEmail");
+const createUserCallable = functions.httpsCallable('createUser');
+const updateUserCallable = functions.httpsCallable('updateUser');
+const getUserByIdCallable = functions.httpsCallable('getUserById');
+const getUserByEmailCallable = functions.httpsCallable('getUserByEmail');
 
 interface ICreateUser {
   email: string;
@@ -56,8 +56,8 @@ const getUserByEmail = async (email: string): Promise<IUser> => {
 const getUsersForChain = async (chainId: string): Promise<IUser[]> => {
   const idToken = await firebase.auth().currentUser?.getIdToken(true);
   const snapshot = await db
-    .collection("users")
-    .where("chainId", "==", chainId)
+    .collection('users')
+    .where('chainId', '==', chainId)
     .get();
   var userRetrieval = snapshot.docs.map(
     async (doc: any): Promise<IUser> =>
@@ -68,6 +68,10 @@ const getUsersForChain = async (chainId: string): Promise<IUser[]> => {
 
 const updateUser = async (user: IUser): Promise<void> => {
   await updateUserCallable(user);
+};
+
+export const removeUserFromChain = async (userId: string): Promise<void> => {
+  return db.collection('users').doc(userId).update({ chainId: null });
 };
 
 export {
