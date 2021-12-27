@@ -11,11 +11,11 @@ import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
 
 const LanguageSwitcher = () => {
-  const languages = ["en", "nl"];
+  const languages = ["english", "dutch"];
   const classes = makeStyles(theme as any)();
 
 
-  const [selected, setSelected] = useState("en");
+  const [selected, setSelected] = useState("english");
 
   const handleChange = (e: any) => {
     let language = e.target.value;
