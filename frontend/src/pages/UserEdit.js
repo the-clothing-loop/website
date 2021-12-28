@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -6,7 +6,6 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 // Material UI
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core";
@@ -30,9 +29,6 @@ const UserEdit = () => {
   const [chainId, setChainId] = useState();
   const classes = makeStyles(theme)();
   const history = useHistory();
-  const [geocoderResult, setGeocoderResult] = useState({
-    result: { place_name: "" },
-  });
   const [address, setAddress] = useState();
   const [uid, setUid] = useState();
   const [submitted, setSubmitted] = useState(false);

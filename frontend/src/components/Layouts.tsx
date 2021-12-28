@@ -20,7 +20,7 @@ const ThreeColumnLayout: React.FC<IThreeColumnsLayout> = ({ children }) => {
   const classes = makeStyles(theme as any)();
 
   return (
-    <Grid container className={classes.form}>
+    <Grid container className={classes.threeColumnsForm}>
       <Grid item sm />
       <Grid item sm>
         {children}
@@ -37,7 +37,7 @@ const TwoColumnLayout: React.FC<ITwoColumnsLayout> = ({ children, img }) => {
     <div className={classes.formContainer}>
       <Grid container className={classes.form}>
         <Grid item sm>
-          <img src={img} className={classes.formImg}/>
+          <img src={img} alt='form-img' className={classes.formImg}/>
         </Grid>
         <Grid item sm>
           {children}

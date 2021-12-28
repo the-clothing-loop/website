@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -14,7 +14,7 @@ import theme from "../util/theme";
 // Project resources
 import { getChain, updateChain } from "../util/firebase/chain";
 import GeocoderSelector from "../components/GeocoderSelector";
-import { TextForm, CheckboxField } from "../components/FormFields";
+import { TextForm } from "../components/FormFields";
 import {ThreeColumnLayout} from "../components/Layouts";
 import categories from "../util/categories";
 

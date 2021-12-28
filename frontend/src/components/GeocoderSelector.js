@@ -1,12 +1,9 @@
-import { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapGL from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
 import { useTranslation } from "react-i18next";
-
-//material UI
-import Typography from "@material-ui/core/Typography";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
 

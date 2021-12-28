@@ -15,6 +15,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import SizesDropdown from "./SizesDropdown";
+import InputAdornment from "@mui/material/InputAdornment";
+import Search from "@mui/icons-material/Search";
 
 //project resources
 import theme from "../util/theme";
@@ -82,7 +84,7 @@ const SearchBar: React.FC<IProps> = ({
       filterData(filteredChains);
 
       //if no search term, show nothing
-      if (searchTerm == "") {
+      if (searchTerm === "") {
         return setValue(null);
       }
 
@@ -126,30 +128,37 @@ const SearchBar: React.FC<IProps> = ({
   };
 
   return (
-    <div className={"search-bar-container"}>
+    <div>
       <Paper component="form" className={classes.root2}>
         <TextField
           id="outlined-basic"
           placeholder={t("searchLocation")}
-          variant="outlined"
+          variant="standard"
           className={classes.input}
           onChange={onChange}
           value={searchTerm}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment
+                position="start"
+                className={classes.inputAdornment}
+              >
+                <Search />
+              </InputAdornment>
+            ),
+          }}
         />
 
-        <FormControl
-          className={classes.formControl}
-          style={{ marginRight: "1%" }}
-        >
+        <FormControl className={classes.formControl}>
           <Select
             displayEmpty
             className={classes.select}
             labelId="demo-multiple-checkbox-label"
             id="demo-multiple-checkbox"
             multiple
+            variant="standard"
             value={selectedGenders}
             onChange={(e: any) => handleChange(e, setSelectedGenders)}
-            input={<OutlinedInput label="Categories" />}
             renderValue={(selected) => {
               if (selected.length === 0) {
                 return <em className={classes.em}>{t("categories")}</em>;
@@ -159,7 +168,7 @@ const SearchBar: React.FC<IProps> = ({
             }}
           >
             {categories.genders.map((value: any) => (
-              <MenuItem key={value} value={value} className={"menu-item-here"}>
+              <MenuItem key={value} value={value}>
                 <Checkbox
                   className={classes.checkbox}
                   checked={selectedGenders.includes(value) ? true : false}
@@ -173,14 +182,16 @@ const SearchBar: React.FC<IProps> = ({
           </Select>
         </FormControl>
 
-        <SizesDropdown
-          className={classes.select}
-          setSizes={setSelectedSizes}
-          genders={selectedGenders}
-          sizes={selectedSizes}
-          label={t("sizes")}
-          fullWidth={false}
-        />
+        <div className={classes.formControl}>
+          <SizesDropdown
+            className={classes.select}
+            setSizes={setSelectedSizes}
+            genders={selectedGenders}
+            sizes={selectedSizes}
+            label={t("sizes")}
+            fullWidth={false}
+          />
+        </div>
 
         <Button
           className={classes.submitBtn}

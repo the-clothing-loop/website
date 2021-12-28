@@ -48,16 +48,16 @@ const SizesDropdown: React.FC<IProps> = ({
   };
 
   return (
-    <FormControl className={classes.formControl} fullWidth={fullWidth}>
+    <FormControl className={classes.sizesFormWrapper} fullWidth={fullWidth}>
       <Select
         className={stylingClass}
         labelId="demo-multiple-checkbox-label"
         id="demo-multiple-checkbox"
         multiple
         displayEmpty
+        variant="standard"
         value={selectedSizes}
         onChange={(e: any) => handleChange(e, setSelectedSizes)}
-        input={<OutlinedInput label={label} />}
         renderValue={(selected) => {
           if (selected.length === 0) {
             return <em className={classes.em}>{label}</em>;
@@ -74,7 +74,7 @@ const SizesDropdown: React.FC<IProps> = ({
             key={value}
             disabled={
               !selectedGenders.includes("children") &&
-              selectedGenders.length != 0
+              selectedGenders.length !== 0
             }
             value={value}
           >
@@ -95,7 +95,7 @@ const SizesDropdown: React.FC<IProps> = ({
         {categories.sizes.slice(3, 7).map((value: any) => (
           <MenuItem
             disabled={
-              !selectedGenders.includes("women") && selectedGenders.length != 0
+              !selectedGenders.includes("women") && selectedGenders.length !== 0
             }
             key={value}
             value={value}
@@ -117,7 +117,7 @@ const SizesDropdown: React.FC<IProps> = ({
         {categories.sizes.slice(7, 11).map((value: any) => (
           <MenuItem
             disabled={
-              !selectedGenders.includes("men") && selectedGenders.length != 0
+              !selectedGenders.includes("men") && selectedGenders.length !== 0
             }
             key={value}
             value={value}
