@@ -8,6 +8,10 @@ const functions = firebase
   .app()
   .functions(process.env.REACT_APP_FIREBASE_REGION);
 
+if (process.env.REACT_APP_USE_EMULATOR == 'true') {
+  functions.useEmulator('localhost', 5001);
+}
+
 const createChainCallable = functions.httpsCallable("createChain");
 const addUserToChainCallable = functions.httpsCallable("addUserToChain");
 

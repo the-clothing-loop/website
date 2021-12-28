@@ -17,4 +17,8 @@ console.debug(firebaseConfig);
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+if (process.env.REACT_APP_USE_EMULATOR == 'true') {
+  db.useEmulator('localhost', 8080);
+}
+
 export default db;
