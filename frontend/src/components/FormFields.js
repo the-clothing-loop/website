@@ -65,7 +65,7 @@ const TextForm = ({ label, ...props }) => {
 };
 
 const NumberField = ({ label, step=1, ...props}) => {
-  const [field, meta] = useField(props);
+  const [field] = useField(props);
   const { t } = useTranslation();
 
   return (
