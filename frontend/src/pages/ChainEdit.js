@@ -16,7 +16,7 @@ import { getChain, updateChain } from "../util/firebase/chain";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { TextForm } from "../components/FormFields";
 import {ThreeColumnLayout} from "../components/Layouts";
-import categories from "../util/categories";
+import categories, { allSizes } from "../util/categories";
 
 const ChainEdit = () => {
   const { t } = useTranslation();
@@ -163,7 +163,7 @@ const ChainEdit = () => {
                     categories
                   </Typography>
                   <div style={{ display: "flex", padding: "2% 0" }}>
-                    {categories.genders.map((value, i) => {
+                    {Object.keys(categories).map((value, i) => {
                       return (
                         <div key={value}>
                           <input
@@ -194,7 +194,7 @@ const ChainEdit = () => {
                     sizes
                   </Typography>
                   <div style={{ display: "flex", padding: "2% 0" }}>
-                    {categories.sizes.map((value, i) => {
+                    {allSizes.map((value, i) => {
                       return (
                         <div key={value}>
                           <input

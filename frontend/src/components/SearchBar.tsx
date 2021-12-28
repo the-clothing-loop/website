@@ -167,7 +167,7 @@ const SearchBar: React.FC<IProps> = ({
               return selected.join(", ");
             }}
           >
-            {categories.genders.map((value: any) => (
+            {Object.keys(categories).map((value: any) => (
               <MenuItem key={value} value={value}>
                 <Checkbox
                   className={classes.checkbox}

@@ -151,11 +151,11 @@ const Signup = () => {
 
                 <GeocoderSelector name="address" onResult={setGeocoderResult} />
 
-                <div className={classes.sizesDropdownWrapper}>
+                <div className={classes.formFieldWithPopover}>
                   <SizesDropdown
                     className={classes.formSelect}
                     setSizes={setSelectedSizes}
-                    genders={categories.genders}
+                    genders={Object.keys(categories)}
                     sizes={selectedSizes}
                     label={t("interestedSizes")}
                     fullWidth={true}
