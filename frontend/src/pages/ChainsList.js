@@ -97,7 +97,7 @@ const ChainsList = () => {
               {chains
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((chain, i) => (
-                  <TableRow key={chain.name}>
+                  <TableRow key={chain.name} className="chains-list__table-row">
                     <TableCell component="th" scope="row">
                       {chain.name}
                     </TableCell>

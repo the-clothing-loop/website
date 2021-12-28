@@ -177,7 +177,6 @@ const theme = {
     padding: " 0 5%",
     position: "relative",
     top: "50%",
-    transform: "translateY(-50%)",
   },
 
   formImg: {

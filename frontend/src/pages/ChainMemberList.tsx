@@ -11,17 +11,17 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Card,
-  CardContent,
   Typography,
   Switch,
   TablePagination,
   TableContainer,
+  FormControlLabel,
 } from '@material-ui/core';
 import {
   EditOutlined as EditIcon,
   Clear as DeleteIcon,
 } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/styles';
 
 // Project resources
 import { getChain, updateChain } from '../util/firebase/chain';
@@ -34,6 +34,36 @@ type TParams = {
 };
 
 const rows = ['name', 'address', 'email', 'phone', 'interested size'];
+
+const useStyles = makeStyles({
+  borderlessTableCellRoot: {
+    borderBottom: 'none',
+  },
+  headRowTableCellRoot: {
+    paddingBottom: 24,
+    borderBottom: '1px solid #C4C4C4',
+    fontSize: 14,
+    fontWeight: 400,
+    lineHeight: '17px',
+    color: '#C4C4C4',
+  },
+  descriptionTypographyRoot: {
+    marginTop: 24,
+    fontSize: 18,
+  },
+  titleTypographyRoot: {
+    textTransform: 'uppercase',
+    fontSize: 36,
+    fontWeight: 700,
+  },
+  fieldSubheadingTypographyRoot: {
+    fontSize: 16,
+    color: '#068C7C',
+  },
+  switchGroupRoot: {
+    marginTop: 32,
+  },
+});
 
 const ChainMemberList = () => {
   const location = useLocation<any>();
@@ -103,17 +133,20 @@ const ChainMemberList = () => {
     setUsers(chainUsers);
   };
 
+  const classes = useStyles();
+
   return !chain || !users ? null : (
     <>
       <Helmet>
         <title>Clothing-Loop | Loop Members</title>
         <meta name="description" content="Loop Members" />
       </Helmet>
-      <Grid container direction="column" style={{ backgroundColor: 'white' }}>
-        <Grid item container spacing={4}>
-          <Grid item sm>
-            <Card raised>
-              <CardContent>
+
+      <div className="chain-member-list">
+        <Grid container direction="column" spacing={6}>
+          <Grid item container spacing={4}>
+            <Grid item sm>
+              <div className="chain-member-list__card">
                 {location.state ? (
                   <p className="success">{location.state.message}</p>
                 ) : null}
@@ -126,15 +159,7 @@ const ChainMemberList = () => {
                   spacing={0}
                 >
                   <Grid item>
-                    <Typography
-                      style={{
-                        textTransform: 'uppercase',
-                        fontWeight: 700,
-                        fontSize: 36,
-                      }}
-                    >
-                      {chain.name}
-                    </Typography>
+                    <Title>{chain.name}</Title>
                   </Grid>
                   <Grid item>
                     <Link to={`/loops/edit/${chainId}`}>
@@ -143,61 +168,46 @@ const ChainMemberList = () => {
                   </Grid>
                 </Grid>
 
-                {chain.description}
+                <Typography
+                  classes={{ root: classes.descriptionTypographyRoot }}
+                >
+                  {chain.description}
+                </Typography>
 
-                <Field
-                  title="Categories"
-                  content={
-                    chain.categories?.gender &&
+                <Field title="Categories">
+                  {chain.categories?.gender &&
                     chain.categories.gender
                       .map((gender, i) => `${gender.toUpperCase()}'S CLOTHING`)
-                      .join(' / ')
-                  }
-                />
-                <Field
-                  title="Sizes"
-                  content={
-                    chain.categories?.size &&
+                      .join(' / ')}
+                </Field>
+                <Field title="Sizes">
+                  {chain.categories?.size &&
                     chain.categories.size
                       .map((size, i) => size.toUpperCase())
-                      .join(' / ')
-                  }
-                />
-                <Field
-                  title="Participants"
-                  content={`${users.length} ${
-                    users.length === 1 ? 'person' : 'people'
-                  }`}
-                />
+                      .join(' / ')}
+                </Field>
+                <Field title="Participants">{`${users.length} ${
+                  users.length === 1 ? 'person' : 'people'
+                }`}</Field>
 
-                <Grid container alignItems="center">
-                  <Grid item>
+                <FormControlLabel
+                  classes={{ root: classes.switchGroupRoot }}
+                  value={publishedValue.published}
+                  control={
                     <Switch
                       checked={publishedValue.published}
                       onChange={handleChange}
                       name="published"
                       inputProps={{ 'aria-label': 'secondary checkbox' }}
                     />
-                  </Grid>
-                  <Grid item>
-                    {publishedValue.published ? (
-                      <Typography variant="body2" component="p">
-                        {'published'}
-                      </Typography>
-                    ) : (
-                      <Typography variant="body2" component="p">
-                        {'unpublished'}
-                      </Typography>
-                    )}
-                  </Grid>
-                  {error ? <Alert severity="error">{error}</Alert> : null}
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item sm>
-            <Card raised>
-              <CardContent>
+                  }
+                  label={publishedValue.published ? 'published' : 'unpublished'}
+                  labelPlacement="end"
+                />
+              </div>
+            </Grid>
+            <Grid item sm>
+              <div className="chain-member-list__card">
                 <Grid
                   container
                   alignItems="center"
@@ -205,15 +215,7 @@ const ChainMemberList = () => {
                   wrap="nowrap"
                 >
                   <Grid item>
-                    <Typography
-                      style={{
-                        textTransform: 'uppercase',
-                        fontWeight: 700,
-                        fontSize: 36,
-                      }}
-                    >
-                      Loop Admin
-                    </Typography>
+                    <Title>Loop Admin</Title>
                   </Grid>
                   <Grid item>
                     <Link to={`/loops/edit/${chainId}`}>
@@ -222,42 +224,30 @@ const ChainMemberList = () => {
                   </Grid>
                 </Grid>
 
-                <Field title="Name" content={admin?.name} />
-                <Field title="Address" content={admin?.address} />
-                <Field title="Email" content={admin?.email} />
-                <Field title="Phone" content={admin?.phoneNumber} />
-              </CardContent>
-            </Card>
+                <Field title="Name">{admin?.name}</Field>
+                <Field title="Address">{admin?.address}</Field>
+                <Field title="Email">{admin?.email}</Field>
+                <Field title="Phone">{admin?.phoneNumber}</Field>
+              </div>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item>
-          <Card raised>
-            <CardContent>
-              <Typography
-                style={{
-                  textTransform: 'uppercase',
-                  fontWeight: 700,
-                  fontSize: 36,
-                }}
-              >
-                Loop Participants
-              </Typography>
+          <Grid item>
+            <div className="chain-member-list__card">
+              <Title>Loop Participants</Title>
 
-              <TableContainer>
+              <TableContainer className="chain-member-list__table--margin">
                 <Table>
                   <TableHead>
-                    <TableRow className="table-row-head">
+                    <TableRow>
                       {rows.map((row, i) => {
                         return (
-                          <TableCell component="th" key={i}>
-                            {row}
-                          </TableCell>
+                          <HeadRowTableCell key={i}>{row}</HeadRowTableCell>
                         );
                       })}
                       {userData?.role === 'admin' && (
                         <>
-                          <TableCell component="th" />
-                          <TableCell component="th" />
+                          <HeadRowTableCell />
+                          <HeadRowTableCell />
                         </>
                       )}
                     </TableRow>
@@ -270,25 +260,29 @@ const ChainMemberList = () => {
                       )
                       .map((u: IUser) => (
                         <TableRow key={u.uid}>
-                          <TableCell>{u.name}</TableCell>
-                          <TableCell>{u.address}</TableCell>
-                          <TableCell>{u.email}</TableCell>
-                          <TableCell>{u.phoneNumber}</TableCell>
-                          <TableCell>{u.interestedSizes?.join(', ')}</TableCell>
+                          <BorderlessTableCell>{u.name}</BorderlessTableCell>
+                          <BorderlessTableCell>{u.address}</BorderlessTableCell>
+                          <BorderlessTableCell>{u.email}</BorderlessTableCell>
+                          <BorderlessTableCell>
+                            {u.phoneNumber}
+                          </BorderlessTableCell>
+                          <BorderlessTableCell>
+                            {u.interestedSizes?.join(', ')}
+                          </BorderlessTableCell>
                           {userData?.role === 'admin' && (
                             <>
-                              <TableCell align="right">
+                              <BorderlessTableCell>
                                 <Link to={`/users/edit/${u.uid}`}>
                                   <EditIcon />
                                 </Link>
-                              </TableCell>
-                              <TableCell align="right">
+                              </BorderlessTableCell>
+                              <BorderlessTableCell>
                                 <DeleteIcon
                                   onClick={() =>
                                     handleRemoveFromChain(u.uid as string)
                                   }
                                 />
-                              </TableCell>
+                              </BorderlessTableCell>
                             </>
                           )}
                         </TableRow>
@@ -306,19 +300,59 @@ const ChainMemberList = () => {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </TableContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
+      </div>
     </>
   );
 };
 
-const Field = ({ title, content }: { title: string; content: any }) => (
-  <>
-    <Typography style={{ fontSize: 16, color: '#068C7C' }}>{title}:</Typography>
-    <div style={{ marginTop: 12, marginLeft: 44 }}>{content}</div>
-  </>
-);
+const Title = ({ children }: { children: any }) => {
+  const classes = useStyles();
+
+  return (
+    <Typography classes={{ root: classes.titleTypographyRoot }}>
+      {children}
+    </Typography>
+  );
+};
+
+const Field = ({ title, children }: { title: string; children: any }) => {
+  const classes = useStyles();
+
+  return (
+    <div className="chain-member-list__field">
+      <Typography classes={{ root: classes.fieldSubheadingTypographyRoot }}>
+        {title}:
+      </Typography>
+      <div className="chain-member-list__field-content">{children}</div>
+    </div>
+  );
+};
+
+const BorderlessTableCell = ({ children, ...props }: { children: any }) => {
+  const classes = useStyles();
+
+  return (
+    <TableCell classes={{ root: classes.borderlessTableCellRoot }} {...props}>
+      {children}
+    </TableCell>
+  );
+};
+
+const HeadRowTableCell = ({ children, ...props }: { children?: any }) => {
+  const classes = useStyles();
+
+  return (
+    <TableCell
+      classes={{ root: classes.headRowTableCellRoot }}
+      variant="head"
+      {...props}
+    >
+      {children}
+    </TableCell>
+  );
+};
 
 export default ChainMemberList;

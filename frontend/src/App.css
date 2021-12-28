@@ -13,7 +13,7 @@
   }
 
   .container {
-    height: 85vh;
+    min-height: 85vh;
   }
 
   .app {
@@ -161,16 +161,8 @@
     height: 20px;
   }
 
-  .MuiGrid-item {
-    padding: 2%;
-  }
-
   .address-details {
     padding: 20% 2%;
-  }
-
-  table {
-    margin-bottom: 2%;
   }
 
   th,
@@ -183,7 +175,7 @@
     background-color: transparent !important;
   }
 
-  tr {
+  .chains-list__table-row {
     background-color: #fff;
   }
 
@@ -534,4 +526,34 @@
     position: relative;
     top: 50%;
   }
+}
+
+.chain-member-list {
+  background-color: #ffffff;
+  padding: 56px 88px;
+}
+
+.chain-member-list__card {
+  padding: 56px 48px 56px 72px;
+  height: 100%;
+  background: #fafafa;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+}
+
+.chain-member-list__field {
+  margin-top: 24px;
+}
+
+.chain-member-list__field-content {
+  margin-top: 12px;
+  margin-left: 44px;
+}
+
+.chain-member-list__field:first-child {
+  margin-top: 0;
+}
+
+.chain-member-list__table--margin {
+  margin-top: 42px;
 }
