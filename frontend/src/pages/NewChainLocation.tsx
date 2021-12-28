@@ -40,7 +40,12 @@ const NewChainLocation = () => {
     height: "40vh",
     zoom: 1,
   });
+  const [loopRadius, setLoopRadius] = useState<number>(3);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+
+  const handleRadiusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLoopRadius(parseFloat(event.target.value));
+  }
 
   const redrawLoop = ({ project }: {project: any}) => {
     const centerCoords = [loopLocation!.longitude, loopLocation!.latitude];
@@ -48,7 +53,7 @@ const NewChainLocation = () => {
     // get the coordinates of a point the right distance away from center
     const boundaryPoint = destination(
       centerCoords,
-      3,  // this should be the selected distance
+      loopRadius,
       0,  // due north
       {units: "kilometers"},
     );
@@ -91,7 +96,6 @@ const NewChainLocation = () => {
     flyToLocation(longitude, latitude);
   };
 
-  // we could use the TwoColumnLayout here
   return (
     <>
       <Helmet>
@@ -147,8 +151,10 @@ const NewChainLocation = () => {
                       required
                       label="Radius (km)"
                       name="radius"
+                      value={loopRadius}
                       className={classes.textField}
-                      type="number"
+                      step={0.1}
+                      onChange={(e: any) => {setLoopRadius(e.target.value)}}
                     />
                   </Grid>
                   <Grid item xs={12}>

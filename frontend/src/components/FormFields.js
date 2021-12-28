@@ -1,6 +1,7 @@
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import theme from "../util/theme";
+import i18n from "../i18n";
 import { useTranslation } from "react-i18next";
 import MuiPhoneInput from "material-ui-phone-number";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -63,10 +64,9 @@ const TextForm = ({ label, ...props }) => {
   );
 };
 
-const NumberField = ({ label, isInteger=true, ...props}) => {
+const NumberField = ({ label, step=1, ...props}) => {
   const [field, meta] = useField(props);
   const { t } = useTranslation();
-  const pattern = `[0-9${isInteger ? '' : '\.,'}]*`;
 
   return (
     <div>
@@ -76,11 +76,20 @@ const NumberField = ({ label, isInteger=true, ...props}) => {
         autoComplete="off"
         label={t(label)}
         fullWidth
-        inputProps={{ inputMode: 'numeric', pattern:  pattern }}
+        type="number"
+        lang={i18n.language}
+        inputProps={{
+          inputMode: 'numeric',
+          step: step,
+          /* Determines use of . or , for decimal separator
+           * Firefox respects "lang" but other browsers use
+           * their configured locale */
+          lang: i18n.language,
+        }}
       />
     </div>
   );
-}
+};
 
 const CheckboxField = ({ required, label, ...props }) => {
   const [field, meta] = useField(props);
