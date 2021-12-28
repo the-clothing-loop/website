@@ -543,7 +543,7 @@ const theme = {
     top: "20%",
   },
 
-  sizesDropdownWrapper: {
+  formFieldWithPopover: {
     display: "flex",
     position: "relative",
   },

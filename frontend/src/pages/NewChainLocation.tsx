@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -7,7 +7,7 @@ import destination from "@turf/destination";
 import { Form, Formik } from "formik";
 
 // Material UI
-import { Button, makeStyles, Typography } from "@material-ui/core";
+import { Button, FormControl, makeStyles, MenuItem, Select, Typography, InputLabel } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 
 // Project resources
@@ -20,6 +20,7 @@ import { TextForm, NumberField } from "../components/FormFields";
 import SizesDropdown from "../components/SizesDropdown";
 import FormActions from "../components/formActions";
 import categories from "../util/categories";
+import PopoverOnHover from "../components/Popover";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || '';
 
@@ -41,10 +42,15 @@ const NewChainLocation = () => {
     zoom: 1,
   });
   const [loopRadius, setLoopRadius] = useState<number>(3);
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [clothingType, setClothingType] = useState<string>('');
+  const [clothingSize, setClothingSize] = useState<string>('');
 
-  const handleRadiusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLoopRadius(parseFloat(event.target.value));
+  const handleClothingTypeChange = (event: any) => {
+    const newType = event.target.value;
+    if ( newType && ! categories[newType].includes(clothingSize)) {
+      setClothingSize('');
+    }
+    setClothingType(newType);
   }
 
   const redrawLoop = ({ project }: {project: any}) => {
@@ -166,14 +172,47 @@ const NewChainLocation = () => {
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <SizesDropdown
-                      className={classes.formSelect}
-                      setSizes={setSelectedSizes}
-                      genders={categories.genders}
-                      sizes={selectedSizes}
-                      label={t("interestedSizes")}
-                      fullWidth={true}
-                    />
+                    <div className={classes.formFieldWithPopover}>
+                      <FormControl fullWidth>
+                        <InputLabel id="clothingTypeLabel">
+                          Select a clothing type
+                        </InputLabel>
+                        <Select
+                          value={clothingType}
+                          labelId="clothingTypeLabel"
+                          onChange={handleClothingTypeChange}
+                        >
+                          {Object.keys(categories).map((category: string) => (
+                            <MenuItem value={category} key={category}>
+                              {category}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <PopoverOnHover message="Some extra information about the field" />
+                    </div>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <div className={classes.formFieldWithPopover}>
+                      <FormControl fullWidth>
+                        <InputLabel id="clothingSizeLabel">
+                          Select a clothing size
+                        </InputLabel>
+                        <Select
+                          value={clothingSize}
+                          labelId="clothingsizeLabel"
+                          onChange={(e: any) => {setClothingSize(e.target.value)}}
+                        >
+                          {clothingType ? (
+                            categories[clothingType].map((size: string) => (
+                            <MenuItem value={size} key={size}>
+                              {size}
+                            </MenuItem>
+                          ))) : null}
+                        </Select>
+                      </FormControl>
+                      <PopoverOnHover message="Some extra information about the field" />
+                    </div>
                   </Grid>
                 </Grid>
 
