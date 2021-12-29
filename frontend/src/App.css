@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 @font-face {
   font-family: "Montserrat";
   src: url("../src/fonts/Montserrat.ttf");
@@ -74,33 +76,6 @@
 
   .nav-container {
     margin: auto;
-  }
-
-  .chain-page-details {
-    border-bottom: 1px solid #e8eaed;
-    border-top: 1px solid #e8eaed;
-    margin-top: 8px;
-    position: relative;
-    border-radius: 8px;
-    background-color: rgb(255, 255, 255);
-    height: max-content;
-  }
-
-  .chain-members-page {
-    display: grid;
-    grid-template-columns: 30% auto;
-    column-gap: 1%;
-    padding: 1%;
-  }
-
-  .admin-list {
-    border-bottom: 1px solid #e8eaed;
-    border-top: 1px solid #e8eaed;
-    margin-top: 8px;
-    position: relative;
-    padding: 0 1%;
-    border-radius: 8px;
-    background-color: rgb(255, 255, 255);
   }
 
   .mapboxgl-popup-content {
@@ -191,16 +166,8 @@
     height: 20px;
   }
 
-  .MuiGrid-item {
-    padding: 2%;
-  }
-
   .address-details {
     padding: 20% 2%;
-  }
-
-  table {
-    margin-bottom: 2%;
   }
 
   th,
@@ -213,7 +180,7 @@
     background-color: transparent !important;
   }
 
-  tr {
+  .chains-list__table-row {
     background-color: #fff;
   }
 
@@ -261,16 +228,11 @@
     margin-right: 5%;
   }
 
-  .chain-edit-btn {
-    position: relative;
-    text-align: right;
-  }
-
-  input[type="checkbox"].map-cat-input {
+  input[type='checkbox'].map-cat-input {
     display: none;
   }
 
-  input[type="checkbox"].map-cat-input + label {
+  input[type='checkbox'].map-cat-input + label {
     -webkit-transition: all 500ms ease;
     -moz-user-select: -moz-none;
     -ms-user-select: none;
@@ -289,7 +251,7 @@
     margin: 0 5px;
   }
 
-  input[type="checkbox"].map-cat-input:checked + label {
+  input[type='checkbox'].map-cat-input:checked + label {
     -webkit-transition: all 500ms ease;
     transition: all 500ms ease;
     background-color: #067f8c;
@@ -431,7 +393,7 @@
   }
 
   .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    text-transform: "capitalize";
+    text-transform: 'capitalize';
   }
 
   div#demo-multiple-checkbox {
@@ -578,4 +540,34 @@
     position: relative;
     top: 50%;
   }
+}
+
+.chain-member-list {
+  background-color: #ffffff;
+  padding: 56px 88px;
+}
+
+.chain-member-list__card {
+  padding: 56px 48px 56px 72px;
+  height: 100%;
+  background: #fafafa;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+}
+
+.chain-member-list__field {
+  margin-top: 24px;
+}
+
+.chain-member-list__field-content {
+  margin-top: 12px;
+  margin-left: 44px;
+}
+
+.chain-member-list__field:first-child {
+  margin-top: 0;
+}
+
+.chain-member-list__table--margin {
+  margin-top: 42px;
 }

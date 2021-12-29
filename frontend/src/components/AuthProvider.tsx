@@ -18,7 +18,11 @@ export const AuthProvider = ({ children }: any) => {
   const [previousUid, setPreviousUid] = useState("");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(async (user: firebase.User | null) => {
+      if (process.env.REACT_APP_USE_EMULATOR == 'true') {
+        firebase.auth().useEmulator('http://localhost:9099');
+      }
+
+      firebase.auth().onAuthStateChanged(async (user: firebase.User | null) => {
       setUser(user);
       setLoading(false);
       if (user?.uid && user?.uid !== previousUid) {
