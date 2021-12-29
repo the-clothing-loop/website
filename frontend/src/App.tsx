@@ -31,6 +31,7 @@ import { useState, useEffect } from "react";
 const theme = createTheme(themeFile);
 
 const App = () => {
+  // TODO: Remove once the new Landing Page is live
   const [showNavbar, setShowNavbar] = useState(true);
   const [showFooter, setShowFooter] = useState(true);
 
@@ -40,6 +41,7 @@ const App = () => {
       setShowFooter(false);
     }
   }, []);
+  // TODO: Remove once the new Landing Page is live
 
   return (
     <MuiThemeProvider theme={theme}>
