@@ -26,16 +26,27 @@ import MessageSubmitted from "./pages/MessageSubmitted";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Logout } from "./pages/Logout";
+import { useState, useEffect } from "react";
 
 const theme = createTheme(themeFile);
 
 const App = () => {
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [showFooter, setShowFooter] = useState(true);
+
+  useEffect(() => {
+    if (window.location.pathname == "/") {
+      setShowNavbar(false);
+      setShowFooter(false);
+    }
+  }, []);
+
   return (
     <MuiThemeProvider theme={theme}>
       <AuthProvider>
         <div className="app">
           <Router>
-            <Navbar />
+            {showNavbar && <Navbar />}
             <div className="container">
               <Switch>
                 <Route exact path="/about" component={Home} />
@@ -81,7 +92,7 @@ const App = () => {
                 <Route exact path="/" component={LandingPage} />
               </Switch>
             </div>
-            <Footer />
+            {showFooter && <Footer />}
           </Router>
         </div>
       </AuthProvider>
