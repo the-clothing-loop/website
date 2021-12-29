@@ -1,6 +1,3 @@
-import { findByLabelText } from "@testing-library/dom";
-import { url } from "inspector";
-
 const black = "#3C3C3B";
 const white = "#ffff";
 const teal = "#48808B";
@@ -10,8 +7,6 @@ const lightBlue = "#98D9DE";
 const turquoise = "#518D7E";
 const bronze = "#C58C41";
 const grey = "#A5A5A5";
-
-const font = ["Montserrat"].join(",");
 
 const theme = {
   palette: {
@@ -31,12 +26,13 @@ const theme = {
   },
 
   typography: {
-    fontFamily: ["Montserrat"].join(","),
+    fontFamily: "Montserrat",
   },
   body2: {
     fontSize: 0.8,
   },
   p: {
+    fontFamily: "Montserrat !important",
     fontSize: "0.875rem",
   },
   a: {
@@ -55,7 +51,7 @@ const theme = {
     fontSize: "1rem",
     lineHeight: "1.4375em",
     letterSpacing: " 0.00938em",
-    fontFamily: font,
+    fontFamily: "Montserrat",
   },
 
   header: {
@@ -71,6 +67,7 @@ const theme = {
       paddingRight: "2%",
       "& div#simple-select": {
         textTransform: "uppercase",
+        fontFamily: "Montserrat",
       },
     },
 
@@ -123,7 +120,6 @@ const theme = {
 
   submitBtn: {
     alignSelf: "stretch",
-    margin: "1%",
 
     "&:hover": {
       backgroundColor: bronze,
@@ -155,8 +151,15 @@ const theme = {
   },
 
   formGrid: {
-    display: "grid",
-    gridTemplateRows: "58px 58px 58px 58px 58px auto",
+    padding: "2% 5%",
+    display: "flex",
+    flexDirection: "column",
+  },
+
+  threeColumnsForm: {
+    height: "100%",
+    textAlign: "center",
+    backgroundColor: aqua,
   },
 
   singleForm: {
@@ -174,9 +177,18 @@ const theme = {
     padding: "2% 5%",
   },
   formContainer: {
-    padding: " 0 5%",
+    margin: " 1% 5%",
     position: "relative",
-    top: "50%",
+  },
+  contactFormWrapper: {
+    height: "100%",
+    backgroundColor: aqua,
+
+    "& div": {
+      "& div": {
+        boxShadow: "none !important",
+      },
+    },
   },
 
   formImg: {
@@ -194,19 +206,27 @@ const theme = {
   },
   pageTitle: {
     margin: "20px auto 20px auto",
-    fontFamily: font,
+    fontFamily: "Montserrat",
     fontSize: "1.5rem",
     textTransform: "uppercase",
   },
   loopName: {
-    fontFamily: font,
+    fontFamily: "Montserrat",
     textTransform: "uppercase",
     fontWeight: "bold",
     fontSize: "2rem ",
   },
   textField: {
-    margin: "5px auto 5px auto",
+    marginTop: "5px",
     border: "none",
+    fontFamily: "Montserrat",
+  },
+
+  textArea: {
+    backgroundColor: white,
+    borderRadius: "4px",
+    padding: "1%",
+    border: `1px solid ${turquoise} `,
   },
   button: {
     margin: "5% 0",
@@ -263,14 +283,20 @@ const theme = {
   },
 
   pageGrid: {
+    transform: " translate(-50%, -50%)",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     backgroundColor: aqua,
     textAlign: "center",
-    height: "50vh",
-    margin: " 5%",
+    height: "80vh",
+    width: "80%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     borderRadius: " 5px",
+    boxShadow:
+      "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
   },
 
   pageDescription: {
@@ -284,6 +310,7 @@ const theme = {
 
   /*styling for table*/
   root2: {
+    padding: "1% 0",
     backgroundColor: teal,
     alignItems: "center",
     borderRadius: "0px",
@@ -294,6 +321,19 @@ const theme = {
     position: "relative",
     boxShadow:
       "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
+
+    "& .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled)::before":
+      {
+        borderBottom: "none",
+      },
+
+    "& .css-1480iag-MuiInputBase-root-MuiInput-root::after": {
+      borderBottom: "none",
+    },
+
+    "& > *": {
+      marginLeft: "1% !important",
+    },
   },
 
   checkbox: {
@@ -305,12 +345,6 @@ const theme = {
   },
 
   input: {
-    margin: "1% !important",
-    backgroundImage:
-      "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'><path d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/></svg>\")",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "1% 50%",
-    backgroundSize: "35px 35px",
     backgroundColor: "#fff",
     minWidth: "30rem",
     width: "30rem",
@@ -321,19 +355,13 @@ const theme = {
     borderRadius: "4px",
     padding: " 0 1%",
     border: "0",
-    fontFamily: font,
+    fontFamily: "Montserrat",
     boxShadow:
       "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
+  },
 
-    "& input.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": {
-      padding: "10px !important",
-      fontFamily: font,
-      marginLeft: "30px !important",
-    },
-
-    "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": {
-      textTransform: "capitalize",
-    },
+  inputAdornment: {
+    paddingLeft: "2%",
   },
 
   iconButton: {
@@ -341,8 +369,9 @@ const theme = {
   },
 
   select: {
+    borderRadius: "4px",
     backgroundColor: "#fff",
-    width: "15rem",
+    width: "100%",
     boxShadow:
       "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
 
@@ -370,10 +399,12 @@ const theme = {
     margin: "5px auto 5px auto",
     border: "none",
     width: "100%",
-    borderBottom: "1px solid rgba(255, 255, 255, 0.7);",
     borderRadius: "0 !important",
     padding: "0 ",
     marginTop: "16px",
+  },
+  formControl: {
+    width: "15rem",
   },
 
   label: {
@@ -384,12 +415,12 @@ const theme = {
   },
 
   listItemText: {
-    fontFamily: font,
+    fontFamily: "Montserrat",
     textTransform: "capitalize",
   },
 
   listItemTextSizes: {
-    fontFamily: font,
+    fontFamily: "Montserrat",
     textTransform: "uppercase",
   },
 
@@ -464,6 +495,76 @@ const theme = {
     color: "inherit",
     fontSize: "2.5rem",
     marginLeft: "1.5rem",
+  },
+
+  contactsWrapper: {
+    height: "100%",
+  },
+
+  errorDiv: {
+    margin: "0 !important",
+    color: "red",
+    textAlign: "initial",
+  },
+  searchBarContainer: {
+    padding: "2% 0%",
+  },
+  customLabelStyle: {
+    fontFamily: "Montserrat !important",
+  },
+
+  activeIcon: {
+    color: `${yellow} !important`,
+  },
+
+  completedIcon: {
+    color: `${yellow} !important`,
+  },
+
+  stepLabel: {
+    fontFamily: "Montserrat",
+  },
+
+  sizesFormWrapper: {
+    display: "flex !important",
+    flexDirection: "row !important",
+  },
+  popoverWrapper: {
+    display: "flex",
+    alignItems: "center",
+    paddingTop: "10px",
+    position: "absolute",
+    left: "100%",
+    top: "20%",
+  },
+
+  sizesDropdownWrapper: {
+    display: "flex",
+    position: "relative",
+  },
+  icon: {
+    color: grey,
+  },
+
+  confirmationWrapper: {
+    padding: "0 15%",
+
+    " & > div ": {
+      padding: "5% 0",
+    },
+  },
+
+  infoAlert: {
+    backgroundColor: "rgb(229, 246, 253)",
+    color: " rgb(1, 67, 97)",
+  },
+  errorAlert: {
+    backgroundColor: "rgb(253, 237, 237)",
+    color: "rgb(95, 33, 32)",
+  },
+  successAlert: {
+    backgroundColor: "rgb(237, 247, 237)",
+    color: "rgb(30, 70, 32)",
   },
 };
 export default theme;

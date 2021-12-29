@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 
 // Material UI
-import { AppBar, Toolbar, Button } from "@material-ui/core";
+import { AppBar, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 
 // Project resources
@@ -26,12 +26,7 @@ const Navbar = () => {
       <div className={classes.headerRight}>
         <div className={classes.headerNav}>
           {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
-            <Button
-              color="primary"
-              variant="contained"
-              component={Link}
-              to="#"
-            >
+            <Button color="primary" variant="contained" component={Link} to="#">
               {t("download")}
             </Button>
           ) : null}
@@ -84,6 +79,5 @@ const Navbar = () => {
     </AppBar>
   );
 };
-
 
 export default Navbar;

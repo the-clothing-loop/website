@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+@font-face {
+  font-family: "Montserrat";
+  src: url("../src/fonts/Montserrat.ttf");
+}
+
 @media only screen and (min-width: 481px) {
   * {
     box-sizing: border-box;
@@ -7,24 +12,24 @@
 
   html,
   body {
-    font-family: 'Montserrat';
+    font-family: "Montserrat" !important;
     background-color: rgb(245, 245, 245);
     margin: 0;
   }
 
   .container {
     min-height: 85vh;
+    position: relative;
   }
 
   .app {
     position: relative;
     min-height: 100vh;
-    padding-bottom: 10rem;
   }
 
   a {
     text-decoration: none;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat";
   }
 
   p.explanatory-text {
@@ -272,7 +277,7 @@
   }
 
   form.contact-form > * {
-    padding: 2% 0;
+    margin: 3% 0;
   }
 
   .landing-page-wrapper {
@@ -285,7 +290,7 @@
   }
 
   .landing-page-logo {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat";
     color: #ffffff;
     position: absolute;
     font-size: 3rem !important;
@@ -305,7 +310,7 @@
     display: flex;
     flex-direction: column;
     position: absolute;
-    bottom: 35%;
+    bottom: 5%;
     right: 10px;
   }
 
@@ -362,12 +367,12 @@
   }
 
   span.css-10hburv-MuiTypography-root {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat";
     font-size: 0.875rem;
   }
 
   div.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat";
     text-transform: capitalize;
   }
 
@@ -380,7 +385,11 @@
   input.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
     padding: 10px !important;
     margin-left: 30px !important;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat";
+  }
+
+  .MuiInput-underline::before {
+    border-bottom: 1px solid #518d7e !important;
   }
 
   .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
@@ -409,7 +418,8 @@
 
   input#outlined-basic {
     padding: 2%;
-    margin-left: 30px;
+    font-family: "Montserrat";
+    text-transform: capitalize;
   }
 
   div.geocoder-wrapper > canvas.mapboxgl-canvas,
@@ -450,7 +460,7 @@
 
   div.geocoding-map > .mapboxgl-control-container > .mapboxgl-ctrl-top-left {
     width: 100% !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+    border-bottom: 1px solid #518d7e;
   }
 
   div.geocoding-map
@@ -463,7 +473,7 @@
     border-radius: 0 !important;
     margin: 0 !important;
     max-width: 100% !important;
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: "Montserrat" !important;
     font-size: 1rem !important;
   }
 
@@ -486,6 +496,10 @@
   button.mapboxgl-ctrl-geocoder--button {
     background-color: #d5ecdf !important;
   }
+
+  .MuiStepLabel-label {
+    font-family: "Montserrat" !important;
+  }
 }
 
 @media only screen and (max-width: 480px) {
@@ -507,7 +521,7 @@
 
   .landing-page-wrapper h1 {
     text-transform: uppercase;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat";
     font-weight: 300;
     font-size: 1.8rem;
     line-height: 1.167;
@@ -517,7 +531,7 @@
   }
 
   .landing-page-wrapper h4 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat";
     font-weight: 300;
     font-size: 1.2rem;
     line-height: 1.167;

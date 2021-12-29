@@ -22,17 +22,15 @@ import { Alert } from "@material-ui/lab";
 import { CardContent } from "@material-ui/core";
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
-mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+import MapboxWorker from "worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker";
+
+mapboxgl.workerClass = MapboxWorker;
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
 
 const NewChainLocation = () => {
-  const styles = (theme) => ({
-    ...theme.spreadThis,
-  });
-
   const { t } = useTranslation();
 
   const [viewport, setViewport] = useState([]);
@@ -57,10 +55,7 @@ const NewChainLocation = () => {
 
     setChain({
       locality: data.features[0].place_name,
-      place: data.features[0].place_name
-        .split(",")
-        .slice(1)
-        .join(","),
+      place: data.features[0].place_name.split(",").slice(1).join(","),
     });
   };
 
@@ -214,9 +209,7 @@ const NewChainLocation = () => {
                               component="p"
                               className="explanatory-text"
                             >
-                              {
-                                "More information on the new clothing loop:"
-                              }
+                              {"More information on the new clothing loop:"}
                             </Typography>
                             <TextForm
                               key="name"
@@ -265,7 +258,7 @@ const NewChainLocation = () => {
                               <Typography
                                 component="p"
                                 className="explanatory-text"
-                                style={{fontSize:'0.875rem'}}
+                                style={{ fontSize: "0.875rem" }}
                               >
                                 {"multiple categories can be selected"}
                               </Typography>
@@ -309,7 +302,7 @@ const NewChainLocation = () => {
                                 <Typography
                                   component="p"
                                   className="explanatory-text"
-                                  style={{fontSize:'0.875rem'}}
+                                  style={{ fontSize: "0.875rem" }}
                                 >
                                   {
                                     "multiple sizes can be selected, standard sizing is S-M-L"

@@ -6,7 +6,7 @@ import { Helmet } from "react-helmet";
 // Project resources
 import AppIcon from "../images/clothing-loop.png";
 import ProjectImg from "../images/Naamloze-presentatie.jpeg";
-import Footer from "../components/Footer";
+
 const Home = () => {
   return (
     <>
