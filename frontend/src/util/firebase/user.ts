@@ -4,6 +4,10 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/functions';
 
+if (process.env.REACT_APP_USE_EMULATOR == 'true') {
+  firebase.auth().useEmulator('http://localhost:9099');
+}
+
 const functions = firebase
   .app()
   .functions(process.env.REACT_APP_FIREBASE_REGION);
