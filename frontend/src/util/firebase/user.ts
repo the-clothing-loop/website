@@ -70,6 +70,7 @@ const updateUser = async (user: IUser): Promise<void> => {
   await updateUserCallable(user);
 };
 
+
 export {
   createUser,
   getUserById,
