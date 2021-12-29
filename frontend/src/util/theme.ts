@@ -137,6 +137,37 @@ const theme = {
     height: "2.625rem",
   },
 
+  animatedBtn: {
+    width: "200px",
+    height: "50px",
+    lineHeight: "50px",
+    border: "2px solid #fff",
+    margin: "30px 0",
+    position: "relative",
+    cursor: "pointer",
+    transition: "all 1s ease",
+    overflow: "hidden",
+
+    "&::before": {
+      content: "",
+      width: "100%",
+      height: "100%",
+      backgroundColor: "#fff",
+      position: "absolute",
+      transition: " all 1s ease",
+    },
+    " & > span": {
+      textAlign: "center",
+      textTransform: "uppercase",
+      color: "#fff",
+      fontWeight: "bold",
+      fontSize: "16px",
+      position: "relative",
+      zIndex: "1",
+      transition: "all 1s ease",
+    },
+  },
+
   menuItem: {
     textTransform: "uppercase",
   },

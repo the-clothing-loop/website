@@ -28,10 +28,7 @@ export interface ICreateChain {
 
 // Return chain data for one chain by id
 const getChain = async (chainId: string) => {
-  const snapshot = await db
-    .collection("chains")
-    .doc(chainId)
-    .get();
+  const snapshot = await db.collection("chains").doc(chainId).get();
   return { id: chainId, ...snapshot.data() } as IChain;
 };
 
@@ -41,6 +38,12 @@ const getChains = async () => {
   return snapshot.docs.map(
     (doc: any) => ({ id: doc.id, ...doc.data() } as IChain)
   );
+};
+
+const getChainsLength = async () => {
+  const snapshot = await db.collection("chains").get();
+
+  return snapshot.docs.length;
 };
 
 const createChain = async (chain: ICreateChain): Promise<string> => {
@@ -55,9 +58,13 @@ const addUserToChain = async (chainId: string, userId: string) => {
 };
 
 const updateChain = (chainId: string, chain: {}): Promise<void> => {
-  return db
-    .collection("chains")
-    .doc(chainId)
-    .set(chain, { merge: true });
+  return db.collection("chains").doc(chainId).set(chain, { merge: true });
 };
-export { getChains, createChain, getChain, addUserToChain, updateChain };
+export {
+  getChains,
+  createChain,
+  getChain,
+  addUserToChain,
+  updateChain,
+  getChainsLength,
+};
