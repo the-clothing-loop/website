@@ -17,6 +17,7 @@ import Geocoding from "./Geocoding";
 import { IChain, IViewPort } from "../types";
 import { number } from "yup/lib/locale";
 import { TextForm, NumberField } from "../components/FormFields";
+import ProgressBar from "../components/ProgressBar"
 import SizesDropdown from "../components/SizesDropdown";
 import FormActions from "../components/formActions";
 import categories from "../util/categories";
@@ -118,7 +119,10 @@ const NewChainLocation = () => {
               <Typography variant="h3" className={classes.pageTitle}>
                 {t("startNewLoop")}
               </Typography>
-              <Typography>
+              <ProgressBar activeStep={1} />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography className="formSubtitle">
                 Click on the map to set the approximate location of the loop
               </Typography>
             </Grid>
