@@ -1,7 +1,6 @@
 // Material
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, TextField } from "@material-ui/core";
 import theme from "../util/theme";
 import Button from "@material-ui/core/Button";
 import { Alert } from "@material-ui/lab";
@@ -15,16 +14,25 @@ import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 
 // Project resources
-import AppIcon from "../images/clothing-loop.png";
-import { TextForm, TextArea } from "../components/FormFields";
-import Footer from "../components/Footer";
+import { TextForm } from "../components/FormFields";
 import { contactMail } from "../util/firebase/mail";
+import { OneColumnLayout } from "../components/Layouts";
 
 const Contacts = () => {
-  const classes = makeStyles(theme);
+  const classes = makeStyles(theme)();
+
   const { t } = useTranslation();
   const [error, setError] = useState();
   const [submitted, setSubmitted] = useState(false);
+
+  const CHARACTER_LIMIT = 2000;
+  const [values, setValues] = useState({
+    name: "",
+  });
+
+  const handleChange = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.value });
+  };
 
   const validate = Yup.object({
     name: Yup.string()
@@ -34,11 +42,16 @@ const Contacts = () => {
     message: Yup.string().min(2, "Must be more than 2 characters"),
   });
 
-  const handleSubmit = async (mail) => {
-    console.log(`sending mail: ${JSON.stringify(mail)}`);
+  const handleSubmit = async (data) => {
+    let newEmail = {
+      ...data,
+      message: values.name,
+    };
+
+    console.log(`sending mail: ${JSON.stringify(newEmail)}`);
 
     try {
-      await contactMail(mail);
+      await contactMail(newEmail);
       setSubmitted(true);
     } catch (e) {
       console.error(`Error sending mail: ${JSON.stringify(e)}`);
@@ -47,7 +60,7 @@ const Contacts = () => {
   };
 
   if (submitted) {
-    return <Redirect to={`/thankyou`} />;
+    return <Redirect to={`/message-submitted`} />;
   }
 
   return (
@@ -56,70 +69,78 @@ const Contacts = () => {
         <title>Clothing-Loop | Contacts</title>
         <meta name="description" content="Contacts" />
       </Helmet>
-      <Grid container>
-        <Grid item sm />
-        <Grid item sm>
-          <div className={"text-wrapper"}>
-            <img src={AppIcon} alt="SFM logo" width="500" />
-            <Typography>
-              For all enquiries about The Clothing Loop project, please get in
-              touch with us using the form below. We will get back to you as
-              soon as possible.
-            </Typography>
+      <div className={classes.contactFormWrapper}>
+        <OneColumnLayout>
+          <Typography component="p">
+            Questions? Funny stories? Tips? Press enquiries? We’d love to hear
+            from you! (Please do check our FAQ first!)
+          </Typography>
 
-            <Formik
-              initialValues={{
-                name: "",
-                email: "",
-                message: "",
-              }}
-              validationSchema={validate}
-              onSubmit={handleSubmit}
-            >
-              {({ errors, touched }) => (
-                <Form className="contact-form">
-                  <TextForm
-                    label="Name"
-                    name="name"
-                    type="text"
-                    className={classes.textField}
-                    required
-                  />
-                  {touched.name && errors.name && <div>{errors.name}</div>}
-                  <TextForm
-                    label="Email"
-                    name="email"
-                    type="text"
-                    className={classes.textField}
-                    required
-                  />
-                  {touched.email && errors.email && <div>{errors.email}</div>}
-                  <TextArea
-                    label="Message"
-                    name="message"
-                    type="text"
-                    required
-                  />
-                  {touched.message && errors.message && <div>{errors.message}</div>}
-                  {error ? (
-                    <Alert severity="error">{error}</Alert>
-                  ) : null}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                  >
-                    {t("submit")}
-                  </Button>
-                </Form>
-              )}
-            </Formik>
-          </div>
-          <Footer />
-        </Grid>
-        <Grid item sm />
-      </Grid>
+          <Formik
+            initialValues={{
+              name: "",
+              email: "",
+              message: "",
+            }}
+            validationSchema={validate}
+            onSubmit={handleSubmit}
+          >
+            {({ errors, touched }) => (
+              <Form className="contact-form">
+                <TextForm
+                  label={t("name")}
+                  name="name"
+                  type="text"
+                  className={classes.textField}
+                  required
+                />
+                {touched.name && errors.name && (
+                  <div className={classes.errorDiv}>{errors.name}</div>
+                )}
+                <TextForm
+                  label={t("email")}
+                  name="email"
+                  type="text"
+                  className={classes.textField}
+                  required
+                />
+                {touched.email && errors.email && (
+                  <div className={classes.errorDiv}>{errors.email}</div>
+                )}
+                <TextField
+                  placeholder={t("yourMessage")}
+                  name="message"
+                  type="text"
+                  required
+                  InputProps={{
+                    disableUnderline: true,
+                    maxLength: CHARACTER_LIMIT,
+                    className: classes.textArea,
+                  }}
+                  value={values.name}
+                  helperText={`${values.name.length}/${CHARACTER_LIMIT}`}
+                  onChange={handleChange("name")}
+                  multiline={true}
+                  rows={10}
+                />
+
+                {touched.message && errors.message && (
+                  <div className={classes.errorDiv}>{errors.message}</div>
+                )}
+                {error ? <Alert severity="error">{error}</Alert> : null}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                >
+                  {t("submit")}
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </OneColumnLayout>
+      </div>
     </>
   );
 };

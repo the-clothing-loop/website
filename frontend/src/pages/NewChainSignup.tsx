@@ -9,18 +9,17 @@ import { Helmet } from "react-helmet";
 // Material UI
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import {
-  makeStyles
-} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
-import { ThreeColumnLayout,  OneColumnLayout } from "../components/Layouts";
+import { OneColumnLayout } from "../components/Layouts";
 import { Alert } from "@material-ui/lab";
+import ProgressBar from "../components/ProgressBar";
+import PopoverOnHover from "../components/Popover";
 
 // Project resources
 import {
   PhoneFormField,
-  TextForm,
-  CheckboxField,
+  TextForm
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../components/AuthProvider";
@@ -117,6 +116,8 @@ const Signup = () => {
                 {t("startNewLoop")}
               </Typography>
 
+              <ProgressBar activeStep={0} />
+
               <Form className={classes.formGrid}>
                 <TextForm
                   required
@@ -149,14 +150,20 @@ const Signup = () => {
                 />
 
                 <GeocoderSelector name="address" onResult={setGeocoderResult} />
-                <SizesDropdown
-                  className={classes.formSelect}
-                  setSizes={setSelectedSizes}
-                  genders={categories.genders}
-                  sizes={selectedSizes}
-                  label={t("interestedSizes")}
-                  fullWidth={true}
-                />
+
+                <div className={classes.sizesDropdownWrapper}>
+                  <SizesDropdown
+                    className={classes.formSelect}
+                    setSizes={setSelectedSizes}
+                    genders={categories.genders}
+                    sizes={selectedSizes}
+                    label={t("interestedSizes")}
+                    fullWidth={true}
+                  />
+                  <PopoverOnHover
+                    message={"please select the sizes you are interested in."}
+                  />
+                </div>
 
                 <FormActions handleClick={handleClickAction} />
 

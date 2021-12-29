@@ -58,5 +58,10 @@
   "joinAnExistingLoop": "aansluiten bij een bestaande keten",
   "or": "of",
   "thankYouForJoining": "Bedankt voor je deelname aan The Clothing Loop!",
-  "youWillReceiveAnEmail": "U ontvangt binnenkort een bevestigingsmail met de vervolgstappen."
+  "youWillReceiveAnEmail": "U ontvangt binnenkort een bevestigingsmail met de vervolgstappen.",
+  "yourMessage": "Jouw bericht",
+  "thankYouForYourMessage": "Dedankt voor je bericht",
+  "weWillReplySoon": "Iemand van ons team zal spoedig contact met je opnemen",
+  "selectLoopLocation": "Selecteer ketenlocatie",
+  "confirmation": "Bevestiging"
 }
