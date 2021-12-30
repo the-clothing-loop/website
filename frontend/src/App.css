@@ -627,3 +627,10 @@
 .chain-member-list__table--margin {
   margin-top: 42px;
 }
+
+.newsletter {
+  max-width: 720px;
+  min-height: 448px;
+  padding: 80px 256px 56px 80px;
+  background: rgb(72, 128, 139, 0.1);
+}

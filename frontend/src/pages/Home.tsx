@@ -1,32 +1,31 @@
 // Material
-import { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import { Helmet } from "react-helmet";
-import { makeStyles } from "@material-ui/core";
-import theme from "../util/theme";
-import Button from "@material-ui/core/Button";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { makeStyles, Button, Grid } from '@material-ui/core';
+
+import theme from '../util/theme';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { Newsletter } from '../components/Newsletter/Newsletter';
 
 // Project resources
-import { getChainsLength } from "../util/firebase/chain";
-import { ClassNames } from "@emotion/react";
-import { ClassSharp } from "@material-ui/icons";
-import LandingPageMobile from "./LandingPageMobile";
-import Counters from "../components/Counters";
+import { getChainsLength } from '../util/firebase/chain';
+import { ClassNames } from '@emotion/react';
+import { ClassSharp } from '@material-ui/icons';
+import LandingPageMobile from './LandingPageMobile';
+import Counters from '../components/Counters';
 
 //Media
-import HeroImg from "../images/hero-image.png";
-import SectionThreeImg from "../images/image_3.png";
-import BagImage from "../images/bag_image.png";
-import MapImage from "../images/map_image.png";
-import ClothesImage from "../images/clothes_image.png";
-import CirclesFrame from "../images/circles.png";
-import SfmLogo from "../images/sfm_logo.png";
-import CarouselImgOne from "../images/carousel_image_one.png";
-import CarouselImgTwo from "../images/carousel_image_two.png";
-import HorizontalArrow from "../images/horizontal_arrow.svg";
-import Clothes from "../images/clothes.png";
+import HeroImg from '../images/hero-image.png';
+import SectionThreeImg from '../images/image_3.png';
+import BagImage from '../images/bag_image.png';
+import MapImage from '../images/map_image.png';
+import ClothesImage from '../images/clothes_image.png';
+import CirclesFrame from '../images/circles.png';
+import SfmLogo from '../images/sfm_logo.png';
+import CarouselImgOne from '../images/carousel_image_one.png';
+import CarouselImgTwo from '../images/carousel_image_two.png';
+import HorizontalArrow from '../images/horizontal_arrow.svg';
+import Clothes from '../images/clothes.png';
 
 const Home = () => {
   const [chainsCount, setChainsCount] = useState(0);
@@ -68,7 +67,7 @@ const Home = () => {
                 enim ad minim veniam”
               </p>
               <Button className="btn btn-2" href="/loops/find">
-                {"Find a loop"}
+                {'Find a loop'}
               </Button>
             </div>
             <div className="hero-image-wrapper">
@@ -222,6 +221,34 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <div
+          style={{ position: 'relative', height: '319px', overflow: 'hidden' }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              position: 'absolute',
+              justifyContent: 'center',
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <h1
+              style={{
+                color: 'white',
+                zIndex: '11',
+              }}
+            >
+              THE CLOTHING LOOP
+            </h1>
+          </div>
+        </div>
+        <Grid container justifyContent="flex-end">
+          <Grid item>
+            <Newsletter />
+          </Grid>
+        </Grid>
       </div>
 
       <LandingPageMobile />
