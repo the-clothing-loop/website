@@ -57,6 +57,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:with:emulator": "REACT_APP_USE_EMULATOR=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -78,5 +79,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "resolutions": {
+    "//": "See https://github.com/facebook/create-react-app/issues/11773",
+    "react-error-overlay": "6.0.9"
   }
 }

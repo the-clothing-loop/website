@@ -1,18 +1,17 @@
-import React from "react";
-
 //MUI
 import { Popover, Typography } from "@mui/material";
 import Help from "@mui/icons-material/HelpOutline";
 import { makeStyles } from "@material-ui/core";
 
 import theme from "../util/theme";
+import { useState } from "react";
 
 interface IProps {
   message: string;
 }
 
 const PopoverOnHover: React.FC<IProps> = ({ message }: IProps) => {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const classes = makeStyles(theme as any)();
 

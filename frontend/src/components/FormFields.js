@@ -80,7 +80,6 @@ const NumberField = ({ label, step=1, ...props}) => {
         label={t(label)}
         fullWidth
         type="number"
-        lang={i18n.language}
         inputProps={{
           inputMode: 'numeric',
           step: step,
