@@ -498,8 +498,6 @@
   }
 
   .mapboxgl-ctrl-geocoder {
-    width: 100% !important;
-    max-width: 100% !important;
     margin-bottom: 0.5rem;
   }
 

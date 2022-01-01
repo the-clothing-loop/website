@@ -278,9 +278,6 @@ const theme = {
       flexWrap: "wrap",
     },
   },
-  geocoder: {
-    height: "20px",
-  },
 
   pageGrid: {
     transform: " translate(-50%, -50%)",
@@ -500,6 +497,12 @@ const theme = {
   newLoopMap: {
     cursor: "pointer",
     filter: "drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25))",
+  },
+
+  inMapSearchBar: {
+    position: "absolute",
+    top: "20px",
+    left: "20px",
   },
 
   contactsWrapper: {

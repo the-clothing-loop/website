@@ -96,9 +96,14 @@ const NewChainLocation = () => {
     flyToLocation(...center);
   };
 
-  const handleMapClick = (evt: MapEvent) => {
-    const longitude = evt.lngLat[0];
-    const latitude = evt.lngLat[1];
+  const handleMapClick = (event: any) => {
+    const targetClass: string = event.srcEvent.target?.className;
+    if (targetClass.includes("mapboxgl-ctrl-geocoder")) {
+      // ignore clicks on geocoding search bar, which is on top of map
+      return;
+    };
+    const longitude = event.lngLat[0];
+    const latitude = event.lngLat[1];
     setLoopLocation({ longitude: longitude, latitude: latitude });
     flyToLocation(longitude, latitude);
   };
@@ -127,7 +132,6 @@ const NewChainLocation = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Geocoding onResult={handleGeolocationResult} />
               <ReactMapGL
                 mapboxApiAccessToken={accessToken}
                 mapStyle="mapbox://styles/mapbox/light-v10"
@@ -138,6 +142,10 @@ const NewChainLocation = () => {
                 className={classes.newLoopMap}
                 width="100%"
               >
+                <Geocoding
+                  onResult={handleGeolocationResult}
+                  className={classes.inMapSearchBar}
+                />
                 {loopLocation !== null ? (
                   <SVGOverlay redraw={redrawLoop} />
                 ) : null}
