@@ -173,7 +173,7 @@ const SearchBar: React.FC<IProps> = ({
                   checked={selectedGenders.includes(value) ? true : false}
                 />
                 <ListItemText
-                  primary={value}
+                  primary={t(value)}
                   className={classes.listItemText}
                 />
               </MenuItem>

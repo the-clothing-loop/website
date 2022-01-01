@@ -178,7 +178,7 @@ const ChainEdit = () => {
                             checked={!!genders[value]}
                           ></input>
                           <label key={`label-${value}-${i}`} htmlFor={value}>
-                            <Typography variant="body2">{`${value}'s clothing`}</Typography>
+                            <Typography variant="body2">{t(value)}</Typography>
                           </label>
                         </div>
                       );
@@ -221,7 +221,7 @@ const ChainEdit = () => {
                               variant="body2"
                               className="input-label-typography"
                             >
-                              {value}
+                              {t(value)}
                             </Typography>
                           </label>
                         </div>

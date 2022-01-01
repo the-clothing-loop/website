@@ -123,7 +123,7 @@ const NewChainLocation = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography className="formSubtitle">
-                Click on the map to set the approximate location of the loop
+                {t("clickToSetLoopLocation")}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -149,7 +149,7 @@ const NewChainLocation = () => {
                   <Grid item xs={9}>
                     <TextForm
                       required
-                      label="Loop name"
+                      label={t("loopName")}
                       name="loopName"
                       type="text"
                       className={classes.textField}
@@ -159,7 +159,7 @@ const NewChainLocation = () => {
                   <Grid item xs={3}>
                     <NumberField
                       required
-                      label="Radius (km)"
+                      label={t("radius")}
                       name="radius"
                       value={loopRadius}
                       className={classes.textField}
@@ -170,7 +170,7 @@ const NewChainLocation = () => {
                   <Grid item xs={12}>
                     <TextForm
                       required
-                      label="Description"
+                      label={t("description")}
                       name="description"
                       className={classes.textField}
                     />
@@ -179,7 +179,7 @@ const NewChainLocation = () => {
                     <div className={classes.formFieldWithPopover}>
                       <FormControl fullWidth>
                         <InputLabel id="clothingTypeLabel">
-                          Select a clothing type
+                          {t("selectClothingType")}
                         </InputLabel>
                         <Select
                           value={clothingType}
@@ -188,7 +188,7 @@ const NewChainLocation = () => {
                         >
                           {Object.keys(categories).map((category: string) => (
                             <MenuItem value={category} key={category}>
-                              {category}
+                              {t(category)}
                             </MenuItem>
                           ))}
                         </Select>
@@ -200,7 +200,7 @@ const NewChainLocation = () => {
                     <div className={classes.formFieldWithPopover}>
                       <FormControl fullWidth>
                         <InputLabel id="clothingSizeLabel">
-                          Select a clothing size
+                          {t("selectSize")}
                         </InputLabel>
                         <Select
                           value={clothingSize}
@@ -210,7 +210,7 @@ const NewChainLocation = () => {
                           {clothingType ? (
                             categories[clothingType].map((size: string) => (
                             <MenuItem value={size} key={size}>
-                              {size}
+                              {t(size)}
                             </MenuItem>
                           ))) : null}
                         </Select>

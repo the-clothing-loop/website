@@ -5,20 +5,20 @@ interface ICategories {
 const clothingCategories: ICategories = {
   children: [
     "baby",
-    "1-4 years old",
-    "5-12 years old",
+    "1To4YearsOld",
+    "5To12YearsOld",
   ],
   women: [
     "EU36",
     "EU38",
     "EU40",
-    "Women's plus size",
+    "womenPlusSize",
   ],
   men: [
     "EU46",
     "EU48",
     "EU50",
-    "Men's plus size",
+    "menPlusSize",
   ],
 };
 

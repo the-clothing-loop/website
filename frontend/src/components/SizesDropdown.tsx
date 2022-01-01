@@ -83,7 +83,7 @@ const SizesDropdown: React.FC<IProps> = ({
               checked={selectedSizes.includes(value) ? true : false}
             />
             <ListItemText
-              primary={value}
+              primary={t(value)}
               className={classes.listItemTextSizes}
               style={{ textTransform: "capitalize" }}
             />
@@ -105,7 +105,7 @@ const SizesDropdown: React.FC<IProps> = ({
               checked={selectedSizes.includes(value) ? true : false}
             />
             <ListItemText
-              primary={value}
+              primary={t(value)}
               className={classes.listItemTextSizes}
               style={{ textTransform: "uppercase" }}
             />
@@ -127,7 +127,7 @@ const SizesDropdown: React.FC<IProps> = ({
               checked={selectedSizes.includes(value) ? true : false}
             />
             <ListItemText
-              primary={value}
+              primary={t(value)}
               className={classes.listItemTextSizes}
               style={{ textTransform: "uppercase" }}
             />
