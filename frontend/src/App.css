@@ -514,6 +514,11 @@
   .MuiStepLabel-label {
     font-family: "Montserrat" !important;
   }
+
+  .MuiGrid-item {
+    padding: 1% 2%;
+  }
+
 }
 
 @media only screen and (max-width: 480px) {
