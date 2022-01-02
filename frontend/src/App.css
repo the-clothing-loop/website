@@ -1,9 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
-@font-face {
-  font-family: "Montserrat";
-  src: url("../src/fonts/Montserrat.ttf");
-}
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap');
 
 @media only screen and (min-width: 481px) {
   * {
@@ -228,11 +225,11 @@
     margin-right: 5%;
   }
 
-  input[type='checkbox'].map-cat-input {
+  input[type="checkbox"].map-cat-input {
     display: none;
   }
 
-  input[type='checkbox'].map-cat-input + label {
+  input[type="checkbox"].map-cat-input + label {
     -webkit-transition: all 500ms ease;
     -moz-user-select: -moz-none;
     -ms-user-select: none;
@@ -251,7 +248,7 @@
     margin: 0 5px;
   }
 
-  input[type='checkbox'].map-cat-input:checked + label {
+  input[type="checkbox"].map-cat-input:checked + label {
     -webkit-transition: all 500ms ease;
     transition: all 500ms ease;
     background-color: #067f8c;
@@ -393,7 +390,7 @@
   }
 
   .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    text-transform: 'capitalize';
+    text-transform: "capitalize";
   }
 
   div#demo-multiple-checkbox {
@@ -512,6 +509,7 @@
     transition: all 3s ease;
     overflow: hidden;
     border-radius: 0%;
+    color: #f7c86f;
   }
 
   .btn > span {
@@ -538,7 +536,7 @@
   /* Left Slider */
   .btn-2:before {
     top: 0;
-    left: -110px;
+    left: -150px;
   }
 
   /* Hover Effect */

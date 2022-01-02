@@ -168,6 +168,20 @@ const theme = {
     },
   },
 
+  circleBtn: {
+    position: "absolute",
+    backgroundColor: "white",
+    width: "86px",
+    height: "86px",
+    borderRadius: "50%",
+    outline: `solid 1px ${turquoise}`,
+    transition: " outline 0.6s linear",
+    margin: " 0.5em",
+
+    "&:hover": {
+      outlineWidth: "20px",
+    },
+  },
   menuItem: {
     textTransform: "uppercase",
   },
@@ -596,6 +610,16 @@ const theme = {
   successAlert: {
     backgroundColor: "rgb(237, 247, 237)",
     color: "rgb(30, 70, 32)",
+  },
+
+  imageAnimatedWrapper: {
+    outline: `solid 1px ${teal}`,
+    transition: " outline 0.6s linear",
+    margin: " 0.5em",
+
+    "&:hover": {
+      outlineWidth: "80px",
+    },
   },
 };
 export default theme;
