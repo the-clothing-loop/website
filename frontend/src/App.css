@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap");
 
 @media only screen and (min-width: 481px) {
   * {
@@ -509,18 +509,18 @@
     transition: all 3s ease;
     overflow: hidden;
     border-radius: 0%;
-    color: #f7c86f;
   }
 
   .btn > span {
     text-align: center;
     text-transform: inherit;
-    color: #fff;
     font-weight: bold;
     font-size: 21px;
     position: relative;
     z-index: 1;
     transition: all 3s ease;
+   mix-blend-mode:color-dodge;
+   color: #f7c86f;
   }
 
   /* sliders */
@@ -544,9 +544,6 @@
     left: 0;
   }
 
-  .btn:hover p {
-    color: #00bfb6;
-  }
 }
 
 @media only screen and (max-width: 480px) {

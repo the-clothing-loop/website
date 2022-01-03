@@ -12,40 +12,29 @@ import { getChainsLength } from "../util/firebase/chain";
 import { ClassNames } from "@emotion/react";
 import { ClassSharp } from "@material-ui/icons";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import Carousel from "react-material-ui-carousel";
 
 //Media
 import HeroImg from "../images/hero-image.png";
 import SectionThreeImg from "../images/image_3.png";
-import BagImage from "../images/Naamloze-presentatie.jpeg";
+import BagImage from "../images/bag_image.png";
+import MapImage from "../images/map_image.png";
+import ClothesImage from "../images/clothes_image.png";
+import CirclesFrame from "../images/circles.png";
 import SfmLogo from "../images/sfm_logo.png";
 import CarouselImgOne from "../images/carousel_image_one.png";
 import CarouselImgTwo from "../images/carousel_image_two.png";
+import HorizontalArrow from "../images/horizontal_arrow.svg";
+import Clothes from "../images/clothes.png";
 
 const Home = () => {
   const [chainsCount, setChainsCount] = useState(0);
-  const [usersCount, setUsersCount] = useState(0);
 
   const classes = makeStyles(theme as any)();
-
-  const array = [
-    {
-      image: CarouselImgOne,
-      altText: "collection of yellow textures",
-    },
-    {
-      image: CarouselImgTwo,
-      altText: "collection of green textures",
-    },
-  ];
 
   useEffect(() => {
     (async () => {
       const chainsLengthResponse = await getChainsLength();
       setChainsCount(chainsLengthResponse);
-
-      // const usersLengthResponse = await getUsersLength();
-      // setUsersCount(usersLengthResponse);
     })();
   }, []);
 
@@ -61,23 +50,34 @@ const Home = () => {
           className={classes.landingPageWrapper}
           style={{
             position: "relative",
+            margin: "5% 0",
           }}
         >
           <div
             style={{
               position: "absolute",
-              height: "45%",
+              height: "40%",
               backgroundColor: "#D5ECDF",
               width: "100vw",
             }}
-          ></div>
+          >
+            <div
+              style={{
+                position: "relative",
+                marginLeft: "40%",
+                marginTop: "1%",
+              }}
+            >
+              <img src={CirclesFrame} style={{ paddingRight: "8px" }} />
+              <img src={CirclesFrame} />
+            </div>
+          </div>
           <div
             className={classes.landingPageHero}
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               zIndex: "111111",
-              paddingTop: "5%",
               position: "relative",
             }}
           >
@@ -87,8 +87,8 @@ const Home = () => {
             >
               <h1
                 style={{
-                  fontSize: "96px",
-                  lineHeight: "96px",
+                  fontSize: "7rem",
+                  lineHeight: "7rem",
                   fontWeight: "900",
                   color: "#518D7E",
                   margin: "2rem 0",
@@ -106,7 +106,14 @@ const Home = () => {
                   shop it
                 </span>
               </h1>
-              <p style={{ margin: " 2rem 0" }}>
+              <p
+                style={{
+                  margin: " 2rem 0",
+                  color: "#3C3C3B",
+                  fontSize: "1.25rem",
+                  lineHeight: "2rem",
+                }}
+              >
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
                 enim ad minim veniam”
@@ -118,16 +125,16 @@ const Home = () => {
                   width: "282px",
                   height: "54.69px",
                   border: "1px solid #F7C86F",
-                  fontSize: "21px",
-                  color: "white",
+                  fontSize: "1.25rem",
                   textTransform: "inherit",
                   borderRadius: "0px",
+                  fontFamily: "Montserrat",
                 }}
               >
                 {"Find a loop"}
               </Button>
             </div>
-            <div className={classes.heroImgWrapper}>
+            <div className={classes.heroImgWrapper} style={{ marginTop: "5%" }}>
               <div
                 style={{
                   position: "relative",
@@ -149,11 +156,10 @@ const Home = () => {
 
               <div className={classes.circleBtn}>
                 {
-                  //TODO: find better arrow vector
                   <ArrowDownwardIcon
                     style={{
-                      width: "28px",
-                      height: "40px",
+                      width: "50%",
+                      height: "auto",
                       color: "#518D7E",
                       position: "relative",
                       top: "50%",
@@ -168,16 +174,22 @@ const Home = () => {
         </div>
 
         <div className={classes.stepsWrapper}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              margin: "5% 0",
+            }}
+          >
             <div
               style={{
                 position: "relative",
-                height: "80%",
+                height: "90%",
                 overflow: "hidden",
               }}
             >
               <img
-                src={HeroImg}
+                src={BagImage}
                 style={{
                   width: "100%",
                   height: "auto",
@@ -186,12 +198,18 @@ const Home = () => {
                 }}
               />
             </div>
-            <div style={{ textAlign: "left", paddingLeft: "2%" }}>
+            <div
+              style={{
+                textAlign: "left",
+                paddingLeft: "2%",
+                marginBottom: "2%",
+              }}
+            >
               <h1
                 style={{
                   fontFamily: "'Playfair Display', serif",
                   fontWeight: " bold",
-                  fontSize: " 200px",
+                  fontSize: "12.5rem",
                   WebkitTextStroke: "1.5px #518d7e",
                   color: "transparent",
                   margin: "0",
@@ -219,17 +237,19 @@ const Home = () => {
                 }}
               >
                 To join a loop you need to <br />
-                <span
+                <a
+                  href="/loops/find"
                   style={{
                     fontFamily: "'Playfair Display', serif",
                     fontWeight: "900",
                     fontSize: "24px",
                     lineHeight: "40px",
                     textDecoration: "underline",
+                    color: "#518d7e",
                   }}
                 >
                   find a loop near you
-                </span>
+                </a>
               </p>
             </div>
           </div>
@@ -276,6 +296,12 @@ const Home = () => {
                 >
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  <a
+                    href="/loops/find"
+                    style={{ display: "block", margin: "2% 0" }}
+                  >
+                    <img src={HorizontalArrow} />
+                  </a>
                 </p>
               </div>
             </div>
@@ -289,7 +315,7 @@ const Home = () => {
               }}
             >
               <img
-                src={HeroImg}
+                src={MapImage}
                 style={{
                   width: "100%",
                   height: "auto",
@@ -376,20 +402,184 @@ const Home = () => {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+        <div
+          className={classes.projectNumbersWrapper}
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
+        >
+          <div
+            style={{
+              backgroundColor: "#518D7E",
+              display: "flex",
+              flexDirection: "column",
+              paddingLeft: "5%",
+            }}
+          >
+            <h1
+              style={{
+                fontFamily: "Playfair Display",
+                color: "white",
+                fontSize: "96px",
+              }}
+            >
+              What we do
+            </h1>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+              }}
+            >
+              <div
+                style={{ position: "relative", width: "50%", margin: "2% 0" }}
+              >
+                <h1
+                  style={{
+                    fontFamily: "Playfair Display",
+                    color: "transparent",
+                    WebkitTextStroke: "1px white",
+                    fontSize: "78px",
+                    margin: "1% 0",
+                  }}
+                >
+                  350
+                </h1>
+                <h3
+                  style={{
+                    fontFamily: "Playfair Display",
+                    color: "white",
+                    fontSize: "49px",
+                    margin: "1% 0",
+                  }}
+                >
+                  Different <br />
+                  loops
+                </h3>
+              </div>
+              <div style={{ position: "relative", width: "50%" }}>
+                <h1
+                  style={{
+                    fontFamily: "Playfair Display",
+                    color: "transparent",
+                    WebkitTextStroke: "1px white",
+                    fontSize: "78px",
+                    margin: "1% 0",
+                  }}
+                >
+                  1200
+                </h1>
+                <h3
+                  style={{
+                    fontFamily: "Playfair Display",
+                    color: "white",
+                    fontSize: "49px",
+                    margin: "1% 0",
+                  }}
+                >
+                  People
+                </h3>
+              </div>
+              <div style={{ position: "relative", width: "50%" }}>
+                <h1
+                  style={{
+                    fontFamily: "Playfair Display",
+                    color: "transparent",
+                    WebkitTextStroke: "1px white",
+                    fontSize: "78px",
+                    margin: "1% 0",
+                  }}
+                >
+                  3
+                </h1>
+                <h3
+                  style={{
+                    fontFamily: "Playfair Display",
+                    color: "white",
+                    fontSize: "49px",
+                    margin: "1% 0",
+                  }}
+                >
+                  Countries
+                </h3>
+              </div>
+              <div style={{ position: "relative", width: "50%" }}>
+                <div style={{ height: "105px" }}>
+                  <a
+                    href="/loops/find"
+                    style={{
+                      backgroundColor: "#F7C86F",
+                      width: "52px",
+                      height: "52px",
+                      borderRadius: "50%",
+                      display: "inline-block",
+                      top: "50%",
+                      position: "relative",
+                      transform: "translateY(-50%)",
+                    }}
+                  >
+                    <ArrowDownwardIcon
+                      style={{
+                        position: "relative",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%) rotate(-90deg) ",
+                        color: "white",
+                      }}
+                    />
+                  </a>
+                </div>
+                <h3
+                  style={{
+                    fontFamily: "Playfair Display",
+                    color: "white",
+                    fontSize: "49px",
+                    margin: "1% 0",
+                  }}
+                >
+                  Our goals
+                </h3>
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
+            <div style={{ position: "relative", width: "50%" }}>
+              <img src={Clothes} style={{ height: "100%", width: "auto" }} />
+            </div>
+            <div style={{ position: "relative", width: "50%" }}>
+              <img src={Clothes} style={{ height: "100%", width: "100%" }} />
+            </div>
+            <div style={{ position: "relative", width: "50%" }}>
+              <img src={Clothes} style={{ height: "100%", width: "100%" }} />
+            </div>
+            <div style={{ position: "relative", width: "50%" }}>
+              <img src={Clothes} style={{ height: "100%", width: "100%" }} />
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            margin: "5% 0",
+          }}
+        >
           <div>
             <img
-              src={BagImage}
+              src={ClothesImage}
               alt=""
               style={{ width: "100%", height: "auto", objectFit: "cover" }}
             />
           </div>
           <div
             style={{
-              paddingRight: "10%",
+              paddingRight: "15%",
               paddingLeft: "5%",
               position: "relative",
-              bottom: "20%",
+              bottom: "15%",
             }}
           >
             <h3
@@ -436,7 +626,7 @@ const Home = () => {
             display: "flex",
             flexDirection: "column",
             position: "relative",
-            margin: "0 5%",
+            margin: "5% 5%",
           }}
         >
           <div
@@ -523,13 +713,17 @@ const Home = () => {
           </div>
         </div>
 
-        <div style={{ position: "relative" }}>
+        <div
+          style={{ position: "relative", height: "319px", overflow: "hidden" }}
+        >
           <div
             style={{
               display: "flex",
               alignItems: "center",
               position: "absolute",
               justifyContent: "center",
+              width: "100%",
+              height: "100%",
             }}
           >
             <h1
@@ -540,23 +734,6 @@ const Home = () => {
             >
               THE CLOTHING LOOP
             </h1>
-          </div>
-
-          <div>
-            <Carousel animation="slide" indicators={false}>
-              {array.map((item, i) => (
-                <div
-                  key={i}
-                  style={{ width: "100vw", height: "50vh", overflow: "hidden" }}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.altText}
-                    style={{ width: "100%", height: "auto" }}
-                  />
-                </div>
-              ))}
-            </Carousel>{" "}
           </div>
         </div>
       </div>

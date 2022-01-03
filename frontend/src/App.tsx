@@ -36,7 +36,10 @@ const App = () => {
   const [showFooter, setShowFooter] = useState(true);
 
   useEffect(() => {
-    if (window.location.pathname == "/") {
+    if (
+      window.location.pathname == "/" ||
+      window.location.pathname == "/home"
+    ) {
       setShowNavbar(false);
       setShowFooter(false);
     }
@@ -51,7 +54,7 @@ const App = () => {
             {showNavbar && <Navbar />}
             <div className="container">
               <Switch>
-                <Route exact path="/about" component={Home} />
+                <Route exact path="/home" component={Home} />
                 <Route exact path="/thankyou" component={Thankyou} />
                 <Route
                   exact

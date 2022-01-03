@@ -169,14 +169,16 @@ const theme = {
   },
 
   circleBtn: {
-    position: "absolute",
+    position: "relative",
     backgroundColor: "white",
     width: "86px",
     height: "86px",
     borderRadius: "50%",
     outline: `solid 1px ${turquoise}`,
     transition: " outline 0.6s linear",
-    margin: " 0.5em",
+    margin: " 0",
+    left:"50%",
+    transform:'translateY(-50%)',
 
     "&:hover": {
       outlineWidth: "20px",
