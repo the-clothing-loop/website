@@ -6,12 +6,13 @@ import { Helmet } from "react-helmet";
 import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
 import Button from "@material-ui/core/Button";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 // Project resources
 import { getChainsLength } from "../util/firebase/chain";
 import { ClassNames } from "@emotion/react";
 import { ClassSharp } from "@material-ui/icons";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import LandingPageMobile from "./LandingPageMobile";
 
 //Media
 import HeroImg from "../images/hero-image.png";
@@ -45,7 +46,10 @@ const Home = () => {
         <meta name="description" content="Home" />
       </Helmet>
 
-      <div style={{ backgroundColor: "#FFFFFF" }}>
+      <div
+        style={{ backgroundColor: "#FFFFFF" }}
+        id="landing-page-desktop"
+      >
         <div
           className={classes.landingPageWrapper}
           style={{
@@ -737,6 +741,8 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      <LandingPageMobile />
     </>
   );
 };

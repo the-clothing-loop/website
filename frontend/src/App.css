@@ -544,6 +544,9 @@
     left: 0;
   }
 
+  #landing-page-mobile {
+    display: none;
+  }
 }
 
 @media only screen and (max-width: 480px) {
@@ -583,6 +586,14 @@
     padding: 5% 0;
     position: relative;
     top: 50%;
+  }
+
+  #landing-page-desktop {
+    display: none;
+  }
+
+  #landing-page-mobile {
+    display: inline;
   }
 }
 
