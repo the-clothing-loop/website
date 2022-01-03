@@ -1,11 +1,10 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
+import { TextField, Checkbox, Select, InputLabel, FormHelperText } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles";
 import theme from "../util/theme";
 import i18n from "../i18n";
 import { useTranslation } from "react-i18next";
 import MuiPhoneInput from "material-ui-phone-number";
-import Checkbox from "@material-ui/core/Checkbox";
 import { useField } from "formik";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -130,4 +129,27 @@ const TextArea = ({ label, ...props }) => {
   );
 };
 
-export { TextFormField, PhoneFormField, TextForm, CheckboxField, TextArea, NumberField};
+const SelectField = ({ label, children, errorText = "", ...props}) => {
+  const [field] = useField(props);
+  const { t } = useTranslation();
+  const labelId = props.name + "Label";
+  return (
+    <>
+      <InputLabel id={labelId}>
+        {t(label) + (props?.required ? " *" : "")}
+      </InputLabel>
+      <Select
+        labelId={labelId}
+        {...props}
+        {...field}
+      >
+        {children}
+      </Select>
+      {errorText ? (
+        <FormHelperText error={true}>{errorText}</FormHelperText>
+      ) : null}
+    </>
+  )
+}
+
+export { TextFormField, PhoneFormField, TextForm, CheckboxField, TextArea, NumberField, SelectField};
