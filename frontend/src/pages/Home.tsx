@@ -13,6 +13,7 @@ import { getChainsLength } from "../util/firebase/chain";
 import { ClassNames } from "@emotion/react";
 import { ClassSharp } from "@material-ui/icons";
 import LandingPageMobile from "./LandingPageMobile";
+import Counter from "../components/Counter";
 
 //Media
 import HeroImg from "../images/hero-image.png";
@@ -46,10 +47,7 @@ const Home = () => {
         <meta name="description" content="Home" />
       </Helmet>
 
-      <div
-        style={{ backgroundColor: "#FFFFFF" }}
-        id="landing-page-desktop"
-      >
+      <div style={{ backgroundColor: "#FFFFFF" }} id="landing-page-desktop">
         <div
           className={classes.landingPageWrapper}
           style={{
@@ -407,7 +405,7 @@ const Home = () => {
         </div>
 
         <div
-          className={classes.projectNumbersWrapper}
+          className={'project-numbers-wrapper'}
           style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
         >
           <div
@@ -434,78 +432,8 @@ const Home = () => {
                 flexWrap: "wrap",
               }}
             >
-              <div
-                style={{ position: "relative", width: "50%", margin: "2% 0" }}
-              >
-                <h1
-                  style={{
-                    fontFamily: "Playfair Display",
-                    color: "transparent",
-                    WebkitTextStroke: "1px white",
-                    fontSize: "78px",
-                    margin: "1% 0",
-                  }}
-                >
-                  350
-                </h1>
-                <h3
-                  style={{
-                    fontFamily: "Playfair Display",
-                    color: "white",
-                    fontSize: "49px",
-                    margin: "1% 0",
-                  }}
-                >
-                  Different <br />
-                  loops
-                </h3>
-              </div>
-              <div style={{ position: "relative", width: "50%" }}>
-                <h1
-                  style={{
-                    fontFamily: "Playfair Display",
-                    color: "transparent",
-                    WebkitTextStroke: "1px white",
-                    fontSize: "78px",
-                    margin: "1% 0",
-                  }}
-                >
-                  1200
-                </h1>
-                <h3
-                  style={{
-                    fontFamily: "Playfair Display",
-                    color: "white",
-                    fontSize: "49px",
-                    margin: "1% 0",
-                  }}
-                >
-                  People
-                </h3>
-              </div>
-              <div style={{ position: "relative", width: "50%" }}>
-                <h1
-                  style={{
-                    fontFamily: "Playfair Display",
-                    color: "transparent",
-                    WebkitTextStroke: "1px white",
-                    fontSize: "78px",
-                    margin: "1% 0",
-                  }}
-                >
-                  3
-                </h1>
-                <h3
-                  style={{
-                    fontFamily: "Playfair Display",
-                    color: "white",
-                    fontSize: "49px",
-                    margin: "1% 0",
-                  }}
-                >
-                  Countries
-                </h3>
-              </div>
+              <Counter />
+
               <div style={{ position: "relative", width: "50%" }}>
                 <div style={{ height: "105px" }}>
                   <a
