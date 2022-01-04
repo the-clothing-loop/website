@@ -13,7 +13,7 @@ import { getChainsLength } from "../util/firebase/chain";
 import { ClassNames } from "@emotion/react";
 import { ClassSharp } from "@material-ui/icons";
 import LandingPageMobile from "./LandingPageMobile";
-import Counter from "../components/Counter";
+import Counters from "../components/Counters";
 
 //Media
 import HeroImg from "../images/hero-image.png";
@@ -405,7 +405,7 @@ const Home = () => {
         </div>
 
         <div
-          className={'project-numbers-wrapper'}
+          className={"project-numbers-wrapper"}
           style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
         >
           <div
@@ -425,53 +425,8 @@ const Home = () => {
             >
               What we do
             </h1>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-              }}
-            >
-              <Counter />
 
-              <div style={{ position: "relative", width: "50%" }}>
-                <div style={{ height: "105px" }}>
-                  <a
-                    href="/loops/find"
-                    style={{
-                      backgroundColor: "#F7C86F",
-                      width: "52px",
-                      height: "52px",
-                      borderRadius: "50%",
-                      display: "inline-block",
-                      top: "50%",
-                      position: "relative",
-                      transform: "translateY(-50%)",
-                    }}
-                  >
-                    <ArrowDownwardIcon
-                      style={{
-                        position: "relative",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%) rotate(-90deg) ",
-                        color: "white",
-                      }}
-                    />
-                  </a>
-                </div>
-                <h3
-                  style={{
-                    fontFamily: "Playfair Display",
-                    color: "white",
-                    fontSize: "49px",
-                    margin: "1% 0",
-                  }}
-                >
-                  Our goals
-                </h3>
-              </div>
-            </div>
+            <Counters />
           </div>
 
           <div
