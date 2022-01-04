@@ -6,7 +6,10 @@ import {
   Typography,
   Grid,
 } from '@material-ui/core';
+
 import ArrowRight from './arrow-right.svg';
+
+import { subscribeToNewsletter } from '../../util/firebase/newsletter';
 
 const useStyles = makeStyles({
   headingTypographyRoot: {
@@ -65,8 +68,8 @@ export const Newsletter = () => {
     setEmail(e.target.value);
   };
 
-  const handleSubmitClick = () => {
-    console.log(name, email);
+  const handleSubmitClick = async () => {
+    await subscribeToNewsletter({ name, email });
   };
 
   return (
