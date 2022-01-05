@@ -614,13 +614,421 @@ const theme = {
     color: "rgb(30, 70, 32)",
   },
 
+  landingPageDesktop: {
+    backgroundColor: "#FFFFFF",
+  },
+
+  landingPageWrapper: {
+    position: "relative",
+    margin: "5% 0",
+
+    "& .background-box": {
+      position: "absolute",
+      height: "40%",
+      backgroundColor: aqua,
+      width: "100vw",
+
+      "& .circles-frame": {
+        position: "relative",
+        marginLeft: "40%",
+        marginTop: "1%",
+
+        "& img:nth-of-type(1)": {
+          paddingRight: "8px",
+        },
+      },
+    },
+
+    "& .landing-page-hero": {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      zIndex: "111111",
+      position: "relative",
+
+      "& .hero-text-wrapper": {
+        position: "relative",
+        top: "10%",
+        padding: " 0 80px",
+
+        "& h1": {
+          fontSize: "7rem",
+          lineHeight: "7rem",
+          fontWeight: "900",
+          color: "#518D7E",
+          margin: "2rem 0",
+          fontFamily: "'Playfair Display', serif",
+
+          "& span": {
+            WebkitTextStroke: "1.5px #518d7e",
+            color: "transparent",
+          },
+        },
+
+        "& p": {
+          margin: " 2rem 0",
+          color: "#3C3C3B",
+          fontSize: "1.25rem",
+          lineHeight: "2rem",
+        },
+      },
+
+      "& .hero-image-wrapper": {
+        marginTop: "5%",
+
+        "& .image-wrapper": {
+          position: "relative",
+          height: " 80%",
+          overflow: "hidden",
+
+          " & img": {
+            width: "100%",
+            height: "auto",
+            position: "relative",
+            top: "-10%",
+          },
+        },
+        "& .icon": {
+          width: "50%",
+          height: "auto",
+          color: turquoise,
+          position: "relative",
+          top: "50%",
+          left: "50%",
+          transform: " translate(-50%, -50%)",
+        },
+      },
+    },
+  },
+
+  sectionsWrapper: {
+    "& .single-section-wrapper": {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      margin: "5% 0",
+      position: "relative",
+
+      "& .image-wrapper": {
+        position: "relative",
+        height: "90%",
+        overflow: "hidden",
+
+        "& img": {
+          width: "100%",
+          height: "auto",
+          position: "relative",
+          left: "80px",
+          zIndex: "1",
+        },
+      },
+
+      "& .circles-frame": {
+        position: "absolute",
+        left: " 1%",
+        bottom: "-10%",
+      },
+
+      "& .text-wrapper": {
+        textAlign: "left",
+        paddingLeft: "2%",
+        marginBottom: "2%",
+
+        "& h1": {
+          fontFamily: "'Playfair Display', serif",
+          fontWeight: " bold",
+          fontSize: "12.5rem",
+          WebkitTextStroke: `1.5px ${turquoise}`,
+          color: "transparent",
+          margin: "0",
+          lineHeight: "96.3%",
+        },
+
+        "& h3": {
+          color: turquoise,
+          fontSize: "5rem",
+          margin: "0",
+          fontFamily: "'Playfair Display', serif",
+        },
+
+        "& p": {
+          color: turquoise,
+          fontSize: "1.25rem",
+          lineHeight: "2.5rem",
+
+          "& a": {
+            fontFamily: "'Playfair Display', serif",
+            fontWeight: "900",
+            fontSize: "24px",
+            lineHeight: "40px",
+            textDecoration: "underline",
+            color: "#518d7e",
+          },
+        },
+      },
+    },
+
+    "& .single-section-wrapper-2": {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      margin: "5% 0",
+      position: "relative",
+
+      "& .text-wrapper": {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+
+        "& h1": {
+          fontFamily: "Playfair Display, serif",
+          fontWeight: " bold",
+          fontSize: "16.8rem",
+          WebkitTextStroke: "1.5px #48808B",
+          color: "transparent",
+          margin: "0",
+          lineHeight: "96.3%",
+        },
+
+        "& div": {
+          padding: "0 2%",
+          width: "40%",
+
+          "& h3": {
+            color: "#48808B",
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "5rem",
+            lineHeight: "4.8rem",
+            marginBottom: "2%",
+          },
+
+          "& p": {
+            color: teal,
+            textAlign: "left",
+            fontSize: "1.25rem",
+            height: " 2rem",
+
+            "& a": {
+              display: "block",
+              margin: "2% 0",
+            },
+          },
+        },
+      },
+
+      "& .circles-frame": {
+        position: "absolute",
+        right: "0",
+        top: "-10%",
+        zIndex: "11",
+      },
+    },
+
+    "& .single-section-wrapper-3": {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      position: "relative",
+      marginTop: "10%",
+
+      "& .circles-frame": {
+        position: "absolute",
+        left: "25%",
+        top: "-10%",
+      },
+
+      "& .background-box": {
+        justifySelf: "center",
+        position: "absolute",
+        height: "549px",
+        backgroundColor: "#F7C86F",
+        width: "722px",
+        opacity: " 0.3",
+      },
+
+      "& .image-wrapper": {
+        position: "relative",
+        marginTop: "calc(549px / 2)",
+        transform: "translateY(-50%)",
+        display: "flex",
+        justifyContent: "end",
+      },
+
+      "& .text-wrapper": {
+        padding: "0 5%",
+        position: "relative",
+        bottom: "20%",
+
+        "& h1": {
+          fontFamily: "'Playfair Display', serif",
+          fontWeight: " bold",
+          fontSize: "16.8rem",
+          WebkitTextStroke: `2px ${bronze}`,
+          color: "transparent",
+          margin: "0",
+          lineHeight: "96.3%",
+        },
+
+        "& div": {
+          marginRight: "15%",
+
+          "& h3": {
+            color: bronze,
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "5rem",
+            lineHeight: "4.8rem",
+            marginBottom: "10%",
+            marginTop: "5%",
+          },
+
+          "& p": {
+            color: bronze,
+            textAlign: "left",
+            fontSize: "1.25rem",
+            height: " 2rem",
+          },
+        },
+      },
+    },
+  },
+
   imageAnimatedWrapper: {
     outline: `solid 1px ${teal}`,
     transition: " outline 0.6s linear",
     margin: " 0.5em",
+    position: "relative",
+    overflow: "hidden",
+    height: "90%",
+    width: "90%",
 
     "&:hover": {
       outlineWidth: "80px",
+    },
+
+    "& img": {
+      width: "100%",
+      height: "auto",
+      position: "relative",
+      zIndex: "111",
+    },
+  },
+
+  projectNumbersWrapper: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+
+    "& .inner-wrapper": {
+      backgroundColor: turquoise,
+      display: "flex",
+      flexDirection: "column",
+      paddingLeft: "5%",
+
+      "& h1": {
+        fontFamily: "Playfair Display",
+        color: white,
+        fontSize: "6rem",
+      },
+    },
+
+    "& .images-wrapper": {
+      display: "flex",
+      flexDirection: "row",
+      flexWrap: "wrap",
+
+      "& *": {
+        position: "relative",
+        width: "50%",
+
+        "& *": {
+          height: "100%",
+          width: "100%",
+        },
+      },
+    },
+  },
+
+  aboutSectionWrapper: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    margin: "5% 0",
+
+    "& .image-wrapper": {
+      "& img": {
+        width: "100%",
+        height: "auto",
+        objectFit: "cover",
+      },
+    },
+
+    "& .text-wrapper": {
+      paddingRight: "15%",
+      paddingLeft: "5%",
+      position: "relative",
+      bottom: "15%",
+
+      "& h3": {
+        color: teal,
+        fontFamily: "Playfair Display",
+        fontSize: "3rem",
+        lineHeight: "4rem",
+        fontWeight: "bold",
+      },
+
+      "& p": {
+        color: teal,
+        fontSize: "1.25rem",
+        lineHeight: "2rem",
+        fontWeight: "normal",
+      },
+
+      "& h5": {
+        color: teal,
+        fontSize: "1.5rem",
+        lineHeight: "2rem",
+        fontWeight: "900",
+        textDecoration: "underline",
+        fontFamily: "Playfair Display",
+      },
+    },
+  },
+
+  supportersSection: {
+    display: "flex",
+    flexDirection: "column",
+    position: "relative",
+    margin: "5% 5%",
+
+    "& .background-box": {
+      position: "absolute",
+      height: "252px",
+      backgroundColor: aqua,
+      opacity: "0.3",
+      width: "721px",
+      left: "-5%",
+      transform: "translateY(50%)",
+    },
+
+    "& h2": {
+      color: teal,
+      fontFamily: "Playfair Display",
+      fontSize: "5rem",
+      lineHeight: "96.3%",
+      fontWeight: "bold",
+      zIndex: "1",
+    },
+
+    "& .logos-wrapper": {
+      display: "flex",
+      flexDirection: "row",
+      width: "100%",
+      justifyContent: "space-between",
+      zIndex: "1",
+
+      "& *": {
+        width: "150px",
+        height: "150px",
+
+        "& *": {
+          width: "100%",
+          height: "auto",
+        },
+      },
     },
   },
 };
