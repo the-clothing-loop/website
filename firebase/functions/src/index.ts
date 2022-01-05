@@ -326,26 +326,26 @@ export const contactMail =
       });
 
 export const subscribeToNewsletter = functions
-  .region(region)
-  .https.onCall(async (data: any, context: functions.https.CallableContext) => {
-    functions.logger.debug('subscribeToNewsletter parameters', data);
+    .region(region)
+    .https.onCall(async (data: any, context: functions.https.CallableContext) => {
+      functions.logger.debug("subscribeToNewsletter parameters", data);
 
-    const { name, email } = data;
+      const {name, email} = data;
 
-    await db.collection('interested_users').add({
-      name,
-      email,
-    });
+      await db.collection("interested_users").add({
+        name,
+        email,
+      });
 
-    await db.collection('mail').add({
-      to: email,
-      message: {
-        subject: 'Thank you for subscribing to Clothing Loop',
-        html: ` <p>Hi ${name},</p>
+      await db.collection("mail").add({
+        to: email,
+        message: {
+          subject: "Thank you for subscribing to Clothing Loop",
+          html: ` <p>Hi ${name},</p>
                       <p>Thank you for subscribing!</p>
                       <p>Regards,</p>
                       <p>The clothing-loop team!</p>
               `,
-      },
+        },
+      });
     });
-  });
