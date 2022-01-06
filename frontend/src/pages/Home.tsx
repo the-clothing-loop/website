@@ -14,24 +14,49 @@ import { ClassNames } from "@emotion/react";
 import { ClassSharp } from "@material-ui/icons";
 import LandingPageMobile from "./LandingPageMobile";
 import Counters from "../components/Counters";
+import Carousel from "../components/Carousel";
 
 //Media
 import HeroImg from "../images/hero-image.png";
 import SectionThreeImg from "../images/image_3.png";
-import BagImage from "../images/bag_image.png";
+import BagImage from "../images/Utrecht.jpeg";
 import MapImage from "../images/map_image.png";
-import ClothesImage from "../images/clothes_image.png";
+import ClothesImage from "../images/Nichon_zelfportret.jpg";
 import CirclesFrame from "../images/circles.png";
-import SfmLogo from "../images/sfm_logo.png";
-import CarouselImgOne from "../images/carousel_image_one.png";
-import CarouselImgTwo from "../images/carousel_image_two.png";
 import HorizontalArrow from "../images/horizontal_arrow.svg";
 import Clothes from "../images/clothes.png";
+//Logos
+import SfmLogo from "../images/logos/sfm_logo.png";
+import CollActionLogo from "../images/logos/Logo-CollAction.png";
+import ImpactHubLogo from "../images/logos/LOGO-IMPACTHUB.png";
+import EssenseLogo from "../images/logos/essense-logo.svg";
+import WdcdLogo from "../images/logos/Logo_WDCD.png";
 
 const Home = () => {
   const [chainsCount, setChainsCount] = useState(0);
 
   const classes = makeStyles(theme as any)();
+
+  const supporters = [
+    {
+      logo: SfmLogo,
+      url: "https://slowfashion.global/",
+    },
+    {
+      logo: EssenseLogo,
+      url: "https://essense.eu/",
+    },
+    {
+      logo: CollActionLogo,
+      url: "https://www.collaction.org/",
+    },
+    {
+      logo: ImpactHubLogo,
+      url: "https://impacthub.net/",
+    },
+
+    { logo: WdcdLogo, url: "https://www.whatdesigncando.com/" },
+  ];
 
   useEffect(() => {
     (async () => {
@@ -189,39 +214,21 @@ const Home = () => {
 
         <div className={classes.supportersSection}>
           <div className="background-box"></div>
-          <h2>Supporters</h2>
+          <h2>Partners & Sponsors</h2>
           <div className="logos-wrapper">
-            <div>
-              <a>
-                <img src={SfmLogo} alt="Slow Fashion Movement logo" />
-              </a>
-            </div>
-
-            <div>
-              <a>
-                <img src={SfmLogo} alt="Slow Fashion Movement logo" />
-              </a>
-            </div>
-
-            <div>
-              <a>
-                <img src={SfmLogo} alt="Slow Fashion Movement logo" />
-              </a>
-            </div>
-
-            <div>
-              <a>
-                <img src={SfmLogo} alt="Slow Fashion Movement logo" />
-              </a>
-            </div>
-
-            <div>
-              <a>
-                <img src={SfmLogo} alt="Slow Fashion Movement logo" />
-              </a>
-            </div>
+            {supporters.map((el, i) => {
+              return (
+                <div key={i}>
+                  <a href={el.url}>
+                    <img src={el.logo} alt="" />
+                  </a>
+                </div>
+              );
+            })}
           </div>
         </div>
+
+        <Carousel />
       </div>
 
       <LandingPageMobile />

@@ -549,6 +549,39 @@
   #landing-page-mobile {
     display: none;
   }
+
+  @keyframes slide {
+    0% {
+      left: 0%;
+    }
+    50% {
+      left: -100%;
+    }
+    100% {
+      left: -200%;
+    }
+  }
+
+  div#slider {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 40vh;
+    overflow: "hidden";
+  }
+  div#slider figure img {
+    width: 20%;
+    float: left;
+  }
+  div#slider figure {
+    position: relative;
+    width: 500%;
+    margin: 0;
+    left: 0;
+    text-align: left;
+    font-size: 0;
+    animation: 8s slide infinite;
+  }
 }
 
 @media only screen and (max-width: 480px) {
