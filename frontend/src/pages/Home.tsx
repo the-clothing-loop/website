@@ -1,12 +1,11 @@
 // Material
 import { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import { Helmet } from "react-helmet";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Button, Grid } from "@material-ui/core";
+
 import theme from "../util/theme";
-import Button from "@material-ui/core/Button";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { Newsletter } from "../components/Newsletter/Newsletter";
 
 // Project resources
 import { getChainsLength } from "../util/firebase/chain";
