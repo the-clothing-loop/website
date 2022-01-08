@@ -28,17 +28,7 @@ const SingleCount: React.FC<IProps> = ({ end, step }: IProps) => {
 
   return (
     <div>
-      <h1
-        style={{
-          fontFamily: "Playfair Display",
-          color: "transparent",
-          WebkitTextStroke: "1px white",
-          fontSize: "78px",
-          margin: "1% 0",
-        }}
-      >
-        {state}
-      </h1>
+      {state}
     </div>
   );
 };

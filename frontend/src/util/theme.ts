@@ -177,8 +177,8 @@ const theme = {
     outline: `solid 1px ${turquoise}`,
     transition: " outline 0.6s linear",
     margin: " 0",
-    left:"50%",
-    transform:'translateY(-50%)',
+    left: "50%",
+    transform: "translateY(-50%)",
 
     "&:hover": {
       outlineWidth: "20px",
@@ -1023,14 +1023,78 @@ const theme = {
       "& *": {
         width: "200px",
         height: "200px",
-        display:'flex',
-        alignItems:'center',
+        display: "flex",
+        alignItems: "center",
 
         "& *": {
           width: "100%",
           height: "auto",
         },
       },
+    },
+  },
+
+  countersWrapper: {
+    display: "flex",
+    flexWrap: "wrap",
+
+    "& .isVisible": {
+      position: "relative",
+      width: "50%",
+      paddingLeft: "5%",
+
+      "& h1": {
+        fontFamily: "Playfair Display",
+        color: "transparent",
+        WebkitTextStroke: "1px white",
+        fontSize: "78px",
+        margin: "1% 0",
+      },
+
+      "& h3": {
+        fontFamily: "Playfair Display",
+        color: "white",
+        fontSize: "49px",
+        margin: "1% 0",
+      },
+    },
+  },
+
+  counterLinkWrapper: {
+    position: "relative",
+    width: "50%",
+    paddingLeft: "5%",
+
+    "& div": {
+      height: "105px",
+      display: "flex",
+      alignItems: "center",
+
+      "& a": {
+        backgroundColor: "#F7C86F",
+        width: "52px",
+        height: "52px",
+        borderRadius: "50%",
+        display: "inline-block",
+        top: "50%",
+        position: "relative",
+        transform: "translateY(-50%)",
+
+        "& .icon": {
+          position: "relative",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%) rotate(-90deg) ",
+          color: "white",
+        },
+      },
+    },
+
+    "& h3": {
+      fontFamily: "Playfair Display",
+      color: "white",
+      fontSize: "49px",
+      margin: "1% 0",
     },
   },
 };

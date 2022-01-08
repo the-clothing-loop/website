@@ -509,7 +509,7 @@
     transition: all 3s ease;
     overflow: hidden;
     border-radius: 0px !important;
-    text-transform: inherit;
+    text-transform: initial !important;
   }
 
   .btn > span {

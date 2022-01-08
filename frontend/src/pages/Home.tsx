@@ -12,7 +12,7 @@ import { getChainsLength } from "../util/firebase/chain";
 import { ClassNames } from "@emotion/react";
 import { ClassSharp } from "@material-ui/icons";
 import LandingPageMobile from "./LandingPageMobile";
-import Counters from "../components/Counters";
+import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 
 //Media
