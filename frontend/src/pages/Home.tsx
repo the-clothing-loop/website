@@ -1,11 +1,10 @@
 // Material
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { makeStyles, Button, Grid } from "@material-ui/core";
+import { makeStyles, Button } from "@material-ui/core";
 
 import theme from "../util/theme";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { Newsletter } from "../components/Newsletter/Newsletter";
 
 // Project resources
 import { getChainsLength } from "../util/firebase/chain";
@@ -24,6 +23,7 @@ import ClothesImage from "../images/Nichon_zelfportret.jpg";
 import CirclesFrame from "../images/circles.png";
 import HorizontalArrow from "../images/horizontal_arrow.svg";
 import Clothes from "../images/clothes.png";
+import ArrowRightIcon from "../images/right-arrow-yellow.svg";
 //Logos
 import SfmLogo from "../images/logos/sfm_logo.png";
 import CollActionLogo from "../images/logos/Logo-CollAction.png";
@@ -93,6 +93,7 @@ const Home = () => {
               </p>
               <Button className="btn btn-2" href="/loops/find">
                 {"Find a loop"}
+                <img src={ArrowRightIcon} alt="" className="btn-icon" />
               </Button>
             </div>
             <div className="hero-image-wrapper">
@@ -101,13 +102,15 @@ const Home = () => {
               </div>
 
               <div className={classes.circleBtn}>
-                {<ArrowDownwardIcon className="icon" />}
+                <a href="#section-one">
+                  {<ArrowDownwardIcon className="icon" />}
+                </a>
               </div>
             </div>
           </div>
         </div>
 
-        <div className={classes.sectionsWrapper}>
+        <section className={classes.sectionsWrapper} id="section-one">
           <div className="single-section-wrapper">
             <div className="image-wrapper">
               <img src={BagImage} alt="clothing bag" />
@@ -171,9 +174,9 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className={classes.projectNumbersWrapper}>
+        <section className={classes.projectNumbersWrapper}>
           <div className="inner-wrapper">
             <h1>What we do</h1>
             <Counters />
@@ -193,9 +196,9 @@ const Home = () => {
               <img src={Clothes} alt="bags of clothes" />
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className={classes.aboutSectionWrapper}>
+        <section className={classes.aboutSectionWrapper}>
           <div className="image-wrapper">
             <img src={ClothesImage} alt="" />
           </div>
@@ -209,7 +212,7 @@ const Home = () => {
 
             <h5>Read more about us</h5>
           </div>
-        </div>
+        </section>
 
         <div className={classes.supportersSection}>
           <div className="background-box"></div>

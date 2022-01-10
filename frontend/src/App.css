@@ -9,7 +9,7 @@
   html,
   body {
     font-family: 'Montserrat' !important;
-    background-color: rgb(245, 245, 245);
+    background-color: white;
     margin: 0;
   }
 
@@ -406,12 +406,6 @@
     padding-left: 0 !important;
   }
 
-  div#language-switcher-select {
-    margin-top: 0;
-    text-transform: uppercase;
-    color: white;
-  }
-
   input#outlined-basic {
     padding: 2%;
     font-family: 'Montserrat';
@@ -522,6 +516,11 @@
     transition: all 3s ease;
     mix-blend-mode: color-dodge;
     color: #f7c86f;
+    font-weight: 400;
+  }
+
+  img.btn-icon {
+    margin-left: 20px;
   }
 
   /* sliders */
@@ -537,7 +536,7 @@
   /* Left Slider */
   .btn-2:before {
     top: 0;
-    left: -150px;
+    left: -160px;
   }
 
   /* Hover Effect */

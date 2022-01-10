@@ -55,21 +55,15 @@ const theme = {
   },
 
   header: {
-    backgroundColor: teal,
+    position: "relative",
+    padding: "0 80px",
+    backgroundColor: "white",
     boxShadow: "none",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    zIndex: "1111",
+    zIndex: "11111111",
     height: "10vh",
-
-    "& div.language-switcher-wrapper": {
-      paddingRight: "2%",
-      "& div#simple-select": {
-        textTransform: "uppercase",
-        fontFamily: "Montserrat",
-      },
-    },
 
     "& .MuiButtonBase-root": {
       fontSize: "1.2rem",
@@ -84,6 +78,16 @@ const theme = {
     minHeight: "4rem",
     display: "flex",
     alignItems: "center",
+
+    "& a": {
+      fontWeight: " 500",
+      fontStyle: " normal",
+      fontSize: "1rem",
+      lineHeight: " 21.86px",
+      color: "#3C3C3B",
+      padding: "12px 32px",
+      margin: "0px 24px",
+    },
   },
 
   headerRight: {
@@ -91,6 +95,12 @@ const theme = {
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
+  },
+
+  languageSwitcherWrapper: {
+    marginLeft: " 24px",
+    padding: "12px 0",
+    paddingLeft: " 32px",
   },
 
   buttonContained: {
@@ -103,10 +113,10 @@ const theme = {
   },
 
   logo: {
-    fontSize: "2rem",
-    margin: "0 3rem",
-    color: bronze,
+    fontSize: "24px",
+    color: black,
     textTransform: "uppercase",
+    lineHeight: "29.2px",
   },
 
   buttonOutlined: {
@@ -128,13 +138,23 @@ const theme = {
   },
 
   buttonCta: {
-    backgroundColor: turquoise,
+    backgroundColor: white,
     color: yellow,
-    border: `1px solid ${bronze}`,
-    margin: "0 2%",
+    border: `1.54px solid ${yellow}`,
+    padding: "12px, 32px, 12px, 32px",
+    boxSizing: " border-box",
     minWidth: "max-content",
-    width: "9rem",
-    height: "2.625rem",
+    width: "188.43px",
+    height: "46px",
+    borderRadius: "0",
+    textTransform: "initial",
+    fontSize: "1rem",
+    lineHeight: "21.86px",
+
+    "& span": {
+      color: yellow,
+      fontSize: "1rem",
+    },
   },
 
   animatedBtn: {
@@ -185,7 +205,10 @@ const theme = {
     },
   },
   menuItem: {
-    textTransform: "uppercase",
+    color: black,
+    textTransform: "capitalize",
+    fontFamily: "Montserrat !important",
+    fontWeight: "500 !important",
   },
 
   // Styling for forms
@@ -416,6 +439,7 @@ const theme = {
   },
 
   select: {
+    color: black,
     borderRadius: "4px",
     backgroundColor: "#fff",
     width: "100%",
@@ -439,7 +463,9 @@ const theme = {
 
   simpleSelect: {
     textTransform: "uppercase",
-    color: `${white} !important`,
+    color: black,
+    fontWeight: "500 !important",
+    zIndex: "111111111",
   },
 
   formSelect: {
@@ -506,14 +532,12 @@ const theme = {
   },
 
   footer: {
-    backgroundColor: teal,
-    color: white,
+    paddingTop: "152px",
+    backgroundColor: "#ffff",
+    color: black,
     width: "100%",
-    height: "10rem",
     position: "relative",
     bottom: 0,
-    padding: "0 5%",
-    boxShadow: " 0px -4px 3px rgba(0, 0, 0, 0.2)",
     zIndex: "11",
 
     "& a": {
@@ -522,27 +546,103 @@ const theme = {
     },
   },
 
-  footerNav: {
-    color: "inherit",
+  footerWrapper: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    paddingLeft: "50px",
+  },
+
+  footerSections: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
-    padding: "0 5%",
-    height: "6rem",
+    flexWrap: "wrap",
+    padding: "1% 0",
   },
 
-  socialMediaLinkContainer: {
+  footerSection: {
+    width: "50%",
     display: "flex",
-    flexDirection: "row-reverse",
-    alignItems: "center",
-    height: "4rem",
+    flexDirection: "column",
+
+    "& h5": {
+      fontStyle: " normal",
+      fontSize: " 24px",
+      lineHeight: "32.8px",
+      color: teal,
+      padding: "2% 0",
+      fontWeight: "800",
+    },
+
+    "& a": {
+      fontStyle: "normal",
+      fontSize: "1rem",
+      lineHeight: "21.86px",
+      paddingTop: "8px",
+      cursor: "pointer",
+
+      "&:hover": {
+        textDecoration: "none",
+      },
+    },
   },
 
-  socialMediaLink: {
-    color: "inherit",
-    fontSize: "2.5rem",
-    marginLeft: "1.5rem",
+  footerLegalWrapper: {
+    backgroundColor: teal,
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+
+    "& p": {
+      margin: "27px 80px",
+      fontWeight: "300",
+      fontStyle: "normal",
+      fontSize: "16px",
+      lineHeight: "21.86px",
+      color: white,
+
+      "& span": {
+        color: white,
+        fontWeight: "800",
+      },
+    },
   },
+
+  legalLinks: {
+    margin: "27px 80px",
+    "& a": {
+      fontStyle: "normal",
+      fontSize: "1rem",
+      lineHeight: "21.86px",
+      paddingRight: " 34px",
+      cursor: "pointer",
+      color: white,
+      "&:hover": {
+        textDecoration: "none",
+      },
+    },
+  },
+  // footerNav: {
+  //   color: "inherit",
+  //   display: "flex",
+  //   flexDirection: "row",
+  //   justifyContent: "space-evenly",
+  //   padding: "0 5%",
+  //   height: "6rem",
+  // },
+
+  // socialMediaLinkContainer: {
+  //   display: "flex",
+  //   flexDirection: "row-reverse",
+  //   alignItems: "center",
+  //   height: "4rem",
+  // },
+
+  // socialMediaLink: {
+  //   color: "inherit",
+  //   fontSize: "2.5rem",
+  //   marginLeft: "1.5rem",
+  // },
 
   contactsWrapper: {
     height: "100%",
@@ -620,7 +720,6 @@ const theme = {
 
   landingPageWrapper: {
     position: "relative",
-    margin: "5% 0",
 
     "& .background-box": {
       position: "absolute",
@@ -647,7 +746,7 @@ const theme = {
 
       "& .hero-text-wrapper": {
         position: "relative",
-        top: "10%",
+        marginTop: "10%",
         padding: " 0 80px",
 
         "& h1": {
@@ -674,11 +773,12 @@ const theme = {
 
       "& .hero-image-wrapper": {
         marginTop: "5%",
+        position: "relative",
 
         "& .image-wrapper": {
           position: "relative",
-          height: " 80%",
           overflow: "hidden",
+          maxHeight: "80%",
 
           " & img": {
             width: "100%",
@@ -701,6 +801,7 @@ const theme = {
   },
 
   sectionsWrapper: {
+    marginTop: "5% 0",
     "& .single-section-wrapper": {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
@@ -829,14 +930,14 @@ const theme = {
 
       "& .circles-frame": {
         position: "absolute",
-        left: "25%",
+        left: "20%",
         top: "-10%",
       },
 
       "& .background-box": {
         justifySelf: "center",
         position: "absolute",
-        height: "549px",
+        height: "80%",
         backgroundColor: "#F7C86F",
         width: "722px",
         opacity: " 0.3",
