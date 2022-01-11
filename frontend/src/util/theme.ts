@@ -1,3 +1,5 @@
+import { autocompleteClasses } from "@mui/material";
+
 const black = "#3C3C3B";
 const white = "#ffff";
 const teal = "#48808B";
@@ -984,6 +986,89 @@ const theme = {
             fontSize: "1.25rem",
             height: " 2rem",
           },
+        },
+      },
+    },
+  },
+
+  //donations
+  donationsWrapper: {
+    position: "relative",
+    margin: "10% 0",
+    width: "100%",
+
+    "& .background-box": {
+      justifySelf: "center",
+      position: "absolute",
+      height: "298px",
+      backgroundColor: yellow,
+      width: "60%",
+      opacity: " 0.3",
+      top: "30%",
+      left: "50%",
+      transform: "translateX(-50%)",
+    },
+
+    " & div": {
+      display: "grid",
+      gridTemplateColumns: "50% 50%",
+
+      "& .image-wrapper": {
+        position: "relative",
+        width: "480px",
+        height: "357px",
+        display: "flex",
+        left: "197px",
+
+        "& img": {
+          width: "100%",
+          height: "auto",
+          objectFit: "cover",
+        },
+      },
+
+      "& .text-wrapper": {
+        paddingRight: "50%",
+        position: "relative",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+
+        "& h3": {
+          color: bronze,
+          fontFamily: "'Playfair Display', serif",
+          fontSize: "4.5rem",
+          lineHeight: "5rem",
+          fontWeight: "700",
+          margin: " 0",
+          paddingBottom: "28px",
+        },
+
+        "& p": {
+          color: black,
+          textAlign: "left",
+          fontSize: "1rem",
+          lineHeight: " 1.5rem",
+          fontWeight: "400",
+          fontFamily: "Montserrat",
+          paddingBottom: "16px",
+          margin: "0",
+
+          "& span": {
+            fontFamily: "Montserrat",
+            fontWeight: "900",
+          },
+        },
+
+        "& button": {
+          width: "105px",
+          height: " 35px",
+          border: ` 2px solid ${bronze} `,
+          color: bronze,
+          backgroundColor: "transparent",
+          fontSize: "14px",
+          lineHeight: "19px",
+          fontWeight: "500",
         },
       },
     },

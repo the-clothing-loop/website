@@ -13,7 +13,7 @@ import { ClassSharp } from "@material-ui/icons";
 import LandingPageMobile from "./LandingPageMobile";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
-
+import Donations from "../components/Donations";
 //Media
 import HeroImg from "../images/hero-image.png";
 import SectionThreeImg from "../images/image_3.png";
@@ -229,6 +229,7 @@ const Home = () => {
             })}
           </div>
         </div>
+        <Donations />
 
         <Carousel />
       </div>
