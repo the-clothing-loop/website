@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 //project resources
 import { getChainsLength } from "../../util/firebase/chain";
 import SingleCounter from "./SingleCounter";
+import useIntersectionObserver from "./hooks";
 
 //mui
 import { makeStyles } from "@material-ui/core";
@@ -27,7 +28,7 @@ const Counters = () => {
   }, []);
 
   //check if div is visible on viewport
-  const callBAck = (entries: any) => {
+  const callBack = (entries: any) => {
     const [entry] = entries;
     setIsVisible(entry.isIntersecting);
   };
@@ -38,14 +39,7 @@ const Counters = () => {
     threshold: 0.5,
   };
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(callBAck, options);
-    if (containerRef.current) observer.observe(containerRef.current);
-
-    return () => {
-      if (containerRef.current) observer.unobserve(containerRef.current);
-    };
-  }, [containerRef, options]);
+  useIntersectionObserver(callBack, containerRef, options);
 
   return (
     <div ref={containerRef} className={classes.countersWrapper}>
