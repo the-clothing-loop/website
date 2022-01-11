@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useContext, useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { useContext } from "react";
 
 // Material UI
 import { AppBar, Button } from "@material-ui/core";
@@ -13,26 +12,12 @@ import { AuthContext } from "../components/AuthProvider";
 import theme from "../util/theme";
 import ArrowIcon from "../images/right-arrow-yellow.svg";
 
-const Navbar = (props: any) => {
+const Navbar = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
   const { userData } = useContext(AuthContext);
 
-  const { match, location, history } = props;
-
-  const [mainPage, setMainPage] = useState(false);
-  const [landingPage, setLandingPage] = useState(false);
-
-  useEffect(() => {
-    if (window.location.pathname == "/loops/find") {
-      setMainPage(true);
-      setLandingPage(false);
-    }
-    if (window.location.pathname == "/home") {
-      setLandingPage(true);
-      setMainPage(false);
-    }
-  }, [props.location.pathname]);
+  let location = useLocation();
 
   return (
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
@@ -53,7 +38,7 @@ const Navbar = (props: any) => {
               {t("download")}
             </Button>
           ) : null}
-          {userData === null && mainPage ? (
+          {userData === null && location.pathname === "/loops/find" ? (
             <Button
               color="inherit"
               component={Link}
@@ -64,7 +49,7 @@ const Navbar = (props: any) => {
             </Button>
           ) : null}
 
-          {userData === null && !mainPage ? (
+          {userData === null && location.pathname !== "/loops/find" ? (
             <Button
               color="inherit"
               component={Link}
@@ -95,4 +80,4 @@ const Navbar = (props: any) => {
   );
 };
 
-export default withRouter(Navbar);
+export default Navbar;
