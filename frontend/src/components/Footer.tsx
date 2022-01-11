@@ -2,37 +2,62 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 //Project resources
-import { Button, Divider, makeStyles } from "@material-ui/core";
-import theme from "../util/theme";
+import { Newsletter } from "./Newsletter/Newsletter";
 
-import InstagramIcon from "@material-ui/icons/Instagram";
-import FacebookIcon from "@material-ui/icons/Facebook";
+//Mui
+import { makeStyles, Typography } from "@material-ui/core";
+import theme from "../util/theme";
+import { useContext } from "react";
+import { AuthContext } from "./AuthProvider";
 
 const Footer = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
 
+  const { userData } = useContext(AuthContext);
+
   return (
-    <div className={classes.footer}>
-      <div className={classes.footerNav}>
-        <Button component={Link} to="/about">
-          {t("About")}
-        </Button>
-        <Button component={Link} to="/">
-          {t("FAQ")}
-        </Button>
-        <Button component={Link} to="/">
-          {t("Connect")}
-        </Button>
-      </div>
-      <Divider />
-      <div className={classes.socialMediaLinkContainer}>
-        <a href="https://www.instagram.com/ketting_kledingruil/" target="_blank">
-          <InstagramIcon className={classes.socialMediaLink} />
-        </a>
-        <a href="facebook.com/groups/868282617266730/" target="_blank">
-          <FacebookIcon className={classes.socialMediaLink} />
-        </a>
+    <div
+      className={classes.footer}
+      style={{ display: "flex", flexDirection: "column" }}
+    >
+      {userData === null ? (
+        <div className={classes.footerWrapper}>
+          <div className={classes.footerSections}>
+            <div className={classes.footerSection}>
+              <Typography component="h5">Learn more</Typography>
+              <Link to="#">FAQ's</Link>
+              <Link to="#">Help</Link>
+              <Link to="#">About</Link>
+            </div>
+            <div className={classes.footerSection}>
+              <Typography component="h5">Loops</Typography>
+              <Link to="/loops/find">Finding a loop</Link>
+              <Link to="/loops/new-signup">Starting a loop</Link>
+              <Link to="/users/login">Login</Link>
+              <Link to="#">Register</Link>
+            </div>
+            <div className={classes.footerSection}>
+              <Typography component="h5">Find us</Typography>
+              <Link to="mailto:hello@theclothingloop.com">
+                hello@theclothingloop.org
+              </Link>
+              <Link to="/contacts">Contact</Link>
+            </div>
+          </div>
+          <Newsletter />
+        </div>
+      ) : null}
+
+      <div className={classes.footerLegalWrapper}>
+        <div className={classes.legalLinks}>
+          <Link to="#">Terms of service</Link>
+          <Link to="#">Privacy</Link>
+        </div>
+
+        <p>
+          <span>The Clothing Loop</span> &copy; 2022
+        </p>
       </div>
     </div>
   );

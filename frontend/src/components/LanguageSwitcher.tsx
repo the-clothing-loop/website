@@ -24,14 +24,13 @@ const LanguageSwitcher = () => {
   };
 
   return (
-    <div className="language-switcher-wrapper">
+    <div className={classes.languageSwitcherWrapper}>
       {languages ? (
         <FormControl fullWidth>
           <Select
             labelId="language-switcher-select-label"
             id="language-switcher-select"
             value={selected}
-            label="Languages"
             onChange={handleChange}
             className={classes.simpleSelect}
           >
