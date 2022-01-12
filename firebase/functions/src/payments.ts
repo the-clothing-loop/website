@@ -2,8 +2,8 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires,max-len
-const stripe = require("stripe")("sk_test_51HxZwwKEl0DmQOIqcCvTNnTthmJL6eEnyDDSHAqliBayBW9XALZ2FfJknueL6F0CuUknbaE2sYmSmQ4HXURiNRZv00Kn5pNPk9");
-const endpointSecret = "whsec_3R37ljt6v38bnhaGOXpz5tsxE7Uq4oUT"; // process.env.STRIPE_WH_SECRET;
+const stripe = require("stripe")(functions.config().clothingloop.stripeKey);
+const endpointSecret = functions.config().clothingloop.webhookSecret;
 
 interface IPaymentInitiateData {
   variables: {

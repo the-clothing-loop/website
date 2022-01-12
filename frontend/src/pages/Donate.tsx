@@ -1,13 +1,10 @@
 // Material
 import {makeStyles} from "@material-ui/core";
-import {Button} from "@material-ui/core";
 import DonationForm from "../components/Donation/DonationForm";
 
 //Project resources
 import theme from "../util/theme";
 import {RouteComponentProps} from "react-router";
-import {loadStripe} from "@stripe/stripe-js";
-import {Elements} from "@stripe/react-stripe-js";
 
 type TParams = {
     status?: string;
@@ -25,17 +22,17 @@ const Donate = ({match}: RouteComponentProps<TParams>) => {
             <div className={classes.pageGrid} style={{justifyContent: "flex-start"}}>
 
 
-                        <div>
-                            <h3>Donation test page</h3>
+                  <div>
+                      <h3>Donation test page</h3>
 
 
-                            {status === "thankyou" ?
-                                <>Thank you</> :
-                                <DonationForm/>
-                            }
+                      {status === "thankyou" ?
+                          <>Thank you</> :
+                          <DonationForm/>
+                      }
 
 
-                        </div>
+                  </div>
 
 
             </div>
