@@ -26,6 +26,8 @@
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.2.4",
     "@mui/styles": "^5.2.3",
+    "@stripe/react-stripe-js": "^1.7.0",
+    "@stripe/stripe-js": "^1.22.0",
     "@types/mapbox__mapbox-gl-geocoder": "^4.7.1",
     "@types/react-helmet": "^6.1.1",
     "axios": "^0.21.1",
