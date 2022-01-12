@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {UserRecord} from "firebase-functions/lib/providers/auth";
+import payments from "./payments";
 
 admin.initializeApp();
 
@@ -349,3 +350,7 @@ export const subscribeToNewsletter = functions
         },
       });
     });
+
+export const paymentInitiate = functions
+    .region(region)
+    .https.onCall(payments.initiate);
