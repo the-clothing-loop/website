@@ -3,6 +3,7 @@ import * as admin from "firebase-admin";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires,max-len
 const stripe = require("stripe")("sk_test_51HxZwwKEl0DmQOIqcCvTNnTthmJL6eEnyDDSHAqliBayBW9XALZ2FfJknueL6F0CuUknbaE2sYmSmQ4HXURiNRZv00Kn5pNPk9");
+const endpointSecret = "whsec_3R37ljt6v38bnhaGOXpz5tsxE7Uq4oUT"; // process.env.STRIPE_WH_SECRET;
 
 interface IPaymentInitiateData {
   variables: {
@@ -14,7 +15,7 @@ interface IPaymentInitiateData {
 }
 
 const payments = {
-  initiate: async (data : IPaymentInitiateData) => {
+  initiate: async (data : IPaymentInitiateData): Promise<{ sessionId: string }> => {
     functions.logger.debug("paymentInitiate parameters", data);
     const {amount, email, type, priceId} = data.variables;
 
@@ -62,7 +63,7 @@ const payments = {
     if (!session || !session.id) {
       throw new functions.https.HttpsError("unknown", "Something went wrong when processing your checkout request...");
     }
-    await admin.firestore().collection("payments").add({
+    await admin.firestore().collection("payments").doc(session.id).set({
       sessionId: session.id,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       amount,
@@ -74,6 +75,108 @@ const payments = {
     return {
       sessionId: session && session.id,
     };
+  },
+  webhook: async (request: functions.Request, response: functions.Response) : Promise<any> => {
+    functions.logger.debug("payment webhook parameters", request.body);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const payload = request.rawBody;
+    const sig = request.headers["stripe-signature"];
+
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      functions.logger.warn(`Stripe Webhook Error: ${err.message}`);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the checkout.session.completed event
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+
+      if (session.mode === "setup") {
+        const priceId = session.metadata.price_id;
+
+        const setupIntentID = session.setup_intent;
+        const intent = await stripe.setupIntents.retrieve(setupIntentID);
+
+        const method = await stripe.paymentMethods.retrieve(intent.payment_method);
+        const billingDetails = method.billing_details;
+
+        const email = billingDetails.email;
+
+        /* Create customer */
+        const customer = await stripe.customers.create({
+          email,
+          name: billingDetails.name,
+          address: billingDetails.address,
+          payment_method: intent.payment_method,
+          invoice_settings: {
+            default_payment_method: intent.payment_method,
+          },
+        });
+
+        const customerId = customer.id;
+        await stripe.subscriptions.create({
+          customer: customerId,
+          items: [
+            {price: priceId},
+          ],
+        });
+        await admin.firestore().collection("payments").doc(session.id).update({
+          sessionId: session.id,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          completed: true,
+          email,
+          customerId,
+        });
+
+        // await sendThankYouEmail(email);
+
+        // const amount = {
+        //   "price_1IAgywKEl0DmQOIqsyiOEF88": "2,50",
+        //   "price_1IAgzIKEl0DmQOIqLGl1nBIA": "5,00",
+        //   "price_1IAgzbKEl0DmQOIqEuVJitsi": "10,00",
+        // }[priceId];
+        // await postSlackUpdateMember(amount);
+      } else {
+        if (!session.customer) {
+          return response.status(400).send("Webhook Error: No customer provided...");
+        }
+
+        const customer = await stripe.customers.retrieve(
+            session.customer
+        ).catch(() => {
+          return response.status(400).send("Customer not found...");
+        });
+
+        const email = customer.email;
+
+        await admin.firestore().collection("payments").doc(session.id).update({
+          sessionId: session.id,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          completed: true,
+          email,
+          customerId: session.customer,
+        });
+
+        // await sendThankYouEmail(email);
+
+        // const amount = session.amount_total / 100;
+        // await postSlackUpdateDonation(amount);
+      }
+
+      return response.json({received: true});
+    } else {
+      return response.json({received: true});
+    }
   },
 };
 

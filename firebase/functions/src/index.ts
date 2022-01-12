@@ -354,3 +354,7 @@ export const subscribeToNewsletter = functions
 export const paymentInitiate = functions
     .region(region)
     .https.onCall(payments.initiate);
+
+export const paymentWebhook = functions
+    .region(region)
+    .https.onRequest(payments.webhook);
