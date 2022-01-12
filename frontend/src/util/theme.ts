@@ -359,7 +359,7 @@ const theme = {
     left: "50%",
     backgroundColor: aqua,
     textAlign: "center",
-    height: "80vh",
+    minHeight: "80vh",
     width: "80%",
     display: "flex",
     flexDirection: "column",
