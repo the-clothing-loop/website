@@ -4,7 +4,6 @@ import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import { createTheme } from "@mui/material/styles";
 import { AuthProvider } from "./components/AuthProvider";
 import themeFile from "./util/theme";
-import { useState, useEffect } from "react";
 
 // Pages
 import FindChain from "./pages/FindChain";
@@ -31,24 +30,12 @@ import { Logout } from "./pages/Logout";
 const theme = createTheme(themeFile);
 
 const App = () => {
-  // TODO: Remove once the new Landing Page is live
-  const [showNavbar, setShowNavbar] = useState(true);
-  const [showFooter, setShowFooter] = useState(true);
-
-  useEffect(() => {
-    if (window.location.pathname == "/") {
-      setShowNavbar(false);
-      setShowFooter(false);
-    }
-  }, []);
-  // TODO: Remove once the new Landing Page is live
-
   return (
     <MuiThemeProvider theme={theme}>
       <AuthProvider>
         <div className="app">
           <Router>
-            {showNavbar && <Navbar />}
+            <Navbar />
             <div className="container">
               <Switch>
                 <Route exact path="/home" component={Home} />
@@ -94,7 +81,7 @@ const App = () => {
                 <Route exact path="/" component={LandingPage} />
               </Switch>
             </div>
-            {showFooter && <Footer />}
+            <Footer />
           </Router>
         </div>
       </AuthProvider>
