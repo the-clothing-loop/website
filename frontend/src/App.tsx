@@ -26,6 +26,7 @@ import MessageSubmitted from "./pages/MessageSubmitted";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Logout } from "./pages/Logout";
+import Donate from "./pages/Donate";
 
 const theme = createTheme(themeFile);
 
@@ -40,6 +41,7 @@ const App = () => {
               <Switch>
                 <Route exact path="/home" component={Home} />
                 <Route exact path="/thankyou" component={Thankyou} />
+                <Route exact path="/donate/:status?" component={Donate} />
                 <Route
                   exact
                   path="/message-submitted"
