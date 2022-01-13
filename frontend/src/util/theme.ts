@@ -120,12 +120,18 @@ const theme = {
   },
 
   buttonOutlined: {
-    position: "relative",
-    margin: "15px 15px 15px 15px",
-    border: `1px solid ${yellow}`,
-    color: "black",
-    width: "9rem",
-    height: "2.625rem",
+    width: "157.43px",
+    height: "46px",
+    padding: "12px 32px",
+    backgroundColor: "transparent",
+    border: `1.5px solid ${yellow}`,
+    color: yellow,
+    fontSize: "1rem",
+    lineHeight: "21.8px",
+    margin: "0px 23px",
+    borderRadius: "0",
+    boxShadow: "none",
+    textTransform: "initial",
   },
 
   submitBtn: {
@@ -204,6 +210,10 @@ const theme = {
       outlineWidth: "20px",
     },
   },
+
+  buttonsWrapper: {
+    paddingTop: "10%",
+  },
   menuItem: {
     color: black,
     textTransform: "capitalize",
@@ -226,10 +236,16 @@ const theme = {
     flexDirection: "column",
   },
 
-  threeColumnsForm: {
+  threeColumnsFormWrapper: {
     height: "100%",
     textAlign: "center",
-    backgroundColor: aqua,
+    backgroundColor: white,
+    padding: "5% 0",
+  },
+
+  threeColumnsForm: {
+    backgroundColor: " rgb(72, 128, 139, 0.1)",
+    padding: "5%",
   },
 
   singleForm: {
@@ -278,7 +294,6 @@ const theme = {
     margin: "20px auto 20px auto",
     fontFamily: "Montserrat",
     fontSize: "1.5rem",
-    textTransform: "uppercase",
   },
   loopName: {
     fontFamily: "Montserrat",
@@ -287,7 +302,7 @@ const theme = {
     fontSize: "2rem ",
   },
   textField: {
-    marginTop: "5px",
+    marginTop: "2%",
     border: "none",
     fontFamily: "Montserrat",
   },
@@ -299,13 +314,27 @@ const theme = {
     border: `1px solid ${turquoise} `,
   },
   button: {
-    margin: "5% 0",
-    width: "9rem",
-    height: "2.625rem",
-    display: "block",
-    position: "relative",
-    left: "50%",
-    transform: "translateX(-50%)",
+    width: "157.43px",
+    height: "46px",
+    padding: "12px 32px",
+    backgroundColor: yellow,
+    border: `1.5px solid ${yellow}`,
+    color: white,
+    fontSize: "1rem",
+    lineHeight: "21.8px",
+    margin: "0px 23px",
+    borderRadius: "0",
+    boxShadow: "none",
+    textTransform: "initial",
+
+    "& img": {
+      paddingLeft: "20px",
+    },
+
+    // display: "block",
+    // position: "relative",
+    // left: "50%",
+    // transform: "translateX(-50%)",
   },
   root: {
     minWidth: 275,
@@ -440,11 +469,11 @@ const theme = {
 
   select: {
     color: black,
-    borderRadius: "4px",
-    backgroundColor: "#fff",
+    borderRadius: "0",
+    backgroundColor: "transparent",
     width: "100%",
-    boxShadow:
-      "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
+    fontFamily: "Montserrat !important",
+    textTransform: "capitalize",
 
     "& div#demo-multiple-checkbox": {
       padding: "10px !important",
@@ -458,6 +487,15 @@ const theme = {
     },
     "&:not(.Mui-disabled):hover::before": {
       borderColor: yellow,
+    },
+  },
+
+  labelSelect: {
+    fontFamily: "Montserrat !important",
+    transform: "translate(0px, -6px) scale(0.75) !important",
+
+    "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
+      transform: "translate(0px, -6px) scale(0.75) !important",
     },
   },
 
@@ -494,7 +532,6 @@ const theme = {
 
   listItemTextSizes: {
     fontFamily: "Montserrat",
-    textTransform: "uppercase",
   },
 
   alertContainer: {

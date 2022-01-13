@@ -64,5 +64,10 @@
   "weWillReplySoon": "Someone from our team will be in touch with you soon",
   "selectLoopLocation": "Select Loop location",
   "confirmation": "Confirmation",
-  "about": "About"
+  "about": "About",
+  "editLoopInformation": "Edit Loop information",
+  "newsletterSubscription": "Newsletter subscription",
+  "editAdminContacts": "Edit Admin contacts",
+  "editParticipantContacts": "Edit Participant contacts",
+  "ifNoSizesAreShowing": "If no sizes are showing, the participant didn't select any interested size when joining."
 }
