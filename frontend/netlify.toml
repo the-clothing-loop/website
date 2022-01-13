@@ -25,8 +25,8 @@
       form-action 'self' https://*.list-manage.com/ https://*.googleapis.com; 
       connect-src 'self' https://*.mapbox.com https://*.googleapis.com https://*.cloudfunctions.net; 
       img-src 'self' 'unsafe-inline' https://*.iconfinder.com data: blob:; 
-      style-src 'self' 'unsafe-inline' https://*.mapbox.com; 
-      font-src 'self'; 
+      style-src 'self' 'unsafe-inline' https://*.mapbox.com https://fonts.googleapis.com;; 
+      font-src 'self' https://fonts.gstatic.com; 
       media-src 'self'; 
       frame-src 'self'; 
       script-src 'self' blob:; 
