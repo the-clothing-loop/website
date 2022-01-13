@@ -435,6 +435,15 @@ const theme = {
     },
   },
 
+  tableCellRoot: {
+    fontSize: "1rem",
+    borderBottom: "none !important",
+  },
+
+  tableCell: {
+    borderBottom: "1px solid #dee3ed",
+  },
+
   checkbox: {
     color: `${yellow} !important`,
   },
@@ -1234,6 +1243,24 @@ const theme = {
       fontSize: "49px",
       margin: "1% 0",
     },
+  },
+
+  progressBox: {
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center",
+    padding: '5% 0',
+
+    "& h3": {
+      color: black,
+      fontFamily: "Montserrat",
+    },
+  },
+  progressAnimation: {
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    color: turquoise,
   },
 };
 export default theme;

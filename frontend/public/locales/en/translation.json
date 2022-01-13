@@ -39,7 +39,7 @@
   "sizes": "Sizes",
   "join": "Join",
   "back": "Back",
-  "participants": "Partecipants",
+  "participants": "Participants",
   "submit": "Submit",
   "search": "Search",
   "noResultsFound": "No results found",
@@ -69,5 +69,9 @@
   "newsletterSubscription": "Newsletter subscription",
   "editAdminContacts": "Edit Admin contacts",
   "editParticipantContacts": "Edit Participant contacts",
-  "ifNoSizesAreShowing": "If no sizes are showing, the participant didn't select any interested size when joining."
+  "ifNoSizesAreShowing": "If no sizes are showing, the participant didn't select any interested size when joining.",
+  "loadingListOfAllLoops": "Loading list of all Loops",
+  "view": "View",
+  "location": "Location",
+  "status": "Status"
 }
