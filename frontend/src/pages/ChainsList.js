@@ -19,6 +19,7 @@ import Alert from "@material-ui/lab/Alert";
 import { getChains } from "../util/firebase/chain";
 import { Typography } from "@material-ui/core";
 import { getUsersForChain } from "../util/firebase/user";
+import {DataExport} from "../components/DataExport";
 
 const rows = ["name", "location", "status", "active users"];
 
@@ -78,6 +79,7 @@ const ChainsList = () => {
               "All available clothing loops are listed below. To select a specific clothing loop and make any change, click on 'view'."
             }
           </Typography>
+          <DataExport />
         </div>
         {error ? <Alert severity="error">{error}</Alert> : null}
         <TableContainer component={Paper}>
