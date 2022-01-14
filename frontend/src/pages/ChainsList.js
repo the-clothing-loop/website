@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory} from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
 // Material UI
 import { makeStyles } from "@material-ui/core";
-
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
@@ -25,19 +24,15 @@ import RightArrow from "../images/right-arrow-white.svg";
 // Project resources
 import { getChains } from "../util/firebase/chain";
 import { Typography } from "@material-ui/core";
-import { getUsersForChain } from "../util/firebase/user";
 import theme from "../util/theme";
 
-const rows = ["name", "location", "status", "participants"];
+const rows = ["name", "location", "status"];
 
 const ChainsList = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme)();
-
   const history = useHistory();
-
   const [chains, setChains] = useState();
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [error, setError] = useState("");
@@ -54,18 +49,6 @@ const ChainsList = () => {
   useEffect(() => {
     (async () => {
       let chains = await getChains();
-
-      let activeUsers = 0;
-      for (const chain of chains) {
-        try {
-          const getUsersForChainRes = await getUsersForChain(chain.id);
-          activeUsers = getUsersForChainRes.length;
-          chain.activeUsers = activeUsers;
-        } catch (error) {
-          setError(`an error occurred when trying to get all active users`);
-          console.error("error in getting users for chain with id", chain.id);
-        }
-      }
       let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
       setChains(sortedChains);
     })();
@@ -149,13 +132,6 @@ const ChainsList = () => {
                             </div>
                           )}
                         </TableCell>
-                        <TableCell
-                          key="chain-users"
-                          align="left"
-                          className={classes.tableCell}
-                        >
-                          {chain.activeUsers}
-                        </TableCell>
                         <TableCell align="right" className={classes.tableCell}>
                           <Button
                             variant="contained"
@@ -187,7 +163,10 @@ const ChainsList = () => {
           </div>
         ) : (
           <Box className={classes.progressBox}>
-            <CircularProgress color="inherit" className={classes.progressAnimation} />
+            <CircularProgress
+              color="inherit"
+              className={classes.progressAnimation}
+            />
             <h3>{t("loadingListOfAllLoops")}</h3>
           </Box>
         )}
