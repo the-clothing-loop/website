@@ -166,7 +166,9 @@ const FindChain = () => {
   const geoJSONFilteredChains: GeoJSONTypes.FeatureCollection<GeoJSONTypes.Geometry> =
     {
       type: 'FeatureCollection',
-      features: filteredChains.map((filteredChain, filteredChainIndex) => {
+      features: filteredChains
+        .filter(({ published }) => published)
+        .map((filteredChain, filteredChainIndex) => {
         const {
           longitude,
           latitude,
