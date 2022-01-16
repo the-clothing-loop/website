@@ -183,7 +183,11 @@ const FindChain = () => {
           },
           properties: {
             chainIndex: filteredChainIndex,
-            gender: gender[0], // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
+              gender: gender.includes('women')
+                ? 'woman'
+                : gender.includes('men')
+                ? 'men'
+                : 'children', // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
           },
         };
       }),
@@ -225,13 +229,11 @@ const FindChain = () => {
               'circle-color': [
                 'match',
                 ['get', 'gender'],
-                'children',
-                'red',
                 'women',
                 'pink',
                 'men',
                 'blue',
-                'black',
+                'red',
               ],
               'circle-radius': 30,
               'circle-blur': 0.7,
