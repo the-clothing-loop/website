@@ -233,7 +233,8 @@ const FindChain = () => {
                 'blue',
                 'black',
               ],
-              'circle-radius': 10,
+              'circle-radius': 30,
+              'circle-blur': 0.7,
                   }}
                 />
           <Layer
@@ -250,15 +251,8 @@ const FindChain = () => {
                 750,
                 '#f28cb1',
               ],
-              'circle-radius': [
-                'step',
-                ['get', 'point_count'],
-                20,
-                100,
-                30,
-                750,
-                40,
-              ],
+              'circle-radius': 30,
+              'circle-blur': 0.7,
                   }}
                 />
           <Layer
@@ -267,9 +261,8 @@ const FindChain = () => {
             filter={['has', 'point_count']}
             layout={{
               'text-field': '{point_count_abbreviated}',
-              'text-size': 12,
                   }}
-            paint={{}}
+            paint={{ 'text-color': 'white' }}
                 />
         </Source>
 
