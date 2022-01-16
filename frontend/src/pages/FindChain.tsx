@@ -55,8 +55,13 @@ const FindChain = () => {
   useEffect(() => {
     (async () => {
       const chainResponse = await getChains();
-      setChainData(chainResponse);
-      setFilteredChains(chainResponse);
+
+      const publishedChains = chainResponse.filter(
+        ({ published }) => published
+      );
+
+      setChainData(publishedChains);
+      setFilteredChains(publishedChains);
 
       //get user role
       if (user) {
@@ -167,7 +172,6 @@ const FindChain = () => {
     {
       type: 'FeatureCollection',
       features: filteredChains
-        .filter(({ published }) => published)
         .map((filteredChain, filteredChainIndex) => {
         const {
           longitude,
