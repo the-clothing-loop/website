@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import ReactMapGL, { MapEvent, SVGOverlay, FlyToInterpolator } from "react-map-gl";
+import ReactMapGL, { SVGOverlay, FlyToInterpolator } from "react-map-gl";
 import destination from "@turf/destination";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 // Material UI
 import { Button, FormControl, makeStyles, MenuItem, Typography } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import Grid from "@material-ui/core/Grid";
 
 // Project resources
 import theme from "../util/theme";
 import Geocoding from "./Geocoding";
-import { IChain, IViewPort } from "../types";
+import { IViewPort } from "../types";
+import { createChain } from "../util/firebase/chain";
 import { TextForm, NumberField, SelectField } from "../components/FormFields";
 import ProgressBar from "../components/ProgressBar"
 import categories,  {allSizes} from "../util/categories";
@@ -22,15 +24,12 @@ import PopoverOnHover from "../components/Popover";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || '';
 
-type Coordinates = {
-  longitude: number;
-  latitude: number;
-};
-
 const NewChainLocation = () => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
-  const history = useHistory();
+  const [error, setError] = useState("");
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const { userId } = useParams<{ userId: string }>();
   const [viewport, setViewport] = useState<IViewPort>({
     longitude: 0,
     latitude: 0,
@@ -54,6 +53,14 @@ const NewChainLocation = () => {
     flyToLocation(...center);
   };
 
+  const getPlaceName = async ([longitude, latitude]: [number, number]) => {
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
+    );
+    const data = await response.json();
+    return data.features[0].place_name;
+  };
+
   const formSchema = Yup.object().shape({
     loopName: Yup.string()
       .min(2, "Must be more than 2 characters")
@@ -71,6 +78,32 @@ const NewChainLocation = () => {
       .required("Required"),
     coordinates: Yup.array().of(Yup.number())
   });
+
+  const handleSubmit = async (values: any) => {
+    const newChain = {
+      name: values.name,
+      description: values.description,
+      longitude: values.coordinates[0],
+      latitude: values.coordinates[1],
+      categories: { gender: values.clothingType, size: values.clothingSize },
+      address: await getPlaceName(values.coordinates),
+      published: false,
+      uid: userId,
+    };
+
+    console.log(`creating chain: ${JSON.stringify(newChain)}`);
+    try {
+      await createChain(newChain);
+      setSubmitted(true);
+    } catch (e: any) {
+      console.error(`Error creating chain: ${JSON.stringify(e)}`);
+      setError(e.message);
+    }
+  };
+
+  if (submitted) {
+    return <Redirect to={`/thankyou`} />;
+  }
 
   return (
     <>
@@ -93,9 +126,7 @@ const NewChainLocation = () => {
             return {coordinates: "Please set the loop location by clicking the map"}
           }
         }}
-        onSubmit={(values, actions) => {
-          console.log(JSON.stringify(values));
-        }}
+        onSubmit={handleSubmit}
       >
         {({ values, errors, touched, setFieldValue, setFieldError, handleChange }) => {
 
@@ -270,6 +301,9 @@ const NewChainLocation = () => {
                       ) : null}
                     </Grid>
 
+                    {error ? (
+                      <Alert severity="error">{error}</Alert>
+                    ) : null}
                     <div className={classes.formSubmitActions}>
                       <Button
                         type="submit"
