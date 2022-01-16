@@ -161,6 +161,7 @@ const Signup = () => {
                       sizes={selectedSizes}
                       label={t("interestedSizes")}
                       fullWidth={true}
+                      inputVisible={true}
                     />
                     <PopoverOnHover
                       message={"please select the sizes you are interested in."}

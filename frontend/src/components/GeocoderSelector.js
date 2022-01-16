@@ -57,7 +57,10 @@ const GeocoderSelector = ({ onResult, ...props }) => {
             onViewportChange={handleGeocoderViewportChange}
             mapboxApiAccessToken={MAPBOX_TOKEN}
             position="top-left"
-            placeholder={t("enterYourAddress")}
+            placeholder={
+              props.userAddress ? props.userAddress : t("enterYourAddress")
+            }
+            userAddress={props.userAddress}
           />
         </MapGL>
       </div>

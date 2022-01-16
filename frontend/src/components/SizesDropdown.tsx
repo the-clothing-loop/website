@@ -12,6 +12,7 @@ import Checkbox from "@mui/material/Checkbox";
 
 import theme from "../util/theme";
 import categories from "../util/categories";
+import InputLabel from "@mui/material/InputLabel";
 
 interface IProps {
   setSizes: (el: string[]) => void;
@@ -20,6 +21,7 @@ interface IProps {
   className: string;
   label: string;
   fullWidth: boolean;
+  inputVisible: boolean;
 }
 
 const SizesDropdown: React.FC<IProps> = ({
@@ -29,6 +31,7 @@ const SizesDropdown: React.FC<IProps> = ({
   className,
   label,
   fullWidth,
+  inputVisible,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
@@ -49,6 +52,14 @@ const SizesDropdown: React.FC<IProps> = ({
 
   return (
     <FormControl className={classes.sizesFormWrapper} fullWidth={fullWidth}>
+      {inputVisible ? (
+        <InputLabel
+          id="demo-multiple-checkbox-label"
+          className={classes.labelSelect}
+        >
+          {label}
+        </InputLabel>
+      ) : null}
       <Select
         className={stylingClass}
         labelId="demo-multiple-checkbox-label"
@@ -59,8 +70,12 @@ const SizesDropdown: React.FC<IProps> = ({
         value={selectedSizes}
         onChange={(e: any) => handleChange(e, setSelectedSizes)}
         renderValue={(selected) => {
-          if (selected.length === 0) {
+          if (selected.length === 0 && !inputVisible) {
             return <em className={classes.em}>{label}</em>;
+          }
+
+          if (selected.length === 0 && inputVisible) {
+            return;
           }
 
           return selected.join(", ");

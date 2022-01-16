@@ -10,13 +10,18 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
+import InputLabel from "@mui/material/InputLabel";
 
 // Project resources
 import { getChain, updateChain } from "../util/firebase/chain";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { TextForm } from "../components/FormFields";
-import {ThreeColumnLayout} from "../components/Layouts";
-import categories, { allSizes } from "../util/categories";
+import { ThreeColumnLayout } from "../components/Layouts";
+import SizesDropdown from "../components/SizesDropdown";
+import CategoriesDropdown from "../components/CategoriesDropdown";
+
+//media
+import RightArrow from "../images/right-arrow-white.svg";
 
 const ChainEdit = () => {
   const { t } = useTranslation();
@@ -30,33 +35,13 @@ const ChainEdit = () => {
   const [coordinates, setCoordinates] = useState();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [sizes, setSizes] = useState({});
-  const [genders, setGenders] = useState({});
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedGenders, setSelectedGenders] = useState([]);
 
   const validate = Yup.object({
     name: Yup.string().min(2, "Must be more than 2 characters"),
     description: Yup.string().min(2, "Must be more than 2 characters"),
   });
-
-  const handleChange = (e, categories, setCategories) => {
-    if (e.target.checked) {
-      setCategories({
-        ...categories,
-        [e.target.name]: true,
-      });
-    } else {
-      setCategories({
-        ...categories,
-        [e.target.name]: false,
-      });
-    }
-  };
-
-  const getValues = (obj) => {
-    return Object.keys(obj).filter((e) => {
-      return obj[e] === true;
-    });
-  };
 
   const handleSubmit = async (values) => {
     const newChainData = {
@@ -65,8 +50,8 @@ const ChainEdit = () => {
       latitude: coordinates.latitude,
       longitude: coordinates.longitude,
       categories: {
-        gender: getValues(genders),
-        size: getValues(sizes),
+        size: selectedSizes,
+        gender: selectedGenders,
       },
     };
 
@@ -84,15 +69,6 @@ const ChainEdit = () => {
     }
   };
 
-  //refactor db data from array to obj
-  const convertArrayToObject = (array) => {
-    let obj = {};
-    array.forEach((element) => {
-      obj[element] = array.includes(element);
-    });
-    return obj;
-  };
-
   useEffect(async () => {
     const chain = await getChain(chainId);
     setChain(chain);
@@ -102,8 +78,8 @@ const ChainEdit = () => {
       longitude: chain.longitude,
     });
 
-    setGenders(convertArrayToObject(chain.categories.gender));
-    setSizes(convertArrayToObject(chain.categories.size));
+    setSelectedSizes(chain.categories.size);
+    setSelectedGenders(chain.categories.gender);
   }, []);
 
   return !chain ? null : (
@@ -123,12 +99,7 @@ const ChainEdit = () => {
         {({ errors, touched }) => (
           <ThreeColumnLayout>
             <Typography variant="h3" className={classes.pageTitle}>
-              {`edit ${chain.name} information`}
-            </Typography>
-            <Typography component="p" className="explanatory-text">
-              {
-                "Update loop information by replacing the relevant fields below with the new details. Sizes and categories can only be added but not removed."
-              }
+              {t(`editLoopInformation`)}
             </Typography>
             <Form>
               <TextForm
@@ -153,84 +124,28 @@ const ChainEdit = () => {
                     : null
                 }
               />
-
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div>
-                  <Typography
-                    component="p"
-                    style={{ textAlign: "left", textTransform: "capitalize" }}
-                  >
-                    categories
-                  </Typography>
-                  <div style={{ display: "flex", padding: "2% 0" }}>
-                    {Object.keys(categories).map((value, i) => {
-                      return (
-                        <div key={value}>
-                          <input
-                            className="map-cat-input"
-                            key={`input-${value}-${i}`}
-                            id={value}
-                            type="checkbox"
-                            name={value}
-                            onChange={(e) =>
-                              handleChange(e, genders, setGenders)
-                            }
-                            checked={!!genders[value]}
-                          ></input>
-                          <label key={`label-${value}-${i}`} htmlFor={value}>
-                            <Typography variant="body2">{t(value)}</Typography>
-                          </label>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <Typography
-                    component="p"
-                    style={{ textAlign: "left", textTransform: "capitalize" }}
-                  >
-                    sizes
-                  </Typography>
-                  <div style={{ display: "flex", padding: "2% 0" }}>
-                    {allSizes.map((value, i) => {
-                      return (
-                        <div key={value}>
-                          <input
-                            className="map-cat-input"
-                            key={value}
-                            id={value}
-                            type="checkbox"
-                            name={value}
-                            onChange={(e) => handleChange(e, sizes, setSizes)}
-                            checked={!!sizes[value]}
-                          ></input>
-                          <label
-                            key={`label-${value}-${i}`}
-                            htmlFor={value}
-                            style={{
-                              textTransform: "uppercase",
-                              width: "40px",
-                              height: "40px",
-                              padding: "0",
-                              textAlign: "center",
-                            }}
-                          >
-                            <Typography
-                              variant="body2"
-                              className="input-label-typography"
-                            >
-                              {t(value)}
-                            </Typography>
-                          </label>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+              <div style={{ paddingTop: "10px" }}>
+                <CategoriesDropdown
+                  setGenders={setSelectedGenders}
+                  genders={selectedGenders}
+                  className={classes.select}
+                  label={t("categories")}
+                  fullWidth={true}
+                />
               </div>
-
+              <div style={{ paddingTop: "10px" }}>
+                <SizesDropdown
+                  className={classes.select}
+                  setSizes={setSelectedSizes}
+                  genders={selectedGenders}
+                  sizes={selectedSizes}
+                  label={t("sizes")}
+                  fullWidth={false}
+                  inputVisible={true}
+                />
+              </div>
+              {/* TODO: implement location when admin edits loop 
+              to match the new loop location logic*/}
               <GeocoderSelector
                 onResult={(e) => {
                   setAddress(e.result.place_name);
@@ -241,27 +156,30 @@ const ChainEdit = () => {
                 }}
               />
 
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-              >
-                {t("submit")}
-              </Button>
-              <Button
-                onClick={() => history.push(`/loops/members/${chainId}`)}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-              >
-                {t("back")}
-              </Button>
+              <div className={classes.buttonsWrapper}>
+                <Button
+                  onClick={() => history.push(`/loops/members/${chainId}`)}
+                  variant="contained"
+                  color="primary"
+                  className={classes.buttonOutlined}
+                >
+                  {t("back")}
+                </Button>
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                >
+                  {t("submit")}
+                  <img src={RightArrow} alt="" />
+                </Button>
+              </div>
             </Form>
           </ThreeColumnLayout>
         )}
       </Formik>
-      );
     </>
   );
 };

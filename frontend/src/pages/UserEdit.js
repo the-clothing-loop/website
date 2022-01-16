@@ -14,6 +14,12 @@ import theme from "../util/theme";
 // Project resources
 import { getUserById, updateUser } from "../util/firebase/user";
 import { ThreeColumnLayout } from "../components/Layouts";
+import SizesDropdown from "../components/SizesDropdown";
+import categories from "../util/categories";
+import Popover from "../components/Popover";
+
+//media
+import RightArrow from "../images/right-arrow-white.svg";
 
 import {
   PhoneFormField,
@@ -33,6 +39,9 @@ const UserEdit = () => {
   const [uid, setUid] = useState();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [newsletter, setNewsletter] = useState(false);
+  const [userRole, setUserRole] = useState("");
+  const [selectedSizes, setSelectedSizes] = useState([]);
 
   const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
@@ -54,6 +63,7 @@ const UserEdit = () => {
       ...values,
       address: address,
       chainId: chainId,
+      interestedSizes: selectedSizes,
     };
     console.log(`updating user information: ${JSON.stringify(newUserData)}`);
 
@@ -78,6 +88,14 @@ const UserEdit = () => {
         setChainId(user.chainId);
         setAddress(user.address);
         setUid(user.uid);
+        setNewsletter(user.newsletter);
+        setUserRole(user.role);
+
+        if (user.interestedSizes === null) {
+          setSelectedSizes([]);
+        } else {
+          setSelectedSizes(user.interestedSizes);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -98,68 +116,89 @@ const UserEdit = () => {
           newsletter: user.newsletter,
           address: address,
           uid: userId,
+          interestedSizes: selectedSizes,
         }}
         validationSchema={validate}
         onSubmit={onSubmit}
       >
         {({ formik, setFieldValue }) => (
           <ThreeColumnLayout>
-            <Typography variant="h3" className={classes.pageTitle}>
-              {`edit ${user.name} contacts`}
-            </Typography>
-            <Typography component="p" className="explanatory-text">
-              {
-                "Update user contacts by replacing the relevant fields below with the new information."
-              }
-            </Typography>
+            {userRole === "chainAdmin" ? (
+              <Typography variant="h3" className={classes.pageTitle}>
+                {t("editAdminContacts")}
+              </Typography>
+            ) : (
+              <Typography variant="h3" className={classes.pageTitle}>
+                {t("editParticipantContacts")}
+              </Typography>
+            )}
             <Form>
               <TextForm
-                label="Name"
+                label={t("name")}
                 name="name"
                 type="text"
                 className={classes.textField}
               />
 
               <TextForm
-                label="Email"
+                label={t("email")}
                 name="email"
                 type="email"
                 className={classes.textField}
               />
               <PhoneFormField
-                label="Phone number"
+                label={t("phoneNumber")}
                 name="phoneNumber"
                 onChange={(e) =>
                   setFieldValue("phoneNumber", e.replace(/\s/g, ""))
                 }
               />
+              <div style={{ position: "relative", marginTop: "2%" }}>
+                <SizesDropdown
+                  className={classes.formSelect}
+                  setSizes={setSelectedSizes}
+                  genders={categories.genders}
+                  sizes={selectedSizes}
+                  label={t("interestedSizes")}
+                  fullWidth={true}
+                  inputVisible={true}
+                />
+                <Popover message={t("ifNoSizesAreShowing")} />
+              </div>
 
               <GeocoderSelector
+                userAddress={user.address}
                 onResult={(e) => {
                   setAddress(e.result.place_name);
                 }}
               />
               <CheckboxField
-                label="Newsletter"
+                label={t("newsletterSubscription")}
                 name="newsletter"
                 type="checkbox"
+                style={{ padding: "2% 0" }}
               />
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-              >
-                {t("submit")}
-              </Button>
-              <Button
-                onClick={() => history.push(`/loops/members/${chainId}`)}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-              >
-                {t("back")}
-              </Button>
+
+              <div className={classes.buttonsWrapper}>
+                <Button
+                  onClick={() => history.push(`/loops/members/${chainId}`)}
+                  variant="contained"
+                  color="primary"
+                  className={classes.buttonOutlined}
+                >
+                  {t("back")}
+                </Button>
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                >
+                  {t("submit")}
+                  <img src={RightArrow} alt="" />
+                </Button>
+              </div>
             </Form>
           </ThreeColumnLayout>
         )}

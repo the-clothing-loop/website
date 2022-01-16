@@ -26,32 +26,19 @@ import MessageSubmitted from "./pages/MessageSubmitted";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Logout } from "./pages/Logout";
-import { useState, useEffect } from "react";
 
 const theme = createTheme(themeFile);
 
 const App = () => {
-  // TODO: Remove once the new Landing Page is live
-  const [showNavbar, setShowNavbar] = useState(true);
-  const [showFooter, setShowFooter] = useState(true);
-
-  useEffect(() => {
-    if (window.location.pathname == "/") {
-      setShowNavbar(false);
-      setShowFooter(false);
-    }
-  }, []);
-  // TODO: Remove once the new Landing Page is live
-
   return (
     <MuiThemeProvider theme={theme}>
       <AuthProvider>
         <div className="app">
           <Router>
-            {showNavbar && <Navbar />}
+            <Navbar />
             <div className="container">
               <Switch>
-                <Route exact path="/about" component={Home} />
+                <Route exact path="/home" component={Home} />
                 <Route exact path="/thankyou" component={Thankyou} />
                 <Route
                   exact
@@ -94,7 +81,7 @@ const App = () => {
                 <Route exact path="/" component={LandingPage} />
               </Switch>
             </div>
-            {showFooter && <Footer />}
+            <Footer />
           </Router>
         </div>
       </AuthProvider>
