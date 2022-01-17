@@ -20,9 +20,9 @@ const ThreeColumnLayout: React.FC<IThreeColumnsLayout> = ({ children }) => {
   const classes = makeStyles(theme as any)();
 
   return (
-    <Grid container className={classes.threeColumnsForm}>
+    <Grid container className={classes.threeColumnsFormWrapper}>
       <Grid item sm />
-      <Grid item sm>
+      <Grid item sm className={classes.threeColumnsForm}>
         {children}
       </Grid>
       <Grid item sm />

@@ -190,6 +190,7 @@ const SearchBar: React.FC<IProps> = ({
             sizes={selectedSizes}
             label={t("sizes")}
             fullWidth={false}
+            inputVisible={false}
           />
         </div>
 

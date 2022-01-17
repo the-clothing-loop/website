@@ -65,5 +65,14 @@
   "selectLoopLocation": "Selecteer ketenlocatie",
   "confirmation": "Bevestiging",
   "about": "Over",
-  "exportData": "Exportgegevens"
+  "exportData": "Exportgegevens",
+  "editLoopInformation": "Keteninformatie bewerken",
+  "newsletterSubscription": "Nieuwsbrief abonnement",
+  "editAdminContacts": "Beheerderscontacten bewerken",
+  "editParticipantContacts": "Bewerk deelnemerscontacten",
+  "ifNoSizesAreShowing": "Als er geen maten worden weergegeven, heeft de deelnemer bij deelname geen geïnteresseerde maat geselecteerd.",
+  "loadingListOfAllLoops": "Lijst met alle lussen laden",
+  "view": "Visie",
+  "location": "Plaats",
+  "status": "Toestand"
 }

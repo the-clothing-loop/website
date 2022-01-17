@@ -219,7 +219,7 @@ const ChainMemberList = () => {
                     <Title>Loop Admin</Title>
                   </Grid>
                   <Grid item>
-                    <Link to={`/loops/edit/${chainId}`}>
+                    <Link to={`/users/edit/${admin?.uid}`}>
                       <EditIcon />
                     </Link>
                   </Grid>
