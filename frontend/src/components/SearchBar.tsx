@@ -148,6 +148,7 @@ const SearchBar: React.FC<IProps> = ({
             ),
           }}
         />
+
         <FormControl className={classes.formControl}>
           <Select
             displayEmpty

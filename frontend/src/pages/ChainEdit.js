@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -10,7 +10,6 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
-import InputLabel from "@mui/material/InputLabel";
 
 // Project resources
 import { getChain, updateChain } from "../util/firebase/chain";

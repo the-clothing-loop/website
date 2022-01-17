@@ -6,7 +6,7 @@ import Button from "@material-ui/core/Button";
 import { Alert } from "@material-ui/lab";
 
 //Plugins
-import React, { useState } from "react";
+import { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Formik, Form } from "formik";

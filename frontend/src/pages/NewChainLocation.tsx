@@ -305,11 +305,7 @@ const NewChainLocation = () => {
                       <Alert severity="error">{error}</Alert>
                     ) : null}
                     <div className={classes.formSubmitActions}>
-                      <Button
-                        type="submit"
-                        className={classes.buttonOutlined}
-                      >
-                        {" "}
+                      <Button type="submit" className={classes.buttonOutlined} >
                         {t("back")}
                       </Button>
                       <Button type="submit" className={classes.buttonContained}>
