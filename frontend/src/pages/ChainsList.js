@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
@@ -24,6 +24,7 @@ import RightArrow from "../images/right-arrow-white.svg";
 // Project resources
 import { getChains } from "../util/firebase/chain";
 import { Typography } from "@material-ui/core";
+import { DataExport } from "../components/DataExport";
 import theme from "../util/theme";
 
 const rows = ["name", "location", "status"];
@@ -65,6 +66,7 @@ const ChainsList = () => {
           <div className="table-container">
             <div className="table-head">
               <Typography variant="h5">{`${chains.length} Clothing Loops`}</Typography>
+              <DataExport />
             </div>
             {error ? (
               <Alert className={classes.errorAlert} severity="error">
