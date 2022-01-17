@@ -1,8 +1,15 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from 'react';
 import { useHistory } from "react-router-dom";
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import ReactMapGL, {
+  Source,
+  Layer,
+  Popup,
+  MapEvent,
+  MapRef,
+} from 'react-map-gl';
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
+import * as GeoJSONTypes from 'geojson';
 
 // Material UI
 import { Button } from "@material-ui/core";
@@ -14,7 +21,6 @@ import { makeStyles } from "@material-ui/core";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import CircleIcon from "@mui/icons-material/Circle";
 
 // Project resources
 import { getChains } from "../util/firebase/chain";
@@ -44,11 +50,18 @@ const FindChain = () => {
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState<string | null>(null);
 
+  const mapRef = useRef<MapRef>(null);
+
   useEffect(() => {
     (async () => {
       const chainResponse = await getChains();
-      setChainData(chainResponse);
-      setFilteredChains(chainResponse);
+
+      const publishedChains = chainResponse.filter(
+        ({ published }) => published
+      );
+
+      setChainData(publishedChains);
+      setFilteredChains(publishedChains);
 
       //get user role
       if (user) {
@@ -116,6 +129,74 @@ const FindChain = () => {
     }
   };
 
+  const handleMapClick = (event: MapEvent) => {
+    const topMostFeature = event?.features?.[0];
+    const {
+      layer: { id: layerId },
+    } = topMostFeature;
+
+    if (layerId === 'chains') {
+      const selectedChainIndex = topMostFeature.properties.chainIndex;
+
+      setSelectedChain(filteredChains[selectedChainIndex]);
+      setShowPopup(true);
+    } else if (layerId === 'cluster' || layerId === 'cluster-count') {
+      const clusterId = topMostFeature.properties.cluster_id;
+
+      const mapboxSource = mapRef!.current!.getMap().getSource('chains');
+
+      mapboxSource.getClusterExpansionZoom(
+        clusterId,
+        (err: any, zoom: number) => {
+          if (err) {
+            return;
+          }
+
+          const {
+            geometry: { coordinates },
+          } = topMostFeature;
+
+          setViewport({
+            ...viewport,
+            longitude: coordinates[0],
+            latitude: coordinates[1],
+            zoom,
+            transitionDuration: 500,
+          });
+        }
+      );
+    }
+  };
+
+  const geoJSONFilteredChains: GeoJSONTypes.FeatureCollection<GeoJSONTypes.Geometry> =
+    {
+      type: 'FeatureCollection',
+      features: filteredChains
+        .map((filteredChain, filteredChainIndex) => {
+        const {
+          longitude,
+          latitude,
+          categories: { gender },
+        } = filteredChain;
+
+        return {
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [longitude, latitude],
+          },
+          properties: {
+            chainIndex: filteredChainIndex,
+              gender: gender.includes('women')
+                ? 'woman'
+                : gender.includes('men')
+                ? 'men'
+                : 'children', // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
+          },
+        };
+      }),
+    };
+
   return (
     <>
       <Helmet>
@@ -133,45 +214,64 @@ const FindChain = () => {
         mapStyle="mapbox://styles/mapbox/light-v10"
         {...viewport}
         onViewportChange={(newView: IViewPort) => setViewport(newView)}
+        onClick={handleMapClick}
+        ref={mapRef}
       >
-        {filteredChains.map((chain) =>
-          chain.published ? (
-            <Marker
-              key={chain.id}
-              latitude={chain.latitude}
-              longitude={chain.longitude}
+        <Source
+          id="chains"
+          type="geojson"
+          data={geoJSONFilteredChains}
+          cluster={true}
+          clusterMaxZoom={14}
+          clusterRadius={50}
             >
-              {chain.categories.gender.includes("women") ? (
-                <CircleIcon
-                  style={{ color: "pink" }}
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                    setSelectedChain(chain);
-                    setShowPopup(true);
+          <Layer
+            id="chains"
+            type="circle"
+            filter={['!', ['has', 'point_count']]}
+            paint={{
+              'circle-color': [
+                'match',
+                ['get', 'gender'],
+                'women',
+                'pink',
+                'men',
+                'blue',
+                'red',
+              ],
+              'circle-radius': 30,
+              'circle-blur': 0.7,
                   }}
                 />
-              ) : chain.categories.gender.includes("men") ? (
-                <CircleIcon
-                  style={{ color: "blue" }}
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                    setSelectedChain(chain);
-                    setShowPopup(true);
+          <Layer
+            id="cluster"
+            type="circle"
+            filter={['has', 'point_count']}
+            paint={{
+              'circle-color': [
+                'step',
+                ['get', 'point_count'],
+                '#51bbd6',
+                100,
+                '#f1f075',
+                750,
+                '#f28cb1',
+              ],
+              'circle-radius': 30,
+              'circle-blur': 0.7,
                   }}
                 />
-              ) : (
-                <CircleIcon
-                  style={{ color: "red" }}
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                    setSelectedChain(chain);
-                    setShowPopup(true);
+          <Layer
+            id="cluster-count"
+            type="symbol"
+            filter={['has', 'point_count']}
+            layout={{
+              'text-field': '{point_count_abbreviated}',
                   }}
+            paint={{ 'text-color': 'white' }}
                 />
-              )}
-            </Marker>
-          ) : null
-        )}
+        </Source>
+
         {selectedChain && showPopup ? (
           <Popup
             latitude={selectedChain.latitude}
