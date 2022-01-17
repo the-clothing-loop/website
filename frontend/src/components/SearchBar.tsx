@@ -163,7 +163,7 @@ const SearchBar: React.FC<IProps> = ({
                 return <em className={classes.em}>{t("categories")}</em>;
               }
 
-              return selected.join(", ");
+              return selected.map(t).join(", ");
             }}
           >
             {Object.keys(categories).map((value: any) => (
