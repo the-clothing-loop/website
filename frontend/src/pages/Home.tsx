@@ -1,5 +1,5 @@
 // Material
-import { useEffect, useState } from "react";
+import React from "react";
 import { Helmet } from "react-helmet";
 import { makeStyles, Button } from "@material-ui/core";
 
@@ -7,9 +7,7 @@ import theme from "../util/theme";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 // Project resources
-import { getChainsLength } from "../util/firebase/chain";
-import { ClassNames } from "@emotion/react";
-import { ClassSharp } from "@material-ui/icons";
+import { ChainsContext } from "../components/ChainsProvider";
 import LandingPageMobile from "./LandingPageMobile";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
@@ -32,8 +30,8 @@ import EssenseLogo from "../images/logos/essense-logo.svg";
 import WdcdLogo from "../images/logos/Logo_WDCD.png";
 
 const Home = () => {
-  const [chainsCount, setChainsCount] = useState(0);
-
+  const chainsCount = React.useContext(ChainsContext).length;
+  
   const classes = makeStyles(theme as any)();
 
   const supporters = [
@@ -56,13 +54,6 @@ const Home = () => {
 
     { logo: WdcdLogo, url: "https://www.whatdesigncando.com/" },
   ];
-
-  useEffect(() => {
-    (async () => {
-      const chainsLengthResponse = await getChainsLength();
-      setChainsCount(chainsLengthResponse);
-    })();
-  }, []);
 
   return (
     <>

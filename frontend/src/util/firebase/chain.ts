@@ -40,12 +40,6 @@ const getChains = async () => {
   );
 };
 
-const getChainsLength = async () => {
-  const snapshot = await db.collection("chains").get();
-
-  return snapshot.docs.length;
-};
-
 const createChain = async (chain: ICreateChain): Promise<string> => {
   return (await createChainCallable(chain)).data.id;
 };
@@ -66,5 +60,4 @@ export {
   getChain,
   addUserToChain,
   updateChain,
-  getChainsLength,
 };
