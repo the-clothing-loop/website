@@ -211,6 +211,30 @@ const theme = {
     },
   },
 
+  buttonExport: {
+    backgroundColor: white,
+    color: yellow,
+    border: `1.54px solid ${yellow}`,
+    padding: "12px, 32px, 12px, 32px",
+    boxSizing: " border-box",
+    minWidth: "max-content",
+    width: "188.43px",
+    height: "46px",
+    borderRadius: "0",
+    textTransform: "initial",
+    fontSize: "1rem",
+    lineHeight: "21.86px",
+
+    "& a": {
+      display: "flex",
+      alignItems: "center",
+      color: yellow,
+      justifyContent: "center",
+      position: "relative",
+      top: "50%",
+      transform: "translateY(-50%)",
+    },
+  },
   buttonsWrapper: {
     paddingTop: "10%",
   },
@@ -1257,7 +1281,7 @@ const theme = {
     display: "flex",
     flexDirection: "column",
     textAlign: "center",
-    padding: '5% 0',
+    padding: "5% 0",
 
     "& h3": {
       color: black,
