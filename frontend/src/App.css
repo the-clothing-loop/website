@@ -82,18 +82,18 @@
   .mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
-    border-bottom-color: #d5ecdf !important;
+    border-bottom-color: #edf2f3 !important;
   }
   .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
-    border-top-color: #d5ecdf !important;
+    border-top-color: #edf2f3 !important;
   }
   .mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
-    border-right-color: #d5ecdf !important;
+    border-right-color: #edf2f3 !important;
   }
   .mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
-    border-left-color: #d5ecdf !important;
+    border-left-color: #edf2f3 !important;
   }
 
   .explanatory-text > p {
@@ -144,6 +144,9 @@
 
   .mapboxgl-popup-close-button {
     z-index: 11;
+    top: 30px !important;
+    right: 30px !important;
+    padding: 0 !important;
   }
 
   .chain-categories {
@@ -252,10 +255,6 @@
   form.contact-form {
     display: flex;
     flex-direction: column;
-  }
-
-  form.contact-form > * {
-    margin: 3% 0;
   }
 
   .landing-page-wrapper {
@@ -377,6 +376,10 @@
   div#demo-multiple-checkbox {
     padding: 10px !important;
     padding-left: 0 !important;
+    font-family: "Montserrat" !important;
+    text-align: left;
+    text-transform: capitalize;
+    color: #3c3c3b;
   }
 
   fieldset.MuiOutlinedInput-notchedOutline {
@@ -469,9 +472,19 @@
     background-color: #d5ecdf !important;
   }
 
+  input.mapboxgl-ctrl-geocoder--input {
+    color: #48808b;
+  }
+
   .MuiStepLabel-label {
     font-family: 'Montserrat' !important;
   }
+
+  #language-switcher-select {
+    text-transform: capitalize !important;
+    border-bottom: none !important;
+  }
+
 
   .btn {
     width: 282px;
