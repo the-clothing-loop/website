@@ -8,7 +8,13 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 // Material UI
-import { Button, FormControl, makeStyles, MenuItem, Typography } from "@material-ui/core";
+import {
+  Button,
+  FormControl,
+  makeStyles,
+  MenuItem,
+  Typography,
+} from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import Grid from "@material-ui/core/Grid";
 
@@ -18,11 +24,11 @@ import Geocoding from "./Geocoding";
 import { IViewPort } from "../types";
 import { createChain } from "../util/firebase/chain";
 import { TextForm, NumberField, SelectField } from "../components/FormFields";
-import ProgressBar from "../components/ProgressBar"
-import categories,  {allSizes} from "../util/categories";
+import ProgressBar from "../components/ProgressBar";
+import categories, { allSizes } from "../util/categories";
 import PopoverOnHover from "../components/Popover";
 
-const accessToken = process.env.REACT_APP_MAPBOX_KEY || '';
+const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
 const NewChainLocation = () => {
   const classes = makeStyles(theme as any)();
@@ -43,13 +49,17 @@ const NewChainLocation = () => {
       ...viewport,
       longitude: longitude,
       latitude: latitude,
-      zoom:10,
+      zoom: 10,
       transitionDuration: 500,
       transitionInterpolator: new FlyToInterpolator(),
     });
   };
 
-  const handleGeolocationResult = ({result: {center}}: {result: {center: [number, number]} }) => {
+  const handleGeolocationResult = ({
+    result: { center },
+  }: {
+    result: { center: [number, number] };
+  }) => {
     flyToLocation(...center);
   };
 
@@ -68,15 +78,12 @@ const NewChainLocation = () => {
     description: Yup.string()
       .min(2, "Must be more than 2 characters")
       .required("Required"),
-    radius: Yup.number()
-      .required("Required"),
+    radius: Yup.number().required("Required"),
     clothingType: Yup.string()
       .oneOf(Object.keys(categories))
       .required("Required"),
-    clothingSize: Yup.string()
-      .oneOf(allSizes)
-      .required("Required"),
-    coordinates: Yup.array().of(Yup.number())
+    clothingSize: Yup.string().oneOf(allSizes).required("Required"),
+    coordinates: Yup.array().of(Yup.number()),
   });
 
   const handleSubmit = async (values: any) => {
@@ -122,8 +129,10 @@ const NewChainLocation = () => {
         }}
         validationSchema={formSchema}
         validate={(values) => {
-          if (values.coordinates.some(el => el === null)) {
-            return {coordinates: "Please set the loop location by clicking the map"};
+          if (values.coordinates.some((el) => el === null)) {
+            return {
+              coordinates: "Please set the loop location by clicking the map",
+            };
           }
         }}
         onSubmit={handleSubmit}
@@ -134,8 +143,8 @@ const NewChainLocation = () => {
             if (targetClass.includes("mapboxgl-ctrl-geocoder")) {
               // ignore clicks on geocoding search bar, which is on top of map
               return;
-            };
-            setFieldValue("coordinates", event.lngLat)
+            }
+            setFieldValue("coordinates", event.lngLat);
             flyToLocation(event.lngLat[0], event.lngLat[1]);
           };
 
@@ -149,8 +158,8 @@ const NewChainLocation = () => {
             const boundaryPoint = destination(
               [longitude, latitude],
               values.radius,
-              0,  // due north
-              {units: "kilometers"},
+              0, // due north
+              { units: "kilometers" }
             );
             const [_, boundaryY] = project(boundaryPoint.geometry.coordinates);
             const projectedRadius = centerY - boundaryY;
@@ -158,20 +167,38 @@ const NewChainLocation = () => {
             return (
               <>
                 <defs>
-                    <radialGradient id="feather">
-                        <stop offset="0%" stopColor={theme.palette.primary.main} stopOpacity="0.4" />
-                        <stop offset="50%" stopColor={theme.palette.primary.main} stopOpacity="0.4"/>
-                        <stop offset="100%" stopColor={theme.palette.primary.main} stopOpacity="0"/>
-                    </radialGradient>
+                  <radialGradient id="feather">
+                    <stop
+                      offset="0%"
+                      stopColor={theme.palette.primary.main}
+                      stopOpacity="0.4"
+                    />
+                    <stop
+                      offset="50%"
+                      stopColor={theme.palette.primary.main}
+                      stopOpacity="0.4"
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor={theme.palette.primary.main}
+                      stopOpacity="0"
+                    />
+                  </radialGradient>
                 </defs>
-                <circle cx={centerX} cy={centerY} r={projectedRadius} fill="url(#feather)" />;
+                <circle
+                  cx={centerX}
+                  cy={centerY}
+                  r={projectedRadius}
+                  fill="url(#feather)"
+                />
+                ;
               </>
             );
           };
 
           const handleClothingTypeChange = (event: any) => {
             const newType = event.target.value;
-            if ( newType && ! categories[newType].includes(values.clothingSize)) {
+            if (newType && !categories[newType].includes(values.clothingSize)) {
               setFieldValue("clothingSize", "");
             }
             setFieldValue("clothingType", newType);
@@ -196,7 +223,9 @@ const NewChainLocation = () => {
                     mapboxApiAccessToken={accessToken}
                     mapStyle="mapbox://styles/mapbox/light-v10"
                     {...viewport}
-                    onViewportChange={(newView: IViewPort) => setViewport(newView)}
+                    onViewportChange={(newView: IViewPort) =>
+                      setViewport(newView)
+                    }
                     onClick={handleMapClick}
                     getCursor={() => "pointer"}
                     className={classes.newLoopMap}
@@ -206,7 +235,7 @@ const NewChainLocation = () => {
                       onResult={handleGeolocationResult}
                       className={classes.inMapSearchBar}
                     />
-                    {values.coordinates.every(coord => (coord !== null)) ? (
+                    {values.coordinates.every((coord) => coord !== null) ? (
                       <SVGOverlay redraw={redrawLoop} />
                     ) : null}
                   </ReactMapGL>
@@ -222,7 +251,11 @@ const NewChainLocation = () => {
                           type="text"
                           value={values.loopName}
                           error={touched.loopName && Boolean(errors.loopName)}
-                          helperText={touched.loopName && errors.loopName ? errors.loopName : null}
+                          helperText={
+                            touched.loopName && errors.loopName
+                              ? errors.loopName
+                              : null
+                          }
                           className={classes.textField}
                         />
                       </Grid>
@@ -233,7 +266,11 @@ const NewChainLocation = () => {
                           name="radius"
                           value={values.radius}
                           error={touched.radius && Boolean(errors.radius)}
-                          helperText={touched.radius && errors.radius ? errors.radius : null}
+                          helperText={
+                            touched.radius && errors.radius
+                              ? errors.radius
+                              : null
+                          }
                           className={classes.textField}
                           step={0.1}
                         />
@@ -244,8 +281,14 @@ const NewChainLocation = () => {
                           label={t("description")}
                           name="description"
                           value={values.description}
-                          error={touched.description && Boolean(errors.description)}
-                          helperText={touched.description && errors.description ? errors.description : null}
+                          error={
+                            touched.description && Boolean(errors.description)
+                          }
+                          helperText={
+                            touched.description && errors.description
+                              ? errors.description
+                              : null
+                          }
                           className={classes.textField}
                         />
                       </Grid>
@@ -255,15 +298,19 @@ const NewChainLocation = () => {
                             <SelectField
                               name="clothingType"
                               label="selectClothingType"
-                              errorText={touched.clothingType ? errors.clothingType : ""}
+                              errorText={
+                                touched.clothingType ? errors.clothingType : ""
+                              }
                               onChange={handleClothingTypeChange}
                               required
                             >
-                              {Object.keys(categories).map((category: string) => (
-                                <MenuItem value={category} key={category}>
-                                  {t(category)}
-                                </MenuItem>
-                              ))}
+                              {Object.keys(categories).map(
+                                (category: string) => (
+                                  <MenuItem value={category} key={category}>
+                                    {t(category)}
+                                  </MenuItem>
+                                )
+                              )}
                             </SelectField>
                           </FormControl>
                           <PopoverOnHover message="Some extra information about the field" />
@@ -278,31 +325,34 @@ const NewChainLocation = () => {
                               value={values.clothingSize}
                               required
                               onChange={handleChange}
-                              errorText={touched.clothingSize ? errors.clothingSize : ""}
+                              errorText={
+                                touched.clothingSize ? errors.clothingSize : ""
+                              }
                             >
-                              {values.clothingType ? (
-                                categories[values.clothingType].map((size: string) => (
-                                <MenuItem value={size} key={size}>
-                                  {t(size)}
-                                </MenuItem>
-                              ))) : null}
+                              {values.clothingType
+                                ? categories[values.clothingType].map(
+                                    (size: string) => (
+                                      <MenuItem value={size} key={size}>
+                                        {t(size)}
+                                      </MenuItem>
+                                    )
+                                  )
+                                : null}
                             </SelectField>
                           </FormControl>
                           <PopoverOnHover message="Some extra information about the field" />
                         </div>
                       </Grid>
-                      { touched.coordinates && errors.coordinates ? (
+                      {touched.coordinates && errors.coordinates ? (
                         <Grid item xs={12}>
                           <Typography color="error">
-                            { errors.coordinates }
+                            {errors.coordinates}
                           </Typography>
                         </Grid>
                       ) : null}
                     </Grid>
 
-                    {error ? (
-                      <Alert severity="error">{error}</Alert>
-                    ) : null}
+                    {error ? <Alert severity="error">{error}</Alert> : null}
                     <div className={classes.formSubmitActions}>
                       <Button type="submit" className={classes.buttonOutlined}>
                         {t("back")}
@@ -312,7 +362,6 @@ const NewChainLocation = () => {
                       </Button>
                     </div>
                   </Form>
-
                 </Grid>
               </Grid>
             </div>

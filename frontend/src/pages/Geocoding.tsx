@@ -5,11 +5,11 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
 
 interface IProps {
-  onResult: (event: any) => void,
-  className?: string,
+  onResult: (event: any) => void;
+  className?: string;
 }
 
-const Geocoding = ({onResult, className}: IProps) => {
+const Geocoding = ({ onResult, className }: IProps) => {
   const [address, setAddress] = useState<string>();
   const [results, setResults] = useState({});
 
@@ -40,8 +40,7 @@ const Geocoding = ({onResult, className}: IProps) => {
       id="geocoding"
       className={className}
       ref={geoRef as React.RefObject<HTMLDivElement>}
-    >
-    </div>
+    ></div>
   );
 };
 

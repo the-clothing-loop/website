@@ -1,4 +1,10 @@
-import { TextField, Checkbox, Select, InputLabel, FormHelperText } from "@material-ui/core"
+import {
+  TextField,
+  Checkbox,
+  Select,
+  InputLabel,
+  FormHelperText,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import theme from "../util/theme";
 import i18n from "../i18n";
@@ -65,7 +71,7 @@ const TextForm = ({ label, ...props }) => {
   );
 };
 
-const NumberField = ({ label, step=1, ...props}) => {
+const NumberField = ({ label, step = 1, ...props }) => {
   const [field] = useField(props);
   const { t } = useTranslation();
 
@@ -79,7 +85,7 @@ const NumberField = ({ label, step=1, ...props}) => {
         fullWidth
         type="number"
         inputProps={{
-          inputMode: 'numeric',
+          inputMode: "numeric",
           step: step,
           /* Determines use of . or , for decimal separator
            * Firefox respects "lang" but other browsers use
@@ -128,7 +134,7 @@ const TextArea = ({ label, ...props }) => {
   );
 };
 
-const SelectField = ({ label, children, errorText = "", ...props}) => {
+const SelectField = ({ label, children, errorText = "", ...props }) => {
   const [field] = useField(props);
   const { t } = useTranslation();
   const labelId = props.name + "Label";
@@ -137,18 +143,22 @@ const SelectField = ({ label, children, errorText = "", ...props}) => {
       <InputLabel id={labelId}>
         {t(label) + (props?.required ? " *" : "")}
       </InputLabel>
-      <Select
-        labelId={labelId}
-        {...props}
-        {...field}
-      >
+      <Select labelId={labelId} {...props} {...field}>
         {children}
       </Select>
       {errorText ? (
         <FormHelperText error={true}>{errorText}</FormHelperText>
       ) : null}
     </>
-  )
-}
+  );
+};
 
-export { TextFormField, PhoneFormField, TextForm, CheckboxField, TextArea, NumberField, SelectField};
+export {
+  TextFormField,
+  PhoneFormField,
+  TextForm,
+  CheckboxField,
+  TextArea,
+  NumberField,
+  SelectField,
+};
