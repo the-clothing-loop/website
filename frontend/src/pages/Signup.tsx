@@ -5,7 +5,6 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Redirect, useParams, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import img from "../images/image 31.png";
 import GeocoderSelector from "../components/GeocoderSelector";
 import SizesDropdown from "../components/SizesDropdown";
 import PopoverOnHover from "../components/Popover";
@@ -27,6 +26,7 @@ import FormActions from "../components/formActions";
 
 //Media
 import RightArrow from "../images/right-arrow-white.svg";
+import NumberedBag from "../images/numbered-bag-outdoors.png";
 
 const Signup = () => {
   const history = useHistory();
@@ -118,7 +118,7 @@ const Signup = () => {
         >
           {(formik) => (
             <div className="signup-wrapper">
-              <TwoColumnLayout img={img}>
+              <TwoColumnLayout img={NumberedBag}>
                 <div id="container" className="signup-content">
                   <Typography variant="h3" className={classes.pageTitle}>
                     {t("join")}

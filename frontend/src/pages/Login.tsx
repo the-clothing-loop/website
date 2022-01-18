@@ -14,11 +14,12 @@ import Alert from "@material-ui/lab/Alert";
 
 // Project resources
 import { TwoColumnLayout } from "../components/Layouts";
-import img from "../images/image 31.png";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
 import CirclesFrame from "../images/circles.png";
+import NumberedBag from "../images/numbered-bag-outdoors.png";
+
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -63,7 +64,7 @@ const Login = () => {
       <div className="background-frame-login"></div>
       <img className="circles-frame-login" src={CirclesFrame} alt="" />
       <div className="login-container">
-        <TwoColumnLayout img={img}>
+        <TwoColumnLayout img={NumberedBag}>
           <div className="login-content">
             <Typography variant="h3" className={classes.pageTitle}>
               {t("login")}
