@@ -57,7 +57,7 @@
   "notPartOfTheClothingLoopYet": "Not part of The Clothing Loop yet,",
   "joinAnExistingLoop": "join an existing Loop",
   "or": "or",
-  "thankYouForJoining": "Thank you for joining The Clothing Loop!",
+  "thankYouForJoining": "Thank you for joining",
   "youWillReceiveAnEmail": "You will shortly receive a confirmation email with the next steps.",
   "yourMessage": "Your message",
   "thankYouForYourMessage": "Thank you for your message",
@@ -74,5 +74,6 @@
   "loadingListOfAllLoops": "Loading list of all Loops",
   "view": "View",
   "location": "Location",
-  "status": "Status"
+  "status": "Status",
+  "joinWaitingList": "Join waiting list"
 }

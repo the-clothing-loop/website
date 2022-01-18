@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @media only screen and (min-width: 481px) {
   * {
@@ -8,7 +8,7 @@
 
   html,
   body {
-    font-family: 'Montserrat' !important;
+    font-family: "Montserrat" !important;
     background-color: white;
     margin: 0;
   }
@@ -25,7 +25,7 @@
 
   a {
     text-decoration: none;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
   }
 
   p.explanatory-text {
@@ -174,7 +174,6 @@
     display: inline-block;
   }
 
-
   .MuiPaper-elevation1 {
     box-shadow: none !important;
   }
@@ -209,11 +208,11 @@
     margin-right: 5%;
   }
 
-  input[type='checkbox'].map-cat-input {
+  input[type="checkbox"].map-cat-input {
     display: none;
   }
 
-  input[type='checkbox'].map-cat-input + label {
+  input[type="checkbox"].map-cat-input + label {
     -webkit-transition: all 500ms ease;
     -moz-user-select: -moz-none;
     -ms-user-select: none;
@@ -232,7 +231,7 @@
     margin: 0 5px;
   }
 
-  input[type='checkbox'].map-cat-input:checked + label {
+  input[type="checkbox"].map-cat-input:checked + label {
     -webkit-transition: all 500ms ease;
     transition: all 500ms ease;
     background-color: #067f8c;
@@ -267,7 +266,7 @@
   }
 
   .landing-page-logo {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     color: #ffffff;
     position: absolute;
     font-size: 3rem !important;
@@ -344,12 +343,12 @@
   }
 
   span.css-10hburv-MuiTypography-root {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-size: 0.875rem;
   }
 
   div.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     text-transform: capitalize;
   }
 
@@ -362,7 +361,7 @@
   input.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
     padding: 10px !important;
     margin-left: 30px !important;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
   }
 
   .MuiInput-underline::before {
@@ -370,7 +369,7 @@
   }
 
   .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    text-transform: 'capitalize';
+    text-transform: "capitalize";
   }
 
   div#demo-multiple-checkbox {
@@ -393,7 +392,7 @@
 
   input#outlined-basic {
     padding: 2%;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     text-transform: capitalize;
   }
 
@@ -448,7 +447,7 @@
     border-radius: 0 !important;
     margin: 0 !important;
     max-width: 100% !important;
-    font-family: 'Montserrat' !important;
+    font-family: "Montserrat" !important;
     font-size: 1rem !important;
   }
 
@@ -477,14 +476,13 @@
   }
 
   .MuiStepLabel-label {
-    font-family: 'Montserrat' !important;
+    font-family: "Montserrat" !important;
   }
 
   #language-switcher-select {
     text-transform: capitalize !important;
     border-bottom: none !important;
   }
-
 
   .btn {
     width: 282px;
@@ -520,7 +518,7 @@
 
   /* sliders */
   .btn:before {
-    content: '';
+    content: "";
     width: 100%;
     height: 100%;
     background-color: #f7c86f;
@@ -575,6 +573,59 @@
     font-size: 0;
     animation: 8s slide infinite;
   }
+
+  .background-frame-login {
+    position: absolute;
+    background-color: #edf2f3;
+    width: 60%;
+    height: 400px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 80px;
+  }
+
+  .circles-frame-login {
+    position: absolute;
+    margin-left: 15%;
+    padding-top: 2%;
+  }
+
+  .login-container {
+    padding: 112px 21% 0 21%;
+  }
+
+  .login-content {
+    padding-left: 5%;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .single-submit-btn {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 0px;
+  }
+
+  .signup-wrapper {
+    padding: 87px 14%;
+  }
+
+  .signup-content {
+    background-color: #edf2f3;
+    padding: 0 8%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #signup-title {
+    margin: 5% 0;
+    text-align: center;
+  }
 }
 
 @media only screen and (max-width: 480px) {
@@ -596,7 +647,7 @@
 
   .landing-page-wrapper h1 {
     text-transform: uppercase;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-weight: 300;
     font-size: 1.8rem;
     line-height: 1.167;
@@ -606,7 +657,7 @@
   }
 
   .landing-page-wrapper h4 {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-weight: 300;
     font-size: 1.2rem;
     line-height: 1.167;

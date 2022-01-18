@@ -342,7 +342,6 @@ const theme = {
     margin: "20px auto auto auto",
   },
   pageTitle: {
-    margin: "0px auto 20px auto",
     fontFamily: "Montserrat",
     fontSize: "36px",
     fontWeight: "600",
@@ -611,7 +610,7 @@ const theme = {
 
   formWrapper: {
     backgroundColor: "#EDF2F3",
-    padding: "35px 125px",
+    padding: "35px 15%",
   },
 
   label: {

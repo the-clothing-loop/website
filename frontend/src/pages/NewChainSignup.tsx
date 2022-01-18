@@ -115,7 +115,11 @@ const Signup = () => {
         {({ errors, touched, setFieldValue }) => (
           <OneColumnLayout>
             <div className={classes.formWrapper}>
-              <Typography variant="h3" className={classes.pageTitle}>
+              <Typography
+                variant="h3"
+                className={classes.pageTitle}
+                id="signup-title"
+              >
                 {t("startNewLoop")}
               </Typography>
 
