@@ -31,6 +31,9 @@ import theme from "../util/theme";
 import { getUserById } from "../util/firebase/user";
 import SearchBar from "../components/SearchBar";
 
+//media
+import RightArrow from "../images/right-arrow-white.svg";
+
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
@@ -276,36 +279,33 @@ const FindChain = () => {
             dynamicPosition={true}
             onClose={() => setShowPopup(false)}
           >
-            <Card
-              className={classes.card}
-              style={{ borderRadius: "8px", padding: "10px 10px 15px" }}
-            >
+            <Card className={classes.card}>
               <CardContent className={classes.cardContent}>
                 <Typography component="h1" gutterBottom>
                   {selectedChain.name}
                 </Typography>
-                <Typography component="h2">
+                <Typography component="p" id="description">
                   {selectedChain.description}
                 </Typography>
                 <div className={"chain-categories"}>
-                  <Typography component="p">{t("categories")}:</Typography>
+                  <Typography component="h3">{t("categories")}:</Typography>
                   <div id="categories-container">
                     {selectedChain.categories.gender
                       ? selectedChain.categories.gender.map((category, i) => {
                           return (
-                            <Typography component="h3" key={i}>
+                            <Typography component="p" key={i}>
                               {t(`${category}`)} {t("clothing")}
                             </Typography>
                           );
                         })
                       : null}
                   </div>
-                  <Typography component="p">{t("sizes")}:</Typography>
+                  <Typography component="h3">{t("sizes")}:</Typography>
                   <div id="sizes-container">
                     {selectedChain.categories.size
                       ? selectedChain.categories.size.map((size, i) => {
                           return (
-                            <Typography key={i} component="h3">
+                            <Typography key={i} component="p">
                               {size}
                             </Typography>
                           );
@@ -337,24 +337,16 @@ const FindChain = () => {
                   </Button>{" "}
                 </CardActions>
               ) : (
-                <CardActions>
-                  <Button
-                    key={"btn-signup"}
-                    variant="outlined"
-                    color="primary"
-                    className={classes.buttonOutlined}
-                    onClick={(e) => setShowPopup(false)}
-                  >
-                    {t("close")}
-                  </Button>
+                <CardActions className={classes.cardsAction}>
                   <Button
                     key={"btn-join"}
                     variant="contained"
                     color="primary"
-                    className={classes.buttonContained}
+                    className={classes.button}
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
+                    <img src={RightArrow} alt="" />
                   </Button>
                 </CardActions>
               )}

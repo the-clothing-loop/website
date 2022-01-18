@@ -22,6 +22,7 @@ interface IProps {
   label: string;
   fullWidth: boolean;
   inputVisible: boolean;
+  variantVal: boolean;
 }
 
 const SizesDropdown: React.FC<IProps> = ({
@@ -32,6 +33,7 @@ const SizesDropdown: React.FC<IProps> = ({
   label,
   fullWidth,
   inputVisible,
+  variantVal,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
@@ -62,11 +64,14 @@ const SizesDropdown: React.FC<IProps> = ({
       ) : null}
       <Select
         className={stylingClass}
+        inputProps={{
+          className: classes.inputLabel,
+        }}
         labelId="demo-multiple-checkbox-label"
         id="demo-multiple-checkbox"
         multiple
         displayEmpty
-        variant="standard"
+        variant={variantVal ? "standard" : "outlined"}
         value={selectedSizes}
         onChange={(e: any) => handleChange(e, setSelectedSizes)}
         renderValue={(selected) => {

@@ -17,6 +17,7 @@ import TextField from "@mui/material/TextField";
 import SizesDropdown from "./SizesDropdown";
 import InputAdornment from "@mui/material/InputAdornment";
 import Search from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 
 //project resources
 import theme from "../util/theme";
@@ -133,11 +134,14 @@ const SearchBar: React.FC<IProps> = ({
         <TextField
           id="outlined-basic"
           placeholder={t("searchLocation")}
-          variant="standard"
+          variant="outlined"
           className={classes.input}
           onChange={onChange}
           value={searchTerm}
           InputProps={{
+            style: {
+              color: "#48808B",
+            },
             startAdornment: (
               <InputAdornment
                 position="start"
@@ -156,7 +160,7 @@ const SearchBar: React.FC<IProps> = ({
             labelId="demo-multiple-checkbox-label"
             id="demo-multiple-checkbox"
             multiple
-            variant="standard"
+            variant="outlined"
             value={selectedGenders}
             onChange={(e: any) => handleChange(e, setSelectedGenders)}
             renderValue={(selected) => {
@@ -191,11 +195,12 @@ const SearchBar: React.FC<IProps> = ({
             label={t("sizes")}
             fullWidth={false}
             inputVisible={false}
+            variantVal={false}
           />
         </div>
 
         <Button
-          className={classes.submitBtn}
+          className={classes.button}
           variant="contained"
           color="primary"
           onClick={handleSubmit}
@@ -208,26 +213,26 @@ const SearchBar: React.FC<IProps> = ({
 
       {noResultFound ? (
         <div className={classes.alertContainer}>
+          <CloseIcon onClick={backAction} className={classes.closeIcon} />
           <Typography component="h1">
-            {`${t("noLoopsFoundIn")}`} <span>"{searchTerm}"</span>
+            {`${t("noLoopsFoundIn")}`} <span>{searchTerm}</span>
           </Typography>
           <Typography component="p">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </Typography>
           <div>
-            {" "}
             <Button
-              className={classes.submitBtn}
+              className={classes.buttonCta}
               variant="contained"
               color="primary"
-              onClick={backAction}
               key={"btn-submit-1"}
+              href="#"
             >
-              {t("back")}
-            </Button>{" "}
+              {t("joinWaitingList")}
+            </Button>
             <Button
-              className={classes.submitBtn}
+              className={classes.buttonCtaContained}
               variant="contained"
               color="primary"
               onClick={() => history.push("/loops/new-signup")}

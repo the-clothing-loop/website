@@ -32,6 +32,7 @@ const LanguageSwitcher = () => {
             value={selected}
             onChange={handleChange}
             className={classes.simpleSelect}
+            variant="outlined"
           >
             {languages.map((el, i) => {
               return (

@@ -5,7 +5,6 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Redirect, useParams, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import img from "../images/Naamloze-presentatie.jpeg";
 import GeocoderSelector from "../components/GeocoderSelector";
 import SizesDropdown from "../components/SizesDropdown";
 import PopoverOnHover from "../components/Popover";
@@ -24,6 +23,10 @@ import { createUser } from "../util/firebase/user";
 import { getChain } from "../util/firebase/chain";
 import { IChain } from "../types";
 import FormActions from "../components/formActions";
+
+//Media
+import RightArrow from "../images/right-arrow-white.svg";
+import NumberedBag from "../images/numbered-bag-outdoors.png";
 
 const Signup = () => {
   const history = useHistory();
@@ -114,83 +117,86 @@ const Signup = () => {
           onSubmit={(v) => onSubmit(v)}
         >
           {(formik) => (
-            <TwoColumnLayout img={img}>
-              <div id="container">
-                <Typography variant="h3" className={classes.pageTitle}>
-                  {t("join")}
-                </Typography>
+            <div className="signup-wrapper">
+              <TwoColumnLayout img={NumberedBag}>
+                <div id="container" className="signup-content">
+                  <Typography variant="h3" className={classes.pageTitle}>
+                    {t("join")}
+                    <span> {chain?.name}</span>
+                  </Typography>
 
-                <Typography variant="h3" className={classes.loopName}>
-                  {chain?.name}
-                </Typography>
-                <Form className={classes.formGrid}>
-                  <TextForm
-                    label={t("name")}
-                    name="name"
-                    type="text"
-                    required
-                    className={classes.textField}
-                  />
-                  <TextForm
-                    label={t("email")}
-                    name="email"
-                    type="email"
-                    required
-                    className={classes.textField}
-                  />
-
-                  <PhoneFormField
-                    label={t("phoneNumber")}
-                    name="phoneNumber"
-                    onChange={(e: string) =>
-                      formik.setFieldValue("phoneNumber", e)
-                    }
-                    style={{ marginTop: "10px" }}
-                  />
-
-                  <GeocoderSelector
-                    name="address"
-                    onResult={setGeocoderResult}
-                  />
-
-                  <div className={classes.sizesDropdownWrapper}>
-                    <SizesDropdown
-                      className={classes.formSelect}
-                      setSizes={setSelectedSizes}
-                      genders={chainGender}
-                      sizes={selectedSizes}
-                      label={t("interestedSizes")}
-                      fullWidth={true}
-                      inputVisible={true}
+                  <Form className={classes.formGrid}>
+                    <TextForm
+                      label={t("name")}
+                      name="name"
+                      type="text"
+                      required
+                      className={classes.textField}
                     />
-                    <PopoverOnHover
-                      message={"please select the sizes you are interested in."}
+                    <TextForm
+                      label={t("email")}
+                      name="email"
+                      type="email"
+                      required
+                      className={classes.textField}
                     />
-                  </div>
 
-                  <FormActions handleClick={handleClickAction} />
-
-                  {error ? <Alert severity="error">{error}</Alert> : null}
-                  <div className={classes.formSubmitActions}>
-                    <Button
-                      type="submit"
-                      className={classes.buttonOutlined}
-                      onClick={() =>
-                        history.push({
-                          pathname: "/loops/find",
-                          state: { detail: "something" },
-                        })
+                    <PhoneFormField
+                      label={t("phoneNumber")}
+                      name="phoneNumber"
+                      onChange={(e: string) =>
+                        formik.setFieldValue("phoneNumber", e)
                       }
-                    >
-                      {t("back")}
-                    </Button>
-                    <Button type="submit" className={classes.buttonContained}>
-                      {t("join")}
-                    </Button>
-                  </div>
-                </Form>
-              </div>
-            </TwoColumnLayout>
+                    />
+
+                    <GeocoderSelector
+                      name="address"
+                      onResult={setGeocoderResult}
+                    />
+
+                    <div className={classes.sizesDropdownWrapper}>
+                      <SizesDropdown
+                        className={classes.formSelect}
+                        setSizes={setSelectedSizes}
+                        genders={chainGender}
+                        sizes={selectedSizes}
+                        label={t("interestedSizes")}
+                        fullWidth={true}
+                        inputVisible={false}
+                        variantVal={true}
+                      />
+                      <PopoverOnHover
+                        message={
+                          "We would like to know this, to see if different size interests are equally represented within your loop. Also, knowing this makes it easier to split the route over time, depending on size interest!"
+                        }
+                      />
+                    </div>
+
+                    <FormActions handleClick={handleClickAction} />
+
+                    {error ? <Alert severity="error">{error}</Alert> : null}
+                    <div className={classes.formSubmitActions}>
+                      <Button
+                        type="submit"
+                        className={classes.buttonOutlined}
+                        onClick={() =>
+                          history.push({
+                            pathname: "/loops/find",
+                            state: { detail: "something" },
+                          })
+                        }
+                      >
+                        {t("back")}
+                      </Button>
+                      <Button type="submit" className={classes.button}>
+                        {t("join")}
+                        <img src={RightArrow} alt="" />
+                      </Button>
+                    </div>
+                  </Form>
+                </div>
+              </TwoColumnLayout>
+            </div>
           )}
         </Formik>
       </>
