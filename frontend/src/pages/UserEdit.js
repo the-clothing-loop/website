@@ -153,18 +153,18 @@ const UserEdit = () => {
                   setFieldValue("phoneNumber", e.replace(/\s/g, ""))
                 }
               />
-              <div style={{ position: "relative", marginTop: "2%" }}>
-                <SizesDropdown
-                  className={classes.formSelect}
-                  setSizes={setSelectedSizes}
-                  genders={Object.keys(categories)}
-                  sizes={selectedSizes}
-                  label={t("interestedSizes")}
-                  fullWidth={true}
-                  inputVisible={true}
-                />
-                <Popover message={t("ifNoSizesAreShowing")} />
-              </div>
+
+              <SizesDropdown
+                className={classes.formSelect}
+                setSizes={setSelectedSizes}
+                genders={Object.keys(categories)}
+                sizes={selectedSizes}
+                label={t("interestedSizes")}
+                fullWidth={true}
+                inputVisible={true}
+                variantVal={true}
+                style={{marginTop:'2%'}}
+              />
 
               <GeocoderSelector
                 userAddress={user.address}

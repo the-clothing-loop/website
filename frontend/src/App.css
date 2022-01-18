@@ -86,18 +86,18 @@
   .mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
-    border-bottom-color: #d5ecdf !important;
+    border-bottom-color: #edf2f3 !important;
   }
   .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
-    border-top-color: #d5ecdf !important;
+    border-top-color: #edf2f3 !important;
   }
   .mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
-    border-right-color: #d5ecdf !important;
+    border-right-color: #edf2f3 !important;
   }
   .mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
-    border-left-color: #d5ecdf !important;
+    border-left-color: #edf2f3 !important;
   }
 
   .explanatory-text > p {
@@ -148,6 +148,9 @@
 
   .mapboxgl-popup-close-button {
     z-index: 11;
+    top: 30px !important;
+    right: 30px !important;
+    padding: 0 !important;
   }
 
   .chain-categories {
@@ -255,10 +258,6 @@
   form.contact-form {
     display: flex;
     flex-direction: column;
-  }
-
-  form.contact-form > * {
-    margin: 3% 0;
   }
 
   .landing-page-wrapper {
@@ -380,6 +379,10 @@
   div#demo-multiple-checkbox {
     padding: 10px !important;
     padding-left: 0 !important;
+    font-family: "Montserrat" !important;
+    text-align: left;
+    text-transform: capitalize;
+    color: #3c3c3b;
   }
 
   fieldset.MuiOutlinedInput-notchedOutline {
@@ -476,8 +479,17 @@
     margin-bottom: 0.5rem;
   }
 
+  input.mapboxgl-ctrl-geocoder--input {
+    color: #48808b;
+  }
+
   .MuiStepLabel-label {
     font-family: "Montserrat" !important;
+  }
+
+  #language-switcher-select {
+    text-transform: capitalize !important;
+    border-bottom: none !important;
   }
 
   .btn {
@@ -574,6 +586,58 @@
     padding: 1% 2%;
   }
 
+  .background-frame-login {
+    position: absolute;
+    background-color: #edf2f3;
+    width: 60%;
+    height: 400px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 80px;
+  }
+
+  .circles-frame-login {
+    position: absolute;
+    margin-left: 15%;
+    padding-top: 2%;
+  }
+
+  .login-container {
+    padding: 112px 21% 0 21%;
+  }
+
+  .login-content {
+    padding-left: 5%;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .single-submit-btn {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 0px;
+  }
+
+  .signup-wrapper {
+    padding: 87px 14%;
+  }
+
+  .signup-content {
+    background-color: #edf2f3;
+    padding: 0 8%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #signup-title {
+    margin: 5% 0;
+    text-align: center;
+  }
 }
 
 @media only screen and (max-width: 480px) {

@@ -127,20 +127,21 @@ const ChainEdit = () => {
                 <CategoriesDropdown
                   setGenders={setSelectedGenders}
                   genders={selectedGenders}
-                  className={classes.select}
+                  className={classes.formSelect}
                   label={t("categories")}
                   fullWidth={true}
                 />
               </div>
               <div style={{ paddingTop: "10px" }}>
                 <SizesDropdown
-                  className={classes.select}
+                  className={classes.formSelect}
                   setSizes={setSelectedSizes}
                   genders={selectedGenders}
                   sizes={selectedSizes}
                   label={t("sizes")}
                   fullWidth={false}
                   inputVisible={true}
+                  variantVal={true}
                 />
               </div>
               {/* TODO: implement location when admin edits loop 

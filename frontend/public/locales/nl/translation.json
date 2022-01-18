@@ -68,7 +68,7 @@
   "notPartOfTheClothingLoopYet": "Nog geen onderdeel van The Clothing Loop,",
   "joinAnExistingLoop": "aansluiten bij een bestaande keten",
   "or": "of",
-  "thankYouForJoining": "Bedankt voor je deelname aan The Clothing Loop!",
+  "thankYouForJoining": "Bedankt voor uw deelname",
   "youWillReceiveAnEmail": "U ontvangt binnenkort een bevestigingsmail met de vervolgstappen.",
   "yourMessage": "Jouw bericht",
   "thankYouForYourMessage": "Dedankt voor je bericht",
@@ -91,5 +91,6 @@
   "loadingListOfAllLoops": "Lijst met alle lussen laden",
   "view": "Visie",
   "location": "Plaats",
-  "status": "Toestand"
+  "status": "Toestand",
+  "joinWaitingList": "Inschrijven op wachtlijst"
 }

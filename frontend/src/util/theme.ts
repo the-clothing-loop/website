@@ -18,7 +18,7 @@ const theme = {
     },
     secondary: {
       light: aqua,
-      main: turquoise,
+      main: teal,
       dark: bronze,
       contrastText: black,
     },
@@ -33,18 +33,20 @@ const theme = {
   },
   p: {
     fontFamily: "Montserrat !important",
-    fontSize: "0.875rem",
+    fontSize: "1rem",
+    lineHeight: "19.5px",
   },
   a: {
-    color: bronze,
+    color: teal,
     display: "inline",
-    fontSize: "0.875rem",
     textDecoration: "underline",
     padding: "0 3px",
+    fontSize: "1rem",
+    lineHeight: "19.5px",
   },
 
   em: {
-    color: "rgba(0, 0, 0, 0.6)",
+    color: "rgb(72, 128, 139, .4)",
     fontStyle: "inherit",
     float: "left",
     fontWeight: "400",
@@ -134,17 +136,8 @@ const theme = {
     textTransform: "initial",
   },
 
-  submitBtn: {
-    alignSelf: "stretch",
-
-    "&:hover": {
-      backgroundColor: bronze,
-      color: black,
-    },
-  },
-
   buttonCta: {
-    backgroundColor: white,
+    backgroundColor: "transparent",
     color: yellow,
     border: `1.54px solid ${yellow}`,
     padding: "12px, 32px, 12px, 32px",
@@ -156,9 +149,31 @@ const theme = {
     textTransform: "initial",
     fontSize: "1rem",
     lineHeight: "21.86px",
+    boxShadow: "none",
 
     "& span": {
       color: yellow,
+      fontSize: "1rem",
+    },
+  },
+
+  buttonCtaContained: {
+    backgroundColor: yellow,
+    color: white,
+    border: `1.54px solid ${yellow}`,
+    padding: "12px, 32px, 12px, 32px",
+    boxSizing: " border-box",
+    minWidth: "max-content",
+    width: "188.43px",
+    height: "46px",
+    borderRadius: "0",
+    textTransform: "initial",
+    fontSize: "1rem",
+    lineHeight: "21.86px",
+    boxShadow: "none",
+
+    "& span": {
+      color: white,
       fontSize: "1rem",
     },
   },
@@ -248,14 +263,10 @@ const theme = {
   // Styling for forms
   form: {
     textAlign: "center",
-    backgroundColor: aqua,
-    borderRadius: "4px",
-    boxShadow:
-      "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
   },
 
   formGrid: {
-    padding: "2% 5%",
+    padding: "2% 0",
     display: "flex",
     flexDirection: "column",
   },
@@ -274,30 +285,41 @@ const theme = {
 
   singleForm: {
     textAlign: "center",
-    backgroundColor: aqua,
-    borderRadius: "4px",
-    boxShadow:
-      "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
-
     position: "relative",
     left: "50%",
     top: "50%",
     transform: "translate(-50%)",
     width: "50%",
-    padding: "2% 5%",
   },
   formContainer: {
-    margin: " 1% 5%",
     position: "relative",
   },
   contactFormWrapper: {
     height: "100%",
-    backgroundColor: aqua,
+    padding: "2% 10%",
 
     "& div": {
       "& div": {
         boxShadow: "none !important",
       },
+    },
+
+    "& h1": {
+      fontFamily: "Playfair Display",
+      fontSize: "36px",
+      color: teal,
+      textAlign: "left",
+      fontWeight: "bold",
+    },
+
+    "& p": {
+      textAlign: "left",
+      margin: "1% 0",
+      fontWeight: " 400",
+      fontStyle: "normal",
+      fontSize: "18px",
+      lineHeight: " 24.59px",
+      color: black,
     },
   },
 
@@ -305,19 +327,27 @@ const theme = {
     position: "relative",
     top: "50%",
     transform: "translateY(-50%)",
+    objectFit: "cover",
+    width: "100%",
+    height: "auto",
   },
 
   formSubmitActions: {
     display: "flex",
     justifyContent: "space-around",
+    padding: "15px 0",
+    width: "100% !important",
   },
   image: {
     margin: "20px auto auto auto",
   },
   pageTitle: {
-    margin: "20px auto 20px auto",
     fontFamily: "Montserrat",
-    fontSize: "1.5rem",
+    fontSize: "36px",
+    fontWeight: "600",
+    lineHeight: "63.98px",
+    color: teal,
+    textAlign: "left",
   },
   loopName: {
     fontFamily: "Montserrat",
@@ -329,14 +359,19 @@ const theme = {
     marginTop: "2%",
     border: "none",
     fontFamily: "Montserrat",
+    float: "left",
   },
 
   textArea: {
     backgroundColor: white,
-    borderRadius: "4px",
     padding: "1%",
-    border: `1px solid ${turquoise} `,
+    border: `1px solid ${teal} `,
   },
+
+  inputLabel: {
+    color: "rgb(72, 128, 139, .4)",
+  },
+
   button: {
     width: "157.43px",
     height: "46px",
@@ -354,11 +389,6 @@ const theme = {
     "& img": {
       paddingLeft: "20px",
     },
-
-    // display: "block",
-    // position: "relative",
-    // left: "50%",
-    // transform: "translateX(-50%)",
   },
   root: {
     minWidth: 275,
@@ -370,30 +400,31 @@ const theme = {
   },
   card: {
     minWidth: "400px",
-    backgroundColor: aqua,
+    backgroundColor: "#EDF2F3",
+    borderRadius: "0",
   },
   cardContent: {
+    padding: "30px 30px 0 30px",
     "& h1": {
-      fontSize: "2rem",
+      fontSize: "1.5rem",
       textTransform: "uppercase",
       fontWeight: "bolder",
     },
 
-    "& h2": {
-      fontSize: "1.1rem",
-      padding: "2% 0",
-    },
-
     "& h3": {
       fontSize: "1rem",
-      padding: "3%",
-      textTransform: "uppercase",
       display: "flex",
+      color: turquoise,
+      margin: " 1% 0",
     },
 
     "& p": {
-      color: turquoise,
-      fontSize: "0.8rem",
+      fontSize: "1rem",
+      margin: "5px 30px",
+    },
+
+    "& p#description": {
+      margin: "0",
     },
 
     "& div#categories-container, div#sizes-container": {
@@ -402,21 +433,48 @@ const theme = {
     },
   },
 
+  cardsAction: {
+    margin: "20px 0",
+    display: "flex",
+    justifyContent: "end",
+  },
+  geocoder: {
+    height: "20px",
+  },
+
   pageGrid: {
     transform: " translate(-50%, -50%)",
     position: "absolute",
     top: "50%",
     left: "50%",
-    backgroundColor: aqua,
+    backgroundColor: "#EDF2F3",
     textAlign: "center",
     height: "80vh",
-    width: "80%",
+    width: "60%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    borderRadius: " 5px",
-    boxShadow:
-      "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
+
+    "& div": {
+      position: "relative",
+      left: "50%",
+      transform: "translateX(-50%)",
+      width: "60%",
+
+      "& h3": {
+        fontFamily: "Playfair Display",
+        fontWeight: "700",
+        fontStyle: "normal",
+        fontSize: "48px",
+        lineHeight: "63.98px",
+        color: teal,
+        textAlign: "left",
+      },
+
+      "& p": {
+        textAlign: "left",
+      },
+    },
   },
 
   pageDescription: {
@@ -430,15 +488,15 @@ const theme = {
 
   /*styling for table*/
   root2: {
-    padding: "1% 0",
-    backgroundColor: teal,
+    padding: "1% 80px",
+    backgroundColor: white,
     alignItems: "center",
     borderRadius: "0px",
     display: "flex",
     width: "100%",
-    justifyContent: "center",
     zIndex: "1100",
     position: "relative",
+    justifyContent: "space-between",
     boxShadow:
       "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
 
@@ -449,10 +507,6 @@ const theme = {
 
     "& .css-1480iag-MuiInputBase-root-MuiInput-root::after": {
       borderBottom: "none",
-    },
-
-    "& > *": {
-      marginLeft: "1% !important",
     },
   },
 
@@ -466,7 +520,7 @@ const theme = {
   },
 
   checkbox: {
-    color: `${yellow} !important`,
+    color: `${teal} !important`,
   },
 
   actionsWrapper: {
@@ -481,16 +535,20 @@ const theme = {
     whiteSpace: "nowrap",
     overflow: "hidden",
     minHeight: "1.4375em",
-    borderRadius: "4px",
-    padding: " 0 1%",
-    border: "0",
+    borderRadius: "0",
+    padding: "0 1%",
     fontFamily: "Montserrat",
-    boxShadow:
-      "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
+    border: `1px solid ${turquoise} !important`,
+    color: "rgb(72, 128, 139, .4) !important",
+    fontSize: "1rem",
+    fontWeight: "400",
+    lineHeight: " 1.4375em",
+    letterSpacing: "0.00938em",
   },
 
   inputAdornment: {
     paddingLeft: "2%",
+    color: "#518D7E !important",
   },
 
   iconButton: {
@@ -499,11 +557,12 @@ const theme = {
 
   select: {
     color: black,
-    borderRadius: "0",
+    borderRadius: "0 !important",
     backgroundColor: "transparent",
     width: "100%",
     fontFamily: "Montserrat !important",
     textTransform: "capitalize",
+    border: `1px solid ${turquoise}`,
 
     "& div#demo-multiple-checkbox": {
       padding: "10px !important",
@@ -523,6 +582,8 @@ const theme = {
   labelSelect: {
     fontFamily: "Montserrat !important",
     transform: "translate(0px, -6px) scale(0.75) !important",
+    color: "rgb(72, 128, 139, .4) !important",
+    marginTop: "10px",
 
     "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
       transform: "translate(0px, -6px) scale(0.75) !important",
@@ -533,7 +594,6 @@ const theme = {
     textTransform: "uppercase",
     color: black,
     fontWeight: "500 !important",
-    zIndex: "111111111",
   },
 
   formSelect: {
@@ -548,6 +608,11 @@ const theme = {
     width: "15rem",
   },
 
+  formWrapper: {
+    backgroundColor: "#EDF2F3",
+    padding: "35px 15%",
+  },
+
   label: {
     color: "rgba(0, 0, 0, 0.6)",
     fontStyle: "italic",
@@ -556,20 +621,20 @@ const theme = {
   },
 
   listItemText: {
-    fontFamily: "Montserrat",
+    fontFamily: "Montserrat !important",
     textTransform: "capitalize",
   },
 
   listItemTextSizes: {
-    fontFamily: "Montserrat",
+    fontFamily: "Montserrat !important",
   },
 
   alertContainer: {
-    width: "60%",
+    padding: "30px 50px",
+    width: "40%",
     position: "absolute",
     zIndex: "1",
-    backgroundColor: aqua,
-    borderRadius: "4px",
+    backgroundColor: "#EDF2F3",
     left: "50%",
     transform: "translate(-50%)",
     marginTop: "1%",
@@ -577,10 +642,13 @@ const theme = {
       "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
 
     " & h1": {
-      fontSize: "1.5rem",
-      color: black,
-      textTransform: "uppercase",
-      textAlign: "center",
+      color: teal,
+      textAlign: "left",
+      fontSize: "24px",
+      fontStyle: "normal",
+      fontWeight: "800",
+      lineHeight: "32.8px",
+      padding: "1% 0",
 
       "& span": {
         fontStyle: "italic",
@@ -588,14 +656,24 @@ const theme = {
     },
 
     " & p": {
-      textAlign: "center",
+      textAlign: "left",
       color: black,
+      fontSize: "16px",
+      lineHeight: " 21.86px",
+      padding: "1% 0",
     },
 
     "& div": {
       display: "flex",
-      justifyContent: "center",
+      justifyContent: "space-around",
+      padding: "3% 0",
     },
+  },
+
+  closeIcon: {
+    position: "absolute",
+    right: "20px",
+    cursor: "pointer",
   },
 
   footer: {
@@ -700,27 +778,6 @@ const theme = {
       },
     },
   },
-  // footerNav: {
-  //   color: "inherit",
-  //   display: "flex",
-  //   flexDirection: "row",
-  //   justifyContent: "space-evenly",
-  //   padding: "0 5%",
-  //   height: "6rem",
-  // },
-
-  // socialMediaLinkContainer: {
-  //   display: "flex",
-  //   flexDirection: "row-reverse",
-  //   alignItems: "center",
-  //   height: "4rem",
-  // },
-
-  // socialMediaLink: {
-  //   color: "inherit",
-  //   fontSize: "2.5rem",
-  //   marginLeft: "1.5rem",
-  // },
 
   contactsWrapper: {
     height: "100%",
@@ -739,20 +796,22 @@ const theme = {
   },
 
   activeIcon: {
-    color: `${yellow} !important`,
+    color: `${teal} !important`,
   },
 
   completedIcon: {
-    color: `${yellow} !important`,
+    color: `${teal} !important`,
   },
 
   stepLabel: {
     fontFamily: "Montserrat",
+    color: black,
   },
 
   sizesFormWrapper: {
     display: "flex !important",
     flexDirection: "row !important",
+    position: "relative",
   },
   popoverWrapper: {
     display: "flex",
@@ -768,15 +827,7 @@ const theme = {
     position: "relative",
   },
   icon: {
-    color: grey,
-  },
-
-  confirmationWrapper: {
-    padding: "0 15%",
-
-    " & > div ": {
-      padding: "5% 0",
-    },
+    color: teal,
   },
 
   infoAlert: {
@@ -819,7 +870,6 @@ const theme = {
     "& .landing-page-hero": {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      zIndex: "111111",
       position: "relative",
 
       "& .hero-text-wrapper": {

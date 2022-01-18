@@ -18,6 +18,9 @@ import { TextForm } from "../components/FormFields";
 import { contactMail } from "../util/firebase/mail";
 import { OneColumnLayout } from "../components/Layouts";
 
+//media
+import RightArrow from "../images/right-arrow-white.svg";
+
 const Contacts = () => {
   const classes = makeStyles(theme)();
 
@@ -71,6 +74,7 @@ const Contacts = () => {
       </Helmet>
       <div className={classes.contactFormWrapper}>
         <OneColumnLayout>
+          <Typography component="h3" className={classes.pageTitle}>Contact us</Typography>
           <Typography component="p">
             Questions? Funny stories? Tips? Press enquiries? We’d love to hear
             from you! (Please do check our FAQ first!)
@@ -116,6 +120,7 @@ const Contacts = () => {
                     disableUnderline: true,
                     maxLength: CHARACTER_LIMIT,
                     className: classes.textArea,
+                    style:{marginTop: '30px'}
                   }}
                   value={values.name}
                   helperText={`${values.name.length}/${CHARACTER_LIMIT}`}
@@ -128,14 +133,17 @@ const Contacts = () => {
                   <div className={classes.errorDiv}>{errors.message}</div>
                 )}
                 {error ? <Alert severity="error">{error}</Alert> : null}
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  {t("submit")}
-                </Button>
+                <div className={classes.cardsAction}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    {t("submit")}
+                    <img src={RightArrow} alt="" />
+                  </Button>
+                </div>
               </Form>
             )}
           </Formik>
