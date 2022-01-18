@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -22,7 +22,7 @@ import Box from "@mui/material/Box";
 import RightArrow from "../images/right-arrow-white.svg";
 
 // Project resources
-import { getChains } from "../util/firebase/chain";
+import { ChainsContext } from "../components/ChainsProvider";
 import { Typography } from "@material-ui/core";
 import { DataExport } from "../components/DataExport";
 import theme from "../util/theme";
@@ -33,7 +33,9 @@ const ChainsList = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme)();
   const history = useHistory();
-  const [chains, setChains] = useState();
+  const chains = useContext(ChainsContext).sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [error, setError] = useState("");
@@ -46,14 +48,6 @@ const ChainsList = () => {
     setRowsPerPage(+e.target.value);
     setPage(0);
   };
-
-  useEffect(() => {
-    (async () => {
-      let chains = await getChains();
-      let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
-      setChains(sortedChains);
-    })();
-  }, []);
 
   return (
     <>
