@@ -23,7 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
 // Project resources
-import { getChains } from "../util/firebase/chain";
+import { ChainsContext } from "../components/ChainsProvider";
 import { AuthContext } from "../components/AuthProvider";
 import { addUserToChain } from "../util/firebase/chain";
 import { IChain, IViewPort } from "../types";
@@ -42,27 +42,24 @@ const FindChain = () => {
 
   const classes = makeStyles(theme as any)();
 
+  const chains = useContext(ChainsContext);
+
   const [viewport, setViewport] = useState<IViewPort | {}>({});
-  const [chainData, setChainData] = useState<IChain[]>([]);
+  const chainData = chains.filter(({ published }) => published);
   const [selectedChain, setSelectedChain] = useState<IChain | null>(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [filteredChains, setFilteredChains] = useState<IChain[]>([]);
+  const [filteredChains, setFilteredChains] = useState<IChain[]>(chainData);
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    setFilteredChains(chainData);
+  }, [chains]);
 
   const mapRef = useRef<MapRef>(null);
 
   useEffect(() => {
     (async () => {
-      const chainResponse = await getChains();
-
-      const publishedChains = chainResponse.filter(
-        ({ published }) => published
-      );
-
-      setChainData(publishedChains);
-      setFilteredChains(publishedChains);
-
       //get user role
       if (user) {
         setUserId(user.uid);
