@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
-import { Redirect, useHistory, useParams } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ReactMapGL, { SVGOverlay, FlyToInterpolator } from "react-map-gl";
 import destination from "@turf/destination";
@@ -27,9 +27,9 @@ const accessToken = process.env.REACT_APP_MAPBOX_KEY || '';
 const NewChainLocation = () => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
+  const { userId } = useParams<{ userId: string }>();
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const { userId } = useParams<{ userId: string }>();
   const [viewport, setViewport] = useState<IViewPort>({
     longitude: 0,
     latitude: 0,
@@ -69,7 +69,7 @@ const NewChainLocation = () => {
       .min(2, "Must be more than 2 characters")
       .required("Required"),
     radius: Yup.number()
-      .required("required"),
+      .required("Required"),
     clothingType: Yup.string()
       .oneOf(Object.keys(categories))
       .required("Required"),
@@ -122,14 +122,13 @@ const NewChainLocation = () => {
         }}
         validationSchema={formSchema}
         validate={(values) => {
-          if (values.coordinates.every(el => el === null)) {
-            return {coordinates: "Please set the loop location by clicking the map"}
+          if (values.coordinates.some(el => el === null)) {
+            return {coordinates: "Please set the loop location by clicking the map"};
           }
         }}
         onSubmit={handleSubmit}
       >
-        {({ values, errors, touched, setFieldValue, setFieldError, handleChange }) => {
-
+        {({ values, errors, touched, setFieldValue, handleChange }) => {
           const handleMapClick = (event: any) => {
             const targetClass = String(event.srcEvent.target?.className);
             if (targetClass.includes("mapboxgl-ctrl-geocoder")) {
@@ -140,7 +139,7 @@ const NewChainLocation = () => {
             flyToLocation(event.lngLat[0], event.lngLat[1]);
           };
 
-          const redrawLoop = ({ project }: { project: any}) => {
+          const redrawLoop = ({ project }: { project: any }) => {
             const [longitude, latitude] = values.coordinates;
             if (longitude === null || latitude === null) {
               return;
@@ -305,7 +304,7 @@ const NewChainLocation = () => {
                       <Alert severity="error">{error}</Alert>
                     ) : null}
                     <div className={classes.formSubmitActions}>
-                      <Button type="submit" className={classes.buttonOutlined} >
+                      <Button type="submit" className={classes.buttonOutlined}>
                         {t("back")}
                       </Button>
                       <Button type="submit" className={classes.buttonContained}>

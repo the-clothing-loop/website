@@ -43,6 +43,10 @@
     text-transform: uppercase;
   }
 
+  .MuiInput-input {
+    text-align: left;
+  }
+
   .nav-container {
     margin: auto;
   }
