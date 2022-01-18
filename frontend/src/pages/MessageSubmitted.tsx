@@ -31,7 +31,6 @@ const MessageSubmitted = (props: any) => {
               color="primary"
               onClick={() => history.push("/")}
               key={"btn-submit-1"}
-              style={{ margin: "2% 0" }}
             >
               {t("home")}
             </Button>
@@ -41,7 +40,6 @@ const MessageSubmitted = (props: any) => {
               color="primary"
               onClick={() => history.push("/")}
               key={"btn-submit-1"}
-              style={{ margin: "2% 0" }}
             >
               {t("FAQ's")}
             </Button>
