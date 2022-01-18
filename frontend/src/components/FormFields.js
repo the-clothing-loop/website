@@ -43,6 +43,9 @@ const PhoneFormField = ({ label, ...props }) => {
         {...field}
         {...props}
         className={classes.textField}
+        InputLabelProps={{
+          className: classes.inputLabel,
+        }}
       ></MuiPhoneInput>
     </div>
   );
@@ -51,6 +54,7 @@ const PhoneFormField = ({ label, ...props }) => {
 const TextForm = ({ label, ...props }) => {
   const [field] = useField(props);
   const { t } = useTranslation();
+  const classes = makeStyles(theme)();
 
   return (
     <div>
@@ -60,6 +64,9 @@ const TextForm = ({ label, ...props }) => {
         autoComplete="off"
         label={t(label)}
         fullWidth
+        InputLabelProps={{
+          className: classes.inputLabel,
+        }}
       />
     </div>
   );
@@ -82,6 +89,9 @@ const CheckboxField = ({ required, label, ...props }) => {
         {...props}
         label={label}
         required={required ? true : false}
+        InputLabelProps={{
+          className: classes.inputLabel,
+        }}
       />
     </FormGroup>
   );
@@ -89,6 +99,7 @@ const CheckboxField = ({ required, label, ...props }) => {
 
 const TextArea = ({ label, ...props }) => {
   const [field] = useField(props);
+  const classes = makeStyles(theme)();
   return (
     <TextField
       id="outlined-multiline-static"
@@ -98,6 +109,9 @@ const TextArea = ({ label, ...props }) => {
       {...props}
       {...field}
       label={label}
+      InputLabelProps={{
+        className: classes.inputLabel,
+      }}
     />
   );
 };
