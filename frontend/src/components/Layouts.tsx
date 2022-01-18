@@ -37,7 +37,7 @@ const TwoColumnLayout: React.FC<ITwoColumnsLayout> = ({ children, img }) => {
     <div className={classes.formContainer}>
       <Grid container className={classes.form}>
         <Grid item sm>
-          <img src={img} alt='form-img' className={classes.formImg}/>
+          <img src={img} alt="form-img" className={classes.formImg} />
         </Grid>
         <Grid item sm>
           {children}

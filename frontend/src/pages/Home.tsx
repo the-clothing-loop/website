@@ -31,7 +31,7 @@ import WdcdLogo from "../images/logos/Logo_WDCD.png";
 
 const Home = () => {
   const chainsCount = React.useContext(ChainsContext).length;
-  
+
   const classes = makeStyles(theme as any)();
 
   const supporters = [

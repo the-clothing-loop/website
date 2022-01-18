@@ -1,4 +1,4 @@
-import { useState, useRef, useContext} from "react";
+import { useState, useRef, useContext } from "react";
 
 //project resources
 import { ChainsContext } from "../ChainsProvider";
