@@ -1,55 +1,55 @@
-import React from 'react';
+import React from "react";
 import {
   makeStyles,
   Button,
   TextField,
   Typography,
   Grid,
-} from '@material-ui/core';
+} from "@material-ui/core";
 
-import ArrowRight from './arrow-right.svg';
+import ArrowRight from "./arrow-right.svg";
 
-import { subscribeToNewsletter } from '../../util/firebase/newsletter';
+import { subscribeToNewsletter } from "../../util/firebase/newsletter";
 
 const useStyles = makeStyles({
   headingTypographyRoot: {
-    fontFamily: 'Playfair Display',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: '48px',
-    lineHeight: '64px',
-    color: '#48808B',
+    fontFamily: "Playfair Display",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "48px",
+    lineHeight: "64px",
+    color: "#48808B",
   },
   subheadingTypographyRoot: {
-    marginTop: '16px',
-    fontFamily: 'Avenir', // Not a free font. Available by default in MacOS
-    fontWeight: 'normal',
-    fontSize: '18px',
-    lineHeight: '25px',
-    color: '#3C3C3B',
+    marginTop: "16px",
+    fontFamily: "Avenir", // Not a free font. Available by default in MacOS
+    fontWeight: "normal",
+    fontSize: "18px",
+    lineHeight: "25px",
+    color: "#3C3C3B",
   },
   textFieldGridRoot: {
-    marginTop: '8px',
+    marginTop: "8px",
   },
   muiInputLabelRootTextFieldRoot: {
-    '& label.MuiInputLabel-root': { color: '#48808B' },
-    '& .MuiInputBase-input': { color: '#48808B' },
-    '& .MuiInput-underline': {
-      '&:after': { borderBottom: 'none' },
+    "& label.MuiInputLabel-root": { color: "#48808B" },
+    "& .MuiInputBase-input": { color: "#48808B" },
+    "& .MuiInput-underline": {
+      "&:after": { borderBottom: "none" },
     },
   },
   buttonRoot: {
-    marginTop: '24px',
-    fontFamily: 'Avenir', // Not a free font. Available by default in MacOS
-    fontSize: '16px',
+    marginTop: "24px",
+    fontFamily: "Avenir", // Not a free font. Available by default in MacOS
+    fontSize: "16px",
     fontWeight: 500,
-    padding: '12px 32px',
-    borderRadius: '0px',
-    background: '#f7C86f',
-    color: '#ffffff',
-    textTransform: 'capitalize',
-    '&:hover': {
-      background: '#f7a00f', // Change color, not part of Figma
+    padding: "12px 32px",
+    borderRadius: "0px",
+    background: "#f7C86f",
+    color: "#ffffff",
+    textTransform: "capitalize",
+    "&:hover": {
+      background: "#f7a00f", // Change color, not part of Figma
     },
   },
 });
@@ -57,8 +57,8 @@ const useStyles = makeStyles({
 export const Newsletter = () => {
   const classes = useStyles();
 
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);

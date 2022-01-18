@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import { getChains } from '../util/firebase/chain';
-import { IChain } from '../types';
+import { getChains } from "../util/firebase/chain";
+import { IChain } from "../types";
 
 export const ChainsContext = React.createContext<IChain[]>([]);
 

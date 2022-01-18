@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useContext, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import ReactMapGL, {
   Source,
@@ -6,10 +6,10 @@ import ReactMapGL, {
   Popup,
   MapEvent,
   MapRef,
-} from 'react-map-gl';
+} from "react-map-gl";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
-import * as GeoJSONTypes from 'geojson';
+import * as GeoJSONTypes from "geojson";
 
 // Material UI
 import { Button } from "@material-ui/core";
@@ -132,15 +132,15 @@ const FindChain = () => {
       layer: { id: layerId },
     } = topMostFeature;
 
-    if (layerId === 'chains') {
+    if (layerId === "chains") {
       const selectedChainIndex = topMostFeature.properties.chainIndex;
 
       setSelectedChain(filteredChains[selectedChainIndex]);
       setShowPopup(true);
-    } else if (layerId === 'cluster' || layerId === 'cluster-count') {
+    } else if (layerId === "cluster" || layerId === "cluster-count") {
       const clusterId = topMostFeature.properties.cluster_id;
 
-      const mapboxSource = mapRef!.current!.getMap().getSource('chains');
+      const mapboxSource = mapRef!.current!.getMap().getSource("chains");
 
       mapboxSource.getClusterExpansionZoom(
         clusterId,
@@ -167,9 +167,8 @@ const FindChain = () => {
 
   const geoJSONFilteredChains: GeoJSONTypes.FeatureCollection<GeoJSONTypes.Geometry> =
     {
-      type: 'FeatureCollection',
-      features: filteredChains
-        .map((filteredChain, filteredChainIndex) => {
+      type: "FeatureCollection",
+      features: filteredChains.map((filteredChain, filteredChainIndex) => {
         const {
           longitude,
           latitude,
@@ -177,18 +176,18 @@ const FindChain = () => {
         } = filteredChain;
 
         return {
-          type: 'Feature',
+          type: "Feature",
           geometry: {
-            type: 'Point',
+            type: "Point",
             coordinates: [longitude, latitude],
           },
           properties: {
             chainIndex: filteredChainIndex,
-              gender: gender.includes('women')
-                ? 'woman'
-                : gender.includes('men')
-                ? 'men'
-                : 'children', // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
+            gender: gender.includes("women")
+              ? "woman"
+              : gender.includes("men")
+              ? "men"
+              : "children", // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
           },
         };
       }),
@@ -221,52 +220,52 @@ const FindChain = () => {
           cluster={true}
           clusterMaxZoom={14}
           clusterRadius={50}
-            >
+        >
           <Layer
             id="chains"
             type="circle"
-            filter={['!', ['has', 'point_count']]}
+            filter={["!", ["has", "point_count"]]}
             paint={{
-              'circle-color': [
-                'match',
-                ['get', 'gender'],
-                'women',
-                'pink',
-                'men',
-                'blue',
-                'red',
+              "circle-color": [
+                "match",
+                ["get", "gender"],
+                "women",
+                "pink",
+                "men",
+                "blue",
+                "red",
               ],
-              'circle-radius': 30,
-              'circle-blur': 0.7,
-                  }}
-                />
+              "circle-radius": 30,
+              "circle-blur": 0.7,
+            }}
+          />
           <Layer
             id="cluster"
             type="circle"
-            filter={['has', 'point_count']}
+            filter={["has", "point_count"]}
             paint={{
-              'circle-color': [
-                'step',
-                ['get', 'point_count'],
-                '#51bbd6',
+              "circle-color": [
+                "step",
+                ["get", "point_count"],
+                "#51bbd6",
                 100,
-                '#f1f075',
+                "#f1f075",
                 750,
-                '#f28cb1',
+                "#f28cb1",
               ],
-              'circle-radius': 30,
-              'circle-blur': 0.7,
-                  }}
-                />
+              "circle-radius": 30,
+              "circle-blur": 0.7,
+            }}
+          />
           <Layer
             id="cluster-count"
             type="symbol"
-            filter={['has', 'point_count']}
+            filter={["has", "point_count"]}
             layout={{
-              'text-field': '{point_count_abbreviated}',
-                  }}
-            paint={{ 'text-color': 'white' }}
-                />
+              "text-field": "{point_count_abbreviated}",
+            }}
+            paint={{ "text-color": "white" }}
+          />
         </Source>
 
         {selectedChain && showPopup ? (

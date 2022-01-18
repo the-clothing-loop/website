@@ -26,11 +26,7 @@ const SingleCount: React.FC<IProps> = ({ end, step }: IProps) => {
     counter(0, end, setState, step);
   }, []);
 
-  return (
-    <div>
-      {state}
-    </div>
-  );
+  return <div>{state}</div>;
 };
 
 export default SingleCount;
