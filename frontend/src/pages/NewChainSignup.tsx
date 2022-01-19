@@ -17,16 +17,16 @@ import ProgressBar from "../components/ProgressBar";
 import PopoverOnHover from "../components/Popover";
 
 // Project resources
-import {
-  PhoneFormField,
-  TextForm
-} from "../components/FormFields";
+import { PhoneFormField, TextForm } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../components/AuthProvider";
 import { createUser } from "../util/firebase/user";
 import SizesDropdown from "../components/SizesDropdown";
 import categories from "../util/categories";
 import FormActions from "../components/formActions";
+
+//media
+import RightArrow from "../images/right-arrow-white.svg";
 
 const Signup = () => {
   const { t } = useTranslation();
@@ -111,8 +111,12 @@ const Signup = () => {
       >
         {({ errors, touched, setFieldValue }) => (
           <OneColumnLayout>
-            <div>
-              <Typography variant="h3" className={classes.pageTitle}>
+            <div className={classes.formWrapper}>
+              <Typography
+                variant="h3"
+                className={classes.pageTitle}
+                id="signup-title"
+              >
                 {t("startNewLoop")}
               </Typography>
 
@@ -159,9 +163,13 @@ const Signup = () => {
                     sizes={selectedSizes}
                     label={t("interestedSizes")}
                     fullWidth={true}
+                    inputVisible={false}
+                    variantVal={true}
                   />
                   <PopoverOnHover
-                    message={"please select the sizes you are interested in."}
+                    message={
+                      "We would like to know this, to see if different size interests are equally represented within your loop. Also, knowing this makes it easier to split the route over time, depending on size interest!"
+                    }
                   />
                 </div>
 
@@ -177,8 +185,9 @@ const Signup = () => {
                     {" "}
                     {t("back")}
                   </Button>
-                  <Button type="submit" className={classes.buttonContained}>
+                  <Button type="submit" className={classes.button}>
                     {t("next")}
+                    <img src={RightArrow} alt="" />
                   </Button>
                 </div>
               </Form>

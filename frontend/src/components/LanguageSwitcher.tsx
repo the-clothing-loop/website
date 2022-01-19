@@ -11,11 +11,10 @@ import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
 
 const LanguageSwitcher = () => {
-  const languages = ["english", "dutch"];
+  const languages = ["en", "nl"];
   const classes = makeStyles(theme as any)();
 
-
-  const [selected, setSelected] = useState("english");
+  const [selected, setSelected] = useState("en");
 
   const handleChange = (e: any) => {
     let language = e.target.value;
@@ -33,11 +32,12 @@ const LanguageSwitcher = () => {
             value={selected}
             onChange={handleChange}
             className={classes.simpleSelect}
+            variant="outlined"
           >
             {languages.map((el, i) => {
               return (
                 <MenuItem className={classes.menuItem} key={i} value={el}>
-                  {el}
+                  {el === "en" ? "English 🇬🇧" : "Dutch 🇳🇱"}
                 </MenuItem>
               );
             })}

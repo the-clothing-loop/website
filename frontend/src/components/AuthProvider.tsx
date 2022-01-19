@@ -10,7 +10,11 @@ type AuthProps = {
   loading: boolean;
 };
 
-export const AuthContext = React.createContext<AuthProps>({ user: null, loading: true, userData: null});
+export const AuthContext = React.createContext<AuthProps>({
+  user: null,
+  loading: true,
+  userData: null,
+});
 
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState(null as firebase.User | null);
@@ -18,11 +22,11 @@ export const AuthProvider = ({ children }: any) => {
   const [previousUid, setPreviousUid] = useState("");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-      if (process.env.REACT_APP_USE_EMULATOR == 'true') {
-        firebase.auth().useEmulator('http://localhost:9099');
-      }
+    if (process.env.REACT_APP_USE_EMULATOR == "true") {
+      firebase.auth().useEmulator("http://localhost:9099");
+    }
 
-      firebase.auth().onAuthStateChanged(async (user: firebase.User | null) => {
+    firebase.auth().onAuthStateChanged(async (user: firebase.User | null) => {
       setUser(user);
       setLoading(false);
       if (user?.uid && user?.uid !== previousUid) {
@@ -37,9 +41,9 @@ export const AuthProvider = ({ children }: any) => {
   const contextValue = {
     user,
     userData,
-    loading
+    loading,
   };
-  return <AuthContext.Provider value={contextValue}>
-    {children}
-	</AuthContext.Provider>;
-}
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
+};

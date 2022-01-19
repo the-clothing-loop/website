@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
-import { useParams, Link, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import { useState, useEffect, useContext } from "react";
+import { useParams, Link, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 // Material UI
-import { Alert } from '@material-ui/lab';
+import { Alert } from "@material-ui/lab";
 import {
   Grid,
   Table,
@@ -16,49 +16,50 @@ import {
   TablePagination,
   TableContainer,
   FormControlLabel,
-} from '@material-ui/core';
+} from "@material-ui/core";
 import {
   EditOutlined as EditIcon,
   Clear as DeleteIcon,
-} from '@material-ui/icons';
-import { makeStyles } from '@material-ui/styles';
+} from "@material-ui/icons";
+import { makeStyles } from "@material-ui/styles";
 
 // Project resources
-import { getChain, updateChain } from '../util/firebase/chain';
-import { getUsersForChain, removeUserFromChain } from '../util/firebase/user';
-import { IChain, IUser } from '../types';
-import { AuthContext } from '../components/AuthProvider';
+import { getChain, updateChain } from "../util/firebase/chain";
+import { getUsersForChain, removeUserFromChain } from "../util/firebase/user";
+import { IChain, IUser } from "../types";
+import { AuthContext } from "../components/AuthProvider";
+import { UserDataExport } from "../components/DataExport";
 
 type TParams = {
   chainId: string;
 };
 
-const rows = ['name', 'address', 'email', 'phone', 'interested size'];
+const rows = ["name", "address", "email", "phone", "interested size"];
 
 const useStyles = makeStyles({
   borderlessTableCellRoot: {
-    borderBottom: 'none',
+    borderBottom: "none",
   },
   headRowTableCellRoot: {
     paddingBottom: 24,
-    borderBottom: '1px solid #C4C4C4',
+    borderBottom: "1px solid #C4C4C4",
     fontSize: 14,
     fontWeight: 400,
-    lineHeight: '17px',
-    color: '#C4C4C4',
+    lineHeight: "17px",
+    color: "#C4C4C4",
   },
   descriptionTypographyRoot: {
     marginTop: 24,
     fontSize: 18,
   },
   titleTypographyRoot: {
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     fontSize: 36,
     fontWeight: 700,
   },
   fieldSubheadingTypographyRoot: {
     fontSize: 16,
-    color: '#068C7C',
+    color: "#068C7C",
   },
   switchGroupRoot: {
     marginTop: 32,
@@ -73,7 +74,7 @@ const ChainMemberList = () => {
   const [chain, setChain] = useState<IChain>();
   const [users, setUsers] = useState<IUser[]>();
   const [publishedValue, setPublishedValue] = useState({ published: true });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -123,7 +124,7 @@ const ChainMemberList = () => {
   }, []);
 
   useEffect(() => {
-    setAdmin(users?.find((user: IUser) => user.role === 'chainAdmin'));
+    setAdmin(users?.find((user: IUser) => user.role === "chainAdmin"));
   }, [users]);
 
   const handleRemoveFromChain = async (userId: string) => {
@@ -178,16 +179,16 @@ const ChainMemberList = () => {
                   {chain.categories?.gender &&
                     chain.categories.gender
                       .map((gender, i) => `${gender.toUpperCase()}'S CLOTHING`)
-                      .join(' / ')}
+                      .join(" / ")}
                 </Field>
                 <Field title="Sizes">
                   {chain.categories?.size &&
                     chain.categories.size
                       .map((size, i) => size.toUpperCase())
-                      .join(' / ')}
+                      .join(" / ")}
                 </Field>
                 <Field title="Participants">{`${users.length} ${
-                  users.length === 1 ? 'person' : 'people'
+                  users.length === 1 ? "person" : "people"
                 }`}</Field>
 
                 <FormControlLabel
@@ -198,10 +199,10 @@ const ChainMemberList = () => {
                       checked={publishedValue.published}
                       onChange={handleChange}
                       name="published"
-                      inputProps={{ 'aria-label': 'secondary checkbox' }}
+                      inputProps={{ "aria-label": "secondary checkbox" }}
                     />
                   }
-                  label={publishedValue.published ? 'published' : 'unpublished'}
+                  label={publishedValue.published ? "published" : "unpublished"}
                   labelPlacement="end"
                 />
               </div>
@@ -218,7 +219,7 @@ const ChainMemberList = () => {
                     <Title>Loop Admin</Title>
                   </Grid>
                   <Grid item>
-                    <Link to={`/loops/edit/${chainId}`}>
+                    <Link to={`/users/edit/${admin?.uid}`}>
                       <EditIcon />
                     </Link>
                   </Grid>
@@ -234,6 +235,7 @@ const ChainMemberList = () => {
           <Grid item>
             <div className="chain-member-list__card">
               <Title>Loop Participants</Title>
+              <UserDataExport />
 
               <TableContainer className="chain-member-list__table--margin">
                 <Table>
@@ -244,7 +246,7 @@ const ChainMemberList = () => {
                           <HeadRowTableCell key={i}>{row}</HeadRowTableCell>
                         );
                       })}
-                      {userData?.role === 'admin' && (
+                      {userData?.role === "admin" && (
                         <>
                           <HeadRowTableCell />
                           <HeadRowTableCell />
@@ -267,9 +269,9 @@ const ChainMemberList = () => {
                             {u.phoneNumber}
                           </BorderlessTableCell>
                           <BorderlessTableCell>
-                            {u.interestedSizes?.join(', ')}
+                            {u.interestedSizes?.join(", ")}
                           </BorderlessTableCell>
-                          {userData?.role === 'admin' && (
+                          {userData?.role === "admin" && (
                             <>
                               <BorderlessTableCell>
                                 <Link to={`/users/edit/${u.uid}`}>

@@ -53,7 +53,11 @@ const PopoverOnHover: React.FC<IProps> = ({ message }: IProps) => {
         onClose={handlePopoverClose}
         disableRestoreFocus
       >
-        <Typography className={classes.p} sx={{ p: 1 }}>
+        <Typography
+          className={classes.p}
+          sx={{ p: 1 }}
+          style={{ maxWidth: "300px" }}
+        >
           {message}
         </Typography>
       </Popover>
