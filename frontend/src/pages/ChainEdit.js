@@ -10,14 +10,12 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
-import InputLabel from "@mui/material/InputLabel";
 
 // Project resources
 import { getChain, updateChain } from "../util/firebase/chain";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { TextForm } from "../components/FormFields";
 import { ThreeColumnLayout } from "../components/Layouts";
-import categories from "../util/categories";
 import SizesDropdown from "../components/SizesDropdown";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 

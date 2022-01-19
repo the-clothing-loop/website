@@ -168,17 +168,17 @@ const SearchBar: React.FC<IProps> = ({
                 return <em className={classes.em}>{t("categories")}</em>;
               }
 
-              return selected.join(", ");
+              return selected.map(t).join(", ");
             }}
           >
-            {categories.genders.map((value: any) => (
+            {Object.keys(categories).map((value: any) => (
               <MenuItem key={value} value={value}>
                 <Checkbox
                   className={classes.checkbox}
                   checked={selectedGenders.includes(value) ? true : false}
                 />
                 <ListItemText
-                  primary={value}
+                  primary={t(value)}
                   className={classes.listItemText}
                 />
               </MenuItem>
