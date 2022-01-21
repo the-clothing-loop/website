@@ -154,7 +154,7 @@ const Signup = () => {
                       onResult={setGeocoderResult}
                     />
 
-                    <div className={classes.sizesDropdownWrapper}>
+                    <div className={classes.formFieldWithPopover}>
                       <SizesDropdown
                         className={classes.formSelect}
                         setSizes={setSelectedSizes}
