@@ -43,87 +43,82 @@ export const SearchBar: React.FC<IProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div>
-      <Paper className={classes.root2}>
-        <TextField
-          id="outlined-basic"
-          placeholder={t("searchLocation")}
+    <Paper className={classes.root2}>
+      <TextField
+        id="outlined-basic"
+        placeholder={t("searchLocation")}
+        variant="outlined"
+        className={classes.input}
+        value={searchTerm}
+        onChange={handleSearchTermChange}
+        InputProps={{
+          style: {
+            color: "#48808B",
+          },
+          startAdornment: (
+            <InputAdornment position="start" className={classes.inputAdornment}>
+              <Search />
+            </InputAdornment>
+          ),
+        }}
+      />
+
+      <FormControl className={classes.formControl}>
+        <Select
+          displayEmpty
+          className={classes.select}
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
           variant="outlined"
-          className={classes.input}
-          value={searchTerm}
-          onChange={handleSearchTermChange}
-          InputProps={{
-            style: {
-              color: "#48808B",
-            },
-            startAdornment: (
-              <InputAdornment
-                position="start"
-                className={classes.inputAdornment}
-              >
-                <Search />
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        <FormControl className={classes.formControl}>
-          <Select
-            displayEmpty
-            className={classes.select}
-            labelId="demo-multiple-checkbox-label"
-            id="demo-multiple-checkbox"
-            multiple
-            variant="outlined"
-            value={selectedGenders}
-            onChange={handleSelectedGenderChange}
-            renderValue={(selected) => {
-              if (Array.isArray(selected)) {
-                if (selected.length === 0) {
-                  return <em className={classes.em}>{t("categories")}</em>;
-                }
-
-                return selected.map(t).join(", ");
+          value={selectedGenders}
+          onChange={handleSelectedGenderChange}
+          renderValue={(selected) => {
+            if (Array.isArray(selected)) {
+              if (selected.length === 0) {
+                return <em className={classes.em}>{t("categories")}</em>;
               }
-            }}
-          >
-            {Object.keys(categories).map((value: any) => (
-              <MenuItem key={value} value={value}>
-                <Checkbox
-                  className={classes.checkbox}
-                  checked={selectedGenders.includes(value) ? true : false}
-                />
-                <ListItemText
-                  primary={t(value)}
-                  className={classes.listItemText}
-                />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
 
-        <div className={classes.formControl}>
-          <SizesDropdown
-            className={classes.select}
-            genders={selectedGenders}
-            sizes={selectedSizes}
-            setSizes={setSelectedSizes}
-            label={t("sizes")}
-            fullWidth={false}
-            inputVisible={false}
-            variantVal={false}
-          />
-        </div>
-
-        <Button
-          className={classes.button}
-          variant="contained"
-          color="primary"
-          onClick={handleSearch}
+              return selected.map(t).join(", ");
+            }
+          }}
         >
-          {t("search")}
-        </Button>
-      </Paper>
-    </div>
+          {Object.keys(categories).map((value: any) => (
+            <MenuItem key={value} value={value}>
+              <Checkbox
+                className={classes.checkbox}
+                checked={selectedGenders.includes(value) ? true : false}
+              />
+              <ListItemText
+                primary={t(value)}
+                className={classes.listItemText}
+              />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <div className={classes.formControl}>
+        <SizesDropdown
+          className={classes.select}
+          genders={selectedGenders}
+          sizes={selectedSizes}
+          setSizes={setSelectedSizes}
+          label={t("sizes")}
+          fullWidth={false}
+          inputVisible={false}
+          variantVal={false}
+        />
+      </div>
+
+      <Button
+        className={classes.button}
+        variant="contained"
+        color="primary"
+        onClick={handleSearch}
+      >
+        {t("search")}
+      </Button>
+    </Paper>
   );
 };
