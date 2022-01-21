@@ -32,14 +32,14 @@ import { getUserById } from "../util/firebase/user";
 import { SearchBar } from "../components/SearchBar";
 import { ChainNotFound } from "../components/ChainNotFound";
 
+// Media
+import RightArrow from "../images/right-arrow-white.svg";
+
 interface FilterChainPredicate {
   (chain: IChain): boolean;
 }
 
 const defaultTruePredicate = () => true;
-
-//media
-import RightArrow from "../images/right-arrow-white.svg";
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
