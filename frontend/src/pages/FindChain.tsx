@@ -29,7 +29,14 @@ import { addUserToChain } from "../util/firebase/chain";
 import { IChain, IViewPort } from "../types";
 import theme from "../util/theme";
 import { getUserById } from "../util/firebase/user";
-import SearchBar from "../components/SearchBar";
+import { SearchBar } from "../components/SearchBar";
+import { ChainNotFound } from "../components/ChainNotFound";
+
+interface FilterChainPredicate {
+  (chain: IChain): boolean;
+}
+
+const defaultTruePredicate = () => true;
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
@@ -37,6 +44,9 @@ import RightArrow from "../images/right-arrow-white.svg";
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
+
+const hasCommonElements = (arr1: string[], arr2: string[]) =>
+  arr1.some((item: string) => arr2.includes(item));
 
 const FindChain = () => {
   const history = useHistory();
@@ -46,18 +56,79 @@ const FindChain = () => {
   const classes = makeStyles(theme as any)();
 
   const chains = useContext(ChainsContext);
+  const publishedChains = chains.filter(({ published }) => published);
 
   const [viewport, setViewport] = useState<IViewPort | {}>({});
-  const chainData = chains.filter(({ published }) => published);
   const [selectedChain, setSelectedChain] = useState<IChain | null>(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [filteredChains, setFilteredChains] = useState<IChain[]>(chainData);
+
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState<string | null>(null);
 
-  useEffect(() => {
-    setFilteredChains(chainData);
-  }, [chains]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
+  const [isChainNotFound, setIsChainNotFound] = useState<boolean>(false);
+
+  const [filterChainPredicate, setFilterChainPredicate] =
+    useState<FilterChainPredicate>(() => defaultTruePredicate);
+
+  const filteredChains = publishedChains.filter(filterChainPredicate);
+
+  const handleSearchTermChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSelectedGenderChange = (event: React.ChangeEvent<any>) => {
+    const {
+      target: { value },
+    } = event;
+
+    setSelectedGenders(typeof value === "string" ? value.split(",") : value);
+  };
+
+  const handleSearch = () => {
+    const newChainFilterPredicate = (chain: IChain) => {
+      const { categories } = chain;
+
+      return (
+        (!selectedSizes.length ||
+          hasCommonElements(categories.size, selectedSizes)) &&
+        (!selectedGenders.length ||
+          hasCommonElements(categories.gender, selectedGenders))
+      );
+    };
+
+    setFilterChainPredicate(() => newChainFilterPredicate);
+
+    if (!searchTerm) {
+      return;
+    }
+
+    const matchingChain = filteredChains.find((chain: IChain) =>
+      chain.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    matchingChain
+      ? setViewport({
+          latitude: matchingChain?.latitude,
+          longitude: matchingChain?.longitude,
+          width: "100vw",
+          height: "95vh",
+          zoom: 8,
+        })
+      : setIsChainNotFound(true);
+  };
+
+  const handleBack = () => {
+    setSearchTerm("");
+    setSelectedSizes([]);
+    setSelectedGenders([]);
+    setIsChainNotFound(false);
+    setFilterChainPredicate(() => defaultTruePredicate);
+  };
 
   const mapRef = useRef<MapRef>(null);
 
@@ -202,11 +273,21 @@ const FindChain = () => {
         <title>Clothing-Loop | Find Loop</title>
         <meta name="description" content="Find Loop" />
       </Helmet>
+
       <SearchBar
-        data={chainData}
-        setData={setFilteredChains}
-        setViewport={setViewport}
+        searchTerm={searchTerm}
+        handleSearchTermChange={handleSearchTermChange}
+        selectedGenders={selectedGenders}
+        handleSelectedGenderChange={handleSelectedGenderChange}
+        selectedSizes={selectedSizes}
+        setSelectedSizes={setSelectedSizes}
+        handleSearch={handleSearch}
       />
+
+      {isChainNotFound && (
+        <ChainNotFound searchTerm={searchTerm} backAction={handleBack} />
+      )}
+
       <ReactMapGL
         className={"main-map"}
         mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
