@@ -29,24 +29,20 @@ import { addUserToChain } from "../util/firebase/chain";
 import { IChain, IViewPort } from "../types";
 import theme from "../util/theme";
 import { getUserById } from "../util/firebase/user";
-import { SearchBar } from "../components/SearchBar";
-import { ChainNotFound } from "../components/ChainNotFound";
+import { FindChainSearchBarContainer } from "../components/FindChain";
 
 // Media
 import RightArrow from "../images/right-arrow-white.svg";
 
-interface FilterChainPredicate {
+export interface ChainPredicate {
   (chain: IChain): boolean;
 }
 
-const defaultTruePredicate = () => true;
+export const defaultTruePredicate = () => true;
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
-
-const hasCommonElements = (arr1: string[], arr2: string[]) =>
-  arr1.some((item: string) => arr2.includes(item));
 
 const FindChain = () => {
   const history = useHistory();
@@ -65,69 +61,24 @@ const FindChain = () => {
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState<string | null>(null);
 
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
-  const [isChainNotFound, setIsChainNotFound] = useState<boolean>(false);
-
   const [filterChainPredicate, setFilterChainPredicate] =
-    useState<FilterChainPredicate>(() => defaultTruePredicate);
+    useState<ChainPredicate>(() => defaultTruePredicate);
 
   const filteredChains = publishedChains.filter(filterChainPredicate);
 
-  const handleSearchTermChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSearchTerm(event.target.value);
-  };
+  const handleFindChainCallback = (findChainPredicate: ChainPredicate) => {
+    const matchingChain = filteredChains.find(findChainPredicate);
 
-  const handleSelectedGenderChange = (event: React.ChangeEvent<any>) => {
-    const {
-      target: { value },
-    } = event;
+    matchingChain &&
+      setViewport({
+        latitude: matchingChain?.latitude,
+        longitude: matchingChain?.longitude,
+        width: "100vw",
+        height: "95vh",
+        zoom: 8,
+      });
 
-    setSelectedGenders(typeof value === "string" ? value.split(",") : value);
-  };
-
-  const handleSearch = () => {
-    const newChainFilterPredicate = (chain: IChain) => {
-      const { categories } = chain;
-
-      return (
-        (!selectedSizes.length ||
-          hasCommonElements(categories.size, selectedSizes)) &&
-        (!selectedGenders.length ||
-          hasCommonElements(categories.gender, selectedGenders))
-      );
-    };
-
-    setFilterChainPredicate(() => newChainFilterPredicate);
-
-    if (!searchTerm) {
-      return;
-    }
-
-    const matchingChain = filteredChains.find((chain: IChain) =>
-      chain.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    matchingChain
-      ? setViewport({
-          latitude: matchingChain?.latitude,
-          longitude: matchingChain?.longitude,
-          width: "100vw",
-          height: "95vh",
-          zoom: 8,
-        })
-      : setIsChainNotFound(true);
-  };
-
-  const handleBack = () => {
-    setSearchTerm("");
-    setSelectedSizes([]);
-    setSelectedGenders([]);
-    setIsChainNotFound(false);
-    setFilterChainPredicate(() => defaultTruePredicate);
+    return !!matchingChain;
   };
 
   const mapRef = useRef<MapRef>(null);
@@ -274,19 +225,10 @@ const FindChain = () => {
         <meta name="description" content="Find Loop" />
       </Helmet>
 
-      <SearchBar
-        searchTerm={searchTerm}
-        handleSearchTermChange={handleSearchTermChange}
-        selectedGenders={selectedGenders}
-        handleSelectedGenderChange={handleSelectedGenderChange}
-        selectedSizes={selectedSizes}
-        setSelectedSizes={setSelectedSizes}
-        handleSearch={handleSearch}
+      <FindChainSearchBarContainer
+        setFilterChainPredicate={setFilterChainPredicate}
+        handleFindChainCallback={handleFindChainCallback}
       />
-
-      {isChainNotFound && (
-        <ChainNotFound searchTerm={searchTerm} backAction={handleBack} />
-      )}
 
       <ReactMapGL
         className={"main-map"}

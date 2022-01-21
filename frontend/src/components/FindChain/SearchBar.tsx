@@ -13,11 +13,11 @@ import {
 import { Button, Paper, makeStyles } from "@material-ui/core";
 import { Search } from "@mui/icons-material";
 
-import SizesDropdown from "./SizesDropdown";
+import SizesDropdown from "../SizesDropdown";
 
 // Project resources
-import theme from "../util/theme";
-import categories from "../util/categories";
+import theme from "../../util/theme";
+import categories from "../../util/categories";
 
 interface IProps {
   searchTerm: string;

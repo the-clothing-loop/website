@@ -4,7 +4,7 @@ import { Button, makeStyles, Typography } from "@material-ui/core";
 
 import { Close as CloseIcon } from "@mui/icons-material";
 
-import theme from "../util/theme";
+import theme from "../../util/theme";
 
 export const ChainNotFound = ({
   searchTerm,
