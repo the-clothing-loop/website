@@ -29,10 +29,16 @@ import { addUserToChain } from "../util/firebase/chain";
 import { IChain, IViewPort } from "../types";
 import theme from "../util/theme";
 import { getUserById } from "../util/firebase/user";
-import SearchBar from "../components/SearchBar";
+import { FindChainSearchBarContainer } from "../components/FindChain";
 
-//media
+// Media
 import RightArrow from "../images/right-arrow-white.svg";
+
+export interface ChainPredicate {
+  (chain: IChain): boolean;
+}
+
+export const defaultTruePredicate = () => true;
 
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
@@ -46,18 +52,34 @@ const FindChain = () => {
   const classes = makeStyles(theme as any)();
 
   const chains = useContext(ChainsContext);
+  const publishedChains = chains.filter(({ published }) => published);
 
   const [viewport, setViewport] = useState<IViewPort | {}>({});
-  const chainData = chains.filter(({ published }) => published);
   const [selectedChain, setSelectedChain] = useState<IChain | null>(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [filteredChains, setFilteredChains] = useState<IChain[]>(chainData);
+
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState<string | null>(null);
 
-  useEffect(() => {
-    setFilteredChains(chainData);
-  }, [chains]);
+  const [filterChainPredicate, setFilterChainPredicate] =
+    useState<ChainPredicate>(() => defaultTruePredicate);
+
+  const filteredChains = publishedChains.filter(filterChainPredicate);
+
+  const handleFindChainCallback = (findChainPredicate: ChainPredicate) => {
+    const matchingChain = filteredChains.find(findChainPredicate);
+
+    matchingChain &&
+      setViewport({
+        latitude: matchingChain?.latitude,
+        longitude: matchingChain?.longitude,
+        width: "100vw",
+        height: "95vh",
+        zoom: 8,
+      });
+
+    return !!matchingChain;
+  };
 
   const mapRef = useRef<MapRef>(null);
 
@@ -202,11 +224,12 @@ const FindChain = () => {
         <title>Clothing-Loop | Find Loop</title>
         <meta name="description" content="Find Loop" />
       </Helmet>
-      <SearchBar
-        data={chainData}
-        setData={setFilteredChains}
-        setViewport={setViewport}
+
+      <FindChainSearchBarContainer
+        setFilterChainPredicate={setFilterChainPredicate}
+        handleFindChainCallback={handleFindChainCallback}
       />
+
       <ReactMapGL
         className={"main-map"}
         mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
