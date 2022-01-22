@@ -1,8 +1,7 @@
-import * as React from "react";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 
 //project resources
-import { getChainsLength } from "../../util/firebase/chain";
+import { ChainsContext } from "../ChainsProvider";
 import SingleCounter from "./SingleCounter";
 import useIntersectionObserver from "./hooks";
 
@@ -16,16 +15,9 @@ const Counters = () => {
   const classes = makeStyles(theme as any)();
   const containerRef = useRef(null);
 
-  const [chains, setChains] = useState(0);
+  const chainsCount = useContext(ChainsContext).length;
 
   const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      const chainsLengthResponse = await getChainsLength();
-      setChains(chainsLengthResponse);
-    })();
-  }, []);
 
   //check if div is visible on viewport
   const callBack = (entries: any) => {

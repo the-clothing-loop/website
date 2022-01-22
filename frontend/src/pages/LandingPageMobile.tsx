@@ -15,7 +15,7 @@ const LandingPageMobile = () => {
   const classes = makeStyles(theme as any)();
 
   return (
-    <div id='landing-page-mobile' >
+    <div id="landing-page-mobile">
       <div style={{ display: "flex", justifyContent: "center" }}>
         <h1
           style={{

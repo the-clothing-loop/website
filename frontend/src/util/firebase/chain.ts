@@ -8,8 +8,8 @@ const functions = firebase
   .app()
   .functions(process.env.REACT_APP_FIREBASE_REGION);
 
-if (process.env.REACT_APP_USE_EMULATOR == 'true') {
-  functions.useEmulator('localhost', 5001);
+if (process.env.REACT_APP_USE_EMULATOR == "true") {
+  functions.useEmulator("localhost", 5001);
 }
 
 const createChainCallable = functions.httpsCallable("createChain");
@@ -21,7 +21,7 @@ export interface ICreateChain {
   address: string;
   latitude: number;
   longitude: number;
-  categories: { gender: [string] };
+  categories: { gender: [string], size: [string] };
   published: boolean;
   uid: string;
 }
@@ -40,12 +40,6 @@ const getChains = async () => {
   );
 };
 
-const getChainsLength = async () => {
-  const snapshot = await db.collection("chains").get();
-
-  return snapshot.docs.length;
-};
-
 const createChain = async (chain: ICreateChain): Promise<string> => {
   return (await createChainCallable(chain)).data.id;
 };
@@ -60,11 +54,4 @@ const addUserToChain = async (chainId: string, userId: string) => {
 const updateChain = (chainId: string, chain: {}): Promise<void> => {
   return db.collection("chains").doc(chainId).set(chain, { merge: true });
 };
-export {
-  getChains,
-  createChain,
-  getChain,
-  addUserToChain,
-  updateChain,
-  getChainsLength,
-};
+export { getChains, createChain, getChain, addUserToChain, updateChain };
