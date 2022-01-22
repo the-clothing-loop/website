@@ -38,8 +38,10 @@ const ChainEdit = () => {
   const [selectedGenders, setSelectedGenders] = useState([]);
 
   const validate = Yup.object({
-    name: Yup.string().min(2, "Must be more than 2 characters"),
-    description: Yup.string().min(2, "Must be more than 2 characters"),
+    name: Yup.string()
+      .required("Required")
+      .min(2, "Must be at least 2 characters"),
+    description: Yup.string(),
   });
 
   const handleSubmit = async (values) => {
@@ -107,6 +109,7 @@ const ChainEdit = () => {
                 label="Name"
                 name="name"
                 type="text"
+                required
                 className={classes.textField}
                 error={touched.name && Boolean(errors.name)}
                 helperText={errors.name && touched.name ? errors.name : null}

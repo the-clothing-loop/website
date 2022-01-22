@@ -164,7 +164,7 @@ const UserEdit = () => {
                 fullWidth={true}
                 inputVisible={true}
                 variantVal={true}
-                style={{marginTop:'2%'}}
+                style={{ marginTop: "2%" }}
               />
 
               <GeocoderSelector

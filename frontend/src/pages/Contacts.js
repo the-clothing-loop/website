@@ -45,8 +45,6 @@ const Contacts = () => {
   const handleSubmit = async (data) => {
     let newEmail = { ...data };
 
-    console.log(newEmail);
-
     console.log(`sending mail: ${JSON.stringify(newEmail)}`);
 
     try {

@@ -73,16 +73,13 @@ const NewChainLocation = () => {
 
   const formSchema = Yup.object().shape({
     loopName: Yup.string()
-      .min(2, "Must be more than 2 characters")
+      .min(2, "Must be at least 2 characters")
       .required("Required"),
-    description: Yup.string()
-      .min(2, "Must be more than 2 characters")
-      .required("Required"),
+    description: Yup.string(),
     radius: Yup.number().required("Required"),
     clothingType: Yup.string()
-      .oneOf(Object.keys(categories))
-      .required("Required"),
-    clothingSize: Yup.string().oneOf(allSizes).required("Required"),
+      .oneOf(Object.keys(categories)),
+    clothingSize: Yup.string().oneOf(allSizes),
     coordinates: Yup.array().of(Yup.number()),
   });
 
@@ -278,7 +275,6 @@ const NewChainLocation = () => {
                       </Grid>
                       <Grid item xs={12}>
                         <TextForm
-                          required
                           label={t("description")}
                           name="description"
                           value={values.description}
@@ -303,7 +299,6 @@ const NewChainLocation = () => {
                                 touched.clothingType ? errors.clothingType : ""
                               }
                               onChange={handleClothingTypeChange}
-                              required
                             >
                               {Object.keys(categories).map(
                                 (category: string) => (
