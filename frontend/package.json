@@ -25,6 +25,7 @@
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.2.4",
+    "@turf/destination": "^6.5.0",
     "@mui/styles": "^5.2.3",
     "@types/mapbox__mapbox-gl-geocoder": "^4.7.1",
     "@types/react-csv": "^1.1.2",

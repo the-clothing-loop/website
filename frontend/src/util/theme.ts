@@ -755,6 +755,17 @@ const theme = {
     },
   },
 
+  newLoopMap: {
+    cursor: "pointer",
+    filter: "drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25))",
+  },
+
+  inMapSearchBar: {
+    position: "absolute",
+    top: "20px",
+    left: "20px",
+  },
+
   legalLinks: {
     margin: "27px 80px",
     "& a": {
@@ -813,7 +824,7 @@ const theme = {
     top: "20%",
   },
 
-  sizesDropdownWrapper: {
+  formFieldWithPopover: {
     display: "flex",
     position: "relative",
   },

@@ -74,7 +74,7 @@ const SizesDropdown: React.FC<IProps> = ({
         variant={variantVal ? "standard" : "outlined"}
         value={selectedSizes}
         onChange={(e: any) => handleChange(e, setSelectedSizes)}
-        renderValue={(selected) => {
+        renderValue={(selected: string[]) => {
           if (selected.length === 0 && !inputVisible) {
             return <em className={classes.em}>{label}</em>;
           }
@@ -83,13 +83,13 @@ const SizesDropdown: React.FC<IProps> = ({
             return;
           }
 
-          return selected.join(", ");
+          return selected.map(t).join(", ");
         }}
       >
         <Typography component="p" className={classes.label}>
           {t("childrenSizes")}
         </Typography>{" "}
-        {categories.sizes.slice(0, 3).map((value: any) => (
+        {categories.children.map((value: any) => (
           <MenuItem
             key={value}
             disabled={
@@ -103,7 +103,7 @@ const SizesDropdown: React.FC<IProps> = ({
               checked={selectedSizes.includes(value) ? true : false}
             />
             <ListItemText
-              primary={value}
+              primary={t(value)}
               className={classes.listItemTextSizes}
               style={{ textTransform: "capitalize" }}
             />
@@ -112,7 +112,7 @@ const SizesDropdown: React.FC<IProps> = ({
         <Typography component="p" className={classes.label}>
           {t("womenSizes")}
         </Typography>{" "}
-        {categories.sizes.slice(3, 7).map((value: any) => (
+        {categories.women.map((value: any) => (
           <MenuItem
             disabled={
               !selectedGenders.includes("women") && selectedGenders.length !== 0
@@ -125,16 +125,16 @@ const SizesDropdown: React.FC<IProps> = ({
               checked={selectedSizes.includes(value) ? true : false}
             />
             <ListItemText
-              primary={value}
+              primary={t(value)}
               className={classes.listItemTextSizes}
-              style={{ textTransform: "uppercase" }}
+              style={{ textTransform: "capitalize" }}
             />
           </MenuItem>
         ))}
         <Typography component="p" className={classes.label}>
           {t("menSizes")}
         </Typography>{" "}
-        {categories.sizes.slice(7, 11).map((value: any) => (
+        {categories.men.map((value: any) => (
           <MenuItem
             disabled={
               !selectedGenders.includes("men") && selectedGenders.length !== 0
@@ -147,9 +147,9 @@ const SizesDropdown: React.FC<IProps> = ({
               checked={selectedSizes.includes(value) ? true : false}
             />
             <ListItemText
-              primary={value}
+              primary={t(value)}
               className={classes.listItemTextSizes}
-              style={{ textTransform: "uppercase" }}
+              style={{ textTransform: "capitalize" }}
             />
           </MenuItem>
         ))}

@@ -15,7 +15,7 @@ import categories from "../util/categories";
 
 interface IProps {
   setGenders: (el: string[]) => void;
-  genders: string;
+  genders: string[];
   className: string;
   fullWidth: boolean;
 }
@@ -59,24 +59,24 @@ const CategoriesDropdown: React.FC<IProps> = ({
         variant="standard"
         value={selectedGenders}
         onChange={(e: any) => handleChange(e, setSelectedGenders)}
-        renderValue={(selected: string) => {
+        renderValue={(selected: string[]) => {
           if (selected.length === 0) {
             return (
               <em className={classes.em}>{t("no categories selected")}</em>
             );
           }
 
-          return [selected].join(", ");
+          return selected.map(t).join(", ");
         }}
       >
-        {categories.genders.map((value: any) => (
+        {Object.keys(categories).map((value: string) => (
           <MenuItem key={value} value={value}>
             <Checkbox
               className={classes.checkbox}
               checked={selectedGenders.includes(value) ? true : false}
             />
             <ListItemText
-              primary={value}
+              primary={t(value)}
               className={classes.listItemTextSizes}
               style={{ textTransform: "uppercase" }}
             />

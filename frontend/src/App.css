@@ -43,6 +43,10 @@
     text-transform: uppercase;
   }
 
+  .MuiInput-input {
+    text-align: left;
+  }
+
   .nav-container {
     margin: auto;
   }
@@ -471,6 +475,10 @@
     background-color: #d5ecdf !important;
   }
 
+  .mapboxgl-ctrl-geocoder {
+    margin-bottom: 0.5rem;
+  }
+
   input.mapboxgl-ctrl-geocoder--input {
     color: #48808b;
   }
@@ -572,6 +580,10 @@
     text-align: left;
     font-size: 0;
     animation: 8s slide infinite;
+  }
+
+  .MuiGrid-item {
+    padding: 1% 2%;
   }
 
   .background-frame-login {

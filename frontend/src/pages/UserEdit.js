@@ -157,7 +157,7 @@ const UserEdit = () => {
               <SizesDropdown
                 className={classes.formSelect}
                 setSizes={setSelectedSizes}
-                genders={categories.genders}
+                genders={Object.keys(categories)}
                 sizes={selectedSizes}
                 label={t("interestedSizes")}
                 fullWidth={true}
