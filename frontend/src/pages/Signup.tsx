@@ -114,6 +114,7 @@ const Signup = () => {
             newsletter: false,
           }}
           validationSchema={validate}
+          validateOnChange={false}
           onSubmit={(v) => onSubmit(v)}
         >
           {(formik) => (

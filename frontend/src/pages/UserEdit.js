@@ -119,6 +119,7 @@ const UserEdit = () => {
           interestedSizes: selectedSizes,
         }}
         validationSchema={validate}
+        validateOnChange={false}
         onSubmit={onSubmit}
       >
         {({ formik, setFieldValue }) => (

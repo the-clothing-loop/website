@@ -87,6 +87,7 @@ const Contacts = () => {
               message: "",
             }}
             validationSchema={validate}
+            validateOnChange={false}
             onSubmit={handleSubmit}
           >
             {({ errors, touched }) => (

@@ -93,6 +93,7 @@ const ChainEdit = () => {
           description: chain.description,
         }}
         validationSchema={validate}
+        validateOnChange={false}
         onSubmit={handleSubmit}
       >
         {({ errors, touched }) => (

@@ -128,6 +128,7 @@ const NewChainLocation = () => {
           coordinates: [null, null],
         }}
         validationSchema={formSchema}
+        validateOnChange={false}
         validate={(values) => {
           if (values.coordinates.some((el) => el === null)) {
             return {
