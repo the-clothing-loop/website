@@ -29,27 +29,23 @@ const Contacts = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const CHARACTER_LIMIT = 2000;
-  const [values, setValues] = useState({
-    name: "",
-  });
-
-  const handleChange = (name) => (event) => {
-    setValues({ ...values, [name]: event.target.value });
-  };
 
   const validate = Yup.object({
     name: Yup.string()
-      .min(2, "Must be more than 2 characters")
+      .min(2, "Must be at least 2 characters")
       .required("Required"),
-    email: Yup.string().email("Please enter a valid e-mail address"),
-    message: Yup.string().min(2, "Must be more than 2 characters"),
+    email: Yup.string()
+      .required("Required")
+      .email("Please enter a valid e-mail address"),
+    message: Yup.string()
+      .required("Required")
+      .min(2, "Must be at least 2 characters"),
   });
 
   const handleSubmit = async (data) => {
-    let newEmail = {
-      ...data,
-      message: values.name,
-    };
+    let newEmail = { ...data };
+
+    console.log(newEmail);
 
     console.log(`sending mail: ${JSON.stringify(newEmail)}`);
 
@@ -74,7 +70,9 @@ const Contacts = () => {
       </Helmet>
       <div className={classes.contactFormWrapper}>
         <OneColumnLayout>
-          <Typography component="h3" className={classes.pageTitle}>Contact us</Typography>
+          <Typography component="h3" className={classes.pageTitle}>
+            Contact us
+          </Typography>
           <Typography component="p">
             Questions? Funny stories? Tips? Press enquiries? We’d love to hear
             from you! (Please do check our FAQ first!)
@@ -90,7 +88,7 @@ const Contacts = () => {
             validateOnChange={false}
             onSubmit={handleSubmit}
           >
-            {({ errors, touched }) => (
+            {({ values, errors, touched }) => (
               <Form className="contact-form">
                 <TextForm
                   label={t("name")}
@@ -112,7 +110,8 @@ const Contacts = () => {
                 {touched.email && errors.email && (
                   <div className={classes.errorDiv}>{errors.email}</div>
                 )}
-                <TextField
+                <TextForm
+                  label=""
                   placeholder={t("yourMessage")}
                   name="message"
                   type="text"
@@ -121,11 +120,9 @@ const Contacts = () => {
                     disableUnderline: true,
                     maxLength: CHARACTER_LIMIT,
                     className: classes.textArea,
-                    style:{marginTop: '30px'}
+                    style: { marginTop: "30px" },
                   }}
-                  value={values.name}
-                  helperText={`${values.name.length}/${CHARACTER_LIMIT}`}
-                  onChange={handleChange("name")}
+                  helperText={`${values.message.length}/${CHARACTER_LIMIT}`}
                   multiline={true}
                   rows={10}
                 />
