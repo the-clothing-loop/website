@@ -28,6 +28,8 @@ import ProgressBar from "../components/ProgressBar";
 import categories, { allSizes } from "../util/categories";
 import PopoverOnHover from "../components/Popover";
 
+//media
+import RightArrow from "../images/right-arrow-white.svg";
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
 const NewChainLocation = () => {
@@ -203,13 +205,19 @@ const NewChainLocation = () => {
           };
 
           return (
-            <div className={classes.formContainer}>
-              <Grid container className={classes.form}>
+            <div className={classes.formContainerLocation}>
+              <Grid container className={classes.newLoopLocationForm}>
                 <Grid item xs={12}>
-                  <Typography variant="h3" className={classes.pageTitle}>
+                  <Typography
+                    variant="h3"
+                    className={classes.pageTitle}
+                    style={{ textAlign: "center" }}
+                  >
                     {t("startNewLoop")}
                   </Typography>
-                  <ProgressBar activeStep={1} />
+                  <div className={classes.progressBarWrapper}>
+                    <ProgressBar activeStep={1} />
+                  </div>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography className="formSubtitle">
@@ -240,7 +248,7 @@ const NewChainLocation = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Form noValidate={true}>
-                    <Grid container>
+                    <Grid container style={{ paddingBottom: "5%" }}>
                       <Grid item xs={9}>
                         <TextForm
                           required
@@ -257,7 +265,7 @@ const NewChainLocation = () => {
                           className={classes.textField}
                         />
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={3} className={classes.gridItemAlignedEnd}>
                         <NumberField
                           required
                           label={t("radius")}
@@ -353,8 +361,9 @@ const NewChainLocation = () => {
                       <Button type="submit" className={classes.buttonOutlined}>
                         {t("back")}
                       </Button>
-                      <Button type="submit" className={classes.buttonContained}>
+                      <Button type="submit" className={classes.button}>
                         {t("next")}
+                        <img src={RightArrow} alt="" />
                       </Button>
                     </div>
                   </Form>
