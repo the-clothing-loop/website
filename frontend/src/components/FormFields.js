@@ -81,6 +81,7 @@ const TextForm = ({ label, ...props }) => {
 const NumberField = ({ label, step = 1, ...props }) => {
   const [field] = useField(props);
   const { t } = useTranslation();
+  const classes = makeStyles(theme)();
 
   return (
     <div>
@@ -91,6 +92,9 @@ const NumberField = ({ label, step = 1, ...props }) => {
         label={t(label)}
         fullWidth
         type="number"
+        InputLabelProps={{
+          className: classes.inputLabel,
+        }}
         inputProps={{
           inputMode: "numeric",
           step: step,
@@ -151,10 +155,11 @@ const TextArea = ({ label, ...props }) => {
 const SelectField = ({ label, children, errorText = "", ...props }) => {
   const [field] = useField(props);
   const { t } = useTranslation();
+  const classes = makeStyles(theme)();
   const labelId = props.name + "Label";
   return (
     <>
-      <InputLabel id={labelId}>
+      <InputLabel id={labelId} className={classes.inputLabel}>
         {t(label) + (props?.required ? " *" : "")}
       </InputLabel>
       <Select labelId={labelId} {...props} {...field}>
