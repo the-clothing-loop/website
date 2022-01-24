@@ -79,9 +79,9 @@ const NewChainLocation = () => {
       .required("Required"),
     description: Yup.string(),
     radius: Yup.number().required("Required"),
-    clothingType: Yup.string()
+    clothingType: Yup.string().required("Required")
       .oneOf(Object.keys(categories)),
-    clothingSize: Yup.string().oneOf(allSizes),
+    clothingSize: Yup.string().oneOf(allSizes).required("Required"),
     coordinates: Yup.array().of(Yup.number()),
   });
 
@@ -303,6 +303,7 @@ const NewChainLocation = () => {
                             <SelectField
                               name="clothingType"
                               label="selectClothingType"
+                              required
                               errorText={
                                 touched.clothingType ? errors.clothingType : ""
                               }
