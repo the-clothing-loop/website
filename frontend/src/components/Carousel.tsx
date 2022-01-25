@@ -43,14 +43,6 @@ const Carousel = () => {
         />
       </div>
     </div>
-
-    // <div id="slider" style={{}}>
-    //   <figure>
-    //     {featuredImages.map((img, i) => {
-    //       return <img src={img} key={i} alt="" />;
-    //     })}
-    //   </figure>
-    // </div>
   );
 };
 
