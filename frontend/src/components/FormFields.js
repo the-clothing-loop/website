@@ -1,9 +1,15 @@
-import TextField from "@material-ui/core/TextField";
+import {
+  TextField,
+  Checkbox,
+  Select,
+  InputLabel,
+  FormHelperText,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import theme from "../util/theme";
+import i18n from "../i18n";
 import { useTranslation } from "react-i18next";
 import MuiPhoneInput from "material-ui-phone-number";
-import Checkbox from "@material-ui/core/Checkbox";
 import { useField } from "formik";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -43,6 +49,9 @@ const PhoneFormField = ({ label, ...props }) => {
         {...field}
         {...props}
         className={classes.textField}
+        InputLabelProps={{
+          className: classes.inputLabel,
+        }}
       ></MuiPhoneInput>
     </div>
   );
@@ -51,6 +60,7 @@ const PhoneFormField = ({ label, ...props }) => {
 const TextForm = ({ label, ...props }) => {
   const [field] = useField(props);
   const { t } = useTranslation();
+  const classes = makeStyles(theme)();
 
   return (
     <div>
@@ -60,6 +70,39 @@ const TextForm = ({ label, ...props }) => {
         autoComplete="off"
         label={t(label)}
         fullWidth
+        InputLabelProps={{
+          className: classes.inputLabel,
+        }}
+      />
+    </div>
+  );
+};
+
+const NumberField = ({ label, step = 1, ...props }) => {
+  const [field] = useField(props);
+  const { t } = useTranslation();
+  const classes = makeStyles(theme)();
+
+  return (
+    <div>
+      <TextField
+        {...field}
+        {...props}
+        autoComplete="off"
+        label={t(label)}
+        fullWidth
+        type="number"
+        InputLabelProps={{
+          className: classes.inputLabel,
+        }}
+        inputProps={{
+          inputMode: "numeric",
+          step: step,
+          /* Determines use of . or , for decimal separator
+           * Firefox respects "lang" but other browsers use
+           * their configured locale */
+          lang: i18n.language,
+        }}
       />
     </div>
   );
@@ -82,6 +125,9 @@ const CheckboxField = ({ required, label, ...props }) => {
         {...props}
         label={label}
         required={required ? true : false}
+        InputLabelProps={{
+          className: classes.inputLabel,
+        }}
       />
     </FormGroup>
   );
@@ -89,6 +135,7 @@ const CheckboxField = ({ required, label, ...props }) => {
 
 const TextArea = ({ label, ...props }) => {
   const [field] = useField(props);
+  const classes = makeStyles(theme)();
   return (
     <TextField
       id="outlined-multiline-static"
@@ -98,8 +145,39 @@ const TextArea = ({ label, ...props }) => {
       {...props}
       {...field}
       label={label}
+      InputLabelProps={{
+        className: classes.inputLabel,
+      }}
     />
   );
 };
 
-export { TextFormField, PhoneFormField, TextForm, CheckboxField, TextArea };
+const SelectField = ({ label, children, errorText = "", ...props }) => {
+  const [field] = useField(props);
+  const { t } = useTranslation();
+  const classes = makeStyles(theme)();
+  const labelId = props.name + "Label";
+  return (
+    <>
+      <InputLabel id={labelId} className={classes.inputLabel}>
+        {t(label) + (props?.required ? " *" : "")}
+      </InputLabel>
+      <Select labelId={labelId} {...props} {...field}>
+        {children}
+      </Select>
+      {errorText ? (
+        <FormHelperText error={true}>{errorText}</FormHelperText>
+      ) : null}
+    </>
+  );
+};
+
+export {
+  TextFormField,
+  PhoneFormField,
+  TextForm,
+  CheckboxField,
+  TextArea,
+  NumberField,
+  SelectField,
+};

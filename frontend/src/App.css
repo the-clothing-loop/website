@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @media only screen and (min-width: 481px) {
   * {
@@ -8,7 +8,7 @@
 
   html,
   body {
-    font-family: 'Montserrat' !important;
+    font-family: "Montserrat" !important;
     background-color: white;
     margin: 0;
   }
@@ -25,7 +25,7 @@
 
   a {
     text-decoration: none;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
   }
 
   p.explanatory-text {
@@ -41,6 +41,10 @@
     font-size: 1.5rem !important;
     font-weight: 700;
     text-transform: uppercase;
+  }
+
+  .MuiInput-input {
+    text-align: left;
   }
 
   .nav-container {
@@ -82,18 +86,18 @@
   .mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
-    border-bottom-color: #d5ecdf !important;
+    border-bottom-color: #edf2f3 !important;
   }
   .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
   .mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
-    border-top-color: #d5ecdf !important;
+    border-top-color: #edf2f3 !important;
   }
   .mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
-    border-right-color: #d5ecdf !important;
+    border-right-color: #edf2f3 !important;
   }
   .mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
-    border-left-color: #d5ecdf !important;
+    border-left-color: #edf2f3 !important;
   }
 
   .explanatory-text > p {
@@ -144,6 +148,9 @@
 
   .mapboxgl-popup-close-button {
     z-index: 11;
+    top: 30px !important;
+    right: 30px !important;
+    padding: 0 !important;
   }
 
   .chain-categories {
@@ -166,28 +173,9 @@
     padding: 20% 2%;
   }
 
-  th,
   h6 {
     text-transform: capitalize;
     display: inline-block;
-  }
-
-  .MuiTableContainer-root {
-    background-color: transparent !important;
-  }
-
-  .chains-list__table-row {
-    background-color: #fff;
-  }
-
-  .table-row-head {
-    background-color: transparent;
-  }
-
-  .table-row-head > th {
-    border-bottom: none !important;
-    font-size: small;
-    color: gray;
   }
 
   .MuiPaper-elevation1 {
@@ -203,13 +191,13 @@
   }
 
   .table-container {
-    padding: 0 5%;
+    padding: 0 80px;
   }
 
   .dot-active {
     height: 20px;
     width: 20px;
-    background-color: #69f0ae;
+    background-color: rgb(76, 175, 80);
     border-radius: 50%;
     display: inline-block;
     margin-right: 5%;
@@ -218,17 +206,17 @@
   .dot-not-active {
     height: 20px;
     width: 20px;
-    background-color: #ff8a80;
+    background-color: rgb(239, 83, 80);
     border-radius: 50%;
     display: inline-block;
     margin-right: 5%;
   }
 
-  input[type='checkbox'].map-cat-input {
+  input[type="checkbox"].map-cat-input {
     display: none;
   }
 
-  input[type='checkbox'].map-cat-input + label {
+  input[type="checkbox"].map-cat-input + label {
     -webkit-transition: all 500ms ease;
     -moz-user-select: -moz-none;
     -ms-user-select: none;
@@ -247,7 +235,7 @@
     margin: 0 5px;
   }
 
-  input[type='checkbox'].map-cat-input:checked + label {
+  input[type="checkbox"].map-cat-input:checked + label {
     -webkit-transition: all 500ms ease;
     transition: all 500ms ease;
     background-color: #067f8c;
@@ -272,10 +260,6 @@
     flex-direction: column;
   }
 
-  form.contact-form > * {
-    margin: 3% 0;
-  }
-
   .landing-page-wrapper {
     position: absolute;
     top: 0;
@@ -286,7 +270,7 @@
   }
 
   .landing-page-logo {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     color: #ffffff;
     position: absolute;
     font-size: 3rem !important;
@@ -363,12 +347,12 @@
   }
 
   span.css-10hburv-MuiTypography-root {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-size: 0.875rem;
   }
 
   div.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     text-transform: capitalize;
   }
 
@@ -381,7 +365,7 @@
   input.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
     padding: 10px !important;
     margin-left: 30px !important;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
   }
 
   .MuiInput-underline::before {
@@ -389,12 +373,16 @@
   }
 
   .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    text-transform: 'capitalize';
+    text-transform: "capitalize";
   }
 
   div#demo-multiple-checkbox {
     padding: 10px !important;
     padding-left: 0 !important;
+    font-family: "Montserrat" !important;
+    text-align: left;
+    text-transform: capitalize;
+    color: #3c3c3b;
   }
 
   fieldset.MuiOutlinedInput-notchedOutline {
@@ -408,7 +396,7 @@
 
   input#outlined-basic {
     padding: 2%;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     text-transform: capitalize;
   }
 
@@ -463,7 +451,7 @@
     border-radius: 0 !important;
     margin: 0 !important;
     max-width: 100% !important;
-    font-family: 'Montserrat' !important;
+    font-family: "Montserrat" !important;
     font-size: 1rem !important;
   }
 
@@ -487,8 +475,21 @@
     background-color: #d5ecdf !important;
   }
 
+  .mapboxgl-ctrl-geocoder {
+    margin-bottom: 0.5rem;
+  }
+
+  input.mapboxgl-ctrl-geocoder--input {
+    color: #48808b;
+  }
+
   .MuiStepLabel-label {
-    font-family: 'Montserrat' !important;
+    font-family: "Montserrat" !important;
+  }
+
+  #language-switcher-select {
+    text-transform: capitalize !important;
+    border-bottom: none !important;
   }
 
   .btn {
@@ -525,7 +526,7 @@
 
   /* sliders */
   .btn:before {
-    content: '';
+    content: "";
     width: 100%;
     height: 100%;
     background-color: #f7c86f;
@@ -580,6 +581,63 @@
     font-size: 0;
     animation: 8s slide infinite;
   }
+
+  .MuiGrid-item {
+    padding: 1% 2%;
+  }
+
+  .background-frame-login {
+    position: absolute;
+    background-color: #edf2f3;
+    width: 60%;
+    height: 400px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 80px;
+  }
+
+  .circles-frame-login {
+    position: absolute;
+    margin-left: 15%;
+    padding-top: 2%;
+  }
+
+  .login-container {
+    padding: 112px 21% 0 21%;
+  }
+
+  .login-content {
+    padding-left: 5%;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .single-submit-btn {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 0px;
+  }
+
+  .signup-wrapper {
+    padding: 87px 14%;
+  }
+
+  .signup-content {
+    background-color: #edf2f3;
+    padding: 0 8%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #signup-title {
+    margin: 5% 0;
+    text-align: center;
+  }
 }
 
 @media only screen and (max-width: 480px) {
@@ -601,7 +659,7 @@
 
   .landing-page-wrapper h1 {
     text-transform: uppercase;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-weight: 300;
     font-size: 1.8rem;
     line-height: 1.167;
@@ -611,7 +669,7 @@
   }
 
   .landing-page-wrapper h4 {
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-weight: 300;
     font-size: 1.2rem;
     line-height: 1.167;

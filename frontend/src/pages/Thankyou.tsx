@@ -24,21 +24,29 @@ const Thankyou = (props: any) => {
       </Helmet>
 
       <div className={classes.pageGrid}>
-        <div className={classes.confirmationWrapper}>
-          <ProgressBar activeStep={2} />
-
-          <div>
-            <h3>{t("thankYouForJoining")}</h3>
-            <p>{t("youWillReceiveAnEmail")}</p>
-
+        <div>
+          <h3>{t("thankYouForJoining")}</h3>
+          <p>{t("youWillReceiveAnEmail")}</p>
+          <div className={classes.formSubmitActions}>
             <Button
-              className={classes.submitBtn}
+              className={classes.buttonOutlined}
               variant="contained"
               color="primary"
               onClick={() => history.push("/")}
               key={"btn-submit-1"}
+              style={{ margin: "2% 0" }}
             >
               {t("home")}
+            </Button>
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="primary"
+              onClick={() => history.push("/")}
+              key={"btn-submit-1"}
+              style={{ margin: "2% 0" }}
+            >
+              {t("About")}
             </Button>
           </div>
         </div>
