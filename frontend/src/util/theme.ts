@@ -265,8 +265,27 @@ const theme = {
 
   // Styling for forms
   form: {
+    width: "100%",
     textAlign: "center",
-    paddingTop: "10%",
+    padding: "1%",
+    position: "relative",
+    left: "50%",
+    transform: "translate(-50%)",
+
+    "& .MuiGrid-item": {
+      padding: "0",
+    },
+  },
+
+  newLoopLocationForm: {
+    width: "80%",
+    textAlign: "center",
+    marginTop: "5%",
+    padding: "2%",
+    position: "relative",
+    left: "50%",
+    transform: "translate(-50%)",
+    backgroundColor: "#EDF2F3",
   },
 
   formGrid: {
@@ -305,6 +324,12 @@ const theme = {
     transform: " translateX(-50%)",
     width: "80%",
     padding: "0 2%",
+  },
+  formContainerLocation: {
+    maxWidth: "1440px",
+    position: "relative",
+    left: "50%",
+    transform: "translate(-50%)",
   },
   contactFormWrapper: {
     height: "100%",
@@ -1465,6 +1490,19 @@ const theme = {
     left: "50%",
     transform: "translateX(-50%)",
     color: turquoise,
+  },
+
+  progressBarWrapper: {
+    width: "60%",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    padding: "2% 0",
+  },
+
+  gridItemAlignedEnd: {
+    display: "flex",
+    alignItems: "flex-end",
   },
 };
 export default theme;

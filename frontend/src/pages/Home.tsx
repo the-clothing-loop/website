@@ -26,7 +26,7 @@ import ArrowRightIcon from "../images/right-arrow-yellow.svg";
 //Logos
 import SfmLogo from "../images/logos/sfm_logo.png";
 import CollActionLogo from "../images/logos/Logo-CollAction.png";
-import ImpactHubLogo from "../images/logos/logo-impacthub.png";
+import ImpactHubLogo from "../images/logos/Logo_impact_hub.png";
 import EssenseLogo from "../images/logos/essense-logo.svg";
 import WdcdLogo from "../images/logos/Logo_WDCD.png";
 import DoenLogo from "../images/logos/DOEN.png";
