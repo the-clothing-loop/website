@@ -20,7 +20,6 @@ import RightArrow from "../images/right-arrow-white.svg";
 import CirclesFrame from "../images/circles.png";
 import NumberedBag from "../images/numbered-bag-outdoors.png";
 
-
 import firebase from "firebase/app";
 import "firebase/auth";
 import { Helmet } from "react-helmet";
@@ -61,79 +60,81 @@ const Login = () => {
         <meta name="description" content="Login" />
       </Helmet>
 
-      <div className="background-frame-login"></div>
-      <img className="circles-frame-login" src={CirclesFrame} alt="" />
-      <div className="login-container">
-        <TwoColumnLayout img={NumberedBag}>
-          <div className="login-content">
-            <Typography variant="h3" className={classes.pageTitle}>
-              {t("login")}
-            </Typography>
-            <div className={classes.pageDescription}>
-              <Typography component="p" className={classes.p}>
-                {t("areYouALoopAdmin")}
+      <div className="login-wrapper">
+        <div className="background-frame-login"></div>
+        <img className="circles-frame-login" src={CirclesFrame} alt="" />
+        <div className="login-container">
+          <TwoColumnLayout img={NumberedBag}>
+            <div className="login-content">
+              <Typography variant="h3" className={classes.pageTitle}>
+                {t("login")}
               </Typography>
-              <br />
-              <Typography component="p" className={classes.p}>
-                {t("notPartOfTheClothingLoopYet")}
-              </Typography>
-              <Link className={classes.a} to="../../loops/find">
-                {t("joinAnExistingLoop")}
-              </Link>
-              <Typography component="p" className={classes.p}>
-                {t("or")}
-              </Typography>
-              <Link className={classes.a} to="../../loops/new-signup">
-                {t("startNewLoop")}
-              </Link>
-            </div>
+              <div className={classes.pageDescription}>
+                <Typography component="p" className={classes.p}>
+                  {t("areYouALoopAdmin")}
+                </Typography>
+                <br />
+                <Typography component="p" className={classes.p}>
+                  {t("notPartOfTheClothingLoopYet")}
+                </Typography>
+                <Link className={classes.a} to="../../loops/find">
+                  {t("joinAnExistingLoop")}
+                </Link>
+                <Typography component="p" className={classes.p}>
+                  {t("or")}
+                </Typography>
+                <Link className={classes.a} to="../../loops/new-signup">
+                  {t("startNewLoop")}
+                </Link>
+              </div>
 
-            <Formik
-              initialValues={{
-                email: "",
-              }}
-              validationSchema={validate}
-              onSubmit={async (v) => onSubmit(v)}
-            >
-              {(formik) => (
-                <Form className="login-form">
-                  <TextField
-                    className={classes.textField}
-                    {...formik.getFieldProps("email")}
-                    label={t("email")}
-                    required
-                    fullWidth
-                  />
-                  {formik.submitCount > 0 && formik.errors.email && (
-                    <Alert severity="error">{formik.errors.email}</Alert>
-                  )}
-                  <div className="single-submit-btn">
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
+              <Formik
+                initialValues={{
+                  email: "",
+                }}
+                validationSchema={validate}
+                onSubmit={async (v) => onSubmit(v)}
+              >
+                {(formik) => (
+                  <Form className="login-form">
+                    <TextField
+                      className={classes.textField}
+                      {...formik.getFieldProps("email")}
+                      label={t("email")}
+                      required
                       fullWidth
-                    >
-                      {t("submit")}
-                      <img src={RightArrow} alt="" />
-                    </Button>
-                  </div>
-                </Form>
+                    />
+                    {formik.submitCount > 0 && formik.errors.email && (
+                      <Alert severity="error">{formik.errors.email}</Alert>
+                    )}
+                    <div className="single-submit-btn">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        fullWidth
+                      >
+                        {t("submit")}
+                        <img src={RightArrow} alt="" />
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
+              {error && (
+                <Alert className={classes.errorAlert} severity="error">
+                  {error}
+                </Alert>
               )}
-            </Formik>
-            {error && (
-              <Alert className={classes.errorAlert} severity="error">
-                {error}
-              </Alert>
-            )}
-            {submitted && (
-              <Alert className={classes.infoAlert} severity="info">
-                {t("loginEmailSent")}
-              </Alert>
-            )}
-          </div>
-        </TwoColumnLayout>
+              {submitted && (
+                <Alert className={classes.infoAlert} severity="info">
+                  {t("loginEmailSent")}
+                </Alert>
+              )}
+            </div>
+          </TwoColumnLayout>
+        </div>
       </div>
     </>
   );

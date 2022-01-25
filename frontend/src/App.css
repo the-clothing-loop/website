@@ -492,32 +492,43 @@
     border-bottom: none !important;
   }
 
-  .btn {
+  button.slide:hover,
+  button.slide:focus {
+    box-shadow: inset 282px 0 0 0 #f7c86f;
+  }
+
+  button.slide {
+    color: #f7c86f;
+    transition: 0.3s;
+    font-size: 21.6px;
+    background-color: transparent;
     width: 282px;
     height: 54.69px;
-    line-height: 50px;
-    font-size: 1.25rem;
-    border: 1.54px solid #f7c86f !important;
+    line-height: 30px;
+    border: 1.54px solid #f7c86f;
     margin: 30px 0;
     position: relative;
     cursor: pointer;
-    transition: all 3s ease;
-    overflow: hidden;
-    border-radius: 0px !important;
-    text-transform: initial !important;
+    border-radius: 0px;
+    text-transform: initial;
+    font-weight: 500;
+    font-style: normal;
+    font-family: "Montserrat";
   }
 
-  .btn > span {
-    text-align: center;
-    text-transform: inherit;
-    font-weight: bold;
-    font-size: 21px;
-    position: relative;
-    z-index: 1;
-    transition: all 3s ease;
-    mix-blend-mode: color-dodge;
-    color: #f7c86f;
-    font-weight: 400;
+  button.slide:hover,
+  button.slide:focus {
+    border-color: 1px solid #f7c86f;
+    color: white;
+  }
+
+  button.slide:focus {
+    background: none;
+    border: 2px solid;
+    font: inherit;
+    line-height: 1;
+    margin: 0.5em;
+    padding: 1em 2em;
   }
 
   img.btn-icon {
@@ -589,21 +600,29 @@
   .background-frame-login {
     position: absolute;
     background-color: #edf2f3;
-    width: 60%;
+    width: 80%;
     height: 400px;
     left: 50%;
     transform: translateX(-50%);
     margin-top: 80px;
+    max-width: 1440px;
   }
 
+  .login-wrapper {
+    max-width: 1440px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
   .circles-frame-login {
     position: absolute;
-    margin-left: 15%;
+    margin-left: 7%;
     padding-top: 2%;
   }
 
   .login-container {
-    padding: 112px 21% 0 21%;
+    position: relative;
+    
   }
 
   .login-content {
@@ -622,7 +641,10 @@
   }
 
   .signup-wrapper {
-    padding: 87px 14%;
+    max-width: 1440px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .signup-content {
@@ -637,6 +659,43 @@
   #signup-title {
     margin: 5% 0;
     text-align: center;
+  }
+
+  .chain-member-list {
+    background-color: #ffffff;
+    padding: 56px 88px;
+  }
+
+  .chain-member-list__card {
+    padding: 56px 48px 56px 72px;
+    height: 100%;
+    background: #fafafa;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+  }
+
+  .chain-member-list__field {
+    margin-top: 24px;
+  }
+
+  .chain-member-list__field-content {
+    margin-top: 12px;
+    margin-left: 44px;
+  }
+
+  .chain-member-list__field:first-child {
+    margin-top: 0;
+  }
+
+  .chain-member-list__table--margin {
+    margin-top: 42px;
+  }
+
+  .newsletter {
+    max-width: 720px;
+    min-height: 448px;
+    padding: 80px 256px 56px 80px;
+    background: rgb(72, 128, 139, 0.1);
   }
 }
 
@@ -686,41 +745,37 @@
   #landing-page-mobile {
     display: inline;
   }
-}
 
-.chain-member-list {
-  background-color: #ffffff;
-  padding: 56px 88px;
-}
+  #footer {
+    display: none;
+  }
 
-.chain-member-list__card {
-  padding: 56px 48px 56px 72px;
-  height: 100%;
-  background: #fafafa;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 5px;
-}
+  .newsletter {
+    max-width: 720px;
+    min-height: 448px;
+    padding: 32px 16px;
+    background: rgb(72, 128, 139, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
 
-.chain-member-list__field {
-  margin-top: 24px;
-}
+  #grid-mobile {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
 
-.chain-member-list__field-content {
-  margin-top: 12px;
-  margin-left: 44px;
-}
+  #mobile-submit-bt {
+    width: 157.43px;
+    height: 46px;
+  }
 
-.chain-member-list__field:first-child {
-  margin-top: 0;
-}
+  #btn-text {
+    padding: 12px 0;
+  }
 
-.chain-member-list__table--margin {
-  margin-top: 42px;
-}
-
-.newsletter {
-  max-width: 720px;
-  min-height: 448px;
-  padding: 80px 256px 56px 80px;
-  background: rgb(72, 128, 139, 0.1);
+  #mobile-textfield > div {
+    width: 100%;
+    border-bottom: 1px solid rgb(72, 128, 139);
+  }
 }
