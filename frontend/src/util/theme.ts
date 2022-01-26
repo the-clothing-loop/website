@@ -1383,5 +1383,17 @@ const theme = {
     display: "flex",
     alignItems: "flex-end",
   },
+
+  donationsWrapper: {
+    justifyContent: "flex-start",
+    width: "50%",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    backgroundColor: "#EDF2F3",
+    padding:'2% 5%',
+    margin:'2% 0',
+    maxWidth: '800px'
+  },
 };
 export default theme;

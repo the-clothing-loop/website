@@ -11,15 +11,17 @@ interface IPaymentInitiateData {
     email: string;
     type: string;
     priceId: string;
-  }
+  };
 }
 
 const payments = {
-  initiate: async (data : IPaymentInitiateData): Promise<{ sessionId: string }> => {
+  initiate: async (
+    data: IPaymentInitiateData
+  ): Promise<{ sessionId: string }> => {
     functions.logger.debug("paymentInitiate parameters", data);
-    const {amount, email, type, priceId} = data.variables;
+    const { amount, email, type, priceId } = data.variables;
 
-    let options : any = {
+    let options: any = {
       payment_method_types: ["ideal", "card"],
       line_items: [
         {
@@ -34,16 +36,20 @@ const payments = {
         },
       ],
       mode: "payment",
-      success_url: functions.config().clothingloop.base_domain + "/donate/thankyou",
-      cancel_url: functions.config().clothingloop.base_domain + "/donate/cancel",
+      success_url:
+        functions.config().clothingloop.base_domain + "/donate/thankyou",
+      cancel_url:
+        functions.config().clothingloop.base_domain + "/donate/cancel",
     };
 
     if (type === "recurring") {
       options = {
         payment_method_types: ["sepa_debit", "card"],
         mode: "setup",
-        success_url: functions.config().clothingloop.base_domain + "/donate/thankyou",
-        cancel_url: functions.config().clothingloop.base_domain + "/donate/cancel",
+        success_url:
+          functions.config().clothingloop.base_domain + "/donate/thankyou",
+        cancel_url:
+          functions.config().clothingloop.base_domain + "/donate/cancel",
         metadata: {
           price_id: priceId,
         },
@@ -55,28 +61,45 @@ const payments = {
       options.customer_email = email;
     }
 
-    const session = await stripe.checkout.sessions.create(options).catch((error: { type: string, message: string }) => {
-      functions.logger.warn(`Error from Stripe: ${error.type}: ${error.message}`);
-      throw new functions.https.HttpsError("unknown", "Something went wrong when processing your checkout request...");
-    });
+    const session = await stripe.checkout.sessions
+      .create(options)
+      .catch((error: { type: string; message: string }) => {
+        functions.logger.warn(
+          `Error from Stripe: ${error.type}: ${error.message}`
+        );
+        throw new functions.https.HttpsError(
+          "unknown",
+          "Something went wrong when processing your checkout request..."
+        );
+      });
 
     if (!session || !session.id) {
-      throw new functions.https.HttpsError("unknown", "Something went wrong when processing your checkout request...");
+      throw new functions.https.HttpsError(
+        "unknown",
+        "Something went wrong when processing your checkout request..."
+      );
     }
-    await admin.firestore().collection("payments").doc(session.id).set({
-      sessionId: session.id,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      amount,
-      email,
-      recurring: type === "recurring",
-    });
+    await admin
+      .firestore()
+      .collection("payments")
+      .doc(session.id)
+      .set({
+        sessionId: session.id,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        amount,
+        email,
+        recurring: type === "recurring",
+      });
 
     functions.logger.debug("payment initiate result", session);
     return {
       sessionId: session && session.id,
     };
   },
-  webhook: async (request: functions.Request, response: functions.Response) : Promise<any> => {
+  webhook: async (
+    request: functions.Request,
+    response: functions.Response
+  ): Promise<any> => {
     functions.logger.debug("payment webhook parameters", request.body);
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -107,7 +130,9 @@ const payments = {
         const setupIntentID = session.setup_intent;
         const intent = await stripe.setupIntents.retrieve(setupIntentID);
 
-        const method = await stripe.paymentMethods.retrieve(intent.payment_method);
+        const method = await stripe.paymentMethods.retrieve(
+          intent.payment_method
+        );
         const billingDetails = method.billing_details;
 
         const email = billingDetails.email;
@@ -126,9 +151,7 @@ const payments = {
         const customerId = customer.id;
         await stripe.subscriptions.create({
           customer: customerId,
-          items: [
-            {price: priceId},
-          ],
+          items: [{ price: priceId }],
         });
         await admin.firestore().collection("payments").doc(session.id).update({
           sessionId: session.id,
@@ -148,14 +171,16 @@ const payments = {
         // await postSlackUpdateMember(amount);
       } else {
         if (!session.customer) {
-          return response.status(400).send("Webhook Error: No customer provided...");
+          return response
+            .status(400)
+            .send("Webhook Error: No customer provided...");
         }
 
-        const customer = await stripe.customers.retrieve(
-            session.customer
-        ).catch(() => {
-          return response.status(400).send("Customer not found...");
-        });
+        const customer = await stripe.customers
+          .retrieve(session.customer)
+          .catch(() => {
+            return response.status(400).send("Customer not found...");
+          });
 
         const email = customer.email;
 
@@ -173,9 +198,9 @@ const payments = {
         // await postSlackUpdateDonation(amount);
       }
 
-      return response.json({received: true});
+      return response.json({ received: true });
     } else {
-      return response.json({received: true});
+      return response.json({ received: true });
     }
   },
 };
