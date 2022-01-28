@@ -33,22 +33,21 @@ const Footer = () => {
                 <div className={classes.footerSection}>
                   <Typography component="h5">Learn more</Typography>
                   <Link to="#">FAQ's</Link>
-                  <Link to="#">Help</Link>
-                  <Link to="#">About</Link>
+                  <Link to="/contact-us">Help</Link>
+                  <Link to="/about">About</Link>
                 </div>
                 <div className={classes.footerSection}>
                   <Typography component="h5">Loops</Typography>
                   <Link to="/loops/find">Finding a loop</Link>
                   <Link to="/loops/new-signup">Starting a loop</Link>
                   <Link to="/users/login">Login</Link>
-                  <Link to="#">Register</Link>
                 </div>
                 <div className={classes.footerSection}>
                   <Typography component="h5">Find us</Typography>
                   <Link to="mailto:hello@theclothingloop.com">
                     hello@theclothingloop.org
                   </Link>
-                  <Link to="/contacts">Contact</Link>
+                  <Link to="/contact-us">Contact</Link>
                 </div>
               </div>
               <Newsletter />

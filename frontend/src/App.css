@@ -590,7 +590,7 @@
     position: absolute;
     background-color: #edf2f3;
     width: 60%;
-    height: 400px;
+    height: 450px;
     left: 50%;
     transform: translateX(-50%);
     margin-top: 80px;
@@ -623,6 +623,7 @@
 
   .signup-wrapper {
     padding: 87px 14%;
+    height: 100vh;
   }
 
   .signup-content {
