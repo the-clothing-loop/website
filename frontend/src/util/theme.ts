@@ -56,6 +56,15 @@ const theme = {
     fontFamily: "Montserrat",
   },
 
+  h3: {
+    fontFamily: "Montserrat",
+    fontWeight: "600",
+    fontStyle: "normal",
+    color: teal,
+    fontSize: "18px",
+    lineHeight: "22px",
+  },
+
   header: {
     position: "relative",
     padding: "0 80px",
@@ -268,6 +277,7 @@ const theme = {
     position: "relative",
     left: "50%",
     transform: "translate(-50%)",
+    height: "100%",
 
     "& .MuiGrid-item": {
       padding: "0",
@@ -313,6 +323,7 @@ const theme = {
   },
   formContainer: {
     position: "relative",
+    height: "100%",
   },
   formContainerLocation: {
     maxWidth: "1440px",
@@ -355,7 +366,7 @@ const theme = {
     transform: "translateY(-50%)",
     objectFit: "cover",
     width: "100%",
-    height: "auto",
+    height: "100%",
   },
 
   formSubmitActions: {
@@ -480,12 +491,13 @@ const theme = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    maxWidth: "800px",
 
     "& div": {
       position: "relative",
       left: "50%",
       transform: "translateX(-50%)",
-      width: "60%",
+      width: "80%",
 
       "& h3": {
         fontFamily: "Playfair Display",
@@ -1382,6 +1394,14 @@ const theme = {
   gridItemAlignedEnd: {
     display: "flex",
     alignItems: "flex-end",
+  },
+
+  legalPagesWrapper: {
+    width: "80%",
+    maxWidth: "1440px",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
   },
 };
 export default theme;

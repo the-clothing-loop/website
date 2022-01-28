@@ -36,15 +36,15 @@ const Counters = () => {
   return (
     <div ref={containerRef} className={classes.countersWrapper}>
       <div className="isVisible">
-        <h1>{isVisible ? <SingleCounter end={350} step={2} /> : "0"}</h1>
-        <h3>{"Different loops"}</h3>
+        <h1>{isVisible ? <SingleCounter end={410} step={2} /> : "0"}</h1>
+        <h3>{"Loops"}</h3>
       </div>
       <div className="isVisible">
-        <h1>{isVisible ? <SingleCounter end={13000} step={15} /> : "0"}</h1>
-        <h3>{"People"}</h3>
+        <h1>{isVisible ? <SingleCounter end={15000} step={20} /> : "0"}</h1>
+        <h3>{"participants"}</h3>
       </div>
       <a className="isVisible" href="/loops/find">
-        <h1>{"5"}</h1>
+        <h1>{"3"}</h1>
         <h3>{"Countries"}</h3>
       </a>
       <div className={classes.counterLinkWrapper}>

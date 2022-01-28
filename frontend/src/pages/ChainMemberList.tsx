@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
 
 // Material UI
 import { Alert } from "@material-ui/lab";
@@ -29,6 +30,7 @@ import { getUsersForChain, removeUserFromChain } from "../util/firebase/user";
 import { IChain, IUser } from "../types";
 import { AuthContext } from "../components/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
+import Popover from "../components/Popover";
 
 type TParams = {
   chainId: string;
@@ -80,6 +82,7 @@ const ChainMemberList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [admin, setAdmin] = useState<IUser>();
+  const { t } = useTranslation();
 
   const handleChange = async (e: {
     target: { checked: boolean; name: any };
@@ -191,20 +194,23 @@ const ChainMemberList = () => {
                   users.length === 1 ? "person" : "people"
                 }`}</Field>
 
-                <FormControlLabel
-                  classes={{ root: classes.switchGroupRoot }}
-                  value={publishedValue.published}
-                  control={
-                    <Switch
-                      checked={publishedValue.published}
-                      onChange={handleChange}
-                      name="published"
-                      inputProps={{ "aria-label": "secondary checkbox" }}
-                    />
-                  }
-                  label={publishedValue.published ? "published" : "unpublished"}
-                  labelPlacement="end"
-                />
+                <div style={{ position: "relative", display: "inline" }}>
+                  <FormControlLabel
+                    classes={{ root: classes.switchGroupRoot }}
+                    value={publishedValue.published}
+                    control={
+                      <Switch
+                        checked={publishedValue.published}
+                        onChange={handleChange}
+                        name="published"
+                        inputProps={{ "aria-label": "secondary checkbox" }}
+                      />
+                    }
+                    label={publishedValue.published ? "visible" : "invisible"}
+                    labelPlacement="end"
+                  />
+                  <Popover message={t("adminSwitcherMessage")} />
+                </div>
               </div>
             </Grid>
             <Grid item sm>
@@ -358,3 +364,6 @@ const HeadRowTableCell = ({ children, ...props }: { children?: any }) => {
 };
 
 export default ChainMemberList;
+function t(arg0: string): string {
+  throw new Error("Function not implemented.");
+}

@@ -68,8 +68,9 @@
   "notPartOfTheClothingLoopYet": "Not part of The Clothing Loop yet,",
   "joinAnExistingLoop": "join an existing Loop",
   "or": "or",
-  "thankYouForJoining": "Thank you for joining",
-  "youWillReceiveAnEmail": "You will shortly receive a confirmation email with the next steps.",
+  "thankYouForSigningUp": "Thank you for signing up",
+  "yourClosetIsAboutToBecomeAWholeLotMoreSustainable": "Your closet is about to become a whole lot more sustainable, more fun and more YOU! Our confirmation email is on it’s way.",
+  "happySwapping": "Happy swapping!",
   "yourMessage": "Your message",
   "thankYouForYourMessage": "Thank you for your message",
   "weWillReplySoon": "Someone from our team will be in touch with you soon",
@@ -92,5 +93,9 @@
   "view": "View",
   "location": "Location",
   "status": "Status",
-  "joinWaitingList": "Join waiting list"
+  "joinWaitingList": "Join waiting list",
+  "ThereIsNoActiveLoopInYourRegion": "There is no active Loop in your region... but there should be! Would you like to start one? It is easy and a lot of fun! Click below, sign in, and we will send you all the information to get you started.",
+  "clothingTypePopoverMessage": "The Clothing Loop is open to all people, regardless of the gender they feel is best representing their identity. Therefore, we decided to split clothes into normative gender lines influenced by the fashion industry, and leave the choice which one to join up to you.",
+  "clothingSizesPopoverMessage": "We recommend to start* with either: - A mix of items from size 36 - 42 (Small - Medium - Large). - A plus size loop for sizes XL XXL XXXL and up if relevant. In our experience, bags with these mixed sizes ranges work very well, as sizes vary per brand, era and country anyway. *If needed, loops can later on always be tailored to a more narrow size range.",
+  "adminSwitcherMessage": "Do you want to set everything up, but are you not quite ready for launching? Just keep this slider set to invisible for a little longer! Don’t wait too long though, as someone else may beat you to the chase and start a loop in the same area. And even though there can be multiple loops in the same area, it may cause a bit of confusion."
 }

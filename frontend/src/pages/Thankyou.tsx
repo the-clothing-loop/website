@@ -25,8 +25,9 @@ const Thankyou = (props: any) => {
 
       <div className={classes.pageGrid}>
         <div>
-          <h3>{t("thankYouForJoining")}</h3>
-          <p>{t("youWillReceiveAnEmail")}</p>
+          <h3>{t("thankYouForSigningUp")}</h3>
+          <p>{t("yourClosetIsAboutToBecomeAWholeLotMoreSustainable")}</p>
+          <p>{t("happySwapping")}</p>
           <div className={classes.formSubmitActions}>
             <Button
               className={classes.buttonOutlined}
