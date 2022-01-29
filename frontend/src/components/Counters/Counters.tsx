@@ -36,7 +36,7 @@ const Counters = () => {
   return (
     <div ref={containerRef} className={classes.countersWrapper}>
       <div className="isVisible">
-        <h1>{isVisible ? <SingleCounter end={410} step={2} /> : "0"}</h1>
+        <h1>{isVisible ? <SingleCounter end={415} step={2} /> : "0"}</h1>
         <h3>{"Loops"}</h3>
       </div>
       <div className="isVisible">
