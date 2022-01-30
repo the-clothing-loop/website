@@ -65,10 +65,8 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
       .required("Required"),
     description: Yup.string(),
     radius: Yup.number().required("Required"),
-    clothingTypes: Yup.array().of(Yup.string())
-      .required("Required"),
-    clothingSizes: Yup.array().of(Yup.string())
-      .required("Required"),
+    clothingTypes: Yup.array().of(Yup.string()).required("Required"),
+    clothingSizes: Yup.array().of(Yup.string()).required("Required"),
     longitude: Yup.number(),
     latitude: Yup.number(),
   });
@@ -197,11 +195,11 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
           const filteredSizes = values.clothingSizes.filter((size) => {
             const parentCats = selectedCats.filter((cat) =>
               categories[cat].includes(size)
-            )
+            );
             return parentCats.length > 0;
           });
           setFieldValue("clothingSizes", filteredSizes);
-        }
+        };
 
         return (
           <Grid container>

@@ -12,7 +12,6 @@ import theme from "../util/theme";
 import { getChain, updateChain } from "../util/firebase/chain";
 import ChainDetailsForm, { ChainFields } from "../components/ChainDetailsForm";
 
-
 const ChainEdit = () => {
   const { t } = useTranslation();
   let history = useHistory();
@@ -52,10 +51,10 @@ const ChainEdit = () => {
           ...chain,
           clothingTypes: chain.categories.gender,
           clothingSizes: chain.categories.size,
-        }
+        };
         setChain(fields);
       } else {
-          console.error(`chain ${chainId} does not exist`);
+        console.error(`chain ${chainId} does not exist`);
       }
     })();
   }, [chainId]);
