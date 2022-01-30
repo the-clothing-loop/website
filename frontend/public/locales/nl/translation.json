@@ -76,6 +76,7 @@
   "selectLoopLocation": "Selecteer ketenlocatie",
   "confirmation": "Bevestiging",
   "clickToSetLoopLocation": "Klik op de kaart om de geschatte locatie van de ketting in te stellen",
+  "clickToChangeLoopLocation": "Klik op de kaart om de locatie van de ketting te wijzigen",
   "loopName": "Ketting naam",
   "radius": "Radius (km)",
   "description": "Beschrijving",

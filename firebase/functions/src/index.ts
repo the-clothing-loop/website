@@ -111,6 +111,7 @@ export const createChain =
           address,
           latitude,
           longitude,
+          radius,
           categories,
         ] = [
           data.uid,
@@ -119,6 +120,7 @@ export const createChain =
           data.address,
           data.latitude,
           data.longitude,
+          data.radius,
           data.categories,
         ];
 
@@ -132,6 +134,7 @@ export const createChain =
             address,
             latitude,
             longitude,
+            radius,
             categories,
             published: false,
           });

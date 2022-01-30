@@ -17,23 +17,26 @@ import { Alert } from "@material-ui/lab";
 import Grid from "@material-ui/core/Grid";
 
 // Project resources
-import categories, { allSizes } from "../util/categories";
+import categories from "../util/categories";
 import { IViewPort } from "../types";
 import theme from "../util/theme";
 import Geocoding from "../pages/Geocoding";
 import { TextForm, NumberField, SelectField } from "./FormFields";
 import PopoverOnHover from "./Popover";
+import SizesDropdown from "../components/SizesDropdown";
+import CategoriesDropdown from "../components/CategoriesDropdown";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
+
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
 interface ChainFields {
   name: string;
   description?: string;
   radius: number;
-  clothingType: string;
-  clothingSize: string;
+  clothingTypes: [string];
+  clothingSizes: [string];
   longitude: number;
   latitude: number;
 }
@@ -62,10 +65,10 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
       .required("Required"),
     description: Yup.string(),
     radius: Yup.number().required("Required"),
-    clothingType: Yup.string()
-      .required("Required")
-      .oneOf(Object.keys(categories)),
-    clothingSize: Yup.string().oneOf(allSizes).required("Required"),
+    clothingTypes: Yup.array().of(Yup.string())
+      .required("Required"),
+    clothingSizes: Yup.array().of(Yup.string())
+      .required("Required"),
     longitude: Yup.number(),
     latitude: Yup.number(),
   });
@@ -106,8 +109,8 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
     name: "",
     description: "",
     radius: 3,
-    clothingType: "",
-    clothingSize: "",
+    clothingTypes: [],
+    clothingSizes: [],
     longitude: 0,
     latitude: 0,
   };
@@ -188,13 +191,17 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
           );
         };
 
-        const handleClothingTypeChange = (event: any) => {
-          const newType = event.target.value;
-          if (newType && !categories[newType].includes(values.clothingSize)) {
-            setFieldValue("clothingSize", "");
-          }
-          setFieldValue("clothingType", newType);
-        };
+        const handleCategoriesChange = (selectedCats: string[]) => {
+          setFieldValue("clothingTypes", selectedCats);
+          // potentially remove some sizes if their parent category has been deselected
+          const filteredSizes = values.clothingSizes.filter((size) => {
+            const parentCats = selectedCats.filter((cat) =>
+              categories[cat].includes(size)
+            )
+            return parentCats.length > 0;
+          });
+          setFieldValue("clothingSizes", filteredSizes);
+        }
 
         return (
           <Grid container>
@@ -264,52 +271,25 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <div className={classes.formFieldWithPopover}>
-                      <FormControl fullWidth>
-                        <SelectField
-                          name="clothingType"
-                          label="selectClothingType"
-                          required
-                          errorText={
-                            touched.clothingType ? errors.clothingType : ""
-                          }
-                          onChange={handleClothingTypeChange}
-                        >
-                          {Object.keys(categories).map((category: string) => (
-                            <MenuItem value={category} key={category}>
-                              {t(category)}
-                            </MenuItem>
-                          ))}
-                        </SelectField>
-                      </FormControl>
-                      <PopoverOnHover message="Some extra information about the field" />
+                    <div style={{ paddingTop: "10px" }}>
+                      <CategoriesDropdown
+                        setGenders={handleCategoriesChange}
+                        genders={values.clothingTypes}
+                        className={classes.formSelect}
+                        fullWidth={true}
+                      />
                     </div>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <div className={classes.formFieldWithPopover}>
-                      <FormControl fullWidth>
-                        <SelectField
-                          name="clothingSize"
-                          label="selectSize"
-                          value={values.clothingSize}
-                          required
-                          onChange={handleChange}
-                          errorText={
-                            touched.clothingSize ? errors.clothingSize : ""
-                          }
-                        >
-                          {values.clothingType
-                            ? categories[values.clothingType].map(
-                                (size: string) => (
-                                  <MenuItem value={size} key={size}>
-                                    {t(size)}
-                                  </MenuItem>
-                                )
-                              )
-                            : null}
-                        </SelectField>
-                      </FormControl>
-                      <PopoverOnHover message="Some extra information about the field" />
+                    <div style={{ paddingTop: "10px" }}>
+                      <SizesDropdown
+                        setSizes={(val) => setFieldValue("clothingSizes", val)}
+                        className={classes.formSelect}
+                        genders={values.clothingTypes}
+                        sizes={values.clothingSizes}
+                        label={t("sizes")}
+                        fullWidth={false}
+                        inputVisible={true}
+                        variantVal={true}
+                      />
                     </div>
                   </Grid>
                   {touched.longitude && errors.longitude ? (

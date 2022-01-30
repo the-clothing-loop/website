@@ -8,6 +8,7 @@ import { makeStyles, Typography } from "@material-ui/core";
 import theme from "../util/theme";
 import ProgressBar from "../components/ProgressBar";
 import ChainDetailsForm from "../components/ChainDetailsForm";
+import { createChain } from "../util/firebase/chain";
 
 const NewChainLocation = () => {
   const classes = makeStyles(theme as any)();
@@ -19,9 +20,9 @@ const NewChainLocation = () => {
   const onSubmit = async (values: any) => {
     const newChain = {
       ...values,
-      longitude: values.coordinates[0],
-      latitude: values.coordinates[1],
-      categories: { gender: values.clothingType, size: values.clothingSize },
+      longitude: values.longitude,
+      latitude: values.latitude,
+      categories: { gender: values.clothingTypes, size: values.clothingSizes },
       published: false,
       uid: userId,
     };
