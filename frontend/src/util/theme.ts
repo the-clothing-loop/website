@@ -1072,6 +1072,9 @@ const theme = {
             textAlign: "left",
             fontSize: "1.25rem",
             height: " 2rem",
+            fontWeight: "400",
+            lineHeight: "32px",
+            letterSpacing: "0em",
 
             "& a": {
               display: "block",
@@ -1151,6 +1154,9 @@ const theme = {
             textAlign: "left",
             fontSize: "1.25rem",
             height: " 2rem",
+            fontWeight: "400",
+            lineHeight: "32px",
+            letterSpacing: "0em",
           },
         },
       },
@@ -1407,6 +1413,20 @@ const theme = {
       textAlign: "left",
       fontSize: "16px",
       padding: "2% 0",
+
+      "& a": {
+        color: teal,
+      },
+
+      "& ol": {
+        "& li": {
+          padding: "1% 0",
+
+          "& a": {
+            color: teal,
+          },
+        },
+      },
     },
   },
 };

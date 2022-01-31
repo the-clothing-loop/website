@@ -22,6 +22,8 @@ import Contacts from "./pages/Contacts.js";
 import LandingPage from "./pages/LandingPage";
 import MessageSubmitted from "./pages/MessageSubmitted";
 import About from "./pages/About";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfUse from "./pages/TermsOfUse";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -91,6 +93,12 @@ const App = () => {
                   <Route exact path="/contact-us" component={Contacts} />
                   <Route exact path="/" component={LandingPage} />
                   <Route exact path="/about" component={About} />
+                  <Route
+                    exact
+                    path="/privacy-policy"
+                    component={PrivacyPolicy}
+                  />
+                  <Route exact path="/terms-of-use" component={TermsOfUse} />
                 </Switch>
               </div>
               <Footer />
