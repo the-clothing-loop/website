@@ -24,6 +24,7 @@ import MessageSubmitted from "./pages/MessageSubmitted";
 import About from "./pages/About";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
+import FAQ from "./pages/FAQ";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -99,6 +100,11 @@ const App = () => {
                     component={PrivacyPolicy}
                   />
                   <Route exact path="/terms-of-use" component={TermsOfUse} />
+                  <Route
+                    exact
+                    path="/frequently-asked-questions"
+                    component={FAQ}
+                  />
                 </Switch>
               </div>
               <Footer />

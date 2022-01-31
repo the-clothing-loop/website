@@ -29,23 +29,19 @@ const TermsOfUse = () => {
           <ol>
             <li>
               These terms of use, as amended from time to time (hereinafter
-              referred to as the{" "}
-              <span style={{ fontWeight: "bold" }}>"Terms of Use"</span>),
-              stipulate (a) the terms under which use may be made of the
-              website, www.clothingloop.org and the application (together and
-              separately hereinafter also referred to as the{" "}
-              <span style={{ fontWeight: "bold" }}>"Platform"</span>) of and
-              offered by The Clothing Loop (hereinafter referred to as “The
-              Clothing Loop" or <span style={{ fontWeight: "bold" }}>"we</span>{" "}
-              or <span style={{ fontWeight: "bold" }}>"us"</span>) as part of
-              Stichting Slow Fashion Movement, (KVK 85110701) and (b) the terms
-              of your participation in The Clothing Loop.{" "}
+              referred to as the <span>"Terms of Use"</span>), stipulate (a) the
+              terms under which use may be made of the website,
+              www.clothingloop.org and the application (together and separately
+              hereinafter also referred to as the <span>"Platform"</span>) of
+              and offered by The Clothing Loop (hereinafter referred to as “The
+              Clothing Loop" or <span>"we</span> or <span>"us"</span>) as part
+              of Stichting Slow Fashion Movement, (KVK 85110701) and (b) the
+              terms of your participation in The Clothing Loop.{" "}
             </li>
             <li>
               By using the Platform, you (hereinafter also referred to as the{" "}
-              <span style={{ fontWeight: "bold" }}>"User"</span>) confirm that
-              you are of legal age in your jurisdiction of residence to enter
-              into a binding agreement.{" "}
+              <span>"User"</span>) confirm that you are of legal age in your
+              jurisdiction of residence to enter into a binding agreement.{" "}
             </li>
           </ol>
         </Typography>
@@ -112,77 +108,94 @@ const TermsOfUse = () => {
               that you:
               <br />
               <br />
-              - must provide complete and truthful information; <br />
-              - may not share misleading or offensive information;
-              <br />
-              - may not violate the rights of ownership and/or other personal
-              rights of other Users or third parties (including intellectual
-              property rights);
-              <br />
-              - may not perform or permit any acts and/or conduct that violates
-              applicable laws or regulations, public morals, public order or the
-              rights of other Users or third parties (including the rights of
-              The Clothing Loop);
-              <br />
-              - must conduct yourself in a respectful and cordial manner in all
-              communications with other Users and you must adhere to the rules
-              and regulations applicable to any channels used by the local
-              Clothing Loops;
-              <br />
-              - may not add to the Platform (or via any other channels used by a
-              local Loop) any texts, data or files that have illegal or
-              offensive content, for example, discriminatory, racist, sexist or
-              pornographic content, or (otherwise) infringe on the private lives
-              of other Users or third parties;
-              <br />
-              - must keep your own login data confidential;
-              <br />
-              - must keep the personal data of other Users or third parties that
-              may become available to you strictly confidential and, if
-              requested do to so, immediately destroy such personal data;
-              <br />
-              - insofar as you share (personal) data of other Users or third
-              parties with us (for example, names, telephone numbers and email
-              addresses), you guarantee that you are authorized to share this
-              data with us in accordance with applicable laws and regulations
-              (for example, because you have permission to do so) and that we
-              can use this data for the purposes for which this data has been
-              shared with us;
-              <br />
-              - may not spread viruses through the Platform (or through any
-              other channels used by the Clothing Loop), or otherwise disrupt,
-              prevent or damage (the operation of) the Platform;
-              <br />
-              - must respect and consider the good name and reputation of The
-              Clothing Loop;
-              <br />
-              - must install the application correctly and install updates to
-              the application;
-              <br />
-              - may not sell or rent (the software behind) the Platform to third
-              parties or otherwise make it available to third parties;
-              <br />
-              - may not de-compile, reverse engineer or modify the Platform
-              without The Clothing Loop’s prior consent. You may also not remove
-              or allow to be removed or circumvent any technical measures
-              intended to protect the Platform. <br />
+              <ul>
+                <li>must provide complete and truthful information;</li>
+                <li>may not share misleading or offensive information;</li>
+                <li>
+                  may not violate the rights of ownership and/or other personal
+                  rights of other Users or third parties (including intellectual
+                  property rights);
+                </li>
+                <li>
+                  may not perform or permit any acts and/or conduct that
+                  violates applicable laws or regulations, public morals, public
+                  order or the rights of other Users or third parties (including
+                  the rights of The Clothing Loop);
+                </li>
+                <li>
+                  must conduct yourself in a respectful and cordial manner in
+                  all communications with other Users and you must adhere to the
+                  rules and regulations applicable to any channels used by the
+                  local Clothing Loops;
+                </li>
+                <li>
+                  {" "}
+                  may not add to the Platform (or via any other channels used by
+                  a local Loop) any texts, data or files that have illegal or
+                  offensive content, for example, discriminatory, racist, sexist
+                  or pornographic content, or (otherwise) infringe on the
+                  private lives of other Users or third parties;
+                </li>
+                <li>must keep your own login data confidential;</li>
+                <li>
+                  must keep the personal data of other Users or third parties
+                  that may become available to you strictly confidential and, if
+                  requested do to so, immediately destroy such personal data;
+                </li>
+                <li>
+                  insofar as you share (personal) data of other Users or third
+                  parties with us (for example, names, telephone numbers and
+                  email addresses), you guarantee that you are authorized to
+                  share this data with us in accordance with applicable laws and
+                  regulations (for example, because you have permission to do
+                  so) and that we can use this data for the purposes for which
+                  this data has been shared with us;
+                </li>
+                <li>
+                  may not spread viruses through the Platform (or through any
+                  other channels used by the Clothing Loop), or otherwise
+                  disrupt, prevent or damage (the operation of) the Platform;
+                </li>
+                <li>
+                  must respect and consider the good name and reputation of The
+                  Clothing Loop;
+                </li>
+                <li>
+                  must install the application correctly and install updates to
+                  the application;
+                </li>
+                <li>
+                  may not sell or rent (the software behind) the Platform to
+                  third parties or otherwise make it available to third parties;
+                </li>
+                <li>
+                  may not de-compile, reverse engineer or modify the Platform
+                  without The Clothing Loop’s prior consent. You may also not
+                  remove or allow to be removed or circumvent any technical
+                  measures intended to protect the Platform.
+                </li>
+              </ul>
             </li>
             <li>
               In terms of items (to be) shared as part of the Clothing Loop,
               you:
-              <br />
-              <br />
-              - represent and warrant that you are the owner of such items;
-              <br />
-              - ensure that any items provided are clean, ready to wear and in
-              good shape (not discolored or damaged);
-              <br />
-              - acknowledge and agree that you may not reclaim any items you
-              previously provided;
-              <br />
-              - acknowledge and agree that The Clothing Loop (nor any other
-              Users) are responsible or liable for any lost items.
-              <br />
+              <ul>
+                <li>
+                  represent and warrant that you are the owner of such items;
+                </li>
+                <li>
+                  ensure that any items provided are clean, ready to wear and in
+                  good shape (not discolored or damaged);
+                </li>
+                <li>
+                  acknowledge and agree that you may not reclaim any items you
+                  previously provided;
+                </li>
+                <li>
+                  acknowledge and agree that The Clothing Loop (nor any other
+                  Users) are responsible or liable for any lost items.
+                </li>
+              </ul>
             </li>
             <li>
               In the event of (suspected) use of the Platform or conduct in
@@ -215,7 +228,7 @@ const TermsOfUse = () => {
           Liability
         </Typography>
         <Typography component="p">
-          <ol start={10}>
+          <ol start={11}>
             <li>
               The use of the Platform, and thus participating in The Clothing
               Loop is at your own risk and (if applicable) expense.

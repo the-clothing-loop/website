@@ -35,6 +35,7 @@ const theme = {
     fontFamily: "Montserrat !important",
     fontSize: "1rem",
     lineHeight: "19.5px",
+    textAlign: "left",
   },
   a: {
     color: teal,
@@ -1416,6 +1417,10 @@ const theme = {
 
       "& a": {
         color: teal,
+      },
+
+      "& span": {
+        fontWeight: "bold",
       },
 
       "& ol": {
