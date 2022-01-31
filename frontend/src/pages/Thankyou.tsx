@@ -43,7 +43,7 @@ const Thankyou = (props: any) => {
               className={classes.button}
               variant="contained"
               color="primary"
-              onClick={() => history.push("/")}
+              onClick={() => history.push("/about")}
               key={"btn-submit-1"}
               style={{ margin: "2% 0" }}
             >

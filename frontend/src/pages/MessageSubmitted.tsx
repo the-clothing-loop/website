@@ -38,7 +38,7 @@ const MessageSubmitted = (props: any) => {
               className={classes.button}
               variant="contained"
               color="primary"
-              onClick={() => history.push("/")}
+              onClick={() => history.push("/FAQ")}
               key={"btn-submit-1"}
             >
               {t("FAQ's")}

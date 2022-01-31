@@ -177,17 +177,27 @@ const PrivacyPolicy = () => {
           of your data protection rights. Every user is entitled to the
           following: <br />
           <br />
-          1. The right to access - You have the right to request The Clothing
-          Loop for copies of your personal data.
-          <br /> 2.The right to correct your data: if your data changes, for
-          example you move or your phone number changes, and this can for some
-          reason not be changed within the local loop itself by the loop host,
-          then ask for your data to be removed completely and sign back up{" "}
-          <br />
-          3. The right to erase - You have the right to request that The
-          Clothing Loop erase your personal data 4. If you make a request, we
-          have one month to respond to you. If you would like to exercise any of
-          these rights, please contact us at our email:{" "}
+          <ol>
+            <li>
+              The right to access - You have the right to request The Clothing
+              Loop for copies of your personal data.
+            </li>
+            <li>
+              The right to correct your data: if your data changes, for example
+              you move or your phone number changes, and this can for some
+              reason not be changed within the local loop itself by the loop
+              host, then ask for your data to be removed completely and sign
+              back up
+            </li>
+            <li>
+              {" "}
+              The right to erase - You have the right to request that The
+              Clothing Loop erase your personal data 4. If you make a request,
+              we have one month to respond to you.
+            </li>
+          </ol>
+          If you would like to exercise any of these rights, please contact us
+          at our email:{" "}
           <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
         </Typography>
 

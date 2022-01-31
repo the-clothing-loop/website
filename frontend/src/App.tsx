@@ -100,11 +100,7 @@ const App = () => {
                     component={PrivacyPolicy}
                   />
                   <Route exact path="/terms-of-use" component={TermsOfUse} />
-                  <Route
-                    exact
-                    path="/frequently-asked-questions"
-                    component={FAQ}
-                  />
+                  <Route exact path="/FAQ" component={FAQ} />
                 </Switch>
               </div>
               <Footer />

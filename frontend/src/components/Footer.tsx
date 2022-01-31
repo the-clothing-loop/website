@@ -32,7 +32,7 @@ const Footer = () => {
               <div className={classes.footerSections}>
                 <div className={classes.footerSection}>
                   <Typography component="h5">Learn more</Typography>
-                  <Link to="#">FAQ's</Link>
+                  <Link to="/FAQ">FAQ's</Link>
                   <Link to="/contact-us">Help</Link>
                   <Link to="/about">About</Link>
                 </div>
