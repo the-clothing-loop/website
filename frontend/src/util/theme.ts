@@ -1,3 +1,5 @@
+import { autocompleteClasses } from "@mui/material";
+
 const black = "#3C3C3B";
 const white = "#ffff";
 const teal = "#48808B";
@@ -66,6 +68,9 @@ const theme = {
     alignItems: "center",
     zIndex: "11111111",
     height: "10vh",
+    maxWidth: "1440px",
+    left: "50%",
+    transform: " translateX(-50%)",
 
     "& .MuiButtonBase-root": {
       fontSize: "1.2rem",
@@ -88,7 +93,6 @@ const theme = {
       lineHeight: " 21.86px",
       color: "#3C3C3B",
       padding: "12px 32px",
-      margin: "0px 24px",
     },
   },
 
@@ -100,7 +104,6 @@ const theme = {
   },
 
   languageSwitcherWrapper: {
-    marginLeft: " 24px",
     padding: "12px 0",
     paddingLeft: " 32px",
   },
@@ -291,6 +294,10 @@ const theme = {
     flexDirection: "column",
   },
 
+  formGridItem: {
+    padding: "0",
+  },
+
   threeColumnsFormWrapper: {
     height: "100%",
     textAlign: "center",
@@ -313,6 +320,10 @@ const theme = {
   },
   formContainer: {
     position: "relative",
+    left: "50%",
+    transform: " translateX(-50%)",
+    width: "80%",
+    padding: "0 2%",
   },
   formContainerLocation: {
     maxWidth: "1440px",
@@ -425,7 +436,7 @@ const theme = {
     fontWeight: "bold",
   },
   card: {
-    minWidth: "400px",
+    maxWidth: "500px",
     backgroundColor: "#EDF2F3",
     borderRadius: "0",
   },
@@ -514,6 +525,9 @@ const theme = {
 
   /*styling for table*/
   root2: {
+    maxWidth: "1440px",
+    left: "50%",
+    transform: " translateX(-50%)",
     padding: "1% 80px",
     backgroundColor: white,
     alignItems: "center",
@@ -523,8 +537,7 @@ const theme = {
     zIndex: "1100",
     position: "relative",
     justifyContent: "space-between",
-    boxShadow:
-      "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important",
+    boxShadow: " 0 4px 2px -2px gray !important",
 
     "& .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled)::before":
       {
@@ -721,6 +734,10 @@ const theme = {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     paddingLeft: "50px",
+    maxWidth: "1440px",
+    left: "50%",
+    transform: " translateX(-50%)",
+    position: "relative",
   },
 
   footerSections: {
@@ -897,6 +914,9 @@ const theme = {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
       position: "relative",
+      maxWidth: "1440px",
+      left: "50%",
+      transform: " translateX(-50%)",
 
       "& .hero-text-wrapper": {
         position: "relative",
@@ -956,6 +976,11 @@ const theme = {
 
   sectionsWrapper: {
     marginTop: "5% 0",
+    maxWidth: "1440px",
+    left: "50%",
+    transform: " translateX(-50%)",
+    position: "relative",
+
     "& .single-section-wrapper": {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
@@ -1143,6 +1168,92 @@ const theme = {
     },
   },
 
+  //donations
+  donationsWrapper: {
+    position: "relative",
+    margin: "10% 0",
+    width: "100%",
+    maxWidth: "1440px",
+    left: "50%",
+    transform: " translateX(-50%)",
+
+    "& .background-box": {
+      justifySelf: "center",
+      position: "absolute",
+      height: "298px",
+      backgroundColor: yellow,
+      width: "60%",
+      opacity: " 0.3",
+      top: "30%",
+      left: "50%",
+      transform: "translateX(-50%)",
+    },
+
+    " & div": {
+      display: "grid",
+      gridTemplateColumns: "50% 50%",
+
+      "& .image-wrapper": {
+        position: "relative",
+        width: "480px",
+        height: "357px",
+        display: "flex",
+        left: "197px",
+
+        "& img": {
+          width: "100%",
+          height: "auto",
+          objectFit: "cover",
+        },
+      },
+
+      "& .text-wrapper": {
+        paddingRight: "50%",
+        position: "relative",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+
+        "& h3": {
+          color: bronze,
+          fontFamily: "'Playfair Display', serif",
+          fontSize: "4.5rem",
+          lineHeight: "5rem",
+          fontWeight: "700",
+          margin: " 0",
+          paddingBottom: "28px",
+        },
+
+        "& p": {
+          color: black,
+          textAlign: "left",
+          fontSize: "1rem",
+          lineHeight: " 1.5rem",
+          fontWeight: "400",
+          fontFamily: "Montserrat",
+          paddingBottom: "16px",
+          margin: "0",
+
+          "& span": {
+            fontFamily: "Montserrat",
+            fontWeight: "900",
+          },
+        },
+
+        "& button": {
+          width: "105px",
+          height: " 35px",
+          border: ` 2px solid ${bronze} `,
+          color: bronze,
+          backgroundColor: "transparent",
+          fontSize: "14px",
+          lineHeight: "19px",
+          fontWeight: "500",
+        },
+      },
+    },
+  },
+
   imageAnimatedWrapper: {
     outline: `solid 1px ${teal}`,
     transition: " outline 0.6s linear",
@@ -1202,6 +1313,10 @@ const theme = {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     margin: "5% 0",
+    position: "relative",
+    maxWidth: "1440px",
+    left: "50%",
+    transform: " translateX(-50%)",
 
     "& .image-wrapper": {
       "& img": {
@@ -1272,18 +1387,24 @@ const theme = {
       display: "flex",
       flexDirection: "row",
       width: "100%",
-      justifyContent: "space-between",
+      justifyContent: "space-evenly",
       zIndex: "1",
+      maxWidth: "1440px",
+      left: "50%",
+      transform: " translateX(-50%)",
+      position: "relative",
+      padding: "2% 0",
+      alignItems: "center",
+      flexWrap: "wrap",
 
-      "& *": {
-        width: "200px",
-        height: "200px",
-        display: "flex",
-        alignItems: "center",
+      "& > div": {
+        margin: "0 5%",
 
-        "& *": {
-          width: "100%",
-          height: "auto",
+        "& > a": {
+          "& > img": {
+            width: "100%",
+            height: "auto",
+          },
         },
       },
     },
@@ -1384,16 +1505,16 @@ const theme = {
     alignItems: "flex-end",
   },
 
-  donationsWrapper: {
+  donationsContainer: {
     justifyContent: "flex-start",
     width: "50%",
     position: "relative",
     left: "50%",
     transform: "translateX(-50%)",
     backgroundColor: "#EDF2F3",
-    padding:'2% 5%',
-    margin:'2% 0',
-    maxWidth: '800px'
+    padding: "2% 5%",
+    margin: "2% 0",
+    maxWidth: "800px",
   },
 };
 export default theme;

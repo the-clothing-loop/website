@@ -21,12 +21,12 @@ import LoginEmailFinished from "./pages/LoginEmailFinished";
 import Contacts from "./pages/Contacts.js";
 import LandingPage from "./pages/LandingPage";
 import MessageSubmitted from "./pages/MessageSubmitted";
+import Donate from "./pages/Donate";
 
 // Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Logout } from "./pages/Logout";
-import Donate from "./pages/Donate";
 import { ChainsProvider } from "./components/ChainsProvider";
 
 const theme = createTheme(themeFile);
