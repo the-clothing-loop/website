@@ -62,8 +62,12 @@ const Signup = () => {
     (async () => {
       if (chainId) {
         const chain = await getChain(chainId);
-        setChain(chain);
-        setChainGender(chain.categories.gender);
+        if (chain !== undefined) {
+          setChain(chain);
+          setChainGender(chain.categories.gender);
+        } else {
+          console.error(`chain ${chainId} does not exist`)
+        }
       }
     })();
   }, [chainId]);
@@ -114,6 +118,7 @@ const Signup = () => {
             newsletter: false,
           }}
           validationSchema={validate}
+          validateOnChange={false}
           onSubmit={(v) => onSubmit(v)}
         >
           {(formik) => (

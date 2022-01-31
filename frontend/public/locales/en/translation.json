@@ -77,6 +77,7 @@
   "selectLoopLocation": "Select Loop location",
   "confirmation": "Confirmation",
   "clickToSetLoopLocation": "Click on the map to set the approximate location of the loop",
+  "clickToChangeLoopLocation": "Click on the map to change the location of the loop",
   "loopName": "Loop name",
   "radius": "Radius (km)",
   "description": "Description",

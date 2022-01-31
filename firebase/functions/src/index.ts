@@ -67,25 +67,14 @@ export const createUser = functions
         url: functions.config().clothingloop.base_domain,
       });
     const verificationEmail =
-      `Hello ${name}  and welcome to the Clothing Loop!,<br><br>` +
-      "Thank you for making the step to create a more sustainable world together.<br><br>" +
-      "We are super happy to have you. Please find our manual in the attachment to see how to proceed.<br>" +
-      `Firstly, we need you to verify your email address by clicking  <a href="${verificationLink}">here</a><br><br>` +
-      "Next steps for loop hosts:<br>" +
-      "Right now everything is set up, but the loop is not live. When you are ready, login and move the slider to ‘visible’." +
-      "Don’t wait too long, as someone else may beat you to the chase and start a loop in the same area. And even though there can be multiple loops in the same area, it may cause a bit of confusion. <br><br>" +
-      "Next steps for participants:<br>" +
-      "What happens next?" +
-      "Each Loop has a local host that coordinates the specific Loop voluntarily. He/she/they will receive your application, and get in touch with further info. Please be patient, sometimes this can take up to four weeks, depending on the available time of the host.<br>" +
-      "Of course, you want to start swapping right away, which we applaud obviously! What you can do in the meantime is start scanning your closet for items that are ready to go on adventures with somebody else. You can check if they need some repairs, depilling or a little wash, so they will become an even better addition to our travelling swap bags. Please note, it’s a mutual effort to keep the bag a surprise for everyone. This way we are not just passing on a bag of clothes but a bag of happy stories and care! Don’t worry if you do not find something in the very first bag <br><br>" +
-      "Furthermore, we love to grow as fast as possible to make the most impact. The sooner the better! So, another thing you can help us with is spread the word amongst your family, friends and neighbours. The earth will be eternally grateful.<br><br>" +
-      "Happy swapping!" +
-      "Regards,<br>The Clothing Loop team: Nichon, Paloeka, Giulia and Mirjam";
+      `Hi ${name},<br><br>` +
+      `Click <a href="${verificationLink}">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>` +
+      "Regards,<br>The clothing-loop team!";
     functions.logger.debug("sending verification email", verificationEmail);
     await db.collection("mail").add({
       to: email,
       message: {
-        subject: "Verify e-mail for The Clothing Loop",
+        subject: "Verify e-mail for clothing chain",
         html: verificationEmail,
       },
     });
@@ -98,10 +87,12 @@ export const createUser = functions
     });
     if (adminEmails.includes(email)) {
       functions.logger.debug(`Adding user ${email} as admin`);
-      await admin.auth().setCustomUserClaims(userRecord.uid, {
-        role: ROLE_ADMIN,
-        chainId: chainId,
-      });
+      await admin
+        .auth()
+        .setCustomUserClaims(userRecord.uid, {
+          role: ROLE_ADMIN,
+          chainId: chainId,
+        });
     } else {
       await admin
         .auth()
@@ -116,13 +107,23 @@ export const createChain = functions
   .https.onCall(async (data: any, context: functions.https.CallableContext) => {
     functions.logger.debug("createChain parameters", data);
 
-    const [uid, name, description, address, latitude, longitude, categories] = [
+    const [
+      uid,
+      name,
+      description,
+      address,
+      latitude,
+      longitude,
+      radius,
+      categories,
+    ] = [
       data.uid,
       data.name,
       data.description,
       data.address,
       data.latitude,
       data.longitude,
+      data.radius,
       data.categories,
     ];
 
@@ -140,6 +141,7 @@ export const createChain = functions
         address,
         latitude,
         longitude,
+        radius,
         categories,
         published: false,
       });
@@ -176,10 +178,12 @@ export const addUserToChain = functions
         if (context.auth?.token?.role === ROLE_CHAINADMIN) {
           await admin.auth().setCustomUserClaims(uid, { chainId: chainId });
         } else {
-          await admin.auth().setCustomUserClaims(uid, {
-            chainId: chainId,
-            role: context.auth?.token?.role,
-          });
+          await admin
+            .auth()
+            .setCustomUserClaims(uid, {
+              chainId: chainId,
+              role: context.auth?.token?.role,
+            });
         }
       }
     } else {
@@ -322,14 +326,14 @@ export const contactMail = functions
     await db.collection("mail").add({
       to: email,
       message: {
-        subject: "Thank you for contacting The Clothing Loop",
+        subject: "Thank you for contacting Clothing-Loop",
         html: ` <p>Hi ${name},</p>
                     <p>Thank you for your message!</p>
                     <p>You wrote:</p>
                     <p>${message}</p>
                     <p>We will contact you as soon as possible.</p>
                     <p>Regards,</p>
-                    <p>The Clothing Loop team!</p>
+                    <p>The clothing-loop team!</p>
             `,
       },
     });
@@ -352,16 +356,9 @@ export const subscribeToNewsletter = functions
       message: {
         subject: "Thank you for subscribing to Clothing Loop",
         html: ` <p>Hi ${name},</p>
-                      <p> Hurrah! You are now subscribed to our newsletter.</p>
-                      <br/>
-                      <p> Expect monthly updates full of inspiration, swap highlights and all kinds of wonderful Clothing Loop related stories.</p>
-                      <p>And please do reach out if you have exciting news or a nice Clothing Loop story you would like to share. We’d love to hear from you! <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a></p>
-                      <br/>
-                      <p>Changing the fashion world one swap at a time, let’s do it together!</p>
-                      <br/>
-                      <p>Thank you for your interest and support,</p>
-                      <p>Nichon, Paloeka, Giulia and Mirjam</p>
-
+                      <p>Thank you for subscribing!</p>
+                      <p>Regards,</p>
+                      <p>The clothing-loop team!</p>
               `,
       },
     });

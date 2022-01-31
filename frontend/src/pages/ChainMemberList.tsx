@@ -116,12 +116,16 @@ const ChainMemberList = () => {
     (async () => {
       try {
         const chainData = await getChain(chainId);
-        setChain(chainData);
-        const chainUsers = await getUsersForChain(chainId);
-        setUsers(chainUsers);
-        setPublishedValue({ published: chainData.published });
+        if (chainData === undefined) {
+          console.error(`chain ${chainId} does not exist`);
+        } else {
+          setChain(chainData);
+          const chainUsers = await getUsersForChain(chainId);
+          setUsers(chainUsers);
+          setPublishedValue({ published: chainData.published });
+        }
       } catch (error) {
-        console.error(error);
+        console.error(`Error getting chain: ${error}`);
       }
     })();
   }, []);
