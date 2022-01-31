@@ -22,6 +22,7 @@ import CirclesFrame from "../images/circles.png";
 import HorizontalArrow from "../images/horizontal_arrow.svg";
 import ArrowRightIcon from "../images/right-arrow-yellow.svg";
 import Selfies from "../images/Selfies.jpg";
+import DoorImg from "../images/numbered-bag-outdoors.png";
 //Logos
 import SfmLogo from "../images/logos/sfm_logo.png";
 import CollActionLogo from "../images/logos/Logo-CollAction.png";
@@ -154,7 +155,7 @@ const Home = () => {
             <div className="background-box"></div>
 
             <div className="image-wrapper">
-              <img src={SectionThreeImg} />
+              <img src={DoorImg} />
             </div>
 
             <div className="text-wrapper">

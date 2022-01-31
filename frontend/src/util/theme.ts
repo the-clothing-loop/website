@@ -1116,6 +1116,7 @@ const theme = {
         transform: "translateY(-50%)",
         display: "flex",
         justifyContent: "end",
+        top: "50px",
       },
 
       "& .text-wrapper": {
