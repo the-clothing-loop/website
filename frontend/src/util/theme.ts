@@ -61,8 +61,9 @@ const theme = {
     fontWeight: "600",
     fontStyle: "normal",
     color: teal,
-    fontSize: "18px",
+    fontSize: "24px",
     lineHeight: "22px",
+    padding: "2% 0",
   },
 
   header: {
@@ -1392,11 +1393,20 @@ const theme = {
   },
 
   legalPagesWrapper: {
-    width: "80%",
+    width: "50%",
     maxWidth: "1440px",
     position: "relative",
     left: "50%",
     transform: "translateX(-50%)",
+    textAlign: "left",
+    padding: "2% 0",
+
+    "& p": {
+      lineHeight: "30px",
+      textAlign: "left",
+      fontSize: "16px",
+      padding: "2% 0",
+    },
   },
 };
 export default theme;

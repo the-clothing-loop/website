@@ -225,6 +225,11 @@ const NewChainLocation = () => {
                   <Typography className="formSubtitle">
                     {t("clickToSetLoopLocation")}
                   </Typography>
+                  <PopoverOnHover
+                    message={
+                      "Please select the estimated area of your future Loop by clicking on the map below. Live in a densely populated area? Select a small radius in the dropdown menu below, for example, 2 or 3 kilometres. Do you live in a less populated area? Decide on a larger radius, like 10 kilometres. "
+                    }
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <ReactMapGL
@@ -321,7 +326,11 @@ const NewChainLocation = () => {
                               )}
                             </SelectField>
                           </FormControl>
-                          <PopoverOnHover message="Some extra information about the field" />
+                          <PopoverOnHover
+                            message={
+                              "We recommend to start* with either a mix of items from size 36 - 42 (Small - Medium - Large) or plus size loop for sizes XL XXL XXXL and up if relevant. In our experience, bags with these mixed sizes ranges work very well, as sizes vary per brand, era and country anyway. *If needed, loops can later on always be tailored to a more narrow size range"
+                            }
+                          />
                         </div>
                       </Grid>
                       <Grid item xs={12}>
@@ -348,7 +357,12 @@ const NewChainLocation = () => {
                                 : null}
                             </SelectField>
                           </FormControl>
-                          <PopoverOnHover message="Some extra information about the field" />
+                          <PopoverOnHover
+                            message={t([
+                              "clothingSizesPopoverMessage",
+                              "thankyouForSigningUp",
+                            ])}
+                          />
                         </div>
                       </Grid>
                       {touched.coordinates && errors.coordinates ? (
