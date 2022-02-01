@@ -18,8 +18,7 @@ import { TwoColumnLayout } from "../components/Layouts";
 //media
 import RightArrow from "../images/right-arrow-white.svg";
 import CirclesFrame from "../images/circles.png";
-import NumberedBag from "../images/numbered-bag-outdoors.png";
-
+import LoginImg from "../images/Login.jpg";
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -64,28 +63,24 @@ const Login = () => {
       <div className="background-frame-login"></div>
       <img className="circles-frame-login" src={CirclesFrame} alt="" />
       <div className="login-container">
-        <TwoColumnLayout img={NumberedBag}>
+        <TwoColumnLayout img={LoginImg}>
           <div className="login-content">
             <Typography variant="h3" className={classes.pageTitle}>
               {t("login")}
             </Typography>
             <div className={classes.pageDescription}>
               <Typography component="p" className={classes.p}>
-                {t("areYouALoopAdmin")}
-              </Typography>
-              <br />
-              <Typography component="p" className={classes.p}>
-                {t("notPartOfTheClothingLoopYet")}
+                Are you already hosting a Loop? Sign in here to get access to
+                the people that signed up in your neighbourhood. They are
+                eagerly waiting to become part of your Loop! Just want to
+                participate?
               </Typography>
               <Link className={classes.a} to="../../loops/find">
                 {t("joinAnExistingLoop")}
               </Link>
               <Typography component="p" className={classes.p}>
-                {t("or")}
+                instead. No user profile needed for this.
               </Typography>
-              <Link className={classes.a} to="../../loops/new-signup">
-                {t("startNewLoop")}
-              </Link>
             </div>
 
             <Formik
