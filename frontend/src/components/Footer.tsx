@@ -57,7 +57,7 @@ const Footer = () => {
           <div className={classes.footerLegalWrapper}>
             <div className={classes.legalLinks}>
               <Link to="/terms-of-use">Terms of service</Link>
-              <Link to="privacy-policy">Privacy</Link>
+              <Link to="/privacy-policy">Privacy</Link>
             </div>
 
             <p>
