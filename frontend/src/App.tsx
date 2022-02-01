@@ -21,6 +21,10 @@ import LoginEmailFinished from "./pages/LoginEmailFinished";
 import Contacts from "./pages/Contacts.js";
 import LandingPage from "./pages/LandingPage";
 import MessageSubmitted from "./pages/MessageSubmitted";
+import About from "./pages/About";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfUse from "./pages/TermsOfUse";
+import FAQ from "./pages/FAQ";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -87,8 +91,16 @@ const App = () => {
                     component={NewChainSignup}
                   />
                   <Route exact path="/loops" component={ChainsList} />
-                  <Route exact path="/contacts" component={Contacts} />
+                  <Route exact path="/contact-us" component={Contacts} />
                   <Route exact path="/" component={LandingPage} />
+                  <Route exact path="/about" component={About} />
+                  <Route
+                    exact
+                    path="/privacy-policy"
+                    component={PrivacyPolicy}
+                  />
+                  <Route exact path="/terms-of-use" component={TermsOfUse} />
+                  <Route exact path="/FAQ" component={FAQ} />
                 </Switch>
               </div>
               <Footer />

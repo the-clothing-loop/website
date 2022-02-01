@@ -628,8 +628,8 @@
   .background-frame-login {
     position: absolute;
     background-color: #edf2f3;
-    width: 80%;
-    height: 400px;
+    width: 60%;
+    height: 450px;
     left: 50%;
     transform: translateX(-50%);
     margin-top: 80px;

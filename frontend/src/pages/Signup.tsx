@@ -26,7 +26,7 @@ import FormActions from "../components/formActions";
 
 //Media
 import RightArrow from "../images/right-arrow-white.svg";
-import NumberedBag from "../images/numbered-bag-outdoors.png";
+import JoinLoopImg from "../images/Join-Loop.jpg";
 
 const Signup = () => {
   const history = useHistory();
@@ -123,7 +123,7 @@ const Signup = () => {
         >
           {(formik) => (
             <div className="signup-wrapper">
-              <TwoColumnLayout img={NumberedBag}>
+              <TwoColumnLayout img={JoinLoopImg}>
                 <div id="container" className="signup-content">
                   <Typography variant="h3" className={classes.pageTitle}>
                     {t("join")}

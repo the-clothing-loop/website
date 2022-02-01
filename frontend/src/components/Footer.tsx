@@ -32,9 +32,9 @@ const Footer = () => {
               <div className={classes.footerSections}>
                 <div className={classes.footerSection}>
                   <Typography component="h5">Learn more</Typography>
-                  <Link to="#">FAQ's</Link>
-                  <Link to="#">Help</Link>
-                  <Link to="#">About</Link>
+                  <Link to="/FAQ">FAQ's</Link>
+                  <Link to="/contact-us">Help</Link>
+                  <Link to="/about">About</Link>
                 </div>
                 <div className={classes.footerSection}>
                   <Typography component="h5">Loops</Typography>
@@ -48,7 +48,7 @@ const Footer = () => {
                   <Link to="mailto:hello@clothingloop.com">
                     hello@clothingloop.org
                   </Link>
-                  <Link to="/contacts">Contact</Link>
+                  <Link to="/contact-us">Contact</Link>
                 </div>
               </div>
               <Newsletter />
@@ -57,8 +57,8 @@ const Footer = () => {
 
           <div className={classes.footerLegalWrapper} id="footer">
             <div className={classes.legalLinks}>
-              <Link to="#">Terms of service</Link>
-              <Link to="#">Privacy</Link>
+              <Link to="/terms-of-use">Terms of service</Link>
+              <Link to="/privacy-policy">Privacy</Link>
             </div>
 
             <p>

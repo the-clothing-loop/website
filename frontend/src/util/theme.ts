@@ -35,6 +35,7 @@ const theme = {
     fontFamily: "Montserrat !important",
     fontSize: "1rem",
     lineHeight: "19.5px",
+    textAlign: "left",
   },
   a: {
     color: teal,
@@ -54,6 +55,16 @@ const theme = {
     lineHeight: "1.4375em",
     letterSpacing: " 0.00938em",
     fontFamily: "Montserrat",
+  },
+
+  h3: {
+    fontFamily: "Montserrat",
+    fontWeight: "600",
+    fontStyle: "normal",
+    color: teal,
+    fontSize: "24px",
+    lineHeight: "22px",
+    padding: "2% 0",
   },
 
   header: {
@@ -269,6 +280,7 @@ const theme = {
     position: "relative",
     left: "50%",
     transform: "translate(-50%)",
+    height: "100%",
 
     "& .MuiGrid-item": {
       padding: "0",
@@ -322,6 +334,7 @@ const theme = {
     transform: " translateX(-50%)",
     width: "80%",
     padding: "0 2%",
+    height: "100%",
   },
 
   formContainerLocation: {
@@ -365,7 +378,7 @@ const theme = {
     transform: "translateY(-50%)",
     objectFit: "cover",
     width: "100%",
-    height: "auto",
+    height: "100%",
   },
 
   formSubmitActions: {
@@ -490,12 +503,13 @@ const theme = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    maxWidth: "800px",
 
     "& div": {
       position: "relative",
       left: "50%",
       transform: "translateX(-50%)",
-      width: "60%",
+      width: "80%",
 
       "& h3": {
         fontFamily: "Playfair Display",
@@ -1083,6 +1097,9 @@ const theme = {
             textAlign: "left",
             fontSize: "1.25rem",
             height: " 2rem",
+            fontWeight: "400",
+            lineHeight: "32px",
+            letterSpacing: "0em",
 
             "& a": {
               display: "block",
@@ -1127,6 +1144,7 @@ const theme = {
         transform: "translateY(-50%)",
         display: "flex",
         justifyContent: "end",
+        top: "50px",
       },
 
       "& .text-wrapper": {
@@ -1161,6 +1179,9 @@ const theme = {
             textAlign: "left",
             fontSize: "1.25rem",
             height: " 2rem",
+            fontWeight: "400",
+            lineHeight: "32px",
+            letterSpacing: "0em",
           },
         },
       },
@@ -1298,12 +1319,7 @@ const theme = {
 
       "& *": {
         position: "relative",
-        width: "50%",
-
-        "& *": {
-          height: "100%",
-          width: "100%",
-        },
+        width: "100%",
       },
     },
   },
@@ -1502,6 +1518,41 @@ const theme = {
   gridItemAlignedEnd: {
     display: "flex",
     alignItems: "flex-end",
+  },
+
+  legalPagesWrapper: {
+    width: "50%",
+    maxWidth: "1440px",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    textAlign: "left",
+    padding: "2% 0",
+
+    "& p": {
+      lineHeight: "30px",
+      textAlign: "left",
+      fontSize: "16px",
+      padding: "2% 0",
+
+      "& a": {
+        color: teal,
+      },
+
+      "& span": {
+        fontWeight: "bold",
+      },
+
+      "& ol": {
+        "& li": {
+          padding: "1% 0",
+
+          "& a": {
+            color: teal,
+          },
+        },
+      },
+    },
   },
 };
 export default theme;
