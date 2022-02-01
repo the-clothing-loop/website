@@ -86,7 +86,7 @@ export const Newsletter = () => {
         spacing={4}
         wrap="nowrap"
       >
-        <Grid item>
+        <Grid item id="mobile-textfield">
           <TextField
             classes={{
               root: classes.muiInputLabelRootTextFieldRoot,
@@ -96,7 +96,7 @@ export const Newsletter = () => {
             onChange={handleNameChange}
           />
         </Grid>
-        <Grid item>
+        <Grid item id="mobile-textfield">
           <TextField
             classes={{
               root: classes.muiInputLabelRootTextFieldRoot,
@@ -111,9 +111,12 @@ export const Newsletter = () => {
       <Button
         classes={{ root: classes.buttonRoot }}
         onClick={handleSubmitClick}
+        id="mobile-submit-bt"
       >
         <Grid container spacing={3}>
-          <Grid item>Submit</Grid>
+          <Grid item id="btn-text">
+            Submit
+          </Grid>
           <Grid item>
             <img src={ArrowRight} />
           </Grid>
