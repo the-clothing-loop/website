@@ -28,7 +28,7 @@ const Footer = () => {
           style={{ display: "flex", flexDirection: "column" }}
         >
           {userData === null ? (
-            <div className={classes.footerWrapper}>
+            <div className={classes.footerWrapper} id="footer">
               <div className={classes.footerSections}>
                 <div className={classes.footerSection}>
                   <Typography component="h5">Learn more</Typography>
@@ -41,11 +41,12 @@ const Footer = () => {
                   <Link to="/loops/find">Finding a loop</Link>
                   <Link to="/loops/new-signup">Starting a loop</Link>
                   <Link to="/users/login">Login</Link>
+                  <Link to="/loops/new-signup">Register</Link>
                 </div>
                 <div className={classes.footerSection}>
                   <Typography component="h5">Find us</Typography>
-                  <Link to="mailto:hello@theclothingloop.com">
-                    hello@theclothingloop.org
+                  <Link to="mailto:hello@clothingloop.com">
+                    hello@clothingloop.org
                   </Link>
                   <Link to="/contact-us">Contact</Link>
                 </div>
@@ -54,7 +55,7 @@ const Footer = () => {
             </div>
           ) : null}
 
-          <div className={classes.footerLegalWrapper}>
+          <div className={classes.footerLegalWrapper} id="footer">
             <div className={classes.legalLinks}>
               <Link to="/terms-of-use">Terms of service</Link>
               <Link to="/privacy-policy">Privacy</Link>

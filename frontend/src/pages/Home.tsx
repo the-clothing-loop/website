@@ -2,6 +2,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { makeStyles, Button } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 import theme from "../util/theme";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -26,34 +27,61 @@ import DoorImg from "../images/numbered-bag-outdoors.png";
 //Logos
 import SfmLogo from "../images/logos/sfm_logo.png";
 import CollActionLogo from "../images/logos/Logo-CollAction.png";
-import ImpactHubLogo from "../images/logos/LOGO-IMPACTHUB.png";
+import ImpactHubLogo from "../images/logos/Logo_impact_hub.png";
 import EssenseLogo from "../images/logos/essense-logo.svg";
 import WdcdLogo from "../images/logos/Logo_WDCD.png";
+import DoenLogo from "../images/logos/DOEN.png";
+import PNHLogo from "../images/logos/PNH_logo.png";
 
 const Home = () => {
   const chainsCount = React.useContext(ChainsContext).length;
 
   const classes = makeStyles(theme as any)();
+  let history = useHistory();
 
   const supporters = [
     {
       logo: SfmLogo,
       url: "https://slowfashion.global/",
+      width: "200px",
+      height: "200px",
     },
     {
-      logo: EssenseLogo,
-      url: "https://essense.eu/",
+      logo: DoenLogo,
+      url: "https://www.doen.nl/en",
+      width: "150px",
+      height: "150px",
     },
     {
-      logo: CollActionLogo,
-      url: "https://www.collaction.org/",
+      logo: WdcdLogo,
+      url: "https://www.whatdesigncando.com/",
+      width: "150px",
+      height: "150px",
     },
     {
       logo: ImpactHubLogo,
       url: "https://impacthub.net/",
+      width: "150px",
+      height: "150px",
     },
-
-    { logo: WdcdLogo, url: "https://www.whatdesigncando.com/" },
+    {
+      logo: PNHLogo,
+      url: "https://www.noord-holland.nl/",
+      width: "250px",
+      height: "auto",
+    },
+    {
+      logo: EssenseLogo,
+      url: "https://essense.eu/",
+      width: "250px",
+      height: "auto",
+    },
+    {
+      logo: CollActionLogo,
+      url: "https://www.collaction.org/",
+      width: "150px",
+      height: "150px",
+    },
   ];
 
   return (
@@ -75,8 +103,10 @@ const Home = () => {
             <div className="hero-text-wrapper">
               <h1>
                 Swap it, <br />
-                don't <br />
-                <span>shop it</span>
+                <span>
+                  don't <br />
+                  shop it
+                </span>
               </h1>
               <p>
                 Want to dress more sustainably? Clear out your closet and
@@ -87,10 +117,14 @@ const Home = () => {
                 others in their own neighbourhood. It’s fun, free and
                 sustainable!
               </p>
-              <Button className="btn btn-2" href="/loops/find">
+              <button
+                className="slide"
+                onClick={() => history.push("/loops/find")}
+              >
+                {" "}
                 {"Find a loop"}
                 <img src={ArrowRightIcon} alt="" className="btn-icon" />
-              </Button>
+              </button>
             </div>
             <div className="hero-image-wrapper">
               <div className="image-wrapper">
@@ -161,13 +195,14 @@ const Home = () => {
             <div className="text-wrapper">
               <h1>3</h1>
               <div>
-                <h3>Wait & Swap</h3>
+                <h3>Get ready to swap!</h3>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna
-                  aliqua.usmod tempor incididunt ut labore et dolore magna
-                  aliqua.usmod tempor incididunt ut labore et dolore magna
-                  aliqua.
+                  The host of your local Loop will add you to the route as soon
+                  as possible, and then it is only a matter of time before the
+                  first bag will arrive! Find something you like, and donate
+                  something that no longer suits you, before you pass the bag
+                  onto the next person on the list. Don’t forget to share a
+                  picture of your newfound treasure with the group!
                 </p>
               </div>
             </div>
@@ -201,7 +236,9 @@ const Home = () => {
               win!
             </p>
 
-            <h5>Read more about us</h5>
+            <h5>
+              <a href="/about">Read more about us</a>
+            </h5>
           </div>
         </section>
 
@@ -211,8 +248,8 @@ const Home = () => {
           <div className="logos-wrapper">
             {supporters.map((el, i) => {
               return (
-                <div key={i}>
-                  <a href={el.url}>
+                <div key={i} style={{ width: el.width, height: el.height }}>
+                  <a href={el.url} target="_blank">
                     <img src={el.logo} alt="" />
                   </a>
                 </div>
