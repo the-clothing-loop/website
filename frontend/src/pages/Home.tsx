@@ -195,13 +195,14 @@ const Home = () => {
             <div className="text-wrapper">
               <h1>3</h1>
               <div>
-                <h3>Wait & Swap</h3>
+                <h3>Get ready to swap!</h3>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna
-                  aliqua.usmod tempor incididunt ut labore et dolore magna
-                  aliqua.usmod tempor incididunt ut labore et dolore magna
-                  aliqua.
+                  The host of your local Loop will add you to the route as soon
+                  as possible, and then it is only a matter of time before the
+                  first bag will arrive! Find something you like, and donate
+                  something that no longer suits you, before you pass the bag
+                  onto the next person on the list. Don’t forget to share a
+                  picture of your newfound treasure with the group!
                 </p>
               </div>
             </div>
@@ -235,7 +236,9 @@ const Home = () => {
               win!
             </p>
 
-            <h5>Read more about us</h5>
+            <h5>
+              <a href="/about">Read more about us</a>
+            </h5>
           </div>
         </section>
 

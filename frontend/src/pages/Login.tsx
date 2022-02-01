@@ -59,76 +59,77 @@ const Login = () => {
         <title>Clothing-Loop | Login</title>
         <meta name="description" content="Login" />
       </Helmet>
-
-      <div className="background-frame-login"></div>
-      <img className="circles-frame-login" src={CirclesFrame} alt="" />
-      <div className="login-container">
-        <TwoColumnLayout img={LoginImg}>
-          <div className="login-content">
-            <Typography variant="h3" className={classes.pageTitle}>
-              {t("login")}
-            </Typography>
-            <div className={classes.pageDescription}>
-              <Typography component="p" className={classes.p}>
-                Are you already hosting a Loop? Sign in here to get access to
-                the people that signed up in your neighbourhood. They are
-                eagerly waiting to become part of your Loop! Just want to
-                participate?
+      <div className="login-wrapper">
+        <div className="background-frame-login"></div>
+        <img className="circles-frame-login" src={CirclesFrame} alt="" />
+        <div className="login-container">
+          <TwoColumnLayout img={LoginImg}>
+            <div className="login-content">
+              <Typography variant="h3" className={classes.pageTitle}>
+                {t("login")}
               </Typography>
-              <Link className={classes.a} to="../../loops/find">
-                {t("joinAnExistingLoop")}
-              </Link>
-              <Typography component="p" className={classes.p}>
-                instead. No user profile needed for this.
-              </Typography>
-            </div>
+              <div className={classes.pageDescription}>
+                <Typography component="p" className={classes.p}>
+                  Are you already hosting a Loop? Sign in here to get access to
+                  the people that signed up in your neighbourhood. They are
+                  eagerly waiting to become part of your Loop! Just want to
+                  participate?
+                </Typography>
+                <Link className={classes.a} to="../../loops/find">
+                  {t("joinAnExistingLoop")}
+                </Link>
+                <Typography component="p" className={classes.p}>
+                  instead. No user profile needed for this.
+                </Typography>
+              </div>
 
-            <Formik
-              initialValues={{
-                email: "",
-              }}
-              validationSchema={validate}
-              onSubmit={async (v) => onSubmit(v)}
-            >
-              {(formik) => (
-                <Form className="login-form">
-                  <TextField
-                    className={classes.textField}
-                    {...formik.getFieldProps("email")}
-                    label={t("email")}
-                    required
-                    fullWidth
-                  />
-                  {formik.submitCount > 0 && formik.errors.email && (
-                    <Alert severity="error">{formik.errors.email}</Alert>
-                  )}
-                  <div className="single-submit-btn">
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
+              <Formik
+                initialValues={{
+                  email: "",
+                }}
+                validationSchema={validate}
+                onSubmit={async (v) => onSubmit(v)}
+              >
+                {(formik) => (
+                  <Form className="login-form">
+                    <TextField
+                      className={classes.textField}
+                      {...formik.getFieldProps("email")}
+                      label={t("email")}
+                      required
                       fullWidth
-                    >
-                      {t("submit")}
-                      <img src={RightArrow} alt="" />
-                    </Button>
-                  </div>
-                </Form>
+                    />
+                    {formik.submitCount > 0 && formik.errors.email && (
+                      <Alert severity="error">{formik.errors.email}</Alert>
+                    )}
+                    <div className="single-submit-btn">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        fullWidth
+                      >
+                        {t("submit")}
+                        <img src={RightArrow} alt="" />
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
+              {error && (
+                <Alert className={classes.errorAlert} severity="error">
+                  {error}
+                </Alert>
               )}
-            </Formik>
-            {error && (
-              <Alert className={classes.errorAlert} severity="error">
-                {error}
-              </Alert>
-            )}
-            {submitted && (
-              <Alert className={classes.infoAlert} severity="info">
-                {t("loginEmailSent")}
-              </Alert>
-            )}
-          </div>
-        </TwoColumnLayout>
+              {submitted && (
+                <Alert className={classes.infoAlert} severity="info">
+                  {t("loginEmailSent")}
+                </Alert>
+              )}
+            </div>
+          </TwoColumnLayout>
+        </div>
       </div>
     </>
   );

@@ -34,7 +34,7 @@ const theme = {
   p: {
     fontFamily: "Montserrat !important",
     fontSize: "1rem",
-    lineHeight: "19.5px",
+    lineHeight: "21px",
     textAlign: "left",
   },
   a: {
@@ -1125,7 +1125,7 @@ const theme = {
 
       "& .circles-frame": {
         position: "absolute",
-        left: "20%",
+        left: "15%",
         top: "-10%",
       },
 
@@ -1363,12 +1363,14 @@ const theme = {
       },
 
       "& h5": {
-        color: teal,
-        fontSize: "1.5rem",
-        lineHeight: "2rem",
-        fontWeight: "900",
-        textDecoration: "underline",
-        fontFamily: "Playfair Display",
+        "& a": {
+          color: teal,
+          fontSize: "1.5rem",
+          lineHeight: "2rem",
+          fontWeight: "900",
+          textDecoration: "underline",
+          fontFamily: "Playfair Display",
+        },
       },
     },
   },
