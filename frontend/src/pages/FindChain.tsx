@@ -12,6 +12,8 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import * as GeoJSONTypes from "geojson";
 
+import mapboxgl from "mapbox-gl";
+
 // Material UI
 import { Button } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
@@ -35,6 +37,12 @@ import { FindChainSearchBarContainer } from "../components/FindChain";
 
 // Media
 import RightArrow from "../images/right-arrow-white.svg";
+
+// The following is required to stop "npm build" from transpiling mapbox code.
+// notice the exclamation point in the import.
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
+mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 export interface ChainPredicate {
   (chain: IChain): boolean;
