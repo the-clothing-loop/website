@@ -57,11 +57,11 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
             <div className={classes.actionsWrapper}>
               <Typography component="p" className={classes.p}>
                 I am not a minor and accept and agree to
-                <a href="/terms-of-use" className={classes.a}>
+                <a href="/terms-of-use" target="_blank" className={classes.a}>
                   Terms of Use
                 </a>
                 and
-                <a href="/privacy-policy" className={classes.a}>
+                <a href="/privacy-policy" target="_blank" className={classes.a}>
                   Privacy Policy
                 </a>
                 *
@@ -92,7 +92,7 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
             can unsubscribe via the unsubscribe option at the bottom of the
             newsletter.
             <br /> Read more about our
-            <a href="/privacy-policy"> Privacy Policy</a>
+            <a href="/privacy-policy" target="_blank"> Privacy Policy</a>
           </DialogContentText>
         </DialogContent>
         <DialogActions>

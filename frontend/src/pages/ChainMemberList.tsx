@@ -368,6 +368,3 @@ const HeadRowTableCell = ({ children, ...props }: { children?: any }) => {
 };
 
 export default ChainMemberList;
-function t(arg0: string): string {
-  throw new Error("Function not implemented.");
-}
