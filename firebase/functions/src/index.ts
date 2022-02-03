@@ -144,6 +144,7 @@ export const createChain = functions
         radius,
         categories,
         published: false,
+        chainAdmin: uid
       });
       db.collection("users").doc(uid).update("chainId", chainData.id);
       await admin.auth().setCustomUserClaims(uid, {
@@ -164,7 +165,7 @@ export const addUserToChain = functions
   .https.onCall(async (data: any, context: functions.https.CallableContext) => {
     functions.logger.debug("updateUserToChain parameters", data);
 
-    const [uid, chainId] = [data.uid, data.chainId];
+    const {uid, chainId} = data;
 
     if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
       const userReference = db.collection("users").doc(uid);
@@ -185,6 +186,8 @@ export const addUserToChain = functions
               role: context.auth?.token?.role,
             });
         }
+
+        notifyChainAdmin(chainId, uid);
       }
     } else {
       throw new functions.https.HttpsError(
@@ -194,6 +197,38 @@ export const addUserToChain = functions
     }
   });
 
+const notifyChainAdmin = async (chainId: string, newUserId: string) => {
+  const chainData = await db.collection("chains").doc(chainId).get();
+  const chainAdminUid = await chainData.get("chainAdmin");
+
+  const adminUserAuthData = await admin.auth().getUser(chainAdminUid);
+  const adminName = adminUserAuthData.displayName;
+  const adminEmail = adminUserAuthData.email;
+
+  const newUserAuthData = await admin.auth().getUser(newUserId);
+  const name = newUserAuthData.displayName;
+  const email = newUserAuthData.email;
+  const phone = newUserAuthData.phoneNumber;
+
+  db.collection("mail").add({
+    to: adminEmail,
+    message: {
+      subject: "A participant just joined your Loop!",
+      html: ` <p>Hi, ${adminName}</p>
+                        <p>A new participant just joined your loop</p>
+                        <p>Please find below all contacts:</p>
+                        <ul>
+                          <li>Name: ${name}</li>
+                          <li>Email: ${email}</li>
+                          <li>Phone: ${phone}</li>
+                        </ul>
+                        <p>Best,</p>
+                        <p>The Clothing Loop team</p>
+                `,
+    },
+  });
+};
+  
 export const updateUser = functions
   .region(region)
   .https.onCall(async (data: any, context: functions.https.CallableContext) => {
