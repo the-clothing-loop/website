@@ -194,17 +194,17 @@ export const addUserToChain = functions
   });
 
 const notifyChainAdmin = async (chainId: string, newUserId: string) => {
-  const chainData = await db.collection("chains").doc(chainId).get();
-  const chainAdminUid = await chainData.get("chainAdmin");
+  const chain = await db.collection("chains").doc(chainId).get();
+  const chainAdminUid = await chain.get("chainAdmin");
 
-  const adminUserAuthData = await admin.auth().getUser(chainAdminUid);
-  const adminName = adminUserAuthData.displayName;
-  const adminEmail = adminUserAuthData.email;
+  const chainAdmin = await admin.auth().getUser(chainAdminUid);
+  const adminName = chainAdmin.displayName;
+  const adminEmail = chainAdmin.email;
 
-  const newUserAuthData = await admin.auth().getUser(newUserId);
-  const name = newUserAuthData.displayName;
-  const email = newUserAuthData.email;
-  const phone = newUserAuthData.phoneNumber;
+  const newUser = await admin.auth().getUser(newUserId);
+  const name = newUser.displayName;
+  const email = newUser.email;
+  const phone = newUser.phoneNumber;
 
   db.collection("mail").add({
     to: adminEmail,
