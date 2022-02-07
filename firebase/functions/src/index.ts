@@ -183,7 +183,7 @@ export const addUserToChain = functions
           });
         }
 
-        notifyChainAdmin(chainId, uid);
+        await notifyChainAdmin(chainId, uid);
       }
     } else {
       throw new functions.https.HttpsError(
@@ -206,7 +206,7 @@ const notifyChainAdmin = async (chainId: string, newUserId: string) => {
   const email = newUser.email;
   const phone = newUser.phoneNumber;
 
-  db.collection("mail").add({
+  await db.collection("mail").add({
     to: adminEmail,
     message: {
       subject: "A participant just joined your Loop!",
