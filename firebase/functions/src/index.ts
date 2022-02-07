@@ -211,8 +211,8 @@ const notifyChainAdmin = async (chainId: string, newUserId: string) => {
     message: {
       subject: "A participant just joined your Loop!",
       html: ` <p>Hi, ${adminName}</p>
-                        <p>A new participant just joined your loop</p>
-                        <p>Please find below all contacts:</p>
+                        <p>A new participant just joined your loop.</p>
+                        <p>Please find below the participant's contact information:</p>
                         <ul>
                           <li>Name: ${name}</li>
                           <li>Email: ${email}</li>
