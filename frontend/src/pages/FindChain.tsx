@@ -255,7 +255,6 @@ const FindChain = () => {
         onViewportChange={(newView: IViewPort) => setViewport(newView)}
         onClick={handleMapClick}
         ref={mapRef}
-        scrollZoom={false}
       >
         <Source
           id="chains"
@@ -340,7 +339,7 @@ const FindChain = () => {
                 margin: "0",
               }}
             >
-              315
+              415
             </p>
           </button>
         </Marker>
