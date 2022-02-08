@@ -66,10 +66,31 @@ export const createUser = functions
         handleCodeInApp: false,
         url: functions.config().clothingloop.base_domain,
       });
-    const verificationEmail =
-      `Hi ${name},<br><br>` +
-      `Click <a href="${verificationLink}">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>` +
-      "Regards,<br>The clothing-loop team!";
+    const verificationEmail = `<p>Hello ${name} and welcome to the Clothing Loop!,</p>
+
+      <p>Thank you for making the step to create a more sustainable world together.</p>
+      <p>We are super happy to have you. Please find our manual in the attachment to see how to proceed.</p>
+
+      <p>Firstly, we need you to verify your email address by clicking  <a href="${verificationLink}">here</a></p>
+
+      <p>Next steps for loop hosts:"
+      <p>Right now everything is set up, but the loop is not live. When you are ready, login and navigate to the admin tab. To make the loop active, set the slider to 'visible'.</p>
+      <p>Don't wait too long, as someone else may beat you to the chase and start a loop in the same area. And even though there can be multiple loops in the same area, it may cause a bit of confusion.</p>
+     
+      <p>Next steps for participants:</p>
+      <p>What happens next?</p>
+      <p>Each Loop has a local host that coordinates the specific Loop voluntarily. He/she/they will receive your application, and get in touch with further info. Please be patient, sometimes this can take up to four weeks, depending on the available time of the host.</p>
+      <p>Of course, you want to start swapping right away, which we applaud obviously!</p>
+      <p>What you can do in the meantime is start scanning your closet for items that are ready to go on adventures with somebody else.</p>
+      <p>You can check if they need some repairs, depilling or a little wash, so they will become an even better addition to our travelling swap bags. </p>
+      <p>Please note, it's a mutual effort to keep the bag a surprise for everyone. This way we are not just passing on a bag of clothes but a bag of happy stories and care!</p>
+      <p>Don't worry if you do not find something in the very first bag. </p>
+
+      <p>Furthermore, we love to grow as fast as possible to make the most impact. The sooner the better! So, another thing you can help us with is spread the word amongst your family, friends and neighbours. The earth will be eternally grateful.</p>
+      <p>Happy swapping!</p>
+
+      <p>Regards,</p>
+      <p>The Clothing Loop team: Nichon, Paloeka, Giulia and Mirjam</p>`;
     functions.logger.debug("sending verification email", verificationEmail);
     await db.collection("mail").add({
       to: email,
@@ -387,9 +408,17 @@ export const subscribeToNewsletter = functions
       message: {
         subject: "Thank you for subscribing to Clothing Loop",
         html: ` <p>Hi ${name},</p>
-                      <p>Thank you for subscribing!</p>
-                      <p>Regards,</p>
-                      <p>The clothing-loop team!</p>
+
+                <p>Hurrah! You are now subscribed to our newsletter.</p>
+                <p> Expect monthly updates full of inspiration, swap highlights and all kinds of wonderful Clothing Loop related stories.</p>
+              
+                <p>And please do reach out if you have exciting news or a nice Clothing Loop story you would like to share. We’d love to hear from you! <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a></p>
+                
+                <p>Changing the fashion world one swap at a time, let’s do it together!</p>
+                
+                <p>Thank you for your interest and support.</p>
+                
+               <p> Nichon, Paloeka, Giulia and Mirjam</p>
               `,
       },
     });
