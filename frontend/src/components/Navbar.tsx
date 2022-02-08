@@ -31,7 +31,7 @@ const Navbar = () => {
       {location.pathname !== "/" ? (
         <AppBar position="sticky" className={classes.header}>
           <Link to="/home" className={classes.logo}>
-            The Clothing Loop
+            The<span>Clothing</span> Loop
           </Link>
           <div className={classes.headerRight}>
             <div className={classes.headerNav}>
@@ -83,7 +83,9 @@ const Navbar = () => {
               )}
               {userData === null ? <Link to="/about">{t("about")}</Link> : null}
             </div>
-            <LanguageSwitcher />
+            {/* === START publish language switcher once Dutch loops are fully migrated
+            <LanguageSwitcher /> 
+            ===== END */}
           </div>
         </AppBar>
       ) : null}
