@@ -127,10 +127,14 @@ const theme = {
   },
 
   logo: {
-    fontSize: "24px",
+    fontSize: "38px",
     color: black,
     textTransform: "uppercase",
     lineHeight: "29.2px",
+
+    "& span": {
+      padding: "0 30px",
+    },
   },
 
   buttonOutlined: {
@@ -335,6 +339,7 @@ const theme = {
     width: "80%",
     padding: "0 2%",
     height: "100%",
+    maxWidth: "1440px",
   },
 
   formContainerLocation: {
@@ -1143,8 +1148,14 @@ const theme = {
         marginTop: "calc(549px / 2)",
         transform: "translateY(-50%)",
         display: "flex",
-        justifyContent: "end",
-        top: "50px",
+        top: "30px",
+        width: "90%",
+        justifySelf: "flex-end",
+
+        "& img": {
+          width: "100%",
+          height: "auto",
+        },
       },
 
       "& .text-wrapper": {
@@ -1398,6 +1409,17 @@ const theme = {
       lineHeight: "96.3%",
       fontWeight: "bold",
       zIndex: "1",
+      marginBottom: "1%",
+    },
+
+    "& h5": {
+      color: teal,
+      fontSize: "1.5rem",
+      lineHeight: "2rem",
+      fontWeight: "900",
+      fontFamily: "Playfair Display",
+      zIndex: "1",
+      marginTop: "1%",
     },
 
     "& .logos-wrapper": {
@@ -1523,7 +1545,7 @@ const theme = {
   },
 
   legalPagesWrapper: {
-    width: "50%",
+    width: "40%",
     maxWidth: "1440px",
     position: "relative",
     left: "50%",
@@ -1554,6 +1576,12 @@ const theme = {
           },
         },
       },
+    },
+
+    "& img": {
+      width: "100%",
+      height: "auto",
+      padding: "5% 0",
     },
   },
 };
