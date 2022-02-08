@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import { UserRecord } from "firebase-functions/lib/providers/auth";
+import {UserRecord} from "firebase-functions/lib/providers/auth";
 
 admin.initializeApp();
 
@@ -57,7 +57,7 @@ export const createUser = functions
       );
     } catch (e) {
       functions.logger.warn(`Error creating user: ${JSON.stringify(e)}`);
-      return { validationError: e };
+      return {validationError: e};
     }
     functions.logger.debug("created user", userRecord);
     const verificationLink = await admin
@@ -87,19 +87,17 @@ export const createUser = functions
     });
     if (adminEmails.includes(email)) {
       functions.logger.debug(`Adding user ${email} as admin`);
-      await admin
-        .auth()
-        .setCustomUserClaims(userRecord.uid, {
-          role: ROLE_ADMIN,
-          chainId: chainId,
-        });
+      await admin.auth().setCustomUserClaims(userRecord.uid, {
+        role: ROLE_ADMIN,
+        chainId: chainId,
+      });
     } else {
       await admin
         .auth()
-        .setCustomUserClaims(userRecord.uid, { chainId: chainId });
+        .setCustomUserClaims(userRecord.uid, {chainId: chainId});
     }
     // TODO: Subscribe user in mailchimp if needed
-    return { id: userRecord.uid };
+    return {id: userRecord.uid};
   });
 
 export const createChain = functions
@@ -144,13 +142,14 @@ export const createChain = functions
         radius,
         categories,
         published: false,
+        chainAdmin: uid,
       });
       db.collection("users").doc(uid).update("chainId", chainData.id);
       await admin.auth().setCustomUserClaims(uid, {
         chainId: chainData.id,
         role: user.customClaims?.role ?? ROLE_CHAINADMIN,
       });
-      return { id: chainData.id };
+      return {id: chainData.id};
     } else {
       throw new functions.https.HttpsError(
         "permission-denied",
@@ -164,7 +163,7 @@ export const addUserToChain = functions
   .https.onCall(async (data: any, context: functions.https.CallableContext) => {
     functions.logger.debug("updateUserToChain parameters", data);
 
-    const [uid, chainId] = [data.uid, data.chainId];
+    const {uid, chainId} = data;
 
     if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
       const userReference = db.collection("users").doc(uid);
@@ -176,15 +175,15 @@ export const addUserToChain = functions
         await userReference.update("chainId", chainId);
         // When switching chains, you're no longer an chain-admin
         if (context.auth?.token?.role === ROLE_CHAINADMIN) {
-          await admin.auth().setCustomUserClaims(uid, { chainId: chainId });
+          await admin.auth().setCustomUserClaims(uid, {chainId: chainId});
         } else {
-          await admin
-            .auth()
-            .setCustomUserClaims(uid, {
-              chainId: chainId,
-              role: context.auth?.token?.role,
-            });
+          await admin.auth().setCustomUserClaims(uid, {
+            chainId: chainId,
+            role: context.auth?.token?.role,
+          });
         }
+
+        await notifyChainAdmin(chainId, uid);
       }
     } else {
       throw new functions.https.HttpsError(
@@ -193,6 +192,38 @@ export const addUserToChain = functions
       );
     }
   });
+
+const notifyChainAdmin = async (chainId: string, newUserId: string) => {
+  const chain = await db.collection("chains").doc(chainId).get();
+  const chainAdminUid = await chain.get("chainAdmin");
+
+  const chainAdmin = await admin.auth().getUser(chainAdminUid);
+  const adminName = chainAdmin.displayName;
+  const adminEmail = chainAdmin.email;
+
+  const newUser = await admin.auth().getUser(newUserId);
+  const name = newUser.displayName;
+  const email = newUser.email;
+  const phone = newUser.phoneNumber;
+
+  await db.collection("mail").add({
+    to: adminEmail,
+    message: {
+      subject: "A participant just joined your Loop!",
+      html: ` <p>Hi, ${adminName}</p>
+                        <p>A new participant just joined your loop.</p>
+                        <p>Please find below the participant's contact information:</p>
+                        <ul>
+                          <li>Name: ${name}</li>
+                          <li>Email: ${email}</li>
+                          <li>Phone: ${phone}</li>
+                        </ul>
+                        <p>Best,</p>
+                        <p>The Clothing Loop team</p>
+                `,
+    },
+  });
+};
 
 export const updateUser = functions
   .region(region)
@@ -220,7 +251,7 @@ export const updateUser = functions
           newsletter,
           interestedSizes,
         },
-        { merge: true }
+        {merge: true}
       );
       // TODO: Update user in mailchimp if needed
       return {};
@@ -344,7 +375,7 @@ export const subscribeToNewsletter = functions
   .https.onCall(async (data: any, context: functions.https.CallableContext) => {
     functions.logger.debug("subscribeToNewsletter parameters", data);
 
-    const { name, email } = data;
+    const {name, email} = data;
 
     await db.collection("interested_users").add({
       name,
