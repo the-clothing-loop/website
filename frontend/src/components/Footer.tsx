@@ -9,6 +9,7 @@ import { makeStyles, Typography } from "@material-ui/core";
 import theme from "../util/theme";
 import { useContext } from "react";
 import { AuthContext } from "./AuthProvider";
+import InstagramIcon from "@mui/icons-material/Instagram";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -41,14 +42,23 @@ const Footer = () => {
                   <Link to="/loops/find">Finding a loop</Link>
                   <Link to="/loops/new-signup">Starting a loop</Link>
                   <Link to="/users/login">Login</Link>
-                  <Link to="/loops/new-signup">Register</Link>
                 </div>
                 <div className={classes.footerSection}>
                   <Typography component="h5">Find us</Typography>
-                  <Link to="mailto:hello@clothingloop.com">
+                  <a href="mailto:hello@clothingloop.com">
                     hello@clothingloop.org
-                  </Link>
-                  <Link to="/contact-us">Contact</Link>
+                  </a>
+                  <a
+                    href="https://www.instagram.com/theclothingloop/"
+                    target="_blank"
+                  >
+                    <InstagramIcon
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                      }}
+                    />
+                  </a>
                 </div>
               </div>
               <Newsletter />

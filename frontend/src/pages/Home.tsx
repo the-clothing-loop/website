@@ -23,7 +23,7 @@ import CirclesFrame from "../images/circles.png";
 import HorizontalArrow from "../images/horizontal_arrow.svg";
 import ArrowRightIcon from "../images/right-arrow-yellow.svg";
 import Selfies from "../images/Selfies.jpg";
-import DoorImg from "../images/numbered-bag-outdoors.png";
+import DoorImg from "../images/numbered-bag-outdoors.jpg";
 //Logos
 import SfmLogo from "../images/logos/sfm_logo.png";
 import CollActionLogo from "../images/logos/Logo-CollAction.png";
@@ -102,10 +102,10 @@ const Home = () => {
           <div className="landing-page-hero">
             <div className="hero-text-wrapper">
               <h1>
-                Swap it, <br />
+                Swap, <br />
                 <span>
                   don't <br />
-                  shop it
+                  shop!
                 </span>
               </h1>
               <p>
@@ -167,7 +167,7 @@ const Home = () => {
                 <p>
                   Want to join? We’d love to have you! Check our map and sign up
                   for a Loop in your neighbourhood. No active Loop to join in
-                  your area yet? We help you set one up! Joining is free and
+                  your area yet? We'll help you set one up! Joining is free and
                   open to everyone.
                   <a href="/loops/find">
                     <img src={HorizontalArrow} />
@@ -227,13 +227,13 @@ const Home = () => {
           <div className="text-wrapper">
             <h3>From local lockdown initiative to international success</h3>
             <p>
-              This idea started in Amsterdam during the first lockdown, and soon
-              other cities followed suit; within less than a year this local
-              initiative became the powerful movement it is today. Together we
-              have saved thousands of kilos of clothing, facilitated neighbours
-              getting to know each other, and created real behavioural change
-              towards our textile consumption. Now that’s what we call a win win
-              win!
+              This idea started in Amsterdam during the first Covid-19 lockdown,
+              and soon other cities followed suit; within less than a year this
+              local initiative became the powerful movement it is today.
+              Together we have saved thousands of kilo’s of clothing, helped
+              neighbours get to know each other, and created real behavioural
+              change towards our textile consumption. Now that’s what we call a
+              win win win!
             </p>
 
             <h5>
@@ -245,6 +245,7 @@ const Home = () => {
         <div className={classes.supportersSection}>
           <div className="background-box"></div>
           <h2>Partners & Sponsors</h2>
+          <h5>Want to support us too? We'd love to hear from you! </h5>
           <div className="logos-wrapper">
             {supporters.map((el, i) => {
               return (

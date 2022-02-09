@@ -2,6 +2,10 @@ import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import theme from "../util/theme";
 
+//media
+import PressClipping from "../images/press-clippings-site.jpg";
+import TeamImg from "../images/Team-pics.jpg";
+
 const About = () => {
   const classes = makeStyles(theme as any)();
 
@@ -11,6 +15,14 @@ const About = () => {
         {"About The Clothing Loop"}
       </Typography>
       <div className={classes.legalPagesContentWrapper}>
+        <div className="iframe-wrapper">
+          <iframe
+            src="https://player.vimeo.com/video/673700502?h=90c8532936"
+            width="640"
+            height="360"
+            allow="autoplay; fullscreen; picture-in-picture"
+          ></iframe>
+        </div>
         <Typography component="p">
           The Clothing Loop is an initiative that allows people to easily swap
           clothes with others in their own neighbourhood. It’s fun, free and
@@ -19,19 +31,20 @@ const About = () => {
           district.
         </Typography>
         <Typography component="p">
-          Do you get the bag ​delivered to your​ home? After of course getting
-          acquainted with somebody new from your neighbourhood it’s ​time to
-          shop! Take ​items you like, and put back something that is still in
-          good condition, but ready for a new owner. If you want, share a photo
-          with your latest find in the corresponding app group. Then take the
-          bag to the next neighbou​r on the list.
+          Do you get the bag ​delivered to your​ home by the person before you
+          in the Loop? ​Time to shop! Take ​items you like, and put back
+          something that is still in good condition, and ready for a new owner.
+          If you want, share a photo with your latest find in the corresponding
+          communication channel. It is so nice to see where items end up! Then
+          you bring the bag to the next person on the list. ​Not all
+          participants know each other, so it contributes enormously to a sense
+          of community in the neighbourhood.
         </Typography>
         <Typography component="p">
-          ​Not all participants know each other, so it contributes enormously to
-          a group feeling in the neighbourhood. Want to join? We’d love to have
-          you! Check our map to find one in your neighbourhood and sign up. No
-          active Loop to join in your area yet? We help you set one up! Joining
-          is free and open to everyone.
+          ​ Want to join? We’d love to have you!{" "}
+          <a href="./loops/find">Check our map</a> to find one in your
+          neighbourhood and sign up. No active Loop to join in your area yet? We
+          help you set one up! Joining is free and open to everyone.
         </Typography>
         <Typography component="p">
           This idea started in Amsterdam during the first lockdown. And it
@@ -41,9 +54,9 @@ const About = () => {
           populated areas, the system works everywhere! Because of our guidance,
           support and community building efforts, this local initiative grew
           into the powerful movement it is today. Together we have saved
-          thousands of kilo’s of clothing, facilitated neighbours getting to
-          know each other, and created real behavioural change towards our
-          textile consumption. And all of this is fun and super Corona-proof!
+          thousands of kilo’s of clothing, neighbours got to know each other,
+          and we created real behavioural change towards our textile
+          consumption. And all of this is fun and super Corona-proof!
         </Typography>
         <Typography component="p">
           Please join the movement, because if you buy only six items per year
@@ -63,9 +76,12 @@ const About = () => {
           Team:
         </Typography>
         <Typography component="p">
-          The Clothing Loop is an independent initiative within the Slow Fashion
-          Movement.
+          The Clothing Loop is an independent initiative within the{" "}
+          <a href="https://slowfashion.global/" target="_blank">
+            Slow Fashion Movement.
+          </a>
         </Typography>
+        <img src={PressClipping} alt="" style={{ position: "relative" }} />
         <Typography component="p">
           Nichon Glerum is our founder, CEO, spokesperson and living example
           that one can look like a million bucks in 100% second hand clothes.{" "}
@@ -81,7 +97,8 @@ const About = () => {
           and overall rockstar jack of all trades.
           <br />
           <br />
-          And then there is all the wonderful people that helped us out along
+          <img src={TeamImg} alt="" />
+          And then there are all the wonderful people that helped us out along
           the way: Lena for her tireless help and support through Slow Fashion
           Movement, Floortje, Eline, Brechtje, Lara, Sophie en Markoesa for
           making version 1.0 run smoothly, Nynke for her app-improving skills,
@@ -90,8 +107,8 @@ const About = () => {
           Elma and Wieke for data analyzation, Tana for the bookkeeping magic,
           Anke for the fun filming, Nikita for the brilliant edit, Team What
           Design can Do and Impact Hub for all the fun, guidance and support,
-          Eric for the coaching and last but definitely not least: all the
-          volunteers that have set up their Local loops and ran with it.
+          Erik for the coaching and last but definitely not least: all the
+          volunteers that have set up their local Loops and ran with it.
           <br />
           <br />
           Thank you!
