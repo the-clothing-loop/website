@@ -30,7 +30,7 @@
       media-src 'self'; 
       frame-src 'self'; 
       script-src 'self' blob:; 
-      child-src blob:;
+      child-src 'self' blob:;
       worker-src 'self' blob:;
       frame-ancestors 'none'
     '''
