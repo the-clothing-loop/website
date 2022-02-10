@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
         </Typography>
 
         <Typography component="p">
-          Version dated 2022, January 29th
+          Version dated 2022, February 9th
           <br />
           <br />
           The Clothing Loop is part of the foundation Slow Fashion Movement, KvK
@@ -45,12 +45,10 @@ const PrivacyPolicy = () => {
           How do we store your data? <br />
           Newsletter and communication What are your data protection rights?{" "}
           <br />
-          What are cookies? <br />
-          How do we use cookies? <br />
-          How to manage your cookies? <br />
-          Privacy policies of other websites <br />
-          Changes to our privacy policy <br />
-          How to contact us? <br />
+          What are cookies? <br /> How do we use cookies? How to manage your
+          cookies? <br />
+          Privacy policies of other websites Changes to our privacy policy How
+          to contact us? <br />
           How to contact the appropriate authorities
         </Typography>
 
@@ -62,11 +60,11 @@ const PrivacyPolicy = () => {
           The Clothing Loop collects the following data:
           <ul>
             <li>
-              Personal identification information (First name, last name, email,
+              personal identification information (First name, last name, email,
               address, phone number, gender, age, date of subscribing,
-              allocation to specific local Clothing Loop)
+              allocation to specific local Clothing Loop);
             </li>
-            <li>Input from surveys and customer panel</li>
+            <li>input from surveys and customer panel.</li>
           </ul>
         </Typography>
 
@@ -75,23 +73,23 @@ const PrivacyPolicy = () => {
         </Typography>
 
         <Typography component="p" className={classes.p}>
-          You directly provide The Clothing Loop with the data we collect We
+          You directly provide The Clothing Loop with the data we collect. We
           collect data and process data when you:
           <ul>
             <li>
-              Register online or place an order for any of our products or
-              services.
+              register online or place an order for any of our products or
+              services;
             </li>
             <li>
-              Voluntarily complete a customer survey or provide feedback on any
-              of our message boards or via email.
+              voluntarily complete a customer survey or provide feedback on any
+              of our message boards or via email;
             </li>
-            <li>Use or view our website via your browser's cookies.</li>
+            <li>use or view our website via your browser's cookies.</li>
           </ul>
           The Clothing Loop may also receive your data indirectly from the
           following sources:
           <ul>
-            <li>None</li>
+            <li>None.</li>
           </ul>
         </Typography>
 
@@ -102,33 +100,33 @@ const PrivacyPolicy = () => {
         <Typography component="p" className={classes.p}>
           The Clothing Loop collects your data so that we can:
           <ul>
-            <li>Process your registration with the Clothing Loop</li>
+            <li>process your registration with the Clothing Loop;</li>
             <li>
-              Provide your data to your local host of the local Clothing Loop in
+              provide your data to your local host of the local Clothing Loop in
               order to onboard you. Depending on the local host that can be:
-              adding to an app-group, adding in the Glide app
+              adding to an app-group, adding in the Glide app;
             </li>
             <li>
-              Within your local Clothing Loop group, when using the Glide-app,
+              within your local Clothing Loop group, when using the Glide-app,
               your address is only visible to the participants directly before
-              and after you on the route
+              and after you on the route;
             </li>
-            <li>If new people are added to the route this may change</li>
+            <li>if new people are added to the route this may change;</li>
             <li>
-              Your (first) name and phone number will be visible to all
+              your (first) name and phone number will be visible to all
               participants of your local loop. In case you need to get a bag
               delivered to you by someone other than the people directly before
               or after you on the list, they can contact you to arrange drop off
-              or pick up{" "}
+              or pick up;
             </li>
-            <li>Contact you if necessary</li>
-            <li>Improve processes and maximise impact</li>
-            <li>Process your order</li>
-            <li>Manage your account</li>
-            <li>Email you with a newsletter (when you signed up for it)</li>
+            <li>contact you if necessary;</li>
+            <li>improve processes and maximize impact;</li>
+            <li>process your order;</li>
+            <li>manage your account;</li>
+            <li>email you with a newsletter (when you signed up for it);</li>
             <li>
-              Anonymised location data to show generic area of existing local
-              Clothing Loops
+              anonymised location data to show generic area of existing local
+              Clothing Loops;
             </li>
           </ul>
         </Typography>
@@ -142,7 +140,11 @@ const PrivacyPolicy = () => {
           address) are stored by the Clothing Loop in Firebase database, which
           is a Google cloud service - more information about their privacy
           policy
-          <a href="https://firebase.google.com/support/privacy"> here</a> <br />
+          <a href="https://firebase.google.com/support/privacy" target="_blank">
+            {" "}
+            here
+          </a>{" "}
+          <br />
           <br />
           The Clothing Loop will keep your personal data for a time-period as
           long as you are enrolled with the Clothing Loop. Once this time period
@@ -161,11 +163,12 @@ const PrivacyPolicy = () => {
           When subscribed, you will receive our newsletter. This newsletter will
           always be written and composed by us, with things relevant to the
           initiative. If branded and paid for content will be relevant in the
-          future, we will always specify
+          future, we will always specify.
           <br />
-          <br /> If you have agreed to receive our newsletter, you may always
-          opt out at a later date. You can unsubscribe via the unsubscribe
-          option at the bottom of the newsletter
+          <br />
+          If you have agreed to receive our newsletter, you may always opt out
+          at a later date. You can unsubscribe via the unsubscribe option at the
+          bottom of the newsletter.
         </Typography>
 
         <Typography component="h3" className={classes.h3}>
@@ -175,30 +178,32 @@ const PrivacyPolicy = () => {
         <Typography component="p" className={classes.p}>
           The Clothing Loop would like to make sure you are fully aware of all
           of your data protection rights. Every user is entitled to the
-          following: <br />
+          following:
+          <br />
           <br />
           <ol>
             <li>
-              The right to access - You have the right to request The Clothing
-              Loop for copies of your personal data.
+              the right to access - You have the right to request The Clothing
+              Loop for copies of your personal data;
             </li>
             <li>
-              The right to correct your data: if your data changes, for example
+              the right to correct your data: if your data changes, for example
               you move or your phone number changes, and this can for some
               reason not be changed within the local loop itself by the loop
               host, then ask for your data to be removed completely and sign
-              back up
+              back up;
             </li>
             <li>
-              {" "}
-              The right to erase - You have the right to request that The
-              Clothing Loop erase your personal data 4. If you make a request,
-              we have one month to respond to you.
+              the right to erase - You have the right to request that The
+              Clothing Loop erase your personal data;
+            </li>
+            <li>
+              if you make a request, we have one month to respond to you. If you
+              would like to exercise any of these rights, please contact us at
+              our email:{" "}
+              <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
             </li>
           </ol>
-          If you would like to exercise any of these rights, please contact us
-          at our email:{" "}
-          <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
         </Typography>
 
         <Typography component="h3" className={classes.h3}>
@@ -224,10 +229,16 @@ const PrivacyPolicy = () => {
 
         <Typography component="p" className={classes.p}>
           Cookies are text files placed on your computer to collect standard
-          Internet log information and visitor behavior information. When you
+          Internet log information and visitor behaviour information. When you
           visit our websites, we may collect information from you automatically
-          through cookies or similar technology. For further information, visit
-          <a href="https://www.allaboutcookies.org/"> allaboutcookies.org.</a>
+          through cookies or similar technology.
+          <br />
+          <br />
+          For further information, visit
+          <a href="https://www.allaboutcookies.org/" target="_blank">
+            {" "}
+            allaboutcookies.org.
+          </a>
         </Typography>
 
         <Typography component="h3" className={classes.h3}>
@@ -240,12 +251,12 @@ const PrivacyPolicy = () => {
             <li>
               User session management - this is strictly used for the local loop
               hosts when they login. We save information about their login in
-              order to keep these hosts signed in
+              order to keep these hosts signed in.
             </li>
             <li>
               IP address tracking in order to retrieve the user location and use
               it to personalize the map view and the anonymised general map view
-              and loops displayed
+              and loops displayed.
             </li>
           </ul>
         </Typography>
@@ -268,8 +279,10 @@ const PrivacyPolicy = () => {
           The Clothing Loop website contains links to other websites like the
           app we created for you in Glide. The use of this app is optional. Our
           privacy policy applies only to our website, so as soon as you leave
-          www.clothingloop.org to visit a third party website, their privacy
-          policy applies
+          <a href="www.clothingloop.org" target="_blank">
+            www.clothingloop.org
+          </a>{" "}
+          to visit a third party website, their privacy policy applies
         </Typography>
 
         <Typography component="h3" className={classes.h3}>
@@ -300,7 +313,7 @@ const PrivacyPolicy = () => {
         <Typography component="p" className={classes.p}>
           Should you wish to report a complaint or if you feel that The Clothing
           Loop has not addressed your concern in a satisfactory manner, you may
-          contact Autoriteit Persoonsgegevens in the Netherlands{" "}
+          contact Autoriteit Persoonsgegevens in the Netherlands.
         </Typography>
 
         <Typography component="h3" className={classes.h3}>
