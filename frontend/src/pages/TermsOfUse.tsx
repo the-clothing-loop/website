@@ -329,16 +329,24 @@ const TermsOfUse = () => {
         </Typography>
 
         <Typography component="p" className={classes.p}>
-          Do you have any questions? Then contact us at: <br />
-          <br />
-          Email:{" "}
+          Do you have any questions? Then contact us at:
+        </Typography>
+        <Typography component="p" className={classes.p}>
+          Email:
           <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
-          <br />
-          <br /> Or by post: <br />
-          The Clothing Loop <br />
+        </Typography>
+        <Typography component="p" className={classes.p}>
+          Or by post:
+        </Typography>
+        <Typography component="p" className={classes.p}>
+          The Clothing Loop
+        </Typography>
+        <Typography component="p" className={classes.p}>
           P/A Stichting Slow Fashion Movement
-          <br /> Wethouder Frankeweg 22 H <br />
-          1098 LA Amsterdam <br />
+          <br />
+          Wethouder Frankeweg 22 H <br />
+          1098 LA Amsterdam
+          <br />
           The Netherlands
         </Typography>
       </div>

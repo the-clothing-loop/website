@@ -28,7 +28,7 @@
       style-src 'self' 'unsafe-inline' https://*.mapbox.com https://fonts.googleapis.com;; 
       font-src 'self' https://fonts.gstatic.com; 
       media-src 'self'; 
-      frame-src 'self'; 
+      frame-src 'self' https://player.vimeo.com/; 
       script-src 'self' blob:; 
       child-src 'self' blob:;
       worker-src 'self' blob:;

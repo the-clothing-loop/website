@@ -19,14 +19,12 @@ const PrivacyPolicy = () => {
           {"Privacy Policy - The Clothing Loop"}
         </Typography>
 
-        <Typography component="p">
-          Version dated 2022, February 9th
-          <br />
-          <br />
+        <Typography component="p">Version dated 2022, February 9th</Typography>
+        <Typography component="p" className={classes.p}>
           The Clothing Loop is part of the foundation Slow Fashion Movement, KvK
           85110701
-          <br />
-          <br />
+        </Typography>
+        <Typography component="p" className={classes.p}>
           We see it as our responsibility to protect your privacy according to
           the guidelines of the AVG (Algemene Verordening Gegevensbescherming)
           that entered into force on May 25th 2018. This privacy policy will
@@ -39,17 +37,22 @@ const PrivacyPolicy = () => {
         </Typography>
 
         <Typography component="p" className={classes.p}>
-          What data do we collect? <br />
-          How do we collect your data? <br />
-          How will we use your data? <br />
-          How do we store your data? <br />
-          Newsletter and communication What are your data protection rights?{" "}
-          <br />
-          What are cookies? <br /> How do we use cookies? How to manage your
-          cookies? <br />
-          Privacy policies of other websites Changes to our privacy policy How
-          to contact us? <br />
-          How to contact the appropriate authorities
+          <ul style={{ listStyleType: "none" }}>
+            <li> What data do we collect?</li>
+            <li> How do we collect your data?</li>
+            <li>How will we use your data?</li>
+            <li> How do we store your data?</li>
+            <li>
+              Newsletter and communication What are your data protection rights?
+            </li>
+            <li> What are cookies?</li>
+            <li>How do we use cookies? How to manage your cookies?</li>
+            <li>
+              Privacy policies of other websites Changes to our privacy policy
+              How to contact us?
+            </li>
+            <li> How to contact the appropriate authorities</li>
+          </ul>
         </Typography>
 
         <Typography component="h3" className={classes.h3}>
@@ -60,7 +63,7 @@ const PrivacyPolicy = () => {
           The Clothing Loop collects the following data:
           <ul>
             <li>
-              personal identification information (First name, last name, email,
+              personal identification information (first name, last name, email,
               address, phone number, gender, age, date of subscribing,
               allocation to specific local Clothing Loop);
             </li>
@@ -141,11 +144,10 @@ const PrivacyPolicy = () => {
           is a Google cloud service - more information about their privacy
           policy
           <a href="https://firebase.google.com/support/privacy" target="_blank">
-            {" "}
             here
-          </a>{" "}
-          <br />
-          <br />
+          </a>
+        </Typography>
+        <Typography component="p" className={classes.p}>
           The Clothing Loop will keep your personal data for a time-period as
           long as you are enrolled with the Clothing Loop. Once this time period
           has expired your data will be deleted by the Clothing Loop Admin team.
@@ -164,8 +166,8 @@ const PrivacyPolicy = () => {
           always be written and composed by us, with things relevant to the
           initiative. If branded and paid for content will be relevant in the
           future, we will always specify.
-          <br />
-          <br />
+        </Typography>
+        <Typography component="p" className={classes.p}>
           If you have agreed to receive our newsletter, you may always opt out
           at a later date. You can unsubscribe via the unsubscribe option at the
           bottom of the newsletter.
@@ -179,8 +181,8 @@ const PrivacyPolicy = () => {
           The Clothing Loop would like to make sure you are fully aware of all
           of your data protection rights. Every user is entitled to the
           following:
-          <br />
-          <br />
+        </Typography>
+        <Typography component="p" className={classes.p}>
           <ol>
             <li>
               the right to access - You have the right to request The Clothing
@@ -200,7 +202,7 @@ const PrivacyPolicy = () => {
             <li>
               if you make a request, we have one month to respond to you. If you
               would like to exercise any of these rights, please contact us at
-              our email:{" "}
+              our email:
               <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
             </li>
           </ol>
@@ -219,7 +221,7 @@ const PrivacyPolicy = () => {
           their children, in order to prevent data collection without parental
           consent. In case you are convinced that we collected data without
           parental consent from a minor, please contact
-          <a href="mailto:hello@clothingloop.org"> hello@clothingloop.org </a>
+          <a href="mailto:hello@clothingloop.org">hello@clothingloop.org </a>
           and we will erase the information.
         </Typography>
 
@@ -232,11 +234,10 @@ const PrivacyPolicy = () => {
           Internet log information and visitor behaviour information. When you
           visit our websites, we may collect information from you automatically
           through cookies or similar technology.
-          <br />
-          <br />
+        </Typography>
+        <Typography component="p" className={classes.p}>
           For further information, visit
           <a href="https://www.allaboutcookies.org/" target="_blank">
-            {" "}
             allaboutcookies.org.
           </a>
         </Typography>
@@ -281,7 +282,7 @@ const PrivacyPolicy = () => {
           privacy policy applies only to our website, so as soon as you leave
           <a href="www.clothingloop.org" target="_blank">
             www.clothingloop.org
-          </a>{" "}
+          </a>
           to visit a third party website, their privacy policy applies
         </Typography>
 
@@ -322,11 +323,13 @@ const PrivacyPolicy = () => {
 
         <Typography component="p" className={classes.p}>
           Do you have any questions? Then contact us at: <br />
-          <br />
+        </Typography>
+        <Typography component="p" className={classes.p}>
           Email:{" "}
           <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
-          <br />
-          <br /> Or by post: <br />
+        </Typography>
+        <Typography component="p" className={classes.p}>
+          Or by post: <br />
           The Clothing Loop <br />
           P/A Stichting Slow Fashion Movement
           <br /> Wethouder Frankeweg 22 H <br />

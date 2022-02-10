@@ -86,7 +86,6 @@ const About = () => {
           work!)
         </Typography>
         <Typography component="h3" className={classes.h3}>
-          {" "}
           Team:
         </Typography>
         <Typography component="p">
@@ -98,19 +97,22 @@ const About = () => {
         <img src={PressClipping} alt="" style={{ position: "relative" }} />
         <Typography component="p">
           Nichon Glerum is our founder, CEO, spokesperson and living example
-          that one can look like a million bucks in 100% second hand clothes.{" "}
-          <br />
+          that one can look like a million bucks in 100% second hand clothes.
+        </Typography>
+        <Typography component="p">
           Giulia Mummolo is responsible for the development of this amazing
           website you are visiting right now.
-          <br />
+        </Typography>
+        <Typography component="p">
           Mirjam Pennings is sinking her teeth in getting us some funding to be
           able to keep making our impact and a great support on almost any
           subject or activity.
-          <br />
+        </Typography>
+        <Typography component="p">
           Paloeka de Koning is our fearless intern, Glide app helpdesk wizard
           and overall rockstar jack of all trades.
-          <br />
-          <br />
+        </Typography>
+        <Typography component="p">
           <img src={TeamImg} alt="" />
           And then there are all the wonderful people that helped us out along
           the way: Lena for her tireless help and support through Slow Fashion
@@ -123,10 +125,8 @@ const About = () => {
           Design can Do and Impact Hub for all the fun, guidance and support,
           Erik for the coaching and last but definitely not least: all the
           volunteers that have set up their local Loops and ran with it.
-          <br />
-          <br />
-          Thank you!
         </Typography>
+        <Typography component="p">Thank you!</Typography>
       </div>
     </div>
   );
