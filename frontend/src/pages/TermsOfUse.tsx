@@ -34,14 +34,14 @@ const TermsOfUse = () => {
               www.clothingloop.org and the application (together and separately
               hereinafter also referred to as the <span>"Platform"</span>) of
               and offered by The Clothing Loop (hereinafter referred to as “The
-              Clothing Loop" or <span>"we</span> or <span>"us"</span>) as part
+              Clothing Loop" or <span>"we"</span> or <span>"us"</span>) as part
               of Stichting Slow Fashion Movement, (KVK 85110701) and (b) the
-              terms of your participation in The Clothing Loop.{" "}
+              terms of your participation in The Clothing Loop.
             </li>
             <li>
-              By using the Platform, you (hereinafter also referred to as the{" "}
+              By using the Platform, you (hereinafter also referred to as the
               <span>"User"</span>) confirm that you are of legal age in your
-              jurisdiction of residence to enter into a binding agreement.{" "}
+              jurisdiction of residence to enter into a binding agreement.
             </li>
           </ol>
         </Typography>
@@ -58,13 +58,13 @@ const TermsOfUse = () => {
             </li>
             <li>
               We reserve the right to unilaterally amend these Terms of Use. We
-              will endeavor to inform you of any (material) changes to the Terms
-              of Use in a timely manner. In addition, we may at any time modify
-              the Platform, change and/or delete data or restrict or discontinue
-              the use of the Platform or your participation in The Clothing
-              Loop, without any liability on any grounds whatsoever towards you
-              or other third parties and without you being able to derive any
-              rights therefrom.
+              will endeavour to inform you of any (material) changes to the
+              Terms of Use in a timely manner. In addition, we may at any time
+              modify the Platform, change and/or delete data or restrict or
+              discontinue the use of the Platform or your participation in The
+              Clothing Loop, without any liability on any grounds whatsoever
+              towards you or other third parties and without you being able to
+              derive any rights therefrom.
             </li>
           </ol>
         </Typography>
@@ -129,7 +129,6 @@ const TermsOfUse = () => {
                   local Clothing Loops;
                 </li>
                 <li>
-                  {" "}
                   may not add to the Platform (or via any other channels used by
                   a local Loop) any texts, data or files that have illegal or
                   offensive content, for example, discriminatory, racist, sexist
@@ -206,7 +205,7 @@ const TermsOfUse = () => {
               prohibit you from participating in The Clothing Loop, in whole or
               in part, temporarily or permanently, and recover any damages
               and/or costs from you. We may also inform the competent
-              institutions and authorities.{" "}
+              institutions and authorities.
             </li>
           </ol>
         </Typography>
