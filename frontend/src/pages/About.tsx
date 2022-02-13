@@ -16,12 +16,26 @@ const About = () => {
       </Typography>
       <div className={classes.legalPagesContentWrapper}>
         <div className="iframe-wrapper">
-          <iframe
-            src="https://player.vimeo.com/video/673700502?h=90c8532936"
-            width="640"
-            height="360"
-            allow="autoplay; fullscreen; picture-in-picture"
-          ></iframe>
+          <div
+            style={{
+              padding: "56.25% 0 0 0",
+              position: "relative",
+              left: "50%",
+            }}
+          >
+            <iframe
+              src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+              allow="autoplay; fullscreen; picture-in-picture"
+              style={{
+                position: "absolute",
+                top: "0",
+                left: "0",
+                width: "100%",
+                height: "100%",
+              }}
+            ></iframe>
+          </div>
+          <script src="https://player.vimeo.com/api/player.js"></script>
         </div>
         <Typography component="p">
           The Clothing Loop is an initiative that allows people to easily swap
@@ -72,7 +86,6 @@ const About = () => {
           work!)
         </Typography>
         <Typography component="h3" className={classes.h3}>
-          {" "}
           Team:
         </Typography>
         <Typography component="p">
@@ -84,19 +97,22 @@ const About = () => {
         <img src={PressClipping} alt="" style={{ position: "relative" }} />
         <Typography component="p">
           Nichon Glerum is our founder, CEO, spokesperson and living example
-          that one can look like a million bucks in 100% second hand clothes.{" "}
-          <br />
+          that one can look like a million bucks in 100% second hand clothes.
+        </Typography>
+        <Typography component="p">
           Giulia Mummolo is responsible for the development of this amazing
           website you are visiting right now.
-          <br />
+        </Typography>
+        <Typography component="p">
           Mirjam Pennings is sinking her teeth in getting us some funding to be
           able to keep making our impact and a great support on almost any
           subject or activity.
-          <br />
+        </Typography>
+        <Typography component="p">
           Paloeka de Koning is our fearless intern, Glide app helpdesk wizard
           and overall rockstar jack of all trades.
-          <br />
-          <br />
+        </Typography>
+        <Typography component="p">
           <img src={TeamImg} alt="" />
           And then there are all the wonderful people that helped us out along
           the way: Lena for her tireless help and support through Slow Fashion
@@ -109,10 +125,8 @@ const About = () => {
           Design can Do and Impact Hub for all the fun, guidance and support,
           Erik for the coaching and last but definitely not least: all the
           volunteers that have set up their local Loops and ran with it.
-          <br />
-          <br />
-          Thank you!
         </Typography>
+        <Typography component="p">Thank you!</Typography>
       </div>
     </div>
   );
