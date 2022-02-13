@@ -263,7 +263,7 @@
   .landing-page-wrapper {
     position: absolute;
     top: 0;
-    z-index: 11111;
+    z-index: 900;
     background-color: black;
     width: 100vw;
     height: 100vh;
