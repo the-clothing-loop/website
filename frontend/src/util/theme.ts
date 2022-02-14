@@ -75,7 +75,7 @@ const theme = {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    zIndex: "11111111",
+    zIndex: "1000",
     height: "10vh",
     maxWidth: "1440px",
     left: "50%",
@@ -463,6 +463,11 @@ const theme = {
       fontSize: "1.5rem",
       textTransform: "uppercase",
       fontWeight: "bolder",
+    },
+
+    "& h2": {
+      fontSize: "1.5rem",
+      fontWeight: 500,
     },
 
     "& h3": {
