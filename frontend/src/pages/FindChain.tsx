@@ -118,7 +118,7 @@ const FindChain = () => {
         latitude: matchingChain?.latitude,
         longitude: matchingChain?.longitude,
         width: "100vw",
-        height: "75vh",
+        height: "80vh",
         zoom: 8,
         maxZoom: 12,
       });
@@ -138,11 +138,11 @@ const FindChain = () => {
       }
 
       setViewport({
-        latitude: 0,
-        longitude: 0,
+        latitude: 26.3351,
+        longitude: 17.2283,
         width: "100vw",
-        height: "75vh",
-        zoom: 1,
+        height: "80vh",
+        zoom: 1.45,
         maxZoom: 12,
       });
     })();

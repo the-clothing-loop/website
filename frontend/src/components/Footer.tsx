@@ -66,14 +66,16 @@ const Footer = () => {
           ) : null}
 
           <div className={classes.footerLegalWrapper} id="footer">
-            <div className={classes.legalLinks}>
-              <Link to="/terms-of-use">Terms of service</Link>
-              <Link to="/privacy-policy">Privacy</Link>
-            </div>
+            <div className={classes.legalLinksWrapper}>
+              <div className={classes.legalLinks}>
+                <Link to="/terms-of-use">Terms of service</Link>
+                <Link to="/privacy-policy">Privacy</Link>
+              </div>
 
-            <p>
-              <span>The Clothing Loop</span> &copy; 2022
-            </p>
+              <p>
+                <span>The Clothing Loop</span> &copy; 2022
+              </p>
+            </div>
           </div>
         </div>
       ) : null}

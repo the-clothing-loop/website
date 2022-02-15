@@ -121,7 +121,6 @@ const Home = () => {
                 className="slide"
                 onClick={() => history.push("/loops/find")}
               >
-                {" "}
                 {"Find a loop"}
                 <img src={ArrowRightIcon} alt="" className="btn-icon" />
               </button>
@@ -129,12 +128,7 @@ const Home = () => {
             <div className="hero-image-wrapper">
               <div className="image-wrapper">
                 <img src={HeroImg} alt="Kledingketting" />
-              </div>
-
-              <div className={classes.circleBtn}>
-                <a href="#section-one">
-                  {<ArrowDownwardIcon className="icon" />}
-                </a>
+                <p>photo: Martijn van den Dobbelsteen/de Brug</p>
               </div>
             </div>
           </div>
@@ -169,14 +163,13 @@ const Home = () => {
                   for a Loop in your neighbourhood. No active Loop to join in
                   your area yet? We'll help you set one up! Joining is free and
                   open to everyone.
-                  <a href="/loops/find">
-                    <img src={HorizontalArrow} />
-                  </a>
                 </p>
               </div>
             </div>
             <div className={classes.imageAnimatedWrapper}>
-              <img src={MapImage} alt="map image" />
+              <a href="./loops/find">
+                <img src={MapImage} alt="map image" />
+              </a>
             </div>
             <img className="circles-frame" src={CirclesFrame} />
           </div>
@@ -211,7 +204,7 @@ const Home = () => {
 
         <section className={classes.projectNumbersWrapper}>
           <div className="inner-wrapper">
-            <h1>What we do</h1>
+            <h1>Our impact</h1>
             <Counters />
           </div>
 
@@ -245,7 +238,12 @@ const Home = () => {
         <div className={classes.supportersSection}>
           <div className="background-box"></div>
           <h2>Partners & Sponsors</h2>
-          <h5>Want to support us too? We'd love to hear from you! </h5>
+          <h5>
+            Want to support us too?{" "}
+            <a href="mailto:hello@clothingloop.org">
+              We'd love to hear from you!
+            </a>{" "}
+          </h5>
           <div className="logos-wrapper">
             {supporters.map((el, i) => {
               return (
