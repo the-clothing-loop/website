@@ -1642,10 +1642,15 @@ const theme = {
       position: "relative",
       width: "50%",
       minHeight: "60vh",
-    }
+    },
   },
-
-
+  
+  dialogCloseButton: {
+    position: "absolute",
+    right: "8px",
+    top: "8px",
+    color: grey
+  },
 
 };
 export default theme;

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Material
-import { makeStyles, Dialog } from "@material-ui/core";
+import { makeStyles, Dialog, IconButton } from "@material-ui/core";
+import CloseIcon from "@mui/icons-material/Close";
 
 // Project resources
 import theme from "../../util/theme";
@@ -10,15 +11,27 @@ import BagImage from "../../images/Utrecht.jpeg";
 
 const SignupDialog = () => {
   const classes = makeStyles(theme as any)();
-  const [showDialog, setShowDialog] = useState(true);
+  const [showDialog, setShowDialog] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (!localStorage.getItem("newsletterDialogSeen")) {
+        setShowDialog(true);
+      }
+    }, 30_000);
+  }, []);
+
+  if (!showDialog) {
+    return <></>;
+  }
+
+  const onClose = () => {
+    setShowDialog(false);
+    localStorage.setItem("newsletterDialogSeen", "true");
+  };
 
   return (
-    <Dialog
-      open={showDialog}
-      onClose={() => setShowDialog(false)}
-      maxWidth="lg"
-      fullWidth={true}
-    >
+    <Dialog open={showDialog} onClose={onClose} maxWidth="lg" fullWidth={true}>
       <div className={`newsletter-dialog ${classes.newsletterDialog}`}>
         <div
           style={{ backgroundImage: `url("${BagImage}")` }}
@@ -28,6 +41,13 @@ const SignupDialog = () => {
           <Newsletter />
         </div>
       </div>
+      <IconButton
+        aria-label="close"
+        onClick={onClose}
+        className={classes.dialogCloseButton}
+      >
+        <CloseIcon />
+      </IconButton>
     </Dialog>
   );
 };
