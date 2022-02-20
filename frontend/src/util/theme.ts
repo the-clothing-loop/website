@@ -3,7 +3,7 @@ const white = "#ffff";
 const teal = "#48808B";
 const yellow = "#F7C86F";
 const aqua = " #D5ECDF";
-const lightBlue = "#98D9DE";
+const lightBlue = "#ECF2F3";
 const turquoise = "#518D7E";
 const bronze = "#C58C41";
 const grey = "#A5A5A5";
@@ -1630,7 +1630,7 @@ const theme = {
   newsletterDialog: {
     position: "relative",
     display: "flex",
-    // height: "100%"
+    backgroundColor: lightBlue,
 
     "& .dialog-image": {
       backgroundSize: "150%",
