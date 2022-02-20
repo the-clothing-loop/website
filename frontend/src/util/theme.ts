@@ -1626,5 +1626,26 @@ const theme = {
       padding: "5% 0",
     },
   },
+
+  newsletterDialog: {
+    position: "relative",
+    display: "flex",
+    // height: "100%"
+
+    "& .dialog-image": {
+      backgroundSize: "150%",
+      backgroundPosition: "center bottom",
+      backgroundRepeat: "no-repeat",
+    },
+
+    "& .dialog-section": {
+      position: "relative",
+      width: "50%",
+      minHeight: "60vh",
+    }
+  },
+
+
+
 };
 export default theme;

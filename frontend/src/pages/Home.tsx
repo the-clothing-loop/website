@@ -1,26 +1,24 @@
 // Material
 import React from "react";
 import { Helmet } from "react-helmet";
-import { makeStyles, Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
 import theme from "../util/theme";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 // Project resources
 import { ChainsContext } from "../components/ChainsProvider";
 import LandingPageMobile from "./LandingPageMobile";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
+import SignupDialog from "../components/Newsletter/SignupDialog";
 
 //Media
 import HeroImg from "../images/Kirsten-Rosan.jpg";
-import SectionThreeImg from "../images/image_3.png";
 import BagImage from "../images/Utrecht.jpeg";
 import MapImage from "../images/map_image.png";
 import ClothesImage from "../images/Nichon_zelfportret.jpg";
 import CirclesFrame from "../images/circles.png";
-import HorizontalArrow from "../images/horizontal_arrow.svg";
 import ArrowRightIcon from "../images/right-arrow-yellow.svg";
 import Selfies from "../images/Selfies.jpg";
 import DoorImg from "../images/numbered-bag-outdoors.jpg";
@@ -90,6 +88,8 @@ const Home = () => {
         <title>Clothing-Loop | Home</title>
         <meta name="description" content="Home" />
       </Helmet>
+
+      <SignupDialog />
 
       <div id="landing-page-desktop" className={classes.landingPageDesktop}>
         <div className={classes.landingPageWrapper}>

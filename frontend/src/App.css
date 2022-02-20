@@ -690,7 +690,11 @@
   .newsletter {
     min-height: 448px;
     padding: 80px 256px 56px 80px;
-    background: rgb(72, 128, 139, 0.1);
+    background: rgb(236, 242, 243);
+  }
+
+  .newsletter-dialog .newsletter {
+    padding: 75px;
   }
 
   #signup-title {
