@@ -1,149 +1,278 @@
-import { useState, useEffect, useRef, createRef } from "react";
-import Carousel from "react-material-ui-carousel";
+import { useRef, useState } from "react";
 
 //MUI
-import { Typography } from "@material-ui/core";
+import { Typography, Grid, Paper, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import theme from "../util/theme";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+const useStyles = makeStyles({
+  headingTypographyRoot: {
+    fontFamily: "Playfair Display",
+    fontWeight: "bold",
+    fontStyle: "normal",
+    fontSize: "80px",
+    lineHeight: "77.04px",
+    color: "#C58C41",
+    marginLeft: "30px",
+  },
+  carouselContainer: {
+    position: "relative",
+    overflow: "hidden",
+    transform: "translateX(-50%)",
+    left: "50%",
+    maxWidth: "1440px",
+    zIndex: 1,
+  },
+
+  carouselContentContainer: {
+    display: "flex",
+    minWidth: "2880px",
+    position: "relative",
+    justifyContent: "space-evenly",
+  },
+
+  carouselElement: {
+    width: "400px",
+    height: "450px",
+    border: "1px solid #C58C41",
+    padding: "50px 45px",
+    display: "grid",
+    gap: "20px",
+    position: "relative",
+    margin: "0 30px",
+    borderRadius: "0px",
+    backgroundColor: "white",
+  },
+
+  contentTypographyRoot: {
+    fontStyle: "normal",
+    fontSize: "18px",
+    lineHeight: "32px",
+    color: "#C58C41",
+  },
+
+  testimonialAuthor: {
+    fontFamily: "Playfair Display",
+    fontSize: "24px",
+    color: "#C58C41",
+    textAlign: "right",
+    fontWeight: "bold",
+  },
+
+  carouselButtonActive: {
+    width: "60px",
+    height: "60px",
+    backgroundColor: "#48808B",
+    borderRadius: "50%",
+    padding: "0",
+    margin: "10px",
+
+    "&:hover": {
+      backgroundColor: "white",
+      border: "1px solid #48808B",
+
+      "& .css-i4bv87-MuiSvgIcon-root": {
+        color: "#48808B !important",
+      },
+    },
+  },
+
+  carouselButtonInactive: {
+    width: "60px",
+    height: "60px",
+    backgroundColor: "#48808B",
+    borderRadius: "50%",
+    padding: "0",
+    margin: "10px",
+    opacity: "0.4",
+
+    "&:hover": {
+      backgroundColor: "white",
+      border: "1px solid #48808B",
+
+      "& .css-i4bv87-MuiSvgIcon-root": {
+        color: "#48808B !important",
+      },
+    },
+  },
+  backgroundElementRoot: {
+    position: "absolute",
+    background: "#F7C86F",
+    width: "90%",
+    bottom: "0",
+    opacity: "0.3",
+    height: "400px",
+    zIndex: 0,
+  },
+});
 
 const Content = [
   {
-    name: "bla bla",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    author: "author name",
+    content:
+      "I think it's great to be able to 'shop' regularly without burdening your wallet or the environment",
   },
   {
-    name: "bla bla",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    author: "author name",
+    content:
+      "Someone in my loop landed a new job. Guess who's dress she wore to her interview?",
   },
   {
-    name: "bla bla",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    author: "author name",
+    content:
+      "The best part is trying on things you would never try in the store, and then realise you really like them",
   },
 
   {
-    name: "another",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    author: "author name",
+    content:
+      "Teach them young! My daughters, aged 13 and 16, regularly find something cool in the bag. I love how this teaches them that clothes can perfectly well be sourced second-hand. Sustainability and environmental awareness should be an important part of any upbringing, in my opinion!",
   },
   {
-    name: "another",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    author: "author name",
+    content:
+      "A nice bonus is: you get to know people in your neighbourhood, usually neighbours who already have a somewhat green heart. This makes it a small step – if you really need something but would rather not buy it – to ask if someone in the Loop can perhaps lend it to you, like ski pants or a costume for a theme party!",
   },
   {
-    name: "another",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    author: "author name",
+    content:
+      "After the third bag I receive it dawns on me: what an incredible amount of clothes we all have in the closet!",
   },
 ];
 
 const Testimonials = () => {
-  const classes = makeStyles(theme as any)();
+  const classes = useStyles();
 
   const refDiv = useRef<HTMLHeadingElement>(null);
 
-  const [prev, setPrevious] = useState(false);
-  const [next, setNext] = useState(false);
+  const [next, setNext] = useState(true);
+  const [previous, setPrevious] = useState(false);
 
   let count = 0;
   let size = 1440;
-
+  console.log(count);
   const nextClick = () => {
+    console.log(count);
     if (count >= 1) return;
 
     if (refDiv.current !== null) {
       refDiv.current.style.transition = "transform 0.4s ease-in-out";
-      setNext(true);
-      setPrevious(false);
+
       count++;
       refDiv.current.style.transform = "translateX(" + -size * count + "px)";
+
+      // setNext(false);
     }
   };
 
   const prevClick = () => {
-
+    console.log(count);
     if (count <= 0) return;
     if (refDiv.current !== null) {
       refDiv.current.style.transition = "transform 0.4s ease-in-out";
-      setNext(false);
-      setPrevious(true);
+
       count--;
       refDiv.current.style.transform = "translateX(" + -size * count + "px)";
+
+      // setNext(true);
     }
-
-
   };
 
   return (
-    <div style={{ width: "100%" }}>
-      <Typography
-        component="h1"
-        style={{
-          fontFamily: "Playfair Display",
-          fontWeight: "700",
-          fontStyle: "normal",
-          fontSize: "80px",
-          lineHeight: "77.04px",
-        }}
-      >
-        Testimonials
-      </Typography>
+    <div
+      style={{
+        width: "100%",
+        maxWidth: "1440px",
+        position: "relative",
+        padding: "10% 0",
+        left: "50%",
+        transform: "translateX(-50%)",
+      }}
+    >
       <div>
-        <button onClick={prevClick}>previous</button>
-        <button onClick={nextClick}>next</button>
-      </div>
+        <Typography
+          classes={{ root: classes.headingTypographyRoot }}
+          component="h1"
+        >
+          Testimonials
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "20px 0",
+            marginRight:'30px'
+          }}
+        >
+          <Button
+            classes={{
+              root: previous
+                ? classes.carouselButtonActive
+                : classes.carouselButtonInactive,
+            }}
+            onClick={prevClick}
+          >
+            <ArrowBackIcon
+              style={{ color: "white", width: "30px", height: "30px" }}
+            />
+          </Button>
+          <Button
+            classes={{
+              root: next
+                ? classes.carouselButtonActive
+                : classes.carouselButtonInactive,
+            }}
+            onClick={nextClick}
+          >
+            <ArrowForwardIcon
+              style={{ color: "white", width: "30px", height: "30px" }}
+            />
+          </Button>
+        </div>
 
-      <div
-        ref={refDiv}
-        style={{
-          display: "flex",
-          width: "max-content",
-          position: "relative",
-        }}
-      >
-        {Content.map((testimonial, i) => {
-          return (
-            <div
-              key={i}
-              style={{
-                maxWidth: "450px",
-                maxHeight: "400px",
-                border: "1px solid pink",
-                padding: "80px 45px",
-                display: "grid",
-                gap: "35px",
-                position: "relative",
-                margin: "0 20px",
-              }}
-            >
-              <FormatQuoteIcon
-                style={{
-                  position: "absolute",
-                  color: "pink",
-                  transform: "rotate(-180deg)",
-                  width: "100px",
-                  height: "100px",
-                  opacity: "0.5",
-                  top: "0",
-                  left: "0",
-                }}
-              />
+        <Grid container classes={{ root: classes.carouselContainer }}>
+          <Grid
+            classes={{ root: classes.carouselContentContainer }}
+            ref={refDiv}
+          >
+            {Content.map((testimonial, i) => {
+              return (
+                <Paper classes={{ root: classes.carouselElement }} key={i}>
+                  <FormatQuoteIcon
+                    style={{
+                      position: "absolute",
+                      color: "#C58C41",
+                      transform: "rotate(-180deg)",
+                      width: "120px",
+                      height: "120px",
+                      opacity: "0.4",
+                      top: "0",
+                      left: "0",
+                    }}
+                  />
 
-              <Typography component="p">{testimonial.text}</Typography>
-              <Typography
-                component="p"
-                style={{
-                  fontFamily: "Playfair Display",
-                  fontSize: "24px",
-                  color: "pink",
-                  textAlign: "right",
-                  fontWeight: "900",
-                }}
-              >
-                - {testimonial.name}
-              </Typography>
-            </div>
-          );
-        })}
+                  <Typography
+                    component="p"
+                    classes={{ root: classes.contentTypographyRoot }}
+                  >
+                    {testimonial.content}
+                  </Typography>
+                  <Typography
+                    classes={{ root: classes.testimonialAuthor }}
+                    component="p"
+                  >
+                    - {testimonial.author}
+                  </Typography>
+                </Paper>
+              );
+            })}
+          </Grid>
+        </Grid>
       </div>
+      <Grid classes={{ root: classes.backgroundElementRoot }}></Grid>
     </div>
   );
 };
