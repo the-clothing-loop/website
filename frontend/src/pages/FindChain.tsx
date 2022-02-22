@@ -15,7 +15,7 @@ import * as GeoJSONTypes from "geojson";
 import mapboxgl from "mapbox-gl";
 
 // Material UI
-import { Button } from "@material-ui/core";
+import { Button, Dialog } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -54,6 +54,38 @@ const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
 
+const DutchLoopsCard = () => {
+  const { t } = useTranslation();
+  const classes = makeStyles(theme as any)();
+  return (
+    <Card className={classes.card} style={{ maxWidth: "500px" }}>
+      <CardContent className={classes.cardContent}>
+        <Typography component="h2" gutterBottom>
+          {t("areYouInTheNetherlands")}
+        </Typography>
+        <Typography component="p" id="description">
+          {t("migratingDutchLoops")}
+        </Typography>
+
+        <CardActions className={classes.cardsAction}>
+          <Link
+            to={{
+              pathname:
+                "https://docs.google.com/forms/d/e/1FAIpQLSfeyclg6SjM3GRBbaBprFZhoha3Q9a7l3xs1s9eIDpKeVzi6w/viewform",
+            }}
+            target="_blank"
+            key={"btn-join"}
+            className={classes.button}
+          >
+            {t("join")}
+            <img src={RightArrow} alt="" />
+          </Link>
+        </CardActions>
+      </CardContent>
+    </Card>
+  );
+}
+
 const FindChain = () => {
   const history = useHistory();
   const { t } = useTranslation();
@@ -67,6 +99,7 @@ const FindChain = () => {
   const [viewport, setViewport] = useState<IViewPort | {}>({});
   const [selectedChain, setSelectedChain] = useState<IChain | null>(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [showDutchLoopsDialog, setShowDutchLoopsDialog] = useState(false);
 
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState<string | null>(null);
@@ -85,7 +118,7 @@ const FindChain = () => {
         latitude: matchingChain?.latitude,
         longitude: matchingChain?.longitude,
         width: "100vw",
-        height: "75vh",
+        height: "80vh",
         zoom: 8,
         maxZoom: 12,
       });
@@ -105,15 +138,32 @@ const FindChain = () => {
       }
 
       setViewport({
-        latitude: 0,
-        longitude: 0,
+        latitude: 26.3351,
+        longitude: 17.2283,
         width: "100vw",
-        height: "75vh",
-        zoom: 1,
+        height: "80vh",
+        zoom: 1.45,
         maxZoom: 12,
       });
     })();
   }, []);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (location) => {
+        const { longitude, latitude } = location.coords;
+        fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken.mapboxApiAccessToken}&types=country`
+        ).then(
+          (response) => response.json()
+        ).then((data) => {
+          if (data.features[0].properties.short_code === "nl") {
+            setShowDutchLoopsDialog(true);
+          }
+        });
+      }
+    );
+  }, [])
 
   if (!accessToken.mapboxApiAccessToken) {
     return <div>Access tokens not configured</div>;
@@ -247,6 +297,13 @@ const FindChain = () => {
         handleFindChainCallback={handleFindChainCallback}
       />
 
+      <Dialog
+        open={showDutchLoopsDialog}
+        onClose={() => setShowDutchLoopsDialog(false)}
+      > 
+        <DutchLoopsCard />
+      </Dialog>
+
       <ReactMapGL
         className={"main-map"}
         mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
@@ -351,33 +408,7 @@ const FindChain = () => {
             dynamicPosition={true}
             onClose={() => setNetherlandsPopup(false)}
           >
-            <Card className={classes.card} style={{ maxWidth: "500px" }}>
-              <CardContent className={classes.cardContent}>
-                <Typography component="h1" gutterBottom>
-                  {"The Netherlands"}
-                </Typography>
-                <Typography component="p" id="description">
-                  {
-                    "We are in the process of migrating all Dutch loops into this platform. If you are in the Netherlands and want to join, please signup following the link below.  "
-                  }
-                </Typography>
-
-                <CardActions className={classes.cardsAction}>
-                  <Link
-                    to={{
-                      pathname:
-                        "https://docs.google.com/forms/d/e/1FAIpQLSfeyclg6SjM3GRBbaBprFZhoha3Q9a7l3xs1s9eIDpKeVzi6w/viewform",
-                    }}
-                    target="_blank"
-                    key={"btn-join"}
-                    className={classes.button}
-                  >
-                    {t("join")}
-                    <img src={RightArrow} alt="" />
-                  </Link>
-                </CardActions>
-              </CardContent>
-            </Card>
+            <DutchLoopsCard />
           </Popup>
         ) : null}
         {/* ===end  TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}

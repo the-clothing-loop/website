@@ -263,7 +263,7 @@
   .landing-page-wrapper {
     position: absolute;
     top: 0;
-    z-index: 11111;
+    z-index: 900;
     background-color: black;
     width: 100vw;
     height: 100vh;
@@ -688,7 +688,6 @@
   }
 
   .newsletter {
-    max-width: 720px;
     min-height: 448px;
     padding: 80px 256px 56px 80px;
     background: rgb(72, 128, 139, 0.1);

@@ -45,7 +45,7 @@ const App = () => {
                 <Navbar />
                 <div className="container">
                   <Switch>
-                    <Route exact path="/home" component={Home} />
+                    <Route exact path="/" component={Home} />
                     <Route exact path="/thankyou" component={Thankyou} />
                     <Route
                       exact
@@ -93,7 +93,6 @@ const App = () => {
                     />
                     <Route exact path="/loops" component={ChainsList} />
                     <Route exact path="/contact-us" component={Contacts} />
-                    <Route exact path="/" component={LandingPage} />
                     <Route exact path="/about" component={About} />
                     <Route
                       exact

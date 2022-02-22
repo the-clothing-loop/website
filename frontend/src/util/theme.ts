@@ -75,7 +75,7 @@ const theme = {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    zIndex: "11111111",
+    zIndex: "1000",
     height: "10vh",
     maxWidth: "1440px",
     left: "50%",
@@ -232,7 +232,7 @@ const theme = {
     height: "86px",
     borderRadius: "50%",
     outline: `solid 1px ${turquoise}`,
-    transition: " outline 0.6s linear",
+    transition: " outline 0.3s linear",
     margin: " 0",
     left: "50%",
     transform: "translateY(-50%)",
@@ -463,6 +463,11 @@ const theme = {
       fontSize: "1.5rem",
       textTransform: "uppercase",
       fontWeight: "bolder",
+    },
+
+    "& h2": {
+      fontSize: "1.5rem",
+      fontWeight: 500,
     },
 
     "& h3": {
@@ -751,11 +756,6 @@ const theme = {
   footerWrapper: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    paddingLeft: "50px",
-    maxWidth: "1440px",
-    left: "50%",
-    transform: " translateX(-50%)",
-    position: "relative",
   },
 
   footerSections: {
@@ -763,6 +763,11 @@ const theme = {
     flexDirection: "row",
     flexWrap: "wrap",
     padding: "1% 0",
+    maxWidth: "720px",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    paddingLeft: "50px",
   },
 
   footerSection: {
@@ -794,10 +799,7 @@ const theme = {
 
   footerLegalWrapper: {
     backgroundColor: teal,
-    display: "flex",
-    flexDirection: "row",
     width: "100%",
-    justifyContent: "space-between",
 
     "& p": {
       margin: "27px 80px",
@@ -814,6 +816,16 @@ const theme = {
     },
   },
 
+  legalLinksWrapper: {
+    maxWidth: "1440px",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
   newLoopMap: {
     cursor: "pointer",
     filter: "drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25))",
@@ -827,6 +839,7 @@ const theme = {
 
   legalLinks: {
     margin: "27px 80px",
+
     "& a": {
       fontStyle: "normal",
       fontSize: "1rem",
@@ -978,6 +991,16 @@ const theme = {
             position: "relative",
             top: "-10%",
           },
+
+          "& p": {
+            position: "absolute",
+            color: "white",
+            margin: "0",
+            bottom: "138px",
+            right: "-120px",
+            transform: " rotate(-90deg)",
+            fontSize: "12px",
+          },
         },
         "& .icon": {
           width: "50%",
@@ -993,7 +1016,6 @@ const theme = {
   },
 
   sectionsWrapper: {
-    marginTop: "5% 0",
     maxWidth: "1440px",
     left: "50%",
     transform: " translateX(-50%)",
@@ -1002,12 +1024,12 @@ const theme = {
     "& .single-section-wrapper": {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      margin: "5% 0",
+      margin: "100px 0",
       position: "relative",
 
       "& .image-wrapper": {
         position: "relative",
-        height: "90%",
+        height: "100%",
         overflow: "hidden",
 
         "& img": {
@@ -1028,7 +1050,9 @@ const theme = {
       "& .text-wrapper": {
         textAlign: "left",
         paddingLeft: "2%",
-        marginBottom: "2%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: " space-between",
 
         "& h1": {
           fontFamily: "'Playfair Display', serif",
@@ -1045,12 +1069,14 @@ const theme = {
           fontSize: "5rem",
           margin: "0",
           fontFamily: "'Playfair Display', serif",
+          lineHeight: "4.8rem",
         },
 
         "& p": {
           color: turquoise,
           fontSize: "1.25rem",
           lineHeight: "2.5rem",
+          margin: "0",
 
           "& a": {
             fontFamily: "'Playfair Display', serif",
@@ -1067,7 +1093,7 @@ const theme = {
     "& .single-section-wrapper-2": {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      margin: "5% 0",
+      margin: "20% 0",
       position: "relative",
 
       "& .text-wrapper": {
@@ -1126,7 +1152,7 @@ const theme = {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
       position: "relative",
-      marginTop: "10%",
+      margin: "15% 0",
 
       "& .circles-frame": {
         position: "absolute",
@@ -1287,7 +1313,7 @@ const theme = {
 
   imageAnimatedWrapper: {
     outline: `solid 1px ${teal}`,
-    transition: " outline 0.6s linear",
+    transition: " outline 0.5s linear",
     margin: " 0.5em",
     position: "relative",
     overflow: "hidden",
@@ -1309,6 +1335,11 @@ const theme = {
   projectNumbersWrapper: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
+    maxWidth: "1440px",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    margin: "50px 0",
 
     "& .inner-wrapper": {
       backgroundColor: turquoise,
@@ -1338,7 +1369,7 @@ const theme = {
   aboutSectionWrapper: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    margin: "5% 0",
+    padding: "100px 0",
     position: "relative",
     maxWidth: "1440px",
     left: "50%",
@@ -1356,7 +1387,6 @@ const theme = {
       paddingRight: "15%",
       paddingLeft: "5%",
       position: "relative",
-      bottom: "15%",
 
       "& h3": {
         color: teal,
@@ -1364,6 +1394,7 @@ const theme = {
         fontSize: "3rem",
         lineHeight: "4rem",
         fontWeight: "bold",
+        margin: "0",
       },
 
       "& p": {
@@ -1390,7 +1421,8 @@ const theme = {
     display: "flex",
     flexDirection: "column",
     position: "relative",
-    margin: "5% 5%",
+    margin: "0 5%",
+    paddingBottom:'100px',
 
     "& .background-box": {
       position: "absolute",
@@ -1420,6 +1452,16 @@ const theme = {
       fontFamily: "Playfair Display",
       zIndex: "1",
       marginTop: "1%",
+
+      "& a": {
+        color: teal,
+        fontSize: "1.5rem",
+        lineHeight: "2rem",
+        fontWeight: "900",
+        fontFamily: "Playfair Display",
+        zIndex: "1",
+        marginTop: "1%",
+      },
     },
 
     "& .logos-wrapper": {
