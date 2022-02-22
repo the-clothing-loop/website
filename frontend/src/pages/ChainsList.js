@@ -52,7 +52,7 @@ const ChainsList = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Loops List</title>
+        <title>The Clothing Loop | Loops List</title>
         <meta name="description" content="Loops List" />
       </Helmet>
       <div>

@@ -62,7 +62,7 @@ const ChainEdit = () => {
   return !chain ? null : (
     <>
       <Helmet>
-        <title>Clothing-Loop | Edit Loop details</title>
+        <title>The Clothing Loop | Edit Loop details</title>
         <meta name="description" content="Edit Loop details" />
       </Helmet>
       <div className={classes.formContainerLocation}>

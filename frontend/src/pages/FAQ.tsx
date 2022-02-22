@@ -11,8 +11,8 @@ const FAQ = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | FAQ's</title>
-        <meta name="description" content="Home" />
+        <title>The Clothing Loop | FAQ's</title>
+        <meta name="description" content="frequently asked questions" />
       </Helmet>
 
       <div className={classes.legalPagesWrapper}>

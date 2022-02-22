@@ -80,7 +80,7 @@ const Signup = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Create user for new loop</title>
+        <title>The Clothing Loop | Create user for new Loop</title>
         <meta name="description" content="Create user for new loop" />
       </Helmet>
       <Formik

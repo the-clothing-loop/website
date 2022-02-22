@@ -56,7 +56,7 @@ const Login = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Login</title>
+        <title>The Clothing Loop | Login</title>
         <meta name="description" content="Login" />
       </Helmet>
 

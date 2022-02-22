@@ -22,7 +22,7 @@ export const Logout = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Logout</title>
+        <title>The Clothing Loop | Logout</title>
         <meta name="description" content="Logout" />
       </Helmet>
       {done && (

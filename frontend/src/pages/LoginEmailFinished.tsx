@@ -40,7 +40,7 @@ const LoginEmailFinished = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Login finishing</title>
+        <title>The Clothing Loop | Login finishing</title>
         <meta name="description" content="Login finishing" />
       </Helmet>
       {finished && (

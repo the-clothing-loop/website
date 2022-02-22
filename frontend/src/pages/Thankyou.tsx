@@ -19,7 +19,7 @@ const Thankyou = (props: any) => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Thank you</title>
+        <title>The Clothing Loop | Thank you</title>
         <meta name="description" content="Thank you" />
       </Helmet>
 

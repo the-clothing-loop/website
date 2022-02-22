@@ -11,8 +11,8 @@ const TermsOfUse = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Terms of Use</title>
-        <meta name="description" content="Home" />
+        <title>The Clothing Loop | Terms of Use</title>
+        <meta name="description" content="Terms of use" />
       </Helmet>
       <div className={classes.legalPagesWrapper}>
         <Typography component="h1" className={classes.pageTitle}>

@@ -107,7 +107,7 @@ const Signup = () => {
     return (
       <>
         <Helmet>
-          <title>Clothing-Loop | Signup user</title>
+          <title>The Clothing Loop | Signup user</title>
           <meta name="description" content="Signup user" />
         </Helmet>
         <Formik

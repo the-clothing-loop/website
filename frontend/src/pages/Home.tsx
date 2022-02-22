@@ -87,7 +87,7 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Home</title>
+        <title>The Clothing Loop | Home</title>
         <meta name="description" content="Home" />
       </Helmet>
 

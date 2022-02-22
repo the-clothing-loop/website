@@ -16,8 +16,8 @@ const MessageSubmitted = (props: any) => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Message Submitted</title>
-        <meta name="description" content="Thank you" />
+        <title>The Clothing Loop | Message Submitted</title>
+        <meta name="description" content="message submitted" />
       </Helmet>
 
       <div className={classes.pageGrid}>

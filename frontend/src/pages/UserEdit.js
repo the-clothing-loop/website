@@ -105,7 +105,7 @@ const UserEdit = () => {
   return !user ? null : (
     <>
       <Helmet>
-        <title>Clothing-Loop | Edit user</title>
+        <title>The Clothing Loop | Edit user</title>
         <meta name="description" content="Edit user" />
       </Helmet>
       <Formik

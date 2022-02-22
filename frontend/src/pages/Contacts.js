@@ -63,8 +63,8 @@ const Contacts = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Contacts</title>
-        <meta name="description" content="Contacts" />
+        <title>The Clothing Loop | Contact Us</title>
+        <meta name="description" content="Contact us" />
       </Helmet>
       <div className={classes.contactFormWrapper}>
         <OneColumnLayout>

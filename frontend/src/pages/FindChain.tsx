@@ -288,7 +288,7 @@ const FindChain = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Find Loop</title>
+        <title>The Clothing Loop | Find Loop</title>
         <meta name="description" content="Find Loop" />
       </Helmet>
 

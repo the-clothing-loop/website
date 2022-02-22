@@ -146,7 +146,7 @@ const ChainMemberList = () => {
   return !chain || !users ? null : (
     <>
       <Helmet>
-        <title>Clothing-Loop | Loop Members</title>
+        <title>The Clothing Loop | Loop Members</title>
         <meta name="description" content="Loop Members" />
       </Helmet>
 
