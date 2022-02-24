@@ -136,12 +136,12 @@ const useStyles = makeStyles({
 
 const Content = [
   {
-    author: "Anke",
+    author: "Roos",
     content:
       "I think it's great to be able to 'shop' regularly without burdening your wallet or the environment",
   },
   {
-    author: "Participant",
+    author: "Unknown",
     content:
       "Teach them young! My daughters, aged 13 and 16, regularly find something cool in the bag. I love how this teaches them that clothes can perfectly well be sourced second-hand. Sustainability and environmental awareness should be an important part of any upbringing, in my opinion!",
   },
