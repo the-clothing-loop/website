@@ -263,7 +263,7 @@
   .landing-page-wrapper {
     position: absolute;
     top: 0;
-    z-index: 11111;
+    z-index: 900;
     background-color: black;
     width: 100vw;
     height: 100vh;
@@ -601,11 +601,18 @@
     position: absolute;
     background-color: #edf2f3;
     width: 80%;
-    height: 400px;
+    height: 450px;
     left: 50%;
     transform: translateX(-50%);
     margin-top: 80px;
     max-width: 1440px;
+  }
+
+  .login-wrapper {
+    max-width: 1440px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .login-wrapper {
@@ -622,7 +629,7 @@
 
   .login-container {
     position: relative;
-    
+    padding-top: 100px;
   }
 
   .login-content {
@@ -656,11 +663,6 @@
     justify-content: center;
   }
 
-  #signup-title {
-    margin: 5% 0;
-    text-align: center;
-  }
-
   .chain-member-list {
     background-color: #ffffff;
     padding: 56px 88px;
@@ -692,10 +694,30 @@
   }
 
   .newsletter {
-    max-width: 720px;
     min-height: 448px;
     padding: 80px 256px 56px 80px;
     background: rgb(72, 128, 139, 0.1);
+  }
+
+  #signup-title {
+    margin: 5% 0;
+    text-align: center;
+  }
+
+  .MuiSwitch-track {
+    border: 2px solid #48808b !important;
+  }
+
+  .iframe-wrapper {
+    padding: 5% 0;
+  }
+
+  iframe {
+    border: none;
+    width: 100%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 

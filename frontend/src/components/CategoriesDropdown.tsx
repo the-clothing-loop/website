@@ -78,7 +78,7 @@ const CategoriesDropdown: React.FC<IProps> = ({
             <ListItemText
               primary={t(value)}
               className={classes.listItemTextSizes}
-              style={{ textTransform: "uppercase" }}
+              style={{ textTransform: "capitalize" }}
             />
           </MenuItem>
         ))}

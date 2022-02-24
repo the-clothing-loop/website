@@ -12,8 +12,10 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import * as GeoJSONTypes from "geojson";
 
+import mapboxgl from "mapbox-gl";
+
 // Material UI
-import { Button } from "@material-ui/core";
+import { Button, Dialog } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -36,6 +38,12 @@ import { FindChainSearchBarContainer } from "../components/FindChain";
 // Media
 import RightArrow from "../images/right-arrow-white.svg";
 
+// The following is required to stop "npm build" from transpiling mapbox code.
+// notice the exclamation point in the import.
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
+mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+
 export interface ChainPredicate {
   (chain: IChain): boolean;
 }
@@ -45,6 +53,38 @@ export const defaultTruePredicate = () => true;
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
+
+const DutchLoopsCard = () => {
+  const { t } = useTranslation();
+  const classes = makeStyles(theme as any)();
+  return (
+    <Card className={classes.card} style={{ maxWidth: "500px" }}>
+      <CardContent className={classes.cardContent}>
+        <Typography component="h2" gutterBottom>
+          {t("areYouInTheNetherlands")}
+        </Typography>
+        <Typography component="p" id="description">
+          {t("migratingDutchLoops")}
+        </Typography>
+
+        <CardActions className={classes.cardsAction}>
+          <Link
+            to={{
+              pathname:
+                "https://docs.google.com/forms/d/e/1FAIpQLSfeyclg6SjM3GRBbaBprFZhoha3Q9a7l3xs1s9eIDpKeVzi6w/viewform",
+            }}
+            target="_blank"
+            key={"btn-join"}
+            className={classes.button}
+          >
+            {t("join")}
+            <img src={RightArrow} alt="" />
+          </Link>
+        </CardActions>
+      </CardContent>
+    </Card>
+  );
+}
 
 const FindChain = () => {
   const history = useHistory();
@@ -59,10 +99,10 @@ const FindChain = () => {
   const [viewport, setViewport] = useState<IViewPort | {}>({});
   const [selectedChain, setSelectedChain] = useState<IChain | null>(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [showDutchLoopsDialog, setShowDutchLoopsDialog] = useState(false);
 
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState<string | null>(null);
-
   const [netherlandsPopup, setNetherlandsPopup] = useState(false);
 
   const [filterChainPredicate, setFilterChainPredicate] =
@@ -78,7 +118,7 @@ const FindChain = () => {
         latitude: matchingChain?.latitude,
         longitude: matchingChain?.longitude,
         width: "100vw",
-        height: "95vh",
+        height: "80vh",
         zoom: 8,
         maxZoom: 12,
       });
@@ -98,15 +138,32 @@ const FindChain = () => {
       }
 
       setViewport({
-        latitude: 0,
-        longitude: 0,
+        latitude: 26.3351,
+        longitude: 17.2283,
         width: "100vw",
-        height: "75vh",
-        zoom: 1,
+        height: "80vh",
+        zoom: 1.45,
         maxZoom: 12,
       });
     })();
   }, []);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (location) => {
+        const { longitude, latitude } = location.coords;
+        fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken.mapboxApiAccessToken}&types=country`
+        ).then(
+          (response) => response.json()
+        ).then((data) => {
+          if (data.features[0].properties.short_code === "nl") {
+            setShowDutchLoopsDialog(true);
+          }
+        });
+      }
+    );
+  }, [])
 
   if (!accessToken.mapboxApiAccessToken) {
     return <div>Access tokens not configured</div>;
@@ -240,6 +297,13 @@ const FindChain = () => {
         handleFindChainCallback={handleFindChainCallback}
       />
 
+      <Dialog
+        open={showDutchLoopsDialog}
+        onClose={() => setShowDutchLoopsDialog(false)}
+      > 
+        <DutchLoopsCard />
+      </Dialog>
+
       <ReactMapGL
         className={"main-map"}
         mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
@@ -371,6 +435,51 @@ const FindChain = () => {
                 </CardActions>
               </CardContent>
             </Card>
+          </Popup>
+        ) : null}
+        {/* ===end  TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}
+
+        {/* ====start TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}
+        <Marker
+          key={"marker-netherlands"}
+          longitude={4.9041}
+          latitude={52.3676}
+        >
+          <button
+            onClick={() => {
+              setNetherlandsPopup(true);
+            }}
+            style={{
+              width: "40px",
+              height: "40px",
+              backgroundColor: "#98D9DE",
+              borderRadius: "50%",
+              borderStyle: "solid",
+              borderWidth: "1px",
+              borderColor: "#98D9DE",
+              boxShadow: " 0px 0px 15px #98D9DE",
+              position: "absolute",
+            }}
+          >
+            <p
+              style={{
+                color: "white",
+                margin: "0",
+              }}
+            >
+              415
+            </p>
+          </button>
+        </Marker>
+        {netherlandsPopup ? (
+          <Popup
+            longitude={4.9041}
+            latitude={52.3676}
+            closeOnClick={true}
+            dynamicPosition={true}
+            onClose={() => setNetherlandsPopup(false)}
+          >
+            <DutchLoopsCard />
           </Popup>
         ) : null}
         {/* ===end  TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}

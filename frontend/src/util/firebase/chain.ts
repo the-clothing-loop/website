@@ -29,7 +29,9 @@ export interface ICreateChain {
 // Return chain data for one chain by id
 const getChain = async (chainId: string) => {
   const snapshot = await db.collection("chains").doc(chainId).get();
-  return { id: chainId, ...snapshot.data() } as IChain;
+  if (snapshot.exists) {
+    return { id: chainId, ...snapshot.data() } as IChain;
+  }
 };
 
 // Return data for all chains

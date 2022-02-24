@@ -27,8 +27,7 @@ export const ChainNotFound = ({
       </Typography>
 
       <Typography component="p">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        {t("ThereIsNoActiveLoopInYourRegion")}
       </Typography>
 
       <div>
@@ -38,7 +37,7 @@ export const ChainNotFound = ({
           color="primary"
           onClick={backAction}
           key={"btn-submit-1"}
-          href="#"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSe3tb2KGckaXna4j8zQOaO7lyII6P0DzG7HjreHFYd_9c08Dg/viewform"
         >
           {t("joinWaitingList")}
         </Button>

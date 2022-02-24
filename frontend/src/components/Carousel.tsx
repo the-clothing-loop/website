@@ -1,6 +1,6 @@
 //media
-import CarouselImgOne from "../images/carousel_image_one.png";
-import CarouselImgTwo from "../images/carousel_image_two.png";
+import CarouselImgOne from "../images/Tassen-voor-carrousel3.jpg";
+import CarouselImgTwo from "../images/Tassen-voor-carrousel2.jpg";
 
 const Carousel = () => {
   const featuredImages = [CarouselImgOne, CarouselImgTwo, CarouselImgOne];

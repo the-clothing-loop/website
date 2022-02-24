@@ -26,7 +26,7 @@ import FormActions from "../components/formActions";
 
 //Media
 import RightArrow from "../images/right-arrow-white.svg";
-import NumberedBag from "../images/numbered-bag-outdoors.png";
+import JoinLoopImg from "../images/Join-Loop.jpg";
 
 const Signup = () => {
   const history = useHistory();
@@ -62,8 +62,12 @@ const Signup = () => {
     (async () => {
       if (chainId) {
         const chain = await getChain(chainId);
-        setChain(chain);
-        setChainGender(chain.categories.gender);
+        if (chain !== undefined) {
+          setChain(chain);
+          setChainGender(chain.categories.gender);
+        } else {
+          console.error(`chain ${chainId} does not exist`)
+        }
       }
     })();
   }, [chainId]);
@@ -114,11 +118,12 @@ const Signup = () => {
             newsletter: false,
           }}
           validationSchema={validate}
+          validateOnChange={false}
           onSubmit={(v) => onSubmit(v)}
         >
           {(formik) => (
             <div className="signup-wrapper">
-              <TwoColumnLayout img={NumberedBag}>
+              <TwoColumnLayout img={JoinLoopImg}>
                 <div id="container" className="signup-content">
                   <Typography variant="h3" className={classes.pageTitle}>
                     {t("join")}

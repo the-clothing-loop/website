@@ -36,7 +36,8 @@ const theme = {
   p: {
     fontFamily: "Montserrat !important",
     fontSize: "1rem",
-    lineHeight: "19.5px",
+    lineHeight: "21px",
+    textAlign: "left",
   },
   a: {
     color: teal,
@@ -58,6 +59,16 @@ const theme = {
     fontFamily: "Montserrat",
   },
 
+  h3: {
+    fontFamily: "Montserrat",
+    fontWeight: "600",
+    fontStyle: "normal",
+    color: teal,
+    fontSize: "24px",
+    lineHeight: "22px",
+    padding: "2% 0",
+  },
+
   header: {
     position: "relative",
     padding: "0 80px",
@@ -66,7 +77,7 @@ const theme = {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    zIndex: "11111111",
+    zIndex: "1000",
     height: "10vh",
     maxWidth: "1440px",
     left: "50%",
@@ -118,10 +129,14 @@ const theme = {
   },
 
   logo: {
-    fontSize: "24px",
+    fontSize: "38px",
     color: black,
     textTransform: "uppercase",
     lineHeight: "29.2px",
+
+    "& span": {
+      padding: "0 30px",
+    },
   },
 
   buttonOutlined: {
@@ -219,7 +234,7 @@ const theme = {
     height: "86px",
     borderRadius: "50%",
     outline: `solid 1px ${turquoise}`,
-    transition: " outline 0.6s linear",
+    transition: " outline 0.3s linear",
     margin: " 0",
     left: "50%",
     transform: "translateY(-50%)",
@@ -271,6 +286,7 @@ const theme = {
     position: "relative",
     left: "50%",
     transform: "translate(-50%)",
+    height: "100%",
 
     "& .MuiGrid-item": {
       padding: "0",
@@ -316,7 +332,7 @@ const theme = {
     left: "50%",
     top: "50%",
     transform: "translate(-50%)",
-    width: "50%",
+    width: "60%",
   },
   formContainer: {
     position: "relative",
@@ -324,7 +340,10 @@ const theme = {
     transform: " translateX(-50%)",
     width: "80%",
     padding: "0 2%",
+    height: "100%",
+    maxWidth: "1440px",
   },
+
   formContainerLocation: {
     maxWidth: "1440px",
     position: "relative",
@@ -366,7 +385,7 @@ const theme = {
     transform: "translateY(-50%)",
     objectFit: "cover",
     width: "100%",
-    height: "auto",
+    height: "100%",
   },
 
   formSubmitActions: {
@@ -436,7 +455,7 @@ const theme = {
     fontWeight: "bold",
   },
   card: {
-    maxWidth: "500px",
+    minWidth: "500px",
     backgroundColor: "#EDF2F3",
     borderRadius: "0",
   },
@@ -446,6 +465,11 @@ const theme = {
       fontSize: "1.5rem",
       textTransform: "uppercase",
       fontWeight: "bolder",
+    },
+
+    "& h2": {
+      fontSize: "1.5rem",
+      fontWeight: 500,
     },
 
     "& h3": {
@@ -491,12 +515,13 @@ const theme = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    maxWidth: "800px",
 
     "& div": {
       position: "relative",
       left: "50%",
       transform: "translateX(-50%)",
-      width: "60%",
+      width: "80%",
 
       "& h3": {
         fontFamily: "Playfair Display",
@@ -733,11 +758,6 @@ const theme = {
   footerWrapper: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    paddingLeft: "50px",
-    maxWidth: "1440px",
-    left: "50%",
-    transform: " translateX(-50%)",
-    position: "relative",
   },
 
   footerSections: {
@@ -745,6 +765,11 @@ const theme = {
     flexDirection: "row",
     flexWrap: "wrap",
     padding: "1% 0",
+    maxWidth: "720px",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    paddingLeft: "50px",
   },
 
   footerSection: {
@@ -776,10 +801,7 @@ const theme = {
 
   footerLegalWrapper: {
     backgroundColor: teal,
-    display: "flex",
-    flexDirection: "row",
     width: "100%",
-    justifyContent: "space-between",
 
     "& p": {
       margin: "27px 80px",
@@ -796,6 +818,16 @@ const theme = {
     },
   },
 
+  legalLinksWrapper: {
+    maxWidth: "1440px",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
   newLoopMap: {
     cursor: "pointer",
     filter: "drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25))",
@@ -809,6 +841,7 @@ const theme = {
 
   legalLinks: {
     margin: "27px 80px",
+
     "& a": {
       fontStyle: "normal",
       fontSize: "1rem",
@@ -960,6 +993,16 @@ const theme = {
             position: "relative",
             top: "-10%",
           },
+
+          "& p": {
+            position: "absolute",
+            color: "white",
+            margin: "0",
+            bottom: "138px",
+            right: "-120px",
+            transform: " rotate(-90deg)",
+            fontSize: "12px",
+          },
         },
         "& .icon": {
           width: "50%",
@@ -975,7 +1018,6 @@ const theme = {
   },
 
   sectionsWrapper: {
-    marginTop: "5% 0",
     maxWidth: "1440px",
     left: "50%",
     transform: " translateX(-50%)",
@@ -984,12 +1026,12 @@ const theme = {
     "& .single-section-wrapper": {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      margin: "5% 0",
+      margin: "100px 0",
       position: "relative",
 
       "& .image-wrapper": {
         position: "relative",
-        height: "90%",
+        height: "100%",
         overflow: "hidden",
 
         "& img": {
@@ -1010,7 +1052,9 @@ const theme = {
       "& .text-wrapper": {
         textAlign: "left",
         paddingLeft: "2%",
-        marginBottom: "2%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: " space-between",
 
         "& h1": {
           fontFamily: "'Playfair Display', serif",
@@ -1027,12 +1071,14 @@ const theme = {
           fontSize: "5rem",
           margin: "0",
           fontFamily: "'Playfair Display', serif",
+          lineHeight: "4.8rem",
         },
 
         "& p": {
           color: turquoise,
           fontSize: "1.25rem",
           lineHeight: "2.5rem",
+          margin: "0",
 
           "& a": {
             fontFamily: "'Playfair Display', serif",
@@ -1049,7 +1095,7 @@ const theme = {
     "& .single-section-wrapper-2": {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      margin: "5% 0",
+      margin: "20% 0",
       position: "relative",
 
       "& .text-wrapper": {
@@ -1084,6 +1130,9 @@ const theme = {
             textAlign: "left",
             fontSize: "1.25rem",
             height: " 2rem",
+            fontWeight: "400",
+            lineHeight: "32px",
+            letterSpacing: "0em",
 
             "& a": {
               display: "block",
@@ -1105,11 +1154,11 @@ const theme = {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
       position: "relative",
-      marginTop: "10%",
+      margin: "15% 0",
 
       "& .circles-frame": {
         position: "absolute",
-        left: "20%",
+        left: "15%",
         top: "-10%",
       },
 
@@ -1127,7 +1176,14 @@ const theme = {
         marginTop: "calc(549px / 2)",
         transform: "translateY(-50%)",
         display: "flex",
-        justifyContent: "end",
+        top: "30px",
+        width: "90%",
+        justifySelf: "flex-end",
+
+        "& img": {
+          width: "100%",
+          height: "auto",
+        },
       },
 
       "& .text-wrapper": {
@@ -1162,6 +1218,9 @@ const theme = {
             textAlign: "left",
             fontSize: "1.25rem",
             height: " 2rem",
+            fontWeight: "400",
+            lineHeight: "32px",
+            letterSpacing: "0em",
           },
         },
       },
@@ -1256,7 +1315,7 @@ const theme = {
 
   imageAnimatedWrapper: {
     outline: `solid 1px ${teal}`,
-    transition: " outline 0.6s linear",
+    transition: " outline 0.5s linear",
     margin: " 0.5em",
     position: "relative",
     overflow: "hidden",
@@ -1278,6 +1337,11 @@ const theme = {
   projectNumbersWrapper: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
+    maxWidth: "1440px",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    margin: "50px 0",
 
     "& .inner-wrapper": {
       backgroundColor: turquoise,
@@ -1299,12 +1363,7 @@ const theme = {
 
       "& *": {
         position: "relative",
-        width: "50%",
-
-        "& *": {
-          height: "100%",
-          width: "100%",
-        },
+        width: "100%",
       },
     },
   },
@@ -1312,7 +1371,7 @@ const theme = {
   aboutSectionWrapper: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    margin: "5% 0",
+    padding: "100px 0",
     position: "relative",
     maxWidth: "1440px",
     left: "50%",
@@ -1330,7 +1389,6 @@ const theme = {
       paddingRight: "15%",
       paddingLeft: "5%",
       position: "relative",
-      bottom: "15%",
 
       "& h3": {
         color: teal,
@@ -1338,6 +1396,7 @@ const theme = {
         fontSize: "3rem",
         lineHeight: "4rem",
         fontWeight: "bold",
+        margin: "0",
       },
 
       "& p": {
@@ -1348,12 +1407,14 @@ const theme = {
       },
 
       "& h5": {
-        color: teal,
-        fontSize: "1.5rem",
-        lineHeight: "2rem",
-        fontWeight: "900",
-        textDecoration: "underline",
-        fontFamily: "Playfair Display",
+        "& a": {
+          color: teal,
+          fontSize: "1.5rem",
+          lineHeight: "2rem",
+          fontWeight: "900",
+          textDecoration: "underline",
+          fontFamily: "Playfair Display",
+        },
       },
     },
   },
@@ -1362,7 +1423,8 @@ const theme = {
     display: "flex",
     flexDirection: "column",
     position: "relative",
-    margin: "5% 5%",
+    margin: "0 5%",
+    paddingBottom: "100px",
 
     "& .background-box": {
       position: "absolute",
@@ -1381,6 +1443,27 @@ const theme = {
       lineHeight: "96.3%",
       fontWeight: "bold",
       zIndex: "1",
+      marginBottom: "1%",
+    },
+
+    "& h5": {
+      color: teal,
+      fontSize: "1.5rem",
+      lineHeight: "2rem",
+      fontWeight: "900",
+      fontFamily: "Playfair Display",
+      zIndex: "1",
+      marginTop: "1%",
+
+      "& a": {
+        color: teal,
+        fontSize: "1.5rem",
+        lineHeight: "2rem",
+        fontWeight: "900",
+        fontFamily: "Playfair Display",
+        zIndex: "1",
+        marginTop: "1%",
+      },
     },
 
     "& .logos-wrapper": {
@@ -1515,6 +1598,46 @@ const theme = {
     padding: "2% 5%",
     margin: "2% 0",
     maxWidth: "800px",
+  },
+  legalPagesWrapper: {
+    width: "40%",
+    maxWidth: "1440px",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    textAlign: "left",
+    padding: "2% 0",
+
+    "& p": {
+      lineHeight: "30px",
+      textAlign: "left",
+      fontSize: "16px",
+      padding: "2% 0",
+
+      "& a": {
+        color: teal,
+      },
+
+      "& span": {
+        fontWeight: "bold",
+      },
+
+      "& ol": {
+        "& li": {
+          padding: "1% 0",
+
+          "& a": {
+            color: teal,
+          },
+        },
+      },
+    },
+
+    "& img": {
+      width: "100%",
+      height: "auto",
+      padding: "5% 0",
+    },
   },
 };
 export default theme;

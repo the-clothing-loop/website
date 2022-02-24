@@ -59,6 +59,7 @@ export const Newsletter = () => {
 
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [submitted, setSubmitted] = React.useState(false);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -70,59 +71,72 @@ export const Newsletter = () => {
 
   const handleSubmitClick = async () => {
     await subscribeToNewsletter({ name, email });
+    setSubmitted(true);
   };
 
   return (
     <div className="newsletter">
-      <Typography classes={{ root: classes.headingTypographyRoot }}>
-        Keep up with our latest news
-      </Typography>
-      <Typography classes={{ root: classes.subheadingTypographyRoot }}>
-        Stay on top of our latest news and releases about the clothing loop
-      </Typography>
-      <Grid
-        container
-        classes={{ root: classes.textFieldGridRoot }}
-        spacing={4}
-        wrap="nowrap"
-        id="grid-mobile"
-      >
-        <Grid item id="mobile-textfield">
-          <TextField
-            classes={{
-              root: classes.muiInputLabelRootTextFieldRoot,
-            }}
-            label="Name"
-            value={name}
-            onChange={handleNameChange}
-          />
-        </Grid>
-        <Grid item id="mobile-textfield">
-          <TextField
-            classes={{
-              root: classes.muiInputLabelRootTextFieldRoot,
-            }}
-            type="email"
-            label="Email address"
-            value={email}
-            onChange={handleEmailChange}
-          />
-        </Grid>
-      </Grid>
-      <Button
-        classes={{ root: classes.buttonRoot }}
-        onClick={handleSubmitClick}
-        id="mobile-submit-bt"
-      >
-        <Grid container spacing={3}>
-          <Grid id="btn-text" item>
-            Submit
+      {submitted ? (
+        <div>
+          <Typography classes={{ root: classes.headingTypographyRoot }}>
+            Thank you for signing up!
+          </Typography>
+          <Typography classes={{ root: classes.subheadingTypographyRoot }}>
+            Our latest news are soon coming straight to your inbox.
+          </Typography>
+        </div>
+      ) : (
+        <div>
+          <Typography classes={{ root: classes.headingTypographyRoot }}>
+            Keep up with our latest news
+          </Typography>
+          <Typography classes={{ root: classes.subheadingTypographyRoot }}>
+            Stay on top of our latest news and releases about the clothing loop
+          </Typography>
+          <Grid
+            container
+            classes={{ root: classes.textFieldGridRoot }}
+            spacing={4}
+            wrap="nowrap"
+          >
+            <Grid item id="mobile-textfield">
+              <TextField
+                classes={{
+                  root: classes.muiInputLabelRootTextFieldRoot,
+                }}
+                label="Name"
+                value={name}
+                onChange={handleNameChange}
+              />
+            </Grid>
+            <Grid item id="mobile-textfield">
+              <TextField
+                classes={{
+                  root: classes.muiInputLabelRootTextFieldRoot,
+                }}
+                type="email"
+                label="Email address"
+                value={email}
+                onChange={handleEmailChange}
+              />
+            </Grid>
           </Grid>
-          <Grid item>
-            <img src={ArrowRight} />
-          </Grid>
-        </Grid>
-      </Button>
+          <Button
+            classes={{ root: classes.buttonRoot }}
+            onClick={handleSubmitClick}
+            id="mobile-submit-bt"
+          >
+            <Grid container spacing={3}>
+              <Grid item id="btn-text">
+                Submit
+              </Grid>
+              <Grid item>
+                <img src={ArrowRight} />
+              </Grid>
+            </Grid>
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

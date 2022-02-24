@@ -91,6 +91,7 @@ const Signup = () => {
           newsletter: false,
         }}
         validationSchema={validate}
+        validateOnChange={false}
         onSubmit={async (values) => {
           const user = {
             address: geocoderResult.result.place_name,

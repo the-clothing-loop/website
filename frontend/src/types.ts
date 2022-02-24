@@ -7,6 +7,7 @@ export interface IChain {
   address: string;
   latitude: number;
   longitude: number;
+  radius: number;
   categories: { gender: [string]; size: [string] };
   published: boolean;
 }

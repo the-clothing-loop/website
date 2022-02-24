@@ -13,16 +13,19 @@ import LandingPageMobile from "./LandingPageMobile";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Donations from "../components/Donations";
+import Testimonials from "../components/Testimonials";
+
 //Media
-import HeroImg from "../images/hero-image.png";
+import HeroImg from "../images/Kirsten-Rosan.jpg";
 import SectionThreeImg from "../images/image_3.png";
 import BagImage from "../images/Utrecht.jpeg";
 import MapImage from "../images/map_image.png";
 import ClothesImage from "../images/Nichon_zelfportret.jpg";
 import CirclesFrame from "../images/circles.png";
 import HorizontalArrow from "../images/horizontal_arrow.svg";
-import Clothes from "../images/clothes.png";
 import ArrowRightIcon from "../images/right-arrow-yellow.svg";
+import Selfies from "../images/Selfies.jpg";
+import DoorImg from "../images/numbered-bag-outdoors.jpg";
 //Logos
 import SfmLogo from "../images/logos/sfm_logo.png";
 import CollActionLogo from "../images/logos/Logo-CollAction.png";
@@ -31,6 +34,7 @@ import EssenseLogo from "../images/logos/essense-logo.svg";
 import WdcdLogo from "../images/logos/Logo_WDCD.png";
 import DoenLogo from "../images/logos/DOEN.png";
 import PNHLogo from "../images/logos/PNH_logo.png";
+
 const Home = () => {
   const chainsCount = React.useContext(ChainsContext).length;
 
@@ -77,8 +81,8 @@ const Home = () => {
     {
       logo: CollActionLogo,
       url: "https://www.collaction.org/",
-      width: "150px",
-      height: "150px",
+      width: "250px",
+      height: "auto",
     },
   ];
 
@@ -100,16 +104,20 @@ const Home = () => {
           <div className="landing-page-hero">
             <div className="hero-text-wrapper">
               <h1>
-                Swap it, <br />
+                Swap, <br />
                 <span>
                   don't <br />
-                  shop it
+                  shop!
                 </span>
               </h1>
               <p>
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam”
+                Want to dress more sustainably? Clear out your closet and
+                surprise others with items of clothing that you no longer wear?
+                Spice up your wardrobe without spending a dime, or simply
+                connect with neighbours? Look no further! The Clothing Loop is
+                an initiative that allows people to easily swap clothes with
+                others in their own neighbourhood. It’s fun, free and
+                sustainable!
               </p>
               <button
                 className="slide"
@@ -122,12 +130,7 @@ const Home = () => {
             <div className="hero-image-wrapper">
               <div className="image-wrapper">
                 <img src={HeroImg} alt="Kledingketting" />
-              </div>
-
-              <div className={classes.circleBtn}>
-                <a href="#section-one">
-                  {<ArrowDownwardIcon className="icon" />}
-                </a>
+                <p>photo: Martijn van den Dobbelsteen/de Brug</p>
               </div>
             </div>
           </div>
@@ -158,16 +161,17 @@ const Home = () => {
               <div>
                 <h3>Join</h3>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  <a href="/loops/find">
-                    <img src={HorizontalArrow} />
-                  </a>
+                  Want to join? We’d love to have you! Check our map and sign up
+                  for a Loop in your neighbourhood. No active Loop to join in
+                  your area yet? We'll help you set one up! Joining is free and
+                  open to everyone.
                 </p>
               </div>
             </div>
             <div className={classes.imageAnimatedWrapper}>
-              <img src={MapImage} alt="map image" />
+              <a href="./loops/find">
+                <img src={MapImage} alt="map image" />
+              </a>
             </div>
             <img className="circles-frame" src={CirclesFrame} />
           </div>
@@ -180,19 +184,20 @@ const Home = () => {
             <div className="background-box"></div>
 
             <div className="image-wrapper">
-              <img src={SectionThreeImg} />
+              <img src={DoorImg} />
             </div>
 
             <div className="text-wrapper">
               <h1>3</h1>
               <div>
-                <h3>Wait & Swap</h3>
+                <h3>Get ready to swap!</h3>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna
-                  aliqua.usmod tempor incididunt ut labore et dolore magna
-                  aliqua.usmod tempor incididunt ut labore et dolore magna
-                  aliqua.
+                  The host of your local Loop will add you to the route as soon
+                  as possible, and then it is only a matter of time before the
+                  first bag will arrive! Find something you like, and donate
+                  something that no longer suits you, before you pass the bag
+                  onto the next person on the list. Don’t forget to share a
+                  picture of your newfound treasure with the group!
                 </p>
               </div>
             </div>
@@ -201,23 +206,12 @@ const Home = () => {
 
         <section className={classes.projectNumbersWrapper}>
           <div className="inner-wrapper">
-            <h1>What we do</h1>
+            <h1>Our impact</h1>
             <Counters />
           </div>
 
           <div className="images-wrapper">
-            <div>
-              <img src={Clothes} alt="bags of clothes" />
-            </div>
-            <div>
-              <img src={Clothes} alt="bags of clothes" />
-            </div>
-            <div>
-              <img src={Clothes} alt="bags of clothes" />
-            </div>
-            <div>
-              <img src={Clothes} alt="bags of clothes" />
-            </div>
+            <img src={Selfies} alt="" />
           </div>
         </section>
 
@@ -228,23 +222,37 @@ const Home = () => {
           <div className="text-wrapper">
             <h3>From local lockdown initiative to international success</h3>
             <p>
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laborisn”
+              This idea started in Amsterdam during the first Covid-19 lockdown,
+              and soon other cities followed suit; within less than a year this
+              local initiative became the powerful movement it is today.
+              Together we have saved thousands of kilo’s of clothing, helped
+              neighbours get to know each other, and created real behavioural
+              change towards our textile consumption. Now that’s what we call a
+              win win win!
             </p>
 
-            <h5>Read more about us</h5>
+            <h5>
+              <a href="/about">Read more about us</a>
+            </h5>
           </div>
         </section>
+
+        <Testimonials />
 
         <div className={classes.supportersSection}>
           <div className="background-box"></div>
           <h2>Partners & Sponsors</h2>
+          <h5>
+            Want to support us too?{" "}
+            <a href="mailto:hello@clothingloop.org">
+              We'd love to hear from you!
+            </a>{" "}
+          </h5>
           <div className="logos-wrapper">
             {supporters.map((el, i) => {
               return (
                 <div key={i} style={{ width: el.width, height: el.height }}>
-                  <a href={el.url}>
+                  <a href={el.url} target="_blank">
                     <img src={el.logo} alt="" />
                   </a>
                 </div>
