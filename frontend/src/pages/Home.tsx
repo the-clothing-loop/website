@@ -260,7 +260,6 @@ const Home = () => {
             })}
           </div>
         </div>
-        <Donations />
 
         <Carousel />
       </div>
