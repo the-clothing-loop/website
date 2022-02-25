@@ -12,6 +12,7 @@ import { ChainsContext } from "../components/ChainsProvider";
 import LandingPageMobile from "./LandingPageMobile";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
+import Testimonials from "../components/Testimonials";
 
 //Media
 import HeroImg from "../images/Kirsten-Rosan.jpg";
@@ -79,8 +80,8 @@ const Home = () => {
     {
       logo: CollActionLogo,
       url: "https://www.collaction.org/",
-      width: "150px",
-      height: "150px",
+      width: "250px",
+      height: "auto",
     },
   ];
 
@@ -234,6 +235,8 @@ const Home = () => {
             </h5>
           </div>
         </section>
+
+        <Testimonials />
 
         <div className={classes.supportersSection}>
           <div className="background-box"></div>
