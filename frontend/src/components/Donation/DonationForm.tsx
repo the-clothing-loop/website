@@ -29,7 +29,6 @@ const DonationFormContent = () => {
     },
     {
       string: "A dinner a month 🍲️ €10.00",
-      // priceId: "price_1IAcnxKEl0DmQOIqGvWHsJVb", //TEST KEY
       priceId: "price_1IAgzbKEl0DmQOIqEuVJitsi",
     },
   ];
@@ -133,7 +132,7 @@ const DonationFormContent = () => {
   return (
     <Card
       className={styles.card}
-      style={{ width: "100%", backgroundColor:'transparent' }}
+      style={{ width: "100%", backgroundColor: "transparent" }}
     >
       <CardContent>
         {error && <Alert severity="error">{error}</Alert>}
@@ -284,9 +283,8 @@ const DonationFormContent = () => {
 };
 
 const DonationForm = () => {
-  // const stripePublicKey = "pk_live_51HxZwwKEl0DmQOIqq5F7MLdkzr38JndgeMYL5gkF21Ryw62CIzso6PgHQCn3qP7MKjGVWhArEvG6nKqhPAaGrtT300PBqSBvXu"; //pk_live_dqTQSnQdaIWgcU4C1nPvdyHp
   const stripePublicKey =
-    "pk_test_51HxZwwKEl0DmQOIqX2xqLmbNfyzBE0Qf3CbzqOuQOzbKddiZuOSuP4XMtDHuMKwUlQZmClLsviZU7tqUBR8nxtG0005Zqiz6DC"; //pk_live_dqTQSnQdaIWgcU4C1nPvdyHp
+    "pk_live_51HxZwwKEl0DmQOIqq5F7MLdkzr38JndgeMYL5gkF21Ryw62CIzso6PgHQCn3qP7MKjGVWhArEvG6nKqhPAaGrtT300PBqSBvXu"; //pk_live_dqTQSnQdaIWgcU4C1nPvdyHp
   const stripePromise = loadStripe(stripePublicKey);
   return (
     <Elements stripe={stripePromise}>

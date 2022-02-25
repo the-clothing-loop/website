@@ -78,15 +78,15 @@ export const createUser = functions
       <p>Right now everything is set up, but the loop is not live. When you are ready, login and navigate to the admin tab.</p>
       <p>To make the loop active, set the slider to 'visible'.</p>
       <p>Don't wait too long, as someone else may beat you to the chase and start a loop in the same area. </p>
-      <p>And even though there can be multiple loops in the same area, it may cause a bit of confusion.</p>
-     
+      <p>And even though there can be multiple loops in the same area, it may cause a bit of confusion.</p>  
       <p>Next steps for participants:</p>
       <p>What happens next?</p>
       <p>Each Loop has a local host that coordinates the specific Loop voluntarily. </p>
       <p>He/she/they will receive your application, and get in touch with further info.</p>
       <p>Please be patient, sometimes this can take up to four weeks, depending on the available time of the host.</p>
       <p>Of course, you want to start swapping right away, which we applaud obviously!</p>
-      <p>What you can do in the meantime is start scanning your closet for items that are ready to go on adventures with somebody else.</p>
+      <p>What you can do in the meantime is start scanning your closet for items that are ready to go on adventures</p>
+      <p> with somebody else.</p>
       <p>You can check if they need some repairs, depilling or a little wash, </p>
       <p>so they will become an even better addition to our travelling swap bags. </p>
       <p>Please note, it's a mutual effort to keep the bag a surprise for everyone.</p>

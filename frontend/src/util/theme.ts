@@ -1230,8 +1230,8 @@ const theme = {
   //donations
   donationsWrapper: {
     position: "relative",
-    margin: "10% 0",
-    width: "100%",
+    margin: "100px 0",
+    width: "40%",
     maxWidth: "1440px",
     left: "50%",
     transform: " translateX(-50%)",
@@ -1249,9 +1249,6 @@ const theme = {
     },
 
     " & div": {
-      display: "grid",
-      gridTemplateColumns: "50% 50%",
-
       "& .image-wrapper": {
         position: "relative",
         width: "480px",
