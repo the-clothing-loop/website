@@ -11,6 +11,10 @@ import { paymentInitiate } from "../../util/firebase/payments";
 import { makeStyles } from "@material-ui/core";
 import theme from "../../util/theme";
 
+const accessToken = {
+  stripeApiAccessToken: process.env.REACT_APP_STRIPE_PUBLIC_KEY,
+};
+
 const DonationFormContent = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -283,14 +287,18 @@ const DonationFormContent = () => {
 };
 
 const DonationForm = () => {
-  const stripePublicKey =
-    "pk_live_51HxZwwKEl0DmQOIqq5F7MLdkzr38JndgeMYL5gkF21Ryw62CIzso6PgHQCn3qP7MKjGVWhArEvG6nKqhPAaGrtT300PBqSBvXu"; //pk_live_dqTQSnQdaIWgcU4C1nPvdyHp
-  const stripePromise = loadStripe(stripePublicKey);
-  return (
-    <Elements stripe={stripePromise}>
-      <DonationFormContent />
-    </Elements>
-  );
+  if (accessToken.stripeApiAccessToken) {
+    const stripePublicKey = accessToken.stripeApiAccessToken;
+
+    const stripePromise = loadStripe(stripePublicKey);
+
+    return (
+      <Elements stripe={stripePromise}>
+        <DonationFormContent />
+      </Elements>
+    );
+  }
+  return <div>Access token not configured</div>;
 };
 
 export default DonationForm;
