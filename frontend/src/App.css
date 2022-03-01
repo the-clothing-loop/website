@@ -615,6 +615,12 @@
     transform: translateX(-50%);
   }
 
+  .login-wrapper {
+    max-width: 1440px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
   .circles-frame-login {
     position: absolute;
     margin-left: 7%;
@@ -761,6 +767,7 @@
   #landing-page-mobile {
     display: inline;
   }
+
   #footer {
     display: none;
   }

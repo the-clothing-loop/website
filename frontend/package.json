@@ -27,6 +27,8 @@
     "@mui/material": "^5.2.4",
     "@turf/destination": "^6.5.0",
     "@mui/styles": "^5.2.3",
+    "@stripe/react-stripe-js": "^1.7.0",
+    "@stripe/stripe-js": "^1.22.0",
     "@types/mapbox__mapbox-gl-geocoder": "^4.7.1",
     "@types/react-csv": "^1.1.2",
     "@types/react-helmet": "^6.1.1",
