@@ -1,3 +1,5 @@
+import { autocompleteClasses } from "@mui/material";
+
 const black = "#3C3C3B";
 const white = "#ffff";
 const teal = "#48808B";
@@ -1228,8 +1230,8 @@ const theme = {
   //donations
   donationsWrapper: {
     position: "relative",
-    margin: "10% 0",
-    width: "100%",
+    margin: "100px 0",
+    width: "40%",
     maxWidth: "1440px",
     left: "50%",
     transform: " translateX(-50%)",
@@ -1247,9 +1249,6 @@ const theme = {
     },
 
     " & div": {
-      display: "grid",
-      gridTemplateColumns: "50% 50%",
-
       "& .image-wrapper": {
         position: "relative",
         width: "480px",
@@ -1422,7 +1421,7 @@ const theme = {
     flexDirection: "column",
     position: "relative",
     margin: "0 5%",
-    paddingBottom:'100px',
+    paddingBottom: "100px",
 
     "& .background-box": {
       position: "absolute",
@@ -1586,6 +1585,17 @@ const theme = {
     alignItems: "flex-end",
   },
 
+  donationsContainer: {
+    justifyContent: "flex-start",
+    width: "50%",
+    position: "relative",
+    left: "50%",
+    transform: "translateX(-50%)",
+    backgroundColor: "#EDF2F3",
+    padding: "2% 5%",
+    margin: "2% 0",
+    maxWidth: "800px",
+  },
   legalPagesWrapper: {
     width: "40%",
     maxWidth: "1440px",

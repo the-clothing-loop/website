@@ -21,6 +21,7 @@ import LoginEmailFinished from "./pages/LoginEmailFinished";
 import Contacts from "./pages/Contacts.js";
 import LandingPage from "./pages/LandingPage";
 import MessageSubmitted from "./pages/MessageSubmitted";
+import Donate from "./pages/Donate";
 import About from "./pages/About";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
@@ -47,6 +48,7 @@ const App = () => {
                   <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/thankyou" component={Thankyou} />
+                    <Route exact path="/donate/:status?" component={Donate} />
                     <Route
                       exact
                       path="/message-submitted"

@@ -12,6 +12,7 @@ import { ChainsContext } from "../components/ChainsProvider";
 import LandingPageMobile from "./LandingPageMobile";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
+import Donations from "../components/Donations";
 import Testimonials from "../components/Testimonials";
 
 //Media
