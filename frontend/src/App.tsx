@@ -19,7 +19,6 @@ import ChainsList from "./pages/ChainsList";
 import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
 import Contacts from "./pages/Contacts.js";
-import LandingPage from "./pages/LandingPage";
 import MessageSubmitted from "./pages/MessageSubmitted";
 import Donate from "./pages/Donate";
 import About from "./pages/About";
@@ -102,7 +101,7 @@ const App = () => {
                       component={PrivacyPolicy}
                     />
                     <Route exact path="/terms-of-use" component={TermsOfUse} />
-                    <Route exact path="/FAQ" component={FAQ} />
+                    <Route exact path="/faq" component={FAQ} />
                   </Switch>
                 </div>
                 <Footer />
