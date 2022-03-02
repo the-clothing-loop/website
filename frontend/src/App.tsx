@@ -5,6 +5,7 @@ import { createTheme } from "@mui/material/styles";
 import { AuthProvider } from "./components/AuthProvider";
 import themeFile from "./util/theme";
 import ScrollToTop from "./util/scrollToTop";
+
 // Pages
 import FindChain from "./pages/FindChain";
 import Login from "./pages/Login";
@@ -24,7 +25,7 @@ import Donate from "./pages/Donate";
 import About from "./pages/About";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
-import FAQ from "./pages/FAQ";
+import FAQ from "./pages/FAQ/FAQ";
 
 // Components
 import Navbar from "./components/Navbar";
