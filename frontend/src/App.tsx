@@ -5,6 +5,7 @@ import { createTheme } from "@mui/material/styles";
 import { AuthProvider } from "./components/AuthProvider";
 import themeFile from "./util/theme";
 import ScrollToTop from "./util/scrollToTop";
+
 // Pages
 import FindChain from "./pages/FindChain";
 import Login from "./pages/Login";
@@ -19,13 +20,12 @@ import ChainsList from "./pages/ChainsList";
 import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
 import Contacts from "./pages/Contacts.js";
-import LandingPage from "./pages/LandingPage";
 import MessageSubmitted from "./pages/MessageSubmitted";
 import Donate from "./pages/Donate";
 import About from "./pages/About";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
-import FAQ from "./pages/FAQ";
+import FAQ from "./pages/FAQ/FAQ";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -102,7 +102,7 @@ const App = () => {
                       component={PrivacyPolicy}
                     />
                     <Route exact path="/terms-of-use" component={TermsOfUse} />
-                    <Route exact path="/FAQ" component={FAQ} />
+                    <Route exact path="/faq" component={FAQ} />
                   </Switch>
                 </div>
                 <Footer />

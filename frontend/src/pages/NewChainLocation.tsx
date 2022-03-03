@@ -44,7 +44,7 @@ const NewChainLocation = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing Loop | Create New Loop</title>
+        <title>The Clothing Loop | Create New Loop</title>
         <meta name="description" content="Create New Loop" />
       </Helmet>
       <div className={classes.formContainerLocation}>

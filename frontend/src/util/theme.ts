@@ -9,6 +9,7 @@ const lightBlue = "#98D9DE";
 const turquoise = "#518D7E";
 const bronze = "#C58C41";
 const grey = "#A5A5A5";
+const lightgrey = "#e8e8e8";
 
 const theme = {
   palette: {
@@ -1489,7 +1490,6 @@ const theme = {
       },
     },
   },
-
   countersWrapper: {
     display: "flex",
     flexWrap: "wrap",
@@ -1515,7 +1515,6 @@ const theme = {
       },
     },
   },
-
   counterLinkWrapper: {
     position: "relative",
     width: "50%",
@@ -1553,7 +1552,6 @@ const theme = {
       margin: "1% 0",
     },
   },
-
   progressBox: {
     display: "flex",
     flexDirection: "column",
@@ -1571,7 +1569,6 @@ const theme = {
     transform: "translateX(-50%)",
     color: turquoise,
   },
-
   progressBarWrapper: {
     width: "60%",
     position: "relative",
@@ -1579,12 +1576,10 @@ const theme = {
     transform: "translateX(-50%)",
     padding: "2% 0",
   },
-
   gridItemAlignedEnd: {
     display: "flex",
     alignItems: "flex-end",
   },
-
   donationsContainer: {
     justifyContent: "flex-start",
     width: "50%",
@@ -1635,6 +1630,14 @@ const theme = {
       height: "auto",
       padding: "5% 0",
     },
+  },
+  MuiAccordionRoot: {
+    borderBottom: `1px solid ${lightgrey}`,
+    borderBottomLeftRadius: "0 !important",
+    borderBottomRightRadius: "0 !important",
+  },
+  AccordionTypographyRoot: {
+    fontWeight: `600`
   },
 };
 export default theme;

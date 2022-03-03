@@ -11,8 +11,8 @@ const PrivacyPolicy = () => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Privacy Policy</title>
-        <meta name="description" content="Home" />
+        <title>The Clothing Loop | Privacy Policy</title>
+        <meta name="description" content="privacy policy" />
       </Helmet>
       <div className={classes.legalPagesWrapper}>
         <Typography component="h1" className={classes.pageTitle}>
