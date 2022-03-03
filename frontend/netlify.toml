@@ -32,5 +32,6 @@
       script-src 'self' blob:; 
       child-src 'self' blob:;
       worker-src 'self' blob:;
+      script-src-elem 'self https://js.stripe.com/v3;
       frame-ancestors 'none'
     '''
