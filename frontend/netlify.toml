@@ -32,7 +32,6 @@
       script-src 'self' blob:; 
       child-src 'self' blob:;
       worker-src 'self' blob:;
-      bugfix/netlify-config
       script-src-elem  https://js.stripe.com/v3;
       frame-ancestors 'none'
     '''
