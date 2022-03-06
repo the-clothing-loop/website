@@ -29,9 +29,8 @@
       font-src 'self' https://fonts.gstatic.com; 
       media-src 'self'; 
       frame-src 'self' https://player.vimeo.com/; 
-      script-src 'self' blob:; 
+      script-src 'self' https://js.stripe.com/v3 blob:; 
       child-src 'self' blob:;
       worker-src 'self' blob:;
-      script-src-elem  https://js.stripe.com/v3;
       frame-ancestors 'none'
     '''
