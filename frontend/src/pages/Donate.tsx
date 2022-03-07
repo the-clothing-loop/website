@@ -19,7 +19,7 @@ const Donate = ({ match }: RouteComponentProps<TParams>) => {
   return (
     <>
       <Helmet>
-        <title>Clothing-Loop | Donate</title>
+        <title>The Clothing Loop | Donate</title>
         <meta name="description" content="Donate" />
       </Helmet>
       <div className={classes.donationsWrapper}>
