@@ -82,7 +82,7 @@ export const Newsletter = () => {
             Thank you for signing up!
           </Typography>
           <Typography classes={{ root: classes.subheadingTypographyRoot }}>
-            Our latest news are soon coming straight to your inbox.
+            You are now subscribed to our monthly newsletter!
           </Typography>
         </div>
       ) : (
@@ -91,7 +91,8 @@ export const Newsletter = () => {
             Keep up with our latest news
           </Typography>
           <Typography classes={{ root: classes.subheadingTypographyRoot }}>
-            Stay on top of our latest news and releases about the clothing loop
+            Subscribe to receive our latest news, tips, inspiration and data on
+            the impact of swapping in your inbox each month!
           </Typography>
           <Grid
             container
