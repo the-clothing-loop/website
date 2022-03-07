@@ -17,7 +17,7 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
   const { t } = useTranslation();
 
   return (
-    <div style={{ padding: "2% 0" }}>
+    <div style={{ padding: "5% 0" }}>
       <CheckboxField
         required={false}
         label={
