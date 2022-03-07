@@ -139,18 +139,27 @@ const Home = () => {
         <section className={classes.sectionsWrapper} id="section-one">
           <div className="single-section-wrapper">
             <div className="image-wrapper">
-              <img src={BagImage} alt="clothing bag" />
+              <iframe
+                src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                allow="autoplay; fullscreen; picture-in-picture"
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  left: "0",
+                  width: "100%",
+                  height: "100%",
+                  transform: "none",
+                }}
+              ></iframe>
             </div>
-            <img className="circles-frame" src={CirclesFrame} />
 
             <div className="text-wrapper">
               <h1>1</h1>
               <h3>
-                Find a <br />
-                loop
+                Find out
+                <br /> how it works
               </h3>
               <p>
-                To join a loop you need to <br />
                 <a href="/loops/find">find a loop near you</a>
               </p>
             </div>
@@ -159,7 +168,7 @@ const Home = () => {
             <div className="text-wrapper">
               <h1>2</h1>
               <div>
-                <h3>Join</h3>
+                <h3>Join a Loop</h3>
                 <p>
                   Want to join? We’d love to have you! Check our map and sign up
                   for a Loop in your neighbourhood. No active Loop to join in
@@ -222,13 +231,10 @@ const Home = () => {
           <div className="text-wrapper">
             <h3>From local lockdown initiative to international success</h3>
             <p>
-              This idea started in Amsterdam during the first Covid-19 lockdown,
-              and soon other cities followed suit; within less than a year this
-              local initiative became the powerful movement it is today.
-              Together we have saved thousands of kilo’s of clothing, helped
-              neighbours get to know each other, and created real behavioural
-              change towards our textile consumption. Now that’s what we call a
-              win win win!
+              The Clothing Loop started in Amsterdam. Within one year this local
+              initiative became the powerful movement it is today; we saved
+              mountains of clothing, neighbours got to know each other and we
+              created real behavioural change towards textile consumption.
             </p>
 
             <h5>
