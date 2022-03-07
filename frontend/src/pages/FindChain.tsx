@@ -368,77 +368,7 @@ const FindChain = () => {
             paint={{ "text-color": "white" }}
           />
         </Source>
-        {/* ====start TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}
-        <Marker
-          key={"marker-netherlands"}
-          longitude={4.9041}
-          latitude={52.3676}
-        >
-          <button
-            onClick={() => {
-              setNetherlandsPopup(true);
-            }}
-            style={{
-              width: "40px",
-              height: "40px",
-              backgroundColor: "#98D9DE",
-              borderRadius: "50%",
-              borderStyle: "solid",
-              borderWidth: "1px",
-              borderColor: "#98D9DE",
-              boxShadow: " 0px 0px 15px #98D9DE",
-              position: "absolute",
-            }}
-          >
-            <p
-              style={{
-                color: "white",
-                margin: "0",
-              }}
-            >
-              350
-            </p>
-          </button>
-        </Marker>
-        {netherlandsPopup ? (
-          <Popup
-            longitude={4.9041}
-            latitude={52.3676}
-            closeOnClick={true}
-            dynamicPosition={true}
-            onClose={() => setNetherlandsPopup(false)}
-          >
-            <Card className={classes.card}>
-              <CardContent className={classes.cardContent}>
-                <Typography component="h1" gutterBottom>
-                  {"The Netherlands"}
-                </Typography>
-                <Typography component="p" id="description">
-                  {
-                    "We are in the process of migrating all Dutch loops into this platform. If you are in the Netherlands and want to join, please signup following the link below.  "
-                  }
-                </Typography>
-
-                <CardActions className={classes.cardsAction}>
-                  <Link
-                    to={{
-                      pathname:
-                        "https://docs.google.com/forms/d/e/1FAIpQLSfeyclg6SjM3GRBbaBprFZhoha3Q9a7l3xs1s9eIDpKeVzi6w/viewform",
-                    }}
-                    target="_blank"
-                    key={"btn-join"}
-                    className={classes.button}
-                  >
-                    {t("join")}
-                    <img src={RightArrow} alt="" />
-                  </Link>
-                </CardActions>
-              </CardContent>
-            </Card>
-          </Popup>
-        ) : null}
-        {/* ===end  TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}
-
+  
         {/* ====start TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}
         <Marker
           key={"marker-netherlands"}
