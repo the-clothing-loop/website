@@ -387,14 +387,14 @@ export const contactMail = functions
       await db.collection("mail").add({
         to: email,
         message: {
-          subject: "Thank you for contacting Clothing-Loop",
+          subject: "Thank you for contacting The Clothing Loop",
           html: ` <p>Hi ${name},</p>
                     <p>Thank you for your message!</p>
                     <p>You wrote:</p>
                     <p>${message}</p>
                     <p>We will contact you as soon as possible.</p>
                     <p>Regards,</p>
-                    <p>The clothing-loop team!</p>
+                    <p>The Clothing Loop team!</p>
             `,
         },
       });

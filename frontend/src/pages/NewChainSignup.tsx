@@ -123,6 +123,21 @@ const Signup = () => {
 
               <ProgressBar activeStep={0} />
 
+              <Typography
+                component="p"
+                className={classes.p}
+                id="explanatory-text"
+              >
+                Starting a Loop is fun and easy! We will help you get started
+                with our manual, in which you'll find all the steps to make your
+                new swap empire run smoothly. Setup your Loop via this form, hit
+                publish, send friends and neighbours to this website to
+                subscribe and wait for submissions to roll in! All the data of
+                new members can be accessed on your personal page. You will also
+                be invited for an online welcome meeting for all new hosts,
+                which we host on a regular basis. We'd love to meet you!
+              </Typography>
+
               <Form className={classes.formGrid}>
                 <TextForm
                   required

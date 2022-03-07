@@ -676,6 +676,10 @@ const theme = {
   formWrapper: {
     backgroundColor: "#EDF2F3",
     padding: "35px 15%",
+
+    "& p#explanatory-text": {
+      marginTop: "20px",
+    },
   },
 
   label: {
@@ -1034,6 +1038,7 @@ const theme = {
         position: "relative",
         height: "100%",
         overflow: "hidden",
+        marginLeft: "10px",
 
         "& img": {
           width: "100%",
@@ -1043,19 +1048,13 @@ const theme = {
           zIndex: "1",
         },
       },
-
-      "& .circles-frame": {
-        position: "absolute",
-        left: " 1%",
-        bottom: "-10%",
-      },
-
       "& .text-wrapper": {
         textAlign: "left",
         paddingLeft: "2%",
         display: "flex",
         flexDirection: "column",
         justifyContent: " space-between",
+        width: "80%",
 
         "& h1": {
           fontFamily: "'Playfair Display', serif",
@@ -1637,7 +1636,7 @@ const theme = {
     borderBottomRightRadius: "0 !important",
   },
   AccordionTypographyRoot: {
-    fontWeight: `600`
+    fontWeight: `600`,
   },
 };
 export default theme;
