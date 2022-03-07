@@ -312,7 +312,7 @@ const FindChain = () => {
         onViewportChange={(newView: IViewPort) => setViewport(newView)}
         onClick={handleMapClick}
         ref={mapRef}
-        scrollZoom={false}
+        scrollZoom={true}
       >
         <Source
           id="chains"
