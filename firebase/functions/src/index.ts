@@ -1,9 +1,16 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {UserRecord} from "firebase-functions/lib/providers/auth";
+import * as mailchimp from "@mailchimp/mailchimp_marketing";
+
 import payments from "./payments";
 
 admin.initializeApp();
+
+mailchimp.setConfig({
+  apiKey: functions.config().mailchimp.api_key,
+  server: functions.config().mailchimp.server,
+});
 
 const db = admin.firestore();
 const region = functions.config().clothingloop.region as string;
@@ -126,7 +133,7 @@ export const createUser = functions
         .auth()
         .setCustomUserClaims(userRecord.uid, {chainId: chainId});
     }
-    // TODO: Subscribe user in mailchimp if needed
+    
     return {id: userRecord.uid};
   });
 
@@ -171,46 +178,104 @@ export const createChain = functions
         longitude,
         radius,
         categories,
-        published: false,
-        chainAdmin: uid,
-      });
-      db.collection("users").doc(uid).update("chainId", chainData.id);
-      await admin.auth().setCustomUserClaims(uid, {
-        chainId: chainData.id,
-        role: user.customClaims?.role ?? ROLE_CHAINADMIN,
-      });
-      return {id: chainData.id};
-    } else {
-      throw new functions.https.HttpsError(
-        "permission-denied",
-        "You don't have permission to change this user's chain"
-      );
-    }
-  });
+          published: false,
+          chainAdmin: uid,
+        });
+        db.collection("users").doc(uid).update("chainId", chainData.id);
+        await admin.auth().setCustomUserClaims(uid, {
+          chainId: chainData.id,
+          role: user.customClaims?.role ?? ROLE_CHAINADMIN,
+        });
+
+        try {
+          const name = user.displayName!;
+          const email = user.email!;
+
+          const nameLength = name.split(" ").length;
+          const firstName =
+          nameLength === 1 ? name : name.split(" ").slice(0, -1).join(" ");
+          const lastName = name.split(" ").slice(-1).join(" ");
+
+          await mailchimp.lists.addListMember(
+              functions.config().mailchimp.interested_audience_id,
+              {
+                email_address: email,
+                status: "subscribed",
+                merge_fields: {
+                  FNAME: firstName,
+                  LNAME: lastName,
+                },
+              }
+          );
+        } catch (error) {
+          console.log("Mailchimp add contact error", error);
+        }
+
+        console.log("Mailchimp add contact success");
+
+        return {id: chainData.id};
+      } else {
+        throw new functions.https.HttpsError(
+            "permission-denied",
+            "You don't have permission to change this user's chain"
+        );
+      }
+    });
 
 export const addUserToChain = functions
-  .region(region)
-  .https.onCall(async (data: any, context: functions.https.CallableContext) => {
-    functions.logger.debug("updateUserToChain parameters", data);
+    .region(region)
+    .https.onCall(async (data: any, context: functions.https.CallableContext) => {
+      functions.logger.debug("updateUserToChain parameters", data);
 
-    const {uid, chainId} = data;
+      const {uid, chainId} = data;
 
-    if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
-      const userReference = db.collection("users").doc(uid);
-      if ((await userReference.get()).get("chainId") === chainId) {
-        functions.logger.warn(
-          `user ${uid} is already member of chain ${chainId}`
-        );
-      } else {
-        await userReference.update("chainId", chainId);
-        // When switching chains, you're no longer an chain-admin
-        if (context.auth?.token?.role === ROLE_CHAINADMIN) {
-          await admin.auth().setCustomUserClaims(uid, {chainId: chainId});
+      if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
+        const userReference = db.collection("users").doc(uid);
+        const user = await userReference.get();
+
+        if (user.get("chainId") === chainId) {
+          functions.logger.warn(
+              `user ${uid} is already member of chain ${chainId}`
+          );
         } else {
-          await admin.auth().setCustomUserClaims(uid, {
-            chainId: chainId,
-            role: context.auth?.token?.role,
-          });
+          await userReference.update("chainId", chainId);
+
+          try {
+            const userAuth = await admin.auth().getUser(uid);
+            const name = userAuth.displayName!;
+            const email = userAuth.email!;
+
+            const nameLength = name.split(" ").length;
+            const firstName =
+            nameLength === 1 ? name : name.split(" ").slice(0, -1).join(" ");
+            const lastName = name.split(" ").slice(-1).join(" ");
+
+            await mailchimp.lists.addListMember(
+                functions.config().mailchimp.interested_audience_id,
+                {
+                  email_address: email,
+                  status: "subscribed",
+                  merge_fields: {
+                    FNAME: firstName,
+                    LNAME: lastName,
+                  },
+                }
+            );
+          } catch (error) {
+            console.log("Mailchimp add contact error", error);
+          }
+
+          console.log("Mailchimp add contact success");
+
+          // When switching chains, you're no longer an chain-admin
+          if (context.auth?.token?.role === ROLE_CHAINADMIN) {
+            await admin.auth().setCustomUserClaims(uid, {chainId: chainId});
+          } else {
+            await admin.auth().setCustomUserClaims(uid, {
+              chainId: chainId,
+              role: context.auth?.token?.role,
+            });
+
         }
 
         await notifyChainAdmin(chainId, uid);
@@ -256,42 +321,41 @@ const notifyChainAdmin = async (chainId: string, newUserId: string) => {
 };
 
 export const updateUser = functions
-  .region(region)
-  .https.onCall(async (data: any, context: functions.https.CallableContext) => {
-    functions.logger.debug("updateUser parameters", data);
-    const [uid, name, phoneNumber, newsletter, interestedSizes, address] = [
-      data.uid,
-      data.name,
-      data.phoneNumber,
-      data.newsletter,
-      data.interestedSizes,
-      data.address,
-    ];
+    .region(region)
+    .https.onCall(async (data: any, context: functions.https.CallableContext) => {
+      functions.logger.debug("updateUser parameters", data);
+      const [uid, name, phoneNumber, newsletter, interestedSizes, address] = [
+        data.uid,
+        data.name,
+        data.phoneNumber,
+        data.newsletter,
+        data.interestedSizes,
+        data.address,
+      ];
 
-    if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
-      const userRecord = await admin.auth().updateUser(uid, {
-        phoneNumber: phoneNumber,
-        displayName: name,
-        disabled: false,
-      });
-      functions.logger.debug("updated user", userRecord);
-      await db.collection("users").doc(userRecord.uid).set(
-        {
-          address,
-          newsletter,
-          interestedSizes,
-        },
-        {merge: true}
-      );
-      // TODO: Update user in mailchimp if needed
-      return {};
-    } else {
-      throw new functions.https.HttpsError(
-        "permission-denied",
-        "You don't have permission to update this user"
-      );
-    }
-  });
+      if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
+        const userRecord = await admin.auth().updateUser(uid, {
+          phoneNumber: phoneNumber,
+          displayName: name,
+          disabled: false,
+        });
+        functions.logger.debug("updated user", userRecord);
+        await db.collection("users").doc(userRecord.uid).set(
+            {
+              address,
+              newsletter,
+              interestedSizes,
+            },
+            {merge: true}
+        );
+        return {};
+      } else {
+        throw new functions.https.HttpsError(
+            "permission-denied",
+            "You don't have permission to update this user"
+        );
+      }
+    });
 
 export const getUserById = functions
   .region(region)
@@ -407,10 +471,34 @@ export const subscribeToNewsletter = functions
 
     const {name, email} = data;
 
-    await db.collection("interested_users").add({
-      name,
-      email,
-    });
+      try {
+        const nameLength = name.split(" ").length;
+        const firstName =
+        nameLength === 1 ? name : name.split(" ").slice(0, -1).join(" ");
+        const lastName = name.split(" ").slice(-1).join(" ");
+
+        await mailchimp.lists.addListMember(
+            functions.config().mailchimp.interested_audience_id,
+            {
+              email_address: email,
+              status: "subscribed",
+              merge_fields: {
+                FNAME: firstName,
+                LNAME: lastName,
+              },
+            }
+        );
+      } catch (error) {
+        console.log("Mailchimp add contact error", error);
+        throw error;
+      }
+
+      console.log("Mailchimp add contact success");
+
+      await db.collection("interested_users").add({
+        name,
+        email,
+      });
 
     await db.collection("mail").add({
       to: email,
