@@ -495,10 +495,7 @@ export const subscribeToNewsletter = functions
 
       console.log("Mailchimp add contact success");
 
-      await db.collection("interested_users").add({
-        name,
-        email,
-      });
+      await db.collection("interested_users").doc(email).set({name, email});
 
     await db.collection("mail").add({
       to: email,
