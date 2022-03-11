@@ -6,7 +6,7 @@ service cloud.firestore {
       allow read: if request.auth != null && (request.auth.uid == userId || request.auth.token.role == "admin" || (request.auth.token.role == "chainAdmin" && resource.data.chainId == request.auth.token.chainId));
     }
     match /chains/{chainId} {
-      allow update, write: if request.auth != null && ((request.auth.token.chainId == chainId && request.auth.token.role == "chainAdmin" && resource.data.published) || request.auth.token.role == "admin");
+      allow update, write: if request.auth != null && ((request.auth.token.chainId == chainId && request.auth.token.role == "chainAdmin") || request.auth.token.role == "admin");
       allow delete: if request.auth != null && request.auth.token.role == "admin";
       allow read;
     }
