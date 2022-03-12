@@ -206,13 +206,15 @@ export const createChain = functions
           role: user.customClaims?.role ?? ROLE_CHAINADMIN,
         });
 
+        let name;
+        let email;
         try {
-          const name = user.displayName!;
-          const email = user.email!;
+          name = user.displayName!;
+          email = user.email!;
 
           addContactToMailchimpAudience(name, email);
         } catch (error) {
-          console.log("Mailchimp add contact error", error);
+          console.error("Mailchimp add contact error", email, error);
         }
 
         console.log("Mailchimp add contact success");
@@ -244,14 +246,16 @@ export const addUserToChain = functions
         } else {
           await userReference.update("chainId", chainId);
 
+          let name;
+          let email;
           try {
             const userAuth = await admin.auth().getUser(uid);
-            const name = userAuth.displayName!;
-            const email = userAuth.email!;
+            name = userAuth.displayName!;
+            email = userAuth.email!;
 
             addContactToMailchimpAudience(name, email);
           } catch (error) {
-            console.log("Mailchimp add contact error", error);
+            console.error("Mailchimp add contact error", email, error);
           }
 
           console.log("Mailchimp add contact success");
@@ -463,7 +467,7 @@ export const subscribeToNewsletter = functions
       try {
         addContactToMailchimpAudience(name, email);
       } catch (error) {
-        console.log("Mailchimp add contact error", error);
+        console.error("Mailchimp add contact error", email, error);
         throw error;
       }
 
