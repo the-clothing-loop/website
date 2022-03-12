@@ -16,7 +16,7 @@ interface IPaymentInitiateData {
 
 const payments = {
   initiate: async (
-      data: IPaymentInitiateData
+    data: IPaymentInitiateData
   ): Promise<{sessionId: string}> => {
     functions.logger.debug("paymentInitiate parameters", data);
     const {amount, email, type, priceId} = data.variables;
@@ -62,34 +62,34 @@ const payments = {
     }
 
     const session = await stripe.checkout.sessions
-        .create(options)
-        .catch((error: {type: string; message: string}) => {
-          functions.logger.warn(
-              `Error from Stripe: ${error.type}: ${error.message}`
-          );
-          throw new functions.https.HttpsError(
-              "unknown",
-              "Something went wrong when processing your checkout request..."
-          );
-        });
+      .create(options)
+      .catch((error: {type: string; message: string}) => {
+        functions.logger.warn(
+          `Error from Stripe: ${error.type}: ${error.message}`
+        );
+        throw new functions.https.HttpsError(
+          "unknown",
+          "Something went wrong when processing your checkout request..."
+        );
+      });
 
     if (!session || !session.id) {
       throw new functions.https.HttpsError(
-          "unknown",
-          "Something went wrong when processing your checkout request..."
+        "unknown",
+        "Something went wrong when processing your checkout request..."
       );
     }
     await admin
-        .firestore()
-        .collection("payments")
-        .doc(session.id)
-        .set({
-          sessionId: session.id,
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-          amount,
-          email,
-          recurring: type === "recurring",
-        });
+      .firestore()
+      .collection("payments")
+      .doc(session.id)
+      .set({
+        sessionId: session.id,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        amount,
+        email,
+        recurring: type === "recurring",
+      });
 
     functions.logger.debug("payment initiate result", session);
     return {
@@ -97,8 +97,8 @@ const payments = {
     };
   },
   webhook: async (
-      request: functions.Request,
-      response: functions.Response
+    request: functions.Request,
+    response: functions.Response
   ): Promise<any> => {
     functions.logger.debug("payment webhook parameters", request.body);
 
@@ -131,7 +131,7 @@ const payments = {
         const intent = await stripe.setupIntents.retrieve(setupIntentID);
 
         const method = await stripe.paymentMethods.retrieve(
-            intent.payment_method
+          intent.payment_method
         );
         const billingDetails = method.billing_details;
 
@@ -163,15 +163,15 @@ const payments = {
       } else {
         if (!session.customer) {
           return response
-              .status(400)
-              .send("Webhook Error: No customer provided...");
+            .status(400)
+            .send("Webhook Error: No customer provided...");
         }
 
         const customer = await stripe.customers
-            .retrieve(session.customer)
-            .catch(() => {
-              return response.status(400).send("Customer not found...");
-            });
+          .retrieve(session.customer)
+          .catch(() => {
+            return response.status(400).send("Customer not found...");
+          });
 
         const email = customer.email;
 
