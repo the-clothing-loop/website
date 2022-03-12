@@ -32,6 +32,25 @@ function wrapInECMAPromise<T>(fn: () => Promise<T>): Promise<T> {
   });
 }
 
+const addContactToMailchimpAudience = async (name: string, email: string) => {
+  const nameLength = name.split(" ").length;
+  const firstName =
+    nameLength === 1 ? name : name.split(" ").slice(0, -1).join(" ");
+  const lastName = name.split(" ").slice(-1).join(" ");
+
+  await mailchimp.lists.addListMember(
+      functions.config().mailchimp.interested_audience_id,
+      {
+        email_address: email,
+        status: "subscribed",
+        merge_fields: {
+          FNAME: firstName,
+          LNAME: lastName,
+        },
+      }
+  );
+};
+
 export const createUser = functions
   .region(region)
   .https.onCall(async (data: any) => {
@@ -191,22 +210,7 @@ export const createChain = functions
           const name = user.displayName!;
           const email = user.email!;
 
-          const nameLength = name.split(" ").length;
-          const firstName =
-          nameLength === 1 ? name : name.split(" ").slice(0, -1).join(" ");
-          const lastName = name.split(" ").slice(-1).join(" ");
-
-          await mailchimp.lists.addListMember(
-              functions.config().mailchimp.interested_audience_id,
-              {
-                email_address: email,
-                status: "subscribed",
-                merge_fields: {
-                  FNAME: firstName,
-                  LNAME: lastName,
-                },
-              }
-          );
+          addContactToMailchimpAudience(name, email);
         } catch (error) {
           console.log("Mailchimp add contact error", error);
         }
@@ -245,22 +249,7 @@ export const addUserToChain = functions
             const name = userAuth.displayName!;
             const email = userAuth.email!;
 
-            const nameLength = name.split(" ").length;
-            const firstName =
-            nameLength === 1 ? name : name.split(" ").slice(0, -1).join(" ");
-            const lastName = name.split(" ").slice(-1).join(" ");
-
-            await mailchimp.lists.addListMember(
-                functions.config().mailchimp.interested_audience_id,
-                {
-                  email_address: email,
-                  status: "subscribed",
-                  merge_fields: {
-                    FNAME: firstName,
-                    LNAME: lastName,
-                  },
-                }
-            );
+            addContactToMailchimpAudience(name, email);
           } catch (error) {
             console.log("Mailchimp add contact error", error);
           }
@@ -472,22 +461,7 @@ export const subscribeToNewsletter = functions
     const {name, email} = data;
 
       try {
-        const nameLength = name.split(" ").length;
-        const firstName =
-        nameLength === 1 ? name : name.split(" ").slice(0, -1).join(" ");
-        const lastName = name.split(" ").slice(-1).join(" ");
-
-        await mailchimp.lists.addListMember(
-            functions.config().mailchimp.interested_audience_id,
-            {
-              email_address: email,
-              status: "subscribed",
-              merge_fields: {
-                FNAME: firstName,
-                LNAME: lastName,
-              },
-            }
-        );
+        addContactToMailchimpAudience(name, email);
       } catch (error) {
         console.log("Mailchimp add contact error", error);
         throw error;
