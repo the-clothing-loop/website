@@ -221,7 +221,6 @@ export const createChain = functions
           }
         }
 
-
         return {id: chainData.id};
       } else {
         throw new functions.https.HttpsError(
@@ -473,7 +472,6 @@ export const subscribeToNewsletter = functions
         console.error("Mailchimp add contact error", email, error);
         throw error;
       }
-
 
       await db.collection("interested_users").doc(email).set({name, email});
 
