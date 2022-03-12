@@ -213,11 +213,12 @@ export const createChain = functions
           email = user.email!;
 
           addContactToMailchimpAudience(name, email);
+
+          console.log("Mailchimp add contact success");
         } catch (error) {
           console.error("Mailchimp add contact error", email, error);
         }
 
-        console.log("Mailchimp add contact success");
 
         return {id: chainData.id};
       } else {
@@ -254,11 +255,12 @@ export const addUserToChain = functions
             email = userAuth.email!;
 
             addContactToMailchimpAudience(name, email);
+
+            console.log("Mailchimp add contact success");
           } catch (error) {
             console.error("Mailchimp add contact error", email, error);
           }
 
-          console.log("Mailchimp add contact success");
 
           // When switching chains, you're no longer an chain-admin
           if (context.auth?.token?.role === ROLE_CHAINADMIN) {
@@ -466,12 +468,13 @@ export const subscribeToNewsletter = functions
 
       try {
         addContactToMailchimpAudience(name, email);
+
+        console.log("Mailchimp add contact success");
       } catch (error) {
         console.error("Mailchimp add contact error", email, error);
         throw error;
       }
 
-      console.log("Mailchimp add contact success");
 
       await db.collection("interested_users").doc(email).set({name, email});
 
