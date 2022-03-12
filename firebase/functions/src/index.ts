@@ -208,15 +208,17 @@ export const createChain = functions
           role: user.customClaims?.role ?? ROLE_CHAINADMIN,
         });
 
-        let name;
-        let email;
-        try {
-          name = user.displayName!;
-          email = user.email!;
+        if (userData.get("newsletter")) {
+          let userDisplayName;
+          let email;
+          try {
+            userDisplayName = user.displayName!;
+            email = user.email!;
 
-          await addContactToMailchimpAudience(name, email);
-        } catch (error) {
-          console.error("Mailchimp add contact error", email, error);
+            await addContactToMailchimpAudience(userDisplayName, email);
+          } catch (error) {
+            console.error("Mailchimp add contact error", email, error);
+          }
         }
 
 
@@ -247,18 +249,19 @@ export const addUserToChain = functions
         } else {
           await userReference.update("chainId", chainId);
 
-          let name;
-          let email;
-          try {
-            const userAuth = await admin.auth().getUser(uid);
-            name = userAuth.displayName!;
-            email = userAuth.email!;
+          if (user.get("newsletter")) {
+            let name;
+            let email;
+            try {
+              const userAuth = await admin.auth().getUser(uid);
+              name = userAuth.displayName!;
+              email = userAuth.email!;
 
-            await addContactToMailchimpAudience(name, email);
-          } catch (error) {
-            console.error("Mailchimp add contact error", email, error);
+              await addContactToMailchimpAudience(name, email);
+            } catch (error) {
+              console.error("Mailchimp add contact error", email, error);
+            }
           }
-
 
           // When switching chains, you're no longer an chain-admin
           if (context.auth?.token?.role === ROLE_CHAINADMIN) {
