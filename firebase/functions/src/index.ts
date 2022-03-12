@@ -214,7 +214,7 @@ export const createChain = functions
           name = user.displayName!;
           email = user.email!;
 
-          addContactToMailchimpAudience(name, email);
+          await addContactToMailchimpAudience(name, email);
         } catch (error) {
           console.error("Mailchimp add contact error", email, error);
         }
@@ -254,7 +254,7 @@ export const addUserToChain = functions
             name = userAuth.displayName!;
             email = userAuth.email!;
 
-            addContactToMailchimpAudience(name, email);
+            await addContactToMailchimpAudience(name, email);
           } catch (error) {
             console.error("Mailchimp add contact error", email, error);
           }
@@ -465,7 +465,7 @@ export const subscribeToNewsletter = functions
     const {name, email} = data;
 
       try {
-        addContactToMailchimpAudience(name, email);
+        await addContactToMailchimpAudience(name, email);
       } catch (error) {
         console.error("Mailchimp add contact error", email, error);
         throw error;
