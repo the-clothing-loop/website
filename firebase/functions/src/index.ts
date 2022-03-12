@@ -128,35 +128,43 @@ export const createUser = functions
 
       <p>Regards,</p>
       <p>The Clothing Loop team: Nichon, Paloeka, Giulia and Mirjam</p>`;
-    functions.logger.debug("sending verification email", verificationEmail);
-    await db.collection("mail").add({
-      to: email,
-      message: {
-        subject: "Verify e-mail for clothing chain",
-        html: verificationEmail,
-      },
-    });
-    functions.logger.debug("Adding user supplemental information to firebase");
-    await db.collection("users").doc(userRecord.uid).set({
-      chainId,
-      address,
-      newsletter,
-      interestedSizes,
-    });
-    if (adminEmails.includes(email)) {
-      functions.logger.debug(`Adding user ${email} as admin`);
-      await admin.auth().setCustomUserClaims(userRecord.uid, {
-        role: ROLE_ADMIN,
-        chainId: chainId,
+      functions.logger.debug("sending verification email", verificationEmail);
+      await db.collection("mail").add({
+        to: email,
+        message: {
+          subject: "Verify e-mail for clothing chain",
+          html: verificationEmail,
+        },
       });
-    } else {
-      await admin
-        .auth()
-        .setCustomUserClaims(userRecord.uid, {chainId: chainId});
-    }
-    
-    return {id: userRecord.uid};
-  });
+      functions.logger.debug("Adding user supplemental information to firebase");
+      await db.collection("users").doc(userRecord.uid).set({
+        chainId,
+        address,
+        newsletter,
+        interestedSizes,
+      });
+      if (adminEmails.includes(email)) {
+        functions.logger.debug(`Adding user ${email} as admin`);
+        await admin.auth().setCustomUserClaims(userRecord.uid, {
+          role: ROLE_ADMIN,
+          chainId: chainId,
+        });
+      } else {
+        await admin
+            .auth()
+            .setCustomUserClaims(userRecord.uid, {chainId: chainId});
+      }
+
+      if (newsletter) {
+        try {
+          await addContactToMailchimpAudience(name, email);
+        } catch (error) {
+          console.error("Mailchimp add contact error", email, error);
+        }
+      }
+
+      return {id: userRecord.uid};
+    });
 
 export const createChain = functions
   .region(region)
