@@ -710,14 +710,22 @@
 
   .iframe-wrapper {
     padding: 5% 0;
+    position: relative;
   }
 
-  iframe {
+  .iframe-content {
+    padding: 56.25% 0 0 0;
+    position: relative;
+  }
+
+  iframe.vimeo-video {
     border: none;
     width: 100%;
-    position: relative;
+    height: 100%;
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    top: 0;
   }
 }
 
