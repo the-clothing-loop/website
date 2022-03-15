@@ -1,9 +1,10 @@
 // Material
-import { makeStyles, Typography } from "@material-ui/core";
-import DonationForm from "../components/Donation/DonationForm";
+import { makeStyles } from "@material-ui/core";
+import DonationForm from "../../components/Donation/DonationForm";
+import DonationCompleted from "../../components/Donation/DonationCompleted";
 
 //Project resources
-import theme from "../util/theme";
+import theme from "../../util/theme";
 import { RouteComponentProps } from "react-router";
 import { Helmet } from "react-helmet";
 
@@ -22,14 +23,8 @@ const Donate = ({ match }: RouteComponentProps<TParams>) => {
         <title>The Clothing Loop | Donate</title>
         <meta name="description" content="Donate" />
       </Helmet>
-      <div className={classes.donationsWrapper}>
-        <div>
-          <Typography className={classes.pageTitle}>
-            Donate to The Clothing Loop
-          </Typography>
-
-          {status === "thankyou" ? <>Thank you</> : <DonationForm />}
-        </div>
+      <div>
+        {status === "thankyou" ? <DonationCompleted /> : <DonationForm />}
       </div>
     </>
   );
