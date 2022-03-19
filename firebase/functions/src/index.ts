@@ -53,13 +53,21 @@ const addContactToMailchimpAudience = async (name: string, email: string) => {
   console.log("Mailchimp add contact successful");
 };
 
-const doesContactExistInMailchimpAudience = async (email: string) => {
-  await mailchimp.lists.getListMember(
-    functions.config().mailchimp.interested_audience_id,
-    email
-  );
+const checkContactExistInMailchimpAudience = async (email: string) => {
+  try {
+    await await mailchimp.lists.getListMember(
+      functions.config().mailchimp.interested_audience_id,
+      email
+    );
 
-  console.log("Mailchimp contact found", email);
+    console.log("Mailchimp contact found", email);
+  } catch (error) {
+    console.log("Mailchimp contact not found");
+
+    return false;
+  }
+
+  return true;
 };
 
 const updateContactSubscriptionInMailchimpAudience = async (
@@ -349,17 +357,12 @@ export const updateUser = functions
       const userAuth = await admin.auth().getUser(uid);
       const email = userAuth.email!;
 
-      let isContactExists = true;
-      try {
-        await doesContactExistInMailchimpAudience(email);
-      } catch (error) {
-        console.log("Mailchimp contact not found");
-
-        isContactExists = false;
-      }
+      const doesContactExist = await checkContactExistInMailchimpAudience(
+        email
+      );
 
       if (newsletter) {
-        if (isContactExists) {
+        if (doesContactExist) {
           try {
             await updateContactSubscriptionInMailchimpAudience(email, true);
           } catch (error) {
@@ -372,7 +375,7 @@ export const updateUser = functions
             console.error("Mailchimp add contact error", email, error);
           }
         }
-      } else if (isContactExists) {
+      } else if (doesContactExist) {
         try {
           await updateContactSubscriptionInMailchimpAudience(email, false);
         } catch (error) {
