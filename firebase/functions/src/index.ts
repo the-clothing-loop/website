@@ -140,7 +140,6 @@ export const createUser = functions
       await db.collection("users").doc(userRecord.uid).set({
         chainId,
         address,
-        newsletter,
         interestedSizes,
       });
       if (adminEmails.includes(email)) {
@@ -481,13 +480,11 @@ export const subscribeToNewsletter = functions
         throw error;
       }
 
-      await db.collection("interested_users").doc(email).set({name, email});
-
-    await db.collection("mail").add({
-      to: email,
-      message: {
-        subject: "Thank you for subscribing to Clothing Loop",
-        html: ` <p>Hi ${name},</p>
+      await db.collection("mail").add({
+        to: email,
+        message: {
+          subject: "Thank you for subscribing to Clothing Loop",
+          html: ` <p>Hi ${name},</p>
 
                 <p>Hurrah! You are now subscribed to our newsletter.</p>
                 <p> Expect monthly updates full of inspiration, </p>
