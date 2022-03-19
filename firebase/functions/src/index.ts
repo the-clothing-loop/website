@@ -50,7 +50,31 @@ const addContactToMailchimpAudience = async (name: string, email: string) => {
     }
   );
 
-  console.log("Mailchimp add contact success");
+  console.log("Mailchimp add contact successful");
+};
+
+const isContactExistInMailchimpAudience = async (email: string) => {
+  await mailchimp.lists.getListMember(
+    functions.config().mailchimp.interested_audience_id,
+    email
+  );
+
+  console.log("Mailchimp contact found", email);
+};
+
+const updateContactSubscriptionInMailchimpAudience = async (
+  email: string,
+  isSubscribe: boolean
+) => {
+  await mailchimp.lists.updateListMember(
+    functions.config().mailchimp.interested_audience_id,
+    email,
+    {
+      status: isSubscribe ? "subscribed" : "unsubscribed",
+    }
+  );
+
+  console.log("Mailchimp update contact subscription successful");
 };
 
 export const createUser = functions
@@ -321,6 +345,41 @@ export const updateUser = functions
         },
         {merge: true}
       );
+
+      const userAuth = await admin.auth().getUser(uid);
+      const email = userAuth.email!;
+
+      let isContactExists = true;
+      try {
+        await isContactExistInMailchimpAudience(email);
+      } catch (error) {
+        console.log("Mailchimp contact not found");
+
+        isContactExists = false;
+      }
+
+      if (newsletter) {
+        if (isContactExists) {
+          try {
+            await updateContactSubscriptionInMailchimpAudience(email, true);
+          } catch (error) {
+            console.error("Mailchimp subscribe contact error", email, error);
+          }
+        } else {
+          try {
+            await addContactToMailchimpAudience(name, email);
+          } catch (error) {
+            console.error("Mailchimp add contact error", email, error);
+          }
+        }
+      } else if (isContactExists) {
+        try {
+          await updateContactSubscriptionInMailchimpAudience(email, false);
+        } catch (error) {
+          console.error("Mailchimp unsubscribe contact error", email, error);
+        }
+      }
+
       return {};
     } else {
       throw new functions.https.HttpsError(
