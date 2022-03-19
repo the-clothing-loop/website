@@ -39,15 +39,15 @@ const addContactToMailchimpAudience = async (name: string, email: string) => {
   const lastName = name.split(" ").slice(-1).join(" ");
 
   await mailchimp.lists.addListMember(
-      functions.config().mailchimp.interested_audience_id,
-      {
-        email_address: email,
-        status: "subscribed",
-        merge_fields: {
-          FNAME: firstName,
-          LNAME: lastName,
-        },
-      }
+    functions.config().mailchimp.interested_audience_id,
+    {
+      email_address: email,
+      status: "subscribed",
+      merge_fields: {
+        FNAME: firstName,
+        LNAME: lastName,
+      },
+    }
   );
 
   console.log("Mailchimp add contact success");
@@ -128,42 +128,42 @@ export const createUser = functions
 
       <p>Regards,</p>
       <p>The Clothing Loop team: Nichon, Paloeka, Giulia and Mirjam</p>`;
-      functions.logger.debug("sending verification email", verificationEmail);
-      await db.collection("mail").add({
-        to: email,
-        message: {
-          subject: "Verify e-mail for clothing chain",
-          html: verificationEmail,
-        },
-      });
-      functions.logger.debug("Adding user supplemental information to firebase");
-      await db.collection("users").doc(userRecord.uid).set({
-        chainId,
-        address,
-        interestedSizes,
-      });
-      if (adminEmails.includes(email)) {
-        functions.logger.debug(`Adding user ${email} as admin`);
-        await admin.auth().setCustomUserClaims(userRecord.uid, {
-          role: ROLE_ADMIN,
-          chainId: chainId,
-        });
-      } else {
-        await admin
-            .auth()
-            .setCustomUserClaims(userRecord.uid, {chainId: chainId});
-      }
-
-      if (newsletter) {
-        try {
-          await addContactToMailchimpAudience(name, email);
-        } catch (error) {
-          console.error("Mailchimp add contact error", email, error);
-        }
-      }
-
-      return {id: userRecord.uid};
+    functions.logger.debug("sending verification email", verificationEmail);
+    await db.collection("mail").add({
+      to: email,
+      message: {
+        subject: "Verify e-mail for clothing chain",
+        html: verificationEmail,
+      },
     });
+    functions.logger.debug("Adding user supplemental information to firebase");
+    await db.collection("users").doc(userRecord.uid).set({
+      chainId,
+      address,
+      interestedSizes,
+    });
+    if (adminEmails.includes(email)) {
+      functions.logger.debug(`Adding user ${email} as admin`);
+      await admin.auth().setCustomUserClaims(userRecord.uid, {
+        role: ROLE_ADMIN,
+        chainId: chainId,
+      });
+    } else {
+      await admin
+        .auth()
+        .setCustomUserClaims(userRecord.uid, {chainId: chainId});
+    }
+
+    if (newsletter) {
+      try {
+        await addContactToMailchimpAudience(name, email);
+      } catch (error) {
+        console.error("Mailchimp add contact error", email, error);
+      }
+    }
+
+    return {id: userRecord.uid};
+  });
 
 export const createChain = functions
   .region(region)
@@ -206,78 +206,50 @@ export const createChain = functions
         longitude,
         radius,
         categories,
-          published: false,
-          chainAdmin: uid,
-        });
-        db.collection("users").doc(uid).update("chainId", chainData.id);
-        await admin.auth().setCustomUserClaims(uid, {
-          chainId: chainData.id,
-          role: user.customClaims?.role ?? ROLE_CHAINADMIN,
-        });
+        published: false,
+        chainAdmin: uid,
+      });
+      db.collection("users").doc(uid).update("chainId", chainData.id);
+      await admin.auth().setCustomUserClaims(uid, {
+        chainId: chainData.id,
+        role: user.customClaims?.role ?? ROLE_CHAINADMIN,
+      });
 
-        if (userData.get("newsletter")) {
-          let userDisplayName;
-          let email;
-          try {
-            userDisplayName = user.displayName!;
-            email = user.email!;
-
-            await addContactToMailchimpAudience(userDisplayName, email);
-          } catch (error) {
-            console.error("Mailchimp add contact error", email, error);
-          }
-        }
-
-        return {id: chainData.id};
-      } else {
-        throw new functions.https.HttpsError(
-            "permission-denied",
-            "You don't have permission to change this user's chain"
-        );
-      }
-    });
+      return {id: chainData.id};
+    } else {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "You don't have permission to change this user's chain"
+      );
+    }
+  });
 
 export const addUserToChain = functions
-    .region(region)
-    .https.onCall(async (data: any, context: functions.https.CallableContext) => {
-      functions.logger.debug("updateUserToChain parameters", data);
+  .region(region)
+  .https.onCall(async (data: any, context: functions.https.CallableContext) => {
+    functions.logger.debug("updateUserToChain parameters", data);
 
-      const {uid, chainId} = data;
+    const {uid, chainId} = data;
 
-      if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
-        const userReference = db.collection("users").doc(uid);
-        const user = await userReference.get();
+    if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
+      const userReference = db.collection("users").doc(uid);
+      const user = await userReference.get();
 
-        if (user.get("chainId") === chainId) {
-          functions.logger.warn(
-              `user ${uid} is already member of chain ${chainId}`
-          );
+      if (user.get("chainId") === chainId) {
+        functions.logger.warn(
+          `user ${uid} is already member of chain ${chainId}`
+        );
+      } else {
+        await userReference.update("chainId", chainId);
+
+        // When switching chains, you're no longer an chain-admin
+        if (context.auth?.token?.role === ROLE_CHAINADMIN) {
+          await admin.auth().setCustomUserClaims(uid, {chainId: chainId});
         } else {
-          await userReference.update("chainId", chainId);
-
-          if (user.get("newsletter")) {
-            let name;
-            let email;
-            try {
-              const userAuth = await admin.auth().getUser(uid);
-              name = userAuth.displayName!;
-              email = userAuth.email!;
-
-              await addContactToMailchimpAudience(name, email);
-            } catch (error) {
-              console.error("Mailchimp add contact error", email, error);
-            }
-          }
-
-          // When switching chains, you're no longer an chain-admin
-          if (context.auth?.token?.role === ROLE_CHAINADMIN) {
-            await admin.auth().setCustomUserClaims(uid, {chainId: chainId});
-          } else {
-            await admin.auth().setCustomUserClaims(uid, {
-              chainId: chainId,
-              role: context.auth?.token?.role,
-            });
-
+          await admin.auth().setCustomUserClaims(uid, {
+            chainId: chainId,
+            role: context.auth?.token?.role,
+          });
         }
 
         await notifyChainAdmin(chainId, uid);
@@ -323,41 +295,40 @@ const notifyChainAdmin = async (chainId: string, newUserId: string) => {
 };
 
 export const updateUser = functions
-    .region(region)
-    .https.onCall(async (data: any, context: functions.https.CallableContext) => {
-      functions.logger.debug("updateUser parameters", data);
-      const [uid, name, phoneNumber, newsletter, interestedSizes, address] = [
-        data.uid,
-        data.name,
-        data.phoneNumber,
-        data.newsletter,
-        data.interestedSizes,
-        data.address,
-      ];
+  .region(region)
+  .https.onCall(async (data: any, context: functions.https.CallableContext) => {
+    functions.logger.debug("updateUser parameters", data);
+    const [uid, name, phoneNumber, newsletter, interestedSizes, address] = [
+      data.uid,
+      data.name,
+      data.phoneNumber,
+      data.newsletter,
+      data.interestedSizes,
+      data.address,
+    ];
 
-      if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
-        const userRecord = await admin.auth().updateUser(uid, {
-          phoneNumber: phoneNumber,
-          displayName: name,
-          disabled: false,
-        });
-        functions.logger.debug("updated user", userRecord);
-        await db.collection("users").doc(userRecord.uid).set(
-            {
-              address,
-              newsletter,
-              interestedSizes,
-            },
-            {merge: true}
-        );
-        return {};
-      } else {
-        throw new functions.https.HttpsError(
-            "permission-denied",
-            "You don't have permission to update this user"
-        );
-      }
-    });
+    if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
+      const userRecord = await admin.auth().updateUser(uid, {
+        phoneNumber: phoneNumber,
+        displayName: name,
+        disabled: false,
+      });
+      functions.logger.debug("updated user", userRecord);
+      await db.collection("users").doc(userRecord.uid).set(
+        {
+          address,
+          interestedSizes,
+        },
+        {merge: true}
+      );
+      return {};
+    } else {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "You don't have permission to update this user"
+      );
+    }
+  });
 
 export const getUserById = functions
   .region(region)
@@ -381,7 +352,6 @@ export const getUserById = functions
         emailVerified: user.emailVerified,
         chainId: userData.get("chainId"),
         address: userData.get("address"),
-        newsletter: userData.get("newsletter"),
         interestedSizes: userData.get("interestedSizes"),
         role: user.customClaims?.role,
       };
@@ -415,7 +385,6 @@ export const getUserByEmail = functions
         emailVerified: user.emailVerified,
         chainId: userData.get("chainId"),
         address: userData.get("address"),
-        newsletter: userData.get("newsletter"),
         interestedSizes: userData.get("interestedSizes"),
         role: user.customClaims?.role,
       };
@@ -473,18 +442,18 @@ export const subscribeToNewsletter = functions
 
     const {name, email} = data;
 
-      try {
-        await addContactToMailchimpAudience(name, email);
-      } catch (error) {
-        console.error("Mailchimp add contact error", email, error);
-        throw error;
-      }
+    try {
+      await addContactToMailchimpAudience(name, email);
+    } catch (error) {
+      console.error("Mailchimp add contact error", email, error);
+      throw error;
+    }
 
-      await db.collection("mail").add({
-        to: email,
-        message: {
-          subject: "Thank you for subscribing to Clothing Loop",
-          html: ` <p>Hi ${name},</p>
+    await db.collection("mail").add({
+      to: email,
+      message: {
+        subject: "Thank you for subscribing to Clothing Loop",
+        html: ` <p>Hi ${name},</p>
 
                 <p>Hurrah! You are now subscribed to our newsletter.</p>
                 <p> Expect monthly updates full of inspiration, </p>
