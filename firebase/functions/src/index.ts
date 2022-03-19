@@ -53,7 +53,7 @@ const addContactToMailchimpAudience = async (name: string, email: string) => {
   console.log("Mailchimp add contact successful");
 };
 
-const checkContactExistInMailchimpAudience = async (email: string) => {
+const checkContactExistenceInMailchimpAudience = async (email: string) => {
   try {
     await await mailchimp.lists.getListMember(
       functions.config().mailchimp.interested_audience_id,
@@ -357,7 +357,7 @@ export const updateUser = functions
       const userAuth = await admin.auth().getUser(uid);
       const email = userAuth.email!;
 
-      const doesContactExist = await checkContactExistInMailchimpAudience(
+      const doesContactExist = await checkContactExistenceInMailchimpAudience(
         email
       );
 
