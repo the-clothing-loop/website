@@ -18,7 +18,15 @@ jobs:
       - name: Configure
         uses: w9jds/firebase-action@master
         with:
-          args: functions:config:set clothingloop.base_domain="$BASE_DOMAIN" clothingloop.region="$REGION" clothingloop.admin_emails="$ADMIN_EMAILS" clothingloop.contact_emails="$CONTACT_EMAILS"
+          args: >
+            functions:config:set 
+            clothingloop.base_domain="$BASE_DOMAIN" 
+            clothingloop.region="$REGION" 
+            clothingloop.admin_emails="$ADMIN_EMAILS" 
+            clothingloop.contact_emails="$CONTACT_EMAILS" 
+            mailchimp.api_key="$API_KEY" 
+            mailchimp.server="$SERVER" 
+            mailchimp.interested_audience_id="$INTERESTED_AUDIENCE_ID"
         env:
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
           BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
@@ -27,6 +35,11 @@ jobs:
           PROJECT_PATH: ./firebase/functions
           REGION: ${{ secrets.REGION }}
           CONTACT_EMAILS: ${{ secrets.CONTACT_EMAILS }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
+          SERVER: ${{ secrets.SERVER }}
+          INTERESTED_AUDIENCE_ID: ${{ secrets.INTERESTED_AUDIENCE_ID }}
       - name: Deploy
         uses: w9jds/firebase-action@master
         with:
