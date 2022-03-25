@@ -24,7 +24,7 @@ const About = () => {
           <div className="iframe-wrapper">
             <div className="iframe-content">
               <iframe
-                src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
                 allow="autoplay; fullscreen; picture-in-picture"
                 className="vimeo-video"
               ></iframe>
