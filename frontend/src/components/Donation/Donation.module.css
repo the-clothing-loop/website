@@ -8,7 +8,7 @@
 
 .donationsWrapper {
   position: relative;
-  margin: 100px 0;
+  margin: 50px 0;
   width: 40%;
   max-width: 1440px;
   left: 50%;
@@ -18,7 +18,7 @@
   width: 100%;
 }
 .donationsWrapper .donationForm .paymentSelectionOptions {
-  margin-top: 2px;
+  margin-top: 40px;
   margin-bottom: 10px;
 }
 .donationsWrapper .donationForm .paymentSelectionOptions .paymentToggle {
@@ -48,13 +48,14 @@
   border-color: #518d7e;
 }
 .donationsWrapper .donationForm .paymentSelectionOptions .paymentToggle input[type=text] {
-  border: solid 1px var(--c-grey-d30--c-grey-d30);
+  border: solid 1px #518d7e;
   display: inline-block;
   width: 100%;
-  height: 46px;
-  padding: 0 10px;
+  height: max-content;
+  padding: 11px;
   background-color: white;
   border-radius: 0;
+  font-family: "Montserrat";
 }
 .donationsWrapper .donationForm .paymentSelectionOptions .paymentToggle input[type=text]::placeholder {
   color: #8a8a8a;
@@ -117,6 +118,7 @@
   font-family: Montserrat;
   font-weight: 600;
   line-height: 63.98px;
+  margin: 0;
 }
 
 p {

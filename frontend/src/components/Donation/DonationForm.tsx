@@ -36,13 +36,13 @@ const DonationFormContent = () => {
       priceId: "price_1KdEeQKBdXHva7sK8x1tPlL7",
     },
   ];
-  const amounts = [10, 20, 30, 50, 100];
+  const amounts = [5, 10, 20, 50, 100];
 
   const formik = useFormik({
     initialValues: {
       email: "",
-      recurring: true,
-      amount: 20,
+      recurring: false,
+      amount: 10,
       type: "",
       priceId: "price_1KdEdvKBdXHva7sKjwXlAoxe",
     },
@@ -143,6 +143,7 @@ const DonationFormContent = () => {
 
         <FormikContext.Provider value={formik}>
           <form onSubmit={formik.handleSubmit} className={styles.donationForm}>
+            {/*======> START: UI FOR RECURRING PAYMENTS <======
             <p>How do you want to contribute to The Clothing Loop?</p>
             <Grid container className={styles.paymentSelectionOptions}>
               <Grid
@@ -188,13 +189,24 @@ const DonationFormContent = () => {
                   Become a member
                 </label>
               </Grid>
-            </Grid>
+            </Grid> 
             <br />
             {formik.values.recurring ? (
               <p>I will support The Clothing Loop with a monthly donation:</p>
             ) : (
               <p>I will support The Clothing Loop with a one-time donation:</p>
             )}
+            ===============> END <===============
+            */}
+            <p>
+              "Small acts, when multiplied by millions of people, can change the
+              world" (Howard Zinn)
+            </p>
+            <p>
+              Thanks for considering a donation to The Clothing Loop! <br/>With your
+              gift we will work effortlessly to make The Clothing Loop even
+              better, bigger and more impactful.
+            </p>
             <Grid
               container
               spacing={2}
@@ -219,7 +231,7 @@ const DonationFormContent = () => {
                     onChange={(e) =>
                       formik.setFieldValue("amount", parseInt(e.target.value))
                     }
-                    placeholder="Other"
+                    placeholder="Other amount"
                   />
                 </Grid>
               )}
@@ -297,9 +309,9 @@ const DonationForm = () => {
       <div className={styles.donationsWrapper}>
         <h3 className={styles.pageTitle}>Donate to The Clothing Loop</h3>
 
-      <Elements stripe={stripePromise}>
-        <DonationFormContent />
-      </Elements>
+        <Elements stripe={stripePromise}>
+          <DonationFormContent />
+        </Elements>
       </div>
     );
   }
