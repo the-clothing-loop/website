@@ -1,9 +1,16 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {UserRecord} from "firebase-functions/lib/providers/auth";
+import * as mailchimp from "@mailchimp/mailchimp_marketing";
+
 import payments from "./payments";
 
 admin.initializeApp();
+
+mailchimp.setConfig({
+  apiKey: functions.config().mailchimp.api_key,
+  server: functions.config().mailchimp.server,
+});
 
 const db = admin.firestore();
 const region = functions.config().clothingloop.region as string;
@@ -24,6 +31,59 @@ function wrapInECMAPromise<T>(fn: () => Promise<T>): Promise<T> {
       .catch((err) => reject(err));
   });
 }
+
+const addContactToMailchimpAudience = async (name: string, email: string) => {
+  const nameLength = name.split(" ").length;
+  const firstName =
+    nameLength === 1 ? name : name.split(" ").slice(0, -1).join(" ");
+  const lastName = name.split(" ").slice(-1).join(" ");
+
+  await mailchimp.lists.addListMember(
+    functions.config().mailchimp.interested_audience_id,
+    {
+      email_address: email,
+      status: "subscribed",
+      merge_fields: {
+        FNAME: firstName,
+        LNAME: lastName,
+      },
+    }
+  );
+
+  console.log("Mailchimp add contact successful");
+};
+
+const checkContactExistenceInMailchimpAudience = async (email: string) => {
+  try {
+    await await mailchimp.lists.getListMember(
+      functions.config().mailchimp.interested_audience_id,
+      email
+    );
+
+    console.log("Mailchimp contact found", email);
+  } catch (error) {
+    console.log("Mailchimp contact not found");
+
+    return false;
+  }
+
+  return true;
+};
+
+const updateContactSubscriptionInMailchimpAudience = async (
+  email: string,
+  isSubscribe: boolean
+) => {
+  await mailchimp.lists.updateListMember(
+    functions.config().mailchimp.interested_audience_id,
+    email,
+    {
+      status: isSubscribe ? "subscribed" : "unsubscribed",
+    }
+  );
+
+  console.log("Mailchimp update contact subscription successful");
+};
 
 export const createUser = functions
   .region(region)
@@ -112,7 +172,6 @@ export const createUser = functions
     await db.collection("users").doc(userRecord.uid).set({
       chainId,
       address,
-      newsletter,
       interestedSizes,
     });
     if (adminEmails.includes(email)) {
@@ -126,7 +185,15 @@ export const createUser = functions
         .auth()
         .setCustomUserClaims(userRecord.uid, {chainId: chainId});
     }
-    // TODO: Subscribe user in mailchimp if needed
+
+    if (newsletter) {
+      try {
+        await addContactToMailchimpAudience(name, email);
+      } catch (error) {
+        console.error("Mailchimp add contact error", email, error);
+      }
+    }
+
     return {id: userRecord.uid};
   });
 
@@ -179,6 +246,7 @@ export const createChain = functions
         chainId: chainData.id,
         role: user.customClaims?.role ?? ROLE_CHAINADMIN,
       });
+
       return {id: chainData.id};
     } else {
       throw new functions.https.HttpsError(
@@ -197,12 +265,15 @@ export const addUserToChain = functions
 
     if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
       const userReference = db.collection("users").doc(uid);
-      if ((await userReference.get()).get("chainId") === chainId) {
+      const user = await userReference.get();
+
+      if (user.get("chainId") === chainId) {
         functions.logger.warn(
           `user ${uid} is already member of chain ${chainId}`
         );
       } else {
         await userReference.update("chainId", chainId);
+
         // When switching chains, you're no longer an chain-admin
         if (context.auth?.token?.role === ROLE_CHAINADMIN) {
           await admin.auth().setCustomUserClaims(uid, {chainId: chainId});
@@ -278,12 +349,40 @@ export const updateUser = functions
       await db.collection("users").doc(userRecord.uid).set(
         {
           address,
-          newsletter,
           interestedSizes,
         },
         {merge: true}
       );
-      // TODO: Update user in mailchimp if needed
+
+      const userAuth = await admin.auth().getUser(uid);
+      const email = userAuth.email!;
+
+      const doesContactExist = await checkContactExistenceInMailchimpAudience(
+        email
+      );
+
+      if (newsletter) {
+        if (doesContactExist) {
+          try {
+            await updateContactSubscriptionInMailchimpAudience(email, true);
+          } catch (error) {
+            console.error("Mailchimp subscribe contact error", email, error);
+          }
+        } else {
+          try {
+            await addContactToMailchimpAudience(name, email);
+          } catch (error) {
+            console.error("Mailchimp add contact error", email, error);
+          }
+        }
+      } else if (doesContactExist) {
+        try {
+          await updateContactSubscriptionInMailchimpAudience(email, false);
+        } catch (error) {
+          console.error("Mailchimp unsubscribe contact error", email, error);
+        }
+      }
+
       return {};
     } else {
       throw new functions.https.HttpsError(
@@ -315,7 +414,6 @@ export const getUserById = functions
         emailVerified: user.emailVerified,
         chainId: userData.get("chainId"),
         address: userData.get("address"),
-        newsletter: userData.get("newsletter"),
         interestedSizes: userData.get("interestedSizes"),
         role: user.customClaims?.role,
       };
@@ -349,7 +447,6 @@ export const getUserByEmail = functions
         emailVerified: user.emailVerified,
         chainId: userData.get("chainId"),
         address: userData.get("address"),
-        newsletter: userData.get("newsletter"),
         interestedSizes: userData.get("interestedSizes"),
         role: user.customClaims?.role,
       };
@@ -407,10 +504,12 @@ export const subscribeToNewsletter = functions
 
     const {name, email} = data;
 
-    await db.collection("interested_users").add({
-      name,
-      email,
-    });
+    try {
+      await addContactToMailchimpAudience(name, email);
+    } catch (error) {
+      console.error("Mailchimp add contact error", email, error);
+      throw error;
+    }
 
     await db.collection("mail").add({
       to: email,

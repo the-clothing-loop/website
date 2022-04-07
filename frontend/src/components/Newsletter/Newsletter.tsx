@@ -60,6 +60,7 @@ export const Newsletter = () => {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [submitted, setSubmitted] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -70,7 +71,15 @@ export const Newsletter = () => {
   };
 
   const handleSubmitClick = async () => {
-    await subscribeToNewsletter({ name, email });
+    try {
+      await subscribeToNewsletter({ name, email });
+    } catch (error) {
+      setIsError(true);
+      setTimeout(() => setIsError(false), 3000);
+
+      return;
+    }
+
     setSubmitted(true);
   };
 
@@ -83,6 +92,15 @@ export const Newsletter = () => {
           </Typography>
           <Typography classes={{ root: classes.subheadingTypographyRoot }}>
             You are now subscribed to our monthly newsletter!
+          </Typography>
+        </div>
+      ) : isError ? (
+        <div>
+          <Typography classes={{ root: classes.headingTypographyRoot }}>
+            Something is wrong
+          </Typography>
+          <Typography classes={{ root: classes.subheadingTypographyRoot }}>
+            Please try again in 3 seconds
           </Typography>
         </div>
       ) : (
