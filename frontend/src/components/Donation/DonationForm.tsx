@@ -138,12 +138,11 @@ const DonationFormContent = () => {
       className={styles.card}
       style={{ width: "100%", backgroundColor: "transparent" }}
     >
-      <CardContent>
+      <CardContent className={styles.cardContent}>
         {error && <Alert severity="error">{error}</Alert>}
 
         <FormikContext.Provider value={formik}>
           <form onSubmit={formik.handleSubmit} className={styles.donationForm}>
-            {/*======> START: UI FOR RECURRING PAYMENTS <======
             <p>How do you want to contribute to The Clothing Loop?</p>
             <Grid container className={styles.paymentSelectionOptions}>
               <Grid
@@ -189,24 +188,14 @@ const DonationFormContent = () => {
                   Become a member
                 </label>
               </Grid>
-            </Grid> 
+            </Grid>
             <br />
             {formik.values.recurring ? (
               <p>I will support The Clothing Loop with a monthly donation:</p>
             ) : (
               <p>I will support The Clothing Loop with a one-time donation:</p>
             )}
-            ===============> END <===============
-            */}
-            <p>
-              "Small acts, when multiplied by millions of people, can change the
-              world" (Howard Zinn)
-            </p>
-            <p>
-              Thanks for considering a donation to The Clothing Loop! <br/>With your
-              gift we will work effortlessly to make The Clothing Loop even
-              better, bigger and more impactful.
-            </p>
+
             <Grid
               container
               spacing={2}
@@ -308,6 +297,15 @@ const DonationForm = () => {
     return (
       <div className={styles.donationsWrapper}>
         <h3 className={styles.pageTitle}>Donate to The Clothing Loop</h3>
+        <p>
+          "Small acts, when multiplied by millions of people, can change the
+          world" (Howard Zinn)
+        </p>
+        <p>
+          Thanks for considering a donation to The Clothing Loop! <br />
+          With your gift we will work effortlessly to make The Clothing Loop
+          even better, bigger and more impactful.
+        </p>
 
         <Elements stripe={stripePromise}>
           <DonationFormContent />

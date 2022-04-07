@@ -1,7 +1,9 @@
 .card {
   background-color: white;
 }
-
+.cardContent {
+  padding: 0;
+}
 .formRow {
   margin-bottom: var(--spacing);
 }
@@ -18,7 +20,7 @@
     width: 100%;
 
     .paymentSelectionOptions {
-      margin-top: 40px;
+      margin-top: 10px;
       margin-bottom: 10px;
 
       .paymentToggle {
