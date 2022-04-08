@@ -21,7 +21,7 @@ import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
 import Contacts from "./pages/Contacts.js";
 import MessageSubmitted from "./pages/MessageSubmitted";
-import Donate from "./pages/Donate";
+import Donate from "./pages/Donations/Donate";
 import About from "./pages/About";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";

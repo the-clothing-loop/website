@@ -3,7 +3,7 @@ import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { FormikContext, useFormik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
-import { Button, Card, CardContent, Grid } from "@material-ui/core";
+import { Button, Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { Alert, CircularProgress } from "@mui/material";
 import styles from "./Donation.module.css";
 import { paymentInitiate } from "../../util/firebase/payments";
@@ -25,26 +25,26 @@ const DonationFormContent = () => {
   const amountsRecurring = [
     {
       string: "A coffee a month ☕️ €2.50",
-      priceId: "price_1IAgywKEl0DmQOIqsyiOEF88",
+      priceId: "price_1KdEdAKBdXHva7sKwHdv20Iw",
     },
     {
       string: "A sandwich a month 🥪 €5.00",
-      priceId: "price_1IAgzIKEl0DmQOIqLGl1nBIA",
+      priceId: "price_1KdEdvKBdXHva7sKjwXlAoxe",
     },
     {
       string: "A dinner a month 🍲️ €10.00",
-      priceId: "price_1IAgzbKEl0DmQOIqEuVJitsi",
+      priceId: "price_1KdEeQKBdXHva7sK8x1tPlL7",
     },
   ];
-  const amounts = [10, 20, 30, 50, 100];
+  const amounts = [5, 10, 20, 50, 100];
 
   const formik = useFormik({
     initialValues: {
       email: "",
-      recurring: true,
-      amount: 20,
+      recurring: false,
+      amount: 10,
       type: "",
-      priceId: "price_1IAgzIKEl0DmQOIqLGl1nBIA",
+      priceId: "price_1KdEdvKBdXHva7sKjwXlAoxe",
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -138,34 +138,13 @@ const DonationFormContent = () => {
       className={styles.card}
       style={{ width: "100%", backgroundColor: "transparent" }}
     >
-      <CardContent>
+      <CardContent className={styles.cardContent}>
         {error && <Alert severity="error">{error}</Alert>}
 
         <FormikContext.Provider value={formik}>
           <form onSubmit={formik.handleSubmit} className={styles.donationForm}>
             <p>How do you want to contribute to The Clothing Loop?</p>
             <Grid container className={styles.paymentSelectionOptions}>
-              <Grid
-                item
-                key="periodic"
-                xs={12}
-                sm={6}
-                className={styles.paymentToggle}
-              >
-                <input
-                  id="periodic-donation-button"
-                  type="radio"
-                  name="type"
-                  value="periodic"
-                  checked={formik.values.recurring}
-                  onChange={() => {
-                    formik.setFieldValue("recurring", true);
-                  }}
-                />
-                <label htmlFor="periodic-donation-button">
-                  Become a member
-                </label>
-              </Grid>
               <Grid
                 item
                 key="one-off"
@@ -187,6 +166,28 @@ const DonationFormContent = () => {
                   One-time donation
                 </label>
               </Grid>
+
+              <Grid
+                item
+                key="periodic"
+                xs={12}
+                sm={6}
+                className={styles.paymentToggle}
+              >
+                <input
+                  id="periodic-donation-button"
+                  type="radio"
+                  name="type"
+                  value="periodic"
+                  checked={formik.values.recurring}
+                  onChange={() => {
+                    formik.setFieldValue("recurring", true);
+                  }}
+                />
+                <label htmlFor="periodic-donation-button">
+                  Become a member
+                </label>
+              </Grid>
             </Grid>
             <br />
             {formik.values.recurring ? (
@@ -194,6 +195,7 @@ const DonationFormContent = () => {
             ) : (
               <p>I will support The Clothing Loop with a one-time donation:</p>
             )}
+
             <Grid
               container
               spacing={2}
@@ -218,7 +220,7 @@ const DonationFormContent = () => {
                     onChange={(e) =>
                       formik.setFieldValue("amount", parseInt(e.target.value))
                     }
-                    placeholder="Other"
+                    placeholder="Other amount"
                   />
                 </Grid>
               )}
@@ -293,9 +295,22 @@ const DonationForm = () => {
     const stripePromise = loadStripe(stripePublicKey);
 
     return (
-      <Elements stripe={stripePromise}>
-        <DonationFormContent />
-      </Elements>
+      <div className={styles.donationsWrapper}>
+        <h3 className={styles.pageTitle}>Donate to The Clothing Loop</h3>
+        <p>
+          "Small acts, when multiplied by millions of people, can change the
+          world" (Howard Zinn)
+        </p>
+        <p>
+          Thanks for considering a donation to The Clothing Loop! <br />
+          With your gift we will work effortlessly to make The Clothing Loop
+          even better, bigger and more impactful.
+        </p>
+
+        <Elements stripe={stripePromise}>
+          <DonationFormContent />
+        </Elements>
+      </div>
     );
   }
   return <div>Access token not configured</div>;
