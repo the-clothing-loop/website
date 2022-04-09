@@ -289,9 +289,11 @@ const DonationFormContent = () => {
 };
 
 const DonationForm = () => {
+  console.log("accessToken", accessToken.stripeApiAccessToken);
+
   if (accessToken.stripeApiAccessToken) {
     const stripePublicKey = accessToken.stripeApiAccessToken;
-    console.log("stripePublicKey", stripePublicKey)
+    console.log("stripePublicKey", stripePublicKey);
 
     const stripePromise = loadStripe(stripePublicKey);
 
