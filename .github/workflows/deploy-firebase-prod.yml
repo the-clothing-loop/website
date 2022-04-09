@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env: 
+  REACT_APP_STRIPE_PUBLIC_KEY: ${{ secrets.REACT_APP_STRIPE_PUBLIC_KEY }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -40,7 +43,6 @@ jobs:
           API_KEY: ${{ secrets.API_KEY }}
           SERVER: ${{ secrets.SERVER }}
           INTERESTED_AUDIENCE_ID: ${{ secrets.INTERESTED_AUDIENCE_ID }}
-          REACT_APP_STRIPE_PUBLIC_KEY: ${{ secrets.REACT_APP_STRIPE_PUBLIC_KEY }}
       - name: Deploy
         uses: w9jds/firebase-action@master
         with:
