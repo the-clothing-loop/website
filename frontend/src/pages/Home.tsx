@@ -34,6 +34,7 @@ import EssenseLogo from "../images/logos/essense-logo.svg";
 import WdcdLogo from "../images/logos/Logo_WDCD.png";
 import DoenLogo from "../images/logos/DOEN.png";
 import PNHLogo from "../images/logos/PNH_logo.png";
+import { StandaloneSearchBar } from "../components/FindChain/StandaloneSearchBar";
 
 const Home = () => {
   const chainsCount = React.useContext(ChainsContext).length;
@@ -92,6 +93,8 @@ const Home = () => {
         <title>The Clothing Loop | Home</title>
         <meta name="description" content="Home" />
       </Helmet>
+
+      <StandaloneSearchBar />
 
       <div id="landing-page-desktop" className={classes.landingPageDesktop}>
         <div className={classes.landingPageWrapper}>
