@@ -40,7 +40,7 @@ const Navbar = () => {
                 {t("download")}
               </Button>
             ) : null}
-            {userData === null && location.pathname === "/loops/find" ? (
+            {userData === null && ["/loops/find", "/"].indexOf(location.pathname) !== -1 ? (
               <Button
                 color="inherit"
                 component={Link}
@@ -51,7 +51,7 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            {userData === null && location.pathname !== "/loops/find" ? (
+            {userData === null && ["/loops/find", "/"].indexOf(location.pathname) === -1 ? (
               <Button
                 color="inherit"
                 component={Link}

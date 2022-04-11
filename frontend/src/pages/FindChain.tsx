@@ -84,9 +84,11 @@ const DutchLoopsCard = () => {
       </CardContent>
     </Card>
   );
-}
+};
 
-const FindChain = () => {
+const FindChain = ({ location }: { location: Location }) => {
+  const urlParams = new URLSearchParams(location.search);
+
   const history = useHistory();
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
@@ -149,21 +151,19 @@ const FindChain = () => {
   }, []);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (location) => {
-        const { longitude, latitude } = location.coords;
-        fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken.mapboxApiAccessToken}&types=country`
-        ).then(
-          (response) => response.json()
-        ).then((data) => {
+    navigator.geolocation.getCurrentPosition((location) => {
+      const { longitude, latitude } = location.coords;
+      fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken.mapboxApiAccessToken}&types=country`
+      )
+        .then((response) => response.json())
+        .then((data) => {
           if (data.features[0].properties.short_code === "nl") {
             setShowDutchLoopsDialog(true);
           }
         });
-      }
-    );
-  }, [])
+    });
+  }, []);
 
   if (!accessToken.mapboxApiAccessToken) {
     return <div>Access tokens not configured</div>;
@@ -295,12 +295,17 @@ const FindChain = () => {
       <FindChainSearchBarContainer
         setFilterChainPredicate={setFilterChainPredicate}
         handleFindChainCallback={handleFindChainCallback}
+        initialValues={{
+          searchTerm: urlParams.get("searchTerm") || "",
+          sizes: urlParams.getAll("sizes") || [],
+          genders: urlParams.getAll("genders") || [],
+        }}
       />
 
       <Dialog
         open={showDutchLoopsDialog}
         onClose={() => setShowDutchLoopsDialog(false)}
-      > 
+      >
         <DutchLoopsCard />
       </Dialog>
 
@@ -368,7 +373,7 @@ const FindChain = () => {
             paint={{ "text-color": "white" }}
           />
         </Source>
-  
+
         {/* ====start TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}
         <Marker
           key={"marker-netherlands"}
