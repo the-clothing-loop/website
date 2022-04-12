@@ -341,8 +341,8 @@ const FindChain = ({ location }: { location: Location }) => {
                 "#F7C86F",
                 "#48808B",
               ],
-              "circle-radius": 30,
-              "circle-blur": 0.7,
+              "circle-radius": 15,
+               "circle-blur": 0.5,
             }}
           />
           <Layer
