@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 //Media
 import { ClassNames } from "@emotion/react";
-import HeroImg from "../images/hero-image.png";
+import JewelleryImg from "../images/TCL-Jewellery.jpg";
 
 //MUI
 import { makeStyles, Grid, Typography } from "@material-ui/core";
@@ -57,18 +57,24 @@ const useStyles = makeStyles({
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-around",
+        justifyContent: "space-evenly",
         paddingLeft: "44px",
-        paddingRight: "356px",
+        paddingRight: "280px",
+        margin: "50px 0",
 
         "& h3": {
           color: "#C58C41",
           fontFamily: "'Playfair Display', serif",
-          fontSize: "4.5rem",
-          lineHeight: "5rem",
+          fontSize: "2rem",
+          lineHeight: "1.2",
           fontWeight: "700",
           margin: " 0",
-          paddingBottom: "28px",
+
+          "& span": {
+            fontSize: "1.4rem",
+            fontStyle: "italic",
+            marginLeft: "5px" 
+          },
         },
 
         "& p": {
@@ -96,6 +102,7 @@ const useStyles = makeStyles({
           fontSize: "14px",
           lineHeight: "19px",
           fontWeight: "500",
+          cursor: "pointer",
         },
       },
     },
@@ -113,15 +120,20 @@ const Donations = () => {
         <div className="background-box"></div>
 
         <figure className="image-wrapper">
-          <img src={HeroImg} style={{ width: "100%", height: "auto" }} />
+          <img src={JewelleryImg} style={{ width: "100%", height: "auto" }} />
         </figure>
 
         <section className="text-wrapper">
-          <Typography component="h3">{t("allTheSmallBitsHelp")}</Typography>
-          <Typography component="p">{t("byDonatingACupOfCoffee")}</Typography>
-          <button onClick={() => history.push("/donate")}>
-            {t("donate")} ☕
-          </button>
+          <h3>
+            "Small acts, when multiplied by millions of people, can change the
+            world" <span>Howard Zinn</span>
+          </h3>
+          <p>
+            We are continuously working on making The Clothing Loop better, more
+            widespread and more impactful. Click here if you want to help us do
+            so!
+          </p>
+          <button onClick={() => history.push("/donate")}>{t("donate")}</button>
         </section>
       </section>
     </Grid>

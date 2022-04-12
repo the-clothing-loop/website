@@ -24,15 +24,15 @@ const DonationFormContent = () => {
 
   const amountsRecurring = [
     {
-      string: "A coffee a month ☕️ €2.50",
+      string: "€2.50",
       priceId: "price_1KdEdAKBdXHva7sKwHdv20Iw",
     },
     {
-      string: "A sandwich a month 🥪 €5.00",
+      string: "€5.00",
       priceId: "price_1KdEdvKBdXHva7sKjwXlAoxe",
     },
     {
-      string: "A dinner a month 🍲️ €10.00",
+      string: "€10.00",
       priceId: "price_1KdEeQKBdXHva7sK8x1tPlL7",
     },
   ];
@@ -289,8 +289,6 @@ const DonationFormContent = () => {
 };
 
 const DonationForm = () => {
-  console.log("accessToken", accessToken.stripeApiAccessToken);
-
   if (accessToken.stripeApiAccessToken) {
     const stripePublicKey = accessToken.stripeApiAccessToken;
 
@@ -299,10 +297,6 @@ const DonationForm = () => {
     return (
       <div className={styles.donationsWrapper}>
         <h3 className={styles.pageTitle}>Donate to The Clothing Loop</h3>
-        <p>
-          "Small acts, when multiplied by millions of people, can change the
-          world" (Howard Zinn)
-        </p>
         <p>
           Thanks for considering a donation to The Clothing Loop! <br />
           With your gift we will work effortlessly to make The Clothing Loop
