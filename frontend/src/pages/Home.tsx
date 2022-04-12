@@ -240,7 +240,8 @@ const Home = () => {
         </section>
 
         <Testimonials />
-
+        <Donations />
+        
         <div className={classes.supportersSection}>
           <div className="background-box"></div>
           <h2>Partners & Sponsors</h2>
@@ -262,6 +263,7 @@ const Home = () => {
             })}
           </div>
         </div>
+
 
         <Carousel />
       </div>
