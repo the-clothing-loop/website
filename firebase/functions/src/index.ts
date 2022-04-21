@@ -534,6 +534,25 @@ export const subscribeToNewsletter = functions
     });
   });
 
+export const addUserAsChainAdmin = functions
+  .region(region)
+  .https.onCall(async (data: any) => {
+    functions.logger.debug("addUserAsChainAdmin", data);
+
+    const {uid, chainId} = data;
+
+    const user = await admin.auth().getUser(uid);
+
+    const {role} = user.customClaims || {};
+
+    if (!role) {
+      await admin.auth().setCustomUserClaims(uid, {
+        chainId,
+        role: ROLE_CHAINADMIN,
+      });
+    }
+  });
+
 export const paymentInitiate = functions
   .region(region)
   .https.onCall(payments.initiate);
