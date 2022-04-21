@@ -4,20 +4,7 @@ import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
 // Material UI
-import { Alert } from "@material-ui/lab";
-import {
-  Grid,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  Typography,
-  Switch,
-  TablePagination,
-  TableContainer,
-  FormControlLabel,
-} from "@material-ui/core";
+import { Grid, Typography, Switch, FormControlLabel } from "@material-ui/core";
 import {
   EditOutlined as EditIcon,
   Clear as DeleteIcon,
@@ -28,28 +15,24 @@ import { makeStyles } from "@material-ui/styles";
 import { getChain, updateChain } from "../util/firebase/chain";
 import { getUsersForChain, removeUserFromChain } from "../util/firebase/user";
 import { IChain, IUser } from "../types";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext, AuthProps } from "../components/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import Popover from "../components/Popover";
+import { ChainParticipantsTable } from "../components/ChainParticipantsTable";
 
 type TParams = {
   chainId: string;
 };
 
-const rows = ["name", "address", "email", "phone", "interested size"];
+const memberColumns = [
+  { headerName: "name", propertyName: "name" },
+  { headerName: "address", propertyName: "address" },
+  { headerName: "email", propertyName: "email" },
+  { headerName: "phone", propertyName: "phoneNumber" },
+  { headerName: "interested size", propertyName: "interestedSizes" },
+];
 
 const useStyles = makeStyles({
-  borderlessTableCellRoot: {
-    borderBottom: "none",
-  },
-  headRowTableCellRoot: {
-    paddingBottom: 24,
-    borderBottom: "1px solid #C4C4C4",
-    fontSize: 14,
-    fontWeight: 400,
-    lineHeight: "17px",
-    color: "#C4C4C4",
-  },
   descriptionTypographyRoot: {
     marginTop: 24,
     fontSize: 18,
@@ -71,15 +54,14 @@ const useStyles = makeStyles({
 const ChainMemberList = () => {
   const location = useLocation<any>();
   const { chainId } = useParams<TParams>();
-  const { userData } = useContext<any>(AuthContext);
+  const { userData }: { userData: IUser | null } =
+    useContext<AuthProps>(AuthContext);
 
   const [chain, setChain] = useState<IChain>();
   const [users, setUsers] = useState<IUser[]>();
   const [publishedValue, setPublishedValue] = useState({ published: true });
   const [error, setError] = useState("");
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [admin, setAdmin] = useState<IUser>();
   const { t } = useTranslation();
@@ -100,16 +82,6 @@ const ChainMemberList = () => {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
       setError(e.message);
     }
-  };
-
-  //pagination
-  const handleChangePage = (e: any, newPage: any) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (e: any) => {
-    setRowsPerPage(+e.target.value);
-    setPage(0);
   };
 
   useEffect(() => {
@@ -247,71 +219,23 @@ const ChainMemberList = () => {
               <Title>Loop Participants</Title>
               <UserDataExport />
 
-              <TableContainer className="chain-member-list__table--margin">
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      {rows.map((row, i) => {
-                        return (
-                          <HeadRowTableCell key={i}>{row}</HeadRowTableCell>
-                        );
-                      })}
-                      {userData?.role === "admin" && (
-                        <>
-                          <HeadRowTableCell />
-                          <HeadRowTableCell />
-                        </>
-                      )}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {users
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((u: IUser) => (
-                        <TableRow key={u.uid}>
-                          <BorderlessTableCell>{u.name}</BorderlessTableCell>
-                          <BorderlessTableCell>{u.address}</BorderlessTableCell>
-                          <BorderlessTableCell>{u.email}</BorderlessTableCell>
-                          <BorderlessTableCell>
-                            {u.phoneNumber}
-                          </BorderlessTableCell>
-                          <BorderlessTableCell>
-                            {u.interestedSizes?.join(", ")}
-                          </BorderlessTableCell>
-                          {userData?.role === "admin" && (
-                            <>
-                              <BorderlessTableCell>
-                                <Link to={`/users/edit/${u.uid}`}>
-                                  <EditIcon />
-                                </Link>
-                              </BorderlessTableCell>
-                              <BorderlessTableCell>
-                                <DeleteIcon
-                                  onClick={() =>
-                                    handleRemoveFromChain(u.uid as string)
-                                  }
-                                />
-                              </BorderlessTableCell>
-                            </>
-                          )}
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={users.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </TableContainer>
+              <ChainParticipantsTable
+                columns={memberColumns}
+                userData={userData}
+                users={users}
+                initialPage={0}
+                initialRowsPerPage={10}
+                editItemComponent={(u: IUser) => (
+                  <Link to={`/users/edit/${u.uid}`}>
+                    <EditIcon />
+                  </Link>
+                )}
+                deleteItemComponent={(u: IUser) => (
+                  <DeleteIcon
+                    onClick={() => handleRemoveFromChain(u.uid as string)}
+                  />
+                )}
+              />
             </div>
           </Grid>
         </Grid>
@@ -340,30 +264,6 @@ const Field = ({ title, children }: { title: string; children: any }) => {
       </Typography>
       <div className="chain-member-list__field-content">{children}</div>
     </div>
-  );
-};
-
-const BorderlessTableCell = ({ children, ...props }: { children: any }) => {
-  const classes = useStyles();
-
-  return (
-    <TableCell classes={{ root: classes.borderlessTableCellRoot }} {...props}>
-      {children}
-    </TableCell>
-  );
-};
-
-const HeadRowTableCell = ({ children, ...props }: { children?: any }) => {
-  const classes = useStyles();
-
-  return (
-    <TableCell
-      classes={{ root: classes.headRowTableCellRoot }}
-      variant="head"
-      {...props}
-    >
-      {children}
-    </TableCell>
   );
 };
 
