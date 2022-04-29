@@ -73,6 +73,8 @@ const App = () => {
                       path="/users/:userId/edit"
                       component={UserEdit}
                     />
+
+                    <Route exact path="/loops" component={ChainsList} />
                     <Route exact path="/loops/find" component={FindChain} />
                     <Route
                       exact
@@ -99,16 +101,17 @@ const App = () => {
                       path="/loops/new-signup"
                       component={NewChainSignup}
                     />
-                    <Route exact path="/loops" component={ChainsList} />
+
+                    <Route exact path="/faq" component={FAQ} />
                     <Route exact path="/contact-us" component={Contacts} />
                     <Route exact path="/about" component={About} />
+
+                    <Route exact path="/terms-of-use" component={TermsOfUse} />
                     <Route
                       exact
                       path="/privacy-policy"
                       component={PrivacyPolicy}
                     />
-                    <Route exact path="/terms-of-use" component={TermsOfUse} />
-                    <Route exact path="/faq" component={FAQ} />
                   </Switch>
                 </div>
                 <Footer />
