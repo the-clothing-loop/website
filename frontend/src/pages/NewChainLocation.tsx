@@ -10,10 +10,13 @@ import ProgressBar from "../components/ProgressBar";
 import ChainDetailsForm from "../components/ChainDetailsForm";
 import { createChain } from "../util/firebase/chain";
 
-const NewChainLocation = () => {
+const NewChainLocation = ({ location }: { location: any }) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
-  const { userId } = useParams<{ userId: string }>();
+
+  const { state } = location;
+  const { userId } = state;
+
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState<boolean>(false);
 

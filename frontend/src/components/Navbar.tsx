@@ -44,7 +44,7 @@ const Navbar = () => {
               <Button
                 color="inherit"
                 component={Link}
-                to="/loops/new-signup"
+                to="/loops/new/users/signup"
                 className={classes.buttonCta}
               >
                 {t("startNewLoop")}

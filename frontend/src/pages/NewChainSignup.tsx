@@ -62,11 +62,17 @@ const Signup = () => {
   });
 
   if (submitted) {
-    return <Redirect to={`/loops/new-location/${userId}`} />;
+    return (
+      <Redirect to={{ pathname: "/loops/new", state: { userId } }} />
+    );
   }
 
   if (user) {
-    return <Redirect to={`/loops/new-location/${user.uid}`} />;
+    return (
+      <Redirect
+        to={{ pathname: "/loops/new", state: { userId: user.uid } }}
+      />
+    );
   }
 
   const handleClickAction = (

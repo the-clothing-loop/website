@@ -65,11 +65,6 @@ const App = () => {
                     <Route exact path="/users/logout" component={Logout} />
                     <Route
                       exact
-                      path="/users/signup/:chainId"
-                      component={Signup}
-                    />
-                    <Route
-                      exact
                       path="/users/:userId/edit"
                       component={UserEdit}
                     />
@@ -88,18 +83,23 @@ const App = () => {
                     />
                     <Route
                       exact
-                      path="/loops/:chainId/addChainAdmin" // Follows REST-ful API naming convention
+                      path="/loops/:chainId/addChainAdmin"
                       component={AddChainAdmin}
                     />
                     <Route
                       exact
-                      path="/loops/new-location/:userId"
-                      component={NewChainLocation}
+                      path="/loops/:chainId/users/signup"
+                      component={Signup}
                     />
                     <Route
                       exact
-                      path="/loops/new-signup"
+                      path="/loops/new/users/signup"
                       component={NewChainSignup}
+                    />
+                    <Route
+                      exact
+                      path="/loops/new"
+                      component={NewChainLocation}
                     />
 
                     <Route exact path="/faq" component={FAQ} />
