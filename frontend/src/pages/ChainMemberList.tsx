@@ -32,6 +32,12 @@ const memberColumns = [
   { headerName: "interested size", propertyName: "interestedSizes" },
 ];
 
+const adminColumns = [
+  { headerName: "name", propertyName: "name" },
+  { headerName: "email", propertyName: "email" },
+  { headerName: "phone", propertyName: "phoneNumber" },
+];
+
 const useStyles = makeStyles({
   descriptionTypographyRoot: {
     marginTop: 24,
@@ -62,8 +68,7 @@ const ChainMemberList = () => {
   const [publishedValue, setPublishedValue] = useState({ published: true });
   const [error, setError] = useState("");
 
-
-  const [admin, setAdmin] = useState<IUser>();
+  const [isChainAdmin, setIsChainAdmin] = useState<boolean>();
   const { t } = useTranslation();
 
   const handleChange = async (e: {
@@ -103,7 +108,11 @@ const ChainMemberList = () => {
   }, []);
 
   useEffect(() => {
-    setAdmin(users?.find((user: IUser) => user.role === "chainAdmin"));
+    setIsChainAdmin(
+      users
+        ?.filter((user: IUser) => user.role === "chainAdmin")
+        .some((user: IUser) => user.uid === userData?.uid)
+    );
   }, [users]);
 
   const handleRemoveFromChain = async (userId: string) => {
@@ -189,31 +198,61 @@ const ChainMemberList = () => {
                 </div>
               </div>
             </Grid>
+
             <Grid item sm>
               <div className="chain-member-list__card">
-                <Grid
-                  container
-                  alignItems="center"
-                  justifyContent="space-between"
-                  wrap="nowrap"
-                >
-                  <Grid item>
-                    <Title>Loop Admin</Title>
-                  </Grid>
-                  <Grid item>
-                    <Link to={`/users/edit/${admin?.uid}`}>
-                      <EditIcon />
+                <div className="chain-member-list__loop-admin__flex-col">
+                  <div>
+                    <Grid
+                      container
+                      alignItems="center"
+                      justifyContent="space-between"
+                      wrap="nowrap"
+                    >
+                      <Grid item>
+                        <Title>Loop Admin</Title>
+                      </Grid>
+                      <Grid item>
+                        <Link to={`/users/edit/${(userData as IUser).uid}`}>
+                          <EditIcon />
+                        </Link>
+                      </Grid>
+                    </Grid>
+                    <ChainParticipantsTable
+                      columns={adminColumns}
+                      userData={userData}
+                      users={users.filter(
+                        (user: IUser) => user.role === "chainAdmin"
+                      )}
+                      initialPage={0}
+                      initialRowsPerPage={10}
+                      editItemComponent={(u: IUser) => (
+                        <Link to={`/users/edit/${u.uid}`}>
+                          <EditIcon />
+                        </Link>
+                      )}
+                      deleteItemComponent={(u: IUser) => (
+                        <DeleteIcon
+                          onClick={() => handleRemoveFromChain(u.uid as string)}
+                        />
+                      )}
+                    />
+                  </div>
+                  {isChainAdmin && (
+                    <Link
+                      to={{
+                        pathname: `/loops/${chainId}/addChainAdmin`,
+                        state: { users, chainId },
+                      }}
+                    >
+                      <div className="chain-member-list__add-co-host">add co-host</div>
                     </Link>
-                  </Grid>
-                </Grid>
-
-                <Field title="Name">{admin?.name}</Field>
-                <Field title="Address">{admin?.address}</Field>
-                <Field title="Email">{admin?.email}</Field>
-                <Field title="Phone">{admin?.phoneNumber}</Field>
+                  )}
+                </div>
               </div>
             </Grid>
           </Grid>
+
           <Grid item>
             <div className="chain-member-list__card">
               <Title>Loop Participants</Title>
