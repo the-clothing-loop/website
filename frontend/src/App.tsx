@@ -70,18 +70,18 @@ const App = () => {
                     />
                     <Route
                       exact
-                      path="/users/edit/:userId"
+                      path="/users/:userId/edit"
                       component={UserEdit}
                     />
                     <Route exact path="/loops/find" component={FindChain} />
                     <Route
                       exact
-                      path="/loops/edit/:chainId"
+                      path="/loops/:chainId/edit"
                       component={ChainEdit}
                     />
                     <Route
                       exact
-                      path="/loops/members/:chainId"
+                      path="/loops/:chainId/members"
                       component={ChainMemberList}
                     />
                     <Route

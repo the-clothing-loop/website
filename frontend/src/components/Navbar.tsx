@@ -67,7 +67,7 @@ const Navbar = () => {
               <Link to="/loops">{t("admin")}</Link>
             ) : null}
             {userData?.role === "chainAdmin" ? (
-              <Link to={`/loops/members/${userData.chainId}`}>
+              <Link to={`/loops/${userData.chainId}/members`}>
                 {t("admin")}
               </Link>
             ) : null}
