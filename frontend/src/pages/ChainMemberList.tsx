@@ -13,12 +13,14 @@ import { makeStyles } from "@material-ui/styles";
 
 // Project resources
 import { getChain, updateChain } from "../util/firebase/chain";
+import theme from "../util/theme";
 import { getUsersForChain, removeUserFromChain } from "../util/firebase/user";
 import { IChain, IUser } from "../types";
 import { AuthContext, AuthProps } from "../components/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import Popover from "../components/Popover";
 import { ChainParticipantsTable } from "../components/ChainParticipantsTable";
+import { Title } from "../components/Typography";
 
 type TParams = {
   chainId: string;
@@ -38,24 +40,7 @@ const adminColumns = [
   { headerName: "phone", propertyName: "phoneNumber" },
 ];
 
-const useStyles = makeStyles({
-  descriptionTypographyRoot: {
-    marginTop: 24,
-    fontSize: 18,
-  },
-  titleTypographyRoot: {
-    textTransform: "uppercase",
-    fontSize: 36,
-    fontWeight: 700,
-  },
-  fieldSubheadingTypographyRoot: {
-    fontSize: 16,
-    color: "#068C7C",
-  },
-  switchGroupRoot: {
-    marginTop: 32,
-  },
-});
+const useStyles = makeStyles(theme as any);
 
 const ChainMemberList = () => {
   const location = useLocation<any>();
@@ -245,7 +230,9 @@ const ChainMemberList = () => {
                         state: { users, chainId },
                       }}
                     >
-                      <div className="chain-member-list__add-co-host">add co-host</div>
+                      <div className="chain-member-list__add-co-host">
+                        add co-host
+                      </div>
                     </Link>
                   )}
                 </div>
@@ -280,16 +267,6 @@ const ChainMemberList = () => {
         </Grid>
       </div>
     </>
-  );
-};
-
-const Title = ({ children }: { children: any }) => {
-  const classes = useStyles();
-
-  return (
-    <Typography classes={{ root: classes.titleTypographyRoot }}>
-      {children}
-    </Typography>
   );
 };
 

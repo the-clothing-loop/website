@@ -14,19 +14,9 @@ import { makeStyles } from "@material-ui/styles";
 
 import { IUser } from "../types";
 
-const useStyles = makeStyles({
-  borderlessTableCellRoot: {
-    borderBottom: "none",
-  },
-  headRowTableCellRoot: {
-    paddingBottom: 24,
-    borderBottom: "1px solid #C4C4C4",
-    fontSize: 14,
-    fontWeight: 400,
-    lineHeight: "17px",
-    color: "#C4C4C4",
-  },
-});
+import theme from "../util/theme";
+
+const useStyles = makeStyles(theme as any);
 
 export const ChainParticipantsTable = ({
   columns,
