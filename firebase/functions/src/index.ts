@@ -536,22 +536,36 @@ export const subscribeToNewsletter = functions
 
 export const addUserAsChainAdmin = functions
   .region(region)
-  .https.onCall(async (data: any) => {
-    functions.logger.debug("addUserAsChainAdmin", data);
+  .https.onCall(
+    async (
+      data: {uid: string; chainId: string},
+      context: functions.https.CallableContext
+    ) => {
+      functions.logger.debug("addUserAsChainAdmin", data);
 
-    const {uid, chainId} = data;
+      const {uid, chainId} = data;
 
-    const user = await admin.auth().getUser(uid);
+      const callerRole = context.auth?.token?.role;
+      const callerChainId = context.auth?.token?.chainId;
 
-    const {role} = user.customClaims || {};
+      if (callerRole !== ROLE_CHAINADMIN || callerChainId !== chainId) {
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "You don't have permission to add the user to become chain admin"
+        );
+      }
 
-    if (!role) {
-      await admin.auth().setCustomUserClaims(uid, {
-        chainId,
-        role: ROLE_CHAINADMIN,
-      });
+      const userToBeAdded = await admin.auth().getUser(uid);
+      const userToBeAddedRole = userToBeAdded.customClaims?.role;
+
+      if (!userToBeAddedRole) {
+        await admin.auth().setCustomUserClaims(uid, {
+          chainId,
+          role: ROLE_CHAINADMIN,
+        });
+      }
     }
-  });
+  );
 
 export const paymentInitiate = functions
   .region(region)
