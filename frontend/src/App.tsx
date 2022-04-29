@@ -26,6 +26,7 @@ import About from "./pages/About";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import FAQ from "./pages/FAQ/FAQ";
+import { AddChainAdmin } from "./pages/AddChainAdmin";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -82,6 +83,11 @@ const App = () => {
                       exact
                       path="/loops/members/:chainId"
                       component={ChainMemberList}
+                    />
+                    <Route
+                      exact
+                      path="/loops/:chainId/addChainAdmin" // Follows REST-ful API naming convention
+                      component={AddChainAdmin}
                     />
                     <Route
                       exact
