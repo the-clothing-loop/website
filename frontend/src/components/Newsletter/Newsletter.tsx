@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     color: "#3C3C3B",
   },
   textFieldGridRoot: {
-    marginTop: "8px",
+    marginTop: "-8px",
   },
   muiInputLabelRootTextFieldRoot: {
     "& label.MuiInputLabel-root": { color: "#48808B" },
