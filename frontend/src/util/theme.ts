@@ -593,7 +593,6 @@ const theme = {
     overflow: "hidden",
     minHeight: "1.4375em",
     borderRadius: "0",
-    padding: "0 1%",
     fontFamily: "Montserrat",
     border: `1px solid ${turquoise} !important`,
     color: "rgb(72, 128, 139, .4) !important",
