@@ -14,6 +14,9 @@ if (process.env.REACT_APP_USE_EMULATOR == "true") {
 
 const createChainCallable = functions.httpsCallable("createChain");
 const addUserToChainCallable = functions.httpsCallable("addUserToChain");
+const addUserAsChainAdminCallable = functions.httpsCallable(
+  "addUserAsChainAdmin"
+);
 
 export interface ICreateChain {
   name: string;
@@ -21,7 +24,7 @@ export interface ICreateChain {
   address: string;
   latitude: number;
   longitude: number;
-  categories: { gender: [string], size: [string] };
+  categories: { gender: [string]; size: [string] };
   published: boolean;
   uid: string;
 }
@@ -56,4 +59,9 @@ const addUserToChain = async (chainId: string, userId: string) => {
 const updateChain = (chainId: string, chain: {}): Promise<void> => {
   return db.collection("chains").doc(chainId).set(chain, { merge: true });
 };
+
+export const addUserAsChainAdmin = async (chainId: string, uid: string) => {
+  await addUserAsChainAdminCallable({ uid, chainId });
+};
+
 export { getChains, createChain, getChain, addUserToChain, updateChain };
