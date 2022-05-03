@@ -93,6 +93,7 @@ const Login = () => {
                     className={classes.textField}
                     {...formik.getFieldProps("email")}
                     label={t("email")}
+                    variant="standard"
                     required
                     fullWidth
                   />

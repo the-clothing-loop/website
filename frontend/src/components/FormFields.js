@@ -29,6 +29,7 @@ const TextFormField = ({ name, inputRef, email }) => {
       className={classes.textField}
       inputRef={inputRef}
       required={true}
+      variant="standard"
       fullWidth
     ></TextField>
   );
@@ -75,6 +76,7 @@ const TextForm = ({ label, ...props }) => {
         InputLabelProps={{
           className: classes.inputLabel,
         }}
+        variant="standard"
       />
     </div>
   );
@@ -92,6 +94,7 @@ const NumberField = ({ label, step = 1, ...props }) => {
         {...props}
         autoComplete="off"
         label={t(label)}
+        variant="standard"
         fullWidth
         type="number"
         InputLabelProps={{
