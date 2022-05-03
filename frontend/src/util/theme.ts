@@ -83,29 +83,12 @@ const theme = {
     maxWidth: "1440px",
     left: "50%",
     transform: " translateX(-50%)",
-
-    "& .MuiButtonBase-root": {
-      fontSize: "1.2rem",
-      marginRight: "1rem",
-    },
-    "& .MuiSelect-root": {
-      fontSize: "1.2rem",
-    },
   },
 
   headerNav: {
     minHeight: "4rem",
     display: "flex",
     alignItems: "center",
-
-    "& a": {
-      fontWeight: " 500",
-      fontStyle: " normal",
-      fontSize: "1rem",
-      lineHeight: " 21.86px",
-      color: "#3C3C3B",
-      padding: "12px 32px",
-    },
   },
 
   headerRight: {
@@ -159,7 +142,6 @@ const theme = {
     backgroundColor: "transparent",
     color: yellow,
     border: `1.54px solid ${yellow}`,
-    padding: "12px, 32px, 12px, 32px",
     boxSizing: " border-box",
     minWidth: "max-content",
     width: "188.43px",
@@ -169,11 +151,11 @@ const theme = {
     fontSize: "1rem",
     lineHeight: "21.86px",
     boxShadow: "none",
+  },
 
-    "& span": {
-      color: yellow,
-      fontSize: "1rem",
-    },
+  buttonCtaHeader: {
+    padding: "12px 32px",
+    marginRight: "1rem",
   },
 
   buttonCtaContained: {
@@ -195,6 +177,16 @@ const theme = {
       color: white,
       fontSize: "1rem",
     },
+  },
+
+  buttonText: {
+    fontWeight: " 500",
+    fontStyle: " normal",
+    fontSize: "1rem",
+    lineHeight: " 21.86px",
+    color: "#3C3C3B",
+    padding: "12px 32px",
+    textTransform: "none",
   },
 
   animatedBtn: {

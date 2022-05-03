@@ -32,7 +32,7 @@ const Navbar = () => {
             {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
               <Button
                 color="inherit"
-                className={classes.buttonCta}
+                className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
                 onClick={() =>
                   (window.location.href =
                     "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27")
@@ -47,7 +47,7 @@ const Navbar = () => {
                 color="inherit"
                 component={Link}
                 to="/loops/new/users/signup"
-                className={classes.buttonCta}
+                className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
               >
                 {t("startNewLoop")}
               </Button>
@@ -59,23 +59,44 @@ const Navbar = () => {
                 color="inherit"
                 component={Link}
                 to="/loops/find"
-                className={classes.buttonCta}
+                className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
               >
                 {t("findLoops")}
                 <img src={ArrowIcon} className="btn-icon" />
               </Button>
             ) : null}
 
-            {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
-              <Link to="/admin/dashboard">{t("admin")}</Link>
-            ) : null}
+            {userData?.role === "admin" ||
+              (userData?.role === "chainAdmin" && (
+                <Button
+                  color="inherit"
+                  component={Link}
+                  to="/admin/dashboard"
+                  className={classes.buttonText}
+                >
+                  {t("admin")}
+                </Button>
+              ))}
 
-            {userData ? (
-              <Link to="/users/logout">{t("logout")}</Link>
-            ) : (
-              <Link to="/users/login">{t("login")}</Link>
+            <Button
+              color="inherit"
+              component={Link}
+              to={userData ? "/users/logout" : "/users/login"}
+              className={classes.buttonText}
+            >
+              {userData ? t("logout") : t("login")}
+            </Button>
+
+            {userData === null && (
+              <Button
+                color="inherit"
+                component={Link}
+                to="/about"
+                className={classes.buttonText}
+              >
+                {t("about")}
+              </Button>
             )}
-            {userData === null ? <Link to="/about">{t("about")}</Link> : null}
           </div>
           {/* === START publish language switcher once Dutch loops are fully migrated
             <LanguageSwitcher /> 
