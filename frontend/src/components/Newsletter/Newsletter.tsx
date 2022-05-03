@@ -121,6 +121,7 @@ export const Newsletter = () => {
                 label="Name"
                 value={name}
                 onChange={handleNameChange}
+                variant="standard"
               />
             </Grid>
             <Grid item id="mobile-textfield">
@@ -132,6 +133,7 @@ export const Newsletter = () => {
                 label="Email address"
                 value={email}
                 onChange={handleEmailChange}
+                variant="standard"
               />
             </Grid>
           </Grid>
