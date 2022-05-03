@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  makeStyles,
-  Button,
-  TextField,
-  Typography,
-  Grid,
-} from "@material-ui/core";
+import { Button, TextField, Typography, Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import ArrowRight from "./arrow-right.svg";
 

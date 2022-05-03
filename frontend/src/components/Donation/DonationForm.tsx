@@ -3,12 +3,19 @@ import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { FormikContext, useFormik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
-import { Button, Card, CardContent, Grid, Typography } from "@material-ui/core";
-import { Alert, CircularProgress } from "@mui/material";
+import {
+  Alert,
+  CircularProgress,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import styles from "./Donation.module.css";
 import { paymentInitiate } from "../../util/firebase/payments";
 
-import { makeStyles } from "@material-ui/core";
 import theme from "../../util/theme";
 
 const accessToken = {

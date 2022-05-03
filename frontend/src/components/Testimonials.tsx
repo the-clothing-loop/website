@@ -1,12 +1,13 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-//MUI
-import { Typography, Grid, Paper, Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
-import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Typography, Grid, Paper, Button } from "@mui/material";
+import {
+  FormatQuote as FormatQuoteIcon,
+  ArrowForward as ArrowForwardIcon,
+  ArrowBack as ArrowBackIcon,
+} from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
   componentWrapperRoot: {

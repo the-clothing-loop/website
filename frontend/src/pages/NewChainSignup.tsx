@@ -6,13 +6,11 @@ import * as Yup from "yup";
 import { Redirect, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
-// Material UI
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core";
+import { Typography, Button, Alert } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import theme from "../util/theme";
 import { OneColumnLayout } from "../components/Layouts";
-import { Alert } from "@material-ui/lab";
 import ProgressBar from "../components/ProgressBar";
 import PopoverOnHover from "../components/Popover";
 

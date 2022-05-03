@@ -2,9 +2,9 @@ import { useHistory } from "react-router-dom";
 
 // Material
 import { Helmet } from "react-helmet";
-import { makeStyles } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 //Project resources
 import theme from "../util/theme";

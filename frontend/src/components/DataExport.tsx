@@ -1,12 +1,10 @@
-import { ClassNames } from "@emotion/react";
 import { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
 import { useTranslation } from "react-i18next";
 import { useParams, Link, useLocation } from "react-router-dom";
 
-//MUI
-import { makeStyles } from "@material-ui/core";
-import DownloadIcon from "@mui/icons-material/Download";
+import { Download as DownloadIcon } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 // Project resources
 import { getChain, getChains } from "../util/firebase/chain";

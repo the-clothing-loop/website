@@ -1,7 +1,9 @@
-import { Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
-import theme from "../util/theme";
+import { Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import { Helmet } from "react-helmet";
+
+import theme from "../util/theme";
 
 //media
 import PressClipping from "../images/press-clippings-site.jpg";

@@ -4,12 +4,13 @@ import { useTranslation } from "react-i18next";
 //Project resources
 import { Newsletter } from "./Newsletter/Newsletter";
 
-//Mui
-import { makeStyles, Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
+import { Instagram as InstagramIcon } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
+
 import theme from "../util/theme";
 import { useContext } from "react";
 import { AuthContext } from "./AuthProvider";
-import InstagramIcon from "@mui/icons-material/Instagram";
 
 const Footer = () => {
   const { t } = useTranslation();

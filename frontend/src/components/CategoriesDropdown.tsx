@@ -1,14 +1,15 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
-//material ui
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { makeStyles, Typography } from "@material-ui/core";
-import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
-import InputLabel from "@mui/material/InputLabel";
+import {
+  InputLabel,
+  Checkbox,
+  ListItemText,
+  Select,
+  FormControl,
+  MenuItem,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import categories from "../util/categories";

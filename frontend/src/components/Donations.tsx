@@ -2,12 +2,10 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 //Media
-import { ClassNames } from "@emotion/react";
 import JewelleryImg from "../images/TCL-Jewellery.jpg";
 
-//MUI
-import { makeStyles, Grid, Typography } from "@material-ui/core";
-import theme from "../util/theme";
+import { Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
   donationsSection: {
@@ -73,7 +71,7 @@ const useStyles = makeStyles({
           "& span": {
             fontSize: "1.4rem",
             fontStyle: "italic",
-            marginLeft: "5px" 
+            marginLeft: "5px",
           },
         },
 

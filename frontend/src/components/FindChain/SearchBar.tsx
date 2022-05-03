@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 
-// Material ui
 import {
   MenuItem,
   FormControl,
@@ -9,9 +8,11 @@ import {
   Checkbox,
   TextField,
   InputAdornment,
+  Button,
+  Paper,
 } from "@mui/material";
-import { Button, Paper, makeStyles } from "@material-ui/core";
 import { Search } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 import SizesDropdown from "../SizesDropdown";
 

@@ -1,5 +1,6 @@
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core";
+import { Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import theme from "../util/theme";
 
 // Standard responsive three column grid used in the app

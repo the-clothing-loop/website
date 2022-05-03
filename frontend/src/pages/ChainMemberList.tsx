@@ -3,13 +3,25 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
-// Material UI
-import { Grid, Typography, Switch, FormControlLabel } from "@material-ui/core";
+import {
+  Alert,
+  Grid,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Typography,
+  Switch,
+  TablePagination,
+  TableContainer,
+  FormControlLabel,
+} from "@mui/material";
 import {
   EditOutlined as EditIcon,
   Clear as DeleteIcon,
-} from "@material-ui/icons";
-import { makeStyles } from "@material-ui/styles";
+} from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 // Project resources
 import { getChain, updateChain } from "../util/firebase/chain";

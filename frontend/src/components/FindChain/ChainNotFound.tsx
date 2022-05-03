@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, makeStyles, Typography } from "@material-ui/core";
-
+import { Button, Typography } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 import theme from "../../util/theme";
 

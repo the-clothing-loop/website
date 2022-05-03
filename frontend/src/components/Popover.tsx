@@ -1,7 +1,7 @@
 //MUI
 import { Popover, Typography } from "@mui/material";
-import Help from "@mui/icons-material/HelpOutline";
-import { makeStyles } from "@material-ui/core";
+import { HelpOutline as Help } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import { useState } from "react";

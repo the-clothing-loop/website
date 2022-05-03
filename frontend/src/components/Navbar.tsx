@@ -2,9 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 
-// Material UI
-import { AppBar, Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
+import { AppBar, Button } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 // Project resources
 import LanguageSwitcher from "./LanguageSwitcher";

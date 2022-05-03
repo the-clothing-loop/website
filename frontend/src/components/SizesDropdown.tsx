@@ -1,18 +1,19 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
-//material ui
-import OutlinedInput from "@mui/material/OutlinedInput";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { makeStyles, Typography } from "@material-ui/core";
-import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
+import {
+  MenuItem,
+  FormControl,
+  Select,
+  ListItemText,
+  Checkbox,
+  Typography,
+  InputLabel,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import categories from "../util/categories";
-import InputLabel from "@mui/material/InputLabel";
 
 interface IProps {
   setSizes: (el: string[]) => void;

@@ -5,16 +5,8 @@ import ReactMapGL, { SVGOverlay, FlyToInterpolator } from "react-map-gl";
 import { useTranslation } from "react-i18next";
 import { Form, Formik } from "formik";
 
-// Material UI
-import {
-  makeStyles,
-  Button,
-  FormControl,
-  MenuItem,
-  Typography,
-} from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
-import Grid from "@material-ui/core/Grid";
+import { Button, Typography, Alert, Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 // Project resources
 import categories from "../util/categories";

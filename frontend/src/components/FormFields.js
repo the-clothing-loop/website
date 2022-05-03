@@ -4,15 +4,17 @@ import {
   Select,
   InputLabel,
   FormHelperText,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+  FormGroup,
+  FormControlLabel,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
+import { useTranslation } from "react-i18next";
+import MuiPhoneInput from "mui-phone-number";
+import { useField } from "formik";
+
 import theme from "../util/theme";
 import i18n from "../i18n";
-import { useTranslation } from "react-i18next";
-import MuiPhoneInput from "material-ui-phone-number";
-import { useField } from "formik";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const TextFormField = ({ name, inputRef, email }) => {
   const { t } = useTranslation();

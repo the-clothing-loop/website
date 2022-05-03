@@ -1,5 +1,7 @@
 //MUI
-import { Typography, makeStyles } from "@material-ui/core";
+import { Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import { Helmet } from "react-helmet";
 
 //project resources

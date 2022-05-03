@@ -14,17 +14,20 @@ import * as GeoJSONTypes from "geojson";
 
 import mapboxgl from "mapbox-gl";
 
-// Material UI
-import { Button, Dialog } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import { makeStyles } from "@material-ui/core";
-import GpsFixedIcon from "@mui/icons-material/GpsFixed";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import CircleIcon from "@mui/icons-material/Circle";
+import {
+  Button,
+  Dialog,
+  Typography,
+  Card,
+  CardActions,
+  CardContent,
+} from "@mui/material";
+import {
+  GpsFixed as GpsFixedIcon,
+  Add as AddIcon,
+  Remove as RemoveIcon,
+} from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 // Project resources
 import { ChainsContext } from "../components/ChainsProvider";

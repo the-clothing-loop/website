@@ -1,12 +1,9 @@
 import { Helmet } from "react-helmet";
-import {
-  Typography,
-  makeStyles,
-  AccordionSummary,
-  AccordionDetails,
-  Grid,
-} from "@material-ui/core";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+import { Typography, Grid } from "@mui/material";
+import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
+
 import AccordionFaq from "../../components/AccordionFaq/AccordionFaq";
 import participantsFaq from "./participantsFaq";
 import hostsFaq from "./hostsFaq";
