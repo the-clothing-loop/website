@@ -47,6 +47,9 @@ const useStyles = makeStyles({
       background: "#f7a00f", // Change color, not part of Figma
     },
   },
+  gridItemsNoPadding: {
+    padding: 0,
+  },
 });
 
 export const Newsletter = () => {
@@ -113,7 +116,11 @@ export const Newsletter = () => {
             spacing={4}
             wrap="nowrap"
           >
-            <Grid item id="mobile-textfield">
+            <Grid
+              item
+              id="mobile-textfield"
+              classes={{ root: classes.gridItemsNoPadding }}
+            >
               <TextField
                 classes={{
                   root: classes.muiInputLabelRootTextFieldRoot,
@@ -124,7 +131,11 @@ export const Newsletter = () => {
                 variant="standard"
               />
             </Grid>
-            <Grid item id="mobile-textfield">
+            <Grid
+              item
+              id="mobile-textfield"
+              classes={{ root: classes.gridItemsNoPadding }}
+            >
               <TextField
                 classes={{
                   root: classes.muiInputLabelRootTextFieldRoot,
@@ -143,10 +154,14 @@ export const Newsletter = () => {
             id="mobile-submit-bt"
           >
             <Grid container spacing={3}>
-              <Grid item id="btn-text">
+              <Grid
+                item
+                id="btn-text"
+                classes={{ root: classes.gridItemsNoPadding }}
+              >
                 Submit
               </Grid>
-              <Grid item>
+              <Grid item classes={{ root: classes.gridItemsNoPadding }}>
                 <img src={ArrowRight} />
               </Grid>
             </Grid>
