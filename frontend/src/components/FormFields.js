@@ -10,7 +10,7 @@ import {
 import { makeStyles } from "@mui/styles";
 
 import { useTranslation } from "react-i18next";
-import MuiPhoneInput from "mui-phone-number";
+import MuiPhoneInput from "material-ui-phone-number";
 import { useField } from "formik";
 
 import theme from "../util/theme";
@@ -50,7 +50,7 @@ const PhoneFormField = ({ label, ...props }) => {
         htmlFor={field.name}
         {...field}
         {...props}
-        className={classes.textField}
+        inputClass={classes.textField}
         InputLabelProps={{
           className: classes.inputLabel,
         }}

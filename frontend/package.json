@@ -38,7 +38,7 @@
     "i18next-browser-languagedetector": "^6.1.0",
     "i18next-http-backend": "^1.2.0",
     "mapbox-gl": "^2.1.1",
-    "mui-phone-number": "^2.2.9",
+    "material-ui-phone-number": "^3.0.0",
     "react": "^17.0.2",
     "react-csv": "^2.2.1",
     "react-dom": "^17.0.1",
