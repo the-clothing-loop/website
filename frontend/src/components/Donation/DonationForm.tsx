@@ -211,11 +211,7 @@ const DonationFormContent = () => {
               <p>I will support The Clothing Loop with a one-time donation:</p>
             )}
 
-            <Grid
-              container
-              spacing={2}
-              className={styles.paymentSelectionOptions}
-            >
+            <Grid container spacing={2} className={styles.paymentAmountOptions}>
               {formik.values.recurring
                 ? amountsRecurring.map((amount: any) =>
                     recurringAmountCheckbox(amount)
