@@ -26,6 +26,7 @@ import About from "./pages/About";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import FAQ from "./pages/FAQ/FAQ";
+import AdminControlsNav from "./components/AdminControlsNav";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -103,6 +104,11 @@ const App = () => {
                     />
                     <Route exact path="/terms-of-use" component={TermsOfUse} />
                     <Route exact path="/faq" component={FAQ} />
+                    <Route
+                      exact
+                      path="/admin/dashboard"
+                      component={AdminControlsNav}
+                    />
                   </Switch>
                 </div>
                 <Footer />

@@ -727,6 +727,25 @@
     transform: translateX(-50%);
     top: 0;
   }
+
+  .admin-controls-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    padding-top: 20px;
+  }
+
+  .admin-nav-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .admin-nav-content {
+    margin-left: 50px;
+    padding-top: 80px;
+  }
 }
 
 @media only screen and (max-width: 480px) {
