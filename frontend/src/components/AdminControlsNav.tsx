@@ -40,7 +40,7 @@ const AdminControlsNav = () => {
                     color="inherit"
                     className={classes.button}
                     component={Link}
-                    to={`/loops/members/${userData.chainId}`}
+                    to={`/loops/${userData.chainId}/members`}
                   >
                     {t("viewLoop")}
                   </Button>
@@ -48,7 +48,7 @@ const AdminControlsNav = () => {
                     color="inherit"
                     className={classes.button}
                     component={Link}
-                    to={`/loops/edit/${userData.chainId}`}
+                    to={`/loops/${userData.chainId}/edit`}
                   >
                     {t("editLoop")}
                   </Button>
