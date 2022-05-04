@@ -34,7 +34,7 @@ const Footer = () => {
               <div className={classes.footerSection}>
                 <Typography component="h5">Loops</Typography>
                 <Link to="/loops/find">Finding a loop</Link>
-                <Link to="/loops/new-signup">Starting a loop</Link>
+                <Link to="/loops/new/users/signup">Starting a loop</Link>
                 <Link to="/users/login">Login</Link>
               </div>
               <div className={classes.footerSection}>

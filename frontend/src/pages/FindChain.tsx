@@ -176,7 +176,7 @@ const FindChain = ({ location }: { location: Location }) => {
       history.push({ pathname: "/thankyou" });
     } else {
       history.push({
-        pathname: `/users/signup/${selectedChain?.id}`,
+        pathname: `/loops/${selectedChain?.id}/users/signup`,
         state: {
           chainId: selectedChain?.id,
         },
@@ -342,7 +342,7 @@ const FindChain = ({ location }: { location: Location }) => {
                 "#48808B",
               ],
               "circle-radius": 15,
-               "circle-blur": 0.5,
+              "circle-blur": 0.5,
             }}
           />
           <Layer

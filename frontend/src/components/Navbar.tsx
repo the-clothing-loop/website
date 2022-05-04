@@ -44,7 +44,7 @@ const Navbar = () => {
               <Button
                 color="inherit"
                 component={Link}
-                to="/loops/new-signup"
+                to="/loops/new/users/signup"
                 className={classes.buttonCta}
               >
                 {t("startNewLoop")}
@@ -67,7 +67,7 @@ const Navbar = () => {
               <Link to="/loops">{t("admin")}</Link>
             ) : null}
             {userData?.role === "chainAdmin" ? (
-              <Link to={`/loops/members/${userData.chainId}`}>
+              <Link to={`/loops/${userData.chainId}/members`}>
                 {t("admin")}
               </Link>
             ) : null}

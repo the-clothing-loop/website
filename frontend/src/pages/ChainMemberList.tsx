@@ -136,7 +136,7 @@ const ChainMemberList = () => {
                     <Title>{chain.name}</Title>
                   </Grid>
                   <Grid item>
-                    <Link to={`/loops/edit/${chainId}`}>
+                    <Link to={`/loops/${chainId}/edit`}>
                       <EditIcon />
                     </Link>
                   </Grid>
@@ -198,7 +198,7 @@ const ChainMemberList = () => {
                         <Title>Loop Admin</Title>
                       </Grid>
                       <Grid item>
-                        <Link to={`/users/edit/${(userData as IUser).uid}`}>
+                        <Link to={`/users/${(userData as IUser).uid}/edit`}>
                           <EditIcon />
                         </Link>
                       </Grid>
@@ -212,7 +212,7 @@ const ChainMemberList = () => {
                       initialPage={0}
                       initialRowsPerPage={10}
                       editItemComponent={(u: IUser) => (
-                        <Link to={`/users/edit/${u.uid}`}>
+                        <Link to={`/users/${u.uid}/edit`}>
                           <EditIcon />
                         </Link>
                       )}
@@ -252,7 +252,7 @@ const ChainMemberList = () => {
                 initialPage={0}
                 initialRowsPerPage={10}
                 editItemComponent={(u: IUser) => (
-                  <Link to={`/users/edit/${u.uid}`}>
+                  <Link to={`/users/${u.uid}/edit`}>
                     <EditIcon />
                   </Link>
                 )}
