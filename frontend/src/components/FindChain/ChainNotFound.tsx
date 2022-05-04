@@ -45,7 +45,7 @@ export const ChainNotFound = ({
           className={classes.buttonCtaContained}
           variant="contained"
           color="primary"
-          onClick={() => history.push("/loops/new-signup")}
+          onClick={() => history.push("/loops/new/users/signup")}
           key={"btn-submit-2"}
           type="submit"
         >

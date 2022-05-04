@@ -1638,5 +1638,33 @@ const theme = {
   AccordionTypographyRoot: {
     fontWeight: `600`,
   },
+
+  borderlessTableCellRoot: {
+    borderBottom: "none",
+  },
+  headRowTableCellRoot: {
+    paddingBottom: 24,
+    borderBottom: "1px solid #C4C4C4",
+    fontSize: 14,
+    fontWeight: 400,
+    lineHeight: "17px",
+    color: "#C4C4C4",
+  },
+  descriptionTypographyRoot: {
+    marginTop: 24,
+    fontSize: 18,
+  },
+  titleTypographyRoot: {
+    textTransform: "uppercase",
+    fontSize: 36,
+    fontWeight: 700,
+  },
+  fieldSubheadingTypographyRoot: {
+    fontSize: 16,
+    color: "#068C7C",
+  },
+  switchGroupRoot: {
+    marginTop: 32,
+  },
 };
 export default theme;

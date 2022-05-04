@@ -27,6 +27,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import FAQ from "./pages/FAQ/FAQ";
 import AdminControlsNav from "./components/AdminControlsNav";
+import { AddChainAdmin } from "./pages/AddChainAdmin";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -65,38 +66,48 @@ const App = () => {
                     <Route exact path="/users/logout" component={Logout} />
                     <Route
                       exact
-                      path="/users/signup/:chainId"
-                      component={Signup}
-                    />
-                    <Route
-                      exact
-                      path="/users/edit/:userId"
+                      path="/users/:userId/edit"
                       component={UserEdit}
                     />
+
+                    <Route exact path="/loops" component={ChainsList} />
                     <Route exact path="/loops/find" component={FindChain} />
                     <Route
                       exact
-                      path="/loops/edit/:chainId"
+                      path="/loops/:chainId/edit"
                       component={ChainEdit}
                     />
                     <Route
                       exact
-                      path="/loops/members/:chainId"
+                      path="/loops/:chainId/members"
                       component={ChainMemberList}
                     />
                     <Route
                       exact
-                      path="/loops/new-location/:userId"
-                      component={NewChainLocation}
+                      path="/loops/:chainId/addChainAdmin"
+                      component={AddChainAdmin}
                     />
                     <Route
                       exact
-                      path="/loops/new-signup"
+                      path="/loops/:chainId/users/signup"
+                      component={Signup}
+                    />
+                    <Route
+                      exact
+                      path="/loops/new/users/signup"
                       component={NewChainSignup}
                     />
-                    <Route exact path="/loops" component={ChainsList} />
+                    <Route
+                      exact
+                      path="/loops/new"
+                      component={NewChainLocation}
+                    />
+
+                    <Route exact path="/faq" component={FAQ} />
                     <Route exact path="/contact-us" component={Contacts} />
                     <Route exact path="/about" component={About} />
+
+                    <Route exact path="/terms-of-use" component={TermsOfUse} />
                     <Route
                       exact
                       path="/privacy-policy"

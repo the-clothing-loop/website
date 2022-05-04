@@ -13,6 +13,7 @@ export interface IChain {
 }
 
 export interface IUser {
+  [key: string]: any;
   uid: string | null;
   email: string;
   address: string;

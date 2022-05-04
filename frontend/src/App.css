@@ -676,6 +676,17 @@
     border-radius: 5px;
   }
 
+  .chain-member-list__loop-admin__flex-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .chain-member-list__add-co-host {
+    text-align: center;
+  }
+
   .chain-member-list__field {
     margin-top: 24px;
   }
@@ -745,6 +756,22 @@
   .admin-nav-content {
     margin-left: 50px;
     padding-top: 80px;
+  }
+
+  .add-chain-admin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 105px;
+  }
+
+  .add-chain-admin__select {
+    margin-top: 96px;
+    width: 428px;
+  }
+
+  .add-chain-admin__button {
+    margin-top: 88px;
   }
 }
 

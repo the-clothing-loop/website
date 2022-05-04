@@ -4,7 +4,7 @@ import "firebase/auth";
 import { getUserById } from "../util/firebase/user";
 import { IUser } from "../types";
 
-type AuthProps = {
+export type AuthProps = {
   user: firebase.User | null;
   userData: IUser | null;
   loading: boolean;
