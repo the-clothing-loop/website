@@ -2,10 +2,6 @@
   background-color: white;
 }
 
-.cardContent {
-  padding: 0;
-}
-
 .formRow {
   margin-bottom: var(--spacing);
 }
