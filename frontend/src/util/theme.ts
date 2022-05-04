@@ -1664,5 +1664,8 @@ const theme = {
     margin: "15px 0",
     width: "80%",
   },
+  gridItemsNoPadding: {
+    padding: 0,
+  },
 };
 export default theme;

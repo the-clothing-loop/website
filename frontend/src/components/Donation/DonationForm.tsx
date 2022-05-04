@@ -99,7 +99,14 @@ const DonationFormContent = () => {
     currency: "EUR",
   });
   const amountCheckbox = (amount: number) => (
-    <Grid item key={amount} xs={6} sm={4} className={styles.paymentToggle}>
+    <Grid
+      item
+      key={amount}
+      xs={6}
+      sm={4}
+      className={styles.paymentToggle}
+      classes={{ root: classes.gridItemsNoPadding }}
+    >
       <input
         id={`donation-amount-${amount}`}
         type="radio"
@@ -123,6 +130,7 @@ const DonationFormContent = () => {
       xs={12}
       sm={12}
       className={styles.paymentToggle}
+      classes={{ root: classes.gridItemsNoPadding }}
     >
       <input
         id={`donation-amount-${amount.priceId}`}
@@ -220,6 +228,7 @@ const DonationFormContent = () => {
                   xs={6}
                   sm={4}
                   className={styles.paymentToggle}
+                  classes={{ root: classes.gridItemsNoPadding }}
                 >
                   <input
                     name="customAmount"
@@ -236,7 +245,7 @@ const DonationFormContent = () => {
               )}
             </Grid>
             <Grid container spacing={2} className={styles.paymentEmail}>
-              <Grid item xs={12}>
+              <Grid item xs={12} classes={{ root: classes.gridItemsNoPadding }}>
                 <input
                   name="email"
                   type="text"
@@ -273,7 +282,12 @@ const DonationFormContent = () => {
                   <CircularProgress />
                 </div>
               ) : (
-                <Grid item xs={12} md={6}>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  classes={{ root: classes.gridItemsNoPadding }}
+                >
                   <Button type="submit" className={styles.paymentButton}>
                     Donate
                   </Button>
