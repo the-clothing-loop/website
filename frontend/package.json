@@ -50,7 +50,7 @@
     "react-map-gl-geocoder": "^2.1.6",
     "react-mapbox-gl-geocoder": "^1.1.0",
     "react-material-ui-carousel": "^3.1.1",
-    "react-mui-mapbox-geocoder": "^1.1.10",
+    "react-mui-mapbox-geocoder": "^2.0.1",
     "react-places-autocomplete": "^7.3.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",

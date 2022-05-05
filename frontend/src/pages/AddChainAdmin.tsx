@@ -1,6 +1,6 @@
 import React from "react";
-import { Select, FormControl, MenuItem } from "@mui/material";
-import { makeStyles, Button } from "@material-ui/core";
+import { Select, FormControl, MenuItem, Button } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import RightArrow from "../images/right-arrow-white.svg";
 
