@@ -109,6 +109,8 @@ export const ChainParticipantsTable = ({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          nextIconButtonProps={{ size: "large" }}
+          backIconButtonProps={{ size: "large" }}
         />
       </TableContainer>
     </>
