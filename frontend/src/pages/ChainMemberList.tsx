@@ -3,20 +3,7 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
-import {
-  Alert,
-  Grid,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  Typography,
-  Switch,
-  TablePagination,
-  TableContainer,
-  FormControlLabel,
-} from "@mui/material";
+import { Grid, Typography, Switch, FormControlLabel } from "@mui/material";
 import {
   EditOutlined as EditIcon,
   Clear as DeleteIcon,
@@ -130,8 +117,13 @@ const ChainMemberList = () => {
 
       <div className="chain-member-list">
         <Grid container direction="column" spacing={6}>
-          <Grid item container spacing={4}>
-            <Grid item sm>
+          <Grid
+            item
+            classes={{ root: classes.gridItemsNoPadding }}
+            container
+            spacing={4}
+          >
+            <Grid item classes={{ root: classes.gridItemsNoPadding }} sm>
               <div className="chain-member-list__card">
                 {location.state ? (
                   <p className="success">{location.state.message}</p>
@@ -196,7 +188,7 @@ const ChainMemberList = () => {
               </div>
             </Grid>
 
-            <Grid item sm>
+            <Grid item classes={{ root: classes.gridItemsNoPadding }} sm>
               <div className="chain-member-list__card">
                 <div className="chain-member-list__loop-admin__flex-col">
                   <div>
@@ -252,7 +244,7 @@ const ChainMemberList = () => {
             </Grid>
           </Grid>
 
-          <Grid item>
+          <Grid item classes={{ root: classes.gridItemsNoPadding }}>
             <div className="chain-member-list__card">
               <Title>Loop Participants</Title>
               <UserDataExport />
