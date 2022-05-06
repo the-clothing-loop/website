@@ -159,12 +159,12 @@ export const createUser = functions
       <p>Happy swapping!</p>
 
       <p>Regards,</p>
-      <p>The Clothing Loop team: Nichon, Paloeka, Giulia and Mirjam</p>`;
+      <p>The Clothing Loop team: Nichon, Paloeka and Giulia</p>`;
     functions.logger.debug("sending verification email", verificationEmail);
     await db.collection("mail").add({
       to: email,
       message: {
-        subject: "Verify e-mail for clothing chain",
+        subject: "Verify e-mail for The Clothing Loop",
         html: verificationEmail,
       },
     });
@@ -528,7 +528,7 @@ export const subscribeToNewsletter = functions
                 
                 <p>Thank you for your interest and support.</p>
                 
-               <p> Nichon, Paloeka, Giulia and Mirjam</p>
+               <p> Nichon, Paloeka and Giulia</p>
               `,
       },
     });
@@ -551,7 +551,7 @@ export const addUserAsChainAdmin = functions
       if (callerRole !== ROLE_CHAINADMIN || callerChainId !== chainId) {
         throw new functions.https.HttpsError(
           "permission-denied",
-          "You don't have permission to add the user to become chain admin"
+          "You don't have permission to add the user to become loop admin"
         );
       }
 
