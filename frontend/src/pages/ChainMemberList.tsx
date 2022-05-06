@@ -177,6 +177,7 @@ const ChainMemberList = () => {
                         checked={publishedValue.published}
                         onChange={handleChange}
                         name="published"
+                        color="secondary"
                         inputProps={{ "aria-label": "secondary checkbox" }}
                       />
                     }
