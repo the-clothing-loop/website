@@ -70,13 +70,7 @@ const AdminControlsNav = () => {
               ) : null}
 
               <Link
-                style={{
-                  textDecoration: "underline",
-                  color: "#F7C86F",
-                  display: "inline-block",
-                  margin: "15px 0",
-                  width: "80%",
-                }}
+              className={classes.underlinedLink}
                 target="_blank"
                 to={{
                   pathname:
