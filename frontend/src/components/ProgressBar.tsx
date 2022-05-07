@@ -23,7 +23,6 @@ const ProgressBar: React.FC<IProps> = ({ activeStep }) => {
               className={classes.stepLabel}
               StepIconProps={{
                 classes: {
-                  root: classes.icon,
                   active: classes.activeIcon,
                   completed: classes.completedIcon,
                 },
