@@ -682,6 +682,9 @@ const theme = {
     borderRadius: "0 !important",
     padding: "0 ",
     marginTop: "16px",
+    "&:after": {
+      borderColor: "#1976d2",
+    },
   },
   formControl: {
     width: "15rem",
