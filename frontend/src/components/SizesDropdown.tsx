@@ -54,7 +54,11 @@ const SizesDropdown: React.FC<IProps> = ({
   };
 
   return (
-    <FormControl className={classes.sizesFormWrapper} fullWidth={fullWidth}>
+    <FormControl
+      className={classes.sizesFormWrapper}
+      fullWidth={fullWidth}
+      classes={{ root: classes.specificSpacing }}
+    >
       {inputVisible ? (
         <InputLabel
           id="demo-multiple-checkbox-label"

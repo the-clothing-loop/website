@@ -74,6 +74,9 @@ export const SearchBar: React.FC<IProps> = ({
           variant="outlined"
           value={selectedGenders}
           onChange={handleSelectedGenderChange}
+          inputProps={{
+            className: classes.specificSpacing,
+          }}
           renderValue={(selected) => {
             if (Array.isArray(selected)) {
               if (selected.length === 0) {

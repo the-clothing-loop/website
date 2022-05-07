@@ -42,7 +42,7 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
             value={selectedUser}
             onChange={handleSelectedUserChange}
             inputProps={{
-              className: classes.inputLabel,
+              className: classes.specificSpacing,
             }}
             renderValue={(selected: string) =>
               selected ? (

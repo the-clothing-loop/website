@@ -727,6 +727,10 @@ const theme = {
   selected: {},
 
 
+  specificSpacing: {
+    letterSpacing: "0.00938em",
+  },
+
   alertContainer: {
     padding: "30px 50px",
     width: "40%",
