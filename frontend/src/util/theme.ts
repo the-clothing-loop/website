@@ -635,6 +635,29 @@ const theme = {
     },
   },
 
+  addChainAdminSelect: {
+    borderRadius: "0 !important",
+    backgroundColor: "transparent",
+    width: "100%",
+    fontFamily: "Montserrat !important",
+    textTransform: "capitalize",
+    border: `1px solid ${turquoise}`,
+
+    "& div#demo-multiple-checkbox": {
+      padding: "10px !important",
+    },
+
+    "&:before": {
+      borderColor: yellow,
+    },
+    "&:after": {
+      borderColor: yellow,
+    },
+    "&:not(.Mui-disabled):hover::before": {
+      borderColor: yellow,
+    },
+  },
+
   labelSelect: {
     fontFamily: "Montserrat !important",
     transform: "translate(0px, -6px) scale(0.75) !important",

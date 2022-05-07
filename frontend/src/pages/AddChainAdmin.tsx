@@ -37,7 +37,7 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
       <div className="add-chain-admin__select">
         <FormControl className={classes.sizesFormWrapper}>
           <Select
-            className={classes.select}
+            className={classes.addChainAdminSelect}
             variant="outlined"
             value={selectedUser}
             onChange={handleSelectedUserChange}
