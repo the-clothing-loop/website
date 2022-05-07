@@ -63,6 +63,7 @@ const SizesDropdown: React.FC<IProps> = ({
         <InputLabel
           id="demo-multiple-checkbox-label"
           className={classes.labelSelect}
+          classes={{ root: classes.focusColor }}
         >
           {label}
         </InputLabel>

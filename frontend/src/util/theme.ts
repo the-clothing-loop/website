@@ -726,6 +726,11 @@ const theme = {
   },
   selected: {},
 
+  focusColor: {
+    "&:focus": {
+      color: "#f7c86f",
+    },
+  },
 
   specificSpacing: {
     letterSpacing: "0.00938em",
