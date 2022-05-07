@@ -661,7 +661,7 @@ const theme = {
   labelSelect: {
     fontFamily: "Montserrat !important",
     transform: "translate(0px, -6px) scale(0.75) !important",
-    color: "rgb(72, 128, 139, .4) !important",
+    color: "rgb(72, 128, 139, .4)",
     marginTop: "10px",
 
     "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
