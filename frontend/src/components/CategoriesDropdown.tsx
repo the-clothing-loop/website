@@ -71,7 +71,14 @@ const CategoriesDropdown: React.FC<IProps> = ({
         }}
       >
         {Object.keys(categories).map((value: string) => (
-          <MenuItem key={value} value={value}>
+          <MenuItem
+            key={value}
+            value={value}
+            classes={{
+              root: classes.menuItemSpacingAndColor,
+              selected: classes.selected,
+            }}
+          >
             <Checkbox
               className={classes.checkbox}
               checked={selectedGenders.includes(value) ? true : false}

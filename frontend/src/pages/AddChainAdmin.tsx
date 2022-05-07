@@ -66,6 +66,10 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
                 <MenuItem
                   key={uid}
                   className={classes.listItemTextSizes}
+                  classes={{
+                    root: classes.menuItemSpacingAndColor,
+                    selected: classes.selected,
+                  }}
                   value={uid}
                 >
                   {name} - {email}

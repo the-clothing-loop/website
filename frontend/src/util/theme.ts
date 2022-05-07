@@ -689,6 +689,21 @@ const theme = {
     fontFamily: "Montserrat !important",
   },
 
+  menuItemSpacingAndColor: {
+    letterSpacing: "0.00938em",
+    "&$selected": {
+      backgroundColor: "rgba(25, 118, 210, 0.08)",
+      "&:focus-visible": {
+        backgroundColor: "rgba(25, 118, 210, 0.08)",
+      },
+      "&:hover": {
+        backgroundColor: "rgba(25, 118, 210, 0.12)",
+      },
+    },
+  },
+  selected: {},
+
+
   alertContainer: {
     padding: "30px 50px",
     width: "40%",

@@ -97,6 +97,10 @@ const SizesDropdown: React.FC<IProps> = ({
               !selectedGenders.includes("children") &&
               selectedGenders.length !== 0
             }
+            classes={{
+              root: classes.menuItemSpacingAndColor,
+              selected: classes.selected,
+            }}
             value={value}
           >
             <Checkbox
@@ -118,6 +122,10 @@ const SizesDropdown: React.FC<IProps> = ({
             disabled={
               !selectedGenders.includes("women") && selectedGenders.length !== 0
             }
+            classes={{
+              root: classes.menuItemSpacingAndColor,
+              selected: classes.selected,
+            }}
             key={value}
             value={value}
           >
@@ -140,6 +148,10 @@ const SizesDropdown: React.FC<IProps> = ({
             disabled={
               !selectedGenders.includes("men") && selectedGenders.length !== 0
             }
+            classes={{
+              root: classes.menuItemSpacingAndColor,
+              selected: classes.selected,
+            }}
             key={value}
             value={value}
           >
