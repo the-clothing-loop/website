@@ -103,6 +103,9 @@ export const SearchBar: React.FC<IProps> = ({
               <ListItemText
                 primary={t(value)}
                 className={classes.listItemText}
+                classes={{
+                  primary: classes.listItemTextFontSize,
+                }}
               />
             </MenuItem>
           ))}

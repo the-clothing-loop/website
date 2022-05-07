@@ -712,6 +712,10 @@ const theme = {
     fontFamily: "Montserrat !important",
   },
 
+  listItemTextFontSize: {
+    fontSize: "0.875rem",
+  },
+
   menuItemSpacingAndColor: {
     letterSpacing: "0.00938em",
     "&$selected": {
