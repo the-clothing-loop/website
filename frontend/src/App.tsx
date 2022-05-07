@@ -26,6 +26,7 @@ import About from "./pages/About";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import FAQ from "./pages/FAQ/FAQ";
+import AdminControlsNav from "./components/AdminControlsNav/AdminControlsNav";
 import { AddChainAdmin } from "./pages/AddChainAdmin";
 
 // Components
@@ -88,13 +89,13 @@ const App = () => {
                     />
                     <Route
                       exact
-                      path="/loops/:chainId/users/signup"
-                      component={Signup}
+                      path="/loops/new/users/signup"
+                      component={NewChainSignup}
                     />
                     <Route
                       exact
-                      path="/loops/new/users/signup"
-                      component={NewChainSignup}
+                      path="/loops/:chainId/users/signup"
+                      component={Signup}
                     />
                     <Route
                       exact
@@ -111,6 +112,13 @@ const App = () => {
                       exact
                       path="/privacy-policy"
                       component={PrivacyPolicy}
+                    />
+                    <Route exact path="/terms-of-use" component={TermsOfUse} />
+                    <Route exact path="/faq" component={FAQ} />
+                    <Route
+                      exact
+                      path="/admin/dashboard"
+                      component={AdminControlsNav}
                     />
                   </Switch>
                 </div>

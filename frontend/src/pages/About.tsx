@@ -98,11 +98,6 @@ const About = () => {
             website you are visiting right now.
           </Typography>
           <Typography component="p">
-            Mirjam Pennings is sinking her teeth in getting us some funding to
-            be able to keep making our impact and a great support on almost any
-            subject or activity.
-          </Typography>
-          <Typography component="p">
             Paloeka de Koning is our fearless intern, Glide app helpdesk wizard
             and overall rockstar jack of all trades.
           </Typography>

@@ -49,7 +49,11 @@ const Counters = () => {
       </a>
       <div className={classes.counterLinkWrapper}>
         <div className={classes.counterLinkIconWrapper}>
-          <a href="/loops/find" className={classes.counterLink}>
+          <a
+            href="https://heyzine.com/flip-book/a2735d7012.html"
+            target="_blank"
+            className={classes.counterLink}
+          >
             <ArrowDownwardIcon className="icon" />
           </a>
         </div>

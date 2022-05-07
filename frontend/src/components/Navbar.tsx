@@ -34,13 +34,16 @@ const Navbar = () => {
               <Button
                 color="inherit"
                 className={classes.buttonCta}
-                component={Link}
-                to="#"
+                onClick={() =>
+                  (window.location.href =
+                    "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27")
+                }
               >
                 {t("download")}
               </Button>
             ) : null}
-            {userData === null && ["/loops/find", "/"].indexOf(location.pathname) !== -1 ? (
+            {userData === null &&
+            ["/loops/find", "/"].indexOf(location.pathname) !== -1 ? (
               <Button
                 color="inherit"
                 component={Link}
@@ -51,7 +54,8 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            {userData === null && ["/loops/find", "/"].indexOf(location.pathname) === -1 ? (
+            {userData === null &&
+            ["/loops/find", "/"].indexOf(location.pathname) === -1 ? (
               <Button
                 color="inherit"
                 component={Link}
@@ -63,14 +67,10 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            {userData?.role === "admin" ? (
-              <Link to="/loops">{t("admin")}</Link>
+            {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
+              <Link to="/admin/dashboard">{t("admin")}</Link>
             ) : null}
-            {userData?.role === "chainAdmin" ? (
-              <Link to={`/loops/${userData.chainId}/members`}>
-                {t("admin")}
-              </Link>
-            ) : null}
+
             {userData ? (
               <Link to="/users/logout">{t("logout")}</Link>
             ) : (

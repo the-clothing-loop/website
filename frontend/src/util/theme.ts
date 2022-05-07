@@ -1666,5 +1666,12 @@ const theme = {
   switchGroupRoot: {
     marginTop: 32,
   },
+  underlinedLink: {
+    textDecoration: "underline",
+    color: "#F7C86F",
+    display: "inline-block",
+    margin: "15px 0",
+    width: "80%",
+  },
 };
 export default theme;
