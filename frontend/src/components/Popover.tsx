@@ -54,7 +54,7 @@ const PopoverOnHover: React.FC<IProps> = ({ message }: IProps) => {
         disableRestoreFocus
       >
         <Typography
-          className={classes.p}
+          className={classes.specificSpacing}
           sx={{ p: 1 }}
           style={{ maxWidth: "300px" }}
         >
