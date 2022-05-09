@@ -3,9 +3,9 @@ import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
 // Material UI
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core";
+import { Typography, Button } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import theme from "../../util/theme";
 
 //Resources
@@ -70,7 +70,7 @@ const AdminControlsNav = () => {
               ) : null}
 
               <Link
-              className={classes.underlinedLink}
+                className={classes.underlinedLink}
                 target="_blank"
                 to={{
                   pathname:
