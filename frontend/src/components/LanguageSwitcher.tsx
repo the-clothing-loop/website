@@ -1,11 +1,8 @@
 import i18n from "../i18n";
 import { useState } from "react";
 
-//material UI
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { makeStyles } from "@material-ui/core";
+import { Select, FormControl, MenuItem } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 //project resources
 import theme from "../util/theme";

@@ -1,14 +1,15 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
-//material ui
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { makeStyles, Typography } from "@material-ui/core";
-import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
-import InputLabel from "@mui/material/InputLabel";
+import {
+  InputLabel,
+  Checkbox,
+  ListItemText,
+  Select,
+  FormControl,
+  MenuItem,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import categories from "../util/categories";
@@ -43,10 +44,15 @@ const CategoriesDropdown: React.FC<IProps> = ({
   };
 
   return (
-    <FormControl className={classes.sizesFormWrapper} fullWidth={fullWidth}>
+    <FormControl
+      className={classes.sizesFormWrapper}
+      fullWidth={fullWidth}
+      classes={{ root: classes.specificSpacing }}
+    >
       <InputLabel
         id="demo-multiple-checkbox-label"
         className={classes.labelSelect}
+        classes={{ root: classes.focusColor }}
       >
         {t("categories")}
       </InputLabel>
@@ -70,7 +76,14 @@ const CategoriesDropdown: React.FC<IProps> = ({
         }}
       >
         {Object.keys(categories).map((value: string) => (
-          <MenuItem key={value} value={value}>
+          <MenuItem
+            key={value}
+            value={value}
+            classes={{
+              root: classes.menuItemSpacingAndColor,
+              selected: classes.selected,
+            }}
+          >
             <Checkbox
               className={classes.checkbox}
               checked={selectedGenders.includes(value) ? true : false}
@@ -79,6 +92,9 @@ const CategoriesDropdown: React.FC<IProps> = ({
               primary={t(value)}
               className={classes.listItemTextSizes}
               style={{ textTransform: "capitalize" }}
+              classes={{
+                primary: classes.listItemTextFontSize,
+              }}
             />
           </MenuItem>
         ))}

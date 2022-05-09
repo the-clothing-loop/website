@@ -1,16 +1,13 @@
-import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 
-// Material UI
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core";
+import { Typography, TextField, Button, Alert } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import theme from "../util/theme";
-import Alert from "@material-ui/lab/Alert";
 
 // Project resources
 import { TwoColumnLayout } from "../components/Layouts";
@@ -96,6 +93,7 @@ const Login = () => {
                     className={classes.textField}
                     {...formik.getFieldProps("email")}
                     label={t("email")}
+                    variant="standard"
                     required
                     fullWidth
                   />

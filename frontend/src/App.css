@@ -327,11 +327,6 @@
     position: absolute;
   }
 
-  /* MUI classes styling */
-  .css-1kty9di-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
-    color: #f7c86f !important;
-  }
-
   .css-1v4ccyo.Mui-focused.MuiOutlinedInput-notchedOutline {
     border-color: transparent !important;
   }
@@ -344,11 +339,6 @@
   .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
     border-color: transparent !important;
     border-radius: 0px !important;
-  }
-
-  span.css-10hburv-MuiTypography-root {
-    font-family: "Montserrat";
-    font-size: 0.875rem;
   }
 
   div.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {

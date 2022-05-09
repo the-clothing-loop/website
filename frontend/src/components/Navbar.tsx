@@ -2,9 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 
-// Material UI
-import { AppBar, Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
+import { AppBar, Button, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 // Project resources
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -33,7 +32,7 @@ const Navbar = () => {
             {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
               <Button
                 color="inherit"
-                className={classes.buttonCta}
+                className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
                 onClick={() =>
                   (window.location.href =
                     "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27")
@@ -48,7 +47,7 @@ const Navbar = () => {
                 color="inherit"
                 component={Link}
                 to="/loops/new/users/signup"
-                className={classes.buttonCta}
+                className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
               >
                 {t("startNewLoop")}
               </Button>
@@ -60,23 +59,44 @@ const Navbar = () => {
                 color="inherit"
                 component={Link}
                 to="/loops/find"
-                className={classes.buttonCta}
+                className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
               >
                 {t("findLoops")}
                 <img src={ArrowIcon} className="btn-icon" />
               </Button>
             ) : null}
 
-            {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
-              <Link to="/admin/dashboard">{t("admin")}</Link>
-            ) : null}
+            {userData?.role === "admin" ||
+              (userData?.role === "chainAdmin" && (
+                <Typography
+                  color="inherit"
+                  component={Link}
+                  to="/admin/dashboard"
+                  className={classes.buttonText}
+                >
+                  {t("admin")}
+                </Typography>
+              ))}
 
-            {userData ? (
-              <Link to="/users/logout">{t("logout")}</Link>
-            ) : (
-              <Link to="/users/login">{t("login")}</Link>
+            <Typography
+              color="inherit"
+              component={Link}
+              to={userData ? "/users/logout" : "/users/login"}
+              className={classes.buttonText}
+            >
+              {userData ? t("logout") : t("login")}
+            </Typography>
+
+            {userData === null && (
+              <Typography
+                color="inherit"
+                component={Link}
+                to="/about"
+                className={classes.buttonText}
+              >
+                {t("about")}
+              </Typography>
             )}
-            {userData === null ? <Link to="/about">{t("about")}</Link> : null}
           </div>
           {/* === START publish language switcher once Dutch loops are fully migrated
             <LanguageSwitcher /> 

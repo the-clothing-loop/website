@@ -4,15 +4,17 @@ import {
   Select,
   InputLabel,
   FormHelperText,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import theme from "../util/theme";
-import i18n from "../i18n";
+  FormGroup,
+  FormControlLabel,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import { useTranslation } from "react-i18next";
 import MuiPhoneInput from "material-ui-phone-number";
 import { useField } from "formik";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+
+import theme from "../util/theme";
+import i18n from "../i18n";
 
 const TextFormField = ({ name, inputRef, email }) => {
   const { t } = useTranslation();
@@ -27,6 +29,7 @@ const TextFormField = ({ name, inputRef, email }) => {
       className={classes.textField}
       inputRef={inputRef}
       required={true}
+      variant="standard"
       fullWidth
     ></TextField>
   );
@@ -48,7 +51,7 @@ const PhoneFormField = ({ label, ...props }) => {
         htmlFor={field.name}
         {...field}
         {...props}
-        className={classes.textField}
+        inputClass={classes.textField}
         InputLabelProps={{
           className: classes.inputLabel,
         }}
@@ -73,6 +76,7 @@ const TextForm = ({ label, ...props }) => {
         InputLabelProps={{
           className: classes.inputLabel,
         }}
+        variant="standard"
       />
     </div>
   );
@@ -90,6 +94,7 @@ const NumberField = ({ label, step = 1, ...props }) => {
         {...props}
         autoComplete="off"
         label={t(label)}
+        variant="standard"
         fullWidth
         type="number"
         InputLabelProps={{

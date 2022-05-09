@@ -1,12 +1,8 @@
 import theme from "../util/theme";
-import { makeStyles } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 
-//MUI
-import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
+import { Box, Stepper, Step, StepLabel } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 const steps = ["signup", "selectLoopLocation", "confirmation"];
 
@@ -27,7 +23,6 @@ const ProgressBar: React.FC<IProps> = ({ activeStep }) => {
               className={classes.stepLabel}
               StepIconProps={{
                 classes: {
-                  root: classes.icon,
                   active: classes.activeIcon,
                   completed: classes.completedIcon,
                 },

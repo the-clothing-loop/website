@@ -6,9 +6,9 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 // Material UI
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core";
+import { Typography, Button } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import theme from "../util/theme";
 
 // Project resources

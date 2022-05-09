@@ -2,10 +2,13 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import { useEffect, useState } from "react";
 import { Redirect, useParams } from "react-router-dom";
-import Alert from "@material-ui/lab/Alert";
+
+import { Alert } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
-import { makeStyles } from "@material-ui/core";
+
 import theme from "../util/theme";
 
 const LoginEmailFinished = () => {

@@ -1,7 +1,7 @@
 //project resources
-import { ClassNames } from "@emotion/react";
 import { Helmet } from "react-helmet";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@mui/styles";
+
 import theme from "../util/theme";
 
 //components

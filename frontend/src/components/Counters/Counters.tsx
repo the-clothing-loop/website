@@ -5,11 +5,9 @@ import { ChainsContext } from "../ChainsProvider";
 import SingleCounter from "./SingleCounter";
 import useIntersectionObserver from "./hooks";
 
-//mui
-import { makeStyles } from "@material-ui/core";
 import theme from "../../util/theme";
-import { number } from "yup/lib/locale";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 const Counters = () => {
   const classes = makeStyles(theme as any)();

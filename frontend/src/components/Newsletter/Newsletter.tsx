@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  makeStyles,
-  Button,
-  TextField,
-  Typography,
-  Grid,
-} from "@material-ui/core";
+import { Button, TextField, Typography, Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import ArrowRight from "./arrow-right.svg";
 
@@ -29,7 +24,7 @@ const useStyles = makeStyles({
     color: "#3C3C3B",
   },
   textFieldGridRoot: {
-    marginTop: "8px",
+    marginTop: "-8px",
   },
   muiInputLabelRootTextFieldRoot: {
     "& label.MuiInputLabel-root": { color: "#48808B" },
@@ -51,6 +46,9 @@ const useStyles = makeStyles({
     "&:hover": {
       background: "#f7a00f", // Change color, not part of Figma
     },
+  },
+  gridItemsNoPadding: {
+    padding: 0,
   },
 });
 
@@ -118,7 +116,11 @@ export const Newsletter = () => {
             spacing={4}
             wrap="nowrap"
           >
-            <Grid item id="mobile-textfield">
+            <Grid
+              item
+              id="mobile-textfield"
+              classes={{ root: classes.gridItemsNoPadding }}
+            >
               <TextField
                 classes={{
                   root: classes.muiInputLabelRootTextFieldRoot,
@@ -126,9 +128,14 @@ export const Newsletter = () => {
                 label="Name"
                 value={name}
                 onChange={handleNameChange}
+                variant="standard"
               />
             </Grid>
-            <Grid item id="mobile-textfield">
+            <Grid
+              item
+              id="mobile-textfield"
+              classes={{ root: classes.gridItemsNoPadding }}
+            >
               <TextField
                 classes={{
                   root: classes.muiInputLabelRootTextFieldRoot,
@@ -137,6 +144,7 @@ export const Newsletter = () => {
                 label="Email address"
                 value={email}
                 onChange={handleEmailChange}
+                variant="standard"
               />
             </Grid>
           </Grid>
@@ -146,10 +154,14 @@ export const Newsletter = () => {
             id="mobile-submit-bt"
           >
             <Grid container spacing={3}>
-              <Grid item id="btn-text">
+              <Grid
+                item
+                id="btn-text"
+                classes={{ root: classes.gridItemsNoPadding }}
+              >
                 Submit
               </Grid>
-              <Grid item>
+              <Grid item classes={{ root: classes.gridItemsNoPadding }}>
                 <img src={ArrowRight} />
               </Grid>
             </Grid>

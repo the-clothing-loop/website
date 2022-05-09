@@ -1,12 +1,11 @@
-//MUI
 import {
   Typography,
-  makeStyles,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-} from "@material-ui/core";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+} from "@mui/material";
+import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 //Project Resources
 import theme from "../../util/theme";

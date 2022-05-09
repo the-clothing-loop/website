@@ -1,5 +1,6 @@
-import { makeStyles } from "@material-ui/core";
 import theme from "../util/theme";
+
+import { makeStyles } from "@mui/styles";
 
 //project resources
 import { Newsletter } from "./Newsletter/Newsletter";

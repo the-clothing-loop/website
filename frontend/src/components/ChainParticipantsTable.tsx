@@ -8,9 +8,9 @@ import {
   TableCell,
   TablePagination,
   TableContainer,
-} from "@material-ui/core";
+} from "@mui/material";
 
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 import { IUser } from "../types";
 
@@ -109,6 +109,8 @@ export const ChainParticipantsTable = ({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          nextIconButtonProps={{ size: "large" }}
+          backIconButtonProps={{ size: "large" }}
         />
       </TableContainer>
     </>

@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 
-// Material ui
 import {
   MenuItem,
   FormControl,
@@ -9,9 +8,11 @@ import {
   Checkbox,
   TextField,
   InputAdornment,
+  Button,
+  Paper,
 } from "@mui/material";
-import { Button, Paper, makeStyles } from "@material-ui/core";
 import { Search } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 import SizesDropdown from "../SizesDropdown";
 
@@ -73,6 +74,9 @@ export const SearchBar: React.FC<IProps> = ({
           variant="outlined"
           value={selectedGenders}
           onChange={handleSelectedGenderChange}
+          inputProps={{
+            className: classes.specificSpacing,
+          }}
           renderValue={(selected) => {
             if (Array.isArray(selected)) {
               if (selected.length === 0) {
@@ -84,7 +88,14 @@ export const SearchBar: React.FC<IProps> = ({
           }}
         >
           {Object.keys(categories).map((value: any) => (
-            <MenuItem key={value} value={value}>
+            <MenuItem
+              key={value}
+              value={value}
+              classes={{
+                root: classes.menuItemSpacingAndColor,
+                selected: classes.selected,
+              }}
+            >
               <Checkbox
                 className={classes.checkbox}
                 checked={selectedGenders.includes(value) ? true : false}
@@ -92,6 +103,9 @@ export const SearchBar: React.FC<IProps> = ({
               <ListItemText
                 primary={t(value)}
                 className={classes.listItemText}
+                classes={{
+                  primary: classes.listItemTextFontSize,
+                }}
               />
             </MenuItem>
           ))}

@@ -3,27 +3,28 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-// Material UI
-import { makeStyles } from "@material-ui/core";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
-import { Button } from "@material-ui/core";
-import TablePagination from "@material-ui/core/TablePagination";
-import Paper from "@material-ui/core/Paper";
-import TableContainer from "@material-ui/core/TableContainer";
-import Alert from "@material-ui/lab/Alert";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TablePagination,
+  Paper,
+  TableContainer,
+  Box,
+  Typography,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
 
 // Project resources
 import { ChainsContext } from "../components/ChainsProvider";
-import { Typography } from "@material-ui/core";
 import { DataExport } from "../components/DataExport";
 import theme from "../util/theme";
 
@@ -154,6 +155,8 @@ const ChainsList = () => {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
+                nextIconButtonProps={{ size: "large" }}
+                backIconButtonProps={{ size: "large" }}
               />
             </TableContainer>
           </div>

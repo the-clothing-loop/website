@@ -1,5 +1,3 @@
-// Material
-import { makeStyles } from "@material-ui/core";
 import DonationForm from "../../components/Donation/DonationForm";
 import DonationCompleted from "../../components/Donation/DonationCompleted";
 
@@ -7,6 +5,8 @@ import DonationCompleted from "../../components/Donation/DonationCompleted";
 import theme from "../../util/theme";
 import { RouteComponentProps } from "react-router";
 import { Helmet } from "react-helmet";
+
+import { makeStyles } from "@mui/styles";
 
 type TParams = {
   status?: string;

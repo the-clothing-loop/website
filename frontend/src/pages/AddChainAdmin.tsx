@@ -1,6 +1,6 @@
 import React from "react";
-import { Select, FormControl, MenuItem } from "@mui/material";
-import { makeStyles, Button } from "@material-ui/core";
+import { Select, FormControl, MenuItem, Button } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import RightArrow from "../images/right-arrow-white.svg";
 
@@ -37,12 +37,12 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
       <div className="add-chain-admin__select">
         <FormControl className={classes.sizesFormWrapper}>
           <Select
-            className={classes.select}
+            className={classes.addChainAdminSelect}
             variant="outlined"
             value={selectedUser}
             onChange={handleSelectedUserChange}
             inputProps={{
-              className: classes.inputLabel,
+              className: classes.specificSpacing,
             }}
             renderValue={(selected: string) =>
               selected ? (
@@ -66,6 +66,10 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
                 <MenuItem
                   key={uid}
                   className={classes.listItemTextSizes}
+                  classes={{
+                    root: classes.menuItemSpacingAndColor,
+                    selected: classes.selected,
+                  }}
                   value={uid}
                 >
                   {name} - {email}

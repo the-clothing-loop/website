@@ -1,11 +1,11 @@
 // Material
 import React from "react";
 import { Helmet } from "react-helmet";
-import { makeStyles, Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
 import theme from "../util/theme";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 // Project resources
 import { ChainsContext } from "../components/ChainsProvider";
@@ -241,7 +241,7 @@ const Home = () => {
 
         <Testimonials />
         <Donations />
-        
+
         <div className={classes.supportersSection}>
           <div className="background-box"></div>
           <h2>Partners & Sponsors</h2>
@@ -263,7 +263,6 @@ const Home = () => {
             })}
           </div>
         </div>
-
 
         <Carousel />
       </div>

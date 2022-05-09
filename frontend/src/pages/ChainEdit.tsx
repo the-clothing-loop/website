@@ -3,9 +3,9 @@ import { useParams, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-// Material UI
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core";
+import { Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import theme from "../util/theme";
 
 // Project resources

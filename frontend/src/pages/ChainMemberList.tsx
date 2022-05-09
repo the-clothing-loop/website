@@ -3,13 +3,12 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
-// Material UI
-import { Grid, Typography, Switch, FormControlLabel } from "@material-ui/core";
+import { Grid, Typography, Switch, FormControlLabel } from "@mui/material";
 import {
   EditOutlined as EditIcon,
   Clear as DeleteIcon,
-} from "@material-ui/icons";
-import { makeStyles } from "@material-ui/styles";
+} from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
 
 // Project resources
 import { getChain, updateChain } from "../util/firebase/chain";
@@ -118,8 +117,13 @@ const ChainMemberList = () => {
 
       <div className="chain-member-list">
         <Grid container direction="column" spacing={6}>
-          <Grid item container spacing={4}>
-            <Grid item sm>
+          <Grid
+            item
+            classes={{ root: classes.gridItemsNoPadding }}
+            container
+            spacing={4}
+          >
+            <Grid item classes={{ root: classes.gridItemsNoPadding }} sm>
               <div className="chain-member-list__card">
                 {location.state ? (
                   <p className="success">{location.state.message}</p>
@@ -173,6 +177,7 @@ const ChainMemberList = () => {
                         checked={publishedValue.published}
                         onChange={handleChange}
                         name="published"
+                        color="secondary"
                         inputProps={{ "aria-label": "secondary checkbox" }}
                       />
                     }
@@ -184,7 +189,7 @@ const ChainMemberList = () => {
               </div>
             </Grid>
 
-            <Grid item sm>
+            <Grid item classes={{ root: classes.gridItemsNoPadding }} sm>
               <div className="chain-member-list__card">
                 <div className="chain-member-list__loop-admin__flex-col">
                   <div>
@@ -240,7 +245,7 @@ const ChainMemberList = () => {
             </Grid>
           </Grid>
 
-          <Grid item>
+          <Grid item classes={{ root: classes.gridItemsNoPadding }}>
             <div className="chain-member-list__card">
               <Title>Loop Participants</Title>
               <UserDataExport />

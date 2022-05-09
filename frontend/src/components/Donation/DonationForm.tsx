@@ -3,12 +3,19 @@ import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { FormikContext, useFormik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
-import { Button, Card, CardContent, Grid, Typography } from "@material-ui/core";
-import { Alert, CircularProgress } from "@mui/material";
+import {
+  Alert,
+  CircularProgress,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import styles from "./Donation.module.css";
 import { paymentInitiate } from "../../util/firebase/payments";
 
-import { makeStyles } from "@material-ui/core";
 import theme from "../../util/theme";
 
 const accessToken = {
@@ -92,7 +99,14 @@ const DonationFormContent = () => {
     currency: "EUR",
   });
   const amountCheckbox = (amount: number) => (
-    <Grid item key={amount} xs={6} sm={4} className={styles.paymentToggle}>
+    <Grid
+      item
+      key={amount}
+      xs={6}
+      sm={4}
+      className={styles.paymentToggle}
+      classes={{ root: classes.gridItemsNoPadding }}
+    >
       <input
         id={`donation-amount-${amount}`}
         type="radio"
@@ -116,6 +130,7 @@ const DonationFormContent = () => {
       xs={12}
       sm={12}
       className={styles.paymentToggle}
+      classes={{ root: classes.gridItemsNoPadding }}
     >
       <input
         id={`donation-amount-${amount.priceId}`}
@@ -196,11 +211,7 @@ const DonationFormContent = () => {
               <p>I will support The Clothing Loop with a one-time donation:</p>
             )}
 
-            <Grid
-              container
-              spacing={2}
-              className={styles.paymentSelectionOptions}
-            >
+            <Grid container spacing={2} className={styles.paymentAmountOptions}>
               {formik.values.recurring
                 ? amountsRecurring.map((amount: any) =>
                     recurringAmountCheckbox(amount)
@@ -213,6 +224,7 @@ const DonationFormContent = () => {
                   xs={6}
                   sm={4}
                   className={styles.paymentToggle}
+                  classes={{ root: classes.gridItemsNoPadding }}
                 >
                   <input
                     name="customAmount"
@@ -229,7 +241,7 @@ const DonationFormContent = () => {
               )}
             </Grid>
             <Grid container spacing={2} className={styles.paymentEmail}>
-              <Grid item xs={12}>
+              <Grid item xs={12} classes={{ root: classes.gridItemsNoPadding }}>
                 <input
                   name="email"
                   type="text"
@@ -266,7 +278,12 @@ const DonationFormContent = () => {
                   <CircularProgress />
                 </div>
               ) : (
-                <Grid item xs={12} md={6}>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  classes={{ root: classes.gridItemsNoPadding }}
+                >
                   <Button type="submit" className={styles.paymentButton}>
                     Donate
                   </Button>

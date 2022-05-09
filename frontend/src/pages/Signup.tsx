@@ -9,11 +9,9 @@ import GeocoderSelector from "../components/GeocoderSelector";
 import SizesDropdown from "../components/SizesDropdown";
 import PopoverOnHover from "../components/Popover";
 
-// Material UI
-import Typography from "@material-ui/core/Typography";
-import { Alert } from "@material-ui/lab";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core";
+import { Alert, Button, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
 import theme from "../util/theme";
 import { TwoColumnLayout } from "../components/Layouts";
 
@@ -66,7 +64,7 @@ const Signup = () => {
           setChain(chain);
           setChainGender(chain.categories.gender);
         } else {
-          console.error(`chain ${chainId} does not exist`)
+          console.error(`chain ${chainId} does not exist`);
         }
       }
     })();

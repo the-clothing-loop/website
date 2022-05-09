@@ -1,18 +1,19 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
-//material ui
-import OutlinedInput from "@mui/material/OutlinedInput";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { makeStyles, Typography } from "@material-ui/core";
-import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
+import {
+  MenuItem,
+  FormControl,
+  Select,
+  ListItemText,
+  Checkbox,
+  Typography,
+  InputLabel,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import categories from "../util/categories";
-import InputLabel from "@mui/material/InputLabel";
 
 interface IProps {
   setSizes: (el: string[]) => void;
@@ -53,11 +54,16 @@ const SizesDropdown: React.FC<IProps> = ({
   };
 
   return (
-    <FormControl className={classes.sizesFormWrapper} fullWidth={fullWidth}>
+    <FormControl
+      className={classes.sizesFormWrapper}
+      fullWidth={fullWidth}
+      classes={{ root: classes.specificSpacing }}
+    >
       {inputVisible ? (
         <InputLabel
           id="demo-multiple-checkbox-label"
           className={classes.labelSelect}
+          classes={{ root: classes.focusColor }}
         >
           {label}
         </InputLabel>
@@ -96,6 +102,10 @@ const SizesDropdown: React.FC<IProps> = ({
               !selectedGenders.includes("children") &&
               selectedGenders.length !== 0
             }
+            classes={{
+              root: classes.menuItemSpacingAndColor,
+              selected: classes.selected,
+            }}
             value={value}
           >
             <Checkbox
@@ -105,6 +115,9 @@ const SizesDropdown: React.FC<IProps> = ({
             <ListItemText
               primary={t(value)}
               className={classes.listItemTextSizes}
+              classes={{
+                primary: classes.listItemTextFontSize,
+              }}
               style={{ textTransform: "capitalize" }}
             />
           </MenuItem>
@@ -117,6 +130,10 @@ const SizesDropdown: React.FC<IProps> = ({
             disabled={
               !selectedGenders.includes("women") && selectedGenders.length !== 0
             }
+            classes={{
+              root: classes.menuItemSpacingAndColor,
+              selected: classes.selected,
+            }}
             key={value}
             value={value}
           >
@@ -127,6 +144,9 @@ const SizesDropdown: React.FC<IProps> = ({
             <ListItemText
               primary={t(value)}
               className={classes.listItemTextSizes}
+              classes={{
+                primary: classes.listItemTextFontSize,
+              }}
               style={{ textTransform: "capitalize" }}
             />
           </MenuItem>
@@ -139,6 +159,10 @@ const SizesDropdown: React.FC<IProps> = ({
             disabled={
               !selectedGenders.includes("men") && selectedGenders.length !== 0
             }
+            classes={{
+              root: classes.menuItemSpacingAndColor,
+              selected: classes.selected,
+            }}
             key={value}
             value={value}
           >
@@ -149,6 +173,9 @@ const SizesDropdown: React.FC<IProps> = ({
             <ListItemText
               primary={t(value)}
               className={classes.listItemTextSizes}
+              classes={{
+                primary: classes.listItemTextFontSize,
+              }}
               style={{ textTransform: "capitalize" }}
             />
           </MenuItem>

@@ -3,7 +3,8 @@ import { Helmet } from "react-helmet";
 import { Redirect, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { makeStyles, Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import ProgressBar from "../components/ProgressBar";

@@ -83,29 +83,12 @@ const theme = {
     maxWidth: "1440px",
     left: "50%",
     transform: " translateX(-50%)",
-
-    "& .MuiButtonBase-root": {
-      fontSize: "1.2rem",
-      marginRight: "1rem",
-    },
-    "& .MuiSelect-root": {
-      fontSize: "1.2rem",
-    },
   },
 
   headerNav: {
     minHeight: "4rem",
     display: "flex",
     alignItems: "center",
-
-    "& a": {
-      fontWeight: " 500",
-      fontStyle: " normal",
-      fontSize: "1rem",
-      lineHeight: " 21.86px",
-      color: "#3C3C3B",
-      padding: "12px 32px",
-    },
   },
 
   headerRight: {
@@ -159,7 +142,6 @@ const theme = {
     backgroundColor: "transparent",
     color: yellow,
     border: `1.54px solid ${yellow}`,
-    padding: "12px, 32px, 12px, 32px",
     boxSizing: " border-box",
     minWidth: "max-content",
     width: "188.43px",
@@ -169,11 +151,11 @@ const theme = {
     fontSize: "1rem",
     lineHeight: "21.86px",
     boxShadow: "none",
+  },
 
-    "& span": {
-      color: yellow,
-      fontSize: "1rem",
-    },
+  buttonCtaHeader: {
+    padding: "12px 32px",
+    marginRight: "1rem",
   },
 
   buttonCtaContained: {
@@ -195,6 +177,16 @@ const theme = {
       color: white,
       fontSize: "1rem",
     },
+  },
+
+  buttonText: {
+    fontWeight: " 500",
+    fontStyle: " normal",
+    fontSize: "1rem",
+    lineHeight: " 21.86px",
+    color: "#3C3C3B",
+    padding: "12px 32px",
+    textTransform: "none",
   },
 
   animatedBtn: {
@@ -423,6 +415,11 @@ const theme = {
     backgroundColor: white,
     padding: "1%",
     border: `1px solid ${teal} `,
+    lineHeight: "1.1876em",
+  },
+
+  textAreaPlaceholder: {
+    "&::placeholder": { opacity: 0.5 },
   },
 
   inputLabel: {
@@ -601,7 +598,6 @@ const theme = {
     overflow: "hidden",
     minHeight: "1.4375em",
     borderRadius: "0",
-    padding: "0 1%",
     fontFamily: "Montserrat",
     border: `1px solid ${turquoise} !important`,
     color: "rgb(72, 128, 139, .4) !important",
@@ -644,10 +640,33 @@ const theme = {
     },
   },
 
+  addChainAdminSelect: {
+    borderRadius: "0 !important",
+    backgroundColor: "transparent",
+    width: "100%",
+    fontFamily: "Montserrat !important",
+    textTransform: "capitalize",
+    border: `1px solid ${turquoise}`,
+
+    "& div#demo-multiple-checkbox": {
+      padding: "10px !important",
+    },
+
+    "&:before": {
+      borderColor: yellow,
+    },
+    "&:after": {
+      borderColor: yellow,
+    },
+    "&:not(.Mui-disabled):hover::before": {
+      borderColor: yellow,
+    },
+  },
+
   labelSelect: {
     fontFamily: "Montserrat !important",
     transform: "translate(0px, -6px) scale(0.75) !important",
-    color: "rgb(72, 128, 139, .4) !important",
+    color: "rgb(72, 128, 139, .4)",
     marginTop: "10px",
 
     "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
@@ -668,6 +687,9 @@ const theme = {
     borderRadius: "0 !important",
     padding: "0 ",
     marginTop: "16px",
+    "&:after": {
+      borderColor: "#1976d2",
+    },
   },
   formControl: {
     width: "15rem",
@@ -696,6 +718,34 @@ const theme = {
 
   listItemTextSizes: {
     fontFamily: "Montserrat !important",
+  },
+
+  listItemTextFontSize: {
+    fontSize: "0.875rem",
+  },
+
+  menuItemSpacingAndColor: {
+    letterSpacing: "0.00938em",
+    "&$selected": {
+      backgroundColor: "rgba(25, 118, 210, 0.08)",
+      "&:focus-visible": {
+        backgroundColor: "rgba(25, 118, 210, 0.08)",
+      },
+      "&:hover": {
+        backgroundColor: "rgba(25, 118, 210, 0.12)",
+      },
+    },
+  },
+  selected: {},
+
+  focusColor: {
+    "&:focus": {
+      color: "#f7c86f",
+    },
+  },
+
+  specificSpacing: {
+    letterSpacing: "0.00938em",
   },
 
   alertContainer: {
@@ -1672,6 +1722,9 @@ const theme = {
     display: "inline-block",
     margin: "15px 0",
     width: "80%",
+  },
+  gridItemsNoPadding: {
+    padding: 0,
   },
 };
 export default theme;
