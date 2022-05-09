@@ -115,7 +115,10 @@ const Contacts = () => {
                   InputProps={{
                     disableUnderline: true,
                     maxLength: CHARACTER_LIMIT,
-                    className: classes.textArea,
+                    classes: {
+                      root: classes.textArea,
+                      input: classes.textAreaPlaceholder,
+                    },
                     style: { marginTop: "30px" },
                   }}
                   helperText={`${values.message.length}/${CHARACTER_LIMIT}`}

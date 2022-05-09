@@ -415,6 +415,11 @@ const theme = {
     backgroundColor: white,
     padding: "1%",
     border: `1px solid ${teal} `,
+    lineHeight: "1.1876em",
+  },
+
+  textAreaPlaceholder: {
+    "&::placeholder": { opacity: 0.5 },
   },
 
   inputLabel: {
