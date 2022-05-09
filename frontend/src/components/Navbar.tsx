@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 
-import { AppBar, Button } from "@mui/material";
+import { AppBar, Button, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
@@ -68,34 +68,34 @@ const Navbar = () => {
 
             {userData?.role === "admin" ||
               (userData?.role === "chainAdmin" && (
-                <Button
+                <Typography
                   color="inherit"
                   component={Link}
                   to="/admin/dashboard"
                   className={classes.buttonText}
                 >
                   {t("admin")}
-                </Button>
+                </Typography>
               ))}
 
-            <Button
+            <Typography
               color="inherit"
               component={Link}
               to={userData ? "/users/logout" : "/users/login"}
               className={classes.buttonText}
             >
               {userData ? t("logout") : t("login")}
-            </Button>
+            </Typography>
 
             {userData === null && (
-              <Button
+              <Typography
                 color="inherit"
                 component={Link}
                 to="/about"
                 className={classes.buttonText}
               >
                 {t("about")}
-              </Button>
+              </Typography>
             )}
           </div>
           {/* === START publish language switcher once Dutch loops are fully migrated
