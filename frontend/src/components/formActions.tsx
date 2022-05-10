@@ -29,6 +29,11 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
         type="checkbox"
       />
       <CheckboxField
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          marginTop: "15px",
+        }}
         required={true}
         label={
           <>

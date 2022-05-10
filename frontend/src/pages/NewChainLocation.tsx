@@ -63,9 +63,6 @@ const NewChainLocation = ({ location }: { location: any }) => {
           <div className={classes.progressBarWrapper}>
             <ProgressBar activeStep={1} />
           </div>
-          <Typography className="formSubtitle">
-            {t("clickToSetLoopLocation")}
-          </Typography>
           <ChainDetailsForm onSubmit={onSubmit} submitError={submitError} />
         </div>
       </div>

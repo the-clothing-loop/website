@@ -194,7 +194,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
         };
 
         return (
-          <Grid container>
+          <Grid container style={{ padding: "1% 2%" }}>
             <Grid item xs={12} sm={6}>
               <ReactMapGL
                 mapboxApiAccessToken={accessToken}
@@ -218,7 +218,10 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
             <Grid item xs={12} sm={6}>
               <Form noValidate={true}>
                 <Grid container style={{ paddingBottom: "5%" }}>
-                  <Grid item xs={9}>
+                  <Typography className="formSubtitle">
+                    {t("clickToSetLoopLocation")}
+                  </Typography>
+                  <Grid item xs={12}>
                     <TextForm
                       required
                       label={t("loopName")}
@@ -231,8 +234,14 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       }
                       className={classes.textField}
                     />
+
+                    <PopoverOnHover
+                      message={
+                        "Up to you, usually the geographic location of your Loop works best as a Loop name, keep it short and sweet! You can elaborate in the description box below. "
+                      }
+                    />
                   </Grid>
-                  <Grid item xs={3} className={classes.gridItemAlignedEnd}>
+                  <Grid item xs={3} style={{paddingTop:'10px'}}>
                     <NumberField
                       required
                       label={t("radius")}
@@ -245,8 +254,14 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       className={classes.textField}
                       step={0.1}
                     />
+                    <PopoverOnHover
+                      message={
+                        "Decide on the area your Loop will be active in. The dot in the map will change size according to your radius. We recommend a smaller radius for densely populated areas, and a larger one for villages and rural areas."
+                      }
+                    />
                   </Grid>
-                  <Grid item xs={12}>
+
+                  <Grid item xs={12} style={{ position: "relative" }}>
                     <TextForm
                       label={t("description")}
                       name="description"
@@ -259,8 +274,13 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       }
                       className={classes.textField}
                     />
+                    <PopoverOnHover
+                      message={
+                        "Optional field, type anything else you want to add that makes your Loop unique. This can always  be edited at a later stage!"
+                      }
+                    />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} style={{ position: "relative" }}>
                     <div style={{ paddingTop: "10px" }}>
                       <CategoriesDropdown
                         setGenders={handleCategoriesChange}
@@ -269,7 +289,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                         fullWidth={true}
                       />
                     </div>
-                    <div style={{ paddingTop: "10px" }}>
+                    <div style={{ paddingTop: "10px", position: "relative" }}>
                       <SizesDropdown
                         setSizes={(val) => setFieldValue("clothingSizes", val)}
                         className={classes.formSelect}
@@ -279,6 +299,11 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                         fullWidth={false}
                         inputVisible={true}
                         variantVal={true}
+                      />
+                      <PopoverOnHover
+                        message={
+                          "Mixed bags usually work best, therefore we recommend to either tick all three boxes (X)S- M-(X)L for a mixed Loop, or to start a separate Loop for plus sizes. "
+                        }
                       />
                     </div>
                   </Grid>

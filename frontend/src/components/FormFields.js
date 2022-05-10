@@ -66,19 +66,17 @@ const TextForm = ({ label, ...props }) => {
   const classes = makeStyles(theme)();
 
   return (
-    <div>
-      <TextField
-        {...field}
-        {...props}
-        autoComplete="off"
-        label={t(label)}
-        fullWidth
-        InputLabelProps={{
-          className: classes.inputLabel,
-        }}
-        variant="standard"
-      />
-    </div>
+    <TextField
+      {...field}
+      {...props}
+      autoComplete="off"
+      label={t(label)}
+      fullWidth
+      InputLabelProps={{
+        className: classes.inputLabel,
+      }}
+      variant="standard"
+    />
   );
 };
 
