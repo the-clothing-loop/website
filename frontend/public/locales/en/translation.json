@@ -76,7 +76,7 @@
   "weWillReplySoon": "Someone from our team will be in touch with you soon",
   "selectLoopLocation": "Select Loop location",
   "confirmation": "Confirmation",
-  "clickToSetLoopLocation": "Click on the map to set the approximate location of the loop",
+  "clickToSetLoopLocation": "Click on the map to set the approximate location of your loop. A dot will appear, you can manually change the radius in the field below.",
   "clickToChangeLoopLocation": "Click on the map to change the location of the loop",
   "loopName": "Loop name",
   "radius": "Radius (km)",
