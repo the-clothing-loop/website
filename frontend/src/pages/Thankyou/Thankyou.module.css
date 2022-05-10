@@ -1,0 +1,19 @@
+.h3 {
+  font-family: "Playfair Display";
+  font-weight: 700;
+  font-style: normal;
+  font-size: 48px;
+  line-height: 63.98px;
+  color: teal;
+  text-align: left;
+  margin: 20px 0;
+}
+
+.buttonsWrapper {
+  margin: 50px 0;
+}
+
+.pageWrapper {
+  margin-top: 100px;
+  padding-left: 50px;
+}

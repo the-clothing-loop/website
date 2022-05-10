@@ -12,7 +12,7 @@ import ScrollToTop from "./util/scrollToTop";
 // Pages
 import FindChain from "./pages/FindChain";
 import Login from "./pages/Login";
-import Thankyou from "./pages/Thankyou";
+import Thankyou from "./pages/Thankyou/Thankyou";
 import ChainMemberList from "./pages/ChainMemberList";
 import NewChainSignup from "./pages/NewChainSignup";
 import Signup from "./pages/Signup";
