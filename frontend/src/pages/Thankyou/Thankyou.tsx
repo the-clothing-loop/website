@@ -34,7 +34,7 @@ const Content = ({ heading, subheading }: IProps) => {
       <Typography component="p" className={styles.p}>
         {t("happySwapping")}
       </Typography>
-      <Grid container xs={12} className={styles.buttonsWrapper}>
+      <Grid container className={styles.buttonsWrapper}>
         <Grid item xs={6}>
           <Button
             className={classes.buttonOutlined}
