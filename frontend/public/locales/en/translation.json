@@ -68,8 +68,8 @@
   "notPartOfTheClothingLoopYet": "Not part of The Clothing Loop yet,",
   "joinAnExistingLoop": "join an existing Loop",
   "or": "or",
-  "thankYouForSigningUp": "Thank you for signing up",
-  "yourClosetIsAboutToBecomeAWholeLotMoreSustainable": "Your closet is about to become a whole lot more sustainable, more fun and more YOU! Our confirmation email is on its way.",
+  "thankYouForSigningUp": "Thank you for signing up!",
+  "yourClosetIsAboutToBecomeAWholeLotMoreSustainable": "Your closet is about to become a whole lot more sustainable, more fun and more YOU!",
   "happySwapping": "Happy swapping!",
   "yourMessage": "Your message",
   "thankYouForYourMessage": "Thank you for your message",
@@ -106,5 +106,8 @@
   "byDonatingACupOfCoffee": "By donating a cup of coffee to the creators we can help you find your next sweater",
   "donate": "Donate",
   "editLoop": "Edit Loop",
-  "viewLoop": "View Loop"
+  "viewLoop": "View Loop",
+  "thankYouForStartingThisLoop": "Thank you for starting this loop!",
+  "youAreUnlockingTheClothesSwapPotential": "You are unlocking the clothes swap potential for so many people in your neighbourhood, we hope you are as excited about this as we are!",
+  "confirmationEmailIsOnItsWay": "Our confirmation email is on its way."
 }

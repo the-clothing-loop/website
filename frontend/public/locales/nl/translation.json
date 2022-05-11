@@ -68,8 +68,8 @@
   "notPartOfTheClothingLoopYet": "Nog geen onderdeel van The Clothing Loop,",
   "joinAnExistingLoop": "aansluiten bij een bestaande keten",
   "or": "of",
-  "thankYouForSigningUp": "Dankjewel voor het aanmelden",
-  "yourClosetIsAboutToBecomeAWholeLotMoreSustainable": "Je kast wordt een stuk duurzamer, leuker en meer JIJ! Onze bevestigingsmail is onderweg.",
+  "thankYouForSigningUp": "Dankjewel voor het aanmelden!",
+  "yourClosetIsAboutToBecomeAWholeLotMoreSustainable": "Je kast wordt een stuk duurzamer, leuker en meer JIJ!",
   "happySwapping": "Veel plezier met ruilen!",
   "yourMessage": "Jouw bericht",
   "thankYouForYourMessage": "Dedankt voor je bericht",
@@ -106,5 +106,8 @@
   "byDonatingACupOfCoffee": "Door een kopje koffie te doneren aan de makers kunnen wij helpen je vindt je volgende trui",
   "donate": "Doneren",
   "editLoop": "Kledingketen Bewerken",
-  "viewLoop": "Bekijk Kledingketen"
+  "viewLoop": "Bekijk Kledingketen",
+  "thankYouForStartingThisLoop": "Bedankt voor het starten van deze lus!",
+  "youAreUnlockingTheClothesSwapPotential": "Je ontgrendelt het kledingruilpotentieel voor zoveel mensen in je buurt, we hopen dat je hier net zo enthousiast over bent als wij!",
+  "confirmationEmailIsOnItsWay": "Onze bevestigingsmail is onderweg."
 }
