@@ -17,6 +17,7 @@ import categories from "../util/categories";
 
 interface IProps {
   variant: "outlined" | "standard";
+  showInputLabel: boolean;
   renderValueWhenEmpty?: string;
   setGenders: (el: string[]) => void;
   genders: string[];
@@ -26,6 +27,7 @@ interface IProps {
 
 const CategoriesDropdown: React.FC<IProps> = ({
   variant,
+  showInputLabel,
   renderValueWhenEmpty,
   genders,
   setGenders,
@@ -50,9 +52,11 @@ const CategoriesDropdown: React.FC<IProps> = ({
 
   return (
     <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
-      <InputLabel classes={{ root: classes.labelSelect }}>
-        {t("categories")}
-      </InputLabel>
+      {showInputLabel && (
+        <InputLabel classes={{ root: classes.labelSelect }}>
+          {t("categories")}
+        </InputLabel>
+      )}
       <Select
         className={stylingClass}
         labelId="demo-multiple-checkbox-label"

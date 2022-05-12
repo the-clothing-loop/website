@@ -284,6 +284,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                     <div style={{ paddingTop: "10px" }}>
                       <CategoriesDropdown
                         variant="standard"
+                        showInputLabel={true}
                         setGenders={handleCategoriesChange}
                         genders={values.clothingTypes}
                         className={classes.formSelect}
