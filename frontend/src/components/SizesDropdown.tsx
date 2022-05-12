@@ -91,6 +91,7 @@ const SizesDropdown: React.FC<IProps> = ({
         {categories.children.map((value: string) => (
           <MenuItem
             key={value}
+            value={value}
             disabled={
               !selectedGenders.includes("children") && !!selectedGenders.length
             }
@@ -98,7 +99,6 @@ const SizesDropdown: React.FC<IProps> = ({
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,
             }}
-            value={value}
           >
             <Checkbox
               color="secondary"
@@ -118,6 +118,8 @@ const SizesDropdown: React.FC<IProps> = ({
         </Typography>
         {categories.women.map((value: string) => (
           <MenuItem
+            key={value}
+            value={value}
             disabled={
               !selectedGenders.includes("women") && !!selectedGenders.length
             }
@@ -125,8 +127,6 @@ const SizesDropdown: React.FC<IProps> = ({
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,
             }}
-            key={value}
-            value={value}
           >
             <Checkbox
               color="secondary"
@@ -146,6 +146,8 @@ const SizesDropdown: React.FC<IProps> = ({
         </Typography>
         {categories.men.map((value: string) => (
           <MenuItem
+            key={value}
+            value={value}
             disabled={
               !selectedGenders.includes("men") && !!selectedGenders.length
             }
@@ -153,8 +155,6 @@ const SizesDropdown: React.FC<IProps> = ({
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,
             }}
-            key={value}
-            value={value}
           >
             <Checkbox
               color="secondary"
