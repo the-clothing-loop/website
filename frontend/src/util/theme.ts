@@ -49,15 +49,10 @@ const theme = {
     lineHeight: "19.5px",
   },
 
-  em: {
+  emptyRenderValue: {
     color: "rgb(72, 128, 139, .4)",
-    fontStyle: "inherit",
-    float: "left",
-    fontWeight: "400",
-    fontSize: "1rem",
     lineHeight: "1.4375em",
     letterSpacing: " 0.00938em",
-    fontFamily: "Montserrat",
   },
 
   h3: {

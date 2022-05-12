@@ -1,5 +1,11 @@
 import React from "react";
-import { Select, FormControl, MenuItem, Button } from "@mui/material";
+import {
+  Select,
+  FormControl,
+  MenuItem,
+  Button,
+  Typography,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import RightArrow from "../images/right-arrow-white.svg";
@@ -42,10 +48,13 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
             value={selectedUser}
             onChange={handleSelectedUserChange}
             renderValue={(selected: string) =>
-              selected ? (
-                selected
-              ) : (
-                <em className={classes.em}>Select co-host</em>
+              selected ?? (
+                <Typography
+                  component="span"
+                  classes={{ root: classes.emptyRenderValue }}
+                >
+                  Select co-host
+                </Typography>
               )
             }
             displayEmpty

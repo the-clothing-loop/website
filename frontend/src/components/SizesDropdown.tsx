@@ -77,15 +77,18 @@ const SizesDropdown: React.FC<IProps> = ({
         value={selectedSizes}
         onChange={(e: any) => handleChange(e, setSelectedSizes)}
         renderValue={(selected: string[]) => {
-          if (selected.length === 0 && !inputVisible) {
-            return <em className={classes.em}>{label}</em>;
+          if (!selected.length) {
+            return inputVisible ? null : (
+              <Typography
+                component="span"
+                classes={{ root: classes.emptyRenderValue }}
+              >
+                {label}
+              </Typography>
+            );
+          } else {
+            return selected.map(t).join(", ");
           }
-
-          if (selected.length === 0 && inputVisible) {
-            return;
-          }
-
-          return selected.map(t).join(", ");
         }}
       >
         <Typography component="p" className={classes.label}>

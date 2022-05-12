@@ -241,7 +241,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={3} style={{paddingTop:'10px'}}>
+                  <Grid item xs={3} style={{ paddingTop: "10px" }}>
                     <NumberField
                       required
                       label={t("radius")}

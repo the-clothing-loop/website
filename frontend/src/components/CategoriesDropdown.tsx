@@ -8,6 +8,7 @@ import {
   Select,
   FormControl,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -15,6 +16,7 @@ import theme from "../util/theme";
 import categories from "../util/categories";
 
 interface IProps {
+  renderValueWhenEmpty?: string;
   setGenders: (el: string[]) => void;
   genders: string[];
   className: string;
@@ -22,6 +24,7 @@ interface IProps {
 }
 
 const CategoriesDropdown: React.FC<IProps> = ({
+  renderValueWhenEmpty,
   genders,
   setGenders,
   className,
@@ -61,9 +64,18 @@ const CategoriesDropdown: React.FC<IProps> = ({
         variant="standard"
         value={selectedGenders}
         onChange={(e: any) => handleChange(e, setSelectedGenders)}
-        renderValue={(selected: string[]) => {
-          return selected.map(t).join(", ");
-        }}
+        renderValue={(selected: string[]) =>
+          !selected.length && renderValueWhenEmpty ? (
+            <Typography
+              component="span"
+              classes={{ root: classes.emptyRenderValue }}
+            >
+              {renderValueWhenEmpty}
+            </Typography>
+          ) : (
+            selected.map(t).join(", ")
+          )
+        }
       >
         {Object.keys(categories).map((value: string) => (
           <MenuItem
