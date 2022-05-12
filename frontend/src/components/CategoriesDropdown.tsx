@@ -23,7 +23,6 @@ interface IProps {
   selectedCategories: string[];
   handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
   className: string;
-  fullWidth: boolean;
 }
 
 const CategoriesDropdown: React.FC<IProps> = ({
@@ -33,7 +32,6 @@ const CategoriesDropdown: React.FC<IProps> = ({
   selectedCategories,
   handleSelectedCategoriesChange,
   className,
-  fullWidth,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();

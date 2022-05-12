@@ -21,7 +21,6 @@ interface IProps {
   showInputLabel: boolean;
   className: string;
   label: string;
-  fullWidth: boolean;
   selectedGenders: string[];
   selectedSizes: string[];
   handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
@@ -32,7 +31,6 @@ const SizesDropdown: React.FC<IProps> = ({
   showInputLabel,
   className,
   label,
-  fullWidth,
   selectedGenders,
   selectedSizes,
   handleSelectedCategoriesChange,

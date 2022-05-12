@@ -118,7 +118,6 @@ export const SearchBar: React.FC<IProps> = ({
           showInputLabel={false}
           className={classes.select}
           label={t("sizes")}
-          fullWidth={false}
           selectedGenders={selectedGenders}
           selectedSizes={selectedSizes}
           handleSelectedCategoriesChange={setSelectedSizes}

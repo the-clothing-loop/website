@@ -160,7 +160,6 @@ const UserEdit = () => {
                 showInputLabel={true}
                 className={classes.formSelect}
                 label={t("interestedSizes")}
-                fullWidth={true}
                 selectedGenders={Object.keys(categories)}
                 selectedSizes={selectedSizes}
                 handleSelectedCategoriesChange={setSelectedSizes}

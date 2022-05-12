@@ -163,7 +163,6 @@ const Signup = () => {
                         showInputLabel={false}
                         className={classes.formSelect}
                         label={t("interestedSizes")}
-                        fullWidth={true}
                         selectedGenders={chainGender}
                         selectedSizes={selectedSizes}
                         handleSelectedCategoriesChange={setSelectedSizes}
