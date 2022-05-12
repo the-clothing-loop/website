@@ -117,11 +117,11 @@ export const SearchBar: React.FC<IProps> = ({
           variant="outlined"
           showInputLabel={false}
           className={classes.select}
-          genders={selectedGenders}
-          sizes={selectedSizes}
-          setSizes={setSelectedSizes}
           label={t("sizes")}
           fullWidth={false}
+          selectedGenders={selectedGenders}
+          selectedSizes={selectedSizes}
+          handleSelectedCategoriesChange={setSelectedSizes}
         />
       </div>
 

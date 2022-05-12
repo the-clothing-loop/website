@@ -159,11 +159,11 @@ const UserEdit = () => {
                 variant="standard"
                 showInputLabel={true}
                 className={classes.formSelect}
-                setSizes={setSelectedSizes}
-                genders={Object.keys(categories)}
-                sizes={selectedSizes}
                 label={t("interestedSizes")}
                 fullWidth={true}
+                selectedGenders={Object.keys(categories)}
+                selectedSizes={selectedSizes}
+                handleSelectedCategoriesChange={setSelectedSizes}
                 style={{ marginTop: "2%" }}
               />
 

@@ -9,6 +9,7 @@ import {
   Checkbox,
   Typography,
   InputLabel,
+  SelectChangeEvent,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -18,39 +19,37 @@ import categories from "../util/categories";
 interface IProps {
   variant: "outlined" | "standard";
   showInputLabel: boolean;
-  setSizes: (el: string[]) => void;
-  genders: string[];
-  sizes: string[];
   className: string;
   label: string;
   fullWidth: boolean;
+  selectedGenders: string[];
+  selectedSizes: string[];
+  handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
 }
 
 const SizesDropdown: React.FC<IProps> = ({
   variant,
   showInputLabel,
-  genders,
-  setSizes,
-  sizes,
   className,
   label,
   fullWidth,
+  selectedGenders,
+  selectedSizes,
+  handleSelectedCategoriesChange,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
 
-  const selectedGenders = genders;
-  const setSelectedSizes = setSizes;
-  const selectedSizes = sizes;
   const stylingClass = className;
 
-  //get selected categories
-  const handleChange = (event: any, setCategories: any) => {
+  const handleOnChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
     } = event;
 
-    setCategories(typeof value === "string" ? value.split(",") : value);
+    handleSelectedCategoriesChange(
+      typeof value === "string" ? value.split(",") : value
+    );
   };
 
   return (
@@ -69,7 +68,7 @@ const SizesDropdown: React.FC<IProps> = ({
         displayEmpty
         variant={variant}
         value={selectedSizes}
-        onChange={(e: any) => handleChange(e, setSelectedSizes)}
+        onChange={handleOnChange}
         renderValue={(selected: string[]) => {
           if (!selected.length) {
             return showInputLabel ? null : (

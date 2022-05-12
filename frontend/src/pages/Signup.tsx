@@ -162,11 +162,11 @@ const Signup = () => {
                         variant="standard"
                         showInputLabel={false}
                         className={classes.formSelect}
-                        setSizes={setSelectedSizes}
-                        genders={chainGender}
-                        sizes={selectedSizes}
                         label={t("interestedSizes")}
                         fullWidth={true}
+                        selectedGenders={chainGender}
+                        selectedSizes={selectedSizes}
+                        handleSelectedCategoriesChange={setSelectedSizes}
                       />
                       <PopoverOnHover
                         message={

@@ -295,12 +295,14 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       <SizesDropdown
                         variant="standard"
                         showInputLabel={true}
-                        setSizes={(val) => setFieldValue("clothingSizes", val)}
                         className={classes.formSelect}
-                        genders={values.clothingTypes}
-                        sizes={values.clothingSizes}
                         label={t("sizes")}
                         fullWidth={false}
+                        selectedGenders={values.clothingTypes}
+                        selectedSizes={values.clothingSizes}
+                        handleSelectedCategoriesChange={(val) =>
+                          setFieldValue("clothingSizes", val)
+                        }
                       />
                       <PopoverOnHover
                         message={
