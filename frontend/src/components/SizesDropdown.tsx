@@ -112,6 +112,7 @@ const SizesDropdown: React.FC<IProps> = ({
             />
           </MenuItem>
         ))}
+
         <Typography component="p" className={classes.label}>
           {t("womenSizes")}
         </Typography>
@@ -139,6 +140,7 @@ const SizesDropdown: React.FC<IProps> = ({
             />
           </MenuItem>
         ))}
+
         <Typography component="p" className={classes.label}>
           {t("menSizes")}
         </Typography>
@@ -170,4 +172,5 @@ const SizesDropdown: React.FC<IProps> = ({
     </FormControl>
   );
 };
+
 export default SizesDropdown;
