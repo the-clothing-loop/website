@@ -294,7 +294,6 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       <SizesDropdown
                         variant="standard"
                         showInputLabel={true}
-                        className={classes.formSelect}
                         label={t("sizes")}
                         selectedGenders={values.clothingTypes}
                         selectedSizes={values.clothingSizes}

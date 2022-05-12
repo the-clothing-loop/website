@@ -5,6 +5,8 @@ import {
   MenuItem,
   FormControl,
   Select,
+  Input,
+  OutlinedInput,
   ListItemText,
   Checkbox,
   Typography,
@@ -19,7 +21,6 @@ import categories from "../util/categories";
 interface IProps {
   variant: "outlined" | "standard";
   showInputLabel: boolean;
-  className: string;
   label: string;
   selectedGenders: string[];
   selectedSizes: string[];
@@ -29,7 +30,6 @@ interface IProps {
 const SizesDropdown: React.FC<IProps> = ({
   variant,
   showInputLabel,
-  className,
   label,
   selectedGenders,
   selectedSizes,
@@ -37,8 +37,6 @@ const SizesDropdown: React.FC<IProps> = ({
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
-
-  const stylingClass = className;
 
   const handleOnChange = (event: SelectChangeEvent<string[]>) => {
     const {
@@ -56,14 +54,25 @@ const SizesDropdown: React.FC<IProps> = ({
         <InputLabel classes={{ root: classes.labelSelect }}>{label}</InputLabel>
       )}
       <Select
-        className={stylingClass}
-        inputProps={{
-          className: classes.inputLabel,
-        }}
         labelId="demo-multiple-checkbox-label"
         id="demo-multiple-checkbox"
         multiple
         displayEmpty
+        input={
+          variant === "outlined" ? (
+            <OutlinedInput
+              classes={{
+                root: classes.select,
+              }}
+            />
+          ) : (
+            <Input
+              classes={{
+                root: classes.formSelect,
+              }}
+            />
+          )
+        }
         variant={variant}
         value={selectedSizes}
         onChange={handleOnChange}

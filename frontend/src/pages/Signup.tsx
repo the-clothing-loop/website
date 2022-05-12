@@ -161,7 +161,6 @@ const Signup = () => {
                       <SizesDropdown
                         variant="standard"
                         showInputLabel={false}
-                        className={classes.formSelect}
                         label={t("interestedSizes")}
                         selectedGenders={chainGender}
                         selectedSizes={selectedSizes}

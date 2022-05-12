@@ -158,7 +158,6 @@ const UserEdit = () => {
               <SizesDropdown
                 variant="standard"
                 showInputLabel={true}
-                className={classes.formSelect}
                 label={t("interestedSizes")}
                 selectedGenders={Object.keys(categories)}
                 selectedSizes={selectedSizes}

@@ -116,7 +116,6 @@ export const SearchBar: React.FC<IProps> = ({
         <SizesDropdown
           variant="outlined"
           showInputLabel={false}
-          className={classes.select}
           label={t("sizes")}
           selectedGenders={selectedGenders}
           selectedSizes={selectedSizes}
