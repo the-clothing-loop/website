@@ -715,12 +715,9 @@ const theme = {
     textTransform: "capitalize",
   },
 
-  listItemTextSizes: {
-    fontFamily: "Montserrat !important",
-  },
-
   listItemTextFontSize: {
     fontSize: "0.875rem",
+    textTransform: "capitalize",
   },
 
   menuItemSpacingAndColor: {

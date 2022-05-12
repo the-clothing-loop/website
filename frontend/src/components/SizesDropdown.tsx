@@ -114,11 +114,9 @@ const SizesDropdown: React.FC<IProps> = ({
             />
             <ListItemText
               primary={t(value)}
-              className={classes.listItemTextSizes}
               classes={{
                 primary: classes.listItemTextFontSize,
               }}
-              style={{ textTransform: "capitalize" }}
             />
           </MenuItem>
         ))}
@@ -143,11 +141,9 @@ const SizesDropdown: React.FC<IProps> = ({
             />
             <ListItemText
               primary={t(value)}
-              className={classes.listItemTextSizes}
               classes={{
                 primary: classes.listItemTextFontSize,
               }}
-              style={{ textTransform: "capitalize" }}
             />
           </MenuItem>
         ))}
@@ -172,11 +168,9 @@ const SizesDropdown: React.FC<IProps> = ({
             />
             <ListItemText
               primary={t(value)}
-              className={classes.listItemTextSizes}
               classes={{
                 primary: classes.listItemTextFontSize,
               }}
-              style={{ textTransform: "capitalize" }}
             />
           </MenuItem>
         ))}
