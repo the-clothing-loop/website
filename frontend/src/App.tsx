@@ -12,7 +12,10 @@ import ScrollToTop from "./util/scrollToTop";
 // Pages
 import FindChain from "./pages/FindChain";
 import Login from "./pages/Login";
-import Thankyou from "./pages/Thankyou";
+import {
+  NewLoopConfirmation,
+  JoinLoopConfirmation,
+} from "./pages/Thankyou/Thankyou";
 import ChainMemberList from "./pages/ChainMemberList";
 import NewChainSignup from "./pages/NewChainSignup";
 import Signup from "./pages/Signup";
@@ -53,7 +56,11 @@ const App = () => {
                   <div className="container">
                     <Switch>
                       <Route exact path="/" component={Home} />
-                      <Route exact path="/thankyou" component={Thankyou} />
+                      <Route
+                        exact
+                        path="/thankyou"
+                        component={JoinLoopConfirmation}
+                      />
                       <Route exact path="/donate/:status?" component={Donate} />
                       <Route
                         exact
@@ -100,6 +107,11 @@ const App = () => {
                         exact
                         path="/loops/new"
                         component={NewChainLocation}
+                      />
+                      <Route
+                        exact
+                        path="/loops/new/confirmation"
+                        component={NewLoopConfirmation}
                       />
                       <Route
                         exact

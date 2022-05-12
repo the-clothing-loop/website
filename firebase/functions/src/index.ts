@@ -21,6 +21,9 @@ const adminEmails = (
 const ROLE_ADMIN = "admin";
 const ROLE_CHAINADMIN = "chainAdmin";
 
+const ToolkitLink =
+  "https://drive.google.com/drive/u/0/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27";
+
 // https://github.com/firebase/firebase-js-sdk/issues/1881
 // If we want to use try/catch with auth functions, we have to wrap it in this
 // Auth functions return a "clojure" promise which has a different catch implementation
@@ -129,36 +132,26 @@ export const createUser = functions
       });
     const verificationEmail = `<p>Hello ${name} and welcome to the Clothing Loop!,</p>
 
-      <p>Thank you for making the step to create a more sustainable world together.</p>
-      <p>We are super happy to have you. Please find our manual in the attachment to see how to proceed.</p>
-
-      <p>Firstly, we need you to verify your email address by clicking  <a href="${verificationLink}">here</a></p>
-
-      <p>Next steps for loop hosts:"
-      <p>Right now everything is set up, but the loop is not live. When you are ready, login and navigate to the admin tab.</p>
-      <p>To make the loop active, set the slider to 'visible'.</p>
-      <p>Don't wait too long, as someone else may beat you to the chase and start a loop in the same area. </p>
-      <p>And even though there can be multiple loops in the same area, it may cause a bit of confusion.</p>  
-      <p>Next steps for participants:</p>
-      <p>What happens next?</p>
-      <p>Each Loop has a local host that coordinates the specific Loop voluntarily. </p>
-      <p>He/she/they will receive your application, and get in touch with further info.</p>
-      <p>Please be patient, sometimes this can take up to four weeks, depending on the available time of the host.</p>
-      <p>Of course, you want to start swapping right away, which we applaud obviously!</p>
-      <p>What you can do in the meantime is start scanning your closet for items that are ready to go on adventures</p>
-      <p> with somebody else.</p>
-      <p>You can check if they need some repairs, depilling or a little wash, </p>
-      <p>so they will become an even better addition to our travelling swap bags. </p>
-      <p>Please note, it's a mutual effort to keep the bag a surprise for everyone.</p>
-      <p>This way we are not just passing on a bag of clothes but a bag of happy stories and care!</p>
-      <p>Don't worry if you do not find something in the very first bag. </p>
-
-      <p>Furthermore, we love to grow as fast as possible to make the most impact. The sooner the better! </p>
-      <p>So, another thing you can help us with is spread the word amongst your family, friends and neighbours.</p>
-      <p>The earth will be eternally grateful.</p>
+      </br>
+      <p>Thank you for making the step to create a more sustainable world together, we are so happy to have you!</p>
+      <p>Two things to do before your Loop is active:</p>
+      <p>First, we need you to verify your email address by clicking <a href="${verificationLink}">here</a></p>.</p>
+      <p>(You only have to do this once)</p>
+      <p>Second: login and navigate to the admin tab. If everything is ready to go, drag the slider to 'visible'.</p>
+      <p>From then on your Loop is published, and registrations can start pouring in!</p>
+      <p>You will get a notification if a new person signs up.</p>
+      </br>
+      <p>Everything you need to get started with your Loop you can find in our <a href="${ToolkitLink}">Toolkit folder</a></p>
+      <ul>
+        <li><p>Our manual on how to set up and run your Loop</p></li>
+        <li><p>The template of our app + a tutorial on how to set it up</p></li>
+        <li><p>Logos and images</p></li>
+        <li><p>A press release template</p></li>
+      </ul>
+      </br>
+      <p>If you have any more questions that are not in our FAQ, please send us an email!</p>
       <p>Happy swapping!</p>
-
-      <p>Regards,</p>
+      </br>
       <p>The Clothing Loop team: Nichon, Paloeka and Giulia</p>`;
     functions.logger.debug("sending verification email", verificationEmail);
     await db.collection("mail").add({
