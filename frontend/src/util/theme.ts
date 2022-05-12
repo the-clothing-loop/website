@@ -610,28 +610,16 @@ const theme = {
     padding: 10,
   },
 
-  select: {
+  selectInputOutlined: {
     color: black,
-    borderRadius: "0 !important",
-    backgroundColor: "transparent",
     width: "100%",
-    fontFamily: "Montserrat !important",
-    textTransform: "capitalize",
     border: `1px solid ${turquoise}`,
-
-    "& div#demo-multiple-checkbox": {
-      padding: "10px !important",
-    },
-
-    "&:before": {
-      borderColor: yellow,
-    },
-    "&:after": {
-      borderColor: yellow,
-    },
-    "&:not(.Mui-disabled):hover::before": {
-      borderColor: yellow,
-    },
+    borderRadius: "0",
+    backgroundColor: "transparent",
+    textTransform: "capitalize",
+  },
+  selectOutlined: {
+    padding: "10px",
   },
 
   addChainAdminSelect: {
@@ -672,19 +660,17 @@ const theme = {
     fontWeight: "500 !important",
   },
 
-  formSelect: {
-    margin: "5px auto 5px auto",
-    border: "none",
+  selectInputStandard: {
+    color: black,
     width: "100%",
-    borderRadius: "0 !important",
-    padding: "0 ",
-    marginTop: "16px",
+    margin: "5px auto 5px auto",
+    textTransform: "capitalize",
     "&:after": {
       borderColor: "#1976d2",
     },
   },
-  formControl: {
-    width: "15rem",
+  selectStandard: {
+    padding: "10px 10px 10px 0",
   },
 
   formWrapper: {
@@ -701,11 +687,6 @@ const theme = {
     fontStyle: "italic",
     fontWeight: "lighter",
     paddingLeft: "16px",
-  },
-
-  listItemText: {
-    fontFamily: "Montserrat !important",
-    textTransform: "capitalize",
   },
 
   listItemTextFontSize: {

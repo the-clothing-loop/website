@@ -54,25 +54,29 @@ const SizesDropdown: React.FC<IProps> = ({
         <InputLabel classes={{ root: classes.labelSelect }}>{label}</InputLabel>
       )}
       <Select
-        labelId="demo-multiple-checkbox-label"
-        id="demo-multiple-checkbox"
         multiple
         displayEmpty
         input={
           variant === "outlined" ? (
             <OutlinedInput
               classes={{
-                root: classes.select,
+                root: classes.selectInputOutlined,
               }}
             />
           ) : (
             <Input
               classes={{
-                root: classes.formSelect,
+                root: classes.selectInputStandard,
               }}
             />
           )
         }
+        classes={{
+          select:
+            variant === "outlined"
+              ? classes.selectOutlined
+              : classes.selectStandard,
+        }}
         variant={variant}
         value={selectedSizes}
         onChange={handleOnChange}

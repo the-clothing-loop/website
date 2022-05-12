@@ -54,7 +54,7 @@ export const SearchBar: React.FC<IProps> = ({
         }}
       />
 
-      <div className={classes.formControl}>
+      <div className="search-bar__dropdown">
         <CategoriesDropdown
           variant="outlined"
           showInputLabel={false}
@@ -64,7 +64,7 @@ export const SearchBar: React.FC<IProps> = ({
         />
       </div>
 
-      <div className={classes.formControl}>
+      <div className="search-bar__dropdown">
         <SizesDropdown
           variant="outlined"
           showInputLabel={false}
