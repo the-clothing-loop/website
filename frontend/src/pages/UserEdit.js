@@ -157,13 +157,13 @@ const UserEdit = () => {
 
               <SizesDropdown
                 variant="standard"
+                showInputLabel={true}
                 className={classes.formSelect}
                 setSizes={setSelectedSizes}
                 genders={Object.keys(categories)}
                 sizes={selectedSizes}
                 label={t("interestedSizes")}
                 fullWidth={true}
-                inputVisible={true}
                 style={{ marginTop: "2%" }}
               />
 

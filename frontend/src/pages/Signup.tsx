@@ -160,13 +160,13 @@ const Signup = () => {
                     <div className={classes.formFieldWithPopover}>
                       <SizesDropdown
                         variant="standard"
+                        showInputLabel={false}
                         className={classes.formSelect}
                         setSizes={setSelectedSizes}
                         genders={chainGender}
                         sizes={selectedSizes}
                         label={t("interestedSizes")}
                         fullWidth={true}
-                        inputVisible={false}
                       />
                       <PopoverOnHover
                         message={

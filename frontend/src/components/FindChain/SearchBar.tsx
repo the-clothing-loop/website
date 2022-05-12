@@ -115,13 +115,13 @@ export const SearchBar: React.FC<IProps> = ({
       <div className={classes.formControl}>
         <SizesDropdown
           variant="outlined"
+          showInputLabel={false}
           className={classes.select}
           genders={selectedGenders}
           sizes={selectedSizes}
           setSizes={setSelectedSizes}
           label={t("sizes")}
           fullWidth={false}
-          inputVisible={false}
         />
       </div>
 

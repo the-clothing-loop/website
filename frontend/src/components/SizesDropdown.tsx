@@ -17,24 +17,24 @@ import categories from "../util/categories";
 
 interface IProps {
   variant: "outlined" | "standard";
+  showInputLabel: boolean;
   setSizes: (el: string[]) => void;
   genders: string[];
   sizes: string[];
   className: string;
   label: string;
   fullWidth: boolean;
-  inputVisible: boolean;
 }
 
 const SizesDropdown: React.FC<IProps> = ({
   variant,
+  showInputLabel,
   genders,
   setSizes,
   sizes,
   className,
   label,
   fullWidth,
-  inputVisible,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
@@ -55,9 +55,9 @@ const SizesDropdown: React.FC<IProps> = ({
 
   return (
     <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
-      {inputVisible ? (
+      {showInputLabel && (
         <InputLabel classes={{ root: classes.labelSelect }}>{label}</InputLabel>
-      ) : null}
+      )}
       <Select
         className={stylingClass}
         inputProps={{
@@ -72,7 +72,7 @@ const SizesDropdown: React.FC<IProps> = ({
         onChange={(e: any) => handleChange(e, setSelectedSizes)}
         renderValue={(selected: string[]) => {
           if (!selected.length) {
-            return inputVisible ? null : (
+            return showInputLabel ? null : (
               <Typography
                 component="span"
                 classes={{ root: classes.emptyRenderValue }}
