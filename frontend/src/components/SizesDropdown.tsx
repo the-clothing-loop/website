@@ -88,7 +88,7 @@ const SizesDropdown: React.FC<IProps> = ({
         <Typography component="p" className={classes.label}>
           {t("childrenSizes")}
         </Typography>
-        {categories.children.map((value: any) => (
+        {categories.children.map((value: string) => (
           <MenuItem
             key={value}
             disabled={
@@ -116,7 +116,7 @@ const SizesDropdown: React.FC<IProps> = ({
         <Typography component="p" className={classes.label}>
           {t("womenSizes")}
         </Typography>
-        {categories.women.map((value: any) => (
+        {categories.women.map((value: string) => (
           <MenuItem
             disabled={
               !selectedGenders.includes("women") && !!selectedGenders.length
@@ -144,7 +144,7 @@ const SizesDropdown: React.FC<IProps> = ({
         <Typography component="p" className={classes.label}>
           {t("menSizes")}
         </Typography>
-        {categories.men.map((value: any) => (
+        {categories.men.map((value: string) => (
           <MenuItem
             disabled={
               !selectedGenders.includes("men") && !!selectedGenders.length
