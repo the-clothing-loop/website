@@ -585,6 +585,8 @@
 
   .MuiGrid-item {
     padding: 1% 2%;
+    padding-right: 0;
+    position: relative;
   }
 
   .background-frame-login {
@@ -762,6 +764,11 @@
 
   .add-chain-admin__button {
     margin-top: 88px;
+  }
+  .privacy-policy-action {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 15px;
   }
 }
 

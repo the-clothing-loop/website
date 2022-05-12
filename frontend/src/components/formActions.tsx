@@ -29,6 +29,7 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
         type="checkbox"
       />
       <CheckboxField
+        className="privacy-policy-action"
         required={true}
         label={
           <>
