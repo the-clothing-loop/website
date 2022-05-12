@@ -293,6 +293,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                     </div>
                     <div style={{ paddingTop: "10px", position: "relative" }}>
                       <SizesDropdown
+                        variant="standard"
                         setSizes={(val) => setFieldValue("clothingSizes", val)}
                         className={classes.formSelect}
                         genders={values.clothingTypes}
@@ -300,7 +301,6 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                         label={t("sizes")}
                         fullWidth={false}
                         inputVisible={true}
-                        variantVal={true}
                       />
                       <PopoverOnHover
                         message={

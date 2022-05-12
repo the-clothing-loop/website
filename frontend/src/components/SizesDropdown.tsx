@@ -16,6 +16,7 @@ import theme from "../util/theme";
 import categories from "../util/categories";
 
 interface IProps {
+  variant: "outlined" | "standard";
   setSizes: (el: string[]) => void;
   genders: string[];
   sizes: string[];
@@ -23,10 +24,10 @@ interface IProps {
   label: string;
   fullWidth: boolean;
   inputVisible: boolean;
-  variantVal: boolean;
 }
 
 const SizesDropdown: React.FC<IProps> = ({
+  variant,
   genders,
   setSizes,
   sizes,
@@ -34,7 +35,6 @@ const SizesDropdown: React.FC<IProps> = ({
   label,
   fullWidth,
   inputVisible,
-  variantVal,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
@@ -67,7 +67,7 @@ const SizesDropdown: React.FC<IProps> = ({
         id="demo-multiple-checkbox"
         multiple
         displayEmpty
-        variant={variantVal ? "standard" : "outlined"}
+        variant={variant}
         value={selectedSizes}
         onChange={(e: any) => handleChange(e, setSelectedSizes)}
         renderValue={(selected: string[]) => {

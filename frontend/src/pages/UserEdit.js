@@ -156,6 +156,7 @@ const UserEdit = () => {
               />
 
               <SizesDropdown
+                variant="standard"
                 className={classes.formSelect}
                 setSizes={setSelectedSizes}
                 genders={Object.keys(categories)}
@@ -163,7 +164,6 @@ const UserEdit = () => {
                 label={t("interestedSizes")}
                 fullWidth={true}
                 inputVisible={true}
-                variantVal={true}
                 style={{ marginTop: "2%" }}
               />
 

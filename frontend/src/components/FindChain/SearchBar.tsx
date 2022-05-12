@@ -114,6 +114,7 @@ export const SearchBar: React.FC<IProps> = ({
 
       <div className={classes.formControl}>
         <SizesDropdown
+          variant="outlined"
           className={classes.select}
           genders={selectedGenders}
           sizes={selectedSizes}
@@ -121,7 +122,6 @@ export const SearchBar: React.FC<IProps> = ({
           label={t("sizes")}
           fullWidth={false}
           inputVisible={false}
-          variantVal={false}
         />
       </div>
 
