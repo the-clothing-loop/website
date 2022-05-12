@@ -283,6 +283,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                   <Grid item xs={12} style={{ position: "relative" }}>
                     <div style={{ paddingTop: "10px" }}>
                       <CategoriesDropdown
+                        variant="standard"
                         setGenders={handleCategoriesChange}
                         genders={values.clothingTypes}
                         className={classes.formSelect}

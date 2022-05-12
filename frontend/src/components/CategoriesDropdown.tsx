@@ -16,6 +16,7 @@ import theme from "../util/theme";
 import categories from "../util/categories";
 
 interface IProps {
+  variant: "outlined" | "standard";
   renderValueWhenEmpty?: string;
   setGenders: (el: string[]) => void;
   genders: string[];
@@ -24,6 +25,7 @@ interface IProps {
 }
 
 const CategoriesDropdown: React.FC<IProps> = ({
+  variant,
   renderValueWhenEmpty,
   genders,
   setGenders,
@@ -61,7 +63,7 @@ const CategoriesDropdown: React.FC<IProps> = ({
         id="demo-multiple-checkbox"
         multiple
         displayEmpty
-        variant="standard"
+        variant={variant}
         value={selectedGenders}
         onChange={(e: any) => handleChange(e, setSelectedGenders)}
         renderValue={(selected: string[]) =>
