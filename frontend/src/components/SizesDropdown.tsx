@@ -92,8 +92,7 @@ const SizesDropdown: React.FC<IProps> = ({
           <MenuItem
             key={value}
             disabled={
-              !selectedGenders.includes("children") &&
-              selectedGenders.length !== 0
+              !selectedGenders.includes("children") && !!selectedGenders.length
             }
             classes={{
               root: classes.menuItemSpacingAndColor,
@@ -119,7 +118,7 @@ const SizesDropdown: React.FC<IProps> = ({
         {categories.women.map((value: any) => (
           <MenuItem
             disabled={
-              !selectedGenders.includes("women") && selectedGenders.length !== 0
+              !selectedGenders.includes("women") && !!selectedGenders.length
             }
             classes={{
               root: classes.menuItemSpacingAndColor,
@@ -146,7 +145,7 @@ const SizesDropdown: React.FC<IProps> = ({
         {categories.men.map((value: any) => (
           <MenuItem
             disabled={
-              !selectedGenders.includes("men") && selectedGenders.length !== 0
+              !selectedGenders.includes("men") && !!selectedGenders.length
             }
             classes={{
               root: classes.menuItemSpacingAndColor,
