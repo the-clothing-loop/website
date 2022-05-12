@@ -6,6 +6,8 @@ import {
   Checkbox,
   ListItemText,
   Select,
+  Input,
+  OutlinedInput,
   FormControl,
   MenuItem,
   Typography,
@@ -22,7 +24,6 @@ interface IProps {
   renderValueWhenEmpty?: string;
   selectedCategories: string[];
   handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
-  className: string;
 }
 
 const CategoriesDropdown: React.FC<IProps> = ({
@@ -31,12 +32,9 @@ const CategoriesDropdown: React.FC<IProps> = ({
   renderValueWhenEmpty,
   selectedCategories,
   handleSelectedCategoriesChange,
-  className,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
-
-  const stylingClass = className;
 
   const handleOnChange = (event: SelectChangeEvent<string[]>) => {
     const {
@@ -56,11 +54,17 @@ const CategoriesDropdown: React.FC<IProps> = ({
         </InputLabel>
       )}
       <Select
-        className={stylingClass}
         labelId="demo-multiple-checkbox-label"
         id="demo-multiple-checkbox"
         multiple
         displayEmpty
+        input={
+          <Input
+            classes={{
+              root: classes.formSelect,
+            }}
+          />
+        }
         variant={variant}
         value={selectedCategories}
         onChange={handleOnChange}
