@@ -2,15 +2,15 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-  MenuItem,
   FormControl,
+  InputLabel,
   Select,
   Input,
   OutlinedInput,
-  ListItemText,
+  MenuItem,
   Checkbox,
+  ListItemText,
   Typography,
-  InputLabel,
   SelectChangeEvent,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
