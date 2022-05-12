@@ -59,11 +59,19 @@ const CategoriesDropdown: React.FC<IProps> = ({
         multiple
         displayEmpty
         input={
-          <Input
-            classes={{
-              root: classes.formSelect,
-            }}
-          />
+          variant === "outlined" ? (
+            <OutlinedInput
+              classes={{
+                root: classes.select,
+              }}
+            />
+          ) : (
+            <Input
+              classes={{
+                root: classes.formSelect,
+              }}
+            />
+          )
         }
         variant={variant}
         value={selectedCategories}
