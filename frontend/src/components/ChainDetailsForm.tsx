@@ -285,8 +285,8 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       <CategoriesDropdown
                         variant="standard"
                         showInputLabel={true}
-                        setGenders={handleCategoriesChange}
-                        genders={values.clothingTypes}
+                        selectedCategories={values.clothingTypes}
+                        handleSelectedCategoriesChange={handleCategoriesChange}
                         className={classes.formSelect}
                         fullWidth={true}
                       />

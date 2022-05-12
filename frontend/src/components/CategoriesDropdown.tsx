@@ -9,6 +9,7 @@ import {
   FormControl,
   MenuItem,
   Typography,
+  SelectChangeEvent,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -19,8 +20,8 @@ interface IProps {
   variant: "outlined" | "standard";
   showInputLabel: boolean;
   renderValueWhenEmpty?: string;
-  setGenders: (el: string[]) => void;
-  genders: string[];
+  selectedCategories: string[];
+  handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
   className: string;
   fullWidth: boolean;
 }
@@ -29,25 +30,24 @@ const CategoriesDropdown: React.FC<IProps> = ({
   variant,
   showInputLabel,
   renderValueWhenEmpty,
-  genders,
-  setGenders,
+  selectedCategories,
+  handleSelectedCategoriesChange,
   className,
   fullWidth,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
 
-  const selectedGenders = genders;
-  const setSelectedGenders = setGenders;
   const stylingClass = className;
 
-  //get selected categories
-  const handleChange = (event: any, setCategories: any) => {
+  const handleOnChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
     } = event;
 
-    setCategories(typeof value === "string" ? value.split(",") : value);
+    handleSelectedCategoriesChange(
+      typeof value === "string" ? value.split(",") : value
+    );
   };
 
   return (
@@ -64,8 +64,8 @@ const CategoriesDropdown: React.FC<IProps> = ({
         multiple
         displayEmpty
         variant={variant}
-        value={selectedGenders}
-        onChange={(e: any) => handleChange(e, setSelectedGenders)}
+        value={selectedCategories}
+        onChange={handleOnChange}
         renderValue={(selected: string[]) =>
           !selected.length && renderValueWhenEmpty ? (
             <Typography
@@ -90,7 +90,7 @@ const CategoriesDropdown: React.FC<IProps> = ({
           >
             <Checkbox
               color="secondary"
-              checked={selectedGenders.includes(value) ? true : false}
+              checked={selectedCategories.includes(value) ? true : false}
             />
             <ListItemText
               primary={t(value)}
