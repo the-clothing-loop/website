@@ -1,10 +1,11 @@
 import React from "react";
 import {
-  Select,
   FormControl,
+  Select,
+  OutlinedInput,
   MenuItem,
-  Button,
   Typography,
+  Button,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -41,9 +42,19 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
       <Title>Select Co-Host</Title>
 
       <div className="add-chain-admin__select">
-        <FormControl classes={{ root: classes.specificSpacing }}>
+        <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
           <Select
-            className={classes.addChainAdminSelect}
+            displayEmpty
+            input={
+              <OutlinedInput
+                classes={{
+                  root: classes.selectInputOutlined,
+                }}
+              />
+            }
+            classes={{
+              select: classes.selectOutlined,
+            }}
             variant="outlined"
             value={selectedUser}
             onChange={handleSelectedUserChange}
@@ -57,7 +68,6 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
                 </Typography>
               )
             }
-            displayEmpty
           >
             {users.map(
               ({

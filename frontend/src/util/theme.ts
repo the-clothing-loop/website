@@ -622,29 +622,6 @@ const theme = {
     padding: "10px",
   },
 
-  addChainAdminSelect: {
-    borderRadius: "0 !important",
-    backgroundColor: "transparent",
-    width: "100%",
-    fontFamily: "Montserrat !important",
-    textTransform: "capitalize",
-    border: `1px solid ${turquoise}`,
-
-    "& div#demo-multiple-checkbox": {
-      padding: "10px !important",
-    },
-
-    "&:before": {
-      borderColor: yellow,
-    },
-    "&:after": {
-      borderColor: yellow,
-    },
-    "&:not(.Mui-disabled):hover::before": {
-      borderColor: yellow,
-    },
-  },
-
   labelSelect: {
     marginTop: "10px",
     color: "rgb(72, 128, 139, .4)",
