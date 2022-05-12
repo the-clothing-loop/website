@@ -79,7 +79,7 @@ const CategoriesDropdown: React.FC<IProps> = ({
             }}
           >
             <Checkbox
-              className={classes.checkbox}
+              color="secondary"
               checked={selectedGenders.includes(value) ? true : false}
             />
             <ListItemText

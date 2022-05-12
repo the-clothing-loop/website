@@ -584,10 +584,6 @@ const theme = {
     borderBottom: "1px solid #dee3ed",
   },
 
-  checkbox: {
-    color: `${teal} !important`,
-  },
-
   actionsWrapper: {
     display: "flex",
   },

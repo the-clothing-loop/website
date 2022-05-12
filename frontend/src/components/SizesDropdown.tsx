@@ -109,7 +109,7 @@ const SizesDropdown: React.FC<IProps> = ({
             value={value}
           >
             <Checkbox
-              className={classes.checkbox}
+              color="secondary"
               checked={selectedSizes.includes(value) ? true : false}
             />
             <ListItemText
@@ -138,7 +138,7 @@ const SizesDropdown: React.FC<IProps> = ({
             value={value}
           >
             <Checkbox
-              className={classes.checkbox}
+              color="secondary"
               checked={selectedSizes.includes(value) ? true : false}
             />
             <ListItemText
@@ -167,7 +167,7 @@ const SizesDropdown: React.FC<IProps> = ({
             value={value}
           >
             <Checkbox
-              className={classes.checkbox}
+              color="secondary"
               checked={selectedSizes.includes(value) ? true : false}
             />
             <ListItemText
