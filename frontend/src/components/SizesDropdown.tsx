@@ -56,13 +56,7 @@ const SizesDropdown: React.FC<IProps> = ({
   return (
     <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
       {inputVisible ? (
-        <InputLabel
-          id="demo-multiple-checkbox-label"
-          className={classes.labelSelect}
-          classes={{ root: classes.focusColor }}
-        >
-          {label}
-        </InputLabel>
+        <InputLabel classes={{ root: classes.labelSelect }}>{label}</InputLabel>
       ) : null}
       <Select
         className={stylingClass}

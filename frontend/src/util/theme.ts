@@ -658,13 +658,11 @@ const theme = {
   },
 
   labelSelect: {
-    fontFamily: "Montserrat !important",
-    transform: "translate(0px, -6px) scale(0.75) !important",
-    color: "rgb(72, 128, 139, .4)",
     marginTop: "10px",
-
-    "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-      transform: "translate(0px, -6px) scale(0.75) !important",
+    color: "rgb(72, 128, 139, .4)",
+    transform: "translate(0px, -6px) scale(0.75)",
+    "&:focus": {
+      color: "#f7c86f",
     },
   },
 
@@ -728,12 +726,6 @@ const theme = {
     },
   },
   selected: {},
-
-  focusColor: {
-    "&:focus": {
-      color: "#f7c86f",
-    },
-  },
 
   specificSpacing: {
     letterSpacing: "0.00938em",

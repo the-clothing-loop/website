@@ -50,11 +50,7 @@ const CategoriesDropdown: React.FC<IProps> = ({
 
   return (
     <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
-      <InputLabel
-        id="demo-multiple-checkbox-label"
-        className={classes.labelSelect}
-        classes={{ root: classes.focusColor }}
-      >
+      <InputLabel classes={{ root: classes.labelSelect }}>
         {t("categories")}
       </InputLabel>
       <Select
