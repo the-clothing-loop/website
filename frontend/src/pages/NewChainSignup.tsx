@@ -97,7 +97,7 @@ const Signup = () => {
             address: geocoderResult.result.place_name,
             chainId: null,
             ...values,
-            interestedSizes: selectedSizes,
+            interestedSizes: [],
           };
 
           console.log(`creating user: ${JSON.stringify(user)}`);
@@ -214,25 +214,6 @@ const Signup = () => {
                 />
 
                 <GeocoderSelector name="address" onResult={setGeocoderResult} />
-
-                <div className={classes.formFieldWithPopover}>
-                  <SizesDropdown
-                    className={classes.formSelect}
-                    setSizes={setSelectedSizes}
-                    genders={Object.keys(categories)}
-                    sizes={selectedSizes}
-                    label={t("interestedSizes")}
-                    fullWidth={true}
-                    inputVisible={false}
-                    variantVal={true}
-                  />
-                  <PopoverOnHover
-                    message={
-                      "We would like to know this, to see if different size interests are equally represented within your loop. Also, knowing this makes it easier to split the route over time, depending on size interest!"
-                    }
-                  />
-                </div>
-
                 <FormActions handleClick={handleClickAction} />
 
                 {error ? <Alert severity="error">{error}</Alert> : null}

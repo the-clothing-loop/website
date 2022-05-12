@@ -66,12 +66,6 @@ const CategoriesDropdown: React.FC<IProps> = ({
         value={selectedGenders}
         onChange={(e: any) => handleChange(e, setSelectedGenders)}
         renderValue={(selected: string[]) => {
-          if (selected.length === 0) {
-            return (
-              <em className={classes.em}>{t("no categories selected")}</em>
-            );
-          }
-
           return selected.map(t).join(", ");
         }}
       >

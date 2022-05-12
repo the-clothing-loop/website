@@ -951,6 +951,7 @@ const theme = {
     position: "absolute",
     left: "100%",
     top: "20%",
+    opacity:'0.6'
   },
 
   formFieldWithPopover: {
