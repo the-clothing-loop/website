@@ -622,6 +622,19 @@ const theme = {
     padding: "10px",
   },
 
+  selectInputStandard: {
+    color: black,
+    width: "100%",
+    margin: "5px auto 5px auto",
+    textTransform: "capitalize",
+    "&:after": {
+      borderColor: "#1976d2",
+    },
+  },
+  selectStandard: {
+    padding: "10px 10px 10px 0",
+  },
+
   labelSelect: {
     marginTop: "10px",
     color: "rgb(72, 128, 139, .4)",
@@ -635,19 +648,6 @@ const theme = {
     textTransform: "uppercase",
     color: black,
     fontWeight: "500 !important",
-  },
-
-  selectInputStandard: {
-    color: black,
-    width: "100%",
-    margin: "5px auto 5px auto",
-    textTransform: "capitalize",
-    "&:after": {
-      borderColor: "#1976d2",
-    },
-  },
-  selectStandard: {
-    padding: "10px 10px 10px 0",
   },
 
   formWrapper: {
