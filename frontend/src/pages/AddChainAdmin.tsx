@@ -35,15 +35,12 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
       <Title>Select Co-Host</Title>
 
       <div className="add-chain-admin__select">
-        <FormControl className={classes.sizesFormWrapper}>
+        <FormControl classes={{ root: classes.specificSpacing }}>
           <Select
             className={classes.addChainAdminSelect}
             variant="outlined"
             value={selectedUser}
             onChange={handleSelectedUserChange}
-            inputProps={{
-              className: classes.specificSpacing,
-            }}
             renderValue={(selected: string) =>
               selected ? (
                 selected
@@ -65,7 +62,6 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
               }) => (
                 <MenuItem
                   key={uid}
-                  className={classes.listItemTextSizes}
                   classes={{
                     root: classes.menuItemSpacingAndColor,
                     selected: classes.selected,

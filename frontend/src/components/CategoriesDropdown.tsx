@@ -44,11 +44,7 @@ const CategoriesDropdown: React.FC<IProps> = ({
   };
 
   return (
-    <FormControl
-      className={classes.sizesFormWrapper}
-      fullWidth={fullWidth}
-      classes={{ root: classes.specificSpacing }}
-    >
+    <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
       <InputLabel
         id="demo-multiple-checkbox-label"
         className={classes.labelSelect}

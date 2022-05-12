@@ -935,11 +935,6 @@ const theme = {
     color: black,
   },
 
-  sizesFormWrapper: {
-    display: "flex !important",
-    flexDirection: "row !important",
-    position: "relative",
-  },
   popoverWrapper: {
     display: "flex",
     alignItems: "center",
