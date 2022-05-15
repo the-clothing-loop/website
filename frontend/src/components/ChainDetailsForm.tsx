@@ -111,7 +111,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
       validationSchema={formSchema}
       validateOnChange={false}
       validate={(values: ChainFields) => {
-        if (values.longitude === null || values.latitude === null) {
+        if (values.longitude === 0 && values.latitude === 0) {
           return {
             longitude: "Please set the loop location by clicking the map",
           };
