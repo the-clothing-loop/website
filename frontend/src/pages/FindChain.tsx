@@ -426,7 +426,7 @@ const FindChain = ({ location }: { location: Location }) => {
                       ? selectedChain.categories.size.map((size, i) => {
                           return (
                             <Typography key={i} component="p">
-                              {size}
+                              {t(`${size}`)}
                             </Typography>
                           );
                         })

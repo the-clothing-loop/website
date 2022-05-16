@@ -161,7 +161,7 @@ const ChainMemberList = () => {
                 <Field title="Sizes">
                   {chain.categories?.size &&
                     chain.categories.size
-                      .map((size, i) => size.toUpperCase())
+                      .map((size, i) => t(`${size}`))
                       .join(" / ")}
                 </Field>
                 <Field title="Participants">{`${users.length} ${

@@ -4,8 +4,8 @@ interface ICategories {
 
 const clothingCategories: ICategories = {
   children: ["baby", "1To4YearsOld", "5To12YearsOld"],
-  women: ["womenSmall", "womenMedium", "womenLarge"],
-  men: ["menSmall", "menMedium", "menLarge"],
+  women: ["womenSmall", "womenMedium", "womenLarge", "womenPlusSize"],
+  men: ["menSmall", "menMedium", "menLarge", "menPlusSize"],
 };
 
 export const allSizes = Object.values(clothingCategories).reduce(
