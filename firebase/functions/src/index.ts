@@ -152,7 +152,7 @@ export const createUser = functions
       <p>If you have any more questions that are not in our FAQ, please send us an email!</p>
       <p>Happy swapping!</p>
       </br>
-      <p>The Clothing Loop team: Nichon, Paloeka and Giulia</p>`;
+      <p>Nichon, on behalf of the Clothing Loop team</p>`;
     functions.logger.debug("sending verification email", verificationEmail);
     await db.collection("mail").add({
       to: email,
@@ -313,8 +313,7 @@ const notifyChainAdmin = async (chainId: string, newUserId: string) => {
                           <li>Phone: ${phone}</li>
                         </ul>
                         <p>Best,</p>
-                        <p>The Clothing Loop team</p>
-                `,
+                        <p>Nichon, on behalf of the Clothing Loop team</p>`,
     },
   });
 };
@@ -484,8 +483,7 @@ export const contactMail = functions
                     <p>${message}</p>
                     <p>We will contact you as soon as possible.</p>
                     <p>Regards,</p>
-                    <p>The Clothing Loop team!</p>
-            `,
+                    <p>Nichon, on behalf of the Clothing Loop team</p>`,
       },
     });
   });
@@ -521,8 +519,7 @@ export const subscribeToNewsletter = functions
                 
                 <p>Thank you for your interest and support.</p>
                 
-               <p> Nichon, Paloeka and Giulia</p>
-              `,
+                <p>Nichon, on behalf of the Clothing Loop team</p>`,
       },
     });
   });
