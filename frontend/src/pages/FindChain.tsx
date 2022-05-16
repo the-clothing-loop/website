@@ -378,37 +378,6 @@ const FindChain = ({ location }: { location: Location }) => {
         </Source>
 
         {/* ====start TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}
-        <Marker
-          key={"marker-netherlands"}
-          longitude={4.9041}
-          latitude={52.3676}
-        >
-          <button
-            onClick={() => {
-              setNetherlandsPopup(true);
-            }}
-            style={{
-              width: "40px",
-              height: "40px",
-              backgroundColor: "#98D9DE",
-              borderRadius: "50%",
-              borderStyle: "solid",
-              borderWidth: "1px",
-              borderColor: "#98D9DE",
-              boxShadow: " 0px 0px 15px #98D9DE",
-              position: "absolute",
-            }}
-          >
-            <p
-              style={{
-                color: "white",
-                margin: "0",
-              }}
-            >
-              415
-            </p>
-          </button>
-        </Marker>
         {netherlandsPopup ? (
           <Popup
             longitude={4.9041}
