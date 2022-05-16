@@ -124,7 +124,7 @@ const FindChain = ({ location }: { location: Location }) => {
         longitude: matchingChain?.longitude,
         width: "100vw",
         height: "80vh",
-        zoom: 8,
+        zoom: 12,
         maxZoom: 12,
       });
 
@@ -341,8 +341,8 @@ const FindChain = ({ location }: { location: Location }) => {
                 "women",
                 "pink",
                 "men",
-                "#F7C86F",
-                "#48808B",
+                "#513484",
+                "#EF953D",
               ],
               "circle-radius": 15,
               "circle-blur": 0.5,
