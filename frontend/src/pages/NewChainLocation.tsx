@@ -27,7 +27,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
       longitude: values.longitude,
       latitude: values.latitude,
       categories: { gender: values.clothingTypes, size: values.clothingSizes },
-      published: false,
+      published: true,
       uid: userId,
     };
 

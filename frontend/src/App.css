@@ -770,6 +770,13 @@
     align-items: flex-start;
     margin-top: 15px;
   }
+  .MuiPhoneNumber-flagButton > svg.margin {
+    max-width: 30px;
+    height: auto;
+  }
+  .MuiPhoneNumber-flagButton {
+    max-width: 30px;
+  }
 }
 
 @media only screen and (max-width: 480px) {

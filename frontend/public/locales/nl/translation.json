@@ -78,7 +78,7 @@
   "confirmation": "Bevestiging",
   "clickToSetLoopLocation": "Klik op de kaart om de geschatte locatie van uw lus in te stellen. Er verschijnt een punt, u kunt de straal handmatig wijzigen in het onderstaande veld.",
   "clickToChangeLoopLocation": "Klik op de kaart om de locatie van de ketting te wijzigen",
-  "loopName": "Ketting naam",
+  "loopName": "Ketting naam (moet de naam van de stad/het dorp bevatten)",
   "radius": "Radius (km)",
   "description": "Beschrijving",
   "selectClothingType": "Selecteer een kledingtype",

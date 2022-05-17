@@ -124,7 +124,7 @@ const FindChain = ({ location }: { location: Location }) => {
         longitude: matchingChain?.longitude,
         width: "100vw",
         height: "80vh",
-        zoom: 8,
+        zoom: 12,
         maxZoom: 12,
       });
 
@@ -341,8 +341,10 @@ const FindChain = ({ location }: { location: Location }) => {
                 "women",
                 "pink",
                 "men",
-                "#F7C86F",
-                "#48808B",
+                "#513484",
+                "children",
+                "#86CBAC",
+                "#EF953D",
               ],
               "circle-radius": 15,
               "circle-blur": 0.5,
@@ -356,11 +358,11 @@ const FindChain = ({ location }: { location: Location }) => {
               "circle-color": [
                 "step",
                 ["get", "point_count"],
-                "#518D7E",
+                "#513484",
                 100,
-                "#f1f075",
+                "#513484",
                 750,
-                "#f28cb1",
+                "#513484",
               ],
               "circle-radius": 30,
               "circle-blur": 0.7,
@@ -378,37 +380,6 @@ const FindChain = ({ location }: { location: Location }) => {
         </Source>
 
         {/* ====start TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}
-        <Marker
-          key={"marker-netherlands"}
-          longitude={4.9041}
-          latitude={52.3676}
-        >
-          <button
-            onClick={() => {
-              setNetherlandsPopup(true);
-            }}
-            style={{
-              width: "40px",
-              height: "40px",
-              backgroundColor: "#98D9DE",
-              borderRadius: "50%",
-              borderStyle: "solid",
-              borderWidth: "1px",
-              borderColor: "#98D9DE",
-              boxShadow: " 0px 0px 15px #98D9DE",
-              position: "absolute",
-            }}
-          >
-            <p
-              style={{
-                color: "white",
-                margin: "0",
-              }}
-            >
-              415
-            </p>
-          </button>
-        </Marker>
         {netherlandsPopup ? (
           <Popup
             longitude={4.9041}
@@ -457,7 +428,7 @@ const FindChain = ({ location }: { location: Location }) => {
                       ? selectedChain.categories.size.map((size, i) => {
                           return (
                             <Typography key={i} component="p">
-                              {size}
+                              {t(`${size}`)}
                             </Typography>
                           );
                         })

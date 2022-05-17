@@ -153,7 +153,7 @@ const Signup = () => {
                 id="explanatory-text"
                 style={{ marginTop: "5px" }}
               >
-                Second: login and hit publish
+                Second: login via the link sent to your email
               </Typography>
               <Typography
                 component="p"
