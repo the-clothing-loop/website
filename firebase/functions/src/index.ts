@@ -231,7 +231,7 @@ export const createChain = functions
         longitude,
         radius,
         categories,
-        published: false,
+        published: true,
         chainAdmin: uid,
       });
       db.collection("users").doc(uid).update("chainId", chainData.id);
