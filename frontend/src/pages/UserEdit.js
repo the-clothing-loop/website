@@ -71,7 +71,7 @@ const UserEdit = () => {
       await updateUser(newUserData);
       setSubmitted(true);
       history.push({
-        pathname: `/loops/members/${chainId}`,
+        pathname: `/loops/${chainId}/members`,
         state: { message: t("saved") },
       });
     } catch (e) {
@@ -182,7 +182,7 @@ const UserEdit = () => {
 
               <div className={classes.buttonsWrapper}>
                 <Button
-                  onClick={() => history.push(`/loops/members/${chainId}`)}
+                  onClick={() => history.push(`/loops/${chainId}/members`)}
                   variant="contained"
                   color="primary"
                   className={classes.buttonOutlined}

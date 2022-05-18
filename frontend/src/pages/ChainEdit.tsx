@@ -34,7 +34,7 @@ const ChainEdit = () => {
       await updateChain(chainId, newChainData);
       setSubmitted(true);
       history.push({
-        pathname: `/loops/members/${chainId}`,
+        pathname: `/loops/${chainId}/members`,
         state: { message: t("saved") },
       });
     } catch (e: any) {

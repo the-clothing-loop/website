@@ -10,6 +10,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { AuthContext } from "../components/AuthProvider";
 import theme from "../util/theme";
 import ArrowIcon from "../images/right-arrow-yellow.svg";
+import Logo from "../images/logos/The_Clothing_Loop_Logo.png";
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -24,8 +25,16 @@ const Navbar = () => {
 
     <div>
       <AppBar position="sticky" className={classes.header}>
-        <Link to="/" className={classes.logo}>
-          The<span>Clothing</span> Loop
+        <Link
+          to="/"
+          className={classes.logo}
+          style={
+            location.pathname === "/"
+              ? { width: "220px", height: "150px" }
+              : { width: "150px", height: "100px" }
+          }
+        >
+          <img src={Logo} alt="Logo" />
         </Link>
         <div className={classes.headerRight}>
           <div className={classes.headerNav}>
@@ -66,17 +75,16 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            {userData?.role === "admin" ||
-              (userData?.role === "chainAdmin" && (
-                <Typography
-                  color="inherit"
-                  component={Link}
-                  to="/admin/dashboard"
-                  className={classes.buttonText}
-                >
-                  {t("admin")}
-                </Typography>
-              ))}
+            {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
+              <Typography
+                color="inherit"
+                component={Link}
+                to="/admin/dashboard"
+                className={classes.buttonText}
+              >
+                {t("admin")}
+              </Typography>
+            ) : null}
 
             <Typography
               color="inherit"

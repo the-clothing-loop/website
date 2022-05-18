@@ -79,7 +79,6 @@ const theme = {
     flexDirection: "row",
     alignItems: "center",
     zIndex: "1000",
-    height: "10vh",
     maxWidth: "1440px",
     left: "50%",
     transform: " translateX(-50%)",
@@ -118,8 +117,12 @@ const theme = {
     textTransform: "uppercase",
     lineHeight: "29.2px",
 
-    "& span": {
-      padding: "0 30px",
+    "& img": {
+      width: "100%",
+      height: "auto",
+      position: "relative",
+      transform: "translateY(-50%)",
+      top: "50%",
     },
   },
 

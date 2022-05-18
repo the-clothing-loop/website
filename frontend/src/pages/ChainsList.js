@@ -136,7 +136,7 @@ const ChainsList = () => {
                             className={classes.button}
                             onClick={(e) => {
                               e.preventDefault();
-                              history.push(`/loops/members/${chain.id}`);
+                              history.push(`/loops/${chain.id}/members`);
                             }}
                           >
                             {t("view")}

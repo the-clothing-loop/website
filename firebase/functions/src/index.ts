@@ -134,11 +134,8 @@ export const createUser = functions
 
       </br>
       <p>Thank you for making the step to create a more sustainable world together, we are so happy to have you!</p>
-      <p>Two things to do before your Loop is active:</p>
       <p>First, we need you to verify your email address by clicking <a href="${verificationLink}">here</a></p>.</p>
       <p>(You only have to do this once)</p>
-      <p>Second: login and navigate to the admin tab. If everything is ready to go, drag the slider to 'visible'.</p>
-      <p>From then on your Loop is published, and registrations can start pouring in!</p>
       <p>You will get a notification if a new person signs up.</p>
       </br>
       <p>Everything you need to get started with your Loop you can find in our <a href="${ToolkitLink}">Toolkit folder</a></p>
