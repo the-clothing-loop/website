@@ -57,38 +57,6 @@ const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
 
-const DutchLoopsCard = () => {
-  const { t } = useTranslation();
-  const classes = makeStyles(theme as any)();
-  return (
-    <Card className={classes.card} style={{ maxWidth: "500px" }}>
-      <CardContent className={classes.cardContent}>
-        <Typography component="h2" gutterBottom>
-          {t("areYouInTheNetherlands")}
-        </Typography>
-        <Typography component="p" id="description">
-          {t("migratingDutchLoops")}
-        </Typography>
-
-        <CardActions className={classes.cardsAction}>
-          <Link
-            to={{
-              pathname:
-                "https://docs.google.com/forms/d/e/1FAIpQLSfeyclg6SjM3GRBbaBprFZhoha3Q9a7l3xs1s9eIDpKeVzi6w/viewform",
-            }}
-            target="_blank"
-            key={"btn-join"}
-            className={classes.button}
-          >
-            {t("join")}
-            <img src={RightArrow} alt="" />
-          </Link>
-        </CardActions>
-      </CardContent>
-    </Card>
-  );
-};
-
 const FindChain = ({ location }: { location: Location }) => {
   const urlParams = new URLSearchParams(location.search);
 
@@ -267,6 +235,7 @@ const FindChain = ({ location }: { location: Location }) => {
         const {
           longitude,
           latitude,
+          radius,
           categories: { gender },
         } = filteredChain;
 
@@ -277,6 +246,7 @@ const FindChain = ({ location }: { location: Location }) => {
             coordinates: [longitude, latitude],
           },
           properties: {
+            radius: radius * 6,
             chainIndex: filteredChainIndex,
             gender: gender.includes("women")
               ? "woman"
@@ -304,13 +274,6 @@ const FindChain = ({ location }: { location: Location }) => {
           genders: urlParams.getAll("genders") || [],
         }}
       />
-
-      <Dialog
-        open={showDutchLoopsDialog}
-        onClose={() => setShowDutchLoopsDialog(false)}
-      >
-        <DutchLoopsCard />
-      </Dialog>
 
       <ReactMapGL
         className={"main-map"}
@@ -341,13 +304,13 @@ const FindChain = ({ location }: { location: Location }) => {
                 "women",
                 "pink",
                 "men",
-                "#513484",
+                "#9a8cb4",
                 "children",
                 "#86CBAC",
                 "#EF953D",
               ],
-              "circle-radius": 15,
-              "circle-blur": 0.5,
+              "circle-radius": ["get", "radius"],
+              "circle-blur": 0.8,
             }}
           />
           <Layer
@@ -378,20 +341,6 @@ const FindChain = ({ location }: { location: Location }) => {
             paint={{ "text-color": "white" }}
           />
         </Source>
-
-        {/* ====start TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}
-        {netherlandsPopup ? (
-          <Popup
-            longitude={4.9041}
-            latitude={52.3676}
-            closeOnClick={true}
-            dynamicPosition={true}
-            onClose={() => setNetherlandsPopup(false)}
-          >
-            <DutchLoopsCard />
-          </Popup>
-        ) : null}
-        {/* ===end  TO REMOVE ONCE ALL DUTCH LOOPS ARE MIGRATED INTO FIREBASE */}
 
         {selectedChain && showPopup ? (
           <Popup
