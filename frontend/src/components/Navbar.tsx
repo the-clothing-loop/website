@@ -38,7 +38,7 @@ const Navbar = () => {
                     "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27")
                 }
               >
-                {t("download")}
+                {t("toolkit")}
               </Button>
             ) : null}
             {userData === null &&

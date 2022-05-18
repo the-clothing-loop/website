@@ -15,9 +15,10 @@ import Img from "../../images/party-image.jpg";
 export interface IProps {
   heading: string;
   subheading: string;
+  confirmationEmail:string;
 }
 
-const Content = ({ heading, subheading }: IProps) => {
+const Content = ({ heading, subheading, confirmationEmail }: IProps) => {
   const classes = makeStyles(theme as any)();
   let history = useHistory();
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ const Content = ({ heading, subheading }: IProps) => {
       </Typography>
       <Typography component="p">{subheading}</Typography>
       <Typography component="p" className={styles.p}>
-        {t("confirmationEmailIsOnItsWay")}
+        {confirmationEmail}
       </Typography>
       <Typography component="p" className={styles.p}>
         {t("happySwapping")}
@@ -80,6 +81,7 @@ const NewLoopConfirmation = (props: any) => {
           <Content
             heading={t("thankYouForStartingThisLoop")}
             subheading={t("youAreUnlockingTheClothesSwapPotential")}
+            confirmationEmail={t("hostConfirmationEmailIsOnItsWay")}
           />
         }
       ></TwoColumnLayout>
@@ -103,6 +105,7 @@ const JoinLoopConfirmation = (props: any) => {
           <Content
             heading={t("thankYouForSigningUp")}
             subheading={t("yourClosetIsAboutToBecomeAWholeLotMoreSustainable")}
+            confirmationEmail={t("confirmationEmailIsOnItsWay")}
           />
         }
       ></TwoColumnLayout>
