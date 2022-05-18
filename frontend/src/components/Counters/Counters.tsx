@@ -48,7 +48,10 @@ const Counters = () => {
       <div className={classes.counterLinkWrapper}>
         <div className={classes.counterLinkIconWrapper}>
           <a
-            href="https://heyzine.com/flip-book/a2735d7012.html"
+            //==== USE THE LINK BELOW WHEN IMPACT REPORT IS READY TO GO LIVE
+            // href="https://heyzine.com/flip-book/a2735d7012.html"
+            //=====
+            href="/loops/find"
             target="_blank"
             className={classes.counterLink}
           >
