@@ -75,17 +75,16 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            {userData?.role === "admin" ||
-              (userData?.role === "chainAdmin" && (
-                <Typography
-                  color="inherit"
-                  component={Link}
-                  to="/admin/dashboard"
-                  className={classes.buttonText}
-                >
-                  {t("admin")}
-                </Typography>
-              ))}
+            {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
+              <Typography
+                color="inherit"
+                component={Link}
+                to="/admin/dashboard"
+                className={classes.buttonText}
+              >
+                {t("admin")}
+              </Typography>
+            ) : null}
 
             <Typography
               color="inherit"
