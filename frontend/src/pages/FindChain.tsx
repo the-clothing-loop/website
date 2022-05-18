@@ -189,7 +189,7 @@ const FindChain = ({ location }: { location: Location }) => {
 
   const viewChain = (e: any) => {
     e.preventDefault();
-    history.push(`/loops/members/${selectedChain?.id}`);
+    history.push(`/loops/${selectedChain?.id}/members`);
   };
 
   const handleLocation = () => {
