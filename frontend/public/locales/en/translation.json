@@ -5,7 +5,7 @@
   "edit": "Edit",
   "editUserDetails": "Edit user details",
   "email": "Email",
-  "download": "Download",
+  "toolkit": "Toolkit",
   "home": "Home",
   "login": "Login",
   "name": "Name",
@@ -109,5 +109,6 @@
   "viewLoop": "View Loop",
   "thankYouForStartingThisLoop": "Thank you for starting this loop!",
   "youAreUnlockingTheClothesSwapPotential": "You are unlocking the clothes swap potential for so many people in your neighbourhood, we hope you are as excited about this as we are!",
+  "hostConfirmationEmailIsOnItsWay": "Our confirmation email is on its way. Please verify before logging in.",
   "confirmationEmailIsOnItsWay": "Our confirmation email is on its way."
 }

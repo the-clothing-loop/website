@@ -45,14 +45,6 @@ const AdminControlsNav = () => {
                   >
                     {t("viewLoop")}
                   </Button>
-                  <Button
-                    color="inherit"
-                    className={classes.button}
-                    component={Link}
-                    to={`/loops/${userData.chainId}/edit`}
-                  >
-                    {t("editLoop")}
-                  </Button>
                 </div>
               ) : null}
 

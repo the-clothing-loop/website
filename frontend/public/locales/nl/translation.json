@@ -2,7 +2,7 @@
   "actions": "Acties",
   "address": "Adres",
   "cancel": "Annuleren",
-  "download": "Downloaden",
+  "toolkit": "Toolkit",
   "edit": "Aanpassen",
   "editUserDetails": "Gegevens aanpassen",
   "email": "Email",
@@ -109,5 +109,6 @@
   "viewLoop": "Bekijk Kledingketen",
   "thankYouForStartingThisLoop": "Bedankt voor het starten van deze lus!",
   "youAreUnlockingTheClothesSwapPotential": "Je ontgrendelt het kledingruilpotentieel voor zoveel mensen in je buurt, we hopen dat je hier net zo enthousiast over bent als wij!",
-  "confirmationEmailIsOnItsWay": "Onze bevestigingsmail is onderweg."
+  "confirmationEmailIsOnItsWay": "Onze bevestigingsmail is onderweg.",
+  "hostConfirmationEmailIsOnItsWay": "Onze bevestigingsmail is onderweg. Gelieve te verifiëren alvorens in te loggen."
 }
