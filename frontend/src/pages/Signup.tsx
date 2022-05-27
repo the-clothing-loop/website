@@ -87,7 +87,9 @@ const Signup = () => {
       setSubmitted(true);
     } catch (e: any) {
       console.error(`Error creating user: ${JSON.stringify(e)}`);
-      setError(e.message);
+      e.code === "auth/invalid-phone-number"
+        ? setError("Please enter a valid phone number")
+        : setError(e.message);
     }
   };
 
