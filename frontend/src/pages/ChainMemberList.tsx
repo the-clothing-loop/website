@@ -49,7 +49,7 @@ const ChainMemberList = () => {
 
   const [chain, setChain] = useState<IChain>();
   const [users, setUsers] = useState<IUser[]>();
-  const [publishedValue, setPublishedValue] = useState({ published: true });
+  const [switcherValues, setSwitcherValues] = useState({ published: true, open: true});
   const [error, setError] = useState("");
 
   const [isChainAdmin, setIsChainAdmin] = useState<boolean>();
@@ -58,7 +58,7 @@ const ChainMemberList = () => {
   const handleChange = async (e: {
     target: { checked: boolean; name: any };
   }) => {
-    setPublishedValue({ ...publishedValue, [e.target.name]: e.target.checked });
+    setSwitcherValues({ ...switcherValues, [e.target.name]: e.target.checked });
 
     const updatedChainData = {
       [e.target.name]: e.target.checked,
@@ -83,7 +83,10 @@ const ChainMemberList = () => {
           setChain(chainData);
           const chainUsers = await getUsersForChain(chainId);
           setUsers(chainUsers);
-          setPublishedValue({ published: chainData.published });
+          setSwitcherValues({
+            published: chainData.published,
+            open: chainData.open,
+          });
         }
       } catch (error) {
         console.error(`Error getting chain: ${error}`);
@@ -168,24 +171,52 @@ const ChainMemberList = () => {
                   users.length === 1 ? "person" : "people"
                 }`}</Field>
 
-                <div style={{ position: "relative", display: "inline" }}>
-                  <FormControlLabel
-                    classes={{ root: classes.switchGroupRoot }}
-                    value={publishedValue.published}
-                    control={
-                      <Switch
-                        checked={publishedValue.published}
-                        onChange={handleChange}
-                        name="published"
-                        color="secondary"
-                        inputProps={{ "aria-label": "secondary checkbox" }}
+                <Grid container spacing={2}>
+                  <Grid item sm={12} md={6}>
+                    <div style={{ position: "relative", display: "inline" }}>
+                      <FormControlLabel
+                        classes={{ root: classes.switchGroupRoot }}
+                        value={switcherValues.published}
+                        control={
+                          <Switch
+                            checked={switcherValues.published}
+                            onChange={handleChange}
+                            name="published"
+                            color="secondary"
+                            inputProps={{ "aria-label": "secondary checkbox" }}
+                          />
+                        }
+                        label={
+                          switcherValues.published
+                            ? t<string>("visible")
+                            : t<string>("invisible")
+                        }
+                        labelPlacement="end"
                       />
-                    }
-                    label={publishedValue.published ? "visible" : "invisible"}
-                    labelPlacement="end"
-                  />
-                  <Popover message={t("adminSwitcherMessage")} />
-                </div>
+                      <Popover message={t("adminLoopVisibleMessage")} />
+                    </div>
+                  </Grid>
+                  <Grid item sm={12} md={6}>
+                    <div style={{ position: "relative", display: "inline" }}>
+                      <FormControlLabel
+                        classes={{ root: classes.switchGroupRoot }}
+                        value={switcherValues.open}
+                        control={
+                          <Switch
+                            checked={switcherValues.open}
+                            onChange={handleChange}
+                            name="open"
+                            color="secondary"
+                            inputProps={{ "aria-label": "secondary checkbox" }}
+                          />
+                        }
+                        label={switcherValues.open ? t<string>("open") : t<string>("closed")}
+                        labelPlacement="end"
+                      />
+                      <Popover message={t("adminLoopOpenMessage")} />
+                    </div>
+                  </Grid>
+                </Grid>
               </div>
             </Grid>
 
