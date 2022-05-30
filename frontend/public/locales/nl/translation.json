@@ -11,7 +11,7 @@
   "findChain": "Find ketting",
   "logout": "Logout",
   "loginEmailSent": "Een e-mail is verstuurd waarmee je in kan loggen",
-  "noEmailProvidedLoggingIn": "Geen of verkeerde e-mail, er ging iets verkeerd",
+  "noEmailProvidedLoggingIn": "E-mailadres is niet geverifieerd.",
   "userIsLoggedIn": "Je bent nu ingelogged",
   "errorLoggingIn": "Fout bij inloggen",
   "finishingLoggingIn": "Bezig met inloggen...",
