@@ -1,4 +1,4 @@
- const participantsFaq = [
+const participantsFaq = [
   {
     question:
       "Are there rules on how much you can take out, and do you have to donate the same amount of clothes as you take out?",
