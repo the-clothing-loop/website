@@ -110,5 +110,22 @@
   "thankYouForStartingThisLoop": "Thank you for starting this loop!",
   "youAreUnlockingTheClothesSwapPotential": "You are unlocking the clothes swap potential for so many people in your neighbourhood, we hope you are as excited about this as we are!",
   "hostConfirmationEmailIsOnItsWay": "Our confirmation email is on its way. Please verify before logging in.",
-  "confirmationEmailIsOnItsWay": "Our confirmation email is on its way."
+  "confirmationEmailIsOnItsWay": "Our confirmation email is on its way.",
+  "swapDontShop":"Swap, <br><span>don't <br>shop!</span>",
+  "swapDontShopMessage": "Want to dress more sustainably? Clear out your closet and surprise others with items of clothing that you no longer wear? Spice up your wardrobe without spending a dime, or simply connect with neighbours? Look no further! The Clothing Loop is an initiative that allows people to easily swap clothes with others in their own neighbourhood. It’s fun, free and sustainable!",
+  "findALoop": "Find a loop",
+  "photo": "photo",
+  "findOutHowItWorks": "Find out <br />how it works",
+  "findALoopNearYou": "find a loop near you",
+  "joinALoop": "Join a Loop",
+  "joinALoopMessage": "Want to join? We’d love to have you! Check our map and sign up for a Loop in your neighbourhood. No active Loop to join in your area yet? We'll help you set one up! Joining is free and open to everyone.",
+  "getReadyToSwap": "Get ready to swap!",
+  "getReadyToSwapMessage": "The host of your local Loop will add you to the route as soon as possible, and then it is only a matter of time before the first bag will arrive! Find something you like, and donate something that no longer suits you, before you pass the bag onto the next person on the list. Don’t forget to share a picture of your newfound treasure with the group!",
+  "ourImpact": "Our impact",
+  "fromLocalLockdownToSuccess": "From local lockdown initiative to international success",
+  "fromLocalLockdownToSuccessMessage": "The Clothing Loop started in Amsterdam. Within one year this local initiative became the powerful movement it is today; we saved mountains of clothing, neighbours got to know each other and we created real behavioural change towards textile consumption.",
+  "readMoreAboutUs": "Read more about us",
+  "PartnersAndSponsors": "Partners & Sponsors",
+  "wantToSupportUsToo":"Want to support us too?",
+  "wedLoveToHearFromYou": "We'd love to hear from you!"
 }
