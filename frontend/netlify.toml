@@ -1,0 +1,36 @@
+[build]
+  base = "Frontend/"
+  publish = "build/"
+  command = "yarn run build"
+
+[build.environment]
+  INLINE_RUNTIME_CHUNK = "false"
+  
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Feature-Policy = "midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'none'; payment 'none';"
+    Content-Security-Policy = '''
+      block-all-mixed-content; 
+      upgrade-insecure-requests; 
+      object-src 'self'; 
+      form-action 'self' https://*.list-manage.com/ https://*.googleapis.com; 
+      connect-src 'self' https://*.mapbox.com https://*.googleapis.com https://*.cloudfunctions.net; 
+      img-src 'self' 'unsafe-inline' https://*.iconfinder.com data: blob:; 
+      style-src 'self' 'unsafe-inline' https://*.mapbox.com https://fonts.googleapis.com;; 
+      font-src 'self' https://fonts.gstatic.com; 
+      media-src 'self'; 
+      frame-src https://player.vimeo.com/ https://js.stripe.com/; 
+      script-src 'self' https://js.stripe.com/v3 blob:; 
+      child-src 'self' blob:;
+      worker-src 'self' blob:;
+      frame-ancestors 'none'
+    '''
