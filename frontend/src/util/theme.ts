@@ -707,6 +707,20 @@ const theme = {
     },
   },
 
+  formHelperLink: {
+   "& .text": {
+      display: "inline-block",
+      fontSize: "14px",
+    },
+    "& .link": {
+      display: "inline-block !important",
+      fontSize: "14px",
+      marginLeft: "5px",
+      textDecoration: "underline",
+      color: "black",
+    },
+  },
+
   label: {
     color: "rgba(0, 0, 0, 0.6)",
     fontStyle: "italic",
@@ -954,7 +968,7 @@ const theme = {
     position: "absolute",
     left: "100%",
     top: "20%",
-    opacity:'0.6'
+    opacity: "0.6",
   },
 
   formFieldWithPopover: {
@@ -1718,7 +1732,7 @@ const theme = {
     color: "#068C7C",
   },
   switchGroupRoot: {
-    marginTop: 32,
+    marginTop: 10,
   },
   underlinedLink: {
     textDecoration: "underline",

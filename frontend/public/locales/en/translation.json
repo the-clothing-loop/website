@@ -14,7 +14,7 @@
   "findChain": "Find chain",
   "logout": "Logout",
   "loginEmailSent": "An e-mail has been sent to you allowing you to login",
-  "noEmailProvidedLoggingIn": "No e-mail or wrong e-mail configured for login flow, something went wrong",
+  "noEmailProvidedLoggingIn": "Email address has not been verified.",
   "userIsLoggedIn": "You are now logged in",
   "errorLoggingIn": "Error logging in",
   "finishingLoggingIn": "Finishing logging in...",

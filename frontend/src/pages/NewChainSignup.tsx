@@ -106,7 +106,9 @@ const Signup = () => {
             setSubmitted(true);
           } catch (e: any) {
             console.error(`Error creating user: ${JSON.stringify(e)}`);
-            setError(e.message);
+            e.code === "auth/invalid-phone-number"
+              ? setError("Please enter a valid phone number")
+              : setError(e.message);
           }
         }}
       >
@@ -208,6 +210,11 @@ const Signup = () => {
                   label="Phone number"
                   name="phoneNumber"
                   error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                  helperText={
+                    errors.phoneNumber && touched.phoneNumber
+                      ? errors.phoneNumber
+                      : null
+                  }
                   onChange={(e: string) =>
                     setFieldValue("phoneNumber", e.replace(/\s/g, ""))
                   }
@@ -215,6 +222,8 @@ const Signup = () => {
 
                 <GeocoderSelector name="address" onResult={setGeocoderResult} />
                 <FormActions handleClick={handleClickAction} />
+
+                {console.log(error)}
 
                 {error ? <Alert severity="error">{error}</Alert> : null}
                 <div className={classes.formSubmitActions}>
@@ -232,6 +241,17 @@ const Signup = () => {
                   </Button>
                 </div>
               </Form>
+              <div className={classes.formHelperLink}>
+                <Typography component="p" className="text">
+                  Troubles with the signup? Contact us
+                </Typography>
+                <a
+                  className="link"
+                  href="mailto:hello@clothingloop.org?subject=Troubles signing up to The Clothing Loop"
+                >
+                  hello@clothingloop.org
+                </a>
+              </div>
             </div>
           </OneColumnLayout>
         )}
