@@ -111,7 +111,7 @@
   "youAreUnlockingTheClothesSwapPotential": "Je ontgrendelt het kledingruilpotentieel voor zoveel mensen in je buurt, we hopen dat je hier net zo enthousiast over bent als wij!",
   "confirmationEmailIsOnItsWay": "Onze bevestigingsmail is onderweg.",
   "hostConfirmationEmailIsOnItsWay": "Onze bevestigingsmail is onderweg. Gelieve te verifiëren alvorens in te loggen.",
-  "swapDontShop":"Swap, <br><span>don't <br>shop!</span>",
+  "swapDontShop": "Swap, <br><span>don't <br>shop!</span>",
   "swapDontShopMessage": "Want to dress more sustainably? Clear out your closet and surprise others with items of clothing that you no longer wear? Spice up your wardrobe without spending a dime, or simply connect with neighbours? Look no further! The Clothing Loop is an initiative that allows people to easily swap clothes with others in their own neighbourhood. It’s fun, free and sustainable!",
   "findALoop": "Find a loop",
   "photo": "foto",
@@ -126,10 +126,11 @@
   "fromLocalLockdownToSuccessMessage": "The Clothing Loop started in Amsterdam. Within one year this local initiative became the powerful movement it is today; we saved mountains of clothing, neighbours got to know each other and we created real behavioural change towards textile consumption.",
   "readMoreAboutUs": "Read more about us",
   "PartnersAndSponsors": "Partners & Sponsors",
-  "wantToSupportUsToo":"Want to support us too?",
+  "wantToSupportUsToo": "Want to support us too?",
   "wedLoveToHearFromYou": "We'd love to hear from you!",
   "smallActsCanChangeTheWorld": "&quot;Small acts, when multiplied by millions of people, can change the world&quot; <span>Howard Zinn</span>",
   "weAreWorkingOnMakingTheClothingLoopBetter": "We are continuously working on making The Clothing Loop better, more widespread and more impactful. Click here if you want to help us do so!",
   "joinTheBrMovement": "Join the <br>Movement",
-  "currentlyWeAreDevelopingOurPlatform": "Currently we are developing our platform as best as we can. Right now we have the website up and running on your desktop and soon it will be available for mobile. Hang in there"
+  "currentlyWeAreDevelopingOurPlatform": "Currently we are developing our platform as best as we can. Right now we have the website up and running on your desktop and soon it will be available for mobile. Hang in there",
+  "troublesWithTheSignupContactUs": "Troubles with the signup? Contact us"
 }

@@ -201,7 +201,7 @@ const Signup = () => {
                   </Form>
                   <div className={classes.formHelperLink}>
                     <Typography component="p" className="text">
-                      Troubles with the signup? Contact us
+                      {t("troublesWithTheSignupContactUs")}
                     </Typography>
                     <a
                       className="link"
