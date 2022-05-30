@@ -10,9 +10,11 @@ import FooterMobile from "../components/FooterMobile";
 //media
 import Clothes from "../images/clothes.png";
 import CirclesFrame from "../images/circles.png";
+import { useTranslation } from "react-i18next";
 
 const LandingPageMobile = () => {
   const classes = makeStyles(theme as any)();
+  const {t} = useTranslation();
 
   return (
     <>
@@ -60,10 +62,8 @@ const LandingPageMobile = () => {
               zIndex: "11",
               position: "relative",
             }}
-          >
-            Join the <br />
-            movement
-          </h1>
+            dangerouslySetInnerHTML={{__html: t('joinTheBrMovement')}}
+          ></h1>
 
           <p
             style={{
@@ -76,11 +76,7 @@ const LandingPageMobile = () => {
               zIndex: "111",
               position: "relative",
             }}
-          >
-            Currently we are developing our platform as best as we can. Right
-            now we have the website up and running on your desktop and soon it
-            will be available for mobile. Hang in there
-          </p>
+          >{t('currentlyWeAreDevelopingOurPlatform')}</p>
           <div style={{ position: "relative", width: "70%", margin: "5% 0" }}>
             <img src={Clothes} style={{ width: "100%", height: "auto" }} />
           </div>
