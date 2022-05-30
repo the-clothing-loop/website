@@ -1,6 +1,7 @@
 // Material
 import React from "react";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 import theme from "../util/theme";
@@ -38,6 +39,7 @@ import { StandaloneSearchBar } from "../components/FindChain/StandaloneSearchBar
 
 const Home = () => {
   const chainsCount = React.useContext(ChainsContext).length;
+  const { t } = useTranslation();
 
   const classes = makeStyles(theme as any)();
   let history = useHistory();
@@ -106,34 +108,20 @@ const Home = () => {
           </div>
           <div className="landing-page-hero">
             <div className="hero-text-wrapper">
-              <h1>
-                Swap, <br />
-                <span>
-                  don't <br />
-                  shop!
-                </span>
-              </h1>
-              <p>
-                Want to dress more sustainably? Clear out your closet and
-                surprise others with items of clothing that you no longer wear?
-                Spice up your wardrobe without spending a dime, or simply
-                connect with neighbours? Look no further! The Clothing Loop is
-                an initiative that allows people to easily swap clothes with
-                others in their own neighbourhood. It’s fun, free and
-                sustainable!
-              </p>
+              <h1 dangerouslySetInnerHTML={{__html: t('swapDontShop')}}></h1>
+              <p>{t('swapDontShopMessage')}</p>
               <button
                 className="slide"
                 onClick={() => history.push("/loops/find")}
               >
-                {"Find a loop"}
+                {t('findALoop')}
                 <img src={ArrowRightIcon} alt="" className="btn-icon" />
               </button>
             </div>
             <div className="hero-image-wrapper">
               <div className="image-wrapper">
                 <img src={HeroImg} alt="Kledingketting" />
-                <p>photo: Martijn van den Dobbelsteen/de Brug</p>
+                <p>{t('photo')}: Martijn van den Dobbelsteen/de Brug</p>
               </div>
             </div>
           </div>
@@ -151,12 +139,9 @@ const Home = () => {
 
             <div className="text-wrapper">
               <h1>1</h1>
-              <h3>
-                Find out
-                <br /> how it works
-              </h3>
+              <h3 dangerouslySetInnerHTML={{__html: t('findOutHowItWorks')}}></h3>
               <p>
-                <a href="/loops/find">find a loop near you</a>
+                <a href="/loops/find">{t('findALoopNearYou')}</a>
               </p>
             </div>
           </div>
@@ -164,13 +149,8 @@ const Home = () => {
             <div className="text-wrapper">
               <h1>2</h1>
               <div>
-                <h3>Join a Loop</h3>
-                <p>
-                  Want to join? We’d love to have you! Check our map and sign up
-                  for a Loop in your neighbourhood. No active Loop to join in
-                  your area yet? We'll help you set one up! Joining is free and
-                  open to everyone.
-                </p>
+                <h3>{t('joinALoop')}</h3>
+                <p>{t('joinALoopMessage')}</p>
               </div>
             </div>
             <div className={classes.imageAnimatedWrapper}>
@@ -195,15 +175,8 @@ const Home = () => {
             <div className="text-wrapper">
               <h1>3</h1>
               <div>
-                <h3>Get ready to swap!</h3>
-                <p>
-                  The host of your local Loop will add you to the route as soon
-                  as possible, and then it is only a matter of time before the
-                  first bag will arrive! Find something you like, and donate
-                  something that no longer suits you, before you pass the bag
-                  onto the next person on the list. Don’t forget to share a
-                  picture of your newfound treasure with the group!
-                </p>
+                <h3>{t('getReadyToSwap')}</h3>
+                <p>{t('getReadyToSwapMessage')}</p>
               </div>
             </div>
           </div>
@@ -211,7 +184,7 @@ const Home = () => {
 
         <section className={classes.projectNumbersWrapper}>
           <div className="inner-wrapper">
-            <h1>Our impact</h1>
+            <h1>{t('ourImpact')}</h1>
             <Counters />
           </div>
 
@@ -225,16 +198,13 @@ const Home = () => {
             <img src={ClothesImage} alt="" />
           </div>
           <div className="text-wrapper">
-            <h3>From local lockdown initiative to international success</h3>
+            <h3>{t('fromLocalLockdownToSuccess')}</h3>
             <p>
-              The Clothing Loop started in Amsterdam. Within one year this local
-              initiative became the powerful movement it is today; we saved
-              mountains of clothing, neighbours got to know each other and we
-              created real behavioural change towards textile consumption.
+              {t('fromLocalLockdownToSuccessMessage')}
             </p>
 
             <h5>
-              <a href="/about">Read more about us</a>
+              <a href="/about">{t('readMoreAboutUs')}</a>
             </h5>
           </div>
         </section>
@@ -244,11 +214,11 @@ const Home = () => {
 
         <div className={classes.supportersSection}>
           <div className="background-box"></div>
-          <h2>Partners & Sponsors</h2>
+          <h2>{t('Partners & Sponsors')}</h2>
           <h5>
-            Want to support us too?{" "}
+            {t('wantToSupportUsToo')+" "}
             <a href="mailto:hello@clothingloop.org">
-              We'd love to hear from you!
+              {t('wedLoveToHearFromYou')}
             </a>{" "}
           </h5>
           <div className="logos-wrapper">
