@@ -98,8 +98,7 @@ const theme = {
   },
 
   languageSwitcherWrapper: {
-    padding: "12px 0",
-    paddingLeft: " 32px",
+    paddingLeft: "18px", // 32 - 14
   },
 
   buttonContained: {

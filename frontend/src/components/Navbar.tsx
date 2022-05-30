@@ -105,10 +105,9 @@ const Navbar = () => {
                 {t("about")}
               </Typography>
             )}
+          {/* === START publish language switcher once Dutch loops are fully migrated */}
+          <LanguageSwitcher />
           </div>
-          {/* === START publish language switcher once Dutch loops are fully migrated
-            <LanguageSwitcher /> 
-            ===== END */}
         </div>
       </AppBar>
     </div>
