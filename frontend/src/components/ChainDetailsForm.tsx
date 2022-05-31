@@ -236,9 +236,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                     />
 
                     <PopoverOnHover
-                      message={
-                        "Up to you, usually the geographic location of your Loop works best as a Loop name, keep it short and sweet! You can elaborate in the description box below. "
-                      }
+                      message={t("upToYouUsuallyTheGeopraphic")}
                     />
                   </Grid>
                   <Grid item xs={3} style={{paddingTop:'10px'}}>
@@ -255,9 +253,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       step={0.1}
                     />
                     <PopoverOnHover
-                      message={
-                        "Decide on the area your Loop will be active in. The dot in the map will change size according to your radius. We recommend a smaller radius for densely populated areas, and a larger one for villages and rural areas."
-                      }
+                      message={t("decideOnTheAreaYourLoopWillBeActiveIn")}
                     />
                   </Grid>
 
@@ -275,9 +271,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       className={classes.textField}
                     />
                     <PopoverOnHover
-                      message={
-                        "Optional field, type anything else you want to add that makes your Loop unique. This can always  be edited at a later stage!"
-                      }
+                      message={t("optionalFieldTypeAnything")}
                     />
                   </Grid>
                   <Grid item xs={12} style={{ position: "relative" }}>
@@ -301,9 +295,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                         variantVal={true}
                       />
                       <PopoverOnHover
-                        message={
-                          "Mixed bags usually work best, therefore we recommend to either tick all three boxes (X)S- M-(X)L for a mixed Loop, or to start a separate Loop for plus sizes. "
-                        }
+                        message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
                       />
                     </div>
                   </Grid>

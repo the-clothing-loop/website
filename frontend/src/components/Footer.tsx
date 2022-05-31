@@ -63,8 +63,8 @@ const Footer = () => {
         <div className={classes.footerLegalWrapper} id="footer">
           <div className={classes.legalLinksWrapper}>
             <div className={classes.legalLinks}>
-              <Link to="/terms-of-use">Terms of service</Link>
-              <Link to="/privacy-policy">Privacy</Link>
+              <Link to="/terms-of-use">{t("termsOfService")}</Link>
+              <Link to="/privacy-policy">{t("privacy")}</Link>
             </div>
 
             <p>

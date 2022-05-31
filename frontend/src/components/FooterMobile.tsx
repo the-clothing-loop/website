@@ -4,8 +4,10 @@ import { makeStyles } from "@mui/styles";
 
 //project resources
 import { Newsletter } from "./Newsletter/Newsletter";
+import { useTranslation } from "react-i18next";
 
 const FooterMobile = () => {
+  const {t} = useTranslation();
   const classes = makeStyles(theme as any)();
 
   return (
@@ -37,7 +39,7 @@ const FooterMobile = () => {
               fontWeight: "300",
             }}
           >
-            Terms of service
+            {t("termsOfService")}
           </a>
           <a
             style={{
@@ -50,7 +52,7 @@ const FooterMobile = () => {
               fontWeight: "300",
             }}
           >
-            Privacy
+            {t("privacy")}
           </a>
         </div>
         <div

@@ -132,5 +132,12 @@
   "weAreWorkingOnMakingTheClothingLoopBetter": "We are continuously working on making The Clothing Loop better, more widespread and more impactful. Click here if you want to help us do so!",
   "joinTheBrMovement": "Join the <br>Movement",
   "currentlyWeAreDevelopingOurPlatform": "Currently we are developing our platform as best as we can. Right now we have the website up and running on your desktop and soon it will be available for mobile. Hang in there",
-  "troublesWithTheSignupContactUs": "Troubles with the signup? Contact us"
+  "troublesWithTheSignupContactUs": "Troubles with the signup? Contact us",
+  "upToYouUsuallyTheGeopraphic": "Up to you, usually the geographic location of your Loop works best as a Loop name, keep it short and sweet! You can elaborate in the description box below. ",
+  "decideOnTheAreaYourLoopWillBeActiveIn": "Decide on the area your Loop will be active in. The dot in the map will change size according to your radius. We recommend a smaller radius for densely populated areas, and a larger one for villages and rural areas.",
+  "optionalFieldTypeAnything": "Optional field, type anything else you want to add that makes your Loop unique. This can always be edited at a later stage!",
+  "mixedBagsUsuallyWorkBestThereforeWeRecommentTo": "Mixed bags usually work best, therefore we recommend to either tick all three boxes (X)S- M-(X)L for a mixed Loop, or to start a separate Loop for plus sizes.",
+  "termsOfService": "Terms of service",
+  "privacy": "Privacy",
+  "iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star": "I am not a minor and accept and agree to <1>Terms of Use</1> and <2>Privacy Policy</2>*"
 }
