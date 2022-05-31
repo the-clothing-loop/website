@@ -53,7 +53,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
 
   const formSchema = Yup.object().shape({
     name: Yup.string()
-      .min(2, "Must be at least 2 characters")
+      .min(2, t("mustBeAtLeastChar"))
       .required(t("required")),
     description: Yup.string(),
     radius: Yup.number().required(t("required")),
@@ -113,7 +113,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
       validate={(values: ChainFields) => {
         if (values.longitude === 0 && values.latitude === 0) {
           return {
-            longitude: "Please set the loop location by clicking the map",
+            longitude: t("pleaseSetTheLoopLocationByClick"),
           };
         }
       }}

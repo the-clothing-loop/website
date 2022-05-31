@@ -60,8 +60,8 @@ const DonationFormContent = () => {
         .required(t("pleaseEnterYourEmail"))
         .email(t("pleaseEnterAValid.emailAddress")),
       amount: Yup.number()
-        .min(1, "Your donation amount must be positive")
-        .typeError("You must specify a number as donation amount"),
+        .min(1, t("yourDonationAmountMustBePositive"))
+        .typeError(t("youMustSpecifyANumberAsDonation")),
       type: Yup.string(),
     }),
     validateOnChange: false,

@@ -27,19 +27,19 @@ const Footer = () => {
           <div className={classes.footerWrapper} id="footer">
             <div className={classes.footerSections}>
               <div className={classes.footerSection}>
-                <Typography component="h5">Learn more</Typography>
-                <Link to="/faq">FAQ's</Link>
-                <Link to="/contact-us">Help</Link>
-                <Link to="/about">About</Link>
+                <Typography component="h5">{t("learnMore")}</Typography>
+                <Link to="/faq">{t("faqs")}</Link>
+                <Link to="/contact-us">{t("help")}</Link>
+                <Link to="/about">{t("about")}</Link>
               </div>
               <div className={classes.footerSection}>
-                <Typography component="h5">Loops</Typography>
-                <Link to="/loops/find">Finding a loop</Link>
-                <Link to="/loops/new/users/signup">Starting a loop</Link>
-                <Link to="/users/login">Login</Link>
+                <Typography component="h5">{t("loops")}</Typography>
+                <Link to="/loops/find">{t("findingALoop")}</Link>
+                <Link to="/loops/new/users/signup">{t("startingALoop")}</Link>
+                <Link to="/users/login">{t("login")}</Link>
               </div>
               <div className={classes.footerSection}>
-                <Typography component="h5">Find us</Typography>
+                <Typography component="h5">{t("findUs")}</Typography>
                 <a href="mailto:hello@clothingloop.com">
                   hello@clothingloop.org
                 </a>

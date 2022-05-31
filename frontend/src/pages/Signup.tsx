@@ -44,7 +44,7 @@ const Signup = () => {
 
   const validate = Yup.object({
     name: Yup.string()
-      .min(2, t("thereMustBeMoreThan"))
+      .min(2, t("mustBeAtLeastChar"))
       .required(t("required")),
     email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
     phoneNumber: Yup.string()
