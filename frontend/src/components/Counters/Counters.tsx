@@ -8,8 +8,10 @@ import useIntersectionObserver from "./hooks";
 import theme from "../../util/theme";
 import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
+import { useTranslation } from "react-i18next";
 
 const Counters = () => {
+  const {t} = useTranslation();
   const classes = makeStyles(theme as any)();
   const containerRef = useRef(null);
 
@@ -58,7 +60,7 @@ const Counters = () => {
             <ArrowDownwardIcon className="icon" />
           </a>
         </div>
-        <h3>Our goals</h3>
+        <h3>{t("ourGoals")}</h3>
       </div>
     </div>
   );
