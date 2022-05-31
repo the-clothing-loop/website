@@ -107,6 +107,7 @@
   "donate": "Donate",
   "editLoop": "Edit Loop",
   "viewLoop": "View Loop",
+  "viewLoops": "View Loops",
   "thankYouForStartingThisLoop": "Thank you for starting this loop!",
   "youAreUnlockingTheClothesSwapPotential": "You are unlocking the clothes swap potential for so many people in your neighbourhood, we hope you are as excited about this as we are!",
   "hostConfirmationEmailIsOnItsWay": "Our confirmation email is on its way. Please verify before logging in.",
@@ -139,5 +140,7 @@
   "mixedBagsUsuallyWorkBestThereforeWeRecommentTo": "Mixed bags usually work best, therefore we recommend to either tick all three boxes (X)S- M-(X)L for a mixed Loop, or to start a separate Loop for plus sizes.",
   "termsOfService": "Terms of service",
   "privacy": "Privacy",
-  "iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star": "I am not a minor and accept and agree to <1>Terms of Use</1> and <2>Privacy Policy</2>*"
+  "iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star": "I am not a minor and accept and agree to <1>Terms of Use</1> and <2>Privacy Policy</2>*",
+  "thankYouForBeingHere": "Thank you for being here, together we are making the world a more sustainable place, one Loop at a time!",
+  "goToTheToolkitFolder": "Go to the Toolkit Folder, which includes our Manual, Impact Report and more."
 }

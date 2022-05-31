@@ -29,8 +29,7 @@ const AdminControlsNav = () => {
             </Typography>
             <div className={classes.pageDescription}>
               <Typography component="p" className={classes.p}>
-                Thank you for being here, together we are making the world a
-                more sustainable place, one Loop at a time!
+                {t("thankYouForBeingHere")}
               </Typography>
             </div>
 
@@ -56,7 +55,7 @@ const AdminControlsNav = () => {
                     component={Link}
                     to="/loops"
                   >
-                    view loops
+                    {t("viewLoops")}
                   </Button>
                 </div>
               ) : null}
@@ -69,8 +68,7 @@ const AdminControlsNav = () => {
                     "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27",
                 }}
               >
-                Go to the Toolkit Folder, which includes our Manual, Impact
-                Report and more.
+                {t("goToTheToolkitFolder")}
               </Link>
             </div>
           </div>
