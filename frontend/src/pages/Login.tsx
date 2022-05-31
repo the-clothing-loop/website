@@ -28,7 +28,7 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const validate = Yup.object({
-    email: Yup.string().email("Please enter a valid e-mail address"),
+    email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
   });
 
   const onSubmit = async (data: any) => {

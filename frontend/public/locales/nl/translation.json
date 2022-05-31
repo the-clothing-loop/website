@@ -143,5 +143,26 @@
   "iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star": "I am not a minor and accept and agree to <1>Terms of Use</1> and <2>Privacy Policy</2>*",
   "thankYouForBeingHere": "Thank you for being here, together we are making the world a more sustainable place, one Loop at a time!",
   "goToTheToolkitFolder": "Go to the Toolkit Folder, which includes our Manual, Impact Report and more.",
-  "ourGoals": "Our goals"
+  "ourGoals": "Our goals",
+  "thankYou": "Thank you!",
+  "youAretheSpecialTypeOfPersonThatLiftsPeopleUp": "You are the special type of person that lifts people up, and makes the world a better place. Rest assured that every donation has us doing a little dance in our (home) office. We've got a lot of work ahead of us, and your donation has made it that much easier to get things done and thrust us forward towards a more sustainable world. Thank you so much for your desire to help The Clothing Loop succeed.",
+  "byDonatingYouAgreeWithOur": "By donating you agree with our ",
+  "accessTokenNotConfigured": "Access token not configured",
+  "dontHaveACreditCardChooseSepa": "Don't have a credit card? Choose 'SEPA Direct Debit' in the next step.",
+  "donateToTheClothingLoop": "Donate to The Clothing Loop",
+  "thanksForConsideringADonation": "Thanks for considering a donation to The Clothing Loop!<br >With your gift we will work effortlessly to make The Clothing Loop even better, bigger and more impactful.",
+  "otherAmount": "Other amount",
+  "iWillSupportTheClothingLoopWithAMonthlyDonation": "I will support The Clothing Loop with a monthly donation:",
+  "iWillSupportTheClothingLoopWithAOneTimeDonation": "I will support The Clothing Loop with a one-time donation:",
+  "becomeAMember": "Become a member",
+  "oneTimeDonation": "One-time donation",
+  "howDoYouWantToContributeToTheClothingLoop": "How do you want to contribute to The Clothing Loop?",
+  "anErrorOccurredDuringCheckout": "An error occurred during checkout...",
+  "pleaseEnterYourEmail": "Please enter your e-mail address",
+  "pleaseEnterAValid": {
+    "emailAddress": "Please enter a valid e-mail address",
+    "phoneNumber": "Please enter a valid phone number"
+  },
+  "thereMustBeMoreThan": "Must be more than 2 characters",
+  "required": "Required"
 }

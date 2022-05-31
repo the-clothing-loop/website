@@ -45,17 +45,17 @@ const Signup = () => {
 
   const validate = Yup.object({
     name: Yup.string()
-      .min(2, "Must be more than 2 characters")
-      .required("Required"),
+      .min(2, t("thereMustBeMoreThan"))
+      .required(t("required")),
     email: Yup.string()
-      .email("Please enter a valid e-mail address")
-      .required("Required"),
+      .email(t("pleaseEnterAValid.emailAddress"))
+      .required(t("required")),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
-        message: "Please enter valid phone number",
+        message: t("pleaseEnterAValid.phoneNumber"),
       })
       .max(15)
-      .required("Please enter a valid phone number"),
+      .required(t("pleaseEnterAValid.phoneNumber")),
     newsletter: Yup.boolean(),
   });
 
@@ -107,7 +107,7 @@ const Signup = () => {
           } catch (e: any) {
             console.error(`Error creating user: ${JSON.stringify(e)}`);
             e.code === "auth/invalid-phone-number"
-              ? setError("Please enter a valid phone number")
+              ? setError(t("pleaseEnterAValid.phoneNumber"))
               : setError(e.message);
           }
         }}

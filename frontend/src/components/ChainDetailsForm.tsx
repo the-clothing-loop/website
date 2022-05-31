@@ -54,11 +54,11 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
   const formSchema = Yup.object().shape({
     name: Yup.string()
       .min(2, "Must be at least 2 characters")
-      .required("Required"),
+      .required(t("required")),
     description: Yup.string(),
-    radius: Yup.number().required("Required"),
-    clothingTypes: Yup.array().of(Yup.string()).required("Required"),
-    clothingSizes: Yup.array().of(Yup.string()).required("Required"),
+    radius: Yup.number().required(t("required")),
+    clothingTypes: Yup.array().of(Yup.string()).required(t("required")),
+    clothingSizes: Yup.array().of(Yup.string()).required(t("required")),
     longitude: Yup.number(),
     latitude: Yup.number(),
   });
