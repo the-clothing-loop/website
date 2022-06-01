@@ -171,9 +171,7 @@ const Signup = () => {
                         variantVal={true}
                       />
                       <PopoverOnHover
-                        message={
-                          "We would like to know this, to see if different size interests are equally represented within your loop. Also, knowing this makes it easier to split the route over time, depending on size interest!"
-                        }
+                        message={t("weWouldLikeToKnowThisEquallyRepresented")}
                       />
                     </div>
 
