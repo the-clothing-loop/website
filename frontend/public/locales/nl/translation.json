@@ -66,7 +66,6 @@
   "enterYourAddress": "Voer je adres in",
   "areYouALoopAdmin": "Bent u een ketenbeheerder? Vul hieronder uw e-mailadres in om in te loggen.",
   "notPartOfTheClothingLoopYet": "Nog geen onderdeel van The Clothing Loop,",
-  "joinAnExistingLoop": "aansluiten bij een bestaande keten",
   "or": "of",
   "thankYouForSigningUp": "Dankjewel voor het aanmelden!",
   "yourClosetIsAboutToBecomeAWholeLotMoreSustainable": "Je kast wordt een stuk duurzamer, leuker en meer JIJ!",
@@ -185,5 +184,6 @@
   "firstRegisterYourLoopViaThisForm": "First: register your Loop via this form",
   "secondLoginViaLink": "Second: login via the link sent to your email",
   "thirdSendFriendsToWebsite": "Third: send friends and neighbours to this website to subscribe, and wait for submissions to roll in!",
-  "allDataOfNewParticipantsCanBeAccessed": "All the data of new participants can be accessed on your personal page."
+  "allDataOfNewParticipantsCanBeAccessed": "All the data of new participants can be accessed on your personal page.",
+  "areYouAlreadyHosting<a>JoinAnExistingLoop": "Are you already hosting a Loop? Sign in here to get access to the people that signed up in your neighbourhood. They are eagerly waiting to become part of your Loop! Just want to participate?<a> Join an existing Loop</a>instead. No user profile needed for this."
 }

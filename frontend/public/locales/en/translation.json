@@ -67,7 +67,6 @@
   "enterYourAddress": "Enter your address",
   "areYouALoopAdmin": "Are you a Loop Admin? Enter your email below to login.",
   "notPartOfTheClothingLoopYet": "Not part of The Clothing Loop yet,",
-  "joinAnExistingLoop": "join an existing Loop",
   "or": "or",
   "thankYouForSigningUp": "Thank you for signing up!",
   "yourClosetIsAboutToBecomeAWholeLotMoreSustainable": "Your closet is about to become a whole lot more sustainable, more fun and more YOU!",
@@ -186,5 +185,6 @@
   "firstRegisterYourLoopViaThisForm": "First: register your Loop via this form",
   "secondLoginViaLink": "Second: login via the link sent to your email",
   "thirdSendFriendsToWebsite": "Third: send friends and neighbours to this website to subscribe, and wait for submissions to roll in!",
-  "allDataOfNewParticipantsCanBeAccessed": "All the data of new participants can be accessed on your personal page."
+  "allDataOfNewParticipantsCanBeAccessed": "All the data of new participants can be accessed on your personal page.",
+  "areYouAlreadyHosting<a>JoinAnExistingLoop": "Are you already hosting a Loop? Sign in here to get access to the people that signed up in your neighbourhood. They are eagerly waiting to become part of your Loop! Just want to participate?<a>join an existing Loop</a>instead. No user profile needed for this."
 }
