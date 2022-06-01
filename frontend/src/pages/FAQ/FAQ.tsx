@@ -6,12 +6,18 @@ import { makeStyles } from "@mui/styles";
 
 import AccordionFaq from "../../components/AccordionFaq/AccordionFaq";
 import participantsFaq from "./participantsFaq";
-import hostsFaq from "./hostsFaq";
 import theme from "../../util/theme";
 import styles from "./FAQ.module.css";
+import { useTranslation } from "react-i18next";
 
 const FAQ = () => {
+  const {t} = useTranslation("faq");
   const classes = makeStyles(theme as any)();
+
+  const arrHosts = t("arrHosts", {
+    returnObjects: true,
+    defaultValue: [],
+  }) as {question: string, answer: string}[]
 
   return (
     <>
@@ -41,7 +47,7 @@ const FAQ = () => {
               <Typography component="h1" className={classes.pageTitle}>
                 FAQ for Loop Hosts
               </Typography>
-              {hostsFaq.map((el, index) => (
+              {arrHosts.map((el, index) => (
                 <AccordionFaq
                   key={index}
                   question={el.question}
