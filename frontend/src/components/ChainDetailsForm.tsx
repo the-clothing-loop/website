@@ -241,7 +241,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={3} style={{paddingTop:'10px'}}>
+                  <Grid item xs={3} style={{ paddingTop: "10px" }}>
                     <NumberField
                       required
                       label={t("radius")}
@@ -283,22 +283,22 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                   <Grid item xs={12} style={{ position: "relative" }}>
                     <div style={{ paddingTop: "10px" }}>
                       <CategoriesDropdown
-                        setGenders={handleCategoriesChange}
-                        genders={values.clothingTypes}
-                        className={classes.formSelect}
-                        fullWidth={true}
+                        variant="standard"
+                        showInputLabel={true}
+                        selectedCategories={values.clothingTypes}
+                        handleSelectedCategoriesChange={handleCategoriesChange}
                       />
                     </div>
                     <div style={{ paddingTop: "10px", position: "relative" }}>
                       <SizesDropdown
-                        setSizes={(val) => setFieldValue("clothingSizes", val)}
-                        className={classes.formSelect}
-                        genders={values.clothingTypes}
-                        sizes={values.clothingSizes}
+                        variant="standard"
+                        showInputLabel={true}
                         label={t("sizes")}
-                        fullWidth={false}
-                        inputVisible={true}
-                        variantVal={true}
+                        selectedGenders={values.clothingTypes}
+                        selectedSizes={values.clothingSizes}
+                        handleSelectedCategoriesChange={(val) =>
+                          setFieldValue("clothingSizes", val)
+                        }
                       />
                       <PopoverOnHover
                         message={

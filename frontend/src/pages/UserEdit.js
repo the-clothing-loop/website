@@ -156,14 +156,12 @@ const UserEdit = () => {
               />
 
               <SizesDropdown
-                className={classes.formSelect}
-                setSizes={setSelectedSizes}
-                genders={Object.keys(categories)}
-                sizes={selectedSizes}
+                variant="standard"
+                showInputLabel={true}
                 label={t("interestedSizes")}
-                fullWidth={true}
-                inputVisible={true}
-                variantVal={true}
+                selectedGenders={Object.keys(categories)}
+                selectedSizes={selectedSizes}
+                handleSelectedCategoriesChange={setSelectedSizes}
                 style={{ marginTop: "2%" }}
               />
 

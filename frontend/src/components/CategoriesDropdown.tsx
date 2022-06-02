@@ -2,12 +2,16 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 
 import {
+  FormControl,
   InputLabel,
+  Select,
+  Input,
+  OutlinedInput,
+  MenuItem,
   Checkbox,
   ListItemText,
-  Select,
-  FormControl,
-  MenuItem,
+  Typography,
+  SelectChangeEvent,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -15,59 +19,79 @@ import theme from "../util/theme";
 import categories from "../util/categories";
 
 interface IProps {
-  setGenders: (el: string[]) => void;
-  genders: string[];
-  className: string;
-  fullWidth: boolean;
+  variant: "outlined" | "standard";
+  showInputLabel: boolean;
+  renderValueWhenEmpty?: string;
+  selectedCategories: string[];
+  handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
 }
 
 const CategoriesDropdown: React.FC<IProps> = ({
-  genders,
-  setGenders,
-  className,
-  fullWidth,
+  variant,
+  showInputLabel,
+  renderValueWhenEmpty,
+  selectedCategories,
+  handleSelectedCategoriesChange,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
 
-  const selectedGenders = genders;
-  const setSelectedGenders = setGenders;
-  const stylingClass = className;
-
-  //get selected categories
-  const handleChange = (event: any, setCategories: any) => {
+  const handleOnChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
     } = event;
 
-    setCategories(typeof value === "string" ? value.split(",") : value);
+    handleSelectedCategoriesChange(
+      typeof value === "string" ? value.split(",") : value
+    );
   };
 
   return (
-    <FormControl
-      className={classes.sizesFormWrapper}
-      fullWidth={fullWidth}
-      classes={{ root: classes.specificSpacing }}
-    >
-      <InputLabel
-        id="demo-multiple-checkbox-label"
-        className={classes.labelSelect}
-        classes={{ root: classes.focusColor }}
-      >
-        {t("categories")}
-      </InputLabel>
+    <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
+      {showInputLabel && (
+        <InputLabel classes={{ root: classes.labelSelect }}>
+          {t("categories")}
+        </InputLabel>
+      )}
       <Select
-        className={stylingClass}
-        labelId="demo-multiple-checkbox-label"
-        id="demo-multiple-checkbox"
         multiple
         displayEmpty
-        variant="standard"
-        value={selectedGenders}
-        onChange={(e: any) => handleChange(e, setSelectedGenders)}
-        renderValue={(selected: string[]) => {
-          return selected.map(t).join(", ");
+        input={
+          variant === "outlined" ? (
+            <OutlinedInput
+              classes={{
+                root: classes.selectInputOutlined,
+              }}
+            />
+          ) : (
+            <Input
+              classes={{
+                root: classes.selectInputStandard,
+              }}
+            />
+          )
+        }
+        classes={{
+          select:
+            variant === "outlined"
+              ? classes.selectOutlined
+              : classes.selectStandard,
         }}
+        variant={variant}
+        value={selectedCategories}
+        onChange={handleOnChange}
+        renderValue={(selected: string[]) =>
+          !selected.length && renderValueWhenEmpty ? (
+            <Typography
+              component="span"
+              classes={{ root: classes.emptyRenderValue }}
+            >
+              {renderValueWhenEmpty}
+            </Typography>
+          ) : (
+            selected.map(t).join(", ")
+          )
+        }
       >
         {Object.keys(categories).map((value: string) => (
           <MenuItem
@@ -79,13 +103,11 @@ const CategoriesDropdown: React.FC<IProps> = ({
             }}
           >
             <Checkbox
-              className={classes.checkbox}
-              checked={selectedGenders.includes(value) ? true : false}
+              color="secondary"
+              checked={selectedCategories.includes(value) ? true : false}
             />
             <ListItemText
               primary={t(value)}
-              className={classes.listItemTextSizes}
-              style={{ textTransform: "capitalize" }}
               classes={{
                 primary: classes.listItemTextFontSize,
               }}

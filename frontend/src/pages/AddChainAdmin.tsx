@@ -1,5 +1,12 @@
 import React from "react";
-import { Select, FormControl, MenuItem, Button } from "@mui/material";
+import {
+  FormControl,
+  Select,
+  OutlinedInput,
+  MenuItem,
+  Typography,
+  Button,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import RightArrow from "../images/right-arrow-white.svg";
@@ -35,23 +42,32 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
       <Title>Select Co-Host</Title>
 
       <div className="add-chain-admin__select">
-        <FormControl className={classes.sizesFormWrapper}>
+        <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
           <Select
-            className={classes.addChainAdminSelect}
+            displayEmpty
+            input={
+              <OutlinedInput
+                classes={{
+                  root: classes.selectInputOutlined,
+                }}
+              />
+            }
+            classes={{
+              select: classes.selectOutlined,
+            }}
             variant="outlined"
             value={selectedUser}
             onChange={handleSelectedUserChange}
-            inputProps={{
-              className: classes.specificSpacing,
-            }}
             renderValue={(selected: string) =>
-              selected ? (
-                selected
-              ) : (
-                <em className={classes.em}>Select co-host</em>
+              selected ?? (
+                <Typography
+                  component="span"
+                  classes={{ root: classes.emptyRenderValue }}
+                >
+                  Select co-host
+                </Typography>
               )
             }
-            displayEmpty
           >
             {users.map(
               ({
@@ -65,7 +81,6 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
               }) => (
                 <MenuItem
                   key={uid}
-                  className={classes.listItemTextSizes}
                   classes={{
                     root: classes.menuItemSpacingAndColor,
                     selected: classes.selected,
