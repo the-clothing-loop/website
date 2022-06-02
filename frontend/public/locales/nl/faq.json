@@ -1,60 +1,60 @@
 {
-   "faqForParticipants": "FAQ for Participants",
+   "faqForParticipants": "FAQ voor Deelnemers",
    "arrParticipants": [
       {
-         "question": "Are there rules on how much you can take out, and do you have to donate the same amount of clothes as you take out?",
-         "answer": "No, there are no rules here. Sometimes you take a bit more, sometimes you give more. Please don't add clothes to the bags that aren't of good quality, just to add something! It's better to have a bag half full of treasures, than to have a full bag that is of less quality."
-       },
-       {
-         "question": "Can all sizes of clothing be in the same bag?",
-         "answer": "Mixed bags work perfectly well usually, as sizes vary per brand and proportions are different as well. But this only works within a certain width. We recommend having a mix of items from size 36 - 42 (S, M and L) and starting a new Clothing Loop for smaller or bigger sizes."
-       },
-       {
+         "question": "Zijn er regels over hoeveel je eruit kunt halen, en moet je dezelfde hoeveelheid kleding doneren als je eruit haalt?",
+         "answer": "Nee, er zijn hier geen regels. Soms neem je een beetje meer, soms breng je meer bij. Voeg alsjeblieft geen kleren toe aan de tassen die niet van goede kwaliteit zijn, gewoon om iets toe te voegen! Het is beter om een half vol zak schatten te hebben dan om een volle tas te hebben van minder kwaliteit."
+      },
+      {
+         "question": "Kunnen verschillende maten van kleding in dezelfde zak zitten?",
+         "answer": "Gemengde tassen werken heel normaal, omdat de formaten per merk verschillen en verhoudingen. Maar dit werkt alleen binnen een bepaalde breedte. We raden aan om een mix van items van grootte 36 - 42 (S, M and L) en een nieuwe Loop beginnen voor kleinere of grotere formaten."
+      },
+      {
          "question": "How to avoid “Finders keepers, losers weepers”?",
          "answer": "There are no guarantees that you will find something that you like. Sometimes a few bags will pass your house that may not have an item for you. But remember: finding one dream item is more worth than having 10 items in your wardrobe that you do not wear. And making someone else very happy with something that was collecting dust in your wardrobe is also a significant (and fun!) part of the Clothing Loop mentality!"
-       },
-       {
+      },
+      {
          "question": "What to do with bulky clothes (like winter coats) that don't fit in the bag?",
          "answer": "Big items can be photographed and shared via the communication channel, or through the Glide app. In a private message, people can respond and organize pick up."
-       },
-       {
+      },
+      {
          "question": "Can I put shoes in the bag as well?",
          "answer": "The short answer is yes, but keep in mind: shoes are more difficult to pass along than clothes. There are many more sizes, and they show wear a lot quicker than garments. So please be very selective with shoes! Only add “as good as new” pairs, and have no more than 2 pairs per bag."
-       }
+      }
    ],
-   "faqForHosts": "FAQ for Hosts",
+   "faqForHosts": "FAQ voor Organisatoren",
    "arrHosts": [
       {
-         "question": "How can I start using the app?",
-         "answer": "You can copy the app and use it within your group. You only have to fill in the address list in our downloadable template. It is super easy! We created a video tutorial and slide deck to help you get started. Please get in touch here if you still run into trouble!"
-       },
-       {
-         "question": "Are there graphic templates we can use?",
-         "answer": "Absolutely, we made you a folder where you can find logo's templates, manuals and all. Use as many as you like!"
-       },
-       {
-         "question": "Introducing a “Ghost rider” in the Loop",
-         "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! You can then introduce a “ghost rider” bag that travels in the other direction, so all of a sudden you have other people before you in the route, and also other styles in the bag. If you do so, please make people aware that they shouldn't put any items in the “ghost rider” bag that they have previously taken out of a regular bag. And keep the number of ghost rider bags limited to 1 or 2, to keep it special and also simple."
-       },
-       {
-         "question": "How to manage a large group of people in the communication channel?",
+         "question": "Hoe kan ik de app gebruiken?",
+         "answer": "U kunt de app kopiëren en deze gebruiken binnen uw groep. U hoeft alleen de adreslijst in te vullen in onze sjabloon. Het is super eenvoudig! We hebben een video tutorial en slide dek gemaakt om je aan de slag te helpen. Neem contact op als je nog steeds in de problemen komt!"
+      },
+      {
+         "question": "Zijn er grafische sjablonen die we kunnen gebruiken?",
+         "answer": "Absoluut, wij hebben je een map gemaakt waar je logo sjablonen, handleidingen en meer, allemaal kunt vinden. Gebruik er zoveel als je wilt!"
+      },
+      {
+         "question": "Introductie van een \"Geestenrijder\" in de Loop",
+         "answer": "Zodra uw Loop een tijdje doorgaat, kunt u dit een beetje veranderen! Je kunt dan een zak met \"Spookrijder\" invoeren die in de andere richting reist. dus plotseling heb je andere mensen voor je in de route, en ook andere stijlen in de tas. Als je dat doet, Maak mensen ervan bewust dat ze geen voorwerpen in de \"Spookrijder\" zak moeten stoppen die ze eerder uit een gewone zak hebben genomen. En houd het aantal Spookrijders beperkt tot 1 of 2, om het speciaal en ook eenvoudig te houden."
+      },
+      {
+         "question": "Hoe gaat men om met een grote groep mensen in de communicatiekanalen?",
          "answer": "Especially when groups get bigger, it is important to make sure people aren't bombarded with (irrelevant) messages. You can set up some rules for what should and shouldn't be shared via the group app. For example:<br /><br /><span>Yes,</span> in the app:<ul><li>Selfies of nice things you took from the bag or nice things that you are putting in</li><li>Compliments to others</li><li>Logistics and organizational relevant updates</li></ul><span>No,</span> not in the app:<ul><li>Everything unrelated to the Clothing Loop (requests for surveys, invites for new groups, Fund raising, memes, etc). If you want to ask everyone's input on something, use a polling app like LouLou instead</li></ul>"
-       },
-       {
-         "question": "What if I no longer have time to manage the Clothing Loop I started?",
-         "answer": "Use the group! Ask if someone else wants to take over and host the loop."
-       },
-       {
-         "question": "What if someone wants to join but lives too far away?",
-         "answer": "If someone signed up for your Loop but lives too far outside of your Loop area, it is up to you to decide if he/she/them may join. One thing you can do to decrease the distance between addresses, is to ask that person to find other participants between their area and the original Loop location."
-       },
-       {
-         "question": "What is an ideal group size?",
+      },
+      {
+         "question": "Wat als ik geen tijd meer heb om het Loop keten te beheren dat ik begonnen?",
+         "answer": "Gebruik de groep! Vraag of iemand anders de keten wil overnemen en hosten."
+      },
+      {
+         "question": "Wat als iemand wil meedoen, maar te ver weg leeft?",
+         "answer": "Als iemand heeft aangemeld voor je Loop maar te ver buiten je Loop woont, het is aan jou om te beslissen of hij/zij of hen zich mogen aansluiten. Eén ding dat u kunt doen om de afstand tussen adressen te verkleinen, is om die persoon te vragen andere deelnemers te vinden tussen hun omgeving en de oorspronkelijke Loop locatie."
+      },
+      {
+         "question": "Wat is een ideale groepsgrootte?",
          "answer": "We'd recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognize anything in the bag anymore, so you can keep swapping. There is no real maximum, it is up to you what still works! In the Netherlands a loop is on average 45 people. But there are loops running smoothly with 130 people!"
-       },
-       {
-         "question": "What to do if the Clothing Loop does not work well?",
+      },
+      {
+         "question": "Wat moeten we doen als de Loop keten niet goed werkt?",
          "answer": "If the quality of the clothing isn't high enough, people might leave the Loop. Make sure that everyone shares the responsibility for only adding good quality items.<br/><br/>Do you see anything that shouldn't be in the Loop? Take it out and donate it to a clothing container. This way, it can still be recycled. If in doubt, ask the person next to you if he/she agrees and decide then.<br/><br/>A fabric shaver can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, set a good example yourself; share some nice photos and encourage others to do the same!"
-       }
+      }
    ]
 }
