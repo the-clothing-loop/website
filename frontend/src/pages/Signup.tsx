@@ -161,14 +161,12 @@ const Signup = () => {
 
                     <div className={classes.formFieldWithPopover}>
                       <SizesDropdown
-                        className={classes.formSelect}
-                        setSizes={setSelectedSizes}
-                        genders={chainGender}
-                        sizes={selectedSizes}
+                        variant="standard"
+                        showInputLabel={false}
                         label={t("interestedSizes")}
-                        fullWidth={true}
-                        inputVisible={false}
-                        variantVal={true}
+                        selectedGenders={chainGender}
+                        selectedSizes={selectedSizes}
+                        handleSelectedCategoriesChange={setSelectedSizes}
                       />
                       <PopoverOnHover
                         message={t("weWouldLikeToKnowThisEquallyRepresented")}

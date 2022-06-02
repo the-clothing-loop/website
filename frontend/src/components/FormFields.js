@@ -121,7 +121,7 @@ const CheckboxField = ({ required, label, ...props }) => {
           <Checkbox
             required={required ? true : false}
             name={field.name}
-            className={classes.checkbox}
+            color="secondary"
           />
         }
         {...field}

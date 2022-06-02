@@ -49,15 +49,10 @@ const theme = {
     lineHeight: "19.5px",
   },
 
-  em: {
+  emptyRenderValue: {
     color: "rgb(72, 128, 139, .4)",
-    fontStyle: "inherit",
-    float: "left",
-    fontWeight: "400",
-    fontSize: "1rem",
     lineHeight: "1.4375em",
     letterSpacing: " 0.00938em",
-    fontFamily: "Montserrat",
   },
 
   h3: {
@@ -583,10 +578,6 @@ const theme = {
     borderBottom: "1px solid #dee3ed",
   },
 
-  checkbox: {
-    color: `${teal} !important`,
-  },
-
   actionsWrapper: {
     display: "flex",
   },
@@ -618,61 +609,37 @@ const theme = {
     padding: 10,
   },
 
-  select: {
+  selectInputOutlined: {
     color: black,
-    borderRadius: "0 !important",
-    backgroundColor: "transparent",
     width: "100%",
-    fontFamily: "Montserrat !important",
-    textTransform: "capitalize",
     border: `1px solid ${turquoise}`,
-
-    "& div#demo-multiple-checkbox": {
-      padding: "10px !important",
-    },
-
-    "&:before": {
-      borderColor: yellow,
-    },
-    "&:after": {
-      borderColor: yellow,
-    },
-    "&:not(.Mui-disabled):hover::before": {
-      borderColor: yellow,
-    },
+    borderRadius: "0",
+    backgroundColor: "transparent",
+    textTransform: "capitalize",
+  },
+  selectOutlined: {
+    padding: "10px",
   },
 
-  addChainAdminSelect: {
-    borderRadius: "0 !important",
-    backgroundColor: "transparent",
+  selectInputStandard: {
+    color: black,
     width: "100%",
-    fontFamily: "Montserrat !important",
+    margin: "5px auto 5px auto",
     textTransform: "capitalize",
-    border: `1px solid ${turquoise}`,
-
-    "& div#demo-multiple-checkbox": {
-      padding: "10px !important",
-    },
-
-    "&:before": {
-      borderColor: yellow,
-    },
     "&:after": {
-      borderColor: yellow,
+      borderColor: "#1976d2",
     },
-    "&:not(.Mui-disabled):hover::before": {
-      borderColor: yellow,
-    },
+  },
+  selectStandard: {
+    padding: "10px 10px 10px 0",
   },
 
   labelSelect: {
-    fontFamily: "Montserrat !important",
-    transform: "translate(0px, -6px) scale(0.75) !important",
-    color: "rgb(72, 128, 139, .4)",
     marginTop: "10px",
-
-    "& .MuiInputLabel-outlined.MuiInputLabel-shrink": {
-      transform: "translate(0px, -6px) scale(0.75) !important",
+    color: "rgb(72, 128, 139, .4)",
+    transform: "translate(0px, -6px) scale(0.75)",
+    "&:focus": {
+      color: "#f7c86f",
     },
   },
 
@@ -680,21 +647,6 @@ const theme = {
     textTransform: "uppercase",
     color: black,
     fontWeight: "500 !important",
-  },
-
-  formSelect: {
-    margin: "5px auto 5px auto",
-    border: "none",
-    width: "100%",
-    borderRadius: "0 !important",
-    padding: "0 ",
-    marginTop: "16px",
-    "&:after": {
-      borderColor: "#1976d2",
-    },
-  },
-  formControl: {
-    width: "15rem",
   },
 
   formWrapper: {
@@ -727,17 +679,9 @@ const theme = {
     paddingLeft: "16px",
   },
 
-  listItemText: {
-    fontFamily: "Montserrat !important",
-    textTransform: "capitalize",
-  },
-
-  listItemTextSizes: {
-    fontFamily: "Montserrat !important",
-  },
-
   listItemTextFontSize: {
     fontSize: "0.875rem",
+    textTransform: "capitalize",
   },
 
   menuItemSpacingAndColor: {
@@ -753,12 +697,6 @@ const theme = {
     },
   },
   selected: {},
-
-  focusColor: {
-    "&:focus": {
-      color: "#f7c86f",
-    },
-  },
 
   specificSpacing: {
     letterSpacing: "0.00938em",
@@ -955,11 +893,6 @@ const theme = {
     color: black,
   },
 
-  sizesFormWrapper: {
-    display: "flex !important",
-    flexDirection: "row !important",
-    position: "relative",
-  },
   popoverWrapper: {
     display: "flex",
     alignItems: "center",
