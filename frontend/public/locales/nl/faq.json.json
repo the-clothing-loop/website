@@ -22,7 +22,7 @@
          "answer": "The short answer is yes, but keep in mind: shoes are more difficult to pass along than clothes. There are many more sizes, and they show wear a lot quicker than garments. So please be very selective with shoes! Only add “as good as new” pairs, and have no more than 2 pairs per bag."
       }
    ],
-   "faqForHosts": "FAQ voor Organisatoren",
+   "faqForHosts": "FAQ voor Beheerders",
    "arrHosts": [
       {
          "question": "Hoe kan ik de app gebruiken?",
@@ -38,11 +38,11 @@
       },
       {
          "question": "Hoe gaat men om met een grote groep mensen in de communicatiekanalen?",
-         "answer": "Especially when groups get bigger, it is important to make sure people aren't bombarded with (irrelevant) messages. You can set up some rules for what should and shouldn't be shared via the group app. For example:<br /><br /><span>Yes,</span> in the app:<ul><li>Selfies of nice things you took from the bag or nice things that you are putting in</li><li>Compliments to others</li><li>Logistics and organizational relevant updates</li></ul><span>No,</span> not in the app:<ul><li>Everything unrelated to the Clothing Loop (requests for surveys, invites for new groups, Fund raising, memes, etc). If you want to ask everyone's input on something, use a polling app like LouLou instead</li></ul>"
+         "answer": "Vooral wanneer groepen groter worden, is het belangrijk om ervoor te zorgen dat mensen niet worden gebombardeerd met (irrelevante) berichten. Je kunt enkele regels instellen voor wat wel en niet gedeeld mag worden via de app van de groep. Bijvoorbeeld:<br /><br /><span>Ja,</span> in de app:<ul><li>Selfies van leuke dingen die je van de tas of leuke dingen die je doet meeneemt</li><li>Complimenten aan anderen</li><li>Logistiek en organisatorische relevante updates</li></ul><span>Nee,</span> niet in de app:<ul><li>Alles niet gerelateerd aan de Clothing Loop (verzoeken voor enquêtes, uitnodigingen voor nieuwe groepen, fondswerving, memes, enz.). Als u van iedereen iets wilt vragen, gebruik dan een polling-app zoals LouLou in plaats daarvan</li></ul>"
       },
       {
          "question": "Wat als ik geen tijd meer heb om het Loop keten te beheren dat ik begonnen?",
-         "answer": "Gebruik de groep! Vraag of iemand anders de keten wil overnemen en hosten."
+         "answer": "Gebruik de groep! Vraag of iemand anders de keten wil overnemen en beheren."
       },
       {
          "question": "Wat als iemand wil meedoen, maar te ver weg leeft?",
@@ -50,11 +50,11 @@
       },
       {
          "question": "Wat is een ideale groepsgrootte?",
-         "answer": "We'd recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognize anything in the bag anymore, so you can keep swapping. There is no real maximum, it is up to you what still works! In the Netherlands a loop is on average 45 people. But there are loops running smoothly with 130 people!"
+         "answer": "We raden aan om minimaal 20 personen in een groep te hebben: na 20 adressen herkent u meestal niets meer in de tas zodat u kunt blijven wisselen. Er is geen echt maximum, het is aan jou wat er nog steeds werkt! In Nederland ligt een Loop op gemiddeld 45 mensen. Maar met 130 mensen lopen Loops en probleem!"
       },
       {
          "question": "Wat moeten we doen als de Loop keten niet goed werkt?",
-         "answer": "If the quality of the clothing isn't high enough, people might leave the Loop. Make sure that everyone shares the responsibility for only adding good quality items.<br/><br/>Do you see anything that shouldn't be in the Loop? Take it out and donate it to a clothing container. This way, it can still be recycled. If in doubt, ask the person next to you if he/she agrees and decide then.<br/><br/>A fabric shaver can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, set a good example yourself; share some nice photos and encourage others to do the same!"
+         "answer": "Als de kwaliteit van de kleding niet hoog genoeg is, zouden mensen de Loop kunnen verlaten. Zorg ervoor dat iedereen de verantwoordelijkheid deelt om alleen producten van goede kwaliteit toe te voegen.<br/><br/>Zie je iets dat niet in de Loop zou moeten staan? Pak het uit en doneer het aan een kledingcontainer. Op die manier kan het nog steeds worden gerecycled. Vraag in geval van twijfel de persoon naast u of hij het daarmee eens is en dan een besluit neemt.<br/><br/>Een grondstofkleur kan de levensduur van een kledingstuk enorm verlengen! Je kan dit advies binnen jouw gemeenschap delen.<br/><br/>Tot slot stel zelf een goed voorbeeld; deel een paar mooie foto's en moedig anderen aan hetzelfde te doen!"
       }
    ]
 }
