@@ -363,64 +363,60 @@ const FindChain = ({ location }: { location: Location }) => {
                   <div id="categories-container">
                     {selectedChain.categories.gender
                       ? selectedChain.categories.gender.map((category, i) => {
-                          return (
-                            <Typography component="p" key={i}>
-                              {t(`${category}`)} {t("clothing")}
-                            </Typography>
-                          );
-                        })
+                        return (
+                          <Typography component="p" key={i}>
+                            {t(`${category}`)} {t("clothing")}
+                          </Typography>
+                        );
+                      })
                       : null}
                   </div>
                   <Typography component="h3">{t("sizes")}:</Typography>
                   <div id="sizes-container">
                     {selectedChain.categories.size
                       ? selectedChain.categories.size.map((size, i) => {
-                          return (
-                            <Typography key={i} component="p">
-                              {t(`${size}`)}
-                            </Typography>
-                          );
-                        })
+                        return (
+                          <Typography key={i} component="p">
+                            {t(`${size}`)}
+                          </Typography>
+                        );
+                      })
                       : null}
                   </div>
                 </div>
+                {! selectedChain.open ? (
+                  <Typography component="p" id="loopFull">
+                    {t("loopFull")}
+                    <Link to="/loops/new/users/signup">{t("startLoop")}</Link>
+                  </Typography>
+                ) : null}
               </CardContent>
 
-              {role === "admin" ? (
-                <CardActions>
+              <CardActions className={classes.cardsAction}>
+                {selectedChain.open ? (
                   <Button
-                    key={"btn-join"}
-                    variant="outlined"
+                    key="btn-join"
+                    variant={role === "admin" ? "outlined" : "contained" }
                     color="primary"
-                    className={"card-button"}
+                    className={role === "admin" ? "card-button" : classes.button}
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
+                    {role !== "admin" ? <img src={RightArrow} alt="" /> : ""}
                   </Button>
+                ) : null }
+                {"admin" === "admin" ? (
                   <Button
-                    key={"btn-view"}
+                    key="btn-view"
                     variant="contained"
                     color="primary"
                     className={"card-button"}
                     onClick={(e) => viewChain(e)}
                   >
                     {t("viewChain")}
-                  </Button>{" "}
-                </CardActions>
-              ) : (
-                <CardActions className={classes.cardsAction}>
-                  <Button
-                    key={"btn-join"}
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={(e) => signupToChain(e)}
-                  >
-                    {t("join")}
-                    <img src={RightArrow} alt="" />
                   </Button>
-                </CardActions>
-              )}
+                ) : null }
+            </CardActions>
             </Card>
           </Popup>
         ) : null}
