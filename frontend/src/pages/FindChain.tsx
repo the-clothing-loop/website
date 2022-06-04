@@ -396,21 +396,19 @@ const FindChain = ({ location }: { location: Location }) => {
                 {selectedChain.open ? (
                   <Button
                     key="btn-join"
-                    variant={role === "admin" ? "outlined" : "contained" }
                     color="primary"
-                    className={role === "admin" ? "card-button" : classes.button}
+                    className={role === "admin" ? classes.buttonOutlined : classes.button}
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
                     {role !== "admin" ? <img src={RightArrow} alt="" /> : ""}
                   </Button>
                 ) : null }
-                {"admin" === "admin" ? (
+                {role === "admin" ? (
                   <Button
                     key="btn-view"
-                    variant="contained"
                     color="primary"
-                    className={"card-button"}
+                    className={classes.button}
                     onClick={(e) => viewChain(e)}
                   >
                     {t("viewChain")}
