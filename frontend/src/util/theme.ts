@@ -491,7 +491,6 @@ const theme = {
     "& p#loopFull": {
       margin: "0",
       paddingTop: "1rem",
-      width: "40rem",
     },
 
     "& div#categories-container, div#sizes-container": {

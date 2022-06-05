@@ -6,9 +6,8 @@ import ReactMapGL, {
   Popup,
   MapEvent,
   MapRef,
-  Marker,
 } from "react-map-gl";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import * as GeoJSONTypes from "geojson";
 
@@ -386,8 +385,14 @@ const FindChain = ({ location }: { location: Location }) => {
                 </div>
                 {! selectedChain.open ? (
                   <Typography component="p" id="loopFull">
-                    {t("loopFull")}
-                    <Link to="/loops/new/users/signup">{t("startLoop")}</Link>
+                    {role === "admin" ? t("loopFullAdmin") : (
+                      <Trans
+                        i18nKey="loopFull"
+                        components={{
+                          "1": <Link to="/loops/new/users/signup"></Link>
+                        }}
+                      ></Trans>
+                    )}
                   </Typography>
                 ) : null}
               </CardContent>
