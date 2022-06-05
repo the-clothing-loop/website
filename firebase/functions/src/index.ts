@@ -256,10 +256,16 @@ export const addUserToChain = functions
     if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
       const userReference = db.collection("users").doc(uid);
       const user = await userReference.get();
+      const chain = await db.collection("chains").doc(chainId).get();
 
       if (user.get("chainId") === chainId) {
         functions.logger.warn(
           `user ${uid} is already member of chain ${chainId}`
+        );
+      } else if (! chain.get("open")) {
+        throw new functions.https.HttpsError(
+          "failed-precondition",
+          "This chain is not currently open to new members"
         );
       } else {
         await userReference.update("chainId", chainId);
