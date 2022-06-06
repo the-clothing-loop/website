@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
@@ -28,7 +28,7 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const validate = Yup.object({
-    email: Yup.string().email("Please enter a valid e-mail address"),
+    email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
   });
 
   const onSubmit = async (data: any) => {
@@ -67,16 +67,12 @@ const Login = () => {
             </Typography>
             <div className={classes.pageDescription}>
               <Typography component="p" className={classes.p}>
-                Are you already hosting a Loop? Sign in here to get access to
-                the people that signed up in your neighbourhood. They are
-                eagerly waiting to become part of your Loop! Just want to
-                participate?
-              </Typography>
-              <Link className={classes.a} to="../../loops/find">
-                {t("joinAnExistingLoop")}
-              </Link>
-              <Typography component="p" className={classes.p}>
-                instead. No user profile needed for this.
+                <Trans
+                  i18nKey="areYouAlreadyHosting<a>JoinAnExistingLoop"
+                  components={{
+                    "a": <Link className={classes.a} to="../../loops/find"></Link>,
+                  }}
+                ></Trans>
               </Typography>
             </div>
 

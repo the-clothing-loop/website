@@ -17,6 +17,7 @@ import styles from "./Donation.module.css";
 import { paymentInitiate } from "../../util/firebase/payments";
 
 import theme from "../../util/theme";
+import { useTranslation } from "react-i18next";
 
 const accessToken = {
   stripeApiAccessToken: process.env.REACT_APP_STRIPE_PUBLIC_KEY,
@@ -28,6 +29,7 @@ const DonationFormContent = () => {
   const stripe = useStripe();
 
   const classes = makeStyles(theme as any)();
+  const {t} = useTranslation();
 
   const amountsRecurring = [
     {
@@ -55,11 +57,11 @@ const DonationFormContent = () => {
     },
     validationSchema: Yup.object({
       email: Yup.string()
-        .required("Please enter your e-mail address")
-        .email("Please enter a valid e-mail address"),
+        .required(t("pleaseEnterYourEmail"))
+        .email(t("pleaseEnterAValid.emailAddress")),
       amount: Yup.number()
-        .min(1, "Your donation amount must be positive")
-        .typeError("You must specify a number as donation amount"),
+        .min(1, t("yourDonationAmountMustBePositive"))
+        .typeError(t("youMustSpecifyANumberAsDonation")),
       type: Yup.string(),
     }),
     validateOnChange: false,
@@ -82,7 +84,7 @@ const DonationFormContent = () => {
               sessionId: data.sessionId,
             });
           } else {
-            const err = "An error occurred during checkout...";
+            const err = t("anErrorOccurredDuringCheckout");
             setError(err);
             setLoading(false);
           }
@@ -158,7 +160,7 @@ const DonationFormContent = () => {
 
         <FormikContext.Provider value={formik}>
           <form onSubmit={formik.handleSubmit} className={styles.donationForm}>
-            <p>How do you want to contribute to The Clothing Loop?</p>
+            <p>{t("howDoYouWantToContributeToTheClothingLoop")}</p>
             <Grid container className={styles.paymentSelectionOptions}>
               <Grid
                 item
@@ -178,7 +180,7 @@ const DonationFormContent = () => {
                   }}
                 />
                 <label htmlFor="one-off-donation-button">
-                  One-time donation
+                  {t("oneTimeDonation")}
                 </label>
               </Grid>
 
@@ -200,15 +202,15 @@ const DonationFormContent = () => {
                   }}
                 />
                 <label htmlFor="periodic-donation-button">
-                  Become a member
+                  {t("becomeAMember")}
                 </label>
               </Grid>
             </Grid>
             <br />
             {formik.values.recurring ? (
-              <p>I will support The Clothing Loop with a monthly donation:</p>
+              <p>{t("iWillSupportTheClothingLoopWithAMonthlyDonation")}</p>
             ) : (
-              <p>I will support The Clothing Loop with a one-time donation:</p>
+              <p>{t("iWillSupportTheClothingLoopWithAOneTimeDonation")}</p>
             )}
 
             <Grid container spacing={2} className={styles.paymentAmountOptions}>
@@ -232,7 +234,7 @@ const DonationFormContent = () => {
                     onChange={(e) =>
                       formik.setFieldValue("amount", parseInt(e.target.value))
                     }
-                    placeholder="Other amount"
+                    placeholder={t("otherAmount")}
                   />
                 </Grid>
               )}
@@ -249,7 +251,7 @@ const DonationFormContent = () => {
                   onChange={(e) =>
                     formik.setFieldValue("email", e.target.value)
                   }
-                  placeholder="Email"
+                  placeholder={t("email")}
                 />
                 {formik.errors.email && (
                   <Alert severity="error">{formik.errors.email}</Alert>
@@ -261,8 +263,7 @@ const DonationFormContent = () => {
 
             {formik.values.recurring && (
               <small style={{ color: "#555" }}>
-                Don't have a credit card? Choose 'SEPA Direct Debit' in the next
-                step.
+                {t("dontHaveACreditCardChooseSepa")}
               </small>
             )}
 
@@ -285,16 +286,16 @@ const DonationFormContent = () => {
                   classes={{ root: classes.gridItemsNoPadding }}
                 >
                   <Button type="submit" className={styles.paymentButton}>
-                    Donate
+                    {t("donate")}
                   </Button>
                 </Grid>
               )}
             </Grid>
 
             <small className={styles.privacyPolicy}>
-              By donating you agree with our{" "}
+              {t("byDonatingYouAgreeWithOur")}
               <a href="/privacy-policy" target="_blank">
-                Privacy Policy
+                {t("privacyPolicy")}
               </a>
               .
             </small>
@@ -306,6 +307,7 @@ const DonationFormContent = () => {
 };
 
 const DonationForm = () => {
+  const {t} = useTranslation();
   if (accessToken.stripeApiAccessToken) {
     const stripePublicKey = accessToken.stripeApiAccessToken;
 
@@ -313,12 +315,8 @@ const DonationForm = () => {
 
     return (
       <div className={styles.donationsWrapper}>
-        <h3 className={styles.pageTitle}>Donate to The Clothing Loop</h3>
-        <p>
-          Thanks for considering a donation to The Clothing Loop! <br />
-          With your gift we will work effortlessly to make The Clothing Loop
-          even better, bigger and more impactful.
-        </p>
+        <h3 className={styles.pageTitle}>{t("donateToTheClothingLoop")}</h3>
+        <p dangerouslySetInnerHTML={{__html: t("thanksForConsideringADonation")}}></p>
 
         <Elements stripe={stripePromise}>
           <DonationFormContent />
@@ -326,7 +324,7 @@ const DonationForm = () => {
       </div>
     );
   }
-  return <div>Access token not configured</div>;
+  return <div>{t("accessTokenNotConfigured")}</div>;
 };
 
 export default DonationForm;

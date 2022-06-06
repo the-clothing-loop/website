@@ -5,6 +5,7 @@ import { makeStyles } from "@mui/styles";
 import ArrowRight from "./arrow-right.svg";
 
 import { subscribeToNewsletter } from "../../util/firebase/newsletter";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles({
   headingTypographyRoot: {
@@ -54,6 +55,7 @@ const useStyles = makeStyles({
 
 export const Newsletter = () => {
   const classes = useStyles();
+  const {t} = useTranslation();
 
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -86,29 +88,28 @@ export const Newsletter = () => {
       {submitted ? (
         <div>
           <Typography classes={{ root: classes.headingTypographyRoot }}>
-            Thank you for signing up!
+            {t("thankYouForSigningUp")}
           </Typography>
           <Typography classes={{ root: classes.subheadingTypographyRoot }}>
-            You are now subscribed to our monthly newsletter!
+            {t("youAreNowSubscribedToOurMonthlyNewsletter")}
           </Typography>
         </div>
       ) : isError ? (
         <div>
           <Typography classes={{ root: classes.headingTypographyRoot }}>
-            Something is wrong
+            {t("somethingIsWrong")}
           </Typography>
           <Typography classes={{ root: classes.subheadingTypographyRoot }}>
-            Please try again in 3 seconds
+            {t("pleaseTryAgainInSeconds")}
           </Typography>
         </div>
       ) : (
         <div>
           <Typography classes={{ root: classes.headingTypographyRoot }}>
-            Keep up with our latest news
+            {t("keepUpWithOurLatestNews")}
           </Typography>
           <Typography classes={{ root: classes.subheadingTypographyRoot }}>
-            Subscribe to receive our latest news, tips, inspiration and data on
-            the impact of swapping in your inbox each month!
+            {t("subscribeToRecieveOurLatestNews")}
           </Typography>
           <Grid
             container
@@ -125,7 +126,7 @@ export const Newsletter = () => {
                 classes={{
                   root: classes.muiInputLabelRootTextFieldRoot,
                 }}
-                label="Name"
+                label={t("name")}
                 value={name}
                 onChange={handleNameChange}
                 variant="standard"
@@ -141,7 +142,7 @@ export const Newsletter = () => {
                   root: classes.muiInputLabelRootTextFieldRoot,
                 }}
                 type="email"
-                label="Email address"
+                label={t("emailAddress")}
                 value={email}
                 onChange={handleEmailChange}
                 variant="standard"
@@ -159,7 +160,7 @@ export const Newsletter = () => {
                 id="btn-text"
                 classes={{ root: classes.gridItemsNoPadding }}
               >
-                Submit
+                {t("submit")}
               </Grid>
               <Grid item classes={{ root: classes.gridItemsNoPadding }}>
                 <img src={ArrowRight} />

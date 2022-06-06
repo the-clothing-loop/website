@@ -44,14 +44,14 @@ const Signup = () => {
 
   const validate = Yup.object({
     name: Yup.string()
-      .min(2, "Must be more than 2 characters")
-      .required("Required"),
-    email: Yup.string().email("Please enter a valid e-mail address"),
+      .min(2, t("mustBeAtLeastChar"))
+      .required(t("required")),
+    email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
-        message: "Please enter valid phone number",
+        message: t("pleaseEnterAValid.phoneNumber"),
       })
-      .required("Required"),
+      .required(t("required")),
     newsletter: Yup.boolean(),
   });
 
@@ -88,7 +88,7 @@ const Signup = () => {
     } catch (e: any) {
       console.error(`Error creating user: ${JSON.stringify(e)}`);
       e.code === "auth/invalid-phone-number"
-        ? setError("Please enter a valid phone number")
+        ? setError(t("pleaseEnterAValid.phoneNumber"))
         : setError(e.message);
     }
   };
@@ -169,9 +169,7 @@ const Signup = () => {
                         handleSelectedCategoriesChange={setSelectedSizes}
                       />
                       <PopoverOnHover
-                        message={
-                          "We would like to know this, to see if different size interests are equally represented within your loop. Also, knowing this makes it easier to split the route over time, depending on size interest!"
-                        }
+                        message={t("weWouldLikeToKnowThisEquallyRepresented")}
                       />
                     </div>
 
@@ -199,7 +197,7 @@ const Signup = () => {
                   </Form>
                   <div className={classes.formHelperLink}>
                     <Typography component="p" className="text">
-                      Troubles with the signup? Contact us
+                      {t("troublesWithTheSignupContactUs")}
                     </Typography>
                     <a
                       className="link"

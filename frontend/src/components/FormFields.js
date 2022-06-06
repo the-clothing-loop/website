@@ -70,7 +70,7 @@ const TextForm = ({ label, ...props }) => {
       {...field}
       {...props}
       autoComplete="off"
-      label={t(label)}
+      label={label}
       fullWidth
       InputLabelProps={{
         className: classes.inputLabel,
@@ -91,7 +91,7 @@ const NumberField = ({ label, step = 1, ...props }) => {
         {...field}
         {...props}
         autoComplete="off"
-        label={t(label)}
+        label={label}
         variant="standard"
         fullWidth
         type="number"
@@ -163,7 +163,7 @@ const SelectField = ({ label, children, errorText = "", ...props }) => {
   return (
     <>
       <InputLabel id={labelId} className={classes.inputLabel}>
-        {t(label) + (props?.required ? " *" : "")}
+        {label + (props?.required ? " *" : "")}
       </InputLabel>
       <Select labelId={labelId} {...props} {...field}>
         {children}
