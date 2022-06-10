@@ -122,15 +122,8 @@ const Donations = () => {
         </figure>
 
         <section className="text-wrapper">
-          <h3>
-            "Small acts, when multiplied by millions of people, can change the
-            world" <span>Howard Zinn</span>
-          </h3>
-          <p>
-            We are continuously working on making The Clothing Loop better, more
-            widespread and more impactful. Click here if you want to help us do
-            so!
-          </p>
+          <h3 dangerouslySetInnerHTML={{__html: t('smallActsCanChangeTheWorld')}}></h3>
+          <p>{t('weAreWorkingOnMakingTheClothingLoopBetter')}</p>
           <button onClick={() => history.push("/donate")}>{t("donate")}</button>
         </section>
       </section>

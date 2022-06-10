@@ -1,17 +1,31 @@
 import { Helmet } from "react-helmet";
 
 import { Typography, Grid } from "@mui/material";
-import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 import AccordionFaq from "../../components/AccordionFaq/AccordionFaq";
-import participantsFaq from "./participantsFaq";
-import hostsFaq from "./hostsFaq";
 import theme from "../../util/theme";
 import styles from "./FAQ.module.css";
+import { useTranslation } from "react-i18next";
+
+interface AccordionFaqTranslation {
+  question: string
+  answer: string
+}
 
 const FAQ = () => {
+  const {t} = useTranslation("faq");
   const classes = makeStyles(theme as any)();
+
+  const arrHosts = t("arrHosts", {
+    returnObjects: true,
+    defaultValue: [],
+  }) as AccordionFaqTranslation[]
+
+  const arrParticipants = t("arrParticipants", {
+    returnObjects: true,
+    defaultValue: [],
+  }) as AccordionFaqTranslation[]
 
   return (
     <>
@@ -25,9 +39,9 @@ const FAQ = () => {
           <Grid item sm={12} md={6}>
             <div className={styles.faqSection}>
               <Typography component="h1" className={classes.pageTitle}>
-                FAQ for Participants
+                {t("faqForParticipants")}
               </Typography>
-              {participantsFaq.map((el, index) => (
+              {arrParticipants.map((el, index) => (
                 <AccordionFaq
                   key={index}
                   question={el.question}
@@ -39,9 +53,9 @@ const FAQ = () => {
           <Grid item sm={12} md={6}>
             <div className={styles.faqSection}>
               <Typography component="h1" className={classes.pageTitle}>
-                FAQ for Loop Hosts
+                {t("faqForHosts")}
               </Typography>
-              {hostsFaq.map((el, index) => (
+              {arrHosts.map((el, index) => (
                 <AccordionFaq
                   key={index}
                   question={el.question}

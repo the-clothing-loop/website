@@ -20,14 +20,6 @@ export const StandaloneSearchBar = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSelectedGenderChange = (event: React.ChangeEvent<any>) => {
-    const {
-      target: { value },
-    } = event;
-
-    setSelectedGenders(typeof value === "string" ? value.split(",") : value);
-  };
-
   const handleSearch = () => {
     const queryParams = new URLSearchParams();
     queryParams.append("searchTerm", searchTerm);
@@ -45,7 +37,7 @@ export const StandaloneSearchBar = () => {
       searchTerm={searchTerm}
       handleSearchTermChange={handleSearchTermChange}
       selectedGenders={selectedGenders}
-      handleSelectedGenderChange={handleSelectedGenderChange}
+      handleSelectedGenderChange={setSelectedGenders}
       selectedSizes={selectedSizes}
       setSelectedSizes={setSelectedSizes}
       handleSearch={handleSearch}

@@ -8,8 +8,10 @@ import useIntersectionObserver from "./hooks";
 import theme from "../../util/theme";
 import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
+import { useTranslation } from "react-i18next";
 
 const Counters = () => {
+  const {t} = useTranslation();
   const classes = makeStyles(theme as any)();
   const containerRef = useRef(null);
 
@@ -35,15 +37,15 @@ const Counters = () => {
     <div ref={containerRef} className={classes.countersWrapper}>
       <div className="isVisible">
         <h1>{isVisible ? <SingleCounter end={415} step={2} /> : "0"}</h1>
-        <h3>{"Loops"}</h3>
+        <h3>{t("Loops")}</h3>
       </div>
       <div className="isVisible">
         <h1>{isVisible ? <SingleCounter end={15000} step={20} /> : "0"}</h1>
-        <h3>{"participants"}</h3>
+        <h3>{t("participants")}</h3>
       </div>
       <a className="isVisible" href="/loops/find">
-        <h1>{"3"}</h1>
-        <h3>{"Countries"}</h3>
+        <h1>3</h1>
+        <h3>{t("countries")}</h3>
       </a>
       <div className={classes.counterLinkWrapper}>
         <div className={classes.counterLinkIconWrapper}>
@@ -58,7 +60,7 @@ const Counters = () => {
             <ArrowDownwardIcon className="icon" />
           </a>
         </div>
-        <h3>Our goals</h3>
+        <h3>{t("ourGoals")}</h3>
       </div>
     </div>
   );

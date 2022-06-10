@@ -31,12 +31,12 @@ const Contacts = () => {
   const validate = Yup.object({
     name: Yup.string()
       .min(2, "Must be at least 2 characters")
-      .required("Required"),
+      .required(t("required")),
     email: Yup.string()
-      .required("Required")
-      .email("Please enter a valid e-mail address"),
+      .required(t("required"))
+      .email(t("pleaseEnterAValid.emailAddress")),
     message: Yup.string()
-      .required("Required")
+      .required(t("required"))
       .min(2, "Must be at least 2 characters"),
   });
 

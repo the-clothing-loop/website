@@ -47,14 +47,14 @@ const UserEdit = () => {
 
   const validate = Yup.object({
     name: Yup.string()
-      .min(2, "Must be more than 2 characters")
-      .required("Required"),
-    email: Yup.string().email("Please enter a valid e-mail address"),
+      .min(2, t("mustBeAtLeastChar"))
+      .required(t("required")),
+    email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
-        message: "Please enter valid phonenumber",
+        message: t("pleaseEnterAValid.phoneNumber"),
       })
-      .required("Required"),
+      .required(t("required")),
     newsletter: Yup.boolean(),
   });
 
@@ -156,14 +156,12 @@ const UserEdit = () => {
               />
 
               <SizesDropdown
-                className={classes.formSelect}
-                setSizes={setSelectedSizes}
-                genders={Object.keys(categories)}
-                sizes={selectedSizes}
+                variant="standard"
+                showInputLabel={true}
                 label={t("interestedSizes")}
-                fullWidth={true}
-                inputVisible={true}
-                variantVal={true}
+                selectedGenders={Object.keys(categories)}
+                selectedSizes={selectedSizes}
+                handleSelectedCategoriesChange={setSelectedSizes}
                 style={{ marginTop: "2%" }}
               />
 

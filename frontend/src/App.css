@@ -366,15 +366,6 @@
     text-transform: "capitalize";
   }
 
-  div#demo-multiple-checkbox {
-    padding: 10px !important;
-    padding-left: 0 !important;
-    font-family: "Montserrat" !important;
-    text-align: left;
-    text-transform: capitalize;
-    color: #3c3c3b;
-  }
-
   fieldset.MuiOutlinedInput-notchedOutline {
     border-color: transparent;
   }
@@ -858,4 +849,8 @@
     width: 100%;
     border-bottom: 1px solid rgb(72, 128, 139);
   }
+}
+
+.search-bar__dropdown {
+  width: 15rem;
 }

@@ -53,12 +53,12 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
 
   const formSchema = Yup.object().shape({
     name: Yup.string()
-      .min(2, "Must be at least 2 characters")
-      .required("Required"),
+      .min(2, t("mustBeAtLeastChar"))
+      .required(t("required")),
     description: Yup.string(),
-    radius: Yup.number().required("Required"),
-    clothingTypes: Yup.array().of(Yup.string()).required("Required"),
-    clothingSizes: Yup.array().of(Yup.string()).required("Required"),
+    radius: Yup.number().required(t("required")),
+    clothingTypes: Yup.array().of(Yup.string()).required(t("required")),
+    clothingSizes: Yup.array().of(Yup.string()).required(t("required")),
     longitude: Yup.number(),
     latitude: Yup.number(),
   });
@@ -113,7 +113,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
       validate={(values: ChainFields) => {
         if (values.longitude === 0 && values.latitude === 0) {
           return {
-            longitude: "Please set the loop location by clicking the map",
+            longitude: t("pleaseSetTheLoopLocationByClick"),
           };
         }
       }}
@@ -236,12 +236,10 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                     />
 
                     <PopoverOnHover
-                      message={
-                        "Up to you, usually the geographic location of your Loop works best as a Loop name, keep it short and sweet! You can elaborate in the description box below. "
-                      }
+                      message={t("upToYouUsuallyTheGeopraphic")}
                     />
                   </Grid>
-                  <Grid item xs={3} style={{paddingTop:'10px'}}>
+                  <Grid item xs={3} style={{ paddingTop: "10px" }}>
                     <NumberField
                       required
                       label={t("radius")}
@@ -255,9 +253,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       step={0.1}
                     />
                     <PopoverOnHover
-                      message={
-                        "Decide on the area your Loop will be active in. The dot in the map will change size according to your radius. We recommend a smaller radius for densely populated areas, and a larger one for villages and rural areas."
-                      }
+                      message={t("decideOnTheAreaYourLoopWillBeActiveIn")}
                     />
                   </Grid>
 
@@ -275,35 +271,31 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       className={classes.textField}
                     />
                     <PopoverOnHover
-                      message={
-                        "Optional field, type anything else you want to add that makes your Loop unique. This can always  be edited at a later stage!"
-                      }
+                      message={t("optionalFieldTypeAnything")}
                     />
                   </Grid>
                   <Grid item xs={12} style={{ position: "relative" }}>
                     <div style={{ paddingTop: "10px" }}>
                       <CategoriesDropdown
-                        setGenders={handleCategoriesChange}
-                        genders={values.clothingTypes}
-                        className={classes.formSelect}
-                        fullWidth={true}
+                        variant="standard"
+                        showInputLabel={true}
+                        selectedCategories={values.clothingTypes}
+                        handleSelectedCategoriesChange={handleCategoriesChange}
                       />
                     </div>
                     <div style={{ paddingTop: "10px", position: "relative" }}>
                       <SizesDropdown
-                        setSizes={(val) => setFieldValue("clothingSizes", val)}
-                        className={classes.formSelect}
-                        genders={values.clothingTypes}
-                        sizes={values.clothingSizes}
+                        variant="standard"
+                        showInputLabel={true}
                         label={t("sizes")}
-                        fullWidth={false}
-                        inputVisible={true}
-                        variantVal={true}
+                        selectedGenders={values.clothingTypes}
+                        selectedSizes={values.clothingSizes}
+                        handleSelectedCategoriesChange={(val) =>
+                          setFieldValue("clothingSizes", val)
+                        }
                       />
                       <PopoverOnHover
-                        message={
-                          "Mixed bags usually work best, therefore we recommend to either tick all three boxes (X)S- M-(X)L for a mixed Loop, or to start a separate Loop for plus sizes. "
-                        }
+                        message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
                       />
                     </div>
                   </Grid>

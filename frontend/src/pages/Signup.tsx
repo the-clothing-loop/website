@@ -44,14 +44,14 @@ const Signup = () => {
 
   const validate = Yup.object({
     name: Yup.string()
-      .min(2, "Must be more than 2 characters")
-      .required("Required"),
-    email: Yup.string().email("Please enter a valid e-mail address"),
+      .min(2, t("mustBeAtLeastChar"))
+      .required(t("required")),
+    email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
-        message: "Please enter valid phone number",
+        message: t("pleaseEnterAValid.phoneNumber"),
       })
-      .required("Required"),
+      .required(t("required")),
     newsletter: Yup.boolean(),
   });
 
@@ -87,7 +87,9 @@ const Signup = () => {
       setSubmitted(true);
     } catch (e: any) {
       console.error(`Error creating user: ${JSON.stringify(e)}`);
-      setError(e.message);
+      e.code === "auth/invalid-phone-number"
+        ? setError(t("pleaseEnterAValid.phoneNumber"))
+        : setError(e.message);
     }
   };
 
@@ -159,19 +161,15 @@ const Signup = () => {
 
                     <div className={classes.formFieldWithPopover}>
                       <SizesDropdown
-                        className={classes.formSelect}
-                        setSizes={setSelectedSizes}
-                        genders={chainGender}
-                        sizes={selectedSizes}
+                        variant="standard"
+                        showInputLabel={false}
                         label={t("interestedSizes")}
-                        fullWidth={true}
-                        inputVisible={false}
-                        variantVal={true}
+                        selectedGenders={chainGender}
+                        selectedSizes={selectedSizes}
+                        handleSelectedCategoriesChange={setSelectedSizes}
                       />
                       <PopoverOnHover
-                        message={
-                          "We would like to know this, to see if different size interests are equally represented within your loop. Also, knowing this makes it easier to split the route over time, depending on size interest!"
-                        }
+                        message={t("weWouldLikeToKnowThisEquallyRepresented")}
                       />
                     </div>
 
@@ -197,6 +195,17 @@ const Signup = () => {
                       </Button>
                     </div>
                   </Form>
+                  <div className={classes.formHelperLink}>
+                    <Typography component="p" className="text">
+                      {t("troublesWithTheSignupContactUs")}
+                    </Typography>
+                    <a
+                      className="link"
+                      href="mailto:hello@clothingloop.org?subject=Troubles signing up to The Clothing Loop"
+                    >
+                      hello@clothingloop.org
+                    </a>
+                  </div>
                 </div>
               </TwoColumnLayout>
             </div>

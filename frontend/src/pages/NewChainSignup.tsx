@@ -45,17 +45,17 @@ const Signup = () => {
 
   const validate = Yup.object({
     name: Yup.string()
-      .min(2, "Must be more than 2 characters")
-      .required("Required"),
+      .min(2, t("mustBeAtLeastChar"))
+      .required(t("required")),
     email: Yup.string()
-      .email("Please enter a valid e-mail address")
-      .required("Required"),
+      .email(t("pleaseEnterAValid.emailAddress"))
+      .required(t("required")),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
-        message: "Please enter valid phone number",
+        message: t("pleaseEnterAValid.phoneNumber"),
       })
       .max(15)
-      .required("Please enter a valid phone number"),
+      .required(t("pleaseEnterAValid.phoneNumber")),
     newsletter: Yup.boolean(),
   });
 
@@ -106,7 +106,9 @@ const Signup = () => {
             setSubmitted(true);
           } catch (e: any) {
             console.error(`Error creating user: ${JSON.stringify(e)}`);
-            setError(e.message);
+            e.code === "auth/invalid-phone-number"
+              ? setError(t("pleaseEnterAValid.phoneNumber"))
+              : setError(e.message);
           }
         }}
       >
@@ -134,9 +136,7 @@ const Signup = () => {
                 className={classes.p}
                 id="explanatory-text"
               >
-                {" "}
-                In our manual you'll find all the steps to make your new swap
-                empire run smoothly. Three more things to do:
+                {" " + t("inOurManualYoullFindAllTheStepsNewSwapEmpire")}
               </Typography>
 
               <Typography
@@ -144,7 +144,7 @@ const Signup = () => {
                 className={classes.p}
                 id="explanatory-text"
               >
-                First: register your Loop via this form
+                {t("firstRegisterYourLoopViaThisForm")}
               </Typography>
 
               <Typography
@@ -153,7 +153,7 @@ const Signup = () => {
                 id="explanatory-text"
                 style={{ marginTop: "5px" }}
               >
-                Second: login via the link sent to your email
+                {t("secondLoginViaLink")}
               </Typography>
               <Typography
                 component="p"
@@ -161,8 +161,7 @@ const Signup = () => {
                 id="explanatory-text"
                 style={{ marginTop: "5px" }}
               >
-                Third: send friends and neighbours to this website to subscribe,
-                and wait for submissions to roll in!
+                {t("thirdSendFriendsToWebsite")}
               </Typography>
 
               <Typography
@@ -170,22 +169,19 @@ const Signup = () => {
                 className={classes.p}
                 id="explanatory-text"
               >
-                {" "}
-                All the data of new participants can be accessed on your
-                personal page.
+                {" " + t("allDataOfNewParticipantsCanBeAccessed")}
               </Typography>
               <Typography
                 component="p"
                 className={classes.p}
                 id="explanatory-text"
               >
-                {" "}
-                Happy swapping!
+                {" " + t("happySwapping")}
               </Typography>
               <Form className={classes.formGrid}>
                 <TextForm
                   required
-                  label="Name"
+                  label={t("name")}
                   name="name"
                   type="text"
                   className={classes.textField}
@@ -195,7 +191,7 @@ const Signup = () => {
 
                 <TextForm
                   required
-                  label="Email"
+                  label={t("email")}
                   name="email"
                   type="email"
                   className={classes.textField}
@@ -205,9 +201,14 @@ const Signup = () => {
                   }
                 />
                 <PhoneFormField
-                  label="Phone number"
+                  label={t("phoneNumber")}
                   name="phoneNumber"
                   error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                  helperText={
+                    errors.phoneNumber && touched.phoneNumber
+                      ? errors.phoneNumber
+                      : null
+                  }
                   onChange={(e: string) =>
                     setFieldValue("phoneNumber", e.replace(/\s/g, ""))
                   }
@@ -215,6 +216,8 @@ const Signup = () => {
 
                 <GeocoderSelector name="address" onResult={setGeocoderResult} />
                 <FormActions handleClick={handleClickAction} />
+
+                {console.log(error)}
 
                 {error ? <Alert severity="error">{error}</Alert> : null}
                 <div className={classes.formSubmitActions}>
@@ -232,6 +235,17 @@ const Signup = () => {
                   </Button>
                 </div>
               </Form>
+              <div className={classes.formHelperLink}>
+                <Typography component="p" className="text">
+                  {t("troublesWithTheSignupContactUs")}
+                </Typography>
+                <a
+                  className="link"
+                  href="mailto:hello@clothingloop.org?subject=Troubles signing up to The Clothing Loop"
+                >
+                  hello@clothingloop.org
+                </a>
+              </div>
             </div>
           </OneColumnLayout>
         )}
