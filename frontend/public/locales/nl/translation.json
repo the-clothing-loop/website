@@ -115,7 +115,7 @@
   "closed": "Gesloten",
   "visible": "Zichtbaar",
   "invisible": "Onzichtbaar",
-  "loopFull": "Deze ketting is momenteel vol en accepteert daarom geen nieuwe deelnemers. Kom later terug, of ",
-  "startLoop": "start je eigen ketting!"
+  "loopFull": "Deze ketting is momenteel vol en accepteert daarom geen nieuwe deelnemers.</br>Kom later terug, of <1>start je eigen ketting!</1>",
+  "loopFullAdmin": "Deze ketting is momenteel vol en accepteert daarom geen nieuwe deelnemers."
 
 }

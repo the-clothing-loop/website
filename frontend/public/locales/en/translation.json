@@ -115,6 +115,6 @@
   "closed": "Closed",
   "visible": "Visible",
   "invisible": "Invisible",
-  "loopFull": "This Loop is currently at capacity and therefore not accepting new participants. Please check back in later, or ",
-  "startLoop": "start your own Loop!"
+  "loopFull": "This Loop is currently at capacity and therefore not accepting new participants.<br/>Please check back in later, or <1>start your own Loop!</1>",
+  "loopFullAdmin": "This Loop is currently at capacity and therefore not accepting new participants"
 }
