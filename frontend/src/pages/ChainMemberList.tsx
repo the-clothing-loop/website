@@ -49,7 +49,10 @@ const ChainMemberList = () => {
 
   const [chain, setChain] = useState<IChain>();
   const [users, setUsers] = useState<IUser[]>();
-  const [switcherValues, setSwitcherValues] = useState({ published: true, open: true});
+  const [switcherValues, setSwitcherValues] = useState({
+    published: true,
+    open: true,
+  });
   const [error, setError] = useState("");
 
   const [isChainAdmin, setIsChainAdmin] = useState<boolean>();
@@ -193,7 +196,10 @@ const ChainMemberList = () => {
                         }
                         labelPlacement="end"
                       />
-                      <Popover message={t("adminLoopVisibleMessage")} />
+                      <Popover
+                        message={t("adminLoopVisibleMessage")}
+                        style={{ paddingTop: 0 }}
+                      />
                     </div>
                   </Grid>
                   <Grid item sm={12} md={6}>
@@ -210,10 +216,17 @@ const ChainMemberList = () => {
                             inputProps={{ "aria-label": "secondary checkbox" }}
                           />
                         }
-                        label={switcherValues.open ? t<string>("open") : t<string>("closed")}
+                        label={
+                          switcherValues.open
+                            ? t<string>("open")
+                            : t<string>("closed")
+                        }
                         labelPlacement="end"
                       />
-                      <Popover message={t("adminLoopOpenMessage")} />
+                      <Popover
+                        message={t("adminLoopOpenMessage")}
+                        style={{ paddingTop: 0 }}
+                      />
                     </div>
                   </Grid>
                 </Grid>
