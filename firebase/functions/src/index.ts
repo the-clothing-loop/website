@@ -230,6 +230,7 @@ export const createChain = functions
         categories,
         published: true,
         chainAdmin: uid,
+        open: true,
       });
       db.collection("users").doc(uid).update("chainId", chainData.id);
       await admin.auth().setCustomUserClaims(uid, {

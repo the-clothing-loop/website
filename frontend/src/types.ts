@@ -10,6 +10,7 @@ export interface IChain {
   radius: number;
   categories: { gender: [string]; size: [string] };
   published: boolean;
+  open: boolean;
 }
 
 export interface IUser {
