@@ -263,7 +263,8 @@ export const addUserToChain = functions
         functions.logger.warn(
           `user ${uid} is already member of chain ${chainId}`
         );
-      } else if (! chain.get("open")) {
+      // the "open" field may not be set in which case we should treat it as if it were true
+      } else if (chain.get("open") === false) {
         throw new functions.https.HttpsError(
           "failed-precondition",
           "This chain is not currently open to new members"
