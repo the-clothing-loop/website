@@ -51,7 +51,7 @@ const ChainMemberList = () => {
   const [users, setUsers] = useState<IUser[]>();
   const [switcherValues, setSwitcherValues] = useState({
     published: true,
-    open: true,
+    openToNewMembers: true,
   });
   const [error, setError] = useState("");
 
@@ -88,7 +88,7 @@ const ChainMemberList = () => {
           setUsers(chainUsers);
           setSwitcherValues({
             published: chainData.published,
-            open: chainData.open,
+            openToNewMembers: chainData.openToNewMembers,
           });
         }
       } catch (error) {
@@ -206,18 +206,18 @@ const ChainMemberList = () => {
                     <div style={{ position: "relative", display: "inline" }}>
                       <FormControlLabel
                         classes={{ root: classes.switchGroupRoot }}
-                        value={switcherValues.open}
+                        value={switcherValues.openToNewMembers}
                         control={
                           <Switch
-                            checked={switcherValues.open}
+                            checked={switcherValues.openToNewMembers}
                             onChange={handleChange}
-                            name="open"
+                            name="openToNewMembers"
                             color="secondary"
                             inputProps={{ "aria-label": "secondary checkbox" }}
                           />
                         }
                         label={
-                          switcherValues.open
+                          switcherValues.openToNewMembers
                             ? t<string>("open")
                             : t<string>("closed")
                         }

@@ -383,7 +383,7 @@ const FindChain = ({ location }: { location: Location }) => {
                       : null}
                   </div>
                 </div>
-                {! selectedChain.open ? (
+                {! selectedChain.openToNewMembers ? (
                   <Typography component="p" id="loopFull">
                     {role === "admin" ? t("loopFullAdmin") : (
                       <Trans
@@ -398,7 +398,7 @@ const FindChain = ({ location }: { location: Location }) => {
               </CardContent>
 
               <CardActions className={classes.cardsAction}>
-                {selectedChain.open ? (
+                {selectedChain.openToNewMembers ? (
                   <Button
                     key="btn-join"
                     color="primary"

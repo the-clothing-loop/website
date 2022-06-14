@@ -230,7 +230,7 @@ export const createChain = functions
         categories,
         published: true,
         chainAdmin: uid,
-        open: true,
+        openToNewMembers: true,
       });
       db.collection("users").doc(uid).update("chainId", chainData.id);
       await admin.auth().setCustomUserClaims(uid, {
@@ -263,8 +263,8 @@ export const addUserToChain = functions
         functions.logger.warn(
           `user ${uid} is already member of chain ${chainId}`
         );
-      // the "open" field may not be set in which case we should treat it as if it were true
-      } else if (chain.get("open") === false) {
+      // the "openToNewMembers" field may not be set in which case we should treat it as if it were true
+      } else if (chain.get("openToNewMembers") === false) {
         throw new functions.https.HttpsError(
           "failed-precondition",
           "This chain is not currently open to new members"
