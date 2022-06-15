@@ -112,15 +112,17 @@ const Contacts = () => {
                   name="message"
                   type="text"
                   required
-                  InputProps={{
-                    disableUnderline: true,
-                    maxLength: CHARACTER_LIMIT,
-                    classes: {
-                      root: classes.textArea,
-                      input: classes.textAreaPlaceholder,
-                    },
-                    style: { marginTop: "30px" },
-                  }}
+                  InputProps={
+                    {
+                      disableUnderline: true,
+                      maxLength: CHARACTER_LIMIT,
+                      classes: {
+                        root: classes.textArea,
+                        input: classes.textAreaPlaceholder,
+                      },
+                      style: { marginTop: "30px" },
+                    } as any
+                  }
                   helperText={`${values.message.length}/${CHARACTER_LIMIT}`}
                   multiline={true}
                   rows={10}

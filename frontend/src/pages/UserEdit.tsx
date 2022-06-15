@@ -178,7 +178,6 @@ const UserEdit = () => {
                 required={false}
                 label={t("newsletterSubscription")}
                 name="newsletter"
-                type="checkbox"
                 style={{ padding: "2% 0" }}
               />
 

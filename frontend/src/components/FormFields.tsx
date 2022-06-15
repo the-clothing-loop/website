@@ -123,10 +123,11 @@ const NumberField = ({ label, step = 1, ...props }: NumberFieldProps) => {
   );
 };
 
-type CheckboxFieldProps = Partial<FormControlLabelProps> & {
-  required?: boolean;
-  name: string;
-};
+type CheckboxFieldProps = React.LabelHTMLAttributes<any> &
+  Partial<FormControlLabelProps> & {
+    required?: boolean;
+    name: string;
+  };
 const CheckboxField = ({ required, label, ...props }: CheckboxFieldProps) => {
   const [field] = useField(props as any);
   const classes = makeStyles(theme as any)();

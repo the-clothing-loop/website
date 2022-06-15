@@ -1,5 +1,5 @@
 // React / plugins
-import { useState, useContext } from "react";
+import { useState, useContext, ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -44,9 +44,7 @@ const Signup = () => {
     /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
   const validate = Yup.object({
-    name: Yup.string()
-      .min(2, t("mustBeAtLeastChar"))
-      .required(t("required")),
+    name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     email: Yup.string()
       .email(t("pleaseEnterAValid.emailAddress"))
       .required(t("required")),
@@ -209,8 +207,11 @@ const Signup = () => {
                       ? errors.phoneNumber
                       : null
                   }
-                  onChange={(e: string) =>
-                    setFieldValue("phoneNumber", e.replace(/\s/g, ""))
+                  onChange={(e) =>
+                    setFieldValue(
+                      "phoneNumber",
+                      (e as string).replace(/\s/g, "")
+                    )
                   }
                 />
 
