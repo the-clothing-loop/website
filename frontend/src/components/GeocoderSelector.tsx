@@ -1,20 +1,26 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback, createRef } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import MapGL from "react-map-gl";
+import MapGL, { MapRef } from "react-map-gl";
+// @ts-ignore
 import Geocoder from "react-map-gl-geocoder";
 import { useTranslation } from "react-i18next";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
 
-const GeocoderSelector = ({ onResult, ...props }) => {
+type GeocoderSelectorProps = {
+  onResult: (result: any) => any;
+  userAddress: any;
+};
+
+const GeocoderSelector = ({ onResult, ...props }: GeocoderSelectorProps) => {
   const [viewport, setViewPort] = useState({
     latitude: 0,
     longitude: 0,
     zoom: 2,
   });
 
-  const mapRef = useRef();
+  const mapRef = createRef<MapRef>();
   const { t } = useTranslation();
 
   const handleViewportChange = useCallback(
