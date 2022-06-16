@@ -12,6 +12,15 @@ const grey = "#A5A5A5";
 const lightgrey = "#e8e8e8";
 
 const theme = {
+  breakpoints: {
+    values: {
+      xs: 481,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
   palette: {
     primary: {
       light: aqua,
@@ -659,7 +668,7 @@ const theme = {
   },
 
   formHelperLink: {
-   "& .text": {
+    "& .text": {
       display: "inline-block",
       fontSize: "14px",
     },
