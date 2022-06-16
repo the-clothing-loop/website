@@ -10,7 +10,7 @@ const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
 
 type GeocoderSelectorProps = {
   onResult: (result: any) => any;
-  userAddress?: any;
+  userAddress?: string;
   name?: string;
 };
 
