@@ -25,7 +25,7 @@ import ChainEdit from "./pages/ChainEdit";
 import ChainsList from "./pages/ChainsList";
 import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
-import Contacts from "./pages/Contacts.js";
+import Contacts from "./pages/Contacts";
 import MessageSubmitted from "./pages/MessageSubmitted";
 import Donate from "./pages/Donations/Donate";
 import About from "./pages/About";

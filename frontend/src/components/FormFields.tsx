@@ -6,19 +6,29 @@ import {
   FormHelperText,
   FormGroup,
   FormControlLabel,
+  TextFieldProps,
+  FormControlLabelProps,
+  SelectProps,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import { useTranslation } from "react-i18next";
-import MuiPhoneInput from "material-ui-phone-number";
+import MuiPhoneInput, { MuiPhoneNumberProps } from "material-ui-phone-number";
 import { useField } from "formik";
 
 import theme from "../util/theme";
 import i18n from "../i18n";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
-const TextFormField = ({ name, inputRef, email }) => {
+interface TextFormFieldProps {
+  name: string;
+  inputRef: React.Ref<HTMLInputElement>;
+  email: string;
+}
+
+const TextFormField = ({ name, inputRef, email }: TextFormFieldProps) => {
   const { t } = useTranslation();
-  const classes = makeStyles(theme)();
+  const classes = makeStyles(theme as any)();
 
   return (
     <TextField
@@ -35,11 +45,11 @@ const TextFormField = ({ name, inputRef, email }) => {
   );
 };
 
-const PhoneFormField = ({ label, ...props }) => {
+const PhoneFormField = ({ label, ...props }: MuiPhoneNumberProps) => {
   const { t } = useTranslation();
-  const classes = makeStyles(theme)();
+  const classes = makeStyles(theme as any)();
 
-  const [field] = useField(props);
+  const [field] = useField(props as any);
   return (
     <div>
       <MuiPhoneInput
@@ -48,6 +58,7 @@ const PhoneFormField = ({ label, ...props }) => {
         fullWidth
         label={t("phoneNumber")}
         required={true}
+        //@ts-ignore
         htmlFor={field.name}
         {...field}
         {...props}
@@ -60,10 +71,10 @@ const PhoneFormField = ({ label, ...props }) => {
   );
 };
 
-const TextForm = ({ label, ...props }) => {
-  const [field] = useField(props);
+const TextForm = ({ label, ...props }: TextFieldProps) => {
+  const [field] = useField(props as any);
   const { t } = useTranslation();
-  const classes = makeStyles(theme)();
+  const classes = makeStyles(theme as any)();
 
   return (
     <TextField
@@ -80,10 +91,11 @@ const TextForm = ({ label, ...props }) => {
   );
 };
 
-const NumberField = ({ label, step = 1, ...props }) => {
-  const [field] = useField(props);
+type NumberFieldProps = TextFieldProps & { step: number };
+const NumberField = ({ label, step = 1, ...props }: NumberFieldProps) => {
+  const [field] = useField(props as any);
   const { t } = useTranslation();
-  const classes = makeStyles(theme)();
+  const classes = makeStyles(theme as any)();
 
   return (
     <div>
@@ -111,34 +123,31 @@ const NumberField = ({ label, step = 1, ...props }) => {
   );
 };
 
-const CheckboxField = ({ required, label, ...props }) => {
-  const [field] = useField(props);
-  const classes = makeStyles(theme)();
+type CheckboxFieldProps = React.LabelHTMLAttributes<any> &
+  Partial<FormControlLabelProps> & {
+    required?: boolean;
+    name: string;
+  };
+const CheckboxField = ({ required, label, ...props }: CheckboxFieldProps) => {
+  const [field] = useField(props as any);
+  const classes = makeStyles(theme as any)();
   return (
     <FormGroup>
       <FormControlLabel
         control={
-          <Checkbox
-            required={required ? true : false}
-            name={field.name}
-            color="secondary"
-          />
+          <Checkbox required={!!required} name={field.name} color="secondary" />
         }
         {...field}
         {...props}
         label={label}
-        required={required ? true : false}
-        InputLabelProps={{
-          className: classes.inputLabel,
-        }}
       />
     </FormGroup>
   );
 };
 
-const TextArea = ({ label, ...props }) => {
-  const [field] = useField(props);
-  const classes = makeStyles(theme)();
+const TextArea = ({ label, ...props }: TextFieldProps) => {
+  const [field] = useField(props as any);
+  const classes = makeStyles(theme as any)();
   return (
     <TextField
       id="outlined-multiline-static"
@@ -155,10 +164,20 @@ const TextArea = ({ label, ...props }) => {
   );
 };
 
-const SelectField = ({ label, children, errorText = "", ...props }) => {
-  const [field] = useField(props);
+type SelectFieldProps = {
+  label?: string;
+  children: ReactJSXElement;
+  errorText?: string;
+} & SelectProps;
+const SelectField = ({
+  label,
+  children,
+  errorText = "",
+  ...props
+}: SelectFieldProps) => {
+  const [field] = useField(props as any);
   const { t } = useTranslation();
-  const classes = makeStyles(theme)();
+  const classes = makeStyles(theme as any)();
   const labelId = props.name + "Label";
   return (
     <>

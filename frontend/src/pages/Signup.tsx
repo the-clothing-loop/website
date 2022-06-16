@@ -43,9 +43,7 @@ const Signup = () => {
   const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
   const validate = Yup.object({
-    name: Yup.string()
-      .min(2, t("mustBeAtLeastChar"))
-      .required(t("required")),
+    name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
@@ -149,8 +147,8 @@ const Signup = () => {
                     <PhoneFormField
                       label={t("phoneNumber")}
                       name="phoneNumber"
-                      onChange={(e: string) =>
-                        formik.setFieldValue("phoneNumber", e)
+                      onChange={(e) =>
+                        formik.setFieldValue("phoneNumber", e as string)
                       }
                     />
 

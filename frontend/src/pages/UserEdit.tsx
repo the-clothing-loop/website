@@ -27,28 +27,31 @@ import {
   CheckboxField,
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
+import { IUser } from "../types";
 
 const UserEdit = () => {
   const { t } = useTranslation();
-  const { userId } = useParams();
-  const [user, setUser] = useState();
-  const [chainId, setChainId] = useState();
-  const classes = makeStyles(theme)();
+  const classes = makeStyles(theme as any)();
   const history = useHistory();
-  const [address, setAddress] = useState();
-  const [uid, setUid] = useState();
+
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [newsletter, setNewsletter] = useState(false);
-  const [userRole, setUserRole] = useState("");
-  const [selectedSizes, setSelectedSizes] = useState([]);
+
+  const [user, setUser] = useState<IUser>();
+  const { userId } = useParams<{ userId: string }>();
+  const [chainId, setChainId] = useState<IUser["chainId"]>();
+  const [address, setAddress] = useState<IUser["address"]>();
+  const [selectedSizes, setSelectedSizes] = useState<IUser["selectedSizes"]>(
+    []
+  );
+  const [uid, setUid] = useState<IUser["uid"]>();
+  const [newsletter, setNewsletter] = useState<IUser["newsletter"]>(false);
+  const [userRole, setUserRole] = useState<IUser["userRole"]>("");
 
   const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
   const validate = Yup.object({
-    name: Yup.string()
-      .min(2, t("mustBeAtLeastChar"))
-      .required(t("required")),
+    name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
@@ -58,8 +61,8 @@ const UserEdit = () => {
     newsletter: Yup.boolean(),
   });
 
-  const onSubmit = async (values) => {
-    const newUserData = {
+  const onSubmit = async (values: Partial<IUser>) => {
+    const newUserData: Partial<IUser> = {
       ...values,
       address: address,
       chainId: chainId,
@@ -68,13 +71,13 @@ const UserEdit = () => {
     console.log(`updating user information: ${JSON.stringify(newUserData)}`);
 
     try {
-      await updateUser(newUserData);
+      await updateUser(newUserData as IUser);
       setSubmitted(true);
       history.push({
         pathname: `/loops/${chainId}/members`,
         state: { message: t("saved") },
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error(`Error updating user: ${JSON.stringify(e)}`);
       setError(e.message);
     }
@@ -108,13 +111,13 @@ const UserEdit = () => {
         <title>The Clothing Loop | Edit user</title>
         <meta name="description" content="Edit user" />
       </Helmet>
-      <Formik
+      <Formik<Partial<IUser>>
         initialValues={{
           name: user.name,
           email: user.email,
           phoneNumber: user.phoneNumber,
           newsletter: user.newsletter,
-          address: address,
+          address: address as string,
           uid: userId,
           interestedSizes: selectedSizes,
         }}
@@ -122,7 +125,7 @@ const UserEdit = () => {
         validateOnChange={false}
         onSubmit={onSubmit}
       >
-        {({ formik, setFieldValue }) => (
+        {({ setFieldValue }) => (
           <ThreeColumnLayout>
             {userRole === "chainAdmin" ? (
               <Typography variant="h3" className={classes.pageTitle}>
@@ -150,7 +153,7 @@ const UserEdit = () => {
               <PhoneFormField
                 label={t("phoneNumber")}
                 name="phoneNumber"
-                onChange={(e) =>
+                onChange={(e: any) =>
                   setFieldValue("phoneNumber", e.replace(/\s/g, ""))
                 }
               />
@@ -172,9 +175,9 @@ const UserEdit = () => {
                 }}
               />
               <CheckboxField
+                required={false}
                 label={t("newsletterSubscription")}
                 name="newsletter"
-                type="checkbox"
                 style={{ padding: "2% 0" }}
               />
 
