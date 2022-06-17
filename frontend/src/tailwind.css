@@ -1,3 +1,4 @@
+/* this removes Preflight - the base styles for tailwind */
 /* @tailwind base; */
 @tailwind components;
 @tailwind utilities;

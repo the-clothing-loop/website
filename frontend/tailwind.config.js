@@ -1,8 +1,17 @@
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   prefix: "tw-",
   theme: {
+    screens: {
+      xs: "481px",
+      sm: "600px",
+      md: "900px",
+      lg: "1200px",
+      xl: "1536px",
+    },
     colors: {
       transparent: "transparent",
       white: "#ffff",
@@ -18,12 +27,9 @@ module.exports = {
         DEFAULT: "#A5A5A5",
       },
     },
-    screens: {
-      xs: "481px",
-      sm: "600px",
-      md: "900px",
-      lg: "1200px",
-      xl: "1536px",
+    fontFamily: {
+      sans: ["Montserrat", ...defaultTheme.fontFamily.sans],
+      serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
     },
     extend: {},
   },
