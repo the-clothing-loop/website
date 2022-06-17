@@ -32,7 +32,7 @@ const rows = ["name", "location", "status"];
 
 const ChainsList = () => {
   const { t } = useTranslation();
-  const classes = makeStyles(theme)();
+  const classes = makeStyles(theme as any)();
   const history = useHistory();
   const chains = useContext(ChainsContext).sort((a, b) =>
     a.name.localeCompare(b.name)
@@ -41,11 +41,11 @@ const ChainsList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [error, setError] = useState("");
 
-  const handleChangePage = (e, newPage) => {
+  const handleChangePage = (e: any, newPage: any) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (e) => {
+  const handleChangeRowsPerPage = (e: any) => {
     setRowsPerPage(+e.target.value);
     setPage(0);
   };

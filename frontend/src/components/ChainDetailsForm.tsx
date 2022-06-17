@@ -52,9 +52,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
   });
 
   const formSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(2, t("mustBeAtLeastChar"))
-      .required(t("required")),
+    name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     description: Yup.string(),
     radius: Yup.number().required(t("required")),
     clothingTypes: Yup.array().of(Yup.string()).required(t("required")),
@@ -270,9 +268,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       }
                       className={classes.textField}
                     />
-                    <PopoverOnHover
-                      message={t("optionalFieldTypeAnything")}
-                    />
+                    <PopoverOnHover message={t("optionalFieldTypeAnything")} />
                   </Grid>
                   <Grid item xs={12} style={{ position: "relative" }}>
                     <div style={{ paddingTop: "10px" }}>
@@ -295,7 +291,9 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                         }
                       />
                       <PopoverOnHover
-                        message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
+                        message={t(
+                          "mixedBagsUsuallyWorkBestThereforeWeRecommentTo"
+                        )}
                       />
                     </div>
                   </Grid>

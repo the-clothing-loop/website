@@ -25,6 +25,7 @@ interface IProps {
   selectedGenders: string[];
   selectedSizes: string[];
   handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
+  style?: React.CSSProperties;
 }
 
 const SizesDropdown: React.FC<IProps> = ({
