@@ -10,6 +10,7 @@ export interface IChain {
   radius: number;
   categories: { gender: [string]; size: [string] };
   published: boolean;
+  openToNewMembers: boolean;
 }
 
 export interface IUser {
@@ -22,7 +23,7 @@ export interface IUser {
   chainId: string | null;
   emailVerified: boolean;
   newsletter: boolean;
-  role: "admin" | "chainAdmin" | null;
+  role: string | null;
   interestedSizes: string[];
 }
 

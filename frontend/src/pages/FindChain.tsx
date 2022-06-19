@@ -6,9 +6,8 @@ import ReactMapGL, {
   Popup,
   MapEvent,
   MapRef,
-  Marker,
 } from "react-map-gl";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import * as GeoJSONTypes from "geojson";
 
@@ -363,64 +362,64 @@ const FindChain = ({ location }: { location: Location }) => {
                   <div id="categories-container">
                     {selectedChain.categories.gender
                       ? selectedChain.categories.gender.map((category, i) => {
-                          return (
-                            <Typography component="p" key={i}>
-                              {t(`${category}`)} {t("clothing")}
-                            </Typography>
-                          );
-                        })
+                        return (
+                          <Typography component="p" key={i}>
+                            {t(`${category}`)} {t("clothing")}
+                          </Typography>
+                        );
+                      })
                       : null}
                   </div>
                   <Typography component="h3">{t("sizes")}:</Typography>
                   <div id="sizes-container">
                     {selectedChain.categories.size
                       ? selectedChain.categories.size.map((size, i) => {
-                          return (
-                            <Typography key={i} component="p">
-                              {t(`${size}`)}
-                            </Typography>
-                          );
-                        })
+                        return (
+                          <Typography key={i} component="p">
+                            {t(`${size}`)}
+                          </Typography>
+                        );
+                      })
                       : null}
                   </div>
                 </div>
+                {! selectedChain.openToNewMembers ? (
+                  <Typography component="p" id="loopFull">
+                    {role === "admin" ? t("loopFullAdmin") : (
+                      <Trans
+                        i18nKey="loopFull"
+                        components={{
+                          "1": <Link to="/loops/new/users/signup"></Link>
+                        }}
+                      ></Trans>
+                    )}
+                  </Typography>
+                ) : null}
               </CardContent>
 
-              {role === "admin" ? (
-                <CardActions>
+              <CardActions className={classes.cardsAction}>
+                {selectedChain.openToNewMembers ? (
                   <Button
-                    key={"btn-join"}
-                    variant="outlined"
+                    key="btn-join"
                     color="primary"
-                    className={"card-button"}
+                    className={role === "admin" ? classes.buttonOutlined : classes.button}
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
+                    {role !== "admin" ? <img src={RightArrow} alt="" /> : ""}
                   </Button>
+                ) : null }
+                {role === "admin" ? (
                   <Button
-                    key={"btn-view"}
-                    variant="contained"
+                    key="btn-view"
                     color="primary"
-                    className={"card-button"}
+                    className={classes.button}
                     onClick={(e) => viewChain(e)}
                   >
                     {t("viewChain")}
-                  </Button>{" "}
-                </CardActions>
-              ) : (
-                <CardActions className={classes.cardsAction}>
-                  <Button
-                    key={"btn-join"}
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={(e) => signupToChain(e)}
-                  >
-                    {t("join")}
-                    <img src={RightArrow} alt="" />
                   </Button>
-                </CardActions>
-              )}
+                ) : null }
+            </CardActions>
             </Card>
           </Popup>
         ) : null}
