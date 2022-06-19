@@ -111,12 +111,10 @@ export const createUser = functions
     ];
     const chain = await db.collection("chains").doc(chainId).get();
     if (chain.get("openToNewMembers") === false) {
-      return {
-        validationError: {
-          message:
-            "The loop you are trying to chain is not currently accepting new members",
-        },
-      };
+      throw new functions.https.HttpsError(
+        "failed-precondition",
+        "This loop is not currently open to new members"
+      );
     }
     let userRecord = null as null | UserRecord;
     try {
@@ -276,7 +274,7 @@ export const addUserToChain = functions
       } else if (chain.get("openToNewMembers") === false) {
         throw new functions.https.HttpsError(
           "failed-precondition",
-          "This chain is not currently open to new members"
+          "This loop is not currently open to new members"
         );
       } else {
         await userReference.update("chainId", chainId);
