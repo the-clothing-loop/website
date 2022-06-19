@@ -1,4 +1,4 @@
-import { useState, useCallback, createRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapGL, { MapRef } from "react-map-gl";
@@ -21,7 +21,7 @@ const GeocoderSelector = ({ onResult, ...props }: GeocoderSelectorProps) => {
     zoom: 2,
   });
 
-  const mapRef = createRef<MapRef>();
+  const mapRef = useRef<any>();
   const { t } = useTranslation();
 
   const handleViewportChange = useCallback(
