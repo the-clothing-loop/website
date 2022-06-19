@@ -109,6 +109,15 @@ export const createUser = functions
       data.interestedSizes,
       data.address,
     ];
+    const chain = await db.collection("chains").doc(chainId).get();
+    if (chain.get("openToNewMembers") === false) {
+      return {
+        validationError: {
+          message:
+            "The loop you are trying to chain is not currently accepting new members",
+        },
+      };
+    }
     let userRecord = null as null | UserRecord;
     try {
       userRecord = await wrapInECMAPromise<UserRecord>(() =>
@@ -263,7 +272,7 @@ export const addUserToChain = functions
         functions.logger.warn(
           `user ${uid} is already member of chain ${chainId}`
         );
-      // the "openToNewMembers" field may not be set in which case we should treat it as if it were true
+        // the "openToNewMembers" field may not be set in which case we should treat it as if it were true
       } else if (chain.get("openToNewMembers") === false) {
         throw new functions.https.HttpsError(
           "failed-precondition",
