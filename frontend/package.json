@@ -20,7 +20,7 @@
     "web-vitals": "^1.0.1"
   },
   "dependencies": {
-    "@craco/craco": "^6.4.3",
+    "react-scripts": "4.0.2",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mapbox/mapbox-gl-geocoder": "^4.7.4",
@@ -64,10 +64,14 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "craco start",
-    "start:with:emulator": "REACT_APP_USE_EMULATOR=true craco start",
-    "build": "craco build",
-    "test": "craco test"
+    "start": "npm-run-all -p start:tailwind start:react",
+    "start:react": "react-scripts start",
+    "start:tailwind": "tailwindcss -i src/tailwind.css -o src/tailwind.generated.css --watch",
+    "start:with:emulator": "REACT_APP_USE_EMULATOR=true npm run start",
+    "build": "npm-run-all build:tailwind build:react",
+    "build:react": "react-scripts build",
+    "build:tailwind": "tailwindcss build -i src/tailwind.css -o src/tailwind.generated.css --minify",
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": [
