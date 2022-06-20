@@ -12,7 +12,7 @@ import theme from "../util/theme";
 import ArrowIcon from "../images/right-arrow-yellow.svg";
 import Logo from "../images/logos/The_Clothing_Loop_Logo.png";
 
-const Navbar = () => {
+function Navbar() {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
   const { userData } = useContext(AuthContext);
@@ -112,6 +112,6 @@ const Navbar = () => {
       </AppBar>
     </div>
   );
-};
+}
 
 export default Navbar;

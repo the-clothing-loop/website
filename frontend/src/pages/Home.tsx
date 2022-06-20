@@ -100,28 +100,28 @@ const Home = () => {
 
       <div id="landing-page-desktop" className={classes.landingPageDesktop}>
         <div className={classes.landingPageWrapper}>
-          <div className="background-box">
-            <div className="circles-frame">
+          <div className="tw-w-full tw-absolute tw-bg-teal-light">
+            <div className="tw-my-8 tw-ml-[40%]">
               <img src={CirclesFrame} alt="circles-frame" />
-              <img src={CirclesFrame} alt="circles-frame" />
+              <img className="tw-pl-2" src={CirclesFrame} alt="circles-frame" />
             </div>
           </div>
           <div className="landing-page-hero">
             <div className="hero-text-wrapper">
-              <h1 dangerouslySetInnerHTML={{__html: t('swapDontShop')}}></h1>
-              <p>{t('swapDontShopMessage')}</p>
+              <h1 dangerouslySetInnerHTML={{ __html: t("swapDontShop") }}></h1>
+              <p>{t("swapDontShopMessage")}</p>
               <button
                 className="slide"
                 onClick={() => history.push("/loops/find")}
               >
-                {t('findALoop')}
+                {t("findALoop")}
                 <img src={ArrowRightIcon} alt="" className="btn-icon" />
               </button>
             </div>
             <div className="hero-image-wrapper">
               <div className="image-wrapper">
                 <img src={HeroImg} alt="Kledingketting" />
-                <p>{t('photo')}: Martijn van den Dobbelsteen/de Brug</p>
+                <p>{t("photo")}: Martijn van den Dobbelsteen/de Brug</p>
               </div>
             </div>
           </div>
@@ -139,9 +139,11 @@ const Home = () => {
 
             <div className="text-wrapper">
               <h1>1</h1>
-              <h3 dangerouslySetInnerHTML={{__html: t('findOutHowItWorks')}}></h3>
+              <h3
+                dangerouslySetInnerHTML={{ __html: t("findOutHowItWorks") }}
+              ></h3>
               <p>
-                <a href="/loops/find">{t('findALoopNearYou')}</a>
+                <a href="/loops/find">{t("findALoopNearYou")}</a>
               </p>
             </div>
           </div>
@@ -149,8 +151,8 @@ const Home = () => {
             <div className="text-wrapper">
               <h1>2</h1>
               <div>
-                <h3>{t('joinALoop')}</h3>
-                <p>{t('joinALoopMessage')}</p>
+                <h3>{t("joinALoop")}</h3>
+                <p>{t("joinALoopMessage")}</p>
               </div>
             </div>
             <div className={classes.imageAnimatedWrapper}>
@@ -175,8 +177,8 @@ const Home = () => {
             <div className="text-wrapper">
               <h1>3</h1>
               <div>
-                <h3>{t('getReadyToSwap')}</h3>
-                <p>{t('getReadyToSwapMessage')}</p>
+                <h3>{t("getReadyToSwap")}</h3>
+                <p>{t("getReadyToSwapMessage")}</p>
               </div>
             </div>
           </div>
@@ -184,7 +186,7 @@ const Home = () => {
 
         <section className={classes.projectNumbersWrapper}>
           <div className="inner-wrapper">
-            <h1>{t('ourImpact')}</h1>
+            <h1>{t("ourImpact")}</h1>
             <Counters />
           </div>
 
@@ -198,13 +200,11 @@ const Home = () => {
             <img src={ClothesImage} alt="" />
           </div>
           <div className="text-wrapper">
-            <h3>{t('fromLocalLockdownToSuccess')}</h3>
-            <p>
-              {t('fromLocalLockdownToSuccessMessage')}
-            </p>
+            <h3>{t("fromLocalLockdownToSuccess")}</h3>
+            <p>{t("fromLocalLockdownToSuccessMessage")}</p>
 
             <h5>
-              <a href="/about">{t('readMoreAboutUs')}</a>
+              <a href="/about">{t("readMoreAboutUs")}</a>
             </h5>
           </div>
         </section>
@@ -214,11 +214,11 @@ const Home = () => {
 
         <div className={classes.supportersSection}>
           <div className="background-box"></div>
-          <h2>{t('Partners & Sponsors')}</h2>
+          <h2>{t("Partners & Sponsors")}</h2>
           <h5>
-            {t('wantToSupportUsToo')+" "}
+            {t("wantToSupportUsToo") + " "}
             <a href="mailto:hello@clothingloop.org">
-              {t('wedLoveToHearFromYou')}
+              {t("wedLoveToHearFromYou")}
             </a>{" "}
           </h5>
           <div className="logos-wrapper">

@@ -13,11 +13,6 @@
     margin: 0;
   }
 
-  .container {
-    min-height: 85vh;
-    position: relative;
-  }
-
   .app {
     position: relative;
     min-height: 100vh;

@@ -49,98 +49,92 @@ const App = () => {
       <MuiThemeProvider theme={theme}>
         <AuthProvider>
           <ChainsProvider>
-            <div className="app">
+            <div className="tw-min-h-screen">
               <Router>
                 <ScrollToTop>
                   <Navbar />
-                  <div className="container">
-                    <Switch>
-                      <Route exact path="/" component={Home} />
-                      <Route
-                        exact
-                        path="/thankyou"
-                        component={JoinLoopConfirmation}
-                      />
-                      <Route exact path="/donate/:status?" component={Donate} />
-                      <Route
-                        exact
-                        path="/message-submitted"
-                        component={MessageSubmitted}
-                      />
+                  <Switch>
+                    <Route exact path="/" component={Home} />
+                    <Route
+                      exact
+                      path="/thankyou"
+                      component={JoinLoopConfirmation}
+                    />
+                    <Route exact path="/donate/:status?" component={Donate} />
+                    <Route
+                      exact
+                      path="/message-submitted"
+                      component={MessageSubmitted}
+                    />
 
-                      <Route
-                        exact
-                        path="/users/login-email-finished/:email"
-                        component={LoginEmailFinished}
-                      />
-                      <Route exact path="/users/login" component={Login} />
-                      <Route exact path="/users/logout" component={Logout} />
-                      <Route
-                        exact
-                        path="/users/:userId/edit"
-                        component={UserEdit}
-                      />
+                    <Route
+                      exact
+                      path="/users/login-email-finished/:email"
+                      component={LoginEmailFinished}
+                    />
+                    <Route exact path="/users/login" component={Login} />
+                    <Route exact path="/users/logout" component={Logout} />
+                    <Route
+                      exact
+                      path="/users/:userId/edit"
+                      component={UserEdit}
+                    />
 
-                      <Route exact path="/loops" component={ChainsList} />
-                      <Route exact path="/loops/find" component={FindChain} />
-                      <Route
-                        exact
-                        path="/loops/:chainId/edit"
-                        component={ChainEdit}
-                      />
-                      <Route
-                        exact
-                        path="/loops/:chainId/members"
-                        component={ChainMemberList}
-                      />
-                      <Route
-                        exact
-                        path="/loops/:chainId/addChainAdmin"
-                        component={AddChainAdmin}
-                      />
-                      <Route
-                        exact
-                        path="/loops/new/users/signup"
-                        component={NewChainSignup}
-                      />
-                      <Route
-                        exact
-                        path="/loops/new"
-                        component={NewChainLocation}
-                      />
-                      <Route
-                        exact
-                        path="/loops/new/confirmation"
-                        component={NewLoopConfirmation}
-                      />
-                      <Route
-                        exact
-                        path="/loops/:chainId/users/signup"
-                        component={Signup}
-                      />
+                    <Route exact path="/loops" component={ChainsList} />
+                    <Route exact path="/loops/find" component={FindChain} />
+                    <Route
+                      exact
+                      path="/loops/:chainId/edit"
+                      component={ChainEdit}
+                    />
+                    <Route
+                      exact
+                      path="/loops/:chainId/members"
+                      component={ChainMemberList}
+                    />
+                    <Route
+                      exact
+                      path="/loops/:chainId/addChainAdmin"
+                      component={AddChainAdmin}
+                    />
+                    <Route
+                      exact
+                      path="/loops/new/users/signup"
+                      component={NewChainSignup}
+                    />
+                    <Route
+                      exact
+                      path="/loops/new"
+                      component={NewChainLocation}
+                    />
+                    <Route
+                      exact
+                      path="/loops/new/confirmation"
+                      component={NewLoopConfirmation}
+                    />
+                    <Route
+                      exact
+                      path="/loops/:chainId/users/signup"
+                      component={Signup}
+                    />
 
-                      <Route exact path="/faq" component={FAQ} />
-                      <Route exact path="/contact-us" component={Contacts} />
-                      <Route exact path="/about" component={About} />
+                    <Route exact path="/faq" component={FAQ} />
+                    <Route exact path="/contact-us" component={Contacts} />
+                    <Route exact path="/about" component={About} />
 
-                      <Route
-                        exact
-                        path="/terms-of-use"
-                        component={TermsOfUse}
-                      />
-                      <Route
-                        exact
-                        path="/privacy-policy"
-                        component={PrivacyPolicy}
-                      />
+                    <Route exact path="/terms-of-use" component={TermsOfUse} />
+                    <Route
+                      exact
+                      path="/privacy-policy"
+                      component={PrivacyPolicy}
+                    />
 
-                      <Route
-                        exact
-                        path="/admin/dashboard"
-                        component={AdminControlsNav}
-                      />
-                    </Switch>
-                  </div>
+                    <Route
+                      exact
+                      path="/admin/dashboard"
+                      component={AdminControlsNav}
+                    />
+                  </Switch>
                   <Footer />
                 </ScrollToTop>
               </Router>

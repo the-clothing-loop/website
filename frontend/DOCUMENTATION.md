@@ -1,5 +1,10 @@
 # Frontend Documentation
 
+## Linting
+
+[Prettier](https://prettier.io/) is used as linter.
+Please install the prettier addon to your preferred editor and ensure that you lint before you save or commit.
+
 ## Styling
 
 ### MUI Material framework
@@ -12,6 +17,4 @@ Motive behind moving to tailwind is to decrease the bundle size of the website [
 
 Component specific styling uses [TailwindCSS](https://tailwindcss.com/).
 
-The `tw-` prefix is used to differenciate between tailwind classes and legacy css or mui classes [docs](https://tailwindcss.com/docs/configuration#prefix).
-
-> To get Tailwind working with CreateReactApp I needed to add `craco` a "Create React App Configuration Override, an easy and comprehensible configuration layer for create-react-app". `craco` can be removed during the move to NextJS.
+The `tw-` prefix is used to differentiate between tailwind classes and legacy css or mui classes [docs](https://tailwindcss.com/docs/configuration#prefix).
