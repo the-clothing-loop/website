@@ -165,11 +165,6 @@
     border-color: #067f8c;
   }
 
-  form.contact-form {
-    display: flex;
-    flex-direction: column;
-  }
-
   .landing-page-wrapper {
     position: absolute;
     top: 0;
