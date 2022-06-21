@@ -59,7 +59,7 @@ const Login = () => {
 
       <div className="background-frame-login"></div>
       <img className="circles-frame-login" src={CirclesFrame} alt="" />
-      <div className="login-container">
+      <div className="tw-pt-24 tw-relative">
         <TwoColumnLayout img={LoginImg}>
           <div className="login-content">
             <Typography variant="h3" className={classes.pageTitle}>
@@ -70,7 +70,9 @@ const Login = () => {
                 <Trans
                   i18nKey="areYouAlreadyHosting<a>JoinAnExistingLoop"
                   components={{
-                    "a": <Link className={classes.a} to="../../loops/find"></Link>,
+                    a: (
+                      <Link className={classes.a} to="../../loops/find"></Link>
+                    ),
                   }}
                 ></Trans>
               </Typography>
@@ -84,7 +86,7 @@ const Login = () => {
               onSubmit={async (v) => onSubmit(v)}
             >
               {(formik) => (
-                <Form className="login-form">
+                <Form className="tw-flex tw-flex-col">
                   <TextField
                     className={classes.textField}
                     {...formik.getFieldProps("email")}
@@ -96,7 +98,7 @@ const Login = () => {
                   {formik.submitCount > 0 && formik.errors.email && (
                     <Alert severity="error">{formik.errors.email}</Alert>
                   )}
-                  <div className="single-submit-btn">
+                  <div className="tw-flex tw-justify-end tw-mx-0 tw-my-5">
                     <Button
                       type="submit"
                       variant="contained"

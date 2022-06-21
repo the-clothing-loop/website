@@ -6,10 +6,17 @@ const Carousel = () => {
   const featuredImages = [CarouselImgOne, CarouselImgTwo, CarouselImgOne];
 
   return (
-    <div id="slider" style={{}}>
-      <figure>
+    <div className="tw-relative tw-w-full tw-overflow-hidden tw-h-[40vh]">
+      <figure className="tw-relative tw-w-[500%] tw-m-0 tw-animate-slide">
         {featuredImages.map((img, i) => {
-          return <img src={img} key={i} alt="" />;
+          return (
+            <img
+              src={img}
+              key={i}
+              alt="bags"
+              className="tw-w-[20%] tw-float-left"
+            />
+          );
         })}
       </figure>
     </div>

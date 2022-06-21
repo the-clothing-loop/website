@@ -37,7 +37,24 @@ module.exports = {
       sans: ["Montserrat", ...defaultTheme.fontFamily.sans],
       serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
     },
-    extend: {},
+    extend: {
+      keyframes: {
+        slide: {
+          "0%": {
+            left: "0%",
+          },
+          "50%": {
+            left: "-100%",
+          },
+          "100%": {
+            left: "-200%",
+          },
+        },
+      },
+      animation: {
+        slide: "8s slide infinite",
+      },
+    },
   },
   plugins: [],
   corePlugins: { preflight: false },

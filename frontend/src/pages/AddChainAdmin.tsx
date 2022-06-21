@@ -38,10 +38,10 @@ export default function AddChainAdmin({ location }: { location: any }) {
   };
 
   return (
-    <div className="add-chain-admin">
+    <div className="tw-flex tw-flex-col tw-items-center tw-pt-24">
       <Title>Select Co-Host</Title>
 
-      <div className="add-chain-admin__select">
+      <div className="tw-mt-24 tw-w-[428px]">
         <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
           <Select
             displayEmpty
@@ -95,7 +95,7 @@ export default function AddChainAdmin({ location }: { location: any }) {
         </FormControl>
       </div>
 
-      <div className="add-chain-admin__button">
+      <div className="tw-mt-20">
         <Button
           className={classes.button}
           type="submit"

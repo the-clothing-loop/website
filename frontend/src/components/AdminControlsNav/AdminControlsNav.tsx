@@ -23,7 +23,7 @@ const AdminControlsNav = () => {
     <div>
       {userData ? (
         <TwoColumnLayout img={Img}>
-          <div className="admin-nav-content">
+          <div className="tw-ml-12 tw-pt-20">
             <Typography variant="h3" className={classes.pageTitle}>
               {`Hello, ${userData?.name}`}
             </Typography>
@@ -33,9 +33,9 @@ const AdminControlsNav = () => {
               </Typography>
             </div>
 
-            <div className="admin-controls-nav">
+            <div className="tw-flex tw-flex-col tw-items-center tw-pt-5 tw-gap-8">
               {userData?.role === "chainAdmin" ? (
-                <div className="admin-nav-btn">
+                <div className="tw-flex tw-flew-col tw-gap-8">
                   <Button
                     color="inherit"
                     className={classes.button}
@@ -48,7 +48,7 @@ const AdminControlsNav = () => {
               ) : null}
 
               {userData?.role === "admin" ? (
-                <div className="admin-nav-btn">
+                <div className="tw-flex tw-flew-col tw-gap-8">
                   <Button
                     color="inherit"
                     className={classes.button}

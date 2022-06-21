@@ -235,7 +235,7 @@ const ChainMemberList = () => {
 
             <Grid item classes={{ root: classes.gridItemsNoPadding }} sm>
               <div className="chain-member-list__card">
-                <div className="chain-member-list__loop-admin__flex-col">
+                <div className="tw-flex tw-flex-col tw-justify-between tw-h-full">
                   <div>
                     <Grid
                       container
@@ -279,9 +279,7 @@ const ChainMemberList = () => {
                         state: { users, chainId },
                       }}
                     >
-                      <div className="chain-member-list__add-co-host">
-                        add co-host
-                      </div>
+                      <div className="tw-text-center">add co-host</div>
                     </Link>
                   )}
                 </div>
@@ -323,11 +321,13 @@ const Field = ({ title, children }: { title: string; children: any }) => {
   const classes = useStyles();
 
   return (
-    <div className="chain-member-list__field">
-      <Typography classes={{ root: classes.fieldSubheadingTypographyRoot }}>
+    <div className="tw-mt-6">
+      <Typography
+        classes={{ root: classes.fieldSubheadingTypographyRoot + " tw-mt-0" }}
+      >
         {title}:
       </Typography>
-      <div className="chain-member-list__field-content">{children}</div>
+      <div className="tw-mt-0">{children}</div>
     </div>
   );
 };

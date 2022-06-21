@@ -115,7 +115,7 @@ const Home = () => {
                 onClick={() => history.push("/loops/find")}
               >
                 {t("findALoop")}
-                <img src={ArrowRightIcon} alt="" className="btn-icon" />
+                <img src={ArrowRightIcon} alt="" className="tw-ml-5" />
               </button>
             </div>
             <div className="hero-image-wrapper">

@@ -71,7 +71,7 @@ function Navbar() {
                 className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
               >
                 {t("findLoops")}
-                <img src={ArrowIcon} className="btn-icon" />
+                <img src={ArrowIcon} className="tw-ml-5" />
               </Button>
             ) : null}
 
