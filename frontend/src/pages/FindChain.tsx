@@ -44,7 +44,7 @@ import RightArrow from "../images/right-arrow-white.svg";
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
 // @ts-ignore
-// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
+// prettier-ignore
 mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 export interface ChainPredicate {
