@@ -429,7 +429,7 @@ const FindChain = ({ location }: { location: Location }) => {
         ) : null}
       </ReactMapGL>
 
-      <div className="map-actions">
+      <div className="tw-flex tw-flex-col tw-absolute tw-bottom-[5%] tw-right-2.5">
         <Button className="map-action-btn" onClick={() => handleLocation()}>
           <GpsFixedIcon fontSize="medium" />
         </Button>

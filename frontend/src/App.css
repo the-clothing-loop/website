@@ -174,31 +174,6 @@
     height: 100vh;
   }
 
-  .landing-page-logo {
-    font-family: "Montserrat";
-    color: #ffffff;
-    position: absolute;
-    font-size: 3rem !important;
-    padding: 1%;
-  }
-
-  .landing-page-text {
-    color: #ffffff;
-    text-align: center;
-    position: absolute;
-    width: 100%;
-    bottom: 20%;
-    text-transform: capitalize;
-  }
-
-  .map-actions {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    bottom: 5%;
-    right: 10px;
-  }
-
   button.map-action-btn {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     cursor: pointer;
