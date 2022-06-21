@@ -16,7 +16,7 @@ import { addUserAsChainAdmin } from "../util/firebase/chain";
 
 import { Title } from "../components/Typography";
 
-export const AddChainAdmin = ({ location }: { location: any }) => {
+export default function AddChainAdmin({ location }: { location: any }) {
   const classes = makeStyles(theme as any)();
 
   const { state } = location;
@@ -110,4 +110,4 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
       </div>
     </div>
   );
-};
+}

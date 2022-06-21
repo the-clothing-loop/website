@@ -1,4 +1,5 @@
 import "./App.css";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import {
   createTheme,
@@ -9,37 +10,41 @@ import { AuthProvider } from "./components/AuthProvider";
 import themeFile from "./util/theme";
 import ScrollToTop from "./util/scrollToTop";
 
-// Pages
-import FindChain from "./pages/FindChain";
-import Login from "./pages/Login";
-import {
-  NewLoopConfirmation,
-  JoinLoopConfirmation,
-} from "./pages/Thankyou/Thankyou";
-import ChainMemberList from "./pages/ChainMemberList";
-import NewChainSignup from "./pages/NewChainSignup";
-import Signup from "./pages/Signup";
-import NewChainLocation from "./pages/NewChainLocation";
-import UserEdit from "./pages/UserEdit";
-import ChainEdit from "./pages/ChainEdit";
-import ChainsList from "./pages/ChainsList";
-import Home from "./pages/Home";
-import LoginEmailFinished from "./pages/LoginEmailFinished";
-import Contacts from "./pages/Contacts";
-import MessageSubmitted from "./pages/MessageSubmitted";
-import Donate from "./pages/Donations/Donate";
-import About from "./pages/About";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfUse from "./pages/TermsOfUse";
-import FAQ from "./pages/FAQ/FAQ";
-import AdminControlsNav from "./components/AdminControlsNav/AdminControlsNav";
-import { AddChainAdmin } from "./pages/AddChainAdmin";
-
 // Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Logout } from "./pages/Logout";
 import { ChainsProvider } from "./components/ChainsProvider";
+
+// Pages
+import {
+  NewLoopConfirmation,
+  JoinLoopConfirmation,
+} from "./pages/Thankyou/Thankyou";
+const FindChain = React.lazy(() => import("./pages/FindChain"));
+const Login = React.lazy(() => import("./pages/Login"));
+const ChainMemberList = React.lazy(() => import("./pages/ChainMemberList"));
+const NewChainSignup = React.lazy(() => import("./pages/NewChainSignup"));
+const Signup = React.lazy(() => import("./pages/Signup"));
+const NewChainLocation = React.lazy(() => import("./pages/NewChainLocation"));
+const UserEdit = React.lazy(() => import("./pages/UserEdit"));
+const ChainEdit = React.lazy(() => import("./pages/ChainEdit"));
+const ChainsList = React.lazy(() => import("./pages/ChainsList"));
+const Home = React.lazy(() => import("./pages/Home"));
+const LoginEmailFinished = React.lazy(
+  () => import("./pages/LoginEmailFinished")
+);
+const Contacts = React.lazy(() => import("./pages/Contacts"));
+const MessageSubmitted = React.lazy(() => import("./pages/MessageSubmitted"));
+const Donate = React.lazy(() => import("./pages/Donations/Donate"));
+const About = React.lazy(() => import("./pages/About"));
+const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfUse = React.lazy(() => import("./pages/TermsOfUse"));
+const FAQ = React.lazy(() => import("./pages/FAQ/FAQ"));
+const AdminControlsNav = React.lazy(
+  () => import("./components/AdminControlsNav/AdminControlsNav")
+);
+const AddChainAdmin = React.lazy(() => import("./pages/AddChainAdmin"));
 
 const theme = createTheme(themeFile);
 
