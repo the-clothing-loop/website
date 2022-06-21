@@ -358,7 +358,7 @@ const FindChain = ({ location }: { location: Location }) => {
                 <Typography component="p" id="description">
                   {selectedChain.description}
                 </Typography>
-                <div className={"chain-categories"}>
+                <div className="tw-flex tw-flex-col tw-w-full tw-pt-8">
                   <Typography component="h3">{t("categories")}:</Typography>
                   <div id="categories-container">
                     {selectedChain.categories.gender
@@ -392,7 +392,7 @@ const FindChain = ({ location }: { location: Location }) => {
                     key={"btn-join"}
                     variant="outlined"
                     color="primary"
-                    className={"card-button"}
+                    className="m-4 relative w-full"
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
@@ -401,7 +401,7 @@ const FindChain = ({ location }: { location: Location }) => {
                     key={"btn-view"}
                     variant="contained"
                     color="primary"
-                    className={"card-button"}
+                    className="m-4 relative w-full"
                     onClick={(e) => viewChain(e)}
                   >
                     {t("viewChain")}
