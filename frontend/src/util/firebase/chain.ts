@@ -41,7 +41,10 @@ const getChain = async (chainId: string) => {
 const getChains = async () => {
   const snapshot = await db.collection("chains").get();
   return snapshot.docs.map(
-    (doc: any) => ({ id: doc.id, ...doc.data() } as IChain)
+    // some chains were created before the "openToNewMembers" field
+    // existed, so we provide the default value of true
+    (doc: any) =>
+      ({ id: doc.id, openToNewMembers: true, ...doc.data() } as IChain)
   );
 };
 

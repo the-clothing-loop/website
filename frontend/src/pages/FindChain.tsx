@@ -6,9 +6,8 @@ import ReactMapGL, {
   Popup,
   MapEvent,
   MapRef,
-  Marker,
 } from "react-map-gl";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import * as GeoJSONTypes from "geojson";
 
@@ -384,43 +383,47 @@ const FindChain = ({ location }: { location: Location }) => {
                       : null}
                   </div>
                 </div>
+                {!selectedChain.openToNewMembers ? (
+                  <Typography component="p" id="loopFull">
+                    {role === "admin" ? (
+                      t("loopFullAdmin")
+                    ) : (
+                      <Trans
+                        i18nKey="loopFull"
+                        components={{
+                          "1": <Link to="/loops/new/users/signup"></Link>,
+                        }}
+                      ></Trans>
+                    )}
+                  </Typography>
+                ) : null}
               </CardContent>
 
-              {role === "admin" ? (
-                <CardActions>
+              <CardActions className={classes.cardsAction}>
+                {selectedChain.openToNewMembers ? (
                   <Button
-                    key={"btn-join"}
-                    variant="outlined"
+                    key="btn-join"
                     color="primary"
-                    className="m-4 relative w-full"
+                    className={
+                      role === "admin" ? classes.buttonOutlined : classes.button
+                    }
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
+                    {role !== "admin" ? <img src={RightArrow} alt="" /> : ""}
                   </Button>
+                ) : null}
+                {role === "admin" ? (
                   <Button
-                    key={"btn-view"}
-                    variant="contained"
+                    key="btn-view"
                     color="primary"
-                    className="m-4 relative w-full"
+                    className={classes.button}
                     onClick={(e) => viewChain(e)}
                   >
                     {t("viewChain")}
-                  </Button>{" "}
-                </CardActions>
-              ) : (
-                <CardActions className={classes.cardsAction}>
-                  <Button
-                    key={"btn-join"}
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={(e) => signupToChain(e)}
-                  >
-                    {t("join")}
-                    <img src={RightArrow} alt="" />
                   </Button>
-                </CardActions>
-              )}
+                ) : null}
+              </CardActions>
             </Card>
           </Popup>
         ) : null}

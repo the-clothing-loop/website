@@ -18,6 +18,7 @@ const chainsHeaders = [
   { label: "Categories", key: "categories.gender" },
   { label: "Sizes", key: "categories.size" },
   { label: "Published", key: "published" },
+  { label: "Open to new members", key: "openToNewMembers" },
   { label: "Description", key: "description" },
 ];
 
