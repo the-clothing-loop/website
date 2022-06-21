@@ -21,6 +21,7 @@ import {
   NewLoopConfirmation,
   JoinLoopConfirmation,
 } from "./pages/Thankyou/Thankyou";
+import Home from "./pages/Home";
 const FindChain = React.lazy(() => import("./pages/FindChain"));
 const Login = React.lazy(() => import("./pages/Login"));
 const ChainMemberList = React.lazy(() => import("./pages/ChainMemberList"));
@@ -30,7 +31,6 @@ const NewChainLocation = React.lazy(() => import("./pages/NewChainLocation"));
 const UserEdit = React.lazy(() => import("./pages/UserEdit"));
 const ChainEdit = React.lazy(() => import("./pages/ChainEdit"));
 const ChainsList = React.lazy(() => import("./pages/ChainsList"));
-const Home = React.lazy(() => import("./pages/Home"));
 const LoginEmailFinished = React.lazy(
   () => import("./pages/LoginEmailFinished")
 );
