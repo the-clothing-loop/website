@@ -134,24 +134,6 @@
     padding: 0 80px;
   }
 
-  .dot-active {
-    height: 20px;
-    width: 20px;
-    background-color: rgb(76, 175, 80);
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5%;
-  }
-
-  .dot-not-active {
-    height: 20px;
-    width: 20px;
-    background-color: rgb(239, 83, 80);
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5%;
-  }
-
   input[type="checkbox"].map-cat-input {
     display: none;
   }
@@ -181,18 +163,6 @@
     background-color: #067f8c;
     color: white;
     border-color: #067f8c;
-  }
-
-  .input-label-typography {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .inputs-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
   }
 
   form.contact-form {

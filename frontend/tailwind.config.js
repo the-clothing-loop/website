@@ -26,6 +26,8 @@ module.exports = {
       lightBlue: "#98D9DE",
       turquoise: "#518D7E",
       bronze: "#C58C41",
+      green: "#4CAF50",
+      red: "#EF5350",
       grey: {
         light: "#e8e8e8",
         DEFAULT: "#A5A5A5",

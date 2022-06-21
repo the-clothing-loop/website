@@ -115,14 +115,14 @@ const ChainsList = () => {
                         >
                           {chain.published ? (
                             <div style={{ display: "flex" }}>
-                              <span className="dot-active"></span>
+                              <span className="tw-inline-block tw-h-5 tw-w-5 tw-rounded-full tw-mr-4 tw-bg-green"></span>
                               <Typography variant="body2">
                                 {"published"}
                               </Typography>
                             </div>
                           ) : (
                             <div style={{ display: "flex" }}>
-                              <span className="dot-not-active"></span>
+                              <span className="tw-inline-block tw-h-5 tw-w-5 tw-rounded-full tw-mr-4 tw-bg-red"></span>
                               <Typography variant="body2">
                                 {"unpublished"}
                               </Typography>
