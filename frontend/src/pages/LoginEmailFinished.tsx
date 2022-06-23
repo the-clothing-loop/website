@@ -33,7 +33,7 @@ const LoginEmailFinished = () => {
             window.localStorage.removeItem("emailForSignIn");
             setFinished(true);
           } catch (e: any) {
-            setError(e);
+            setError(e + "");
           }
         }
       }
