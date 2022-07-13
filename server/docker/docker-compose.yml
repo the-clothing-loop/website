@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  cl_app:
+    image: golang:alpine
+    depends_on:
+      - cl_db
+    volumes:
+      - ..:/app
+    networks:
+      - cl_net
+    working_dir: /app
+    command: "sh -c 'go build -o main main.go && ./main'"
+    ports:
+      - 80:80
+  cl_db:
+    image: mariadb
+    ports:
+      - 3306:3306
+    networks:
+      - cl_net
+    environment:
+      - MYSQL_ROOT_PASSWORD=fb4aeaa6d860dbabe785675e
+      - MYSQL_DATABASE=clothingloop
+      - MYSQL_USER=clothingloop
+      - MYSQL_PASSWORD=72bd3937e91363a747f810e7
+    volumes:
+      - ./database:/var/lib/mysql
+networks:
+  cl_net:
+    driver: "bridge"
