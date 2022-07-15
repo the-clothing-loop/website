@@ -20,7 +20,7 @@ func ContactNewsletter(c *gin.Context) {
 	}
 
 	if body.Subscribe == false {
-		global.DB.Where("email = ?", query.Email).Delete(&models.User{})
+		global.DB.Raw("DELETE FROM newsletter WHERE email = ?", body.Email)
 
 		return
 	}
