@@ -10,16 +10,16 @@ import (
 )
 
 func ContactNewsletter(c *gin.Context) {
-	var query struct {
-		Email     string `query:"email" binding:"required,email"`
-		Subscribe bool   `query:"subscribe" binding:"required"`
+	var body struct {
+		Email     string `json:"email" binding:"required,email"`
+		Subscribe bool   `json:"subscribe" binding:"required"`
 	}
-	if err := c.ShouldBindQuery(&query); err != nil {
+	if err := c.ShouldBindJSON(&body); err != nil {
 		boom.BadRequest(c.Writer, err)
 		return
 	}
 
-	if query.Subscribe == false {
+	if body.Subscribe == false {
 		global.DB.Where("email = ?", query.Email).Delete(&models.User{})
 
 		return
@@ -27,17 +27,17 @@ func ContactNewsletter(c *gin.Context) {
 
 	name := "fellow human!"
 	var user models.User
-	global.DB.Raw("SELECT name FROM user WHERE email = ? LIMIT 1", query.Email).Scan(&user)
+	global.DB.Raw("SELECT name FROM user WHERE email = ? LIMIT 1", body.Email).Scan(&user)
 	if user.Name != "" {
 		name = user.Name
 	}
 
 	global.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
 		Name:  name,
-		Email: query.Email,
+		Email: body.Email,
 	})
 
-	views.EmailSubscribeToNewsletter(c, name, query.Email)
+	views.EmailSubscribeToNewsletter(c, name, body.Email)
 }
 
 func ContactMail(c *gin.Context) {
