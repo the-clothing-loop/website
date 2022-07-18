@@ -37,7 +37,7 @@ func EmailAParticipantJoinedTheLoop(
 }
 
 func EmailContactUserMessage(c *gin.Context, name string, email string, message string) bool {
-	to := global.SmtpSender
+	to := global.Config.SmtpSender
 	subject := fmt.Sprintf("ClothingLoop Contact Form - %s", name)
 	body := fmt.Sprintf(`<h3>Name</h3>
 <p>%s</p>

@@ -1,3 +1,5 @@
 /docker/database
 /config.yml
-/main
+/config.test.yml
+/server
+/cmd/server-fcgi/static/app.fcgi

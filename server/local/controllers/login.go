@@ -29,7 +29,7 @@ func LoginEmailStep1(c *gin.Context) {
 	token := global.AuthSignTemporaryEmail(&user)
 
 	subject := "Verify e-mail for clothing chain"
-	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s?apiKey=%s">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>Regards,<br>The clothing-loop team!`, user.Name, global.Url, token)
+	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s?apiKey=%s">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>Regards,<br>The clothing-loop team!`, user.Name, global.Config.SiteBaseUrl, token)
 
 	// email user with token
 	global.MailSend(c, user.Email, subject, messageHtml)
@@ -37,14 +37,14 @@ func LoginEmailStep1(c *gin.Context) {
 
 func LoginEmailStep2(c *gin.Context) {
 	var query struct {
-		ApiKey string `query:"apiKey,required"`
+		Key string `query:"apiKey,required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		boom.BadRequest(c.Writer, "apiKey required")
 		return
 	}
 
-	user := global.AuthValidateEmail(query.ApiKey)
+	user := global.AuthValidateEmail(query.Key)
 	if user == nil {
 		boom.Unathorized(c.Writer)
 		return
@@ -55,11 +55,11 @@ func LoginEmailStep2(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusTemporaryRedirect, global.Url)
+	c.Redirect(http.StatusTemporaryRedirect, global.Config.SiteBaseUrl)
 }
 
 func Logout(c *gin.Context) {
 	if err := global.AuthRevokeCookie(c); err != nil {
-		boom.Unathorized(c.Writer, err)
+		boom.BadRequest(c.Writer, err)
 	}
 }

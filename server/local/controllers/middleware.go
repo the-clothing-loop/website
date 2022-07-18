@@ -7,40 +7,51 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// -
-// - result chain: if chainUID is empty the result chain will be nil
-func middlewareAuthCookieStart(c *gin.Context, minimumRole int) (ok bool, user *models.User) {
+func middlewareAuthCookieStart(c *gin.Context, minimumRole int, chainUID string) (ok bool, user *models.User, chain *models.Chain) {
 	user = global.AuthValidateCookie(c)
 	if user == nil {
 		boom.Unathorized(c.Writer)
-		return false, nil
-	}
-	if minimumRole <= user.Role {
-		boom.Unathorized(c.Writer, "Role not high enough")
-		return false, nil
+		return false, nil, nil
 	}
 
-	return true, user
-}
+	if chainUID == "" {
+		// handle RoleUser
+		// returns without looking up the chain as it is not necessary to authenticate just a basic user
+		if minimumRole == models.RoleUser {
+			return true, user, nil
+		}
+		// handle RoleAdmin where user chain is not required
+		if minimumRole == models.RoleAdmin && user.Admin {
+			return true, user, nil
+		}
 
-func middlewareAuthCheckChainRelation(c *gin.Context, user *models.User, chainUID string) (ok bool, chain *models.Chain) {
-	global.DB.Where("uid = ? AND published = ?", chainUID, true).First(chain)
-	if chain == nil {
-		boom.Unathorized(c.Writer, "Loop does not exist")
-		return false, nil
+		boom.Teapot(c.Writer, "chainUID must not be empty _and_ require role ChainAdmin (2), this is should never happen")
+		return false, nil, nil
 	}
 
-	// check if user is chain admin or admin
-	if user.Role != models.RoleAdmin {
-		var userChain *models.UserChainLL
-		global.DB.Where("chain_id = ? AND user_id = ?", chain.ID, user.ID).First(userChain)
-		if userChain == nil || userChain.ChainAdmin == false {
-			boom.Unathorized(c.Writer, "User does not have an administrative role at this Loop")
-			return false, nil
+	global.DB.Where("uid = ?", chainUID).First(chain)
+
+	user.AddUserChainsLLToObject(global.DB)
+
+	// handle RoleAdmin
+	if user.Admin == true {
+		return true, user, chain
+	}
+
+	// handle RoleChainAdmin
+	if minimumRole == models.RoleChainAdmin {
+		for _, userChain := range user.Chains {
+			if userChain.ChainID == chain.ID {
+				if userChain.ChainAdmin || minimumRole == models.RoleUser {
+					return true, user, chain
+				}
+				break
+			}
 		}
 	}
 
-	return true, chain
+	boom.Unathorized(c.Writer, "Role not high enough")
+	return false, nil, nil
 }
 
 func middlewareAuthCookieEnd(c *gin.Context, user *models.User) (ok bool) {

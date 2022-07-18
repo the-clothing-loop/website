@@ -10,35 +10,12 @@ import (
 	"github.com/jordan-wright/email"
 )
 
-var smtpHost string
-var smtpPort int
-var SmtpSender string
-var smtpUser string
-var smtpPass string
-
-var smtpAddr = fmt.Sprintf("%s:%d", smtpHost, smtpPort)
-var smtpAuth = smtp.PlainAuth("", SmtpSender, smtpPass, smtpHost)
-
-// like "https://www.clothingloop.org/"
-var Url string
-
-func MailInit(
-	smtpHost_ string,
-	smtpPort_ int,
-	smtpSender_ string,
-	smtpUser_ string,
-	smtpPass_ string,
-) {
-	smtpHost = smtpHost_
-	smtpPort = smtpPort_
-	SmtpSender = smtpSender_
-	smtpUser = smtpUser_
-	smtpPass = smtpPass_
-}
+var smtpAddr = fmt.Sprintf("%s:%d", Config.SmtpHost, Config.SmtpPort)
+var smtpAuth = smtp.PlainAuth("", Config.SmtpSender, Config.SmtpPass, Config.SmtpHost)
 
 func MailSend(c *gin.Context, to string, subject string, body string) bool {
 	e := email.NewEmail()
-	e.From = fmt.Sprintf("The Clothing Loop <%s>", SmtpSender)
+	e.From = fmt.Sprintf("The Clothing Loop <%s>", Config.SmtpSender)
 	e.To = []string{to}
 	e.Bcc = []string{}
 	e.Cc = []string{}

@@ -5,14 +5,15 @@ import (
 	"net/http"
 
 	server "github.com/CollActionteam/clothing-loop/local"
+	"github.com/CollActionteam/clothing-loop/local/global"
 )
 
 func main() {
-	config := server.ConfigInit()
+	global.ConfigInit("config.yml")
 
-	router := server.Routes(config)
+	router := server.Routes()
 
-	err := http.ListenAndServe(fmt.Sprintf("%s:%d", config.Host, config.Port), router)
+	err := http.ListenAndServe(fmt.Sprintf("%s:%d", global.Config.Host, global.Config.Port), router)
 	if err != nil {
 		panic(fmt.Errorf("error listen and serve: %s", err))
 	}

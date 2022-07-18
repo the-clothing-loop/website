@@ -12,7 +12,7 @@ import (
 )
 
 func ChainCreate(c *gin.Context) {
-	ok, user := middlewareAuthCookieStart(c, models.RoleChainAdmin)
+	ok, user, _ := middlewareAuthCookieStart(c, models.RoleUser, "")
 	if !ok {
 		return
 	}
@@ -90,11 +90,7 @@ func ChainAddUser(c *gin.Context) {
 		return
 	}
 
-	ok, adminUser := middlewareAuthCookieStart(c, models.RoleChainAdmin)
-	if !ok {
-		return
-	}
-	ok, chain := middlewareAuthCheckChainRelation(c, adminUser, body.ChainUID)
+	ok, adminUser, chain := middlewareAuthCookieStart(c, models.RoleChainAdmin, body.ChainUID)
 	if !ok {
 		return
 	}
@@ -135,7 +131,7 @@ func ChainAddUser(c *gin.Context) {
 	}
 
 	for _, result := range results {
-		views.EmailAParticipantJoinedTheLoop(
+		go views.EmailAParticipantJoinedTheLoop(
 			c,
 			result.Email,
 			result.Name,

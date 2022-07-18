@@ -13,7 +13,7 @@ type User struct {
 	Email           string
 	EmailVerified   bool
 	Chains          []UserChainLL `gorm:"foreignKey:UserID"`
-	Role            int
+	Admin           bool
 	Name            string
 	PhoneNumber     string
 	InterestedSizes []string `gorm:"serializer:json"`
@@ -37,23 +37,66 @@ type UserToken struct {
 
 type UserChainLL struct {
 	ID         uint
-	UserID     uint
+	UserID     uint `gorm:"index"`
 	ChainID    uint
 	ChainAdmin bool
 }
 
-func (u *User) GetChainUIDsByUserID(db *gorm.DB) (*[]string, error) {
-	var results []struct{ UID string }
-	db.Raw("SELECT chain.uid as uid FROM user_chain_ll JOIN chain ON user_chain_ll.chain_id = chain.id WHERE user_chain_ll.user_id = ?", u.ID).Scan(&results)
+type UserChainLLJSON struct {
+	ChainUID   string `json:"chain_uid"`
+	UserUID    string `json:"user_uid"`
+	ChainAdmin bool   `json:"is_chain_admin"`
+}
+
+// Use of an empty user with just the ID included is fine
+//
+// ```go
+// user := &User{ID: id}
+// user.GetChainUIDsAndIsAdminByUserID(db)
+// ```
+func (u *User) GetUserChainLLJSON(db *gorm.DB) (*[]UserChainLLJSON, error) {
+	var results *[]UserChainLLJSON
+	db.Raw(`SELECT
+	( chain.uid as ChainUID
+	, user.uid as UserUID
+	, user_chain_ll.chain_admin as ChainAdmin ) 
+	FROM user_chain_ll
+	JOIN chain ON user_chain_ll.chain_id = chain.id 
+	JOIN user ON user_chain_ll.user_id = user.id 
+	WHERE user_chain_ll.user_id = ?
+	`, u.ID).Scan(results)
 
 	if results == nil {
 		return nil, fmt.Errorf("unable to look for chains related to user")
 	}
 
-	chainUIDs := []string{}
-	for _, result := range results {
-		chainUIDs = append(chainUIDs, result.UID)
-	}
+	return results, nil
+}
 
-	return &chainUIDs, nil
+func (u *User) AddUserChainsLLToObject(db *gorm.DB) {
+	userChainLL := []UserChainLL{}
+	db.Raw(`
+	SELECT
+	( user_chain_ll.id as ID
+	, user_chain_ll.user_id as UserID
+	, user_chain_ll.chain_id as ChainID
+	, user_chain_ll.chain_admin as ChainAdmin )
+	FROM user_chain_ll
+	JOIN user ON user_chain_ll.user_id = user.id
+	WHERE user.id = ?
+	`).Scan(userChainLL)
+
+	u.Chains = userChainLL
+}
+
+func (u *User) IsPartOfChain(db *gorm.DB, chainID uint) bool {
+	res := db.Exec(`
+	SELECT 
+	(id)
+	FROM user_chain_ll
+	JOIN user ON user_chain_ll.user_id = user.id
+	WHERE user_chain_ll.user_id = ?
+		AND user_chain_ll.chain_id = ?
+	`, u.ID, chainID)
+	return res.Error == nil
 }

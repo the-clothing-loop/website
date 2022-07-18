@@ -5,12 +5,13 @@ import (
 	"net/http/cgi"
 
 	server "github.com/CollActionteam/clothing-loop/local"
+	"github.com/CollActionteam/clothing-loop/local/global"
 )
 
 func main() {
-	config := server.ConfigInit()
+	global.ConfigInit("config.yml")
 
-	router := server.Routes(config)
+	router := server.Routes()
 
 	err := cgi.Serve(router)
 	if err != nil {

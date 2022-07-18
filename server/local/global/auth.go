@@ -19,10 +19,10 @@ const cookieName = "token"
 
 var verifier jwt.Verifier
 var signer jwt.Signer
-var cookieDomain string
-var cookieHttpsOnly bool
 
-func AuthInit(key []byte, cookieDomain_ string, cookieHttpsOnly_ bool) {
+func AuthInit() {
+	key := []byte(Config.JwtSecret)
+
 	var err error
 
 	if len(key) >= 32 {
@@ -38,9 +38,6 @@ func AuthInit(key []byte, cookieDomain_ string, cookieHttpsOnly_ bool) {
 	if err != nil {
 		panic(err)
 	}
-
-	cookieDomain = cookieDomain_
-	cookieHttpsOnly = cookieHttpsOnly_
 }
 
 func AuthValidateEmail(token string) *models.User {
@@ -54,7 +51,7 @@ func AuthValidateCookie(c *gin.Context) *models.User {
 
 	user := authValidate(cookie, audienceLogin)
 	if user == nil {
-		c.SetCookie(cookieName, "", -1, "", "", cookieHttpsOnly, true)
+		c.SetCookie(cookieName, "", -1, "", "", Config.CookieHttpsOnly, true)
 		return nil
 	}
 
@@ -95,7 +92,7 @@ func AuthSignCookie(c *gin.Context, user *models.User) bool {
 	}
 
 	maxAge := 3600 * 24 * 30
-	c.SetCookie(cookieName, token, maxAge, "/", cookieDomain, cookieHttpsOnly, true)
+	c.SetCookie(cookieName, token, maxAge, "/", Config.CookieDomain, Config.CookieHttpsOnly, true)
 
 	return true
 }
@@ -135,7 +132,7 @@ func AuthRevokeCookie(c *gin.Context) error {
 	}
 
 	authRevoke(claims.ID)
-	c.SetCookie(cookieName, "", -1, "", "", cookieHttpsOnly, true)
+	c.SetCookie(cookieName, "", -1, "", "", Config.CookieHttpsOnly, true)
 
 	return nil
 }
