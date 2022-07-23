@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/smtp"
 
-	"github.com/CollActionteam/clothing-loop/local/models"
+	"github.com/CollActionteam/clothing-loop/server/local/models"
 	boom "github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 	"github.com/jordan-wright/email"

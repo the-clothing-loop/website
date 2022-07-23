@@ -3,7 +3,7 @@ package views
 import (
 	"fmt"
 
-	"github.com/CollActionteam/clothing-loop/local/global"
+	"github.com/CollActionteam/clothing-loop/server/local/global"
 	"github.com/gin-gonic/gin"
 )
 

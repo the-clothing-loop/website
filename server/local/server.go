@@ -1,8 +1,8 @@
 package local
 
 import (
-	"github.com/CollActionteam/clothing-loop/local/controllers"
-	"github.com/CollActionteam/clothing-loop/local/global"
+	"github.com/CollActionteam/clothing-loop/server/local/controllers"
+	"github.com/CollActionteam/clothing-loop/server/local/global"
 	"github.com/gin-gonic/gin"
 )
 

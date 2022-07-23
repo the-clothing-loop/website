@@ -3,7 +3,7 @@ package global
 import (
 	"fmt"
 
-	"github.com/CollActionteam/clothing-loop/local/models"
+	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

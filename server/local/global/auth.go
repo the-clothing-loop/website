@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/CollActionteam/clothing-loop/local/models"
+	"github.com/CollActionteam/clothing-loop/server/local/models"
 	jwt "github.com/cristalhq/jwt/v4"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"

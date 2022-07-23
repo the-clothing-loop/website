@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"github.com/CollActionteam/clothing-loop/local/global"
-	"github.com/CollActionteam/clothing-loop/local/models"
+	"github.com/CollActionteam/clothing-loop/server/local/global"
+	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 )

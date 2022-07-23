@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/local/global"
-	"github.com/CollActionteam/clothing-loop/local/models"
-	"github.com/CollActionteam/clothing-loop/local/views"
+	"github.com/CollActionteam/clothing-loop/server/local/global"
+	"github.com/CollActionteam/clothing-loop/server/local/models"
+	"github.com/CollActionteam/clothing-loop/server/local/views"
 	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
