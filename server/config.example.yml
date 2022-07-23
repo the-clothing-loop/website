@@ -1,7 +1,9 @@
+production: true
+
 host: "0.0.0.0"
 port: 80
 
-site_base_url: https://clothingloop.org
+site_base_url: "https://clothingloop.org"
 
 jwt_secret: "826fa56956bb0bb546728c74"
 cookie_domain: "localhost"
