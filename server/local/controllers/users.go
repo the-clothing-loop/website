@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/local/global"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
@@ -13,6 +12,8 @@ import (
 )
 
 func UserGet(c *gin.Context) {
+	db := getDB(c)
+
 	var query struct {
 		UID      string `query:"uid" binding:"uuid"`
 		Email    string `query:"email" binding:"email"`
@@ -28,34 +29,34 @@ func UserGet(c *gin.Context) {
 		return
 	}
 
-	ok, authUser, chain := middlewareAuthCookieStart(c, models.RoleUser, query.ChainUID)
+	ok, authUser, chain := middlewareAuthCookieStart(c, db, models.RoleUser, query.ChainUID)
 	if !ok {
 		return
 	}
 
 	var user *models.User
 	if query.UID != "" {
-		global.DB.Where("uid = ? AND email_verified = ?", query.UID, true).First(user)
+		db.Where("uid = ? AND email_verified = ?", query.UID, true).First(user)
 	} else if query.Email != "" {
-		global.DB.Where("email = ? AND email_verified = ?", query.Email, true).First(user)
+		db.Where("email = ? AND email_verified = ?", query.Email, true).First(user)
 	}
 	if user == nil {
 		boom.BadRequest(c.Writer, "user not found")
 		return
 	}
 
-	if ok := user.IsPartOfChain(global.DB, chain.ID); !ok {
+	if ok := user.IsPartOfChain(db, chain.ID); !ok {
 		boom.Unathorized(c.Writer)
 		return
 	}
 
-	userChainLLJSON, err := user.GetUserChainLLJSON(global.DB)
+	userChainLLJSON, err := user.GetUserChainLLJSON(db)
 	if err != nil {
 		boom.Internal(c.Writer, err)
 		return
 	}
 
-	if ok := middlewareAuthCookieEnd(c, authUser); !ok {
+	if ok := middlewareAuthCookieEnd(c, db, authUser); !ok {
 		return
 	}
 
@@ -73,7 +74,9 @@ func UserGet(c *gin.Context) {
 }
 
 func UserUpdate(c *gin.Context) {
-	ok, user, _ := middlewareAuthCookieStart(c, models.RoleUser, "")
+	db := getDB(c)
+
+	ok, user, _ := middlewareAuthCookieStart(c, db, models.RoleUser, "")
 	if !ok {
 		return
 	}
@@ -112,7 +115,7 @@ func UserUpdate(c *gin.Context) {
 		if body.Sizes != nil {
 			userChanges["interested_sizes"] = *body.Sizes
 		}
-		if res := global.DB.Model(user).Updates(userChanges); res.Error != nil {
+		if res := db.Model(user).Updates(userChanges); res.Error != nil {
 			boom.Internal(c.Writer, res.Error)
 			return
 		}
@@ -120,7 +123,7 @@ func UserUpdate(c *gin.Context) {
 
 	if body.Newsletter != nil {
 		if *body.Newsletter {
-			res := global.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
+			res := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
 				Email: user.Email,
 				Name:  user.Name,
 			})
@@ -129,7 +132,7 @@ func UserUpdate(c *gin.Context) {
 				return
 			}
 		} else {
-			res := global.DB.Where("email = ?", user.Email).Delete(&models.Newsletter{})
+			res := db.Where("email = ?", user.Email).Delete(&models.Newsletter{})
 			if res.Error != nil {
 				boom.Internal(c.Writer)
 				return
@@ -137,10 +140,12 @@ func UserUpdate(c *gin.Context) {
 		}
 	}
 
-	middlewareAuthCookieEnd(c, user)
+	middlewareAuthCookieEnd(c, db, user)
 }
 
 func UserCreate(c *gin.Context) {
+	db := getDB(c)
+
 	var body struct {
 		Email           string   `json:"email" binding:"required"`
 		ChainUIDs       []string `json:"chain_uids" binding:"required"`
@@ -164,8 +169,8 @@ func UserCreate(c *gin.Context) {
 		ID uint
 	}
 	// set user to chain
-	global.DB.Distinct("id").Where("uid in ?", body.ChainUIDs).Scan(&chains)
-	// global.DB.Update()
+	db.Distinct("id").Where("uid in ?", body.ChainUIDs).Scan(&chains)
+	// db.Update()
 
 	user := models.User{
 		UID:             uuid.NewV4().String(),
@@ -178,7 +183,7 @@ func UserCreate(c *gin.Context) {
 		Address:         body.Address,
 		Enabled:         false,
 	}
-	global.DB.Create(&user)
+	db.Create(&user)
 
 	userChainLL := []models.UserChainLL{}
 	for _, chain := range chains {
@@ -187,11 +192,13 @@ func UserCreate(c *gin.Context) {
 			ChainID: chain.ID,
 		})
 	}
-	global.DB.Create(&userChainLL)
+	db.Create(&userChainLL)
 }
 
 func UserAddAsChainAdmin(c *gin.Context) {
-	ok, authUser, _ := middlewareAuthCookieStart(c, models.RoleAdmin, "")
+	db := getDB(c)
+
+	ok, authUser, _ := middlewareAuthCookieStart(c, db, models.RoleAdmin, "")
 	if !ok {
 		return
 	}
@@ -206,17 +213,17 @@ func UserAddAsChainAdmin(c *gin.Context) {
 	}
 
 	userID := ""
-	global.DB.Raw(`
+	db.Raw(`
 	SELECT id
-	FROM user
+	FROM users
 	WHERE uid = ?
 	LIMIT 1
 	`, body.UserUID).Scan(userID)
-	global.DB.Raw(`
-	UPDATE user_chain_ll
+	db.Raw(`
+	UPDATE user_chain_lls
 	SET ( chain_admin = ? )
 	WHERE user_id = ?
 	`, true, userID)
 
-	middlewareAuthCookieEnd(c, authUser)
+	middlewareAuthCookieEnd(c, db, authUser)
 }

@@ -1,14 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Mail struct {
-	ID      uint
-	To      string
-	Message struct {
-		Subject string
-		Html    string
-	} `gorm:"serializer:json"`
-	Error     *string
+	ID        uint
+	To        string
+	Subject   string
+	Body      string
+	Error     string
 	CreatedAt time.Time
 }

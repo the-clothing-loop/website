@@ -5,11 +5,11 @@ import (
 	"net/http/cgi"
 
 	server "github.com/CollActionteam/clothing-loop/server/local"
-	"github.com/CollActionteam/clothing-loop/server/local/global"
+	"github.com/CollActionteam/clothing-loop/server/local/app"
 )
 
 func main() {
-	global.ConfigInit("config.yml")
+	app.ConfigInit()
 
 	router := server.Routes()
 

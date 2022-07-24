@@ -12,14 +12,14 @@ type User struct {
 	UID             string `gorm:"uniqueIndex"`
 	Email           string
 	EmailVerified   bool
-	Chains          []UserChainLL `gorm:"foreignKey:UserID"`
 	Admin           bool
 	Name            string
 	PhoneNumber     string
 	InterestedSizes []string `gorm:"serializer:json"`
 	Address         string
-	UserToken       []UserToken `gorm:"foreignKey:UserID"`
 	Enabled         bool
+	UserToken       []UserToken
+	Chains          []UserChainLL
 }
 
 const (
@@ -57,13 +57,13 @@ type UserChainLLJSON struct {
 func (u *User) GetUserChainLLJSON(db *gorm.DB) (*[]UserChainLLJSON, error) {
 	var results *[]UserChainLLJSON
 	db.Raw(`SELECT
-	( chain.uid as ChainUID
-	, user.uid as UserUID
-	, user_chain_ll.chain_admin as ChainAdmin ) 
-	FROM user_chain_ll
-	JOIN chain ON user_chain_ll.chain_id = chain.id 
-	JOIN user ON user_chain_ll.user_id = user.id 
-	WHERE user_chain_ll.user_id = ?
+	( chains.uid as ChainUID
+	, users.uid as UserUID
+	, user_chain_lls.chain_admin as ChainAdmin ) 
+	FROM user_chain_lls
+	JOIN chains ON user_chain_lls.chain_id = chains.id 
+	JOIN users ON user_chain_lls.user_id = users.id 
+	WHERE user_chain_lls.user_id = ?
 	`, u.ID).Scan(results)
 
 	if results == nil {
@@ -77,13 +77,13 @@ func (u *User) AddUserChainsLLToObject(db *gorm.DB) {
 	userChainLL := []UserChainLL{}
 	db.Raw(`
 	SELECT
-	( user_chain_ll.id as ID
-	, user_chain_ll.user_id as UserID
-	, user_chain_ll.chain_id as ChainID
-	, user_chain_ll.chain_admin as ChainAdmin )
-	FROM user_chain_ll
-	JOIN user ON user_chain_ll.user_id = user.id
-	WHERE user.id = ?
+	( user_chain_lls.id as ID
+	, user_chain_lls.user_id as UserID
+	, user_chain_lls.chain_id as ChainID
+	, user_chain_lls.chain_admin as ChainAdmin )
+	FROM user_chain_lls
+	JOIN users ON user_chain_lls.user_id = users.id
+	WHERE users.id = ?
 	`).Scan(userChainLL)
 
 	u.Chains = userChainLL
@@ -93,10 +93,10 @@ func (u *User) IsPartOfChain(db *gorm.DB, chainID uint) bool {
 	res := db.Exec(`
 	SELECT 
 	(id)
-	FROM user_chain_ll
-	JOIN user ON user_chain_ll.user_id = user.id
-	WHERE user_chain_ll.user_id = ?
-		AND user_chain_ll.chain_id = ?
+	FROM user_chain_lls
+	JOIN users ON user_chain_lls.user_id = users.id
+	WHERE user_chain_lls.user_id = ?
+		AND user_chain_lls.chain_id = ?
 	`, u.ID, chainID)
 	return res.Error == nil
 }

@@ -17,9 +17,9 @@ type Chain struct {
 	Radius           float32
 	Published        bool
 	OpenToNewMembers bool
-	Categories       []CategoriesLL `gorm:"foreignKey:ChainID"`
-	Sizes            []ChainSize    `gorm:"foreignKey:ChainID"`
-	Users            []UserChainLL  `gorm:"foreignKey:ChainID"`
+	Categories       []CategoriesLL
+	Sizes            []ChainSize
+	Users            []UserChainLL
 }
 
 const (

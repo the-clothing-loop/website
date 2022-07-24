@@ -3,12 +3,14 @@ package views
 import (
 	"fmt"
 
-	"github.com/CollActionteam/clothing-loop/server/local/global"
+	"github.com/CollActionteam/clothing-loop/server/local/app"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func EmailAParticipantJoinedTheLoop(
 	c *gin.Context,
+	db *gorm.DB,
 	adminEmail string,
 	adminName string,
 	participantName string,
@@ -33,11 +35,11 @@ func EmailAParticipantJoinedTheLoop(
 		participantPhoneNumber,
 	)
 
-	return global.MailSend(c, to, subject, body)
+	return app.MailSend(c, db, to, subject, body)
 }
 
-func EmailContactUserMessage(c *gin.Context, name string, email string, message string) bool {
-	to := global.Config.SmtpSender
+func EmailContactUserMessage(c *gin.Context, db *gorm.DB, name string, email string, message string) bool {
+	to := app.Config.SMTP_SENDER
 	subject := fmt.Sprintf("ClothingLoop Contact Form - %s", name)
 	body := fmt.Sprintf(`<h3>Name</h3>
 <p>%s</p>
@@ -46,10 +48,10 @@ func EmailContactUserMessage(c *gin.Context, name string, email string, message 
 <h3>Message</h3>
 <p>%s</p>`, name, email, message)
 
-	return global.MailSend(c, to, subject, body)
+	return app.MailSend(c, db, to, subject, body)
 }
 
-func EmailContactConfirmation(c *gin.Context, name string, email string, message string) bool {
+func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name string, email string, message string) bool {
 	to := email
 	subject := "Thank you for contacting The Clothing Loop"
 	body := fmt.Sprintf(`<p>Hi %s,</p>
@@ -63,10 +65,10 @@ func EmailContactConfirmation(c *gin.Context, name string, email string, message
 		message,
 	)
 
-	return global.MailSend(c, to, subject, body)
+	return app.MailSend(c, db, to, subject, body)
 }
 
-func EmailSubscribeToNewsletter(c *gin.Context, name string, email string) bool {
+func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB, name string, email string) bool {
 	to := email
 	subject := "Thank you for subscribing to Clothing Loop"
 	body := fmt.Sprintf(`<p>Hi %s,</p>
@@ -84,5 +86,5 @@ func EmailSubscribeToNewsletter(c *gin.Context, name string, email string) bool 
 
 <p>Nichon, on behalf of the Clothing Loop team</p>`, name)
 
-	return global.MailSend(c, to, subject, body)
+	return app.MailSend(c, db, to, subject, body)
 }

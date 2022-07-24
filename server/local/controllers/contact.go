@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/CollActionteam/clothing-loop/server/local/global"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/CollActionteam/clothing-loop/server/local/views"
 	"github.com/darahayes/go-boom"
@@ -10,6 +9,8 @@ import (
 )
 
 func ContactNewsletter(c *gin.Context) {
+	db := getDB(c)
+
 	var body struct {
 		Email     string `json:"email" binding:"required,email"`
 		Subscribe bool   `json:"subscribe" binding:"required"`
@@ -19,28 +20,30 @@ func ContactNewsletter(c *gin.Context) {
 		return
 	}
 
-	if body.Subscribe == false {
-		global.DB.Raw("DELETE FROM newsletter WHERE email = ?", body.Email)
+	if !body.Subscribe {
+		db.Raw("DELETE FROM newsletters WHERE email = ?", body.Email)
 
 		return
 	}
 
 	name := "fellow human!"
-	var user models.User
-	global.DB.Raw("SELECT name FROM user WHERE email = ? LIMIT 1", body.Email).Scan(&user)
-	if user.Name != "" {
-		name = user.Name
+	var row struct{ Name string }
+	db.Raw("SELECT name FROM users WHERE email = ? LIMIT 1", body.Email).Scan(&row)
+	if row.Name != "" {
+		name = row.Name
 	}
 
-	global.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
 		Name:  name,
 		Email: body.Email,
 	})
 
-	views.EmailSubscribeToNewsletter(c, name, body.Email)
+	views.EmailSubscribeToNewsletter(c, db, name, body.Email)
 }
 
 func ContactMail(c *gin.Context) {
+	db := getDB(c)
+
 	var body struct {
 		Name    string `json:"name" binding:"required"`
 		Email   string `json:"email" binding:"required,email"`
@@ -51,6 +54,6 @@ func ContactMail(c *gin.Context) {
 		return
 	}
 
-	views.EmailContactUserMessage(c, body.Name, body.Email, body.Message)
-	views.EmailContactConfirmation(c, body.Name, body.Email, body.Message)
+	views.EmailContactUserMessage(c, db, body.Name, body.Email, body.Message)
+	views.EmailContactConfirmation(c, db, body.Name, body.Email, body.Message)
 }

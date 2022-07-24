@@ -1,4 +1,4 @@
-package global
+package app
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 	jwt "github.com/cristalhq/jwt/v4"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm"
 )
 
 const (
@@ -21,7 +22,7 @@ var verifier jwt.Verifier
 var signer jwt.Signer
 
 func AuthInit() {
-	key := []byte(Config.JwtSecret)
+	key := []byte(Config.JWT_SECRET)
 
 	var err error
 
@@ -40,24 +41,24 @@ func AuthInit() {
 	}
 }
 
-func AuthValidateEmail(token string) *models.User {
-	return authValidate(token, audienceTemporaryEmail)
+func AuthValidateEmail(db *gorm.DB, token string) *models.User {
+	return authValidate(db, token, audienceTemporaryEmail)
 }
-func AuthValidateCookie(c *gin.Context) *models.User {
+func AuthValidateCookie(c *gin.Context, db *gorm.DB) *models.User {
 	cookie, err := c.Cookie(cookieName)
 	if err != nil {
 		return nil
 	}
 
-	user := authValidate(cookie, audienceLogin)
+	user := authValidate(db, cookie, audienceLogin)
 	if user == nil {
-		c.SetCookie(cookieName, "", -1, "", "", Config.CookieHttpsOnly, true)
+		c.SetCookie(cookieName, "", -1, "", "", Config.COOKIE_HTTPS_ONLY, true)
 		return nil
 	}
 
 	return user
 }
-func authValidate(token string, audience string) *models.User {
+func authValidate(db *gorm.DB, token string, audience string) *models.User {
 	tokenBytes := []byte(token)
 
 	var claims jwt.RegisteredClaims
@@ -66,7 +67,7 @@ func authValidate(token string, audience string) *models.User {
 	}
 
 	if ok := claims.IsValidAt(time.Now()); !ok {
-		authRevoke(claims.ID)
+		authRevoke(db, claims.ID)
 		return nil
 	}
 
@@ -75,28 +76,28 @@ func authValidate(token string, audience string) *models.User {
 	}
 
 	var user *models.User
-	if res := DB.Joins("user_token ON user_token.user_id = user.id AND user_token.uid = ?", claims.ID).First(user); res.Error != nil {
+	if res := db.Joins("user_token ON user_token.user_id = user.id AND user_token.uid = ?", claims.ID).First(user); res.Error != nil {
 		return nil
 	}
 
 	return user
 }
 
-func AuthSignTemporaryEmail(user *models.User) string {
-	return authSign(user, audienceTemporaryEmail, time.Hour*12)
+func AuthSignTemporaryEmail(db *gorm.DB, user *models.User) string {
+	return authSign(db, user, audienceTemporaryEmail, time.Hour*12)
 }
-func AuthSignCookie(c *gin.Context, user *models.User) bool {
-	token := authSign(user, audienceLogin, time.Hour*24*30)
+func AuthSignCookie(c *gin.Context, db *gorm.DB, user *models.User) bool {
+	token := authSign(db, user, audienceLogin, time.Hour*24*30)
 	if token == "" {
 		return false
 	}
 
 	maxAge := 3600 * 24 * 30
-	c.SetCookie(cookieName, token, maxAge, "/", Config.CookieDomain, Config.CookieHttpsOnly, true)
+	c.SetCookie(cookieName, token, maxAge, "/", Config.COOKIE_DOMAIN, Config.COOKIE_HTTPS_ONLY, true)
 
 	return true
 }
-func authSign(user *models.User, audience string, expiresAt time.Duration) string {
+func authSign(db *gorm.DB, user *models.User, audience string, expiresAt time.Duration) string {
 	uid := uuid.NewV4().String()
 	now := time.Now()
 	claims := &jwt.RegisteredClaims{
@@ -111,7 +112,7 @@ func authSign(user *models.User, audience string, expiresAt time.Duration) strin
 		return ""
 	}
 
-	DB.Create(&models.UserToken{
+	db.Create(&models.UserToken{
 		UID:    uid,
 		UserID: user.ID,
 	})
@@ -119,7 +120,7 @@ func authSign(user *models.User, audience string, expiresAt time.Duration) strin
 	return token.String()
 }
 
-func AuthRevokeCookie(c *gin.Context) error {
+func AuthRevokeCookie(c *gin.Context, db *gorm.DB) error {
 	cookie, err := c.Cookie(cookieName)
 	if err != nil {
 		return err
@@ -131,11 +132,11 @@ func AuthRevokeCookie(c *gin.Context) error {
 		return err
 	}
 
-	authRevoke(claims.ID)
-	c.SetCookie(cookieName, "", -1, "", "", Config.CookieHttpsOnly, true)
+	authRevoke(db, claims.ID)
+	c.SetCookie(cookieName, "", -1, "", "", Config.COOKIE_HTTPS_ONLY, true)
 
 	return nil
 }
-func authRevoke(claimsID string) {
-	DB.Where("uid = ?", claimsID).Delete(&models.UserToken{})
+func authRevoke(db *gorm.DB, claimsID string) {
+	db.Where("uid = ?", claimsID).Delete(&models.UserToken{})
 }

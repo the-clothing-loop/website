@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/local/global"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/CollActionteam/clothing-loop/server/local/views"
 	"github.com/darahayes/go-boom"
@@ -12,7 +11,8 @@ import (
 )
 
 func ChainCreate(c *gin.Context) {
-	ok, user, _ := middlewareAuthCookieStart(c, models.RoleUser, "")
+	db := getDB(c)
+	ok, user, _ := middlewareAuthCookieStart(c, db, models.RoleUser, "")
 	if !ok {
 		return
 	}
@@ -70,9 +70,9 @@ func ChainCreate(c *gin.Context) {
 			{UserID: user.ID, ChainAdmin: true},
 		},
 	}
-	global.DB.Create(&chain)
+	db.Create(&chain)
 
-	if ok = middlewareAuthCookieEnd(c, user); !ok {
+	if ok = middlewareAuthCookieEnd(c, db, user); !ok {
 		return
 	}
 
@@ -80,6 +80,8 @@ func ChainCreate(c *gin.Context) {
 }
 
 func ChainAddUser(c *gin.Context) {
+	db := getDB(c)
+
 	var body struct {
 		UserUID    string `json:"user_uid" binding:"required,uuid"`
 		ChainUID   string `json:"chain_uid" binding:"required,uuid"`
@@ -90,13 +92,13 @@ func ChainAddUser(c *gin.Context) {
 		return
 	}
 
-	ok, adminUser, chain := middlewareAuthCookieStart(c, models.RoleChainAdmin, body.ChainUID)
+	ok, adminUser, chain := middlewareAuthCookieStart(c, db, models.RoleChainAdmin, body.ChainUID)
 	if !ok {
 		return
 	}
 
 	var user models.User
-	if res := global.DB.Where("uid = ? AND enabled = ? AND email_verified = ?", body.UserUID, true, true).First(&user); res.Error != nil {
+	if res := db.Where("uid = ? AND enabled = ? AND email_verified = ?", body.UserUID, true, true).First(&user); res.Error != nil {
 		boom.BadRequest(c.Writer, "User does not exist")
 		return
 	}
@@ -106,11 +108,11 @@ func ChainAddUser(c *gin.Context) {
 		return
 	}
 
-	if res := global.DB.Where("user_id = ? AND chain_id = ?", user.ID, chain.ID).First(&models.UserChainLL{}); res.Error == nil {
+	if res := db.Where("user_id = ? AND chain_id = ?", user.ID, chain.ID).First(&models.UserChainLL{}); res.Error == nil {
 		boom.BadRequest(c.Writer, "This user is already a member")
 	}
 
-	if res := global.DB.Create(&models.UserChainLL{
+	if res := db.Create(&models.UserChainLL{
 		UserID:     user.ID,
 		ChainID:    chain.ID,
 		ChainAdmin: false,
@@ -123,7 +125,7 @@ func ChainAddUser(c *gin.Context) {
 		Name  string
 		Email string
 	}
-	global.DB.Raw("SELECT user.name as name, user.email as email FROM user_chain_ll JOIN user ON user_chain_ll.user_id = user.id WHERE user_chain_ll.chain_id = ? AND user_chain_ll.chain_admin = ? AND user.enabled = ?", chain.ID, true, true).Scan(&results)
+	db.Raw("SELECT users.name as name, users.email as email FROM user_chain_lls JOIN users ON user_chain_lls.user_id = users.id WHERE user_chain_lls.chain_id = ? AND user_chain_lls.chain_admin = ? AND users.enabled = ?", chain.ID, true, true).Scan(&results)
 
 	if len(results) == 0 {
 		boom.Internal(c.Writer, "No admins exist for this loop")
@@ -133,6 +135,7 @@ func ChainAddUser(c *gin.Context) {
 	for _, result := range results {
 		go views.EmailAParticipantJoinedTheLoop(
 			c,
+			db,
 			result.Email,
 			result.Name,
 			user.Name,
@@ -141,5 +144,5 @@ func ChainAddUser(c *gin.Context) {
 		)
 	}
 
-	middlewareAuthCookieEnd(c, adminUser)
+	middlewareAuthCookieEnd(c, db, adminUser)
 }

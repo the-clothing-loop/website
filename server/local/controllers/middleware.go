@@ -1,14 +1,29 @@
 package controllers
 
 import (
-	"github.com/CollActionteam/clothing-loop/server/local/global"
+	"github.com/CollActionteam/clothing-loop/server/local/app"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func middlewareAuthCookieStart(c *gin.Context, minimumRole int, chainUID string) (ok bool, user *models.User, chain *models.Chain) {
-	user = global.AuthValidateCookie(c)
+func getDB(c *gin.Context) *gorm.DB {
+	db, ok := c.Get("DB")
+	if !ok {
+		panic("db is not instantiated")
+	}
+
+	return db.(*gorm.DB)
+}
+func MiddlewareSetDB(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("DB", db)
+	}
+}
+
+func middlewareAuthCookieStart(c *gin.Context, db *gorm.DB, minimumRole int, chainUID string) (ok bool, user *models.User, chain *models.Chain) {
+	user = app.AuthValidateCookie(c, db)
 	if user == nil {
 		boom.Unathorized(c.Writer)
 		return false, nil, nil
@@ -29,12 +44,12 @@ func middlewareAuthCookieStart(c *gin.Context, minimumRole int, chainUID string)
 		return false, nil, nil
 	}
 
-	global.DB.Where("uid = ?", chainUID).First(chain)
+	db.Where("uid = ?", chainUID).First(chain)
 
-	user.AddUserChainsLLToObject(global.DB)
+	user.AddUserChainsLLToObject(db)
 
 	// handle RoleAdmin
-	if user.Admin == true {
+	if user.Admin {
 		return true, user, chain
 	}
 
@@ -54,8 +69,8 @@ func middlewareAuthCookieStart(c *gin.Context, minimumRole int, chainUID string)
 	return false, nil, nil
 }
 
-func middlewareAuthCookieEnd(c *gin.Context, user *models.User) (ok bool) {
-	if ok = global.AuthSignCookie(c, user); !ok {
+func middlewareAuthCookieEnd(c *gin.Context, db *gorm.DB, user *models.User) (ok bool) {
+	if ok = app.AuthSignCookie(c, db, user); !ok {
 		boom.Internal(c.Writer)
 		return false
 	}
