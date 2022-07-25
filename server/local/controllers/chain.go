@@ -103,7 +103,7 @@ func ChainAddUser(c *gin.Context) {
 		return
 	}
 
-	if chain.OpenToNewMembers == false {
+	if !chain.OpenToNewMembers {
 		boom.BadRequest(c.Writer, "This loop is not currently open to new members")
 		return
 	}
