@@ -25,7 +25,11 @@ It includes handy environments to test:
 - database queries
 - email smtp test server (TODO)
 
-`make docker`
+`make docker-start`
+
+And to stop the docker containers
+
+`make docker-stop`
 
 # Dependencies
 

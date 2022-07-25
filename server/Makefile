@@ -1,4 +1,4 @@
-.PHONY: start build-server build-server-fcgi test docker
+.PHONY: start build-server build-server-fcgi test docker-start docker-stop
 
 # List all make commands
 default:
@@ -18,5 +18,7 @@ build-server-fcgi:
 test:
 	@go test ./...
 
-docker:
-	@cd docker; docker-compose up
+docker-start:
+	@cd docker; docker-compose up -d
+docker-stop:
+	@cd docker; docker-compose down
