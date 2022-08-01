@@ -12,7 +12,7 @@ import (
 
 func ChainCreate(c *gin.Context) {
 	db := getDB(c)
-	ok, user, _ := middlewareAuthCookieStart(c, db, models.RoleUser, "")
+	ok, user, _ := middlewareAuth(c, db, models.RoleUser, "")
 	if !ok {
 		return
 	}
@@ -24,15 +24,15 @@ func ChainCreate(c *gin.Context) {
 		Latitude    float32  `json:"latitude" binding:"required"`
 		Longitude   float32  `json:"longitude" binding:"required"`
 		Radius      float32  `json:"radius" binding:"required"`
-		Categories  []string `json:"categories" binding:"required"`
+		Genders     []string `json:"genders" binding:"required"`
 		Sizes       []string `json:"sizes" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		boom.BadRequest(c.Writer, err)
 		return
 	}
-	if ok := models.ValidateAllCategoryEnum(body.Categories); !ok {
-		boom.BadRequest(c.Writer, "category not a valid enum value")
+	if ok := models.ValidateAllGenderEnum(body.Genders); !ok {
+		boom.BadRequest(c.Writer, "gender not a valid enum value")
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.Sizes); !ok {
@@ -40,10 +40,10 @@ func ChainCreate(c *gin.Context) {
 		return
 	}
 
-	categoriesLLs := []models.CategoriesLL{}
-	for _, categoryEnum := range body.Categories {
-		categoriesLLs = append(categoriesLLs, models.CategoriesLL{
-			CategoryEnum: categoryEnum,
+	chainGenders := []models.ChainGender{}
+	for _, genderEnum := range body.Genders {
+		chainGenders = append(chainGenders, models.ChainGender{
+			GenderEnum: genderEnum,
 		})
 	}
 
@@ -64,19 +64,105 @@ func ChainCreate(c *gin.Context) {
 		Radius:           body.Radius,
 		Published:        true,
 		OpenToNewMembers: true,
-		Categories:       categoriesLLs,
+		Genders:          chainGenders,
 		Sizes:            chainSizes,
-		Users: []models.UserChainLL{
+		Users: []models.UserChain{
 			{UserID: user.ID, ChainAdmin: true},
 		},
 	}
 	db.Create(&chain)
 
-	if ok = middlewareAuthCookieEnd(c, db, user); !ok {
+	c.JSON(http.StatusOK, gin.H{})
+}
+
+func ChainGet(c *gin.Context) {
+	db := getDB(c)
+
+	var body struct {
+		ChainUID string `json:"chain_uid" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		boom.BadRequest(c.Writer, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	ok, _, _ := middlewareAuth(c, db, models.RoleUser, "")
+	if !ok {
+		return
+	}
+
+	chain := models.Chain{}
+	if res := db.Raw(`
+SELECT *
+FROM chains
+WHERE chains.uid = ?
+LEFT JOIN chain_gender ON chain_gender.chain_id = chains.id
+LIMIT 1
+	`).Scan(&chain); res.Error != nil {
+		boom.BadRequest(c.Writer, "chain not found")
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"uid":              chain.UID,
+		"name":             chain.Name,
+		"description":      chain.Description,
+		"address":          chain.Address,
+		"latitude":         chain.Latitude,
+		"longitude":        chain.Longitude,
+		"radius":           chain.Radius,
+		"genders":          chain.Genders,
+		"published":        chain.Published,
+		"openToNewMembers": chain.OpenToNewMembers,
+	})
+}
+
+func ChainUpdate(c *gin.Context) {
+	db := getDB(c)
+
+	var body struct {
+		UID         string    `json:"uid" binding:"required"`
+		Name        *string   `json:"name"`
+		Description *string   `json:"description"`
+		Address     *string   `json:"address"`
+		Latitude    *float32  `json:"latitude"`
+		Longitude   *float32  `json:"longitude"`
+		Radius      *float32  `json:"radius"`
+		Genders     *[]string `json:"genders"`
+		Sizes       *[]string `json:"sizes"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		boom.BadRequest(c.Writer, err)
+		return
+	}
+
+	ok, _, chain := middlewareAuth(c, db, models.RoleChainAdmin, body.UID)
+	if !ok {
+		return
+	}
+
+	optionalValues := map[string]any{
+		"name":        body.Name,
+		"description": body.Description,
+		"address":     body.Address,
+		"latitude":    body.Latitude,
+		"longitude":   body.Longitude,
+		"radius":      body.Radius,
+		"genders":     body.Genders,
+		"sizes":       body.Sizes,
+	}
+	valuesToUpdate := map[string]any{}
+	for k := range optionalValues {
+		v := optionalValues[k]
+
+		if v != nil {
+			valuesToUpdate[k] = v
+		}
+	}
+
+	if res := db.Model(chain).Updates(valuesToUpdate); res.Error != nil {
+		boom.Internal(c.Writer)
+	}
 }
 
 func ChainAddUser(c *gin.Context) {
@@ -92,7 +178,7 @@ func ChainAddUser(c *gin.Context) {
 		return
 	}
 
-	ok, adminUser, chain := middlewareAuthCookieStart(c, db, models.RoleChainAdmin, body.ChainUID)
+	ok, _, chain := middlewareAuth(c, db, models.RoleChainAdmin, body.ChainUID)
 	if !ok {
 		return
 	}
@@ -108,11 +194,11 @@ func ChainAddUser(c *gin.Context) {
 		return
 	}
 
-	if res := db.Where("user_id = ? AND chain_id = ?", user.ID, chain.ID).First(&models.UserChainLL{}); res.Error == nil {
+	if res := db.Where("user_id = ? AND chain_id = ?", user.ID, chain.ID).First(&models.UserChain{}); res.Error == nil {
 		boom.BadRequest(c.Writer, "This user is already a member")
 	}
 
-	if res := db.Create(&models.UserChainLL{
+	if res := db.Create(&models.UserChain{
 		UserID:     user.ID,
 		ChainID:    chain.ID,
 		ChainAdmin: false,
@@ -125,7 +211,14 @@ func ChainAddUser(c *gin.Context) {
 		Name  string
 		Email string
 	}
-	db.Raw("SELECT users.name as name, users.email as email FROM user_chain_lls JOIN users ON user_chain_lls.user_id = users.id WHERE user_chain_lls.chain_id = ? AND user_chain_lls.chain_admin = ? AND users.enabled = ?", chain.ID, true, true).Scan(&results)
+	db.Raw(`
+SELECT users.name as name, users.email as email
+FROM user_chains
+JOIN users ON user_chains.user_id = users.id 
+WHERE user_chains.chain_id = ?
+	AND user_chains.chain_admin = ?
+	AND users.enabled = ?
+`, chain.ID, true, true).Scan(&results)
 
 	if len(results) == 0 {
 		boom.Internal(c.Writer, "No admins exist for this loop")
@@ -143,6 +236,4 @@ func ChainAddUser(c *gin.Context) {
 			user.PhoneNumber,
 		)
 	}
-
-	middlewareAuthCookieEnd(c, db, adminUser)
 }

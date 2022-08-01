@@ -7,7 +7,6 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm/clause"
 )
 
@@ -15,9 +14,9 @@ func UserGet(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UID      string `query:"uid" binding:"uuid"`
-		Email    string `query:"email" binding:"email"`
-		ChainUID string `query:"chain_uid" binding:"uuid,required"`
+		UID      string `uri:"uid" binding:"uuid"`
+		Email    string `uri:"email" binding:"email"`
+		ChainUID string `uri:"chain_uid" binding:"uuid,required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		boom.BadRequest(c.Writer, err)
@@ -29,7 +28,7 @@ func UserGet(c *gin.Context) {
 		return
 	}
 
-	ok, authUser, chain := middlewareAuthCookieStart(c, db, models.RoleUser, query.ChainUID)
+	ok, _, chain := middlewareAuth(c, db, models.RoleUser, query.ChainUID)
 	if !ok {
 		return
 	}
@@ -56,10 +55,6 @@ func UserGet(c *gin.Context) {
 		return
 	}
 
-	if ok := middlewareAuthCookieEnd(c, db, authUser); !ok {
-		return
-	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"uid":              user.UID,
 		"email":            user.Email,
@@ -76,7 +71,7 @@ func UserGet(c *gin.Context) {
 func UserUpdate(c *gin.Context) {
 	db := getDB(c)
 
-	ok, user, _ := middlewareAuthCookieStart(c, db, models.RoleUser, "")
+	ok, user, _ := middlewareAuth(c, db, models.RoleUser, "")
 	if !ok {
 		return
 	}
@@ -139,91 +134,32 @@ func UserUpdate(c *gin.Context) {
 			}
 		}
 	}
-
-	middlewareAuthCookieEnd(c, db, user)
 }
 
-func UserCreate(c *gin.Context) {
+func UserDelete(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		Email           string   `json:"email" binding:"required"`
-		ChainUIDs       []string `json:"chain_uids" binding:"required"`
-		Name            string   `json:"name" binding:"required"`
-		PhoneNumber     string   `json:"phone_number" binding:"required"`
-		Newsletter      bool     `json:"newsletter" binding:"required"`
-		InterestedSizes []string `json:"interested_sizes" binding:"required"`
-		Address         string   `json:"address" binding:"required"`
+	var query struct {
+		UserUID  string `form:"user_uid" binding:"required,uuid"`
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
 	}
-	if err := c.ShouldBindJSON(&body); err != nil {
-		boom.BadRequest(c.Writer)
-	}
-	for _, size := range body.InterestedSizes {
-		if ok := models.ValidateSizeEnum(size); !ok {
-			boom.BadRequest(c.Writer, fmt.Sprintf("invalid size: %s", size))
-			return
-		}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		boom.BadRequest(c.Writer, fmt.Sprintf("err: %v, uri: %v", err, query))
+		return
 	}
 
-	var chains []struct {
-		ID uint
-	}
-	// set user to chain
-	db.Distinct("id").Where("uid in ?", body.ChainUIDs).Scan(&chains)
-	// db.Update()
-
-	user := models.User{
-		UID:             uuid.NewV4().String(),
-		Email:           body.Email,
-		EmailVerified:   false,
-		Admin:           false,
-		Name:            body.Name,
-		PhoneNumber:     body.PhoneNumber,
-		InterestedSizes: body.InterestedSizes,
-		Address:         body.Address,
-		Enabled:         false,
-	}
-	db.Create(&user)
-
-	userChainLL := []models.UserChainLL{}
-	for _, chain := range chains {
-		userChainLL = append(userChainLL, models.UserChainLL{
-			UserID:  user.ID,
-			ChainID: chain.ID,
-		})
-	}
-	db.Create(&userChainLL)
-}
-
-func UserAddAsChainAdmin(c *gin.Context) {
-	db := getDB(c)
-
-	ok, authUser, _ := middlewareAuthCookieStart(c, db, models.RoleAdmin, "")
+	ok, _, _ := middlewareAuth(c, db, models.RoleChainAdmin, query.ChainUID)
 	if !ok {
 		return
 	}
 
-	var body struct {
-		UserUID  string `json:"user_uid" binding:"required,uuid"`
-		ChainUID string `json:"chain_uid" binding:"required,uuid"`
-	}
-	if err := c.BindJSON(&body); err != nil {
-		boom.BadRequest(c.Writer, "Add user_uid and chain_uid to body")
+	// first find user id
+	var userID uint
+	db.Raw("SELECT id FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&userID)
+	if userID == 0 {
+		boom.BadRequest(c.Writer, "User is not found")
 		return
 	}
 
-	userID := ""
-	db.Raw(`
-	SELECT id
-	FROM users
-	WHERE uid = ?
-	LIMIT 1
-	`, body.UserUID).Scan(userID)
-	db.Raw(`
-	UPDATE user_chain_lls
-	SET ( chain_admin = ? )
-	WHERE user_id = ?
-	`, true, userID)
-
-	middlewareAuthCookieEnd(c, db, authUser)
+	db.Delete(&models.User{}, userID)
 }

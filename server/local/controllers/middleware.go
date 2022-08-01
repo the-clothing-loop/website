@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/CollActionteam/clothing-loop/server/local/app"
+	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
@@ -22,12 +22,20 @@ func MiddlewareSetDB(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func middlewareAuthCookieStart(c *gin.Context, db *gorm.DB, minimumRole int, chainUID string) (ok bool, user *models.User, chain *models.Chain) {
-	user = app.AuthValidateCookie(c, db)
-	if user == nil {
-		boom.Unathorized(c.Writer)
+func middlewareAuth(c *gin.Context, db *gorm.DB, minimumRole int, chainUID string) (ok bool, user *models.User, chain *models.Chain) {
+	token, ok := auth.TokenReadFromRequest(c, db)
+	if !ok {
+		boom.BadRequest(c.Writer, "Token not received")
 		return false, nil, nil
 	}
+
+	userID, ok := auth.TokenAuthenticate(db, token)
+	if !ok {
+		boom.Unathorized(c.Writer, "Invalid token")
+		return false, nil, nil
+	}
+
+	db.First(user, userID)
 
 	if chainUID == "" {
 		// handle RoleUser
@@ -67,12 +75,4 @@ func middlewareAuthCookieStart(c *gin.Context, db *gorm.DB, minimumRole int, cha
 
 	boom.Unathorized(c.Writer, "Role not high enough")
 	return false, nil, nil
-}
-
-func middlewareAuthCookieEnd(c *gin.Context, db *gorm.DB, user *models.User) (ok bool) {
-	if ok = app.AuthSignCookie(c, db, user); !ok {
-		boom.Internal(c.Writer)
-		return false
-	}
-	return true
 }

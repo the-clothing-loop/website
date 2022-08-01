@@ -3,14 +3,13 @@ port: 8085
 
 site_base_url: "http://localhost:8084"
 
-jwt_secret: "826fa56956bb0bb546728c74"
 cookie_domain: "localhost"
 cookie_https_only: false
 
 # see docker-compose cl_db
 db_host: "localhost"
 db_port: 3306
-db_name: "clothingloop-test"
+db_name: "clothingloop"
 db_user: "clothingloop"
 db_pass: "72bd3937e91363a747f810e7"
 

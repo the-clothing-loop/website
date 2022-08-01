@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"gorm.io/driver/mysql"
@@ -16,16 +17,22 @@ func DatabaseInit() *gorm.DB {
 		panic(fmt.Errorf("error connecting to db: %s", err))
 	}
 
-	db.AutoMigrate(
+	if os.Getenv("SERVER_NO_MIGRATE") == "" {
+		DatabaseAutoMigrate(db)
+	}
+
+	return db
+}
+
+func DatabaseAutoMigrate(db *gorm.DB) error {
+	return db.AutoMigrate(
 		&models.Chain{},
-		&models.CategoriesLL{},
+		&models.ChainGender{},
 		&models.ChainSize{},
 		&models.Mail{},
 		&models.Newsletter{},
 		&models.User{},
 		&models.UserToken{},
-		&models.UserChainLL{},
+		&models.UserChain{},
 	)
-
-	return db
 }

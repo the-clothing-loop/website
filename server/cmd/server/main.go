@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	app.ConfigInit()
+	app.ConfigInit(".")
 
 	fmt.Printf("Setup environment in: %s\n", app.Config.ENV)
 	fmt.Printf("Listening to: %s:%d\n", app.Config.HOST, app.Config.PORT)

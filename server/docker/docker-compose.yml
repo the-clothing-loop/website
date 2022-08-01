@@ -13,6 +13,8 @@ services:
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=cl_db
+      - PMA_USER=root
+      - PMA_PASSWORD=fb4aeaa6d860dbabe785675e
   cl_db:
     image: mariadb
     ports:

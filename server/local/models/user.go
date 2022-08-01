@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -10,7 +9,7 @@ import (
 type User struct {
 	gorm.Model
 	UID             string `gorm:"uniqueIndex"`
-	Email           string
+	Email           string `gorm:"unique"`
 	EmailVerified   bool
 	Admin           bool
 	Name            string
@@ -19,7 +18,7 @@ type User struct {
 	Address         string
 	Enabled         bool
 	UserToken       []UserToken
-	Chains          []UserChainLL
+	Chains          []UserChain
 }
 
 const (
@@ -30,12 +29,13 @@ const (
 
 type UserToken struct {
 	ID        uint
-	UID       string `gorm:"uniqueIndex"`
+	Token     string `gorm:"unique"`
+	Verified  bool
 	UserID    uint
-	CreatedAt time.Time
+	CreatedAt int64
 }
 
-type UserChainLL struct {
+type UserChain struct {
 	ID         uint
 	UserID     uint `gorm:"index"`
 	ChainID    uint
@@ -59,11 +59,11 @@ func (u *User) GetUserChainLLJSON(db *gorm.DB) (*[]UserChainLLJSON, error) {
 	db.Raw(`SELECT
 	( chains.uid as ChainUID
 	, users.uid as UserUID
-	, user_chain_lls.chain_admin as ChainAdmin ) 
-	FROM user_chain_lls
-	JOIN chains ON user_chain_lls.chain_id = chains.id 
-	JOIN users ON user_chain_lls.user_id = users.id 
-	WHERE user_chain_lls.user_id = ?
+	, user_chains.chain_admin as ChainAdmin ) 
+	FROM user_chains
+	JOIN chains ON user_chains.chain_id = chains.id 
+	JOIN users ON user_chains.user_id = users.id 
+	WHERE user_chains.user_id = ?
 	`, u.ID).Scan(results)
 
 	if results == nil {
@@ -74,17 +74,17 @@ func (u *User) GetUserChainLLJSON(db *gorm.DB) (*[]UserChainLLJSON, error) {
 }
 
 func (u *User) AddUserChainsLLToObject(db *gorm.DB) {
-	userChainLL := []UserChainLL{}
+	userChainLL := []UserChain{}
 	db.Raw(`
 	SELECT
-	( user_chain_lls.id as ID
-	, user_chain_lls.user_id as UserID
-	, user_chain_lls.chain_id as ChainID
-	, user_chain_lls.chain_admin as ChainAdmin )
-	FROM user_chain_lls
-	JOIN users ON user_chain_lls.user_id = users.id
+	( user_chains.id as ID
+	, user_chains.user_id as UserID
+	, user_chains.chain_id as ChainID
+	, user_chains.chain_admin as ChainAdmin )
+	FROM user_chains
+	JOIN users ON user_chains.user_id = users.id
 	WHERE users.id = ?
-	`).Scan(userChainLL)
+	`).Scan(&userChainLL)
 
 	u.Chains = userChainLL
 }
@@ -93,10 +93,10 @@ func (u *User) IsPartOfChain(db *gorm.DB, chainID uint) bool {
 	res := db.Exec(`
 	SELECT 
 	(id)
-	FROM user_chain_lls
-	JOIN users ON user_chain_lls.user_id = users.id
-	WHERE user_chain_lls.user_id = ?
-		AND user_chain_lls.chain_id = ?
+	FROM user_chains
+	JOIN users ON user_chains.user_id = users.id
+	WHERE user_chains.user_id = ?
+		AND user_chains.chain_id = ?
 	`, u.ID, chainID)
 	return res.Error == nil
 }

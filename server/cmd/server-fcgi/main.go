@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	app.ConfigInit()
+	app.ConfigInit(".")
 
 	router := server.Routes()
 

@@ -10,7 +10,6 @@ func Routes() *gin.Engine {
 	// initialization
 	db := app.DatabaseInit()
 	app.MailInit()
-	app.AuthInit()
 
 	// set gin mode
 	if app.Config.ENV == app.EnvEnumProduction {
@@ -21,28 +20,39 @@ func Routes() *gin.Engine {
 
 	// router
 	r := gin.New()
-
 	r.Use(controllers.MiddlewareSetDB(db))
+
+	// v1 router group
+	v1 := r.Group("/v1")
+
 	// login
-	r.POST("/login/email", controllers.LoginEmailStep1)
-	r.POST("/register", controllers.Register)
-	r.GET("/login/validate", controllers.LoginEmailStep2)
-	r.DELETE("/logout", controllers.Logout)
-	if app.Config.ENV == app.EnvEnumDevelopment {
-		r.POST("/login/backdoor", controllers.LoginBackdoor)
-	}
+	v1.POST("/register/basic-user", controllers.RegisterBasicUser)
+	v1.POST("/register/chain-admin", controllers.RegisterChainAdmin)
+	v1.POST("/login/email", controllers.LoginEmailStep1)
+	v1.GET("/login/validate", controllers.LoginEmailStep2)
+	v1.DELETE("/logout", controllers.Logout)
 
 	// payments
-	r.POST("/payments/initiate", controllers.PaymentsInitiate)
-	r.POST("/payments/webhook", controllers.PaymentsWebhook)
+	// TODO: one off + recurring -- stripe
+	v1.POST("/payments/initiate", controllers.PaymentsInitiate)
+	v1.POST("/payments/webhook", controllers.PaymentsWebhook)
+
 	// user
-	r.GET("/user", controllers.UserGet)
-	r.PATCH("/user", controllers.UserUpdate)
-	r.PUT("/user", controllers.UserCreate)
-	r.POST("/user/add-as-chain-admin", controllers.UserAddAsChainAdmin)
+	v1.GET("/user", controllers.UserGet)
+	v1.PATCH("/user", controllers.UserUpdate)
+	v1.DELETE("/user", controllers.UserDelete)
+
+	// chain
+	// TODO
+	v1.GET("/chain", controllers.ChainGet)
+	// v1.GET("/chain/all")
+	v1.PATCH("/chain", controllers.ChainUpdate)
+	v1.POST("/chain", controllers.ChainCreate)
+	v1.POST("/chain/add-user", controllers.ChainAddUser)
+
 	// contact
-	r.POST("/contact/newsletter", controllers.ContactNewsletter)
-	r.POST("/contact/email", controllers.ContactMail)
+	v1.POST("/contact/newsletter", controllers.ContactNewsletter)
+	v1.POST("/contact/email", controllers.ContactMail)
 
 	return r
 }

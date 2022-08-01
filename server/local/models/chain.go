@@ -1,10 +1,11 @@
 package models
 
 import (
-	"strings"
-
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
+
+var validate = validator.New()
 
 type Chain struct {
 	gorm.Model
@@ -17,37 +18,64 @@ type Chain struct {
 	Radius           float32
 	Published        bool
 	OpenToNewMembers bool
-	Categories       []CategoriesLL
+	Genders          []ChainGender
 	Sizes            []ChainSize
-	Users            []UserChainLL
+	Users            []UserChain
+}
+
+// requires Chain to contain Genders
+func (c *Chain) GetGendersToList() (gendersList []string) {
+	for _, g := range c.Genders {
+		gendersList = append(gendersList, g.GenderEnum)
+	}
+
+	return gendersList
+}
+
+func SetGendersFromList(gendersList []string) (genderTables []ChainGender) {
+	for _, genderEnum := range gendersList {
+		genderTables = append(genderTables, ChainGender{GenderEnum: genderEnum})
+	}
+
+	return genderTables
+}
+
+// requires Chain to contain Sizes
+func (c *Chain) GetSizesToList() (sizesList []string) {
+	for _, s := range c.Sizes {
+		sizesList = append(sizesList, s.SizeEnum)
+	}
+
+	return sizesList
+}
+
+func SetSizesFromList(sizesList []string) (sizeTables []ChainSize) {
+	for _, sizeEnum := range sizesList {
+		sizeTables = append(sizeTables, ChainSize{SizeEnum: sizeEnum})
+	}
+
+	return sizeTables
 }
 
 const (
-	CategoryEnumChildren = "1"
-	CategoryEnumWomen    = "2"
-	CategoryEnumMen      = "3"
+	GenderEnumChildren = "1"
+	GenderEnumWomen    = "2"
+	GenderEnumMen      = "3"
 )
 
-func ValidateCategoryEnum(s string) bool {
-	if index := strings.Index("123", s); index == -1 {
-		return false
-	}
-
-	return true
-}
-func ValidateAllCategoryEnum(arr []string) bool {
+func ValidateAllGenderEnum(arr []string) bool {
 	for _, s := range arr {
-		if ok := ValidateCategoryEnum(s); !ok {
+		if err := validate.Var(s, "oneof=1 2 3,required"); err != nil {
 			return false
 		}
 	}
 	return true
 }
 
-type CategoriesLL struct {
-	ID           uint
-	ChainID      uint
-	CategoryEnum string
+type ChainGender struct {
+	ID         uint
+	ChainID    uint
+	GenderEnum string
 }
 
 const (
@@ -65,11 +93,9 @@ const (
 )
 
 func ValidateSizeEnum(s string) bool {
-	if index := strings.Index("123456789AB", s); index == -1 {
-		return false
-	}
+	err := validate.Var(s, "oneof=1 2 3 4 5 6 7 8 9 A B,required")
 
-	return true
+	return err == nil
 }
 func ValidateAllSizeEnum(arr []string) bool {
 	for _, s := range arr {
