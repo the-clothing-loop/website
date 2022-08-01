@@ -40,19 +40,8 @@ func ChainCreate(c *gin.Context) {
 		return
 	}
 
-	chainGenders := []models.ChainGender{}
-	for _, genderEnum := range body.Genders {
-		chainGenders = append(chainGenders, models.ChainGender{
-			GenderEnum: genderEnum,
-		})
-	}
-
-	chainSizes := []models.ChainSize{}
-	for _, size := range body.Sizes {
-		chainSizes = append(chainSizes, models.ChainSize{
-			SizeEnum: size,
-		})
-	}
+	chainGenders := models.SetGendersFromList(body.Genders)
+	chainSizes := models.SetSizesFromList(body.Sizes)
 
 	chain := models.Chain{
 		UID:              uuid.NewV4().String(),

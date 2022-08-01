@@ -110,19 +110,8 @@ func RegisterChainAdmin(c *gin.Context) {
 		return
 	}
 
-	catTables := []models.ChainGender{}
-	for _, gender := range body.Chain.Genders {
-		catTables = append(catTables, models.ChainGender{
-			GenderEnum: gender,
-		})
-	}
-
-	sizeTables := []models.ChainSize{}
-	for _, size := range body.Sizes {
-		sizeTables = append(sizeTables, models.ChainSize{
-			SizeEnum: size,
-		})
-	}
+	genderTables := models.SetGendersFromList(body.Chain.Genders)
+	sizeTables := models.SetSizesFromList(body.Sizes)
 
 	chain := &models.Chain{
 		UID:              uuid.NewV4().String(),
@@ -133,7 +122,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Longitude:        body.Chain.Longitude,
 		Radius:           body.Chain.Radius,
 		OpenToNewMembers: body.Chain.OpenToNewMembers,
-		Genders:          catTables,
+		Genders:          genderTables,
 		Sizes:            sizeTables,
 	}
 	user := &models.User{
