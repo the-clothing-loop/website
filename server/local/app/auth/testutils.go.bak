@@ -1,0 +1,43 @@
+package auth
+
+import (
+	"fmt"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
+)
+
+type callbackFuncWithToken = func(c *gin.Context, token string)
+
+func MockGinContextLoggedIn(t *testing.T, db *gorm.DB, callback callbackFuncWithToken) {
+	// create unverified token
+	token, ok := TokenCreateUnverified(db, 1)
+	assert.Truef(t, ok, "CreateUnverifiedToken returned not ok (%s)", token)
+
+	// verify token
+	ok = TokenVerify(db, token)
+	assert.Truef(t, ok, "Unable to verify token (%s)", token)
+
+	// mock gin context
+	c := MockGinContextBasic(t, db)
+	// add bearer token
+	c.Request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+
+	// defer token removal
+	defer TokenDelete(db, token)
+
+	callback(c, token)
+}
+
+func MockGinContextBasic(t *testing.T, db *gorm.DB) *gin.Context {
+	// mock gin context
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	// add database to context
+	c.Keys = map[string]any{"DB": db}
+
+	return c
+}

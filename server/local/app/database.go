@@ -27,7 +27,6 @@ func DatabaseInit() *gorm.DB {
 func DatabaseAutoMigrate(db *gorm.DB) error {
 	return db.AutoMigrate(
 		&models.Chain{},
-		&models.ChainGender{},
 		&models.ChainSize{},
 		&models.Mail{},
 		&models.Newsletter{},

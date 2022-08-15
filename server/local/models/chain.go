@@ -13,35 +13,17 @@ type Chain struct {
 	Name             string
 	Description      string
 	Address          string
-	Latitude         float32
-	Longitude        float32
+	Latitude         float64
+	Longitude        float64
 	Radius           float32
 	Published        bool
 	OpenToNewMembers bool
-	Genders          []ChainGender
 	Sizes            []ChainSize
 	Users            []UserChain
 }
 
-// requires Chain to contain Genders
-func (c *Chain) GetGendersToList() (gendersList []string) {
-	for _, g := range c.Genders {
-		gendersList = append(gendersList, g.GenderEnum)
-	}
-
-	return gendersList
-}
-
-func SetGendersFromList(gendersList []string) (genderTables []ChainGender) {
-	for _, genderEnum := range gendersList {
-		genderTables = append(genderTables, ChainGender{GenderEnum: genderEnum})
-	}
-
-	return genderTables
-}
-
 // requires Chain to contain Sizes
-func (c *Chain) GetSizesToList() (sizesList []string) {
+func (c *Chain) SizesToList() (sizesList []string) {
 	for _, s := range c.Sizes {
 		sizesList = append(sizesList, s.SizeEnum)
 	}
@@ -55,27 +37,6 @@ func SetSizesFromList(sizesList []string) (sizeTables []ChainSize) {
 	}
 
 	return sizeTables
-}
-
-const (
-	GenderEnumChildren = "1"
-	GenderEnumWomen    = "2"
-	GenderEnumMen      = "3"
-)
-
-func ValidateAllGenderEnum(arr []string) bool {
-	for _, s := range arr {
-		if err := validate.Var(s, "oneof=1 2 3,required"); err != nil {
-			return false
-		}
-	}
-	return true
-}
-
-type ChainGender struct {
-	ID         uint
-	ChainID    uint
-	GenderEnum string
 }
 
 const (

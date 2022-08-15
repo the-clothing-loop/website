@@ -28,8 +28,8 @@ func Routes() *gin.Engine {
 	// login
 	v1.POST("/register/basic-user", controllers.RegisterBasicUser)
 	v1.POST("/register/chain-admin", controllers.RegisterChainAdmin)
-	v1.POST("/login/email", controllers.LoginEmailStep1)
-	v1.GET("/login/validate", controllers.LoginEmailStep2)
+	v1.POST("/login/email", controllers.LoginEmail)
+	v1.GET("/login/validate", controllers.LoginValidate)
 	v1.DELETE("/logout", controllers.Logout)
 
 	// payments

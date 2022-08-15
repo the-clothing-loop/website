@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"fmt"
-	"net/http"
 
+	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
@@ -14,64 +14,69 @@ func UserGet(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UID      string `uri:"uid" binding:"uuid"`
-		Email    string `uri:"email" binding:"email"`
-		ChainUID string `uri:"chain_uid" binding:"uuid,required"`
+		UID      string `form:"user_uid" binding:"omitempty,uuid"`
+		Email    string `form:"email" binding:"omitempty,email"`
+		ChainUID string `form:"chain_uid" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		boom.BadRequest(c.Writer, err)
 		return
 	}
 
+	// retrieve user from query
 	if query.UID == "" && query.Email == "" {
 		boom.BadRequest(c.Writer, "add uid or email to query")
 		return
 	}
-
-	ok, _, chain := middlewareAuth(c, db, models.RoleUser, query.ChainUID)
-	if !ok {
-		return
-	}
-
-	var user *models.User
+	user := &models.User{}
 	if query.UID != "" {
-		db.Where("uid = ? AND email_verified = ?", query.UID, true).First(user)
+		db.Where("uid = ? AND is_email_verified = ?", query.UID, true).First(user)
 	} else if query.Email != "" {
-		db.Where("email = ? AND email_verified = ?", query.Email, true).First(user)
+		db.Where("email = ? AND is_email_verified = ?", query.Email, true).First(user)
 	}
-	if user == nil {
+	if user.ID == 0 {
 		boom.BadRequest(c.Writer, "user not found")
 		return
 	}
 
-	if ok := user.IsPartOfChain(db, chain.ID); !ok {
-		boom.Unathorized(c.Writer)
+	var ok bool
+	if query.ChainUID == "" {
+		ok, authUser, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
+
+		if ok && user.ID != authUser.ID {
+			boom.Unathorized(c.Writer, "for elevated privileges include a chain_uid")
+			return
+		}
+	} else {
+		ok, _, _ = auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+	}
+	if !ok {
 		return
 	}
 
-	userChainLLJSON, err := user.GetUserChainLLJSON(db)
+	userChainJSON, err := user.GetUserChainResponse(db)
 	if err != nil {
 		boom.Internal(c.Writer, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"uid":              user.UID,
-		"email":            user.Email,
-		"name":             user.Name,
-		"phone_number":     user.PhoneNumber,
-		"email_verified":   user.EmailVerified,
-		"chains":           userChainLLJSON,
-		"address":          user.Address,
-		"interested_sizes": user.InterestedSizes,
-		"is_admin":         user.Admin,
+	c.JSON(200, gin.H{
+		"uid":               user.UID,
+		"email":             user.Email,
+		"name":              user.Name,
+		"phone_number":      user.PhoneNumber,
+		"is_email_verified": user.IsEmailVerified,
+		"chains":            userChainJSON,
+		"address":           user.Address,
+		"sizes":             user.Sizes,
+		"is_root_admin":     user.IsRootAdmin,
 	})
 }
 
 func UserUpdate(c *gin.Context) {
 	db := getDB(c)
 
-	ok, user, _ := middlewareAuth(c, db, models.RoleUser, "")
+	ok, user, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
 	if !ok {
 		return
 	}
@@ -148,7 +153,7 @@ func UserDelete(c *gin.Context) {
 		return
 	}
 
-	ok, _, _ := middlewareAuth(c, db, models.RoleChainAdmin, query.ChainUID)
+	ok, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
 	if !ok {
 		return
 	}

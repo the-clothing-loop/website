@@ -8,11 +8,12 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	boom "github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
+	. "github.com/lil5/go-slice-dedup"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
 
-func LoginEmailStep1(c *gin.Context) {
+func LoginEmail(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
@@ -53,7 +54,7 @@ func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool 
 	return app.MailSend(c, db, user.Email, subject, messageHtml)
 }
 
-func LoginEmailStep2(c *gin.Context) {
+func LoginValidate(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
@@ -79,61 +80,61 @@ func RegisterChainAdmin(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		Address string   `json:"address"`
-		Sizes   []string `json:"sizes"`
-		Chain   struct {
+		Chain struct {
 			Name             string   `json:"name"`
 			Description      string   `json:"description"`
-			Latitude         float32  `json:"latitude"`
-			Longitude        float32  `json:"longitude"`
+			Address          string   `json:"address"`
+			Latitude         float64  `json:"latitude"`
+			Longitude        float64  `json:"longitude"`
 			Radius           float32  `json:"radius"`
 			OpenToNewMembers bool     `json:"open_to_new_members"`
-			Genders          []string `json:"genders"`
+			Sizes            []string `json:"sizes"`
 		} `json:"chain" binding:"required"`
 		User struct {
-			Email       string `json:"email" binding:"required"`
-			Name        string `json:"name" binding:"required"`
-			PhoneNumber string `json:"phone_number"`
-			Newsletter  bool   `json:"newsletter"`
+			Email       string   `json:"email" binding:"required"`
+			Name        string   `json:"name" binding:"required"`
+			PhoneNumber string   `json:"phone_number"`
+			Address     string   `json:"address"`
+			Newsletter  bool     `json:"newsletter"`
+			Sizes       []string `json:"sizes"`
 		} `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		boom.BadRequest(c.Writer, err)
 		return
 	}
-	if ok := models.ValidateAllSizeEnum(body.Sizes); !ok {
-		boom.BadRequest(c.Writer, fmt.Sprintf("invalid size in: %v", body.Sizes))
-		return
-	}
-	if ok := models.ValidateAllGenderEnum(body.Chain.Genders); !ok {
-		boom.BadRequest(c.Writer, fmt.Sprintf("invalid gender in: %v", body.Chain.Genders))
+	allSizes := []string{}
+	allSizes = append(allSizes, body.User.Sizes...)
+	allSizes = append(allSizes, body.Chain.Sizes...)
+	allSizes = DeDuplicate(allSizes)
+
+	if ok := models.ValidateAllSizeEnum(allSizes); !ok {
+		boom.BadRequest(c.Writer, fmt.Sprintf("invalid size in: %v", allSizes))
 		return
 	}
 
-	genderTables := models.SetGendersFromList(body.Chain.Genders)
-	sizeTables := models.SetSizesFromList(body.Sizes)
+	sizeTables := models.SetSizesFromList(body.Chain.Sizes)
 
 	chain := &models.Chain{
 		UID:              uuid.NewV4().String(),
 		Name:             body.Chain.Name,
 		Description:      body.Chain.Description,
-		Address:          body.Address,
+		Address:          body.Chain.Address,
 		Latitude:         body.Chain.Latitude,
 		Longitude:        body.Chain.Longitude,
 		Radius:           body.Chain.Radius,
 		OpenToNewMembers: body.Chain.OpenToNewMembers,
-		Genders:          genderTables,
 		Sizes:            sizeTables,
 	}
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           body.User.Email,
-		EmailVerified:   false,
-		Admin:           false,
+		IsEmailVerified: false,
+		IsRootAdmin:     false,
 		Name:            body.User.Name,
 		PhoneNumber:     body.User.PhoneNumber,
-		InterestedSizes: body.Sizes,
-		Address:         body.Address,
+		Sizes:           body.User.Sizes,
+		Address:         body.User.Address,
 		Enabled:         false,
 	}
 	if res := db.Create(user); res.Error != nil {
@@ -141,8 +142,8 @@ func RegisterChainAdmin(c *gin.Context) {
 		return
 	}
 	chain.Users = []models.UserChain{{
-		UserID:     user.ID,
-		ChainAdmin: true,
+		UserID:       user.ID,
+		IsChainAdmin: true,
 	}}
 	db.Create(chain)
 
@@ -182,19 +183,19 @@ func RegisterBasicUser(c *gin.Context) {
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           body.User.Email,
-		EmailVerified:   false,
-		Admin:           false,
+		IsEmailVerified: false,
+		IsRootAdmin:     false,
 		Name:            body.User.Name,
 		PhoneNumber:     body.User.PhoneNumber,
-		InterestedSizes: body.User.Sizes,
+		Sizes:           body.User.Sizes,
 		Address:         body.User.Address,
 		Enabled:         false,
 	}
 	db.Create(user)
 	db.Create(&models.UserChain{
-		UserID:     user.ID,
-		ChainID:    chainID,
-		ChainAdmin: false,
+		UserID:       user.ID,
+		ChainID:      chainID,
+		IsChainAdmin: false,
 	})
 
 	sendVerificationEmail(c, db, user)
@@ -203,7 +204,7 @@ func RegisterBasicUser(c *gin.Context) {
 func Logout(c *gin.Context) {
 	db := getDB(c)
 
-	token, ok := auth.TokenReadFromRequest(c, db)
+	token, ok := auth.TokenReadFromRequest(c)
 	if !ok {
 		boom.BadRequest(c.Writer, "no token received")
 		return

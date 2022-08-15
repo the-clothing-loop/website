@@ -1,8 +1,7 @@
 package controllers
 
 import (
-	"net/http"
-
+	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/CollActionteam/clothing-loop/server/local/views"
 	"github.com/darahayes/go-boom"
@@ -10,37 +9,32 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+type ChainCreateRequestBody struct {
+	Name        string   `json:"name" binding:"required"`
+	Description string   `json:"description" binding:"required"`
+	Address     string   `json:"address" binding:"required"`
+	Latitude    float64  `json:"latitude" binding:"required"`
+	Longitude   float64  `json:"longitude" binding:"required"`
+	Radius      float32  `json:"radius" binding:"required"`
+	Sizes       []string `json:"sizes" binding:"required"`
+}
+
 func ChainCreate(c *gin.Context) {
 	db := getDB(c)
-	ok, user, _ := middlewareAuth(c, db, models.RoleUser, "")
+	ok, user, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
 	if !ok {
 		return
 	}
 
-	var body struct {
-		Name        string   `json:"name" binding:"required"`
-		Description string   `json:"description" binding:"required"`
-		Address     string   `json:"address" binding:"required"`
-		Latitude    float32  `json:"latitude" binding:"required"`
-		Longitude   float32  `json:"longitude" binding:"required"`
-		Radius      float32  `json:"radius" binding:"required"`
-		Genders     []string `json:"genders" binding:"required"`
-		Sizes       []string `json:"sizes" binding:"required"`
-	}
+	var body ChainCreateRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		boom.BadRequest(c.Writer, err)
-		return
-	}
-	if ok := models.ValidateAllGenderEnum(body.Genders); !ok {
-		boom.BadRequest(c.Writer, "gender not a valid enum value")
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.Sizes); !ok {
 		boom.BadRequest(c.Writer, "size not a valid enum value")
 		return
 	}
-
-	chainGenders := models.SetGendersFromList(body.Genders)
 	chainSizes := models.SetSizesFromList(body.Sizes)
 
 	chain := models.Chain{
@@ -53,15 +47,17 @@ func ChainCreate(c *gin.Context) {
 		Radius:           body.Radius,
 		Published:        true,
 		OpenToNewMembers: true,
-		Genders:          chainGenders,
 		Sizes:            chainSizes,
 		Users: []models.UserChain{
-			{UserID: user.ID, ChainAdmin: true},
+			{UserID: user.ID, IsChainAdmin: true},
 		},
 	}
-	db.Create(&chain)
+	if res := db.Create(&chain); res.Error != nil {
+		boom.Internal(c.Writer, "unable to create chain")
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	c.Status(200)
 }
 
 func ChainGet(c *gin.Context) {
@@ -75,7 +71,7 @@ func ChainGet(c *gin.Context) {
 		return
 	}
 
-	ok, _, _ := middlewareAuth(c, db, models.RoleUser, "")
+	ok, _, _ := auth.Authenticate(c, db, models.RoleUser, "")
 	if !ok {
 		return
 	}
@@ -85,7 +81,7 @@ func ChainGet(c *gin.Context) {
 SELECT *
 FROM chains
 WHERE chains.uid = ?
-LEFT JOIN chain_gender ON chain_gender.chain_id = chains.id
+LEFT JOIN chain_sizes ON chain_sizes.chain_id = chains.id
 LIMIT 1
 	`).Scan(&chain); res.Error != nil {
 		boom.BadRequest(c.Writer, "chain not found")
@@ -100,7 +96,7 @@ LIMIT 1
 		"latitude":         chain.Latitude,
 		"longitude":        chain.Longitude,
 		"radius":           chain.Radius,
-		"genders":          chain.Genders,
+		"sizes":            chain.SizesToList(),
 		"published":        chain.Published,
 		"openToNewMembers": chain.OpenToNewMembers,
 	})
@@ -117,7 +113,6 @@ func ChainUpdate(c *gin.Context) {
 		Latitude    *float32  `json:"latitude"`
 		Longitude   *float32  `json:"longitude"`
 		Radius      *float32  `json:"radius"`
-		Genders     *[]string `json:"genders"`
 		Sizes       *[]string `json:"sizes"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -125,9 +120,16 @@ func ChainUpdate(c *gin.Context) {
 		return
 	}
 
-	ok, _, chain := middlewareAuth(c, db, models.RoleChainAdmin, body.UID)
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.UID)
 	if !ok {
 		return
+	}
+
+	if body.Sizes != nil {
+		if ok := models.ValidateAllSizeEnum(*body.Sizes); !ok {
+			boom.BadRequest(c.Writer, "size not a valid enum value")
+			return
+		}
 	}
 
 	optionalValues := map[string]any{
@@ -137,7 +139,6 @@ func ChainUpdate(c *gin.Context) {
 		"latitude":    body.Latitude,
 		"longitude":   body.Longitude,
 		"radius":      body.Radius,
-		"genders":     body.Genders,
 		"sizes":       body.Sizes,
 	}
 	valuesToUpdate := map[string]any{}
@@ -167,7 +168,7 @@ func ChainAddUser(c *gin.Context) {
 		return
 	}
 
-	ok, _, chain := middlewareAuth(c, db, models.RoleChainAdmin, body.ChainUID)
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
 	if !ok {
 		return
 	}
@@ -188,9 +189,9 @@ func ChainAddUser(c *gin.Context) {
 	}
 
 	if res := db.Create(&models.UserChain{
-		UserID:     user.ID,
-		ChainID:    chain.ID,
-		ChainAdmin: false,
+		UserID:       user.ID,
+		ChainID:      chain.ID,
+		IsChainAdmin: false,
 	}); res.Error != nil {
 		boom.Internal(c.Writer, "User could not be added to chain due to unknown error")
 		return

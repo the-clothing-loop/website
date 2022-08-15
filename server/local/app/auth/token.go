@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"strings"
 	"time"
 
 	"github.com/CollActionteam/clothing-loop/server/local/models"
@@ -9,16 +10,17 @@ import (
 	"gorm.io/gorm"
 )
 
-func TokenReadFromRequest(c *gin.Context, db *gorm.DB) (string, bool) {
+func TokenReadFromRequest(c *gin.Context) (string, bool) {
 	token, ok := cookieRead(c)
 	if !ok {
+		prefix := "Bearer "
 		// fallback to bearer token for testing
-		baUser, baPass, ok := c.Request.BasicAuth()
-		if !ok || baUser == "Bearer" {
+		a := c.Request.Header.Get("Authorization")
+		_, t, ok := strings.Cut(a, prefix)
+		if !ok {
 			return "", false
 		}
-
-		token = baPass
+		token = t
 	}
 
 	return token, true
@@ -53,19 +55,20 @@ func TokenVerify(db *gorm.DB, token string) bool {
 	return res.Error == nil
 }
 
-func TokenAuthenticate(db *gorm.DB, token string) (uint, bool) {
-	var userID uint
+func TokenAuthenticate(db *gorm.DB, token string) (user *models.User, ok bool) {
+	user = &models.User{}
 	res := db.Raw(`
-	SELECT user_id
-	FROM user_tokens
-	WHERE token = ? AND verified = ?
-	LIMIT 1
-	`, token, true).Scan(&userID)
-	if res.Error != nil || userID == 0 {
-		return 0, false
+SELECT users.*
+FROM user_tokens
+LEFT JOIN users ON user_tokens.user_id = users.id
+WHERE user_tokens.token = ? AND user_tokens.verified = ?
+LIMIT 1
+	`, token, true).Scan(user)
+	if res.Error != nil || user.ID == 0 {
+		return nil, false
 	}
 
-	return userID, true
+	return user, true
 }
 
 func TokenDelete(db *gorm.DB, token string) {
