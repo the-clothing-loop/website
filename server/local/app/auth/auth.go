@@ -50,7 +50,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	chain = &models.Chain{}
-	db.Where("uid = ?", chainUID).First(chain)
+	db.Raw(`SELECT * FROM chains WHERE uid = ? LIMIT 1`, chainUID).Scan(chain)
 	if chain.ID == 0 {
 		boom.BadRequest(c.Writer, "chain not found")
 		return false, nil, nil

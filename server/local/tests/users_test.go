@@ -13,7 +13,9 @@ import (
 
 func TestUserGetUID(t *testing.T) {
 	// create user chain mock
-	chain, user, token := mockTables.MockChainAndUser()
+	chain, user, token := mockTables.MockChainAndUser(MockChainAndUserOptions{
+		IsChainAdmin: true,
+	})
 
 	// create gin.Context mock
 	url := fmt.Sprintf("/v1/user?user_uid=%s&chain_uid=%s", user.UID, chain.UID)

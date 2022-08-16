@@ -10,7 +10,7 @@ import (
 
 func TestLoginToken(t *testing.T) {
 	// mocks
-	_, user, _ := mockTables.MockChainAndUser()
+	_, user, _ := mockTables.MockChainAndUser(MockChainAndUserOptions{})
 
 	// create unverified token
 	token, ok := auth.TokenCreateUnverified(db, user.ID)

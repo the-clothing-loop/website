@@ -12,7 +12,9 @@ var mockTables *testIDs
 func TestMain(m *testing.M) {
 	setup()
 	code := m.Run()
-	shutdown()
+	if code == 0 {
+		shutdown()
+	}
 	os.Exit(code)
 }
 
@@ -28,10 +30,5 @@ func setup() {
 }
 
 func shutdown() {
-	// 	if res := db.Exec(`
-	// DELETE FROM user_tokens
-	// WHERE user_id = ?
-	// `, 1); res.Error != nil {
-	// 		log.Fatalf("Unable to shutdown: %v", res.Error)
-	// 	}
+	mockTables.Purge()
 }

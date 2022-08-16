@@ -15,30 +15,43 @@ type testIDs struct {
 	UserIDs  []uint
 }
 
-func (d *testIDs) MockUser(chainID uint) (user *models.User, token string) {
+// some options are negatives of the used value
+// this is to keep the defaults to false when not specifically used
+type MockChainAndUserOptions struct {
+	IsEmailUnverified  bool
+	IsTokenUnverified  bool
+	IsRootAdmin        bool
+	IsChainAdmin       bool
+	IsDisabled         bool
+	IsNotPublished     bool
+	IsOpenToNewMembers bool
+}
+
+func (d *testIDs) MockUser(chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           faker.Person().Contact().Email,
-		IsEmailVerified: true,
-		IsRootAdmin:     false,
+		IsEmailVerified: !o.IsEmailUnverified,
+		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Test " + faker.Person().Name(),
 		PhoneNumber:     faker.Person().Contact().Phone,
 		Sizes:           []string{},
 		Address:         faker.Address().Address(),
-		Enabled:         true,
+		Enabled:         !o.IsDisabled,
 		UserToken: []models.UserToken{
 			{
 				Token:    uuid.NewV4().String(),
-				Verified: true,
+				Verified: !o.IsTokenUnverified,
 			},
 		},
 		Chains: []models.UserChain{
 			{
 				ChainID:      chainID,
-				IsChainAdmin: true,
+				IsChainAdmin: o.IsChainAdmin,
 			},
 		},
 	}
+	log.Printf("IsChainAdmin: %v", o.IsChainAdmin)
 	if res := db.Create(user); res.Error != nil {
 		log.Fatalf("Unable to create testUser: %v", res.Error)
 	}
@@ -46,7 +59,7 @@ func (d *testIDs) MockUser(chainID uint) (user *models.User, token string) {
 
 	return user, user.UserToken[0].Token
 }
-func (d *testIDs) MockChainAndUser() (chain *models.Chain, user *models.User, token string) {
+func (d *testIDs) MockChainAndUser(o MockChainAndUserOptions) (chain *models.Chain, user *models.User, token string) {
 	chain = &models.Chain{
 		UID:              uuid.NewV4().String(),
 		Name:             "Test " + faker.Company().Name(),
@@ -55,8 +68,8 @@ func (d *testIDs) MockChainAndUser() (chain *models.Chain, user *models.User, to
 		Latitude:         faker.Address().Latitude(),
 		Longitude:        faker.Address().Latitude(),
 		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
-		Published:        false,
-		OpenToNewMembers: false,
+		Published:        !o.IsNotPublished,
+		OpenToNewMembers: o.IsOpenToNewMembers,
 		Sizes:            []models.ChainSize{},
 		Users:            []models.UserChain{},
 	}
@@ -66,7 +79,7 @@ func (d *testIDs) MockChainAndUser() (chain *models.Chain, user *models.User, to
 	}
 	d.ChainIDs = append(d.ChainIDs, chain.ID)
 
-	user, token = d.MockUser(chain.ID)
+	user, token = d.MockUser(chain.ID, o)
 
 	return chain, user, token
 }
