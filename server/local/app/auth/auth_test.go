@@ -17,13 +17,13 @@ func TestAuthenticate(t *testing.T) {
 	}
 
 	suts := []Sut{
-		// {
-		// 	MockOptions: MockChainAndUserOptions{
-		// 		IsChainAdmin: false,
-		// 		IsRootAdmin:  false,
-		// 	},
-		// 	ExpectedResults: [5]bool{true, true, true, false, false},
-		// },
+		{
+			MockOptions: mocks.MockChainAndUserOptions{
+				IsChainAdmin: false,
+				IsRootAdmin:  false,
+			},
+			ExpectedResults: [5]bool{true, true, true, false, false},
+		},
 		{
 			MockOptions: mocks.MockChainAndUserOptions{
 				IsChainAdmin: true,
@@ -31,13 +31,13 @@ func TestAuthenticate(t *testing.T) {
 			},
 			ExpectedResults: [5]bool{true, true, true, true, false},
 		},
-		// {
-		// 	MockOptions: MockChainAndUserOptions{
-		// 		IsChainAdmin: false,
-		// 		IsRootAdmin:  true,
-		// 	},
-		// 	ExpectedResults: [5]bool{true, true, true, true, true},
-		// },
+		{
+			MockOptions: mocks.MockChainAndUserOptions{
+				IsChainAdmin: false,
+				IsRootAdmin:  true,
+			},
+			ExpectedResults: [5]bool{true, true, true, true, true},
+		},
 	}
 
 	for _, sut := range suts {
