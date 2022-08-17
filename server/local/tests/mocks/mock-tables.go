@@ -1,19 +1,17 @@
-package tests
+package mocks
 
 import (
+	"fmt"
 	"log"
+	"testing"
 
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	Faker "github.com/jaswdr/faker"
 	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm"
 )
 
 var faker = Faker.New()
-
-type testIDs struct {
-	ChainIDs []uint
-	UserIDs  []uint
-}
 
 // some options are negatives of the used value
 // this is to keep the defaults to false when not specifically used
@@ -27,10 +25,10 @@ type MockChainAndUserOptions struct {
 	IsOpenToNewMembers bool
 }
 
-func (d *testIDs) MockUser(chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
+func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           faker.Person().Contact().Email,
+		Email:           fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain()),
 		IsEmailVerified: !o.IsEmailUnverified,
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Test " + faker.Person().Name(),
@@ -55,11 +53,18 @@ func (d *testIDs) MockUser(chainID uint, o MockChainAndUserOptions) (user *model
 	if res := db.Create(user); res.Error != nil {
 		log.Fatalf("Unable to create testUser: %v", res.Error)
 	}
-	d.UserIDs = append(d.UserIDs, user.ID)
+
+	t.Cleanup(func() {
+		tx := db.Begin()
+		tx.Exec(`DELETE FROM user_chains WHERE chain_id = ?`, chainID)
+		tx.Exec(`DELETE FROM user_tokens WHERE user_id = ?`, user.ID)
+		tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID)
+		tx.Commit()
+	})
 
 	return user, user.UserToken[0].Token
 }
-func (d *testIDs) MockChainAndUser(o MockChainAndUserOptions) (chain *models.Chain, user *models.User, token string) {
+func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (chain *models.Chain, user *models.User, token string) {
 	chain = &models.Chain{
 		UID:              uuid.NewV4().String(),
 		Name:             "Test " + faker.Company().Name(),
@@ -77,18 +82,14 @@ func (d *testIDs) MockChainAndUser(o MockChainAndUserOptions) (chain *models.Cha
 	if res := db.Create(&chain); res.Error != nil {
 		log.Fatalf("Unable to create testChain: %v", res.Error)
 	}
-	d.ChainIDs = append(d.ChainIDs, chain.ID)
 
-	user, token = d.MockUser(chain.ID, o)
+	// Cleanup runs FiLo
+	// So Cleanup must happen before MockUser
+	t.Cleanup(func() {
+		db.Exec(`DELETE FROM chains WHERE id = ?`, chain.ID)
+	})
+
+	user, token = MockUser(t, db, chain.ID, o)
 
 	return chain, user, token
-}
-
-func (d *testIDs) Purge() {
-	tx := db.Begin()
-	tx.Exec(`DELETE FROM user_chains WHERE chain_id IN ?`, d.ChainIDs)
-	tx.Exec(`DELETE FROM user_tokens WHERE user_id IN ?`, d.UserIDs)
-	tx.Exec(`DELETE FROM users WHERE id IN ?`, d.UserIDs)
-	tx.Exec(`DELETE FROM chains WHERE id IN ?`, d.ChainIDs)
-	tx.Commit()
 }

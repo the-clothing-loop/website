@@ -1,14 +1,15 @@
-package tests
+package mocks_test
 
 import (
 	"testing"
 
 	"github.com/CollActionteam/clothing-loop/server/local/models"
+	"github.com/CollActionteam/clothing-loop/server/local/tests/mocks"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMockUserShouldSetChainAdminTrue(t *testing.T) {
-	chain, user, _ := mockTables.MockChainAndUser(MockChainAndUserOptions{
+	chain, user, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
 		IsChainAdmin: true,
 	})
 
@@ -20,7 +21,7 @@ func TestMockUserShouldSetChainAdminTrue(t *testing.T) {
 }
 
 func TestMockUserShouldSetRootAdminTrue(t *testing.T) {
-	_, user, _ := mockTables.MockChainAndUser(MockChainAndUserOptions{
+	_, user, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
 		IsRootAdmin: true,
 	})
 

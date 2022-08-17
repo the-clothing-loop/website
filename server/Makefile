@@ -18,6 +18,9 @@ build-server-fcgi:
 test:
 	@go test ./...
 
+coverage:
+	go test -cover ./...
+
 docker-start:
 	@cd docker; docker-compose up -d
 docker-stop:

@@ -1,16 +1,17 @@
-package tests
+package auth_test
 
 import (
 	"net/http"
 	"testing"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
+	"github.com/CollActionteam/clothing-loop/server/local/tests/mocks"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAuthenticate(t *testing.T) {
 	type Sut struct {
-		MockOptions MockChainAndUserOptions
+		MockOptions mocks.MockChainAndUserOptions
 		// for each minimumAuthState 0 to 4
 		ExpectedResults [5]bool
 	}
@@ -24,7 +25,7 @@ func TestAuthenticate(t *testing.T) {
 		// 	ExpectedResults: [5]bool{true, true, true, false, false},
 		// },
 		{
-			MockOptions: MockChainAndUserOptions{
+			MockOptions: mocks.MockChainAndUserOptions{
 				IsChainAdmin: true,
 				IsRootAdmin:  false,
 			},
@@ -40,10 +41,10 @@ func TestAuthenticate(t *testing.T) {
 	}
 
 	for _, sut := range suts {
-		chain, user, token := mockTables.MockChainAndUser(sut.MockOptions)
+		chain, user, token := mocks.MockChainAndUser(t, db, sut.MockOptions)
 
 		for i := 0; i < 5; i++ {
-			c, _ := mockGinContext(http.MethodGet, "/", nil, token)
+			c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, token)
 
 			// to stop the i am a teapot error
 			// AuthState1AnyUser should never need specific chain data

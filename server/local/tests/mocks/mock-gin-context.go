@@ -1,4 +1,4 @@
-package tests
+package mocks
 
 import (
 	"bytes"
@@ -10,8 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
-
-var db *gorm.DB
 
 type mockGinContextResponse struct {
 	Response *http.Response
@@ -25,7 +23,7 @@ func (r mockGinContextResponse) BodyJSON() gin.H {
 	return body
 }
 
-func mockGinContext(method string, url string, bodyJSON *gin.H, token string) (*gin.Context, func() mockGinContextResponse) {
+func MockGinContext(db *gorm.DB, method string, url string, bodyJSON *gin.H, token string) (*gin.Context, func() mockGinContextResponse) {
 	body := bytes.NewBuffer([]byte{})
 	if bodyJSON != nil {
 		json_data, _ := json.Marshal(bodyJSON)

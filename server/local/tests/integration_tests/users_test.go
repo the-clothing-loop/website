@@ -1,4 +1,4 @@
-package tests
+package integration_tests
 
 import (
 	"fmt"
@@ -7,19 +7,20 @@ import (
 
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/local/controllers"
+	"github.com/CollActionteam/clothing-loop/server/local/tests/mocks"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUserGetUID(t *testing.T) {
 	// create user chain mock
-	chain, user, token := mockTables.MockChainAndUser(MockChainAndUserOptions{
+	chain, user, token := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
 		IsChainAdmin: true,
 	})
 
 	// create gin.Context mock
 	url := fmt.Sprintf("/v1/user?user_uid=%s&chain_uid=%s", user.UID, chain.UID)
-	c, resultFunc := mockGinContext(http.MethodGet, url, nil, token)
+	c, resultFunc := mocks.MockGinContext(db, http.MethodGet, url, nil, token)
 
 	// run sut
 	controllers.UserGet(c)
