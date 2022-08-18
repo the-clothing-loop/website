@@ -25,3 +25,6 @@ docker-start:
 	@cd docker; docker-compose up -d
 docker-stop:
 	@cd docker; docker-compose down
+
+firebase-migrate:
+	@cd cmd/firebase-migrate/; go run main.go
