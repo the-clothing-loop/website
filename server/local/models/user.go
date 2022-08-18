@@ -73,25 +73,26 @@ WHERE user_chains.user_id = ?
 	return &results, nil
 }
 
-func (u *User) AddUserChainsLLToObject(db *gorm.DB) {
-	userChainLL := []UserChain{}
+func (u *User) AddUserChainsToObject(db *gorm.DB) {
+	userChains := []UserChain{}
 	db.Raw(`
 SELECT *
 FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id
 WHERE user_chains.user_id = ?
-	`, u.ID).Scan(&userChainLL)
+	`, u.ID).Scan(&userChains)
 
-	u.Chains = userChainLL
+	u.Chains = userChains
 }
 
 func (u *User) IsPartOfChain(db *gorm.DB, chainID uint) bool {
-	res := db.Exec(`
-SELECT (id)
+	var sum int
+	db.Raw(`
+SELECT SUM(user_chains.id)
 FROM user_chains
-JOIN users ON user_chains.user_id = users.id
+LEFT JOIN users ON user_chains.user_id = users.id
 WHERE user_chains.user_id = ?
 	AND user_chains.chain_id = ?
-	`, u.ID, chainID)
-	return res.Error == nil
+	`, u.ID, chainID).Scan(&sum)
+	return sum != 0
 }

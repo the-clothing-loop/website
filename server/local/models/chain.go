@@ -18,13 +18,13 @@ type Chain struct {
 	Radius           float32
 	Published        bool
 	OpenToNewMembers bool
-	Sizes            []ChainSize
-	Users            []UserChain
+	ChainSizes       []ChainSize
+	UserChains       []UserChain
 }
 
 // requires Chain to contain Sizes
 func (c *Chain) SizesToList() (sizesList []string) {
-	for _, s := range c.Sizes {
+	for _, s := range c.ChainSizes {
 		sizesList = append(sizesList, s.SizeEnum)
 	}
 

@@ -124,7 +124,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Longitude:        body.Chain.Longitude,
 		Radius:           body.Chain.Radius,
 		OpenToNewMembers: body.Chain.OpenToNewMembers,
-		Sizes:            sizeTables,
+		ChainSizes:       sizeTables,
 	}
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
@@ -141,7 +141,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		boom.Conflict(c.Writer, "User already exists")
 		return
 	}
-	chain.Users = []models.UserChain{{
+	chain.UserChains = []models.UserChain{{
 		UserID:       user.ID,
 		IsChainAdmin: true,
 	}}

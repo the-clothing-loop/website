@@ -56,7 +56,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 		return false, nil, nil
 	}
 
-	user.AddUserChainsLLToObject(db)
+	user.AddUserChainsToObject(db)
 
 	// 4. Root User
 	if user.IsRootAdmin {

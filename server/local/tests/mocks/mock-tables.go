@@ -75,8 +75,8 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
 		Published:        !o.IsNotPublished,
 		OpenToNewMembers: o.IsOpenToNewMembers,
-		Sizes:            []models.ChainSize{},
-		Users:            []models.UserChain{},
+		ChainSizes:       []models.ChainSize{},
+		UserChains:       []models.UserChain{},
 	}
 
 	if res := db.Create(&chain); res.Error != nil {

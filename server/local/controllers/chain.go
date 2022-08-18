@@ -47,8 +47,8 @@ func ChainCreate(c *gin.Context) {
 		Radius:           body.Radius,
 		Published:        true,
 		OpenToNewMembers: true,
-		Sizes:            chainSizes,
-		Users: []models.UserChain{
+		ChainSizes:       chainSizes,
+		UserChains: []models.UserChain{
 			{UserID: user.ID, IsChainAdmin: true},
 		},
 	}
@@ -77,13 +77,7 @@ func ChainGet(c *gin.Context) {
 	}
 
 	chain := models.Chain{}
-	if res := db.Raw(`
-SELECT *
-FROM chains
-WHERE chains.uid = ?
-LEFT JOIN chain_sizes ON chain_sizes.chain_id = chains.id
-LIMIT 1
-	`).Scan(&chain); res.Error != nil {
+	if res := db.Preload("ChainSizes").First(&chain, "chains.uid = ?", body.ChainUID); res.Error != nil {
 		boom.BadRequest(c.Writer, "chain not found")
 		return
 	}
@@ -100,6 +94,34 @@ LIMIT 1
 		"published":        chain.Published,
 		"openToNewMembers": chain.OpenToNewMembers,
 	})
+}
+
+func ChainGetAll(c *gin.Context) {
+	db := getDB(c)
+
+	chains := []models.Chain{}
+	if res := db.Preload("ChainSizes").Find(&chains, "chains.published = ?", true); res.Error != nil {
+		boom.BadRequest(c.Writer, "chain not found")
+		return
+	}
+
+	chainsJson := []*gin.H{}
+	for _, chain := range chains {
+		chainsJson = append(chainsJson, &gin.H{
+			"uid":              chain.UID,
+			"name":             chain.Name,
+			"description":      chain.Description,
+			"address":          chain.Address,
+			"latitude":         chain.Latitude,
+			"longitude":        chain.Longitude,
+			"radius":           chain.Radius,
+			"sizes":            chain.SizesToList(),
+			"published":        chain.Published,
+			"openToNewMembers": chain.OpenToNewMembers,
+		})
+	}
+
+	c.JSON(200, chainsJson)
 }
 
 func ChainUpdate(c *gin.Context) {
@@ -125,10 +147,19 @@ func ChainUpdate(c *gin.Context) {
 		return
 	}
 
+	tx := db.Begin()
 	if body.Sizes != nil {
 		if ok := models.ValidateAllSizeEnum(*body.Sizes); !ok {
 			boom.BadRequest(c.Writer, "size not a valid enum value")
 			return
+		}
+
+		tx.Exec(`DELETE FROM chain_sizes WHERE chain_id = ?`, chain.ID)
+		for _, size := range *body.Sizes {
+			tx.Create(&models.ChainSize{
+				ChainID:  chain.ID,
+				SizeEnum: size,
+			})
 		}
 	}
 
@@ -139,7 +170,6 @@ func ChainUpdate(c *gin.Context) {
 		"latitude":    body.Latitude,
 		"longitude":   body.Longitude,
 		"radius":      body.Radius,
-		"sizes":       body.Sizes,
 	}
 	valuesToUpdate := map[string]any{}
 	for k := range optionalValues {
@@ -150,7 +180,10 @@ func ChainUpdate(c *gin.Context) {
 		}
 	}
 
-	if res := db.Model(chain).Updates(valuesToUpdate); res.Error != nil {
+	if res := tx.Model(chain).Updates(valuesToUpdate); res.Error != nil {
+		boom.Internal(c.Writer)
+	}
+	if res := tx.Commit(); res.Error != nil {
 		boom.Internal(c.Writer)
 	}
 }
@@ -204,7 +237,7 @@ func ChainAddUser(c *gin.Context) {
 	db.Raw(`
 SELECT users.name as name, users.email as email
 FROM user_chains
-JOIN users ON user_chains.user_id = users.id 
+LEFT JOIN users ON user_chains.user_id = users.id 
 WHERE user_chains.chain_id = ?
 	AND user_chains.chain_admin = ?
 	AND users.enabled = ?

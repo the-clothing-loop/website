@@ -45,7 +45,7 @@ func Routes() *gin.Engine {
 	// chain
 	// TODO
 	v1.GET("/chain", controllers.ChainGet)
-	// v1.GET("/chain/all")
+	v1.GET("/chain/all", controllers.ChainGetAll)
 	v1.PATCH("/chain", controllers.ChainUpdate)
 	v1.POST("/chain", controllers.ChainCreate)
 	v1.POST("/chain/add-user", controllers.ChainAddUser)
