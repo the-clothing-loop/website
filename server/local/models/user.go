@@ -16,7 +16,6 @@ type User struct {
 	PhoneNumber     string
 	Address         string
 	Sizes           []string `gorm:"serializer:json"`
-	Genders         []string `gorm:"serializer:json"`
 	Enabled         bool
 	UserToken       []UserToken
 	Chains          []UserChain

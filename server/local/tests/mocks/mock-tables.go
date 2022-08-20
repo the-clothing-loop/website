@@ -35,7 +35,6 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		Name:            "Test " + faker.Person().Name(),
 		PhoneNumber:     faker.Person().Contact().Phone,
 		Sizes:           mockSizes(false),
-		Genders:         mockGenders(false),
 		Address:         faker.Address().Address(),
 		Enabled:         !o.IsDisabled,
 		UserToken: []models.UserToken{

@@ -251,16 +251,20 @@ func ChainAddUser(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		UserUID    string `json:"user_uid" binding:"required,uuid"`
-		ChainUID   string `json:"chain_uid" binding:"required,uuid"`
-		ChainAdmin bool   `json:"chain_admin"`
+		UserUID      string `json:"user_uid" binding:"required,uuid"`
+		ChainUID     string `json:"chain_uid" binding:"required,uuid"`
+		IsChainAdmin bool   `json:"is_chain_admin"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		boom.BadRequest(c.Writer, err)
 		return
 	}
 
-	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+	minimumAuthState := auth.AuthState2UserOfChain
+	if body.IsChainAdmin {
+		minimumAuthState = auth.AuthState3AdminChainUser
+	}
+	ok, _, chain := auth.Authenticate(c, db, minimumAuthState, body.ChainUID)
 	if !ok {
 		return
 	}
@@ -298,7 +302,7 @@ SELECT users.name as name, users.email as email
 FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id 
 WHERE user_chains.chain_id = ?
-	AND user_chains.chain_admin = ?
+	AND user_chains.is_chain_admin = ?
 	AND users.enabled = ?
 `, chain.ID, true, true).Scan(&results)
 

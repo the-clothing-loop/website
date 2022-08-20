@@ -97,7 +97,6 @@ func RegisterChainAdmin(c *gin.Context) {
 			Address     string   `json:"address"`
 			Newsletter  bool     `json:"newsletter"`
 			Sizes       []string `json:"sizes"`
-			Genders     []string `json:"genders"`
 		} `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -114,10 +113,6 @@ func RegisterChainAdmin(c *gin.Context) {
 		return
 	}
 
-	if ok := models.ValidateAllGenderEnum(body.User.Genders); !ok {
-		boom.BadRequest(c.Writer, models.ErrGenderInvalid)
-		return
-	}
 	if ok := models.ValidateAllGenderEnum(body.Chain.Genders); !ok {
 		boom.BadRequest(c.Writer, models.ErrGenderInvalid)
 		return
@@ -143,7 +138,6 @@ func RegisterChainAdmin(c *gin.Context) {
 		Name:            body.User.Name,
 		PhoneNumber:     body.User.PhoneNumber,
 		Sizes:           body.User.Sizes,
-		Genders:         body.Chain.Genders,
 		Address:         body.User.Address,
 		Enabled:         false,
 	}
@@ -172,7 +166,6 @@ func RegisterBasicUser(c *gin.Context) {
 			PhoneNumber string   `json:"phone_number" binding:"required"`
 			Newsletter  bool     `json:"newsletter" binding:"required"`
 			Sizes       []string `json:"sizes"`
-			Genders     []string `json:"genders"`
 		} `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -181,10 +174,6 @@ func RegisterBasicUser(c *gin.Context) {
 	}
 	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
 		boom.BadRequest(c.Writer, models.ErrSizeInvalid)
-		return
-	}
-	if ok := models.ValidateAllSizeEnum(body.User.Genders); !ok {
-		boom.BadRequest(c.Writer, models.ErrGenderInvalid)
 		return
 	}
 
@@ -203,7 +192,6 @@ func RegisterBasicUser(c *gin.Context) {
 		Name:            body.User.Name,
 		PhoneNumber:     body.User.PhoneNumber,
 		Sizes:           body.User.Sizes,
-		Genders:         body.User.Genders,
 		Address:         body.User.Address,
 		Enabled:         false,
 	}
