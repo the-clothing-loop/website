@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"strings"
 
 	"encoding/json"
 
@@ -11,7 +12,6 @@ import (
 	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
-	"gorm.io/gorm"
 )
 
 type ChainCreateRequestBody struct {
@@ -87,7 +87,7 @@ func ChainGet(c *gin.Context) {
 	}
 
 	chain := models.Chain{}
-	if res := db.Preload("ChainSizes").First(&chain, "chains.uid = ?", body.ChainUID); res.Error != nil {
+	if res := db.First(&chain, "chains.uid = ?", body.ChainUID); res.Error != nil {
 		boom.BadRequest(c.Writer, "chain not found")
 		return
 	}
@@ -113,8 +113,8 @@ func ChainGetAll(c *gin.Context) {
 	var body struct {
 		Filter struct {
 			Sizes   []string `json:"sizes"`
-			Genders []string `json:"gender"`
-		}
+			Genders []string `json:"genders"`
+		} `json:"filter"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		boom.BadRequest(c.Writer, err)
@@ -131,20 +131,28 @@ func ChainGetAll(c *gin.Context) {
 	}
 
 	chains := []models.Chain{}
-	tx := db.Preload("ChainSizes")
+	tx := db.Table("chains")
 
 	// filter sizes and genders
-	isGendersEmpty := len(body.Filter.Genders) > 0
-	isSizesEmpty := len(body.Filter.Sizes) > 0
+	isGendersEmpty := len(body.Filter.Genders) == 0
+	isSizesEmpty := len(body.Filter.Sizes) == 0
 	if !isSizesEmpty || !isGendersEmpty {
-		var txWhere *gorm.DB
+		var args []any
+		var whereSql []string
 		if !isSizesEmpty {
-			setMultiOr(db, txWhere, "sizes", body.Filter.Sizes)
+			for _, size := range body.Filter.Sizes {
+				whereSql = append(whereSql, "chains.sizes LIKE ?")
+				args = append(args, fmt.Sprintf("%%%s%%", size))
+			}
 		}
 		if !isGendersEmpty {
-			setMultiOr(db, txWhere, "genders", body.Filter.Genders)
+			for _, gender := range body.Filter.Genders {
+				whereSql = append(whereSql, "chains.genders LIKE ?")
+				args = append(args, fmt.Sprintf("%%%s%%", gender))
+			}
 		}
-		tx.Where(txWhere)
+
+		tx.Where(strings.Join(whereSql, " OR "), args...)
 	}
 
 	tx.Where("chains.published = ?", true)
@@ -171,17 +179,6 @@ func ChainGetAll(c *gin.Context) {
 	}
 
 	c.JSON(200, chainsJson)
-}
-func setMultiOr(db *gorm.DB, tx *gorm.DB, column string, values []string) {
-	for _, value := range values {
-		query := column + " LIKE ?"
-		arg := fmt.Sprintf("%%%s%%", value)
-		if tx == nil {
-			tx = db.Where(query, arg)
-		} else {
-			tx.Or(query, arg)
-		}
-	}
 }
 
 func ChainUpdate(c *gin.Context) {
