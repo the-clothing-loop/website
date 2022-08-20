@@ -32,13 +32,15 @@ import { makeStyles } from "@mui/styles";
 import { ChainsContext } from "../components/ChainsProvider";
 import { AuthContext } from "../components/AuthProvider";
 import { addUserToChain } from "../util/firebase/chain";
-import { IChain, IViewPort } from "../types";
+import { IViewPort } from "../types";
 import theme from "../util/theme";
 import { getUserById } from "../util/firebase/user";
 import { FindChainSearchBarContainer } from "../components/FindChain";
+import { Chain } from "../api/types";
 
 // Media
 import RightArrow from "../images/right-arrow-white.svg";
+import { Gender } from "../api/enums";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
@@ -47,7 +49,7 @@ import RightArrow from "../images/right-arrow-white.svg";
 mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 export interface ChainPredicate {
-  (chain: IChain): boolean;
+  (chain: Chain): boolean;
 }
 
 export const defaultTruePredicate = () => true;
@@ -69,7 +71,7 @@ const FindChain = ({ location }: { location: Location }) => {
   const publishedChains = chains.filter(({ published }) => published);
 
   const [viewport, setViewport] = useState<IViewPort | {}>({});
-  const [selectedChain, setSelectedChain] = useState<IChain | null>(null);
+  const [selectedChain, setSelectedChain] = useState<Chain | null>(null);
   const [showPopup, setShowPopup] = useState(false);
   const [showDutchLoopsDialog, setShowDutchLoopsDialog] = useState(false);
 
@@ -142,13 +144,13 @@ const FindChain = ({ location }: { location: Location }) => {
   const signupToChain = async (e: any) => {
     e.preventDefault();
     if (user) {
-      await addUserToChain(selectedChain!.id, user.uid);
+      await addUserToChain(selectedChain!.uid, user.uid);
       history.push({ pathname: "/thankyou" });
     } else {
       history.push({
-        pathname: `/loops/${selectedChain?.id}/users/signup`,
+        pathname: `/loops/${selectedChain?.uid}/users/signup`,
         state: {
-          chainId: selectedChain?.id,
+          chainId: selectedChain?.uid,
         },
       });
     }
@@ -156,7 +158,7 @@ const FindChain = ({ location }: { location: Location }) => {
 
   const viewChain = (e: any) => {
     e.preventDefault();
-    history.push(`/loops/${selectedChain?.id}/members`);
+    history.push(`/loops/${selectedChain?.uid}/members`);
   };
 
   const handleLocation = () => {
@@ -235,7 +237,7 @@ const FindChain = ({ location }: { location: Location }) => {
           longitude,
           latitude,
           radius,
-          categories: { gender },
+          genders,
         } = filteredChain;
 
         return {
@@ -247,9 +249,9 @@ const FindChain = ({ location }: { location: Location }) => {
           properties: {
             radius: radius * 6,
             chainIndex: filteredChainIndex,
-            gender: gender.includes("women")
+            gender: genders.includes(Gender.WOMEN)
               ? "woman"
-              : gender.includes("men")
+              : genders.includes(Gender.MEN)
               ? "men"
               : "children", // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
           },
@@ -360,8 +362,8 @@ const FindChain = ({ location }: { location: Location }) => {
                 <div className={"chain-categories"}>
                   <Typography component="h3">{t("categories")}:</Typography>
                   <div id="categories-container">
-                    {selectedChain.categories.gender
-                      ? selectedChain.categories.gender.map((category, i) => {
+                    {selectedChain.genders
+                      ? selectedChain.genders.map((category, i) => {
                         return (
                           <Typography component="p" key={i}>
                             {t(`${category}`)} {t("clothing")}
@@ -372,8 +374,8 @@ const FindChain = ({ location }: { location: Location }) => {
                   </div>
                   <Typography component="h3">{t("sizes")}:</Typography>
                   <div id="sizes-container">
-                    {selectedChain.categories.size
-                      ? selectedChain.categories.size.map((size, i) => {
+                    {selectedChain.sizes
+                      ? selectedChain.sizes.map((size, i) => {
                         return (
                           <Typography key={i} component="p">
                             {t(`${size}`)}

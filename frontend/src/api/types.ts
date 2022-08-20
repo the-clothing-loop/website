@@ -29,7 +29,7 @@ export interface Chain {
   longitude: number;
   radius: number;
   genders: string[];
-  size: string[];
+  sizes: string[];
   published: boolean;
   openToNewMembers: boolean;
 }
