@@ -1,11 +1,20 @@
 import axios from "redaxios";
+import { Chain, User } from "./types";
 
-export function loginStep1(email: string) {
-  return axios.post("/login/email/step1", { email });
+export function registerChainAdmin(user: User, chain: Chain) {
+  return axios.post("/register/chain-admin", { user, chain });
 }
 
-export function loginStep2(key: string) {
-  return axios.post(`/login/email/step2?apiKey=${key}`);
+export function registerBasicUser(user: User) {
+  return axios.post("/register/basic-user", { user });
+}
+
+export function loginEmail(email: string) {
+  return axios.post("/login/email", { email });
+}
+
+export function loginValidate(key: string) {
+  return axios.get(`/login/validate?apiKey=${key}`);
 }
 
 export function logout() {
