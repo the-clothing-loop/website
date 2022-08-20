@@ -3,6 +3,7 @@ package mocks
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"testing"
 
 	"github.com/CollActionteam/clothing-loop/server/local/models"
@@ -33,7 +34,8 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Test " + faker.Person().Name(),
 		PhoneNumber:     faker.Person().Contact().Phone,
-		Sizes:           []string{},
+		Sizes:           mockSizes(false),
+		Genders:         mockGenders(false),
 		Address:         faker.Address().Address(),
 		Enabled:         !o.IsDisabled,
 		UserToken: []models.UserToken{
@@ -75,7 +77,8 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
 		Published:        !o.IsNotPublished,
 		OpenToNewMembers: o.IsOpenToNewMembers,
-		ChainSizes:       []models.ChainSize{},
+		Sizes:            mockSizes(true),
+		Genders:          mockGenders(false),
 		UserChains:       []models.UserChain{},
 	}
 
@@ -92,4 +95,49 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 	user, token = MockUser(t, db, chain.ID, o)
 
 	return chain, user, token
+}
+
+func mockSizes(zeroOrMore bool) []string {
+	return randomEnums([]string{
+		models.SizeEnumBaby,
+		models.SizeEnum1_4YearsOld,
+		models.SizeEnum5_12YearsOld,
+		models.SizeEnumWomenSmall,
+		models.SizeEnumWomenMedium,
+		models.SizeEnumWomenLarge,
+		models.SizeEnumWomenPlusSize,
+		models.SizeEnumMenSmall,
+		models.SizeEnumMenMedium,
+		models.SizeEnumMenLarge,
+		models.SizeEnumMenPlusSize,
+	}, zeroOrMore)
+}
+func mockGenders(zeroOrMore bool) (genders []string) {
+	return randomEnums([]string{
+		models.GenderEnumChildren,
+		models.GenderEnumWomen,
+		models.GenderEnumMen,
+	}, zeroOrMore)
+}
+
+func shuffleSlice[T any](arr []T) []T {
+	rand.Shuffle(len(arr), func(i, j int) {
+		arr[i], arr[j] = arr[j], arr[i]
+	})
+
+	return arr
+}
+
+func randomEnums(enums []string, zeroOrMore bool) (result []string) {
+	min := 0
+	if zeroOrMore {
+		min = -1
+	}
+
+	enums = shuffleSlice(enums)
+	for i := 0; i <= faker.IntBetween(min, len(enums)-1); i++ {
+		result = append(result, enums[i])
+	}
+
+	return result
 }

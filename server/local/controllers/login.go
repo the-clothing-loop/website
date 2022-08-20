@@ -8,7 +8,6 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	boom "github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
-	. "github.com/lil5/go-slice-dedup"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
@@ -89,6 +88,7 @@ func RegisterChainAdmin(c *gin.Context) {
 			Radius           float32  `json:"radius"`
 			OpenToNewMembers bool     `json:"open_to_new_members"`
 			Sizes            []string `json:"sizes"`
+			Genders          []string `json:"genders"`
 		} `json:"chain" binding:"required"`
 		User struct {
 			Email       string   `json:"email" binding:"required"`
@@ -97,23 +97,31 @@ func RegisterChainAdmin(c *gin.Context) {
 			Address     string   `json:"address"`
 			Newsletter  bool     `json:"newsletter"`
 			Sizes       []string `json:"sizes"`
+			Genders     []string `json:"genders"`
 		} `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		boom.BadRequest(c.Writer, err)
 		return
 	}
-	allSizes := []string{}
-	allSizes = append(allSizes, body.User.Sizes...)
-	allSizes = append(allSizes, body.Chain.Sizes...)
-	allSizes = DeDuplicate(allSizes)
 
-	if ok := models.ValidateAllSizeEnum(allSizes); !ok {
-		boom.BadRequest(c.Writer, fmt.Sprintf("invalid size in: %v", allSizes))
+	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
+		boom.BadRequest(c.Writer, models.ErrSizeInvalid)
+		return
+	}
+	if ok := models.ValidateAllSizeEnum(body.Chain.Sizes); !ok {
+		boom.BadRequest(c.Writer, models.ErrSizeInvalid)
 		return
 	}
 
-	sizeTables := models.SetSizesFromList(body.Chain.Sizes)
+	if ok := models.ValidateAllGenderEnum(body.User.Genders); !ok {
+		boom.BadRequest(c.Writer, models.ErrGenderInvalid)
+		return
+	}
+	if ok := models.ValidateAllGenderEnum(body.Chain.Genders); !ok {
+		boom.BadRequest(c.Writer, models.ErrGenderInvalid)
+		return
+	}
 
 	chain := &models.Chain{
 		UID:              uuid.NewV4().String(),
@@ -124,7 +132,8 @@ func RegisterChainAdmin(c *gin.Context) {
 		Longitude:        body.Chain.Longitude,
 		Radius:           body.Chain.Radius,
 		OpenToNewMembers: body.Chain.OpenToNewMembers,
-		ChainSizes:       sizeTables,
+		Sizes:            body.Chain.Sizes,
+		Genders:          body.Chain.Genders,
 	}
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
@@ -134,6 +143,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Name:            body.User.Name,
 		PhoneNumber:     body.User.PhoneNumber,
 		Sizes:           body.User.Sizes,
+		Genders:         body.Chain.Genders,
 		Address:         body.User.Address,
 		Enabled:         false,
 	}
@@ -162,6 +172,7 @@ func RegisterBasicUser(c *gin.Context) {
 			PhoneNumber string   `json:"phone_number" binding:"required"`
 			Newsletter  bool     `json:"newsletter" binding:"required"`
 			Sizes       []string `json:"sizes"`
+			Genders     []string `json:"genders"`
 		} `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -169,7 +180,11 @@ func RegisterBasicUser(c *gin.Context) {
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
-		boom.BadRequest(c.Writer, fmt.Sprintf("invalid size in: %v", body.User.Sizes))
+		boom.BadRequest(c.Writer, models.ErrSizeInvalid)
+		return
+	}
+	if ok := models.ValidateAllSizeEnum(body.User.Genders); !ok {
+		boom.BadRequest(c.Writer, models.ErrGenderInvalid)
 		return
 	}
 
@@ -188,6 +203,7 @@ func RegisterBasicUser(c *gin.Context) {
 		Name:            body.User.Name,
 		PhoneNumber:     body.User.PhoneNumber,
 		Sizes:           body.User.Sizes,
+		Genders:         body.User.Genders,
 		Address:         body.User.Address,
 		Enabled:         false,
 	}

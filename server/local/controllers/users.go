@@ -93,11 +93,9 @@ func UserUpdate(c *gin.Context) {
 		return
 	}
 	if body.Sizes != nil {
-		for _, size := range *body.Sizes {
-			if ok := models.ValidateSizeEnum(size); !ok {
-				boom.BadRequest(c.Writer, "invalid size enum")
-				return
-			}
+		if ok := models.ValidateAllSizeEnum(*body.Sizes); !ok {
+			boom.BadRequest(c.Writer, "invalid size enum")
+			return
 		}
 	}
 

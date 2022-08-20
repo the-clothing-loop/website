@@ -9,7 +9,6 @@ require (
 	github.com/jaswdr/faker v1.15.0
 	github.com/jinzhu/configor v1.2.1
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
-	github.com/lil5/go-slice-dedup v1.0.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/net v0.0.0-20220812174116-3211cb980234

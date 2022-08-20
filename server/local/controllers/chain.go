@@ -1,12 +1,17 @@
 package controllers
 
 import (
+	"fmt"
+
+	"encoding/json"
+
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/CollActionteam/clothing-loop/server/local/views"
 	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm"
 )
 
 type ChainCreateRequestBody struct {
@@ -17,6 +22,7 @@ type ChainCreateRequestBody struct {
 	Longitude   float64  `json:"longitude" binding:"required"`
 	Radius      float32  `json:"radius" binding:"required"`
 	Sizes       []string `json:"sizes" binding:"required"`
+	Genders     []string `json:"genders" binding:"required"`
 }
 
 func ChainCreate(c *gin.Context) {
@@ -32,10 +38,13 @@ func ChainCreate(c *gin.Context) {
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.Sizes); !ok {
-		boom.BadRequest(c.Writer, "size not a valid enum value")
+		boom.BadRequest(c.Writer, models.ErrSizeInvalid)
 		return
 	}
-	chainSizes := models.SetSizesFromList(body.Sizes)
+	if ok := models.ValidateAllGenderEnum(body.Genders); !ok {
+		boom.BadRequest(c.Writer, models.ErrGenderInvalid)
+		return
+	}
 
 	chain := models.Chain{
 		UID:              uuid.NewV4().String(),
@@ -47,7 +56,8 @@ func ChainCreate(c *gin.Context) {
 		Radius:           body.Radius,
 		Published:        true,
 		OpenToNewMembers: true,
-		ChainSizes:       chainSizes,
+		Sizes:            body.Sizes,
+		Genders:          body.Genders,
 		UserChains: []models.UserChain{
 			{UserID: user.ID, IsChainAdmin: true},
 		},
@@ -90,7 +100,8 @@ func ChainGet(c *gin.Context) {
 		"latitude":         chain.Latitude,
 		"longitude":        chain.Longitude,
 		"radius":           chain.Radius,
-		"sizes":            chain.SizesToList(),
+		"sizes":            chain.Sizes,
+		"gender":           chain.Genders,
 		"published":        chain.Published,
 		"openToNewMembers": chain.OpenToNewMembers,
 	})
@@ -99,8 +110,45 @@ func ChainGet(c *gin.Context) {
 func ChainGetAll(c *gin.Context) {
 	db := getDB(c)
 
+	var body struct {
+		Filter struct {
+			Sizes   []string `json:"sizes"`
+			Genders []string `json:"gender"`
+		}
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		boom.BadRequest(c.Writer, err)
+		return
+	}
+
+	if ok := models.ValidateAllSizeEnum(body.Filter.Sizes); !ok {
+		boom.BadRequest(c.Writer, models.ErrSizeInvalid)
+		return
+	}
+	if ok := models.ValidateAllGenderEnum(body.Filter.Genders); !ok {
+		boom.BadRequest(c.Writer, models.ErrGenderInvalid)
+		return
+	}
+
 	chains := []models.Chain{}
-	if res := db.Preload("ChainSizes").Find(&chains, "chains.published = ?", true); res.Error != nil {
+	tx := db.Preload("ChainSizes")
+
+	// filter sizes and genders
+	isGendersEmpty := len(body.Filter.Genders) > 0
+	isSizesEmpty := len(body.Filter.Sizes) > 0
+	if !isSizesEmpty || !isGendersEmpty {
+		var txWhere *gorm.DB
+		if !isSizesEmpty {
+			setMultiOr(db, txWhere, "sizes", body.Filter.Sizes)
+		}
+		if !isGendersEmpty {
+			setMultiOr(db, txWhere, "genders", body.Filter.Genders)
+		}
+		tx.Where(txWhere)
+	}
+
+	tx.Where("chains.published = ?", true)
+	if res := tx.Find(&chains); res.Error != nil {
 		boom.BadRequest(c.Writer, "chain not found")
 		return
 	}
@@ -115,13 +163,25 @@ func ChainGetAll(c *gin.Context) {
 			"latitude":         chain.Latitude,
 			"longitude":        chain.Longitude,
 			"radius":           chain.Radius,
-			"sizes":            chain.SizesToList(),
+			"sizes":            chain.Sizes,
+			"genders":          chain.Genders,
 			"published":        chain.Published,
 			"openToNewMembers": chain.OpenToNewMembers,
 		})
 	}
 
 	c.JSON(200, chainsJson)
+}
+func setMultiOr(db *gorm.DB, tx *gorm.DB, column string, values []string) {
+	for _, value := range values {
+		query := column + " LIKE ?"
+		arg := fmt.Sprintf("%%%s%%", value)
+		if tx == nil {
+			tx = db.Where(query, arg)
+		} else {
+			tx.Or(query, arg)
+		}
+	}
 }
 
 func ChainUpdate(c *gin.Context) {
@@ -136,31 +196,29 @@ func ChainUpdate(c *gin.Context) {
 		Longitude   *float32  `json:"longitude"`
 		Radius      *float32  `json:"radius"`
 		Sizes       *[]string `json:"sizes"`
+		Genders     *[]string `json:"genders"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		boom.BadRequest(c.Writer, err)
 		return
 	}
 
+	if body.Sizes != nil {
+		if ok := models.ValidateAllSizeEnum(*(body.Sizes)); !ok {
+			boom.BadRequest(c.Writer, models.ErrSizeInvalid)
+			return
+		}
+	}
+	if body.Genders != nil {
+		if ok := models.ValidateAllGenderEnum(*(body.Genders)); !ok {
+			boom.BadRequest(c.Writer, models.ErrGenderInvalid)
+			return
+		}
+	}
+
 	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.UID)
 	if !ok {
 		return
-	}
-
-	tx := db.Begin()
-	if body.Sizes != nil {
-		if ok := models.ValidateAllSizeEnum(*body.Sizes); !ok {
-			boom.BadRequest(c.Writer, "size not a valid enum value")
-			return
-		}
-
-		tx.Exec(`DELETE FROM chain_sizes WHERE chain_id = ?`, chain.ID)
-		for _, size := range *body.Sizes {
-			tx.Create(&models.ChainSize{
-				ChainID:  chain.ID,
-				SizeEnum: size,
-			})
-		}
 	}
 
 	optionalValues := map[string]any{
@@ -170,20 +228,24 @@ func ChainUpdate(c *gin.Context) {
 		"latitude":    body.Latitude,
 		"longitude":   body.Longitude,
 		"radius":      body.Radius,
+		"sizes":       body.Sizes,
+		"genders":     body.Genders,
 	}
 	valuesToUpdate := map[string]any{}
 	for k := range optionalValues {
 		v := optionalValues[k]
 
 		if v != nil {
-			valuesToUpdate[k] = v
+			if k == "sizes" || k == "genders" {
+				j, _ := json.Marshal(&v)
+				valuesToUpdate[k] = string(j)
+			} else {
+				valuesToUpdate[k] = v
+			}
 		}
 	}
 
-	if res := tx.Model(chain).Updates(valuesToUpdate); res.Error != nil {
-		boom.Internal(c.Writer)
-	}
-	if res := tx.Commit(); res.Error != nil {
+	if res := db.Model(chain).Updates(valuesToUpdate); res.Error != nil {
 		boom.Internal(c.Writer)
 	}
 }
