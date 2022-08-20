@@ -1,5 +1,5 @@
 // React / plugins
-import { useState, useContext, ChangeEvent } from "react";
+import { useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -12,16 +12,13 @@ import { makeStyles } from "@mui/styles";
 import theme from "../util/theme";
 import { OneColumnLayout } from "../components/Layouts";
 import ProgressBar from "../components/ProgressBar";
-import PopoverOnHover from "../components/Popover";
 
 // Project resources
 import { PhoneFormField, TextForm } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../components/AuthProvider";
 import { createUser } from "../util/firebase/user";
-import SizesDropdown from "../components/SizesDropdown";
-import categories from "../util/categories";
-import FormActions from "../components/formActions";
+import FormActions from "../components/FormActions";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
@@ -176,15 +173,19 @@ const Signup = () => {
               >
                 {" " + t("happySwapping")}
               </Typography>
+
               <Form className={classes.formGrid}>
+                <>
                 <TextForm
-                  required
                   label={t("name")}
                   name="name"
                   type="text"
+                  required
                   className={classes.textField}
                   error={touched.name && Boolean(errors.name)}
-                  helperText={errors.name && touched.name ? errors.name : null}
+                  helperText={
+                    errors.name && touched.name ? errors.name : null
+                  }
                 />
 
                 <TextForm
@@ -198,6 +199,7 @@ const Signup = () => {
                     errors.email && touched.email ? errors.email : null
                   }
                 />
+
                 <PhoneFormField
                   label={t("phoneNumber")}
                   name="phoneNumber"
@@ -225,8 +227,7 @@ const Signup = () => {
                   <Button
                     type="submit"
                     className={classes.buttonOutlined}
-                    onClick={() => history.push("/loops/find")}
-                  >
+                    onClick={() => history.push("/loops/find")}>
                     {" "}
                     {t("back")}
                   </Button>
@@ -235,6 +236,7 @@ const Signup = () => {
                     <img src={RightArrow} alt="" />
                   </Button>
                 </div>
+                </>
               </Form>
               <div className={classes.formHelperLink}>
                 <Typography component="p" className="text">

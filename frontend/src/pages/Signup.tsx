@@ -20,7 +20,7 @@ import { PhoneFormField, TextForm } from "../components/FormFields";
 import { createUser } from "../util/firebase/user";
 import { getChain } from "../util/firebase/chain";
 import { IChain } from "../types";
-import FormActions from "../components/formActions";
+import FormActions from "../components/FormActions";
 
 //Media
 import RightArrow from "../images/right-arrow-white.svg";
