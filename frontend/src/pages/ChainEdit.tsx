@@ -9,8 +9,9 @@ import { makeStyles } from "@mui/styles";
 import theme from "../util/theme";
 
 // Project resources
-import { getChain, updateChain } from "../util/firebase/chain";
-import ChainDetailsForm, { ChainFields } from "../components/ChainDetailsForm";
+import ChainDetailsForm from "../components/ChainDetailsForm";
+import { chainGet, chainUpdate } from "../api/chain";
+import { Chain } from "../api/types";
 
 const ChainEdit = () => {
   const { t } = useTranslation();
@@ -18,20 +19,19 @@ const ChainEdit = () => {
   let location = useLocation();
   const { chainId } = useParams<{ chainId: string }>();
 
-  const [chain, setChain] = useState<ChainFields>();
+  const [chain, setChain] = useState<Chain>();
   const classes = makeStyles(theme as any)();
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  const handleSubmit = async (values: ChainFields) => {
+  const handleSubmit = async (values: Chain) => {
     const newChainData = {
       ...values,
-      categories: { gender: values.clothingTypes, size: values.clothingSizes },
     };
 
     console.log(`updating chain information: ${JSON.stringify(newChainData)}`);
     try {
-      await updateChain(chainId, newChainData);
+      await chainUpdate(newChainData);
       setSubmitted(true);
       history.push({
         pathname: `/loops/${chainId}/members`,
@@ -45,15 +45,11 @@ const ChainEdit = () => {
 
   useEffect(() => {
     (async () => {
-      const chain = await getChain(chainId);
-      if (chain !== undefined) {
-        const fields = {
-          ...chain,
-          clothingTypes: chain.categories.gender,
-          clothingSizes: chain.categories.size,
-        };
-        setChain(fields);
-      } else {
+      try{
+      let chain = (await chainGet(chainId)).data;
+      
+      setChain(chain);
+      } catch{
         console.error(`chain ${chainId} does not exist`);
       }
     })();

@@ -9,7 +9,7 @@ import { makeStyles } from "@mui/styles";
 import theme from "../util/theme";
 import ProgressBar from "../components/ProgressBar";
 import ChainDetailsForm from "../components/ChainDetailsForm";
-import { createChain } from "../util/firebase/chain";
+import { chainCreate } from "../api/chain";
 
 const NewChainLocation = ({ location }: { location: any }) => {
   const classes = makeStyles(theme as any)();
@@ -33,7 +33,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
 
     console.log(`creating chain: ${JSON.stringify(newChain)}`);
     try {
-      await createChain(newChain);
+      await chainCreate(newChain);
       setSubmitted(true);
     } catch (e: any) {
       console.error(`Error creating chain: ${JSON.stringify(e)}`);

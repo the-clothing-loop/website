@@ -54,7 +54,7 @@ const ChainsList = () => {
     <>
       <Helmet>
         <title>The Clothing Loop | Loops List</title>
-        <meta name="description" content="Loops List" />
+        <meta name="description" content="Loops List" />z
       </Helmet>
       <div>
         {chains ? (

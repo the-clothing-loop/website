@@ -48,9 +48,9 @@ export const FindChainSearchBarContainer = ({
 
       return (
         (!selectedSizes.length ||
-          hasCommonElements(chain.sizes, selectedSizes)) &&
+          hasCommonElements(chain.sizes || [], selectedSizes)) &&
         (!selectedGenders.length ||
-          hasCommonElements(chain.genders, selectedGenders))
+          hasCommonElements(chain.genders || [], selectedGenders))
       );
     };
 

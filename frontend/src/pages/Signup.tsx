@@ -18,18 +18,18 @@ import { TwoColumnLayout } from "../components/Layouts";
 // Project resources
 import { PhoneFormField, TextForm } from "../components/FormFields";
 import { createUser } from "../util/firebase/user";
-import { getChain } from "../util/firebase/chain";
-import { IChain } from "../types";
 import FormActions from "../components/formActions";
 
 //Media
 import RightArrow from "../images/right-arrow-white.svg";
 import JoinLoopImg from "../images/Join-Loop.jpg";
+import { Chain } from "../api/types";
+import { chainGet } from "../api/chain";
 
 const Signup = () => {
   const history = useHistory();
   const { chainId } = useParams<{ chainId: string }>();
-  const [chain, setChain] = useState<IChain | null>(null);
+  const [chain, setChain] = useState<Chain | null>(null);
   const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [geocoderResult, setGeocoderResult] = useState({
@@ -57,10 +57,10 @@ const Signup = () => {
   useEffect(() => {
     (async () => {
       if (chainId) {
-        const chain = await getChain(chainId);
+        const chain = (await chainGet(chainId)).data;
         if (chain !== undefined) {
           setChain(chain);
-          setChainGender(chain.categories.gender);
+          setChainGender(chain.genders || []);
         } else {
           console.error(`chain ${chainId} does not exist`);
         }

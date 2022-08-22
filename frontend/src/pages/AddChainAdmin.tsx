@@ -12,9 +12,9 @@ import { makeStyles } from "@mui/styles";
 import RightArrow from "../images/right-arrow-white.svg";
 
 import theme from "../util/theme";
-import { addUserAsChainAdmin } from "../util/firebase/chain";
 
 import { Title } from "../components/Typography";
+import { chainAddUser } from "../api/chain";
 
 export const AddChainAdmin = ({ location }: { location: any }) => {
   const classes = makeStyles(theme as any)();
@@ -33,7 +33,7 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
 
   const handleSubmitAddChainAdmin = async () => {
     if (selectedUser) {
-      await addUserAsChainAdmin(chainId, selectedUser);
+      await chainAddUser(chainId, selectedUser, true);
     }
   };
 

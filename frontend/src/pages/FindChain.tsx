@@ -31,7 +31,6 @@ import { makeStyles } from "@mui/styles";
 // Project resources
 import { ChainsContext } from "../components/ChainsProvider";
 import { AuthContext } from "../components/AuthProvider";
-import { addUserToChain } from "../util/firebase/chain";
 import { IViewPort } from "../types";
 import theme from "../util/theme";
 import { getUserById } from "../util/firebase/user";
@@ -41,6 +40,7 @@ import { Chain } from "../api/types";
 // Media
 import RightArrow from "../images/right-arrow-white.svg";
 import { Gender } from "../api/enums";
+import { chainAddUser } from "../api/chain";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
@@ -143,8 +143,8 @@ const FindChain = ({ location }: { location: Location }) => {
 
   const signupToChain = async (e: any) => {
     e.preventDefault();
-    if (user) {
-      await addUserToChain(selectedChain!.uid, user.uid);
+    if (user && selectedChain) {
+      await chainAddUser(selectedChain.uid, user.uid, false);
       history.push({ pathname: "/thankyou" });
     } else {
       history.push({
@@ -233,25 +233,18 @@ const FindChain = ({ location }: { location: Location }) => {
     {
       type: "FeatureCollection",
       features: filteredChains.map((filteredChain, filteredChainIndex) => {
-        const {
-          longitude,
-          latitude,
-          radius,
-          genders,
-        } = filteredChain;
-
         return {
           type: "Feature",
           geometry: {
             type: "Point",
-            coordinates: [longitude, latitude],
+            coordinates: [filteredChain.longitude, filteredChain.latitude],
           },
           properties: {
-            radius: radius * 6,
+            radius: filteredChain.radius * 6,
             chainIndex: filteredChainIndex,
-            gender: genders.includes(Gender.WOMEN)
+            gender: filteredChain.genders?.includes(Gender.WOMEN)
               ? "woman"
-              : genders.includes(Gender.MEN)
+              : filteredChain.genders?.includes(Gender.MEN)
               ? "men"
               : "children", // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
           },
