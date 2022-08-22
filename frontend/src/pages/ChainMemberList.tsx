@@ -21,7 +21,7 @@ import { ChainParticipantsTable } from "../components/ChainParticipantsTable";
 import { Title } from "../components/Typography";
 import { chainGet, chainUpdate, ChainUpdateBody } from "../api/chain";
 import { Chain } from "../api/types";
-import { Gender, Size } from "../api/enums";
+import {  Genders,  Sizes } from "../api/enums";
 
 type TParams = {
   chainId: string;
@@ -164,13 +164,13 @@ const ChainMemberList = () => {
                 <Field title="Categories">
                   {chain?.genders &&
                     chain?.genders
-                      .map((gender, i) => `${Gender[gender as keyof typeof Gender]}'S CLOTHING`)
+                      .map((gender, i) => `${Genders[gender]}'S CLOTHING`)
                       .join(" / ")}
                 </Field>
                 <Field title="Sizes">
                   {chain?.sizes &&
                     chain?.sizes
-                      .map((size, i) => t(`${Size[size as keyof typeof Size]}`))
+                      .map((size, i) => t(Sizes[size]))
                       .join(" / ")}
                 </Field>
                 <Field title="Participants">{`${users.length} ${

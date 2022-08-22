@@ -39,7 +39,7 @@ import { Chain } from "../api/types";
 
 // Media
 import RightArrow from "../images/right-arrow-white.svg";
-import { Gender } from "../api/enums";
+import {  Genders,  Sizes } from "../api/enums";
 import { chainAddUser } from "../api/chain";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
@@ -233,6 +233,8 @@ const FindChain = ({ location }: { location: Location }) => {
     {
       type: "FeatureCollection",
       features: filteredChains.map((filteredChain, filteredChainIndex) => {
+        let filterGender = filteredChain.genders?.find(g=>g === "1" || g === "2" ||g==="3") || "0"
+        
         return {
           type: "Feature",
           geometry: {
@@ -242,11 +244,7 @@ const FindChain = ({ location }: { location: Location }) => {
           properties: {
             radius: filteredChain.radius * 6,
             chainIndex: filteredChainIndex,
-            gender: filteredChain.genders?.includes(Gender.WOMEN)
-              ? "woman"
-              : filteredChain.genders?.includes(Gender.MEN)
-              ? "men"
-              : "children", // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
+            gender: filterGender, // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
           },
         };
       }),
@@ -356,10 +354,10 @@ const FindChain = ({ location }: { location: Location }) => {
                   <Typography component="h3">{t("categories")}:</Typography>
                   <div id="categories-container">
                     {selectedChain.genders
-                      ? selectedChain.genders.map((category, i) => {
+                      ? selectedChain.genders.map((gender, i) => {
                         return (
                           <Typography component="p" key={i}>
-                            {t(`${category}`)} {t("clothing")}
+                            {t(Genders[gender])}
                           </Typography>
                         );
                       })
@@ -371,7 +369,7 @@ const FindChain = ({ location }: { location: Location }) => {
                       ? selectedChain.sizes.map((size, i) => {
                         return (
                           <Typography key={i} component="p">
-                            {t(`${size}`)}
+                            {t(Sizes[size])}
                           </Typography>
                         );
                       })

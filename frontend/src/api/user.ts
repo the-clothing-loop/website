@@ -1,5 +1,4 @@
 import axios from "./axios";
-import { Gender, Size } from "./enums";
 import { User } from "./types";
 
 export function userGetByUID(chainUID: string, uid: string) {
@@ -24,7 +23,7 @@ export interface UserUpdateBody {
   name?: string;
   phone_number?: string;
   newsletter?: boolean;
-  sizes?: Size[];
+  sizes?: string[];
   address?: string;
 }
 export function userUpdate(user: UserUpdateBody) {
