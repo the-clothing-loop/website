@@ -28,8 +28,8 @@ export interface Chain {
   latitude: number;
   longitude: number;
   radius: number;
-  genders: string[];
-  sizes: string[];
+  genders: string[] | null;
+  sizes: string[] | null;
   published: boolean;
   openToNewMembers: boolean;
 }

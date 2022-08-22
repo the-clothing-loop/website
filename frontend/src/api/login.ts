@@ -1,16 +1,16 @@
-import axios from "redaxios";
+import axios from "./axios";
 import { Chain, User } from "./types";
 
 export function registerChainAdmin(user: User, chain: Chain) {
-  return axios.post("/register/chain-admin", { user, chain });
+  return axios.post("/v1/register/chain-admin", { user, chain });
 }
 
 export function registerBasicUser(user: User) {
-  return axios.post("/register/basic-user", { user });
+  return axios.post("/v1/register/basic-user", { user });
 }
 
 export function loginEmail(email: string) {
-  return axios.post("/login/email", { email });
+  return axios.post("/v1/login/email", { email });
 }
 
 export function loginValidate(key: string) {
@@ -18,5 +18,5 @@ export function loginValidate(key: string) {
 }
 
 export function logout() {
-  return axios.delete("/logout");
+  return axios.delete("/v1/logout");
 }
