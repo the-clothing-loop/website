@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - main
+      - v2/*
 
 env: 
   REACT_APP_STRIPE_PUBLIC_KEY: ${{ secrets.REACT_APP_STRIPE_PUBLIC_KEY }}
