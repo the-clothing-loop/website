@@ -48,9 +48,7 @@ import { chainAddUser } from "../api/chain";
 // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
 mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
-export interface ChainPredicate {
-  (chain: Chain): boolean;
-}
+export type ChainPredicate =  (chain: Chain)=> boolean;
 
 export const defaultTruePredicate = () => true;
 
@@ -190,11 +188,22 @@ const FindChain = ({ location }: { location: Location }) => {
     }
   };
 
+  interface FeatureProperties {
+    radius: number;
+    chainIndex: number;
+    gender: string;
+  }
+
+  interface Feature<FP> extends GeoJSONTypes.Feature<GeoJSONTypes.Point,FP> {
+    layer: {id: string},
+  }
+
   const handleMapClick = (event: MapEvent) => {
-    const topMostFeature = event?.features?.[0];
-    const {
-      layer: { id: layerId },
-    } = topMostFeature;
+    const mapFeatures = (event.features || [] ) as Feature<any>[]
+    console.log("mapFeatures", mapFeatures)
+    const topMostFeature = mapFeatures[0]
+
+    const layerId = topMostFeature.layer.id;
 
     if (layerId === "chains") {
       const selectedChainIndex = topMostFeature.properties.chainIndex;
@@ -213,14 +222,10 @@ const FindChain = ({ location }: { location: Location }) => {
             return;
           }
 
-          const {
-            geometry: { coordinates },
-          } = topMostFeature;
-
           setViewport({
             ...viewport,
-            longitude: coordinates[0],
-            latitude: coordinates[1],
+            longitude: topMostFeature.geometry.coordinates[0],
+            latitude: topMostFeature.geometry.coordinates[1],
             zoom,
             transitionDuration: 500,
           });
@@ -229,7 +234,7 @@ const FindChain = ({ location }: { location: Location }) => {
     }
   };
 
-  const geoJSONFilteredChains: GeoJSONTypes.FeatureCollection<GeoJSONTypes.Geometry> =
+  const geoJSONFilteredChains: GeoJSONTypes.FeatureCollection<GeoJSONTypes.Geometry, FeatureProperties> =
     {
       type: "FeatureCollection",
       features: filteredChains.map((filteredChain, filteredChainIndex) => {
