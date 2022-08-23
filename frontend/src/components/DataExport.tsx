@@ -14,90 +14,90 @@ import { Chain } from "../api/types";
 import { chainGet, chainGetAll } from "../api/chain";
 
 const chainsHeaders = [
-	{ label: "Name", key: "name" },
-	{ label: "Location", key: "address" },
-	{ label: "Categories", key: "categories.gender" },
-	{ label: "Sizes", key: "categories.size" },
-	{ label: "Published", key: "published" },
-	{ label: "Open to new members", key: "openToNewMembers" },
-	{ label: "Description", key: "description" },
+  { label: "Name", key: "name" },
+  { label: "Location", key: "address" },
+  { label: "Categories", key: "categories.gender" },
+  { label: "Sizes", key: "categories.size" },
+  { label: "Published", key: "published" },
+  { label: "Open to new members", key: "openToNewMembers" },
+  { label: "Description", key: "description" },
 ];
 
 type TParams = {
-	chainId: string;
+  chainId: string;
 };
 
 const DataExport = () => {
-	const { t } = useTranslation();
-	const classes = makeStyles(theme as any)();
+  const { t } = useTranslation();
+  const classes = makeStyles(theme as any)();
 
-	const [chains, setChains] = useState<Chain[]>();
-	const [error, setError] = useState("");
+  const [chains, setChains] = useState<Chain[]>();
+  const [error, setError] = useState("");
 
-	useEffect(() => {
-		(async () => {
-			let chains = (await chainGetAll()).data;
-			let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
-			setChains(sortedChains);
-		})();
-	}, []);
+  useEffect(() => {
+    (async () => {
+      let chains = (await chainGetAll()).data;
+      let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
+      setChains(sortedChains);
+    })();
+  }, []);
 
-	return (
-		<div className={classes.buttonExport}>
-			<CSVLink
-				data={chains ? chains : ""}
-				headers={chainsHeaders}
-				filename={"Loops-list.csv"}
-			>
-				{t("exportData")}
-				<DownloadIcon />
-			</CSVLink>
-		</div>
-	);
+  return (
+    <div className={classes.buttonExport}>
+      <CSVLink
+        data={chains ? chains : ""}
+        headers={chainsHeaders}
+        filename={"Loops-list.csv"}
+      >
+        {t("exportData")}
+        <DownloadIcon />
+      </CSVLink>
+    </div>
+  );
 };
 
 const usersHeaders = [
-	{ label: "Name", key: "name" },
-	{ label: "Address", key: "address" },
-	{ label: "Email", key: "email" },
-	{ label: "Phone", key: "phoneNumber" },
-	{ label: "Interested Sizes", key: "interestedSizes" },
-	{ label: "Newsletter", key: "newsletter" },
+  { label: "Name", key: "name" },
+  { label: "Address", key: "address" },
+  { label: "Email", key: "email" },
+  { label: "Phone", key: "phoneNumber" },
+  { label: "Interested Sizes", key: "interestedSizes" },
+  { label: "Newsletter", key: "newsletter" },
 ];
 
 const UserDataExport = () => {
-	const { t } = useTranslation();
-	const { chainId } = useParams<TParams>();
-	const classes = makeStyles(theme as any)();
-	const [chain, setChain] = useState<Chain>();
-	const [users, setUsers] = useState<IUser[]>();
-	const [error, setError] = useState("");
+  const { t } = useTranslation();
+  const { chainId } = useParams<TParams>();
+  const classes = makeStyles(theme as any)();
+  const [chain, setChain] = useState<Chain>();
+  const [users, setUsers] = useState<IUser[]>();
+  const [error, setError] = useState("");
 
-	useEffect(() => {
-		(async () => {
-			try {
-				const chainData = (await chainGet(chainId)).data;
-				setChain(chainData);
-				const chainUsers = await getUsersForChain(chainId);
-				setUsers(chainUsers);
-			} catch (error) {
-				console.error(error);
-			}
-		})();
-	}, []);
+  useEffect(() => {
+    (async () => {
+      try {
+        const chainData = (await chainGet(chainId)).data;
+        setChain(chainData);
+        const chainUsers = await getUsersForChain(chainId);
+        setUsers(chainUsers);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
 
-	return (
-		<div className={classes.buttonExport}>
-			<CSVLink
-				data={users ? users : ""}
-				headers={usersHeaders}
-				filename={`${chain?.name}-participants.csv`}
-			>
-				{t("exportData")}
-				<DownloadIcon />
-			</CSVLink>
-		</div>
-	);
+  return (
+    <div className={classes.buttonExport}>
+      <CSVLink
+        data={users ? users : ""}
+        headers={usersHeaders}
+        filename={`${chain?.name}-participants.csv`}
+      >
+        {t("exportData")}
+        <DownloadIcon />
+      </CSVLink>
+    </div>
+  );
 };
 
 export { DataExport, UserDataExport };

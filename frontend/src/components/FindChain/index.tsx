@@ -9,115 +9,116 @@ import { defaultTruePredicate, ChainPredicate } from "../../pages/FindChain";
 import { Chain } from "../../api/types";
 
 const hasCommonElements = (arr1: string[], arr2: string[]) =>
-	arr1.some((item: string) => arr2.includes(item));
+  arr1.some((item: string) => arr2.includes(item));
 
 interface IProps {
-	setFilterChainPredicate: React.Dispatch<React.SetStateAction<ChainPredicate>>;
-	handleFindChainCallback: (findChainPredicate: ChainPredicate) => boolean;
-	initialValues?: any;
+  setFilterChainPredicate: React.Dispatch<React.SetStateAction<ChainPredicate>>;
+  handleFindChainCallback: (findChainPredicate: ChainPredicate) => boolean;
+  initialValues?: any;
 }
 
 export const FindChainSearchBarContainer = ({
-	setFilterChainPredicate,
-	handleFindChainCallback,
-	initialValues,
+  setFilterChainPredicate,
+  handleFindChainCallback,
+  initialValues,
 }: IProps) => {
-	const [searchTerm, setSearchTerm] = React.useState<string>("");
-	const [selectedSizes, setSelectedSizes] = React.useState<string[]>([]);
-	const [selectedGenders, setSelectedGenders] = React.useState<string[]>([]);
-	const [isChainNotFound, setIsChainNotFound] = React.useState<boolean>(false);
-	const [formAutoFilled, setFormAutoFilled] = React.useState<boolean>(false);
-	const chains = useContext(ChainsContext);
+  const [searchTerm, setSearchTerm] = React.useState<string>("");
+  const [selectedSizes, setSelectedSizes] = React.useState<string[]>([]);
+  const [selectedGenders, setSelectedGenders] = React.useState<string[]>([]);
+  const [isChainNotFound, setIsChainNotFound] = React.useState<boolean>(false);
+  const [formAutoFilled, setFormAutoFilled] = React.useState<boolean>(false);
+  const chains = useContext(ChainsContext);
 
-	const handleSearchTermChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		setSearchTerm(event.target.value);
-	};
+  const handleSearchTermChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchTerm(event.target.value);
+  };
 
-	const handleSelectedGenderChange = (event: React.ChangeEvent<any>) => {
-		const {
-			target: { value },
-		} = event;
+  const handleSelectedGenderChange = (event: React.ChangeEvent<any>) => {
+    const {
+      target: { value },
+    } = event;
 
-		setSelectedGenders(typeof value === "string" ? value.split(",") : value);
-	};
+    setSelectedGenders(typeof value === "string" ? value.split(",") : value);
+  };
 
-	const handleSearch = () => {
-		const newChainFilterPredicate = (chain: Chain) => {
-			return (
-				(!selectedSizes.length ||
-					hasCommonElements(chain.sizes || [], selectedSizes)) &&
-				(!selectedGenders.length ||
-					hasCommonElements(chain.genders || [], selectedGenders))
-			);
-		};
+  const handleSearch = () => {
+    const newChainFilterPredicate = (chain: Chain) => {
 
-		setFilterChainPredicate(() => newChainFilterPredicate);
+      return (
+        (!selectedSizes.length ||
+          hasCommonElements(chain.sizes || [], selectedSizes)) &&
+        (!selectedGenders.length ||
+          hasCommonElements(chain.genders || [], selectedGenders))
+      );
+    };
 
-		if (!searchTerm) {
-			return;
-		}
+    setFilterChainPredicate(() => newChainFilterPredicate);
 
-		const newChainFindPredicate = (chain: Chain) =>
-			chain.name.toLowerCase().includes(searchTerm.toLowerCase());
+    if (!searchTerm) {
+      return;
+    }
 
-		const isFindChainResult = handleFindChainCallback(newChainFindPredicate);
+    const newChainFindPredicate = (chain: Chain) =>
+      chain.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-		!isFindChainResult && setIsChainNotFound(true);
-	};
+    const isFindChainResult = handleFindChainCallback(newChainFindPredicate);
 
-	const handleBack = () => {
-		setSearchTerm("");
-		setSelectedSizes([]);
-		setSelectedGenders([]);
-		setIsChainNotFound(false);
-		setFilterChainPredicate(() => defaultTruePredicate);
-	};
+    !isFindChainResult && setIsChainNotFound(true);
+  };
 
-	useEffect(() => {
-		// chains may not have loaded yet
-		if (!chains.length || !Object.keys(initialValues).length) {
-			return;
-		}
-		const schema = Yup.object({
-			searchTerm: Yup.string().default(""),
-			sizes: Yup.array().of(Yup.string()).default([]),
-			genders: Yup.array().of(Yup.string()).default([]),
-		});
+  const handleBack = () => {
+    setSearchTerm("");
+    setSelectedSizes([]);
+    setSelectedGenders([]);
+    setIsChainNotFound(false);
+    setFilterChainPredicate(() => defaultTruePredicate);
+  };
 
-		try {
-			let validated = schema.validateSync(initialValues);
-			setSearchTerm(validated.searchTerm);
-			setSelectedSizes(validated.sizes);
-			setSelectedGenders(validated.genders);
-			setFormAutoFilled(true);
-		} catch (error) {
-			console.error("Invalid query string parameters");
-			console.error(error);
-			return;
-		}
-	}, [chains]);
+  useEffect(() => {
+    // chains may not have loaded yet
+    if (!chains.length || !Object.keys(initialValues).length) {
+      return;
+    }
+    const schema = Yup.object({
+      searchTerm: Yup.string().default(""),
+      sizes: Yup.array().of(Yup.string()).default([]),
+      genders: Yup.array().of(Yup.string()).default([]),
+    });
 
-	useEffect(() => {
-		handleSearch();
-	}, [formAutoFilled]);
+    try {
+      let validated = schema.validateSync(initialValues);
+      setSearchTerm(validated.searchTerm);
+      setSelectedSizes(validated.sizes);
+      setSelectedGenders(validated.genders);
+      setFormAutoFilled(true);
+    } catch (error) {
+      console.error("Invalid query string parameters");
+      console.error(error);
+      return;
+    }
+  }, [chains]);
 
-	return (
-		<>
-			<SearchBar
-				searchTerm={searchTerm}
-				handleSearchTermChange={handleSearchTermChange}
-				selectedGenders={selectedGenders}
-				handleSelectedGenderChange={handleSelectedGenderChange}
-				selectedSizes={selectedSizes}
-				setSelectedSizes={setSelectedSizes}
-				handleSearch={handleSearch}
-			/>
+  useEffect(() => {
+    handleSearch();
+  }, [formAutoFilled]);
 
-			{isChainNotFound && (
-				<ChainNotFound searchTerm={searchTerm} backAction={handleBack} />
-			)}
-		</>
-	);
+  return (
+    <>
+      <SearchBar
+        searchTerm={searchTerm}
+        handleSearchTermChange={handleSearchTermChange}
+        selectedGenders={selectedGenders}
+        handleSelectedGenderChange={handleSelectedGenderChange}
+        selectedSizes={selectedSizes}
+        setSelectedSizes={setSelectedSizes}
+        handleSearch={handleSearch}
+      />
+
+      {isChainNotFound && (
+        <ChainNotFound searchTerm={searchTerm} backAction={handleBack} />
+      )}
+    </>
+  );
 };

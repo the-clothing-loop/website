@@ -9,25 +9,25 @@ import { Helmet } from "react-helmet";
 import { makeStyles } from "@mui/styles";
 
 type TParams = {
-	status?: string;
+  status?: string;
 };
 
 const Donate = ({ match }: RouteComponentProps<TParams>) => {
-	const classes = makeStyles(theme as any)();
-	const params = match.params;
-	const { status } = params;
+  const classes = makeStyles(theme as any)();
+  const params = match.params;
+  const { status } = params;
 
-	return (
-		<>
-			<Helmet>
-				<title>The Clothing Loop | Donate</title>
-				<meta name="description" content="Donate" />
-			</Helmet>
-			<div>
-				{status === "thankyou" ? <DonationCompleted /> : <DonationForm />}
-			</div>
-		</>
-	);
+  return (
+    <>
+      <Helmet>
+        <title>The Clothing Loop | Donate</title>
+        <meta name="description" content="Donate" />
+      </Helmet>
+      <div>
+        {status === "thankyou" ? <DonationCompleted /> : <DonationForm />}
+      </div>
+    </>
+  );
 };
 
 export default Donate;

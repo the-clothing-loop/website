@@ -6,11 +6,11 @@ import theme from "../util/theme";
 const useStyles = makeStyles(theme as any);
 
 export const Title = ({ children }: { children: any }) => {
-	const classes = useStyles();
+  const classes = useStyles();
 
-	return (
-		<Typography classes={{ root: classes.titleTypographyRoot }}>
-			{children}
-		</Typography>
-	);
+  return (
+    <Typography classes={{ root: classes.titleTypographyRoot }}>
+      {children}
+    </Typography>
+  );
 };
