@@ -11,15 +11,17 @@ import {
 import { makeStyles } from "@mui/styles";
 
 // Project resources
-import { getChain, updateChain } from "../util/firebase/chain";
 import theme from "../util/theme";
 import { getUsersForChain, removeUserFromChain } from "../util/firebase/user";
-import { IChain, IUser } from "../types";
+import { IUser } from "../types";
 import { AuthContext, AuthProps } from "../components/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import Popover from "../components/Popover";
 import { ChainParticipantsTable } from "../components/ChainParticipantsTable";
 import { Title } from "../components/Typography";
+import { chainGet, chainUpdate, ChainUpdateBody } from "../api/chain";
+import { Chain } from "../api/types";
+import {  Genders,  Sizes } from "../api/enums";
 
 type TParams = {
   chainId: string;
@@ -47,7 +49,7 @@ const ChainMemberList = () => {
   const { userData }: { userData: IUser | null } =
     useContext<AuthProps>(AuthContext);
 
-  const [chain, setChain] = useState<IChain>();
+  const [chain, setChain] = useState<Chain>();
   const [users, setUsers] = useState<IUser[]>();
   const [switcherValues, setSwitcherValues] = useState({
     published: true,
@@ -63,13 +65,14 @@ const ChainMemberList = () => {
   }) => {
     setSwitcherValues({ ...switcherValues, [e.target.name]: e.target.checked });
 
-    const updatedChainData = {
+    let updatedChainData = {
       [e.target.name]: e.target.checked,
-    };
+    } as any;
 
     console.log(`updating chain data: ${JSON.stringify(updatedChainData)}`);
     try {
-      await updateChain(chainId, updatedChainData);
+      updatedChainData.uid = chainId
+      await chainUpdate(updatedChainData as any);
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
       setError(e.message);
@@ -79,7 +82,7 @@ const ChainMemberList = () => {
   useEffect(() => {
     (async () => {
       try {
-        const chainData = await getChain(chainId);
+        const chainData = (await chainGet(chainId)).data;
         if (chainData === undefined) {
           console.error(`chain ${chainId} does not exist`);
         } else {
@@ -159,15 +162,15 @@ const ChainMemberList = () => {
                 </Typography>
 
                 <Field title="Categories">
-                  {chain.categories?.gender &&
-                    chain.categories.gender
-                      .map((gender, i) => `${gender.toUpperCase()}'S CLOTHING`)
+                  {chain?.genders &&
+                    chain?.genders
+                      .map((gender, i) => `${Genders[gender]}'S CLOTHING`)
                       .join(" / ")}
                 </Field>
                 <Field title="Sizes">
-                  {chain.categories?.size &&
-                    chain.categories.size
-                      .map((size, i) => t(`${size}`))
+                  {chain?.sizes &&
+                    chain?.sizes
+                      .map((size, i) => t(Sizes[size]))
                       .join(" / ")}
                 </Field>
                 <Field title="Participants">{`${users.length} ${

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"io"
 	"strings"
 
 	"encoding/json"
@@ -116,7 +117,7 @@ func ChainGetAll(c *gin.Context) {
 			Genders []string `json:"genders"`
 		} `json:"filter"`
 	}
-	if err := c.ShouldBindJSON(&body); err != nil {
+	if err := c.ShouldBindJSON(&body); err != nil && err != io.EOF {
 		boom.BadRequest(c.Writer, err)
 		return
 	}

@@ -54,7 +54,7 @@ const ChainsList = () => {
     <>
       <Helmet>
         <title>The Clothing Loop | Loops List</title>
-        <meta name="description" content="Loops List" />
+        <meta name="description" content="Loops List" />z
       </Helmet>
       <div>
         {chains ? (
@@ -136,7 +136,7 @@ const ChainsList = () => {
                             className={classes.button}
                             onClick={(e) => {
                               e.preventDefault();
-                              history.push(`/loops/${chain.id}/members`);
+                              history.push(`/loops/${chain.uid}/members`);
                             }}
                           >
                             {t("view")}

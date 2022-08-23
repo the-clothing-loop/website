@@ -7,10 +7,11 @@ import { Download as DownloadIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
-import { getChain, getChains } from "../util/firebase/chain";
 import { getUsersForChain } from "../util/firebase/user";
 import theme from "../util/theme";
-import { IChain, IUser } from "../types";
+import { IUser } from "../types";
+import { Chain } from "../api/types";
+import { chainGet, chainGetAll } from "../api/chain";
 
 const chainsHeaders = [
   { label: "Name", key: "name" },
@@ -30,12 +31,12 @@ const DataExport = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
 
-  const [chains, setChains] = useState<IChain[]>();
+  const [chains, setChains] = useState<Chain[]>();
   const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
-      let chains = await getChains();
+      let chains = (await chainGetAll()).data;
       let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
       setChains(sortedChains);
     })();
@@ -68,14 +69,14 @@ const UserDataExport = () => {
   const { t } = useTranslation();
   const { chainId } = useParams<TParams>();
   const classes = makeStyles(theme as any)();
-  const [chain, setChain] = useState<IChain>();
+  const [chain, setChain] = useState<Chain>();
   const [users, setUsers] = useState<IUser[]>();
   const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
       try {
-        const chainData = await getChain(chainId);
+        const chainData = (await chainGet(chainId)).data;
         setChain(chainData);
         const chainUsers = await getUsersForChain(chainId);
         setUsers(chainUsers);

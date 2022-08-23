@@ -1,17 +1,17 @@
 import React from "react";
 
-import { getChains } from "../util/firebase/chain";
-import { IChain } from "../types";
+import {Chain} from "../api/types"
+import {chainGetAll} from "../api/chain"
 
-export const ChainsContext = React.createContext<IChain[]>([]);
+export const ChainsContext = React.createContext<Chain[]>([]);
 
 export const ChainsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [chains, setChains] = React.useState<IChain[]>([]);
+  const [chains, setChains] = React.useState<Chain[]>([]);
 
   React.useEffect(() => {
-    (async () => {
-      setChains(await getChains());
-    })();
+    chainGetAll().then((res)=>{
+      setChains(res.data);
+    })
   }, []);
 
   return (

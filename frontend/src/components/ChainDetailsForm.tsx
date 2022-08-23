@@ -17,26 +17,18 @@ import { TextForm, NumberField, SelectField } from "./FormFields";
 import PopoverOnHover from "./Popover";
 import SizesDropdown from "../components/SizesDropdown";
 import CategoriesDropdown from "../components/CategoriesDropdown";
+import { Chain } from "../api/types";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
-interface ChainFields {
-  name: string;
-  description?: string;
-  radius: number;
-  clothingTypes: [string];
-  clothingSizes: [string];
-  longitude: number;
-  latitude: number;
-}
 
 interface IProps {
   onSubmit: (values: any) => void;
   submitError?: string;
-  initialValues?: ChainFields;
+  initialValues?: Chain;
 }
 
 const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
@@ -108,7 +100,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
       initialValues={Object.assign(defaultValues, initialValues)}
       validationSchema={formSchema}
       validateOnChange={false}
-      validate={(values: ChainFields) => {
+      validate={(values: Chain) => {
         if (values.longitude === 0 && values.latitude === 0) {
           return {
             longitude: t("pleaseSetTheLoopLocationByClick"),
@@ -325,5 +317,5 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
   );
 };
 
-export type { ChainFields };
+export type { Chain };
 export default ChainDetailsForm;

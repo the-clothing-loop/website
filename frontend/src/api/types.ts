@@ -1,5 +1,3 @@
-import { Size } from "./enums";
-
 export type UID = string;
 
 export interface User {
@@ -10,7 +8,7 @@ export interface User {
   email_verified: boolean;
   chains: UserChain[];
   address: string;
-  sizes: Size[];
+  sizes: string[];
   is_admin: boolean;
 }
 
@@ -28,8 +26,8 @@ export interface Chain {
   latitude: number;
   longitude: number;
   radius: number;
-  genders: string[];
-  size: string[];
+  genders: string[] | null;
+  sizes: string[] | null;
   published: boolean;
   openToNewMembers: boolean;
 }
