@@ -9,38 +9,38 @@ import { SearchBar } from "./SearchBar";
  * search with whatever values were entered
  */
 export const StandaloneSearchBar = () => {
-  const history = useHistory();
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
+	const history = useHistory();
+	const [searchTerm, setSearchTerm] = useState<string>("");
+	const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+	const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
 
-  const handleSearchTermChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSearchTerm(event.target.value);
-  };
+	const handleSearchTermChange = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		setSearchTerm(event.target.value);
+	};
 
-  const handleSearch = () => {
-    const queryParams = new URLSearchParams();
-    queryParams.append("searchTerm", searchTerm);
-    for (const size of selectedSizes) {
-      queryParams.append("sizes", size);
-    }
-    for (const gender of selectedGenders) {
-      queryParams.append("genders", gender);
-    }
-    history.push("/loops/find?" + queryParams.toString());
-  };
+	const handleSearch = () => {
+		const queryParams = new URLSearchParams();
+		queryParams.append("searchTerm", searchTerm);
+		for (const size of selectedSizes) {
+			queryParams.append("sizes", size);
+		}
+		for (const gender of selectedGenders) {
+			queryParams.append("genders", gender);
+		}
+		history.push("/loops/find?" + queryParams.toString());
+	};
 
-  return (
-    <SearchBar
-      searchTerm={searchTerm}
-      handleSearchTermChange={handleSearchTermChange}
-      selectedGenders={selectedGenders}
-      handleSelectedGenderChange={setSelectedGenders}
-      selectedSizes={selectedSizes}
-      setSelectedSizes={setSelectedSizes}
-      handleSearch={handleSearch}
-    />
-  );
+	return (
+		<SearchBar
+			searchTerm={searchTerm}
+			handleSearchTermChange={handleSearchTermChange}
+			selectedGenders={selectedGenders}
+			handleSelectedGenderChange={setSelectedGenders}
+			selectedSizes={selectedSizes}
+			setSelectedSizes={setSelectedSizes}
+			handleSearch={handleSearch}
+		/>
+	);
 };

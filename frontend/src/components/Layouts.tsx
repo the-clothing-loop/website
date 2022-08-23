@@ -4,62 +4,62 @@ import { makeStyles } from "@mui/styles";
 import theme from "../util/theme";
 
 interface ITwoColumnsLayout {
-  children: any;
-  img: any;
+	children: any;
+	img: any;
 }
 
 interface IThreeColumnsLayout {
-  children: any;
+	children: any;
 }
 
 interface IOneColumnLayout {
-  children: any;
+	children: any;
 }
 
 // Standard responsive three column grid used in the app
 const ThreeColumnLayout: React.FC<IThreeColumnsLayout> = ({ children }) => {
-  const classes = makeStyles(theme as any)();
+	const classes = makeStyles(theme as any)();
 
-  return (
-    <Grid container className={classes.threeColumnsFormWrapper}>
-      <Grid item sm />
-      <Grid item sm className={classes.threeColumnsForm}>
-        {children}
-      </Grid>
-      <Grid item sm />
-    </Grid>
-  );
+	return (
+		<Grid container className={classes.threeColumnsFormWrapper}>
+			<Grid item sm />
+			<Grid item sm className={classes.threeColumnsForm}>
+				{children}
+			</Grid>
+			<Grid item sm />
+		</Grid>
+	);
 };
 
 const TwoColumnLayout: React.FC<ITwoColumnsLayout> = ({ children, img }) => {
-  const classes = makeStyles(theme as any)();
+	const classes = makeStyles(theme as any)();
 
-  return (
-    <div className={classes.formContainer}>
-      <Grid container className={classes.form}>
-        <Grid item sm className={classes.formGridItem}>
-          <img src={img} alt="form-img" className={classes.formImg} />
-        </Grid>
-        <Grid item sm className={classes.formGridItem}>
-          {children}
-        </Grid>
-      </Grid>
-    </div>
-  );
+	return (
+		<div className={classes.formContainer}>
+			<Grid container className={classes.form}>
+				<Grid item sm className={classes.formGridItem}>
+					<img src={img} alt="form-img" className={classes.formImg} />
+				</Grid>
+				<Grid item sm className={classes.formGridItem}>
+					{children}
+				</Grid>
+			</Grid>
+		</div>
+	);
 };
 
 const OneColumnLayout: React.FC<IOneColumnLayout> = ({ children }) => {
-  const classes = makeStyles(theme as any)();
+	const classes = makeStyles(theme as any)();
 
-  return (
-    <div className={classes.formContainer}>
-      <Grid container className={classes.singleForm}>
-        <Grid item sm>
-          {children}
-        </Grid>
-      </Grid>
-    </div>
-  );
+	return (
+		<div className={classes.formContainer}>
+			<Grid container className={classes.singleForm}>
+				<Grid item sm>
+					{children}
+				</Grid>
+			</Grid>
+		</div>
+	);
 };
 
 export { ThreeColumnLayout, TwoColumnLayout, OneColumnLayout };

@@ -6,21 +6,21 @@ import React from "react";
 import theme from "../util/theme";
 
 interface ThreeColumnLayoutProps {
-  children: ReactJSXElement;
+	children: ReactJSXElement;
 }
 // Standard responsive three column grid used in the app
 const ThreeColumnLayout = ({ children }: ThreeColumnLayoutProps) => {
-  const classes = makeStyles(theme as any)();
+	const classes = makeStyles(theme as any)();
 
-  return (
-    <Grid container className={classes.form}>
-      <Grid item sm />
-      <Grid item sm>
-        {children}
-      </Grid>
-      <Grid item sm />
-    </Grid>
-  );
+	return (
+		<Grid container className={classes.form}>
+			<Grid item sm />
+			<Grid item sm>
+				{children}
+			</Grid>
+			<Grid item sm />
+		</Grid>
+	);
 };
 
 export default ThreeColumnLayout;
