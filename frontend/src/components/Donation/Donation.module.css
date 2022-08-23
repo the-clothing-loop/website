@@ -28,7 +28,7 @@
 .donationsWrapper .donationForm .paymentToggle {
   position: relative;
 }
-.donationsWrapper .donationForm .paymentToggle input[type=radio] {
+.donationsWrapper .donationForm .paymentToggle input[type="radio"] {
   opacity: 0;
   position: absolute;
   width: 100%;
@@ -43,15 +43,23 @@
   text-align: center;
   font-size: 11pt;
 }
-.donationsWrapper .donationForm .paymentToggle input[type=radio]:focus + label {
+.donationsWrapper
+  .donationForm
+  .paymentToggle
+  input[type="radio"]:focus
+  + label {
   border: 1px solid var(--c-grey-d30);
 }
-.donationsWrapper .donationForm .paymentToggle input[type=radio]:checked + label {
+.donationsWrapper
+  .donationForm
+  .paymentToggle
+  input[type="radio"]:checked
+  + label {
   color: white;
   background: #518d7e;
   border-color: #518d7e;
 }
-.donationsWrapper .donationForm .paymentToggle input[type=text] {
+.donationsWrapper .donationForm .paymentToggle input[type="text"] {
   border: solid 1px #518d7e;
   display: inline-block;
   width: 100%;
@@ -61,7 +69,7 @@
   border-radius: 0;
   font-family: "Montserrat";
 }
-.donationsWrapper .donationForm .paymentToggle input[type=text]::placeholder {
+.donationsWrapper .donationForm .paymentToggle input[type="text"]::placeholder {
   color: #8a8a8a;
 }
 .donationsWrapper .donationForm .paymentOptions {
@@ -101,7 +109,7 @@
   color: var(--c-grey-d30);
 }
 
-.paymentEmail input[type=text] {
+.paymentEmail input[type="text"] {
   border: solid 1px #518d7e;
   display: inline-block;
   width: 100%;
@@ -111,7 +119,7 @@
   border-radius: 0;
   font-family: Montserrat;
 }
-.paymentEmail input[type=text]::placeholder {
+.paymentEmail input[type="text"]::placeholder {
   color: #8a8a8a;
 }
 

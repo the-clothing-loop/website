@@ -29,7 +29,7 @@ const DonationFormContent = () => {
   const stripe = useStripe();
 
   const classes = makeStyles(theme as any)();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const amountsRecurring = [
     {
@@ -307,7 +307,7 @@ const DonationFormContent = () => {
 };
 
 const DonationForm = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   if (accessToken.stripeApiAccessToken) {
     const stripePublicKey = accessToken.stripeApiAccessToken;
 
@@ -316,7 +316,11 @@ const DonationForm = () => {
     return (
       <div className={styles.donationsWrapper}>
         <h3 className={styles.pageTitle}>{t("donateToTheClothingLoop")}</h3>
-        <p dangerouslySetInnerHTML={{__html: t("thanksForConsideringADonation")}}></p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: t("thanksForConsideringADonation"),
+          }}
+        ></p>
 
         <Elements stripe={stripePromise}>
           <DonationFormContent />

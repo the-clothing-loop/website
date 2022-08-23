@@ -45,11 +45,11 @@ const ChainEdit = () => {
 
   useEffect(() => {
     (async () => {
-      try{
-      let chain = (await chainGet(chainId)).data;
-      
-      setChain(chain);
-      } catch{
+      try {
+        let chain = (await chainGet(chainId)).data;
+
+        setChain(chain);
+      } catch {
         console.error(`chain ${chainId} does not exist`);
       }
     })();

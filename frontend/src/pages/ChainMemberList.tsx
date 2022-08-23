@@ -21,7 +21,7 @@ import { ChainParticipantsTable } from "../components/ChainParticipantsTable";
 import { Title } from "../components/Typography";
 import { chainGet, chainUpdate, ChainUpdateBody } from "../api/chain";
 import { Chain } from "../api/types";
-import {  Genders,  Sizes } from "../api/enums";
+import { Genders, Sizes } from "../api/enums";
 
 type TParams = {
   chainId: string;
@@ -71,7 +71,7 @@ const ChainMemberList = () => {
 
     console.log(`updating chain data: ${JSON.stringify(updatedChainData)}`);
     try {
-      updatedChainData.uid = chainId
+      updatedChainData.uid = chainId;
       await chainUpdate(updatedChainData as any);
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
@@ -169,9 +169,7 @@ const ChainMemberList = () => {
                 </Field>
                 <Field title="Sizes">
                   {chain?.sizes &&
-                    chain?.sizes
-                      .map((size, i) => t(Sizes[size]))
-                      .join(" / ")}
+                    chain?.sizes.map((size, i) => t(Sizes[size])).join(" / ")}
                 </Field>
                 <Field title="Participants">{`${users.length} ${
                   users.length === 1 ? "person" : "people"

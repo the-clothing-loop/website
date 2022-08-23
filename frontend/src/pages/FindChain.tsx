@@ -39,16 +39,16 @@ import { Chain } from "../api/types";
 
 // Media
 import RightArrow from "../images/right-arrow-white.svg";
-import {  Genders,  Sizes } from "../api/enums";
+import { Genders, Sizes } from "../api/enums";
 import { chainAddUser } from "../api/chain";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
 // @ts-ignore
-// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
-mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+mapboxgl.workerClass =
+  require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
-export type ChainPredicate =  (chain: Chain)=> boolean;
+export type ChainPredicate = (chain: Chain) => boolean;
 
 export const defaultTruePredicate = () => true;
 
@@ -194,14 +194,14 @@ const FindChain = ({ location }: { location: Location }) => {
     gender: string;
   }
 
-  interface Feature<FP> extends GeoJSONTypes.Feature<GeoJSONTypes.Point,FP> {
-    layer: {id: string},
+  interface Feature<FP> extends GeoJSONTypes.Feature<GeoJSONTypes.Point, FP> {
+    layer: { id: string };
   }
 
   const handleMapClick = (event: MapEvent) => {
-    const mapFeatures = (event.features || [] ) as Feature<any>[]
-    console.log("mapFeatures", mapFeatures)
-    const topMostFeature = mapFeatures[0]
+    const mapFeatures = (event.features || []) as Feature<any>[];
+    console.log("mapFeatures", mapFeatures);
+    const topMostFeature = mapFeatures[0];
 
     const layerId = topMostFeature.layer.id;
 
@@ -234,26 +234,31 @@ const FindChain = ({ location }: { location: Location }) => {
     }
   };
 
-  const geoJSONFilteredChains: GeoJSONTypes.FeatureCollection<GeoJSONTypes.Geometry, FeatureProperties> =
-    {
-      type: "FeatureCollection",
-      features: filteredChains.map((filteredChain, filteredChainIndex) => {
-        let filterGender = filteredChain.genders?.find(g=>g === "1" || g === "2" ||g==="3") || "0"
-        
-        return {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [filteredChain.longitude, filteredChain.latitude],
-          },
-          properties: {
-            radius: filteredChain.radius * 6,
-            chainIndex: filteredChainIndex,
-            gender: filterGender, // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
-          },
-        };
-      }),
-    };
+  const geoJSONFilteredChains: GeoJSONTypes.FeatureCollection<
+    GeoJSONTypes.Geometry,
+    FeatureProperties
+  > = {
+    type: "FeatureCollection",
+    features: filteredChains.map((filteredChain, filteredChainIndex) => {
+      let filterGender =
+        filteredChain.genders?.find(
+          (g) => g === "1" || g === "2" || g === "3"
+        ) || "0";
+
+      return {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [filteredChain.longitude, filteredChain.latitude],
+        },
+        properties: {
+          radius: filteredChain.radius * 6,
+          chainIndex: filteredChainIndex,
+          gender: filterGender, // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
+        },
+      };
+    }),
+  };
 
   return (
     <>
@@ -360,34 +365,36 @@ const FindChain = ({ location }: { location: Location }) => {
                   <div id="categories-container">
                     {selectedChain.genders
                       ? selectedChain.genders.map((gender, i) => {
-                        return (
-                          <Typography component="p" key={i}>
-                            {t(Genders[gender])}
-                          </Typography>
-                        );
-                      })
+                          return (
+                            <Typography component="p" key={i}>
+                              {t(Genders[gender])}
+                            </Typography>
+                          );
+                        })
                       : null}
                   </div>
                   <Typography component="h3">{t("sizes")}:</Typography>
                   <div id="sizes-container">
                     {selectedChain.sizes
                       ? selectedChain.sizes.map((size, i) => {
-                        return (
-                          <Typography key={i} component="p">
-                            {t(Sizes[size])}
-                          </Typography>
-                        );
-                      })
+                          return (
+                            <Typography key={i} component="p">
+                              {t(Sizes[size])}
+                            </Typography>
+                          );
+                        })
                       : null}
                   </div>
                 </div>
-                {! selectedChain.openToNewMembers ? (
+                {!selectedChain.openToNewMembers ? (
                   <Typography component="p" id="loopFull">
-                    {role === "admin" ? t("loopFullAdmin") : (
+                    {role === "admin" ? (
+                      t("loopFullAdmin")
+                    ) : (
                       <Trans
                         i18nKey="loopFull"
                         components={{
-                          "1": <Link to="/loops/new/users/signup"></Link>
+                          "1": <Link to="/loops/new/users/signup"></Link>,
                         }}
                       ></Trans>
                     )}
@@ -400,13 +407,15 @@ const FindChain = ({ location }: { location: Location }) => {
                   <Button
                     key="btn-join"
                     color="primary"
-                    className={role === "admin" ? classes.buttonOutlined : classes.button}
+                    className={
+                      role === "admin" ? classes.buttonOutlined : classes.button
+                    }
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
                     {role !== "admin" ? <img src={RightArrow} alt="" /> : ""}
                   </Button>
-                ) : null }
+                ) : null}
                 {role === "admin" ? (
                   <Button
                     key="btn-view"
@@ -416,8 +425,8 @@ const FindChain = ({ location }: { location: Location }) => {
                   >
                     {t("viewChain")}
                   </Button>
-                ) : null }
-            </CardActions>
+                ) : null}
+              </CardActions>
             </Card>
           </Popup>
         ) : null}

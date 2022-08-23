@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 
 const LandingPageMobile = () => {
   const classes = makeStyles(theme as any)();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -62,7 +62,7 @@ const LandingPageMobile = () => {
               zIndex: "11",
               position: "relative",
             }}
-            dangerouslySetInnerHTML={{__html: t('joinTheBrMovement')}}
+            dangerouslySetInnerHTML={{ __html: t("joinTheBrMovement") }}
           ></h1>
 
           <p
@@ -76,7 +76,9 @@ const LandingPageMobile = () => {
               zIndex: "111",
               position: "relative",
             }}
-          >{t('currentlyWeAreDevelopingOurPlatform')}</p>
+          >
+            {t("currentlyWeAreDevelopingOurPlatform")}
+          </p>
           <div style={{ position: "relative", width: "70%", margin: "5% 0" }}>
             <img src={Clothes} style={{ width: "100%", height: "auto" }} />
           </div>

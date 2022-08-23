@@ -1,7 +1,7 @@
 import React from "react";
 
-import {Chain} from "../api/types"
-import {chainGetAll} from "../api/chain"
+import { Chain } from "../api/types";
+import { chainGetAll } from "../api/chain";
 
 export const ChainsContext = React.createContext<Chain[]>([]);
 
@@ -9,9 +9,9 @@ export const ChainsProvider = ({ children }: { children: React.ReactNode }) => {
   const [chains, setChains] = React.useState<Chain[]>([]);
 
   React.useEffect(() => {
-    chainGetAll().then((res)=>{
+    chainGetAll().then((res) => {
       setChains(res.data);
-    })
+    });
   }, []);
 
   return (
