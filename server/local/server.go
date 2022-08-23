@@ -20,6 +20,7 @@ func Routes() *gin.Engine {
 
 	// router
 	r := gin.New()
+	r.Use(gin.Logger())
 	r.Use(controllers.MiddlewareSetDB(db))
 
 	// v1 router group
