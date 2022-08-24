@@ -54,23 +54,78 @@ func UserGet(c *gin.Context) {
 		return
 	}
 
-	userChainJSON, err := user.GetUserChainResponse(db)
-	if err != nil {
-		boom.Internal(c.Writer, err)
+	c.JSON(200, user)
+}
+
+func UserGetAllOfChain(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		boom.BadRequest(c.Writer, err)
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"uid":               user.UID,
-		"email":             user.Email,
-		"name":              user.Name,
-		"phone_number":      user.PhoneNumber,
-		"is_email_verified": user.IsEmailVerified,
-		"chains":            userChainJSON,
-		"address":           user.Address,
-		"sizes":             user.Sizes,
-		"is_root_admin":     user.IsRootAdmin,
-	})
+	ok, _, _ := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
+	if !ok {
+		return
+	}
+
+	// retrieve user from query
+	users := &[]models.User{}
+	allUserChains := &[]models.UserChain{}
+
+	tx := db.Begin()
+	err := tx.Raw(`
+SELECT
+	user_chains.id             AS id,
+	user_chains.chain_id       AS chain_id,
+	chains.uid                 AS chain_uid,
+	user_chains.user_id        AS user_id,
+	users.uid                  AS user_uid,
+	user_chains.is_chain_admin AS is_chain_admin
+FROM user_chains
+LEFT JOIN chains ON user_chains.chain_id = chains.id
+LEFT JOIN users ON user_chains.user_id = users.id
+WHERE users.id IN (
+	SELECT user_chains.user_id
+	FROM user_chains
+	LEFT JOIN chains ON chains.id = user_chains.chain_id
+	WHERE chains.uid = ?
+)
+	`, query.ChainUID).Scan(allUserChains).Error
+	if err != nil {
+		boom.Internal(c.Writer)
+		return
+	}
+	err = tx.Raw(`
+SELECT users.*
+FROM users
+LEFT JOIN user_chains ON user_chains.user_id = users.id 
+LEFT JOIN chains      ON chains.id = user_chains.chain_id
+WHERE chains.uid = ? AND users.is_email_verified = ?
+	`, query.ChainUID, true).Scan(users).Error
+	if err != nil {
+		boom.Internal(c.Writer)
+		return
+	}
+	tx.Commit()
+
+	for i, user := range *users {
+		thisUserChains := []models.UserChain{}
+		for ii := range *allUserChains {
+			userChain := (*allUserChains)[ii]
+			if userChain.UserID == user.ID {
+				// log.Printf("userchain is added (userChain.ID: %d -> user.ID: %d)\n", userChain.ID, user.ID)
+				thisUserChains = append(thisUserChains, userChain)
+			}
+		}
+		(*users)[i].Chains = thisUserChains
+	}
+
+	c.JSON(200, users)
 }
 
 func UserUpdate(c *gin.Context) {

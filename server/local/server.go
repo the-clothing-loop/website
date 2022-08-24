@@ -40,6 +40,7 @@ func Routes() *gin.Engine {
 
 	// user
 	v1.GET("/user", controllers.UserGet)
+	v1.GET("/user/all-chain", controllers.UserGetAllOfChain)
 	v1.PATCH("/user", controllers.UserUpdate)
 	v1.DELETE("/user", controllers.UserDelete)
 

@@ -1,14 +1,15 @@
 package models
 
 import (
+	"time"
+
 	"github.com/go-playground/validator/v10"
-	"gorm.io/gorm"
 )
 
 var validate = validator.New()
 
 type Chain struct {
-	gorm.Model
+	ID               uint
 	UID              string `gorm:"uniqueIndex"`
 	Name             string
 	Description      string
@@ -21,4 +22,6 @@ type Chain struct {
 	Sizes            []string `gorm:"serializer:json"`
 	Genders          []string `gorm:"serializer:json"`
 	UserChains       []UserChain
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }
