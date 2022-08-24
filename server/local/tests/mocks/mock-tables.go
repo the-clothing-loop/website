@@ -50,7 +50,6 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 			},
 		},
 	}
-	log.Printf("IsChainAdmin: %v", o.IsChainAdmin)
 	if res := db.Create(user); res.Error != nil {
 		log.Fatalf("Unable to create testUser: %v", res.Error)
 	}

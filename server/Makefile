@@ -28,6 +28,9 @@ test:
 coverage:
 	go test -cover ./...
 
+generate-fake-data:
+	go run cmd/generate-fake-data/main.go
+
 docker-start:
 	@cd docker; docker-compose up -d
 docker-stop:
