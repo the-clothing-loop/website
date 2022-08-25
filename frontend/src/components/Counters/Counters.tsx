@@ -11,7 +11,7 @@ import { makeStyles } from "@mui/styles";
 import { useTranslation } from "react-i18next";
 
 const Counters = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
   const containerRef = useRef(null);
 

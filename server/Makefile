@@ -14,6 +14,13 @@ build-server:
 build-server-fcgi:
 	@go build -o cmd/server-fcgi/static/app.fcgi cmd/server-fcgi/main.go
 
+lint-test:
+	@gofmt -d .
+	@staticcheck ./...
+lint:
+	@gofmt -w .
+	@staticcheck ./...
+
 # Run all go tests
 test:
 	@go test ./...

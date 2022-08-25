@@ -26,7 +26,7 @@ const AccordionFaq = ({ question, answer }: any) => {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography dangerouslySetInnerHTML={{__html: answer}}></Typography>
+          <Typography dangerouslySetInnerHTML={{ __html: answer }}></Typography>
         </AccordionDetails>
       </Accordion>
     </div>

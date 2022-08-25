@@ -45,7 +45,6 @@ export const FindChainSearchBarContainer = ({
 
   const handleSearch = () => {
     const newChainFilterPredicate = (chain: Chain) => {
-
       return (
         (!selectedSizes.length ||
           hasCommonElements(chain.sizes || [], selectedSizes)) &&

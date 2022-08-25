@@ -70,7 +70,9 @@ const Login = () => {
                 <Trans
                   i18nKey="areYouAlreadyHosting<a>JoinAnExistingLoop"
                   components={{
-                    "a": <Link className={classes.a} to="../../loops/find"></Link>,
+                    a: (
+                      <Link className={classes.a} to="../../loops/find"></Link>
+                    ),
                   }}
                 ></Trans>
               </Typography>

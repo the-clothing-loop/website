@@ -24,7 +24,6 @@ import RightArrow from "../images/right-arrow-white.svg";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
-
 interface IProps {
   onSubmit: (values: any) => void;
   submitError?: string;

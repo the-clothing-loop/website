@@ -16,6 +16,11 @@ import (
 
 func main() {
 	// retrieve firestore database
+	_, err := firestore()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	// retrieve firebase authentication
 	authRecords, err := auth()
@@ -39,7 +44,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	os.WriteFile("received_data.json", b, 0660)
+	err = os.WriteFile("received_data.json", b, 0660)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
 
 // Firebase Authentication
@@ -56,7 +65,7 @@ type AuthRecord struct {
 func auth() (records []*AuthRecord, err error) {
 	s, err := os.ReadFile("tbody.min.htm")
 	if err != nil {
-		return nil, fmt.Errorf("Could not read file \"tbody.min.htm\"\nError: %e", err)
+		return nil, fmt.Errorf("could not read file \"tbody.min.htm\"\nError: %e", err)
 	}
 
 	hFragments, err := html.ParseFragment(strings.NewReader(string(s)), &html.Node{
@@ -65,16 +74,16 @@ func auth() (records []*AuthRecord, err error) {
 		DataAtom: atom.Tbody,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("Parsing html failed\nError: %e", err)
+		return nil, fmt.Errorf("parsing html failed\nError: %e", err)
 	}
 
 	if len(hFragments) == 0 {
-		return nil, fmt.Errorf("Zero records to export\nData: %v", hFragments)
+		return nil, fmt.Errorf("zero records to export\nData: %v", hFragments)
 	}
 
 	records = []*AuthRecord{}
 	wg := new(sync.WaitGroup)
-	for i, _ := range hFragments {
+	for i := range hFragments {
 		child := hFragments[i]
 		// filter comments and text nodes
 		// https://pkg.go.dev/golang.org/x/net@v0.0.0-20220812174116-3211cb980234/html?utm_source=gopls#NodeType
@@ -156,7 +165,7 @@ func authParseRow(wg *sync.WaitGroup, n *html.Node, record *AuthRecord) {
 // --------------------------------------------------------
 
 type Firestore struct {
-	Chains          map[string]*FirestoreChain          `json:"chains`
+	Chains          map[string]*FirestoreChain          `json:"chains"`
 	Mail            map[string]*FirestoreMail           `json:"mail"`
 	Payments        map[string]*FirestorePayments       `json:"payments"`
 	Users           map[string]*FirestoreUser           `json:"users"`
@@ -206,4 +215,18 @@ type FirestoreUser struct {
 type FirestoreInterestedUser struct {
 	Email string `json:"email"`
 	Name  string `json:"name"`
+}
+
+func firestore() (data *Firestore, err error) {
+	s, err := os.ReadFile("firestore-dump.json")
+	if err != nil {
+		return nil, fmt.Errorf("could not read file \"tbody.min.htm\"\nError: %e", err)
+	}
+
+	err = json.Unmarshal(s, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

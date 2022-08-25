@@ -1,4 +1,9 @@
-import { Select, FormControl, MenuItem, SelectChangeEvent } from "@mui/material";
+import {
+  Select,
+  FormControl,
+  MenuItem,
+  SelectChangeEvent,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 //project resources
@@ -7,8 +12,8 @@ import { useTranslation } from "react-i18next";
 
 const LanguageSwitcher = () => {
   const languages = [
-    {lng: "en", title: "English 🇬🇧"}, 
-    {lng: "nl", title: "Dutch 🇳🇱"},
+    { lng: "en", title: "English 🇬🇧" },
+    { lng: "nl", title: "Dutch 🇳🇱" },
   ];
   const classes = makeStyles(theme as any)();
   const { i18n } = useTranslation();

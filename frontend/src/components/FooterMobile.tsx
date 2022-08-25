@@ -7,7 +7,7 @@ import { Newsletter } from "./Newsletter/Newsletter";
 import { useTranslation } from "react-i18next";
 
 const FooterMobile = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
 
   return (

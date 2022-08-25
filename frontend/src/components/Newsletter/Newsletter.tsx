@@ -55,7 +55,7 @@ const useStyles = makeStyles({
 
 export const Newsletter = () => {
   const classes = useStyles();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
