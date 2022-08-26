@@ -56,13 +56,7 @@ More documentation here: https://docs.insomnia.rest/insomnia/git-sync#set-up-a-r
 3. Sign in to Github here (if you haven't done so)
    1. Open the Github tab
    2. Click **Authenticate with GitHub**
-4. Paste in **GitHub URI** the following: `https://github.com/CollActionteam/clothing-loop.git`
-
-Select correct branch
-
-1. Click **main \<branch_sign\>**
-2. In the dropdown click **Branches**
-3. Find branch `v2/insomnia` and click **checkout**
+4. Paste in **GitHub URI** the following: `https://github.com/lil5/cl_insomnia.git`
 
 #### 5.3. Create private environments
 
