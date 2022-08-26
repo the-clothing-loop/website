@@ -16,14 +16,15 @@ import (
 )
 
 type ChainCreateRequestBody struct {
-	Name        string   `json:"name" binding:"required"`
-	Description string   `json:"description" binding:"required"`
-	Address     string   `json:"address" binding:"required"`
-	Latitude    float64  `json:"latitude" binding:"required"`
-	Longitude   float64  `json:"longitude" binding:"required"`
-	Radius      float32  `json:"radius" binding:"required"`
-	Sizes       []string `json:"sizes" binding:"required"`
-	Genders     []string `json:"genders" binding:"required"`
+	Name             string   `json:"name" binding:"required"`
+	Description      string   `json:"description" binding:"required"`
+	Address          string   `json:"address" binding:"required"`
+	Latitude         float64  `json:"latitude" binding:"required"`
+	Longitude        float64  `json:"longitude" binding:"required"`
+	Radius           float32  `json:"radius" binding:"required"`
+	OpenToNewMembers bool     `json:"open_to_new_members" binding:"required"`
+	Sizes            []string `json:"sizes" binding:"required"`
+	Genders          []string `json:"genders" binding:"required"`
 }
 
 func ChainCreate(c *gin.Context) {
@@ -323,4 +324,53 @@ WHERE user_chains.chain_id = ?
 			user.PhoneNumber,
 		)
 	}
+}
+
+func ChainRemoveUser(c *gin.Context) {
+	db := getDB(c)
+
+	var body struct {
+		UserUID  string `json:"user_uid" binding:"required,uuid"`
+		ChainUID string `json:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		boom.BadRequest(c.Writer, err)
+		return
+	}
+
+	minimumAuthState := auth.AuthState2UserOfChain
+	ok, user, chain := auth.Authenticate(c, db, minimumAuthState, body.ChainUID)
+	if !ok {
+		return
+	}
+	user.AddUserChainsToObject(db)
+	isUserChainAdmin := false
+	for _, c := range user.Chains {
+		if c.ChainID == chain.ID {
+			isUserChainAdmin = c.IsChainAdmin
+			break
+		}
+	}
+	if !isUserChainAdmin && user.UID != body.UserUID {
+		boom.Unathorized(c.Writer, "Must be a chain admin or higher to remove a different user")
+		return
+	}
+
+	if res := db.Exec(`DELETE FROM user_chains WHERE user_id = ? AND chain_id = ?`, user.ID,
+		chain.ID); res.Error != nil {
+		boom.Internal(c.Writer, "User could not be removed from chain due to unknown error")
+		return
+	}
+
+	// remove chain if this is there are no more users of that chain
+	db.Exec(`
+DELETE FROM chains
+WHERE chains.id IN (
+	SELECT chains.id
+	FROM chains
+	LEFT JOIN user_chains ON user_chains.chain_id = chains.id
+	WHERE chains.id = ?
+	HAVING COUNT(user_chains.id) = 0
+)
+	`, chain.ID)
 }

@@ -20,7 +20,7 @@ func main() {
 	t := &testing.T{}
 
 	chains := []*models.Chain{}
-	// userChainAdmins := []*models.User{}
+	userChainAdmins := []*models.User{}
 	// userBasics := []*models.User{}
 
 	for i := 0; i < 5; i++ {
@@ -29,7 +29,7 @@ func main() {
 		})
 
 		chains = append(chains, chain)
-		// userChainAdmins = append(userChainAdmins, user)
+		userChainAdmins = append(userChainAdmins, user)
 
 		log.Printf("Generated -> Chain\t(ID: %d)", chain.ID)
 		log.Printf("Generated -> User\t(ID: %d)", user.ID)
@@ -41,6 +41,20 @@ func main() {
 		user, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{})
 		log.Printf("Generated -> User\t(ID: %d)", user.ID)
 		// userBasics = append(userBasics, user)
+	}
+
+	for _, user := range userChainAdmins {
+		chainIndex := faker.IntBetween(0, len(chains)-1)
+		chain := chains[chainIndex]
+
+		if err := db.Create(&models.UserChain{
+			UserID:       user.ID,
+			ChainID:      chain.ID,
+			IsChainAdmin: false,
+		}).Error; err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Added     -> User\t(ID: %d)\tto Chain (ID: %d)", user.ID, chain.ID)
 	}
 
 }

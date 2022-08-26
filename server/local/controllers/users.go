@@ -14,7 +14,7 @@ func UserGet(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UID      string `form:"user_uid" binding:"omitempty,uuid"`
+		UserUID  string `form:"user_uid" binding:"omitempty,uuid"`
 		Email    string `form:"email" binding:"omitempty,email"`
 		ChainUID string `form:"chain_uid" binding:"omitempty,uuid"`
 	}
@@ -24,33 +24,54 @@ func UserGet(c *gin.Context) {
 	}
 
 	// retrieve user from query
-	if query.UID == "" && query.Email == "" {
+	if query.UserUID == "" && query.Email == "" {
 		boom.BadRequest(c.Writer, "add uid or email to query")
 		return
 	}
-	user := &models.User{}
-	if query.UID != "" {
-		db.Where("uid = ? AND is_email_verified = ?", query.UID, true).First(user)
-	} else if query.Email != "" {
-		db.Where("email = ? AND is_email_verified = ?", query.Email, true).First(user)
-	}
-	if user.ID == 0 {
-		boom.BadRequest(c.Writer, "user not found")
-		return
-	}
 
-	var ok bool
+	ok := false
 	if query.ChainUID == "" {
-		ok, authUser, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
+		okk, authUser, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
+		ok = okk
 
-		if ok && user.ID != authUser.ID {
+		if ok && !(query.UserUID == authUser.UID || query.Email == authUser.Email) {
 			boom.Unathorized(c.Writer, "for elevated privileges include a chain_uid")
 			return
 		}
 	} else {
 		ok, _, _ = auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
 	}
+	fmt.Printf("ok: %v", ok)
+
 	if !ok {
+		fmt.Println("ok is false")
+		return
+	}
+
+	user := &models.User{}
+	if query.UserUID != "" {
+		db.Raw(`
+SELECT users.*
+FROM users
+WHERE users.uid = ? AND is_email_verified = ?
+LIMIT 1
+		`, query.UserUID, true).First(user)
+	} else if query.Email != "" {
+		db.Raw(`
+SELECT users.*
+FROM users
+WHERE users.email = ? AND is_email_verified = ?
+LIMIT 1
+		`, query.Email, true).First(user)
+	}
+	if user.ID == 0 {
+		boom.BadRequest(c.Writer, "user not found")
+		return
+	}
+
+	err := user.AddUserChainsToObject(db)
+	if err != nil {
+		boom.Internal(c.Writer)
 		return
 	}
 

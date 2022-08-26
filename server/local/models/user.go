@@ -41,9 +41,9 @@ type UserToken struct {
 type UserChain struct {
 	ID           uint   `json:"-"`
 	UserID       uint   `json:"-" gorm:"index"`
-	UserUID      string `json:"user_uid" gorm:"-:migration"`
+	UserUID      string `json:"user_uid" gorm:"-:migration;<-:false"`
 	ChainID      uint   `json:"-"`
-	ChainUID     string `json:"chain_uid" gorm:"-:migration"`
+	ChainUID     string `json:"chain_uid" gorm:"-:migration;<-:false"`
 	IsChainAdmin bool   `json:"is_chain_admin"`
 }
 
@@ -78,16 +78,27 @@ WHERE user_chains.user_id = ?
 	return results, nil
 }
 
-func (u *User) AddUserChainsToObject(db *gorm.DB) {
+func (u *User) AddUserChainsToObject(db *gorm.DB) error {
 	userChains := []UserChain{}
-	db.Raw(`
-SELECT *
+	err := db.Raw(`
+SELECT
+	user_chains.id             AS id,
+	user_chains.chain_id       AS chain_id,
+	chains.uid                 AS chain_uid,
+	user_chains.user_id        AS user_id,
+	users.uid                  AS user_uid,
+	user_chains.is_chain_admin AS is_chain_admin
 FROM user_chains
+LEFT JOIN chains ON user_chains.chain_id = chains.id
 LEFT JOIN users ON user_chains.user_id = users.id
-WHERE user_chains.user_id = ?
-	`, u.ID).Scan(&userChains)
+WHERE users.id = ?
+	`, u.ID).Scan(&userChains).Error
+	if err != nil {
+		return err
+	}
 
 	u.Chains = userChains
+	return nil
 }
 
 func (u *User) IsPartOfChain(db *gorm.DB, chainID uint) bool {
