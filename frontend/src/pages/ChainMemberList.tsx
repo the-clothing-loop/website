@@ -12,45 +12,51 @@ import { makeStyles } from "@mui/styles";
 
 // Project resources
 import theme from "../util/theme";
-import { getUsersForChain, removeUserFromChain } from "../util/firebase/user";
-import { IUser } from "../types";
 import { AuthContext, AuthProps } from "../components/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import Popover from "../components/Popover";
-import { ChainParticipantsTable } from "../components/ChainParticipantsTable";
+import {
+  ChainParticipantsTable,
+  TableUserColumn,
+} from "../components/ChainParticipantsTable";
 import { Title } from "../components/Typography";
-import { chainGet, chainUpdate, ChainUpdateBody } from "../api/chain";
-import { Chain } from "../api/types";
+import {
+  chainGet,
+  chainRemoveUser,
+  chainUpdate,
+  ChainUpdateBody,
+} from "../api/chain";
+import { Chain, User } from "../api/types";
 import { Genders, Sizes } from "../api/enums";
+import { userGetAllByChain } from "../api/user";
 
-type TParams = {
-  chainId: string;
-};
+interface Params {
+  chainUID: string;
+}
 
-const memberColumns = [
+const memberColumns: TableUserColumn[] = [
   { headerName: "name", propertyName: "name" },
   { headerName: "address", propertyName: "address" },
   { headerName: "email", propertyName: "email" },
-  { headerName: "phone", propertyName: "phoneNumber" },
-  { headerName: "interested size", propertyName: "interestedSizes" },
+  { headerName: "phone", propertyName: "phone_number" },
+  { headerName: "interested size", propertyName: "sizes" },
 ];
 
-const adminColumns = [
+const adminColumns: TableUserColumn[] = [
   { headerName: "name", propertyName: "name" },
   { headerName: "email", propertyName: "email" },
-  { headerName: "phone", propertyName: "phoneNumber" },
+  { headerName: "phone", propertyName: "phone_number" },
 ];
 
 const useStyles = makeStyles(theme as any);
 
 const ChainMemberList = () => {
   const location = useLocation<any>();
-  const { chainId } = useParams<TParams>();
-  const { userData }: { userData: IUser | null } =
-    useContext<AuthProps>(AuthContext);
+  const { chainUID } = useParams<Params>();
+  const authUser = useContext<AuthProps>(AuthContext).authUser;
 
   const [chain, setChain] = useState<Chain>();
-  const [users, setUsers] = useState<IUser[]>();
+  const [users, setUsers] = useState<User[]>();
   const [switcherValues, setSwitcherValues] = useState({
     published: true,
     openToNewMembers: true,
@@ -71,7 +77,7 @@ const ChainMemberList = () => {
 
     console.log(`updating chain data: ${JSON.stringify(updatedChainData)}`);
     try {
-      updatedChainData.uid = chainId;
+      updatedChainData.uid = chainUID;
       await chainUpdate(updatedChainData as any);
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
@@ -82,19 +88,19 @@ const ChainMemberList = () => {
   useEffect(() => {
     (async () => {
       try {
-        const chainData = (await chainGet(chainId)).data;
+        const chainData = (await chainGet(chainUID)).data;
         if (chainData === undefined) {
-          console.error(`chain ${chainId} does not exist`);
+          console.error(`chain ${chainUID} does not exist`);
         } else {
           setChain(chainData);
-          const chainUsers = await getUsersForChain(chainId);
+          const chainUsers = (await userGetAllByChain(chainUID)).data;
           setUsers(chainUsers);
           setSwitcherValues({
             published: chainData.published,
             openToNewMembers: chainData.openToNewMembers,
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error(`Error getting chain: ${error}`);
       }
     })();
@@ -102,16 +108,14 @@ const ChainMemberList = () => {
 
   useEffect(() => {
     setIsChainAdmin(
-      users
-        ?.filter((user: IUser) => user.role === "chainAdmin")
-        .some((user: IUser) => user.uid === userData?.uid)
+      authUser?.chains.find((c) => c.chain_uid === chain?.uid)?.is_chain_admin
     );
-  }, [users]);
+  }, [authUser, chain]);
 
-  const handleRemoveFromChain = async (userId: string) => {
-    removeUserFromChain(userId);
+  const handleRemoveFromChain = async (userUID: string) => {
+    chainRemoveUser(chainUID, userUID);
 
-    const chainUsers = await getUsersForChain(chainId);
+    const chainUsers = (await userGetAllByChain(chainUID)).data;
     setUsers(chainUsers);
   };
 
@@ -149,7 +153,7 @@ const ChainMemberList = () => {
                     <Title>{chain.name}</Title>
                   </Grid>
                   <Grid item>
-                    <Link to={`/loops/${chainId}/edit`}>
+                    <Link to={`/loops/${chainUID}/edit`}>
                       <EditIcon />
                     </Link>
                   </Grid>
@@ -248,25 +252,27 @@ const ChainMemberList = () => {
                         <Title>Loop Admin</Title>
                       </Grid>
                       <Grid item>
-                        <Link to={`/users/${(userData as IUser).uid}/edit`}>
+                        <Link to={`/users/${(authUser as User).uid}/edit`}>
                           <EditIcon />
                         </Link>
                       </Grid>
                     </Grid>
                     <ChainParticipantsTable
                       columns={adminColumns}
-                      userData={userData}
+                      authUser={authUser}
                       users={users.filter(
-                        (user: IUser) => user.role === "chainAdmin"
+                        (user) =>
+                          user.chains.find((c) => (c.chain_uid = chain.uid))
+                            ?.is_chain_admin
                       )}
                       initialPage={0}
                       initialRowsPerPage={10}
-                      editItemComponent={(u: IUser) => (
+                      editItemComponent={(u: User) => (
                         <Link to={`/users/${u.uid}/edit`}>
                           <EditIcon />
                         </Link>
                       )}
-                      deleteItemComponent={(u: IUser) => (
+                      deleteItemComponent={(u: User) => (
                         <DeleteIcon
                           onClick={() => handleRemoveFromChain(u.uid as string)}
                         />
@@ -276,8 +282,8 @@ const ChainMemberList = () => {
                   {isChainAdmin && (
                     <Link
                       to={{
-                        pathname: `/loops/${chainId}/addChainAdmin`,
-                        state: { users, chainId },
+                        pathname: `/loops/${chainUID}/addChainAdmin`,
+                        state: { users, chainId: chainUID },
                       }}
                     >
                       <div className="chain-member-list__add-co-host">
@@ -297,16 +303,16 @@ const ChainMemberList = () => {
 
               <ChainParticipantsTable
                 columns={memberColumns}
-                userData={userData}
+                authUser={authUser}
                 users={users}
                 initialPage={0}
                 initialRowsPerPage={10}
-                editItemComponent={(u: IUser) => (
+                editItemComponent={(u: User) => (
                   <Link to={`/users/${u.uid}/edit`}>
                     <EditIcon />
                   </Link>
                 )}
-                deleteItemComponent={(u: IUser) => (
+                deleteItemComponent={(u: User) => (
                   <DeleteIcon
                     onClick={() => handleRemoveFromChain(u.uid as string)}
                   />

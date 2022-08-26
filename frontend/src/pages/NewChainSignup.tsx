@@ -18,26 +18,27 @@ import PopoverOnHover from "../components/Popover";
 import { PhoneFormField, TextForm } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../components/AuthProvider";
-import { createUser } from "../util/firebase/user";
-import SizesDropdown from "../components/SizesDropdown";
-import categories from "../util/categories";
 import FormActions from "../components/formActions";
+import { State as LoopsNewState } from "./NewChainLocation";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
+import { RequestRegisterUser } from "../api/login";
+
+type RegisterUserForm = Omit<RequestRegisterUser, "address" | "sizes">;
 
 const Signup = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [submitted, setSubmitted] = useState(false);
   const [geocoderResult, setGeocoderResult] = useState({
     result: { place_name: "" },
   });
-  const [userId, setUserId] = useState("");
   const classes = makeStyles(theme as any)();
-  const { user } = useContext(AuthContext);
+  const authUser = useContext(AuthContext).authUser;
+  const [registerUser, setRegisterUser] = useState<RequestRegisterUser | null>(
+    null
+  );
   const [error, setError] = useState("");
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
   //Phone Number Validation Format with E.164
   const phoneRegExp =
@@ -48,22 +49,37 @@ const Signup = () => {
     email: Yup.string()
       .email(t("pleaseEnterAValid.emailAddress"))
       .required(t("required")),
-    phoneNumber: Yup.string()
+    phone_number: Yup.string()
       .matches(phoneRegExp, {
         message: t("pleaseEnterAValid.phoneNumber"),
       })
       .max(15)
       .required(t("pleaseEnterAValid.phoneNumber")),
-    newsletter: Yup.boolean(),
-  });
+    address: Yup.string().default(""),
+  } as Record<keyof RegisterUserForm, any>);
 
-  if (submitted) {
-    return <Redirect to={{ pathname: "/loops/new", state: { userId } }} />;
+  if (registerUser) {
+    return (
+      <Redirect
+        to={{
+          pathname: "/loops/new",
+          state: {
+            only_create_chain: false,
+            register_user: registerUser,
+          } as LoopsNewState,
+        }}
+      />
+    );
   }
 
-  if (user) {
+  if (authUser) {
     return (
-      <Redirect to={{ pathname: "/loops/new", state: { userId: user.uid } }} />
+      <Redirect
+        to={{
+          pathname: "/loops/new",
+          state: { only_create_chain: true } as LoopsNewState,
+        }}
+      />
     );
   }
 
@@ -81,33 +97,22 @@ const Signup = () => {
         <title>The Clothing Loop | Create user for new Loop</title>
         <meta name="description" content="Create user for new loop" />
       </Helmet>
-      <Formik
+      <Formik<RegisterUserForm>
         initialValues={{
           name: "",
           email: "",
-          phoneNumber: "",
-          newsletter: false,
+          phone_number: "",
         }}
         validationSchema={validate}
         validateOnChange={false}
         onSubmit={async (values) => {
-          const user = {
+          let registerUser: RequestRegisterUser = {
             address: geocoderResult.result.place_name,
-            chainId: null,
             ...values,
-            interestedSizes: [],
+            sizes: [],
           };
 
-          console.log(`creating user: ${JSON.stringify(user)}`);
-          try {
-            setUserId(await createUser(user));
-            setSubmitted(true);
-          } catch (e: any) {
-            console.error(`Error creating user: ${JSON.stringify(e)}`);
-            e.code === "auth/invalid-phone-number"
-              ? setError(t("pleaseEnterAValid.phoneNumber"))
-              : setError(e.message);
-          }
+          setRegisterUser(registerUser);
         }}
       >
         {({ errors, touched, setFieldValue }) => (
@@ -201,10 +206,10 @@ const Signup = () => {
                 <PhoneFormField
                   label={t("phoneNumber")}
                   name="phoneNumber"
-                  error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                  error={touched.phone_number && Boolean(errors.phone_number)}
                   helperText={
-                    errors.phoneNumber && touched.phoneNumber
-                      ? errors.phoneNumber
+                    errors.phone_number && touched.phone_number
+                      ? errors.phone_number
                       : null
                   }
                   onChange={(e) =>

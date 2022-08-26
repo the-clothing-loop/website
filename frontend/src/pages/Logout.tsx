@@ -1,20 +1,20 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Alert } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import theme from "../util/theme";
+import { AuthContext } from "../components/AuthProvider";
 
 export const Logout = () => {
   const [done, setDone] = useState(false);
   const classes = makeStyles(theme as any)();
+  const { authLogout } = useContext(AuthContext);
 
   const { t } = useTranslation();
   useEffect(() => {
     (async () => {
-      await firebase.auth().signOut();
+      await authLogout();
       setDone(true);
     })();
   }, []);

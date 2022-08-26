@@ -7,11 +7,14 @@ import { Download as DownloadIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
-import { getUsersForChain } from "../util/firebase/user";
 import theme from "../util/theme";
-import { IUser } from "../types";
-import { Chain } from "../api/types";
+import { Chain, User } from "../api/types";
 import { chainGet, chainGetAll } from "../api/chain";
+import { userGetAllByChain } from "../api/user";
+
+interface Params {
+  chainUID: string;
+}
 
 const chainsHeaders = [
   { label: "Name", key: "name" },
@@ -22,10 +25,6 @@ const chainsHeaders = [
   { label: "Open to new members", key: "openToNewMembers" },
   { label: "Description", key: "description" },
 ];
-
-type TParams = {
-  chainId: string;
-};
 
 const DataExport = () => {
   const { t } = useTranslation();
@@ -67,18 +66,18 @@ const usersHeaders = [
 
 const UserDataExport = () => {
   const { t } = useTranslation();
-  const { chainId } = useParams<TParams>();
+  const { chainUID } = useParams<Params>();
   const classes = makeStyles(theme as any)();
   const [chain, setChain] = useState<Chain>();
-  const [users, setUsers] = useState<IUser[]>();
+  const [users, setUsers] = useState<User[]>();
   const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
       try {
-        const chainData = (await chainGet(chainId)).data;
+        const chainData = (await chainGet(chainUID)).data;
         setChain(chainData);
-        const chainUsers = await getUsersForChain(chainId);
+        const chainUsers = (await userGetAllByChain(chainUID)).data;
         setUsers(chainUsers);
       } catch (error) {
         console.error(error);

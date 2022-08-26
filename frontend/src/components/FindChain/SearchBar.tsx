@@ -59,7 +59,7 @@ export const SearchBar: React.FC<IProps> = ({
           variant="outlined"
           showInputLabel={false}
           renderValueWhenEmpty={t("categories")}
-          selectedCategories={selectedGenders}
+          genders={selectedGenders}
           handleSelectedCategoriesChange={handleSelectedGenderChange}
         />
       </div>
@@ -69,8 +69,8 @@ export const SearchBar: React.FC<IProps> = ({
           variant="outlined"
           showInputLabel={false}
           label={t("sizes")}
-          selectedGenders={selectedGenders}
-          selectedSizes={selectedSizes}
+          genders={selectedGenders}
+          sizes={selectedSizes}
           handleSelectedCategoriesChange={setSelectedSizes}
         />
       </div>

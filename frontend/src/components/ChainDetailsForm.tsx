@@ -21,14 +21,20 @@ import { Chain } from "../api/types";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
+import { RequestRegisterChain } from "../api/login";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
 interface IProps {
-  onSubmit: (values: any) => void;
+  onSubmit: (values: RegisterChainForm) => void;
   submitError?: string;
-  initialValues?: Chain;
+  initialValues?: RegisterChainForm;
 }
+
+export type RegisterChainForm = Omit<
+  RequestRegisterChain,
+  "address" | "open_to_new_members"
+>;
 
 const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
   const classes = makeStyles(theme as any)();
@@ -46,11 +52,11 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
     name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     description: Yup.string(),
     radius: Yup.number().required(t("required")),
-    clothingTypes: Yup.array().of(Yup.string()).required(t("required")),
-    clothingSizes: Yup.array().of(Yup.string()).required(t("required")),
+    genders: Yup.array().of(Yup.string()).required(t("required")),
+    sizes: Yup.array().of(Yup.string()).required(t("required")),
     longitude: Yup.number(),
     latitude: Yup.number(),
-  });
+  } as Record<keyof RegisterChainForm, any>);
 
   const flyToLocation = (longitude: number, latitude: number) => {
     setViewport({
@@ -95,11 +101,11 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
   };
 
   return (
-    <Formik
+    <Formik<RegisterChainForm>
       initialValues={Object.assign(defaultValues, initialValues)}
       validationSchema={formSchema}
       validateOnChange={false}
-      validate={(values: Chain) => {
+      validate={(values) => {
         if (values.longitude === 0 && values.latitude === 0) {
           return {
             longitude: t("pleaseSetTheLoopLocationByClick"),
@@ -173,7 +179,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
         const handleCategoriesChange = (selectedCats: string[]) => {
           setFieldValue("clothingTypes", selectedCats);
           // potentially remove some sizes if their parent category has been deselected
-          const filteredSizes = values.clothingSizes.filter((size) => {
+          const filteredSizes = (values.sizes || []).filter((size) => {
             const parentCats = selectedCats.filter((cat) =>
               categories[cat].includes(size)
             );
@@ -266,7 +272,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       <CategoriesDropdown
                         variant="standard"
                         showInputLabel={true}
-                        selectedCategories={values.clothingTypes}
+                        genders={values.genders || []}
                         handleSelectedCategoriesChange={handleCategoriesChange}
                       />
                     </div>
@@ -275,10 +281,10 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                         variant="standard"
                         showInputLabel={true}
                         label={t("sizes")}
-                        selectedGenders={values.clothingTypes}
-                        selectedSizes={values.clothingSizes}
+                        genders={values.genders || []}
+                        sizes={values.sizes || []}
                         handleSelectedCategoriesChange={(val) =>
-                          setFieldValue("clothingSizes", val)
+                          setFieldValue("sizes", val)
                         }
                       />
                       <PopoverOnHover

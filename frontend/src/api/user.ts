@@ -1,12 +1,22 @@
 import axios from "./axios";
 import { User } from "./types";
 
-export function userGetByUID(chainUID: string, uid: string) {
-  return axios.get<User>("/v1/user", {
-    params: {
-      chain_uid: chainUID,
-      user_uid: uid,
-    },
+export function userGetByUID(chainUID: string | null, userUID: string) {
+  interface Params {
+    user_uid: string;
+    chain_uid?: string;
+  }
+  let params: Params = { user_uid: userUID };
+  if (chainUID !== null) {
+    params.chain_uid = chainUID;
+  }
+
+  return axios.get<User>("/v1/user", { params });
+}
+
+export function userGetAllByChain(chainUID: string) {
+  return axios.get<User[]>("/v1/user/all-chain", {
+    params: { chain_uid: chainUID },
   });
 }
 

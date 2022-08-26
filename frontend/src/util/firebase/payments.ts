@@ -1,7 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/functions";
-import { IUser } from "../../types";
 
 const functions = firebase
   .app()

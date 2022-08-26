@@ -33,7 +33,6 @@ import { ChainsContext } from "../components/ChainsProvider";
 import { AuthContext } from "../components/AuthProvider";
 import { IViewPort } from "../types";
 import theme from "../util/theme";
-import { getUserById } from "../util/firebase/user";
 import { FindChainSearchBarContainer } from "../components/FindChain";
 import { Chain } from "../api/types";
 
@@ -61,7 +60,7 @@ const FindChain = ({ location }: { location: Location }) => {
 
   const history = useHistory();
   const { t } = useTranslation();
-  const { user } = useContext(AuthContext);
+  const { authUser: user } = useContext(AuthContext);
 
   const classes = makeStyles(theme as any)();
 
@@ -72,9 +71,6 @@ const FindChain = ({ location }: { location: Location }) => {
   const [selectedChain, setSelectedChain] = useState<Chain | null>(null);
   const [showPopup, setShowPopup] = useState(false);
   const [showDutchLoopsDialog, setShowDutchLoopsDialog] = useState(false);
-
-  const [userId, setUserId] = useState("");
-  const [role, setRole] = useState<string | null>(null);
   const [netherlandsPopup, setNetherlandsPopup] = useState(false);
 
   const [filterChainPredicate, setFilterChainPredicate] =
@@ -102,13 +98,6 @@ const FindChain = ({ location }: { location: Location }) => {
 
   useEffect(() => {
     (async () => {
-      //get user role
-      if (user) {
-        setUserId(user.uid);
-        const userRole = await getUserById(user.uid);
-        setRole(userRole.role);
-      }
-
       setViewport({
         latitude: 26.3351,
         longitude: 17.2283,
@@ -388,7 +377,7 @@ const FindChain = ({ location }: { location: Location }) => {
                 </div>
                 {!selectedChain.openToNewMembers ? (
                   <Typography component="p" id="loopFull">
-                    {role === "admin" ? (
+                    {user?.is_admin ? (
                       t("loopFullAdmin")
                     ) : (
                       <Trans
@@ -408,15 +397,17 @@ const FindChain = ({ location }: { location: Location }) => {
                     key="btn-join"
                     color="primary"
                     className={
-                      role === "admin" ? classes.buttonOutlined : classes.button
+                      user?.is_admin ? classes.buttonOutlined : classes.button
                     }
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
-                    {role !== "admin" ? <img src={RightArrow} alt="" /> : ""}
+                    {user?.is_admin == false ? (
+                      <img src={RightArrow} alt="" />
+                    ) : null}
                   </Button>
                 ) : null}
-                {role === "admin" ? (
+                {user?.is_admin ? (
                   <Button
                     key="btn-view"
                     color="primary"

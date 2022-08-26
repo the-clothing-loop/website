@@ -22,8 +22,8 @@ interface IProps {
   variant: "outlined" | "standard";
   showInputLabel: boolean;
   label: string;
-  selectedGenders: string[];
-  selectedSizes: string[];
+  genders: string[];
+  sizes: string[];
   handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
   style?: React.CSSProperties;
 }
@@ -32,8 +32,8 @@ const SizesDropdown: React.FC<IProps> = ({
   variant,
   showInputLabel,
   label,
-  selectedGenders,
-  selectedSizes,
+  genders,
+  sizes,
   handleSelectedCategoriesChange,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
@@ -79,7 +79,7 @@ const SizesDropdown: React.FC<IProps> = ({
               : classes.selectStandard,
         }}
         variant={variant}
-        value={selectedSizes}
+        value={sizes}
         onChange={handleOnChange}
         renderValue={(selected: string[]) => {
           if (!selected.length) {
@@ -103,9 +103,7 @@ const SizesDropdown: React.FC<IProps> = ({
           <MenuItem
             key={value}
             value={value}
-            disabled={
-              !selectedGenders.includes("children") && !!selectedGenders.length
-            }
+            disabled={!genders.includes("children") && !!genders.length}
             classes={{
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,
@@ -113,7 +111,7 @@ const SizesDropdown: React.FC<IProps> = ({
           >
             <Checkbox
               color="secondary"
-              checked={selectedSizes.includes(value) ? true : false}
+              checked={sizes.includes(value) ? true : false}
             />
             <ListItemText
               primary={t(value)}
@@ -131,9 +129,7 @@ const SizesDropdown: React.FC<IProps> = ({
           <MenuItem
             key={value}
             value={value}
-            disabled={
-              !selectedGenders.includes("women") && !!selectedGenders.length
-            }
+            disabled={!genders.includes("women") && !!genders.length}
             classes={{
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,
@@ -141,7 +137,7 @@ const SizesDropdown: React.FC<IProps> = ({
           >
             <Checkbox
               color="secondary"
-              checked={selectedSizes.includes(value) ? true : false}
+              checked={sizes.includes(value) ? true : false}
             />
             <ListItemText
               primary={t(value)}
@@ -159,9 +155,7 @@ const SizesDropdown: React.FC<IProps> = ({
           <MenuItem
             key={value}
             value={value}
-            disabled={
-              !selectedGenders.includes("men") && !!selectedGenders.length
-            }
+            disabled={!genders.includes("men") && !!genders.length}
             classes={{
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,
@@ -169,7 +163,7 @@ const SizesDropdown: React.FC<IProps> = ({
           >
             <Checkbox
               color="secondary"
-              checked={selectedSizes.includes(value) ? true : false}
+              checked={sizes.includes(value) ? true : false}
             />
             <ListItemText
               primary={t(value)}

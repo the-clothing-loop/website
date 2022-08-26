@@ -15,7 +15,7 @@ import Logo from "../images/logos/The_Clothing_Loop_Logo.png";
 const Navbar = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
-  const { userData } = useContext(AuthContext);
+  const { authUser, authIsChainAdmin } = useContext(AuthContext);
 
   let location = useLocation();
 
@@ -38,7 +38,7 @@ const Navbar = () => {
         </Link>
         <div className={classes.headerRight}>
           <div className={classes.headerNav}>
-            {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
+            {authUser?.is_admin || authIsChainAdmin ? (
               <Button
                 color="inherit"
                 className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
@@ -50,7 +50,7 @@ const Navbar = () => {
                 {t("toolkit")}
               </Button>
             ) : null}
-            {userData === null &&
+            {authUser === null &&
             ["/loops/find", "/"].indexOf(location.pathname) !== -1 ? (
               <Button
                 color="inherit"
@@ -62,7 +62,7 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            {userData === null &&
+            {authUser === null &&
             ["/loops/find", "/"].indexOf(location.pathname) === -1 ? (
               <Button
                 color="inherit"
@@ -75,7 +75,7 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            {userData?.role === "admin" || userData?.role === "chainAdmin" ? (
+            {authUser?.is_admin || authIsChainAdmin ? (
               <Typography
                 color="inherit"
                 component={Link}
@@ -89,13 +89,13 @@ const Navbar = () => {
             <Typography
               color="inherit"
               component={Link}
-              to={userData ? "/users/logout" : "/users/login"}
+              to={authUser ? "/users/logout" : "/users/login"}
               className={classes.buttonText}
             >
-              {userData ? t("logout") : t("login")}
+              {authUser ? t("logout") : t("login")}
             </Typography>
 
-            {userData === null && (
+            {authUser === null && (
               <Typography
                 color="inherit"
                 component={Link}

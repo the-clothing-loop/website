@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 // Material UI
@@ -12,20 +12,22 @@ import theme from "../../util/theme";
 import Img from "../../images/Denise.png";
 import { TwoColumnLayout } from "../Layouts";
 import { AuthContext } from "../AuthProvider";
+import { chainGet } from "../../api/chain";
+import { Chain } from "../../api/types";
 
 const AdminControlsNav = () => {
   const { t } = useTranslation();
 
   const classes = makeStyles(theme as any)();
-  const { userData } = useContext(AuthContext);
+  const { authUser, authChainUID, authIsChainAdmin } = useContext(AuthContext);
 
   return (
     <div>
-      {userData ? (
+      {authUser ? (
         <TwoColumnLayout img={Img}>
           <div className="admin-nav-content">
             <Typography variant="h3" className={classes.pageTitle}>
-              {`Hello, ${userData?.name}`}
+              {`Hello, ${authUser?.name}`}
             </Typography>
             <div className={classes.pageDescription}>
               <Typography component="p" className={classes.p}>
@@ -34,20 +36,20 @@ const AdminControlsNav = () => {
             </div>
 
             <div className="admin-controls-nav">
-              {userData?.role === "chainAdmin" ? (
+              {authIsChainAdmin ? (
                 <div className="admin-nav-btn">
                   <Button
                     color="inherit"
                     className={classes.button}
                     component={Link}
-                    to={`/loops/${userData.chainId}/members`}
+                    to={`/loops/${authChainUID}/members`}
                   >
                     {t("viewLoop")}
                   </Button>
                 </div>
               ) : null}
 
-              {userData?.role === "admin" ? (
+              {authUser.is_admin ? (
                 <div className="admin-nav-btn">
                   <Button
                     color="inherit"
