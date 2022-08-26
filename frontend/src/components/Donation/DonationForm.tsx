@@ -14,10 +14,10 @@ import {
 import { makeStyles } from "@mui/styles";
 
 import styles from "./Donation.module.css";
-import { paymentInitiate } from "../../util/firebase/payments";
 
 import theme from "../../util/theme";
 import { useTranslation } from "react-i18next";
+import { paymentInitiate } from "../../api/payment";
 
 const accessToken = {
   stripeApiAccessToken: process.env.REACT_APP_STRIPE_PUBLIC_KEY,
@@ -75,13 +75,13 @@ const DonationFormContent = () => {
         amount: !values.recurring ? values.amount * 100 : null,
         email: values.email,
         type: values.recurring ? "recurring" : "one-off",
-        priceId: values.priceId,
+        price_id: values.priceId,
       })
-        .then(async (data) => {
-          console.log(data);
-          if (data && data.sessionId && stripe) {
+        .then(async (res) => {
+          console.log(res.data);
+          if (res.data.session_id && stripe) {
             return await stripe.redirectToCheckout({
-              sessionId: data.sessionId,
+              sessionId: res.data.session_id,
             });
           } else {
             const err = t("anErrorOccurredDuringCheckout");
