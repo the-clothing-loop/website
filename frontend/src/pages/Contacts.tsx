@@ -13,11 +13,17 @@ import { useTranslation } from "react-i18next";
 
 // Project resources
 import { TextForm } from "../components/FormFields";
-import { contactMail, IContactMail } from "../util/firebase/mail";
 import { OneColumnLayout } from "../components/Layouts";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
+import { contactMailSend } from "../api/contact";
+
+interface SubmitMail {
+  name: string;
+  email: string;
+  message: string;
+}
 
 const Contacts = () => {
   const classes = makeStyles(theme as any)();
@@ -38,15 +44,15 @@ const Contacts = () => {
     message: Yup.string()
       .required(t("required"))
       .min(2, "Must be at least 2 characters"),
-  });
+  } as Record<keyof SubmitMail, any>);
 
-  const handleSubmit = async (data: IContactMail) => {
+  const handleSubmit = async (data: SubmitMail) => {
     let newEmail = { ...data };
 
     console.log(`sending mail: ${JSON.stringify(newEmail)}`);
 
     try {
-      await contactMail(newEmail);
+      await contactMailSend(data.name, data.email, data.message);
       setSubmitted(true);
     } catch (e: any) {
       console.error(`Error sending mail: ${JSON.stringify(e)}`);
