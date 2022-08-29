@@ -6,11 +6,13 @@ require (
 	github.com/andybalholm/cascadia v1.3.1
 	github.com/darahayes/go-boom v0.0.0-20200826120415-fa5cb724143a
 	github.com/gin-gonic/gin v1.8.1
+	github.com/go-playground/validator/v10 v10.11.0
 	github.com/jaswdr/faker v1.15.0
 	github.com/jinzhu/configor v1.2.1
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.8.0
+	github.com/stripe/stripe-go/v73 v73.4.0
 	golang.org/x/net v0.0.0-20220812174116-3211cb980234
 	gorm.io/driver/mysql v1.3.6
 	gorm.io/gorm v1.23.8
@@ -22,7 +24,6 @@ require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
-	github.com/go-playground/validator/v10 v10.11.0
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.11 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect

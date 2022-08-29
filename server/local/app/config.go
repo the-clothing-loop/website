@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/jinzhu/configor"
+	"github.com/stripe/stripe-go/v73"
 )
 
 const (
@@ -21,6 +22,8 @@ var Config struct {
 	SITE_BASE_URL     string `yaml:"site_base_url" env:"SITE_BASE_URL"`
 	COOKIE_DOMAIN     string `yaml:"cookie_domain" env:"COOKIE_DOMAIN"`
 	COOKIE_HTTPS_ONLY bool   `yaml:"cookie_https_only" env:"COOKIE_HTTPS_ONLY"`
+	STRIPE_KEY        string `yaml:"stripe_key" env:"STRIPE_KEY"`
+	STRIPE_WEBHOOK    string `yaml:"stripe_webhook" env:"STRIPE_WEBHOOK"`
 	DB_HOST           string `yaml:"db_host" env:"DB_HOST"`
 	DB_PORT           int    `yaml:"db_port" env:"DB_PORT"`
 	DB_NAME           string `yaml:"db_name" env:"DB_NAME"`
@@ -60,6 +63,7 @@ func ConfigInit(path string) {
 	}
 
 	Config.ENV = env
+	stripe.Key = Config.STRIPE_KEY
 }
 
 func ConfigTestInit(path string) {
