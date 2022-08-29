@@ -17,7 +17,12 @@ import styles from "./Donation.module.css";
 
 import theme from "../../util/theme";
 import { useTranslation } from "react-i18next";
-import { paymentInitiate } from "../../api/payment";
+import { paymentInitiate, priceIDs } from "../../api/payment";
+
+interface RecurringAmount {
+  text: string;
+  priceID: string;
+}
 
 const accessToken = {
   stripeApiAccessToken: process.env.REACT_APP_STRIPE_PUBLIC_KEY,
@@ -31,29 +36,29 @@ const DonationFormContent = () => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
 
-  const amountsRecurring = [
+  const recurringAmounts: RecurringAmount[] = [
     {
-      string: "€2.50",
-      priceId: "price_1KdEdAKBdXHva7sKwHdv20Iw",
+      text: "€2.50",
+      priceID: priceIDs.recurring_2_50,
     },
     {
-      string: "€5.00",
-      priceId: "price_1KdEdvKBdXHva7sKjwXlAoxe",
+      text: "€5.00",
+      priceID: priceIDs.recurring_5_00,
     },
     {
-      string: "€10.00",
-      priceId: "price_1KdEeQKBdXHva7sK8x1tPlL7",
+      text: "€10.00",
+      priceID: priceIDs.recurring_10_00,
     },
   ];
-  const amounts = [5, 10, 20, 50, 100];
+  const oneOffStandardAmounts = [5, 10, 20, 50, 100];
+  const oneOffPriceID = priceIDs.oneOff_any;
 
   const formik = useFormik({
     initialValues: {
       email: "",
-      recurring: false,
-      amount: 10,
-      type: "",
-      priceId: "price_1KdEdvKBdXHva7sKjwXlAoxe",
+      isRecurring: false,
+      recurringIndex: 1,
+      oneOffAmount: 10,
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -72,10 +77,12 @@ const DonationFormContent = () => {
       setError(null);
 
       paymentInitiate({
-        amount: !values.recurring ? values.amount * 100 : null,
+        amount: values.isRecurring ? null : values.oneOffAmount * 100,
         email: values.email,
-        type: values.recurring ? "recurring" : "one-off",
-        price_id: values.priceId,
+        is_recurring: values.isRecurring,
+        price_id: values.isRecurring
+          ? recurringAmounts[values.recurringIndex].priceID
+          : oneOffPriceID,
       })
         .then(async (res) => {
           console.log(res.data);
@@ -100,7 +107,7 @@ const DonationFormContent = () => {
     style: "currency",
     currency: "EUR",
   });
-  const amountCheckbox = (amount: number) => (
+  const oneOffCheckbox = (amount: number) => (
     <Grid
       item
       key={amount}
@@ -114,9 +121,9 @@ const DonationFormContent = () => {
         type="radio"
         name="amount"
         value={amount}
-        checked={formik.values.amount === amount}
+        checked={formik.values.oneOffAmount === amount}
         onChange={() => {
-          formik.setFieldValue("amount", amount);
+          formik.setFieldValue("oneOffAmount", amount);
         }}
       />
       <label htmlFor={`donation-amount-${amount}`}>
@@ -125,30 +132,33 @@ const DonationFormContent = () => {
     </Grid>
   );
 
-  const recurringAmountCheckbox = (amount: any) => (
-    <Grid
-      item
-      key={amount.priceId}
-      xs={12}
-      sm={12}
-      className={styles.paymentToggle}
-      classes={{ root: classes.gridItemsNoPadding }}
-    >
-      <input
-        id={`donation-amount-${amount.priceId}`}
-        type="radio"
-        name="priceId"
-        value={amount.priceId}
-        checked={formik.values.priceId === amount.priceId}
-        onChange={() => {
-          formik.setFieldValue("priceId", amount.priceId);
-        }}
-      />
-      <label htmlFor={`donation-amount-${amount.priceId}`}>
-        {amount.string}
-      </label>
-    </Grid>
-  );
+  const recurringAmountCheckbox = (recurringIndex: number) => {
+    let recurringAmount = recurringAmounts[recurringIndex];
+    return (
+      <Grid
+        item
+        key={recurringAmount.priceID}
+        xs={12}
+        sm={12}
+        className={styles.paymentToggle}
+        classes={{ root: classes.gridItemsNoPadding }}
+      >
+        <input
+          id={`donation-amount-${recurringAmount.priceID}`}
+          type="radio"
+          name="priceID"
+          value={recurringAmount.priceID}
+          checked={formik.values.recurringIndex === recurringIndex}
+          onChange={() => {
+            formik.setFieldValue("recurringIndex", recurringIndex);
+          }}
+        />
+        <label htmlFor={`donation-amount-${recurringAmount.text}`}>
+          {recurringAmount.text}
+        </label>
+      </Grid>
+    );
+  };
 
   return (
     <Card
@@ -172,11 +182,11 @@ const DonationFormContent = () => {
                 <input
                   id="one-off-donation-button"
                   type="radio"
-                  name="type"
+                  name="isRecurring"
                   value="one-off"
-                  checked={!formik.values.recurring}
+                  checked={!formik.values.isRecurring}
                   onChange={() => {
-                    formik.setFieldValue("recurring", false);
+                    formik.setFieldValue("isRecurring", false);
                   }}
                 />
                 <label htmlFor="one-off-donation-button">
@@ -194,11 +204,11 @@ const DonationFormContent = () => {
                 <input
                   id="periodic-donation-button"
                   type="radio"
-                  name="type"
+                  name="isRecurring"
                   value="periodic"
-                  checked={formik.values.recurring}
+                  checked={formik.values.isRecurring}
                   onChange={() => {
-                    formik.setFieldValue("recurring", true);
+                    formik.setFieldValue("isRecurring", true);
                   }}
                 />
                 <label htmlFor="periodic-donation-button">
@@ -207,19 +217,17 @@ const DonationFormContent = () => {
               </Grid>
             </Grid>
             <br />
-            {formik.values.recurring ? (
+            {formik.values.isRecurring ? (
               <p>{t("iWillSupportTheClothingLoopWithAMonthlyDonation")}</p>
             ) : (
               <p>{t("iWillSupportTheClothingLoopWithAOneTimeDonation")}</p>
             )}
 
             <Grid container spacing={2} className={styles.paymentAmountOptions}>
-              {formik.values.recurring
-                ? amountsRecurring.map((amount: any) =>
-                    recurringAmountCheckbox(amount)
-                  )
-                : amounts.map((amount: number) => amountCheckbox(amount))}
-              {!formik.values.recurring && (
+              {formik.values.isRecurring
+                ? recurringAmounts.map((_, i) => recurringAmountCheckbox(i))
+                : oneOffStandardAmounts.map((amount) => oneOffCheckbox(amount))}
+              {!formik.values.isRecurring && (
                 <Grid
                   item
                   key="custom"
@@ -238,8 +246,8 @@ const DonationFormContent = () => {
                   />
                 </Grid>
               )}
-              {formik.errors.amount && (
-                <Alert severity="error">{formik.errors.amount}</Alert>
+              {formik.errors.oneOffAmount && (
+                <Alert severity="error">{formik.errors.oneOffAmount}</Alert>
               )}
             </Grid>
             <Grid container spacing={2} className={styles.paymentEmail}>
@@ -261,7 +269,7 @@ const DonationFormContent = () => {
 
             <br />
 
-            {formik.values.recurring && (
+            {formik.values.isRecurring && (
               <small style={{ color: "#555" }}>
                 {t("dontHaveACreditCardChooseSepa")}
               </small>

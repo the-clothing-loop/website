@@ -1,9 +1,18 @@
 import axios from "./axios";
 
+export const priceIDs = {
+  oneOff_any: "price_1Lc6cAJnVkskaoubR7eod7bZ",
+  recurring_2_50: "price_1Lc5s1JnVkskaoubc0Sz2AH3",
+  recurring_5_00: "price_1Lc5s1JnVkskaoubQMElHikE",
+  recurring_10_00: "price_1Lc5s1JnVkskaoubMk6VPlMq",
+};
+
 interface PaymentInitiateBody {
+  // only required on one-off payments
+  // value is in euro cents
   amount: number | null;
   email: string;
-  type: "recurring" | "one-off";
+  is_recurring: boolean;
   price_id: string;
 }
 
