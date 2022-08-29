@@ -34,9 +34,8 @@ func Routes() *gin.Engine {
 	v1.DELETE("/logout", controllers.Logout)
 
 	// payments
-	// TODO: one off + recurring -- stripe
-	v1.POST("/payments/initiate", controllers.PaymentsInitiate)
-	v1.POST("/payments/webhook", controllers.PaymentsWebhook)
+	v1.POST("/payment/initiate", controllers.PaymentsInitiate)
+	v1.POST("/payment/webhook", controllers.PaymentsWebhook)
 
 	// user
 	v1.GET("/user", controllers.UserGet)

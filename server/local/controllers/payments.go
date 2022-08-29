@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app"
@@ -8,12 +10,15 @@ import (
 	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 	"github.com/stripe/stripe-go/v73"
-	"github.com/stripe/stripe-go/v73/checkout/session"
+	stripe_session "github.com/stripe/stripe-go/v73/checkout/session"
+	stripe_webhook "github.com/stripe/stripe-go/v73/webhook"
 )
 
+// Rewrite of https://github.com/CollActionteam/clothing-loop/blob/e5d09d38d72bb42f531d0dc0ec7a5b18459bcbcd/firebase/functions/src/payments.ts#L18
 func PaymentsInitiate(c *gin.Context) {
 	var body struct {
-		Amount      int64  `json:"amount" binding:"required"`
+		// Euro cents
+		Amount      int64  `json:"amount" binding:"omitempty"`
 		Email       string `json:"email" binding:"omitempty,email"`
 		IsRecurring bool   `json:"is_recurring"`
 		PriceId     string `json:"price_id"`
@@ -65,7 +70,7 @@ func PaymentsInitiate(c *gin.Context) {
 		checkout.CustomerEmail = &customerEmail
 	}
 
-	session, err := session.New(checkout)
+	session, err := stripe_session.New(checkout)
 	if err != nil {
 		log.Print(err)
 		boom.Illegal(c.Writer, "Something went wrong when processing your checkout request...")
@@ -84,8 +89,30 @@ func PaymentsInitiate(c *gin.Context) {
 	})
 }
 
+// Rewrite of https://github.com/CollActionteam/clothing-loop/blob/e5d09d38d72bb42f531d0dc0ec7a5b18459bcbcd/firebase/functions/src/payments.ts#L99
 func PaymentsWebhook(c *gin.Context) {
-	// signature := c.Request.Header.Get("stripe-signature")
+	signature := c.Request.Header.Get("stripe-signature")
+	body, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		c.AbortWithError(400, fmt.Errorf("body does not exist"))
+		return
+	}
+	event, err := stripe_webhook.ConstructEvent(body, signature, app.Config.STRIPE_WEBHOOK)
+	if err != nil {
+		c.AbortWithError(400, fmt.Errorf("Webhook Error: %s", err))
+		return
+	}
 
-	// stripe.WebhookEndpoint
+	switch event.Type {
+	case "checkout.session.completed":
+		paymentsWebhookCheckoutSessionCompleted(c, event)
+	default:
+		c.JSON(200, gin.H{"received": true})
+	}
+}
+
+func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event) {
+	session := event.Data.Object
+
+	log.Printf("paymentsWebhookCheckoutSessionCompleted: %+v", session)
 }

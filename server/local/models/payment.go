@@ -3,7 +3,8 @@ package models
 import "time"
 
 type Payment struct {
-	ID          uint
+	ID uint
+	// Euro cents
 	Amount      float32
 	Email       string
 	IsRecurring bool

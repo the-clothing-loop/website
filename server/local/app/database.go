@@ -32,5 +32,6 @@ func DatabaseAutoMigrate(db *gorm.DB) error {
 		&models.User{},
 		&models.UserToken{},
 		&models.UserChain{},
+		&models.Payment{},
 	)
 }
