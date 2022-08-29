@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
+	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
@@ -91,15 +92,18 @@ func PaymentsInitiate(c *gin.Context) {
 
 // Rewrite of https://github.com/CollActionteam/clothing-loop/blob/e5d09d38d72bb42f531d0dc0ec7a5b18459bcbcd/firebase/functions/src/payments.ts#L99
 func PaymentsWebhook(c *gin.Context) {
+	const MaxBodyBytes = int64(65536)
+
 	signature := c.Request.Header.Get("stripe-signature")
-	body, err := ioutil.ReadAll(c.Request.Body)
+	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, MaxBodyBytes)
+	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		c.AbortWithError(400, fmt.Errorf("body does not exist"))
 		return
 	}
 	event, err := stripe_webhook.ConstructEvent(body, signature, app.Config.STRIPE_WEBHOOK)
 	if err != nil {
-		c.AbortWithError(400, fmt.Errorf("Webhook Error: %s", err))
+		c.AbortWithError(400, fmt.Errorf("webhook Error: %s", err))
 		return
 	}
 
