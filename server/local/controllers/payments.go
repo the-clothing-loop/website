@@ -96,6 +96,7 @@ func PaymentsInitiate(c *gin.Context) {
 	}).Error; err != nil {
 		log.Print(err)
 		boom.Internal(c.Writer, "unable to add payment to database")
+		return
 	}
 
 	c.JSON(200, gin.H{
