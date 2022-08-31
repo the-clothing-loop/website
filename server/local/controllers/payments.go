@@ -18,11 +18,10 @@ import (
 // Rewrite of https://github.com/CollActionteam/clothing-loop/blob/e5d09d38d72bb42f531d0dc0ec7a5b18459bcbcd/firebase/functions/src/payments.ts#L18
 func PaymentsInitiate(c *gin.Context) {
 	var body struct {
-		// Euro cents
-		Amount      int64  `json:"amount" binding:"omitempty"`
+		PriceCents  int64  `json:"price_cents" binding:"omitempty"`
 		Email       string `json:"email" binding:"omitempty,email"`
 		IsRecurring bool   `json:"is_recurring"`
-		PriceId     string `json:"price_id"`
+		PriceID     string `json:"price_id"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		boom.BadRequest(c.Writer, "email required in json")
@@ -39,33 +38,36 @@ func PaymentsInitiate(c *gin.Context) {
 	currency := "eur"
 	quantity := int64(1)
 	name := "Donation"
-	price := body.Amount
+	priceCents := body.PriceCents
 	customerEmail := body.Email
-	successURL := app.Config.SITE_BASE_URL + "/donate/thankyou"
-	cancelURL := app.Config.SITE_BASE_URL + "/donate/cancel"
+	successURL := app.Config.SITE_BASE_URL_FE + "/donate/thankyou"
+	cancelURL := app.Config.SITE_BASE_URL_FE + "/donate/cancel"
 
-	checkout := &stripe.CheckoutSessionParams{
-		Currency:           &currency,
-		PaymentMethodTypes: []*string{&paymentMethodTypeIDEAL, &paymentMethodTypeCard},
-		Mode:               &checkoutSessionModePayment,
-		LineItems: []*stripe.CheckoutSessionLineItemParams{
-			{
-				Quantity: &quantity,
-				Name:     &name,
-				Amount:   &price,
-			},
-		},
-		SuccessURL: &successURL,
-		CancelURL:  &cancelURL,
-	}
+	checkout := new(stripe.CheckoutSessionParams)
 
 	if body.IsRecurring {
 		checkout.PaymentMethodTypes = []*string{&paymentMethodTypeSEPADebit, &paymentMethodTypeCard}
 		checkout.Mode = &checkoutSessionModeSetup
-		checkout.Metadata = map[string]string{
-			"price_id": body.PriceId,
+	} else {
+		checkout.PaymentMethodTypes = []*string{&paymentMethodTypeIDEAL, &paymentMethodTypeCard}
+		checkout.Mode = &checkoutSessionModePayment
+		checkout.LineItems = []*stripe.CheckoutSessionLineItemParams{
+			{
+				PriceData: &stripe.CheckoutSessionLineItemPriceDataParams{
+					Currency: &currency,
+					ProductData: &stripe.CheckoutSessionLineItemPriceDataProductDataParams{
+						Name: &name,
+					},
+					UnitAmount: &priceCents,
+				},
+				Quantity: &quantity,
+			},
 		}
 	}
+
+	checkout.SuccessURL = &successURL
+	checkout.CancelURL = &cancelURL
+	checkout.Metadata = map[string]string{"price_id": body.PriceID}
 
 	if customerEmail != "" {
 		checkout.CustomerEmail = &customerEmail
@@ -78,12 +80,15 @@ func PaymentsInitiate(c *gin.Context) {
 		return
 	}
 
-	db.Create(models.Payment{
+	if err := db.Create(&models.Payment{
 		SessionID:   session.ID,
 		Amount:      float32(session.AmountTotal) / 100,
 		Email:       customerEmail,
 		IsRecurring: body.IsRecurring,
-	})
+	}).Error; err != nil {
+		log.Print(err)
+		boom.Internal(c.Writer, "unable to add payment to database")
+	}
 
 	c.JSON(200, gin.H{
 		"session_id": session.ID,
@@ -119,4 +124,5 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 	session := event.Data.Object
 
 	log.Printf("paymentsWebhookCheckoutSessionCompleted: %+v", session)
+	log.Printf("metadata %+v", session["metadata"])
 }

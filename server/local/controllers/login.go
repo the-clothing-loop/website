@@ -47,7 +47,7 @@ func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool 
 	}
 
 	subject := "Verify e-mail for clothing chain"
-	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s/login/validate?apiKey=%s">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>Regards,<br>The clothing-loop team!`, user.Name, app.Config.SITE_BASE_URL, token)
+	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s/login/validate?apiKey=%s">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>Regards,<br>The clothing-loop team!`, user.Name, app.Config.SITE_BASE_URL_FE, token)
 
 	// email user with token
 	return app.MailSend(c, db, user.Email, subject, messageHtml)

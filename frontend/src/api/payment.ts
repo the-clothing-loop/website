@@ -10,7 +10,7 @@ export const priceIDs = {
 interface PaymentInitiateBody {
   // only required on one-off payments
   // value is in euro cents
-  amount: number | null;
+  price_cents: number | null;
   email: string;
   is_recurring: boolean;
   price_id: string;
@@ -22,5 +22,5 @@ interface PaymentInitiateResponse {
 
 // TODO: add end point in server
 export function paymentInitiate(body: PaymentInitiateBody) {
-  return axios.post<PaymentInitiateResponse>("/v2/payment/initiate", body);
+  return axios.post<PaymentInitiateResponse>("/v1/payment/initiate", body);
 }

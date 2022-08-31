@@ -24,6 +24,13 @@ interface RecurringAmount {
   priceID: string;
 }
 
+interface FormValues {
+  email: string;
+  isRecurring: boolean;
+  recurringIndex: number;
+  oneOffAmount: number;
+}
+
 const accessToken = {
   stripeApiAccessToken: process.env.REACT_APP_STRIPE_PUBLIC_KEY,
 };
@@ -53,7 +60,7 @@ const DonationFormContent = () => {
   const oneOffStandardAmounts = [5, 10, 20, 50, 100];
   const oneOffPriceID = priceIDs.oneOff_any;
 
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       email: "",
       isRecurring: false,
@@ -77,7 +84,7 @@ const DonationFormContent = () => {
       setError(null);
 
       paymentInitiate({
-        amount: values.isRecurring ? null : values.oneOffAmount * 100,
+        price_cents: values.isRecurring ? null : values.oneOffAmount * 100,
         email: values.email,
         is_recurring: values.isRecurring,
         price_id: values.isRecurring
@@ -153,7 +160,7 @@ const DonationFormContent = () => {
             formik.setFieldValue("recurringIndex", recurringIndex);
           }}
         />
-        <label htmlFor={`donation-amount-${recurringAmount.text}`}>
+        <label htmlFor={`donation-amount-${recurringAmount.priceID}`}>
           {recurringAmount.text}
         </label>
       </Grid>

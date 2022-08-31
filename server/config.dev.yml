@@ -1,10 +1,15 @@
 host: "127.0.0.1"
 port: 8084
 
-site_base_url: "http://localhost:8084"
+site_base_url_api: "http://localhost:8084"
+site_base_url_fe: "http://localhost:3000"
+
 
 cookie_domain: "localhost"
 cookie_https_only: false
+
+stripe_secret_key: "***REMOVED***"
+stripe_webhook: "***REMOVED***"
 
 # see docker-compose cl_db
 db_host: "localhost"
