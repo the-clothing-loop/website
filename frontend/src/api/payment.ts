@@ -1,10 +1,12 @@
 import axios from "./axios";
 
+// TODO: move price ids to config file
 export const priceIDs = {
-  oneOff_any: "price_1Lc6cAJnVkskaoubR7eod7bZ",
-  recurring_2_50: "price_1Lc5s1JnVkskaoubc0Sz2AH3",
-  recurring_5_00: "price_1Lc5s1JnVkskaoubQMElHikE",
-  recurring_10_00: "price_1Lc5s1JnVkskaoubMk6VPlMq",
+  // priceID not necessary for one off donations
+  oneOff_any: "",
+  recurring_2_50: "price_1KdEdAKBdXHva7sKwHdv20Iw",
+  recurring_5_00: "price_1KdEdvKBdXHva7sKjwXlAoxe",
+  recurring_10_00: "price_1KdEeQKBdXHva7sK8x1tPlL7",
 };
 
 interface PaymentInitiateBody {

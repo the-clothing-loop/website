@@ -52,6 +52,7 @@ func PaymentsInitiate(c *gin.Context) {
 			string(stripe.PaymentMethodTypeCard),
 		})
 		checkout.Mode = &checkoutSessionModeSetup
+		checkout.Metadata = map[string]string{"price_id": body.PriceID}
 	} else {
 		checkout.PaymentMethodTypes = stripe.StringSlice([]string{
 			string(stripe.PaymentMethodTypeIDEAL),
@@ -74,7 +75,6 @@ func PaymentsInitiate(c *gin.Context) {
 
 	checkout.SuccessURL = &successURL
 	checkout.CancelURL = &cancelURL
-	checkout.Metadata = map[string]string{"price_id": body.PriceID}
 
 	if customerEmail != "" {
 		checkout.CustomerEmail = &customerEmail
