@@ -22,15 +22,15 @@ interface IProps {
   variant: "outlined" | "standard";
   showInputLabel: boolean;
   renderValueWhenEmpty?: string;
-  selectedCategories: string[];
-  handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
+  genders: string[];
+  handleSelectedCategoriesChange: (genders: string[]) => void;
 }
 
 const CategoriesDropdown: React.FC<IProps> = ({
   variant,
   showInputLabel,
   renderValueWhenEmpty,
-  selectedCategories,
+  genders: selectedCategories,
   handleSelectedCategoriesChange,
 }: IProps) => {
   const classes = makeStyles(theme as any)();

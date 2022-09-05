@@ -47,7 +47,7 @@ func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool 
 	}
 
 	subject := "Verify e-mail for clothing chain"
-	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s/login/validate?apiKey=%s">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>Regards,<br>The clothing-loop team!`, user.Name, app.Config.SITE_BASE_URL, token)
+	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s/login/validate?apiKey=%s">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>Regards,<br>The clothing-loop team!`, user.Name, app.Config.SITE_BASE_URL_FE, token)
 
 	// email user with token
 	return app.MailSend(c, db, user.Email, subject, messageHtml)
@@ -71,7 +71,29 @@ func LoginValidate(c *gin.Context) {
 		return
 	}
 
+	// get user
+	user := &models.User{}
+	err := db.Raw(`
+SELECT users.*
+FROM users
+LEFT JOIN user_tokens ON user_tokens.user_id = users.id
+WHERE user_tokens.token = ? AND users.is_email_verified = ?
+LIMIT 1
+	`, token, true).First(user).Error
+	if err != nil {
+		boom.Internal(c.Writer)
+		return
+	}
+
+	err = user.AddUserChainsToObject(db)
+	if err != nil {
+		boom.Internal(c.Writer)
+		return
+	}
+
+	// set token as cookie
 	auth.CookieSet(c, token)
+	c.JSON(200, user)
 }
 
 // Sizes and Address is set to the user and the chain
@@ -79,23 +101,12 @@ func RegisterChainAdmin(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		Chain struct {
-			Name             string   `json:"name"`
-			Description      string   `json:"description"`
-			Address          string   `json:"address"`
-			Latitude         float64  `json:"latitude"`
-			Longitude        float64  `json:"longitude"`
-			Radius           float32  `json:"radius"`
-			OpenToNewMembers bool     `json:"open_to_new_members"`
-			Sizes            []string `json:"sizes"`
-			Genders          []string `json:"genders"`
-		} `json:"chain" binding:"required"`
-		User struct {
+		Chain ChainCreateRequestBody `json:"chain" binding:"required"`
+		User  struct {
 			Email       string   `json:"email" binding:"required"`
 			Name        string   `json:"name" binding:"required"`
 			PhoneNumber string   `json:"phone_number"`
 			Address     string   `json:"address"`
-			Newsletter  bool     `json:"newsletter"`
 			Sizes       []string `json:"sizes"`
 		} `json:"user" binding:"required"`
 	}

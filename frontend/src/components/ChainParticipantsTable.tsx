@@ -12,29 +12,36 @@ import {
 
 import { makeStyles } from "@mui/styles";
 
-import { IUser } from "../types";
-
 import theme from "../util/theme";
+import { User } from "../api/types";
+import { Sizes } from "../api/enums";
 
 const useStyles = makeStyles(theme as any);
 
+export interface TableUserColumn {
+  headerName: string;
+  propertyName: keyof User;
+}
+
+interface Props {
+  columns: TableUserColumn[];
+  authUser: User | null;
+  users: User[];
+  initialPage: number;
+  initialRowsPerPage: number;
+  editItemComponent: any;
+  deleteItemComponent: any;
+}
+
 export const ChainParticipantsTable = ({
   columns,
-  userData,
+  authUser,
   users,
   initialPage,
   initialRowsPerPage,
   editItemComponent,
   deleteItemComponent,
-}: {
-  columns: { headerName: string; propertyName: string }[];
-  userData: IUser | null;
-  users: IUser[];
-  initialPage: number;
-  initialRowsPerPage: number;
-  editItemComponent: any;
-  deleteItemComponent: any;
-}) => {
+}: Props) => {
   const [page, setPage] = useState(initialPage);
   const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
 
@@ -61,7 +68,7 @@ export const ChainParticipantsTable = ({
                 );
               })}
 
-              {userData?.role === "admin" && (
+              {authUser?.is_admin && (
                 <>
                   {editItemComponent && <HeadRowTableCell />}
                   {deleteItemComponent && <HeadRowTableCell />}
@@ -72,17 +79,20 @@ export const ChainParticipantsTable = ({
           <TableBody>
             {users
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((u: IUser) => (
+              .map((u: User) => (
                 <TableRow key={u.uid}>
-                  {columns.map(({ propertyName }) => (
-                    <BorderlessTableCell>
-                      {propertyName === "interestedSizes"
-                        ? u[propertyName].join(", ")
-                        : u[propertyName]}
-                    </BorderlessTableCell>
-                  ))}
+                  {columns.map(({ propertyName }) => {
+                    let text = propertyName as string;
+                    if (propertyName === "sizes") {
+                      text = u[propertyName]
+                        .filter((v) => Sizes[v])
+                        .map((v) => Sizes[v])
+                        .join(", ");
+                    }
+                    return <BorderlessTableCell>{text}</BorderlessTableCell>;
+                  })}
 
-                  {userData?.role === "admin" && (
+                  {authUser?.is_admin && (
                     <>
                       {editItemComponent && (
                         <BorderlessTableCell>

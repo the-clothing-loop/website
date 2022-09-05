@@ -64,7 +64,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:with:emulator": "REACT_APP_USE_EMULATOR=true react-scripts start",
     "lint": "prettier --write .",
     "lint:test": "prettier --check .",
     "build": "react-scripts build",

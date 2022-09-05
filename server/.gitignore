@@ -1,4 +1,6 @@
 /docker/database
-/config.prod.yml
 /server
 /cmd/server-fcgi/static/app.fcgi
+
+/config.*.yml
+!/config.example.yml

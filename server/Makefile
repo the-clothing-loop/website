@@ -28,6 +28,12 @@ test:
 coverage:
 	go test -cover ./...
 
+generate-fake-data:
+	go run cmd/generate-fake-data/main.go
+
+stripe-dev:
+	stripe listen --forward-to localhost:8084/v1/payment/webhook
+
 docker-start:
 	@cd docker; docker-compose up -d
 docker-stop:

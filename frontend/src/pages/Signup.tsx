@@ -17,7 +17,6 @@ import { TwoColumnLayout } from "../components/Layouts";
 
 // Project resources
 import { PhoneFormField, TextForm } from "../components/FormFields";
-import { createUser } from "../util/firebase/user";
 import FormActions from "../components/formActions";
 
 //Media
@@ -25,10 +24,15 @@ import RightArrow from "../images/right-arrow-white.svg";
 import JoinLoopImg from "../images/Join-Loop.jpg";
 import { Chain } from "../api/types";
 import { chainGet } from "../api/chain";
+import { registerBasicUser, RequestRegisterUser } from "../api/login";
+
+interface Params {
+  chainUID: string;
+}
 
 const Signup = () => {
   const history = useHistory();
-  const { chainId } = useParams<{ chainId: string }>();
+  const { chainUID } = useParams<Params>();
   const [chain, setChain] = useState<Chain | null>(null);
   const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
@@ -56,32 +60,30 @@ const Signup = () => {
   // Get chain id from the URL and save to state
   useEffect(() => {
     (async () => {
-      if (chainId) {
-        const chain = (await chainGet(chainId)).data;
+      if (chainUID) {
+        const chain = (await chainGet(chainUID)).data;
         if (chain !== undefined) {
           setChain(chain);
           setChainGender(chain.genders || []);
         } else {
-          console.error(`chain ${chainId} does not exist`);
+          console.error(`chain ${chainUID} does not exist`);
         }
       }
     })();
-  }, [chainId]);
+  }, [chainUID]);
 
   // Gather data from form, validate and send to firebase
   const onSubmit = async (formData: any) => {
     // TODO: allow only full addresses
 
     try {
-      let user = {
+      let user: RequestRegisterUser = {
         ...formData,
         address: geocoderResult.result.place_name,
-        chainId: chainId,
         interestedSizes: selectedSizes,
       };
       console.log(`creating user: ${JSON.stringify(user)}`);
-      // TODO: do something with validation info for new user (e.g. display this)
-      await createUser(user);
+      await registerBasicUser(user);
       setSubmitted(true);
     } catch (e: any) {
       console.error(`Error creating user: ${JSON.stringify(e)}`);
@@ -162,8 +164,8 @@ const Signup = () => {
                         variant="standard"
                         showInputLabel={false}
                         label={t("interestedSizes")}
-                        selectedGenders={chainGender}
-                        selectedSizes={selectedSizes}
+                        genders={chainGender}
+                        sizes={selectedSizes}
                         handleSelectedCategoriesChange={setSelectedSizes}
                       />
                       <PopoverOnHover

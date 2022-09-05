@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -12,7 +12,6 @@ import { makeStyles } from "@mui/styles";
 import theme from "../util/theme";
 
 // Project resources
-import { getUserById, updateUser } from "../util/firebase/user";
 import { ThreeColumnLayout } from "../components/Layouts";
 import SizesDropdown from "../components/SizesDropdown";
 import categories from "../util/categories";
@@ -27,26 +26,31 @@ import {
   CheckboxField,
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
-import { IUser } from "../types";
+import { UID, User } from "../api/types";
+import { userGetByUID, userUpdate, UserUpdateBody } from "../api/user";
+import { AuthContext } from "../components/AuthProvider";
+
+interface Params {
+  userUID: string;
+}
 
 const UserEdit = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
   const history = useHistory();
+  const { authUser } = useContext(AuthContext);
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const [user, setUser] = useState<IUser>();
-  const { userId } = useParams<{ userId: string }>();
-  const [chainId, setChainId] = useState<IUser["chainId"]>();
-  const [address, setAddress] = useState<IUser["address"]>();
-  const [selectedSizes, setSelectedSizes] = useState<IUser["selectedSizes"]>(
-    []
-  );
-  const [uid, setUid] = useState<IUser["uid"]>();
-  const [newsletter, setNewsletter] = useState<IUser["newsletter"]>(false);
-  const [userRole, setUserRole] = useState<IUser["userRole"]>("");
+  const [user, setUser] = useState<User>();
+  const params = useParams<Params>();
+  const [userUID, setUserUID] = useState<UID>(params.userUID);
+  const [chainId, setChainUID] = useState<UID>();
+  const [address, setAddress] = useState<UserUpdateBody["address"]>();
+  const [sizes, setSizes] = useState<UserUpdateBody["sizes"]>([]);
+  const [userIsAdmin, setUserIsAdmin] = useState(false);
+  const [userIsChainAdmin, setUserIsChainAdmin] = useState(false);
 
   const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
@@ -61,17 +65,16 @@ const UserEdit = () => {
     newsletter: Yup.boolean(),
   });
 
-  const onSubmit = async (values: Partial<IUser>) => {
-    const newUserData: Partial<IUser> = {
+  const onSubmit = async (values: UserUpdateBody) => {
+    const newUserData: UserUpdateBody = {
       ...values,
       address: address,
-      chainId: chainId,
-      interestedSizes: selectedSizes,
+      sizes: sizes,
     };
     console.log(`updating user information: ${JSON.stringify(newUserData)}`);
 
     try {
-      await updateUser(newUserData as IUser);
+      await userUpdate(newUserData);
       setSubmitted(true);
       history.push({
         pathname: `/loops/${chainId}/members`,
@@ -86,19 +89,19 @@ const UserEdit = () => {
   useEffect(() => {
     (async () => {
       try {
-        const user = await getUserById(userId);
+        const user = (
+          await userGetByUID(authUser!.chains[0].chain_uid, userUID)
+        ).data;
+        const firstChain = user.chains[0];
         setUser(user);
-        setChainId(user.chainId);
+        setChainUID(firstChain.chain_uid);
         setAddress(user.address);
-        setUid(user.uid);
-        setNewsletter(user.newsletter);
-        setUserRole(user.role);
-
-        if (user.interestedSizes === null) {
-          setSelectedSizes([]);
-        } else {
-          setSelectedSizes(user.interestedSizes);
-        }
+        setUserUID(user.uid);
+        // TODO: add newsletter back into user
+        // setNewsletter(user.newsletter);
+        setUserIsAdmin(user.is_admin);
+        setUserIsChainAdmin(firstChain.is_chain_admin);
+        setSizes(user.sizes || []);
       } catch (error) {
         console.error(error);
       }
@@ -111,15 +114,15 @@ const UserEdit = () => {
         <title>The Clothing Loop | Edit user</title>
         <meta name="description" content="Edit user" />
       </Helmet>
-      <Formik<Partial<IUser>>
+      <Formik<Partial<User>>
         initialValues={{
           name: user.name,
           email: user.email,
-          phoneNumber: user.phoneNumber,
-          newsletter: user.newsletter,
+          phone_number: user.phone_number,
+          // newsletter: user.newsletter,
           address: address as string,
-          uid: userId,
-          interestedSizes: selectedSizes,
+          uid: userUID,
+          sizes: sizes,
         }}
         validationSchema={validate}
         validateOnChange={false}
@@ -127,7 +130,7 @@ const UserEdit = () => {
       >
         {({ setFieldValue }) => (
           <ThreeColumnLayout>
-            {userRole === "chainAdmin" ? (
+            {userIsAdmin || userIsChainAdmin ? (
               <Typography variant="h3" className={classes.pageTitle}>
                 {t("editAdminContacts")}
               </Typography>
@@ -161,10 +164,10 @@ const UserEdit = () => {
               <SizesDropdown
                 variant="standard"
                 showInputLabel={true}
-                label={t("interestedSizes")}
-                selectedGenders={Object.keys(categories)}
-                selectedSizes={selectedSizes}
-                handleSelectedCategoriesChange={setSelectedSizes}
+                label={t("sizes")}
+                genders={Object.keys(categories)}
+                sizes={sizes || []}
+                handleSelectedCategoriesChange={setSizes}
                 style={{ marginTop: "2%" }}
               />
 

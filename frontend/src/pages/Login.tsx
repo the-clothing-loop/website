@@ -17,9 +17,8 @@ import RightArrow from "../images/right-arrow-white.svg";
 import CirclesFrame from "../images/circles.png";
 import LoginImg from "../images/Login.jpg";
 
-import firebase from "firebase/app";
-import "firebase/auth";
 import { Helmet } from "react-helmet";
+import { loginEmail } from "../api/login";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -37,11 +36,7 @@ const Login = () => {
         const continueUrl = `${
           process.env.REACT_APP_BASE_DOMAIN
         }/users/login-email-finished/${encodeURI(data.email)}`;
-        await firebase.auth().sendSignInLinkToEmail(data.email, {
-          handleCodeInApp: true,
-          url: continueUrl,
-        });
-        window.localStorage.setItem("emailForSignIn", data.email);
+        await loginEmail(data.email);
         setSubmitted(true);
       } catch (e) {
         console.error(e);

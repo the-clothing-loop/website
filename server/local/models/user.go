@@ -2,23 +2,26 @@ package models
 
 import (
 	"fmt"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type User struct {
-	gorm.Model
-	UID             string `gorm:"uniqueIndex"`
-	Email           string `gorm:"unique"`
-	IsEmailVerified bool
-	IsRootAdmin     bool
-	Name            string
-	PhoneNumber     string
-	Address         string
-	Sizes           []string `gorm:"serializer:json"`
-	Enabled         bool
-	UserToken       []UserToken
-	Chains          []UserChain
+	ID              uint        `json:"-"`
+	UID             string      `json:"uid" gorm:"uniqueIndex"`
+	Email           string      `json:"email" gorm:"unique"`
+	IsEmailVerified bool        `json:"is_email_verified"`
+	IsRootAdmin     bool        `json:"is_root_admin"`
+	Name            string      `json:"name"`
+	PhoneNumber     string      `json:"phone_number"`
+	Address         string      `json:"address"`
+	Sizes           []string    `json:"sizes" gorm:"serializer:json"`
+	Enabled         bool        `json:"enabled"`
+	UserToken       []UserToken `json:"-"`
+	Chains          []UserChain `json:"chains"`
+	CreatedAt       time.Time   `json:"-"`
+	UpdatedAt       time.Time   `json:"-"`
 }
 
 const (
@@ -36,10 +39,12 @@ type UserToken struct {
 }
 
 type UserChain struct {
-	ID           uint
-	UserID       uint `gorm:"index"`
-	ChainID      uint
-	IsChainAdmin bool
+	ID           uint   `json:"-"`
+	UserID       uint   `json:"-" gorm:"index"`
+	UserUID      string `json:"user_uid" gorm:"-:migration;<-:false"`
+	ChainID      uint   `json:"-"`
+	ChainUID     string `json:"chain_uid" gorm:"-:migration;<-:false"`
+	IsChainAdmin bool   `json:"is_chain_admin"`
 }
 
 type UserChainResponse struct {
@@ -54,9 +59,9 @@ type UserChainResponse struct {
 // user := &User{ID: id}
 // user.GetChainUIDsAndIsAdminByUserID(db)
 // ```
-func (u *User) GetUserChainResponse(db *gorm.DB) (*[]UserChainResponse, error) {
-	var results []UserChainResponse
-	err := db.Raw(`
+func (u *User) GetUserChainResponse(db *gorm.DB) (results *[]UserChainResponse, err error) {
+	results = &[]UserChainResponse{}
+	err = db.Raw(`
 SELECT
 	chains.uid AS chain_uid,
 	users.uid AS user_uid,
@@ -65,24 +70,35 @@ FROM user_chains
 LEFT JOIN chains ON user_chains.chain_id = chains.id 
 LEFT JOIN users ON user_chains.user_id = users.id 
 WHERE user_chains.user_id = ?
-	`, u.ID).Scan(&results).Error
+	`, u.ID).Scan(results).Error
 	if err != nil {
 		return nil, fmt.Errorf("unable to look for chains related to user")
 	}
 
-	return &results, nil
+	return results, nil
 }
 
-func (u *User) AddUserChainsToObject(db *gorm.DB) {
+func (u *User) AddUserChainsToObject(db *gorm.DB) error {
 	userChains := []UserChain{}
-	db.Raw(`
-SELECT *
+	err := db.Raw(`
+SELECT
+	user_chains.id             AS id,
+	user_chains.chain_id       AS chain_id,
+	chains.uid                 AS chain_uid,
+	user_chains.user_id        AS user_id,
+	users.uid                  AS user_uid,
+	user_chains.is_chain_admin AS is_chain_admin
 FROM user_chains
+LEFT JOIN chains ON user_chains.chain_id = chains.id
 LEFT JOIN users ON user_chains.user_id = users.id
-WHERE user_chains.user_id = ?
-	`, u.ID).Scan(&userChains)
+WHERE users.id = ?
+	`, u.ID).Scan(&userChains).Error
+	if err != nil {
+		return err
+	}
 
 	u.Chains = userChains
+	return nil
 }
 
 func (u *User) IsPartOfChain(db *gorm.DB, chainID uint) bool {

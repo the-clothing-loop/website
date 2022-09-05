@@ -1,5 +1,6 @@
 import { Chain, UID } from "./types";
 import axios from "./axios";
+import { RequestRegisterChain } from "./login";
 
 export function chainGet(chainUID: UID) {
   return axios.get<Chain>("/v1/chain", {
@@ -12,9 +13,7 @@ export function chainGetAll() {
   });
 }
 
-export type ChainCreateBody = Omit<Chain, "uid">;
-
-export function chainCreate(chain: ChainCreateBody) {
+export function chainCreate(chain: RequestRegisterChain) {
   return axios.post("/v1/chain", chain);
 }
 
@@ -33,6 +32,13 @@ export function chainAddUser(
     user_uid: userUID,
     chain_uid: chainUID,
     is_chain_admin: isChainAdmin,
+  });
+}
+
+export function chainRemoveUser(chainUID: UID, userUID: UID) {
+  return axios.post("/v1/chain/remove-user", {
+    user_uid: userUID,
+    chain_uid: chainUID,
   });
 }
 
