@@ -1,0 +1,77 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Install apt packages
+      apt:
+        pkg: [curl, ufw]
+        state: present
+        update_cache: true
+    - name: Setup firewall
+      block:
+        - name: Reset ufw settings
+          shell: |
+            ufw --force reset
+            ufw default deny incoming
+            ufw default allow outgoing
+            ufw allow 22
+            ufw allow 80
+            ufw allow 443
+            ufw --force enable
+        - name: Enable ufw service
+          service:
+            name: ufw
+            state: started
+            enabled: true
+        - name: Cleanup ufw backups
+          shell: |
+            rm /etc/ufw/after6.rules.* || true
+            rm /etc/ufw/after.rules.* || true
+            rm /etc/ufw/before6.rules.* || true
+            rm /etc/ufw/before.rules.* || true
+            rm /etc/ufw/user6.rules.* || true
+            rm /etc/ufw/user.rules.* || true
+    - name: Setup docker
+      block:
+        - name: Check if docker is installed
+          command: which docker
+          register: is_docker_installed
+          ignore_errors: true
+        - name: Install docker
+          when: is_docker_installed == ""
+          shell: |
+            curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
+            sh /tmp/get-docker.sh
+            usermod -aG docker $USER
+            rm /tmp/get-docker.sh
+        - name: Enable & Start docker service
+          service:
+            name: docker
+            state: started
+            enabled: true
+        - name: Create directories
+          command: mkdir -p /data/caddy/etc/ /data/caddy/static/ /data/caddy/data /data/app/ /data/mariadb/
+        - name: Clone repo
+          shell: |
+            cd /data/app/
+            git clone --depth 1 git@github.com:CollActionteam/clothing-loop.git .
+        - name: Add docker compose file
+          template:
+            src: templates/docker-compose.yml
+            dest: /data/docker-compose.yml
+            owner: root
+            group: root
+            mode: "0644"
+        - name: Add env file
+          template:
+            src: templates/.env
+            dest: /data/.env
+            owner: root
+            group: root
+            mode: "0640"
+        - name: Add caddy file
+          template:
+            src: templates/Caddyfile
+            dest: /data/caddy/etc/Caddyfile
+            owner: root
+            group: root
+            mode: "0644"

@@ -1,0 +1,16 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Pull docker images
+      shell: |
+        cd /data
+        docker-compose pull
+    - name: Upgrade packages
+      apt:
+        upgrade: yes
+        update_cache: yes
+    - name: Restart updated docker images
+      shell: |
+        cd /data
+        docker-compose up -d --remove-orphans
+        docker image prune -f
