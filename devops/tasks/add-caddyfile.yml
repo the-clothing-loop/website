@@ -1,7 +1,0 @@
-- name: Add caddy file
-  template:
-    src: templates/Caddyfile
-    dest: /etc/caddy/Caddyfile
-    owner: root
-    group: root
-    mode: "0644"

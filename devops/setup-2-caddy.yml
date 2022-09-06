@@ -12,4 +12,10 @@
       shell: |
         systemctl enable --now caddy
         systemctl disable --now caddy-api
-    - import_tasks: tasks/add-caddyfile.yml
+    - name: Add caddy file
+      template:
+        src: templates/Caddyfile
+        dest: /etc/caddy/Caddyfile
+        owner: root
+        group: root
+        mode: "0644"
