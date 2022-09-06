@@ -1,1 +1,2 @@
 /templates/.env
+/group_vars/all.yml

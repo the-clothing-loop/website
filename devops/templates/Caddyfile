@@ -1,3 +1,3 @@
-api.clothingloop.org
+api.clothingloop.org, vpsnode1.vps.webdock.cloud
 
-reverse_proxy 127.0.0.1:8000
+respond "Hello, World"
