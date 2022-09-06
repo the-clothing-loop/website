@@ -49,3 +49,5 @@ If the choice is given make sure to _not_ install a desktop environment.
 Install python3-minimal on the server.
 
 The VPS is now setup to allow for Ansible to run playbooks on it.
+
+All `setup-*-<name>.yml` are all created and used to setup the system.

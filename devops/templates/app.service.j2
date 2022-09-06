@@ -1,0 +1,14 @@
+[Unit]
+Description={{ app_service_name }}
+After=mariadb.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User={{ app_service_user }}
+ExecStart={{ app_service_path }}
+
+[Install]
+WantedBy=multi-user.target
