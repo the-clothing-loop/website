@@ -24,30 +24,56 @@ These extensions will popup as advised extensions
 
 `make docker-start`
 
-### 3. Start server
+### 3. Setup config files
+
+Copy `/server/config.example.yml` to `/server/config.yml`
+
+Some values are obfuscated how to add these are explained below
+
+#### 3.1. Add stripe dev keys
+
+This is required for payment calls, if you are not working on those calls these steps are not needed
+
+1. Create a stripe account
+2. Download and install the stripe cli https://stripe.com/docs/stripe-cli
+3. From https://dashboard.stripe.com/test/apikeys
+   1. Copy secret key to `stripe_secret_key` in `/server/config.yml`
+   2. Copy publishable key to `REACT_APP_STRIPE_PUBLIC_KEY` in `/frontend/.env`
+4. Go to [webhooks](https://dashboard.stripe.com/test/webhooks) and click **Add an endpoint**
+   1. Set Endpoint url `http://localhost:8080/v1/payment/webhook`
+   2. Click **add endpoint**
+
+#### 3.2 Add database password
+
+You must do this for the server to run properly.
+
+Copy the value of `MYSQL_PASSWORD` found in `/server/docker/docker-compose.yml`, use the password to fill in `db_pass` in `/server/config.yml`
+
+### 4. Start server
 
 `make start`
 
-### 4. Generate fake data (optional)
+### 5. Generate fake data (optional)
 
 If you want you can create some fake data to use in your development environment.
 To do so run this command:
 
 `make generate-fake-data`
 
-### 5. Setup Rest client
+### 6. Setup Rest client
 
 To document, test and use the server independently, [Insomnia](https://insomnia.rest/) is to be used.
 
-#### 5.1. Install Insomnia
+#### 6.1. Install Insomnia
 
 Install the Insomnia Rest client here:
+
 - Win/Mac/Ubuntu: https://insomnia.rest/download
 - Linux: https://flathub.org/apps/details/rest.insomnia.Insomnia
 
 Then open Insomnia from your applications
 
-#### 5.2. Import project to Insomnia
+#### 6.2. Import project to Insomnia
 
 More documentation here: https://docs.insomnia.rest/insomnia/git-sync#set-up-a-remote-repository-with-github
 
@@ -58,7 +84,7 @@ More documentation here: https://docs.insomnia.rest/insomnia/git-sync#set-up-a-r
    2. Click **Authenticate with GitHub**
 4. Paste in **GitHub URI** the following: `https://github.com/lil5/cl_insomnia.git`
 
-#### 5.3. Create private environments
+#### 6.3. Create private environments
 
 1. Type in `ctrl` + `e` or `command` + `e`
 2. Select **Example Sub Environment** in the left side menu
@@ -70,7 +96,7 @@ More documentation here: https://docs.insomnia.rest/insomnia/git-sync#set-up-a-r
 
 When the new site is live and you have access to the production database do the same with and call it **Production**, give it a color too :sparkles:
 
-#### 5.4. Understand how to sync changes
+#### 6.4. Understand how to sync changes
 
 https://docs.insomnia.rest/insomnia/git-sync#commit-changes
 
@@ -89,6 +115,8 @@ Conflict must be done in an external editor like vscode.
 `make build-server`
 
 ### Build for Shared Hosting
+
+This is an attempt to use shared hosting, but has never been properly tested.
 
 `make build-server-fcgi`
 

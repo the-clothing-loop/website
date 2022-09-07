@@ -8,10 +8,6 @@
         curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
         apt update
         apt install caddy -y
-    - name: Setup service
-      shell: |
-        systemctl enable --now caddy
-        systemctl disable --now caddy-api
     - name: Add caddy file
       template:
         src: templates/Caddyfile
@@ -19,3 +15,7 @@
         owner: root
         group: root
         mode: "0644"
+    - name: Setup service
+      shell: |
+        systemctl enable --now caddy
+        systemctl disable --now caddy-api
