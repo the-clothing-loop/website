@@ -1,6 +1,9 @@
 - hosts: server
   become: true
   tasks:
+    - name: Check if caddy is installed
+      package_facts:
+        manager: "auto"
     - name: Install caddy
       shell: |
         apt install -y debian-keyring debian-archive-keyring apt-transport-https
@@ -8,6 +11,7 @@
         curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
         apt update
         apt install caddy -y
+      when: "ansible_facts.packages['caddy'] is undefined"
     - name: Add caddy file
       template:
         src: templates/Caddyfile

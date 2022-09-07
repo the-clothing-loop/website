@@ -9,6 +9,7 @@ Restart=always
 RestartSec=1
 User={{ app_service_user }}
 Environment="SERVER_ENV={{ app_service_env }}"
+WorkingDirectory=/opt/
 ExecStart={{ app_service_path }}
 
 [Install]
