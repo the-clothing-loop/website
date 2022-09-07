@@ -1,0 +1,30 @@
+name: Deploy Server v2
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - golang
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.19"
+      - name: Build binary
+        run: make build-server
+        working-directory: ./server
+      - name: Send binary to vps and restart service
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        with:
+          host: vpsnode1.vps.webdock.cloud
+          user: admin
+          key: ${{ secrets.VPS1_PRIVKEY }}
+          scp: |
+            ./server/server => /opt/app-acceptance
+          last_ssh: |
+            sudo systemctl restart app-acceptance
