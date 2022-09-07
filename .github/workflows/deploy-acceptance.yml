@@ -25,6 +25,8 @@ jobs:
           user: admin
           key: ${{ secrets.VPS1_PRIVKEY }}
           scp: |
-            ./server/server => /opt/app-acceptance
+            ./server/server => /home/admin/app-acceptance
           last_ssh: |
+            sudo chown root:root app-acceptance
+            sudo mv app-acceptance /opt/app-acceptance
             sudo systemctl restart app-acceptance
