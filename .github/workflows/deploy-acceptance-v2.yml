@@ -1,4 +1,4 @@
-name: Deploy Server Acceptance v2
+name: Deploy Acceptance v2
 on:
   workflow_dispatch:
   push:
@@ -6,7 +6,7 @@ on:
       - golang
 
 jobs:
-  deploy:
+  deploy-api:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,8 +25,8 @@ jobs:
           user: admin
           key: ${{ secrets.VPS1_PRIVKEY }}
           scp: |
-            ./server/server => /home/admin/app-acceptance
+            ./server/server => /home/admin/app-acceptance/
           last_ssh: |
-            sudo chown root:root app-acceptance
-            sudo mv app-acceptance /opt/app-acceptance
+            sudo chown root:root /home/admin/app-acceptance/server
+            sudo mv /home/admin/app-acceptance/server /opt/app-acceptance
             sudo systemctl restart app-acceptance
