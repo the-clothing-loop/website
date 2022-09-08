@@ -1,0 +1,31 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Check if caddy is installed
+      package_facts:
+        manager: "auto"
+    - name: Install caddy
+      shell: |
+        apt install -y debian-keyring debian-archive-keyring apt-transport-https
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
+        apt update
+        apt install caddy -y
+      when: "ansible_facts.packages['caddy'] is undefined"
+    - name: Add caddy file
+      template:
+        src: templates/Caddyfile
+        dest: /etc/caddy/Caddyfile
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Disable caddy-api service
+      service:
+        name: caddy-api
+        enabled: no
+        state: stopped
+    - name: Setup caddy service
+      service:
+        name: caddy
+        enabled: yes
+        state: reloaded

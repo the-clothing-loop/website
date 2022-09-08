@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "firebase"
+		},
+		{
+			"path": "devops"
 		}
 	],
 	"settings": {},

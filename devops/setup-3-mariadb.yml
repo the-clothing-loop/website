@@ -1,0 +1,49 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Install mariadb
+      apt:
+        pkg:
+          - mariadb-server
+          - python3-mysqldb
+    - name: Start mariadb
+      service:
+        name: mariadb
+        enabled: true
+        state: started
+    - name: mysql_root_password
+      mysql_user:
+        user: root
+        check_implicit_admin: true
+        password: "{{ mysql_root_password }}"
+        host: localhost
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: Create database cl-production
+      mysql_db:
+        name: cl-production
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: Create database cl-acceptance
+      mysql_db:
+        name: cl-acceptance
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: Create user cl-production
+      mysql_user:
+        name: cl-production
+        password: "{{ mysql_cl_production_password }}"
+        priv: "cl-production.*:ALL,GRANT"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: Create user cl-acceptance
+      mysql_user:
+        name: cl-acceptance
+        password: "{{ mysql_cl_acceptance_password }}"
+        priv: "cl-acceptance.*:ALL,GRANT"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"

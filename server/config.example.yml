@@ -10,14 +10,12 @@ cookie_https_only: false
 stripe_secret_key: "secret"
 stripe_webhook: "secret"
 
-# see docker-compose cl_db
 db_host: "localhost"
 db_port: 3306
 db_name: "clothingloop"
 db_user: "clothingloop"
-db_pass: "secret"
+db_pass: "72bd3937e91363a747f810e7"
 
-# see docker-compose cl_mail
 smtp_host: "localhost"
 smtp_port: 1025
 smtp_sender: "dev@example.com"
