@@ -19,7 +19,13 @@
         owner: root
         group: root
         mode: "0644"
-    - name: Setup service
-      shell: |
-        systemctl enable --now caddy
-        systemctl disable --now caddy-api
+    - name: Disable caddy-api service
+      service:
+        name: caddy-api
+        enabled: no
+        state: stopped
+    - name: Setup caddy service
+      service:
+        name: caddy
+        enabled: yes
+        state: reloaded

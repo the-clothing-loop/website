@@ -1,8 +1,8 @@
-# api.clothingloop.org {
-# 	respond "Hello, world!"
-# 	#reverse_proxy 127.0.0.1:8081
-# }
+api.clothingloop.org {
+	respond "Hello, world!"
+	#reverse_proxy 127.0.0.1:8081
+}
 
-vpsnode1.vps.webdock.cloud,api.acc.clothingloop.org {
+vpsnode1.vps.webdock.cloud, api.acc.clothingloop.org {
 	reverse_proxy 127.0.0.1:8082
 }
