@@ -1,4 +1,4 @@
-name: Deploy Server v2
+name: Deploy Server Acceptance v2
 on:
   workflow_dispatch:
   push:
