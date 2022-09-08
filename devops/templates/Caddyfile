@@ -6,3 +6,8 @@ api.clothingloop.org {
 vpsnode1.vps.webdock.cloud, api.acc.clothingloop.org {
 	reverse_proxy 127.0.0.1:8082
 }
+
+acc.clothingloop.org {
+	root * /var/caddy/acc.clothingloop.org/public_html
+	file_server
+}
