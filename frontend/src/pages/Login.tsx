@@ -34,7 +34,7 @@ const Login = () => {
     if (!submitted) {
       try {
         const continueUrl = `${
-          process.env.REACT_APP_BASE_DOMAIN
+          process.env.REACT_APP_BASE_URL
         }/users/login-email-finished/${encodeURI(data.email)}`;
         await loginEmail(data.email);
         setSubmitted(true);
