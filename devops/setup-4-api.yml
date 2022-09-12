@@ -8,11 +8,6 @@
         shell: /bin/bash
         createhome: yes
         home: /home/clothingloop
-    - name: Add group to user admin
-      user:
-        name: admin
-        groups: clothingloop
-        append: yes
     - name: Add user opt directory
       file:
         path: "/home/clothingloop/opt"
