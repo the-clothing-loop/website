@@ -60,7 +60,6 @@ jobs:
             mkdir /home/admin/cl-fe-acceptance || :
             cd /home/admin/cl-fe-acceptance; tar xzf ../cl-fe-acceptance.tar.gz .
             sudo chown -R caddy:caddy /home/admin/cl-fe-acceptance/build
-            sudo rm -rf /var/caddy/acc.clothingloop.org/{.*,*} || :
-            sudo mv /home/admin/cl-fe-acceptance/build/{.*,*} /var/caddy/acc.clothingloop.org || :
-            sudo systemctl restart app-acceptance
+            sudo mv -f /home/admin/cl-fe-acceptance/build/{.*,*} /var/caddy/acc.clothingloop.org || :
+            sudo systemctl reload caddy
             sudo rm -rf /home/admin/cl-fe-acceptance.tar.gz /home/admin/cl-fe-acceptance
