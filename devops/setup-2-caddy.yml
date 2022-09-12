@@ -26,7 +26,7 @@
         state: stopped
     - name: Create caddy server files
       file:
-        path: "{{ item}}"
+        path: "{{ item }}"
         recurse: yes
         state: directory
         mode: "0775"
