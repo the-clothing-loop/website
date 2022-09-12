@@ -54,13 +54,12 @@ jobs:
           host: vpsnode1.vps.webdock.cloud
           user: admin
           key: ${{ secrets.VPS1_PRIVKEY }}
-          first_ssh: |
           scp: |
             ./frontend/cl-fe-acceptance.tar.gz => /home/admin/
           last_ssh: |
-            mkdir /home/admin/cl-fe-acceptance
+            mkdir /home/admin/cl-fe-acceptance || :
             cd /home/admin/cl-fe-acceptance; tar xzf ../cl-fe-acceptance.tar.gz .
             sudo chown -R caddy:caddy /home/admin/cl-fe-acceptance/build
-            sudo mv /home/admin/cl-fe-acceptance/build /var/caddy/acc.clothingloop.org
+            sudo mv /home/admin/cl-fe-acceptance/build/{.*,*} /var/caddy/acc.clothingloop.org || :
             sudo systemctl restart app-acceptance
-            sudo rm -rf /home/admin/cl-fe-acceptance.tar.gz
+            sudo rm -rf /home/admin/cl-fe-acceptance.tar.gz /home/admin/cl-fe-acceptance
