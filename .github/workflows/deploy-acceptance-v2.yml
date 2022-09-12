@@ -19,7 +19,7 @@ jobs:
         run: make build-server
         working-directory: ./server
       - name: Rename binary
-        run: rm server cl-api-acceptance
+        run: mv server cl-api-acceptance
         working-directory: ./server
       - name: Send binary to vps and restart service
         uses: cross-the-world/ssh-scp-ssh-pipelines@latest
