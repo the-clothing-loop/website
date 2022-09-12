@@ -46,7 +46,7 @@ jobs:
         run: npm run build:acceptance
         working-directory: ./frontend
       - name: Tar public files
-        run: tar czf cl-fe-acceptance.tar.gz build
+        run: tar czf cl-fe-acceptance.tar.gz ./build
         working-directory: ./frontend
       - name: Send public files to vps
         uses: cross-the-world/ssh-scp-ssh-pipelines@latest
