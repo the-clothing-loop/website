@@ -8,6 +8,6 @@ vpsnode1.vps.webdock.cloud, api.acc.clothingloop.org {
 }
 
 acc.clothingloop.org {
-	root * /var/caddy/acc.clothingloop.org/public_html
+	root * /var/caddy/acc.clothingloop.org
 	file_server
 }
