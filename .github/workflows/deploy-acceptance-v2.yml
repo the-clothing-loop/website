@@ -27,7 +27,7 @@ jobs:
           scp: |
             ./server/server => /home/admin/app-acceptance/
           last_ssh: |
-            sudo chown -R root:root /home/admin/app-acceptance/server
+            sudo chown root:root /home/admin/app-acceptance/server
             sudo mv /home/admin/app-acceptance/server /opt/app-acceptance
             sudo systemctl restart app-acceptance
   deploy-frontend:
