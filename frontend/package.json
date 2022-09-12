@@ -67,6 +67,8 @@
     "lint": "prettier --write .",
     "lint:test": "prettier --check .",
     "build": "react-scripts build",
+    "build:acceptance": "cp .env-acceptance .env; npm run build",
+    "build:production": "cp .env-production .env; npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

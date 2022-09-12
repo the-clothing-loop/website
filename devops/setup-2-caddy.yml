@@ -24,6 +24,17 @@
         name: caddy-api
         enabled: no
         state: stopped
+    - name: Create caddy server files
+      file:
+        path: "{{ item }}"
+        recurse: yes
+        state: directory
+        mode: "0775"
+        group: "caddy"
+        owner: "caddy"
+      with_items:
+        - "/var/caddy/acc.clothingloop.org"
+        # - "/var/caddy/clothingloop.org"
     - name: Setup caddy service
       service:
         name: caddy

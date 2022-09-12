@@ -30,3 +30,28 @@ jobs:
             sudo chown root:root /home/admin/app-acceptance/server
             sudo mv /home/admin/app-acceptance/server /opt/app-acceptance
             sudo systemctl restart app-acceptance
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Dependencies Frontend
+        run: npm ci
+        working-directory: ./frontend
+      - name: Build public files
+        run: npm run build:acceptance
+        working-directory: ./frontend
+      - name: Send public files to vps
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        with:
+          host: vpsnode1.vps.webdock.cloud
+          user: admin
+          key: ${{ secrets.VPS1_PRIVKEY }}
+          first_ssh: |
+            sudo rm -r /home/admin/frontend-acceptance || :
+          scp: |
+            ./frontend/build => /home/admin/frontend-acceptance
+          last_ssh: |
+            sudo chown -R caddy:caddy frontend-acceptance
+            sudo mv app-acceptance /var/caddy/acc.clothingloop.org
+            sudo systemctl restart app-acceptance
