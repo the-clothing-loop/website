@@ -18,6 +18,9 @@ jobs:
       - name: Build binary
         run: make build-server
         working-directory: ./server
+      - name: Rename binary
+        run: rm server cl-api-acceptance
+        working-directory: ./server
       - name: Send binary to vps and restart service
         uses: cross-the-world/ssh-scp-ssh-pipelines@latest
         with:
@@ -25,11 +28,12 @@ jobs:
           user: admin
           key: ${{ secrets.VPS1_PRIVKEY }}
           scp: |
-            ./server/server => /home/admin/app-acceptance/
+            ./server/cl-api-acceptance => /home/admin/
           last_ssh: |
-            sudo chown root:root /home/admin/app-acceptance/server
-            sudo mv /home/admin/app-acceptance/server /opt/app-acceptance
-            sudo systemctl restart app-acceptance
+            sudo chown root:root /home/admin/cl-api-acceptance
+            sudo chmod 0775 /home/admin/cl-api-acceptance
+            sudo mv /home/admin/cl-api-acceptance /home/clothingloop/opt/api-acceptance
+            sudo systemctl restart cl-api-acceptance
   deploy-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -41,6 +45,9 @@ jobs:
       - name: Build public files
         run: npm run build:acceptance
         working-directory: ./frontend
+      - name: Tar public files
+        run: tar czf cl-fe-acceptance.tar.gz build
+        working-directory: ./frontend
       - name: Send public files to vps
         uses: cross-the-world/ssh-scp-ssh-pipelines@latest
         with:
@@ -48,10 +55,12 @@ jobs:
           user: admin
           key: ${{ secrets.VPS1_PRIVKEY }}
           first_ssh: |
-            sudo rm -r /home/admin/frontend-acceptance || :
           scp: |
-            ./frontend/build => /home/admin/frontend-acceptance
+            ./frontend/cl-fe-acceptance.tar.gz => /home/admin/
           last_ssh: |
-            sudo chown -R caddy:caddy frontend-acceptance
-            sudo mv app-acceptance /var/caddy/acc.clothingloop.org
+            mkdir /home/admin/cl-fe-acceptance
+            cd /home/admin/cl-fe-acceptance; tar xzf ../cl-fe-acceptance.tar.gz .
+            sudo chown -R caddy:caddy /home/admin/cl-fe-acceptance/build
+            sudo mv /home/admin/cl-fe-acceptance/build /var/caddy/acc.clothingloop.org
             sudo systemctl restart app-acceptance
+            sudo rm -rf /home/admin/cl-fe-acceptance.tar.gz
