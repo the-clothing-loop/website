@@ -9,15 +9,7 @@ api.clothingloop.org {
 }
 
 vpsnode1.vps.webdock.cloud {
-	log {
-		output file /var/log/caddy/phpmyadmin-error.log
-		format console
-		level ERROR
-	}
-	php_fastcgi unix//run/php/php8.1-fpm.sock
-	root * /var/caddy/phpmyadmin
-	file_server
-	try_files {path} /index.php
+	respond "Hello, world!"
 }
 
 api.acc.clothingloop.org {
