@@ -59,11 +59,11 @@
     - name: Systemd reload
       shell: |
         systemctl daemon-reload
-    # - name: Enable service app production
-    #   service:
-    #     name: app-production
-    #     enabled: yes
-    # - name: Enable service app acceptance
-    #   service:
-    #     name: app-acceptance
-    #     enabled: yes
+    - name: Enable service api production
+      service:
+        name: cl-api-production
+        enabled: yes
+    - name: Enable service api acceptance
+      service:
+        name: cl-api-acceptance
+        enabled: yes
