@@ -1,13 +1,42 @@
 api.clothingloop.org {
+	log {
+		output file /var/log/caddy/api.clothingloop.org-error.log
+		format console
+		level ERROR
+	}
 	respond "Hello, world!"
 	#reverse_proxy 127.0.0.1:8081
 }
 
-vpsnode1.vps.webdock.cloud, api.acc.clothingloop.org {
+vpsnode1.vps.webdock.cloud {
+	log {
+		output file /var/log/caddy/phpmyadmin-error.log
+		format console
+		level ERROR
+	}
+	php_fastcgi unix//run/php/php8.1-fpm.sock
+	root * /var/caddy/phpmyadmin
+	file_server
+	try_files {path} /index.php
+}
+
+api.acc.clothingloop.org {
+	log {
+		output file /var/log/caddy/api.acc.clothingloop.org-error.log
+		format console
+		level ERROR
+	}
 	reverse_proxy 127.0.0.1:8082
 }
 
 acc.clothingloop.org {
+	log {
+		output file /var/log/caddy/acc.clothingloop.org-error.log
+		format console
+		level ERROR
+	}
 	root * /var/caddy/acc.clothingloop.org
 	file_server
+	encode zstd gzip
+	try_files {path} /index.html
 }

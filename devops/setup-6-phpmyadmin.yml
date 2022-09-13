@@ -1,0 +1,39 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Install zip
+      apt:
+        pkg:
+          - zip
+          - unzip
+          - curl
+    - name: Download PhpMyAdmin
+      become_user: admin
+      shell: |
+        cd /home/admin
+        echo "e1d373e720ed402087ed5691b7a1935eea39af30eac66a58e6a791e648167b06 phpmyadmin.zip" > phpmyadmin.zip.sha256sum
+        curl -o phpmyadmin.zip https://files.phpmyadmin.net/phpMyAdmin/5.2.0/phpMyAdmin-5.2.0-all-languages.zip
+        sha256sum -c phpmyadmin.zip.sha256sum && unzip phpmyadmin.zip
+    - name: Check if unzipped phpmyadmin files exist
+      stat:
+        path: /home/admin/phpMyAdmin-5.2.0-all-languages/
+      register: phpmyadmin_files
+    - name: Fail if unzipped phpmyadmin files do not exist
+      when: phpmyadmin_files.stat.exists == False
+      fail:
+        msg: "Unzipped phpmyadmin files do not exist"
+    - name: Install PhpMyAdmin
+      shell: |
+        cd /home/admin
+        sudo chmod -R 0775 phpMyAdmin-5.2.0-all-languages
+        sudo chown -R caddy:caddy phpMyAdmin-5.2.0-all-languages
+        sudo rm -rf /var/caddy/phpmyadmin/{.*,*} || :
+        sudo mv -f phpMyAdmin-5.2.0-all-languages/* /var/caddy/phpmyadmin/
+        rm -rf phpmyadmin.zip.sha256sum phpmyadmin.zip phpMyAdmin-5.2.0-all-languages
+    - name: Set config
+      template:
+        src: templates/phpmyadmin.config.php
+        dest: /var/caddy/phpmyadmin/config.inc.php
+        owner: caddy
+        group: caddy
+        mode: "0770"

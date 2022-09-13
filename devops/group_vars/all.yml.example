@@ -2,3 +2,4 @@ ansible_become_pass:
 mysql_root_password:
 mysql_cl_acceptance_password:
 mysql_cl_production_password:
+pma_blowfish: 
