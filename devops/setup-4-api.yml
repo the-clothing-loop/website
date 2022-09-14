@@ -16,6 +16,14 @@
         mode: "0775"
         group: "clothingloop"
         owner: "clothingloop"
+    - name: Add log directory
+      file:
+        path: "/var/log/clothingloop-api"
+        recurse: no
+        state: directory
+        mode: "0775"
+        group: "clothingloop"
+        owner: "clothingloop"
     - name: Add config for acceptance
       template:
         src: templates/config.acceptance.yml

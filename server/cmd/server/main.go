@@ -17,7 +17,7 @@ func main() {
 	router := server.Routes()
 
 	err := http.ListenAndServe(fmt.Sprintf("%s:%d", app.Config.HOST, app.Config.PORT), router)
-	if err != nil {
+	if err != http.ErrServerClosed {
 		panic(fmt.Errorf("error listen and serve: %s", err))
 	}
 }
