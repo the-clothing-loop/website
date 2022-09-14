@@ -36,37 +36,42 @@ func Routes() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(controllers.MiddlewareSetDB(db))
 
-	// v1 router group
-	v1 := r.Group("/v1")
+	// router groups
+	v2 := r.Group("/v2")
+
+	// ping
+	v2.Any("/ping", func(c *gin.Context) {
+		c.String(200, "pong")
+	})
 
 	// login
-	v1.POST("/register/basic-user", controllers.RegisterBasicUser)
-	v1.POST("/register/chain-admin", controllers.RegisterChainAdmin)
-	v1.POST("/login/email", controllers.LoginEmail)
-	v1.GET("/login/validate", controllers.LoginValidate)
-	v1.DELETE("/logout", controllers.Logout)
+	v2.POST("/register/basic-user", controllers.RegisterBasicUser)
+	v2.POST("/register/chain-admin", controllers.RegisterChainAdmin)
+	v2.POST("/login/email", controllers.LoginEmail)
+	v2.GET("/login/validate", controllers.LoginValidate)
+	v2.DELETE("/logout", controllers.Logout)
 
 	// payments
-	v1.POST("/payment/initiate", controllers.PaymentsInitiate)
-	v1.POST("/payment/webhook", controllers.PaymentsWebhook)
+	v2.POST("/payment/initiate", controllers.PaymentsInitiate)
+	v2.POST("/payment/webhook", controllers.PaymentsWebhook)
 
 	// user
-	v1.GET("/user", controllers.UserGet)
-	v1.GET("/user/all-chain", controllers.UserGetAllOfChain)
-	v1.PATCH("/user", controllers.UserUpdate)
-	v1.DELETE("/user", controllers.UserDelete)
+	v2.GET("/user", controllers.UserGet)
+	v2.GET("/user/all-chain", controllers.UserGetAllOfChain)
+	v2.PATCH("/user", controllers.UserUpdate)
+	v2.DELETE("/user", controllers.UserDelete)
 
 	// chain
-	v1.GET("/chain", controllers.ChainGet)
-	v1.GET("/chain/all", controllers.ChainGetAll)
-	v1.PATCH("/chain", controllers.ChainUpdate)
-	v1.POST("/chain", controllers.ChainCreate)
-	v1.POST("/chain/add-user", controllers.ChainAddUser)
-	v1.POST("/chain/remove-user", controllers.ChainRemoveUser)
+	v2.GET("/chain", controllers.ChainGet)
+	v2.GET("/chain/all", controllers.ChainGetAll)
+	v2.PATCH("/chain", controllers.ChainUpdate)
+	v2.POST("/chain", controllers.ChainCreate)
+	v2.POST("/chain/add-user", controllers.ChainAddUser)
+	v2.POST("/chain/remove-user", controllers.ChainRemoveUser)
 
 	// contact
-	v1.POST("/contact/newsletter", controllers.ContactNewsletter)
-	v1.POST("/contact/email", controllers.ContactMail)
+	v2.POST("/contact/newsletter", controllers.ContactNewsletter)
+	v2.POST("/contact/email", controllers.ContactMail)
 
 	return r
 }
