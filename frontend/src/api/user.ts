@@ -11,17 +11,17 @@ export function userGetByUID(chainUID: string | null, userUID: string) {
     params.chain_uid = chainUID;
   }
 
-  return axios.get<User>("/v1/user", { params });
+  return axios.get<User>("/v2/user", { params });
 }
 
 export function userGetAllByChain(chainUID: string) {
-  return axios.get<User[]>("/v1/user/all-chain", {
+  return axios.get<User[]>("/v2/user/all-chain", {
     params: { chain_uid: chainUID },
   });
 }
 
 export function userGetByEmail(chainUID: string, email: string) {
-  return axios.get<User>("/v1/user", {
+  return axios.get<User>("/v2/user", {
     params: {
       chain_uid: chainUID,
       email: email,
@@ -37,11 +37,11 @@ export interface UserUpdateBody {
   address?: string;
 }
 export function userUpdate(user: UserUpdateBody) {
-  return axios.patch("/v1/user", user);
+  return axios.patch("/v2/user", user);
 }
 
 export function userAddAsChainAdmin(chainUID: string, userUID: string) {
-  return axios.post("/v1/user/add-as-chain-admin", {
+  return axios.post("/v2/user/add-as-chain-admin", {
     user_uid: userUID,
     chain_uid: chainUID,
   });

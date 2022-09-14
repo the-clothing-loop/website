@@ -24,5 +24,5 @@ interface PaymentInitiateResponse {
 
 // TODO: add end point in server
 export function paymentInitiate(body: PaymentInitiateBody) {
-  return axios.post<PaymentInitiateResponse>("/v1/payment/initiate", body);
+  return axios.post<PaymentInitiateResponse>("/v2/payment/initiate", body);
 }

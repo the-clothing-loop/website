@@ -25,15 +25,15 @@ export function registerChainAdmin(
   user: RequestRegisterUser,
   chain: RequestRegisterChain
 ) {
-  return axios.post("/v1/register/chain-admin", { user, chain });
+  return axios.post("/v2/register/chain-admin", { user, chain });
 }
 
 export function registerBasicUser(user: RequestRegisterUser) {
-  return axios.post("/v1/register/basic-user", { user });
+  return axios.post("/v2/register/basic-user", { user });
 }
 
 export function loginEmail(email: string) {
-  return axios.post("/v1/login/email", { email });
+  return axios.post("/v2/login/email", { email });
 }
 
 export function loginValidate(key: string) {
@@ -41,5 +41,5 @@ export function loginValidate(key: string) {
 }
 
 export function logout() {
-  return axios.delete("/v1/logout");
+  return axios.delete("/v2/logout");
 }
