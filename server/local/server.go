@@ -1,6 +1,11 @@
 package local
 
 import (
+	"fmt"
+	"io"
+	"log"
+	"os"
+
 	"github.com/CollActionteam/clothing-loop/server/local/app"
 	"github.com/CollActionteam/clothing-loop/server/local/controllers"
 	"github.com/gin-gonic/gin"
@@ -12,8 +17,16 @@ func Routes() *gin.Engine {
 	app.MailInit()
 
 	// set gin mode
-	if app.Config.ENV == app.EnvEnumProduction {
+	if app.Config.ENV == app.EnvEnumProduction || app.Config.ENV == app.EnvEnumAcceptance {
 		gin.SetMode(gin.ReleaseMode)
+
+		// create log file if does not exist and write to it
+		logFilePath := fmt.Sprintf("/var/log/clothingloop-api/%s.log", app.Config.ENV)
+		f, err := os.Create(logFilePath)
+		if err != nil {
+			log.Fatal("could not create log file at '%s'", logFilePath)
+		}
+		gin.DefaultWriter = io.MultiWriter(f)
 	} else {
 		gin.SetMode(gin.DebugMode)
 	}
