@@ -14,7 +14,7 @@ import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import { User } from "../api/types";
-import { Sizes } from "../api/enums";
+import { SizeI18nKeys, Sizes } from "../api/enums";
 
 const useStyles = makeStyles(theme as any);
 
@@ -84,9 +84,9 @@ export const ChainParticipantsTable = ({
                   {columns.map(({ propertyName }) => {
                     let text = propertyName as string;
                     if (propertyName === "sizes") {
-                      text = u[propertyName]
-                        .filter((v) => Sizes[v])
-                        .map((v) => Sizes[v])
+                      text = u.sizes
+                        .filter((v) => Object.hasOwn(SizeI18nKeys, v))
+                        .map((v) => SizeI18nKeys[v])
                         .join(", ");
                     }
                     return <BorderlessTableCell>{text}</BorderlessTableCell>;

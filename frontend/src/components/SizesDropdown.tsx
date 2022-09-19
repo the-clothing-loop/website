@@ -17,11 +17,13 @@ import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import categories from "../util/categories";
+import { Genders } from "../api/enums";
 
 interface IProps {
   variant: "outlined" | "standard";
   showInputLabel: boolean;
   label: string;
+  // gender enum
   genders: string[];
   sizes: string[];
   handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
@@ -103,7 +105,7 @@ const SizesDropdown: React.FC<IProps> = ({
           <MenuItem
             key={value}
             value={value}
-            disabled={!genders.includes("children") && !!genders.length}
+            disabled={!genders.includes(Genders.children) && !!genders.length}
             classes={{
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,

@@ -39,7 +39,7 @@ import { Chain } from "../api/types";
 
 // Media
 import RightArrow from "../images/right-arrow-white.svg";
-import { Genders, Sizes } from "../api/enums";
+import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
 import { chainAddUser } from "../api/chain";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
@@ -357,7 +357,7 @@ const FindChain = ({ location }: { location: Location }) => {
                       ? selectedChain.genders.map((gender, i) => {
                           return (
                             <Typography component="p" key={i}>
-                              {t(Genders[gender])}
+                              {t(GenderI18nKeys[gender])}
                             </Typography>
                           );
                         })
@@ -369,7 +369,7 @@ const FindChain = ({ location }: { location: Location }) => {
                       ? selectedChain.sizes.map((size, i) => {
                           return (
                             <Typography key={i} component="p">
-                              {t(Sizes[size])}
+                              {t(SizeI18nKeys[size])}
                             </Typography>
                           );
                         })

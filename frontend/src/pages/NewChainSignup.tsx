@@ -56,6 +56,7 @@ const Signup = () => {
       .max(15)
       .required(t("pleaseEnterAValid.phoneNumber")),
     address: Yup.string().default(""),
+    newsletter: Yup.boolean().default(false),
   } as Record<keyof RegisterUserForm, any>);
 
   if (registerUser) {
@@ -102,6 +103,7 @@ const Signup = () => {
           name: "",
           email: "",
           phone_number: "",
+          newsletter: true,
         }}
         validationSchema={validate}
         validateOnChange={false}

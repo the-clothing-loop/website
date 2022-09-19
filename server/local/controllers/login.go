@@ -102,13 +102,7 @@ func RegisterChainAdmin(c *gin.Context) {
 
 	var body struct {
 		Chain ChainCreateRequestBody `json:"chain" binding:"required"`
-		User  struct {
-			Email       string   `json:"email" binding:"required"`
-			Name        string   `json:"name" binding:"required"`
-			PhoneNumber string   `json:"phone_number"`
-			Address     string   `json:"address"`
-			Sizes       []string `json:"sizes"`
-		} `json:"user" binding:"required"`
+		User  UserCreateRequestBody  `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		boom.BadRequest(c.Writer, err)
@@ -169,18 +163,11 @@ func RegisterBasicUser(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		ChainUID string `json:"chain_uid" binding:"uuid,required"`
-		User     struct {
-			Email       string   `json:"email" binding:"required"`
-			Name        string   `json:"name" binding:"required"`
-			Address     string   `json:"address"`
-			PhoneNumber string   `json:"phone_number" binding:"required"`
-			Newsletter  bool     `json:"newsletter" binding:"required"`
-			Sizes       []string `json:"sizes"`
-		} `json:"user" binding:"required"`
+		ChainUID string                `json:"chain_uid" binding:"uuid,required"`
+		User     UserCreateRequestBody `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		boom.BadRequest(c.Writer)
+		boom.BadRequest(c.Writer, err)
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
@@ -189,10 +176,16 @@ func RegisterBasicUser(c *gin.Context) {
 	}
 
 	var chainID uint
-	db.Raw("SELECT id FROM chain WHERE uid = ? LIMIT 1", body.ChainUID).Scan(&chainID)
-	if chainID == 0 {
-		boom.BadData(c.Writer, "chain_uid does not exist")
-		return
+	{
+		var row struct {
+			ID uint `gorm:"id"`
+		}
+		db.Raw("SELECT id FROM chains WHERE uid = ? LIMIT 1", body.ChainUID).Scan(&row)
+		chainID = row.ID
+		if chainID == 0 {
+			boom.BadData(c.Writer, "chain_uid does not exist")
+			return
+		}
 	}
 
 	user := &models.User{

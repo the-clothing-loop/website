@@ -45,7 +45,12 @@ const TextFormField = ({ name, inputRef, email }: TextFormFieldProps) => {
   );
 };
 
-const PhoneFormField = ({ label, ...props }: MuiPhoneNumberProps) => {
+const PhoneFormField = ({
+  label,
+  ...props
+}: Omit<MuiPhoneNumberProps, "onChange"> & {
+  onChange?: (s: string) => void;
+}) => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
 

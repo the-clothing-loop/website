@@ -60,7 +60,17 @@ const NewChainLocation = ({ location }: { location: any }) => {
     } else {
       console.log(`creating user: ${JSON.stringify(user)}`);
       try {
-        await registerChainAdmin(user, newChain);
+        await registerChainAdmin(
+          {
+            name: user.name,
+            email: user.email,
+            address: user.address,
+            phone_number: user.phone_number,
+            newsletter: false,
+            sizes: user.sizes,
+          },
+          newChain
+        );
         setSubmitted(true);
       } catch (e: any) {
         console.error(`Error creating user: ${JSON.stringify(e)}`);

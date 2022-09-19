@@ -27,7 +27,7 @@ import {
   ChainUpdateBody,
 } from "../api/chain";
 import { Chain, User } from "../api/types";
-import { Genders, Sizes } from "../api/enums";
+import { GenderI18nKeys, Genders, SizeI18nKeys, Sizes } from "../api/enums";
 import { userGetAllByChain } from "../api/user";
 
 interface Params {
@@ -162,12 +162,16 @@ const ChainMemberList = () => {
                 <Field title="Categories">
                   {chain?.genders &&
                     chain?.genders
-                      .map((gender, i) => `${Genders[gender]}'S CLOTHING`)
+                      .map(
+                        (gender, i) => `${GenderI18nKeys[gender]}'S CLOTHING`
+                      )
                       .join(" / ")}
                 </Field>
                 <Field title="Sizes">
                   {chain?.sizes &&
-                    chain?.sizes.map((size, i) => t(Sizes[size])).join(" / ")}
+                    chain?.sizes
+                      .map((size, i) => t(SizeI18nKeys[size]))
+                      .join(" / ")}
                 </Field>
                 <Field title="Participants">{`${users.length} ${
                   users.length === 1 ? "person" : "people"

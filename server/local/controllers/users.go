@@ -10,6 +10,15 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+type UserCreateRequestBody struct {
+	Email       string   `json:"email" binding:"required"`
+	Name        string   `json:"name" binding:"required"`
+	Address     string   `json:"address"`
+	PhoneNumber string   `json:"phone_number" binding:"required"`
+	Newsletter  bool     `json:"newsletter"`
+	Sizes       []string `json:"sizes"`
+}
+
 func UserGet(c *gin.Context) {
 	db := getDB(c)
 

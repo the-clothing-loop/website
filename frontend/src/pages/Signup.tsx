@@ -25,6 +25,7 @@ import JoinLoopImg from "../images/Join-Loop.jpg";
 import { Chain } from "../api/types";
 import { chainGet } from "../api/chain";
 import { registerBasicUser, RequestRegisterUser } from "../api/login";
+import { Sizes } from "../api/enums";
 
 interface Params {
   chainUID: string;
@@ -75,13 +76,21 @@ const Signup = () => {
     // TODO: allow only full addresses
 
     try {
-      let user: RequestRegisterUser = {
-        ...formData,
-        address: geocoderResult.result.place_name,
-        interestedSizes: selectedSizes,
-      };
-      console.log(`creating user: ${JSON.stringify(user)}`);
-      await registerBasicUser(user);
+      const sizeEnums = selectedSizes
+        .filter((s) => Object.hasOwn(Sizes, s))
+        //@ts-ignore
+        .map((s) => Sizes[s] as string);
+      await registerBasicUser(
+        {
+          name: formData.name,
+          email: formData.email,
+          phone_number: formData.phoneNumber,
+          address: geocoderResult.result.place_name,
+          newsletter: formData.newsletter,
+          sizes: sizeEnums,
+        },
+        chainUID
+      );
       setSubmitted(true);
     } catch (e: any) {
       console.error(`Error creating user: ${JSON.stringify(e)}`);
@@ -147,9 +156,9 @@ const Signup = () => {
                     <PhoneFormField
                       label={t("phoneNumber")}
                       name="phoneNumber"
-                      onChange={(e) =>
-                        formik.setFieldValue("phoneNumber", e as string)
-                      }
+                      onChange={(e) => {
+                        formik.setFieldValue("phoneNumber", e as string);
+                      }}
                     />
 
                     <GeocoderSelector

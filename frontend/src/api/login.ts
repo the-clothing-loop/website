@@ -4,8 +4,9 @@ import { User } from "./types";
 export interface RequestRegisterUser {
   name: string;
   email: string;
-  phone_number: string;
   address: string;
+  phone_number: string;
+  newsletter: boolean;
   sizes: string[] | null;
 }
 
@@ -28,8 +29,8 @@ export function registerChainAdmin(
   return axios.post("/v2/register/chain-admin", { user, chain });
 }
 
-export function registerBasicUser(user: RequestRegisterUser) {
-  return axios.post("/v2/register/basic-user", { user });
+export function registerBasicUser(user: RequestRegisterUser, chainUID: string) {
+  return axios.post("/v2/register/basic-user", { user, chain_uid: chainUID });
 }
 
 export function loginEmail(email: string) {
