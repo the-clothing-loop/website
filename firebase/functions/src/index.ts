@@ -109,13 +109,6 @@ export const createUser = functions
       data.interestedSizes,
       data.address,
     ];
-    const chain = await db.collection("chains").doc(chainId).get();
-    if (chain.get("openToNewMembers") === false) {
-      throw new functions.https.HttpsError(
-        "failed-precondition",
-        "This loop is not currently open to new members"
-      );
-    }
     let userRecord = null as null | UserRecord;
     try {
       userRecord = await wrapInECMAPromise<UserRecord>(() =>
@@ -237,7 +230,6 @@ export const createChain = functions
         categories,
         published: true,
         chainAdmin: uid,
-        openToNewMembers: true,
       });
       db.collection("users").doc(uid).update("chainId", chainData.id);
       await admin.auth().setCustomUserClaims(uid, {
@@ -264,17 +256,10 @@ export const addUserToChain = functions
     if (context.auth?.uid === uid || context.auth?.token?.role === ROLE_ADMIN) {
       const userReference = db.collection("users").doc(uid);
       const user = await userReference.get();
-      const chain = await db.collection("chains").doc(chainId).get();
 
       if (user.get("chainId") === chainId) {
         functions.logger.warn(
           `user ${uid} is already member of chain ${chainId}`
-        );
-        // the "openToNewMembers" field may not be set in which case we should treat it as if it were true
-      } else if (chain.get("openToNewMembers") === false) {
-        throw new functions.https.HttpsError(
-          "failed-precondition",
-          "This loop is not currently open to new members"
         );
       } else {
         await userReference.update("chainId", chainId);

@@ -8,10 +8,9 @@ import { useState } from "react";
 
 interface IProps {
   message: string;
-  style?: any;
 }
 
-const PopoverOnHover: React.FC<IProps> = ({ message, style = {} }: IProps) => {
+const PopoverOnHover: React.FC<IProps> = ({ message }: IProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const classes = makeStyles(theme as any)();
@@ -27,7 +26,7 @@ const PopoverOnHover: React.FC<IProps> = ({ message, style = {} }: IProps) => {
   const open = Boolean(anchorEl);
 
   return (
-    <div className={classes.popoverWrapper} style={style}>
+    <div className={classes.popoverWrapper}>
       <Typography
         aria-owns={open ? "mouse-over-popover" : undefined}
         aria-haspopup="true"

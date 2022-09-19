@@ -77,7 +77,9 @@ const ChainEdit = () => {
           >
             {t("editLoopInformation")}
           </Typography>
-
+          <Typography className="formSubtitle">
+            {t("clickToChangeLoopLocation")}
+          </Typography>
           <ChainDetailsForm
             onSubmit={handleSubmit}
             submitError={submitError}

@@ -482,10 +482,6 @@ const theme = {
     "& p#description": {
       margin: "0",
     },
-    "& p#loopFull": {
-      margin: "0",
-      paddingTop: "1rem",
-    },
 
     "& div#categories-container, div#sizes-container": {
       display: "flex",
