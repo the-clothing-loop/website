@@ -41,7 +41,6 @@ const Signup = () => {
   });
   const [error, setError] = useState("");
   const classes = makeStyles(theme as any)();
-  const [chainGender, setChainGender] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
   const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
@@ -61,11 +60,10 @@ const Signup = () => {
   useEffect(() => {
     (async () => {
       if (chainUID) {
-        const chain = (await chainGet(chainUID)).data;
-        if (chain !== undefined) {
+        try {
+          const chain = (await chainGet(chainUID)).data;
           setChain(chain);
-          setChainGender(chain.genders || []);
-        } else {
+        } catch (e) {
           console.error(`chain ${chainUID} does not exist`);
         }
       }
@@ -164,7 +162,7 @@ const Signup = () => {
                         variant="standard"
                         showInputLabel={false}
                         label={t("interestedSizes")}
-                        genders={chainGender}
+                        genders={chain?.genders || []}
                         sizes={selectedSizes}
                         handleSelectedCategoriesChange={setSelectedSizes}
                       />
