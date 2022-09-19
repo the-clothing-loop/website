@@ -32,7 +32,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		Email:           fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain()),
 		IsEmailVerified: !o.IsEmailUnverified,
 		IsRootAdmin:     o.IsRootAdmin,
-		Name:            "Test " + faker.Person().Name(),
+		Name:            "Fake " + faker.Person().Name(),
 		PhoneNumber:     faker.Person().Contact().Phone,
 		Sizes:           mockSizes(false),
 		Address:         faker.Address().Address(),
@@ -67,7 +67,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (chain *models.Chain, user *models.User, token string) {
 	chain = &models.Chain{
 		UID:              uuid.NewV4().String(),
-		Name:             "Test " + faker.Company().Name(),
+		Name:             "Fake " + faker.Company().Name(),
 		Description:      faker.Company().CatchPhrase(),
 		Address:          faker.Address().Address(),
 		Latitude:         faker.Address().Latitude(),
