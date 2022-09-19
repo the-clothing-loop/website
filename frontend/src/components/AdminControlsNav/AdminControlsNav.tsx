@@ -12,8 +12,6 @@ import theme from "../../util/theme";
 import Img from "../../images/Denise.png";
 import { TwoColumnLayout } from "../Layouts";
 import { AuthContext } from "../AuthProvider";
-import { chainGet } from "../../api/chain";
-import { Chain } from "../../api/types";
 
 const AdminControlsNav = () => {
   const { t } = useTranslation();

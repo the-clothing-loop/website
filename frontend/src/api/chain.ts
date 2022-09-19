@@ -4,13 +4,11 @@ import { RequestRegisterChain } from "./login";
 
 export function chainGet(chainUID: UID) {
   return axios.get<Chain>("/v2/chain", {
-    body: { chain_uid: chainUID },
+    params: { chain_uid: chainUID },
   });
 }
 export function chainGetAll() {
-  return axios.get<Chain[]>("/v2/chain/all", {
-    body: {},
-  });
+  return axios.get<Chain[]>("/v2/chain/all");
 }
 
 export function chainCreate(chain: RequestRegisterChain) {

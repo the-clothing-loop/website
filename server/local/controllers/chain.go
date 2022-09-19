@@ -75,21 +75,16 @@ func ChainCreate(c *gin.Context) {
 func ChainGet(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		ChainUID string `json:"chain_uid" binding:"required"`
+	var query struct {
+		ChainUID string `form:"chain_uid" binding:"required"`
 	}
-	if err := c.ShouldBindJSON(&body); err != nil {
+	if err := c.ShouldBindQuery(&query); err != nil {
 		boom.BadRequest(c.Writer, err)
 		return
 	}
 
-	ok, _, _ := auth.Authenticate(c, db, models.RoleUser, "")
-	if !ok {
-		return
-	}
-
 	chain := models.Chain{}
-	if res := db.First(&chain, "chains.uid = ?", body.ChainUID); res.Error != nil {
+	if res := db.First(&chain, "chains.uid = ?", query.ChainUID); res.Error != nil {
 		boom.BadRequest(c.Writer, "chain not found")
 		return
 	}
@@ -112,22 +107,20 @@ func ChainGet(c *gin.Context) {
 func ChainGetAll(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		Filter struct {
-			Sizes   []string `json:"sizes"`
-			Genders []string `json:"genders"`
-		} `json:"filter"`
+	var query struct {
+		FilterSizes   []string `form:"filter_sizes"`
+		FilterGenders []string `form:"filter_genders"`
 	}
-	if err := c.ShouldBindJSON(&body); err != nil && err != io.EOF {
+	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
 		boom.BadRequest(c.Writer, err)
 		return
 	}
 
-	if ok := models.ValidateAllSizeEnum(body.Filter.Sizes); !ok {
+	if ok := models.ValidateAllSizeEnum(query.FilterSizes); !ok {
 		boom.BadRequest(c.Writer, models.ErrSizeInvalid)
 		return
 	}
-	if ok := models.ValidateAllGenderEnum(body.Filter.Genders); !ok {
+	if ok := models.ValidateAllGenderEnum(query.FilterGenders); !ok {
 		boom.BadRequest(c.Writer, models.ErrGenderInvalid)
 		return
 	}
@@ -136,25 +129,25 @@ func ChainGetAll(c *gin.Context) {
 	tx := db.Table("chains")
 
 	// filter sizes and genders
-	isGendersEmpty := len(body.Filter.Genders) == 0
-	isSizesEmpty := len(body.Filter.Sizes) == 0
+	isGendersEmpty := len(query.FilterGenders) == 0
+	isSizesEmpty := len(query.FilterSizes) == 0
 	if !isSizesEmpty || !isGendersEmpty {
 		var args []any
 		var whereSql []string
 		if !isSizesEmpty {
-			for _, size := range body.Filter.Sizes {
+			for _, size := range query.FilterSizes {
 				whereSql = append(whereSql, "chains.sizes LIKE ?")
 				args = append(args, fmt.Sprintf("%%%s%%", size))
 			}
 		}
 		if !isGendersEmpty {
-			for _, gender := range body.Filter.Genders {
+			for _, gender := range query.FilterGenders {
 				whereSql = append(whereSql, "chains.genders LIKE ?")
 				args = append(args, fmt.Sprintf("%%%s%%", gender))
 			}
 		}
 
-		tx.Where(strings.Join(whereSql, " OR "), args...)
+		tx.Where(strings.Join(whereSql, " AND "), args...)
 	}
 
 	tx.Where("chains.published = ?", true)
