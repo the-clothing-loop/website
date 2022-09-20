@@ -121,7 +121,7 @@ const Signup = () => {
           initialValues={{
             name: "",
             email: "",
-            phone_number: "",
+            phoneNumber: "",
             newsletter: false,
           }}
           validationSchema={validate}
@@ -155,9 +155,9 @@ const Signup = () => {
 
                     <PhoneFormField
                       label={t("phoneNumber")}
-                      name="phone_number"
+                      name="phoneNumber"
                       onChange={(e) => {
-                        formik.setFieldValue("phone_number", e as string);
+                        formik.setFieldValue("phoneNumber", e as string);
                       }}
                     />
 
