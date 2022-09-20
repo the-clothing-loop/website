@@ -52,7 +52,7 @@ const UserEdit = () => {
   const [userIsAdmin, setUserIsAdmin] = useState(false);
   const [userIsChainAdmin, setUserIsChainAdmin] = useState(false);
 
-  const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
+  const phoneRegExp = /^\+?\(?[0-9]{1,3}\)?[-\s\./0-9]+$/g;
 
   const validate = Yup.object({
     name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),

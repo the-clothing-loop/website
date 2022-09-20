@@ -1,4 +1,5 @@
 import axios from "./axios";
+import { Sizes } from "./enums";
 import { User } from "./types";
 
 export interface RequestRegisterUser {
@@ -7,7 +8,7 @@ export interface RequestRegisterUser {
   address: string;
   phone_number: string;
   newsletter: boolean;
-  sizes: string[] | null;
+  sizes: Array<Sizes | string>;
 }
 
 export interface RequestRegisterChain {
@@ -18,8 +19,8 @@ export interface RequestRegisterChain {
   longitude: number;
   radius: number;
   open_to_new_members: boolean;
-  sizes: string[] | null;
-  genders: string[] | null;
+  sizes: Array<Sizes | string> | null;
+  genders: Array<Sizes | string> | null;
 }
 
 export function registerChainAdmin(

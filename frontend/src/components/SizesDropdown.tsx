@@ -17,7 +17,7 @@ import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import categories from "../util/categories";
-import { Genders } from "../api/enums";
+import { Genders, SizeI18nKeys } from "../api/enums";
 
 interface IProps {
   variant: "outlined" | "standard";
@@ -94,29 +94,26 @@ const SizesDropdown: React.FC<IProps> = ({
               </Typography>
             );
           } else {
-            return selected.map(t).join(", ");
+            return selected.map((size) => t(SizeI18nKeys[size])).join(", ");
           }
         }}
       >
         <Typography component="p" className={classes.label}>
           {t("childrenSizes")}
         </Typography>
-        {categories.children.map((value: string) => (
+        {categories[Genders.children].map((size) => (
           <MenuItem
-            key={value}
-            value={value}
+            key={size}
+            value={size}
             disabled={!genders.includes(Genders.children) && !!genders.length}
             classes={{
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,
             }}
           >
-            <Checkbox
-              color="secondary"
-              checked={sizes.includes(value) ? true : false}
-            />
+            <Checkbox color="secondary" checked={sizes.includes(size)} />
             <ListItemText
-              primary={t(value)}
+              primary={t(SizeI18nKeys[size])}
               classes={{
                 primary: classes.listItemTextFontSize,
               }}
@@ -127,22 +124,19 @@ const SizesDropdown: React.FC<IProps> = ({
         <Typography component="p" className={classes.label}>
           {t("womenSizes")}
         </Typography>
-        {categories.women.map((value: string) => (
+        {categories[Genders.women].map((size) => (
           <MenuItem
-            key={value}
-            value={value}
-            disabled={!genders.includes("women") && !!genders.length}
+            key={size}
+            value={size}
+            disabled={!genders.includes(Genders.women) && !!genders.length}
             classes={{
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,
             }}
           >
-            <Checkbox
-              color="secondary"
-              checked={sizes.includes(value) ? true : false}
-            />
+            <Checkbox color="secondary" checked={sizes.includes(size)} />
             <ListItemText
-              primary={t(value)}
+              primary={t(SizeI18nKeys[size])}
               classes={{
                 primary: classes.listItemTextFontSize,
               }}
@@ -153,22 +147,19 @@ const SizesDropdown: React.FC<IProps> = ({
         <Typography component="p" className={classes.label}>
           {t("menSizes")}
         </Typography>
-        {categories.men.map((value: string) => (
+        {categories[Genders.men].map((size) => (
           <MenuItem
-            key={value}
-            value={value}
-            disabled={!genders.includes("men") && !!genders.length}
+            key={size}
+            value={size}
+            disabled={!genders.includes(Genders.men) && !!genders.length}
             classes={{
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,
             }}
           >
-            <Checkbox
-              color="secondary"
-              checked={sizes.includes(value) ? true : false}
-            />
+            <Checkbox color="secondary" checked={sizes.includes(size)} />
             <ListItemText
-              primary={t(value)}
+              primary={t(SizeI18nKeys[size])}
               classes={{
                 primary: classes.listItemTextFontSize,
               }}

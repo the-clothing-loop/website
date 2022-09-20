@@ -44,12 +44,12 @@ const Signup = () => {
   const classes = makeStyles(theme as any)();
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
-  const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
+  const phoneRegExp = /^\+?\(?[0-9]{1,3}\)?[-\s\./0-9]+$/g;
 
   const validate = Yup.object({
     name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
-    phoneNumber: Yup.string()
+    phone_number: Yup.string()
       .matches(phoneRegExp, {
         message: t("pleaseEnterAValid.phoneNumber"),
       })
@@ -121,7 +121,7 @@ const Signup = () => {
           initialValues={{
             name: "",
             email: "",
-            phoneNumber: "",
+            phone_number: "",
             newsletter: false,
           }}
           validationSchema={validate}
@@ -155,9 +155,9 @@ const Signup = () => {
 
                     <PhoneFormField
                       label={t("phoneNumber")}
-                      name="phoneNumber"
+                      name="phone_number"
                       onChange={(e) => {
-                        formik.setFieldValue("phoneNumber", e as string);
+                        formik.setFieldValue("phone_number", e as string);
                       }}
                     />
 

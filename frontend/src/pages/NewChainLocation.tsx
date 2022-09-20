@@ -66,7 +66,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
             email: user.email,
             address: user.address,
             phone_number: user.phone_number,
-            newsletter: false,
+            newsletter: state.register_user?.newsletter || false,
             sizes: user.sizes,
           },
           newChain

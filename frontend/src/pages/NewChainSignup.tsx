@@ -25,7 +25,13 @@ import { State as LoopsNewState } from "./NewChainLocation";
 import RightArrow from "../images/right-arrow-white.svg";
 import { RequestRegisterUser } from "../api/login";
 
-type RegisterUserForm = Omit<RequestRegisterUser, "address" | "sizes">;
+interface RegisterUserForm {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  newsletter: boolean;
+}
 
 const Signup = () => {
   const { t } = useTranslation();
@@ -40,16 +46,14 @@ const Signup = () => {
   );
   const [error, setError] = useState("");
 
-  //Phone Number Validation Format with E.164
-  const phoneRegExp =
-    /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  const phoneRegExp = /^\+?\(?[0-9]{1,3}\)?[-\s\./0-9]+$/g;
 
   const validate = Yup.object({
     name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     email: Yup.string()
       .email(t("pleaseEnterAValid.emailAddress"))
       .required(t("required")),
-    phone_number: Yup.string()
+    phoneNumber: Yup.string()
       .matches(phoneRegExp, {
         message: t("pleaseEnterAValid.phoneNumber"),
       })
@@ -102,17 +106,22 @@ const Signup = () => {
         initialValues={{
           name: "",
           email: "",
-          phone_number: "",
+          phoneNumber: "",
+          address: "",
           newsletter: true,
         }}
         validationSchema={validate}
         validateOnChange={false}
         onSubmit={async (values) => {
           let registerUser: RequestRegisterUser = {
+            name: values.name,
+            email: values.email,
+            phone_number: values.phoneNumber,
             address: geocoderResult.result.place_name,
-            ...values,
+            newsletter: values.newsletter,
             sizes: [],
           };
+          console.log("submit", registerUser);
 
           setRegisterUser(registerUser);
         }}
@@ -208,33 +217,25 @@ const Signup = () => {
                 <PhoneFormField
                   label={t("phoneNumber")}
                   name="phoneNumber"
-                  error={touched.phone_number && Boolean(errors.phone_number)}
+                  error={touched.phoneNumber && Boolean(errors.phoneNumber)}
                   helperText={
-                    errors.phone_number && touched.phone_number
-                      ? errors.phone_number
+                    errors.phoneNumber && touched.phoneNumber
+                      ? errors.phoneNumber
                       : null
                   }
-                  onChange={(e) =>
-                    setFieldValue(
-                      "phoneNumber",
-                      (e as string).replace(/\s/g, "")
-                    )
-                  }
+                  onChange={(e) => setFieldValue("phoneNumber", e)}
                 />
 
                 <GeocoderSelector name="address" onResult={setGeocoderResult} />
                 <FormActions handleClick={handleClickAction} />
 
-                {console.log(error)}
-
-                {error ? <Alert severity="error">{error}</Alert> : null}
+                {error && <Alert severity="error">{error}</Alert>}
                 <div className={classes.formSubmitActions}>
                   <Button
                     type="submit"
                     className={classes.buttonOutlined}
                     onClick={() => history.push("/loops/find")}
                   >
-                    {" "}
                     {t("back")}
                   </Button>
                   <Button type="submit" className={classes.button}>

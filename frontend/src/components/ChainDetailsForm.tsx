@@ -22,6 +22,7 @@ import { Chain } from "../api/types";
 //media
 import RightArrow from "../images/right-arrow-white.svg";
 import { RequestRegisterChain } from "../api/login";
+import { Genders, Sizes } from "../api/enums";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
@@ -90,12 +91,12 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
     return onSubmit(values);
   };
 
-  const defaultValues = {
+  const defaultValues: RegisterChainForm = {
     name: "",
     description: "",
     radius: 3,
-    clothingTypes: [],
-    clothingSizes: [],
+    genders: [],
+    sizes: [],
     longitude: 0,
     latitude: 0,
   };
@@ -176,16 +177,16 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
           );
         };
 
-        const handleCategoriesChange = (selectedCats: string[]) => {
-          setFieldValue("clothingTypes", selectedCats);
+        const handleCategoriesChange = (selectedGenders: string[]) => {
+          setFieldValue("genders", selectedGenders as Genders[]);
           // potentially remove some sizes if their parent category has been deselected
-          const filteredSizes = (values.sizes || []).filter((size) => {
-            const parentCats = selectedCats.filter((cat) =>
-              categories[cat].includes(size)
-            );
-            return parentCats.length > 0;
-          });
-          setFieldValue("clothingSizes", filteredSizes);
+          const filteredSizes = (values.sizes || []).filter(
+            (size) =>
+              selectedGenders.filter((gender) =>
+                categories[gender as Genders].includes(size as Sizes)
+              ).length > 0
+          );
+          setFieldValue("sizes", filteredSizes);
         };
 
         return (

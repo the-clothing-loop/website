@@ -17,29 +17,28 @@ import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import categories from "../util/categories";
+import { GenderI18nKeys, Genders } from "../api/enums";
 
 interface IProps {
   variant: "outlined" | "standard";
   showInputLabel: boolean;
   renderValueWhenEmpty?: string;
-  genders: string[];
-  handleSelectedCategoriesChange: (genders: string[]) => void;
+  genders: Array<Genders | string>;
+  handleSelectedCategoriesChange: (genders: Array<Genders | string>) => void;
 }
 
 const CategoriesDropdown: React.FC<IProps> = ({
   variant,
   showInputLabel,
   renderValueWhenEmpty,
-  genders: selectedCategories,
+  genders: selectedGenders,
   handleSelectedCategoriesChange,
 }: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
 
   const handleOnChange = (event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event;
+    const value = event.target.value;
 
     handleSelectedCategoriesChange(
       typeof value === "string" ? value.split(",") : value
@@ -78,9 +77,9 @@ const CategoriesDropdown: React.FC<IProps> = ({
               : classes.selectStandard,
         }}
         variant={variant}
-        value={selectedCategories}
+        value={selectedGenders}
         onChange={handleOnChange}
-        renderValue={(selected: string[]) =>
+        renderValue={(selected: Array<string | Genders>) =>
           !selected.length && renderValueWhenEmpty ? (
             <Typography
               component="span"
@@ -89,14 +88,14 @@ const CategoriesDropdown: React.FC<IProps> = ({
               {renderValueWhenEmpty}
             </Typography>
           ) : (
-            selected.map(t).join(", ")
+            selected.map((g) => t(GenderI18nKeys[g])).join(", ")
           )
         }
       >
-        {Object.keys(categories).map((value: string) => (
+        {Object.keys(categories).map((gender: string | Genders) => (
           <MenuItem
-            key={value}
-            value={value}
+            key={gender}
+            value={gender}
             classes={{
               root: classes.menuItemSpacingAndColor,
               selected: classes.selected,
@@ -104,10 +103,10 @@ const CategoriesDropdown: React.FC<IProps> = ({
           >
             <Checkbox
               color="secondary"
-              checked={selectedCategories.includes(value) ? true : false}
+              checked={selectedGenders.includes(gender)}
             />
             <ListItemText
-              primary={t(value)}
+              primary={t(GenderI18nKeys[gender])}
               classes={{
                 primary: classes.listItemTextFontSize,
               }}
