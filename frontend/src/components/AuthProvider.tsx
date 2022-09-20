@@ -55,6 +55,9 @@ export const AuthProvider = ({ children }: any) => {
     return (async () => {
       await apiLogout().catch((e) => console.warn(e));
       window.localStorage.removeItem(LOCALSTORAGE_USER_UID);
+      setUser(null);
+      setChainUID(null);
+      setIsChainAdmin(false);
       setLoading(false);
     })();
   };

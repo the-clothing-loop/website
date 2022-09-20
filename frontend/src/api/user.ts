@@ -48,5 +48,5 @@ export function userAddAsChainAdmin(chainUID: string, userUID: string) {
 }
 
 export function userDelete(chainUID: string, userUID: string) {
-  return axios.delete(`/user/?user_uid=${userUID}&chain_uid=${chainUID}`);
+  return axios.delete(`/v2/user/?user_uid=${userUID}&chain_uid=${chainUID}`);
 }
