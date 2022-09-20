@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import theme from "../util/theme";
 import { AuthContext } from "../components/AuthProvider";
+import { Redirect } from "react-router";
+import { sleep } from "../util/sleep";
 
 export const Logout = () => {
   const [done, setDone] = useState(false);
@@ -15,9 +17,14 @@ export const Logout = () => {
   useEffect(() => {
     (async () => {
       await authLogout();
+      await sleep(1700);
       setDone(true);
     })();
   }, []);
+
+  if (done) {
+    return <Redirect to={"/"} />;
+  }
 
   return (
     <>
