@@ -47,7 +47,7 @@ func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool 
 	}
 
 	subject := "Verify e-mail for clothing chain"
-	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s/login/validate?apiKey=%s">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>Regards,<br>The clothing-loop team!`, user.Name, app.Config.SITE_BASE_URL_FE, token)
+	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s/users/login/validate?apiKey=%s">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>Regards,<br>The clothing-loop team!`, user.Name, app.Config.SITE_BASE_URL_FE, token)
 
 	// email user with token
 	return app.MailSend(c, db, user.Email, subject, messageHtml)
@@ -57,7 +57,7 @@ func LoginValidate(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		Key string `uri:"apiKey,required"`
+		Key string `form:"apiKey,required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		boom.BadRequest(c.Writer, "apiKey required")
@@ -67,7 +67,7 @@ func LoginValidate(c *gin.Context) {
 
 	ok := auth.TokenVerify(db, token)
 	if !ok {
-		boom.Unathorized(c.Writer)
+		boom.Unathorized(c.Writer, "Invalid token")
 		return
 	}
 

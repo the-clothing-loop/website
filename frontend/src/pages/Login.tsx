@@ -87,6 +87,7 @@ const Login = () => {
                     {...formik.getFieldProps("email")}
                     label={t("email")}
                     variant="standard"
+                    type="email"
                     required
                     fullWidth
                   />
