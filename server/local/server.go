@@ -24,7 +24,7 @@ func Routes() *gin.Engine {
 		logFilePath := fmt.Sprintf("/var/log/clothingloop-api/%s.log", app.Config.ENV)
 		f, err := os.Create(logFilePath)
 		if err != nil {
-			log.Fatal("could not create log file at '%s'", logFilePath)
+			log.Fatalf("could not create log file at '%s'", logFilePath)
 		}
 		gin.DefaultWriter = io.MultiWriter(f)
 	} else {
