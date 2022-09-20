@@ -61,6 +61,15 @@ export const AuthProvider = ({ children }: any) => {
       setLoading(false);
     })();
   };
+  const authenticate = (user: User) => {
+    setUser(user);
+
+    let selectedUserChain = user.chains[0] as UserChain | undefined;
+    setIsChainAdmin(selectedUserChain?.is_chain_admin || false);
+    setChainUID(selectedUserChain?.chain_uid || null);
+
+    window.localStorage.setItem(LOCALSTORAGE_USER_UID, user.uid);
+  };
   useEffect(() => {
     (async () => {
       let oldUserUID = window.localStorage.getItem(LOCALSTORAGE_USER_UID);
@@ -68,7 +77,7 @@ export const AuthProvider = ({ children }: any) => {
         // check if authentication still works
         try {
           const user = (await userGetByUID(null, oldUserUID)).data;
-          setUser(user);
+          authenticate(user);
         } catch (e) {
           window.localStorage.removeItem(LOCALSTORAGE_USER_UID);
         }
@@ -89,5 +98,3 @@ export const AuthProvider = ({ children }: any) => {
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
-
-export const authLoginValidate = () => {};
