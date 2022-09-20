@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 
 import { AppBar, Button, Typography } from "@mui/material";
+import { OpenInNew } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
@@ -41,13 +42,13 @@ const Navbar = () => {
             {authUser?.is_admin || authIsChainAdmin ? (
               <Button
                 color="inherit"
+                component="a"
+                target="_blank"
                 className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
-                onClick={() =>
-                  (window.location.href =
-                    "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27")
-                }
+                href="https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27"
               >
                 {t("toolkit")}
+                <OpenInNew sx={{ marginLeft: "10px" }} />
               </Button>
             ) : null}
             {authUser === null &&
