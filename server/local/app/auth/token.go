@@ -46,13 +46,31 @@ func TokenCreateUnverified(db *gorm.DB, userID uint) (string, bool) {
 func TokenVerify(db *gorm.DB, token string) bool {
 	timeElapsed := time.Now().Add(-24 * time.Hour)
 
-	res := db.Exec(`
-	UPDATE user_tokens
-	SET verified = ?
-	WHERE token = ? AND verified = ? AND created_at > ?
-	`, true, token, false, timeElapsed.Unix())
+	if res := db.Exec(`
+UPDATE user_tokens
+SET user_tokens.verified = ?
+WHERE user_tokens.token = ?
+	AND user_tokens.verified = ?
+	AND user_tokens.created_at > ?
+	`, true, token, false, timeElapsed.Unix()); res.Error != nil || res.RowsAffected == 0 {
+		return false
+	}
 
-	return res.Error == nil
+	if res := db.Exec(`
+UPDATE users
+SET is_email_verified = ?  
+WHERE id = (
+	SELECT users.id
+	FROM user_tokens
+	LEFT JOIN users ON user_tokens.user_id = users.id
+	WHERE user_tokens.token = ?
+	LIMIT 1
+)
+	`, true, token); res.Error != nil {
+		return false
+	}
+
+	return true
 }
 
 func TokenAuthenticate(db *gorm.DB, token string) (user *models.User, ok bool) {
