@@ -31,6 +31,14 @@ interface Params {
   chainUID: string;
 }
 
+interface RegisterUserForm {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  newsletter: boolean;
+  sizes: string[];
+}
+
 const Signup = () => {
   const history = useHistory();
   const { chainUID } = useParams<Params>();
@@ -42,20 +50,20 @@ const Signup = () => {
   });
   const [error, setError] = useState("");
   const classes = makeStyles(theme as any)();
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
   const phoneRegExp = /^\+?\(?[0-9]{1,3}\)?[-\s\./0-9]+$/g;
 
   const validate = Yup.object({
     name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
-    phone_number: Yup.string()
+    phoneNumber: Yup.string()
       .matches(phoneRegExp, {
         message: t("pleaseEnterAValid.phoneNumber"),
       })
       .required(t("required")),
+    sizes: Yup.array().of(Yup.string()).required(t("required")),
     newsletter: Yup.boolean(),
-  });
+  } as Record<keyof RegisterUserForm, any>);
 
   // Get chain id from the URL and save to state
   useEffect(() => {
@@ -72,14 +80,10 @@ const Signup = () => {
   }, [chainUID]);
 
   // Gather data from form, validate and send to firebase
-  const onSubmit = async (formData: any) => {
+  const onSubmit = async (formData: RegisterUserForm) => {
     // TODO: allow only full addresses
 
     try {
-      const sizeEnums = selectedSizes
-        .filter((s) => Object.hasOwn(Sizes, s))
-        //@ts-ignore
-        .map((s) => Sizes[s] as string);
       await registerBasicUser(
         {
           name: formData.name,
@@ -87,7 +91,7 @@ const Signup = () => {
           phone_number: formData.phoneNumber,
           address: geocoderResult.result.place_name,
           newsletter: formData.newsletter,
-          sizes: sizeEnums,
+          sizes: formData.sizes,
         },
         chainUID
       );
@@ -117,12 +121,13 @@ const Signup = () => {
           <title>The Clothing Loop | Signup user</title>
           <meta name="description" content="Signup user" />
         </Helmet>
-        <Formik
+        <Formik<RegisterUserForm>
           initialValues={{
             name: "",
             email: "",
             phoneNumber: "",
             newsletter: false,
+            sizes: [],
           }}
           validationSchema={validate}
           validateOnChange={false}
@@ -172,8 +177,10 @@ const Signup = () => {
                         showInputLabel={false}
                         label={t("interestedSizes")}
                         genders={chain?.genders || []}
-                        sizes={selectedSizes}
-                        handleSelectedCategoriesChange={setSelectedSizes}
+                        sizes={formik.values.sizes}
+                        handleSelectedCategoriesChange={(s) =>
+                          formik.setFieldValue("sizes", s)
+                        }
                       />
                       <PopoverOnHover
                         message={t("weWouldLikeToKnowThisEquallyRepresented")}
