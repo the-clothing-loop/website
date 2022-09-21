@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	github.com/andybalholm/cascadia v1.3.1
-	github.com/darahayes/go-boom v0.0.0-20200826120415-fa5cb724143a
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/jaswdr/faker v1.15.0

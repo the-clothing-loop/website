@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -9,7 +10,6 @@ import (
 
 	"github.com/CollActionteam/clothing-loop/server/local/app"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
-	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 	"github.com/stripe/stripe-go/v73"
 	stripe_session "github.com/stripe/stripe-go/v73/checkout/session"
@@ -28,7 +28,7 @@ func PaymentsInitiate(c *gin.Context) {
 		PriceID     string `json:"price_id"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		boom.BadRequest(c.Writer, "email required in json")
+		c.AbortWithError(http.StatusBadRequest, errors.New("Email required in json"))
 		return
 	}
 
@@ -83,7 +83,7 @@ func PaymentsInitiate(c *gin.Context) {
 	session, err := stripe_session.New(checkout)
 	if err != nil {
 		log.Print(err)
-		boom.Illegal(c.Writer, "Something went wrong when processing your checkout request...")
+		c.AbortWithError(http.StatusUnavailableForLegalReasons, errors.New("Something went wrong when processing your checkout request..."))
 		return
 	}
 
@@ -95,7 +95,7 @@ func PaymentsInitiate(c *gin.Context) {
 		Status:          string(session.Status),
 	}).Error; err != nil {
 		log.Print(err)
-		boom.Internal(c.Writer, "unable to add payment to database")
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to add payment to database"))
 		return
 	}
 
@@ -112,12 +112,12 @@ func PaymentsWebhook(c *gin.Context) {
 	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, MaxBodyBytes)
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		c.AbortWithError(400, fmt.Errorf("body does not exist"))
+		c.AbortWithError(400, fmt.Errorf("Body does not exist"))
 		return
 	}
 	event, err := stripe_webhook.ConstructEvent(body, signature, app.Config.STRIPE_WEBHOOK)
 	if err != nil {
-		c.AbortWithError(400, fmt.Errorf("webhook Error: %s", err))
+		c.AbortWithError(400, fmt.Errorf("Webhook Error: %s", err))
 		return
 	}
 
@@ -138,7 +138,7 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 	err := json.Unmarshal(event.Data.Raw, session)
 	if err != nil {
 		log.Print(err)
-		boom.Internal(c.Writer)
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 
@@ -176,7 +176,7 @@ func paymentsWebhookCheckoutSessionCompletedModeSetup(c *gin.Context, db *gorm.D
 	})
 	if err != nil {
 		log.Print(err)
-		boom.Internal(c.Writer, "Unable to create customer")
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to create customer"))
 		return
 	}
 
@@ -188,7 +188,7 @@ func paymentsWebhookCheckoutSessionCompletedModeSetup(c *gin.Context, db *gorm.D
 	})
 	if err != nil {
 		log.Print(err)
-		boom.Internal(c.Writer, "Unable to create subscription")
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to create subscription"))
 		return
 	}
 
@@ -199,7 +199,7 @@ func paymentsWebhookCheckoutSessionCompletedModeSetup(c *gin.Context, db *gorm.D
 	}).Error
 	if err != nil {
 		log.Print(err)
-		boom.Internal(c.Writer, "Unable to update payment in database")
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to update payment in database"))
 		return
 	}
 
@@ -216,7 +216,7 @@ func paymentsWebhookCheckoutSessionCompletedModePayment(c *gin.Context, db *gorm
 	}).Error
 	if err != nil {
 		log.Print(err)
-		boom.Internal(c.Writer, "Unable to update payment in database")
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to update payment in database"))
 		return
 	}
 

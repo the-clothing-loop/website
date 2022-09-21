@@ -1,11 +1,14 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
 	"gorm.io/gorm"
 )
+
+var ErrUserNotFound = errors.New("User not found")
 
 type User struct {
 	ID              uint        `json:"-"`

@@ -1,11 +1,12 @@
 package app
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 	"net/smtp"
 
 	"github.com/CollActionteam/clothing-loop/server/local/models"
-	boom "github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 	"github.com/jordan-wright/email"
 	"gorm.io/gorm"
@@ -38,7 +39,7 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 	})
 
 	if errEmail != nil {
-		boom.Internal(c.Writer, "unable to sent email")
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to send email"))
 		return false
 	}
 

@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
-	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm/clause"
 )
@@ -28,13 +29,13 @@ func UserGet(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		boom.BadRequest(c.Writer, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
 	// retrieve user from query
 	if query.UserUID == "" && query.Email == "" {
-		boom.BadRequest(c.Writer, "add uid or email to query")
+		c.AbortWithError(http.StatusBadRequest, errors.New("Add uid or email to query"))
 		return
 	}
 
@@ -44,7 +45,7 @@ func UserGet(c *gin.Context) {
 		ok = okk
 
 		if ok && !(query.UserUID == authUser.UID || query.Email == authUser.Email) {
-			boom.Unathorized(c.Writer, "for elevated privileges include a chain_uid")
+			c.AbortWithError(http.StatusUnauthorized, errors.New("For elevated privileges include a chain_uid"))
 			return
 		}
 	} else {
@@ -74,13 +75,13 @@ LIMIT 1
 		`, query.Email, true).First(user)
 	}
 	if user.ID == 0 {
-		boom.BadRequest(c.Writer, "user not found")
+		c.AbortWithError(http.StatusBadRequest, errors.New("User not found"))
 		return
 	}
 
 	err := user.AddUserChainsToObject(db)
 	if err != nil {
-		boom.Internal(c.Writer)
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 
@@ -94,7 +95,7 @@ func UserGetAllOfChain(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		boom.BadRequest(c.Writer, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -127,7 +128,7 @@ WHERE users.id IN (
 )
 	`, query.ChainUID).Scan(allUserChains).Error
 	if err != nil {
-		boom.Internal(c.Writer)
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 	err = tx.Raw(`
@@ -138,7 +139,7 @@ LEFT JOIN chains      ON chains.id = user_chains.chain_id
 WHERE chains.uid = ? AND users.is_email_verified = ?
 	`, query.ChainUID, true).Scan(users).Error
 	if err != nil {
-		boom.Internal(c.Writer)
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 	tx.Commit()
@@ -174,12 +175,12 @@ func UserUpdate(c *gin.Context) {
 		Address     *string   `json:"address"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		boom.BadRequest(c.Writer, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 	if body.Sizes != nil {
 		if ok := models.ValidateAllSizeEnum(*body.Sizes); !ok {
-			boom.BadRequest(c.Writer, "invalid size enum")
+			c.AbortWithError(http.StatusBadRequest, errors.New("Invalid size enum"))
 			return
 		}
 	}
@@ -199,7 +200,7 @@ func UserUpdate(c *gin.Context) {
 			userChanges["interested_sizes"] = *body.Sizes
 		}
 		if res := db.Model(user).Updates(userChanges); res.Error != nil {
-			boom.Internal(c.Writer, res.Error)
+			c.AbortWithError(http.StatusInternalServerError, res.Error)
 			return
 		}
 	}
@@ -211,13 +212,13 @@ func UserUpdate(c *gin.Context) {
 				Name:  user.Name,
 			})
 			if res.Error != nil {
-				boom.Internal(c.Writer)
+				c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
 				return
 			}
 		} else {
 			res := db.Where("email = ?", user.Email).Delete(&models.Newsletter{})
 			if res.Error != nil {
-				boom.Internal(c.Writer)
+				c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
 				return
 			}
 		}
@@ -232,7 +233,7 @@ func UserDelete(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		boom.BadRequest(c.Writer, fmt.Sprintf("err: %v, uri: %v", err, query))
+		c.AbortWithError(http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
 		return
 	}
 
@@ -245,7 +246,7 @@ func UserDelete(c *gin.Context) {
 	var userID uint
 	db.Raw("SELECT id FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&userID)
 	if userID == 0 {
-		boom.BadRequest(c.Writer, "User is not found")
+		c.AbortWithError(http.StatusBadRequest, errors.New("User is not found"))
 		return
 	}
 

@@ -1,12 +1,15 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/go-playground/validator/v10"
 )
 
 var validate = validator.New()
+
+var ErrChainNotFound = errors.New("Chain not found")
 
 type Chain struct {
 	ID               uint

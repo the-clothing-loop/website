@@ -16,7 +16,7 @@ const (
 	SizeEnumMenPlusSize   = "B"
 )
 
-var ErrSizeInvalid = errors.New("invalid size enum")
+var ErrSizeInvalid = errors.New("Invalid size enum")
 
 func ValidateAllSizeEnum(arr []string) bool {
 	if err := validate.Var(arr, "unique"); err != nil {

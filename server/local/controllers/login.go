@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app"
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
-	boom "github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
@@ -21,7 +21,7 @@ func LoginEmail(c *gin.Context) {
 		Email string `binding:"required,email" json:"email"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		boom.BadRequest(c.Writer, "email required in json")
+		c.AbortWithError(http.StatusBadRequest, errors.New("Email required"))
 		return
 	}
 
@@ -34,7 +34,7 @@ WHERE email = ?
 LIMIT 1
 	`, body.Email).Scan(&user)
 	if res.Error != nil {
-		boom.Unathorized(c.Writer, "email is not yet registered")
+		c.AbortWithError(http.StatusUnauthorized, errors.New("Email is not yet registered"))
 		return
 	}
 
@@ -44,7 +44,7 @@ LIMIT 1
 func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool {
 	token, ok := auth.TokenCreateUnverified(db, user.ID)
 	if !ok {
-		boom.Internal(c.Writer, "unable to create token")
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to create token"))
 		return false
 	}
 
@@ -62,14 +62,14 @@ func LoginValidate(c *gin.Context) {
 		Key string `form:"apiKey,required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		boom.BadRequest(c.Writer, "apiKey required")
+		c.AbortWithError(http.StatusBadRequest, errors.New("Malformed url: apiKey required"))
 		return
 	}
 	token := query.Key
 
 	ok := auth.TokenVerify(db, token)
 	if !ok {
-		boom.Unathorized(c.Writer, "Invalid token")
+		c.AbortWithError(http.StatusUnauthorized, errors.New("Invalid token"))
 		return
 	}
 
@@ -83,13 +83,13 @@ WHERE user_tokens.token = ?
 LIMIT 1
 	`, token).First(user).Error
 	if err != nil {
-		boom.Internal(c.Writer)
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 
 	err = user.AddUserChainsToObject(db)
 	if err != nil {
-		boom.Internal(c.Writer)
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 
@@ -107,21 +107,21 @@ func RegisterChainAdmin(c *gin.Context) {
 		User  UserCreateRequestBody  `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		boom.BadRequest(c.Writer, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
 	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
-		boom.BadRequest(c.Writer, models.ErrSizeInvalid)
+		c.AbortWithError(http.StatusBadRequest, models.ErrSizeInvalid)
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.Chain.Sizes); !ok {
-		boom.BadRequest(c.Writer, models.ErrSizeInvalid)
+		c.AbortWithError(http.StatusBadRequest, models.ErrSizeInvalid)
 		return
 	}
 
 	if ok := models.ValidateAllGenderEnum(body.Chain.Genders); !ok {
-		boom.BadRequest(c.Writer, models.ErrGenderInvalid)
+		c.AbortWithError(http.StatusBadRequest, models.ErrGenderInvalid)
 		return
 	}
 
@@ -150,7 +150,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Enabled:         false,
 	}
 	if res := db.Create(user); res.Error != nil {
-		boom.Conflict(c.Writer, "User already exists")
+		c.AbortWithError(http.StatusConflict, errors.New("User already exists"))
 		return
 	}
 	chain.UserChains = []models.UserChain{{
@@ -177,11 +177,11 @@ func RegisterBasicUser(c *gin.Context) {
 		User     UserCreateRequestBody `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		boom.BadRequest(c.Writer, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
-		boom.BadRequest(c.Writer, models.ErrSizeInvalid)
+		c.AbortWithError(http.StatusBadRequest, models.ErrSizeInvalid)
 		return
 	}
 
@@ -193,7 +193,7 @@ func RegisterBasicUser(c *gin.Context) {
 		db.Raw("SELECT id FROM chains WHERE uid = ? LIMIT 1", body.ChainUID).Scan(&row)
 		chainID = row.ID
 		if chainID == 0 {
-			boom.BadData(c.Writer, "chain_uid does not exist")
+			c.AbortWithError(http.StatusBadRequest, errors.New("Chain does not exist"))
 			return
 		}
 	}
@@ -210,7 +210,7 @@ func RegisterBasicUser(c *gin.Context) {
 		Enabled:         false,
 	}
 	if res := db.Create(user); res.Error != nil {
-		boom.Conflict(c.Writer, "User already exists")
+		c.AbortWithError(http.StatusConflict, errors.New("User already exists"))
 		return
 	}
 	db.Create(&models.UserChain{
@@ -234,7 +234,7 @@ func Logout(c *gin.Context) {
 
 	token, ok := auth.TokenReadFromRequest(c)
 	if !ok {
-		boom.BadRequest(c.Writer, "no token received")
+		c.AbortWithError(http.StatusBadRequest, errors.New("No token received"))
 		return
 	}
 

@@ -8,7 +8,7 @@ const (
 	GenderEnumMen      = "3"
 )
 
-var ErrGenderInvalid = errors.New("invalid gender enum")
+var ErrGenderInvalid = errors.New("Invalid gender enum")
 
 func ValidateAllGenderEnum(arr []string) bool {
 	if err := validate.Var(arr, "unique"); err != nil {

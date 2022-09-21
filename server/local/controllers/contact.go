@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/CollActionteam/clothing-loop/server/local/views"
-	"github.com/darahayes/go-boom"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm/clause"
 )
@@ -16,7 +17,7 @@ func ContactNewsletter(c *gin.Context) {
 		Subscribe bool   `json:"subscribe" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		boom.BadRequest(c.Writer, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -51,7 +52,7 @@ func ContactMail(c *gin.Context) {
 		Message string `json:"message" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		boom.BadRequest(c.Writer, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
