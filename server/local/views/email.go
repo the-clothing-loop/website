@@ -74,7 +74,7 @@ func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB, name string, email 
 	body := fmt.Sprintf(`<p>Hi %s,</p>
 
 <p>Hurrah! You are now subscribed to our newsletter.</p>
-<p> Expect monthly updates full of inspiration, </p>
+<p>Expect monthly updates full of inspiration, </p>
 <p>swap highlights and all kinds of wonderful Clothing Loop related stories.</p>
 
 <p>And please do reach out if you have exciting news or a nice Clothing Loop story you would like to share.</p>

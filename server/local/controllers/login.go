@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app"
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
@@ -10,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func LoginEmail(c *gin.Context) {
@@ -77,9 +79,9 @@ func LoginValidate(c *gin.Context) {
 SELECT users.*
 FROM users
 LEFT JOIN user_tokens ON user_tokens.user_id = users.id
-WHERE user_tokens.token = ? AND users.is_email_verified = ?
+WHERE user_tokens.token = ?
 LIMIT 1
-	`, token, true).First(user).Error
+	`, token).First(user).Error
 	if err != nil {
 		boom.Internal(c.Writer)
 		return
@@ -131,6 +133,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Latitude:         body.Chain.Latitude,
 		Longitude:        body.Chain.Longitude,
 		Radius:           body.Chain.Radius,
+		Published:        false,
 		OpenToNewMembers: body.Chain.OpenToNewMembers,
 		Sizes:            body.Chain.Sizes,
 		Genders:          body.Chain.Genders,
@@ -155,6 +158,13 @@ func RegisterChainAdmin(c *gin.Context) {
 		IsChainAdmin: true,
 	}}
 	db.Create(chain)
+	if body.User.Newsletter {
+		db.Create(&models.Newsletter{
+			Email:    body.User.Email,
+			Name:     body.User.Name,
+			Verified: false,
+		})
+	}
 
 	sendVerificationEmail(c, db, user)
 }
@@ -199,12 +209,22 @@ func RegisterBasicUser(c *gin.Context) {
 		Address:         body.User.Address,
 		Enabled:         false,
 	}
-	db.Create(user)
+	if res := db.Create(user); res.Error != nil {
+		boom.Conflict(c.Writer, "User already exists")
+		return
+	}
 	db.Create(&models.UserChain{
 		UserID:       user.ID,
 		ChainID:      chainID,
 		IsChainAdmin: false,
 	})
+	if body.User.Newsletter {
+		db.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
+			Email:    body.User.Email,
+			Name:     body.User.Name,
+			Verified: false,
+		})
+	}
 
 	sendVerificationEmail(c, db, user)
 }

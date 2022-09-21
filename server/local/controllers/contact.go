@@ -34,8 +34,9 @@ func ContactNewsletter(c *gin.Context) {
 	}
 
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
-		Name:  name,
-		Email: body.Email,
+		Name:     name,
+		Email:    body.Email,
+		Verified: true,
 	})
 
 	views.EmailSubscribeToNewsletter(c, db, name, body.Email)

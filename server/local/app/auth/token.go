@@ -58,9 +58,23 @@ WHERE user_tokens.token = ?
 
 	if res := db.Exec(`
 UPDATE users
-SET is_email_verified = ?  
+SET is_email_verified = ?, enabled = ?
 WHERE id = (
 	SELECT users.id
+	FROM user_tokens
+	LEFT JOIN users ON user_tokens.user_id = users.id
+	WHERE user_tokens.token = ?
+	LIMIT 1
+)
+	`, true, true, token); res.Error != nil {
+		return false
+	}
+
+	if res := db.Exec(`
+UPDATE newsletters
+SET verified = ?
+WHERE email = (
+	SELECT users.email
 	FROM user_tokens
 	LEFT JOIN users ON user_tokens.user_id = users.id
 	WHERE user_tokens.token = ?
