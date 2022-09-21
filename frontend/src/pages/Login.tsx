@@ -38,9 +38,9 @@ const Login = () => {
         }/users/login-email-finished/${encodeURI(data.email)}`;
         await loginEmail(data.email);
         setSubmitted(true);
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
-        setError(JSON.stringify(e));
+        setError(t("noResultsFound"));
       }
     }
   };

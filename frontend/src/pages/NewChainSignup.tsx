@@ -44,7 +44,6 @@ const Signup = () => {
   const [registerUser, setRegisterUser] = useState<RequestRegisterUser | null>(
     null
   );
-  const [error, setError] = useState("");
 
   const phoneRegExp = /^\+?\(?[0-9]{1,3}\)?[-\s\./0-9]+$/g;
 
@@ -229,7 +228,6 @@ const Signup = () => {
                 <GeocoderSelector name="address" onResult={setGeocoderResult} />
                 <FormActions handleClick={handleClickAction} />
 
-                {error && <Alert severity="error">{error}</Alert>}
                 <div className={classes.formSubmitActions}>
                   <Button
                     type="submit"

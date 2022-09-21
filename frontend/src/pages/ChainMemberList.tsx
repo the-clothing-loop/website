@@ -78,7 +78,7 @@ const ChainMemberList = () => {
       await chainUpdate(updatedChainData as any);
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
-      setError(e.message);
+      setError(e.message|| e.data || "");
     }
   };
 

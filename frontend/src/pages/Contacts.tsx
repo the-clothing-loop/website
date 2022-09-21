@@ -56,7 +56,7 @@ const Contacts = () => {
       setSubmitted(true);
     } catch (e: any) {
       console.error(`Error sending mail: ${JSON.stringify(e)}`);
-      setError(e.message);
+      setError(e.message || e.data || "");
     }
   };
 

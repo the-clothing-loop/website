@@ -55,7 +55,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
         setSubmitted(true);
       } catch (e: any) {
         console.error(`Error creating chain: ${JSON.stringify(e)}`);
-        setError(e.message);
+        setError(e.message || e.data || "");
       }
     } else {
       console.log(`creating user: ${JSON.stringify(user)}`);
@@ -73,8 +73,8 @@ const NewChainLocation = ({ location }: { location: any }) => {
         );
         setSubmitted(true);
       } catch (e: any) {
-        console.error(`Error creating user: ${JSON.stringify(e)}`);
-        setError(e.message);
+        console.error(`Error creating user and chain: ${JSON.stringify(e)}`);
+        setError(e.message || e.data || "");
       }
     }
 
