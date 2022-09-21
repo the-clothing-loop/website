@@ -100,7 +100,7 @@ const Signup = () => {
       console.error(`Error creating user: ${JSON.stringify(e)}`);
       e.code === "auth/invalid-phone-number"
         ? setError(t("pleaseEnterAValid.phoneNumber"))
-        : setError(e.message || e.data || "");
+        : setError(e?.data || `Error: ${JSON.stringify(e)}`);
     }
   };
 

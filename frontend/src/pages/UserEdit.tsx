@@ -82,7 +82,7 @@ const UserEdit = () => {
       });
     } catch (e: any) {
       console.error(`Error updating user: ${JSON.stringify(e)}`);
-      setError(e.message || e.data || "");
+      setError(e?.data || `Error: ${JSON.stringify(e)}`);
     }
   };
 
