@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/smtp"
 
+	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/gin-gonic/gin"
 	"github.com/jordan-wright/email"
@@ -39,7 +40,7 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 	})
 
 	if errEmail != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to send email"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to send email"))
 		return false
 	}
 

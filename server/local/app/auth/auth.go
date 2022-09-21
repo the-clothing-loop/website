@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -31,13 +32,13 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	token, ok := TokenReadFromRequest(c)
 	if !ok {
-		c.AbortWithError(http.StatusBadRequest, errors.New("Token not received"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Token not received"))
 		return false, nil, nil
 	}
 
 	user, ok = TokenAuthenticate(db, token)
 	if !ok {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("Invalid token"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Invalid token"))
 		return false, nil, nil
 	}
 
@@ -47,14 +48,14 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	if chainUID == "" {
-		c.AbortWithError(http.StatusTeapot, errors.New("ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusTeapot, errors.New("ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen"))
 		return false, nil, nil
 	}
 
 	chain = &models.Chain{}
 	err := db.Raw(`SELECT * FROM chains WHERE uid = ? LIMIT 1`, chainUID).Scan(chain).Error
 	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, models.ErrChainNotFound)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
 		return false, nil, nil
 	}
 
@@ -87,6 +88,6 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 		}
 	}
 
-	c.AbortWithError(http.StatusUnauthorized, errors.New("User role not high enough"))
+	gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("User role not high enough"))
 	return false, nil, nil
 }

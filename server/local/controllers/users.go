@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
+	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm/clause"
@@ -29,13 +30,13 @@ func UserGet(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
 	// retrieve user from query
 	if query.UserUID == "" && query.Email == "" {
-		c.AbortWithError(http.StatusBadRequest, errors.New("Add uid or email to query"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Add uid or email to query"))
 		return
 	}
 
@@ -45,7 +46,7 @@ func UserGet(c *gin.Context) {
 		ok = okk
 
 		if ok && !(query.UserUID == authUser.UID || query.Email == authUser.Email) {
-			c.AbortWithError(http.StatusUnauthorized, errors.New("For elevated privileges include a chain_uid"))
+			gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("For elevated privileges include a chain_uid"))
 			return
 		}
 	} else {
@@ -75,13 +76,13 @@ LIMIT 1
 		`, query.Email, true).First(user)
 	}
 	if user.ID == 0 {
-		c.AbortWithError(http.StatusBadRequest, errors.New("User not found"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("User not found"))
 		return
 	}
 
 	err := user.AddUserChainsToObject(db)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 
@@ -95,7 +96,7 @@ func UserGetAllOfChain(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
@@ -128,7 +129,7 @@ WHERE users.id IN (
 )
 	`, query.ChainUID).Scan(allUserChains).Error
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 	err = tx.Raw(`
@@ -139,7 +140,7 @@ LEFT JOIN chains      ON chains.id = user_chains.chain_id
 WHERE chains.uid = ? AND users.is_email_verified = ?
 	`, query.ChainUID, true).Scan(users).Error
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 	tx.Commit()
@@ -175,12 +176,12 @@ func UserUpdate(c *gin.Context) {
 		Address     *string   `json:"address"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 	if body.Sizes != nil {
 		if ok := models.ValidateAllSizeEnum(*body.Sizes); !ok {
-			c.AbortWithError(http.StatusBadRequest, errors.New("Invalid size enum"))
+			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Invalid size enum"))
 			return
 		}
 	}
@@ -200,7 +201,7 @@ func UserUpdate(c *gin.Context) {
 			userChanges["interested_sizes"] = *body.Sizes
 		}
 		if res := db.Model(user).Updates(userChanges); res.Error != nil {
-			c.AbortWithError(http.StatusInternalServerError, res.Error)
+			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, res.Error)
 			return
 		}
 	}
@@ -212,13 +213,13 @@ func UserUpdate(c *gin.Context) {
 				Name:  user.Name,
 			})
 			if res.Error != nil {
-				c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
+				gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 				return
 			}
 		} else {
 			res := db.Where("email = ?", user.Email).Delete(&models.Newsletter{})
 			if res.Error != nil {
-				c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
+				gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 				return
 			}
 		}
@@ -233,7 +234,7 @@ func UserDelete(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		c.AbortWithError(http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
 		return
 	}
 
@@ -246,7 +247,7 @@ func UserDelete(c *gin.Context) {
 	var userID uint
 	db.Raw("SELECT id FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&userID)
 	if userID == 0 {
-		c.AbortWithError(http.StatusBadRequest, errors.New("User is not found"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("User is not found"))
 		return
 	}
 

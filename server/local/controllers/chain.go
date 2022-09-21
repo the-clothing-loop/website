@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
+	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/CollActionteam/clothing-loop/server/local/views"
 	"github.com/gin-gonic/gin"
@@ -36,15 +37,15 @@ func ChainCreate(c *gin.Context) {
 
 	var body ChainCreateRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.Sizes); !ok {
-		c.AbortWithError(http.StatusBadRequest, models.ErrSizeInvalid)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrSizeInvalid)
 		return
 	}
 	if ok := models.ValidateAllGenderEnum(body.Genders); !ok {
-		c.AbortWithError(http.StatusBadRequest, models.ErrGenderInvalid)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrGenderInvalid)
 		return
 	}
 
@@ -65,7 +66,7 @@ func ChainCreate(c *gin.Context) {
 		},
 	}
 	if res := db.Create(&chain); res.Error != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to create chain"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create chain"))
 		return
 	}
 
@@ -79,13 +80,13 @@ func ChainGet(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
 	chain := models.Chain{}
 	if res := db.First(&chain, "chains.uid = ?", query.ChainUID); res.Error != nil {
-		c.AbortWithError(http.StatusBadRequest, models.ErrChainNotFound)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
 		return
 	}
 
@@ -112,16 +113,16 @@ func ChainGetAll(c *gin.Context) {
 		FilterGenders []string `form:"filter_genders"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if ok := models.ValidateAllSizeEnum(query.FilterSizes); !ok {
-		c.AbortWithError(http.StatusBadRequest, models.ErrSizeInvalid)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrSizeInvalid)
 		return
 	}
 	if ok := models.ValidateAllGenderEnum(query.FilterGenders); !ok {
-		c.AbortWithError(http.StatusBadRequest, models.ErrGenderInvalid)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrGenderInvalid)
 		return
 	}
 
@@ -152,7 +153,7 @@ func ChainGetAll(c *gin.Context) {
 
 	tx.Where("chains.published = ?", true)
 	if res := tx.Find(&chains); res.Error != nil {
-		c.AbortWithError(http.StatusBadRequest, models.ErrChainNotFound)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
 		return
 	}
 
@@ -191,19 +192,19 @@ func ChainUpdate(c *gin.Context) {
 		Genders     *[]string `json:"genders"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if body.Sizes != nil {
 		if ok := models.ValidateAllSizeEnum(*(body.Sizes)); !ok {
-			c.AbortWithError(http.StatusBadRequest, models.ErrSizeInvalid)
+			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrSizeInvalid)
 			return
 		}
 	}
 	if body.Genders != nil {
 		if ok := models.ValidateAllGenderEnum(*(body.Genders)); !ok {
-			c.AbortWithError(http.StatusBadRequest, models.ErrGenderInvalid)
+			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrGenderInvalid)
 			return
 		}
 	}
@@ -238,7 +239,7 @@ func ChainUpdate(c *gin.Context) {
 	}
 
 	if res := db.Model(chain).Updates(valuesToUpdate); res.Error != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 	}
 }
 
@@ -251,7 +252,7 @@ func ChainAddUser(c *gin.Context) {
 		IsChainAdmin bool   `json:"is_chain_admin"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
@@ -266,17 +267,17 @@ func ChainAddUser(c *gin.Context) {
 
 	var user models.User
 	if res := db.Where("uid = ? AND enabled = ? AND email_verified = ?", body.UserUID, true, true).First(&user); res.Error != nil {
-		c.AbortWithError(http.StatusBadRequest, models.ErrUserNotFound)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrUserNotFound)
 		return
 	}
 
 	if !chain.OpenToNewMembers {
-		c.AbortWithError(http.StatusBadRequest, errors.New("This loop is not currently open to new members"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("This loop is not currently open to new members"))
 		return
 	}
 
 	if res := db.Where("user_id = ? AND chain_id = ?", user.ID, chain.ID).First(&models.UserChain{}); res.Error == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("This user is already a member"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("This user is already a member"))
 	}
 
 	if res := db.Create(&models.UserChain{
@@ -284,7 +285,7 @@ func ChainAddUser(c *gin.Context) {
 		ChainID:      chain.ID,
 		IsChainAdmin: false,
 	}); res.Error != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("User could not be added to chain due to unknown error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be added to chain due to unknown error"))
 		return
 	}
 
@@ -302,7 +303,7 @@ WHERE user_chains.chain_id = ?
 `, chain.ID, true, true).Scan(&results)
 
 	if len(results) == 0 {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("No admins exist for this loop"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("No admins exist for this loop"))
 		return
 	}
 
@@ -327,7 +328,7 @@ func ChainRemoveUser(c *gin.Context) {
 		ChainUID string `json:"chain_uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
@@ -345,13 +346,13 @@ func ChainRemoveUser(c *gin.Context) {
 		}
 	}
 	if !isUserChainAdmin && user.UID != body.UserUID {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("Must be a chain admin or higher to remove a different user"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to remove a different user"))
 		return
 	}
 
 	if res := db.Exec(`DELETE FROM user_chains WHERE user_id = ? AND chain_id = ?`, user.ID,
 		chain.ID); res.Error != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("User could not be removed from chain due to unknown error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be removed from chain due to unknown error"))
 		return
 	}
 

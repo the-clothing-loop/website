@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/CollActionteam/clothing-loop/server/local/views"
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,7 @@ func ContactNewsletter(c *gin.Context) {
 		Subscribe bool   `json:"subscribe" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
@@ -52,7 +53,7 @@ func ContactMail(c *gin.Context) {
 		Message string `json:"message" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 

@@ -7,6 +7,7 @@ import (
 
 	"github.com/CollActionteam/clothing-loop/server/local/app"
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
+	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -21,7 +22,7 @@ func LoginEmail(c *gin.Context) {
 		Email string `binding:"required,email" json:"email"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("Email required"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Email required"))
 		return
 	}
 
@@ -34,7 +35,7 @@ WHERE email = ?
 LIMIT 1
 	`, body.Email).Scan(&user)
 	if res.Error != nil {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("Email is not yet registered"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Email is not yet registered"))
 		return
 	}
 
@@ -44,7 +45,7 @@ LIMIT 1
 func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool {
 	token, ok := auth.TokenCreateUnverified(db, user.ID)
 	if !ok {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to create token"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
 		return false
 	}
 
@@ -62,14 +63,14 @@ func LoginValidate(c *gin.Context) {
 		Key string `form:"apiKey,required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("Malformed url: apiKey required"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Malformed url: apiKey required"))
 		return
 	}
 	token := query.Key
 
 	ok := auth.TokenVerify(db, token)
 	if !ok {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("Invalid token"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Invalid token"))
 		return
 	}
 
@@ -83,13 +84,13 @@ WHERE user_tokens.token = ?
 LIMIT 1
 	`, token).First(user).Error
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 
 	err = user.AddUserChainsToObject(db)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Internal Server Error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 
@@ -107,21 +108,21 @@ func RegisterChainAdmin(c *gin.Context) {
 		User  UserCreateRequestBody  `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
-		c.AbortWithError(http.StatusBadRequest, models.ErrSizeInvalid)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrSizeInvalid)
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.Chain.Sizes); !ok {
-		c.AbortWithError(http.StatusBadRequest, models.ErrSizeInvalid)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrSizeInvalid)
 		return
 	}
 
 	if ok := models.ValidateAllGenderEnum(body.Chain.Genders); !ok {
-		c.AbortWithError(http.StatusBadRequest, models.ErrGenderInvalid)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrGenderInvalid)
 		return
 	}
 
@@ -150,7 +151,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Enabled:         false,
 	}
 	if res := db.Create(user); res.Error != nil {
-		c.AbortWithError(http.StatusConflict, errors.New("User already exists"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("User already exists"))
 		return
 	}
 	chain.UserChains = []models.UserChain{{
@@ -177,11 +178,11 @@ func RegisterBasicUser(c *gin.Context) {
 		User     UserCreateRequestBody `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
-		c.AbortWithError(http.StatusBadRequest, models.ErrSizeInvalid)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrSizeInvalid)
 		return
 	}
 
@@ -193,7 +194,7 @@ func RegisterBasicUser(c *gin.Context) {
 		db.Raw("SELECT id FROM chains WHERE uid = ? LIMIT 1", body.ChainUID).Scan(&row)
 		chainID = row.ID
 		if chainID == 0 {
-			c.AbortWithError(http.StatusBadRequest, errors.New("Chain does not exist"))
+			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Chain does not exist"))
 			return
 		}
 	}
@@ -210,7 +211,7 @@ func RegisterBasicUser(c *gin.Context) {
 		Enabled:         false,
 	}
 	if res := db.Create(user); res.Error != nil {
-		c.AbortWithError(http.StatusConflict, errors.New("User already exists"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("User already exists"))
 		return
 	}
 	db.Create(&models.UserChain{
@@ -234,7 +235,7 @@ func Logout(c *gin.Context) {
 
 	token, ok := auth.TokenReadFromRequest(c)
 	if !ok {
-		c.AbortWithError(http.StatusBadRequest, errors.New("No token received"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("No token received"))
 		return
 	}
 
