@@ -100,7 +100,7 @@ const Signup = () => {
       console.error(`Error creating user: ${JSON.stringify(e)}`);
       e.code === "auth/invalid-phone-number"
         ? setError(t("pleaseEnterAValid.phoneNumber"))
-        : setError(e.message);
+        : setError(e.message || e.data || "");
     }
   };
 
@@ -189,7 +189,7 @@ const Signup = () => {
 
                     <FormActions handleClick={handleClickAction} />
 
-                    {error ? <Alert severity="error">{error}</Alert> : null}
+                    {error && <Alert severity="error">{error}</Alert>}
                     <div className={classes.formSubmitActions}>
                       <Button
                         type="submit"
