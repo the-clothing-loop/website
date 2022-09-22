@@ -72,7 +72,7 @@ export const Newsletter = () => {
 
   const handleSubmitClick = async () => {
     try {
-      await contactNewsletterSet(email, true);
+      await contactNewsletterSet(name, email, true);
     } catch (error) {
       setIsError(true);
       setTimeout(() => setIsError(false), 3000);

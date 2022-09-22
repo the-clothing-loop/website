@@ -14,6 +14,7 @@ func ContactNewsletter(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
+		Name      string `json:"name" binding:"required"`
 		Email     string `json:"email" binding:"required,email"`
 		Subscribe bool   `json:"subscribe" binding:"required"`
 	}
@@ -28,7 +29,7 @@ func ContactNewsletter(c *gin.Context) {
 		return
 	}
 
-	name := "fellow human!"
+	name := body.Name
 	var row struct{ Name string }
 	db.Raw("SELECT name FROM users WHERE email = ? LIMIT 1", body.Email).Scan(&row)
 	if row.Name != "" {

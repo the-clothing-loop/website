@@ -1,7 +1,12 @@
 import axios from "./axios";
 
-export function contactNewsletterSet(email: string, subscribe: boolean) {
+export function contactNewsletterSet(
+  name: string,
+  email: string,
+  subscribe: boolean
+) {
   return axios.post("/v2/contact/newsletter", {
+    name,
     email,
     subscribe,
   });
