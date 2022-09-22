@@ -99,7 +99,7 @@ func ChainGet(c *gin.Context) {
 		"longitude":        chain.Longitude,
 		"radius":           chain.Radius,
 		"sizes":            chain.Sizes,
-		"gender":           chain.Genders,
+		"genders":          chain.Genders,
 		"published":        chain.Published,
 		"openToNewMembers": chain.OpenToNewMembers,
 	})
