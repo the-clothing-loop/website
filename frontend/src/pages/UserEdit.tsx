@@ -163,7 +163,7 @@ const UserEdit = () => {
 
               <SizesDropdown
                 variant="standard"
-                showInputLabel={true}
+                showInputLabel
                 label={t("sizes")}
                 genders={Object.keys(categories)}
                 sizes={sizes || []}

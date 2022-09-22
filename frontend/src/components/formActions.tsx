@@ -29,7 +29,7 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
       />
       <CheckboxField
         className="privacy-policy-action"
-        required={true}
+        required
         label={
           <>
             <div className={classes.actionsWrapper}>

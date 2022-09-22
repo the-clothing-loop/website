@@ -130,7 +130,7 @@ const Contacts = () => {
                     } as any
                   }
                   helperText={`${values.message.length}/${CHARACTER_LIMIT}`}
-                  multiline={true}
+                  multiline
                   rows={10}
                 />
 

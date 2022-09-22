@@ -38,7 +38,7 @@ const TextFormField = ({ name, inputRef, email }: TextFormFieldProps) => {
       label={t("name")}
       className={classes.textField}
       inputRef={inputRef}
-      required={true}
+      required
       variant="standard"
       fullWidth
     ></TextField>
@@ -62,7 +62,7 @@ const PhoneFormField = ({
         regions={"europe"}
         fullWidth
         label={t("phoneNumber")}
-        required={true}
+        required
         //@ts-ignore
         htmlFor={field.name}
         {...field}
@@ -192,9 +192,7 @@ const SelectField = ({
       <Select labelId={labelId} {...props} {...field}>
         {children}
       </Select>
-      {errorText ? (
-        <FormHelperText error={true}>{errorText}</FormHelperText>
-      ) : null}
+      {errorText ? <FormHelperText error>{errorText}</FormHelperText> : null}
     </>
   );
 };

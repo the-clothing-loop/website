@@ -275,13 +275,13 @@ const FindChain = ({ location }: { location: Location }) => {
         onViewportChange={(newView: IViewPort) => setViewport(newView)}
         onClick={handleMapClick}
         ref={mapRef}
-        scrollZoom={true}
+        scrollZoom
       >
         <Source
           id="chains"
           type="geojson"
           data={geoJSONFilteredChains}
-          cluster={true}
+          cluster
           clusterMaxZoom={12}
           clusterRadius={50}
         >
@@ -339,7 +339,7 @@ const FindChain = ({ location }: { location: Location }) => {
             latitude={selectedChain.latitude}
             longitude={selectedChain.longitude}
             closeOnClick={false}
-            dynamicPosition={true}
+            dynamicPosition
             onClose={() => setShowPopup(false)}
           >
             <Card className={classes.card}>

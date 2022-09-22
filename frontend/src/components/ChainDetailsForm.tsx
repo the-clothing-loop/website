@@ -212,7 +212,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
               </ReactMapGL>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Form noValidate={true}>
+              <Form noValidate>
                 <Grid container style={{ paddingBottom: "5%" }}>
                   <Typography className="formSubtitle">
                     {t("clickToSetLoopLocation")}
@@ -272,7 +272,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                     <div style={{ paddingTop: "10px" }}>
                       <CategoriesDropdown
                         variant="standard"
-                        showInputLabel={true}
+                        showInputLabel
                         genders={values.genders || []}
                         handleSelectedCategoriesChange={handleCategoriesChange}
                       />
@@ -280,7 +280,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                     <div style={{ paddingTop: "10px", position: "relative" }}>
                       <SizesDropdown
                         variant="standard"
-                        showInputLabel={true}
+                        showInputLabel
                         label={t("sizes")}
                         genders={values.genders || []}
                         sizes={values.sizes || []}
