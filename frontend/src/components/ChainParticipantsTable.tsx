@@ -9,12 +9,18 @@ import {
   TablePagination,
   TableContainer,
 } from "@mui/material";
+import {
+  EditOutlined as EditIcon,
+  Clear as DeleteIcon,
+} from "@mui/icons-material";
 
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
-import { User } from "../api/types";
+import { UID, User } from "../api/types";
 import { SizeI18nKeys, Sizes } from "../api/enums";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(theme as any);
 
@@ -28,9 +34,9 @@ interface Props {
   authUser: User | null;
   users: User[];
   initialPage: number;
-  initialRowsPerPage: number;
-  editItemComponent: any;
-  deleteItemComponent: any;
+  edit: boolean;
+  remove: boolean;
+  onRemoveUser?: (uid: UID) => void;
 }
 
 export const ChainParticipantsTable = ({
@@ -38,20 +44,17 @@ export const ChainParticipantsTable = ({
   authUser,
   users,
   initialPage,
-  initialRowsPerPage,
-  editItemComponent,
-  deleteItemComponent,
+  edit,
+  remove,
+  onRemoveUser,
 }: Props) => {
   const [page, setPage] = useState(initialPage);
-  const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
+  const rowsPerPage = 20;
+
+  const { t } = useTranslation();
 
   const handleChangePage = (e: any, newPage: any) => {
     setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (e: any) => {
-    setRowsPerPage(+e.target.value);
-    setPage(0);
   };
 
   return (
@@ -70,8 +73,8 @@ export const ChainParticipantsTable = ({
 
               {authUser?.is_admin && (
                 <>
-                  {editItemComponent && <HeadRowTableCell />}
-                  {deleteItemComponent && <HeadRowTableCell />}
+                  {edit && <HeadRowTableCell />}
+                  {remove && <HeadRowTableCell />}
                 </>
               )}
             </TableRow>
@@ -82,7 +85,7 @@ export const ChainParticipantsTable = ({
               .map((u: User) => (
                 <TableRow key={u.uid}>
                   {columns.map(({ propertyName }) => {
-                    let text = propertyName as string;
+                    let text = u[propertyName] as string;
                     if (propertyName === "sizes") {
                       text = u.sizes
                         .filter((v) => Object.hasOwn(SizeI18nKeys, v))
@@ -94,14 +97,18 @@ export const ChainParticipantsTable = ({
 
                   {authUser?.is_admin && (
                     <>
-                      {editItemComponent && (
+                      {edit && (
                         <BorderlessTableCell>
-                          {editItemComponent(u)}
+                          <Link to={`/users/${u.uid}/edit`}>
+                            <EditIcon />
+                          </Link>
                         </BorderlessTableCell>
                       )}
-                      {deleteItemComponent && (
+                      {remove && onRemoveUser && (
                         <BorderlessTableCell>
-                          {deleteItemComponent(u)}
+                          <DeleteIcon
+                            onClick={() => onRemoveUser(u.uid as string)}
+                          />
                         </BorderlessTableCell>
                       )}
                     </>
@@ -112,13 +119,22 @@ export const ChainParticipantsTable = ({
         </Table>
 
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[rowsPerPage]}
           component="div"
           count={users.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelDisplayedRows={({ from, to, count }) => {
+            let currentPage = page + 1;
+            let totalPages = Math.floor(count / rowsPerPage) + 1;
+
+            if (totalPages < 2) {
+              return "";
+            }
+
+            return `${t("page")} ${currentPage} - ${totalPages}`;
+          }}
           nextIconButtonProps={{ size: "large" }}
           backIconButtonProps={{ size: "large" }}
         />

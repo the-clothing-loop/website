@@ -108,7 +108,7 @@ const ChainMemberList = () => {
   }, [authUser, chain]);
 
   const handleRemoveFromChain = async (userUID: string) => {
-    chainRemoveUser(chainUID, userUID);
+    await chainRemoveUser(chainUID, userUID);
 
     const chainUsers = (await userGetAllByChain(chainUID)).data;
     setUsers(chainUsers);
@@ -223,21 +223,14 @@ const ChainMemberList = () => {
                       authUser={authUser}
                       users={users.filter(
                         (user) =>
-                          user.chains.find((c) => (c.chain_uid = chain.uid))
-                            ?.is_chain_admin
+                          user.chains.find(
+                            (c) => c.chain_uid === chain.uid && c.is_chain_admin
+                          ) !== undefined
                       )}
                       initialPage={0}
-                      initialRowsPerPage={10}
-                      editItemComponent={(u: User) => (
-                        <Link to={`/users/${u.uid}/edit`}>
-                          <EditIcon />
-                        </Link>
-                      )}
-                      deleteItemComponent={(u: User) => (
-                        <DeleteIcon
-                          onClick={() => handleRemoveFromChain(u.uid as string)}
-                        />
-                      )}
+                      edit
+                      remove
+                      onRemoveUser={handleRemoveFromChain}
                     />
                   </div>
                   {isChainAdmin && (
@@ -267,17 +260,9 @@ const ChainMemberList = () => {
                 authUser={authUser}
                 users={users}
                 initialPage={0}
-                initialRowsPerPage={10}
-                editItemComponent={(u: User) => (
-                  <Link to={`/users/${u.uid}/edit`}>
-                    <EditIcon />
-                  </Link>
-                )}
-                deleteItemComponent={(u: User) => (
-                  <DeleteIcon
-                    onClick={() => handleRemoveFromChain(u.uid as string)}
-                  />
-                )}
+                edit
+                remove
+                onRemoveUser={handleRemoveFromChain}
               />
             </div>
           </Grid>
