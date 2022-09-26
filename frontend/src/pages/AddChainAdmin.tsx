@@ -15,25 +15,28 @@ import theme from "../util/theme";
 
 import { Title } from "../components/Typography";
 import { chainAddUser } from "../api/chain";
+import { UID, User } from "../api/types";
+
+interface State {
+  users: User[];
+  chainUID: UID;
+}
 
 export const AddChainAdmin = ({ location }: { location: any }) => {
   const classes = makeStyles(theme as any)();
 
   const { state } = location;
-  const { users, chainId } = state;
+  const { users, chainUID } = state as State;
 
-  const [selectedUser, setSelectedUser] = React.useState<string>();
+  const [selectedUser, setSelectedUser] = React.useState<UID>();
 
   const handleSelectedUserChange = (event: { target: any }) => {
-    const { target } = event;
-    const { value } = target;
-
-    setSelectedUser(value);
+    setSelectedUser(event.target.value);
   };
 
   const handleSubmitAddChainAdmin = async () => {
     if (selectedUser) {
-      await chainAddUser(chainId, selectedUser, true);
+      await chainAddUser(chainUID, selectedUser, true);
     }
   };
 
@@ -69,28 +72,18 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
               )
             }
           >
-            {users.map(
-              ({
-                name,
-                email,
-                uid,
-              }: {
-                name: string;
-                email: string;
-                uid: string;
-              }) => (
-                <MenuItem
-                  key={uid}
-                  classes={{
-                    root: classes.menuItemSpacingAndColor,
-                    selected: classes.selected,
-                  }}
-                  value={uid}
-                >
-                  {name} - {email}
-                </MenuItem>
-              )
-            )}
+            {users.map((u) => (
+              <MenuItem
+                key={u.uid}
+                classes={{
+                  root: classes.menuItemSpacingAndColor,
+                  selected: classes.selected,
+                }}
+                value={u.uid}
+              >
+                {u.name} - {u.email}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </div>

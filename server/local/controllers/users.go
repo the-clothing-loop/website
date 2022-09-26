@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -169,11 +170,11 @@ func UserUpdate(c *gin.Context) {
 	}
 
 	var body struct {
-		Name        *string   `json:"name"`
-		PhoneNumber *string   `json:"phone_number"`
-		Newsletter  *bool     `json:"newsletter"`
-		Sizes       *[]string `json:"sizes"`
-		Address     *string   `json:"address"`
+		Name        *string   `json:"name,omitempty"`
+		PhoneNumber *string   `json:"phone_number,omitempty"`
+		Newsletter  *bool     `json:"newsletter,omitempty"`
+		Sizes       *[]string `json:"sizes,omitempty"`
+		Address     *string   `json:"address,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
@@ -198,7 +199,8 @@ func UserUpdate(c *gin.Context) {
 			userChanges["address"] = *body.Address
 		}
 		if body.Sizes != nil {
-			userChanges["interested_sizes"] = *body.Sizes
+			j, _ := json.Marshal(body.Sizes)
+			userChanges["sizes"] = string(j)
 		}
 		if res := db.Model(user).Updates(userChanges); res.Error != nil {
 			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, res.Error)

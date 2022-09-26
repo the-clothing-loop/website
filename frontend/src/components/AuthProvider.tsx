@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }: any) => {
       setLoading(false);
     })();
   }, []);
-  const contextValue = {
+  const contextValue: AuthProps = {
     authUser: user,
     authChainUID: chainUID,
     authIsChainAdmin: isChainAdmin,

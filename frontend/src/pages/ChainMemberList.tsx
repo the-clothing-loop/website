@@ -237,7 +237,7 @@ const ChainMemberList = () => {
                     <Link
                       to={{
                         pathname: `/loops/${chainUID}/addChainAdmin`,
-                        state: { users, chainId: chainUID },
+                        state: { users, chainUID },
                       }}
                     >
                       <div className="chain-member-list__add-co-host">

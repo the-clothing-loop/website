@@ -29,55 +29,60 @@ import GeocoderSelector from "../components/GeocoderSelector";
 import { UID, User } from "../api/types";
 import { userGetByUID, userUpdate, UserUpdateBody } from "../api/user";
 import { AuthContext } from "../components/AuthProvider";
+import { phoneRegExp } from "../util/phoneRegExp";
 
 interface Params {
-  userUID: string;
+  userUID: UID;
+}
+
+interface UserEditForm {
+  name: string;
+  phoneNumber: string;
+  newsletter: boolean;
+  sizes: string[];
+  address: string;
 }
 
 const UserEdit = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
   const history = useHistory();
-  const { authUser } = useContext(AuthContext);
+  const { authUser, authChainUID } = useContext(AuthContext);
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
   const [user, setUser] = useState<User>();
   const params = useParams<Params>();
-  const [userUID, setUserUID] = useState<UID>(params.userUID);
-  const [chainId, setChainUID] = useState<UID>();
-  const [address, setAddress] = useState<UserUpdateBody["address"]>();
-  const [sizes, setSizes] = useState<UserUpdateBody["sizes"]>([]);
   const [userIsAdmin, setUserIsAdmin] = useState(false);
   const [userIsChainAdmin, setUserIsChainAdmin] = useState(false);
 
-  const phoneRegExp = /^\+?\(?[0-9]{1,3}\)?[-\s\./0-9]+$/g;
-
   const validate = Yup.object({
     name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
-    email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
         message: t("pleaseEnterAValid.phoneNumber"),
       })
       .required(t("required")),
     newsletter: Yup.boolean(),
-  });
+    address: Yup.string(),
+    sizes: Yup.array().of(Yup.string()),
+  } as Record<keyof UserEditForm, any>);
 
-  const onSubmit = async (values: UserUpdateBody) => {
-    const newUserData: UserUpdateBody = {
-      ...values,
-      address: address,
-      sizes: sizes,
-    };
-    console.log(`updating user information: ${JSON.stringify(newUserData)}`);
+  const onSubmit = async (values: UserEditForm) => {
+    console.log("values:", values);
 
     try {
-      await userUpdate(newUserData);
+      await userUpdate({
+        name: values.name,
+        phone_number: values.phoneNumber,
+        newsletter: values.newsletter,
+        address: values.address,
+        sizes: values.sizes,
+      });
       setSubmitted(true);
       history.push({
-        pathname: `/loops/${chainId}/members`,
+        pathname: `/loops/${authChainUID}/members`,
         state: { message: t("saved") },
       });
     } catch (e: any) {
@@ -89,21 +94,13 @@ const UserEdit = () => {
   useEffect(() => {
     (async () => {
       try {
-        const user = (
-          await userGetByUID(authUser!.chains[0].chain_uid, userUID)
-        ).data;
+        const user = (await userGetByUID(authChainUID, params.userUID)).data;
         const firstChain = user.chains[0];
         setUser(user);
-        setChainUID(firstChain.chain_uid);
-        setAddress(user.address);
-        setUserUID(user.uid);
-        // TODO: add newsletter back into user
-        // setNewsletter(user.newsletter);
         setUserIsAdmin(user.is_admin);
         setUserIsChainAdmin(firstChain.is_chain_admin);
-        setSizes(user.sizes || []);
       } catch (error) {
-        console.error(error);
+        console.warn(error);
       }
     })();
   }, []);
@@ -114,21 +111,19 @@ const UserEdit = () => {
         <title>The Clothing Loop | Edit user</title>
         <meta name="description" content="Edit user" />
       </Helmet>
-      <Formik<Partial<User>>
+      <Formik<UserEditForm>
         initialValues={{
           name: user.name,
-          email: user.email,
-          phone_number: user.phone_number,
-          // newsletter: user.newsletter,
-          address: address as string,
-          uid: userUID,
-          sizes: sizes,
+          phoneNumber: user.phone_number,
+          newsletter: true,
+          address: user.address,
+          sizes: [...user.sizes],
         }}
         validationSchema={validate}
         validateOnChange={false}
         onSubmit={onSubmit}
       >
-        {({ setFieldValue }) => (
+        {({ setFieldValue, values }) => (
           <ThreeColumnLayout>
             {userIsAdmin || userIsChainAdmin ? (
               <Typography variant="h3" className={classes.pageTitle}>
@@ -147,18 +142,16 @@ const UserEdit = () => {
                 className={classes.textField}
               />
 
-              <TextForm
+              {/* <TextForm
                 label={t("email")}
                 name="email"
                 type="email"
                 className={classes.textField}
-              />
+              /> */}
               <PhoneFormField
                 label={t("phoneNumber")}
                 name="phoneNumber"
-                onChange={(e: any) =>
-                  setFieldValue("phoneNumber", e.replace(/\s/g, ""))
-                }
+                onChange={(e: any) => setFieldValue("phoneNumber", e)}
               />
 
               <SizesDropdown
@@ -166,15 +159,17 @@ const UserEdit = () => {
                 showInputLabel
                 label={t("sizes")}
                 genders={Object.keys(categories)}
-                sizes={sizes || []}
-                handleSelectedCategoriesChange={setSizes}
+                sizes={values.sizes || []}
+                handleSelectedCategoriesChange={(s) =>
+                  setFieldValue("sizes", s)
+                }
                 style={{ marginTop: "2%" }}
               />
 
               <GeocoderSelector
-                userAddress={user.address}
+                userAddress={values.address}
                 onResult={(e) => {
-                  setAddress(e.result.place_name);
+                  setFieldValue("address", e.result.place_name);
                 }}
               />
               <CheckboxField
@@ -186,7 +181,7 @@ const UserEdit = () => {
 
               <div className={classes.buttonsWrapper}>
                 <Button
-                  onClick={() => history.push(`/loops/${chainId}/members`)}
+                  onClick={() => history.push(`/loops/${authChainUID}/members`)}
                   variant="contained"
                   color="primary"
                   className={classes.buttonOutlined}

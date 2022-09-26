@@ -24,6 +24,7 @@ import { State as LoopsNewState } from "./NewChainLocation";
 //media
 import RightArrow from "../images/right-arrow-white.svg";
 import { RequestRegisterUser } from "../api/login";
+import { phoneRegExp } from "../util/phoneRegExp";
 
 interface RegisterUserForm {
   name: string;
@@ -44,8 +45,6 @@ const Signup = () => {
   const [registerUser, setRegisterUser] = useState<RequestRegisterUser | null>(
     null
   );
-
-  const phoneRegExp = /^\+?\(?[0-9]{1,3}\)?[-\s\./0-9]+$/g;
 
   const validate = Yup.object({
     name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),

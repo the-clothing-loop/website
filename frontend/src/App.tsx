@@ -77,7 +77,7 @@ const App = () => {
                       <Route exact path="/users/logout" component={Logout} />
                       <Route
                         exact
-                        path="/users/:userId/edit"
+                        path="/users/:userUID/edit"
                         component={UserEdit}
                       />
 
@@ -95,7 +95,7 @@ const App = () => {
                       />
                       <Route
                         exact
-                        path="/loops/:chainUId/addChainAdmin"
+                        path="/loops/:chainUID/addChainAdmin"
                         component={AddChainAdmin}
                       />
                       <Route

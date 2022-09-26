@@ -26,6 +26,7 @@ import { Chain } from "../api/types";
 import { chainGet } from "../api/chain";
 import { registerBasicUser, RequestRegisterUser } from "../api/login";
 import { Sizes } from "../api/enums";
+import { phoneRegExp } from "../util/phoneRegExp";
 
 interface Params {
   chainUID: string;
@@ -50,8 +51,6 @@ const Signup = () => {
   });
   const [error, setError] = useState("");
   const classes = makeStyles(theme as any)();
-
-  const phoneRegExp = /^\+?\(?[0-9]{1,3}\)?[-\s\./0-9]+$/g;
 
   const validate = Yup.object({
     name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
