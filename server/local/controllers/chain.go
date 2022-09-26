@@ -273,35 +273,33 @@ func ChainAddUser(c *gin.Context) {
 		return
 	}
 
-	var user models.User
-	if res := db.Where("uid = ? AND enabled = ? AND email_verified = ?", body.UserUID, true, true).First(&user); res.Error != nil {
+	user := models.User{}
+	if res := db.Where("uid = ? AND enabled = ? AND is_email_verified = ?", body.UserUID, true, true).First(&user); res.Error != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrUserNotFound)
 		return
 	}
 
-	if !chain.OpenToNewMembers {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("This loop is not currently open to new members"))
-		return
-	}
+	userChain := &models.UserChain{}
+	if res := db.Where("user_id = ? AND chain_id = ?", user.ID, chain.ID).First(userChain); res.Error == nil {
+		if userChain.IsChainAdmin != body.IsChainAdmin {
+			userChain.IsChainAdmin = body.IsChainAdmin
+			db.Save(userChain)
+		}
+	} else {
+		if res := db.Create(&models.UserChain{
+			UserID:       user.ID,
+			ChainID:      chain.ID,
+			IsChainAdmin: false,
+		}); res.Error != nil {
+			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be added to chain due to unknown error"))
+			return
+		}
 
-	if res := db.Where("user_id = ? AND chain_id = ?", user.ID, chain.ID).First(&models.UserChain{}); res.Error == nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("This user is already a member"))
-	}
-
-	if res := db.Create(&models.UserChain{
-		UserID:       user.ID,
-		ChainID:      chain.ID,
-		IsChainAdmin: false,
-	}); res.Error != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be added to chain due to unknown error"))
-		return
-	}
-
-	var results []struct {
-		Name  string
-		Email string
-	}
-	db.Raw(`
+		var results []struct {
+			Name  string
+			Email string
+		}
+		db.Raw(`
 SELECT users.name as name, users.email as email
 FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id 
@@ -310,21 +308,22 @@ WHERE user_chains.chain_id = ?
 	AND users.enabled = ?
 `, chain.ID, true, true).Scan(&results)
 
-	if len(results) == 0 {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("No admins exist for this loop"))
-		return
-	}
+		if len(results) == 0 {
+			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("No admins exist for this loop"))
+			return
+		}
 
-	for _, result := range results {
-		go views.EmailAParticipantJoinedTheLoop(
-			c,
-			db,
-			result.Email,
-			result.Name,
-			user.Name,
-			user.Email,
-			user.PhoneNumber,
-		)
+		for _, result := range results {
+			go views.EmailAParticipantJoinedTheLoop(
+				c,
+				db,
+				result.Email,
+				result.Name,
+				user.Name,
+				user.Email,
+				user.PhoneNumber,
+			)
+		}
 	}
 }
 

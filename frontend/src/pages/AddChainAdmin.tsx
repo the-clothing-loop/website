@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FormControl,
   Select,
@@ -6,6 +6,7 @@ import {
   MenuItem,
   Typography,
   Button,
+  Alert,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -28,7 +29,8 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
   const { state } = location;
   const { users, chainUID } = state as State;
 
-  const [selectedUser, setSelectedUser] = React.useState<UID>();
+  const [selectedUser, setSelectedUser] = useState<UID>();
+  const [error, setError] = useState<string>();
 
   const handleSelectedUserChange = (event: { target: any }) => {
     setSelectedUser(event.target.value);
@@ -36,7 +38,9 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
 
   const handleSubmitAddChainAdmin = async () => {
     if (selectedUser) {
-      await chainAddUser(chainUID, selectedUser, true);
+      await chainAddUser(chainUID, selectedUser, true).catch((rej) =>
+        setError(rej?.data || "error")
+      );
     }
   };
 
@@ -87,6 +91,12 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
           </Select>
         </FormControl>
       </div>
+
+      {error && (
+        <Alert sx={{ marginTop: 4 }} severity="error">
+          {error}
+        </Alert>
+      )}
 
       <div className="add-chain-admin__button">
         <Button
