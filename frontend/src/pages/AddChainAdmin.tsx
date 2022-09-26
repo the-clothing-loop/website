@@ -17,6 +17,7 @@ import theme from "../util/theme";
 import { Title } from "../components/Typography";
 import { chainAddUser } from "../api/chain";
 import { UID, User } from "../api/types";
+import { useHistory } from "react-router-dom";
 
 interface State {
   users: User[];
@@ -25,6 +26,8 @@ interface State {
 
 export const AddChainAdmin = ({ location }: { location: any }) => {
   const classes = makeStyles(theme as any)();
+
+  const history = useHistory();
 
   const { state } = location;
   const { users, chainUID } = state as State;
@@ -38,9 +41,12 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
 
   const handleSubmitAddChainAdmin = async () => {
     if (selectedUser) {
-      await chainAddUser(chainUID, selectedUser, true).catch((rej) =>
-        setError(rej?.data || "error")
-      );
+      try {
+        await chainAddUser(chainUID, selectedUser, true);
+        history.goBack();
+      } catch (err: any) {
+        setError(err?.data || "error");
+      }
     }
   };
 
