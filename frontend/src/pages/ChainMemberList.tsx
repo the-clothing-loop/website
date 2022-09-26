@@ -57,7 +57,7 @@ const ChainMemberList = () => {
 
   const [chain, setChain] = useState<Chain>();
   const [users, setUsers] = useState<User[]>();
-  const [publishedValue, setPublishedValue] = useState({ published: true });
+  const [publishedValue, setPublishedValue] = useState(true);
   const [error, setError] = useState("");
 
   const [isChainAdmin, setIsChainAdmin] = useState<boolean>();
@@ -66,16 +66,17 @@ const ChainMemberList = () => {
   const handleChange = async (e: {
     target: { checked: boolean; name: any };
   }) => {
-    setPublishedValue({ ...publishedValue, [e.target.name]: e.target.checked });
+    let isChecked = e.target.checked;
+    setPublishedValue(isChecked);
 
-    let updatedChainData = {
-      [e.target.name]: e.target.checked,
-    } as any;
-
-    console.log(`updating chain data: ${JSON.stringify(updatedChainData)}`);
+    console.log(
+      `updating chain data: ${JSON.stringify({ published: isChecked })}`
+    );
     try {
-      updatedChainData.uid = chainUID;
-      await chainUpdate(updatedChainData as any);
+      await chainUpdate({
+        uid: chainUID,
+        published: isChecked,
+      });
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
       setError(e?.data || `Error: ${JSON.stringify(e)}`);
@@ -92,7 +93,7 @@ const ChainMemberList = () => {
           setChain(chainData);
           const chainUsers = (await userGetAllByChain(chainUID)).data;
           setUsers(chainUsers);
-          setPublishedValue({ published: chainData.published });
+          setPublishedValue(chainData.published);
         }
       } catch (error: any) {
         console.error(`Error getting chain: ${error}`);
@@ -180,17 +181,17 @@ const ChainMemberList = () => {
                 <div style={{ position: "relative", display: "inline" }}>
                   <FormControlLabel
                     classes={{ root: classes.switchGroupRoot }}
-                    value={publishedValue.published}
+                    value={publishedValue}
                     control={
                       <Switch
-                        checked={publishedValue.published}
+                        checked={publishedValue}
                         onChange={handleChange}
                         name="published"
                         color="secondary"
                         inputProps={{ "aria-label": "secondary checkbox" }}
                       />
                     }
-                    label={publishedValue.published ? "visible" : "invisible"}
+                    label={publishedValue ? "visible" : "invisible"}
                     labelPlacement="end"
                   />
                   <Popover message={t("adminSwitcherMessage")} />

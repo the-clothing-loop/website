@@ -182,14 +182,15 @@ func ChainUpdate(c *gin.Context) {
 
 	var body struct {
 		UID         string    `json:"uid" binding:"required"`
-		Name        *string   `json:"name"`
-		Description *string   `json:"description"`
-		Address     *string   `json:"address"`
-		Latitude    *float32  `json:"latitude"`
-		Longitude   *float32  `json:"longitude"`
-		Radius      *float32  `json:"radius"`
-		Sizes       *[]string `json:"sizes"`
-		Genders     *[]string `json:"genders"`
+		Name        *string   `json:"name,omitempty"`
+		Description *string   `json:"description,omitempty"`
+		Address     *string   `json:"address,omitempty"`
+		Latitude    *float32  `json:"latitude,omitempty"`
+		Longitude   *float32  `json:"longitude,omitempty"`
+		Radius      *float32  `json:"radius,omitempty"`
+		Sizes       *[]string `json:"sizes,omitempty"`
+		Genders     *[]string `json:"genders,omitempty"`
+		Published   *bool     `json:"published,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
@@ -214,28 +215,35 @@ func ChainUpdate(c *gin.Context) {
 		return
 	}
 
-	optionalValues := map[string]any{
-		"name":        body.Name,
-		"description": body.Description,
-		"address":     body.Address,
-		"latitude":    body.Latitude,
-		"longitude":   body.Longitude,
-		"radius":      body.Radius,
-		"sizes":       body.Sizes,
-		"genders":     body.Genders,
-	}
 	valuesToUpdate := map[string]any{}
-	for k := range optionalValues {
-		v := optionalValues[k]
-
-		if v != nil {
-			if k == "sizes" || k == "genders" {
-				j, _ := json.Marshal(&v)
-				valuesToUpdate[k] = string(j)
-			} else {
-				valuesToUpdate[k] = v
-			}
-		}
+	if body.Name != nil {
+		valuesToUpdate["name"] = *(body.Name)
+	}
+	if body.Description != nil {
+		valuesToUpdate["description"] = *(body.Description)
+	}
+	if body.Address != nil {
+		valuesToUpdate["address"] = *(body.Address)
+	}
+	if body.Latitude != nil {
+		valuesToUpdate["latitude"] = *(body.Latitude)
+	}
+	if body.Longitude != nil {
+		valuesToUpdate["longitude"] = *(body.Longitude)
+	}
+	if body.Radius != nil {
+		valuesToUpdate["radius"] = *(body.Radius)
+	}
+	if body.Sizes != nil {
+		j, _ := json.Marshal(body.Sizes)
+		valuesToUpdate["sizes"] = string(j)
+	}
+	if body.Genders != nil {
+		j, _ := json.Marshal(body.Genders)
+		valuesToUpdate["genders"] = string(j)
+	}
+	if body.Published != nil {
+		valuesToUpdate["published"] = *(body.Published)
 	}
 
 	if res := db.Model(chain).Updates(valuesToUpdate); res.Error != nil {
