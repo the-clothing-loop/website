@@ -3,7 +3,13 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
-import { Grid, Typography, Switch, FormControlLabel } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Switch,
+  FormControlLabel,
+  Alert,
+} from "@mui/material";
 import {
   EditOutlined as EditIcon,
   Clear as DeleteIcon,
@@ -53,25 +59,25 @@ const useStyles = makeStyles(theme as any);
 const ChainMemberList = () => {
   const location = useLocation<any>();
   const { chainUID } = useParams<Params>();
-  const authUser = useContext<AuthProps>(AuthContext).authUser;
+  const { authUser } = useContext<AuthProps>(AuthContext);
 
   const [chain, setChain] = useState<Chain>();
   const [users, setUsers] = useState<User[]>();
-  const [publishedValue, setPublishedValue] = useState(true);
+  const [published, setPublished] = useState(true);
+  const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
-
   const [isChainAdmin, setIsChainAdmin] = useState<boolean>();
   const { t } = useTranslation();
 
-  const handleChange = async (e: {
+  type SwitchEvent = {
     target: { checked: boolean; name: any };
-  }) => {
-    let isChecked = e.target.checked;
-    setPublishedValue(isChecked);
+  };
 
-    console.log(
-      `updating chain data: ${JSON.stringify({ published: isChecked })}`
-    );
+  const handleChangePublished = async (e: SwitchEvent) => {
+    let isChecked = e.target.checked;
+    let oldValue = published;
+    setPublished(isChecked);
+
     try {
       await chainUpdate({
         uid: chainUID,
@@ -80,6 +86,24 @@ const ChainMemberList = () => {
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
       setError(e?.data || `Error: ${JSON.stringify(e)}`);
+      setPublished(oldValue);
+    }
+  };
+
+  const handleChangeOpenToNewMembers = async (e: SwitchEvent) => {
+    let isChecked = e.target.checked;
+    let oldValue = openToNewMembers;
+    setOpenToNewMembers(isChecked);
+
+    try {
+      await chainUpdate({
+        uid: chainUID,
+        openToNewMembers: isChecked,
+      });
+    } catch (e: any) {
+      console.error(`Error updating chain: ${JSON.stringify(e)}`);
+      setError(e?.data || `Error: ${JSON.stringify(e)}`);
+      setOpenToNewMembers(oldValue);
     }
   };
 
@@ -93,7 +117,8 @@ const ChainMemberList = () => {
           setChain(chainData);
           const chainUsers = (await userGetAllByChain(chainUID)).data;
           setUsers(chainUsers);
-          setPublishedValue(chainData.published);
+          setPublished(chainData.published);
+          setOpenToNewMembers(chainData.openToNewMembers);
         }
       } catch (error: any) {
         console.error(`Error getting chain: ${error}`);
@@ -124,6 +149,11 @@ const ChainMemberList = () => {
       </Helmet>
 
       <div className="chain-member-list">
+        {error && (
+          <Alert sx={{ marginBottom: 4 }} severity="error">
+            {error}
+          </Alert>
+        )}
         <Grid container direction="column" spacing={6}>
           <Grid
             item
@@ -178,23 +208,42 @@ const ChainMemberList = () => {
                   users.length === 1 ? "person" : "people"
                 }`}</Field>
 
-                <div style={{ position: "relative", display: "inline" }}>
+                <div style={{ position: "relative" }}>
                   <FormControlLabel
                     classes={{ root: classes.switchGroupRoot }}
-                    value={publishedValue}
+                    value={published}
+                    disabled={!isChainAdmin}
                     control={
                       <Switch
-                        checked={publishedValue}
-                        onChange={handleChange}
+                        checked={published}
+                        onChange={handleChangePublished}
                         name="published"
                         color="secondary"
                         inputProps={{ "aria-label": "secondary checkbox" }}
                       />
                     }
-                    label={publishedValue ? "visible" : "invisible"}
+                    label={published ? "published" : "draft"}
                     labelPlacement="end"
                   />
                   <Popover message={t("adminSwitcherMessage")} />
+                </div>
+                <div>
+                  <FormControlLabel
+                    classes={{ root: classes.switchGroupRoot }}
+                    value={openToNewMembers}
+                    disabled={!isChainAdmin}
+                    control={
+                      <Switch
+                        checked={openToNewMembers}
+                        onChange={handleChangeOpenToNewMembers}
+                        name="published"
+                        color="secondary"
+                        inputProps={{ "aria-label": "secondary checkbox" }}
+                      />
+                    }
+                    label={openToNewMembers ? "open to new members" : "closed"}
+                    labelPlacement="end"
+                  />
                 </div>
               </div>
             </Grid>

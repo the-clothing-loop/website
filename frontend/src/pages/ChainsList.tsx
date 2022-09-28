@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Circle as IconCircle } from "@mui/icons-material";
@@ -28,6 +28,9 @@ import RightArrow from "../images/right-arrow-white.svg";
 import { ChainsContext } from "../components/ChainsProvider";
 import { DataExport } from "../components/DataExport";
 import theme from "../util/theme";
+import { AuthContext } from "../components/AuthProvider";
+import { chainGet } from "../api/chain";
+import { Chain } from "../api/types";
 
 const rows = ["name", "location", "status"];
 
@@ -35,21 +38,25 @@ const ChainsList = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
   const history = useHistory();
-  const chains = useContext(ChainsContext).sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const { authUser } = useContext(AuthContext);
+  const [chains, setChains] = useState<Chain[]>();
   const [error, setError] = useState("");
 
-  const handleChangePage = (e: any, newPage: any) => {
-    setPage(newPage);
-  };
+  useEffect(() => {
+    (async () => {
+      if (authUser) {
+        try {
+          let data = await Promise.all(
+            authUser.chains.map((c) => chainGet(c.chain_uid))
+          );
 
-  const handleChangeRowsPerPage = (e: any) => {
-    setRowsPerPage(+e.target.value);
-    setPage(0);
-  };
+          setChains(data.map((d) => d.data));
+        } catch (rej: any) {
+          setError(rej?.data || "Unknown error");
+        }
+      }
+    })();
+  }, [authUser]);
 
   return (
     <>
@@ -88,81 +95,68 @@ const ChainsList = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {chains
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((chain, i) => (
-                      <TableRow
-                        key={chain.name}
-                        className="chains-list__table-row"
+                  {chains.map((chain, i) => (
+                    <TableRow
+                      key={chain.name}
+                      className="chains-list__table-row"
+                    >
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className={classes.tableCell}
                       >
-                        <TableCell
-                          component="th"
-                          scope="row"
-                          className={classes.tableCell}
-                        >
-                          {chain.name}
-                        </TableCell>
-                        <TableCell
-                          key="chain-address"
-                          align="left"
-                          className={classes.tableCell}
-                        >
-                          {chain.address}
-                        </TableCell>
-                        <TableCell
-                          key="chain-status"
-                          align="left"
-                          className={classes.tableCell}
-                        >
-                          {chain.published ? (
-                            <div style={{ display: "flex" }}>
+                        {chain.name}
+                      </TableCell>
+                      <TableCell
+                        key="chain-address"
+                        align="left"
+                        className={classes.tableCell}
+                      >
+                        {chain.address}
+                      </TableCell>
+                      <TableCell
+                        key="chain-status"
+                        align="left"
+                        className={classes.tableCell}
+                      >
+                        {chain.published ? (
+                          <div style={{ display: "flex" }}>
+                            <IconCircle
+                              sx={{ color: "#4CAF50", marginRight: 1 }}
+                            />
+                            <Typography variant="body2">
+                              {"published"}
+                            </Typography>
+                          </div>
+                        ) : (
+                          <div style={{ display: "flex" }}>
+                            <Typography variant="body2">
                               <IconCircle
-                                sx={{ color: "#4CAF50", marginRight: 1 }}
+                                sx={{ color: "#EF5350", marginRight: 1 }}
                               />
-                              <Typography variant="body2">
-                                {"published"}
-                              </Typography>
-                            </div>
-                          ) : (
-                            <div style={{ display: "flex" }}>
-                              <Typography variant="body2">
-                                <IconCircle
-                                  sx={{ color: "#EF5350", marginRight: 1 }}
-                                />
-                                {"unpublished"}
-                              </Typography>
-                            </div>
-                          )}
-                        </TableCell>
-                        <TableCell align="right" className={classes.tableCell}>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            className={classes.button}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              history.push(`/loops/${chain.uid}/members`);
-                            }}
-                          >
-                            {t("view")}
-                            <img src={RightArrow} alt="" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                              {"unpublished"}
+                            </Typography>
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell align="right" className={classes.tableCell}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            history.push(`/loops/${chain.uid}/members`);
+                          }}
+                        >
+                          {t("view")}
+                          <img src={RightArrow} alt="" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={chains.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                nextIconButtonProps={{ size: "large" }}
-                backIconButtonProps={{ size: "large" }}
-              />
             </TableContainer>
           </div>
         ) : (
