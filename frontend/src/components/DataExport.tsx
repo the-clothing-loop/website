@@ -11,13 +11,13 @@ import theme from "../util/theme";
 import { Chain, User } from "../api/types";
 import { chainGet, chainGetAll } from "../api/chain";
 import { userGetAllByChain } from "../api/user";
-import { SizeI18nKeys } from "../api/enums";
+import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
 
 interface Params {
   chainUID: string;
 }
 
-const chainsHeaders = [
+const chainsHeaders: Array<{ label: string; key: keyof ChainData }> = [
   { label: "Name", key: "name" },
   { label: "Location", key: "address" },
   { label: "Categories", key: "genders" },
@@ -26,18 +26,36 @@ const chainsHeaders = [
   { label: "Description", key: "description" },
 ];
 
+interface ChainData {
+  name: string;
+  address: string;
+  genders: string[];
+  sizes: string[];
+  published: boolean;
+  description: string;
+}
+
 const DataExport = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
 
-  const [chains, setChains] = useState<Chain[]>();
+  const [chains, setChains] = useState<ChainData[]>();
   const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
       let chains = (await chainGetAll()).data;
       let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
-      setChains(sortedChains);
+      setChains(
+        sortedChains.map((c) => ({
+          name: c.name,
+          address: c.address,
+          genders: c.genders?.map((g) => GenderI18nKeys[g]) || [],
+          sizes: c.sizes?.map((s) => SizeI18nKeys[s]) || [],
+          published: c.published,
+          description: c.description,
+        }))
+      );
     })();
   }, []);
 
@@ -61,7 +79,7 @@ const usersHeaders: Array<{ label: string; key: keyof UserData }> = [
   { label: "Email", key: "email" },
   { label: "Phone", key: "phoneNumber" },
   { label: "Interested Sizes", key: "interestedSizes" },
-  // { label: "Newsletter", key: "newsletter" },
+  { label: "Newsletter", key: "newsletter" },
 ];
 
 interface UserData {
@@ -70,7 +88,7 @@ interface UserData {
   email: string;
   phoneNumber: string;
   interestedSizes: string[];
-  // newsletter: string;
+  newsletter: boolean;
 }
 
 const UserDataExport = () => {
@@ -94,6 +112,7 @@ const UserDataExport = () => {
             email: u.email,
             phoneNumber: u.phone_number,
             interestedSizes: u.sizes.map((s) => SizeI18nKeys[s]),
+            newsletter: false,
           }))
         );
       } catch (error) {
