@@ -28,7 +28,7 @@ const ChainEdit = () => {
   const [chain, setChain] = useState<Chain>();
   const classes = makeStyles(theme as any)();
   const [submitted, setSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (values: RegisterChainForm) => {
     const newChainData: ChainUpdateBody = {
@@ -40,13 +40,12 @@ const ChainEdit = () => {
     try {
       await chainUpdate(newChainData);
       setSubmitted(true);
-      history.push({
-        pathname: `/loops/${chainUID}/members`,
-        state: { message: t("saved") },
-      });
+      setTimeout(() => {
+        history.goBack();
+      }, 1200);
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
-      setSubmitError(e.message);
+      setError(e?.data || `Error: ${JSON.stringify(e)}`);
     }
   };
 
@@ -56,8 +55,9 @@ const ChainEdit = () => {
         let chain = (await chainGet(chainUID)).data;
 
         setChain(chain);
-      } catch {
+      } catch (e: any) {
         console.error(`chain ${chainUID} does not exist`);
+        setError(e?.data || `Error: ${JSON.stringify(e)}`);
       }
     })();
   }, [chainUID]);
@@ -82,7 +82,8 @@ const ChainEdit = () => {
           </Typography>
           <ChainDetailsForm
             onSubmit={handleSubmit}
-            submitError={submitError}
+            submitError={error}
+            submitted={submitted}
             initialValues={chain}
           />
         </div>

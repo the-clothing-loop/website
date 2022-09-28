@@ -6,7 +6,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 // Material UI
-import { Typography, Button } from "@mui/material";
+import { Typography, Button, Alert } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -81,10 +81,9 @@ const UserEdit = () => {
         sizes: values.sizes,
       });
       setSubmitted(true);
-      history.push({
-        pathname: `/loops/${authChainUID}/members`,
-        state: { message: t("saved") },
-      });
+      setTimeout(() => {
+        history.goBack();
+      }, 1200);
     } catch (e: any) {
       console.error(`Error updating user: ${JSON.stringify(e)}`);
       setError(e?.data || `Error: ${JSON.stringify(e)}`);
@@ -181,7 +180,7 @@ const UserEdit = () => {
 
               <div className={classes.buttonsWrapper}>
                 <Button
-                  onClick={() => history.push(`/loops/${authChainUID}/members`)}
+                  onClick={() => history.goBack()}
                   variant="contained"
                   color="primary"
                   className={classes.buttonOutlined}
@@ -198,6 +197,16 @@ const UserEdit = () => {
                   {t("submit")}
                   <img src={RightArrow} alt="" />
                 </Button>
+                {submitted && (
+                  <Alert severity="success" sx={{ marginTop: 4 }}>
+                    {t("saved")}
+                  </Alert>
+                )}
+                {error && (
+                  <Alert severity="error" sx={{ marginTop: 4 }}>
+                    {error}
+                  </Alert>
+                )}
               </div>
             </Form>
           </ThreeColumnLayout>

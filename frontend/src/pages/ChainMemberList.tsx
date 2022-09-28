@@ -141,7 +141,7 @@ const ChainMemberList = () => {
 
   const classes = useStyles();
 
-  return !chain || !users ? null : (
+  return chain && users ? (
     <>
       <Helmet>
         <title>The Clothing Loop | Loop Members</title>
@@ -163,10 +163,6 @@ const ChainMemberList = () => {
           >
             <Grid item classes={{ root: classes.gridItemsNoPadding }} sm>
               <div className="chain-member-list__card">
-                {location.state ? (
-                  <p className="success">{location.state.message}</p>
-                ) : null}
-
                 <Grid
                   container
                   alignItems="center"
@@ -193,16 +189,12 @@ const ChainMemberList = () => {
                 <Field title="Categories">
                   {chain?.genders &&
                     chain?.genders
-                      .map(
-                        (gender, i) => `${GenderI18nKeys[gender]}'S CLOTHING`
-                      )
+                      .map((g) => `${GenderI18nKeys[g]}'S CLOTHING`)
                       .join(" / ")}
                 </Field>
                 <Field title="Sizes">
                   {chain?.sizes &&
-                    chain?.sizes
-                      .map((size, i) => t(SizeI18nKeys[size]))
-                      .join(" / ")}
+                    chain?.sizes.map((s) => t(SizeI18nKeys[s])).join(" / ")}
                 </Field>
                 <Field title="Participants">{`${users.length} ${
                   users.length === 1 ? "person" : "people"
@@ -271,8 +263,8 @@ const ChainMemberList = () => {
                       columns={adminColumns}
                       authUser={authUser}
                       users={users.filter(
-                        (user) =>
-                          user.chains.find(
+                        (u) =>
+                          u.chains.find(
                             (c) => c.chain_uid === chain.uid && c.is_chain_admin
                           ) !== undefined
                       )}
@@ -318,7 +310,7 @@ const ChainMemberList = () => {
         </Grid>
       </div>
     </>
-  );
+  ) : null;
 };
 
 const Field = ({ title, children }: { title: string; children: any }) => {

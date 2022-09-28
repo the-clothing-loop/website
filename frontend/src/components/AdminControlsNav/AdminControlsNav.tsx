@@ -12,18 +12,19 @@ import theme from "../../util/theme";
 import Img from "../../images/Denise.png";
 import { TwoColumnLayout } from "../Layouts";
 import { AuthContext } from "../AuthProvider";
+import { Box } from "@mui/system";
 
 const AdminControlsNav = () => {
   const { t } = useTranslation();
 
   const classes = makeStyles(theme as any)();
-  const { authUser, authChainUID, authIsChainAdmin } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
   return (
     <div>
       {authUser ? (
         <TwoColumnLayout img={Img}>
-          <div className="admin-nav-content">
+          <Box sx={{ padding: 8 }}>
             <Typography variant="h3" className={classes.pageTitle}>
               {`Hello, ${authUser?.name}`}
             </Typography>
@@ -33,32 +34,16 @@ const AdminControlsNav = () => {
               </Typography>
             </div>
 
-            <div className="admin-controls-nav">
-              {authIsChainAdmin ? (
-                <div className="admin-nav-btn">
-                  <Button
-                    color="inherit"
-                    className={classes.button}
-                    component={Link}
-                    to={`/loops/${authChainUID}/members`}
-                  >
-                    {t("viewLoop")}
-                  </Button>
-                </div>
-              ) : null}
-
-              {authUser.is_admin ? (
-                <div className="admin-nav-btn">
-                  <Button
-                    color="inherit"
-                    className={classes.button}
-                    component={Link}
-                    to="/loops"
-                  >
-                    {t("viewLoops")}
-                  </Button>
-                </div>
-              ) : null}
+            <Box sx={{ textAlign: "center", marginTop: 8 }}>
+              <Button
+                color="inherit"
+                className={classes.button}
+                sx={{ minWidth: 200 }}
+                component={Link}
+                to="/loops"
+              >
+                {t("viewLoops")}
+              </Button>
 
               <Link
                 className={classes.underlinedLink}
@@ -70,8 +55,8 @@ const AdminControlsNav = () => {
               >
                 {t("goToTheToolkitFolder")}
               </Link>
-            </div>
-          </div>
+            </Box>
+          </Box>
         </TwoColumnLayout>
       ) : null}
     </div>

@@ -28,6 +28,7 @@ const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
 interface IProps {
   onSubmit: (values: RegisterChainForm) => void;
+  submitted?: boolean;
   submitError?: string;
   initialValues?: RegisterChainForm;
 }
@@ -37,7 +38,12 @@ export type RegisterChainForm = Omit<
   "address" | "open_to_new_members"
 >;
 
-const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
+const ChainDetailsForm = ({
+  onSubmit,
+  submitError,
+  initialValues,
+  submitted,
+}: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
 
@@ -302,9 +308,8 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                   ) : null}
                 </Grid>
 
-                {submitError ? (
-                  <Alert severity="error">{submitError}</Alert>
-                ) : null}
+                {submitError && <Alert severity="error">{submitError}</Alert>}
+                {submitted && <Alert security="success">{t("saved")}</Alert>}
                 <div className={classes.formSubmitActions}>
                   <Button type="submit" className={classes.buttonOutlined}>
                     {t("back")}
