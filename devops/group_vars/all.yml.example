@@ -2,11 +2,15 @@ ansible_become_pass:
 mysql_root_password:
 
 mysql_cl_acceptance_password:
+smtp_cl_acceptance_host:
+smtp_cl_acceptance_user:
 smtp_cl_acceptance_password:
 stripe_cl_acceptance_secret_key:
 stripe_cl_acceptance_webhook:
 
 mysql_cl_production_password:
+smtp_cl_production_host:
+smtp_cl_production_user:
 smtp_cl_production_password:
 stripe_cl_production_secret_key:
 stripe_cl_production_webhook:

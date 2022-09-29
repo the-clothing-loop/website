@@ -16,8 +16,8 @@ db_name: "{{ api_config_db_name }}"
 db_user: "{{ api_config_db_user }}"
 db_pass: "{{ api_config_db_pass }}"
 
-smtp_host: "smtp.mandrillapp.com"
+smtp_host: "{{ api_config_smtp_host }}"
 smtp_port: 587
-smtp_sender: "hello@clothingloop.org"
-smtp_user: "hello@clothingloop.org"
+smtp_sender: "{{ api_config_smtp_user }}"
+smtp_user: "{{ api_config_smtp_user }}"
 smtp_pass: "{{ api_config_smtp_pass }}"

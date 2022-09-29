@@ -22,6 +22,10 @@ func MailInit() {
 }
 
 func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body string) bool {
+	if Config.ENV != EnvEnumProduction {
+		to = "hello@clothingloop.org"
+	}
+
 	e := email.NewEmail()
 	e.From = fmt.Sprintf("The Clothing Loop <%s>", Config.SMTP_SENDER)
 	e.To = []string{to}

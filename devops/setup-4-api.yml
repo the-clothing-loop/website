@@ -35,10 +35,12 @@
         api_config_db_name: "cl-acceptance"
         api_config_db_user: "cl-acceptance"
         api_config_db_pass: "{{ mysql_cl_acceptance_password }}"
+        api_config_smtp_host: "{{ smtp_cl_acceptance_host }}"
+        api_config_smtp_user: "{{ smtp_cl_acceptance_user }}"
         api_config_smtp_pass: "{{ smtp_cl_acceptance_password }}"
       template:
         src: templates/config.yml.j2
-        dest: /home/clothingloop/opt/config.prod.yml
+        dest: /home/clothingloop/opt/config.acc.yml
         owner: clothingloop
         group: clothingloop
         mode: "0600"
@@ -53,6 +55,8 @@
         api_config_db_name: "cl-production"
         api_config_db_user: "cl-production"
         api_config_db_pass: "{{ mysql_cl_production_password }}"
+        api_config_smtp_host: "{{ smtp_cl_production_host }}"
+        api_config_smtp_user: "{{ smtp_cl_production_user }}"
         api_config_smtp_pass: "{{ smtp_cl_production_password }}"
       template:
         src: templates/config.yml.j2
