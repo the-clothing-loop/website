@@ -1,12 +1,11 @@
 import axios from "./axios";
 
-// TODO: move price ids to config file
 export const priceIDs = {
   // priceID not necessary for one off donations
   oneOff_any: "",
-  recurring_2_50: "price_1KdEdAKBdXHva7sKwHdv20Iw",
-  recurring_5_00: "price_1KdEdvKBdXHva7sKjwXlAoxe",
-  recurring_10_00: "price_1KdEeQKBdXHva7sK8x1tPlL7",
+  recurring_2_50: process.env.REACT_APP_STRIPE_PRICE_RECURRING_2_50 || "",
+  recurring_5_00: process.env.REACT_APP_STRIPE_PRICE_RECURRING_5_00 || "",
+  recurring_10_00: process.env.REACT_APP_STRIPE_PRICE_RECURRING_10_00 || "",
 };
 
 interface PaymentInitiateBody {
@@ -22,7 +21,6 @@ interface PaymentInitiateResponse {
   session_id: string;
 }
 
-// TODO: add end point in server
 export function paymentInitiate(body: PaymentInitiateBody) {
   return axios.post<PaymentInitiateResponse>("/v2/payment/initiate", body);
 }

@@ -83,30 +83,35 @@ const DonationFormContent = () => {
       setLoading(true);
       setError(null);
 
-      paymentInitiate({
-        price_cents: values.isRecurring ? null : values.oneOffAmount * 100,
-        email: values.email,
-        is_recurring: values.isRecurring,
-        price_id: values.isRecurring
-          ? recurringAmounts[values.recurringIndex].priceID
-          : oneOffPriceID,
-      })
-        .then(async (res) => {
+      (async () => {
+        try {
+          const res = await paymentInitiate({
+            price_cents: values.isRecurring ? null : values.oneOffAmount * 100,
+            email: values.email,
+            is_recurring: values.isRecurring,
+            price_id: values.isRecurring
+              ? recurringAmounts[values.recurringIndex].priceID
+              : oneOffPriceID,
+          });
+
           console.log(res.data);
-          if (res.data.session_id && stripe) {
-            return await stripe.redirectToCheckout({
+          if (!res.data?.session_id) throw "couldn't find session ID";
+          if (!stripe) throw "stripe object does not exist";
+          const err = (
+            await stripe.redirectToCheckout({
               sessionId: res.data.session_id,
-            });
-          } else {
-            const err = t("anErrorOccurredDuringCheckout");
-            setError(err);
-            setLoading(false);
-          }
-        })
-        .catch((error) => {
-          setError(error.message);
+            })
+          ).error;
+          if (err) throw err;
+        } catch (e: any) {
+          console.error(e);
+          setError(e?.data || t("anErrorOccurredDuringCheckout"));
           setLoading(false);
-        });
+          setTimeout(() => {
+            setError("");
+          }, 3000);
+        }
+      })();
     },
   });
 
@@ -288,6 +293,11 @@ const DonationFormContent = () => {
               spacing={2}
               justifyContent="center"
             >
+              {error && (
+                <Alert severity="error" sx={{ marginTop: 4 }}>
+                  {error}
+                </Alert>
+              )}
               {loading ? (
                 <div style={{ minHeight: "80px" }}>
                   <br style={{ clear: "both" }} />
