@@ -14,10 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stripe/stripe-go/v73"
 	stripe_session "github.com/stripe/stripe-go/v73/checkout/session"
-	stripe_customer "github.com/stripe/stripe-go/v73/customer"
-	stripe_subscription "github.com/stripe/stripe-go/v73/subscription"
 	stripe_webhook "github.com/stripe/stripe-go/v73/webhook"
-	"gorm.io/gorm"
 )
 
 // Rewrite of https://github.com/CollActionteam/clothing-loop/blob/e5d09d38d72bb42f531d0dc0ec7a5b18459bcbcd/firebase/functions/src/payments.ts#L18
@@ -35,13 +32,7 @@ func PaymentsInitiate(c *gin.Context) {
 
 	db := getDB(c)
 
-	checkoutSessionModePayment := string(stripe.CheckoutSessionModePayment)
-	checkoutSessionModeSetup := string(stripe.CheckoutSessionModeSetup)
-	currency := "eur"
-	quantity := int64(1)
 	name := "Donation"
-	priceCents := body.PriceCents
-	customerEmail := body.Email
 	successURL := app.Config.SITE_BASE_URL_FE + "/donate/thankyou"
 	cancelURL := app.Config.SITE_BASE_URL_FE + "/donate/cancel"
 
@@ -52,24 +43,29 @@ func PaymentsInitiate(c *gin.Context) {
 			string(stripe.PaymentMethodTypeSEPADebit),
 			string(stripe.PaymentMethodTypeCard),
 		})
-		checkout.Mode = &checkoutSessionModeSetup
-		checkout.Metadata = map[string]string{"price_id": body.PriceID}
+		checkout.Mode = stripe.String(string(stripe.CheckoutSessionModeSubscription))
+		checkout.LineItems = []*stripe.CheckoutSessionLineItemParams{
+			{
+				Price:    &body.PriceID,
+				Quantity: stripe.Int64(1),
+			},
+		}
 	} else {
 		checkout.PaymentMethodTypes = stripe.StringSlice([]string{
 			string(stripe.PaymentMethodTypeIDEAL),
 			string(stripe.PaymentMethodTypeCard),
 		})
-		checkout.Mode = &checkoutSessionModePayment
+		checkout.Mode = stripe.String(string(stripe.CheckoutSessionModePayment))
 		checkout.LineItems = []*stripe.CheckoutSessionLineItemParams{
 			{
 				PriceData: &stripe.CheckoutSessionLineItemPriceDataParams{
-					Currency: &currency,
+					Currency: stripe.String(string(stripe.CurrencyEUR)),
 					ProductData: &stripe.CheckoutSessionLineItemPriceDataProductDataParams{
 						Name: &name,
 					},
-					UnitAmount: &priceCents,
+					UnitAmount: stripe.Int64(body.PriceCents),
 				},
-				Quantity: &quantity,
+				Quantity: stripe.Int64(1),
 			},
 		}
 	}
@@ -77,8 +73,8 @@ func PaymentsInitiate(c *gin.Context) {
 	checkout.SuccessURL = &successURL
 	checkout.CancelURL = &cancelURL
 
-	if customerEmail != "" {
-		checkout.CustomerEmail = &customerEmail
+	if body.Email != "" {
+		checkout.CustomerEmail = stripe.String(body.Email)
 	}
 
 	session, err := stripe_session.New(checkout)
@@ -90,7 +86,7 @@ func PaymentsInitiate(c *gin.Context) {
 
 	if err := db.Create(&models.Payment{
 		Amount:          float32(session.AmountTotal) / 100,
-		Email:           customerEmail,
+		Email:           body.Email,
 		IsRecurring:     body.IsRecurring,
 		SessionStripeID: session.ID,
 		Status:          string(session.Status),
@@ -143,77 +139,9 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 		return
 	}
 
-	switch session.Mode {
-	case stripe.CheckoutSessionModeSetup:
-		paymentsWebhookCheckoutSessionCompletedModeSetup(c, db, session)
-	case stripe.CheckoutSessionModePayment:
-		paymentsWebhookCheckoutSessionCompletedModePayment(c, db, session)
-	default:
-		c.JSON(200, gin.H{"received": true})
-	}
-}
-
-func paymentsWebhookCheckoutSessionCompletedModeSetup(c *gin.Context, db *gorm.DB, session *stripe.CheckoutSession) {
-	priceID := session.Metadata["price_id"]
-	intent := session.SetupIntent
-	billingDetails := session.PaymentIntent.PaymentMethod.BillingDetails
-	paymentMethodType := (*string)(&intent.PaymentMethod.Type)
-
-	customer, err := stripe_customer.New(&stripe.CustomerParams{
-		Email: &billingDetails.Email,
-		Name:  &billingDetails.Name,
-		Address: &stripe.AddressParams{
-			City:       &billingDetails.Address.City,
-			Country:    &billingDetails.Address.Country,
-			Line1:      &billingDetails.Address.Line1,
-			Line2:      &billingDetails.Address.Line2,
-			PostalCode: &billingDetails.Address.PostalCode,
-			State:      &billingDetails.Address.State,
-		},
-		PaymentMethod: paymentMethodType,
-		InvoiceSettings: &stripe.CustomerInvoiceSettingsParams{
-			DefaultPaymentMethod: paymentMethodType,
-		},
-	})
-	if err != nil {
-		log.Print(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create customer"))
-		return
-	}
-
-	_, err = stripe_subscription.New(&stripe.SubscriptionParams{
-		Customer: &customer.ID,
-		Items: []*stripe.SubscriptionItemsParams{
-			{Price: &priceID},
-		},
-	})
-	if err != nil {
-		log.Print(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create subscription"))
-		return
-	}
-
-	err = db.Model(&models.Payment{}).Where("session_stripe_id = ?", session.ID).Updates(&models.Payment{
-		Status:                string(session.Status),
-		CustomerStripeID:      customer.ID,
-		PaymentIntentStripeID: session.PaymentIntent.ID,
-	}).Error
-	if err != nil {
-		log.Print(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to update payment in database"))
-		return
-	}
-
-	c.JSON(200, gin.H{"received": true})
-}
-
-func paymentsWebhookCheckoutSessionCompletedModePayment(c *gin.Context, db *gorm.DB, session *stripe.CheckoutSession) {
-	// ! Warning session.Customer is nil here
-	err := db.Model(&models.Payment{}).Where("session_stripe_id = ?", session.ID).UpdateColumns(&models.Payment{
-		Status:                string(session.Status),
-		CustomerStripeID:      "",
-		PaymentIntentStripeID: session.PaymentIntent.ID,
-		Email:                 session.CustomerEmail,
+	err = db.Model(&models.Payment{}).Where("session_stripe_id = ?", session.ID).UpdateColumns(&models.Payment{
+		Status: string(session.Status),
+		Email:  session.CustomerEmail,
 	}).Error
 	if err != nil {
 		log.Print(err)

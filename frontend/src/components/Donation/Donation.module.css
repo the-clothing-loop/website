@@ -30,8 +30,6 @@
 }
 .donationsWrapper .donationForm .paymentToggle input[type="radio"] {
   opacity: 0;
-  position: absolute;
-  width: 100%;
 }
 .donationsWrapper .donationForm .paymentToggle label {
   color: #3b3b3b;

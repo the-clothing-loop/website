@@ -27,13 +27,32 @@ interface RecurringAmount {
 interface FormValues {
   email: string;
   isRecurring: boolean;
-  recurringIndex: number;
+  recurringType: RecurringType;
   oneOffAmount: number;
 }
 
-const accessToken = {
-  stripeApiAccessToken: process.env.REACT_APP_STRIPE_PUBLIC_KEY,
+enum RecurringType {
+  R2_50,
+  R5_00,
+  R10_00,
+}
+
+const recurringAmounts: Record<RecurringType, RecurringAmount> = {
+  [RecurringType.R2_50]: {
+    text: "€2.50",
+    priceID: priceIDs.recurring_2_50,
+  },
+  [RecurringType.R5_00]: {
+    text: "€5.00",
+    priceID: priceIDs.recurring_5_00,
+  },
+  [RecurringType.R10_00]: {
+    text: "€10.00",
+    priceID: priceIDs.recurring_10_00,
+  },
 };
+const oneOffStandardAmounts = [5, 10, 20, 50, 100];
+const oneOffPriceID = priceIDs.oneOff_any;
 
 const DonationFormContent = () => {
   const [error, setError] = useState<string | null>(null);
@@ -43,28 +62,11 @@ const DonationFormContent = () => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
 
-  const recurringAmounts: RecurringAmount[] = [
-    {
-      text: "€2.50",
-      priceID: priceIDs.recurring_2_50,
-    },
-    {
-      text: "€5.00",
-      priceID: priceIDs.recurring_5_00,
-    },
-    {
-      text: "€10.00",
-      priceID: priceIDs.recurring_10_00,
-    },
-  ];
-  const oneOffStandardAmounts = [5, 10, 20, 50, 100];
-  const oneOffPriceID = priceIDs.oneOff_any;
-
   const formik = useFormik<FormValues>({
     initialValues: {
       email: "",
       isRecurring: false,
-      recurringIndex: 1,
+      recurringType: RecurringType.R5_00,
       oneOffAmount: 10,
     },
     validationSchema: Yup.object({
@@ -85,13 +87,16 @@ const DonationFormContent = () => {
 
       (async () => {
         try {
+          let priceID = oneOffPriceID;
+          if (values.isRecurring) {
+            priceID = recurringAmounts[values.recurringType].priceID;
+          }
+
           const res = await paymentInitiate({
             price_cents: values.isRecurring ? null : values.oneOffAmount * 100,
             email: values.email,
             is_recurring: values.isRecurring,
-            price_id: values.isRecurring
-              ? recurringAmounts[values.recurringIndex].priceID
-              : oneOffPriceID,
+            price_id: priceID,
           });
 
           console.log(res.data);
@@ -144,8 +149,9 @@ const DonationFormContent = () => {
     </Grid>
   );
 
-  const recurringAmountCheckbox = (recurringIndex: number) => {
-    let recurringAmount = recurringAmounts[recurringIndex];
+  const recurringAmountCheckbox = (recurringType: RecurringType) => {
+    let recurringAmount = recurringAmounts[recurringType];
+    console.log("change reccuring to ", recurringAmount, recurringType);
     return (
       <Grid
         item
@@ -160,9 +166,9 @@ const DonationFormContent = () => {
           type="radio"
           name="priceID"
           value={recurringAmount.priceID}
-          checked={formik.values.recurringIndex === recurringIndex}
+          checked={formik.values.recurringType === recurringType}
           onChange={() => {
-            formik.setFieldValue("recurringIndex", recurringIndex);
+            formik.setFieldValue("recurringType", recurringType);
           }}
         />
         <label htmlFor={`donation-amount-${recurringAmount.priceID}`}>
@@ -194,7 +200,7 @@ const DonationFormContent = () => {
                 <input
                   id="one-off-donation-button"
                   type="radio"
-                  name="isRecurring"
+                  name="recurring"
                   value="one-off"
                   checked={!formik.values.isRecurring}
                   onChange={() => {
@@ -216,7 +222,7 @@ const DonationFormContent = () => {
                 <input
                   id="periodic-donation-button"
                   type="radio"
-                  name="isRecurring"
+                  name="recurring"
                   value="periodic"
                   checked={formik.values.isRecurring}
                   onChange={() => {
@@ -235,32 +241,46 @@ const DonationFormContent = () => {
               <p>{t("iWillSupportTheClothingLoopWithAOneTimeDonation")}</p>
             )}
 
-            <Grid container spacing={2} className={styles.paymentAmountOptions}>
-              {formik.values.isRecurring
-                ? recurringAmounts.map((_, i) => recurringAmountCheckbox(i))
-                : oneOffStandardAmounts.map((amount) => oneOffCheckbox(amount))}
-              {!formik.values.isRecurring && (
-                <Grid
-                  item
-                  key="custom"
-                  xs={6}
-                  sm={4}
-                  className={styles.paymentToggle}
-                  classes={{ root: classes.gridItemsNoPadding }}
-                >
-                  <input
-                    name="customAmount"
-                    type="text"
-                    onChange={(e) =>
-                      formik.setFieldValue("amount", parseInt(e.target.value))
-                    }
-                    placeholder={t("otherAmount")}
-                  />
-                </Grid>
-              )}
+            <Grid
+              container
+              spacing={2}
+              className={styles.paymentAmountOptions}
+              sx={{ display: formik.values.isRecurring ? "none" : undefined }}
+            >
+              {oneOffStandardAmounts.map((amount) => oneOffCheckbox(amount))}
+
+              <Grid
+                item
+                key="custom"
+                xs={6}
+                sm={4}
+                className={styles.paymentToggle}
+                classes={{ root: classes.gridItemsNoPadding }}
+              >
+                <input
+                  name="customAmount"
+                  type="text"
+                  onChange={(e) =>
+                    formik.setFieldValue("amount", parseInt(e.target.value))
+                  }
+                  placeholder={t("otherAmount")}
+                />
+              </Grid>
               {formik.errors.oneOffAmount && (
                 <Alert severity="error">{formik.errors.oneOffAmount}</Alert>
               )}
+            </Grid>
+            <Grid
+              container
+              spacing={2}
+              className={styles.paymentAmountOptions}
+              sx={{ display: formik.values.isRecurring ? undefined : "none" }}
+            >
+              {[
+                RecurringType.R2_50,
+                RecurringType.R5_00,
+                RecurringType.R10_00,
+              ].map((i) => recurringAmountCheckbox(i))}
             </Grid>
             <Grid container spacing={2} className={styles.paymentEmail}>
               <Grid item xs={12} classes={{ root: classes.gridItemsNoPadding }}>
@@ -333,9 +353,9 @@ const DonationFormContent = () => {
 
 const DonationForm = () => {
   const { t } = useTranslation();
-  if (accessToken.stripeApiAccessToken) {
-    const stripePublicKey = accessToken.stripeApiAccessToken;
 
+  const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY || "";
+  if (stripePublicKey) {
     const stripePromise = loadStripe(stripePublicKey);
 
     return (
