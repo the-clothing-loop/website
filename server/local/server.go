@@ -44,6 +44,9 @@ func Routes() *gin.Engine {
 		c.String(200, "pong")
 	})
 
+	// info
+	v2.GET("/info", controllers.InfoGet)
+
 	// login
 	v2.POST("/register/basic-user", controllers.RegisterBasicUser)
 	v2.POST("/register/chain-admin", controllers.RegisterChainAdmin)
