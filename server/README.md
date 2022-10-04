@@ -62,47 +62,21 @@ To do so run this command:
 
 ### 6. Setup Rest client
 
-To document, test and use the server independently, [Insomnia](https://insomnia.rest/) is to be used.
+To document, test and use the server independently, [Postman](https://www.postman.com/) is to be used.
 
 #### 6.1. Install Insomnia
 
-Install the Insomnia Rest client here:
+Install one of the Insomnia Rest client options here:
 
-- Win/Mac/Ubuntu: https://insomnia.rest/download
-- Linux: https://flathub.org/apps/details/rest.insomnia.Insomnia
+a. app: https://www.postman.com/downloads/
+b. browser agent: https://www.postman.com/downloads/postman-agent/
+c. cli: https://learning.postman.com/docs/postman-cli/postman-cli-installation/
 
-Then open Insomnia from your applications
+#### 6.2. Use project in postman
 
-#### 6.2. Import project to Insomnia
+Here is the link to the postman collection: https://www.postman.com/the-clothing-loop/workspace/the-clothing-loop/overview
 
-More documentation here: https://docs.insomnia.rest/insomnia/git-sync#set-up-a-remote-repository-with-github
-
-1. Click **Create**
-2. In the dropdown click **Git Clone**
-3. Sign in to Github here (if you haven't done so)
-   1. Open the Github tab
-   2. Click **Authenticate with GitHub**
-4. Paste in **GitHub URI** the following: `https://github.com/lil5/cl_insomnia.git`
-
-#### 6.3. Create private environments
-
-1. Type in `ctrl` + `e` or `command` + `e`
-2. Select **Example Sub Environment** in the left side menu
-3. Copy the json to your clipboard
-4. Click the plus button next to **Sub Environments** and select **Private Environment** (this environment will not be added to the github repository for security and merge-conflict reasons)
-5. Rename environment to Development
-6. Select all of the empty json and paste
-7. Change the values to those found in the corresponding database
-
-When the new site is live and you have access to the production database do the same with and call it **Production**, give it a color too :sparkles:
-
-#### 6.4. Understand how to sync changes
-
-https://docs.insomnia.rest/insomnia/git-sync#commit-changes
-
-This application just uses git: commit, push, pull.
-
-Conflict must be done in an external editor like vscode.
+Be warned that everything saved is publicly available if you want to save, remove the sensitive data beforehand or use an environment variable
 
 ## Commands
 
