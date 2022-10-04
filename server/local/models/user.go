@@ -105,13 +105,13 @@ WHERE users.id = ?
 }
 
 func (u *User) IsPartOfChain(db *gorm.DB, chainID uint) bool {
-	var sum int
+	var count int
 	db.Raw(`
-SELECT SUM(user_chains.id)
+SELECT COUNT(user_chains.id)
 FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id
 WHERE user_chains.user_id = ?
 	AND user_chains.chain_id = ?
-	`, u.ID, chainID).Scan(&sum)
-	return sum != 0
+	`, u.ID, chainID).Scan(&count)
+	return count != 0
 }
