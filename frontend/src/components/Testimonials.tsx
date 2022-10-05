@@ -168,7 +168,9 @@ const Testimonials = () => {
     }
   };
 
-  let testimonials: Testimonial[] = t("arrTestimonials") || [];
+  let testimonials: Testimonial[] =
+    t("arrTestimonials", { defaultValue: [], returnObjects: true }) || [];
+  console.log("testimonials", testimonials);
 
   return (
     <Grid classes={{ root: classes.componentWrapperRoot }}>
