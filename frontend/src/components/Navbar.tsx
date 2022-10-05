@@ -107,7 +107,7 @@ const Navbar = () => {
               </Typography>
             )}
 
-            {/* <LanguageSwitcher /> */}
+            <LanguageSwitcher />
           </div>
         </div>
       </AppBar>
