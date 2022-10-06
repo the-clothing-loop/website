@@ -1,0 +1,27 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Install phpmyadmin
+      apt:
+        pkg:
+          - phpmyadmin
+          - php-fpm
+          - php-mbstring
+          - php-bcmath
+          - php-xml
+          - php-mysql
+          - php-common
+          - php-gd
+          - php-cli
+          - php-curl
+          - php-zip
+          - php-gd
+    - name: Disable apache service
+      service:
+        name: apache2
+        enabled: no
+        state: stopped
+    - name: reload caddy service
+      service:
+        name: caddy
+        state: reloaded

@@ -17,6 +17,18 @@ vpsnode1.vps.webdock.cloud {
 	respond "Hello, world!"
 }
 
+admin.clothingloop.org {
+	log {
+		output file /var/log/caddy/phpmyadmin-error.log
+		format console
+		level ERROR
+	}
+	php_fastcgi unix//run/php/php-fpm.sock
+	root * /usr/share/phpmyadmin
+	file_server
+	try_files {path} /index.php
+}
+
 acc.clothingloop.org {
 	log {
 		output file /var/log/caddy/acc.clothingloop.org-error.log
