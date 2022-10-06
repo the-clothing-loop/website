@@ -1,0 +1,67 @@
+name: Deploy Production v2
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.19"
+      - name: Build binary
+        run: make build-server
+        working-directory: ./server
+      - name: Rename binary
+        run: mv server cl-api-production
+        working-directory: ./server
+      - name: Send binary to vps and restart service
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        with:
+          host: vpsnode1.vps.webdock.cloud
+          user: admin
+          key: ${{ secrets.VPS1_PRIVKEY }}
+          scp: |
+            ./server/cl-api-production => /home/admin/
+          last_ssh: |
+            sudo chown root:root /home/admin/cl-api-production
+            sudo chmod 0775 /home/admin/cl-api-production
+            sudo mv /home/admin/cl-api-production /home/clothingloop/opt/api-production
+            sudo systemctl restart cl-api-production
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Dependencies Frontend
+        run: npm ci
+        working-directory: ./frontend
+      - name: Build public files
+        run: npm run build:production
+        working-directory: ./frontend
+      - name: Tar public files
+        run: tar czf cl-fe-production.tar.gz ./build
+        working-directory: ./frontend
+      - name: Send public files to vps
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        with:
+          host: vpsnode1.vps.webdock.cloud
+          user: admin
+          key: ${{ secrets.VPS1_PRIVKEY }}
+          scp: |
+            ./frontend/cl-fe-production.tar.gz => /home/admin/
+          last_ssh: |
+            mkdir /home/admin/cl-fe-production || :
+            cd /home/admin/cl-fe-production; tar xzf ../cl-fe-production.tar.gz .
+            sudo chown -R caddy:caddy /home/admin/cl-fe-production/build
+            sudo chmod -R 0775 /home/admin/cl-fe-production/build
+            sudo rm -rf /var/caddy/clothingloop.org/{.*,*} || :
+            sudo mv -f /home/admin/cl-fe-production/build/{.*,*} /var/caddy/clothingloop.org || :
+            sudo systemctl reload caddy
+            sudo rm -rf /home/admin/cl-fe-production.tar.gz /home/admin/cl-fe-production
