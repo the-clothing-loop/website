@@ -28,8 +28,8 @@ jobs:
           known_hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
       - name: Send binary to vps and restart service
         run: |
-          rsync -az --delete ./server/cl-api-acceptance /home/admin/
-          ssh admin@vpsnode1.vps.webdock.cloud /bin/bash -c "\
+          rsync -az --delete ./server/cl-api-acceptance admin@vpsnode1.vps.webdock.cloud:/home/admin/
+          ssh admin@vpsnode1.vps.webdock.cloud "\
           sudo chown root:root /home/admin/cl-api-acceptance; \
           sudo chmod 0775 /home/admin/cl-api-acceptance; \
           sudo mv /home/admin/cl-api-acceptance /home/clothingloop/opt/api-acceptance; \
@@ -52,9 +52,9 @@ jobs:
           known_hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
       - name: Send public files to vps
         run: |
-          ssh admin@vpsnode1.vps.webdock.cloud /bin/bash -c "mkdir -p /home/admin/cl-fe-acceptance"
-          rsync -az --delete ./frontend/build/ admin@vpsnode1.vps.webdock.cloud/home/admin/cl-fe-acceptance/
-          ssh admin@vpsnode1.vps.webdock.cloud /bin/bash -c "\
+          ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-fe-acceptance"
+          rsync -az --delete ./frontend/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-fe-acceptance/
+          ssh admin@vpsnode1.vps.webdock.cloud "\
           sudo chown -R caddy:caddy /home/admin/cl-fe-acceptance; \
           sudo chmod -R 0775 /home/admin/cl-fe-acceptance; \
           sudo rm -rf /var/caddy/acc.clothingloop.org/{.*,*} || :; \
