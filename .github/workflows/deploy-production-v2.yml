@@ -1,9 +1,8 @@
 name: Deploy Production v2
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  release:
+    types: [created]
 
 jobs:
   deploy-api:
