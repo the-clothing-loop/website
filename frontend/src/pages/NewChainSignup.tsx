@@ -44,9 +44,7 @@ const Signup = () => {
     /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
   const validate = Yup.object({
-    name: Yup.string()
-      .min(2, t("mustBeAtLeastChar"))
-      .required(t("required")),
+    name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     email: Yup.string()
       .email(t("pleaseEnterAValid.emailAddress"))
       .required(t("required")),
@@ -129,14 +127,14 @@ const Signup = () => {
                 className={classes.p}
                 id="explanatory-text"
               >
-                Starting a Loop is fun and easy!{" "}
+                {t("startingALoopIsFunAndEasy")}
               </Typography>
               <Typography
                 component="p"
                 className={classes.p}
                 id="explanatory-text"
               >
-                {" " + t("inOurManualYoullFindAllTheStepsNewSwapEmpire")}
+                {t("inOurManualYoullFindAllTheStepsNewSwapEmpire")}
               </Typography>
 
               <Typography
@@ -226,7 +224,6 @@ const Signup = () => {
                     className={classes.buttonOutlined}
                     onClick={() => history.push("/loops/find")}
                   >
-                    {" "}
                     {t("back")}
                   </Button>
                   <Button type="submit" className={classes.button}>
