@@ -92,10 +92,6 @@ const theme = {
     alignItems: "center",
   },
 
-  languageSwitcherWrapper: {
-    paddingLeft: "18px", // 32 - 14
-  },
-
   buttonContained: {
     position: "relative",
     margin: "15px 15px 15px 15px",
@@ -644,7 +640,6 @@ const theme = {
   },
 
   simpleSelect: {
-    textTransform: "uppercase",
     color: black,
     fontWeight: "500 !important",
   },

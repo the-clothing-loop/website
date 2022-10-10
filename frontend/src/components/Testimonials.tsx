@@ -135,43 +135,14 @@ const useStyles = makeStyles({
   },
 });
 
-const Content = [
-  {
-    author: "Roos",
-    content:
-      "I think it's great to be able to 'shop' regularly without burdening your wallet or the environment",
-  },
-  {
-    author: "Unknown",
-    content:
-      "Teach them young! My daughters, aged 13 and 16, regularly find something cool in the bag. I love how this teaches them that clothes can perfectly well be sourced second-hand. Sustainability and environmental awareness should be an important part of any upbringing, in my opinion!",
-  },
-  {
-    author: "Participant in Barendrecht",
-    content:
-      "Someone in my loop landed a new job. Guess who's dress she wore to her interview?",
-  },
-  {
-    author: "Nienke",
-    content:
-      "The best part is trying on things you would never try in the store, and then realise you really like them",
-  },
-
-  {
-    author: "Lia",
-    content:
-      "A nice bonus is: you get to know people in your neighbourhood, usually neighbours who already have a somewhat green heart. This makes it a small step – if you really need something but would rather not buy it – to ask if someone in the Loop can perhaps lend it to you, like ski pants or a costume for a theme party!",
-  },
-  {
-    author: "Ella",
-    content:
-      "After the third bag I receive it dawns on me: what an incredible amount of clothes we all have in the closet!",
-  },
-];
+interface Testimonial {
+  name: string;
+  message: string;
+}
 
 const Testimonials = () => {
   const classes = useStyles();
-  const { t } = useTranslation();
+  const { t } = useTranslation("testimonials");
 
   const refDiv = useRef<HTMLHeadingElement>(null);
 
@@ -196,6 +167,10 @@ const Testimonials = () => {
       refDiv.current.style.transform = "translateX(0px)";
     }
   };
+
+  let testimonials: Testimonial[] =
+    t("arrTestimonials", { defaultValue: [], returnObjects: true }) || [];
+  console.log("testimonials", testimonials);
 
   return (
     <Grid classes={{ root: classes.componentWrapperRoot }}>
@@ -236,7 +211,7 @@ const Testimonials = () => {
             classes={{ root: classes.carouselContentContainer }}
             ref={refDiv}
           >
-            {Content.map((testimonial, i) => {
+            {testimonials.map((testimonial, i) => {
               return (
                 <Paper classes={{ root: classes.carouselElement }} key={i}>
                   <FormatQuoteIcon className="format-quote-icon" />
@@ -245,13 +220,13 @@ const Testimonials = () => {
                     component="p"
                     classes={{ root: classes.contentTypographyRoot }}
                   >
-                    {testimonial.content}
+                    {testimonial.message}
                   </Typography>
                   <Typography
                     classes={{ root: classes.testimonialAuthor }}
                     component="p"
                   >
-                    - {testimonial.author}
+                    - {testimonial.name}
                   </Typography>
                 </Paper>
               );

@@ -178,10 +178,6 @@
     display: inline-block;
   }
 
-  .MuiPaper-elevation1 {
-    box-shadow: none !important;
-  }
-
   thead {
     border-bottom: 1px solid rgba(224, 224, 224, 1);
   }
@@ -448,11 +444,6 @@
 
   .MuiStepLabel-label {
     font-family: "Montserrat" !important;
-  }
-
-  #language-switcher-select {
-    text-transform: capitalize !important;
-    border-bottom: none !important;
   }
 
   button.slide:hover,

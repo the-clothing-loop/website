@@ -141,14 +141,14 @@ const Signup = () => {
                 className={classes.p}
                 id="explanatory-text"
               >
-                Starting a Loop is fun and easy!{" "}
+                {t("startingALoopIsFunAndEasy")}
               </Typography>
               <Typography
                 component="p"
                 className={classes.p}
                 id="explanatory-text"
               >
-                {" " + t("inOurManualYoullFindAllTheStepsNewSwapEmpire")}
+                {t("inOurManualYoullFindAllTheStepsNewSwapEmpire")}
               </Typography>
 
               <Typography
