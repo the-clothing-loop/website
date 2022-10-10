@@ -1,4 +1,4 @@
-next.clothingloop.org {
+next.clothingloop.org, clothingloop.org {
 	log {
 		output file /var/log/caddy/api.clothingloop.org-error.log
 		format console
@@ -6,7 +6,6 @@ next.clothingloop.org {
 	}
 
 	handle_path /api/* {
-		rewrite * /{path}
 		reverse_proxy 127.0.0.1:8081
 	}
 
