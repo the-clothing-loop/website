@@ -1,16 +1,20 @@
-next.clothingloop.org {
+next.clothingloop.org, clothingloop.org {
 	log {
 		output file /var/log/caddy/api.clothingloop.org-error.log
 		format console
 		level ERROR
 	}
 
-	# handle_path /api/* {
-	# 	rewrite * /{path}
-	# 	reverse_proxy 127.0.0.1:8081
-	# }
+	handle_path /api/* {
+		reverse_proxy 127.0.0.1:8081
+	}
 
-	respond "Hello, world!"
+	handle {
+		root * /var/caddy/clothingloop.org
+		file_server
+		encode zstd gzip
+		try_files {path} /index.html
+	}
 }
 
 vpsnode1.vps.webdock.cloud {

@@ -21,19 +21,21 @@ jobs:
       - name: Rename binary
         run: mv server cl-api-acceptance
         working-directory: ./server
-      - name: Send binary to vps and restart service
-        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
         with:
-          host: vpsnode1.vps.webdock.cloud
-          user: admin
           key: ${{ secrets.VPS1_PRIVKEY }}
-          scp: |
-            ./server/cl-api-acceptance => /home/admin/
-          last_ssh: |
-            sudo chown root:root /home/admin/cl-api-acceptance
-            sudo chmod 0775 /home/admin/cl-api-acceptance
-            sudo mv /home/admin/cl-api-acceptance /home/clothingloop/opt/api-acceptance
-            sudo systemctl restart cl-api-acceptance
+          known_hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
+      - name: Send binary to vps and restart service
+        run: |
+          rsync -az --delete ./server/cl-api-acceptance admin@vpsnode1.vps.webdock.cloud:/home/admin/
+          ssh admin@vpsnode1.vps.webdock.cloud "\
+          sudo rm /home/clothingloop/opt/api-acceptance; \
+          sudo cp /home/admin/cl-api-acceptance /home/clothingloop/opt/api-acceptance; \
+          sudo chown root:root /home/clothingloop/opt/api-acceptance; \
+          sudo chmod 0775 /home/clothingloop/opt/api-acceptance; \
+          sudo systemctl restart cl-api-acceptance"
+          echo "done"
   deploy-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -45,23 +47,16 @@ jobs:
       - name: Build public files
         run: npm run build:acceptance
         working-directory: ./frontend
-      - name: Tar public files
-        run: tar czf cl-fe-acceptance.tar.gz ./build
-        working-directory: ./frontend
-      - name: Send public files to vps
-        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
         with:
-          host: vpsnode1.vps.webdock.cloud
-          user: admin
           key: ${{ secrets.VPS1_PRIVKEY }}
-          scp: |
-            ./frontend/cl-fe-acceptance.tar.gz => /home/admin/
-          last_ssh: |
-            mkdir /home/admin/cl-fe-acceptance || :
-            cd /home/admin/cl-fe-acceptance; tar xzf ../cl-fe-acceptance.tar.gz .
-            sudo chown -R caddy:caddy /home/admin/cl-fe-acceptance/build
-            sudo chmod -R 0775 /home/admin/cl-fe-acceptance/build
-            sudo rm -rf /var/caddy/acc.clothingloop.org/{.*,*} || :
-            sudo mv -f /home/admin/cl-fe-acceptance/build/{.*,*} /var/caddy/acc.clothingloop.org || :
-            sudo systemctl reload caddy
-            sudo rm -rf /home/admin/cl-fe-acceptance.tar.gz /home/admin/cl-fe-acceptance
+          known_hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
+      - name: Send public files to vps
+        run: |
+          ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-fe-acceptance"
+          rsync -az --delete ./frontend/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-fe-acceptance/
+          ssh admin@vpsnode1.vps.webdock.cloud "\
+          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-fe-acceptance/ /var/caddy/acc.clothingloop.org/; \
+          sudo systemctl reload caddy"
+          echo "done"

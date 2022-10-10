@@ -34,7 +34,7 @@
         owner: "caddy"
       with_items:
         - "/var/caddy/acc.clothingloop.org"
-        # - "/var/caddy/clothingloop.org"
+        - "/var/caddy/clothingloop.org"
     - name: Setup caddy service
       service:
         name: caddy
