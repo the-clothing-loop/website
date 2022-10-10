@@ -35,6 +35,7 @@ jobs:
           sudo chown root:root /home/clothingloop/opt/api-acceptance; \
           sudo chmod 0775 /home/clothingloop/opt/api-acceptance; \
           sudo systemctl restart cl-api-acceptance"
+          echo "done"
   deploy-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -56,6 +57,6 @@ jobs:
           ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-fe-acceptance"
           rsync -az --delete ./frontend/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-fe-acceptance/
           ssh admin@vpsnode1.vps.webdock.cloud "\
-          sudo rm -rf /var/caddy/acc.clothingloop.org/{.*,*} || :; \
-          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 /home/admin/cl-fe-acceptance/ /var/caddy/clothingloop.org/; \
+          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-fe-acceptance/ /var/caddy/acc.clothingloop.org/; \
           sudo systemctl reload caddy"
+          echo "done"
