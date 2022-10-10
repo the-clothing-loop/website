@@ -29,9 +29,10 @@ jobs:
         run: |
           rsync -az --delete ./server/cl-api-production admin@vpsnode1.vps.webdock.cloud:/home/admin/
           ssh admin@vpsnode1.vps.webdock.cloud "\
-          sudo chown root:root /home/admin/cl-api-production; \
-          sudo chmod 0775 /home/admin/cl-api-production; \
-          sudo mv /home/admin/cl-api-production /home/clothingloop/opt/api-production; \
+          sudo rm /home/clothingloop/opt/api-production; \
+          sudo cp /home/admin/cl-api-production /home/clothingloop/opt/api-production; \
+          sudo chown root:root /home/clothingloop/opt/api-production; \
+          sudo chmod 0775 /home/clothingloop/opt/api-production; \
           sudo systemctl restart cl-api-production"
   deploy-frontend:
     runs-on: ubuntu-latest
@@ -54,8 +55,6 @@ jobs:
           ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-fe-production"
           rsync -az --delete ./frontend/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-fe-production/
           ssh admin@vpsnode1.vps.webdock.cloud "\
-          sudo chown -R caddy:caddy /home/admin/cl-fe-production; \
-          sudo chmod -R 0775 /home/admin/cl-fe-production; \
           sudo rm -rf /var/caddy/clothingloop.org/{.*,*} || :; \
-          sudo mv -f /home/admin/cl-fe-production/{.*,*} /var/caddy/clothingloop.org || :; \
+          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 /home/admin/cl-fe-production/ /var/caddy/clothingloop.org/; \
           sudo systemctl reload caddy"
