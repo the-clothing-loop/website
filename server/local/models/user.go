@@ -13,6 +13,7 @@ var ErrUserNotFound = errors.New("User not found")
 type User struct {
 	ID              uint        `json:"-"`
 	UID             string      `json:"uid" gorm:"uniqueIndex"`
+	FID             string      `json:"-"`
 	Email           string      `json:"email" gorm:"unique"`
 	IsEmailVerified bool        `json:"is_email_verified"`
 	IsRootAdmin     bool        `json:"is_root_admin"`

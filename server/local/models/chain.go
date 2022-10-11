@@ -14,6 +14,7 @@ var ErrChainNotFound = errors.New("Chain not found")
 type Chain struct {
 	ID               uint
 	UID              string `gorm:"uniqueIndex"`
+	FID              string
 	Name             string
 	Description      string
 	Address          string

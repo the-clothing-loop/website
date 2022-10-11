@@ -13,7 +13,8 @@ const (
 )
 
 type Payment struct {
-	ID uint
+	ID  uint
+	FID string
 	// Euro cents
 	Amount                float32
 	Email                 string
