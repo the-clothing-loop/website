@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -88,7 +89,7 @@ func PaymentsInitiate(c *gin.Context) {
 		Amount:          float32(session.AmountTotal) / 100,
 		Email:           body.Email,
 		IsRecurring:     body.IsRecurring,
-		SessionStripeID: session.ID,
+		SessionStripeID: sql.NullString{String: session.ID, Valid: true},
 		Status:          string(session.Status),
 	}).Error; err != nil {
 		log.Print(err)

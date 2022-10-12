@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/stripe/stripe-go/v73"
@@ -14,12 +15,12 @@ const (
 
 type Payment struct {
 	ID  uint
-	FID string
+	FID sql.NullString `gorm:"column:fid"`
 	// Euro cents
 	Amount                float32
 	Email                 string
 	IsRecurring           bool
-	SessionStripeID       string `gorm:"uniqueIndex"`
+	SessionStripeID       sql.NullString `gorm:"uniqueIndex"`
 	CustomerStripeID      string
 	PaymentIntentStripeID string
 	Status                string

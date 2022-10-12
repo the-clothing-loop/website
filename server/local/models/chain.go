@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"errors"
 	"time"
 
@@ -13,8 +14,8 @@ var ErrChainNotFound = errors.New("Chain not found")
 
 type Chain struct {
 	ID               uint
-	UID              string `gorm:"uniqueIndex"`
-	FID              string
+	UID              string         `gorm:"uniqueIndex"`
+	FID              sql.NullString `gorm:"column:fid"`
 	Name             string
 	Description      string
 	Address          string

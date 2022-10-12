@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"sync"
 
 	"github.com/CollActionteam/clothing-loop/server/cmd/firebase-migrate/local"
 	"github.com/CollActionteam/clothing-loop/server/local/app"
+	"github.com/CollActionteam/clothing-loop/server/local/models"
 )
 
 func main() {
@@ -24,7 +26,6 @@ func run() error {
 	fmt.Printf("Setup environment in: %s\n", app.Config.ENV)
 
 	// set database
-	os.Setenv("SERVER_NO_MIGRATE", "true")
 	db := app.DatabaseInit()
 
 	// test database
@@ -39,72 +40,94 @@ WHERE chains.published = ?
 	}
 	fmt.Printf("database works\ntotalChains: %v\n", totalChains)
 
+	// skip createdAt/updatedAt/deletedAt auto changes
+	db.Config.SkipDefaultTransaction = true
+
 	// read backup.json file
 	data, err := local.ReadBackupFile()
 	if err != nil {
 		return err
 	}
 
+	// read auth_data.json file
+	// auth, err := local.ReadAuthDataFile()
+	// if err != nil {
+	// 	return err
+	// }
+
 	// migrations
-	wg := sync.WaitGroup{}
-	for i := range data.Collections.Chains {
-		fid := i
-		d := data.Collections.Chains[fid]
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			local.MigrateChain(*d, fid)
-		}()
-	}
-	wg.Wait()
+	var wg sync.WaitGroup
+	// wg = sync.WaitGroup{}
+	// for i := range data.Collections.Chains {
+	// 	fid := i
+	// 	d := data.Collections.Chains[fid]
+	// 	wg.Add(1)
+	// 	go func() {
+	// 		defer wg.Done()
+	// 		local.MigrateChain(*d, fid)
+	// 	}()
+	// }
+	// wg.Wait()
+
+	// wg = sync.WaitGroup{}
+	// for i := range data.Collections.Users {
+	// 	fid := i
+	// 	d := data.Collections.Users[fid]
+	// 	wg.Add(1)
+	// 	go func() {
+	// 		defer wg.Done()
+	// 		local.MigrateUser(*d, fid, data.Collections.Chains)
+	// 	}()
+	// }
+	// wg.Wait()
+
+	// wg = sync.WaitGroup{}
+	// for i := range data.Collections.Mail {
+	// 	fid := i
+	// 	d := data.Collections.Mail[fid]
+	// 	wg.Add(1)
+	// 	go func() {
+	// 		defer wg.Done()
+	// 		local.MigrateMail(*d, fid)
+	// 	}()
+	// }
+	// wg.Wait()
 
 	wg = sync.WaitGroup{}
-	for i := range data.Collections.Users {
-		fid := i
-		d := data.Collections.Users[fid]
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			local.MigrateUser(*d, fid, data.Collections.Chains)
-		}()
-	}
-	wg.Wait()
-
-	wg = sync.WaitGroup{}
-	for i := range data.Collections.Mail {
-		fid := i
-		d := data.Collections.Mail[fid]
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			local.MigrateMail(*d, fid)
-		}()
-	}
-	wg.Wait()
-
-	wg = sync.WaitGroup{}
+	payments := []*models.Payment{}
 	for i := range data.Collections.Payments {
 		fid := i
 		d := data.Collections.Payments[fid]
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			local.MigratePayment(*d, fid)
+			p := local.MigratePayment(*d, fid)
+			payments = append(payments, &p)
 		}()
 	}
 	wg.Wait()
+	if err := db.CreateInBatches(payments, 100).Error; err != nil {
+		return fmt.Errorf("error in CreateInBatches(payments, 100): %+v", err)
+	}
+	log.Printf("%d payments imported", len(payments))
 
 	wg = sync.WaitGroup{}
+	newsletters := []*models.Newsletter{}
 	for i := range data.Collections.InterestedUsers {
 		fid := i
 		d := data.Collections.InterestedUsers[fid]
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			local.MigrateInterestedUsers(*d, fid)
+			n := local.MigrateInterestedUsers(*d, fid)
+			newsletters = append(newsletters, &n)
 		}()
 	}
 	wg.Wait()
+	if err := db.CreateInBatches(newsletters, 100).Error; err != nil {
+		return fmt.Errorf("error in CreateInBatches(newsletters, 100): %+v", err)
+	}
+	log.Printf("%d newsletters imported", len(newsletters))
 
 	return nil
 }

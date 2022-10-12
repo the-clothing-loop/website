@@ -1,6 +1,7 @@
 package local
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -66,7 +67,7 @@ func MigrateChain(d map[string]any, fid string) (chain models.Chain, chainAdminF
 	chainAdminFID = d["chainAdmin"].(string)
 	chain = models.Chain{
 		UID:              uuid.NewV4().String(),
-		FID:              fid,
+		FID:              sql.NullString{String: fid, Valid: fid != ""},
 		Name:             name,
 		Description:      description,
 		Address:          address,
@@ -111,7 +112,7 @@ func MigrateUser(d BackupCollectionItem, fid string, dChains BackupCollection) (
 
 	user = models.User{
 		UID:             uuid.NewV4().String(),
-		FID:             fid,
+		FID:             sql.NullString{String: fid, Valid: fid != ""},
 		Email:           fid + "@example.com",
 		IsEmailVerified: false,
 		IsRootAdmin:     isRootAdmin,
@@ -134,7 +135,7 @@ func MigrateMail(d BackupCollectionItem, fid string) (mail models.Mail) {
 		subject = msg["subject"].(string)
 	}
 	mail = models.Mail{
-		FID:       fid,
+		FID:       sql.NullString{String: fid, Valid: fid != ""},
 		To:        to,
 		Subject:   subject,
 		Body:      html,
@@ -169,11 +170,11 @@ func MigratePayment(d BackupCollectionItem, fid string) (payment models.Payment)
 	}
 
 	payment = models.Payment{
-		FID:                   fid,
+		FID:                   sql.NullString{String: fid, Valid: true},
 		Amount:                float32(amount),
 		Email:                 email,
 		IsRecurring:           recurring,
-		SessionStripeID:       sessionID,
+		SessionStripeID:       sql.NullString{String: sessionID, Valid: sessionID != ""},
 		CustomerStripeID:      "",
 		PaymentIntentStripeID: "",
 		Status:                "",
