@@ -8,3 +8,4 @@
 # firebase migration
 /auth_data.json
 /backup.json
+/credentials.json
