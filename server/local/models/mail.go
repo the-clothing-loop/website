@@ -11,6 +11,6 @@ type Mail struct {
 	To        string
 	Subject   string
 	Body      string
-	Error     string
+	Error     sql.NullString
 	CreatedAt time.Time
 }

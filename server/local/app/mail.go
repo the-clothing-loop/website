@@ -1,6 +1,7 @@
 package app
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"net/http"
@@ -34,16 +35,16 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 	e.Subject = subject
 	e.Text = []byte("")
 	e.HTML = []byte(body)
-	errEmail := e.Send(smtpAddr, smtpAuth)
+	err := e.Send(smtpAddr, smtpAuth)
 
 	db.Create(&models.Mail{
 		To:      to,
 		Subject: subject,
 		Body:    body,
-		Error:   fmt.Sprint(errEmail),
+		Error:   sql.NullString{String: fmt.Sprint(err), Valid: err == nil},
 	})
 
-	if errEmail != nil {
+	if err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to send email"))
 		return false
 	}

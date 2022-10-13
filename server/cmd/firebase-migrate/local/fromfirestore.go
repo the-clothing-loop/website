@@ -83,6 +83,7 @@ func MigrateChain(d map[string]any, fid string) (chain models.Chain, chainAdminF
 	return chain, chainAdminFID
 }
 
+// user still requires an email a filler is added for now
 func MigrateUser(d BackupCollectionItem, fid string, dChains BackupCollection) (user models.User, chainFID string, isChainAdmin bool) {
 	chainFID, ok := d["chainId"].(string)
 	if !ok {
@@ -139,7 +140,6 @@ func MigrateMail(d BackupCollectionItem, fid string) (mail models.Mail) {
 		To:        to,
 		Subject:   subject,
 		Body:      html,
-		Error:     "",
 		CreatedAt: time.Time{},
 	}
 
