@@ -1,232 +1,268 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"log"
 	"os"
-	"strings"
 	"sync"
-	"time"
 
-	"github.com/andybalholm/cascadia"
-	"github.com/go-playground/validator/v10"
-	"golang.org/x/net/html"
-	"golang.org/x/net/html/atom"
+	"github.com/CollActionteam/clothing-loop/server/cmd/firebase-migrate/local"
+	"github.com/CollActionteam/clothing-loop/server/local/app"
+	"github.com/CollActionteam/clothing-loop/server/local/models"
+	"gorm.io/gorm"
 )
 
+type UserChainByFID struct {
+	UserFID      string
+	ChainFID     string
+	IsChainAdmin bool
+}
+
 func main() {
-	// retrieve firestore database
-	_, err := firestore()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	// retrieve firebase authentication
-	authRecords, err := auth()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	// create sql file
-
-	// create json file
-	jsonData := struct {
-		FirebaseAuthentication []*AuthRecord `json:"firebase_authentication"`
-	}{
-		FirebaseAuthentication: authRecords,
-	}
-
-	b, err := json.MarshalIndent(&jsonData, "", "\t")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	err = os.WriteFile("received_data.json", b, 0660)
+	err := run()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 }
 
-// Firebase Authentication
-// --------------------------------------------------------
+func run() error {
+	// read config for database
+	app.ConfigInit(".")
 
-type AuthRecord struct {
-	Email       string     `json:"email"`
-	PhoneNumber string     `json:"phone_number"`
-	Created     *time.Time `json:"created"`
-	LastLogin   *time.Time `json:"last_login"`
-	UserFireID  string     `json:"user_fire_id"`
-}
+	fmt.Printf("Setup environment in: %s\n", app.Config.ENV)
 
-func auth() (records []*AuthRecord, err error) {
-	s, err := os.ReadFile("tbody.min.htm")
+	// set database
+	db := app.DatabaseInit()
+
+	// test database
+	totalChains := 0
+	err := db.Raw(`
+SELECT COUNT(chains.id)
+FROM chains
+WHERE chains.published = ?
+	`, true).Scan(&totalChains).Error
 	if err != nil {
-		return nil, fmt.Errorf("could not read file \"tbody.min.htm\"\nError: %e", err)
+		return err
 	}
+	fmt.Printf("database works\ntotalChains: %v\n", totalChains)
 
-	hFragments, err := html.ParseFragment(strings.NewReader(string(s)), &html.Node{
-		Type:     html.ElementNode,
-		Data:     "tbody",
-		DataAtom: atom.Tbody,
-	})
+	// skip createdAt/updatedAt/deletedAt auto changes
+	db.Config.SkipDefaultTransaction = true
+
+	// read backup.json file
+	data, err := local.ReadBackupFile()
 	if err != nil {
-		return nil, fmt.Errorf("parsing html failed\nError: %e", err)
+		return err
 	}
 
-	if len(hFragments) == 0 {
-		return nil, fmt.Errorf("zero records to export\nData: %v", hFragments)
+	// read auth_data.json file
+	auth, err := local.ReadAuthDataFile()
+	if err != nil {
+		return err
 	}
 
-	records = []*AuthRecord{}
-	wg := new(sync.WaitGroup)
-	for i := range hFragments {
-		child := hFragments[i]
-		// filter comments and text nodes
-		// https://pkg.go.dev/golang.org/x/net@v0.0.0-20220812174116-3211cb980234/html?utm_source=gopls#NodeType
-		if child.Type != html.ElementNode {
-			continue
+	// migrations
+	var wg sync.WaitGroup
+	mu := &sync.Mutex{}
+
+	{
+		userChainByFIDs := []*UserChainByFID{}
+
+		wg = sync.WaitGroup{}
+		chains := []*models.Chain{}
+		for i := range data.Collections.Chains {
+			fid := i
+			d := data.Collections.Chains[fid]
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				c, chainAdminFID := local.MigrateChain(*d, fid)
+
+				mu.Lock()
+				chains = append(chains, &c)
+				if chainAdminFID != "" {
+					userChainByFIDs = append(userChainByFIDs, &UserChainByFID{
+						UserFID:      chainAdminFID,
+						ChainFID:     c.FID.String,
+						IsChainAdmin: true,
+					})
+				}
+				mu.Unlock()
+			}()
 		}
-
-		wg.Add(1)
-
-		record := &AuthRecord{}
-		records = append(records, record)
-
-		go authParseRow(wg, child, record)
-	}
-	wg.Wait()
-
-	return records, nil
-}
-
-// Cascadia utility
-func Query(n *html.Node, query string) *html.Node {
-	sel, err := cascadia.Parse(query)
-	if err != nil {
-		return &html.Node{}
-	}
-	return cascadia.Query(n, sel)
-}
-
-// Cascadia utility
-func QueryAll(n *html.Node, query string) []*html.Node {
-	sel, err := cascadia.Parse(query)
-	if err != nil {
-		return []*html.Node{}
-	}
-	return cascadia.QueryAll(n, sel)
-}
-
-func authParseRow(wg *sync.WaitGroup, n *html.Node, record *AuthRecord) {
-	defer wg.Done()
-
-	identifierNodes := QueryAll(n, "td.auth-user-identifier-cell>div>div>div")
-	for _, iNode := range identifierNodes {
-		if iNode == nil {
-			continue
+		wg.Wait()
+		if err := db.CreateInBatches(chains, 100).Error; err != nil {
+			return fmt.Errorf("error in CreateInBatches(chains, 100): %+v", err)
 		}
-		text := strings.TrimSpace(iNode.FirstChild.Data)
-		if err := validator.New().Var(text, "email"); err == nil {
-			record.Email = text
+		log.Printf("%d chains imported", len(chains))
+
+		wg = sync.WaitGroup{}
+		users := []*models.User{}
+		for i := range data.Collections.Users {
+			fid := i
+			d := data.Collections.Users[fid]
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				u, chainFID, isChainAdmin := local.MigrateUser(*d, fid, data.Collections.Chains)
+
+				mu.Lock()
+				users = append(users, &u)
+				if chainFID != "" {
+					userChainByFIDs = append(userChainByFIDs, &UserChainByFID{
+						UserFID:      u.FID.String,
+						ChainFID:     chainFID,
+						IsChainAdmin: isChainAdmin,
+					})
+				}
+				mu.Unlock()
+			}()
+		}
+		wg.Wait()
+		if err := db.CreateInBatches(users, 100).Error; err != nil {
+			return fmt.Errorf("error in CreateInBatches(users, 100): %+v", err)
+		}
+		log.Printf("%d users imported", len(users))
+
+		// find or create
+
+		for i := range auth.Users {
+			d := auth.Users[i]
+			local.MigrateAuth(db, *d)
+		}
+		log.Printf("%d auth.Users imported", len(auth.Users))
+		for i := range userChainByFIDs {
+			d := userChainByFIDs[i]
+			FindOrCreateUserChains(db, *d)
+		}
+		log.Printf("%d user_chains imported", len(userChainByFIDs))
+	}
+
+	{
+		wg = sync.WaitGroup{}
+		mails := []*models.Mail{}
+		for i := range data.Collections.Mail {
+			fid := i
+			d := data.Collections.Mail[fid]
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				m := local.MigrateMail(*d, fid)
+
+				mu.Lock()
+				mails = append(mails, &m)
+				mu.Unlock()
+			}()
+		}
+		wg.Wait()
+		if err := db.CreateInBatches(mails, 100).Error; err != nil {
+			return fmt.Errorf("error in CreateInBatches(mails, 100): %+v", err)
+		}
+		log.Printf("%d mails imported", len(mails))
+	}
+
+	{
+		wg = sync.WaitGroup{}
+		payments := []*models.Payment{}
+		for i := range data.Collections.Payments {
+			fid := i
+			d := data.Collections.Payments[fid]
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				p := local.MigratePayment(*d, fid)
+
+				mu.Lock()
+				payments = append(payments, &p)
+				mu.Unlock()
+			}()
+		}
+		wg.Wait()
+		if err := db.CreateInBatches(payments, 100).Error; err != nil {
+			return fmt.Errorf("error in CreateInBatches(payments, 100): %+v", err)
+		}
+		log.Printf("%d payments imported", len(payments))
+	}
+
+	{
+		wg = sync.WaitGroup{}
+		newsletters := []*models.Newsletter{}
+		for i := range data.Collections.InterestedUsers {
+			fid := i
+			d := data.Collections.InterestedUsers[fid]
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				n := local.MigrateInterestedUsers(*d, fid)
+
+				mu.Lock()
+				newsletters = append(newsletters, &n)
+				mu.Unlock()
+			}()
+		}
+		wg.Wait()
+		if err := db.CreateInBatches(newsletters, 100).Error; err != nil {
+			return fmt.Errorf("error in CreateInBatches(newsletters, 100): %+v", err)
+		}
+		log.Printf("%d newsletters imported", len(newsletters))
+	}
+
+	return nil
+}
+
+func FindOrCreateUserChains(db *gorm.DB, d UserChainByFID) {
+	// find
+	{
+		res := models.UserChain{}
+		err := db.Raw(`
+SELECT user_chains.*
+FROM user_chains
+LEFT JOIN users ON users.id = user_chains.user_id
+LEFT JOIN chains ON chains.id = user_chains.chain_id
+WHERE users.fid = ? AND chains.fid = ?
+LIMIT 1
+	`, d.UserFID, d.ChainFID).Scan(&res).Error
+
+		if err == nil && res.ID != 0 {
+			if res.IsChainAdmin != d.IsChainAdmin {
+				res.IsChainAdmin = d.IsChainAdmin
+				db.Save(res)
+			}
+			// else skip
+			return
+		}
+	}
+
+	// create
+	{
+		res := struct {
+			UserID  uint `gorm:"column:user_id"`
+			ChainID uint `gorm:"column:chain_id"`
+		}{}
+		err := db.Raw(`
+SELECT (
+	SELECT users.id
+	FROM users
+	WHERE users.fid = ?
+	LIMIT 1 
+) as user_id, (
+	SELECT chains.id
+	FROM chains
+	WHERE chains.fid = ?
+	LIMIT 1
+) as chain_id
+LIMIT 1
+		`, d.UserFID, d.ChainFID).Scan(&res).Error
+
+		if err == nil && res.ChainID != 0 && res.UserID != 0 {
+			db.Create(&models.UserChain{
+				UserID:       res.UserID,
+				ChainID:      res.ChainID,
+				IsChainAdmin: d.IsChainAdmin,
+			})
 		} else {
-			record.PhoneNumber = text
+			log.Printf("user (fid:  %s) or chain (fid: %s) was not found, to set isChainAdmin as %v\t%+v", d.UserFID, d.ChainFID, d.IsChainAdmin, res)
 		}
 	}
-
-	createdAtNode := Query(n, "td.mat-column-created-at>div")
-	if createdAtNode != nil {
-		t, err := time.Parse("Jan 2, 2006", strings.TrimSpace(createdAtNode.FirstChild.Data))
-		if err == nil {
-			// fix time differential from EU/Amsterdam + DST time to UTC as of import date 2022-08-18
-			t = t.Add(time.Hour - 2)
-			record.Created = &t
-		}
-	}
-	lastLoginNode := Query(n, "td.mat-column-last-login>div")
-	if lastLoginNode != nil {
-		t, err := time.Parse("Jan 2, 2006", strings.TrimSpace(lastLoginNode.FirstChild.Data))
-		if err == nil {
-			// fix time differential from EU/Amsterdam + DST time to UTC as of import date 2022-08-18
-			t = t.Add(time.Hour - 2)
-			record.LastLogin = &t
-		}
-	}
-	uidNode := Query(n, "td.mat-column-uid>div")
-	if uidNode != nil {
-		record.UserFireID = strings.TrimSpace(uidNode.FirstChild.Data)
-	}
-}
-
-// Firestore Database
-// --------------------------------------------------------
-
-type Firestore struct {
-	Chains          map[string]*FirestoreChain          `json:"chains"`
-	Mail            map[string]*FirestoreMail           `json:"mail"`
-	Payments        map[string]*FirestorePayments       `json:"payments"`
-	Users           map[string]*FirestoreUser           `json:"users"`
-	InterestedUsers map[string]*FirestoreInterestedUser `json:"interested_users"`
-}
-
-type FirestoreChain struct {
-	Categories struct {
-		Gender []string `json:"gender"`
-		Size   []string `json:"size"`
-	} `json:"categories"`
-	Name             string  `json:"name"`
-	Description      string  `json:"description"`
-	Radius           float64 `json:"radius"`
-	ChainAdminFireID string  `json:"chainAdmin"`
-	Address          string  `json:"address"`
-	Longitude        float64 `json:"longitude"`
-	Latitude         float64 `json:"latitude"`
-	Published        bool    `json:"published"`
-}
-
-type FirestoreMail struct {
-	Message struct {
-		Html    string `json:"html"`
-		Subject string `json:"subject"`
-	} `json:"message"`
-	To string `json:"to"`
-}
-
-type FirestorePayments struct {
-	CreatedAt  string   `json:"createdAt"`
-	Recurring  bool     `json:"recurring"`
-	SessionId  string   `json:"sessionId"`
-	Completed  bool     `json:"completed"`
-	Amount     *float64 `json:"amount"`
-	CustomerId string   `json:"customerId"`
-	Email      string   `json:"email"`
-	UpdatedAt  string   `json:"updatedAt"`
-}
-
-type FirestoreUser struct {
-	Address         string   `json:"address"`
-	ChainFireID     string   `json:"chainId"`
-	InterestedSizes []string `json:"interestedSizes"`
-}
-
-type FirestoreInterestedUser struct {
-	Email string `json:"email"`
-	Name  string `json:"name"`
-}
-
-func firestore() (data *Firestore, err error) {
-	s, err := os.ReadFile("firestore-dump.json")
-	if err != nil {
-		return nil, fmt.Errorf("could not read file \"tbody.min.htm\"\nError: %e", err)
-	}
-
-	err = json.Unmarshal(s, data)
-	if err != nil {
-		return nil, err
-	}
-
-	return data, nil
 }
