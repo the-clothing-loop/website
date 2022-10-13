@@ -4,3 +4,7 @@
 
 /config.*.yml
 !/config.example.yml
+
+# firebase migration
+/auth_data.json
+/backup.json
