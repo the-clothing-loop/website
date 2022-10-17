@@ -95,66 +95,73 @@ const ChainsList = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {chains.map((chain, i) => (
-                    <TableRow
-                      key={chain.name}
-                      className="chains-list__table-row"
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        className={classes.tableCell}
+                  {chains.map((chain, i) => {
+                    let isUserAdmin =
+                      authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
+                        ?.is_chain_admin || false;
+                    return (
+                      <TableRow
+                        key={chain.name}
+                        className="chains-list__table-row"
                       >
-                        {chain.name}
-                      </TableCell>
-                      <TableCell
-                        key="chain-address"
-                        align="left"
-                        className={classes.tableCell}
-                      >
-                        {chain.address}
-                      </TableCell>
-                      <TableCell
-                        key="chain-status"
-                        align="left"
-                        className={classes.tableCell}
-                      >
-                        {chain.published ? (
-                          <div style={{ display: "flex" }}>
-                            <IconCircle
-                              sx={{ color: "#4CAF50", marginRight: 1 }}
-                            />
-                            <Typography variant="body2">
-                              {"published"}
-                            </Typography>
-                          </div>
-                        ) : (
-                          <div style={{ display: "flex" }}>
-                            <Typography variant="body2">
-                              <IconCircle
-                                sx={{ color: "#EF5350", marginRight: 1 }}
-                              />
-                              {"unpublished"}
-                            </Typography>
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell align="right" className={classes.tableCell}>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          className={classes.button}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            history.push(`/loops/${chain.uid}/members`);
-                          }}
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          className={classes.tableCell}
                         >
-                          {t("view")}
-                          <img src={RightArrow} alt="" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                          {chain.name}
+                        </TableCell>
+                        <TableCell
+                          key="chain-address"
+                          align="left"
+                          className={classes.tableCell}
+                        >
+                          {chain.address}
+                        </TableCell>
+                        <TableCell
+                          key="chain-status"
+                          align="left"
+                          className={classes.tableCell}
+                        >
+                          {chain.published ? (
+                            <div style={{ display: "flex" }}>
+                              <IconCircle
+                                sx={{ color: "#4CAF50", marginRight: 1 }}
+                              />
+                              <Typography variant="body2">
+                                {"published"}
+                              </Typography>
+                            </div>
+                          ) : (
+                            <div style={{ display: "flex" }}>
+                              <Typography variant="body2">
+                                <IconCircle
+                                  sx={{ color: "#EF5350", marginRight: 1 }}
+                                />
+                                {"unpublished"}
+                              </Typography>
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell align="right" className={classes.tableCell}>
+                          {isUserAdmin && (
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              className={classes.button}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                history.push(`/loops/${chain.uid}/members`);
+                              }}
+                            >
+                              {t("view")}
+                              <img src={RightArrow} alt="" />
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>

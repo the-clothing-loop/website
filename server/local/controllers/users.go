@@ -101,7 +101,7 @@ func UserGetAllOfChain(c *gin.Context) {
 		return
 	}
 
-	ok, _, _ := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
+	ok, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
 	if !ok {
 		return
 	}

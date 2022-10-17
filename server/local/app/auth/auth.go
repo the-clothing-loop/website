@@ -53,7 +53,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	chain = &models.Chain{}
-	err := db.Raw(`SELECT * FROM chains WHERE uid = ? LIMIT 1`, chainUID).Scan(chain).Error
+	err := db.Raw(`SELECT * FROM chains WHERE chains.uid = ? AND chains.deleted_at IS NULL LIMIT 1`, chainUID).Scan(chain).Error
 	if err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
 		return false, nil, nil

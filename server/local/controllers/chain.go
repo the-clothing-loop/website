@@ -365,7 +365,8 @@ func ChainRemoveUser(c *gin.Context) {
 
 	// remove chain if this is there are no more users of that chain
 	db.Exec(`
-DELETE FROM chains
+UPDATE chains
+SET chains.deleted_at = NOW()
 WHERE chains.id IN (
 	SELECT chains.id
 	FROM chains

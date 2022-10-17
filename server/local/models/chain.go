@@ -29,4 +29,5 @@ type Chain struct {
 	UserChains       []UserChain
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
+	DeletedAt        sql.NullTime
 }
