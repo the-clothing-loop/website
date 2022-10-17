@@ -1,11 +1,11 @@
 package local
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/CollActionteam/clothing-loop/server/local/models"
@@ -71,12 +71,14 @@ func MigrateAuth(db *gorm.DB, d AuthDataUser) {
 		}
 	}
 
-	if createdAt, err := strconv.Atoi(d.CreatedAt); err != nil {
-		user.CreatedAt = time.Unix(int64(createdAt), 0)
+	if createdAt, err := FromUnixStrToTime(d.CreatedAt); err == nil {
+		user.CreatedAt = *createdAt
+	} else {
+		user.CreatedAt = time.Now()
 	}
-	if d.LastSignedInAt == "" {
-		if lastSignedInAt, err := strconv.Atoi(d.LastSignedInAt); err != nil {
-			user.LastSignedInAt = time.Unix(int64(lastSignedInAt), 0)
+	if d.LastSignedInAt != "" {
+		if lastSignedInAt, err := FromUnixStrToTime(d.LastSignedInAt); err == nil {
+			user.LastSignedInAt = sql.NullTime{Time: *lastSignedInAt, Valid: true}
 		}
 	}
 	user.Email = d.Email
@@ -84,6 +86,10 @@ func MigrateAuth(db *gorm.DB, d AuthDataUser) {
 	user.Name = d.DisplayName
 	user.Enabled = !d.Disabled
 	user.PhoneNumber = d.PhoneNumber
+
+	if d.FID == "Cpd9bMjmIYNuQd0iHTeTzp4ZbV32" {
+		log.Printf("lastSignedInAt: %+v -> %+v", d.LastSignedInAt, user.LastSignedInAt.Time)
+	}
 
 	user.UpdatedAt = time.Now()
 	db.Save(user)

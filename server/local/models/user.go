@@ -23,7 +23,7 @@ type User struct {
 	Address         string         `json:"address"`
 	Sizes           []string       `json:"sizes" gorm:"serializer:json"`
 	Enabled         bool           `json:"enabled"`
-	LastSignedInAt  time.Time      `json:"-"`
+	LastSignedInAt  sql.NullTime   `json:"-"`
 	UserToken       []UserToken    `json:"-"`
 	Chains          []UserChain    `json:"chains"`
 	CreatedAt       time.Time      `json:"-"`

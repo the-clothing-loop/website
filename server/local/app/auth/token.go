@@ -100,6 +100,18 @@ LIMIT 1
 		return nil, false
 	}
 
+	shouldUpdateLastSignedInAt := true
+	if user.LastSignedInAt.Valid {
+		shouldUpdateLastSignedInAt = user.LastSignedInAt.Time.Before(time.Now().Add(time.Duration(-1 * time.Hour)))
+	}
+	if shouldUpdateLastSignedInAt {
+		db.Exec(`
+UPDATE users
+SET users.last_signed_in_at = NOW()
+WHERE users.id = ?
+	`, user.ID)
+	}
+
 	return user, true
 }
 
