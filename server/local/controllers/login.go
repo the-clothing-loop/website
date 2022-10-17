@@ -134,7 +134,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Latitude:         body.Chain.Latitude,
 		Longitude:        body.Chain.Longitude,
 		Radius:           body.Chain.Radius,
-		Published:        false,
+		Published:        true,
 		OpenToNewMembers: body.Chain.OpenToNewMembers,
 		Sizes:            body.Chain.Sizes,
 		Genders:          body.Chain.Genders,
