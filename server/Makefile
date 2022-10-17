@@ -40,4 +40,4 @@ docker-stop:
 	@cd docker; docker-compose down
 
 firebase-migrate:
-	@cd cmd/firebase-migrate/; go run main.go
+	@go run cmd/firebase-migrate/main.go
