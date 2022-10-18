@@ -122,8 +122,12 @@ const Donations = () => {
         </figure>
 
         <section className="text-wrapper">
-          <h3 dangerouslySetInnerHTML={{__html: t('smallActsCanChangeTheWorld')}}></h3>
-          <p>{t('weAreWorkingOnMakingTheClothingLoopBetter')}</p>
+          <h3
+            dangerouslySetInnerHTML={{
+              __html: t("smallActsCanChangeTheWorld"),
+            }}
+          ></h3>
+          <p>{t("weAreWorkingOnMakingTheClothingLoopBetter")}</p>
           <button onClick={() => history.push("/donate")}>{t("donate")}</button>
         </section>
       </section>

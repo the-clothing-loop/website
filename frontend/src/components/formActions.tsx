@@ -26,11 +26,10 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
           </>
         }
         name="newsletter"
-        type="checkbox"
       />
       <CheckboxField
         className="privacy-policy-action"
-        required={true}
+        required
         label={
           <>
             <div className={classes.actionsWrapper}>
@@ -38,8 +37,20 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
                 <Trans
                   i18nKey="iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star"
                   components={{
-                    "1": <a href="/terms-of-use" target="_blank" className={classes.a}></a>,
-                    "2": <a href="/privacy-policy" target="_blank" className={classes.a}></a>
+                    "1": (
+                      <a
+                        href="/terms-of-use"
+                        target="_blank"
+                        className={classes.a}
+                      ></a>
+                    ),
+                    "2": (
+                      <a
+                        href="/privacy-policy"
+                        target="_blank"
+                        className={classes.a}
+                      ></a>
+                    ),
                   }}
                 ></Trans>
               </Typography>
@@ -47,7 +58,6 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
           </>
         }
         name="privacyPolicy"
-        type="checkbox"
       />
     </div>
   );

@@ -3,7 +3,13 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
-import { Grid, Typography, Switch, FormControlLabel } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Switch,
+  FormControlLabel,
+  Alert,
+} from "@mui/material";
 import {
   EditOutlined as EditIcon,
   Clear as DeleteIcon,
@@ -11,81 +17,110 @@ import {
 import { makeStyles } from "@mui/styles";
 
 // Project resources
-import { getChain, updateChain } from "../util/firebase/chain";
 import theme from "../util/theme";
-import { getUsersForChain, removeUserFromChain } from "../util/firebase/user";
-import { IChain, IUser } from "../types";
 import { AuthContext, AuthProps } from "../components/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import Popover from "../components/Popover";
-import { ChainParticipantsTable } from "../components/ChainParticipantsTable";
+import {
+  ChainParticipantsTable,
+  TableUserColumn,
+} from "../components/ChainParticipantsTable";
 import { Title } from "../components/Typography";
+import {
+  chainGet,
+  chainRemoveUser,
+  chainUpdate,
+  ChainUpdateBody,
+} from "../api/chain";
+import { Chain, User } from "../api/types";
+import { GenderI18nKeys, Genders, SizeI18nKeys, Sizes } from "../api/enums";
+import { userGetAllByChain } from "../api/user";
 
-type TParams = {
-  chainId: string;
-};
+interface Params {
+  chainUID: string;
+}
 
-const memberColumns = [
+const memberColumns: TableUserColumn[] = [
   { headerName: "name", propertyName: "name" },
   { headerName: "address", propertyName: "address" },
   { headerName: "email", propertyName: "email" },
-  { headerName: "phone", propertyName: "phoneNumber" },
-  { headerName: "interested size", propertyName: "interestedSizes" },
+  { headerName: "phone", propertyName: "phone_number" },
+  { headerName: "interested size", propertyName: "sizes" },
 ];
 
-const adminColumns = [
+const adminColumns: TableUserColumn[] = [
   { headerName: "name", propertyName: "name" },
   { headerName: "email", propertyName: "email" },
-  { headerName: "phone", propertyName: "phoneNumber" },
+  { headerName: "phone", propertyName: "phone_number" },
 ];
 
 const useStyles = makeStyles(theme as any);
 
 const ChainMemberList = () => {
   const location = useLocation<any>();
-  const { chainId } = useParams<TParams>();
-  const { userData }: { userData: IUser | null } =
-    useContext<AuthProps>(AuthContext);
+  const { chainUID } = useParams<Params>();
+  const { authUser } = useContext<AuthProps>(AuthContext);
 
-  const [chain, setChain] = useState<IChain>();
-  const [users, setUsers] = useState<IUser[]>();
-  const [publishedValue, setPublishedValue] = useState({ published: true });
+  const [chain, setChain] = useState<Chain>();
+  const [users, setUsers] = useState<User[]>();
+  const [published, setPublished] = useState(true);
+  const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
-
   const [isChainAdmin, setIsChainAdmin] = useState<boolean>();
   const { t } = useTranslation();
 
-  const handleChange = async (e: {
+  type SwitchEvent = {
     target: { checked: boolean; name: any };
-  }) => {
-    setPublishedValue({ ...publishedValue, [e.target.name]: e.target.checked });
+  };
 
-    const updatedChainData = {
-      [e.target.name]: e.target.checked,
-    };
+  const handleChangePublished = async (e: SwitchEvent) => {
+    let isChecked = e.target.checked;
+    let oldValue = published;
+    setPublished(isChecked);
 
-    console.log(`updating chain data: ${JSON.stringify(updatedChainData)}`);
     try {
-      await updateChain(chainId, updatedChainData);
+      await chainUpdate({
+        uid: chainUID,
+        published: isChecked,
+      });
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
-      setError(e.message);
+      setError(e?.data || `Error: ${JSON.stringify(e)}`);
+      setPublished(oldValue);
+    }
+  };
+
+  const handleChangeOpenToNewMembers = async (e: SwitchEvent) => {
+    let isChecked = e.target.checked;
+    let oldValue = openToNewMembers;
+    setOpenToNewMembers(isChecked);
+
+    try {
+      await chainUpdate({
+        uid: chainUID,
+        openToNewMembers: isChecked,
+      });
+    } catch (e: any) {
+      console.error(`Error updating chain: ${JSON.stringify(e)}`);
+      setError(e?.data || `Error: ${JSON.stringify(e)}`);
+      setOpenToNewMembers(oldValue);
     }
   };
 
   useEffect(() => {
     (async () => {
       try {
-        const chainData = await getChain(chainId);
+        const chainData = (await chainGet(chainUID)).data;
         if (chainData === undefined) {
-          console.error(`chain ${chainId} does not exist`);
+          console.error(`chain ${chainUID} does not exist`);
         } else {
           setChain(chainData);
-          const chainUsers = await getUsersForChain(chainId);
+          const chainUsers = (await userGetAllByChain(chainUID)).data;
           setUsers(chainUsers);
-          setPublishedValue({ published: chainData.published });
+          setPublished(chainData.published);
+          setOpenToNewMembers(chainData.openToNewMembers);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error(`Error getting chain: ${error}`);
       }
     })();
@@ -93,22 +128,20 @@ const ChainMemberList = () => {
 
   useEffect(() => {
     setIsChainAdmin(
-      users
-        ?.filter((user: IUser) => user.role === "chainAdmin")
-        .some((user: IUser) => user.uid === userData?.uid)
+      authUser?.chains.find((c) => c.chain_uid === chain?.uid)?.is_chain_admin
     );
-  }, [users]);
+  }, [authUser, chain]);
 
-  const handleRemoveFromChain = async (userId: string) => {
-    removeUserFromChain(userId);
+  const handleRemoveFromChain = async (userUID: string) => {
+    await chainRemoveUser(chainUID, userUID);
 
-    const chainUsers = await getUsersForChain(chainId);
+    const chainUsers = (await userGetAllByChain(chainUID)).data;
     setUsers(chainUsers);
   };
 
   const classes = useStyles();
 
-  return !chain || !users ? null : (
+  return chain && users ? (
     <>
       <Helmet>
         <title>The Clothing Loop | Loop Members</title>
@@ -116,6 +149,11 @@ const ChainMemberList = () => {
       </Helmet>
 
       <div className="chain-member-list">
+        {error && (
+          <Alert sx={{ marginBottom: 4 }} severity="error">
+            {error}
+          </Alert>
+        )}
         <Grid container direction="column" spacing={6}>
           <Grid
             item
@@ -125,10 +163,6 @@ const ChainMemberList = () => {
           >
             <Grid item classes={{ root: classes.gridItemsNoPadding }} sm>
               <div className="chain-member-list__card">
-                {location.state ? (
-                  <p className="success">{location.state.message}</p>
-                ) : null}
-
                 <Grid
                   container
                   alignItems="center"
@@ -140,7 +174,7 @@ const ChainMemberList = () => {
                     <Title>{chain.name}</Title>
                   </Grid>
                   <Grid item>
-                    <Link to={`/loops/${chainId}/edit`}>
+                    <Link to={`/loops/${chainUID}/edit`}>
                       <EditIcon />
                     </Link>
                   </Grid>
@@ -153,38 +187,55 @@ const ChainMemberList = () => {
                 </Typography>
 
                 <Field title="Categories">
-                  {chain.categories?.gender &&
-                    chain.categories.gender
-                      .map((gender, i) => `${gender.toUpperCase()}'S CLOTHING`)
+                  {chain?.genders &&
+                    chain?.genders
+                      .map((g) => `${GenderI18nKeys[g]}'S CLOTHING`)
                       .join(" / ")}
                 </Field>
                 <Field title="Sizes">
-                  {chain.categories?.size &&
-                    chain.categories.size
-                      .map((size, i) => t(`${size}`))
-                      .join(" / ")}
+                  {chain?.sizes &&
+                    chain?.sizes.map((s) => t(SizeI18nKeys[s])).join(" / ")}
                 </Field>
                 <Field title="Participants">{`${users.length} ${
                   users.length === 1 ? "person" : "people"
                 }`}</Field>
 
-                <div style={{ position: "relative", display: "inline" }}>
+                <div style={{ position: "relative" }}>
                   <FormControlLabel
                     classes={{ root: classes.switchGroupRoot }}
-                    value={publishedValue.published}
+                    value={published}
+                    disabled={!isChainAdmin}
                     control={
                       <Switch
-                        checked={publishedValue.published}
-                        onChange={handleChange}
+                        checked={published}
+                        onChange={handleChangePublished}
                         name="published"
                         color="secondary"
                         inputProps={{ "aria-label": "secondary checkbox" }}
                       />
                     }
-                    label={publishedValue.published ? "visible" : "invisible"}
+                    label={published ? "published" : "draft"}
                     labelPlacement="end"
                   />
                   <Popover message={t("adminSwitcherMessage")} />
+                </div>
+                <div>
+                  <FormControlLabel
+                    classes={{ root: classes.switchGroupRoot }}
+                    value={openToNewMembers}
+                    disabled={!isChainAdmin}
+                    control={
+                      <Switch
+                        checked={openToNewMembers}
+                        onChange={handleChangeOpenToNewMembers}
+                        name="published"
+                        color="secondary"
+                        inputProps={{ "aria-label": "secondary checkbox" }}
+                      />
+                    }
+                    label={openToNewMembers ? "open to new members" : "closed"}
+                    labelPlacement="end"
+                  />
                 </div>
               </div>
             </Grid>
@@ -203,36 +254,31 @@ const ChainMemberList = () => {
                         <Title>Loop Admin</Title>
                       </Grid>
                       <Grid item>
-                        <Link to={`/users/${(userData as IUser).uid}/edit`}>
+                        <Link to={`/users/${(authUser as User).uid}/edit`}>
                           <EditIcon />
                         </Link>
                       </Grid>
                     </Grid>
                     <ChainParticipantsTable
                       columns={adminColumns}
-                      userData={userData}
+                      authUser={authUser}
                       users={users.filter(
-                        (user: IUser) => user.role === "chainAdmin"
+                        (u) =>
+                          u.chains.find(
+                            (c) => c.chain_uid === chain.uid && c.is_chain_admin
+                          ) !== undefined
                       )}
                       initialPage={0}
-                      initialRowsPerPage={10}
-                      editItemComponent={(u: IUser) => (
-                        <Link to={`/users/${u.uid}/edit`}>
-                          <EditIcon />
-                        </Link>
-                      )}
-                      deleteItemComponent={(u: IUser) => (
-                        <DeleteIcon
-                          onClick={() => handleRemoveFromChain(u.uid as string)}
-                        />
-                      )}
+                      edit
+                      remove
+                      onRemoveUser={handleRemoveFromChain}
                     />
                   </div>
                   {isChainAdmin && (
                     <Link
                       to={{
-                        pathname: `/loops/${chainId}/addChainAdmin`,
-                        state: { users, chainId },
+                        pathname: `/loops/${chainUID}/addChainAdmin`,
+                        state: { users, chainUID },
                       }}
                     >
                       <div className="chain-member-list__add-co-host">
@@ -252,27 +298,19 @@ const ChainMemberList = () => {
 
               <ChainParticipantsTable
                 columns={memberColumns}
-                userData={userData}
+                authUser={authUser}
                 users={users}
                 initialPage={0}
-                initialRowsPerPage={10}
-                editItemComponent={(u: IUser) => (
-                  <Link to={`/users/${u.uid}/edit`}>
-                    <EditIcon />
-                  </Link>
-                )}
-                deleteItemComponent={(u: IUser) => (
-                  <DeleteIcon
-                    onClick={() => handleRemoveFromChain(u.uid as string)}
-                  />
-                )}
+                edit
+                remove
+                onRemoveUser={handleRemoveFromChain}
               />
             </div>
           </Grid>
         </Grid>
       </div>
     </>
-  );
+  ) : null;
 };
 
 const Field = ({ title, children }: { title: string; children: any }) => {

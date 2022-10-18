@@ -9,23 +9,23 @@ import styles from "./FAQ.module.css";
 import { useTranslation } from "react-i18next";
 
 interface AccordionFaqTranslation {
-  question: string
-  answer: string
+  question: string;
+  answer: string;
 }
 
 const FAQ = () => {
-  const {t} = useTranslation("faq");
+  const { t } = useTranslation("faq");
   const classes = makeStyles(theme as any)();
 
   const arrHosts = t("arrHosts", {
     returnObjects: true,
     defaultValue: [],
-  }) as AccordionFaqTranslation[]
+  }) as AccordionFaqTranslation[];
 
   const arrParticipants = t("arrParticipants", {
     returnObjects: true,
     defaultValue: [],
-  }) as AccordionFaqTranslation[]
+  }) as AccordionFaqTranslation[];
 
   return (
     <>

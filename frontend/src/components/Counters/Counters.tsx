@@ -1,7 +1,6 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef } from "react";
 
 //project resources
-import { ChainsContext } from "../ChainsProvider";
 import SingleCounter from "./SingleCounter";
 import useIntersectionObserver from "./hooks";
 
@@ -9,15 +8,20 @@ import theme from "../../util/theme";
 import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { useTranslation } from "react-i18next";
+// import { InfoBody, infoGet } from "../../api/info";
 
 const Counters = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
   const containerRef = useRef(null);
 
-  const chainsCount = useContext(ChainsContext).length;
+  // const [info, setInfo] = useState<InfoBody>();
 
   const [isVisible, setIsVisible] = useState(false);
+
+  // useEffect(() => {
+  //   infoGet().then((res) => setInfo(res.data));
+  // }, []);
 
   //check if div is visible on viewport
   const callBack = (entries: any) => {

@@ -17,19 +17,33 @@ import { TwoColumnLayout } from "../components/Layouts";
 
 // Project resources
 import { PhoneFormField, TextForm } from "../components/FormFields";
-import { createUser } from "../util/firebase/user";
-import { getChain } from "../util/firebase/chain";
-import { IChain } from "../types";
 import FormActions from "../components/formActions";
 
 //Media
 import RightArrow from "../images/right-arrow-white.svg";
 import JoinLoopImg from "../images/Join-Loop.jpg";
+import { Chain } from "../api/types";
+import { chainGet } from "../api/chain";
+import { registerBasicUser, RequestRegisterUser } from "../api/login";
+import { Sizes } from "../api/enums";
+import { phoneRegExp } from "../util/phoneRegExp";
+
+interface Params {
+  chainUID: string;
+}
+
+interface RegisterUserForm {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  newsletter: boolean;
+  sizes: string[];
+}
 
 const Signup = () => {
   const history = useHistory();
-  const { chainId } = useParams<{ chainId: string }>();
-  const [chain, setChain] = useState<IChain | null>(null);
+  const { chainUID } = useParams<Params>();
+  const [chain, setChain] = useState<Chain | null>(null);
   const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [geocoderResult, setGeocoderResult] = useState({
@@ -37,59 +51,55 @@ const Signup = () => {
   });
   const [error, setError] = useState("");
   const classes = makeStyles(theme as any)();
-  const [chainGender, setChainGender] = useState<string[]>([]);
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-
-  const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 
   const validate = Yup.object({
-    name: Yup.string()
-      .min(2, t("mustBeAtLeastChar"))
-      .required(t("required")),
+    name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
     phoneNumber: Yup.string()
       .matches(phoneRegExp, {
         message: t("pleaseEnterAValid.phoneNumber"),
       })
       .required(t("required")),
+    sizes: Yup.array().of(Yup.string()).required(t("required")),
     newsletter: Yup.boolean(),
-  });
+  } as Record<keyof RegisterUserForm, any>);
 
   // Get chain id from the URL and save to state
   useEffect(() => {
     (async () => {
-      if (chainId) {
-        const chain = await getChain(chainId);
-        if (chain !== undefined) {
+      if (chainUID) {
+        try {
+          const chain = (await chainGet(chainUID)).data;
           setChain(chain);
-          setChainGender(chain.categories.gender);
-        } else {
-          console.error(`chain ${chainId} does not exist`);
+        } catch (e) {
+          console.error(`chain ${chainUID} does not exist`);
         }
       }
     })();
-  }, [chainId]);
+  }, [chainUID]);
 
   // Gather data from form, validate and send to firebase
-  const onSubmit = async (formData: any) => {
+  const onSubmit = async (formData: RegisterUserForm) => {
     // TODO: allow only full addresses
 
     try {
-      let user = {
-        ...formData,
-        address: geocoderResult.result.place_name,
-        chainId: chainId,
-        interestedSizes: selectedSizes,
-      };
-      console.log(`creating user: ${JSON.stringify(user)}`);
-      // TODO: do something with validation info for new user (e.g. display this)
-      await createUser(user);
+      await registerBasicUser(
+        {
+          name: formData.name,
+          email: formData.email,
+          phone_number: formData.phoneNumber,
+          address: geocoderResult.result.place_name,
+          newsletter: formData.newsletter,
+          sizes: formData.sizes,
+        },
+        chainUID
+      );
       setSubmitted(true);
     } catch (e: any) {
       console.error(`Error creating user: ${JSON.stringify(e)}`);
       e.code === "auth/invalid-phone-number"
         ? setError(t("pleaseEnterAValid.phoneNumber"))
-        : setError(e.message);
+        : setError(e?.data || `Error: ${JSON.stringify(e)}`);
     }
   };
 
@@ -110,12 +120,13 @@ const Signup = () => {
           <title>The Clothing Loop | Signup user</title>
           <meta name="description" content="Signup user" />
         </Helmet>
-        <Formik
+        <Formik<RegisterUserForm>
           initialValues={{
             name: "",
             email: "",
             phoneNumber: "",
             newsletter: false,
+            sizes: [],
           }}
           validationSchema={validate}
           validateOnChange={false}
@@ -149,9 +160,9 @@ const Signup = () => {
                     <PhoneFormField
                       label={t("phoneNumber")}
                       name="phoneNumber"
-                      onChange={(e: string) =>
-                        formik.setFieldValue("phoneNumber", e)
-                      }
+                      onChange={(e) => {
+                        formik.setFieldValue("phoneNumber", e as string);
+                      }}
                     />
 
                     <GeocoderSelector
@@ -164,9 +175,11 @@ const Signup = () => {
                         variant="standard"
                         showInputLabel={false}
                         label={t("interestedSizes")}
-                        selectedGenders={chainGender}
-                        selectedSizes={selectedSizes}
-                        handleSelectedCategoriesChange={setSelectedSizes}
+                        genders={chain?.genders || []}
+                        sizes={formik.values.sizes}
+                        handleSelectedCategoriesChange={(s) =>
+                          formik.setFieldValue("sizes", s)
+                        }
                       />
                       <PopoverOnHover
                         message={t("weWouldLikeToKnowThisEquallyRepresented")}
@@ -175,7 +188,7 @@ const Signup = () => {
 
                     <FormActions handleClick={handleClickAction} />
 
-                    {error ? <Alert severity="error">{error}</Alert> : null}
+                    {error && <Alert severity="error">{error}</Alert>}
                     <div className={classes.formSubmitActions}>
                       <Button
                         type="submit"

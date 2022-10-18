@@ -17,29 +17,33 @@ import { TextForm, NumberField, SelectField } from "./FormFields";
 import PopoverOnHover from "./Popover";
 import SizesDropdown from "../components/SizesDropdown";
 import CategoriesDropdown from "../components/CategoriesDropdown";
+import { Chain } from "../api/types";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
+import { RequestRegisterChain } from "../api/login";
+import { Genders, Sizes } from "../api/enums";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
-interface ChainFields {
-  name: string;
-  description?: string;
-  radius: number;
-  clothingTypes: [string];
-  clothingSizes: [string];
-  longitude: number;
-  latitude: number;
-}
-
 interface IProps {
-  onSubmit: (values: any) => void;
+  onSubmit: (values: RegisterChainForm) => void;
+  submitted?: boolean;
   submitError?: string;
-  initialValues?: ChainFields;
+  initialValues?: RegisterChainForm;
 }
 
-const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
+export type RegisterChainForm = Omit<
+  RequestRegisterChain,
+  "address" | "open_to_new_members"
+>;
+
+const ChainDetailsForm = ({
+  onSubmit,
+  submitError,
+  initialValues,
+  submitted,
+}: IProps) => {
   const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
 
@@ -52,16 +56,14 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
   });
 
   const formSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(2, t("mustBeAtLeastChar"))
-      .required(t("required")),
+    name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
     description: Yup.string(),
     radius: Yup.number().required(t("required")),
-    clothingTypes: Yup.array().of(Yup.string()).required(t("required")),
-    clothingSizes: Yup.array().of(Yup.string()).required(t("required")),
+    genders: Yup.array().of(Yup.string()).required(t("required")),
+    sizes: Yup.array().of(Yup.string()).required(t("required")),
     longitude: Yup.number(),
     latitude: Yup.number(),
-  });
+  } as Record<keyof RegisterChainForm, any>);
 
   const flyToLocation = (longitude: number, latitude: number) => {
     setViewport({
@@ -95,22 +97,22 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
     return onSubmit(values);
   };
 
-  const defaultValues = {
+  const defaultValues: RegisterChainForm = {
     name: "",
     description: "",
     radius: 3,
-    clothingTypes: [],
-    clothingSizes: [],
+    genders: [],
+    sizes: [],
     longitude: 0,
     latitude: 0,
   };
 
   return (
-    <Formik
+    <Formik<RegisterChainForm>
       initialValues={Object.assign(defaultValues, initialValues)}
       validationSchema={formSchema}
       validateOnChange={false}
-      validate={(values: ChainFields) => {
+      validate={(values) => {
         if (values.longitude === 0 && values.latitude === 0) {
           return {
             longitude: t("pleaseSetTheLoopLocationByClick"),
@@ -181,16 +183,16 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
           );
         };
 
-        const handleCategoriesChange = (selectedCats: string[]) => {
-          setFieldValue("clothingTypes", selectedCats);
+        const handleCategoriesChange = (selectedGenders: string[]) => {
+          setFieldValue("genders", selectedGenders as Genders[]);
           // potentially remove some sizes if their parent category has been deselected
-          const filteredSizes = values.clothingSizes.filter((size) => {
-            const parentCats = selectedCats.filter((cat) =>
-              categories[cat].includes(size)
-            );
-            return parentCats.length > 0;
-          });
-          setFieldValue("clothingSizes", filteredSizes);
+          const filteredSizes = (values.sizes || []).filter(
+            (size) =>
+              selectedGenders.filter((gender) =>
+                categories[gender as Genders].includes(size as Sizes)
+              ).length > 0
+          );
+          setFieldValue("sizes", filteredSizes);
         };
 
         return (
@@ -216,7 +218,7 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
               </ReactMapGL>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Form noValidate={true}>
+              <Form noValidate>
                 <Grid container style={{ paddingBottom: "5%" }}>
                   <Typography className="formSubtitle">
                     {t("clickToSetLoopLocation")}
@@ -270,32 +272,32 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                       }
                       className={classes.textField}
                     />
-                    <PopoverOnHover
-                      message={t("optionalFieldTypeAnything")}
-                    />
+                    <PopoverOnHover message={t("optionalFieldTypeAnything")} />
                   </Grid>
                   <Grid item xs={12} style={{ position: "relative" }}>
                     <div style={{ paddingTop: "10px" }}>
                       <CategoriesDropdown
                         variant="standard"
-                        showInputLabel={true}
-                        selectedCategories={values.clothingTypes}
+                        showInputLabel
+                        genders={values.genders || []}
                         handleSelectedCategoriesChange={handleCategoriesChange}
                       />
                     </div>
                     <div style={{ paddingTop: "10px", position: "relative" }}>
                       <SizesDropdown
                         variant="standard"
-                        showInputLabel={true}
+                        showInputLabel
                         label={t("sizes")}
-                        selectedGenders={values.clothingTypes}
-                        selectedSizes={values.clothingSizes}
+                        genders={values.genders || []}
+                        sizes={values.sizes || []}
                         handleSelectedCategoriesChange={(val) =>
-                          setFieldValue("clothingSizes", val)
+                          setFieldValue("sizes", val)
                         }
                       />
                       <PopoverOnHover
-                        message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
+                        message={t(
+                          "mixedBagsUsuallyWorkBestThereforeWeRecommentTo"
+                        )}
                       />
                     </div>
                   </Grid>
@@ -306,9 +308,8 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
                   ) : null}
                 </Grid>
 
-                {submitError ? (
-                  <Alert severity="error">{submitError}</Alert>
-                ) : null}
+                {submitError && <Alert severity="error">{submitError}</Alert>}
+                {submitted && <Alert security="success">{t("saved")}</Alert>}
                 <div className={classes.formSubmitActions}>
                   <Button type="submit" className={classes.buttonOutlined}>
                     {t("back")}
@@ -327,5 +328,5 @@ const ChainDetailsForm = ({ onSubmit, submitError, initialValues }: IProps) => {
   );
 };
 
-export type { ChainFields };
+export type { Chain };
 export default ChainDetailsForm;

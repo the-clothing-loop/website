@@ -654,7 +654,7 @@ const theme = {
   },
 
   formHelperLink: {
-   "& .text": {
+    "& .text": {
       display: "inline-block",
       fontSize: "14px",
     },

@@ -7,36 +7,55 @@ import { Download as DownloadIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
-import { getChain, getChains } from "../util/firebase/chain";
-import { getUsersForChain } from "../util/firebase/user";
 import theme from "../util/theme";
-import { IChain, IUser } from "../types";
+import { Chain, User } from "../api/types";
+import { chainGet, chainGetAll } from "../api/chain";
+import { userGetAllByChain } from "../api/user";
+import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
 
-const chainsHeaders = [
+interface Params {
+  chainUID: string;
+}
+
+const chainsHeaders: Array<{ label: string; key: keyof ChainData }> = [
   { label: "Name", key: "name" },
   { label: "Location", key: "address" },
-  { label: "Categories", key: "categories.gender" },
-  { label: "Sizes", key: "categories.size" },
+  { label: "Categories", key: "genders" },
+  { label: "Sizes", key: "sizes" },
   { label: "Published", key: "published" },
   { label: "Description", key: "description" },
 ];
 
-type TParams = {
-  chainId: string;
-};
+interface ChainData {
+  name: string;
+  address: string;
+  genders: string[];
+  sizes: string[];
+  published: boolean;
+  description: string;
+}
 
 const DataExport = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
 
-  const [chains, setChains] = useState<IChain[]>();
+  const [chains, setChains] = useState<ChainData[]>();
   const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
-      let chains = await getChains();
+      let chains = (await chainGetAll()).data;
       let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
-      setChains(sortedChains);
+      setChains(
+        sortedChains.map((c) => ({
+          name: c.name,
+          address: c.address,
+          genders: c.genders?.map((g) => GenderI18nKeys[g]) || [],
+          sizes: c.sizes?.map((s) => SizeI18nKeys[s]) || [],
+          published: c.published,
+          description: c.description,
+        }))
+      );
     })();
   }, []);
 
@@ -54,7 +73,7 @@ const DataExport = () => {
   );
 };
 
-const usersHeaders = [
+const usersHeaders: Array<{ label: string; key: keyof UserData }> = [
   { label: "Name", key: "name" },
   { label: "Address", key: "address" },
   { label: "Email", key: "email" },
@@ -63,21 +82,39 @@ const usersHeaders = [
   { label: "Newsletter", key: "newsletter" },
 ];
 
+interface UserData {
+  name: string;
+  address: string;
+  email: string;
+  phoneNumber: string;
+  interestedSizes: string[];
+  newsletter: boolean;
+}
+
 const UserDataExport = () => {
   const { t } = useTranslation();
-  const { chainId } = useParams<TParams>();
+  const { chainUID } = useParams<Params>();
   const classes = makeStyles(theme as any)();
-  const [chain, setChain] = useState<IChain>();
-  const [users, setUsers] = useState<IUser[]>();
+  const [chain, setChain] = useState<Chain>();
+  const [users, setUsers] = useState<UserData[]>();
   const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
       try {
-        const chainData = await getChain(chainId);
+        const chainData = (await chainGet(chainUID)).data;
         setChain(chainData);
-        const chainUsers = await getUsersForChain(chainId);
-        setUsers(chainUsers);
+        const chainUsers = (await userGetAllByChain(chainUID)).data;
+        setUsers(
+          chainUsers.map((u) => ({
+            name: u.name,
+            address: u.address,
+            email: u.email,
+            phoneNumber: u.phone_number,
+            interestedSizes: u.sizes.map((s) => SizeI18nKeys[s]),
+            newsletter: false,
+          }))
+        );
       } catch (error) {
         console.error(error);
       }

@@ -4,8 +4,8 @@ import { makeStyles } from "@mui/styles";
 
 import ArrowRight from "./arrow-right.svg";
 
-import { subscribeToNewsletter } from "../../util/firebase/newsletter";
 import { useTranslation } from "react-i18next";
+import { contactNewsletterSet } from "../../api/contact";
 
 const useStyles = makeStyles({
   headingTypographyRoot: {
@@ -55,7 +55,7 @@ const useStyles = makeStyles({
 
 export const Newsletter = () => {
   const classes = useStyles();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -72,7 +72,7 @@ export const Newsletter = () => {
 
   const handleSubmitClick = async () => {
     try {
-      await subscribeToNewsletter({ name, email });
+      await contactNewsletterSet(name, email, true);
     } catch (error) {
       setIsError(true);
       setTimeout(() => setIsError(false), 3000);

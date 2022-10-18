@@ -1,0 +1,11 @@
+/docker/database
+/server
+/cmd/server-fcgi/static/app.fcgi
+
+/config.*.yml
+!/config.example.yml
+
+# firebase migration
+/auth_data.json
+/backup.json
+/credentials.json

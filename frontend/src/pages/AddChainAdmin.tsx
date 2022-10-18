@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FormControl,
   Select,
@@ -6,34 +6,47 @@ import {
   MenuItem,
   Typography,
   Button,
+  Alert,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import RightArrow from "../images/right-arrow-white.svg";
 
 import theme from "../util/theme";
-import { addUserAsChainAdmin } from "../util/firebase/chain";
 
 import { Title } from "../components/Typography";
+import { chainAddUser } from "../api/chain";
+import { UID, User } from "../api/types";
+import { useHistory } from "react-router-dom";
+
+interface State {
+  users: User[];
+  chainUID: UID;
+}
 
 export const AddChainAdmin = ({ location }: { location: any }) => {
   const classes = makeStyles(theme as any)();
 
-  const { state } = location;
-  const { users, chainId } = state;
+  const history = useHistory();
 
-  const [selectedUser, setSelectedUser] = React.useState<string>();
+  const { state } = location;
+  const { users, chainUID } = state as State;
+
+  const [selectedUser, setSelectedUser] = useState<UID>();
+  const [error, setError] = useState<string>();
 
   const handleSelectedUserChange = (event: { target: any }) => {
-    const { target } = event;
-    const { value } = target;
-
-    setSelectedUser(value);
+    setSelectedUser(event.target.value);
   };
 
   const handleSubmitAddChainAdmin = async () => {
     if (selectedUser) {
-      await addUserAsChainAdmin(chainId, selectedUser);
+      try {
+        await chainAddUser(chainUID, selectedUser, true);
+        history.goBack();
+      } catch (err: any) {
+        setError(err?.data || "error");
+      }
     }
   };
 
@@ -69,31 +82,27 @@ export const AddChainAdmin = ({ location }: { location: any }) => {
               )
             }
           >
-            {users.map(
-              ({
-                name,
-                email,
-                uid,
-              }: {
-                name: string;
-                email: string;
-                uid: string;
-              }) => (
-                <MenuItem
-                  key={uid}
-                  classes={{
-                    root: classes.menuItemSpacingAndColor,
-                    selected: classes.selected,
-                  }}
-                  value={uid}
-                >
-                  {name} - {email}
-                </MenuItem>
-              )
-            )}
+            {users.map((u) => (
+              <MenuItem
+                key={u.uid}
+                classes={{
+                  root: classes.menuItemSpacingAndColor,
+                  selected: classes.selected,
+                }}
+                value={u.uid}
+              >
+                {u.name} - {u.email}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </div>
+
+      {error && (
+        <Alert sx={{ marginTop: 4 }} severity="error">
+          {error}
+        </Alert>
+      )}
 
       <div className="add-chain-admin__button">
         <Button

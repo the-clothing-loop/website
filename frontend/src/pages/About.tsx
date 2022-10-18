@@ -12,7 +12,7 @@ import { Trans, useTranslation, withTranslation } from "react-i18next";
 
 const About = () => {
   const classes = makeStyles(theme as any)();
-  const {t} = useTranslation("about")
+  const { t } = useTranslation("about");
 
   return (
     <>
@@ -39,8 +39,8 @@ const About = () => {
             i18nKey="p"
             ns="about"
             components={{
-              "p": <Typography component="p"></Typography>,
-              "aFind": <Link href="./loops/find"></Link>,
+              p: <Typography component="p"></Typography>,
+              aFind: <Link href="./loops/find"></Link>,
             }}
           ></Trans>
           <Typography component="h3" className={classes.h3}>
@@ -51,7 +51,12 @@ const About = () => {
               i18nKey="theClothingLoopIsAnIndependent<a>"
               ns="about"
               components={{
-                "aSlowFashion": <Link href="https://slowfashion.global/" target="_blank"></Link>,
+                aSlowFashion: (
+                  <Link
+                    href="https://slowfashion.global/"
+                    target="_blank"
+                  ></Link>
+                ),
               }}
             ></Trans>
           </Typography>
@@ -60,12 +65,14 @@ const About = () => {
             i18nKey="thePeople"
             ns="about"
             components={{
-              "p": <Typography component="p"></Typography>,
-              "imgTeam": <img src={TeamImg} alt="" />,
+              p: <Typography component="p"></Typography>,
+              imgTeam: <img src={TeamImg} alt="" />,
             }}
           ></Trans>
-          
-          <Typography component="p">{t("thankYou", {ns: "translation"})}</Typography>
+
+          <Typography component="p">
+            {t("thankYou", { ns: "translation" })}
+          </Typography>
         </div>
       </div>
     </>
