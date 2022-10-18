@@ -204,7 +204,6 @@ const ChainMemberList = () => {
                   <FormControlLabel
                     classes={{ root: classes.switchGroupRoot }}
                     value={published}
-                    disabled={!isChainAdmin}
                     control={
                       <Switch
                         checked={published}
@@ -223,7 +222,6 @@ const ChainMemberList = () => {
                   <FormControlLabel
                     classes={{ root: classes.switchGroupRoot }}
                     value={openToNewMembers}
-                    disabled={!isChainAdmin}
                     control={
                       <Switch
                         checked={openToNewMembers}
