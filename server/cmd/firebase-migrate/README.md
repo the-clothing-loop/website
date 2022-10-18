@@ -2,13 +2,12 @@
 
 ## TLDR
 
-I'm assuming `config.dev.yaml` exists.
+I'm assuming `config.dev.yml` exists.
 
-1.  Generate a private key file for your service account. In the Firebase console, open Settings > Service Accounts.
+1.  Generate a private key file for your service account. In the Firebase console, open Project Settings > Service Accounts.
 2.  Click Generate New Private Key, then confirm by clicking Generate Key.
-3.  Securely store the JSON file containing the key. You may also check this [documentation](https://firebase.google.com/docs/admin/setup#initialize-sdk).
-4.  Rename the JSON file to `credentials.json`.
-5.  Run the following:
+3.  Rename the JSON file to `credentials.json`.
+4.  Run the following:
 
 ```sh
 npm install -g firebase-tools
@@ -18,6 +17,8 @@ firebase login --interactive
 npx firebase auth:export auth_data.json --format=json --project <project_id>
 
 npx -p node-firestore-import-export firestore-export -a credentials.json -b backup.json
+
+make firebase-migrate
 ```
 
 Your imported data should be in your local MariaDB.

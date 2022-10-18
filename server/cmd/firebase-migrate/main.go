@@ -9,6 +9,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/cmd/firebase-migrate/local"
 	"github.com/CollActionteam/clothing-loop/server/local/app"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
+	"github.com/samber/lo"
 	"gorm.io/gorm"
 )
 
@@ -139,28 +140,28 @@ WHERE chains.published = ?
 		log.Printf("%d user_chains imported", len(userChainByFIDs))
 	}
 
-	{
-		wg = sync.WaitGroup{}
-		mails := []*models.Mail{}
-		for i := range data.Collections.Mail {
-			fid := i
-			d := data.Collections.Mail[fid]
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-				m := local.MigrateMail(*d, fid)
+	// {
+	// 	wg = sync.WaitGroup{}
+	// 	mails := []*models.Mail{}
+	// 	for i := range data.Collections.Mail {
+	// 		fid := i
+	// 		d := data.Collections.Mail[fid]
+	// 		wg.Add(1)
+	// 		go func() {
+	// 			defer wg.Done()
+	// 			m := local.MigrateMail(*d, fid)
 
-				mu.Lock()
-				mails = append(mails, &m)
-				mu.Unlock()
-			}()
-		}
-		wg.Wait()
-		if err := db.CreateInBatches(mails, 100).Error; err != nil {
-			return fmt.Errorf("error in CreateInBatches(mails, 100): %+v", err)
-		}
-		log.Printf("%d mails imported", len(mails))
-	}
+	// 			mu.Lock()
+	// 			mails = append(mails, &m)
+	// 			mu.Unlock()
+	// 		}()
+	// 	}
+	// 	wg.Wait()
+	// 	if err := db.CreateInBatches(mails, 100).Error; err != nil {
+	// 		return fmt.Errorf("error in CreateInBatches(mails, 100): %+v", err)
+	// 	}
+	// 	log.Printf("%d mails imported", len(mails))
+	// }
 
 	{
 		wg = sync.WaitGroup{}
@@ -202,6 +203,9 @@ WHERE chains.published = ?
 			}()
 		}
 		wg.Wait()
+		newsletters = lo.FindUniquesBy(newsletters, func(n *models.Newsletter) string {
+			return n.Email
+		})
 		if err := db.CreateInBatches(newsletters, 100).Error; err != nil {
 			return fmt.Errorf("error in CreateInBatches(newsletters, 100): %+v", err)
 		}

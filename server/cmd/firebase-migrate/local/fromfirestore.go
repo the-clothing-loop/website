@@ -40,12 +40,30 @@ func ReadBackupFile() (data *Backup, err error) {
 }
 
 func MigrateChain(d map[string]any, fid string) (chain models.Chain, chainAdminFID string) {
-	name := d["name"].(string)
-	description := d["description"].(string)
-	address := d["address"].(string)
-	latitude := d["latitude"].(float64)
-	longitude := d["longitude"].(float64)
-	radius := d["radius"].(float64)
+	name, ok := d["name"].(string)
+	if !ok {
+		name = "Error"
+	}
+	description, ok := d["description"].(string)
+	if !ok {
+		description = ""
+	}
+	address, ok := d["address"].(string)
+	if !ok {
+		address = ""
+	}
+	latitude, ok := d["latitude"].(float64)
+	if !ok {
+		latitude = 0
+	}
+	longitude, ok := d["longitude"].(float64)
+	if !ok {
+		longitude = 0
+	}
+	radius, ok := d["radius"].(float64)
+	if !ok {
+		radius = 0
+	}
 	published, ok := d["published"].(bool)
 	if !ok {
 		published = true
@@ -64,7 +82,10 @@ func MigrateChain(d map[string]any, fid string) (chain models.Chain, chainAdminF
 			sizes = convertSizes(dS)
 		}
 	}
-	chainAdminFID = d["chainAdmin"].(string)
+	chainAdminFID, ok = d["chainAdmin"].(string)
+	if !ok {
+		chainAdminFID = ""
+	}
 	chain = models.Chain{
 		UID:              uuid.NewV4().String(),
 		FID:              sql.NullString{String: fid, Valid: fid != ""},
@@ -128,7 +149,10 @@ func MigrateUser(d BackupCollectionItem, fid string, dChains BackupCollection) (
 }
 
 func MigrateMail(d BackupCollectionItem, fid string) (mail models.Mail) {
-	to := d["to"].(string)
+	to, ok := d["to"].(string)
+	if !ok {
+		to = ""
+	}
 	html := ""
 	subject := ""
 	if msg, ok := d["message"].(map[string]any); ok {

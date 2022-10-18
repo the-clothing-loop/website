@@ -60,11 +60,26 @@ func MigrateAuth(db *gorm.DB, d AuthDataUser) {
 		if err != nil {
 			chain := &models.Chain{}
 			if err := db.First(chain, "fid = ?", customAttributes.ChainFID).Error; err == nil {
-				db.Create(&models.UserChain{
-					UserID:       user.ID,
-					ChainID:      chain.ID,
-					IsChainAdmin: customAttributes.Role == "chainAdmin",
-				})
+				uc := &models.UserChain{}
+				err := db.Raw(`
+SELECT user_chains.*
+FROM user_chains
+WHERE user_chains.user_id = ? AND user_chains.chain_id = ?
+LIMIT 1
+				`, user.ID, chain.ID).Scan(uc)
+
+				if err == nil && uc.ID != 0 {
+					if customAttributes.Role != "" {
+						uc.IsChainAdmin = customAttributes.Role == "chainAdmin"
+						db.Save(uc)
+					}
+				} else {
+					db.Create(&models.UserChain{
+						UserID:       user.ID,
+						ChainID:      chain.ID,
+						IsChainAdmin: customAttributes.Role == "chainAdmin",
+					})
+				}
 			} else {
 				log.Printf("chain not found in database with an fid of %s from user fid %s", customAttributes.ChainFID, user.FID.String)
 			}
