@@ -1,0 +1,11 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Start maintenance
+      shell: |
+        mv /etc/caddy/Caddyfile /etc/caddy/Caddyfile.live
+        cp /etc/caddy/Caddyfile.maint /etc/caddy/Caddyfile
+    - name: Reload caddy service
+      service:
+        name: caddy
+        state: reloaded
