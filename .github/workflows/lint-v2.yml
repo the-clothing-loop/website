@@ -2,9 +2,7 @@ name: Lint
 on:
   workflow_dispatch:
   push:
-    branches:
-      - golang
-      - v2/*
+
 jobs:
   lint-frontend:
     runs-on: ubuntu-latest
