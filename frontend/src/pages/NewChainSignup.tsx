@@ -1,5 +1,5 @@
 // React / plugins
-import { useState, useContext } from "react";
+import { useState, useContext, ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -18,30 +18,33 @@ import PopoverOnHover from "../components/Popover";
 import { PhoneFormField, TextForm } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../components/AuthProvider";
-import { createUser } from "../util/firebase/user";
-import SizesDropdown from "../components/SizesDropdown";
-import categories from "../util/categories";
 import FormActions from "../components/formActions";
+import { State as LoopsNewState } from "./NewChainLocation";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
+import { RequestRegisterUser } from "../api/login";
+import { phoneRegExp } from "../util/phoneRegExp";
+
+interface RegisterUserForm {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  newsletter: boolean;
+}
 
 const Signup = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [submitted, setSubmitted] = useState(false);
   const [geocoderResult, setGeocoderResult] = useState({
     result: { place_name: "" },
   });
-  const [userId, setUserId] = useState("");
   const classes = makeStyles(theme as any)();
-  const { user } = useContext(AuthContext);
-  const [error, setError] = useState("");
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-
-  //Phone Number Validation Format with E.164
-  const phoneRegExp =
-    /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  const authUser = useContext(AuthContext).authUser;
+  const [registerUser, setRegisterUser] = useState<RequestRegisterUser | null>(
+    null
+  );
 
   const validate = Yup.object({
     name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
@@ -54,16 +57,32 @@ const Signup = () => {
       })
       .max(15)
       .required(t("pleaseEnterAValid.phoneNumber")),
-    newsletter: Yup.boolean(),
-  });
+    address: Yup.string().default(""),
+    newsletter: Yup.boolean().default(false),
+  } as Record<keyof RegisterUserForm, any>);
 
-  if (submitted) {
-    return <Redirect to={{ pathname: "/loops/new", state: { userId } }} />;
+  if (registerUser) {
+    return (
+      <Redirect
+        to={{
+          pathname: "/loops/new",
+          state: {
+            only_create_chain: false,
+            register_user: registerUser,
+          } as LoopsNewState,
+        }}
+      />
+    );
   }
 
-  if (user) {
+  if (authUser) {
     return (
-      <Redirect to={{ pathname: "/loops/new", state: { userId: user.uid } }} />
+      <Redirect
+        to={{
+          pathname: "/loops/new",
+          state: { only_create_chain: true } as LoopsNewState,
+        }}
+      />
     );
   }
 
@@ -81,33 +100,28 @@ const Signup = () => {
         <title>The Clothing Loop | Create user for new Loop</title>
         <meta name="description" content="Create user for new loop" />
       </Helmet>
-      <Formik
+      <Formik<RegisterUserForm>
         initialValues={{
           name: "",
           email: "",
           phoneNumber: "",
-          newsletter: false,
+          address: "",
+          newsletter: true,
         }}
         validationSchema={validate}
         validateOnChange={false}
         onSubmit={async (values) => {
-          const user = {
+          let registerUser: RequestRegisterUser = {
+            name: values.name,
+            email: values.email,
+            phone_number: values.phoneNumber,
             address: geocoderResult.result.place_name,
-            chainId: null,
-            ...values,
-            interestedSizes: [],
+            newsletter: values.newsletter,
+            sizes: [],
           };
+          console.log("submit", registerUser);
 
-          console.log(`creating user: ${JSON.stringify(user)}`);
-          try {
-            setUserId(await createUser(user));
-            setSubmitted(true);
-          } catch (e: any) {
-            console.error(`Error creating user: ${JSON.stringify(e)}`);
-            e.code === "auth/invalid-phone-number"
-              ? setError(t("pleaseEnterAValid.phoneNumber"))
-              : setError(e.message);
-          }
+          setRegisterUser(registerUser);
         }}
       >
         {({ errors, touched, setFieldValue }) => (
@@ -207,17 +221,12 @@ const Signup = () => {
                       ? errors.phoneNumber
                       : null
                   }
-                  onChange={(e: string) =>
-                    setFieldValue("phoneNumber", e.replace(/\s/g, ""))
-                  }
+                  onChange={(e) => setFieldValue("phoneNumber", e)}
                 />
 
                 <GeocoderSelector name="address" onResult={setGeocoderResult} />
                 <FormActions handleClick={handleClickAction} />
 
-                {console.log(error)}
-
-                {error ? <Alert severity="error">{error}</Alert> : null}
                 <div className={classes.formSubmitActions}>
                   <Button
                     type="submit"

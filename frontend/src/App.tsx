@@ -25,7 +25,7 @@ import ChainEdit from "./pages/ChainEdit";
 import ChainsList from "./pages/ChainsList";
 import Home from "./pages/Home";
 import LoginEmailFinished from "./pages/LoginEmailFinished";
-import Contacts from "./pages/Contacts.js";
+import Contacts from "./pages/Contacts";
 import MessageSubmitted from "./pages/MessageSubmitted";
 import Donate from "./pages/Donations/Donate";
 import About from "./pages/About";
@@ -70,14 +70,14 @@ const App = () => {
 
                       <Route
                         exact
-                        path="/users/login-email-finished/:email"
+                        path="/users/login/validate"
                         component={LoginEmailFinished}
                       />
                       <Route exact path="/users/login" component={Login} />
                       <Route exact path="/users/logout" component={Logout} />
                       <Route
                         exact
-                        path="/users/:userId/edit"
+                        path="/users/:userUID/edit"
                         component={UserEdit}
                       />
 
@@ -85,17 +85,17 @@ const App = () => {
                       <Route exact path="/loops/find" component={FindChain} />
                       <Route
                         exact
-                        path="/loops/:chainId/edit"
+                        path="/loops/:chainUID/edit"
                         component={ChainEdit}
                       />
                       <Route
                         exact
-                        path="/loops/:chainId/members"
+                        path="/loops/:chainUID/members"
                         component={ChainMemberList}
                       />
                       <Route
                         exact
-                        path="/loops/:chainId/addChainAdmin"
+                        path="/loops/:chainUID/addChainAdmin"
                         component={AddChainAdmin}
                       />
                       <Route
@@ -115,7 +115,7 @@ const App = () => {
                       />
                       <Route
                         exact
-                        path="/loops/:chainId/users/signup"
+                        path="/loops/:chainUID/users/signup"
                         component={Signup}
                       />
 

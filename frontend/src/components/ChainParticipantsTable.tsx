@@ -9,42 +9,52 @@ import {
   TablePagination,
   TableContainer,
 } from "@mui/material";
+import {
+  EditOutlined as EditIcon,
+  Clear as DeleteIcon,
+} from "@mui/icons-material";
 
 import { makeStyles } from "@mui/styles";
 
-import { IUser } from "../types";
-
 import theme from "../util/theme";
+import { UID, User } from "../api/types";
+import { SizeI18nKeys, Sizes } from "../api/enums";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(theme as any);
 
+export interface TableUserColumn {
+  headerName: string;
+  propertyName: keyof User;
+}
+
+interface Props {
+  columns: TableUserColumn[];
+  authUser: User | null;
+  users: User[];
+  initialPage: number;
+  edit: boolean;
+  remove: boolean;
+  onRemoveUser?: (uid: UID) => void;
+}
+
 export const ChainParticipantsTable = ({
   columns,
-  userData,
+  authUser,
   users,
   initialPage,
-  initialRowsPerPage,
-  editItemComponent,
-  deleteItemComponent,
-}: {
-  columns: { headerName: string; propertyName: string }[];
-  userData: IUser | null;
-  users: IUser[];
-  initialPage: number;
-  initialRowsPerPage: number;
-  editItemComponent: any;
-  deleteItemComponent: any;
-}) => {
+  edit,
+  remove,
+  onRemoveUser,
+}: Props) => {
   const [page, setPage] = useState(initialPage);
-  const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
+  const rowsPerPage = 20;
+
+  const { t } = useTranslation();
 
   const handleChangePage = (e: any, newPage: any) => {
     setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (e: any) => {
-    setRowsPerPage(+e.target.value);
-    setPage(0);
   };
 
   return (
@@ -61,10 +71,10 @@ export const ChainParticipantsTable = ({
                 );
               })}
 
-              {userData?.role === "admin" && (
+              {authUser?.is_admin && (
                 <>
-                  {editItemComponent && <HeadRowTableCell />}
-                  {deleteItemComponent && <HeadRowTableCell />}
+                  {edit && <HeadRowTableCell />}
+                  {remove && <HeadRowTableCell />}
                 </>
               )}
             </TableRow>
@@ -72,26 +82,33 @@ export const ChainParticipantsTable = ({
           <TableBody>
             {users
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((u: IUser) => (
+              .map((u: User) => (
                 <TableRow key={u.uid}>
-                  {columns.map(({ propertyName }) => (
-                    <BorderlessTableCell>
-                      {propertyName === "interestedSizes"
-                        ? u[propertyName].join(", ")
-                        : u[propertyName]}
-                    </BorderlessTableCell>
-                  ))}
+                  {columns.map(({ propertyName }) => {
+                    let text = u[propertyName] as string;
+                    if (propertyName === "sizes") {
+                      text = u.sizes
+                        .filter((v) => Object.hasOwn(SizeI18nKeys, v))
+                        .map((v) => SizeI18nKeys[v])
+                        .join(", ");
+                    }
+                    return <BorderlessTableCell>{text}</BorderlessTableCell>;
+                  })}
 
-                  {userData?.role === "admin" && (
+                  {authUser?.is_admin && (
                     <>
-                      {editItemComponent && (
+                      {edit && (
                         <BorderlessTableCell>
-                          {editItemComponent(u)}
+                          <Link to={`/users/${u.uid}/edit`}>
+                            <EditIcon />
+                          </Link>
                         </BorderlessTableCell>
                       )}
-                      {deleteItemComponent && (
+                      {remove && onRemoveUser && (
                         <BorderlessTableCell>
-                          {deleteItemComponent(u)}
+                          <DeleteIcon
+                            onClick={() => onRemoveUser(u.uid as string)}
+                          />
                         </BorderlessTableCell>
                       )}
                     </>
@@ -102,13 +119,22 @@ export const ChainParticipantsTable = ({
         </Table>
 
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[rowsPerPage]}
           component="div"
           count={users.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelDisplayedRows={({ from, to, count }) => {
+            let currentPage = page + 1;
+            let totalPages = Math.floor(count / rowsPerPage) + 1;
+
+            if (totalPages < 2) {
+              return "";
+            }
+
+            return `${t("page")} ${currentPage} - ${totalPages}`;
+          }}
           nextIconButtonProps={{ size: "large" }}
           backIconButtonProps={{ size: "large" }}
         />

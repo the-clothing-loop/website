@@ -1,0 +1,103 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Add the user clothingloop
+      user:
+        name: clothingloop
+        uid: 1077
+        shell: /bin/bash
+        createhome: yes
+        home: /home/clothingloop
+    - name: Add user opt directory
+      file:
+        path: "/home/clothingloop/opt"
+        recurse: no
+        state: directory
+        mode: "0775"
+        group: "clothingloop"
+        owner: "clothingloop"
+    - name: Add log directory
+      file:
+        path: "/var/log/clothingloop-api"
+        recurse: no
+        state: directory
+        mode: "0775"
+        group: "clothingloop"
+        owner: "clothingloop"
+    - name: Add config for acceptance
+      vars:
+        api_config_port: 8082
+        api_config_base_url_api: https://acc.clothingloop.org/api
+        api_config_base_url_fe: https://acc.clothingloop.org
+        api_config_cookie_https_only: "true"
+        api_config_stripe_secret_key: "{{ stripe_cl_acceptance_secret_key }}"
+        api_config_stripe_webhook: "{{ stripe_cl_acceptance_webhook }}"
+        api_config_db_name: "cl-acceptance"
+        api_config_db_user: "cl-acceptance"
+        api_config_db_pass: "{{ mysql_cl_acceptance_password }}"
+        api_config_smtp_host: "{{ smtp_cl_acceptance_host }}"
+        api_config_smtp_user: "{{ smtp_cl_acceptance_user }}"
+        api_config_smtp_pass: "{{ smtp_cl_acceptance_password }}"
+      template:
+        src: templates/config.yml.j2
+        dest: /home/clothingloop/opt/config.acc.yml
+        owner: clothingloop
+        group: clothingloop
+        mode: "0600"
+    - name: Add config for production
+      vars:
+        api_config_port: 8081
+        api_config_base_url_api: https://clothingloop.org/api
+        api_config_base_url_fe: https://clothingloop.org
+        api_config_cookie_https_only: "true"
+        api_config_stripe_secret_key: "{{ stripe_cl_production_secret_key }}"
+        api_config_stripe_webhook: "{{ stripe_cl_production_webhook }}"
+        api_config_db_name: "cl-production"
+        api_config_db_user: "cl-production"
+        api_config_db_pass: "{{ mysql_cl_production_password }}"
+        api_config_smtp_host: "{{ smtp_cl_production_host }}"
+        api_config_smtp_user: "{{ smtp_cl_production_user }}"
+        api_config_smtp_pass: "{{ smtp_cl_production_password }}"
+      template:
+        src: templates/config.yml.j2
+        dest: /home/clothingloop/opt/config.prod.yml
+        owner: clothingloop
+        group: clothingloop
+        mode: "0600"
+    - name: Add API production service
+      vars:
+        api_service_name: "Clothingloop API Production"
+        api_service_user: clothingloop
+        api_service_env: production
+        api_service_exec: /home/clothingloop/opt/api-production
+        api_service_path: /home/clothingloop/opt
+      template:
+        src: templates/api.service.j2
+        dest: /etc/systemd/system/cl-api-production.service
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Add API acceptance service
+      vars:
+        api_service_name: "Clothingloop API Acceptance"
+        api_service_user: clothingloop
+        api_service_env: acceptance
+        api_service_exec: /home/clothingloop/opt/api-acceptance
+        api_service_path: /home/clothingloop/opt
+      template:
+        src: templates/api.service.j2
+        dest: /etc/systemd/system/cl-api-acceptance.service
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Systemd reload
+      shell: |
+        systemctl daemon-reload
+    - name: Enable service api production
+      service:
+        name: cl-api-production
+        enabled: yes
+    - name: Enable service api acceptance
+      service:
+        name: cl-api-acceptance
+        enabled: yes

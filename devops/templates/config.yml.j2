@@ -1,0 +1,23 @@
+host: "127.0.0.1"
+port: {{ api_config_port }}
+
+site_base_url_api: "{{ api_config_base_url_api }}"
+site_base_url_fe: "{{ api_config_base_url_fe }}"
+
+cookie_domain: "clothingloop.org"
+cookie_https_only: {{ api_config_cookie_https_only }}
+
+stripe_secret_key: "{{ api_config_stripe_secret_key }}"
+stripe_webhook: "{{ api_config_stripe_webhook }}"
+
+db_host: "localhost"
+db_port: 3306
+db_name: "{{ api_config_db_name }}"
+db_user: "{{ api_config_db_user }}"
+db_pass: "{{ api_config_db_pass }}"
+
+smtp_host: "{{ api_config_smtp_host }}"
+smtp_port: 587
+smtp_sender: "{{ api_config_smtp_user }}"
+smtp_user: "{{ api_config_smtp_user }}"
+smtp_pass: "{{ api_config_smtp_pass }}"

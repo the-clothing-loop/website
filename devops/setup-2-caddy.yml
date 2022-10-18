@@ -1,0 +1,70 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Check what is installed
+      package_facts:
+        manager: "auto"
+    - name: Install caddy
+      shell: |
+        apt install -y debian-keyring debian-archive-keyring apt-transport-https
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
+        apt update
+        apt install caddy -y
+      when: "ansible_facts.packages['caddy'] is undefined"
+    - name: Add caddy file
+      template:
+        src: templates/Caddyfile
+        dest: /etc/caddy/Caddyfile
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Add maintenance caddy file
+      template:
+        src: templates/Caddyfile.maint
+        dest: /etc/caddy/Caddyfile.maint
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Disable caddy-api service
+      service:
+        name: caddy-api
+        enabled: no
+        state: stopped
+    - name: Create caddy server files
+      file:
+        path: "{{ item }}"
+        recurse: yes
+        state: directory
+        mode: "0775"
+        group: "caddy"
+        owner: "caddy"
+      with_items:
+        - "/var/caddy/acc.clothingloop.org"
+        - "/var/caddy/clothingloop.org"
+        - "/var/caddy/maint.clothingloop.org"
+    - name: Build maint css
+      delegate_to: localhost
+      become: false
+      shell: |
+        cd templates/maint/
+        ./build.sh
+    - name: Copy maint files
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: caddy
+        group: caddy
+        mode: "0775"
+      with_items:
+        - src: templates/maint/logo.webp
+          dest: /var/caddy/maint.clothingloop.org/logo.webp
+        - src: templates/maint/index.html
+          dest: /var/caddy/maint.clothingloop.org/index.html
+        - src: templates/maint/style.min.css
+          dest: /var/caddy/maint.clothingloop.org/style.min.css
+    - name: Setup caddy service
+      service:
+        name: caddy
+        enabled: yes
+        state: reloaded

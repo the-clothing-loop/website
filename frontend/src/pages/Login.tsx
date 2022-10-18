@@ -17,9 +17,8 @@ import RightArrow from "../images/right-arrow-white.svg";
 import CirclesFrame from "../images/circles.png";
 import LoginImg from "../images/Login.jpg";
 
-import firebase from "firebase/app";
-import "firebase/auth";
 import { Helmet } from "react-helmet";
+import { loginEmail } from "../api/login";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -35,17 +34,13 @@ const Login = () => {
     if (!submitted) {
       try {
         const continueUrl = `${
-          process.env.REACT_APP_BASE_DOMAIN
+          process.env.REACT_APP_BASE_URL
         }/users/login-email-finished/${encodeURI(data.email)}`;
-        await firebase.auth().sendSignInLinkToEmail(data.email, {
-          handleCodeInApp: true,
-          url: continueUrl,
-        });
-        window.localStorage.setItem("emailForSignIn", data.email);
+        await loginEmail(data.email);
         setSubmitted(true);
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
-        setError(JSON.stringify(e));
+        setError(t("noResultsFound"));
       }
     }
   };
@@ -70,7 +65,9 @@ const Login = () => {
                 <Trans
                   i18nKey="areYouAlreadyHosting<a>JoinAnExistingLoop"
                   components={{
-                    "a": <Link className={classes.a} to="../../loops/find"></Link>,
+                    a: (
+                      <Link className={classes.a} to="../../loops/find"></Link>
+                    ),
                   }}
                 ></Trans>
               </Typography>
@@ -90,6 +87,7 @@ const Login = () => {
                     {...formik.getFieldProps("email")}
                     label={t("email")}
                     variant="standard"
+                    type="email"
                     required
                     fullWidth
                   />

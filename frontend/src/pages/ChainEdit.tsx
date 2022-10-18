@@ -9,55 +9,58 @@ import { makeStyles } from "@mui/styles";
 import theme from "../util/theme";
 
 // Project resources
-import { getChain, updateChain } from "../util/firebase/chain";
-import ChainDetailsForm, { ChainFields } from "../components/ChainDetailsForm";
+import ChainDetailsForm, {
+  RegisterChainForm,
+} from "../components/ChainDetailsForm";
+import { chainGet, chainUpdate, ChainUpdateBody } from "../api/chain";
+import { Chain } from "../api/types";
+
+interface Params {
+  chainUID: string;
+}
 
 const ChainEdit = () => {
   const { t } = useTranslation();
   let history = useHistory();
   let location = useLocation();
-  const { chainId } = useParams<{ chainId: string }>();
+  const { chainUID } = useParams<Params>();
 
-  const [chain, setChain] = useState<ChainFields>();
+  const [chain, setChain] = useState<Chain>();
   const classes = makeStyles(theme as any)();
   const [submitted, setSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (values: ChainFields) => {
-    const newChainData = {
+  const handleSubmit = async (values: RegisterChainForm) => {
+    const newChainData: ChainUpdateBody = {
       ...values,
-      categories: { gender: values.clothingTypes, size: values.clothingSizes },
+      uid: chainUID,
     };
 
     console.log(`updating chain information: ${JSON.stringify(newChainData)}`);
     try {
-      await updateChain(chainId, newChainData);
+      await chainUpdate(newChainData);
       setSubmitted(true);
-      history.push({
-        pathname: `/loops/${chainId}/members`,
-        state: { message: t("saved") },
-      });
+      setTimeout(() => {
+        history.goBack();
+      }, 1200);
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
-      setSubmitError(e.message);
+      setError(e?.data || `Error: ${JSON.stringify(e)}`);
     }
   };
 
   useEffect(() => {
     (async () => {
-      const chain = await getChain(chainId);
-      if (chain !== undefined) {
-        const fields = {
-          ...chain,
-          clothingTypes: chain.categories.gender,
-          clothingSizes: chain.categories.size,
-        };
-        setChain(fields);
-      } else {
-        console.error(`chain ${chainId} does not exist`);
+      try {
+        let chain = (await chainGet(chainUID)).data;
+
+        setChain(chain);
+      } catch (e: any) {
+        console.error(`chain ${chainUID} does not exist`);
+        setError(e?.data || `Error: ${JSON.stringify(e)}`);
       }
     })();
-  }, [chainId]);
+  }, [chainUID]);
 
   return !chain ? null : (
     <>
@@ -79,7 +82,8 @@ const ChainEdit = () => {
           </Typography>
           <ChainDetailsForm
             onSubmit={handleSubmit}
-            submitError={submitError}
+            submitError={error}
+            submitted={submitted}
             initialValues={chain}
           />
         </div>

@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  cl_mail:
+    image: mailhog/mailhog
+    ports:
+      - 8025:8025
+      - 1025:1025
+  cl_pma:
+    image: phpmyadmin:apache
+    ports: 
+      - 8085:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=cl_db
+      - PMA_USER=root
+      - PMA_PASSWORD=fb4aeaa6d860dbabe785675e
+  cl_db:
+    image: mariadb
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=fb4aeaa6d860dbabe785675e
+      - MYSQL_DATABASE=clothingloop
+      - MYSQL_USER=clothingloop
+      - MYSQL_PASSWORD=72bd3937e91363a747f810e7
+    volumes:
+      - ../../database:/var/lib/mysql

@@ -4,9 +4,9 @@ import * as Yup from "yup";
 import { SearchBar } from "./SearchBar";
 import { ChainNotFound } from "./ChainNotFound";
 
-import { IChain } from "../../types";
 import { ChainsContext } from "../ChainsProvider";
 import { defaultTruePredicate, ChainPredicate } from "../../pages/FindChain";
+import { Chain } from "../../api/types";
 
 const hasCommonElements = (arr1: string[], arr2: string[]) =>
   arr1.some((item: string) => arr2.includes(item));
@@ -44,14 +44,12 @@ export const FindChainSearchBarContainer = ({
   };
 
   const handleSearch = () => {
-    const newChainFilterPredicate = (chain: IChain) => {
-      const { categories } = chain;
-
+    const newChainFilterPredicate = (chain: Chain) => {
       return (
         (!selectedSizes.length ||
-          hasCommonElements(categories.size, selectedSizes)) &&
+          hasCommonElements(chain.sizes || [], selectedSizes)) &&
         (!selectedGenders.length ||
-          hasCommonElements(categories.gender, selectedGenders))
+          hasCommonElements(chain.genders || [], selectedGenders))
       );
     };
 
@@ -61,7 +59,7 @@ export const FindChainSearchBarContainer = ({
       return;
     }
 
-    const newChainFindPredicate = (chain: IChain) =>
+    const newChainFindPredicate = (chain: Chain) =>
       chain.name.toLowerCase().includes(searchTerm.toLowerCase());
 
     const isFindChainResult = handleFindChainCallback(newChainFindPredicate);

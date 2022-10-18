@@ -15,7 +15,7 @@ import { AuthContext } from "./AuthProvider";
 const Footer = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
-  const { userData } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
   return (
     <div>
@@ -23,7 +23,7 @@ const Footer = () => {
         className={classes.footer}
         style={{ display: "flex", flexDirection: "column" }}
       >
-        {userData === null ? (
+        {authUser === null ? (
           <div className={classes.footerWrapper} id="footer">
             <div className={classes.footerSections}>
               <div className={classes.footerSection}>

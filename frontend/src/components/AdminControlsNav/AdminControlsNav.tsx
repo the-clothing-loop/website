@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 // Material UI
@@ -12,20 +12,21 @@ import theme from "../../util/theme";
 import Img from "../../images/Denise.png";
 import { TwoColumnLayout } from "../Layouts";
 import { AuthContext } from "../AuthProvider";
+import { Box } from "@mui/system";
 
 const AdminControlsNav = () => {
   const { t } = useTranslation();
 
   const classes = makeStyles(theme as any)();
-  const { userData } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
   return (
     <div>
-      {userData ? (
+      {authUser ? (
         <TwoColumnLayout img={Img}>
-          <div className="admin-nav-content">
+          <Box sx={{ padding: 8 }}>
             <Typography variant="h3" className={classes.pageTitle}>
-              {`Hello, ${userData?.name}`}
+              {`Hello, ${authUser?.name}`}
             </Typography>
             <div className={classes.pageDescription}>
               <Typography component="p" className={classes.p}>
@@ -33,32 +34,16 @@ const AdminControlsNav = () => {
               </Typography>
             </div>
 
-            <div className="admin-controls-nav">
-              {userData?.role === "chainAdmin" ? (
-                <div className="admin-nav-btn">
-                  <Button
-                    color="inherit"
-                    className={classes.button}
-                    component={Link}
-                    to={`/loops/${userData.chainId}/members`}
-                  >
-                    {t("viewLoop")}
-                  </Button>
-                </div>
-              ) : null}
-
-              {userData?.role === "admin" ? (
-                <div className="admin-nav-btn">
-                  <Button
-                    color="inherit"
-                    className={classes.button}
-                    component={Link}
-                    to="/loops"
-                  >
-                    {t("viewLoops")}
-                  </Button>
-                </div>
-              ) : null}
+            <Box sx={{ textAlign: "center", marginTop: 8 }}>
+              <Button
+                color="inherit"
+                className={classes.button}
+                sx={{ minWidth: 200 }}
+                component={Link}
+                to="/loops"
+              >
+                {t("viewLoops")}
+              </Button>
 
               <Link
                 className={classes.underlinedLink}
@@ -70,8 +55,8 @@ const AdminControlsNav = () => {
               >
                 {t("goToTheToolkitFolder")}
               </Link>
-            </div>
-          </div>
+            </Box>
+          </Box>
         </TwoColumnLayout>
       ) : null}
     </div>

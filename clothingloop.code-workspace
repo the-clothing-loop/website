@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "server"
+		},
+		{
+			"path": "frontend"
+		},
+		{
+			"path": ".github"
+		},
+		{
+			"path": "firebase"
+		},
+		{
+			"path": "devops"
+		}
+	],
+	"settings": {},
+	"extensions": {
+		"recommendations": [
+			"golang.go",
+			"esbenp.prettier-vscode",
+			"ms-azuretools.vscode-docker"
+		]
+	}
+}

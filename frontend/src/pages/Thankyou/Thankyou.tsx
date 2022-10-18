@@ -15,7 +15,7 @@ import Img from "../../images/party-image.jpg";
 export interface IProps {
   heading: string;
   subheading: string;
-  confirmationEmail:string;
+  confirmationEmail: string;
 }
 
 const Content = ({ heading, subheading, confirmationEmail }: IProps) => {
