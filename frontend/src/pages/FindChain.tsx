@@ -61,7 +61,7 @@ const FindChain = ({ location }: { location: Location }) => {
 
   const history = useHistory();
   const { t } = useTranslation();
-  const { authUser: user } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
   const classes = makeStyles(theme as any)();
 
@@ -131,8 +131,8 @@ const FindChain = ({ location }: { location: Location }) => {
 
   const signupToChain = async (e: any) => {
     e.preventDefault();
-    if (user && selectedChain) {
-      await chainAddUser(selectedChain.uid, user.uid, false);
+    if (authUser && selectedChain) {
+      await chainAddUser(selectedChain.uid, authUser.uid, false);
       history.push({ pathname: "/thankyou" });
     } else {
       history.push({
@@ -378,7 +378,7 @@ const FindChain = ({ location }: { location: Location }) => {
                 </div>
               </CardContent>
 
-              {user?.is_admin ? (
+              {authUser?.is_root_admin ? (
                 <CardActions>
                   <Button
                     key={"btn-join"}

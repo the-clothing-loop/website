@@ -71,7 +71,7 @@ export const ChainParticipantsTable = ({
                 );
               })}
 
-              {authUser?.is_admin && (
+              {authUser?.is_root_admin && (
                 <>
                   {edit && <HeadRowTableCell />}
                   {remove && <HeadRowTableCell />}
@@ -95,7 +95,7 @@ export const ChainParticipantsTable = ({
                     return <BorderlessTableCell>{text}</BorderlessTableCell>;
                   })}
 
-                  {authUser?.is_admin && (
+                  {authUser?.is_root_admin && (
                     <>
                       {edit && (
                         <BorderlessTableCell>

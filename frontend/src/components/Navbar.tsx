@@ -39,7 +39,7 @@ const Navbar = () => {
         </Link>
         <div className={classes.headerRight}>
           <div className={classes.headerNav}>
-            {authUser?.is_admin || authIsChainAdmin ? (
+            {authUser?.is_root_admin || authIsChainAdmin ? (
               <Button
                 color="inherit"
                 component="a"
@@ -76,7 +76,7 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            {authUser?.is_admin || authIsChainAdmin ? (
+            {authUser?.is_root_admin || authIsChainAdmin ? (
               <Typography
                 color="inherit"
                 component={Link}

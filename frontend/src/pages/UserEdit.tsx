@@ -96,7 +96,7 @@ const UserEdit = () => {
         const user = (await userGetByUID(authChainUID, params.userUID)).data;
         const firstChain = user.chains[0];
         setUser(user);
-        setUserIsAdmin(user.is_admin);
+        setUserIsAdmin(user.is_root_admin);
         setUserIsChainAdmin(firstChain.is_chain_admin);
       } catch (error) {
         console.warn(error);
