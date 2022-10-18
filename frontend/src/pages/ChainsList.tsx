@@ -39,6 +39,7 @@ const ChainsList = () => {
   const classes = makeStyles(theme as any)();
   const history = useHistory();
   const { authUser } = useContext(AuthContext);
+  const allChains = useContext(ChainsContext);
   const [chains, setChains] = useState<Chain[]>();
   const [error, setError] = useState("");
 
@@ -46,11 +47,15 @@ const ChainsList = () => {
     (async () => {
       if (authUser) {
         try {
-          let data = await Promise.all(
-            authUser.chains.map((c) => chainGet(c.chain_uid))
-          );
+          if (authUser.is_root_admin) {
+            setChains(allChains);
+          } else {
+            let data = await Promise.all(
+              authUser.chains.map((c) => chainGet(c.chain_uid))
+            );
 
-          setChains(data.map((d) => d.data));
+            setChains(data.map((d) => d.data));
+          }
         } catch (rej: any) {
           setError(rej?.data || "Unknown error");
         }
@@ -144,7 +149,7 @@ const ChainsList = () => {
                           )}
                         </TableCell>
                         <TableCell align="right" className={classes.tableCell}>
-                          {isUserAdmin && (
+                          {(isUserAdmin || authUser?.is_root_admin) && (
                             <Button
                               variant="contained"
                               color="secondary"

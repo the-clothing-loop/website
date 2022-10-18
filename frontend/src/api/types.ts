@@ -9,7 +9,7 @@ export interface User {
   chains: UserChain[];
   address: string;
   sizes: string[];
-  is_admin: boolean;
+  is_root_admin: boolean;
 }
 
 export interface UserChain {
