@@ -149,7 +149,7 @@ const ChainsList = () => {
                           )}
                         </TableCell>
                         <TableCell align="right" className={classes.tableCell}>
-                          {isUserAdmin && (
+                          {(isUserAdmin || authUser?.is_root_admin) && (
                             <Button
                               variant="contained"
                               color="secondary"
