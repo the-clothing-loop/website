@@ -32,7 +32,7 @@ import About from "./pages/About";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import FAQ from "./pages/FAQ/FAQ";
-import AdminControlsNav from "./components/AdminControlsNav/AdminControlsNav";
+import AdminControlsNav from "./components/AdminControlsNav";
 import { AddChainAdmin } from "./pages/AddChainAdmin";
 
 // Components

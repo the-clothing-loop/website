@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { Typography, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
-import AccordionFaq from "../../components/AccordionFaq/AccordionFaq";
+import AccordionFaq from "../../components/AccordionFaq";
 import theme from "../../util/theme";
 import styles from "./FAQ.module.css";
 import { useTranslation } from "react-i18next";
