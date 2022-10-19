@@ -9,3 +9,7 @@ For learning how to setup your local environment to help out checkout these read
 - Golang Server: [README.md](/server/README.md)
 - React Frontend: [README.md](/frontend/README.md)
 - Ansible Devops: [README.md](/devops/README.md)
+
+## License
+
+MIT
