@@ -90,6 +90,15 @@ const Navbar = () => {
             <Typography
               color="inherit"
               component={Link}
+              to={"/donate"}
+              className={classes.buttonText}
+            >
+              {t("donate")}
+            </Typography>
+
+            <Typography
+              color="inherit"
+              component={Link}
               to={authUser ? "/users/logout" : "/users/login"}
               className={classes.buttonText}
             >
