@@ -82,7 +82,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
   };
 
   if (submitted) {
-    return <Redirect to={`/loops/new/confirmation`} />;
+    return <Redirect to="/loops/new/confirmation" />;
   }
 
   return (

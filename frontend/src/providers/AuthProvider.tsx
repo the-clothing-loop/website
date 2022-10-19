@@ -8,7 +8,6 @@ export type AuthProps = {
   // TODO: multi chain
   // setAuthChainUID
   authUser: User | null;
-  authIsChainAdmin: boolean;
   // ? Should loading only be used for authentication or also for login & logout?
   loading: boolean;
   authLogin: (apiKey: string) => Promise<void>;
@@ -18,7 +17,6 @@ export type AuthProps = {
 export const AuthContext = React.createContext<AuthProps>({
   authChainUID: null,
   authUser: null,
-  authIsChainAdmin: false,
   loading: true,
   authLogin: (apiKey) => Promise.reject(),
   authLogout: () => Promise.reject(),
@@ -29,7 +27,6 @@ const LOCALSTORAGE_USER_UID = "user_uid";
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<User | null>(null);
   const [chainUID, setChainUID] = useState<UID | null>(null);
-  const [isChainAdmin, setIsChainAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const authLogin = (apiKey: string) => {
     setLoading(true);
@@ -39,7 +36,6 @@ export const AuthProvider = ({ children }: any) => {
         setUser(user);
 
         let selectedUserChain = user.chains[0] as UserChain | undefined;
-        setIsChainAdmin(selectedUserChain?.is_chain_admin || false);
         setChainUID(selectedUserChain?.chain_uid || null);
 
         window.localStorage.setItem(LOCALSTORAGE_USER_UID, user.uid);
@@ -57,7 +53,6 @@ export const AuthProvider = ({ children }: any) => {
       window.localStorage.removeItem(LOCALSTORAGE_USER_UID);
       setUser(null);
       setChainUID(null);
-      setIsChainAdmin(false);
       setLoading(false);
     })();
   };
@@ -65,7 +60,6 @@ export const AuthProvider = ({ children }: any) => {
     setUser(user);
 
     let selectedUserChain = user.chains[0] as UserChain | undefined;
-    setIsChainAdmin(selectedUserChain?.is_chain_admin || false);
     setChainUID(selectedUserChain?.chain_uid || null);
 
     window.localStorage.setItem(LOCALSTORAGE_USER_UID, user.uid);
@@ -89,7 +83,6 @@ export const AuthProvider = ({ children }: any) => {
   const contextValue: AuthProps = {
     authUser: user,
     authChainUID: chainUID,
-    authIsChainAdmin: isChainAdmin,
     loading: loading,
     authLogin,
     authLogout,

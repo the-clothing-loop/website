@@ -16,7 +16,7 @@ import Logo from "../images/logos/The_Clothing_Loop_Logo.png";
 const Navbar = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
-  const { authUser, authIsChainAdmin } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
   let location = useLocation();
 
