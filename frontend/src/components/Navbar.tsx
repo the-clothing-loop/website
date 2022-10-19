@@ -39,8 +39,7 @@ const Navbar = () => {
         </Link>
         <div className={classes.headerRight}>
           <div className={classes.headerNav}>
-            {authUser === null &&
-            ["/loops/find", "/"].indexOf(location.pathname) !== -1 ? (
+            {["/loops/find", "/"].indexOf(location.pathname) !== -1 && (
               <Button
                 color="inherit"
                 component={Link}
@@ -49,7 +48,7 @@ const Navbar = () => {
               >
                 {t("startNewLoop")}
               </Button>
-            ) : null}
+            )}
 
             {authUser === null &&
             ["/loops/find", "/"].indexOf(location.pathname) === -1 ? (
