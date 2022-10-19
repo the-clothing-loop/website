@@ -41,3 +41,5 @@ docker-stop:
 
 firebase-migrate:
 	@go run cmd/firebase-migrate/main.go
+spreadsheet-migrate:
+	@go run cmd/spreadsheet-migrate/main.go
