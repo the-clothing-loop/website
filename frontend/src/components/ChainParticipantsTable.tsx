@@ -18,7 +18,7 @@ import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import { UID, User } from "../api/types";
-import { SizeI18nKeys, Sizes } from "../api/enums";
+import { SizeI18nKeys } from "../api/enums";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -34,6 +34,7 @@ interface Props {
   authUser: User | null;
   users: User[];
   initialPage: number;
+  chainUID: string;
   edit: boolean;
   remove: boolean;
   onRemoveUser?: (uid: UID) => void;
@@ -43,6 +44,7 @@ export const ChainParticipantsTable = ({
   columns,
   authUser,
   users,
+  chainUID,
   initialPage,
   edit,
   remove,
@@ -92,20 +94,31 @@ export const ChainParticipantsTable = ({
                         .map((v) => SizeI18nKeys[v])
                         .join(", ");
                     }
-                    return <BorderlessTableCell>{text}</BorderlessTableCell>;
+                    return (
+                      <BorderlessTableCell key={u.uid + propertyName}>
+                        {text}
+                      </BorderlessTableCell>
+                    );
                   })}
 
                   {authUser?.is_root_admin && (
                     <>
                       {edit && (
-                        <BorderlessTableCell>
-                          <Link to={`/users/${u.uid}/edit`}>
+                        <BorderlessTableCell key={u.uid + "editlink"}>
+                          <Link
+                            to={{
+                              pathname: `/users/${u.uid}/edit`,
+                              state: {
+                                chainUID,
+                              },
+                            }}
+                          >
                             <EditIcon />
                           </Link>
                         </BorderlessTableCell>
                       )}
                       {remove && onRemoveUser && (
-                        <BorderlessTableCell>
+                        <BorderlessTableCell key={u.uid + "dellink"}>
                           <DeleteIcon
                             onClick={() => onRemoveUser(u.uid as string)}
                           />

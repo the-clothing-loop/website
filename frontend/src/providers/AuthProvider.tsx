@@ -11,9 +11,6 @@ export enum UserRefreshState {
 }
 
 export type AuthProps = {
-  authChainUID: UID | null;
-  // TODO: multi chain
-  // setAuthChainUID
   authUser: User | null;
   // ? Should loading only be used for authentication or also for login & logout?
   loading: boolean;
@@ -23,7 +20,6 @@ export type AuthProps = {
 };
 
 export const AuthContext = React.createContext<AuthProps>({
-  authChainUID: null,
   authUser: null,
   loading: true,
   authLoginValidate: (apiKey) => Promise.reject(),
@@ -35,7 +31,6 @@ const LOCALSTORAGE_USER_UID = "user_uid";
 
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<User | null>(null);
-  const [chainUID, setChainUID] = useState<UID | null>(null);
   const [loading, setLoading] = useState(true);
   const authLoginValidate = (apiKey: string) => {
     setLoading(true);
@@ -43,9 +38,6 @@ export const AuthProvider = ({ children }: any) => {
       try {
         const user = (await apiLogin(apiKey)).data;
         setUser(user);
-
-        let selectedUserChain = user.chains[0] as UserChain | undefined;
-        setChainUID(selectedUserChain?.chain_uid || null);
 
         window.localStorage.setItem(LOCALSTORAGE_USER_UID, user.uid);
       } catch (e) {
@@ -61,7 +53,6 @@ export const AuthProvider = ({ children }: any) => {
       await apiLogout().catch((e) => console.warn(e));
       window.localStorage.removeItem(LOCALSTORAGE_USER_UID);
       setUser(null);
-      setChainUID(null);
       setLoading(false);
     })();
   };
@@ -74,9 +65,6 @@ export const AuthProvider = ({ children }: any) => {
         try {
           const user = (await userGetByUID(null, oldUserUID)).data;
           setUser(user);
-
-          let selectedUserChain = user.chains[0] as UserChain | undefined;
-          setChainUID(selectedUserChain?.chain_uid || null);
 
           window.localStorage.setItem(LOCALSTORAGE_USER_UID, user.uid);
           setLoading(false);
@@ -101,7 +89,6 @@ export const AuthProvider = ({ children }: any) => {
   }, []);
   const contextValue: AuthProps = {
     authUser: user,
-    authChainUID: chainUID,
     loading: loading,
     authLoginValidate,
     authUserRefresh,

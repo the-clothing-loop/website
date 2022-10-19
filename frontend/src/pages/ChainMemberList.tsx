@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
@@ -57,7 +57,7 @@ const adminColumns: TableUserColumn[] = [
 const useStyles = makeStyles(theme as any);
 
 const ChainMemberList = () => {
-  const location = useLocation<any>();
+  const history = useHistory();
   const { chainUID } = useParams<Params>();
   const { authUser } = useContext<AuthProps>(AuthContext);
 
@@ -110,20 +110,16 @@ const ChainMemberList = () => {
     (async () => {
       try {
         const chainData = (await chainGet(chainUID)).data;
-        if (chainData === undefined) {
-          console.error(`chain ${chainUID} does not exist`);
-        } else {
-          setChain(chainData);
-          const chainUsers = (await userGetAllByChain(chainUID)).data;
-          setUsers(chainUsers);
-          setPublished(chainData.published);
-          setOpenToNewMembers(chainData.openToNewMembers);
-        }
+        setChain(chainData);
+        const chainUsers = (await userGetAllByChain(chainUID)).data;
+        setUsers(chainUsers);
+        setPublished(chainData.published);
+        setOpenToNewMembers(chainData.openToNewMembers);
       } catch (error: any) {
         console.error(`Error getting chain: ${error}`);
       }
     })();
-  }, []);
+  }, [history]);
 
   const handleRemoveFromChain = async (userUID: string) => {
     await chainRemoveUser(chainUID, userUID);
@@ -245,7 +241,14 @@ const ChainMemberList = () => {
                         <Title>Loop Admin</Title>
                       </Grid>
                       <Grid item>
-                        <Link to={`/users/${(authUser as User).uid}/edit`}>
+                        <Link
+                          to={{
+                            pathname: `/users/${authUser?.uid}/edit`,
+                            state: {
+                              chainUID: chainUID,
+                            },
+                          }}
+                        >
                           <EditIcon />
                         </Link>
                       </Grid>
@@ -259,6 +262,7 @@ const ChainMemberList = () => {
                             (c) => c.chain_uid === chain.uid && c.is_chain_admin
                           ) !== undefined
                       )}
+                      chainUID={chain.uid}
                       initialPage={0}
                       edit
                       remove
@@ -290,6 +294,7 @@ const ChainMemberList = () => {
                 columns={memberColumns}
                 authUser={authUser}
                 users={users}
+                chainUID={chain.uid}
                 initialPage={0}
                 edit
                 remove
