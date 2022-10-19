@@ -30,8 +30,8 @@ import {
 import { makeStyles } from "@mui/styles";
 
 // Project resources
-import { ChainsContext } from "../components/ChainsProvider";
-import { AuthContext } from "../components/AuthProvider";
+import { ChainsContext } from "../providers/ChainsProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { IViewPort } from "../types";
 import theme from "../util/theme";
 import { FindChainSearchBarContainer } from "../components/FindChain";

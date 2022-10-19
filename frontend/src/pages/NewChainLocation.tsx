@@ -16,7 +16,7 @@ import {
   RequestRegisterChain,
   RequestRegisterUser,
 } from "../api/login";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { chainAddUser, chainCreate } from "../api/chain";
 
 export interface State {

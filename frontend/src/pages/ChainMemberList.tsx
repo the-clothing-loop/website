@@ -18,7 +18,7 @@ import { makeStyles } from "@mui/styles";
 
 // Project resources
 import theme from "../util/theme";
-import { AuthContext, AuthProps } from "../components/AuthProvider";
+import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import Popover from "../components/Popover";
 import {

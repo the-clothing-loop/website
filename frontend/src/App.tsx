@@ -5,7 +5,7 @@ import {
   ThemeProvider as MuiThemeProvider,
   StyledEngineProvider,
 } from "@mui/material/styles";
-import { AuthProvider } from "./components/AuthProvider";
+import { AuthProvider } from "./providers/AuthProvider";
 import themeFile from "./util/theme";
 import ScrollToTop from "./util/scrollToTop";
 
@@ -39,7 +39,7 @@ import { AddChainAdmin } from "./pages/AddChainAdmin";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Logout } from "./pages/Logout";
-import { ChainsProvider } from "./components/ChainsProvider";
+import { ChainsProvider } from "./providers/ChainsProvider";
 
 const theme = createTheme(themeFile);
 

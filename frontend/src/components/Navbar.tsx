@@ -8,7 +8,7 @@ import { makeStyles } from "@mui/styles";
 
 // Project resources
 import LanguageSwitcher from "./LanguageSwitcher";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import theme from "../util/theme";
 import ArrowIcon from "../images/right-arrow-yellow.svg";
 import Logo from "../images/logos/The_Clothing_Loop_Logo.png";

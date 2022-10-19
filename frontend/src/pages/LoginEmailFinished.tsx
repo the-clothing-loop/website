@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
 import theme from "../util/theme";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 
 const LoginEmailFinished = () => {
   const { t } = useTranslation();

@@ -25,10 +25,10 @@ import { makeStyles } from "@mui/styles";
 import RightArrow from "../images/right-arrow-white.svg";
 
 // Project resources
-import { ChainsContext } from "../components/ChainsProvider";
+import { ChainsContext } from "../providers/ChainsProvider";
 import { DataExport } from "../components/DataExport";
 import theme from "../util/theme";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { chainGet } from "../api/chain";
 import { Chain } from "../api/types";
 

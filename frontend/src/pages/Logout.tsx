@@ -4,7 +4,7 @@ import { makeStyles } from "@mui/styles";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import theme from "../util/theme";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { Redirect } from "react-router";
 import { sleep } from "../util/sleep";
 

@@ -17,7 +17,7 @@ import PopoverOnHover from "../components/Popover";
 // Project resources
 import { PhoneFormField, TextForm } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import FormActions from "../components/formActions";
 import { State as LoopsNewState } from "./NewChainLocation";
 

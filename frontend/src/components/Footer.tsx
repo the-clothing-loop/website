@@ -10,7 +10,7 @@ import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import { useContext } from "react";
-import { AuthContext } from "./AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 
 const Footer = () => {
   const { t } = useTranslation();
