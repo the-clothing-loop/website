@@ -1,4 +1,5 @@
 {
+  "account": "Account",
   "actions": "Actions",
   "address": "Address",
   "cancel": "Cancel",
@@ -29,7 +30,6 @@
   "viewChain": "View chain",
   "findLoops": "Find Loops",
   "startNewLoop": "Start a new Loop",
-  "admin": "Admin",
   "contacts": "Contacts",
   "searchLocation": "Search Location",
   "noMatchesFound": "No matches found",

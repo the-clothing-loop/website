@@ -1,4 +1,5 @@
 {
+  "account": "Account",
   "actions": "Acties",
   "address": "Adres",
   "cancel": "Annuleren",
@@ -29,7 +30,6 @@
   "viewChain": "Toon Loops",
   "findLoops": "Vind Loops",
   "startNewLoop": "Start een nieuwe Loop",
-  "admin": "Beheerder",
   "contacts": "Contacten",
   "searchLocation": "Zoek Locatie",
   "noMatchesFound": "Geen resultaten gevonden",

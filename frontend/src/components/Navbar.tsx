@@ -83,7 +83,7 @@ const Navbar = () => {
                 to="/admin/dashboard"
                 className={classes.buttonText}
               >
-                {t("admin")}
+                {t("account")}
               </Typography>
             ) : null}
 
