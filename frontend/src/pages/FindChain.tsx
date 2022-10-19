@@ -30,8 +30,8 @@ import {
 import { makeStyles } from "@mui/styles";
 
 // Project resources
-import { ChainsContext } from "../components/ChainsProvider";
-import { AuthContext } from "../components/AuthProvider";
+import { ChainsContext } from "../providers/ChainsProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { IViewPort } from "../types";
 import theme from "../util/theme";
 import { FindChainSearchBarContainer } from "../components/FindChain";
@@ -354,7 +354,7 @@ const FindChain = ({ location }: { location: Location }) => {
                   <Typography component="h3">{t("categories")}:</Typography>
                   <div id="categories-container">
                     {selectedChain.genders
-                      ? selectedChain.genders.map((gender, i) => {
+                      ? selectedChain.genders.sort().map((gender, i) => {
                           return (
                             <Typography component="p" key={i}>
                               {t(GenderI18nKeys[gender])}
@@ -366,7 +366,7 @@ const FindChain = ({ location }: { location: Location }) => {
                   <Typography component="h3">{t("sizes")}:</Typography>
                   <div id="sizes-container">
                     {selectedChain.sizes
-                      ? selectedChain.sizes.map((size, i) => {
+                      ? selectedChain.sizes.sort().map((size, i) => {
                           return (
                             <Typography key={i} component="p">
                               {t(SizeI18nKeys[size])}

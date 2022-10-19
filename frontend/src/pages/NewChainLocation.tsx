@@ -16,8 +16,8 @@ import {
   RequestRegisterChain,
   RequestRegisterUser,
 } from "../api/login";
-import { AuthContext } from "../components/AuthProvider";
-import { chainAddUser, chainCreate } from "../api/chain";
+import { AuthContext } from "../providers/AuthProvider";
+import { chainCreate } from "../api/chain";
 
 export interface State {
   only_create_chain: boolean;
@@ -29,7 +29,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
   const { t } = useTranslation();
 
   const state = location.state as State;
-  const authUser = useContext(AuthContext).authUser;
+  const { authUser, authUserRefresh } = useContext(AuthContext);
 
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState<boolean>(false);
@@ -52,6 +52,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
     if (state.only_create_chain) {
       try {
         await chainCreate(newChain);
+        await authUserRefresh();
         setSubmitted(true);
       } catch (e: any) {
         console.error(`Error creating chain: ${JSON.stringify(e)}`);
@@ -82,7 +83,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
   };
 
   if (submitted) {
-    return <Redirect to={`/loops/new/confirmation`} />;
+    return <Redirect to="/loops/new/confirmation" />;
   }
 
   return (

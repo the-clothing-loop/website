@@ -28,7 +28,7 @@ import {
 import GeocoderSelector from "../components/GeocoderSelector";
 import { UID, User } from "../api/types";
 import { userGetByUID, userUpdate, UserUpdateBody } from "../api/user";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { phoneRegExp } from "../util/phoneRegExp";
 
 interface Params {

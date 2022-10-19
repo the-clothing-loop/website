@@ -8,7 +8,7 @@ import { makeStyles } from "@mui/styles";
 
 // Project resources
 import LanguageSwitcher from "./LanguageSwitcher";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import theme from "../util/theme";
 import ArrowIcon from "../images/right-arrow-yellow.svg";
 import Logo from "../images/logos/The_Clothing_Loop_Logo.png";
@@ -16,7 +16,7 @@ import Logo from "../images/logos/The_Clothing_Loop_Logo.png";
 const Navbar = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
-  const { authUser, authIsChainAdmin } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
   let location = useLocation();
 
@@ -39,20 +39,7 @@ const Navbar = () => {
         </Link>
         <div className={classes.headerRight}>
           <div className={classes.headerNav}>
-            {authUser?.is_root_admin || authIsChainAdmin ? (
-              <Button
-                color="inherit"
-                component="a"
-                target="_blank"
-                className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
-                href="https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27"
-              >
-                {t("toolkit")}
-                <OpenInNew sx={{ marginLeft: "10px" }} />
-              </Button>
-            ) : null}
-            {authUser === null &&
-            ["/loops/find", "/"].indexOf(location.pathname) !== -1 ? (
+            {["/loops/find", "/"].indexOf(location.pathname) !== -1 && (
               <Button
                 color="inherit"
                 component={Link}
@@ -61,7 +48,7 @@ const Navbar = () => {
               >
                 {t("startNewLoop")}
               </Button>
-            ) : null}
+            )}
 
             {authUser === null &&
             ["/loops/find", "/"].indexOf(location.pathname) === -1 ? (
@@ -76,16 +63,16 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            {authUser?.is_root_admin || authIsChainAdmin ? (
+            {authUser && (
               <Typography
                 color="inherit"
                 component={Link}
                 to="/admin/dashboard"
                 className={classes.buttonText}
               >
-                {t("admin")}
+                {t("account")}
               </Typography>
-            ) : null}
+            )}
 
             <Typography
               color="inherit"

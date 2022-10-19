@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
 import theme from "../util/theme";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 
 const LoginEmailFinished = () => {
   const { t } = useTranslation();
@@ -16,7 +16,7 @@ const LoginEmailFinished = () => {
 
   const search = useLocation().search;
   const apiKey = new URLSearchParams(search).get("apiKey");
-  const { authUser, authLogin } = useContext(AuthContext);
+  const { authUser, authLoginValidate } = useContext(AuthContext);
 
   const [finished, setFinished] = useState(false);
   const [error, setError] = useState("");
@@ -24,9 +24,12 @@ const LoginEmailFinished = () => {
   useEffect(() => {
     (async () => {
       try {
-        await authLogin(apiKey!);
+        if (!apiKey) {
+          throw "apiKey does not exist";
+        }
+        await authLoginValidate(apiKey!);
       } catch (e: any) {
-        setError(JSON.stringify(e));
+        setError(e?.data || typeof e == "string" ? e : JSON.stringify(e));
       }
       setFinished(true);
     })();

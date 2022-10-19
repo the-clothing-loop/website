@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { SearchBar } from "./SearchBar";
 import { ChainNotFound } from "./ChainNotFound";
 
-import { ChainsContext } from "../ChainsProvider";
+import { ChainsContext } from "../../providers/ChainsProvider";
 import { defaultTruePredicate, ChainPredicate } from "../../pages/FindChain";
 import { Chain } from "../../api/types";
 

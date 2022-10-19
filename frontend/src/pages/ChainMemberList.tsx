@@ -18,7 +18,7 @@ import { makeStyles } from "@mui/styles";
 
 // Project resources
 import theme from "../util/theme";
-import { AuthContext, AuthProps } from "../components/AuthProvider";
+import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import Popover from "../components/Popover";
 import {
@@ -66,7 +66,6 @@ const ChainMemberList = () => {
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
-  const [isChainAdmin, setIsChainAdmin] = useState<boolean>();
   const { t } = useTranslation();
 
   type SwitchEvent = {
@@ -125,12 +124,6 @@ const ChainMemberList = () => {
       }
     })();
   }, []);
-
-  useEffect(() => {
-    setIsChainAdmin(
-      authUser?.chains.find((c) => c.chain_uid === chain?.uid)?.is_chain_admin
-    );
-  }, [authUser, chain]);
 
   const handleRemoveFromChain = async (userUID: string) => {
     await chainRemoveUser(chainUID, userUID);
@@ -272,18 +265,17 @@ const ChainMemberList = () => {
                       onRemoveUser={handleRemoveFromChain}
                     />
                   </div>
-                  {isChainAdmin && (
-                    <Link
-                      to={{
-                        pathname: `/loops/${chainUID}/addChainAdmin`,
-                        state: { users, chainUID },
-                      }}
-                    >
-                      <div className="chain-member-list__add-co-host">
-                        add co-host
-                      </div>
-                    </Link>
-                  )}
+
+                  <Link
+                    to={{
+                      pathname: `/loops/${chainUID}/addChainAdmin`,
+                      state: { users, chainUID },
+                    }}
+                  >
+                    <div className="chain-member-list__add-co-host">
+                      add co-host
+                    </div>
+                  </Link>
                 </div>
               </div>
             </Grid>

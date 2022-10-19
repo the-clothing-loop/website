@@ -9,7 +9,7 @@ import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
-import { ChainsContext } from "../components/ChainsProvider";
+import { ChainsContext } from "../providers/ChainsProvider";
 import LandingPageMobile from "./LandingPageMobile";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";

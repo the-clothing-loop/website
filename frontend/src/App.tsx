@@ -5,7 +5,7 @@ import {
   ThemeProvider as MuiThemeProvider,
   StyledEngineProvider,
 } from "@mui/material/styles";
-import { AuthProvider } from "./components/AuthProvider";
+import { AuthProvider } from "./providers/AuthProvider";
 import themeFile from "./util/theme";
 import ScrollToTop from "./util/scrollToTop";
 
@@ -32,14 +32,14 @@ import About from "./pages/About";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import FAQ from "./pages/FAQ/FAQ";
-import AdminControlsNav from "./components/AdminControlsNav/AdminControlsNav";
+import AdminControlsNav from "./components/AdminControlsNav";
 import { AddChainAdmin } from "./pages/AddChainAdmin";
 
 // Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Logout } from "./pages/Logout";
-import { ChainsProvider } from "./components/ChainsProvider";
+import { ChainsProvider } from "./providers/ChainsProvider";
 
 const theme = createTheme(themeFile);
 
