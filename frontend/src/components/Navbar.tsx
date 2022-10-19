@@ -39,18 +39,6 @@ const Navbar = () => {
         </Link>
         <div className={classes.headerRight}>
           <div className={classes.headerNav}>
-            {authUser?.is_root_admin || authIsChainAdmin ? (
-              <Button
-                color="inherit"
-                component="a"
-                target="_blank"
-                className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
-                href="https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27"
-              >
-                {t("toolkit")}
-                <OpenInNew sx={{ marginLeft: "10px" }} />
-              </Button>
-            ) : null}
             {authUser === null &&
             ["/loops/find", "/"].indexOf(location.pathname) !== -1 ? (
               <Button
@@ -76,7 +64,7 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            {authUser?.is_root_admin || authIsChainAdmin ? (
+            {authUser && (
               <Typography
                 color="inherit"
                 component={Link}
@@ -85,7 +73,7 @@ const Navbar = () => {
               >
                 {t("account")}
               </Typography>
-            ) : null}
+            )}
 
             <Typography
               color="inherit"
