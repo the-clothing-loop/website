@@ -53,10 +53,7 @@ func UserGet(c *gin.Context) {
 	} else {
 		ok, _, _ = auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
 	}
-	fmt.Printf("ok: %v", ok)
-
 	if !ok {
-		fmt.Println("ok is false")
 		return
 	}
 
