@@ -1,5 +1,5 @@
 clothingloop.org {
-	redir https://clothingloop.org permanent
+	redir https://www.clothingloop.org permanent
 }
 
 www.clothingloop.org {
