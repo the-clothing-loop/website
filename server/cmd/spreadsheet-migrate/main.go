@@ -56,37 +56,45 @@ WHERE chains.published = ?
 	var wg sync.WaitGroup
 	mu := &sync.Mutex{}
 
-	wg = sync.WaitGroup{}
+	log.Print("Consume data from spreadsheet -- start")
 	dataChains := []*local.DataChain{}
-	for i := range data.Sheets {
-		d := data.Sheets[i]
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			c, ok := local.MigrateChainAndChainAdminUser(d)
-			if !ok {
-				return
-			}
-			mu.Lock()
-			dataChains = append(dataChains, c)
-			mu.Unlock()
-		}()
+	{
+		wg = sync.WaitGroup{}
+		for i := range data.Sheets {
+			d := data.Sheets[i]
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				c, ok := local.MigrateChainAndChainAdminUser(d)
+				if !ok {
+					return
+				}
+				mu.Lock()
+				dataChains = append(dataChains, c)
+				mu.Unlock()
+			}()
+		}
+		wg.Wait()
 	}
-	wg.Wait()
+	log.Print("Consume data from spreadsheet -- done")
 
+	log.Print("Collect changes required per spreadsheet -- start")
 	for _, dc := range dataChains {
-		users := []*models.User{}
+		log.Printf("Collect changes required per spreadsheet -- %s -- begin", dc.Name)
 		newUsers := []*models.User{}
-		for _, du := range dc.Users {
+		userChains := []*models.UserChain{}
+		chain := models.Chain{}
+		for i, du := range dc.Users {
 			user := models.User{}
 			db.Raw(`
 SELECT users.*
 FROM users
 WHERE users.email = ?
 LIMIT 1
-			`, du.Email).Scan(&user)
+`, du.Email).Scan(&user)
 
 			if user.ID == 0 {
+				// is new user
 				user = models.User{
 					UID:             uuid.NewV4().String(),
 					Email:           du.Email,
@@ -100,23 +108,68 @@ LIMIT 1
 					CreatedAt:       time.Now(),
 					UpdatedAt:       time.Now(),
 				}
-				newUsers = append(newUsers, &user)
+				if i != 0 {
+					newUsers = append(newUsers, &user)
+				}
+			} else {
+				// is an existing user
+				if user.PhoneNumber == "" && du.PhoneNumber != "" {
+					user.PhoneNumber = du.PhoneNumber
+					db.Save(&user)
+				}
 			}
 
-			users = append(users, &user)
+			if i == 0 {
+				if user.ID == 0 {
+					log.Printf("⚠️ Warning chain user is created '%s' %+v", du.Email, du)
+					db.Create(&user)
+				}
+
+				db.Raw(`
+SELECT chains.*
+FROM chains
+LEFT JOIN user_chains ON user_chains.chain_id = chains.id
+WHERE users.id = ?
+LIMIT 1
+				`, user.ID).Scan(&chain)
+				if chain.ID == 0 {
+					log.Printf("⚠️ Warning chain %s is created %+v", dc.Name, dc)
+					chain = models.Chain{
+						UID:              uuid.NewV4().String(),
+						Name:             dc.Name,
+						Description:      "",
+						Address:          du.Address,
+						Latitude:         0,
+						Longitude:        0,
+						Radius:           3,
+						Published:        false,
+						OpenToNewMembers: false,
+						Sizes:            []string{},
+						Genders:          []string{},
+						CreatedAt:        time.Now(),
+						UpdatedAt:        time.Now(),
+					}
+					db.Create(&chain)
+				}
+			}
+
+			// add user_chain
+			userChains = append(userChains, &models.UserChain{
+				UserID:       user.ID,
+				ChainID:      chain.ID,
+				IsChainAdmin: i == 0,
+			})
 		}
-
-		db.Raw(`
-
-		`)
+		if err := db.CreateInBatches(newUsers, 100); err != nil {
+			log.Printf("🛑 Error in CreateInBatches(newUsers, 100): %+v", err)
+		}
+		for _, uc := range userChains {
+			FindOrCreateUserChains(db, *uc)
+		}
+		log.Printf("Collect changes required per spreadsheet -- %s -- done", dc.Name)
 	}
+	log.Print("Collect changes required per spreadsheet -- done")
 
-	// newsletters = lo.FindUniquesBy(newsletters, func(n *models.Newsletter) string {
-	// 	return n.Email
-	// })
-	// if err := db.CreateInBatches(newsletters, 100).Error; err != nil {
-	// 	return fmt.Errorf("error in CreateInBatches(newsletters, 100): %+v", err)
-	// }
 	log.Printf("%d  imported", len(dataChains))
 
 	return nil
@@ -171,7 +224,7 @@ LIMIT 1
 				IsChainAdmin: d.IsChainAdmin,
 			})
 		} else {
-			log.Printf("user (fid:  %s) or chain (fid: %s) was not found, to set isChainAdmin as %v\t%+v", d.UserFID, d.ChainFID, d.IsChainAdmin, res)
+			log.Printf("🛑 Error user (id: %d) or chain (id: %d) was not found, to set isChainAdmin as %v\t%+v", d.UserID, d.ChainID, d.IsChainAdmin, res)
 		}
 	}
 }

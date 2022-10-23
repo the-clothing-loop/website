@@ -17,7 +17,7 @@ const (
 	errOrganisatorDoesNotExist = "Organizer does not exist\tSheet: '%s'\tContents: '%+v'"
 )
 
-var valitate = validator.New()
+var validate = validator.New()
 
 func ReadMigrationFile() (*xlsx.File, error) {
 	return xlsx.OpenFile("migration.xlsx")
@@ -83,7 +83,7 @@ func migrateUser(row *xlsx.Row, sheet string, i int) DataUser {
 		}
 	}
 
-	if err := valitate.Var(user.Email, "email"); err != nil {
+	if err := validate.Var(user.Email, "email"); err != nil {
 		log.Printf(errBadEmail, sheet, i, errContentsToStringArr(row.Cells))
 	}
 
