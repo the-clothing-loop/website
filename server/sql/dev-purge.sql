@@ -1,3 +1,6 @@
+-- ! Warning
+-- ! This will remove all data from the selected database
+
 DELETE FROM user_chains;
 DELETE FROM user_tokens;
 DELETE FROM chains;
