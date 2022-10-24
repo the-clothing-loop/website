@@ -46,7 +46,7 @@ func UserGet(c *gin.Context) {
 		okk, authUser, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
 		ok = okk
 
-		if ok && !(query.UserUID == authUser.UID || query.Email == authUser.Email) {
+		if ok && !(query.UserUID == authUser.UID || query.Email == authUser.Email.String) {
 			gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("For elevated privileges include a chain_uid"))
 			return
 		}
@@ -208,7 +208,7 @@ func UserUpdate(c *gin.Context) {
 	if body.Newsletter != nil {
 		if *body.Newsletter {
 			res := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
-				Email: user.Email,
+				Email: user.Email.String,
 				Name:  user.Name,
 			})
 			if res.Error != nil {

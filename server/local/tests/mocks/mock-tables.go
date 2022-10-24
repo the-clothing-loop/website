@@ -1,6 +1,7 @@
 package mocks
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"math/rand"
@@ -29,7 +30,7 @@ type MockChainAndUserOptions struct {
 func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain()),
+		Email:           sql.NullString{String: fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain()), Valid: true},
 		IsEmailVerified: !o.IsEmailUnverified,
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Fake " + faker.Person().Name(),

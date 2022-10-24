@@ -83,8 +83,13 @@ func migrateUser(row *xlsx.Row, sheet string, i int) DataUser {
 		}
 	}
 
+	if user.Email == "dummie@email.cxm" {
+		user.Email = ""
+	}
+
+	if user.Email != "" {
 	if err := validate.Var(user.Email, "email"); err != nil {
-		log.Printf(errBadEmail, sheet, i, errContentsToStringArr(row.Cells))
+		}
 	}
 
 	return user

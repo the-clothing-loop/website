@@ -15,7 +15,7 @@ type User struct {
 	ID              uint           `json:"-"`
 	UID             string         `json:"uid" gorm:"uniqueIndex"`
 	FID             sql.NullString `json:"-" gorm:"column:fid"`
-	Email           string         `json:"email" gorm:"unique"`
+	Email           sql.NullString `json:"email" gorm:"unique"`
 	IsEmailVerified bool           `json:"is_email_verified"`
 	IsRootAdmin     bool           `json:"is_root_admin"`
 	Name            string         `json:"name"`

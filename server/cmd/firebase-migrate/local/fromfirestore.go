@@ -135,7 +135,7 @@ func MigrateUser(d BackupCollectionItem, fid string, dChains BackupCollection) (
 	user = models.User{
 		UID:             uuid.NewV4().String(),
 		FID:             sql.NullString{String: fid, Valid: fid != ""},
-		Email:           fid + "@example.com",
+		Email:           sql.NullString{},
 		IsEmailVerified: false,
 		IsRootAdmin:     isRootAdmin,
 		Name:            "",

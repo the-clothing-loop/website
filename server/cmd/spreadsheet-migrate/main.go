@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
@@ -85,18 +86,25 @@ WHERE chains.published = ?
 		chain := models.Chain{}
 		for i, du := range dc.Users {
 			user := models.User{}
-			db.Raw(`
+
+			if du.Email != "" {
+				db.Raw(`
 SELECT users.*
 FROM users
 WHERE users.email = ?
 LIMIT 1
-			`, du.Email).Scan(&user)
+				`, du.Email).Scan(&user)
+			}
 
 			if user.ID == 0 {
 				// is new user
+				email := sql.NullString{}
+				if du.Email != "" {
+					email = sql.NullString{String: du.Email, Valid: true}
+				}
 				user = models.User{
 					UID:             uuid.NewV4().String(),
-					Email:           du.Email,
+					Email:           email,
 					IsEmailVerified: false,
 					IsRootAdmin:     false,
 					Name:            du.Name,

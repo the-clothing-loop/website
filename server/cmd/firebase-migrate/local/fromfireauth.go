@@ -96,7 +96,7 @@ LIMIT 1
 			user.LastSignedInAt = sql.NullTime{Time: *lastSignedInAt, Valid: true}
 		}
 	}
-	user.Email = d.Email
+	user.Email = sql.NullString{String: d.Email, Valid: true}
 	user.IsEmailVerified = d.EmailVerified
 	user.Name = d.DisplayName
 	user.Enabled = !d.Disabled
