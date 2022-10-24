@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -34,6 +35,7 @@ func run() error {
 
 	// test database
 	totalChains := 0
+	newChainAdminEmails := []string{}
 	err := db.Raw(`
 SELECT COUNT(chains.id)
 FROM chains
@@ -63,6 +65,9 @@ WHERE chains.published = ?
 		wg = sync.WaitGroup{}
 		for i := range data.Sheets {
 			d := data.Sheets[i]
+			if d.Name == "Initiatiefnemers" {
+				continue
+			}
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
@@ -116,13 +121,19 @@ LIMIT 1
 					UpdatedAt:       time.Now(),
 				}
 				db.Save(&user)
-				log.Printf("⚠️ Warning user is created '%s' %+v", du.Email, du)
+				log.Printf("⚠️ Warning user is created '%s'\t%+v", du.Email, du)
+
+				if i == 0 && email.Valid {
+					newChainAdminEmails = append(newChainAdminEmails, email.String)
+				}
 			} else {
 				// is an existing user
 				if user.PhoneNumber == "" && du.PhoneNumber != "" {
 					user.PhoneNumber = du.PhoneNumber
 					db.Save(&user)
 				}
+
+				log.Printf("✅ Found user '%s'\t%+v", du.Email, du)
 			}
 
 			if i == 0 {
@@ -130,7 +141,7 @@ LIMIT 1
 SELECT chains.*
 FROM chains
 LEFT JOIN user_chains ON user_chains.chain_id = chains.id
-WHERE users.id = ?
+WHERE user_chains.user_id = ?
 LIMIT 1
 				`, user.ID).Scan(&chain)
 				if chain.ID == 0 {
@@ -150,7 +161,9 @@ LIMIT 1
 						UpdatedAt:        time.Now(),
 					}
 					db.Create(&chain)
-					log.Printf("⚠️ Warning chain %s is created %+v", dc.Name, dc)
+					log.Printf("⚠️ Warning chain %s is created", dc.Name)
+				} else {
+					log.Printf("✅ Found chain %s", dc.Name)
 				}
 			}
 
@@ -171,6 +184,8 @@ LIMIT 1
 	log.Print("Collect changes required per spreadsheet -- done")
 
 	log.Printf("%d  imported", len(dataChains))
+
+	log.Printf("\n\n📜 New Chain Admin Emails:\n%s\n", strings.Join(newChainAdminEmails, ", "))
 
 	return nil
 }
