@@ -11,12 +11,6 @@ import (
 
 const IndexChainAdmin = 0
 
-const (
-	errBadEmail                = "User contains a bad email\tSheet: '%s'\tRow: '%d'\tContents: '%+v'"
-	errNotEnoughInfo           = "Row does not contain enough information\tSheet: '%s'\tRow: '%d'\tContents: '%+v'"
-	errOrganisatorDoesNotExist = "Organizer does not exist\tSheet: '%s'\tContents: '%+v'"
-)
-
 var validate = validator.New()
 
 func ReadMigrationFile() (*xlsx.File, error) {
@@ -41,7 +35,7 @@ func MigrateChainAndChainAdminUser(sheet *xlsx.Sheet) (chain *DataChain, ok bool
 	organizerRow := sheet.Rows[0]
 
 	if ok := strings.Contains(organizerRow.Cells[0].Value, "Organisator"); !ok {
-		log.Printf(errOrganisatorDoesNotExist, sheet.Name, errContentsToStringArr(organizerRow.Cells))
+		log.Printf("Organizer does not exist\tSheet: '%s'\tContents: '%+v'", sheet.Name, errContentsToStringArr(organizerRow.Cells))
 		return nil, false
 	}
 
@@ -88,7 +82,8 @@ func migrateUser(row *xlsx.Row, sheet string, i int) DataUser {
 	}
 
 	if user.Email != "" {
-	if err := validate.Var(user.Email, "email"); err != nil {
+		if err := validate.Var(user.Email, "email"); err != nil {
+			log.Printf("User contains a bad email\tSheet: '%s'\tRow: '%d'\tContents: '%+v'", sheet, i+1, errContentsToStringArr(row.Cells))
 		}
 	}
 
