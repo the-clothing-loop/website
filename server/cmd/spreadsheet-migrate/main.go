@@ -81,7 +81,6 @@ WHERE chains.published = ?
 	log.Print("Collect changes required per spreadsheet -- start")
 	for _, dc := range dataChains {
 		log.Printf("Collect changes required per spreadsheet -- %s -- begin", dc.Name)
-		newUsers := []*models.User{}
 		userChains := []*models.UserChain{}
 		chain := models.Chain{}
 		for i, du := range dc.Users {
@@ -91,7 +90,7 @@ SELECT users.*
 FROM users
 WHERE users.email = ?
 LIMIT 1
-`, du.Email).Scan(&user)
+			`, du.Email).Scan(&user)
 
 			if user.ID == 0 {
 				// is new user
@@ -108,9 +107,8 @@ LIMIT 1
 					CreatedAt:       time.Now(),
 					UpdatedAt:       time.Now(),
 				}
-				if i != 0 {
-					newUsers = append(newUsers, &user)
-				}
+				db.Save(&user)
+				log.Printf("⚠️ Warning user is created '%s' %+v", du.Email, du)
 			} else {
 				// is an existing user
 				if user.PhoneNumber == "" && du.PhoneNumber != "" {
@@ -120,11 +118,6 @@ LIMIT 1
 			}
 
 			if i == 0 {
-				if user.ID == 0 {
-					log.Printf("⚠️ Warning chain user is created '%s' %+v", du.Email, du)
-					db.Create(&user)
-				}
-
 				db.Raw(`
 SELECT chains.*
 FROM chains
@@ -133,7 +126,6 @@ WHERE users.id = ?
 LIMIT 1
 				`, user.ID).Scan(&chain)
 				if chain.ID == 0 {
-					log.Printf("⚠️ Warning chain %s is created %+v", dc.Name, dc)
 					chain = models.Chain{
 						UID:              uuid.NewV4().String(),
 						Name:             dc.Name,
@@ -150,6 +142,7 @@ LIMIT 1
 						UpdatedAt:        time.Now(),
 					}
 					db.Create(&chain)
+					log.Printf("⚠️ Warning chain %s is created %+v", dc.Name, dc)
 				}
 			}
 
@@ -160,13 +153,12 @@ LIMIT 1
 				IsChainAdmin: i == 0,
 			})
 		}
-		if err := db.CreateInBatches(newUsers, 100); err != nil {
-			log.Printf("🛑 Error in CreateInBatches(newUsers, 100): %+v", err)
-		}
 		for _, uc := range userChains {
 			FindOrCreateUserChains(db, *uc)
 		}
 		log.Printf("Collect changes required per spreadsheet -- %s -- done", dc.Name)
+
+		time.Sleep(time.Millisecond * 300)
 	}
 	log.Print("Collect changes required per spreadsheet -- done")
 
@@ -187,7 +179,7 @@ LIMIT 1
 	`, d.UserID, d.ChainID).Scan(&res).Error
 
 		if err == nil && res.ID != 0 {
-			if (res.IsChainAdmin != d.IsChainAdmin) && d.IsChainAdmin == true {
+			if (res.IsChainAdmin != d.IsChainAdmin) && d.IsChainAdmin {
 				res.IsChainAdmin = d.IsChainAdmin
 				db.Save(res)
 			}
