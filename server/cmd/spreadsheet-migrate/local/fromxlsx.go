@@ -79,7 +79,7 @@ func migrateUser(row *xlsx.Row, sheet string, i int) DataUser {
 		}
 	}
 
-	if user.Email == "dummie@email.cxm" {
+	if strings.HasSuffix(user.Email, ".cxm") {
 		user.Email = ""
 	}
 
