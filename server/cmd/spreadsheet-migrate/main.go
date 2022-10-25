@@ -137,13 +137,14 @@ LIMIT 1
 			}
 
 			if i == 0 {
-				db.Raw(`
-SELECT chains.*
-FROM chains
-LEFT JOIN user_chains ON user_chains.chain_id = chains.id
-WHERE user_chains.user_id = ?
-LIMIT 1
-				`, user.ID).Scan(&chain)
+				if dc.UID != "" {
+					db.Raw(`
+	SELECT chains.*
+	FROM chains
+	WHERE uid = ?
+	LIMIT 1
+					`, dc.UID).Scan(&chain)
+				}
 				if chain.ID == 0 {
 					chain = models.Chain{
 						UID:              uuid.NewV4().String(),

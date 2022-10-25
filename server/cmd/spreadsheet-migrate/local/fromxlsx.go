@@ -26,6 +26,7 @@ type DataUser struct {
 }
 
 type DataChain struct {
+	UID     string
 	Name    string
 	Address string
 	Users   []DataUser
@@ -46,6 +47,7 @@ func MigrateChainAndChainAdminUser(sheet *xlsx.Sheet) (chain *DataChain, ok bool
 
 	for i, row := range sheet.Rows {
 		if i == 1 {
+			chain.UID = row.Cells[0].Value
 			continue
 		}
 		user := migrateUser(row, sheet.Name, i)
