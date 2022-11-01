@@ -1,10 +1,14 @@
-DELETE FROM user_chains;
-DELETE FROM user_tokens;
-DELETE FROM chains;
-DELETE FROM mails;
-DELETE FROM newsletters;
-DELETE FROM payments;
-DELETE FROM users;
+-- ! Warning
+-- ! This will remove all data from the local docker database
+-- ! Remove "clothingloop." to use elseware
+
+DELETE FROM clothingloop.user_chains;
+DELETE FROM clothingloop.user_tokens;
+DELETE FROM clothingloop.chains;
+DELETE FROM clothingloop.mails;
+DELETE FROM clothingloop.newsletters;
+DELETE FROM clothingloop.payments;
+DELETE FROM clothingloop.users;
 
 ALTER TABLE clothingloop.chains AUTO_INCREMENT=1;
 ALTER TABLE clothingloop.mails AUTO_INCREMENT=1;
