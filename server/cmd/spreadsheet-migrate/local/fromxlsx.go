@@ -1,7 +1,6 @@
 package local
 
 import (
-	"log"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -36,7 +35,7 @@ func MigrateChainAndChainAdminUser(sheet *xlsx.Sheet) (chain *DataChain, ok bool
 	organizerRow := sheet.Rows[0]
 
 	if ok := strings.Contains(organizerRow.Cells[0].Value, "Organisator"); !ok {
-		log.Printf("Organizer does not exist\tSheet: '%s'\tContents: '%+v'", sheet.Name, errContentsToStringArr(organizerRow.Cells))
+		Log.Error("Organisator does not exist\tSheet: '%s'\tValue: '%s'\tContents: '%+v'", sheet.Name, organizerRow.Cells[0].Value, errContentsToStringArr(organizerRow.Cells))
 		return nil, false
 	}
 
@@ -51,19 +50,22 @@ func MigrateChainAndChainAdminUser(sheet *xlsx.Sheet) (chain *DataChain, ok bool
 			continue
 		}
 		user := migrateUser(row, sheet.Name, i)
+		if user == nil {
+			continue
+		}
 		if i == 0 {
 			user.IsChainAdmin = true
 			chain.Address = user.Address
 		}
 
-		chain.Users = append(chain.Users, user)
+		chain.Users = append(chain.Users, *user)
 	}
 
 	return chain, true
 }
 
-func migrateUser(row *xlsx.Row, sheet string, i int) DataUser {
-	user := DataUser{}
+func migrateUser(row *xlsx.Row, sheet string, i int) *DataUser {
+	user := &DataUser{}
 	for ii, cell := range row.Cells {
 		text := strings.TrimSpace(cell.String())
 		switch ii {
@@ -79,13 +81,17 @@ func migrateUser(row *xlsx.Row, sheet string, i int) DataUser {
 		}
 	}
 
+	if user.Email == "" && user.Name == "" {
+		return nil
+	}
+
 	if strings.HasSuffix(user.Email, ".cxm") {
 		user.Email = ""
 	}
 
 	if user.Email != "" {
 		if err := validate.Var(user.Email, "email"); err != nil {
-			log.Printf("User contains a bad email\tSheet: '%s'\tRow: '%d'\tContents: '%+v'", sheet, i+1, errContentsToStringArr(row.Cells))
+			Log.Error("User contains a bad email\tSheet: '%s'\tRow: '%d'\tContents: '%+v'", sheet, i+1, errContentsToStringArr(row.Cells))
 		}
 	}
 

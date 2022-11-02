@@ -11,3 +11,4 @@
 /credentials.json
 # spreadsheet migration
 /migration.xlsx
+*.log

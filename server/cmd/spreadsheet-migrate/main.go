@@ -2,11 +2,8 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
-	"log"
 	"os"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/CollActionteam/clothing-loop/server/cmd/spreadsheet-migrate/local"
@@ -19,7 +16,7 @@ import (
 func main() {
 	err := run()
 	if err != nil {
-		fmt.Println(err)
+		local.Log.Error("%s", err)
 		os.Exit(1)
 	}
 }
@@ -28,7 +25,7 @@ func run() error {
 	// read config for database
 	app.ConfigInit(".")
 
-	fmt.Printf("Setup environment in: %s\n", app.Config.ENV)
+	local.Log.Info("Setup environment in: %s", app.Config.ENV)
 
 	// set database
 	db := app.DatabaseInit()
@@ -44,7 +41,8 @@ WHERE chains.published = ?
 	if err != nil {
 		return err
 	}
-	fmt.Printf("database works\ntotalChains: %v\n", totalChains)
+	local.Log.Info("database works")
+	local.Log.Info("totalChains: %v", totalChains)
 
 	// skip createdAt/updatedAt/deletedAt auto changes
 	db.Config.SkipDefaultTransaction = true
@@ -56,37 +54,24 @@ WHERE chains.published = ?
 	}
 
 	// migrations
-	var wg sync.WaitGroup
-	mu := &sync.Mutex{}
-
-	log.Print("Consume data from spreadsheet -- start")
+	local.Log.Info("Consume data from spreadsheet -- start")
 	dataChains := []*local.DataChain{}
-	{
-		wg = sync.WaitGroup{}
-		for i := range data.Sheets {
-			d := data.Sheets[i]
-			if d.Name == "Initiatiefnemers" {
-				continue
-			}
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-				c, ok := local.MigrateChainAndChainAdminUser(d)
-				if !ok {
-					return
-				}
-				mu.Lock()
-				dataChains = append(dataChains, c)
-				mu.Unlock()
-			}()
+	for i := range data.Sheets {
+		d := data.Sheets[i]
+		if d.Name == "Initiatiefnemers" {
+			continue
 		}
-		wg.Wait()
+		c, ok := local.MigrateChainAndChainAdminUser(d)
+		if !ok {
+			continue
+		}
+		dataChains = append(dataChains, c)
 	}
-	log.Print("Consume data from spreadsheet -- done")
+	local.Log.Info("Consume data from spreadsheet -- done")
 
-	log.Print("Collect changes required per spreadsheet -- start")
+	local.Log.Info("Collect changes required per spreadsheet -- start")
 	for _, dc := range dataChains {
-		log.Printf("Collect changes required per spreadsheet -- %s -- begin", dc.Name)
+		local.Log.Info("Collect changes required per spreadsheet -- %s -- begin", dc.Name)
 		userChains := []*models.UserChain{}
 		chain := models.Chain{}
 		for i, du := range dc.Users {
@@ -121,7 +106,7 @@ LIMIT 1
 					UpdatedAt:       time.Now(),
 				}
 				db.Save(&user)
-				log.Printf("⚠️ Warning user is created '%s'\t%+v", du.Email, du)
+				local.Log.Warn("user is created '%s'\t%+v", du.Email, du)
 
 				if i == 0 && email.Valid {
 					newChainAdminEmails = append(newChainAdminEmails, email.String)
@@ -133,16 +118,16 @@ LIMIT 1
 					db.Save(&user)
 				}
 
-				log.Printf("✅ Found user '%s'\t%+v", du.Email, du)
+				local.Log.Trace("found user '%s'\t%+v", du.Email, du)
 			}
 
 			if i == 0 {
 				if dc.UID != "" {
 					db.Raw(`
-	SELECT chains.*
-	FROM chains
-	WHERE uid = ?
-	LIMIT 1
+SELECT chains.*
+FROM chains
+WHERE uid = ?
+LIMIT 1
 					`, dc.UID).Scan(&chain)
 				}
 				if chain.ID == 0 {
@@ -162,9 +147,9 @@ LIMIT 1
 						UpdatedAt:        time.Now(),
 					}
 					db.Create(&chain)
-					log.Printf("⚠️ Warning chain %s is created", dc.Name)
+					local.Log.Warn("chain %s is created", dc.Name)
 				} else {
-					log.Printf("✅ Found chain %s", dc.Name)
+					local.Log.Trace("found chain %s", dc.Name)
 				}
 			}
 
@@ -178,15 +163,15 @@ LIMIT 1
 		for _, uc := range userChains {
 			FindOrCreateUserChains(db, *uc)
 		}
-		log.Printf("Collect changes required per spreadsheet -- %s -- done", dc.Name)
+		local.Log.Info("Collect changes required per spreadsheet -- %s -- done", dc.Name)
 
 		time.Sleep(time.Millisecond * 300)
 	}
-	log.Print("Collect changes required per spreadsheet -- done")
+	local.Log.Info("Collect changes required per spreadsheet -- done")
 
-	log.Printf("%d  imported", len(dataChains))
+	local.Log.Info("%d  imported", len(dataChains))
 
-	log.Printf("\n\n📜 New Chain Admin Emails:\n%s\n", strings.Join(newChainAdminEmails, ", "))
+	local.Log.Debug("New Chain Admin Emails:\t%s", strings.Join(newChainAdminEmails, ", "))
 
 	return nil
 }
@@ -240,7 +225,7 @@ LIMIT 1
 				IsChainAdmin: d.IsChainAdmin,
 			})
 		} else {
-			log.Printf("🛑 Error user (id: %d) or chain (id: %d) was not found, to set isChainAdmin as %v\t%+v", d.UserID, d.ChainID, d.IsChainAdmin, res)
+			local.Log.Error("user (id: %d) or chain (id: %d) was not found, to set isChainAdmin as %v\t%+v", d.UserID, d.ChainID, d.IsChainAdmin, res)
 		}
 	}
 }
