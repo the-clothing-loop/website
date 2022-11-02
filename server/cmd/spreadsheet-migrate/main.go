@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -9,6 +10,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/cmd/spreadsheet-migrate/local"
 	"github.com/CollActionteam/clothing-loop/server/local/app"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
+	"github.com/samber/lo"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
@@ -106,15 +108,38 @@ LIMIT 1
 					UpdatedAt:       time.Now(),
 				}
 				db.Save(&user)
-				local.Log.Warn("user is created '%s'\t%+v", du.Email, du)
+
+				possiblyAlikeUsers := []models.User{}
+				db.Raw(`
+SELECT users.*
+FROM users
+WHERE users.name LIKE ?
+				`, fmt.Sprintf("%%%s%%", user.Name)).Scan(&possiblyAlikeUsers)
+				local.Log.Warn("user is created '%s'\t'%s'\t%+v", du.Email, du.Name, du)
+				if len(possiblyAlikeUsers) > 0 {
+					local.Log.Error("user (ID: %d) may be related one of these users:\n%+v", user.ID, strings.Join(lo.Map(possiblyAlikeUsers, func(pu models.User, i int) string {
+						return fmt.Sprintf("\tID: %d\tName: %s\tEmail: %s\tAddress: %s", pu.ID,
+							pu.Name,
+							pu.Email.String,
+							pu.Address)
+					}), "\n"))
+				}
 
 				if i == 0 && email.Valid {
 					newChainAdminEmails = append(newChainAdminEmails, email.String)
 				}
 			} else {
 				// is an existing user
-				if user.PhoneNumber == "" && du.PhoneNumber != "" {
-					user.PhoneNumber = du.PhoneNumber
+				shouldChangePhoneNumber := user.PhoneNumber == "" && du.PhoneNumber != ""
+				shouldChangeAddress := user.Address == "" && du.Address != ""
+				if shouldChangeAddress || shouldChangePhoneNumber {
+					if shouldChangePhoneNumber {
+						user.PhoneNumber = du.PhoneNumber
+					}
+
+					if shouldChangeAddress {
+						user.Address = du.Address
+					}
 					db.Save(&user)
 				}
 
