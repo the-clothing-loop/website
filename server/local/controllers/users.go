@@ -62,14 +62,14 @@ func UserGet(c *gin.Context) {
 		db.Raw(`
 SELECT users.*
 FROM users
-WHERE users.uid = ? AND is_email_verified = ?
+WHERE users.uid = ? AND enabled = ?
 LIMIT 1
 		`, query.UserUID, true).First(user)
 	} else if query.Email != "" {
 		db.Raw(`
 SELECT users.*
 FROM users
-WHERE users.email = ? AND is_email_verified = ?
+WHERE users.email = ? AND enabled = ?
 LIMIT 1
 		`, query.Email, true).First(user)
 	}
@@ -135,7 +135,7 @@ SELECT users.*
 FROM users
 LEFT JOIN user_chains ON user_chains.user_id = users.id 
 LEFT JOIN chains      ON chains.id = user_chains.chain_id
-WHERE chains.uid = ? AND users.is_email_verified = ?
+WHERE chains.uid = ? AND users.enabled = ?
 	`, query.ChainUID, true).Scan(users).Error
 	if err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
