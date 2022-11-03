@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"net/http"
@@ -53,7 +54,7 @@ func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool 
 	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s/users/login/validate?apiKey=%s">here</a> to verify your e-mail and activate your clothing-loop account.<br><br>Regards,<br>The clothing-loop team!`, user.Name, app.Config.SITE_BASE_URL_FE, token)
 
 	// email user with token
-	return app.MailSend(c, db, user.Email, subject, messageHtml)
+	return app.MailSend(c, db, user.Email.String, subject, messageHtml)
 }
 
 func LoginValidate(c *gin.Context) {
@@ -141,7 +142,7 @@ func RegisterChainAdmin(c *gin.Context) {
 	}
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           body.User.Email,
+		Email:           sql.NullString{String: body.User.Email, Valid: true},
 		IsEmailVerified: false,
 		IsRootAdmin:     false,
 		Name:            body.User.Name,
@@ -201,7 +202,7 @@ func RegisterBasicUser(c *gin.Context) {
 
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           body.User.Email,
+		Email:           sql.NullString{String: body.User.Email, Valid: true},
 		IsEmailVerified: false,
 		IsRootAdmin:     false,
 		Name:            body.User.Name,

@@ -320,7 +320,7 @@ WHERE user_chains.chain_id = ?
 				result.Email,
 				result.Name,
 				user.Name,
-				user.Email,
+				user.Email.String,
 				user.PhoneNumber,
 			)
 		}
