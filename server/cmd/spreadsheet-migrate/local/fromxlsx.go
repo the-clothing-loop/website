@@ -91,7 +91,7 @@ func migrateUser(row *xlsx.Row, sheet string, i int) *DataUser {
 
 	if user.Email != "" {
 		if err := validate.Var(user.Email, "email"); err != nil {
-			Log.Error("User contains a bad email\tSheet: '%s'\tRow: '%d'\tContents: '%+v'", sheet, i+1, errContentsToStringArr(row.Cells))
+			Log.Error("User contains a bad email\tSheet: %20s' Row: % 3d Contents: '%+v'", "'"+sheet, i+1, errContentsToStringArr(row.Cells))
 		}
 	}
 

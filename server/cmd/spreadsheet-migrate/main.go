@@ -77,6 +77,38 @@ WHERE chains.published = ?
 		userChains := []*models.UserChain{}
 		chain := models.Chain{}
 		for i, du := range dc.Users {
+			if i == 0 {
+				if dc.UID != "" {
+					db.Raw(`
+	SELECT chains.*
+	FROM chains
+	WHERE uid = ?
+	LIMIT 1
+					`, dc.UID).Scan(&chain)
+				}
+				if chain.ID == 0 {
+					chain = models.Chain{
+						UID:              uuid.NewV4().String(),
+						Name:             dc.Name,
+						Description:      "",
+						Address:          du.Address,
+						Latitude:         0,
+						Longitude:        0,
+						Radius:           3,
+						Published:        false,
+						OpenToNewMembers: false,
+						Sizes:            []string{},
+						Genders:          []string{},
+						CreatedAt:        time.Now(),
+						UpdatedAt:        time.Now(),
+					}
+					db.Create(&chain)
+					local.Log.Warn("chain %s is created", dc.Name)
+				} else {
+					local.Log.Trace("found chain %s", dc.Name)
+				}
+			}
+
 			user := models.User{}
 
 			if du.Email != "" {
@@ -86,6 +118,21 @@ FROM users
 WHERE users.email = ?
 LIMIT 1
 				`, du.Email).Scan(&user)
+			}
+
+			if user.ID == 0 && len(du.Address) > 4 && du.Name != "" {
+				probablyAlikeUsers := []models.User{}
+				db.Raw(`
+SELECT users.*
+FROM users
+WHERE users.name LIKE ? 
+AND users.address LIKE ?
+				`, fmt.Sprintf("%%%s%%", du.Name), fmt.Sprintf("%%%s%%", du.Address)).Scan(&probablyAlikeUsers)
+
+				if len(probablyAlikeUsers) == 1 {
+					user = probablyAlikeUsers[0]
+					local.Log.Debug("Found probable user via name and address:\n\tID: % 4d Name: %20s Email: %30s Address: %50s", user.ID, user.Name, user.Email.String, user.Address)
+				}
 			}
 
 			if user.ID == 0 {
@@ -114,11 +161,12 @@ LIMIT 1
 SELECT users.*
 FROM users
 WHERE users.name LIKE ?
-				`, fmt.Sprintf("%%%s%%", user.Name)).Scan(&possiblyAlikeUsers)
-				local.Log.Warn("user is created '%s'\t'%s'\t%+v", du.Email, du.Name, du)
+AND users.id != ?
+				`, fmt.Sprintf("%%%s%%", user.Name), user.ID).Scan(&possiblyAlikeUsers)
+				local.Log.Warn("user is created:\n\tID: % 4d Name: %20s Email: %30s Address: %50s", user.ID, user.Name, user.Email.String, user.Address)
 				if len(possiblyAlikeUsers) > 0 {
-					local.Log.Error("user (ID: %d) may be related one of these users:\n%+v", user.ID, strings.Join(lo.Map(possiblyAlikeUsers, func(pu models.User, i int) string {
-						return fmt.Sprintf("\tID: %d\tName: %s\tEmail: %s\tAddress: %s", pu.ID,
+					local.Log.Warn("➡️ and may be related one of these users:\n%s", strings.Join(lo.Map(possiblyAlikeUsers, func(pu models.User, i int) string {
+						return fmt.Sprintf("\tID: % 4d Name: %20s Email: %30s Address: %50s", pu.ID,
 							pu.Name,
 							pu.Email.String,
 							pu.Address)
@@ -132,7 +180,8 @@ WHERE users.name LIKE ?
 				// is an existing user
 				shouldChangePhoneNumber := user.PhoneNumber == "" && du.PhoneNumber != ""
 				shouldChangeAddress := user.Address == "" && du.Address != ""
-				if shouldChangeAddress || shouldChangePhoneNumber {
+				shouldChangeName := user.Name == "" && du.Name != ""
+				if shouldChangeAddress || shouldChangePhoneNumber || shouldChangeName {
 					if shouldChangePhoneNumber {
 						user.PhoneNumber = du.PhoneNumber
 					}
@@ -140,42 +189,14 @@ WHERE users.name LIKE ?
 					if shouldChangeAddress {
 						user.Address = du.Address
 					}
+
+					if shouldChangeName {
+						user.Name = du.Name
+					}
 					db.Save(&user)
 				}
 
-				local.Log.Trace("found user '%s'\t%+v", du.Email, du)
-			}
-
-			if i == 0 {
-				if dc.UID != "" {
-					db.Raw(`
-SELECT chains.*
-FROM chains
-WHERE uid = ?
-LIMIT 1
-					`, dc.UID).Scan(&chain)
-				}
-				if chain.ID == 0 {
-					chain = models.Chain{
-						UID:              uuid.NewV4().String(),
-						Name:             dc.Name,
-						Description:      "",
-						Address:          du.Address,
-						Latitude:         0,
-						Longitude:        0,
-						Radius:           3,
-						Published:        false,
-						OpenToNewMembers: false,
-						Sizes:            []string{},
-						Genders:          []string{},
-						CreatedAt:        time.Now(),
-						UpdatedAt:        time.Now(),
-					}
-					db.Create(&chain)
-					local.Log.Warn("chain %s is created", dc.Name)
-				} else {
-					local.Log.Trace("found chain %s", dc.Name)
-				}
+				local.Log.Trace("found user:\n ┌           Name: %20s Email: %30s Address: %50s\n └ ID: % 4d Name: %20s Email: %30s Address: %50s", du.Name, du.Email, du.Address, user.ID, user.Name, user.Email.String, user.Address)
 			}
 
 			// add user_chain
@@ -250,7 +271,7 @@ LIMIT 1
 				IsChainAdmin: d.IsChainAdmin,
 			})
 		} else {
-			local.Log.Error("user (id: %d) or chain (id: %d) was not found, to set isChainAdmin as %v\t%+v", d.UserID, d.ChainID, d.IsChainAdmin, res)
+			local.Log.Error("user (id: % 4d) or chain (id: % 4d) was not found, to set isChainAdmin as %v\t%+v", d.UserID, d.ChainID, d.IsChainAdmin, res)
 		}
 	}
 }
