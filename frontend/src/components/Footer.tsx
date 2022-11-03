@@ -23,42 +23,42 @@ const Footer = () => {
         className={classes.footer}
         style={{ display: "flex", flexDirection: "column" }}
       >
-        {authUser === null ? (
-          <div className={classes.footerWrapper} id="footer">
-            <div className={classes.footerSections}>
-              <div className={classes.footerSection}>
-                <Typography component="h5">{t("learnMore")}</Typography>
-                <Link to="/faq">{t("faqs")}</Link>
-                <Link to="/contact-us">{t("help")}</Link>
-                <Link to="/about">{t("about")}</Link>
-              </div>
-              <div className={classes.footerSection}>
-                <Typography component="h5">{t("loops")}</Typography>
-                <Link to="/loops/find">{t("findingALoop")}</Link>
-                <Link to="/loops/new/users/signup">{t("startingALoop")}</Link>
-                <Link to="/users/login">{t("login")}</Link>
-              </div>
-              <div className={classes.footerSection}>
-                <Typography component="h5">{t("findUs")}</Typography>
-                <a href="mailto:hello@clothingloop.com">
-                  hello@clothingloop.org
-                </a>
-                <a
-                  href="https://www.instagram.com/theclothingloop/"
-                  target="_blank"
-                >
-                  <InstagramIcon
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                    }}
-                  />
-                </a>
-              </div>
+        <div className={classes.footerWrapper} id="footer">
+          <div className={classes.footerSections}>
+            <div className={classes.footerSection}>
+              <Typography component="h5">{t("learnMore")}</Typography>
+              <Link to="/faq">{t("faqs")}</Link>
+              <Link to="/contact-us">{t("help")}</Link>
+              <Link to="/about">{t("about")}</Link>
             </div>
-            <Newsletter />
+            <div className={classes.footerSection}>
+              <Typography component="h5">{t("loops")}</Typography>
+              <Link to="/loops/find">{t("findingALoop")}</Link>
+              <Link to="/loops/new/users/signup">{t("startingALoop")}</Link>
+              {authUser ? (
+                <Link to="/users/logout">{t("logout")}</Link>
+              ) : (
+                <Link to="/users/login">{t("login")}</Link>
+              )}
+            </div>
+            <div className={classes.footerSection}>
+              <Typography component="h5">{t("findUs")}</Typography>
+              <a href="mailto:hello@clothingloop.com">hello@clothingloop.org</a>
+              <a
+                href="https://www.instagram.com/theclothingloop/"
+                target="_blank"
+              >
+                <InstagramIcon
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                  }}
+                />
+              </a>
+            </div>
           </div>
-        ) : null}
+          <Newsletter />
+        </div>
 
         <div className={classes.footerLegalWrapper} id="footer">
           <div className={classes.legalLinksWrapper}>
