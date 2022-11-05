@@ -21,11 +21,14 @@ module.exports = {
         light: "#D5ECDF",
         DEFAULT: "#48808B",
       },
-      yellow: "#F7C86F",
+      yellow: {
+        DEFAULT: "#f7c86f",
+        dark: "#F4B63F",
+        darker: "#F1A40F",
+      },
       // aqua: "#D5ECDF",
       lightBlue: "#98D9DE",
       turquoise: "#518D7E",
-      bronze: "#C58C41",
       green: "#4CAF50",
       red: "#EF5350",
       grey: {
