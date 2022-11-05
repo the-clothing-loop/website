@@ -100,10 +100,10 @@ const Home = () => {
 
       <div id="landing-page-desktop" className={classes.landingPageDesktop}>
         <div className={classes.landingPageWrapper}>
-          <div className="background-box">
-            <div className="circles-frame">
+          <div className="tw-w-full tw-absolute tw-bg-teal-light">
+            <div className="tw-my-8 tw-ml-[40%]">
               <img src={CirclesFrame} alt="circles-frame" />
-              <img src={CirclesFrame} alt="circles-frame" />
+              <img className="tw-pl-2" src={CirclesFrame} alt="circles-frame" />
             </div>
           </div>
           <div className="landing-page-hero">
@@ -115,7 +115,7 @@ const Home = () => {
                 onClick={() => history.push("/loops/find")}
               >
                 {t("findALoop")}
-                <img src={ArrowRightIcon} alt="" className="btn-icon" />
+                <img src={ArrowRightIcon} alt="" className="tw-ml-5" />
               </button>
             </div>
             <div className="hero-image-wrapper">

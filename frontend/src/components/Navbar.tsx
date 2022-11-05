@@ -13,7 +13,7 @@ import theme from "../util/theme";
 import ArrowIcon from "../images/right-arrow-yellow.svg";
 import Logo from "../images/logos/The_Clothing_Loop_Logo.png";
 
-const Navbar = () => {
+function Navbar() {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
   const { authUser } = useContext(AuthContext);
@@ -59,7 +59,7 @@ const Navbar = () => {
                 className={`${classes.buttonCta} ${classes.buttonCtaHeader}`}
               >
                 {t("findLoops")}
-                <img src={ArrowIcon} className="btn-icon" />
+                <img src={ArrowIcon} className="tw-ml-5" />
               </Button>
             ) : null}
 
@@ -100,6 +100,6 @@ const Navbar = () => {
       </AppBar>
     </div>
   );
-};
+}
 
 export default Navbar;

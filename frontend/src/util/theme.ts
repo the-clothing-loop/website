@@ -12,6 +12,15 @@ const grey = "#A5A5A5";
 const lightgrey = "#e8e8e8";
 
 const theme = {
+  breakpoints: {
+    values: {
+      xs: 481,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
   palette: {
     primary: {
       light: aqua,
@@ -540,31 +549,6 @@ const theme = {
   },
 
   /*styling for table*/
-  root2: {
-    maxWidth: "1440px",
-    left: "50%",
-    transform: " translateX(-50%)",
-    padding: "1% 80px",
-    backgroundColor: white,
-    alignItems: "center",
-    borderRadius: "0px",
-    display: "flex",
-    width: "100%",
-    zIndex: "1100",
-    position: "relative",
-    justifyContent: "space-between",
-    boxShadow: " 0 4px 2px -2px gray !important",
-
-    "& .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled)::before":
-      {
-        borderBottom: "none",
-      },
-
-    "& .css-1480iag-MuiInputBase-root-MuiInput-root::after": {
-      borderBottom: "none",
-    },
-  },
-
   tableCellRoot: {
     fontSize: "1rem",
     borderBottom: "none !important",
@@ -925,23 +909,6 @@ const theme = {
 
   landingPageWrapper: {
     position: "relative",
-
-    "& .background-box": {
-      position: "absolute",
-      height: "40%",
-      backgroundColor: aqua,
-      width: "100vw",
-
-      "& .circles-frame": {
-        position: "relative",
-        marginLeft: "40%",
-        marginTop: "1%",
-
-        "& img:nth-of-type(1)": {
-          paddingRight: "8px",
-        },
-      },
-    },
 
     "& .landing-page-hero": {
       display: "grid",

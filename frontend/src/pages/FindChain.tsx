@@ -350,7 +350,7 @@ const FindChain = ({ location }: { location: Location }) => {
                 <Typography component="p" id="description">
                   {selectedChain.description}
                 </Typography>
-                <div className={"chain-categories"}>
+                <div className="tw-flex tw-flex-col tw-w-full tw-pt-8">
                   <Typography component="h3">{t("categories")}:</Typography>
                   <div id="categories-container">
                     {selectedChain.genders
@@ -418,7 +418,7 @@ const FindChain = ({ location }: { location: Location }) => {
         ) : null}
       </ReactMapGL>
 
-      <div className="map-actions">
+      <div className="tw-flex tw-flex-col tw-absolute tw-bottom-[5%] tw-right-2.5">
         <Button className="map-action-btn" onClick={() => handleLocation()}>
           <GpsFixedIcon fontSize="medium" />
         </Button>

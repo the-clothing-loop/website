@@ -61,7 +61,7 @@ export const ChainParticipantsTable = ({
 
   return (
     <>
-      <TableContainer className="chain-member-list__table--margin">
+      <TableContainer className="tw-mt-10">
         <Table>
           <TableHead>
             <TableRow>

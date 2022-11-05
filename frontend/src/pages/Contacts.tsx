@@ -91,7 +91,7 @@ const Contacts = () => {
             onSubmit={handleSubmit}
           >
             {({ values, errors, touched }) => (
-              <Form className="contact-form">
+              <Form className="tw-flex tw-flex-col">
                 <TextForm
                   label={t("name")}
                   name="name"

@@ -63,13 +63,13 @@ const SizesDropdown: React.FC<IProps> = ({
           variant === "outlined" ? (
             <OutlinedInput
               classes={{
-                root: classes.selectInputOutlined,
+                root: classes.selectInputOutlined + " tw-h-12",
               }}
             />
           ) : (
             <Input
               classes={{
-                root: classes.selectInputStandard,
+                root: classes.selectInputStandard + " tw-h-12",
               }}
             />
           )

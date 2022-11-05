@@ -71,7 +71,7 @@ const ChainsList = () => {
       </Helmet>
       <div>
         {chains ? (
-          <div className="table-container">
+          <div className="tw-py-0 tw-px-20">
             <div className="table-head">
               <Typography variant="h5">{`${chains.length} Clothing Loops`}</Typography>
               <DataExport />

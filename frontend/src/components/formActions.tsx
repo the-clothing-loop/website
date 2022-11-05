@@ -28,8 +28,8 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
         name="newsletter"
       />
       <CheckboxField
-        className="privacy-policy-action"
-        required
+        className="tw-flex tw-items-start tw-mt-4"
+        required={true}
         label={
           <>
             <div className={classes.actionsWrapper}>

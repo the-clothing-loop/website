@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./i18n";
+import "./tailwind.generated.css";
 
 ReactDOM.render(
   <React.StrictMode>

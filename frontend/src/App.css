@@ -13,16 +13,6 @@
     margin: 0;
   }
 
-  .container {
-    min-height: 85vh;
-    position: relative;
-  }
-
-  .app {
-    position: relative;
-    min-height: 100vh;
-  }
-
   a {
     text-decoration: none;
     font-family: "Montserrat";
@@ -47,10 +37,6 @@
     text-align: left;
   }
 
-  .nav-container {
-    margin: auto;
-  }
-
   .text-wrapper p.intro-text {
     font-size: 1.2rem;
     text-align: justify;
@@ -72,10 +58,6 @@
     bottom: 0;
     height: 100%;
     width: 100%;
-  }
-
-  .nav-container {
-    margin: auto;
   }
 
   .mapboxgl-popup-content {
@@ -109,17 +91,6 @@
     padding: 2% 0;
   }
 
-  .filter-form {
-    display: inline;
-    border-bottom: 1px solid #e8eaed;
-    border-top: 1px solid #e8eaed;
-    margin-top: 8px;
-    position: relative;
-    padding: 5% 1%;
-    border-radius: 8px;
-    background-color: rgb(255, 255, 255);
-  }
-
   .MuiCardContent-root {
     display: flex;
     flex-direction: column;
@@ -130,22 +101,6 @@
     justify-content: space-around;
   }
 
-  form.new-chain-location-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  form.new-chain-location-form > * {
-    padding: 2% 0;
-  }
-
-  .card-button {
-    position: relative;
-    margin: 15px 15px 15px 15px;
-    width: 100%;
-  }
-
   .mapboxgl-popup-close-button {
     z-index: 11;
     top: 30px !important;
@@ -153,24 +108,9 @@
     padding: 0 !important;
   }
 
-  .chain-categories {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    padding-top: 5%;
-  }
-
-  button.chain-description {
-    margin: 5% 0;
-  }
-
   .react-geocoder > input {
     width: 100%;
     height: 20px;
-  }
-
-  .address-details {
-    padding: 20% 2%;
   }
 
   h6 {
@@ -184,10 +124,6 @@
 
   .table-head {
     padding: 1% 0;
-  }
-
-  .table-container {
-    padding: 0 80px;
   }
 
   input[type="checkbox"].map-cat-input {
@@ -221,23 +157,6 @@
     border-color: #067f8c;
   }
 
-  .input-label-typography {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .inputs-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  form.contact-form {
-    display: flex;
-    flex-direction: column;
-  }
-
   .landing-page-wrapper {
     position: absolute;
     top: 0;
@@ -245,31 +164,6 @@
     background-color: black;
     width: 100vw;
     height: 100vh;
-  }
-
-  .landing-page-logo {
-    font-family: "Montserrat";
-    color: #ffffff;
-    position: absolute;
-    font-size: 3rem !important;
-    padding: 1%;
-  }
-
-  .landing-page-text {
-    color: #ffffff;
-    text-align: center;
-    position: absolute;
-    width: 100%;
-    bottom: 20%;
-    text-transform: capitalize;
-  }
-
-  .map-actions {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    bottom: 5%;
-    right: 10px;
   }
 
   button.map-action-btn {
@@ -305,43 +199,8 @@
     position: absolute;
   }
 
-  .css-1v4ccyo.Mui-focused.MuiOutlinedInput-notchedOutline {
-    border-color: transparent !important;
-  }
-
-  .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused
-    .MuiOutlinedInput-notchedOutline {
-    border-color: transparent;
-  }
-
-  .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-    border-color: transparent !important;
-    border-radius: 0px !important;
-  }
-
-  div.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
-    font-family: "Montserrat";
-    text-transform: capitalize;
-  }
-
-  div.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper {
-    border-radius: 0px 0px 4px 4px !important;
-    margin-top: 1px;
-    max-height: 500px;
-  }
-
-  input.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    padding: 10px !important;
-    margin-left: 30px !important;
-    font-family: "Montserrat";
-  }
-
   .MuiInput-underline::before {
     border-bottom: 1px solid #518d7e !important;
-  }
-
-  .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    text-transform: "capitalize";
   }
 
   fieldset.MuiOutlinedInput-notchedOutline {
@@ -485,10 +344,6 @@
     padding: 1em 2em;
   }
 
-  img.btn-icon {
-    margin-left: 20px;
-  }
-
   /* sliders */
   .btn:before {
     content: "";
@@ -499,52 +354,8 @@
     transition: all 1s ease;
   }
 
-  /* Left Slider */
-  .btn-2:before {
-    top: 0;
-    left: -170px;
-  }
-
-  /* Hover Effect */
-  .btn-2:hover:before {
-    left: 0;
-  }
-
   #landing-page-mobile {
     display: none;
-  }
-
-  @keyframes slide {
-    0% {
-      left: 0%;
-    }
-    50% {
-      left: -100%;
-    }
-    100% {
-      left: -200%;
-    }
-  }
-
-  div#slider {
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    height: 40vh;
-    overflow: "hidden";
-  }
-  div#slider figure img {
-    width: 20%;
-    float: left;
-  }
-  div#slider figure {
-    position: relative;
-    width: 500%;
-    margin: 0;
-    left: 0;
-    text-align: left;
-    font-size: 0;
-    animation: 8s slide infinite;
   }
 
   .MuiGrid-item {
@@ -583,24 +394,8 @@
     padding-top: 2%;
   }
 
-  .login-container {
-    position: relative;
-    padding-top: 100px;
-  }
-
   .login-content {
     padding-left: 5%;
-  }
-
-  .login-form {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .single-submit-btn {
-    display: flex;
-    justify-content: flex-end;
-    margin: 20px 0px;
   }
 
   .signup-wrapper {
@@ -630,34 +425,6 @@
     background: #fafafa;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
-  }
-
-  .chain-member-list__loop-admin__flex-col {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-  }
-
-  .chain-member-list__add-co-host {
-    text-align: center;
-  }
-
-  .chain-member-list__field {
-    margin-top: 24px;
-  }
-
-  .chain-member-list__field-content {
-    margin-top: 12px;
-    margin-left: 44px;
-  }
-
-  .chain-member-list__field:first-child {
-    margin-top: 0;
-  }
-
-  .chain-member-list__table--margin {
-    margin-top: 42px;
   }
 
   .newsletter {
@@ -695,45 +462,6 @@
     top: 0;
   }
 
-  .admin-controls-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    align-items: center;
-    padding-top: 20px;
-  }
-
-  .admin-nav-btn {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  .admin-nav-content {
-    margin-left: 50px;
-    padding-top: 80px;
-  }
-
-  .add-chain-admin {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 105px;
-  }
-
-  .add-chain-admin__select {
-    margin-top: 96px;
-    width: 428px;
-  }
-
-  .add-chain-admin__button {
-    margin-top: 88px;
-  }
-  .privacy-policy-action {
-    display: flex;
-    align-items: flex-start;
-    margin-top: 15px;
-  }
   .MuiPhoneNumber-flagButton > svg.margin {
     max-width: 30px;
     height: auto;
@@ -822,8 +550,4 @@
     width: 100%;
     border-bottom: 1px solid rgb(72, 128, 139);
   }
-}
-
-.search-bar__dropdown {
-  width: 15rem;
 }
