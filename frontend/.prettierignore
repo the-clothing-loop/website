@@ -2,6 +2,8 @@
 /coverage
 /build
 
+/src/tailwind.generated.css
+
 .DS_Store
 
 .env.local

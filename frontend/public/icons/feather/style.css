@@ -1,9 +1,8 @@
 @font-face {
-  font-family: 'feather';
-  src:
-    url('feather.ttf?af5g0l') format('truetype'),
-    url('feather.woff?af5g0l') format('woff'),
-    url('feather.svg?af5g0l#feather') format('svg');
+  font-family: "feather";
+  src: url("feather.ttf?af5g0l") format("truetype"),
+    url("feather.woff?af5g0l") format("woff"),
+    url("feather.svg?af5g0l#feather") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -11,7 +10,7 @@
 
 .feather-icon {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'feather' !important;
+  font-family: "feather" !important;
   speak: never;
   font-style: normal;
   font-weight: normal;

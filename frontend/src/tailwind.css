@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 .tw-btn-yellow {
-   @apply tw-bg-yellow hover:tw-bg-yellow-dark focus:tw-outline-none focus:tw-ring-2 tw-ring-yellow-darker tw-border-none tw-cursor-pointer;
+  @apply tw-bg-yellow hover:tw-bg-yellow-dark focus:tw-outline-none focus:tw-ring-2 tw-ring-yellow-darker tw-border-none tw-cursor-pointer;
 }
