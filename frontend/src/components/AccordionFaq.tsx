@@ -4,7 +4,6 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "@mui/material";
-import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 //Project Resources
@@ -17,7 +16,9 @@ const AccordionFaq = ({ question, answer }: any) => {
     <div>
       <Accordion classes={{ root: classes.MuiAccordionRoot }}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={
+            <span className="feather-icon feather-chevron-down"></span>
+          }
           aria-controls="panel1a-content"
           id="panel1a-header"
         >

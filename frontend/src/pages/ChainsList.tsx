@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Circle as IconCircle } from "@mui/icons-material";
 import { Helmet } from "react-helmet";
 
 import {
@@ -130,9 +129,7 @@ const ChainsList = () => {
                         >
                           {chain.published ? (
                             <div style={{ display: "flex" }}>
-                              <IconCircle
-                                sx={{ color: "#4CAF50", marginRight: 1 }}
-                              />
+                              <span className="feather-icon feather-icon-circle tw-mr-1 tw-bg-green" />
                               <Typography variant="body2">
                                 {"published"}
                               </Typography>
@@ -140,9 +137,7 @@ const ChainsList = () => {
                           ) : (
                             <div style={{ display: "flex" }}>
                               <Typography variant="body2">
-                                <IconCircle
-                                  sx={{ color: "#EF5350", marginRight: 1 }}
-                                />
+                                <span className="feather-icon feather-icon-circle tw-mr-1 tw-bg-red" />
                                 {"unpublished"}
                               </Typography>
                             </div>

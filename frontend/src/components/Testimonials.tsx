@@ -2,11 +2,6 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Typography, Grid, Paper, Button } from "@mui/material";
-import {
-  FormatQuote as FormatQuoteIcon,
-  ArrowForward as ArrowForwardIcon,
-  ArrowBack as ArrowBackIcon,
-} from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
@@ -191,7 +186,7 @@ const Testimonials = () => {
             }}
             onClick={prevClick}
           >
-            <ArrowBackIcon className="arrow-icon" />
+            <span className="feather-icon feather-icon-arrow-left" />
           </Button>
           <Button
             classes={{
@@ -202,7 +197,7 @@ const Testimonials = () => {
             }}
             onClick={nextClick}
           >
-            <ArrowForwardIcon className="arrow-icon" />
+            <span className="feather-icon feather-icon-arrow-right" />
           </Button>
         </div>
 
@@ -214,7 +209,7 @@ const Testimonials = () => {
             {testimonials.map((testimonial, i) => {
               return (
                 <Paper classes={{ root: classes.carouselElement }} key={i}>
-                  <FormatQuoteIcon className="format-quote-icon" />
+                  <span className="feather-icon feather-icon-message-circle" />
 
                   <Typography
                     component="p"

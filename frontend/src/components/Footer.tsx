@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Newsletter } from "./Newsletter/Newsletter";
 
 import { Typography } from "@mui/material";
-import { Instagram as InstagramIcon } from "@mui/icons-material";
+import IconInstagram from "../images/icon-instagram.svg";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -48,7 +48,9 @@ const Footer = () => {
                 href="https://www.instagram.com/theclothingloop/"
                 target="_blank"
               >
-                <InstagramIcon
+                <img
+                  className="tw-w-10 tw-h-10"
+                  src={IconInstagram}
                   style={{
                     width: "40px",
                     height: "40px",

@@ -10,10 +10,6 @@ import {
   FormControlLabel,
   Alert,
 } from "@mui/material";
-import {
-  EditOutlined as EditIcon,
-  Clear as DeleteIcon,
-} from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
@@ -164,7 +160,7 @@ const ChainMemberList = () => {
                   </Grid>
                   <Grid item>
                     <Link to={`/loops/${chainUID}/edit`}>
-                      <EditIcon />
+                      <span className="feather-icon feather-icon-edit-2" />
                     </Link>
                   </Grid>
                 </Grid>
@@ -249,7 +245,7 @@ const ChainMemberList = () => {
                             },
                           }}
                         >
-                          <EditIcon />
+                          <span className="feather-icon feather-icon-edit-2" />
                         </Link>
                       </Grid>
                     </Grid>
@@ -276,7 +272,7 @@ const ChainMemberList = () => {
                       state: { users, chainUID },
                     }}
                   >
-                      <div className="tw-text-center">add co-host</div>
+                    <div className="tw-text-center">add co-host</div>
                   </Link>
                 </div>
               </div>

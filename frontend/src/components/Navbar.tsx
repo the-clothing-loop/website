@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 
-import { OpenInNew } from "@mui/icons-material";
 import { Button, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 

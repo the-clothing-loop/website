@@ -5,7 +5,6 @@ import SingleCounter from "./SingleCounter";
 import useIntersectionObserver from "./hooks";
 
 import theme from "../../util/theme";
-import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { useTranslation } from "react-i18next";
 // import { InfoBody, infoGet } from "../../api/info";
@@ -61,7 +60,7 @@ const Counters = () => {
             target="_blank"
             className={classes.counterLink}
           >
-            <ArrowDownwardIcon className="icon" />
+            <span className="feather-icon feather-icon-arrow-down" />
           </a>
         </div>
         <h3>{t("ourGoals")}</h3>

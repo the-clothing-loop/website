@@ -9,10 +9,6 @@ import {
   TablePagination,
   TableContainer,
 } from "@mui/material";
-import {
-  EditOutlined as EditIcon,
-  Clear as DeleteIcon,
-} from "@mui/icons-material";
 
 import { makeStyles } from "@mui/styles";
 
@@ -113,13 +109,14 @@ export const ChainParticipantsTable = ({
                               },
                             }}
                           >
-                            <EditIcon />
+                            <span className="feather-icon feather-icon-edit-2" />
                           </Link>
                         </BorderlessTableCell>
                       )}
                       {remove && onRemoveUser && (
                         <BorderlessTableCell key={u.uid + "dellink"}>
-                          <DeleteIcon
+                          <span
+                            className="feather-icon feather-icon-x"
                             onClick={() => onRemoveUser(u.uid as string)}
                           />
                         </BorderlessTableCell>

@@ -3,7 +3,6 @@ import { CSVLink } from "react-csv";
 import { useTranslation } from "react-i18next";
 import { useParams, Link, useLocation } from "react-router-dom";
 
-import { Download as DownloadIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
@@ -67,7 +66,7 @@ const DataExport = () => {
         filename={"Loops-list.csv"}
       >
         {t("exportData")}
-        <DownloadIcon />
+        <span className="feather-icon feather-icon-download" />
       </CSVLink>
     </div>
   );
@@ -129,7 +128,7 @@ const UserDataExport = () => {
         filename={`${chain?.name}-participants.csv`}
       >
         {t("exportData")}
-        <DownloadIcon />
+        <span className="feather-icon feather-icon-download" />
       </CSVLink>
     </div>
   );

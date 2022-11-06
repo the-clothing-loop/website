@@ -1,6 +1,5 @@
 //MUI
 import { Popover, Typography } from "@mui/material";
-import { HelpOutline as Help } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -33,7 +32,7 @@ const PopoverOnHover: React.FC<IProps> = ({ message }: IProps) => {
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
       >
-        <Help className={classes.icon} />
+        <span className="feather-icon feather-icon-help-circle" />
       </Typography>
       <Popover
         id="mouse-over-popover"

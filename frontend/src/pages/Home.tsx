@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 import theme from "../util/theme";
-import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources

@@ -22,11 +22,6 @@ import {
   CardActions,
   CardContent,
 } from "@mui/material";
-import {
-  GpsFixed as GpsFixedIcon,
-  Add as AddIcon,
-  Remove as RemoveIcon,
-} from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
@@ -420,19 +415,19 @@ const FindChain = ({ location }: { location: Location }) => {
 
       <div className="tw-flex tw-flex-col tw-absolute tw-bottom-[5%] tw-right-2.5">
         <Button className="map-action-btn" onClick={() => handleLocation()}>
-          <GpsFixedIcon fontSize="medium" />
+          <span className="feather-icon feather-icon-crosshair" />
         </Button>
         <Button
           className="map-action-btn"
           onClick={() => mapZoom(viewport, "+")}
         >
-          <AddIcon fontSize="medium" />
+          <span className="feather-icon feather-icon-plus" />
         </Button>
         <Button
           className="map-action-btn"
           onClick={() => mapZoom(viewport, "-")}
         >
-          <RemoveIcon fontSize="medium" />{" "}
+          <span className="feather-icon feather-icon-minus" />{" "}
         </Button>
       </div>
     </>

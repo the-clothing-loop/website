@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
-import { Close as CloseIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../../util/theme";
@@ -20,7 +19,7 @@ export const ChainNotFound = ({
 
   return (
     <div className={classes.alertContainer}>
-      <CloseIcon onClick={backAction} className={classes.closeIcon} />
+      <span className="feather-icon feather-icon-x" onClick={backAction} />
 
       <Typography component="h1">
         {`${t("noLoopsFoundIn")}`} <span>{searchTerm}</span>
