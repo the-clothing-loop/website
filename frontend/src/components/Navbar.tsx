@@ -20,19 +20,12 @@ function Navbar() {
       <Link
         aria-label="Clothing Loop logo"
         to="/"
-        className="tw-h-auto tw-relative "
-        style={
-          location.pathname === "/"
-            ? { width: "220px", height: "150px" }
-            : { width: "150px", height: "100px" }
-        }
-      >
-        <img
-          className="tw-h-auto tw-relative tw-w-full"
-          src="/images/logos/The_Clothing_Loop_Logo.png"
-          alt="Logo"
-        />
-      </Link>
+        className="tw-bg-center tw-w-48 tw-h-36 tw-bg-no-repeat"
+        style={{
+          backgroundImage: "url('/images/logos/the_clothing_loop_logo.png')",
+          backgroundSize: "auto 180px",
+        }}
+      ></Link>
       <div className="tw-flex tw-items-center tw-justify-end tw-flex-grow">
         <div className="tw-flex tw-items-center tw-min-h-[4rem]">
           {["/loops/find", "/"].indexOf(location.pathname) !== -1 && (
