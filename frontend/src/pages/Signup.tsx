@@ -20,8 +20,6 @@ import { PhoneFormField, TextForm } from "../components/FormFields";
 import FormActions from "../components/formActions";
 
 //Media
-import RightArrow from "../images/right-arrow-white.svg";
-import JoinLoopImg from "../images/Join-Loop.jpg";
 import { Chain } from "../api/types";
 import { chainGet } from "../api/chain";
 import { registerBasicUser, RequestRegisterUser } from "../api/login";
@@ -134,7 +132,7 @@ const Signup = () => {
         >
           {(formik) => (
             <div className="signup-wrapper">
-              <TwoColumnLayout img={JoinLoopImg}>
+              <TwoColumnLayout img="/images/Join-Loop.jpg">
                 <div id="container" className="signup-content">
                   <Typography variant="h3" className={classes.pageTitle}>
                     {t("join")}
@@ -199,7 +197,7 @@ const Signup = () => {
                       </Button>
                       <Button type="submit" className={classes.button}>
                         {t("join")}
-                        <img src={RightArrow} alt="" />
+                        <span className="feather feather-arrow-right tw-ml-4"></span>
                       </Button>
                     </div>
                   </Form>

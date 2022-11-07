@@ -47,16 +47,8 @@ const Footer = () => {
               <a
                 href="https://www.instagram.com/theclothingloop/"
                 target="_blank"
-              >
-                <img
-                  className="tw-w-10 tw-h-10"
-                  src={IconInstagram}
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                  }}
-                />
-              </a>
+                className="feather feather-instagram tw-text-lg"
+              ></a>
             </div>
           </div>
           <Newsletter />

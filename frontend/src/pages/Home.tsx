@@ -15,26 +15,26 @@ import Carousel from "../components/Carousel";
 import Donations from "../components/Donations";
 import Testimonials from "../components/Testimonials";
 
-//Media
-import HeroImg from "../images/Kirsten-Rosan.jpg";
-import SectionThreeImg from "../images/image_3.png";
-import BagImage from "../images/Utrecht.jpeg";
-import MapImage from "../images/map_image.png";
-import ClothesImage from "../images/Nichon_zelfportret.jpg";
-import CirclesFrame from "../images/circles.png";
-import HorizontalArrow from "../images/horizontal_arrow.svg";
-import ArrowRightIcon from "../images/right-arrow-yellow.svg";
-import Selfies from "../images/Selfies.jpg";
-import DoorImg from "../images/numbered-bag-outdoors.jpg";
-//Logos
-import SfmLogo from "../images/logos/sfm_logo.png";
-import CollActionLogo from "../images/logos/Logo-CollAction.png";
-import ImpactHubLogo from "../images/logos/Logo_impact_hub.png";
-import EssenseLogo from "../images/logos/essense-logo.svg";
-import WdcdLogo from "../images/logos/Logo_WDCD.png";
-import DoenLogo from "../images/logos/DOEN.png";
-import PNHLogo from "../images/logos/PNH_logo.png";
 import { StandaloneSearchBar } from "../components/FindChain/StandaloneSearchBar";
+//Media
+const HeroImg = "images/Kirsten-Rosan.jpg";
+const SectionThreeImg = "images/image_3.png";
+const BagImage = "images/Utrecht.jpeg";
+const MapImage = "images/map_image.png";
+const ClothesImage = "images/Nichon_zelfportret.jpg";
+const CirclesFrame = "images/circles.png";
+const HorizontalArrow = "images/horizontal_arrow.svg";
+const ArrowRightIcon = "images/right-arrow-yellow.svg";
+const Selfies = "images/Selfies.jpg";
+const DoorImg = "images/numbered-bag-outdoors.jpg";
+//Logos
+const SfmLogo = "/images/logos/sfm_logo.png";
+const CollActionLogo = "/images/logos/Logo-CollAction.png";
+const ImpactHubLogo = "/images/logos/Logo_impact_hub.png";
+const EssenseLogo = "/images/logos/essense-logo.svg";
+const WdcdLogo = "/images/logos/Logo_WDCD.png";
+const DoenLogo = "/images/logos/DOEN.png";
+const PNHLogo = "/images/logos/PNH_logo.png";
 
 const Home = () => {
   const chainsCount = React.useContext(ChainsContext).length;

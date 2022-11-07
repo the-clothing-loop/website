@@ -12,13 +12,12 @@ import theme from "../util/theme";
 // Project resources
 import { TwoColumnLayout } from "../components/Layouts";
 
-//media
-import RightArrow from "../images/right-arrow-white.svg";
-import CirclesFrame from "../images/circles.png";
-import LoginImg from "../images/Login.jpg";
-
 import { Helmet } from "react-helmet";
 import { loginEmail } from "../api/login";
+
+//media
+const CirclesFrame = "/images/circles.png";
+const LoginImg = "/images/Login.jpg";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -103,7 +102,7 @@ const Login = () => {
                       fullWidth
                     >
                       {t("submit")}
-                      <img src={RightArrow} alt="" />
+                      <span className="feather feather-arrow-right tw-ml-4"></span>
                     </Button>
                   </div>
                 </Form>

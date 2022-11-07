@@ -114,7 +114,7 @@ export default function AddChainAdmin({ location }: { location: any }) {
           onClick={handleSubmitAddChainAdmin}
         >
           Confirm
-          <img src={RightArrow} />
+          <span className="feather feather-arrow-right tw-ml-4"></span>
         </Button>
       </div>
     </div>

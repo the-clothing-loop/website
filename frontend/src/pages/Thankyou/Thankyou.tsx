@@ -10,7 +10,6 @@ import { makeStyles } from "@mui/styles";
 //Project resources
 import theme from "../../util/theme";
 import { TwoColumnLayout } from "../../components/Layouts";
-import Img from "../../images/party-image.jpg";
 
 export interface IProps {
   heading: string;
@@ -76,7 +75,7 @@ const NewLoopConfirmation = (props: any) => {
       </Helmet>
 
       <TwoColumnLayout
-        img={Img}
+        img="/images/party-image.jpg"
         children={
           <Content
             heading={t("thankYouForStartingThisLoop")}
@@ -100,7 +99,7 @@ const JoinLoopConfirmation = (props: any) => {
       </Helmet>
 
       <TwoColumnLayout
-        img={Img}
+        img="/images/party-image.jpg"
         children={
           <Content
             heading={t("thankYouForSigningUp")}

@@ -404,7 +404,7 @@ const FindChain = ({ location }: { location: Location }) => {
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
-                    <img src={RightArrow} alt="" />
+                    <span className="feather feather-arrow-right tw-ml-4"></span>
                   </Button>
                 </CardActions>
               )}

@@ -237,7 +237,7 @@ const Signup = () => {
                   </Button>
                   <Button type="submit" className={classes.button}>
                     {t("next")}
-                    <img src={RightArrow} alt="" />
+                    <span className="feather feather-arrow-right tw-ml-4"></span>
                   </Button>
                 </div>
               </Form>

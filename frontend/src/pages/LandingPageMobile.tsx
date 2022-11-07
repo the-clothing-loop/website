@@ -8,9 +8,9 @@ import theme from "../util/theme";
 import FooterMobile from "../components/FooterMobile";
 
 //media
-import Clothes from "../images/clothes.png";
-import CirclesFrame from "../images/circles.png";
 import { useTranslation } from "react-i18next";
+const Clothes = "/images/clothes.png";
+const CirclesFrame = "/images/circles.png";
 
 const LandingPageMobile = () => {
   const classes = makeStyles(theme as any)();

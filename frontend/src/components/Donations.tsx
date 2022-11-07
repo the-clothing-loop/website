@@ -1,9 +1,6 @@
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-//Media
-import JewelleryImg from "../images/TCL-Jewellery.jpg";
-
 import { Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -118,7 +115,10 @@ const Donations = () => {
         <div className="background-box"></div>
 
         <figure className="image-wrapper">
-          <img src={JewelleryImg} style={{ width: "100%", height: "auto" }} />
+          <img
+            src="/images/TCL-Jewellery.jpg"
+            style={{ width: "100%", height: "auto" }}
+          />
         </figure>
 
         <section className="text-wrapper">

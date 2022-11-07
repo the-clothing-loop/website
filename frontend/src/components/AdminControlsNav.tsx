@@ -9,7 +9,6 @@ import { makeStyles } from "@mui/styles";
 import theme from "../util/theme";
 
 //Resources
-import Img from "../images/Denise.png";
 import { TwoColumnLayout } from "./Layouts";
 import { AuthContext } from "../providers/AuthProvider";
 import { Box } from "@mui/system";
@@ -23,7 +22,7 @@ const AdminControlsNav = () => {
   return (
     <div>
       {authUser ? (
-        <TwoColumnLayout img={Img}>
+        <TwoColumnLayout img="/images/Denise.png">
           <Box sx={{ padding: 8 }}>
             <Typography variant="h3" className={classes.pageTitle}>
               {`Hello, ${authUser?.name}`}

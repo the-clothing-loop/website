@@ -194,7 +194,7 @@ const UserEdit = () => {
                   className={classes.button}
                 >
                   {t("submit")}
-                  <img src={RightArrow} alt="" />
+                  <span className="feather feather-arrow-right tw-ml-4"></span>
                 </Button>
                 {submitted && (
                   <Alert severity="success" sx={{ marginTop: 4 }}>

@@ -1,4 +1,3 @@
-import PartyImg from "../../images/party-image.jpg";
 import styles from "./Donation.module.css";
 
 import { TwoColumnLayout } from "../Layouts";
@@ -18,7 +17,7 @@ const Content = () => {
 const DonationCompleted = () => {
   return (
     <div className={styles.donationConfirmationContent}>
-      <TwoColumnLayout children={<Content />} img={PartyImg} />;
+      <TwoColumnLayout children={<Content />} img="/images/party-image.jpg" />;
     </div>
   );
 };

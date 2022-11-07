@@ -13,14 +13,13 @@ import categories from "../util/categories";
 import { IViewPort } from "../types";
 import theme from "../util/theme";
 import Geocoding from "../pages/Geocoding";
-import { TextForm, NumberField, SelectField } from "./FormFields";
+import { TextForm, NumberField } from "./FormFields";
 import PopoverOnHover from "./Popover";
 import SizesDropdown from "../components/SizesDropdown";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import { Chain } from "../api/types";
 
 //media
-import RightArrow from "../images/right-arrow-white.svg";
 import { RequestRegisterChain } from "../api/login";
 import { Genders, Sizes } from "../api/enums";
 
@@ -309,7 +308,7 @@ const ChainDetailsForm = ({
                   </Button>
                   <Button type="submit" className={classes.button}>
                     {t("submit")}
-                    <img src={RightArrow} alt="" />
+                    <span className="feather feather-arrow-right tw-ml-4"></span>
                   </Button>
                 </div>
               </Form>

@@ -1,14 +1,8 @@
 import { Link, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-
 import { Helmet } from "react-helmet";
-
 import theme from "../util/theme";
-
-//media
-import PressClipping from "../images/press-clippings-site.jpg";
-import TeamImg from "../images/Team-pics.jpg";
-import { Trans, useTranslation, withTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 const About = () => {
   const classes = makeStyles(theme as any)();
@@ -60,13 +54,17 @@ const About = () => {
               }}
             ></Trans>
           </Typography>
-          <img src={PressClipping} alt="" style={{ position: "relative" }} />
+          <img
+            src="/images/press-clippings-site.jpg"
+            alt=""
+            style={{ position: "relative" }}
+          />
           <Trans
             i18nKey="thePeople"
             ns="about"
             components={{
               p: <Typography component="p"></Typography>,
-              imgTeam: <img src={TeamImg} alt="" />,
+              imgTeam: <img src="/images/Team-pics.jpg" alt="" />,
             }}
           ></Trans>
 

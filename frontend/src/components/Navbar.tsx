@@ -5,7 +5,6 @@ import { useContext } from "react";
 // Project resources
 import LanguageSwitcher from "./LanguageSwitcher";
 import { AuthContext } from "../providers/AuthProvider";
-import Logo from "../images/logos/The_Clothing_Loop_Logo.png";
 
 function Navbar() {
   const { t } = useTranslation();
@@ -21,7 +20,7 @@ function Navbar() {
       <Link
         aria-label="Clothing Loop logo"
         to="/"
-        className="tw-h-auto tw-relative tw-w-full"
+        className="tw-h-auto tw-relative "
         style={
           location.pathname === "/"
             ? { width: "220px", height: "150px" }
@@ -30,7 +29,7 @@ function Navbar() {
       >
         <img
           className="tw-h-auto tw-relative tw-w-full"
-          src={Logo}
+          src="/images/logos/The_Clothing_Loop_Logo.png"
           alt="Logo"
         />
       </Link>
