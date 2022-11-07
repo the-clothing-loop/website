@@ -1,5 +1,11 @@
-import { useState, useEffect, useContext } from "react";
-import { useParams, Link, useHistory } from "react-router-dom";
+import {
+  useState,
+  useEffect,
+  useContext,
+  ChangeEvent,
+  PropsWithChildren,
+} from "react";
+import { useParams, Link, useHistory, Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
@@ -10,10 +16,7 @@ import {
   FormControlLabel,
   Alert,
 } from "@mui/material";
-import {
-  EditOutlined as EditIcon,
-  Clear as DeleteIcon,
-} from "@mui/icons-material";
+import { EditOutlined as EditIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
@@ -26,14 +29,9 @@ import {
   TableUserColumn,
 } from "../components/ChainParticipantsTable";
 import { Title } from "../components/Typography";
-import {
-  chainGet,
-  chainRemoveUser,
-  chainUpdate,
-  ChainUpdateBody,
-} from "../api/chain";
+import { chainGet, chainRemoveUser, chainUpdate } from "../api/chain";
 import { Chain, User } from "../api/types";
-import { GenderI18nKeys, Genders, SizeI18nKeys, Sizes } from "../api/enums";
+import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
 import { userGetAllByChain } from "../api/user";
 
 interface Params {
@@ -61,18 +59,14 @@ const ChainMemberList = () => {
   const { chainUID } = useParams<Params>();
   const { authUser } = useContext<AuthProps>(AuthContext);
 
-  const [chain, setChain] = useState<Chain>();
-  const [users, setUsers] = useState<User[]>();
+  const [chain, setChain] = useState<Chain | null>(null);
+  const [users, setUsers] = useState<User[] | null>(null);
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
   const { t } = useTranslation();
 
-  type SwitchEvent = {
-    target: { checked: boolean; name: any };
-  };
-
-  const handleChangePublished = async (e: SwitchEvent) => {
+  async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
     let oldValue = published;
     setPublished(isChecked);
@@ -87,9 +81,11 @@ const ChainMemberList = () => {
       setError(e?.data || `Error: ${JSON.stringify(e)}`);
       setPublished(oldValue);
     }
-  };
+  }
 
-  const handleChangeOpenToNewMembers = async (e: SwitchEvent) => {
+  async function handleChangeOpenToNewMembers(
+    e: ChangeEvent<HTMLInputElement>
+  ) {
     let isChecked = e.target.checked;
     let oldValue = openToNewMembers;
     setOpenToNewMembers(isChecked);
@@ -104,7 +100,7 @@ const ChainMemberList = () => {
       setError(e?.data || `Error: ${JSON.stringify(e)}`);
       setOpenToNewMembers(oldValue);
     }
-  };
+  }
 
   useEffect(() => {
     (async () => {
@@ -121,16 +117,19 @@ const ChainMemberList = () => {
     })();
   }, [history]);
 
-  const handleRemoveFromChain = async (userUID: string) => {
+  async function handleRemoveFromChain(userUID: string) {
     await chainRemoveUser(chainUID, userUID);
 
     const chainUsers = (await userGetAllByChain(chainUID)).data;
     setUsers(chainUsers);
-  };
+  }
 
   const classes = useStyles();
 
-  return chain && users ? (
+  if (!chain || !users) {
+    return null;
+  }
+  return (
     <>
       <Helmet>
         <title>The Clothing Loop | Loop Members</title>
@@ -305,20 +304,20 @@ const ChainMemberList = () => {
         </Grid>
       </div>
     </>
-  ) : null;
+  );
 };
 
-const Field = ({ title, children }: { title: string; children: any }) => {
+function Field(props: PropsWithChildren<{ title: string }>) {
   const classes = useStyles();
 
   return (
     <div className="chain-member-list__field">
       <Typography classes={{ root: classes.fieldSubheadingTypographyRoot }}>
-        {title}:
+        {props.title}:
       </Typography>
-      <div className="chain-member-list__field-content">{children}</div>
+      <div className="chain-member-list__field-content">{props.children}</div>
     </div>
   );
-};
+}
 
 export default ChainMemberList;
