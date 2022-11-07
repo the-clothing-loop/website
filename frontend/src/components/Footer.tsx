@@ -54,15 +54,16 @@ const Footer = () => {
           <Newsletter />
         </div>
 
-        <div className={classes.footerLegalWrapper} id="footer">
-          <div className={classes.legalLinksWrapper}>
+        <div className="tw-bg-teal bg-text-white">
+          <div className="">
             <div className={classes.legalLinks}>
               <Link to="/terms-of-use">{t("termsOfService")}</Link>
               <Link to="/privacy-policy">{t("privacy")}</Link>
             </div>
 
             <p>
-              <span>The Clothing Loop</span> &copy; 2022
+              <span className="tw-font-bold">The Clothing Loop</span> &copy;
+              2022
             </p>
           </div>
         </div>
