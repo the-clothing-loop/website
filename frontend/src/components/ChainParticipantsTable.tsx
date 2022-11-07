@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
 
 import {
   Table,
@@ -8,6 +8,7 @@ import {
   TableCell,
   TablePagination,
   TableContainer,
+  TableCellProps,
 } from "@mui/material";
 import {
   EditOutlined as EditIcon,
@@ -55,7 +56,7 @@ export const ChainParticipantsTable = ({
 
   const { t } = useTranslation();
 
-  const handleChangePage = (e: any, newPage: any) => {
+  const handleChangePage = (e: any, newPage: number) => {
     setPage(newPage);
   };
 
@@ -87,12 +88,19 @@ export const ChainParticipantsTable = ({
               .map((u: User) => (
                 <TableRow key={u.uid}>
                   {columns.map(({ propertyName }) => {
-                    let text = u[propertyName] as string;
+                    let text = u[propertyName];
                     if (propertyName === "sizes") {
                       text = u.sizes
                         .filter((v) => Object.hasOwn(SizeI18nKeys, v))
                         .map((v) => SizeI18nKeys[v])
                         .join(", ");
+                    }
+                    if (typeof text !== "string") {
+                      console.error(
+                        "text is not of type string, this should not be happening",
+                        text
+                      );
+                      text = "" + text;
                     }
                     return (
                       <BorderlessTableCell key={u.uid + propertyName}>
@@ -156,7 +164,10 @@ export const ChainParticipantsTable = ({
   );
 };
 
-const BorderlessTableCell = ({ children, ...props }: { children: any }) => {
+function BorderlessTableCell({
+  children,
+  ...props
+}: PropsWithChildren<TableCellProps>) {
   const classes = useStyles();
 
   return (
@@ -164,9 +175,12 @@ const BorderlessTableCell = ({ children, ...props }: { children: any }) => {
       {children}
     </TableCell>
   );
-};
+}
 
-const HeadRowTableCell = ({ children, ...props }: { children?: any }) => {
+function HeadRowTableCell({
+  children,
+  ...props
+}: PropsWithChildren<TableCellProps>) {
   const classes = useStyles();
 
   return (
@@ -178,4 +192,4 @@ const HeadRowTableCell = ({ children, ...props }: { children?: any }) => {
       {children}
     </TableCell>
   );
-};
+}
