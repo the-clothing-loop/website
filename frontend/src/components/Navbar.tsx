@@ -56,20 +56,26 @@ function Navbar() {
           ) : null}
 
           {authUser && (
-            <Link to="/admin/dashboard" className="tw-ml-4 tw-btn tw-btn-ghost">
+            <Link
+              to="/admin/dashboard"
+              className="tw-ml-4 tw-btn tw-btn-ghost tw-text-base"
+            >
               {t("account")}
             </Link>
           )}
 
           <Link
             to={authUser ? "/users/logout" : "/users/login"}
-            className="tw-ml-4 tw-btn tw-btn-ghost"
+            className="tw-ml-4 tw-btn tw-btn-ghost tw-text-base"
           >
             {authUser ? t("logout") : t("login")}
           </Link>
 
           {authUser === null && (
-            <Link to="/about" className="tw-ml-4 tw-btn tw-btn-ghost">
+            <Link
+              to="/about"
+              className="tw-ml-4 tw-btn tw-btn-ghost tw-text-base"
+            >
               {t("about")}
             </Link>
           )}

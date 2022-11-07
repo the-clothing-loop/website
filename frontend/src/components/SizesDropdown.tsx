@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import categories from "../util/categories";
 import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
-import useDropdown from "../util/dropdown.hooks";
+import { useDropdownCheckBox } from "../util/dropdown.hooks";
 
 interface IProps {
   filteredGenders: string[];
@@ -19,7 +19,7 @@ const SizesDropdown: React.FC<IProps> = ({
 }: IProps) => {
   const { t } = useTranslation();
 
-  const dropdown = useDropdown({
+  const dropdown = useDropdownCheckBox({
     selected: selectedSizes,
     handleChange,
   });
@@ -45,7 +45,7 @@ const SizesDropdown: React.FC<IProps> = ({
             checked={checked}
             disabled={disabled}
             className="tw-checkbox"
-            onClick={() => dropdown.handleCheckbox(size)}
+            onClick={() => dropdown.change(size)}
           />
           {t(SizeI18nKeys[size])}
         </label>

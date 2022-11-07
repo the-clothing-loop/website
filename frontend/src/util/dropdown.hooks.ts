@@ -4,9 +4,7 @@ interface Props<O> {
   handleChange: (o: O[]) => void;
 }
 
-export default function useDropdown<O extends string | number>(
-  props: Props<O>
-) {
+export function useDropdown() {
   const [open, setOpenState] = useState(false);
   const setOpen = (v: boolean) => {
     if (!v) {
@@ -17,15 +15,20 @@ export default function useDropdown<O extends string | number>(
     setOpenState(v);
   };
   const toggle = () => setOpen(!open);
-
-  const handleRadio = (value: O) => {
-    if (props.selected.find((o) => o == value)) {
-      props.handleChange([]);
-    } else {
-      props.handleChange([value]);
-    }
+  return {
+    open,
+    setOpen,
+    toggle,
   };
-  const handleCheckbox = (value: O) => {
+}
+
+export function useDropdownCheckBox<O extends string | number>(props: {
+  selected: O[];
+  handleChange: (o: O[]) => void;
+}) {
+  const { open, setOpen, toggle } = useDropdown();
+
+  const change = (value: O) => {
     if (props.selected.find((o) => o == value)) {
       props.handleChange(props.selected.filter((o) => o != value));
     } else {
@@ -37,7 +40,26 @@ export default function useDropdown<O extends string | number>(
     open,
     setOpen,
     toggle,
-    handleCheckbox,
-    handleRadio,
+    change,
+  };
+}
+
+export function useDropdownRadio<O extends string | number>(props: {
+  selected: O;
+  handleChange: (o: O) => void;
+}) {
+  const { open, setOpen, toggle } = useDropdown();
+
+  const change = (value: O) => {
+    if (props.selected != value) {
+      props.handleChange(value);
+    }
+  };
+
+  return {
+    open,
+    setOpen,
+    toggle,
+    change,
   };
 }
