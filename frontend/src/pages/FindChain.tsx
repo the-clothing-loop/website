@@ -415,19 +415,19 @@ const FindChain = ({ location }: { location: Location }) => {
 
       <div className="tw-flex tw-flex-col tw-absolute tw-bottom-[5%] tw-right-2.5">
         <Button className="map-action-btn" onClick={() => handleLocation()}>
-          <span className="feather-icon feather-icon-crosshair" />
+          <span className="feather feather-crosshair" />
         </Button>
         <Button
           className="map-action-btn"
           onClick={() => mapZoom(viewport, "+")}
         >
-          <span className="feather-icon feather-icon-plus" />
+          <span className="feather feather-plus" />
         </Button>
         <Button
           className="map-action-btn"
           onClick={() => mapZoom(viewport, "-")}
         >
-          <span className="feather-icon feather-icon-minus" />{" "}
+          <span className="feather feather-minus" />{" "}
         </Button>
       </div>
     </>

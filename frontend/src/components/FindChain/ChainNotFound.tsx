@@ -19,7 +19,7 @@ export const ChainNotFound = ({
 
   return (
     <div className={classes.alertContainer}>
-      <span className="feather-icon feather-icon-x" onClick={backAction} />
+      <span className="feather feather-x" onClick={backAction} />
 
       <Typography component="h1">
         {`${t("noLoopsFoundIn")}`} <span>{searchTerm}</span>

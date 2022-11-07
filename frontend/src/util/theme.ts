@@ -59,7 +59,7 @@ const theme = {
   },
 
   emptyRenderValue: {
-    color: "rgb(72, 128, 139, .4)",
+    color: "rgba(72, 128, 139, .4)",
     lineHeight: "1.4375em",
     letterSpacing: " 0.00938em",
   },
@@ -73,34 +73,6 @@ const theme = {
     lineHeight: "22px",
     padding: "2% 0",
   },
-
-  header: {
-    position: "relative",
-    padding: "0 80px",
-    backgroundColor: "white",
-    boxShadow: "none",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    zIndex: "1000",
-    maxWidth: "1440px",
-    left: "50%",
-    transform: " translateX(-50%)",
-  },
-
-  headerNav: {
-    minHeight: "4rem",
-    display: "flex",
-    alignItems: "center",
-  },
-
-  headerRight: {
-    flex: "1",
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-
   buttonContained: {
     position: "relative",
     margin: "15px 15px 15px 15px",
@@ -108,21 +80,6 @@ const theme = {
     color: "#fff",
     width: "9rem",
     height: "2.625rem",
-  },
-
-  logo: {
-    fontSize: "38px",
-    color: black,
-    textTransform: "uppercase",
-    lineHeight: "29.2px",
-
-    "& img": {
-      width: "100%",
-      height: "auto",
-      position: "relative",
-      transform: "translateY(-50%)",
-      top: "50%",
-    },
   },
 
   buttonOutlined: {
@@ -1611,15 +1568,6 @@ const theme = {
     fontWeight: 400,
     lineHeight: "17px",
     color: "#C4C4C4",
-  },
-  descriptionTypographyRoot: {
-    marginTop: 24,
-    fontSize: 18,
-  },
-  titleTypographyRoot: {
-    textTransform: "uppercase",
-    fontSize: 36,
-    fontWeight: 700,
   },
   fieldSubheadingTypographyRoot: {
     fontSize: 16,

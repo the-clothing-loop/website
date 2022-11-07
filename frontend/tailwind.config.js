@@ -1,5 +1,29 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
+const colors = {
+  transparent: "transparent",
+  white: "#ffff",
+  black: "#3C3C3B",
+  teal: {
+    light: "#D5ECDF",
+    DEFAULT: "#48808B",
+  },
+  yellow: {
+    DEFAULT: "#f7c86f",
+    dark: "#F4B63F",
+    darker: "#F1A40F",
+  },
+  // aqua: "#D5ECDF",
+  lightBlue: "#98D9DE",
+  turquoise: "#518D7E",
+  green: "#4CAF50",
+  red: "#EF5350",
+  grey: {
+    light: "#e8e8e8",
+    DEFAULT: "#A5A5A5",
+  },
+};
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
@@ -13,29 +37,7 @@ module.exports = {
       lg: "1200px",
       xl: "1536px",
     },
-    colors: {
-      transparent: "transparent",
-      white: "#ffff",
-      black: "#3C3C3B",
-      teal: {
-        light: "#D5ECDF",
-        DEFAULT: "#48808B",
-      },
-      yellow: {
-        DEFAULT: "#f7c86f",
-        dark: "#F4B63F",
-        darker: "#F1A40F",
-      },
-      // aqua: "#D5ECDF",
-      lightBlue: "#98D9DE",
-      turquoise: "#518D7E",
-      green: "#4CAF50",
-      red: "#EF5350",
-      grey: {
-        light: "#e8e8e8",
-        DEFAULT: "#A5A5A5",
-      },
-    },
+    colors,
     fontFamily: {
       sans: ["Montserrat", ...defaultTheme.fontFamily.sans],
       serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
@@ -59,6 +61,23 @@ module.exports = {
       },
     },
   },
-  plugins: [],
-  corePlugins: { preflight: false },
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          primary: colors.yellow.DEFAULT,
+          "primary-focus": colors.yellow.darker,
+          secondary: colors.teal.DEFAULT,
+          "secondary-focus": colors.black,
+          accent: colors.turquoise,
+          "accent-focus": colors.black,
+          neutral: colors.black,
+          "base-100": colors.white,
+          "base-200": colors.grey.light,
+          "base-300": colors.grey.DEFAULT,
+        },
+      },
+    ],
+  },
 };

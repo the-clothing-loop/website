@@ -158,14 +158,9 @@ const UserEdit = () => {
               />
 
               <SizesDropdown
-                variant="standard"
-                showInputLabel
-                label={t("sizes")}
-                genders={Object.keys(categories)}
-                sizes={values.sizes || []}
-                handleSelectedCategoriesChange={(s) =>
-                  setFieldValue("sizes", s)
-                }
+                filteredGenders={Object.keys(categories)}
+                selectedSizes={values.sizes || []}
+                handleChange={(s) => setFieldValue("sizes", s)}
                 style={{ marginTop: "2%" }}
               />
 

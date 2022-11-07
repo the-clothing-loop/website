@@ -16,9 +16,7 @@ const AccordionFaq = ({ question, answer }: any) => {
     <div>
       <Accordion classes={{ root: classes.MuiAccordionRoot }}>
         <AccordionSummary
-          expandIcon={
-            <span className="feather-icon feather-chevron-down"></span>
-          }
+          expandIcon={<span className="feather feather-chevron-down"></span>}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >

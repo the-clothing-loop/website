@@ -13,6 +13,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
+    "daisyui": "^2.38.1",
     "http-proxy-middleware": "^2.0.6",
     "prettier": "^2.7.1",
     "react-scripts": "4.0.2",

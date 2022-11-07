@@ -32,7 +32,7 @@ const PopoverOnHover: React.FC<IProps> = ({ message }: IProps) => {
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
       >
-        <span className="feather-icon feather-icon-help-circle" />
+        <span className="feather feather-help-circle" />
       </Typography>
       <Popover
         id="mouse-over-popover"

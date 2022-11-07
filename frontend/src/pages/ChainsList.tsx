@@ -129,7 +129,7 @@ const ChainsList = () => {
                         >
                           {chain.published ? (
                             <div style={{ display: "flex" }}>
-                              <span className="feather-icon feather-icon-circle tw-mr-1 tw-bg-green" />
+                              <span className="feather feather-circle tw-mr-1 tw-bg-green" />
                               <Typography variant="body2">
                                 {"published"}
                               </Typography>
@@ -137,7 +137,7 @@ const ChainsList = () => {
                           ) : (
                             <div style={{ display: "flex" }}>
                               <Typography variant="body2">
-                                <span className="feather-icon feather-icon-circle tw-mr-1 tw-bg-red" />
+                                <span className="feather feather-circle tw-mr-1 tw-bg-red" />
                                 {"unpublished"}
                               </Typography>
                             </div>

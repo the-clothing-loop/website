@@ -277,22 +277,15 @@ const ChainDetailsForm = ({
                   <Grid item xs={12} style={{ position: "relative" }}>
                     <div style={{ paddingTop: "10px" }}>
                       <CategoriesDropdown
-                        variant="standard"
-                        showInputLabel
-                        genders={values.genders || []}
-                        handleSelectedCategoriesChange={handleCategoriesChange}
+                        selectedGenders={values.genders || []}
+                        handleChange={handleCategoriesChange}
                       />
                     </div>
                     <div style={{ paddingTop: "10px", position: "relative" }}>
                       <SizesDropdown
-                        variant="standard"
-                        showInputLabel
-                        label={t("sizes")}
-                        genders={values.genders || []}
-                        sizes={values.sizes || []}
-                        handleSelectedCategoriesChange={(val) =>
-                          setFieldValue("sizes", val)
-                        }
+                        filteredGenders={values.genders || []}
+                        selectedSizes={values.sizes || []}
+                        handleChange={(val) => setFieldValue("sizes", val)}
                       />
                       <PopoverOnHover
                         message={t(

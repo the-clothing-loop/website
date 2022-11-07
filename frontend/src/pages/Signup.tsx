@@ -172,14 +172,9 @@ const Signup = () => {
 
                     <div className={classes.formFieldWithPopover}>
                       <SizesDropdown
-                        variant="standard"
-                        showInputLabel={false}
-                        label={t("interestedSizes")}
-                        genders={chain?.genders || []}
-                        sizes={formik.values.sizes}
-                        handleSelectedCategoriesChange={(s) =>
-                          formik.setFieldValue("sizes", s)
-                        }
+                        filteredGenders={chain?.genders || []}
+                        selectedSizes={formik.values.sizes}
+                        handleChange={(s) => formik.setFieldValue("sizes", s)}
                       />
                       <PopoverOnHover
                         message={t("weWouldLikeToKnowThisEquallyRepresented")}

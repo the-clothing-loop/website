@@ -109,14 +109,14 @@ export const ChainParticipantsTable = ({
                               },
                             }}
                           >
-                            <span className="feather-icon feather-icon-edit-2" />
+                            <span className="feather feather-edit-2" />
                           </Link>
                         </BorderlessTableCell>
                       )}
                       {remove && onRemoveUser && (
                         <BorderlessTableCell key={u.uid + "dellink"}>
                           <span
-                            className="feather-icon feather-icon-x"
+                            className="feather feather-x"
                             onClick={() => onRemoveUser(u.uid as string)}
                           />
                         </BorderlessTableCell>

@@ -1,120 +1,77 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  Input,
-  OutlinedInput,
-  MenuItem,
-  Checkbox,
-  ListItemText,
-  Typography,
-  SelectChangeEvent,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
 import categories from "../util/categories";
 import { GenderI18nKeys, Genders } from "../api/enums";
+import useDropdown from "../util/dropdown.hooks";
 
 interface IProps {
-  variant: "outlined" | "standard";
-  showInputLabel: boolean;
-  renderValueWhenEmpty?: string;
-  genders: Array<Genders | string>;
-  handleSelectedCategoriesChange: (genders: Array<Genders | string>) => void;
+  selectedGenders: Array<Genders | string>;
+  handleChange: (genders: Array<Genders | string>) => void;
 }
 
-const CategoriesDropdown: React.FC<IProps> = ({
-  variant,
-  showInputLabel,
-  renderValueWhenEmpty,
-  genders: selectedGenders,
-  handleSelectedCategoriesChange,
-}: IProps) => {
-  const classes = makeStyles(theme as any)();
+export default function CategoriesDropdown({
+  selectedGenders,
+  handleChange,
+}: IProps) {
   const { t } = useTranslation();
 
-  const handleOnChange = (event: SelectChangeEvent<string[]>) => {
-    const value = event.target.value;
+  const dropdown = useDropdown({
+    selected: selectedGenders,
+    handleChange,
+  });
 
-    handleSelectedCategoriesChange(
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
+  let btnLabel = React.useMemo(() => {
+    if (selectedGenders.length) {
+      return [...selectedGenders]
+        .sort()
+        .map((g) => t(GenderI18nKeys[g]))
+        .join(", ");
+    } else {
+      return t("categories");
+    }
+  }, [t, selectedGenders]);
 
   return (
-    <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
-      {showInputLabel && (
-        <InputLabel classes={{ root: classes.labelSelect }}>
-          {t("categories")}
-        </InputLabel>
-      )}
-      <Select
-        multiple
-        displayEmpty
-        input={
-          variant === "outlined" ? (
-            <OutlinedInput
-              classes={{
-                root: classes.selectInputOutlined + " tw-h-12",
-              }}
-            />
-          ) : (
-            <Input
-              classes={{
-                root: classes.selectInputStandard + " tw-h-12",
-              }}
-            />
-          )
-        }
-        classes={{
-          select:
-            variant === "outlined"
-              ? classes.selectOutlined
-              : classes.selectStandard,
-        }}
-        variant={variant}
-        value={selectedGenders}
-        onChange={handleOnChange}
-        renderValue={(selected: Array<string | Genders>) =>
-          !selected.length && renderValueWhenEmpty ? (
-            <Typography
-              component="span"
-              classes={{ root: classes.emptyRenderValue }}
-            >
-              {renderValueWhenEmpty}
-            </Typography>
-          ) : (
-            selected.map((g) => t(GenderI18nKeys[g])).join(", ")
-          )
-        }
+    <div
+      className={`tw-w-full tw-dropdown ${
+        dropdown.open ? "tw-dropdown-open" : ""
+      }`}
+      onBlur={() => dropdown.setOpen(false)}
+    >
+      <label
+        tabIndex={0}
+        className="tw-btn tw-btn-outline tw-btn-secondary tw-w-full tw-flex tw-justify-between tw-flex-nowrap"
+        onClick={() => dropdown.toggle()}
       >
-        {Object.keys(categories).map((gender: string | Genders) => (
-          <MenuItem
-            key={gender}
-            value={gender}
-            classes={{
-              root: classes.menuItemSpacingAndColor,
-              selected: classes.selected,
-            }}
-          >
-            <Checkbox
-              color="secondary"
-              checked={selectedGenders.includes(gender)}
-            />
-            <ListItemText
-              primary={t(GenderI18nKeys[gender])}
-              classes={{
-                primary: classes.listItemTextFontSize,
-              }}
-            />
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+        <span className="tw-truncate">{btnLabel}</span>
+        <span
+          className={`tw-pl-2 feather ${
+            dropdown.open ? "feather-arrow-up" : "feather-arrow-down"
+          }`}
+        ></span>
+      </label>
+      <ul
+        className="tw-dropdown-content tw-menu tw-bg-white tw-shadow tw-w-full"
+        tabIndex={0}
+      >
+        {Object.keys(categories).map((gender: string | Genders) => {
+          let checked = selectedGenders.includes(gender);
+          return (
+            <li>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  className="tw-checkbox"
+                  onClick={() => dropdown.handleCheckbox(gender)}
+                />
+                {t(GenderI18nKeys[gender])}
+              </label>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
-};
-export default CategoriesDropdown;
+}

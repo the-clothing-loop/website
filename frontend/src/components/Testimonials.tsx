@@ -186,7 +186,7 @@ const Testimonials = () => {
             }}
             onClick={prevClick}
           >
-            <span className="feather-icon feather-icon-arrow-left" />
+            <span className="feather feather-arrow-left" />
           </Button>
           <Button
             classes={{
@@ -197,7 +197,7 @@ const Testimonials = () => {
             }}
             onClick={nextClick}
           >
-            <span className="feather-icon feather-icon-arrow-right" />
+            <span className="feather feather-arrow-right" />
           </Button>
         </div>
 
@@ -209,7 +209,7 @@ const Testimonials = () => {
             {testimonials.map((testimonial, i) => {
               return (
                 <Paper classes={{ root: classes.carouselElement }} key={i}>
-                  <span className="feather-icon feather-icon-message-circle" />
+                  <span className="feather feather-message-circle" />
 
                   <Typography
                     component="p"

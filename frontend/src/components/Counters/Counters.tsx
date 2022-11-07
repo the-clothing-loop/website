@@ -60,7 +60,7 @@ const Counters = () => {
             target="_blank"
             className={classes.counterLink}
           >
-            <span className="feather-icon feather-icon-arrow-down" />
+            <span className="feather feather-arrow-down" />
           </a>
         </div>
         <h3>{t("ourGoals")}</h3>

@@ -26,17 +26,21 @@ function Navbar() {
     <div className="tw-container tw-mx-auto tw-z-10 tw-bg-white tw-flex tw-flex-row tw-items-center tw-py-0 tw-px-20 tw-shadow-none tw-sticky">
       <Link
         to="/"
-        className={classes.logo}
+        className=" tw-h-auto tw-text-4xl tw-leading-7 tw-relative tw-text-black tw-uppercase tw-w-full"
         style={
           location.pathname === "/"
             ? { width: "220px", height: "150px" }
             : { width: "150px", height: "100px" }
         }
       >
-        <img src={Logo} alt="Logo" />
+        <img
+          className="tw-h-auto tw-relative tw-w-full"
+          src={Logo}
+          alt="Logo"
+        />
       </Link>
-      <div className={classes.headerRight}>
-        <div className={classes.headerNav}>
+      <div className="tw-flex tw-items-center tw-justify-end tw-flex-grow">
+        <div className="tw-flex tw-items-center tw-min-h-[4rem]">
           {["/loops/find", "/"].indexOf(location.pathname) !== -1 && (
             <Button
               color="inherit"

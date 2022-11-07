@@ -35,14 +35,6 @@ export const FindChainSearchBarContainer = ({
     setSearchTerm(event.target.value);
   };
 
-  const handleSelectedGenderChange = (event: React.ChangeEvent<any>) => {
-    const {
-      target: { value },
-    } = event;
-
-    setSelectedGenders(typeof value === "string" ? value.split(",") : value);
-  };
-
   const handleSearch = () => {
     const newChainFilterPredicate = (chain: Chain) => {
       return (
@@ -109,7 +101,7 @@ export const FindChainSearchBarContainer = ({
         searchTerm={searchTerm}
         handleSearchTermChange={handleSearchTermChange}
         selectedGenders={selectedGenders}
-        handleSelectedGenderChange={handleSelectedGenderChange}
+        handleSelectedGenderChange={(gs) => setSelectedGenders(gs)}
         selectedSizes={selectedSizes}
         setSelectedSizes={setSelectedSizes}
         handleSearch={handleSearch}

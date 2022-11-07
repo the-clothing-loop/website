@@ -160,14 +160,12 @@ const ChainMemberList = () => {
                   </Grid>
                   <Grid item>
                     <Link to={`/loops/${chainUID}/edit`}>
-                      <span className="feather-icon feather-icon-edit-2" />
+                      <span className="feather feather-edit-2" />
                     </Link>
                   </Grid>
                 </Grid>
 
-                <Typography
-                  classes={{ root: classes.descriptionTypographyRoot }}
-                >
+                <Typography classes={{ root: "tw-text-lg tw-mt-6" }}>
                   {chain.description}
                 </Typography>
 
@@ -245,7 +243,7 @@ const ChainMemberList = () => {
                             },
                           }}
                         >
-                          <span className="feather-icon feather-icon-edit-2" />
+                          <span className="feather feather-edit-2" />
                         </Link>
                       </Grid>
                     </Grid>

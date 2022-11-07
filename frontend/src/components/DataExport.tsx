@@ -66,7 +66,7 @@ const DataExport = () => {
         filename={"Loops-list.csv"}
       >
         {t("exportData")}
-        <span className="feather-icon feather-icon-download" />
+        <span className="feather feather-download" />
       </CSVLink>
     </div>
   );
@@ -128,7 +128,7 @@ const UserDataExport = () => {
         filename={`${chain?.name}-participants.csv`}
       >
         {t("exportData")}
-        <span className="feather-icon feather-icon-download" />
+        <span className="feather feather-download" />
       </CSVLink>
     </div>
   );

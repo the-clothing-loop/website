@@ -9,7 +9,7 @@ export const Title = ({ children }: { children: any }) => {
   const classes = useStyles();
 
   return (
-    <Typography classes={{ root: classes.titleTypographyRoot }}>
+    <Typography classes={{ root: "tw-font-bold tw-text-4xl tw-uppercase" }}>
       {children}
     </Typography>
   );
