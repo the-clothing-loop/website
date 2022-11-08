@@ -43,17 +43,24 @@ const LanguageSwitcher = () => {
         tabIndex={0}
         className="tw-dropdown-content tw-menu tw-w-36 tw-shadow tw-bg-base-100"
       >
-        {languages.map((el) => (
-          <li key={el.lng}>
-            <button
-              className="tw-flex tw-justify-between"
-              onClick={() => handleChange(el.lng)}
-            >
-              {el.title}
-              <img className="tw-w-6" src={el.flag} alt={el.title + " flag"} />
-            </button>
-          </li>
-        ))}
+        {languages.map((el) => {
+          let active = btnLabelLanguage.lng == el.lng;
+          return (
+            <li key={el.lng} className={active ? "tw-hidden" : ""}>
+              <button
+                className="tw-flex tw-justify-between"
+                onClick={() => handleChange(el.lng)}
+              >
+                {el.title}
+                <img
+                  className="tw-w-6"
+                  src={el.flag}
+                  alt={el.title + " flag"}
+                />
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
