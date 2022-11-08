@@ -517,7 +517,7 @@
   #landing-page-mobile {
     display: inline;
   }
-
+  /* 
   #footer {
     display: none;
   }
@@ -549,5 +549,5 @@
   #mobile-textfield > div {
     width: 100%;
     border-bottom: 1px solid rgb(72, 128, 139);
-  }
+  } */
 }

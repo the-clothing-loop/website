@@ -1,15 +1,4 @@
-import { PropsWithChildren, useState } from "react";
-
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TablePagination,
-  TableContainer,
-  TableCellProps,
-} from "@mui/material";
+import { useState } from "react";
 
 import { makeStyles } from "@mui/styles";
 
@@ -42,56 +31,47 @@ export const ChainParticipantsTable = ({
   authUser,
   users,
   chainUID,
-  initialPage,
   edit,
   remove,
   onRemoveUser,
 }: Props) => {
-  const [page, setPage] = useState(initialPage);
-  const rowsPerPage = 20;
-
   const { t } = useTranslation();
-
-  const handleChangePage = (e: any, newPage: number) => {
-    setPage(newPage);
-  };
 
   return (
     <>
-      <TableContainer className="tw-mt-10">
-        <Table>
-          <TableHead>
-            <TableRow>
+      <div className="sm:tw-overflow-x-auto tw-mt-10">
+        <table className="tw-table tw-w-full">
+          <thead>
+            <tr>
               {columns.map(({ headerName }) => {
-                return (
-                  <HeadRowTableCell key={headerName}>
-                    {headerName}
-                  </HeadRowTableCell>
-                );
+                return <th key={headerName}>{headerName}</th>;
               })}
 
               {authUser?.is_root_admin && (
                 <>
-                  {edit && <HeadRowTableCell />}
-                  {remove && <HeadRowTableCell />}
+                  {edit && <th />}
+                  {remove && <th />}
                 </>
               )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
+            </tr>
+          </thead>
+          <tbody>
             {users
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .sort((a, b) => a.name.localeCompare(b.name))
               .map((u: User) => (
-                <TableRow key={u.uid}>
+                <tr key={u.uid}>
                   {columns.map(({ propertyName }) => {
-                    let text = u[propertyName];
+                    let text: User[keyof User] | JSX.Element[] =
+                      u[propertyName];
                     if (propertyName === "sizes") {
                       text = u.sizes
                         .filter((v) => Object.hasOwn(SizeI18nKeys, v))
-                        .map((v) => SizeI18nKeys[v])
-                        .join(", ");
-                    }
-                    if (typeof text !== "string") {
+                        .map((v) => (
+                          <span className="tw-badge tw-badge-outline tw-mr-2">
+                            {t(SizeI18nKeys[v])}
+                          </span>
+                        ));
+                    } else if (typeof text !== "string") {
                       console.error(
                         "text is not of type string, this should not be happening",
                         text
@@ -99,16 +79,16 @@ export const ChainParticipantsTable = ({
                       text = "" + text;
                     }
                     return (
-                      <BorderlessTableCell key={u.uid + propertyName}>
+                      <td className="tw-border-none" key={u.uid + propertyName}>
                         {text}
-                      </BorderlessTableCell>
+                      </td>
                     );
                   })}
 
                   {authUser?.is_root_admin && (
                     <>
                       {edit && (
-                        <BorderlessTableCell key={u.uid + "editlink"}>
+                        <td className="tw-border-none" key={u.uid + "editlink"}>
                           <Link
                             to={{
                               pathname: `/users/${u.uid}/edit`,
@@ -119,74 +99,23 @@ export const ChainParticipantsTable = ({
                           >
                             <span className="feather feather-edit-2" />
                           </Link>
-                        </BorderlessTableCell>
+                        </td>
                       )}
                       {remove && onRemoveUser && (
-                        <BorderlessTableCell key={u.uid + "dellink"}>
+                        <td className="tw-border-none" key={u.uid + "dellink"}>
                           <span
                             className="feather feather-x"
                             onClick={() => onRemoveUser(u.uid as string)}
                           />
-                        </BorderlessTableCell>
+                        </td>
                       )}
                     </>
                   )}
-                </TableRow>
+                </tr>
               ))}
-          </TableBody>
-        </Table>
-
-        <TablePagination
-          rowsPerPageOptions={[rowsPerPage]}
-          component="div"
-          count={users.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          labelDisplayedRows={({ from, to, count }) => {
-            let currentPage = page + 1;
-            let totalPages = Math.floor(count / rowsPerPage) + 1;
-
-            if (totalPages < 2) {
-              return "";
-            }
-
-            return `${t("page")} ${currentPage} - ${totalPages}`;
-          }}
-          nextIconButtonProps={{ size: "large" }}
-          backIconButtonProps={{ size: "large" }}
-        />
-      </TableContainer>
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };
-
-function BorderlessTableCell({
-  children,
-  ...props
-}: PropsWithChildren<TableCellProps>) {
-  const classes = useStyles();
-
-  return (
-    <TableCell classes={{ root: classes.borderlessTableCellRoot }} {...props}>
-      {children}
-    </TableCell>
-  );
-}
-
-function HeadRowTableCell({
-  children,
-  ...props
-}: PropsWithChildren<TableCellProps>) {
-  const classes = useStyles();
-
-  return (
-    <TableCell
-      classes={{ root: classes.headRowTableCellRoot }}
-      variant="head"
-      {...props}
-    >
-      {children}
-    </TableCell>
-  );
-}

@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 // Material UI
-import { Typography, Button } from "@mui/material";
+import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -34,18 +34,12 @@ const AdminControlsNav = () => {
             </div>
 
             <Box sx={{ textAlign: "center", marginTop: 8 }}>
-              <Button
-                color="inherit"
-                className={classes.button}
-                sx={{ minWidth: 200 }}
-                component={Link}
-                to="/loops"
-              >
+              <Link className="tw-btn tw-btn-primary tw-mb-4" to="/loops">
                 {t("viewLoops")}
-              </Button>
+              </Link>
 
               <Link
-                className={classes.underlinedLink}
+                className="tw-btn tw-btn-primary tw-btn-link tw-text-base"
                 target="_blank"
                 to={{
                   pathname:
