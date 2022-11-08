@@ -51,7 +51,11 @@ const LanguageSwitcher = () => {
               >
                 {el.title}
                 <img
-                  style={{ marginLeft: "8px", width: "18px" }}
+                  style={{
+                    marginLeft: "8px",
+                    width: "18px",
+                    verticalAlign: "middle",
+                  }}
                   src={el.flag}
                   alt={el.title + " flag"}
                 />
