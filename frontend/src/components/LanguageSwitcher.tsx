@@ -13,8 +13,8 @@ import { useTranslation } from "react-i18next";
 
 const LanguageSwitcher = () => {
   const languages = [
-    { lng: "en", title: "English 🇬🇧" },
-    { lng: "nl", title: "Dutch 🇳🇱" },
+    { lng: "en", title: "English", flag: "/icons/flags/gb.svg" },
+    { lng: "nl", title: "Dutch", flag: "/icons/flags/nl.svg" },
   ];
   const classes = makeStyles(theme as any)();
   const { i18n } = useTranslation();
@@ -50,6 +50,11 @@ const LanguageSwitcher = () => {
                 }}
               >
                 {el.title}
+                <img
+                  style={{ marginLeft: "8px", width: "18px" }}
+                  src={el.flag}
+                  alt={el.title + " flag"}
+                />
               </MenuItem>
             );
           })}
