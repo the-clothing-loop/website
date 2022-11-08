@@ -1,3 +1,5 @@
+[![Crowdin](https://badges.crowdin.net/the-clothing-loop/localized.svg)](https://crowdin.com/project/the-clothing-loop)
+
 # The Clothing Loop
 
 The Clothing Loop is an easy-to-access initiative for swapping clothes with other people in your area or neighborhood. It’s fun, it’s free, it’s sustainable!

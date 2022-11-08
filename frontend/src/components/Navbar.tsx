@@ -48,6 +48,13 @@ function Navbar() {
             </Link>
           ) : null}
 
+          <Link
+            to="/donate"
+            className="tw-ml-4 tw-btn tw-btn-ghost tw-text-base"
+          >
+            {t("donate")}
+          </Link>
+
           {authUser && (
             <Link
               to="/admin/dashboard"

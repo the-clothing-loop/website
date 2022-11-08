@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { loginValidate as apiLogin, logout as apiLogout } from "../api/login";
-import { UID, User, UserChain } from "../api/types";
+import { User } from "../api/types";
 import { userGetByUID } from "../api/user";
 
 export enum UserRefreshState {

@@ -1,11 +1,11 @@
 package models
 
 import (
-	"database/sql"
 	"errors"
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"gopkg.in/guregu/null.v3/zero"
 )
 
 var validate = validator.New()
@@ -14,8 +14,8 @@ var ErrChainNotFound = errors.New("Chain not found")
 
 type Chain struct {
 	ID               uint
-	UID              string         `gorm:"uniqueIndex"`
-	FID              sql.NullString `gorm:"column:fid"`
+	UID              string      `gorm:"uniqueIndex"`
+	FID              zero.String `gorm:"column:fid"`
 	Name             string
 	Description      string
 	Address          string
@@ -29,5 +29,5 @@ type Chain struct {
 	UserChains       []UserChain
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
-	DeletedAt        sql.NullTime
+	DeletedAt        zero.Time
 }

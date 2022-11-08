@@ -1,10 +1,11 @@
 package models
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"time"
+
+	"gopkg.in/guregu/null.v3/zero"
 
 	"gorm.io/gorm"
 )
@@ -12,22 +13,22 @@ import (
 var ErrUserNotFound = errors.New("User not found")
 
 type User struct {
-	ID              uint           `json:"-"`
-	UID             string         `json:"uid" gorm:"uniqueIndex"`
-	FID             sql.NullString `json:"-" gorm:"column:fid"`
-	Email           sql.NullString `json:"email" gorm:"unique"`
-	IsEmailVerified bool           `json:"is_email_verified"`
-	IsRootAdmin     bool           `json:"is_root_admin"`
-	Name            string         `json:"name"`
-	PhoneNumber     string         `json:"phone_number"`
-	Address         string         `json:"address"`
-	Sizes           []string       `json:"sizes" gorm:"serializer:json"`
-	Enabled         bool           `json:"enabled"`
-	LastSignedInAt  sql.NullTime   `json:"-"`
-	UserToken       []UserToken    `json:"-"`
-	Chains          []UserChain    `json:"chains"`
-	CreatedAt       time.Time      `json:"-"`
-	UpdatedAt       time.Time      `json:"-"`
+	ID              uint        `json:"-"`
+	UID             string      `json:"uid" gorm:"uniqueIndex"`
+	FID             zero.String `json:"-" gorm:"column:fid"`
+	Email           zero.String `json:"email" gorm:"unique"`
+	IsEmailVerified bool        `json:"is_email_verified"`
+	IsRootAdmin     bool        `json:"is_root_admin"`
+	Name            string      `json:"name"`
+	PhoneNumber     string      `json:"phone_number"`
+	Address         string      `json:"address"`
+	Sizes           []string    `json:"sizes" gorm:"serializer:json"`
+	Enabled         bool        `json:"enabled"`
+	LastSignedInAt  zero.Time   `json:"-"`
+	UserToken       []UserToken `json:"-"`
+	Chains          []UserChain `json:"chains"`
+	CreatedAt       time.Time   `json:"-"`
+	UpdatedAt       time.Time   `json:"-"`
 }
 
 const (

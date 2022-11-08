@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"net/http"
@@ -12,6 +11,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
+	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -142,7 +142,7 @@ func RegisterChainAdmin(c *gin.Context) {
 	}
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           sql.NullString{String: body.User.Email, Valid: true},
+		Email:           zero.StringFrom(body.User.Email),
 		IsEmailVerified: false,
 		IsRootAdmin:     false,
 		Name:            body.User.Name,
@@ -202,7 +202,7 @@ func RegisterBasicUser(c *gin.Context) {
 
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           sql.NullString{String: body.User.Email, Valid: true},
+		Email:           zero.StringFrom(body.User.Email),
 		IsEmailVerified: false,
 		IsRootAdmin:     false,
 		Name:            body.User.Name,

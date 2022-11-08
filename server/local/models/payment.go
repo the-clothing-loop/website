@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/stripe/stripe-go/v73"
+	"gopkg.in/guregu/null.v3/zero"
 )
 
 const (
@@ -20,7 +21,7 @@ type Payment struct {
 	Amount                float32
 	Email                 string
 	IsRecurring           bool
-	SessionStripeID       sql.NullString `gorm:"uniqueIndex"`
+	SessionStripeID       zero.String `gorm:"uniqueIndex"`
 	CustomerStripeID      string
 	PaymentIntentStripeID string
 	Status                string

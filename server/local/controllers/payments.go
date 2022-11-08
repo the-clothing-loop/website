@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,6 +15,7 @@ import (
 	"github.com/stripe/stripe-go/v73"
 	stripe_session "github.com/stripe/stripe-go/v73/checkout/session"
 	stripe_webhook "github.com/stripe/stripe-go/v73/webhook"
+	"gopkg.in/guregu/null.v3/zero"
 )
 
 // Rewrite of https://github.com/CollActionteam/clothing-loop/blob/e5d09d38d72bb42f531d0dc0ec7a5b18459bcbcd/firebase/functions/src/payments.ts#L18
@@ -89,7 +89,7 @@ func PaymentsInitiate(c *gin.Context) {
 		Amount:          float32(session.AmountTotal) / 100,
 		Email:           body.Email,
 		IsRecurring:     body.IsRecurring,
-		SessionStripeID: sql.NullString{String: session.ID, Valid: true},
+		SessionStripeID: zero.StringFrom(session.ID),
 		Status:          string(session.Status),
 	}).Error; err != nil {
 		log.Print(err)

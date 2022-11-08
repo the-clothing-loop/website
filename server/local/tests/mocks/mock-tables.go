@@ -1,7 +1,6 @@
 package mocks
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"math/rand"
@@ -10,6 +9,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	Faker "github.com/jaswdr/faker"
 	uuid "github.com/satori/go.uuid"
+	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 )
 
@@ -30,7 +30,7 @@ type MockChainAndUserOptions struct {
 func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           sql.NullString{String: fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain()), Valid: true},
+		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain())),
 		IsEmailVerified: !o.IsEmailUnverified,
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Fake " + faker.Person().Name(),
