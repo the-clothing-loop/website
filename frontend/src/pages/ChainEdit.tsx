@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useHistory, useLocation } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
@@ -22,7 +22,6 @@ interface Params {
 const ChainEdit = () => {
   const { t } = useTranslation();
   let history = useHistory();
-  let location = useLocation();
   const { chainUID } = useParams<Params>();
 
   const [chain, setChain] = useState<Chain>();

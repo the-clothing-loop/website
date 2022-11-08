@@ -1,16 +1,17 @@
 package models
 
 import (
-	"database/sql"
 	"time"
+
+	"gopkg.in/guregu/null.v3/zero"
 )
 
 type Mail struct {
 	ID        uint
-	FID       sql.NullString `gorm:"column:fid"`
+	FID       zero.String `gorm:"column:fid"`
 	To        string
 	Subject   string
 	Body      string
-	Error     sql.NullString
+	Error     zero.String
 	CreatedAt time.Time
 }

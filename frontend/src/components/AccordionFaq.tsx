@@ -8,7 +8,7 @@ import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 //Project Resources
-import theme from "../../util/theme";
+import theme from "../util/theme";
 
 const AccordionFaq = ({ question, answer }: any) => {
   const classes = makeStyles(theme as any)();

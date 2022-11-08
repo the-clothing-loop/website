@@ -1,5 +1,11 @@
-import { useState, useEffect, useContext } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import {
+  useState,
+  useEffect,
+  useContext,
+  ChangeEvent,
+  PropsWithChildren,
+} from "react";
+import { useParams, Link, useHistory, Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
@@ -10,15 +16,12 @@ import {
   FormControlLabel,
   Alert,
 } from "@mui/material";
-import {
-  EditOutlined as EditIcon,
-  Clear as DeleteIcon,
-} from "@mui/icons-material";
+import { EditOutlined as EditIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
 import theme from "../util/theme";
-import { AuthContext, AuthProps } from "../components/AuthProvider";
+import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import Popover from "../components/Popover";
 import {
@@ -26,14 +29,9 @@ import {
   TableUserColumn,
 } from "../components/ChainParticipantsTable";
 import { Title } from "../components/Typography";
-import {
-  chainGet,
-  chainRemoveUser,
-  chainUpdate,
-  ChainUpdateBody,
-} from "../api/chain";
+import { chainGet, chainRemoveUser, chainUpdate } from "../api/chain";
 import { Chain, User } from "../api/types";
-import { GenderI18nKeys, Genders, SizeI18nKeys, Sizes } from "../api/enums";
+import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
 import { userGetAllByChain } from "../api/user";
 
 interface Params {
@@ -57,23 +55,18 @@ const adminColumns: TableUserColumn[] = [
 const useStyles = makeStyles(theme as any);
 
 const ChainMemberList = () => {
-  const location = useLocation<any>();
+  const history = useHistory();
   const { chainUID } = useParams<Params>();
   const { authUser } = useContext<AuthProps>(AuthContext);
 
-  const [chain, setChain] = useState<Chain>();
-  const [users, setUsers] = useState<User[]>();
+  const [chain, setChain] = useState<Chain | null>(null);
+  const [users, setUsers] = useState<User[] | null>(null);
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
-  const [isChainAdmin, setIsChainAdmin] = useState<boolean>();
   const { t } = useTranslation();
 
-  type SwitchEvent = {
-    target: { checked: boolean; name: any };
-  };
-
-  const handleChangePublished = async (e: SwitchEvent) => {
+  async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
     let oldValue = published;
     setPublished(isChecked);
@@ -88,9 +81,11 @@ const ChainMemberList = () => {
       setError(e?.data || `Error: ${JSON.stringify(e)}`);
       setPublished(oldValue);
     }
-  };
+  }
 
-  const handleChangeOpenToNewMembers = async (e: SwitchEvent) => {
+  async function handleChangeOpenToNewMembers(
+    e: ChangeEvent<HTMLInputElement>
+  ) {
     let isChecked = e.target.checked;
     let oldValue = openToNewMembers;
     setOpenToNewMembers(isChecked);
@@ -105,43 +100,36 @@ const ChainMemberList = () => {
       setError(e?.data || `Error: ${JSON.stringify(e)}`);
       setOpenToNewMembers(oldValue);
     }
-  };
+  }
 
   useEffect(() => {
     (async () => {
       try {
         const chainData = (await chainGet(chainUID)).data;
-        if (chainData === undefined) {
-          console.error(`chain ${chainUID} does not exist`);
-        } else {
-          setChain(chainData);
-          const chainUsers = (await userGetAllByChain(chainUID)).data;
-          setUsers(chainUsers);
-          setPublished(chainData.published);
-          setOpenToNewMembers(chainData.openToNewMembers);
-        }
+        setChain(chainData);
+        const chainUsers = (await userGetAllByChain(chainUID)).data;
+        setUsers(chainUsers);
+        setPublished(chainData.published);
+        setOpenToNewMembers(chainData.openToNewMembers);
       } catch (error: any) {
         console.error(`Error getting chain: ${error}`);
       }
     })();
-  }, []);
+  }, [history]);
 
-  useEffect(() => {
-    setIsChainAdmin(
-      authUser?.chains.find((c) => c.chain_uid === chain?.uid)?.is_chain_admin
-    );
-  }, [authUser, chain]);
-
-  const handleRemoveFromChain = async (userUID: string) => {
+  async function handleRemoveFromChain(userUID: string) {
     await chainRemoveUser(chainUID, userUID);
 
     const chainUsers = (await userGetAllByChain(chainUID)).data;
     setUsers(chainUsers);
-  };
+  }
 
   const classes = useStyles();
 
-  return chain && users ? (
+  if (!chain || !users) {
+    return null;
+  }
+  return (
     <>
       <Helmet>
         <title>The Clothing Loop | Loop Members</title>
@@ -252,7 +240,14 @@ const ChainMemberList = () => {
                         <Title>Loop Admin</Title>
                       </Grid>
                       <Grid item>
-                        <Link to={`/users/${(authUser as User).uid}/edit`}>
+                        <Link
+                          to={{
+                            pathname: `/users/${authUser?.uid}/edit`,
+                            state: {
+                              chainUID: chainUID,
+                            },
+                          }}
+                        >
                           <EditIcon />
                         </Link>
                       </Grid>
@@ -266,24 +261,24 @@ const ChainMemberList = () => {
                             (c) => c.chain_uid === chain.uid && c.is_chain_admin
                           ) !== undefined
                       )}
+                      chainUID={chain.uid}
                       initialPage={0}
                       edit
                       remove
                       onRemoveUser={handleRemoveFromChain}
                     />
                   </div>
-                  {isChainAdmin && (
-                    <Link
-                      to={{
-                        pathname: `/loops/${chainUID}/addChainAdmin`,
-                        state: { users, chainUID },
-                      }}
-                    >
-                      <div className="chain-member-list__add-co-host">
-                        add co-host
-                      </div>
-                    </Link>
-                  )}
+
+                  <Link
+                    to={{
+                      pathname: `/loops/${chainUID}/addChainAdmin`,
+                      state: { users, chainUID },
+                    }}
+                  >
+                    <div className="chain-member-list__add-co-host">
+                      add co-host
+                    </div>
+                  </Link>
                 </div>
               </div>
             </Grid>
@@ -298,6 +293,7 @@ const ChainMemberList = () => {
                 columns={memberColumns}
                 authUser={authUser}
                 users={users}
+                chainUID={chain.uid}
                 initialPage={0}
                 edit
                 remove
@@ -308,20 +304,20 @@ const ChainMemberList = () => {
         </Grid>
       </div>
     </>
-  ) : null;
+  );
 };
 
-const Field = ({ title, children }: { title: string; children: any }) => {
+function Field(props: PropsWithChildren<{ title: string }>) {
   const classes = useStyles();
 
   return (
     <div className="chain-member-list__field">
       <Typography classes={{ root: classes.fieldSubheadingTypographyRoot }}>
-        {title}:
+        {props.title}:
       </Typography>
-      <div className="chain-member-list__field-content">{children}</div>
+      <div className="chain-member-list__field-content">{props.children}</div>
     </div>
   );
-};
+}
 
 export default ChainMemberList;

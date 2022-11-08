@@ -32,7 +32,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	token, ok := TokenReadFromRequest(c)
 	if !ok {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Token not received"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Token not received"))
 		return false, nil, nil
 	}
 

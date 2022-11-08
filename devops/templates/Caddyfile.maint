@@ -2,7 +2,7 @@ vpsnode1.vps.webdock.cloud {
 	respond "Hello, world!"
 }
 
-next.clothingloop.org, clothingloop.org, acc.clothingloop.org, admin.clothingloop.org {
+next.clothingloop.org, clothingloop.org, acc.clothingloop.org, admin.clothingloop.org, www.clothingloop.org {
 	root * /var/caddy/maint.clothingloop.org
 	file_server
 	encode zstd gzip

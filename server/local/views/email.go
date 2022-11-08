@@ -20,7 +20,7 @@ func EmailAParticipantJoinedTheLoop(
 	to := adminEmail
 	subject := "A participant just joined your Loop!"
 	body := fmt.Sprintf(`<p>Hi, %s</p>
-<p>A new participant just joined your loop.</p>
+<p>A new participant just joined your Loop.</p>
 <p>Please find below the participant's contact information:</p>
 <ul>
 	<li>Name: %s</li>
@@ -40,7 +40,7 @@ func EmailAParticipantJoinedTheLoop(
 
 func EmailContactUserMessage(c *gin.Context, db *gorm.DB, name string, email string, message string) bool {
 	to := app.Config.SMTP_SENDER
-	subject := fmt.Sprintf("ClothingLoop Contact Form - %s", name)
+	subject := fmt.Sprintf("Clothing Loop Contact Form - %s", name)
 	body := fmt.Sprintf(`<h3>Name</h3>
 <p>%s</p>
 <h3>Email</h3>
@@ -53,7 +53,7 @@ func EmailContactUserMessage(c *gin.Context, db *gorm.DB, name string, email str
 
 func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name string, email string, message string) bool {
 	to := email
-	subject := "Thank you for contacting The Clothing Loop"
+	subject := "Thank you for contacting the Clothing Loop"
 	body := fmt.Sprintf(`<p>Hi %s,</p>
 <p>Thank you for your message!</p>
 <p>You wrote:</p>
@@ -70,7 +70,7 @@ func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name string, email st
 
 func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB, name string, email string) bool {
 	to := email
-	subject := "Thank you for subscribing to Clothing Loop"
+	subject := "Thank you for subscribing to the Clothing Loop"
 	body := fmt.Sprintf(`<p>Hi %s,</p>
 
 <p>Hurrah! You are now subscribed to our newsletter.</p>

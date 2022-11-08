@@ -6,12 +6,12 @@ import { useTranslation } from "react-i18next";
 import { Typography, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
-import theme from "../../util/theme";
+import theme from "../util/theme";
 
 //Resources
-import Img from "../../images/Denise.png";
-import { TwoColumnLayout } from "../Layouts";
-import { AuthContext } from "../AuthProvider";
+import Img from "../images/Denise.png";
+import { TwoColumnLayout } from "./Layouts";
+import { AuthContext } from "../providers/AuthProvider";
 import { Box } from "@mui/system";
 
 const AdminControlsNav = () => {

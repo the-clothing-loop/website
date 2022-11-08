@@ -1,7 +1,6 @@
 package app
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/gin-gonic/gin"
 	"github.com/jordan-wright/email"
+	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 )
 
@@ -41,7 +41,7 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 		To:      to,
 		Subject: subject,
 		Body:    body,
-		Error:   sql.NullString{String: fmt.Sprint(err), Valid: err == nil},
+		Error:   zero.StringFrom(fmt.Sprint(err)),
 	})
 
 	if err != nil {

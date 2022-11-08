@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
 
 import {
   Table,
@@ -8,6 +8,7 @@ import {
   TableCell,
   TablePagination,
   TableContainer,
+  TableCellProps,
 } from "@mui/material";
 import {
   EditOutlined as EditIcon,
@@ -18,7 +19,7 @@ import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
 import { UID, User } from "../api/types";
-import { SizeI18nKeys, Sizes } from "../api/enums";
+import { SizeI18nKeys } from "../api/enums";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -34,6 +35,7 @@ interface Props {
   authUser: User | null;
   users: User[];
   initialPage: number;
+  chainUID: string;
   edit: boolean;
   remove: boolean;
   onRemoveUser?: (uid: UID) => void;
@@ -43,6 +45,7 @@ export const ChainParticipantsTable = ({
   columns,
   authUser,
   users,
+  chainUID,
   initialPage,
   edit,
   remove,
@@ -53,7 +56,7 @@ export const ChainParticipantsTable = ({
 
   const { t } = useTranslation();
 
-  const handleChangePage = (e: any, newPage: any) => {
+  const handleChangePage = (e: any, newPage: number) => {
     setPage(newPage);
   };
 
@@ -85,27 +88,45 @@ export const ChainParticipantsTable = ({
               .map((u: User) => (
                 <TableRow key={u.uid}>
                   {columns.map(({ propertyName }) => {
-                    let text = u[propertyName] as string;
+                    let text = u[propertyName];
                     if (propertyName === "sizes") {
                       text = u.sizes
                         .filter((v) => Object.hasOwn(SizeI18nKeys, v))
                         .map((v) => SizeI18nKeys[v])
                         .join(", ");
                     }
-                    return <BorderlessTableCell>{text}</BorderlessTableCell>;
+                    if (typeof text !== "string") {
+                      console.error(
+                        "text is not of type string, this should not be happening",
+                        text
+                      );
+                      text = "" + text;
+                    }
+                    return (
+                      <BorderlessTableCell key={u.uid + propertyName}>
+                        {text}
+                      </BorderlessTableCell>
+                    );
                   })}
 
                   {authUser?.is_root_admin && (
                     <>
                       {edit && (
-                        <BorderlessTableCell>
-                          <Link to={`/users/${u.uid}/edit`}>
+                        <BorderlessTableCell key={u.uid + "editlink"}>
+                          <Link
+                            to={{
+                              pathname: `/users/${u.uid}/edit`,
+                              state: {
+                                chainUID,
+                              },
+                            }}
+                          >
                             <EditIcon />
                           </Link>
                         </BorderlessTableCell>
                       )}
                       {remove && onRemoveUser && (
-                        <BorderlessTableCell>
+                        <BorderlessTableCell key={u.uid + "dellink"}>
                           <DeleteIcon
                             onClick={() => onRemoveUser(u.uid as string)}
                           />
@@ -143,7 +164,10 @@ export const ChainParticipantsTable = ({
   );
 };
 
-const BorderlessTableCell = ({ children, ...props }: { children: any }) => {
+function BorderlessTableCell({
+  children,
+  ...props
+}: PropsWithChildren<TableCellProps>) {
   const classes = useStyles();
 
   return (
@@ -151,9 +175,12 @@ const BorderlessTableCell = ({ children, ...props }: { children: any }) => {
       {children}
     </TableCell>
   );
-};
+}
 
-const HeadRowTableCell = ({ children, ...props }: { children?: any }) => {
+function HeadRowTableCell({
+  children,
+  ...props
+}: PropsWithChildren<TableCellProps>) {
   const classes = useStyles();
 
   return (
@@ -165,4 +192,4 @@ const HeadRowTableCell = ({ children, ...props }: { children?: any }) => {
       {children}
     </TableCell>
   );
-};
+}

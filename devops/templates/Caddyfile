@@ -1,4 +1,8 @@
-next.clothingloop.org, clothingloop.org {
+clothingloop.org {
+	redir https://www.clothingloop.org{uri}
+}
+
+www.clothingloop.org {
 	log {
 		output file /var/log/caddy/api.clothingloop.org-error.log
 		format console

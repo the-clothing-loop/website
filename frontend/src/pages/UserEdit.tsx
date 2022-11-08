@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import { Formik, Form } from "formik";
@@ -15,7 +15,6 @@ import theme from "../util/theme";
 import { ThreeColumnLayout } from "../components/Layouts";
 import SizesDropdown from "../components/SizesDropdown";
 import categories from "../util/categories";
-import Popover from "../components/Popover";
 
 //media
 import RightArrow from "../images/right-arrow-white.svg";
@@ -27,12 +26,15 @@ import {
 } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { UID, User } from "../api/types";
-import { userGetByUID, userUpdate, UserUpdateBody } from "../api/user";
-import { AuthContext } from "../components/AuthProvider";
+import { userGetByUID, userUpdate } from "../api/user";
 import { phoneRegExp } from "../util/phoneRegExp";
 
 interface Params {
   userUID: UID;
+}
+
+interface State {
+  chainUID: UID;
 }
 
 interface UserEditForm {
@@ -47,15 +49,20 @@ const UserEdit = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
   const history = useHistory();
-  const { authUser, authChainUID } = useContext(AuthContext);
+  const state = useLocation<State>().state;
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
   const [user, setUser] = useState<User>();
   const params = useParams<Params>();
-  const [userIsAdmin, setUserIsAdmin] = useState(false);
-  const [userIsChainAdmin, setUserIsChainAdmin] = useState(false);
+
+  const userIsChainAdmin = useMemo(
+    () =>
+      user?.chains.find((c) => c.chain_uid == state.chainUID)?.is_chain_admin ||
+      false,
+    [user]
+  );
 
   const validate = Yup.object({
     name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
@@ -93,16 +100,13 @@ const UserEdit = () => {
   useEffect(() => {
     (async () => {
       try {
-        const user = (await userGetByUID(authChainUID, params.userUID)).data;
-        const firstChain = user.chains[0];
+        const user = (await userGetByUID(state.chainUID, params.userUID)).data;
         setUser(user);
-        setUserIsAdmin(user.is_root_admin);
-        setUserIsChainAdmin(firstChain.is_chain_admin);
       } catch (error) {
         console.warn(error);
       }
     })();
-  }, []);
+  }, [history]);
 
   return !user ? null : (
     <>
@@ -124,7 +128,7 @@ const UserEdit = () => {
       >
         {({ setFieldValue, values }) => (
           <ThreeColumnLayout>
-            {userIsAdmin || userIsChainAdmin ? (
+            {user.is_root_admin || userIsChainAdmin ? (
               <Typography variant="h3" className={classes.pageTitle}>
                 {t("editAdminContacts")}
               </Typography>
