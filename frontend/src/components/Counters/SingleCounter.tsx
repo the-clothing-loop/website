@@ -15,7 +15,10 @@ const SingleCount: React.FC<IProps> = ({ end, step }: IProps) => {
     setter: (value: number) => void,
     step: number
   ) => {
-    if (val > end) return;
+    if (val > end) {
+      setter(end);
+      return;
+    }
     setter(val);
     setTimeout(() => {
       counter(val + step, end, setter, step);

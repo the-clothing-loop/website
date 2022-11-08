@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 //project resources
 import SingleCounter from "./SingleCounter";
@@ -8,20 +8,20 @@ import theme from "../../util/theme";
 import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { useTranslation } from "react-i18next";
-// import { InfoBody, infoGet } from "../../api/info";
+import { InfoBody, infoGet } from "../../api/info";
 
 const Counters = () => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
   const containerRef = useRef(null);
 
-  // const [info, setInfo] = useState<InfoBody>();
+  const [info, setInfo] = useState<InfoBody>();
 
   const [isVisible, setIsVisible] = useState(false);
 
-  // useEffect(() => {
-  //   infoGet().then((res) => setInfo(res.data));
-  // }, []);
+  useEffect(() => {
+    infoGet().then((res) => setInfo(res.data));
+  }, []);
 
   //check if div is visible on viewport
   const callBack = (entries: any) => {
@@ -40,11 +40,23 @@ const Counters = () => {
   return (
     <div ref={containerRef} className={classes.countersWrapper}>
       <div className="isVisible">
-        <h1>{isVisible ? <SingleCounter end={415} step={2} /> : "0"}</h1>
+        <h1>
+          {isVisible ? (
+            <SingleCounter end={info?.total_chains || 0} step={2} />
+          ) : (
+            "0"
+          )}
+        </h1>
         <h3>{t("Loops")}</h3>
       </div>
       <div className="isVisible">
-        <h1>{isVisible ? <SingleCounter end={15000} step={20} /> : "0"}</h1>
+        <h1>
+          {isVisible ? (
+            <SingleCounter end={info?.total_users || 0} step={20} />
+          ) : (
+            "0"
+          )}
+        </h1>
         <h3>{t("participants")}</h3>
       </div>
       <a className="isVisible" href="/loops/find">
