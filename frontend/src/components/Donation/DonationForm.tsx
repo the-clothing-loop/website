@@ -10,11 +10,7 @@ import {
   CardContent,
   Grid,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 
-import styles from "./Donation.module.css";
-
-import theme from "../../util/theme";
 import { useTranslation } from "react-i18next";
 import { paymentInitiate, priceIDs } from "../../api/payment";
 
@@ -57,8 +53,6 @@ const DonationFormContent = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const stripe = useStripe();
-
-  const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
 
   const formik = useFormik<FormValues>({
@@ -124,14 +118,7 @@ const DonationFormContent = () => {
     currency: "EUR",
   });
   const oneOffCheckbox = (amount: number) => (
-    <Grid
-      item
-      key={amount}
-      xs={6}
-      sm={4}
-      className={styles.paymentToggle}
-      classes={{ root: classes.gridItemsNoPadding }}
-    >
+    <Grid item key={amount} xs={6} sm={4} className="">
       <input
         id={`donation-amount-${amount}`}
         type="radio"
@@ -152,14 +139,7 @@ const DonationFormContent = () => {
     let recurringAmount = recurringAmounts[recurringType];
     console.log("change reccuring to ", recurringAmount, recurringType);
     return (
-      <Grid
-        item
-        key={recurringAmount.priceID}
-        xs={12}
-        sm={12}
-        className={styles.paymentToggle}
-        classes={{ root: classes.gridItemsNoPadding }}
-      >
+      <Grid item key={recurringAmount.priceID} xs={12} sm={12} className="">
         <input
           id={`donation-amount-${recurringAmount.priceID}`}
           type="radio"
@@ -178,24 +158,15 @@ const DonationFormContent = () => {
   };
 
   return (
-    <Card
-      className={styles.card}
-      style={{ width: "100%", backgroundColor: "transparent" }}
-    >
-      <CardContent className={styles.cardContent}>
+    <Card className="tw-w-full">
+      <CardContent className="">
         {error && <Alert severity="error">{error}</Alert>}
 
         <FormikContext.Provider value={formik}>
-          <form onSubmit={formik.handleSubmit} className={styles.donationForm}>
+          <form onSubmit={formik.handleSubmit} className="">
             <p>{t("howDoYouWantToContributeToTheClothingLoop")}</p>
-            <Grid container className={styles.paymentSelectionOptions}>
-              <Grid
-                item
-                key="one-off"
-                xs={12}
-                sm={6}
-                className={styles.paymentToggle}
-              >
+            <Grid container className="">
+              <Grid item key="one-off" xs={12} sm={6} className="">
                 <input
                   id="one-off-donation-button"
                   type="radio"
@@ -211,13 +182,7 @@ const DonationFormContent = () => {
                 </label>
               </Grid>
 
-              <Grid
-                item
-                key="periodic"
-                xs={12}
-                sm={6}
-                className={styles.paymentToggle}
-              >
+              <Grid item key="periodic" xs={12} sm={6} className="">
                 <input
                   id="periodic-donation-button"
                   type="radio"
@@ -243,19 +208,12 @@ const DonationFormContent = () => {
             <Grid
               container
               spacing={2}
-              className={styles.paymentAmountOptions}
+              className=""
               sx={{ display: formik.values.isRecurring ? "none" : undefined }}
             >
               {oneOffStandardAmounts.map((amount) => oneOffCheckbox(amount))}
 
-              <Grid
-                item
-                key="custom"
-                xs={6}
-                sm={4}
-                className={styles.paymentToggle}
-                classes={{ root: classes.gridItemsNoPadding }}
-              >
+              <Grid item key="custom" xs={6} sm={4} className="">
                 <input
                   name="customAmount"
                   type="text"
@@ -272,7 +230,7 @@ const DonationFormContent = () => {
             <Grid
               container
               spacing={2}
-              className={styles.paymentAmountOptions}
+              className=""
               sx={{ display: formik.values.isRecurring ? undefined : "none" }}
             >
               {[
@@ -281,8 +239,8 @@ const DonationFormContent = () => {
                 RecurringType.R10_00,
               ].map((i) => recurringAmountCheckbox(i))}
             </Grid>
-            <Grid container spacing={2} className={styles.paymentEmail}>
-              <Grid item xs={12} classes={{ root: classes.gridItemsNoPadding }}>
+            <Grid container spacing={2} className="">
+              <Grid item xs={12} className="">
                 <input
                   name="email"
                   type="text"
@@ -306,12 +264,7 @@ const DonationFormContent = () => {
               </small>
             )}
 
-            <Grid
-              container
-              className={styles.paymentOptions}
-              spacing={2}
-              justifyContent="center"
-            >
+            <Grid container className="" spacing={2} justifyContent="center">
               {error && (
                 <Alert severity="error" sx={{ marginTop: 4 }}>
                   {error}
@@ -323,12 +276,7 @@ const DonationFormContent = () => {
                   <CircularProgress />
                 </div>
               ) : (
-                <Grid
-                  item
-                  xs={12}
-                  md={6}
-                  classes={{ root: classes.gridItemsNoPadding }}
-                >
+                <Grid item xs={12} md={6} className="">
                   <button type="submit" className="tw-btn bw-btn-primary">
                     {t("donate")}
                   </button>
@@ -336,7 +284,7 @@ const DonationFormContent = () => {
               )}
             </Grid>
 
-            <small className={styles.privacyPolicy}>
+            <small className="">
               {t("byDonatingYouAgreeWithOur")}
               <a href="/privacy-policy" target="_blank">
                 {t("privacyPolicy")}
@@ -358,8 +306,10 @@ const DonationForm = () => {
     const stripePromise = loadStripe(stripePublicKey);
 
     return (
-      <div className={styles.donationsWrapper}>
-        <h3 className={styles.pageTitle}>{t("donateToTheClothingLoop")}</h3>
+      <div className="tw-container tw-mx-auto">
+        <h1 className="tw-text-3xl tw-text-secondary tw-mb-6">
+          {t("donateToTheClothingLoop")}
+        </h1>
         <p
           dangerouslySetInnerHTML={{
             __html: t("thanksForConsideringADonation"),

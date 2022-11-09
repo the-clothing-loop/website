@@ -233,7 +233,6 @@ const theme = {
   // Styling for forms
   form: {
     width: "100%",
-    textAlign: "center",
     padding: "1%",
     position: "relative",
     left: "50%",

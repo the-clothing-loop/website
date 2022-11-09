@@ -1,23 +1,24 @@
-import styles from "./Donation.module.css";
-
 import { TwoColumnLayout } from "../Layouts";
 import { useTranslation } from "react-i18next";
 
-const Content = () => {
-  const { t } = useTranslation();
-
-  return (
-    <div className={styles.confirmationMessage}>
-      <h3 className={styles.pageTitle}>{t("thankYou")}</h3>
-      <p>{t("youAretheSpecialTypeOfPersonThatLiftsPeopleUp")}</p>
-    </div>
-  );
-};
-
 const DonationCompleted = () => {
+  const { t } = useTranslation();
   return (
-    <div className={styles.donationConfirmationContent}>
-      <TwoColumnLayout children={<Content />} img="/images/party-image.jpg" />;
+    <div className="tw-py-16">
+      <TwoColumnLayout
+        children={
+          <div className="tw-p-8">
+            <h1 className="tw-text-3xl tw-text-secondary tw-pb-4">
+              {t("thankYou")}
+            </h1>
+            <p className="tw-leading-7">
+              {t("youAretheSpecialTypeOfPersonThatLiftsPeopleUp")}
+            </p>
+          </div>
+        }
+        img="/images/party-image.jpg"
+      />
+      ;
     </div>
   );
 };

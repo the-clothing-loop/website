@@ -1,7 +1,4 @@
 import { useHistory } from "react-router-dom";
-import styles from "./Thankyou.module.css";
-
-// Material
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
@@ -20,12 +17,12 @@ const Content = ({ heading, subheading, confirmationEmail }: IProps) => {
   const { t } = useTranslation();
 
   return (
-    <Grid container className={styles.pageWrapper}>
-      <h3 className={styles.h3}>{heading}</h3>
+    <Grid container className="">
+      <h3 className="tw-text-2xl tw-text-secondary">{heading}</h3>
       <p>{subheading}</p>
       <p>{confirmationEmail}</p>
       <p>{t("happySwapping")}</p>
-      <Grid container className={styles.buttonsWrapper}>
+      <Grid container>
         <Grid item xs={6}>
           <button
             className="tw-btn tw-btn-primary tw-btn-outline"

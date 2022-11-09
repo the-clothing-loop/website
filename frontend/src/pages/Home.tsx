@@ -9,7 +9,6 @@ import { makeStyles } from "@mui/styles";
 
 // Project resources
 import { ChainsContext } from "../providers/ChainsProvider";
-import LandingPageMobile from "./LandingPageMobile";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Donations from "../components/Donations";
@@ -97,7 +96,7 @@ const Home = () => {
 
       <StandaloneSearchBar />
 
-      <div id="landing-page-desktop" className={classes.landingPageDesktop}>
+      <div className={classes.landingPageDesktop}>
         <div className={classes.landingPageWrapper}>
           <div className="tw-w-full tw-absolute tw-bg-teal-light">
             <div className="tw-my-8 tw-ml-[40%]">
@@ -235,8 +234,6 @@ const Home = () => {
 
         <Carousel />
       </div>
-
-      <LandingPageMobile />
     </>
   );
 };
