@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../../util/theme";
@@ -21,35 +20,26 @@ export const ChainNotFound = ({
     <div className={classes.alertContainer}>
       <span className="feather feather-x" onClick={backAction} />
 
-      <Typography component="h1">
+      <h1>
         {`${t("noLoopsFoundIn")}`} <span>{searchTerm}</span>
-      </Typography>
+      </h1>
 
-      <Typography component="p">
-        {t("ThereIsNoActiveLoopInYourRegion")}
-      </Typography>
+      <p>{t("ThereIsNoActiveLoopInYourRegion")}</p>
 
       <div>
-        <Button
-          className={classes.buttonCta}
-          variant="contained"
-          color="primary"
+        <button
+          className="tw-btn tw-btn-primary tw-btn-outline"
           onClick={backAction}
-          key={"btn-submit-1"}
-          href="https://docs.google.com/forms/d/e/1FAIpQLSe3tb2KGckaXna4j8zQOaO7lyII6P0DzG7HjreHFYd_9c08Dg/viewform"
         >
           {t("joinWaitingList")}
-        </Button>
-        <Button
-          className={classes.buttonCtaContained}
-          variant="contained"
-          color="primary"
+        </button>
+        <button
+          className="tw-btn tw-btn-primary"
           onClick={() => history.push("/loops/new/users/signup")}
-          key={"btn-submit-2"}
           type="submit"
         >
           {t("startNewLoop")}
-        </Button>
+        </button>
       </div>
     </div>
   );

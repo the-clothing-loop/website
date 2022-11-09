@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 
 //Project resources
 import theme from "../util/theme";
-import { Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 const MessageSubmitted = (props: any) => {
@@ -25,24 +24,20 @@ const MessageSubmitted = (props: any) => {
           <h3>{t("thankYouForYourMessage")}</h3>
           <p>{t("weWillReplySoon")}</p>
           <div className={classes.formSubmitActions}>
-            <Button
-              className={classes.buttonOutlined}
-              variant="contained"
-              color="primary"
+            <button
+              className="tw-btn tw-btn-primary tw-btn-outline"
               onClick={() => history.push("/")}
               key={"btn-submit-1"}
             >
               {t("home")}
-            </Button>
-            <Button
-              className={classes.button}
-              variant="contained"
-              color="primary"
+            </button>
+            <button
+              className="tw-btn tw-btn-primary"
               onClick={() => history.push("/faq")}
               key={"btn-submit-1"}
             >
               {t("FAQ's")}
-            </Button>
+            </button>
           </div>
         </div>
       </div>

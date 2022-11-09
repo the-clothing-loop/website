@@ -1,9 +1,4 @@
-import {
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from "@mui/material";
+import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 //Project Resources
@@ -20,12 +15,10 @@ const AccordionFaq = ({ question, answer }: any) => {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.AccordionTypographyRoot}>
-            {question}
-          </Typography>
+          <p className={classes.AccordionTypographyRoot}>{question}</p>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography dangerouslySetInnerHTML={{ __html: answer }}></Typography>
+          <p dangerouslySetInnerHTML={{ __html: answer }}></p>
         </AccordionDetails>
       </Accordion>
     </div>

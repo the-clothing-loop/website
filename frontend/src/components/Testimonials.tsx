@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Typography, Grid, Paper, Button } from "@mui/material";
+import {  Grid, Paper, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
@@ -170,35 +170,24 @@ const Testimonials = () => {
   return (
     <Grid classes={{ root: classes.componentWrapperRoot }}>
       <section>
-        <Typography
-          classes={{ root: classes.headingTypographyRoot }}
-          component="h1"
-        >
-          {t("testimonials")}
-        </Typography>
+        <h1>{t("testimonials")}</h1>
         <div className="btn-nav-wrapper">
-          <Button
-            classes={{
-              root:
-                count === 1
-                  ? classes.carouselButtonActive
-                  : classes.carouselButtonInactive,
-            }}
+          <button
+            className={`tw-btn tw-btn-circle tw-btn-secondary tw-opacity-70 ${
+              count === 1 ? "" : "tw-btn-disabled"
+            }`}
             onClick={prevClick}
           >
             <span className="feather feather-arrow-left" />
-          </Button>
-          <Button
-            classes={{
-              root:
-                count === 0
-                  ? classes.carouselButtonActive
-                  : classes.carouselButtonInactive,
-            }}
+          </button>
+          <button
+            className={`tw-btn tw-btn-circle tw-btn-secondary tw-opacity-70 tw-ml-4 ${
+              count === 0 ? "" : "tw-btn-disabled"
+            }`}
             onClick={nextClick}
           >
             <span className="feather feather-arrow-right" />
-          </Button>
+          </button>
         </div>
 
         <Grid container classes={{ root: classes.carouselContainer }}>
@@ -211,18 +200,12 @@ const Testimonials = () => {
                 <Paper classes={{ root: classes.carouselElement }} key={i}>
                   <span className="feather feather-message-circle" />
 
-                  <Typography
-                    component="p"
-                    classes={{ root: classes.contentTypographyRoot }}
-                  >
+                  <p className={classes.contentTypographyRoot}>
                     {testimonial.message}
-                  </Typography>
-                  <Typography
-                    classes={{ root: classes.testimonialAuthor }}
-                    component="p"
-                  >
+                  </p>
+                  <p className={classes.testimonialAuthor}>
                     - {testimonial.name}
-                  </Typography>
+                  </p>
                 </Paper>
               );
             })}

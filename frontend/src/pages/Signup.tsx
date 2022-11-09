@@ -9,7 +9,7 @@ import GeocoderSelector from "../components/GeocoderSelector";
 import SizesDropdown from "../components/SizesDropdown";
 import PopoverOnHover from "../components/Popover";
 
-import { Alert, Button, Typography } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -134,10 +134,10 @@ const Signup = () => {
             <div className="signup-wrapper">
               <TwoColumnLayout img="/images/Join-Loop.jpg">
                 <div id="container" className="signup-content">
-                  <Typography variant="h3" className={classes.pageTitle}>
+                  <h3 className={classes.pageTitle}>
                     {t("join")}
                     <span> {chain?.name}</span>
-                  </Typography>
+                  </h3>
 
                   <Form className={classes.formGrid}>
                     <TextForm
@@ -183,9 +183,9 @@ const Signup = () => {
 
                     {error && <Alert severity="error">{error}</Alert>}
                     <div className={classes.formSubmitActions}>
-                      <Button
+                      <button
                         type="submit"
-                        className={classes.buttonOutlined}
+                        className="tw-btn tw-btn-primary tw-btn-outline"
                         onClick={() =>
                           history.push({
                             pathname: "/loops/find",
@@ -194,17 +194,20 @@ const Signup = () => {
                         }
                       >
                         {t("back")}
-                      </Button>
-                      <Button type="submit" className={classes.button}>
+                      </button>
+                      <button
+                        type="submit"
+                        className="tw-btn tw-btn-primary tw-btn-outline"
+                      >
                         {t("join")}
                         <span className="feather feather-arrow-right tw-ml-4"></span>
-                      </Button>
+                      </button>
                     </div>
                   </Form>
                   <div className={classes.formHelperLink}>
-                    <Typography component="p" className="text">
+                    <p className="text">
                       {t("troublesWithTheSignupContactUs")}
-                    </Typography>
+                    </p>
                     <a
                       className="link"
                       href="mailto:hello@clothingloop.org?subject=Troubles signing up to The Clothing Loop"

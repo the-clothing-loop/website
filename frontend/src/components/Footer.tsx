@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 //Project resources
 import { Newsletter } from "./Newsletter/Newsletter";
 
-import { Typography } from "@mui/material";
 import IconInstagram from "../images/icon-instagram.svg";
 import { makeStyles } from "@mui/styles";
 

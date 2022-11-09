@@ -1,5 +1,4 @@
 //MUI
-import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import { Helmet } from "react-helmet";
@@ -17,51 +16,45 @@ const PrivacyPolicy = () => {
         <meta name="description" content="privacy policy" />
       </Helmet>
       <div className={classes.legalPagesWrapper}>
-        <Typography component="h1" className={classes.pageTitle}>
+        <h1 className={classes.pageTitle}>
           {"Privacy Policy - The Clothing Loop"}
-        </Typography>
+        </h1>
 
-        <Typography component="p">Version dated 2022, February 9th</Typography>
-        <Typography component="p" className={classes.p}>
+        <p>Version dated 2022, February 9th</p>
+        <p>
           The Clothing Loop is part of the foundation Slow Fashion Movement, KvK
           85110701
-        </Typography>
-        <Typography component="p" className={classes.p}>
+        </p>
+        <p>
           We see it as our responsibility to protect your privacy according to
           the guidelines of the AVG (Algemene Verordening Gegevensbescherming)
           that entered into force on May 25th 2018. This privacy policy will
           explain how our organization uses the personal data we collect from
           you when you use our website.
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          Table of content
-        </Typography>
+        <h3 className={classes.h3}>Table of content</h3>
 
-        <Typography component="p" className={classes.p}>
-          <ul style={{ listStyleType: "none" }}>
-            <li> What data do we collect?</li>
-            <li> How do we collect your data?</li>
-            <li>How will we use your data?</li>
-            <li> How do we store your data?</li>
-            <li>
-              Newsletter and communication What are your data protection rights?
-            </li>
-            <li> What are cookies?</li>
-            <li>How do we use cookies? How to manage your cookies?</li>
-            <li>
-              Privacy policies of other websites Changes to our privacy policy
-              How to contact us?
-            </li>
-            <li> How to contact the appropriate authorities</li>
-          </ul>
-        </Typography>
+        <ul>
+          <li> What data do we collect?</li>
+          <li> How do we collect your data?</li>
+          <li>How will we use your data?</li>
+          <li> How do we store your data?</li>
+          <li>
+            Newsletter and communication What are your data protection rights?
+          </li>
+          <li> What are cookies?</li>
+          <li>How do we use cookies? How to manage your cookies?</li>
+          <li>
+            Privacy policies of other websites Changes to our privacy policy How
+            to contact us?
+          </li>
+          <li> How to contact the appropriate authorities</li>
+        </ul>
 
-        <Typography component="h3" className={classes.h3}>
-          What data do we collect?
-        </Typography>
+        <h3 className={classes.h3}>What data do we collect?</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           The Clothing Loop collects the following data:
           <ul>
             <li>
@@ -71,13 +64,11 @@ const PrivacyPolicy = () => {
             </li>
             <li>input from surveys and customer panel.</li>
           </ul>
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          How do we collect your data?
-        </Typography>
+        <h3 className={classes.h3}>How do we collect your data?</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           You directly provide The Clothing Loop with the data we collect. We
           collect data and process data when you:
           <ul>
@@ -96,13 +87,11 @@ const PrivacyPolicy = () => {
           <ul>
             <li>None.</li>
           </ul>
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          How will we use your data?
-        </Typography>
+        <h3 className={classes.h3}>How will we use your data?</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           The Clothing Loop collects your data so that we can:
           <ul>
             <li>process your registration with the Clothing Loop;</li>
@@ -134,13 +123,11 @@ const PrivacyPolicy = () => {
               Clothing Loops;
             </li>
           </ul>
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          How do we store your data?
-        </Typography>
+        <h3 className={classes.h3}>How do we store your data?</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           Subscriber’s personal information (such as name, email, phone number,
           address) are stored by the Clothing Loop in Firebase database, which
           is a Google cloud service - more information about their privacy
@@ -148,8 +135,8 @@ const PrivacyPolicy = () => {
           <a href="https://firebase.google.com/support/privacy" target="_blank">
             here
           </a>
-        </Typography>
-        <Typography component="p" className={classes.p}>
+        </p>
+        <p>
           The Clothing Loop will keep your personal data for a time-period as
           long as you are enrolled with the Clothing Loop. Once this time period
           has expired your data will be deleted by the Clothing Loop Admin team.
@@ -157,34 +144,30 @@ const PrivacyPolicy = () => {
           from any other tool or list for sharing your data with other local
           members of the Clothing Loop and you yourself can leave the relevant
           local app-groups, facebook groups etc.
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          Newsletter and communication:
-        </Typography>
+        <h3 className={classes.h3}>Newsletter and communication:</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           When subscribed, you will receive our newsletter. This newsletter will
           always be written and composed by us, with things relevant to the
           initiative. If branded and paid for content will be relevant in the
           future, we will always specify.
-        </Typography>
-        <Typography component="p" className={classes.p}>
+        </p>
+        <p>
           If you have agreed to receive our newsletter, you may always opt out
           at a later date. You can unsubscribe via the unsubscribe option at the
           bottom of the newsletter.
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          What are your data protection rights?
-        </Typography>
+        <h3 className={classes.h3}>What are your data protection rights?</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           The Clothing Loop would like to make sure you are fully aware of all
           of your data protection rights. Every user is entitled to the
           following:
-        </Typography>
-        <Typography component="p" className={classes.p}>
+        </p>
+        <p>
           <ol>
             <li>
               the right to access - You have the right to request The Clothing
@@ -208,13 +191,11 @@ const PrivacyPolicy = () => {
               <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
             </li>
           </ol>
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          Special or sensitive personal data
-        </Typography>
+        <h3 className={classes.h3}>Special or sensitive personal data</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           Our website and/or services don’t have the intention to collect data
           of visitors of the website that are younger than 18 years of age
           unless they have permission from their parents or guardians. We are
@@ -225,30 +206,26 @@ const PrivacyPolicy = () => {
           parental consent from a minor, please contact
           <a href="mailto:hello@clothingloop.org">hello@clothingloop.org </a>
           and we will erase the information.
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          What are cookies?
-        </Typography>
+        <h3 className={classes.h3}>What are cookies?</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           Cookies are text files placed on your computer to collect standard
           Internet log information and visitor behaviour information. When you
           visit our websites, we may collect information from you automatically
           through cookies or similar technology.
-        </Typography>
-        <Typography component="p" className={classes.p}>
+        </p>
+        <p>
           For further information, visit
           <a href="https://www.allaboutcookies.org/" target="_blank">
             allaboutcookies.org.
           </a>
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          How do we use cookies?
-        </Typography>
+        <h3 className={classes.h3}>How do we use cookies?</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           The Clothing Loop uses cookies for:
           <ul>
             <li>
@@ -262,23 +239,19 @@ const PrivacyPolicy = () => {
               and loops displayed.
             </li>
           </ul>
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          How to manage cookies
-        </Typography>
+        <h3 className={classes.h3}>How to manage cookies</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           You can set your browser not to accept cookies, and the above website
           tells you how to remove cookies from your browser. However, in a few
           cases, some of our website features may not function as a result.
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          Privacy policies of other websites
-        </Typography>
+        <h3 className={classes.h3}>Privacy policies of other websites</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           The Clothing Loop website contains links to other websites like the
           app we created for you in Glide. The use of this app is optional. Our
           privacy policy applies only to our website, so as soon as you leave
@@ -286,58 +259,50 @@ const PrivacyPolicy = () => {
             www.clothingloop.org
           </a>
           to visit a third party website, their privacy policy applies
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          Changes to our privacy policy
-        </Typography>
+        <h3 className={classes.h3}>Changes to our privacy policy</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           The Clothing Loop keeps its privacy policy under regular review and
           places any updates on this web page. This privacy policy was last
           updated on 20th of January 2022.
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          How to contact us
-        </Typography>
+        <h3 className={classes.h3}>How to contact us</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           If you have any questions about The Clothing Loop's privacy policy,
           the data we hold about you or you would like to exercise one of your
           data protection rights, please do not hesitate to contact us at
           <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          How to contact the appropriate authority
-        </Typography>
+        <h3 className={classes.h3}>How to contact the appropriate authority</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           Should you wish to report a complaint or if you feel that The Clothing
           Loop has not addressed your concern in a satisfactory manner, you may
           contact Autoriteit Persoonsgegevens in the Netherlands.
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          Contact details
-        </Typography>
+        <h3 className={classes.h3}>Contact details</h3>
 
-        <Typography component="p" className={classes.p}>
+        <p>
           Do you have any questions? Then contact us at: <br />
-        </Typography>
-        <Typography component="p" className={classes.p}>
+        </p>
+        <p>
           Email:{" "}
           <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
-        </Typography>
-        <Typography component="p" className={classes.p}>
+        </p>
+        <p>
           Or by post: <br />
           The Clothing Loop <br />
           P/A Stichting Slow Fashion Movement
           <br /> Wethouder Frankeweg 22 H <br />
           1098 LA Amsterdam <br />
           The Netherlands
-        </Typography>
+        </p>
       </div>
     </>
   );

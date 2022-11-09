@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 
-import { Typography, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import AccordionFaq from "../../components/AccordionFaq";
@@ -38,9 +38,7 @@ const FAQ = () => {
         <Grid container spacing={0}>
           <Grid item sm={12} md={6}>
             <div className={styles.faqSection}>
-              <Typography component="h1" className={classes.pageTitle}>
-                {t("faqForParticipants")}
-              </Typography>
+              <h1 className={classes.pageTitle}>{t("faqForParticipants")}</h1>
               {arrParticipants.map((el, index) => (
                 <AccordionFaq
                   key={index}
@@ -52,9 +50,7 @@ const FAQ = () => {
           </Grid>
           <Grid item sm={12} md={6}>
             <div className={styles.faqSection}>
-              <Typography component="h1" className={classes.pageTitle}>
-                {t("faqForHosts")}
-              </Typography>
+              <h1 className={classes.pageTitle}>{t("faqForHosts")}</h1>
               {arrHosts.map((el, index) => (
                 <AccordionFaq
                   key={index}

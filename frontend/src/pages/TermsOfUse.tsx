@@ -1,5 +1,4 @@
 //MUI
-import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import { Helmet } from "react-helmet";
@@ -17,17 +16,15 @@ const TermsOfUse = () => {
         <meta name="description" content="Terms of use" />
       </Helmet>
       <div className={classes.legalPagesWrapper}>
-        <Typography component="h1" className={classes.pageTitle}>
+        <h1 className={classes.pageTitle}>
           {"Terms of Use - The Clothing Loop"}
-        </Typography>
+        </h1>
 
-        <Typography component="p">Version dated 2022, January 29th</Typography>
+        <p>Version dated 2022, January 29th</p>
 
-        <Typography component="h3" className={classes.h3}>
-          Terms of Use
-        </Typography>
+        <h3 className={classes.h3}>Terms of Use</h3>
 
-        <Typography component="p">
+        <p>
           <ol>
             <li>
               These terms of use, as amended from time to time (hereinafter
@@ -46,12 +43,10 @@ const TermsOfUse = () => {
               jurisdiction of residence to enter into a binding agreement.
             </li>
           </ol>
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          Applicability and amendments
-        </Typography>
-        <Typography component="p">
+        <h3 className={classes.h3}>Applicability and amendments</h3>
+        <p>
           <ol start={3}>
             <li>
               By using the Platform and thus participating in The Clothing Loop,
@@ -69,12 +64,12 @@ const TermsOfUse = () => {
               derive any rights therefrom.
             </li>
           </ol>
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
+        <h3 className={classes.h3}>
           Use of the Platform and general rules of conduct
-        </Typography>
-        <Typography component="p">
+        </h3>
+        <p>
           <ol start={5}>
             <li>
               The goal of The Clothing Loop is to make it easy and fun to share
@@ -210,11 +205,11 @@ const TermsOfUse = () => {
               institutions and authorities.
             </li>
           </ol>
-        </Typography>
-        <Typography component="h3" className={classes.h3}>
+        </p>
+        <h3 className={classes.h3}>
           Links to other websites and/or applications
-        </Typography>
-        <Typography component="p">
+        </h3>
+        <p>
           <ol start={10}>
             <li>
               It is possible that the Platform refers to external internet pages
@@ -223,12 +218,10 @@ const TermsOfUse = () => {
               external internet pages and/or applications.
             </li>
           </ol>
-        </Typography>
+        </p>
 
-        <Typography component="h3" className={classes.h3}>
-          Liability
-        </Typography>
-        <Typography component="p">
+        <h3 className={classes.h3}>Liability</h3>
+        <p>
           <ol start={11}>
             <li>
               The use of the Platform, and thus participating in The Clothing
@@ -257,11 +250,9 @@ const TermsOfUse = () => {
               participation in The Clothing Loop.
             </li>
           </ol>
-        </Typography>
-        <Typography component="h3" className={classes.h3}>
-          Intellectual property rights
-        </Typography>
-        <Typography component="p">
+        </p>
+        <h3 className={classes.h3}>Intellectual property rights</h3>
+        <p>
           <ol start={15}>
             <li>
               Unless otherwise stated, all intellectual property rights and/or
@@ -287,11 +278,9 @@ const TermsOfUse = () => {
               in any way, commercially or non-commercially.
             </li>
           </ol>
-        </Typography>
-        <Typography component="h3" className={classes.h3}>
-          Privacy and Cookie Policy
-        </Typography>
-        <Typography component="p">
+        </p>
+        <h3 className={classes.h3}>Privacy and Cookie Policy</h3>
+        <p>
           <ol start={17}>
             <li>
               Please be referred to our{" "}
@@ -299,11 +288,9 @@ const TermsOfUse = () => {
               applies when using the Platform.
             </li>
           </ol>
-        </Typography>
-        <Typography component="h3" className={classes.h3}>
-          Choice of law and other provisions
-        </Typography>
-        <Typography component="p">
+        </p>
+        <h3 className={classes.h3}>Choice of law and other provisions</h3>
+        <p>
           <ol start={18}>
             <li>
               If these Terms of Use are or become partially invalid, you (and
@@ -325,32 +312,24 @@ const TermsOfUse = () => {
               to the extent legally permissible.
             </li>
           </ol>
-        </Typography>
-        <Typography component="h3" className={classes.h3}>
-          Contact details
-        </Typography>
+        </p>
+        <h3 className={classes.h3}>Contact details</h3>
 
-        <Typography component="p" className={classes.p}>
-          Do you have any questions? Then contact us at:
-        </Typography>
-        <Typography component="p" className={classes.p}>
+        <p>Do you have any questions? Then contact us at:</p>
+        <p>
           Email:
           <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
-        </Typography>
-        <Typography component="p" className={classes.p}>
-          Or by post:
-        </Typography>
-        <Typography component="p" className={classes.p}>
-          The Clothing Loop
-        </Typography>
-        <Typography component="p" className={classes.p}>
+        </p>
+        <p>Or by post:</p>
+        <p>The Clothing Loop</p>
+        <p>
           P/A Stichting Slow Fashion Movement
           <br />
           Wethouder Frankeweg 22 H <br />
           1098 LA Amsterdam
           <br />
           The Netherlands
-        </Typography>
+        </p>
       </div>
     </>
   );

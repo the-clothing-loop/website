@@ -3,7 +3,6 @@ import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -69,16 +68,10 @@ const ChainEdit = () => {
       </Helmet>
       <div className={classes.formContainerLocation}>
         <div className={classes.newLoopLocationForm}>
-          <Typography
-            variant="h3"
-            className={classes.pageTitle}
-            style={{ textAlign: "center" }}
-          >
+          <h3 className={classes.pageTitle} style={{ textAlign: "center" }}>
             {t("editLoopInformation")}
-          </Typography>
-          <Typography className="formSubtitle">
-            {t("clickToChangeLoopLocation")}
-          </Typography>
+          </h3>
+          <p className="formSubtitle">{t("clickToChangeLoopLocation")}</p>
           <ChainDetailsForm
             onSubmit={handleSubmit}
             submitError={error}

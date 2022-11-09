@@ -15,7 +15,6 @@ import * as GeoJSONTypes from "geojson";
 import mapboxgl from "mapbox-gl";
 
 import {
-  Button,
   Dialog,
   Typography,
   Card,
@@ -33,7 +32,6 @@ import { FindChainSearchBarContainer } from "../components/FindChain";
 import { Chain } from "../api/types";
 
 // Media
-import RightArrow from "../images/right-arrow-white.svg";
 import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
 import { chainAddUser } from "../api/chain";
 
@@ -50,6 +48,13 @@ export const defaultTruePredicate = () => true;
 const accessToken = {
   mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
 };
+const maxZoom = 13;
+const minZoom = 1;
+
+enum ZoomOperation {
+  PLUS,
+  MINUS,
+}
 
 const FindChain = ({ location }: { location: Location }) => {
   const urlParams = new URLSearchParams(location.search);
@@ -63,7 +68,13 @@ const FindChain = ({ location }: { location: Location }) => {
   const chains = useContext(ChainsContext);
   const publishedChains = chains.filter(({ published }) => published);
 
-  const [viewport, setViewport] = useState<IViewPort | {}>({});
+  const [viewport, setViewport] = useState<IViewPort>({
+    latitude: 26.3351,
+    longitude: 17.2283,
+    width: "100vw",
+    height: "80vh",
+    zoom: 1.45,
+  });
   const [selectedChain, setSelectedChain] = useState<Chain | null>(null);
   const [showPopup, setShowPopup] = useState(false);
   const [showDutchLoopsDialog, setShowDutchLoopsDialog] = useState(false);
@@ -84,26 +95,12 @@ const FindChain = ({ location }: { location: Location }) => {
         width: "100vw",
         height: "80vh",
         zoom: 12,
-        maxZoom: 12,
       });
 
     return !!matchingChain;
   };
 
   const mapRef = useRef<MapRef>(null);
-
-  useEffect(() => {
-    (async () => {
-      setViewport({
-        latitude: 26.3351,
-        longitude: 17.2283,
-        width: "100vw",
-        height: "80vh",
-        zoom: 1.45,
-        maxZoom: 12,
-      });
-    })();
-  }, []);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((location) => {
@@ -153,7 +150,6 @@ const FindChain = ({ location }: { location: Location }) => {
           width: "100vw",
           height: "75vh",
           zoom: 10,
-          maxZoom: 12,
         });
       },
       (err) => {
@@ -162,16 +158,20 @@ const FindChain = ({ location }: { location: Location }) => {
     );
   };
 
-  const mapZoom = (viewport: IViewPort | {}, operation: string) => {
-    if ("zoom" in viewport) {
-      if (operation === "+" && viewport.zoom === 12) {
-        return setViewport({ ...viewport, viewport: 12 });
-      }
-      operation === "+"
-        ? setViewport({ ...viewport, zoom: viewport.zoom + 1 })
-        : setViewport({ ...viewport, zoom: viewport.zoom - 1 });
+  function mapZoom(viewport: IViewPort, o: ZoomOperation) {
+    switch (o) {
+      case ZoomOperation.PLUS:
+        if (viewport.zoom < maxZoom) {
+          setViewport({ ...viewport, zoom: viewport.zoom + 1 });
+        }
+        break;
+      case ZoomOperation.MINUS:
+        if (viewport.zoom > minZoom) {
+          setViewport({ ...viewport, zoom: viewport.zoom - 1 });
+        }
+        break;
     }
-  };
+  }
 
   interface FeatureProperties {
     radius: number;
@@ -339,34 +339,22 @@ const FindChain = ({ location }: { location: Location }) => {
           >
             <Card className={classes.card}>
               <CardContent className={classes.cardContent}>
-                <Typography component="h1" gutterBottom>
-                  {selectedChain.name}
-                </Typography>
-                <Typography component="p" id="description">
-                  {selectedChain.description}
-                </Typography>
+                <h1 className="tw-mb-3">{selectedChain.name}</h1>
+                <p id="description">{selectedChain.description}</p>
                 <div className="tw-flex tw-flex-col tw-w-full tw-pt-8">
-                  <Typography component="h3">{t("categories")}:</Typography>
+                  <h3>{t("categories")}:</h3>
                   <div id="categories-container">
                     {selectedChain.genders
                       ? selectedChain.genders.sort().map((gender, i) => {
-                          return (
-                            <Typography component="p" key={i}>
-                              {t(GenderI18nKeys[gender])}
-                            </Typography>
-                          );
+                          return <p key={i}>{t(GenderI18nKeys[gender])}</p>;
                         })
                       : null}
                   </div>
-                  <Typography component="h3">{t("sizes")}:</Typography>
+                  <h3>{t("sizes")}:</h3>
                   <div id="sizes-container">
                     {selectedChain.sizes
                       ? selectedChain.sizes.sort().map((size, i) => {
-                          return (
-                            <Typography key={i} component="p">
-                              {t(SizeI18nKeys[size])}
-                            </Typography>
-                          );
+                          return <p key={i}>{t(SizeI18nKeys[size])}</p>;
                         })
                       : null}
                   </div>
@@ -375,37 +363,31 @@ const FindChain = ({ location }: { location: Location }) => {
 
               {authUser?.is_root_admin ? (
                 <CardActions>
-                  <Button
+                  <button
                     key={"btn-join"}
-                    variant="outlined"
-                    color="primary"
-                    className={"card-button"}
+                    className="tw-btn tw-btn-primary tw-btn-outline"
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     key={"btn-view"}
-                    variant="contained"
-                    color="primary"
-                    className={"card-button"}
+                    className="tw-btn tw-btn-primary"
                     onClick={(e) => viewChain(e)}
                   >
                     {t("viewChain")}
-                  </Button>{" "}
+                  </button>{" "}
                 </CardActions>
               ) : (
                 <CardActions className={classes.cardsAction}>
-                  <Button
+                  <button
                     key={"btn-join"}
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
+                    className="tw-btn tw-btn-primary"
                     onClick={(e) => signupToChain(e)}
                   >
                     {t("join")}
                     <span className="feather feather-arrow-right tw-ml-4"></span>
-                  </Button>
+                  </button>
                 </CardActions>
               )}
             </Card>
@@ -414,21 +396,34 @@ const FindChain = ({ location }: { location: Location }) => {
       </ReactMapGL>
 
       <div className="tw-flex tw-flex-col tw-absolute tw-bottom-[5%] tw-right-2.5">
-        <Button className="map-action-btn" onClick={() => handleLocation()}>
-          <span className="feather feather-crosshair" />
-        </Button>
-        <Button
-          className="map-action-btn"
-          onClick={() => mapZoom(viewport, "+")}
+        <button
+          className="tw-btn tw-btn-circle tw-btn-outline tw-glass tw-bg-white/70 hover:tw-bg-white/90 tw-mb-4"
+          onClick={() => handleLocation()}
         >
-          <span className="feather feather-plus" />
-        </Button>
-        <Button
-          className="map-action-btn"
-          onClick={() => mapZoom(viewport, "-")}
-        >
-          <span className="feather feather-minus" />{" "}
-        </Button>
+          <span className="feather feather-crosshair tw-text-base-content" />
+        </button>
+        <div className="tw-btn-group tw-btn-group-vertical">
+          <button
+            className={`tw-btn tw-rounded-t-full ${
+              viewport.zoom >= 12
+                ? "tw-btn-disabled tw-bg-white/30"
+                : "tw-glass tw-bg-white/60 hover:tw-bg-white/90"
+            }`}
+            onClick={() => mapZoom(viewport, ZoomOperation.PLUS)}
+          >
+            <span className="feather feather-plus tw-text-base-content" />
+          </button>
+          <button
+            className={`tw-btn tw-rounded-b-full -tw-mt-px ${
+              viewport.zoom <= 1
+                ? "tw-btn-disabled tw-bg-white/30"
+                : "tw-glass tw-bg-white/60 hover:tw-bg-white/90"
+            }`}
+            onClick={() => mapZoom(viewport, ZoomOperation.MINUS)}
+          >
+            <span className="feather feather-minus tw-text-base-content" />
+          </button>
+        </div>
       </div>
     </>
   );

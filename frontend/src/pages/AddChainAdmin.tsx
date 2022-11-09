@@ -4,8 +4,7 @@ import {
   Select,
   OutlinedInput,
   MenuItem,
-  Typography,
-  Button,
+  
   Alert,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -18,6 +17,7 @@ import { Title } from "../components/Typography";
 import { chainAddUser } from "../api/chain";
 import { UID, User } from "../api/types";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface State {
   users: User[];
@@ -28,6 +28,7 @@ export default function AddChainAdmin({ location }: { location: any }) {
   const classes = makeStyles(theme as any)();
 
   const history = useHistory();
+  const { t } = useTranslation();
 
   const { state } = location;
   const { users, chainUID } = state as State;
@@ -73,12 +74,7 @@ export default function AddChainAdmin({ location }: { location: any }) {
             onChange={handleSelectedUserChange}
             renderValue={(selected: string) =>
               selected ?? (
-                <Typography
-                  component="span"
-                  classes={{ root: classes.emptyRenderValue }}
-                >
-                  Select co-host
-                </Typography>
+                <span className={classes.emptyRenderValue}>Select co-host</span>
               )
             }
           >
@@ -105,17 +101,14 @@ export default function AddChainAdmin({ location }: { location: any }) {
       )}
 
       <div className="tw-mt-20">
-        <Button
-          className={classes.button}
+        <button
+          className="tw-btn tw-btn-primary tw-w-full"
           type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
           onClick={handleSubmitAddChainAdmin}
         >
-          Confirm
+          {t("submit")}
           <span className="feather feather-arrow-right tw-ml-4"></span>
-        </Button>
+        </button>
       </div>
     </div>
   );

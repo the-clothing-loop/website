@@ -5,7 +5,7 @@ import ReactMapGL, { SVGOverlay, FlyToInterpolator } from "react-map-gl";
 import { useTranslation } from "react-i18next";
 import { Form, Formik } from "formik";
 
-import { Button, Typography, Alert, Grid } from "@mui/material";
+import { Button, Alert, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
@@ -219,9 +219,7 @@ const ChainDetailsForm = ({
             <Grid item xs={12} sm={6}>
               <Form noValidate>
                 <Grid container style={{ paddingBottom: "5%" }}>
-                  <Typography className="formSubtitle">
-                    {t("clickToSetLoopLocation")}
-                  </Typography>
+                  <p className="formSubtitle">{t("clickToSetLoopLocation")}</p>
                   <Grid item xs={12}>
                     <TextForm
                       required
@@ -295,7 +293,7 @@ const ChainDetailsForm = ({
                   </Grid>
                   {touched.longitude && errors.longitude ? (
                     <Grid item xs={12}>
-                      <Typography color="error">{errors.longitude}</Typography>
+                      <p color="error">{errors.longitude}</p>
                     </Grid>
                   ) : null}
                 </Grid>
@@ -303,13 +301,19 @@ const ChainDetailsForm = ({
                 {submitError && <Alert severity="error">{submitError}</Alert>}
                 {submitted && <Alert security="success">{t("saved")}</Alert>}
                 <div className={classes.formSubmitActions}>
-                  <Button type="submit" className={classes.buttonOutlined}>
+                  <button
+                    type="submit"
+                    className="tw-btn tw-btn-primary tw-btn-outline"
+                  >
                     {t("back")}
-                  </Button>
-                  <Button type="submit" className={classes.button}>
+                  </button>
+                  <button
+                    type="submit"
+                    className="tw-btn tw-btn-primary tw-ml-4"
+                  >
                     {t("submit")}
                     <span className="feather feather-arrow-right tw-ml-4"></span>
-                  </Button>
+                  </button>
                 </div>
               </Form>
             </Grid>

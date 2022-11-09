@@ -15,9 +15,7 @@ const About = () => {
         <meta name="description" content="About The Clothing Loop" />
       </Helmet>
       <div className={classes.legalPagesWrapper}>
-        <Typography component="h1" className={classes.pageTitle}>
-          {t("aboutTheClothingLoop")}
-        </Typography>
+        <h1 className={classes.pageTitle}>{t("aboutTheClothingLoop")}</h1>
         <div className={classes.legalPagesContentWrapper}>
           <div className="iframe-wrapper">
             <div className="iframe-content">
@@ -33,14 +31,12 @@ const About = () => {
             i18nKey="p"
             ns="about"
             components={{
-              p: <Typography component="p"></Typography>,
+              p: <p></p>,
               aFind: <Link href="./loops/find"></Link>,
             }}
           ></Trans>
-          <Typography component="h3" className={classes.h3}>
-            {t("team")}:
-          </Typography>
-          <Typography component="p">
+          <h3 className={classes.h3}>{t("team")}:</h3>
+          <p>
             <Trans
               i18nKey="theClothingLoopIsAnIndependent<a>"
               ns="about"
@@ -53,7 +49,7 @@ const About = () => {
                 ),
               }}
             ></Trans>
-          </Typography>
+          </p>
           <img
             src="/images/press-clippings-site.jpg"
             alt=""
@@ -63,14 +59,12 @@ const About = () => {
             i18nKey="thePeople"
             ns="about"
             components={{
-              p: <Typography component="p"></Typography>,
+              p: <p></p>,
               imgTeam: <img src="/images/Team-pics.jpg" alt="" />,
             }}
           ></Trans>
 
-          <Typography component="p">
-            {t("thankYou", { ns: "translation" })}
-          </Typography>
+          <p>{t("thankYou", { ns: "translation" })}</p>
         </div>
       </div>
     </>

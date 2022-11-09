@@ -4,11 +4,9 @@ import styles from "./Thankyou.module.css";
 // Material
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-import { Button, Grid, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Grid } from "@mui/material";
 
 //Project resources
-import theme from "../../util/theme";
 import { TwoColumnLayout } from "../../components/Layouts";
 
 export interface IProps {
@@ -18,46 +16,31 @@ export interface IProps {
 }
 
 const Content = ({ heading, subheading, confirmationEmail }: IProps) => {
-  const classes = makeStyles(theme as any)();
   let history = useHistory();
   const { t } = useTranslation();
 
   return (
     <Grid container className={styles.pageWrapper}>
-      <Typography className={styles.h3} component="h3">
-        {heading}
-      </Typography>
-      <Typography component="p">{subheading}</Typography>
-      <Typography component="p" className={styles.p}>
-        {confirmationEmail}
-      </Typography>
-      <Typography component="p" className={styles.p}>
-        {t("happySwapping")}
-      </Typography>
+      <h3 className={styles.h3}>{heading}</h3>
+      <p>{subheading}</p>
+      <p>{confirmationEmail}</p>
+      <p>{t("happySwapping")}</p>
       <Grid container className={styles.buttonsWrapper}>
         <Grid item xs={6}>
-          <Button
-            className={classes.buttonOutlined}
-            variant="contained"
-            color="primary"
+          <button
+            className="tw-btn tw-btn-primary tw-btn-outline"
             onClick={() => history.push("/")}
-            key={"btn-submit-1"}
-            style={{ margin: "2% 0" }}
           >
             {t("home")}
-          </Button>
+          </button>
         </Grid>
         <Grid item xs={6}>
-          <Button
-            className={classes.button}
-            variant="contained"
-            color="primary"
+          <button
+            className="tw-btn tw-btn-primary"
             onClick={() => history.push("/about")}
-            key={"btn-submit-1"}
-            style={{ margin: "2% 0" }}
           >
             {t("About")}
-          </Button>
+          </button>
         </Grid>
       </Grid>
     </Grid>

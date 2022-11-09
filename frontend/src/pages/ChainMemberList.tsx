@@ -9,13 +9,7 @@ import { useParams, Link, useHistory, Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
-import {
-  Grid,
-  Typography,
-  Switch,
-  FormControlLabel,
-  Alert,
-} from "@mui/material";
+import { Grid, Switch, FormControlLabel, Alert } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 // Project resources
@@ -167,9 +161,7 @@ const ChainMemberList = () => {
                   </Grid>
                 </Grid>
 
-                <Typography classes={{ root: "tw-text-lg tw-mt-6" }}>
-                  {chain.description}
-                </Typography>
+                <p className="tw-text-lg tw-mt-6">{chain.description}</p>
 
                 <Field title="Categories">
                   {chain?.genders &&
@@ -307,11 +299,9 @@ function Field(props: PropsWithChildren<{ title: string }>) {
 
   return (
     <div className="tw-mt-6">
-      <Typography
-        classes={{ root: classes.fieldSubheadingTypographyRoot + " tw-mt-0" }}
-      >
+      <p className={classes.fieldSubheadingTypographyRoot + " tw-mt-0"}>
         {props.title}:
-      </Typography>
+      </p>
       <div className="tw-mt-0">{props.children}</div>
     </div>
   );

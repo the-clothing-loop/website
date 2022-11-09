@@ -6,7 +6,6 @@ import * as Yup from "yup";
 import {
   Alert,
   CircularProgress,
-  Button,
   Card,
   CardContent,
   Grid,
@@ -330,9 +329,9 @@ const DonationFormContent = () => {
                   md={6}
                   classes={{ root: classes.gridItemsNoPadding }}
                 >
-                  <Button type="submit" className={styles.paymentButton}>
+                  <button type="submit" className="tw-btn bw-btn-primary">
                     {t("donate")}
-                  </Button>
+                  </button>
                 </Grid>
               )}
             </Grid>

@@ -3,7 +3,6 @@ import { Trans, useTranslation } from "react-i18next";
 import { CheckboxField } from "../components/FormFields";
 import theme from "../util/theme";
 
-import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 interface IProps {
@@ -20,9 +19,7 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
         required={false}
         label={
           <>
-            <Typography component="p" className={classes.p}>
-              {t("subscribeToTheClothingLoopNewsletter")}
-            </Typography>
+            <p>{t("subscribeToTheClothingLoopNewsletter")}</p>
           </>
         }
         name="newsletter"
@@ -33,7 +30,7 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
         label={
           <>
             <div className={classes.actionsWrapper}>
-              <Typography component="p" className={classes.p}>
+              <p>
                 <Trans
                   i18nKey="iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star"
                   components={{
@@ -53,7 +50,7 @@ const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
                     ),
                   }}
                 ></Trans>
-              </Typography>
+              </p>
             </div>
           </>
         }

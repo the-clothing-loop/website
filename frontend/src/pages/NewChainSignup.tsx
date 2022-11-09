@@ -6,7 +6,6 @@ import * as Yup from "yup";
 import { Redirect, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
-import { Typography, Button, Alert } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -127,69 +126,43 @@ const Signup = () => {
         {({ errors, touched, setFieldValue }) => (
           <OneColumnLayout>
             <div className={classes.formWrapper}>
-              <Typography
-                variant="h3"
-                className={classes.pageTitle}
-                id="signup-title"
-              >
+              <h3 className={classes.pageTitle} id="signup-title">
                 {t("startNewLoop")}
-              </Typography>
+              </h3>
 
               <ProgressBar activeStep={0} />
-              <Typography
-                component="p"
-                className={classes.p}
-                id="explanatory-text"
-              >
+              <p className={classes.p} id="explanatory-text">
                 {t("startingALoopIsFunAndEasy")}
-              </Typography>
-              <Typography
-                component="p"
-                className={classes.p}
-                id="explanatory-text"
-              >
+              </p>
+              <p className={classes.p} id="explanatory-text">
                 {t("inOurManualYoullFindAllTheStepsNewSwapEmpire")}
-              </Typography>
+              </p>
 
-              <Typography
-                component="p"
-                className={classes.p}
-                id="explanatory-text"
-              >
+              <p className={classes.p} id="explanatory-text">
                 {t("firstRegisterYourLoopViaThisForm")}
-              </Typography>
+              </p>
 
-              <Typography
-                component="p"
+              <p
                 className={classes.p}
                 id="explanatory-text"
                 style={{ marginTop: "5px" }}
               >
                 {t("secondLoginViaLink")}
-              </Typography>
-              <Typography
-                component="p"
+              </p>
+              <p
                 className={classes.p}
                 id="explanatory-text"
                 style={{ marginTop: "5px" }}
               >
                 {t("thirdSendFriendsToWebsite")}
-              </Typography>
+              </p>
 
-              <Typography
-                component="p"
-                className={classes.p}
-                id="explanatory-text"
-              >
+              <p className={classes.p} id="explanatory-text">
                 {" " + t("allDataOfNewParticipantsCanBeAccessed")}
-              </Typography>
-              <Typography
-                component="p"
-                className={classes.p}
-                id="explanatory-text"
-              >
+              </p>
+              <p className={classes.p} id="explanatory-text">
                 {" " + t("happySwapping")}
-              </Typography>
+              </p>
               <Form className={classes.formGrid}>
                 <TextForm
                   required
@@ -228,23 +201,21 @@ const Signup = () => {
                 <FormActions handleClick={handleClickAction} />
 
                 <div className={classes.formSubmitActions}>
-                  <Button
+                  <button
                     type="submit"
-                    className={classes.buttonOutlined}
+                    className="tw-btn tw-btn-primary tw-btn-outline"
                     onClick={() => history.push("/loops/find")}
                   >
                     {t("back")}
-                  </Button>
-                  <Button type="submit" className={classes.button}>
+                  </button>
+                  <button type="submit" className="tw-btn tw-btn-primary">
                     {t("next")}
                     <span className="feather feather-arrow-right tw-ml-4"></span>
-                  </Button>
+                  </button>
                 </div>
               </Form>
               <div className={classes.formHelperLink}>
-                <Typography component="p" className="text">
-                  {t("troublesWithTheSignupContactUs")}
-                </Typography>
+                <p className="text">{t("troublesWithTheSignupContactUs")}</p>
                 <a
                   className="link"
                   href="mailto:hello@clothingloop.org?subject=Troubles signing up to The Clothing Loop"

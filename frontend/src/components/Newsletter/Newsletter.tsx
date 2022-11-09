@@ -87,30 +87,30 @@ export const Newsletter = () => {
     <div className="newsletter">
       {submitted ? (
         <div>
-          <Typography classes={{ root: classes.headingTypographyRoot }}>
+          <p className={classes.headingTypographyRoot}>
             {t("thankYouForSigningUp")}
-          </Typography>
-          <Typography classes={{ root: classes.subheadingTypographyRoot }}>
+          </p>
+          <p className={classes.subheadingTypographyRoot}>
             {t("youAreNowSubscribedToOurMonthlyNewsletter")}
-          </Typography>
+          </p>
         </div>
       ) : isError ? (
         <div>
-          <Typography classes={{ root: classes.headingTypographyRoot }}>
+          <p className={classes.headingTypographyRoot}>
             {t("somethingIsWrong")}
-          </Typography>
-          <Typography classes={{ root: classes.subheadingTypographyRoot }}>
+          </p>
+          <p className={classes.subheadingTypographyRoot}>
             {t("pleaseTryAgainInSeconds")}
-          </Typography>
+          </p>
         </div>
       ) : (
         <div>
-          <Typography classes={{ root: classes.headingTypographyRoot }}>
+          <p className={classes.headingTypographyRoot}>
             {t("keepUpWithOurLatestNews")}
-          </Typography>
-          <Typography classes={{ root: classes.subheadingTypographyRoot }}>
+          </p>
+          <p className={classes.subheadingTypographyRoot}>
             {t("subscribeToRecieveOurLatestNews")}
-          </Typography>
+          </p>
           <Grid
             container
             classes={{ root: classes.textFieldGridRoot }}
@@ -149,24 +149,14 @@ export const Newsletter = () => {
               />
             </Grid>
           </Grid>
-          <Button
-            classes={{ root: classes.buttonRoot }}
+          <button
+            className="tw-btn tw-btn-primary tw-btn-outline"
             onClick={handleSubmitClick}
             id="mobile-submit-bt"
           >
-            <Grid container spacing={3}>
-              <Grid
-                item
-                id="btn-text"
-                classes={{ root: classes.gridItemsNoPadding }}
-              >
-                {t("submit")}
-              </Grid>
-              <Grid item classes={{ root: classes.gridItemsNoPadding }}>
-                <img src={ArrowRight} />
-              </Grid>
-            </Grid>
-          </Button>
+            {t("submit")}
+            <span className="feather feather-arrow-right tw-ml-3"></span>
+          </button>
         </div>
       )}
     </div>

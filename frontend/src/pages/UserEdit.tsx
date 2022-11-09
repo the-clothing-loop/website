@@ -6,7 +6,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 // Material UI
-import { Typography, Button, Alert } from "@mui/material";
+import { Alert } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -15,9 +15,6 @@ import theme from "../util/theme";
 import { ThreeColumnLayout } from "../components/Layouts";
 import SizesDropdown from "../components/SizesDropdown";
 import categories from "../util/categories";
-
-//media
-import RightArrow from "../images/right-arrow-white.svg";
 
 import {
   PhoneFormField,
@@ -129,13 +126,11 @@ const UserEdit = () => {
         {({ setFieldValue, values }) => (
           <ThreeColumnLayout>
             {user.is_root_admin || userIsChainAdmin ? (
-              <Typography variant="h3" className={classes.pageTitle}>
-                {t("editAdminContacts")}
-              </Typography>
+              <h3 className={classes.pageTitle}>{t("editAdminContacts")}</h3>
             ) : (
-              <Typography variant="h3" className={classes.pageTitle}>
+              <h3 className={classes.pageTitle}>
                 {t("editParticipantContacts")}
-              </Typography>
+              </h3>
             )}
             <Form>
               <TextForm
@@ -178,24 +173,17 @@ const UserEdit = () => {
               />
 
               <div className={classes.buttonsWrapper}>
-                <Button
+                <button
                   onClick={() => history.goBack()}
-                  variant="contained"
-                  color="primary"
-                  className={classes.buttonOutlined}
+                  className="tw-btn tw-btn-primary tw-btn-outline"
                 >
                   {t("back")}
-                </Button>
+                </button>
 
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                >
+                <button type="submit" className="tw-btn tw-btn-secondary">
                   {t("submit")}
                   <span className="feather feather-arrow-right tw-ml-4"></span>
-                </Button>
+                </button>
                 {submitted && (
                   <Alert severity="success" sx={{ marginTop: 4 }}>
                     {t("saved")}

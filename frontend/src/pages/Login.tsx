@@ -4,7 +4,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 
-import { Typography, TextField, Button, Alert } from "@mui/material";
+import { TextField, Button, Alert } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -56,11 +56,9 @@ const Login = () => {
       <div className="tw-pt-24 tw-relative">
         <TwoColumnLayout img={LoginImg}>
           <div className="login-content">
-            <Typography variant="h3" className={classes.pageTitle}>
-              {t("login")}
-            </Typography>
+            <h1 className={classes.pageTitle}>{t("login")}</h1>
             <div className={classes.pageDescription}>
-              <Typography component="p" className={classes.p}>
+              <p>
                 <Trans
                   i18nKey="areYouAlreadyHosting<a>JoinAnExistingLoop"
                   components={{
@@ -69,7 +67,7 @@ const Login = () => {
                     ),
                   }}
                 ></Trans>
-              </Typography>
+              </p>
             </div>
 
             <Formik
@@ -94,16 +92,13 @@ const Login = () => {
                     <Alert severity="error">{formik.errors.email}</Alert>
                   )}
                   <div className="tw-flex tw-justify-end tw-mx-0 tw-my-5">
-                    <Button
+                    <button
                       type="submit"
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      fullWidth
+                      className="tw-btn tw-btn-primary tw-w-full"
                     >
                       {t("submit")}
                       <span className="feather feather-arrow-right tw-ml-4"></span>
-                    </Button>
+                    </button>
                   </div>
                 </Form>
               )}

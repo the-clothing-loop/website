@@ -1,5 +1,5 @@
 //MUI
-import { Popover, Typography } from "@mui/material";
+import { Popover } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -26,14 +26,14 @@ const PopoverOnHover: React.FC<IProps> = ({ message }: IProps) => {
 
   return (
     <div className={classes.popoverWrapper}>
-      <Typography
+      <p
         aria-owns={open ? "mouse-over-popover" : undefined}
         aria-haspopup="true"
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
       >
         <span className="feather feather-help-circle" />
-      </Typography>
+      </p>
       <Popover
         id="mouse-over-popover"
         sx={{
@@ -52,13 +52,7 @@ const PopoverOnHover: React.FC<IProps> = ({ message }: IProps) => {
         onClose={handlePopoverClose}
         disableRestoreFocus
       >
-        <Typography
-          className={classes.specificSpacing}
-          sx={{ p: 1 }}
-          style={{ maxWidth: "300px" }}
-        >
-          {message}
-        </Typography>
+        <p className="tw-p-4">{message}</p>
       </Popover>
     </div>
   );

@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet";
 import { Redirect, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -94,13 +93,9 @@ const NewChainLocation = ({ location }: { location: any }) => {
       </Helmet>
       <div className={classes.formContainerLocation}>
         <div className={classes.newLoopLocationForm}>
-          <Typography
-            variant="h3"
-            className={classes.pageTitle}
-            style={{ textAlign: "center" }}
-          >
+          <h3 className={classes.pageTitle + " tw-text-center"}>
             {t("startNewLoop")}
-          </Typography>
+          </h3>
           <div className={classes.progressBarWrapper}>
             <ProgressBar activeStep={1} />
           </div>

@@ -72,13 +72,11 @@ const Contacts = () => {
       </Helmet>
       <div className={classes.contactFormWrapper}>
         <OneColumnLayout>
-          <Typography component="h3" className={classes.pageTitle}>
-            Contact us
-          </Typography>
-          <Typography component="p">
+          <h3 className={classes.pageTitle}>Contact us</h3>
+          <p>
             Questions? Funny stories? Tips? Press enquiries? We’d love to hear
             from you! (Please do check our FAQ first!)
-          </Typography>
+          </p>
 
           <Formik
             initialValues={{
@@ -139,15 +137,10 @@ const Contacts = () => {
                 )}
                 {error ? <Alert severity="error">{error}</Alert> : null}
                 <div className={classes.cardsAction}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                  >
+                  <button type="submit" className="tw-btn tw-btn-primary">
                     {t("submit")}
                     <span className="feather feather-arrow-right tw-ml-4"></span>
-                  </Button>
+                  </button>
                 </div>
               </Form>
             )}

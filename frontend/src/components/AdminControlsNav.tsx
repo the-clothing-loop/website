@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 // Material UI
-import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import theme from "../util/theme";
@@ -24,13 +23,9 @@ const AdminControlsNav = () => {
       {authUser ? (
         <TwoColumnLayout img="/images/Denise.png">
           <Box sx={{ padding: 8 }}>
-            <Typography variant="h3" className={classes.pageTitle}>
-              {`Hello, ${authUser?.name}`}
-            </Typography>
+            <h3 className={classes.pageTitle}>{`Hello, ${authUser?.name}`}</h3>
             <div className={classes.pageDescription}>
-              <Typography component="p" className={classes.p}>
-                {t("thankYouForBeingHere")}
-              </Typography>
+              <p>{t("thankYouForBeingHere")}</p>
             </div>
 
             <Box sx={{ textAlign: "center", marginTop: 8 }}>
