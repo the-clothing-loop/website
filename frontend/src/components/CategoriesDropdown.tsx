@@ -52,7 +52,7 @@ export default function CategoriesDropdown({
         ></span>
       </label>
       <ul
-        className="tw-dropdown-content tw-menu tw-bg-white tw-shadow tw-w-full"
+        className="tw-dropdown-content tw-menu tw-bg-white tw-shadow tw-w-44 sm:tw-w-full"
         tabIndex={0}
       >
         {Object.keys(categories).map((gender: string | Genders) => {

@@ -73,7 +73,7 @@ const SizesDropdown: React.FC<IProps> = ({
         ></span>
       </label>
       <ul
-        className="tw-dropdown-content tw-menu tw-bg-white tw-shadow tw-w-full"
+        className="tw-dropdown-content tw-menu tw-bg-white tw-shadow tw-w-64 sm:tw-w-full"
         tabIndex={0}
       >
         {Object.entries(categories).map(([gender, sizes]) => {
