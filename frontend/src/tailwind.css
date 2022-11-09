@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .tw-text-stroke-yellow-darkest {
+    color: transparent;
+    -webkit-text-stroke: 1.5px #c58c41;
+    -moz-text-stroke: 1.5px #c58c41;
+  }
+  .tw-text-stroke-secondary {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsla(var(--s));
+    -moz-text-stroke: 1.5px hsla(var(--s));
+  }
+  .tw-text-stroke-accent {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsla(var(--a));
+    -moz-text-stroke: 1.5px hsla(var(--a));
+  }
+  .tw-text-stroke-base-100 {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsla(var(--b1));
+    -moz-text-stroke: 1.5px hsla(var(--b1));
+  }
+}
+
 :root {
   --rounded-btn: 0;
   --btn-text-case: default;

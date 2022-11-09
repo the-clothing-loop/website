@@ -12,6 +12,7 @@ const colors = {
     DEFAULT: "#f7c86f",
     dark: "#F4B63F",
     darker: "#F1A40F",
+    darkest: "#C58C41",
   },
   // aqua: "#D5ECDF",
   lightBlue: "#98D9DE",

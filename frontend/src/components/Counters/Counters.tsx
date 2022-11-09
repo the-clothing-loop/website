@@ -4,14 +4,12 @@ import { useState, useRef, useEffect } from "react";
 import SingleCounter from "./SingleCounter";
 import useIntersectionObserver from "./hooks";
 
-import theme from "../../util/theme";
-import { makeStyles } from "@mui/styles";
 import { useTranslation } from "react-i18next";
 import { InfoBody, infoGet } from "../../api/info";
+import { Link } from "react-router-dom";
 
-const Counters = () => {
+export default function Counters() {
   const { t } = useTranslation();
-  const classes = makeStyles(theme as any)();
   const containerRef = useRef(null);
 
   const [info, setInfo] = useState<InfoBody>();
@@ -28,57 +26,55 @@ const Counters = () => {
     setIsVisible(entry.isIntersecting);
   };
 
-  const options = {
+  useIntersectionObserver(callBack, containerRef, {
     root: null,
     rootMargin: "50px",
     threshold: 0.5,
-  };
-
-  useIntersectionObserver(callBack, containerRef, options);
+  });
 
   return (
-    <div ref={containerRef} className={classes.countersWrapper}>
-      <div className="isVisible">
-        <h1>
+    <div ref={containerRef} className="tw-grid tw-grid-cols-2">
+      <div className="tw-stat">
+        <div className="tw-mb-3 tw-stat-value tw-text-6xl tw-font-serif tw-text-stroke-base-100">
           {isVisible ? (
             <SingleCounter end={info?.total_chains || 0} step={2} />
           ) : (
             "0"
           )}
-        </h1>
-        <h3>{t("Loops")}</h3>
+        </div>
+        <div className="tw-stat-title">{t("Loops")}</div>
       </div>
-      <div className="isVisible">
-        <h1>
+
+      <div className="tw-stat">
+        <div className="tw-mb-3 tw-stat-value tw-text-6xl tw-font-serif tw-text-stroke-base-100">
           {isVisible ? (
             <SingleCounter end={info?.total_users || 0} step={20} />
           ) : (
             "0"
           )}
-        </h1>
-        <h3>{t("participants")}</h3>
-      </div>
-      <a className="isVisible" href="/loops/find">
-        <h1>3</h1>
-        <h3>{t("countries")}</h3>
-      </a>
-      <div className={classes.counterLinkWrapper}>
-        <div className={classes.counterLinkIconWrapper}>
-          <a
-            //==== USE THE LINK BELOW WHEN IMPACT REPORT IS READY TO GO LIVE
-            // href="https://heyzine.com/flip-book/a2735d7012.html"
-            //=====
-            href="/loops/find"
-            target="_blank"
-            className={classes.counterLink}
-          >
-            <span className="feather feather-arrow-down" />
-          </a>
         </div>
-        <h3>{t("ourGoals")}</h3>
+        <div className="tw-stat-title">{t("participants")}</div>
+      </div>
+
+      <div className="tw-stat">
+        <div className="tw-mb-3 tw-stat-value tw-text-6xl tw-font-serif tw-text-stroke-base-100">
+          3
+        </div>
+        <div className="tw-stat-title">{t("countries")}</div>
+      </div>
+
+      <div className="tw-stat">
+        <div className="tw-mb-3 tw-stat-value tw-text-6xl tw-font-serif tw-text-stroke-base-100">
+          <Link
+            to="/loops/find"
+            target="_blank"
+            className="tw-btn tw-btn-primary tw-btn-circle"
+          >
+            <span className="feather feather-arrow-right" />
+          </Link>
+        </div>
+        <div className="tw-stat-title tw-opacity-100">{t("ourGoals")}</div>
       </div>
     </div>
   );
-};
-
-export default Counters;
+}
