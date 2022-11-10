@@ -3,47 +3,105 @@ import { useTranslation } from "react-i18next";
 
 //Project resources
 import { Newsletter } from "./Newsletter/Newsletter";
-
-import IconInstagram from "../images/icon-instagram.svg";
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
-import { useContext } from "react";
+import { MouseEvent, useContext, useState } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 
-const Footer = () => {
+export default function Footer() {
   const { t } = useTranslation();
-  const classes = makeStyles(theme as any)();
   const { authUser } = useContext(AuthContext);
+  const [copying, setCopying] = useState(false);
+
+  function copyToClipboard(e: MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+
+    setCopying(true);
+    setTimeout(() => {
+      setCopying(false);
+    }, 3000);
+
+    navigator.clipboard.writeText("hello@clothingloop.org");
+  }
 
   return (
-    <footer className="tw-bg-white tw-pt-40 tw-w-full">
-      <div className="tw-grid tw-grid-cols-2">
-        <div className={classes.footerSections}>
-          <div className={classes.footerSection}>
-            <h5>{t("learnMore")}</h5>
-            <Link to="/faq">{t("faqs")}</Link>
-            <Link to="/contact-us">{t("help")}</Link>
-            <Link to="/about">{t("about")}</Link>
+    <footer className="tw-bg-white tw-pt-32 tw-w-full">
+      <div className="tw-flex tw-flex-col md:tw-flex-row">
+        <div className="tw-w-1/2 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 xl:tw-grid-cols-3 tw-justify-end tw-p-4">
+          <div className="tw-p-4">
+            <span className="tw-block tw-text-secondary tw-font-bold tw-text-2xl tw-mb-3">
+              {t("learnMore")}
+            </span>
+            <Link className="tw-block tw-link tw-link-hover tw-mb-1" to="/faq">
+              {t("faqs")}
+            </Link>
+            <Link
+              className="tw-block tw-link tw-link-hover tw-mb-1"
+              to="/contact-us"
+            >
+              {t("help")}
+            </Link>
+            <Link
+              className="tw-block tw-link tw-link-hover tw-mb-1"
+              to="/about"
+            >
+              {t("about")}
+            </Link>
           </div>
-          <div className={classes.footerSection}>
-            <h5>{t("loops")}</h5>
-            <Link to="/loops/find">{t("findingALoop")}</Link>
-            <Link to="/loops/new/users/signup">{t("startingALoop")}</Link>
+          <div className="tw-p-4">
+            <span className="tw-block tw-text-secondary tw-font-bold tw-text-2xl tw-mb-3">
+              {t("loops")}
+            </span>
+            <Link
+              className="tw-block tw-link tw-link-hover tw-mb-1"
+              to="/loops/find"
+            >
+              {t("findingALoop")}
+            </Link>
+            <Link
+              className="tw-block tw-link tw-link-hover tw-mb-1"
+              to="/loops/new/users/signup"
+            >
+              {t("startingALoop")}
+            </Link>
             {authUser ? (
-              <Link to="/users/logout">{t("logout")}</Link>
+              <Link
+                className="tw-block tw-link tw-link-hover tw-mb-1"
+                to="/users/logout"
+              >
+                {t("logout")}
+              </Link>
             ) : (
-              <Link to="/users/login">{t("login")}</Link>
+              <Link
+                className="tw-block tw-link tw-link-hover tw-mb-1"
+                to="/users/login"
+              >
+                {t("login")}
+              </Link>
             )}
           </div>
-          <div className={classes.footerSection}>
-            <h5>{t("findUs")}</h5>
-            <a href="mailto:hello@clothingloop.com">hello@clothingloop.org</a>
-            <a
-              href="https://www.instagram.com/theclothingloop/"
-              target="_blank"
-              className="feather feather-instagram tw-text-lg"
-            ></a>
+          <div className="tw-p-4">
+            <span className="tw-block tw-text-secondary tw-font-bold tw-text-2xl tw-mb-3">
+              {t("findUs")}
+            </span>
+            <div className="tw-flex tw-items-center">
+              <a
+                href="https://www.instagram.com/theclothingloop/"
+                target="_blank"
+                className="tw-btn tw-btn-circle tw-btn-outline feather feather-instagram tw-text-lg tw-mr-3"
+              ></a>
+              <a
+                href="mailto:hello@clothingloop.com"
+                className={`tw-btn tw-btn-circle tw-btn-outline tw-mr-3 tw-flex tw-justify-center tw-tooltip tw-tooltip-bottom ${
+                  copying ? "tw-tooltip-open" : ""
+                }`}
+                onClick={copyToClipboard}
+                data-tip={
+                  copying ? t("copiedToClipboard") : t("copyToClipboard")
+                }
+              >
+                <span className="feather feather-at-sign tw-text-lg"></span>
+              </a>
+              <span className="tw-invisible peer-hover:tw-visible tw-bg-base-100 tw-rounded-pill"></span>
+            </div>
           </div>
         </div>
         <Newsletter />
@@ -74,6 +132,4 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

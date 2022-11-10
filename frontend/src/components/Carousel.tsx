@@ -7,15 +7,10 @@ const Carousel = () => {
 
   return (
     <div className="tw-relative tw-w-full tw-overflow-hidden tw-h-[40vh]">
-      <figure className="tw-relative tw-w-[500%] tw-m-0 tw-animate-slide">
+      <figure className="tw-relative tw-w-[500%] tw-h-[40vh] tw-animate-slide">
         {featuredImages.map((img, i) => {
           return (
-            <img
-              src={img}
-              key={i}
-              alt="bags"
-              className="tw-w-[20%] tw-float-left"
-            />
+            <img src={img} key={i} alt="bags" className="tw-h-full tw-inline" />
           );
         })}
       </figure>

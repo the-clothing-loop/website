@@ -1,164 +1,98 @@
-import React from "react";
-import { Button, TextField, Typography, Grid } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-import ArrowRight from "./arrow-right.svg";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { contactNewsletterSet } from "../../api/contact";
 
-const useStyles = makeStyles({
-  headingTypographyRoot: {
-    fontFamily: "Playfair Display",
-    fontStyle: "normal",
-    fontWeight: "bold",
-    fontSize: "48px",
-    lineHeight: "64px",
-    color: "#48808B",
-  },
-  subheadingTypographyRoot: {
-    marginTop: "16px",
-    fontFamily: "Avenir", // Not a free font. Available by default in MacOS
-    fontWeight: "normal",
-    fontSize: "18px",
-    lineHeight: "25px",
-    color: "#3C3C3B",
-  },
-  textFieldGridRoot: {
-    marginTop: "-8px",
-  },
-  muiInputLabelRootTextFieldRoot: {
-    "& label.MuiInputLabel-root": { color: "#48808B" },
-    "& .MuiInputBase-input": { color: "#48808B" },
-    "& .MuiInput-underline": {
-      "&:after": { borderBottom: "none" },
-    },
-  },
-  buttonRoot: {
-    marginTop: "24px",
-    fontFamily: "Avenir", // Not a free font. Available by default in MacOS
-    fontSize: "16px",
-    fontWeight: 500,
-    padding: "12px 32px",
-    borderRadius: "0px",
-    background: "#f7C86f",
-    color: "#ffffff",
-    textTransform: "capitalize",
-    "&:hover": {
-      background: "#f7a00f", // Change color, not part of Figma
-    },
-  },
-  gridItemsNoPadding: {
-    padding: 0,
-  },
-});
-
 export const Newsletter = () => {
-  const classes = useStyles();
   const { t } = useTranslation();
 
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [submitted, setSubmitted] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleNameChange(e: ChangeEvent<HTMLInputElement>) {
     setName(e.target.value);
-  };
+  }
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleEmailChange(e: ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
-  };
+  }
 
-  const handleSubmitClick = async () => {
-    try {
-      await contactNewsletterSet(name, email, true);
-    } catch (error) {
-      setIsError(true);
-      setTimeout(() => setIsError(false), 3000);
+  function handleSubmitClick(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    (async () => {
+      try {
+        await contactNewsletterSet(name, email, true);
+      } catch (error) {
+        console.error(error);
+        setIsError(true);
+        setTimeout(() => setIsError(false), 3000);
 
-      return;
-    }
+        return;
+      }
 
-    setSubmitted(true);
-  };
+      setSubmitted(true);
+    })();
+  }
 
   return (
-    <div className="newsletter">
+    <form
+      onSubmit={handleSubmitClick}
+      className="tw-bg-teal-light tw-w-1/2 tw-py-14 tw-px-16"
+    >
       {submitted ? (
-        <div>
-          <p className={classes.headingTypographyRoot}>
+        <div className="tw-max-w-[600px]">
+          <p className="tw-font-serif tw-text-secondary tw-font-bold tw-text-5xl tw-mb-4 tw-leading-snug">
             {t("thankYouForSigningUp")}
           </p>
-          <p className={classes.subheadingTypographyRoot}>
-            {t("youAreNowSubscribedToOurMonthlyNewsletter")}
-          </p>
+          <p className="">{t("youAreNowSubscribedToOurMonthlyNewsletter")}</p>
         </div>
       ) : isError ? (
-        <div>
-          <p className={classes.headingTypographyRoot}>
+        <div className="tw-max-w-[600px]">
+          <p className="tw-font-serif tw-text-secondary tw-font-bold tw-text-5xl tw-mb-4 tw-leading-snug">
             {t("somethingIsWrong")}
           </p>
-          <p className={classes.subheadingTypographyRoot}>
-            {t("pleaseTryAgainInSeconds")}
-          </p>
+          <p className="">{t("pleaseTryAgainInSeconds")}</p>
         </div>
       ) : (
-        <div>
-          <p className={classes.headingTypographyRoot}>
+        <div className="tw-max-w-[600px]">
+          <h2 className="tw-font-serif tw-text-secondary tw-font-bold tw-text-5xl tw-mb-4 tw-leading-snug">
             {t("keepUpWithOurLatestNews")}
-          </p>
-          <p className={classes.subheadingTypographyRoot}>
-            {t("subscribeToRecieveOurLatestNews")}
-          </p>
-          <Grid
-            container
-            classes={{ root: classes.textFieldGridRoot }}
-            spacing={4}
-            wrap="nowrap"
-          >
-            <Grid
-              item
-              id="mobile-textfield"
-              classes={{ root: classes.gridItemsNoPadding }}
-            >
-              <TextField
-                classes={{
-                  root: classes.muiInputLabelRootTextFieldRoot,
-                }}
-                label={t("name")}
+          </h2>
+          <p className="tw-mb-3">{t("subscribeToRecieveOurLatestNews")}</p>
+
+          <div className="tw-flex tw-flex-row tw-mb-6">
+            <label className="tw-form-control tw-w-52 tw-mr-4">
+              <span className="tw-label tw-text-sm">{t("name")}</span>
+              <input
+                type="text"
+                className="tw-input tw-input-bordered tw-w-full tw-input-ghost"
                 value={name}
                 onChange={handleNameChange}
-                variant="standard"
               />
-            </Grid>
-            <Grid
-              item
-              id="mobile-textfield"
-              classes={{ root: classes.gridItemsNoPadding }}
-            >
-              <TextField
-                classes={{
-                  root: classes.muiInputLabelRootTextFieldRoot,
-                }}
+            </label>
+            <label className="tw-form-control tw-w-52">
+              <span className="tw-label tw-text-sm">{t("emailAddress")}</span>
+              <input
                 type="email"
-                label={t("emailAddress")}
+                className="tw-input tw-input-bordered tw-w-full tw-input-ghost"
                 value={email}
                 onChange={handleEmailChange}
-                variant="standard"
               />
-            </Grid>
-          </Grid>
-          <button
-            className="tw-btn tw-btn-primary tw-btn-outline"
-            onClick={handleSubmitClick}
-            id="mobile-submit-bt"
-          >
-            {t("submit")}
-            <span className="feather feather-arrow-right tw-ml-3"></span>
-          </button>
+            </label>
+          </div>
+          <div className="tw-bg-white tw-inline-block">
+            <button
+              className="tw-btn tw-btn-primary tw-btn-outline"
+              type="submit"
+            >
+              {t("submit")}
+              <span className="feather feather-arrow-right tw-ml-3"></span>
+            </button>
+          </div>
         </div>
       )}
-    </div>
+    </form>
   );
 };

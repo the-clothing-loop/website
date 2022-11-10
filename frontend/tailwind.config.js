@@ -5,7 +5,7 @@ const colors = {
   white: "#ffff",
   black: "#3C3C3B",
   teal: {
-    light: "#D5ECDF",
+    light: "#ecf2f3",
     DEFAULT: "#48808B",
   },
   yellow: {

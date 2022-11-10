@@ -6,7 +6,6 @@ import { Link, useHistory } from "react-router-dom";
 // Project resources
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
-import Donations from "../components/Donations";
 import Testimonials from "../components/Testimonials";
 
 import { StandaloneSearchBar } from "../components/FindChain/StandaloneSearchBar";
@@ -26,7 +25,7 @@ const WdcdLogo = "/images/logos/Logo_WDCD.png";
 const DoenLogo = "/images/logos/DOEN.png";
 const PNHLogo = "/images/logos/PNH_logo.png";
 
-const Home = () => {
+export default function Home() {
   const { t } = useTranslation();
 
   let history = useHistory();
@@ -258,17 +257,47 @@ const Home = () => {
         </section>
 
         <Testimonials />
-        <Donations />
+
+        <section className="tw-flex tw-flex-col md:tw-flex-row tw-items-end tw-mb-20">
+          <div className="tw-w-1/2 tw-flex tw-justify-end">
+            <img
+              src="/images/TCL-Jewellery.jpg"
+              alt="jewellery"
+              className="tw-w-full tw-max-w-[500px]"
+            />
+          </div>
+
+          <div className="tw-w-1/2 tw-flex">
+            <div className="tw-relative tw-p-10 tw-max-w-[400px]">
+              <div className="-tw-z-10 tw-absolute tw-w-full tw-h-[300px] tw-bg-yellow/10 -tw-left-10 tw-bottom-0"></div>
+              <h2
+                className="tw-font-serif tw-font-bold tw-text-4xl tw-text-primary-focus [&_span]:tw-text-2xl tw-mb-7"
+                dangerouslySetInnerHTML={{
+                  __html: t("smallActsCanChangeTheWorld"),
+                }}
+              ></h2>
+              <p className="tw-mb-4">
+                {t("weAreWorkingOnMakingTheClothingLoopBetter")}
+              </p>
+              <Link
+                to="/donate"
+                className="tw-btn tw-btn-outline tw-btn-primary tw-text-base tw-border-2"
+              >
+                {t("donate")}
+              </Link>
+            </div>
+          </div>
+        </section>
 
         <section>
           <div className="tw-relative tw-container tw-mx-auto tw-font-serif tw-font-bold tw-text-secondary tw-mb-6">
-            <div className="tw-bg-teal-light tw-opacity-40 tw-absolute -tw-left-10 tw-top-10 -tw-z-10 tw-w-[600px] tw-h-[200px]">
+            <div className="tw-bg-teal-light tw-absolute -tw-left-10 tw-top-10 -tw-z-10 tw-w-[600px] tw-h-[200px]">
               &nbsp;
             </div>
             <h2 className="tw-text-7xl tw-mb-4">{t("Partners & Sponsors")}</h2>
             <p className="tw-text-xl">
               {t("wantToSupportUsToo") + " "}
-              <a href="mailto:hello@clothingloop.org">
+              <a className="tw-link" href="mailto:hello@clothingloop.org">
                 {t("wedLoveToHearFromYou")}
               </a>{" "}
             </p>
@@ -277,13 +306,7 @@ const Home = () => {
             {supporters[0].map((el, i) => {
               return (
                 <li className="tw-w-1/2 md:tw-w-1/4 tw-flex tw-justify-center tw-mb-4 md:tw-mb-0">
-                  <a
-                    key={i}
-                    className="tw-tooltip tw-w-40"
-                    href={el.url}
-                    target="_blank"
-                    data-tip={el.alt}
-                  >
+                  <a key={i} className="tw-w-40" href={el.url} target="_blank">
                     <img className="tw-w-full" src={el.logo} alt={el.alt} />
                   </a>
                 </li>
@@ -292,13 +315,7 @@ const Home = () => {
             {supporters[1].map((el, i) => {
               return (
                 <li className="tw-w-full md:tw-w-1/3 tw-flex tw-justify-center tw-mb-4 md:tw-mb-0">
-                  <a
-                    key={i}
-                    className="tw-tooltip tw-w-52"
-                    href={el.url}
-                    target="_blank"
-                    data-tip={el.alt}
-                  >
+                  <a key={i} className="tw-w-52" href={el.url} target="_blank">
                     <img className="tw-w-full" src={el.logo} alt={el.alt} />
                   </a>
                 </li>
@@ -311,6 +328,4 @@ const Home = () => {
       </div>
     </>
   );
-};
-
-export default Home;
+}
