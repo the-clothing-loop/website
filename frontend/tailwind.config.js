@@ -60,9 +60,16 @@ module.exports = {
       animation: {
         slide: "8s slide infinite",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            color: colors.black,
+          },
+        },
+      },
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [require("daisyui"), require("@tailwindcss/typography")],
   daisyui: {
     themes: [
       {
@@ -77,6 +84,7 @@ module.exports = {
           "base-100": colors.white,
           "base-200": colors.grey.light,
           "base-300": colors.grey.DEFAULT,
+          "base-content": colors.black,
         },
       },
     ],

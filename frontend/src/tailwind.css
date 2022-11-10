@@ -29,3 +29,7 @@
   --rounded-btn: 0;
   --btn-text-case: default;
 }
+
+.tw-prose {
+  @apply prose-headings:tw-font-serif prose-headings:tw-text-secondary prose-headings:tw-font-bold prose-a:tw-link;
+}
