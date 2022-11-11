@@ -12,7 +12,6 @@ import { makeStyles } from "@mui/styles";
 import theme from "../util/theme";
 
 // Project resources
-import { ThreeColumnLayout } from "../components/Layouts";
 import SizesDropdown from "../components/SizesDropdown";
 import categories from "../util/categories";
 
@@ -124,7 +123,7 @@ const UserEdit = () => {
         onSubmit={onSubmit}
       >
         {({ setFieldValue, values }) => (
-          <ThreeColumnLayout>
+          <div className="tw-w-full sm:tw-w-screen-sm tw-mx-auto tw-p-10">
             {user.is_root_admin || userIsChainAdmin ? (
               <h3 className={classes.pageTitle}>{t("editAdminContacts")}</h3>
             ) : (
@@ -196,7 +195,7 @@ const UserEdit = () => {
                 )}
               </div>
             </Form>
-          </ThreeColumnLayout>
+          </div>
         )}
       </Formik>
     </>

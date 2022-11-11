@@ -1,65 +1,31 @@
-import { Grid } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { PropsWithChildren } from "react";
 
-import theme from "../util/theme";
-
-interface ITwoColumnsLayout {
-  children: any;
-  img: any;
-}
-
-interface IThreeColumnsLayout {
-  children: any;
-}
-
-interface IOneColumnLayout {
-  children: any;
-}
-
-// Standard responsive three column grid used in the app
-const ThreeColumnLayout: React.FC<IThreeColumnsLayout> = ({ children }) => {
-  const classes = makeStyles(theme as any)();
-
+export function TwoColumnLayout({
+  children,
+  img,
+}: PropsWithChildren<{ img: string }>) {
   return (
-    <Grid container className={classes.threeColumnsFormWrapper}>
-      <Grid item sm />
-      <Grid item sm className={classes.threeColumnsForm}>
-        {children}
-      </Grid>
-      <Grid item sm />
-    </Grid>
-  );
-};
-
-const TwoColumnLayout: React.FC<ITwoColumnsLayout> = ({ children, img }) => {
-  const classes = makeStyles(theme as any)();
-
-  return (
-    <div className={classes.formContainer}>
-      <Grid container className={classes.form}>
-        <Grid item sm className={classes.formGridItem}>
-          <img src={img} alt="form-img" className={classes.formImg} />
-        </Grid>
-        <Grid item sm className={classes.formGridItem}>
-          {children}
-        </Grid>
-      </Grid>
+    <div className="tw-flex">
+      <div className="tw-w-1/2 tw-flex tw-justify-end tw-pr-10">
+        <img
+          src={img}
+          alt="form-img"
+          className="tw-max-w-[600px] tw-max-h-[600px]"
+        />
+      </div>
+      <div className="tw-1/2">
+        <div className="tw-max-w-[600px] tw-w-full">{children}</div>
+      </div>
     </div>
   );
-};
+}
 
-const OneColumnLayout: React.FC<IOneColumnLayout> = ({ children }) => {
-  const classes = makeStyles(theme as any)();
-
+export function OneColumnLayout({ children }: PropsWithChildren<{}>) {
   return (
-    <div className={classes.formContainer}>
-      <Grid container className={classes.singleForm}>
-        <Grid item sm>
-          {children}
-        </Grid>
-      </Grid>
+    <div className="tw-container">
+      <div className="tw-flex">
+        <div className="tw-w-1/2">{children}</div>
+      </div>
     </div>
   );
-};
-
-export { ThreeColumnLayout, TwoColumnLayout, OneColumnLayout };
+}

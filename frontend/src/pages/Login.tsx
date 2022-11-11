@@ -1,48 +1,60 @@
-import { useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { Link } from "react-router-dom";
-
-import { TextField, Button, Alert } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
+import { Link, Redirect } from "react-router-dom";
 
 // Project resources
 import { TwoColumnLayout } from "../components/Layouts";
 
 import { Helmet } from "react-helmet";
 import { loginEmail } from "../api/login";
+import { ToastContext } from "../providers/ToastProvider";
+import FormJup from "../util/form-jup";
+import { AuthContext } from "../providers/AuthProvider";
 
 //media
 const CirclesFrame = "/images/circles.png";
 const LoginImg = "/images/Login.jpg";
 
 const Login = () => {
+  const { authUser } = useContext(AuthContext);
+  const { addToast, addToastError } = useContext(ToastContext);
   const { t } = useTranslation();
-  const classes = makeStyles(theme as any)();
-  const [submitted, setSubmitted] = useState(false);
+
   const [error, setError] = useState("");
 
-  const validate = Yup.object({
-    email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
-  });
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    const values = FormJup<{ email: string }>(e);
 
-  const onSubmit = async (data: any) => {
-    if (!submitted) {
+    const email = values.email.toString();
+
+    if (email === "") {
+      setError("email");
+      return;
+    }
+
+    (async () => {
       try {
-        const continueUrl = `${
-          process.env.REACT_APP_BASE_URL
-        }/users/login-email-finished/${encodeURI(data.email)}`;
-        await loginEmail(data.email);
-        setSubmitted(true);
+        await loginEmail(email);
+        addToast({
+          type: "info",
+          message: t("loginEmailSent"),
+        });
       } catch (e: any) {
         console.error(e);
-        setError(t("noResultsFound"));
+        setError("email");
+        addToastError(e?.data || t("noResultsFound"));
       }
-    }
-  };
+    })();
+  }
+  if (authUser) {
+    addToast({
+      type: "info",
+      message: t("userIsLoggedIn"),
+    });
+    return <Redirect to="/admin/dashboard" />;
+  }
 
   return (
     <>
@@ -51,71 +63,49 @@ const Login = () => {
         <meta name="description" content="Login" />
       </Helmet>
 
-      <div className="background-frame-login"></div>
-      <img className="circles-frame-login" src={CirclesFrame} alt="" />
-      <div className="tw-pt-24 tw-relative">
+      <main className="tw-pt-10">
         <TwoColumnLayout img={LoginImg}>
-          <div className="login-content">
-            <h1 className={classes.pageTitle}>{t("login")}</h1>
-            <div className={classes.pageDescription}>
-              <p>
+          <div className="tw-relative tw-p-10">
+            <div className="tw-p-10 tw-bg-teal-light">
+              <img
+                className="tw-absolute tw-bottom-[-12px] tw-left-[-12px] -tw-z-10"
+                src={CirclesFrame}
+                alt=""
+              />
+              <h1 className="tw-font-serif tw-font-bold tw-text-5xl tw-text-secondary tw-mb-8">
+                {t("login")}
+              </h1>
+              <p className="tw-leading-7 tw-mb-6">
                 <Trans
                   i18nKey="areYouAlreadyHosting<a>JoinAnExistingLoop"
                   components={{
-                    a: (
-                      <Link className={classes.a} to="../../loops/find"></Link>
-                    ),
+                    a: <Link className="tw-link" to="../../loops/find"></Link>,
                   }}
                 ></Trans>
               </p>
-            </div>
 
-            <Formik
-              initialValues={{
-                email: "",
-              }}
-              validationSchema={validate}
-              onSubmit={async (v) => onSubmit(v)}
-            >
-              {(formik) => (
-                <Form className="tw-flex tw-flex-col">
-                  <TextField
-                    className={classes.textField}
-                    {...formik.getFieldProps("email")}
-                    label={t("email")}
-                    variant="standard"
-                    type="email"
-                    required
-                    fullWidth
-                  />
-                  {formik.submitCount > 0 && formik.errors.email && (
-                    <Alert severity="error">{formik.errors.email}</Alert>
-                  )}
-                  <div className="tw-flex tw-justify-end tw-mx-0 tw-my-5">
-                    <button
-                      type="submit"
-                      className="tw-btn tw-btn-primary tw-w-full"
-                    >
-                      {t("submit")}
-                      <span className="feather feather-arrow-right tw-ml-4"></span>
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-            {error && (
-              <Alert className={classes.errorAlert} severity="error">
-                {error}
-              </Alert>
-            )}
-            {submitted && (
-              <Alert className={classes.infoAlert} severity="info">
-                {t("loginEmailSent")}
-              </Alert>
-            )}
+              <form onSubmit={onSubmit} className="tw-flex tw-flex-col">
+                <input
+                  className={`tw-input tw-w-full invalid:tw-input-warning ${
+                    error ? "tw-input-error" : "tw-input-secondary"
+                  }`}
+                  placeholder={t("email")}
+                  type="email"
+                  name="email"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="tw-btn tw-btn-primary tw-w-full tw-mt-6"
+                >
+                  {t("submit")}
+                  <span className="feather feather-arrow-right tw-ml-4"></span>
+                </button>
+              </form>
+            </div>
           </div>
         </TwoColumnLayout>
-      </div>
+      </main>
     </>
   );
 };

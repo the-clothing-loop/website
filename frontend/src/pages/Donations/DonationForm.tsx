@@ -63,7 +63,7 @@ function DonationFormContent() {
 
   const { addToastError } = useContext(ToastContext);
 
-  function submit(e: FormEvent<HTMLFormElement>) {
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     const values = FormJup<FormValues>(e);
@@ -179,7 +179,7 @@ function DonationFormContent() {
 
   return (
     <div>
-      <form onSubmit={submit} id="donation-form">
+      <form onSubmit={onSubmit} id="donation-form">
         <p className="tw-mb-3">
           {t("howDoYouWantToContributeToTheClothingLoop")}
         </p>

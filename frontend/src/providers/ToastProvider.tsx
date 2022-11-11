@@ -85,9 +85,7 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
       <li className={classes} key={t.id}>
         <div className="tw-w-[300px]">
           <span className={icon}></span>
-          <span className="tw-font-bold">
-            {t.message} {t.id}
-          </span>
+          <span className="tw-font-bold">{t.message}</span>
         </div>
         {t.actions && (
           <div className="tw-flex-none">
