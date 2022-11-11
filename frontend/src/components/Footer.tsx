@@ -94,9 +94,7 @@ export default function Footer() {
                   copying ? "tw-tooltip-open" : ""
                 }`}
                 onClick={copyToClipboard}
-                data-tip={
-                  copying ? t("copiedToClipboard") : t("copyToClipboard")
-                }
+                data-tip={copying ? t("copiedToClipboard") : t("copy")}
               >
                 <span className="feather feather-at-sign tw-text-lg"></span>
               </a>

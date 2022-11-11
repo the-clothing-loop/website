@@ -1,22 +1,13 @@
-import DonationForm from "../../components/Donation/DonationForm";
-import DonationCompleted from "../../components/Donation/DonationCompleted";
-
-//Project resources
-import theme from "../../util/theme";
 import { RouteComponentProps } from "react-router";
 import { Helmet } from "react-helmet";
-
-import { makeStyles } from "@mui/styles";
+import DonationForm from "./DonationForm";
+import DonationCompleted from "./DonationCompleted";
 
 type TParams = {
   status?: string;
 };
 
-const Donate = ({ match }: RouteComponentProps<TParams>) => {
-  const classes = makeStyles(theme as any)();
-  const params = match.params;
-  const { status } = params;
-
+export default function Donate({ match }: RouteComponentProps<TParams>) {
   return (
     <>
       <Helmet>
@@ -24,10 +15,12 @@ const Donate = ({ match }: RouteComponentProps<TParams>) => {
         <meta name="description" content="Donate" />
       </Helmet>
       <div>
-        {status === "thankyou" ? <DonationCompleted /> : <DonationForm />}
+        {match.params.status === "thankyou" ? (
+          <DonationCompleted />
+        ) : (
+          <DonationForm />
+        )}
       </div>
     </>
   );
-};
-
-export default Donate;
+}

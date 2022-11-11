@@ -22,12 +22,12 @@ import (
 func PaymentsInitiate(c *gin.Context) {
 	var body struct {
 		PriceCents  int64  `json:"price_cents" binding:"omitempty"`
-		Email       string `json:"email" binding:"omitempty,email"`
+		Email       string `json:"email" binding:"required,email"`
 		IsRecurring bool   `json:"is_recurring"`
 		PriceID     string `json:"price_id"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Email required in json"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Email required"))
 		return
 	}
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { loginValidate as apiLogin, logout as apiLogout } from "../api/login";
 import { User } from "../api/types";
@@ -19,7 +19,7 @@ export type AuthProps = {
   authUserRefresh: () => Promise<UserRefreshState>;
 };
 
-export const AuthContext = React.createContext<AuthProps>({
+export const AuthContext = createContext<AuthProps>({
   authUser: null,
   loading: true,
   authLoginValidate: (apiKey) => Promise.reject(),
@@ -29,7 +29,7 @@ export const AuthContext = React.createContext<AuthProps>({
 
 const LOCALSTORAGE_USER_UID = "user_uid";
 
-export const AuthProvider = ({ children }: any) => {
+export function AuthProvider({ children }: PropsWithChildren<{}>) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const authLoginValidate = (apiKey: string) => {
@@ -97,4 +97,4 @@ export const AuthProvider = ({ children }: any) => {
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-};
+}

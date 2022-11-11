@@ -1,7 +1,7 @@
-import { TwoColumnLayout } from "../Layouts";
+import { TwoColumnLayout } from "../../components/Layouts";
 import { useTranslation } from "react-i18next";
 
-const DonationCompleted = () => {
+export default function DonationCompleted() {
   const { t } = useTranslation();
   return (
     <div className="tw-py-16">
@@ -21,6 +21,4 @@ const DonationCompleted = () => {
       ;
     </div>
   );
-};
-
-export default DonationCompleted;
+}
