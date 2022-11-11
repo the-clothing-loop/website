@@ -31,5 +31,5 @@
 }
 
 .tw-prose {
-  @apply prose-headings:tw-font-serif prose-headings:tw-text-secondary prose-headings:tw-font-bold prose-a:tw-link;
+  @apply prose-headings:tw-font-serif prose-headings:tw-text-secondary prose-headings:tw-font-bold prose-a:tw-link tw-max-w-screen-md;
 }

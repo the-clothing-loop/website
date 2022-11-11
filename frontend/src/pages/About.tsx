@@ -1,11 +1,9 @@
-import { Link, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { Helmet } from "react-helmet";
 import theme from "../util/theme";
 import { Trans, useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
-const About = () => {
-  const classes = makeStyles(theme as any)();
+export default function About() {
   const { t } = useTranslation("about");
 
   return (
@@ -14,61 +12,76 @@ const About = () => {
         <title>The Clothing Loop | About</title>
         <meta name="description" content="About The Clothing Loop" />
       </Helmet>
-      <div className={classes.legalPagesWrapper}>
-        <h1 className={classes.pageTitle}>{t("aboutTheClothingLoop")}</h1>
-        <div className={classes.legalPagesContentWrapper}>
-          <div className="iframe-wrapper">
-            <div className="iframe-content">
-              <iframe
-                src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
-                allow="autoplay; fullscreen; picture-in-picture"
-                className="vimeo-video"
-              ></iframe>
-            </div>
-            <script src="https://player.vimeo.com/api/player.js"></script>
+      <main>
+        <div className="tw-max-w-screen-md tw-mx-auto tw-pt-10 tw-px-20">
+          <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl ">
+            {t("aboutTheClothingLoop")}
+          </h1>
+          <div className="tw-flex tw-justify-center tw-my-10">
+            <iframe
+              src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              className="tw-w-2/3 tw-aspect-video"
+            ></iframe>
           </div>
+
+          <div className="tw-prose tw-mx-auto">
+            <p>
+              <Trans
+                i18nKey="p"
+                ns="about"
+                components={{
+                  p: <p></p>,
+                  aFind: <Link className="tw-link" to="/loops/find"></Link>,
+                }}
+              ></Trans>
+            </p>
+          </div>
+          <h2 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-4xl tw-mb-6">
+            {t("team")}:
+          </h2>
           <Trans
-            i18nKey="p"
+            i18nKey="theClothingLoopIsAnIndependent<a>"
             ns="about"
             components={{
-              p: <p></p>,
-              aFind: <Link href="./loops/find"></Link>,
+              aSlowFashion: (
+                <a
+                  href="https://slowfashion.global/"
+                  target="_blank"
+                  className="tw-link"
+                ></a>
+              ),
             }}
           ></Trans>
-          <h3 className={classes.h3}>{t("team")}:</h3>
-          <p>
-            <Trans
-              i18nKey="theClothingLoopIsAnIndependent<a>"
-              ns="about"
-              components={{
-                aSlowFashion: (
-                  <Link
-                    href="https://slowfashion.global/"
-                    target="_blank"
-                  ></Link>
-                ),
-              }}
-            ></Trans>
-          </p>
+        </div>
+        <div className="">
           <img
             src="/images/press-clippings-site.jpg"
             alt=""
-            style={{ position: "relative" }}
+            className="tw-my-10 tw-w-full tw-max-h-[600px] tw-object-contain tw-object-center"
           />
-          <Trans
-            i18nKey="thePeople"
-            ns="about"
-            components={{
-              p: <p></p>,
-              imgTeam: <img src="/images/Team-pics.jpg" alt="" />,
-            }}
-          ></Trans>
+          <div className="tw-prose tw-mx-auto tw-pt-10 tw-px-20">
+            <p>
+              <Trans
+                i18nKey="thePeople"
+                ns="about"
+                components={{
+                  p: <p></p>,
+                  imgTeam: (
+                    <img
+                      src="/images/Team-pics.jpg"
+                      alt="faces of Paloeka and Nichon"
+                      className="tw-h-60 tw-mx-auto"
+                    />
+                  ),
+                }}
+              ></Trans>
+            </p>
 
-          <p>{t("thankYou", { ns: "translation" })}</p>
+            <p>{t("thankYou", { ns: "translation" })}</p>
+          </div>
         </div>
-      </div>
+      </main>
     </>
   );
-};
-
-export default About;
+}
