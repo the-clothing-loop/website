@@ -43,7 +43,6 @@ const TermsOfUse = React.lazy(() => import("./pages/TermsOfUse"));
 const FAQ = React.lazy(() => import("./pages/FAQ/FAQ"));
 const AdminControlsNav = React.lazy(
   () => import("./components/AdminControlsNav")
-);
 const AddChainAdmin = React.lazy(() => import("./pages/AddChainAdmin"));
 
 const theme = createTheme(themeFile);
@@ -52,11 +51,11 @@ const App = () => {
   return (
     <StyledEngineProvider injectFirst>
       <MuiThemeProvider theme={theme}>
-        <AuthProvider>
-          <ChainsProvider>
-            <div className="tw-min-h-screen">
-              <ToastProvider>
-                <Router>
+        <Router>
+          <AuthProvider>
+            <ChainsProvider>
+              <div className="tw-min-h-screen">
+                <ToastProvider>
                   <ScrollToTop>
                     <Navbar />
                     <Switch>
@@ -147,11 +146,11 @@ const App = () => {
                     </Switch>
                     <Footer />
                   </ScrollToTop>
-                </Router>
-              </ToastProvider>
-            </div>
-          </ChainsProvider>
-        </AuthProvider>
+                </ToastProvider>
+              </div>
+            </ChainsProvider>
+          </AuthProvider>
+        </Router>
       </MuiThemeProvider>
     </StyledEngineProvider>
   );

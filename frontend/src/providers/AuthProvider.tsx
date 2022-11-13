@@ -32,7 +32,7 @@ const LOCALSTORAGE_USER_UID = "user_uid";
 export function AuthProvider({ children }: PropsWithChildren<{}>) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const authLoginValidate = (apiKey: string) => {
+  function authLoginValidate(apiKey: string) {
     setLoading(true);
     return (async () => {
       try {
@@ -46,8 +46,8 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
       }
       setLoading(false);
     })();
-  };
-  const authLogout = () => {
+  }
+  function authLogout() {
     setLoading(true);
     return (async () => {
       await apiLogout().catch((e) => console.warn(e));
@@ -55,9 +55,10 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
       setUser(null);
       setLoading(false);
     })();
-  };
-  const authUserRefresh = () => {
+  }
+  function authUserRefresh() {
     setLoading(true);
+    console.log("trying to login");
     return (async () => {
       let oldUserUID = window.localStorage.getItem(LOCALSTORAGE_USER_UID);
       if (oldUserUID != null) {
@@ -69,16 +70,23 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
           window.localStorage.setItem(LOCALSTORAGE_USER_UID, user.uid);
           setLoading(false);
         } catch (e) {
-          await authLogout();
+          await authLogout().catch((e) => {
+            console.error("force logout failed:", e);
+          });
+          console.log("force logout");
           return UserRefreshState.ForceLoggedOut;
         }
+        console.log("logged in");
         return UserRefreshState.LoggedIn;
       }
+
+      console.log("never logged in");
       return UserRefreshState.NeverLoggedIn;
     })();
-  };
+  }
   const history = useHistory();
   useEffect(() => {
+    console.log("trying to login");
     authUserRefresh().then((res) => {
       if (res == UserRefreshState.ForceLoggedOut) {
         if (history.location.pathname != "/") {
