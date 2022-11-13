@@ -41,8 +41,7 @@ const About = React.lazy(() => import("./pages/About"));
 const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfUse = React.lazy(() => import("./pages/TermsOfUse"));
 const FAQ = React.lazy(() => import("./pages/FAQ/FAQ"));
-const AdminControlsNav = React.lazy(
-  () => import("./components/AdminControlsNav")
+const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const AddChainAdmin = React.lazy(() => import("./pages/AddChainAdmin"));
 
 const theme = createTheme(themeFile);
@@ -141,7 +140,7 @@ const App = () => {
                       <Route
                         exact
                         path="/admin/dashboard"
-                        component={AdminControlsNav}
+                        component={AdminDashboard}
                       />
                     </Switch>
                     <Footer />
