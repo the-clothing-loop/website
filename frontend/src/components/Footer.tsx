@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 //Project resources
-import { Newsletter } from "./Newsletter/Newsletter";
+import { Newsletter } from "./Newsletter";
 import { MouseEvent, useContext, useState } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 

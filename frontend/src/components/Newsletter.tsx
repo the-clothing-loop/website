@@ -1,31 +1,34 @@
-import { ChangeEvent, FormEvent, useState } from "react";
-
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { contactNewsletterSet } from "../../api/contact";
+
+import { contactNewsletterSet } from "../api/contact";
+import { ToastContext } from "../providers/ToastProvider";
+import FormJup from "../util/form-jup";
+import { GinParseErrors } from "../util/gin-errors";
+
+interface FormValues {
+  name: string;
+  email: string;
+}
 
 export const Newsletter = () => {
   const { t } = useTranslation();
+  const { addToastError } = useContext(ToastContext);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  function handleNameChange(e: ChangeEvent<HTMLInputElement>) {
-    setName(e.target.value);
-  }
-
-  function handleEmailChange(e: ChangeEvent<HTMLInputElement>) {
-    setEmail(e.target.value);
-  }
-
-  function handleSubmitClick(e: FormEvent<HTMLFormElement>) {
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const values = FormJup<FormValues>(e);
     (async () => {
       try {
-        await contactNewsletterSet(name, email, true);
-      } catch (error) {
-        console.error(error);
+        await contactNewsletterSet(values.name, values.email, true);
+      } catch (e: any) {
+        console.error(e);
+        addToastError(e?.data ? GinParseErrors(t, e.data) : e);
+
         setIsError(true);
         setTimeout(() => setIsError(false), 3000);
 
@@ -38,7 +41,7 @@ export const Newsletter = () => {
 
   return (
     <form
-      onSubmit={handleSubmitClick}
+      onSubmit={onSubmit}
       className="tw-bg-teal-light tw-w-1/2 tw-py-14 tw-px-16"
     >
       {submitted ? (
@@ -67,18 +70,19 @@ export const Newsletter = () => {
               <span className="tw-label tw-text-sm">{t("name")}</span>
               <input
                 type="text"
+                name="name"
                 className="tw-input tw-input-bordered tw-w-full tw-input-ghost"
-                value={name}
-                onChange={handleNameChange}
+                min={3}
+                required
               />
             </label>
             <label className="tw-form-control tw-w-52">
               <span className="tw-label tw-text-sm">{t("emailAddress")}</span>
               <input
                 type="email"
+                name="email"
                 className="tw-input tw-input-bordered tw-w-full tw-input-ghost"
-                value={email}
-                onChange={handleEmailChange}
+                required
               />
             </label>
           </div>
