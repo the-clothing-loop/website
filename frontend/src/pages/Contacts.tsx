@@ -1,64 +1,50 @@
-import { Typography, Button, Alert } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
-
-//Plugins
-import { useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 
-// Project resources
-import { TextForm } from "../components/FormFields";
-import { OneColumnLayout } from "../components/Layouts";
-
-//media
-import RightArrow from "../images/right-arrow-white.svg";
 import { contactMailSend } from "../api/contact";
+import FormJup from "../util/form-jup";
+import { ToastContext } from "../providers/ToastProvider";
+import { GinParseErrors } from "../util/gin-errors";
 
-interface SubmitMail {
+interface FormValues {
   name: string;
   email: string;
   message: string;
 }
 
 const Contacts = () => {
-  const classes = makeStyles(theme as any)();
-
   const { t } = useTranslation();
-  const [error, setError] = useState();
+  const { addToastError } = useContext(ToastContext);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const CHARACTER_LIMIT = 2000;
 
-  const validate = Yup.object({
-    name: Yup.string()
-      .min(2, "Must be at least 2 characters")
-      .required(t("required")),
-    email: Yup.string()
-      .required(t("required"))
-      .email(t("pleaseEnterAValid.emailAddress")),
-    message: Yup.string()
-      .required(t("required"))
-      .min(2, "Must be at least 2 characters"),
-  } as Record<keyof SubmitMail, any>);
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    const values = FormJup<FormValues>(e);
 
-  const handleSubmit = async (data: SubmitMail) => {
-    let newEmail = { ...data };
+    console.log(`sending mail: ${values.email}`);
 
-    console.log(`sending mail: ${JSON.stringify(newEmail)}`);
+    (async () => {
+      try {
+        await contactMailSend(values.name, values.email, values.message);
+        setSubmitted(true);
+      } catch (e: any) {
+        console.error(e);
+        setError("submit");
 
-    try {
-      await contactMailSend(data.name, data.email, data.message);
-      setSubmitted(true);
-    } catch (e: any) {
-      console.error(`Error sending mail: ${JSON.stringify(e)}`);
-      setError(e?.data || `Error: ${JSON.stringify(e)}`);
-    }
-  };
+        addToastError(
+          e?.data
+            ? GinParseErrors(t, e.data)
+            : t("pleaseEnterAValid.emailAddress")
+        );
+      }
+    })();
+  }
 
   if (submitted) {
     return <Redirect to={`/message-submitted`} />;
@@ -70,83 +56,52 @@ const Contacts = () => {
         <title>The Clothing Loop | Contact Us</title>
         <meta name="description" content="Contact us" />
       </Helmet>
-      <div className={classes.contactFormWrapper}>
-        <OneColumnLayout>
-          <h3 className={classes.pageTitle}>Contact us</h3>
-          <p>
-            Questions? Funny stories? Tips? Press enquiries? We’d love to hear
-            from you! (Please do check our FAQ first!)
-          </p>
+      <main className="tw-max-w-screen-sm tw-mx-auto tw-pt-10">
+        <h3 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl tw-mb-8">
+          Contact us
+        </h3>
+        <p className="tw-mb-6">
+          Questions? Funny stories? Tips? Press enquiries? We’d love to hear
+          from you! (Please do check our FAQ first!)
+        </p>
 
-          <Formik
-            initialValues={{
-              name: "",
-              email: "",
-              message: "",
-            }}
-            validationSchema={validate}
-            validateOnChange={false}
-            onSubmit={handleSubmit}
+        <form className="tw-flex tw-flex-col" onSubmit={onSubmit}>
+          <input
+            placeholder={t("name")}
+            name="name"
+            type="text"
+            min={2}
+            className="tw-input tw-input-secondary tw-mb-4"
+            required
+          />
+          <input
+            placeholder={t("email")}
+            name="email"
+            type="text"
+            className="tw-input tw-input-secondary tw-mb-4"
+            required
+          />
+          <textarea
+            placeholder={t("yourMessage")}
+            name="message"
+            required
+            minLength={2}
+            maxLength={CHARACTER_LIMIT}
+            className="tw-textarea tw-textarea-secondary tw-mb-4"
+            rows={10}
+          />
+
+          <button
+            type="submit"
+            className={`tw-btn tw-btn-primary ${
+              error ? "tw-ring-2 tw-ring-offset-2 tw-ring-error" : ""
+            }`}
           >
-            {({ values, errors, touched }) => (
-              <Form className="tw-flex tw-flex-col">
-                <TextForm
-                  label={t("name")}
-                  name="name"
-                  type="text"
-                  className={classes.textField}
-                  required
-                />
-                {touched.name && errors.name && (
-                  <div className={classes.errorDiv}>{errors.name}</div>
-                )}
-                <TextForm
-                  label={t("email")}
-                  name="email"
-                  type="text"
-                  className={classes.textField}
-                  required
-                />
-                {touched.email && errors.email && (
-                  <div className={classes.errorDiv}>{errors.email}</div>
-                )}
-                <TextForm
-                  label=""
-                  placeholder={t("yourMessage")}
-                  name="message"
-                  type="text"
-                  required
-                  InputProps={
-                    {
-                      disableUnderline: true,
-                      maxLength: CHARACTER_LIMIT,
-                      classes: {
-                        root: classes.textArea,
-                        input: classes.textAreaPlaceholder,
-                      },
-                      style: { marginTop: "30px" },
-                    } as any
-                  }
-                  helperText={`${values.message.length}/${CHARACTER_LIMIT}`}
-                  multiline
-                  rows={10}
-                />
-
-                {touched.message && errors.message && (
-                  <div className={classes.errorDiv}>{errors.message}</div>
-                )}
-                {error ? <Alert severity="error">{error}</Alert> : null}
-                <div className={classes.cardsAction}>
-                  <button type="submit" className="tw-btn tw-btn-primary">
-                    {t("submit")}
-                    <span className="feather feather-arrow-right tw-ml-4"></span>
-                  </button>
-                </div>
-              </Form>
-            )}
-          </Formik>
-        </OneColumnLayout>
-      </div>
+            {t("submit")}
+            <span className="feather feather-arrow-right tw-ml-4"></span>
+          </button>
+        </form>
+      </main>
     </>
   );
 };

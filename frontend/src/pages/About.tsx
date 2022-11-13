@@ -14,7 +14,7 @@ export default function About() {
       </Helmet>
       <main>
         <div className="tw-max-w-screen-md tw-mx-auto tw-pt-10 tw-px-20">
-          <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl ">
+          <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl">
             {t("aboutTheClothingLoop")}
           </h1>
           <div className="tw-flex tw-justify-center tw-my-10">

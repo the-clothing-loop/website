@@ -10,6 +10,7 @@ import { loginEmail } from "../api/login";
 import { ToastContext } from "../providers/ToastProvider";
 import FormJup from "../util/form-jup";
 import { AuthContext } from "../providers/AuthProvider";
+import { GinParseErrors } from "../util/gin-errors";
 
 //media
 const CirclesFrame = "/images/circles.png";
@@ -27,7 +28,7 @@ const Login = () => {
     setError("");
     const values = FormJup<{ email: string }>(e);
 
-    const email = values.email.toString();
+    const email = values.email;
 
     if (email === "") {
       setError("email");
@@ -44,7 +45,9 @@ const Login = () => {
       } catch (e: any) {
         console.error(e);
         setError("email");
-        addToastError(e?.data || t("noResultsFound"));
+        addToastError(
+          e?.data ? GinParseErrors(t, e.data) : t("noResultsFound")
+        );
       }
     })();
   }

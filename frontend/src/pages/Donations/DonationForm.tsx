@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { paymentInitiate, priceIDs } from "../../api/payment";
 import FormJup from "../../util/form-jup";
 import { ToastContext } from "../../providers/ToastProvider";
+import { GinParseErrors } from "../../util/gin-errors";
 
 interface RadioItem {
   value: string;
@@ -55,7 +56,7 @@ const oneOff: RadioItem[] = [
 ];
 
 function DonationFormContent() {
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
   const stripe = useStripe();
@@ -65,25 +66,25 @@ function DonationFormContent() {
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError(null);
+    setError("");
     const values = FormJup<FormValues>(e);
 
     let radioObj: RadioItem | undefined;
 
-    if (values.email.toString() === "") {
+    if (values.email === "") {
       setError("email");
       return;
     }
 
     if (isRecurring) {
-      let value = values?.recurring_radio.toString() || "";
+      let value = values?.recurring_radio || "";
       if (value === "") {
         addToastError("This error should not happen");
         return;
       }
       radioObj = recurring.find((v) => v.value === value);
     } else {
-      let value = values?.recurring_radio.toString() || "";
+      let value = values?.recurring_radio || "";
 
       radioObj = oneOff.find((v) => v.value === value);
 
@@ -110,7 +111,7 @@ function DonationFormContent() {
       try {
         const res = await paymentInitiate({
           price_cents: radioObj.cents,
-          email: values.email.toString(),
+          email: values.email,
           is_recurring: isRecurring,
           price_id: radioObj.priceID,
         });
@@ -125,11 +126,11 @@ function DonationFormContent() {
         ).error;
         if (err) throw err;
       } catch (e: any) {
-        setError(e?.data || e?.message || t("anErrorOccurredDuringCheckout"));
+        setError(e?.data || e?.message || "submit");
         addToastError(
-          (e?.data ||
-            e?.message ||
-            t("anErrorOccurredDuringCheckout")) as string
+          e?.data
+            ? GinParseErrors(t, e.data)
+            : e?.message || t("anErrorOccurredDuringCheckout")
         );
         setLoading(false);
         setTimeout(() => {
