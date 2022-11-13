@@ -120,6 +120,13 @@ export default function Footer() {
             >
               {t("privacy")}
             </Link>
+            <a
+              className="tw-btn tw-btn-ghost tw-text-white tw-text-base tw-font-normal"
+              href="https://github.com/CollActionteam/clothing-loop"
+              target="_blank"
+            >
+              {t("contribute")}
+            </a>
           </div>
 
           <p className="tw-flex tw-items-center" aria-label="copyright">
