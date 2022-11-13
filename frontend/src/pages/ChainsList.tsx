@@ -1,41 +1,24 @@
 import { useState, useContext, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-import {
-  Alert,
-  CircularProgress,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  Paper,
-  TableContainer,
-  Box,
-  
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-// Project resources
 import { ChainsContext } from "../providers/ChainsProvider";
 import { DataExport } from "../components/DataExport";
-import theme from "../util/theme";
 import { AuthContext } from "../providers/AuthProvider";
 import { chainGet } from "../api/chain";
 import { Chain } from "../api/types";
+import { ToastContext } from "../providers/ToastProvider";
+import { GinParseErrors } from "../util/gin-errors";
 
 const rows = ["name", "location", "status"];
 
 const ChainsList = () => {
   const { t } = useTranslation();
-  const classes = makeStyles(theme as any)();
-  const history = useHistory();
   const { authUser } = useContext(AuthContext);
   const allChains = useContext(ChainsContext);
+  const { addToastError } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>();
-  const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -50,8 +33,9 @@ const ChainsList = () => {
 
             setChains(data.map((d) => d.data));
           }
-        } catch (rej: any) {
-          setError(rej?.data || "Unknown error");
+        } catch (e: any) {
+          console.error(e);
+          addToastError(GinParseErrors(t, e?.data || "Unknown error"));
         }
       }
     })();
@@ -63,27 +47,26 @@ const ChainsList = () => {
         <title>The Clothing Loop | Loops List</title>
         <meta name="description" content="Loops List" />z
       </Helmet>
-      <div>
+      <main>
         {chains ? (
           <div className="tw-container tw-mx-auto">
             <div className="tw-px-20 tw-py-4">
               <h1 className="tw-text-2xl tw-font-bold tw-mb-3">{`${chains.length} Clothing Loops`}</h1>
               <DataExport />
             </div>
-            {error ? (
-              <Alert className={classes.errorAlert} severity="error">
-                {error}
-              </Alert>
-            ) : null}
 
             <div className="sm:tw-overflow-x-auto">
               <table className="tw-table tw-table-compact tw-w-full">
                 <thead>
                   <tr>
                     {rows.map((row, i) => {
-                      return <th key={i}>{t(row)}</th>;
+                      return (
+                        <th key={i} align={row == "status" ? "center" : "left"}>
+                          {t(row)}
+                        </th>
+                      );
                     })}
-                    <th />
+                    <th align="right" />
                   </tr>
                 </thead>
                 <tbody>
@@ -102,12 +85,9 @@ const ChainsList = () => {
                           <td align="left" className="tw-whitespace-normal">
                             {chain.address}
                           </td>
-                          <td align="left">
+                          <td align="center">
                             {chain.published ? (
-                              <div
-                                className="tw-flex tw-items-center tw-justify-center tw-tooltip"
-                                data-tip="published"
-                              >
+                              <div className="tw-tooltip" data-tip="published">
                                 <span className="feather feather-eye  tw-text-lg tw-text-green" />
                               </div>
                             ) : (
@@ -119,7 +99,9 @@ const ChainsList = () => {
                           <td align="right">
                             {(isUserAdmin || authUser?.is_root_admin) && (
                               <Link
-                                className="tw-btn tw-btn-primary tw-flex-nowrap"
+                                className={`tw-btn tw-btn-primary tw-flex-nowrap ${
+                                  chains?.length > 5 ? "tw-btn-sm" : ""
+                                }`}
                                 to={`/loops/${chain.uid}/members`}
                               >
                                 {t("view")}
@@ -135,15 +117,14 @@ const ChainsList = () => {
             </div>
           </div>
         ) : (
-          <Box className={classes.progressBox}>
-            <CircularProgress
-              color="inherit"
-              className={classes.progressAnimation}
-            />
-            <h3>{t("loadingListOfAllLoops")}</h3>
-          </Box>
+          <div className="tw-flex tw-items-center">
+            <span className="tw-block tw-text-xl feather feather-spinner tw-animate-spin"></span>
+            <p className="tw-text-lg tw-font-bold">
+              {t("loadingListOfAllLoops")}
+            </p>
+          </div>
         )}
-      </div>
+      </main>
     </>
   );
 };
