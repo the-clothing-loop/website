@@ -32,18 +32,16 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
   function addToast(t: Toast) {
     const id = idIndex;
     setIdIndex(idIndex + 1);
-
     setToasts([...toasts, { ...t, id }]);
-    console.log("toast created", id);
 
     setTimeout(() => {
       setToasts((s) => s.filter((t) => t.id != id));
-      console.log("toast removed", id);
-      console.log(toasts);
     }, 7000);
   }
 
   function addToastError(msg: string) {
+    // ensure that message is a string during runtime
+    msg = msg + "";
     addToast({
       type: "error",
       message: msg,
