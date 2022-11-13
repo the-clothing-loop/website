@@ -47,18 +47,18 @@ module.exports = {
       keyframes: {
         slide: {
           "0%": {
-            left: "0%",
+            left: "0px",
           },
           "50%": {
-            left: "-100%",
+            left: "-1130px",
           },
           "100%": {
-            left: "-200%",
+            left: "0px",
           },
         },
       },
       animation: {
-        slide: "8s slide infinite",
+        slide: "30s linear 0s slide infinite",
       },
       typography: {
         DEFAULT: {
