@@ -14,6 +14,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/local/views"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
+	"gopkg.in/guregu/null.v3/zero"
 )
 
 type ChainCreateRequestBody struct {
@@ -297,16 +298,16 @@ func ChainAddUser(c *gin.Context) {
 
 		var results []struct {
 			Name  string
-			Email string
+			Email zero.String
 		}
 		db.Raw(`
 SELECT users.name as name, users.email as email
 FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id 
 WHERE user_chains.chain_id = ?
-	AND user_chains.is_chain_admin = ?
-	AND users.enabled = ?
-`, chain.ID, true, true).Scan(&results)
+	AND user_chains.is_chain_admin = TRUE
+	AND users.enabled = TRUE
+`, chain.ID).Scan(&results)
 
 		if len(results) == 0 {
 			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("No admins exist for this loop"))
@@ -314,15 +315,17 @@ WHERE user_chains.chain_id = ?
 		}
 
 		for _, result := range results {
-			go views.EmailAParticipantJoinedTheLoop(
-				c,
-				db,
-				result.Email,
-				result.Name,
-				user.Name,
-				user.Email.String,
-				user.PhoneNumber,
-			)
+			if result.Email.Valid {
+				go views.EmailAParticipantJoinedTheLoop(
+					c,
+					db,
+					result.Email.String,
+					result.Name,
+					user.Name,
+					user.Email.String,
+					user.PhoneNumber,
+				)
+			}
 		}
 	}
 }

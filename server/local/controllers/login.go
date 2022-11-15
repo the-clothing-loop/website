@@ -9,6 +9,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/local/models"
+	"github.com/CollActionteam/clothing-loop/server/local/views"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3/zero"
@@ -93,6 +94,47 @@ LIMIT 1
 	if err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
+	}
+
+	// email a participant joined the loop
+	chainIDs := []uint{}
+	for _, uc := range user.Chains {
+		if !uc.IsChainAdmin {
+			chainIDs = append(chainIDs, uc.ChainID)
+		}
+	}
+
+	var results []struct {
+		Name  string
+		Email zero.String
+	}
+	err = db.Raw(`
+SELECT users.name as name, users.email as email
+FROM user_chains
+LEFT JOIN users ON user_chains.user_id = users.id 
+WHERE user_chains.chain_id = ?
+	AND user_chains.is_chain_admin = TRUE
+	AND users.enabled = TRUE
+	`, chainIDs).Scan(&results).Error
+	fmt.Printf("\nTest\tResults: %+v Email: %s ChainIDs: %+v\n\tuc: %+v\n", results, user.Email.String, chainIDs, user.Chains)
+	if err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
+		return
+	}
+	if user.Email.Valid {
+		for _, result := range results {
+			if result.Email.Valid {
+				go views.EmailAParticipantJoinedTheLoop(
+					c,
+					db,
+					result.Email.String,
+					result.Name,
+					user.Name,
+					user.Email.String,
+					user.PhoneNumber,
+				)
+			}
+		}
 	}
 
 	// set token as cookie
