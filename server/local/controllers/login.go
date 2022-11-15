@@ -116,7 +116,6 @@ WHERE user_chains.chain_id = ?
 	AND user_chains.is_chain_admin = TRUE
 	AND users.enabled = TRUE
 	`, chainIDs).Scan(&results).Error
-	fmt.Printf("\nTest\tResults: %+v Email: %s ChainIDs: %+v\n\tuc: %+v\n", results, user.Email.String, chainIDs, user.Chains)
 	if err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
