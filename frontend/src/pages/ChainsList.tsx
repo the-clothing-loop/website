@@ -11,8 +11,6 @@ import { Chain } from "../api/types";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 
-const rows = ["name", "location", "status"];
-
 const ChainsList = () => {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
@@ -59,13 +57,9 @@ const ChainsList = () => {
               <table className="tw-table tw-table-compact tw-w-full">
                 <thead>
                   <tr>
-                    {rows.map((row, i) => {
-                      return (
-                        <th key={i} align={row == "status" ? "center" : "left"}>
-                          {t(row)}
-                        </th>
-                      );
-                    })}
+                    <th align="left">{t("name")}</th>
+                    <th align="left">{t("location")}</th>
+                    <th align="center">{t("status")}</th>
                     <th align="right" />
                   </tr>
                 </thead>

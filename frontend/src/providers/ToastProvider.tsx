@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface ToastAction {
@@ -116,7 +116,7 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
     <ToastContext.Provider value={{ addToast, addToastError }}>
       <>
         <ol
-          className={`tw-toast tw-fixed tw-toast-bottom tw-toast-center tw-z-50 ${
+          className={`tw-toast tw-fixed tw-toast-bottom sm:tw-toast-right lg:tw-toast-top tw-toast-center tw-z-50 ${
             toasts.length ? "" : "tw-hidden"
           }`}
         >

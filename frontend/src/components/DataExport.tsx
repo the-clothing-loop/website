@@ -3,7 +3,6 @@ import { CSVLink } from "react-csv";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-// Project resources
 import { Chain } from "../api/types";
 import { chainGet, chainGetAll } from "../api/chain";
 import { userGetAllByChain } from "../api/user";

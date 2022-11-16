@@ -1,14 +1,8 @@
-import { useState } from "react";
-
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
-import { UID, User } from "../api/types";
-import { SizeI18nKeys } from "../api/enums";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-const useStyles = makeStyles(theme as any);
+import { UID, User } from "../api/types";
+import { SizeBadges } from "./Badges";
 
 export interface TableUserColumn {
   headerName: string;
@@ -26,7 +20,7 @@ interface Props {
   onRemoveUser?: (uid: UID) => void;
 }
 
-export const ChainParticipantsTable = ({
+export default function ChainParticipantsTable({
   columns,
   authUser,
   users,
@@ -34,12 +28,12 @@ export const ChainParticipantsTable = ({
   edit,
   remove,
   onRemoveUser,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation();
 
   return (
     <>
-      <div className="sm:tw-overflow-x-auto tw-mt-10">
+      <div className="tw-overflow-x-auto tw-mt-10">
         <table className="tw-table tw-w-full">
           <thead>
             <tr>
@@ -49,8 +43,8 @@ export const ChainParticipantsTable = ({
 
               {authUser?.is_root_admin && (
                 <>
-                  {edit && <th />}
-                  {remove && <th />}
+                  {edit && <th key="edit" />}
+                  {remove && <th key="remove" />}
                 </>
               )}
             </tr>
@@ -64,13 +58,7 @@ export const ChainParticipantsTable = ({
                     let text: User[keyof User] | JSX.Element[] =
                       u[propertyName];
                     if (propertyName === "sizes") {
-                      text = u.sizes
-                        .filter((v) => Object.hasOwn(SizeI18nKeys, v))
-                        .map((v) => (
-                          <span className="tw-badge tw-badge-outline tw-mr-2">
-                            {t(SizeI18nKeys[v])}
-                          </span>
-                        ));
+                      text = SizeBadges(t, u.sizes);
                     } else if (typeof text !== "string") {
                       console.error(
                         "text is not of type string, this should not be happening",
@@ -103,10 +91,11 @@ export const ChainParticipantsTable = ({
                       )}
                       {remove && onRemoveUser && (
                         <td className="tw-border-none" key={u.uid + "dellink"}>
-                          <span
+                          <button
                             className="feather feather-x"
+                            aria-label=""
                             onClick={() => onRemoveUser(u.uid as string)}
-                          />
+                          ></button>
                         </td>
                       )}
                     </>
@@ -118,4 +107,4 @@ export const ChainParticipantsTable = ({
       </div>
     </>
   );
-};
+}
