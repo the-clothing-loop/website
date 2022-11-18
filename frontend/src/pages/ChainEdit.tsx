@@ -3,10 +3,6 @@ import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
-
 // Project resources
 import ChainDetailsForm, {
   RegisterChainForm,
@@ -18,13 +14,12 @@ interface Params {
   chainUID: string;
 }
 
-const ChainEdit = () => {
+export default function ChainEdit() {
   const { t } = useTranslation();
   let history = useHistory();
   const { chainUID } = useParams<Params>();
 
   const [chain, setChain] = useState<Chain>();
-  const classes = makeStyles(theme as any)();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
@@ -66,22 +61,18 @@ const ChainEdit = () => {
         <title>The Clothing Loop | Edit Loop details</title>
         <meta name="description" content="Edit Loop details" />
       </Helmet>
-      <div className={classes.formContainerLocation}>
-        <div className={classes.newLoopLocationForm}>
-          <h3 className={classes.pageTitle} style={{ textAlign: "center" }}>
-            {t("editLoopInformation")}
-          </h3>
-          <p className="formSubtitle">{t("clickToChangeLoopLocation")}</p>
-          <ChainDetailsForm
-            onSubmit={handleSubmit}
-            submitError={error}
-            submitted={submitted}
-            initialValues={chain}
-          />
-        </div>
-      </div>
+      <main className="tw-container tw-mx-auto tw-px-20 tw-pt-10">
+        <h1 className="tw-text-center tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl">
+          {t("editLoopInformation")}
+        </h1>
+        <p className="formSubtitle">{t("clickToChangeLoopLocation")}</p>
+        <ChainDetailsForm
+          onSubmit={handleSubmit}
+          submitError={error}
+          submitted={submitted}
+          initialValues={chain}
+        />
+      </main>
     </>
   );
-};
-
-export default ChainEdit;
+}

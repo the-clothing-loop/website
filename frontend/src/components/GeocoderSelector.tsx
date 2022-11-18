@@ -1,20 +1,19 @@
 import { useState, useCallback, useRef } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import MapGL, { MapRef } from "react-map-gl";
+import MapGL from "react-map-gl";
 // @ts-ignore
 import Geocoder from "react-map-gl-geocoder";
 import { useTranslation } from "react-i18next";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
 
-type GeocoderSelectorProps = {
-  onResult: (result: any) => any;
-  userAddress?: string;
-  name?: string;
-};
+interface Props {
+  onResult: (address: any) => any;
+  address?: string;
+}
 
-const GeocoderSelector = ({ onResult, ...props }: GeocoderSelectorProps) => {
+export default function GeocoderSelector(props: Props) {
   const [viewport, setViewPort] = useState({
     latitude: 0,
     longitude: 0,
@@ -42,11 +41,8 @@ const GeocoderSelector = ({ onResult, ...props }: GeocoderSelectorProps) => {
   );
 
   return (
-    <div style={{ height: "58px", width: "100%" }} className="geocoder-wrapper">
-      <div
-        style={{ height: "58px", padding: "2% 0" }}
-        className="geocoder-wrapper-2"
-      >
+    <div className="geocoder-wrapper tw-w-full">
+      <div className="geocoder-wrapper-2 tw-h-14 tw-px-4">
         <MapGL
           className="geocoding-map"
           mapStyle="mapbox://styles/mapbox/streets-v11"
@@ -59,21 +55,19 @@ const GeocoderSelector = ({ onResult, ...props }: GeocoderSelectorProps) => {
         >
           <Geocoder
             className="address-geocoder"
-            onResult={useCallback((result) => onResult(result), [])}
+            onResult={useCallback((result) => props.onResult(result), [])}
             mapRef={mapRef}
             onViewportChange={handleGeocoderViewportChange}
             mapboxApiAccessToken={MAPBOX_TOKEN}
             position="top-left"
             placeholder={
-              props.userAddress ? props.userAddress : t("enterYourAddress")
+              props.address === "" ? props.address : t("enterYourAddress")
             }
-            userAddress={props.userAddress}
+            address={props.address}
           />
         </MapGL>
       </div>
-      <div style={{ height: "50px" }} />
+      <div />
     </div>
   );
-};
-
-export default GeocoderSelector;
+}

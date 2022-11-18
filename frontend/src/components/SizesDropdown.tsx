@@ -5,38 +5,31 @@ import categories from "../util/categories";
 import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
 import { useDropdownCheckBox } from "../util/dropdown.hooks";
 
-interface IProps {
+export default function SizesDropdown(props: {
   filteredGenders: string[];
   selectedSizes: string[];
   handleChange: (selectedSizes: string[]) => void;
-  style?: React.CSSProperties;
-}
-
-const SizesDropdown: React.FC<IProps> = ({
-  filteredGenders,
-  selectedSizes,
-  handleChange,
-}: IProps) => {
+}) {
   const { t } = useTranslation();
 
   const dropdown = useDropdownCheckBox({
-    selected: selectedSizes,
-    handleChange,
+    selected: props.selectedSizes,
+    handleChange: props.handleChange,
   });
 
   let btnLabel = React.useMemo(() => {
-    if (selectedSizes.length) {
-      return [...selectedSizes]
+    if (props.selectedSizes.length) {
+      return [...props.selectedSizes]
         .sort()
         .map((s) => t(SizeI18nKeys[s]))
         .join(", ");
     } else {
       return t("sizes");
     }
-  }, [t, selectedSizes]);
+  }, [t, props.selectedSizes]);
 
-  const item = (size: string, disabled: boolean) => {
-    let checked = selectedSizes.includes(size);
+  function Item(size: string, disabled: boolean) {
+    let checked = props.selectedSizes.includes(size);
     return (
       <li className={disabled ? "tw-disabled" : ""} key={size}>
         <label>
@@ -51,7 +44,7 @@ const SizesDropdown: React.FC<IProps> = ({
         </label>
       </li>
     );
-  };
+  }
 
   return (
     <div
@@ -77,7 +70,8 @@ const SizesDropdown: React.FC<IProps> = ({
         tabIndex={0}
       >
         {Object.entries(categories).map(([gender, sizes]) => {
-          let disabled = filteredGenders.find((g) => g == gender) == undefined;
+          let disabled =
+            props.filteredGenders.find((g) => g == gender) == undefined;
 
           return (
             <>
@@ -89,13 +83,11 @@ const SizesDropdown: React.FC<IProps> = ({
               >
                 {GenderI18nKeys[gender]}
               </li>
-              {sizes.map((size) => item(size as string, disabled))}
+              {sizes.map((size) => Item(size as string, disabled))}
             </>
           );
         })}
       </ul>
     </div>
   );
-};
-
-export default SizesDropdown;
+}

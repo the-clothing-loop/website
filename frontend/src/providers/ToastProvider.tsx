@@ -16,11 +16,13 @@ type ToastWithID = Toast & { id: number };
 interface ContextValue {
   addToast: (t: Toast) => void;
   addToastError: (msg: string) => void;
+  addStaticToast: (t: Toast) => void;
 }
 
 export const ToastContext = createContext<ContextValue>({
   addToast: (t) => {},
   addToastError: (msg: string) => {},
+  addStaticToast: (t) => {},
 });
 
 export function ToastProvider({ children }: PropsWithChildren<{}>) {
@@ -37,6 +39,28 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
     setTimeout(() => {
       setToasts((s) => s.filter((t) => t.id != id));
     }, 7000);
+  }
+
+  function addStaticToast(toast: Toast) {
+    const id = idIndex;
+    setIdIndex(idIndex + 1);
+    setToasts([
+      ...toasts,
+      {
+        ...toast,
+        id,
+        actions: [
+          ...(toast.actions || []),
+          {
+            text: t("close"),
+            type: "ghost",
+            fn: () => {
+              setToasts((s) => s.filter((t) => t.id != id));
+            },
+          },
+        ],
+      },
+    ]);
   }
 
   function addToastError(msg: string) {
@@ -113,7 +137,7 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
   }
 
   return (
-    <ToastContext.Provider value={{ addToast, addToastError }}>
+    <ToastContext.Provider value={{ addToast, addToastError, addStaticToast }}>
       <>
         <ol
           className={`tw-toast tw-fixed tw-toast-bottom sm:tw-toast-right lg:tw-toast-top tw-toast-center tw-z-50 ${

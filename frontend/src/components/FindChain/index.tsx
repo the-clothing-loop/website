@@ -1,16 +1,21 @@
 import React, { useContext, useEffect } from "react";
-import * as Yup from "yup";
 
 import { SearchBar } from "./SearchBar";
-import { ChainNotFound } from "./ChainNotFound";
 
 import { ChainsContext } from "../../providers/ChainsProvider";
 import { defaultTruePredicate, ChainPredicate } from "../../pages/FindChain";
 import { Chain } from "../../api/types";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router";
 
 const hasCommonElements = (arr1: string[], arr2: string[]) =>
   arr1.some((item: string) => arr2.includes(item));
 
+interface FormValues {
+  searchTerm: string;
+  sizes: string[];
+  genders: string[];
+}
 interface IProps {
   setFilterChainPredicate: React.Dispatch<React.SetStateAction<ChainPredicate>>;
   handleFindChainCallback: (findChainPredicate: ChainPredicate) => boolean;
@@ -72,17 +77,11 @@ export const FindChainSearchBarContainer = ({
     if (!chains.length || !Object.keys(initialValues).length) {
       return;
     }
-    const schema = Yup.object({
-      searchTerm: Yup.string().default(""),
-      sizes: Yup.array().of(Yup.string()).default([]),
-      genders: Yup.array().of(Yup.string()).default([]),
-    });
 
     try {
-      let validated = schema.validateSync(initialValues);
-      setSearchTerm(validated.searchTerm);
-      setSelectedSizes(validated.sizes);
-      setSelectedGenders(validated.genders);
+      setSearchTerm(initialValues.searchTerm);
+      setSelectedSizes(initialValues.sizes);
+      setSelectedGenders(initialValues.genders);
       setFormAutoFilled(true);
     } catch (error) {
       console.error("Invalid query string parameters");
@@ -113,3 +112,42 @@ export const FindChainSearchBarContainer = ({
     </>
   );
 };
+
+function ChainNotFound({
+  searchTerm,
+  backAction,
+}: {
+  searchTerm: string;
+  backAction: any;
+}) {
+  const { t } = useTranslation();
+  const history = useHistory();
+
+  return (
+    <div className="">
+      <span className="feather feather-x" onClick={backAction} />
+
+      <h1>
+        {`${t("noLoopsFoundIn")}`} <span>{searchTerm}</span>
+      </h1>
+
+      <p>{t("ThereIsNoActiveLoopInYourRegion")}</p>
+
+      <div>
+        <button
+          className="tw-btn tw-btn-primary tw-btn-outline"
+          onClick={backAction}
+        >
+          {t("joinWaitingList")}
+        </button>
+        <button
+          className="tw-btn tw-btn-primary"
+          onClick={() => history.push("/loops/new/users/signup")}
+          type="submit"
+        >
+          {t("startNewLoop")}
+        </button>
+      </div>
+    </div>
+  );
+}

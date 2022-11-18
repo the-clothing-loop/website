@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import theme from "../util/theme";
+
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 

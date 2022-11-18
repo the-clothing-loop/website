@@ -3,9 +3,6 @@ import { Helmet } from "react-helmet";
 import { Redirect, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
 import ProgressBar from "../components/ProgressBar";
 import ChainDetailsForm, {
   RegisterChainForm,
@@ -24,7 +21,6 @@ export interface State {
 }
 
 const NewChainLocation = ({ location }: { location: any }) => {
-  const classes = makeStyles(theme as any)();
   const { t } = useTranslation();
 
   const state = location.state as State;
@@ -91,17 +87,15 @@ const NewChainLocation = ({ location }: { location: any }) => {
         <title>The Clothing Loop | Create New Loop</title>
         <meta name="description" content="Create New Loop" />
       </Helmet>
-      <div className={classes.formContainerLocation}>
-        <div className={classes.newLoopLocationForm}>
-          <h3 className={classes.pageTitle + " tw-text-center"}>
-            {t("startNewLoop")}
-          </h3>
-          <div className={classes.progressBarWrapper}>
-            <ProgressBar activeStep={1} />
-          </div>
-          <ChainDetailsForm onSubmit={onSubmit} submitError={error} />
+      <main className="tw-container tw-mx-auto tw-px-20 tw-pt-10">
+        <h1 className="tw-text-center tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl">
+          {t("startNewLoop")}
+        </h1>
+        <div className="">
+          <ProgressBar activeStep={1} />
         </div>
-      </div>
+        <ChainDetailsForm onSubmit={onSubmit} submitError={error} />
+      </main>
     </>
   );
 };

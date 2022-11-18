@@ -57,9 +57,9 @@ const Contacts = () => {
         <meta name="description" content="Contact us" />
       </Helmet>
       <main className="tw-max-w-screen-sm tw-mx-auto tw-pt-10">
-        <h3 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl tw-mb-8">
+        <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl tw-mb-8">
           Contact us
-        </h3>
+        </h1>
         <p className="tw-mb-6">
           Questions? Funny stories? Tips? Press enquiries? We’d love to hear
           from you! (Please do check our FAQ first!)

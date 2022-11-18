@@ -1,12 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {
-  createTheme,
-  ThemeProvider as MuiThemeProvider,
-  StyledEngineProvider,
-} from "@mui/material/styles";
 import { AuthProvider } from "./providers/AuthProvider";
-import themeFile from "./util/theme";
 import ScrollToTop from "./util/scrollToTop";
 
 // Components
@@ -22,6 +16,8 @@ import {
 } from "./pages/Thankyou/Thankyou";
 import Home from "./pages/Home";
 import { ToastProvider } from "./providers/ToastProvider";
+
+// Lazy
 const FindChain = React.lazy(() => import("./pages/FindChain"));
 const Login = React.lazy(() => import("./pages/Login"));
 const ChainMemberList = React.lazy(() => import("./pages/ChainMemberList"));
@@ -42,117 +38,95 @@ const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfUse = React.lazy(() => import("./pages/TermsOfUse"));
 const FAQ = React.lazy(() => import("./pages/FAQ/FAQ"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
-const AddChainAdmin = React.lazy(() => import("./pages/AddChainAdmin"));
 
-const theme = createTheme(themeFile);
-
-const App = () => {
+export default function App() {
   return (
-    <StyledEngineProvider injectFirst>
-      <MuiThemeProvider theme={theme}>
-        <Router>
-          <AuthProvider>
-            <ChainsProvider>
-              <div className="tw-min-h-screen">
-                <ToastProvider>
-                  <ScrollToTop>
-                    <Navbar />
-                    <Switch>
-                      <Route exact path="/" component={Home} />
-                      <Route
-                        exact
-                        path="/thankyou"
-                        component={JoinLoopConfirmation}
-                      />
-                      <Route exact path="/donate/:status?" component={Donate} />
-                      <Route
-                        exact
-                        path="/message-submitted"
-                        component={MessageSubmitted}
-                      />
+    <Router>
+      <AuthProvider>
+        <ChainsProvider>
+          <div className="tw-min-h-screen">
+            <ToastProvider>
+              <ScrollToTop>
+                <Navbar />
+                <Switch>
+                  <Route exact path="/" component={Home} />
+                  <Route
+                    exact
+                    path="/thankyou"
+                    component={JoinLoopConfirmation}
+                  />
+                  <Route exact path="/donate/:status?" component={Donate} />
+                  <Route
+                    exact
+                    path="/message-submitted"
+                    component={MessageSubmitted}
+                  />
 
-                      <Route
-                        exact
-                        path="/users/login/validate"
-                        component={LoginEmailFinished}
-                      />
-                      <Route exact path="/users/login" component={Login} />
-                      <Route exact path="/users/logout" component={Logout} />
-                      <Route
-                        exact
-                        path="/users/:userUID/edit"
-                        component={UserEdit}
-                      />
+                  <Route
+                    exact
+                    path="/users/login/validate"
+                    component={LoginEmailFinished}
+                  />
+                  <Route exact path="/users/login" component={Login} />
+                  <Route exact path="/users/logout" component={Logout} />
+                  <Route
+                    exact
+                    path="/users/:userUID/edit"
+                    component={UserEdit}
+                  />
 
-                      <Route exact path="/loops" component={ChainsList} />
-                      <Route exact path="/loops/find" component={FindChain} />
-                      <Route
-                        exact
-                        path="/loops/:chainUID/edit"
-                        component={ChainEdit}
-                      />
-                      <Route
-                        exact
-                        path="/loops/:chainUID/members"
-                        component={ChainMemberList}
-                      />
-                      <Route
-                        exact
-                        path="/loops/:chainUID/addChainAdmin"
-                        component={AddChainAdmin}
-                      />
-                      <Route
-                        exact
-                        path="/loops/new/users/signup"
-                        component={NewChainSignup}
-                      />
-                      <Route
-                        exact
-                        path="/loops/new"
-                        component={NewChainLocation}
-                      />
-                      <Route
-                        exact
-                        path="/loops/new/confirmation"
-                        component={NewLoopConfirmation}
-                      />
-                      <Route
-                        exact
-                        path="/loops/:chainUID/users/signup"
-                        component={Signup}
-                      />
+                  <Route exact path="/loops" component={ChainsList} />
+                  <Route exact path="/loops/find" component={FindChain} />
+                  <Route
+                    exact
+                    path="/loops/:chainUID/edit"
+                    component={ChainEdit}
+                  />
+                  <Route
+                    exact
+                    path="/loops/:chainUID/members"
+                    component={ChainMemberList}
+                  />
+                  <Route
+                    exact
+                    path="/loops/new/users/signup"
+                    component={NewChainSignup}
+                  />
+                  <Route exact path="/loops/new" component={NewChainLocation} />
+                  <Route
+                    exact
+                    path="/loops/new/confirmation"
+                    component={NewLoopConfirmation}
+                  />
+                  <Route
+                    exact
+                    path="/loops/:chainUID/users/signup"
+                    component={Signup}
+                  />
 
-                      <Route exact path="/faq" component={FAQ} />
-                      <Route exact path="/contact-us" component={Contacts} />
-                      <Route exact path="/about" component={About} />
+                  <Route exact path="/faq" component={FAQ} />
+                  <Route exact path="/contact-us" component={Contacts} />
+                  <Route exact path="/about" component={About} />
 
-                      <Route
-                        exact
-                        path="/terms-of-use"
-                        component={TermsOfUse}
-                      />
-                      <Route
-                        exact
-                        path="/privacy-policy"
-                        component={PrivacyPolicy}
-                      />
+                  <Route exact path="/terms-of-use" component={TermsOfUse} />
+                  <Route
+                    exact
+                    path="/privacy-policy"
+                    component={PrivacyPolicy}
+                  />
 
-                      <Route
-                        exact
-                        path="/admin/dashboard"
-                        component={AdminDashboard}
-                      />
-                    </Switch>
-                    <Footer />
-                  </ScrollToTop>
-                </ToastProvider>
-              </div>
-            </ChainsProvider>
-          </AuthProvider>
-        </Router>
-      </MuiThemeProvider>
-    </StyledEngineProvider>
+                  <Route
+                    exact
+                    path="/admin/dashboard"
+                    component={AdminDashboard}
+                  />
+                </Switch>
+                <Footer />
+              </ScrollToTop>
+            </ToastProvider>
+          </div>
+        </ChainsProvider>
+      </AuthProvider>
+    </Router>
   );
-};
-
-export default App;
+}

@@ -1,7 +1,6 @@
 import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-import { Grid } from "@mui/material";
 
 //Project resources
 import { TwoColumnLayout } from "../../components/Layouts";
@@ -12,39 +11,37 @@ export interface IProps {
   confirmationEmail: string;
 }
 
-const Content = ({ heading, subheading, confirmationEmail }: IProps) => {
+function Content({ heading, subheading, confirmationEmail }: IProps) {
   let history = useHistory();
   const { t } = useTranslation();
 
   return (
-    <Grid container className="">
-      <h3 className="tw-text-2xl tw-text-secondary">{heading}</h3>
-      <p>{subheading}</p>
+    <main>
+      <h1 className="tw-font-serif tw-font-bold tw-text-2xl tw-text-secondary">
+        {heading}
+      </h1>
+      <p className="tw-text-lg">{subheading}</p>
       <p>{confirmationEmail}</p>
       <p>{t("happySwapping")}</p>
-      <Grid container>
-        <Grid item xs={6}>
-          <button
-            className="tw-btn tw-btn-primary tw-btn-outline"
-            onClick={() => history.push("/")}
-          >
-            {t("home")}
-          </button>
-        </Grid>
-        <Grid item xs={6}>
-          <button
-            className="tw-btn tw-btn-primary"
-            onClick={() => history.push("/about")}
-          >
-            {t("About")}
-          </button>
-        </Grid>
-      </Grid>
-    </Grid>
+      <div className="tw-flex tw-flex-row tw-justify-start">
+        <button
+          className="tw-btn tw-btn-primary tw-btn-outline"
+          onClick={() => history.push("/")}
+        >
+          {t("home")}
+        </button>
+        <button
+          className="tw-btn tw-btn-primary"
+          onClick={() => history.push("/about")}
+        >
+          {t("About")}
+        </button>
+      </div>
+    </main>
   );
-};
+}
 
-const NewLoopConfirmation = (props: any) => {
+export function NewLoopConfirmation(props: any) {
   const { t } = useTranslation();
 
   return (
@@ -53,7 +50,6 @@ const NewLoopConfirmation = (props: any) => {
         <title>The Clothing Loop | New Loop Confirmation</title>
         <meta name="description" content="New Loop Confirmation" />
       </Helmet>
-
       <TwoColumnLayout
         img="/images/party-image.jpg"
         children={
@@ -66,9 +62,9 @@ const NewLoopConfirmation = (props: any) => {
       ></TwoColumnLayout>
     </>
   );
-};
+}
 
-const JoinLoopConfirmation = (props: any) => {
+export function JoinLoopConfirmation(props: any) {
   const { t } = useTranslation();
 
   return (
@@ -77,7 +73,6 @@ const JoinLoopConfirmation = (props: any) => {
         <title>The Clothing Loop | Thank you for joining</title>
         <meta name="description" content="Thank you for joining" />
       </Helmet>
-
       <TwoColumnLayout
         img="/images/party-image.jpg"
         children={
@@ -90,6 +85,4 @@ const JoinLoopConfirmation = (props: any) => {
       ></TwoColumnLayout>
     </>
   );
-};
-
-export { NewLoopConfirmation, JoinLoopConfirmation };
+}

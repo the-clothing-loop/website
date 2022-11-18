@@ -1,28 +1,18 @@
-import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-//Project Resources
-import theme from "../util/theme";
-
-const AccordionFaq = ({ question, answer }: any) => {
-  const classes = makeStyles(theme as any)();
-
+export default function AccordionFaq(props: {
+  question: string;
+  answer: string;
+}) {
   return (
-    <div>
-      <Accordion classes={{ root: classes.MuiAccordionRoot }}>
-        <AccordionSummary
-          expandIcon={<span className="feather feather-chevron-down"></span>}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <p className={classes.AccordionTypographyRoot}>{question}</p>
-        </AccordionSummary>
-        <AccordionDetails>
-          <p dangerouslySetInnerHTML={{ __html: answer }}></p>
-        </AccordionDetails>
-      </Accordion>
-    </div>
+    <details className="tw-collapse tw-collapse-plus tw-border tw-border-base-300 tw-bg-base-100">
+      <summary
+        tabIndex={0}
+        className="tw-collapse-title tw-text-xl tw-font-medium"
+      >
+        {props.question}
+      </summary>
+      <div className="tw-collapse-content">
+        <p dangerouslySetInnerHTML={{ __html: props.answer }}></p>
+      </div>
+    </details>
   );
-};
-
-export default AccordionFaq;
+}

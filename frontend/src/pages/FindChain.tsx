@@ -1,12 +1,11 @@
 import { useEffect, useState, useContext, useRef } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import ReactMapGL, {
   Source,
   Layer,
   Popup,
   MapEvent,
   MapRef,
-  Marker,
 } from "react-map-gl";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -14,24 +13,12 @@ import * as GeoJSONTypes from "geojson";
 
 import mapboxgl from "mapbox-gl";
 
-import {
-  Dialog,
-  Typography,
-  Card,
-  CardActions,
-  CardContent,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
 // Project resources
 import { ChainsContext } from "../providers/ChainsProvider";
 import { AuthContext } from "../providers/AuthProvider";
 import { IViewPort } from "../types";
-import theme from "../util/theme";
 import { FindChainSearchBarContainer } from "../components/FindChain";
 import { Chain } from "../api/types";
-
-// Media
 import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
 import { chainAddUser } from "../api/chain";
 
@@ -62,8 +49,6 @@ const FindChain = ({ location }: { location: Location }) => {
   const history = useHistory();
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
-
-  const classes = makeStyles(theme as any)();
 
   const chains = useContext(ChainsContext);
   const publishedChains = chains.filter(({ published }) => published);
@@ -337,8 +322,8 @@ const FindChain = ({ location }: { location: Location }) => {
             dynamicPosition
             onClose={() => setShowPopup(false)}
           >
-            <Card className={classes.card}>
-              <CardContent className={classes.cardContent}>
+            <div className="tw-card">
+              <div className="tw-card-body">
                 <h1 className="tw-mb-3">{selectedChain.name}</h1>
                 <p id="description">{selectedChain.description}</p>
                 <div className="tw-flex tw-flex-col tw-w-full tw-pt-8">
@@ -359,38 +344,29 @@ const FindChain = ({ location }: { location: Location }) => {
                       : null}
                   </div>
                 </div>
-              </CardContent>
+              </div>
 
-              {authUser?.is_root_admin ? (
-                <CardActions>
-                  <button
-                    key={"btn-join"}
-                    className="tw-btn tw-btn-primary tw-btn-outline"
-                    onClick={(e) => signupToChain(e)}
-                  >
-                    {t("join")}
-                  </button>
+              <div className="tw-card-action">
+                <button
+                  key={"btn-join"}
+                  type="button"
+                  className="tw-btn tw-btn-primary"
+                  onClick={(e) => signupToChain(e)}
+                >
+                  {t("join")}
+                  <span className="feather feather-arrow-right tw-ml-4"></span>
+                </button>
+                {authUser?.is_root_admin && (
                   <button
                     key={"btn-view"}
                     className="tw-btn tw-btn-primary"
                     onClick={(e) => viewChain(e)}
                   >
                     {t("viewChain")}
-                  </button>{" "}
-                </CardActions>
-              ) : (
-                <CardActions className={classes.cardsAction}>
-                  <button
-                    key={"btn-join"}
-                    className="tw-btn tw-btn-primary"
-                    onClick={(e) => signupToChain(e)}
-                  >
-                    {t("join")}
-                    <span className="feather feather-arrow-right tw-ml-4"></span>
                   </button>
-                </CardActions>
-              )}
-            </Card>
+                )}
+              </div>
+            </div>
           </Popup>
         ) : null}
       </ReactMapGL>
