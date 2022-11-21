@@ -14,12 +14,14 @@ export default function Footer() {
   function copyToClipboard(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
 
+    let text = (e.target as any).innerText;
+
     setCopying(true);
     setTimeout(() => {
       setCopying(false);
     }, 3000);
 
-    navigator.clipboard.writeText("hello@clothingloop.org");
+    navigator.clipboard.writeText(text);
   }
 
   return (
@@ -82,24 +84,43 @@ export default function Footer() {
             <span className="tw-block tw-text-secondary tw-font-bold tw-text-2xl tw-mb-3">
               {t("findUs")}
             </span>
-            <div className="tw-flex tw-items-center">
-              <a
-                href="https://www.instagram.com/theclothingloop/"
-                target="_blank"
-                className="tw-btn tw-btn-circle tw-btn-outline feather feather-instagram tw-text-lg tw-mr-3"
-              ></a>
-              <a
-                href="mailto:hello@clothingloop.com"
-                className={`tw-btn tw-btn-circle tw-btn-outline tw-mr-3 tw-flex tw-justify-center tw-tooltip tw-tooltip-bottom ${
-                  copying ? "tw-tooltip-open" : ""
-                }`}
-                onClick={copyToClipboard}
-                data-tip={copying ? t("copiedToClipboard") : t("copy")}
-              >
-                <span className="feather feather-at-sign tw-text-lg"></span>
-              </a>
-              <span className="tw-invisible peer-hover:tw-visible tw-bg-base-100 tw-rounded-pill"></span>
-            </div>
+            <ul className="">
+              <li className="tw-mb-3 tw-flex tw-items-center">
+                <a
+                  href="https://www.instagram.com/theclothingloop/"
+                  target="_blank"
+                  className="tw-btn tw-btn-circle tw-btn-outline feather feather-instagram tw-text-lg tw-mr-3 hover:tw-bg-instagram"
+                ></a>
+                <a
+                  href="#"
+                  className={`tw-tooltip tw-tooltip-bottom tw-text-sm ${
+                    copying ? "tw-tooltip-open" : ""
+                  }`}
+                  onClick={copyToClipboard}
+                  data-tip={copying ? t("copiedToClipboard") : t("copy")}
+                >
+                  @theclothingloop
+                </a>
+              </li>
+              <li className="tw-flex tw-items-center">
+                <a
+                  href="mailto:hello@clothingloop.com"
+                  className="tw-btn tw-btn-circle tw-btn-outline tw-mr-3 tw-flex tw-justify-center hover:tw-bg-[#0375b9]"
+                >
+                  <span className="feather feather-at-sign tw-text-lg"></span>
+                </a>
+                <a
+                  href="#"
+                  className={`tw-tooltip tw-tooltip-bottom tw-text-sm ${
+                    copying ? "tw-tooltip-open" : ""
+                  }`}
+                  onClick={copyToClipboard}
+                  data-tip={copying ? t("copiedToClipboard") : t("copy")}
+                >
+                  hello@clothingloop.com
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         <Newsletter />
