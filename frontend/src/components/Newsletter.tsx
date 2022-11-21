@@ -87,10 +87,7 @@ export const Newsletter = () => {
             </label>
           </div>
           <div className="tw-bg-white tw-inline-block">
-            <button
-              className="tw-btn tw-btn-primary tw-btn-outline"
-              type="submit"
-            >
+            <button className="tw-btn tw-btn-primary" type="submit">
               {t("submit")}
               <span className="feather feather-arrow-right tw-ml-3"></span>
             </button>
