@@ -42,7 +42,7 @@ export const Newsletter = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="tw-bg-teal-light tw-w-1/2 tw-py-14 tw-px-16"
+      className="tw-bg-teal-light tw-w-1/2 tw-py-14 tw-px-16 tw-min-h-[456px]"
     >
       {submitted ? (
         <div className="tw-max-w-[600px]">
@@ -63,25 +63,25 @@ export const Newsletter = () => {
           <h2 className="tw-font-serif tw-text-secondary tw-font-bold tw-text-5xl tw-mb-4 tw-leading-snug">
             {t("keepUpWithOurLatestNews")}
           </h2>
-          <p className="tw-mb-3">{t("subscribeToRecieveOurLatestNews")}</p>
+          <p className="tw-mb-8">{t("subscribeToRecieveOurLatestNews")}</p>
 
-          <div className="tw-flex tw-flex-row tw-mb-6">
+          <div className="tw-flex tw-flex-row tw-mb-5">
             <label className="tw-form-control tw-w-52 tw-mr-4">
-              <span className="tw-label tw-text-sm">{t("name")}</span>
               <input
                 type="text"
                 name="name"
-                className="tw-input tw-input-bordered tw-w-full tw-input-ghost"
+                className="tw-input tw-input-bordered tw-w-full tw-input-secondary"
+                placeholder={t("name")}
                 min={3}
                 required
               />
             </label>
             <label className="tw-form-control tw-w-52">
-              <span className="tw-label tw-text-sm">{t("emailAddress")}</span>
               <input
                 type="email"
                 name="email"
-                className="tw-input tw-input-bordered tw-w-full tw-input-ghost"
+                placeholder={t("emailAddress")}
+                className="tw-input tw-input-bordered tw-w-full tw-input-secondary"
                 required
               />
             </label>

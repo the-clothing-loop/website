@@ -9,16 +9,16 @@ import { AuthContext } from "../providers/AuthProvider";
 export default function Footer() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
-  const [copying, setCopying] = useState(false);
+  const [copying, setCopying] = useState("");
 
   function copyToClipboard(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
 
     let text = (e.target as any).innerText;
 
-    setCopying(true);
+    setCopying(text);
     setTimeout(() => {
-      setCopying(false);
+      setCopying("");
     }, 3000);
 
     navigator.clipboard.writeText(text);
@@ -90,14 +90,21 @@ export default function Footer() {
                   href="https://www.instagram.com/theclothingloop/"
                   target="_blank"
                   className="tw-btn tw-btn-circle tw-btn-outline feather feather-instagram tw-text-lg tw-mr-3 hover:tw-bg-instagram"
+                  aria-label="link to our instagram account"
                 ></a>
                 <a
                   href="#"
+                  tabIndex={1}
                   className={`tw-tooltip tw-tooltip-bottom tw-text-sm ${
-                    copying ? "tw-tooltip-open" : ""
+                    copying === "@theclothingloop" ? "tw-tooltip-open" : ""
                   }`}
                   onClick={copyToClipboard}
-                  data-tip={copying ? t("copiedToClipboard") : t("copy")}
+                  aria-hidden
+                  data-tip={
+                    copying === "@theclothingloop"
+                      ? t("copiedToClipboard")
+                      : t("copy")
+                  }
                 >
                   @theclothingloop
                 </a>
@@ -105,17 +112,24 @@ export default function Footer() {
               <li className="tw-flex tw-items-center">
                 <a
                   href="mailto:hello@clothingloop.com"
-                  className="tw-btn tw-btn-circle tw-btn-outline tw-mr-3 tw-flex tw-justify-center hover:tw-bg-[#0375b9]"
-                >
-                  <span className="feather feather-at-sign tw-text-lg"></span>
-                </a>
+                  aria-label="Our email address"
+                  className="tw-btn tw-btn-circle tw-btn-outline tw-mr-3 tw-flex tw-justify-center hover:tw-bg-[#0375b9] feather feather-at-sign tw-text-lg"
+                ></a>
                 <a
                   href="#"
+                  tabIndex={1}
+                  aria-hidden
                   className={`tw-tooltip tw-tooltip-bottom tw-text-sm ${
-                    copying ? "tw-tooltip-open" : ""
+                    copying === "hello@clothingloop.com"
+                      ? "tw-tooltip-open"
+                      : ""
                   }`}
                   onClick={copyToClipboard}
-                  data-tip={copying ? t("copiedToClipboard") : t("copy")}
+                  data-tip={
+                    copying === "hello@clothingloop.com"
+                      ? t("copiedToClipboard")
+                      : t("copy")
+                  }
                 >
                   hello@clothingloop.com
                 </a>
