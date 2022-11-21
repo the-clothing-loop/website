@@ -12,6 +12,7 @@ import SizesDropdown from "../components/SizesDropdown";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import { RequestRegisterChain } from "../api/login";
 import { Genders, Sizes } from "../api/enums";
+import useForm from "../util/form.hooks";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
@@ -43,7 +44,7 @@ export default function ChainDetailsForm({
     zoom: initialValues ? 10 : 1,
   });
 
-  const [values, setValues] = useState<RegisterChainForm>({
+  const [values, setValue, setValues] = useForm<RegisterChainForm>({
     name: "",
     description: "",
     radius: 3,
@@ -52,13 +53,6 @@ export default function ChainDetailsForm({
     longitude: 0,
     latitude: 0,
   });
-
-  function setFieldValue<K = keyof RegisterChainForm>(key: K, value: any) {
-    setValues((state) => ({
-      ...state,
-      [key as any]: value,
-    }));
-  }
 
   function flyToLocation(longitude: number, latitude: number) {
     setViewport({
@@ -98,8 +92,8 @@ export default function ChainDetailsForm({
       // ignore clicks on geocoding search bar, which is on top of map
       return;
     }
-    setFieldValue("longitude", event.lngLat[0]);
-    setFieldValue("latitude", event.lngLat[1]);
+    setValue("longitude", event.lngLat[0]);
+    setValue("latitude", event.lngLat[1]);
     flyToLocation(event.lngLat[0], event.lngLat[1]);
   }
 
@@ -138,7 +132,7 @@ export default function ChainDetailsForm({
     );
   }
   function handleCategoriesChange(selectedGenders: string[]) {
-    setFieldValue("genders", selectedGenders as Genders[]);
+    setValue("genders", selectedGenders as Genders[]);
     // potentially remove some sizes if their parent category has been deselected
     const filteredSizes = (values.sizes || []).filter(
       (size) =>
@@ -146,54 +140,56 @@ export default function ChainDetailsForm({
           categories[gender as Genders].includes(size as Sizes)
         ).length > 0
     );
-    setFieldValue("sizes", filteredSizes);
+    setValue("sizes", filteredSizes);
   }
   return (
     <div className="tw-flex tw-flex-row">
-      <div className="tw-w-1/2">
-        <ReactMapGL
-          mapboxApiAccessToken={accessToken}
-          mapStyle="mapbox://styles/mapbox/light-v10"
-          {...viewport}
-          onViewportChange={(newView: IViewPort) => setViewport(newView)}
-          onClick={handleMapClick}
-          getCursor={() => "pointer"}
-          className="tw-cursor-pointer tw-shadow-lg"
-          width="100%"
-        >
-          <Geocoding
-            onResult={handleGeolocationResult}
-            className="tw-absolute tw-top-5 tw-left-5"
-          />
-          {values.longitude !== null && values.latitude !== null ? (
-            <SVGOverlay redraw={redrawLoop} />
-          ) : null}
-        </ReactMapGL>
+      <div className="tw-w-1/2 tw-pr-4">
+        <div className="tw-aspect-square">
+          <ReactMapGL
+            mapboxApiAccessToken={accessToken}
+            mapStyle="mapbox://styles/mapbox/light-v10"
+            {...viewport}
+            onViewportChange={(newView: IViewPort) => setViewport(newView)}
+            onClick={handleMapClick}
+            getCursor={() => "pointer"}
+            className="tw-cursor-pointer tw-shadow-lg"
+            width="100%"
+            height="100%"
+          >
+            <Geocoding
+              onResult={handleGeolocationResult}
+              className="tw-absolute tw-top-5 tw-left-5"
+            />
+            {values.longitude !== null && values.latitude !== null ? (
+              <SVGOverlay redraw={redrawLoop} />
+            ) : null}
+          </ReactMapGL>
+        </div>
       </div>
-      <div className="tw-w-1/2">
+      <div className="tw-w-1/2 tw-pl-4">
         <form noValidate>
-          <p className="formSubtitle">{t("clickToSetLoopLocation")}</p>
-
+          <p className="tw-mb-2">{t("clickToSetLoopLocation")}</p>
           <TextForm
+            classes={{ root: "" }}
             required
             label={t("loopName")}
             name="name"
             type="text"
             value={values.name}
+            onChange={(e) => setValue("name", e.target.value)}
+            info={t("upToYouUsuallyTheGeopraphic")}
           />
 
-          <PopoverOnHover message={t("upToYouUsuallyTheGeopraphic")} />
-
           <TextForm
-            type="text"
+            type="number"
             required
             label={t("radius")}
             name="radius"
             value={values.radius}
-            step={0.1}
-          />
-          <PopoverOnHover
-            message={t("decideOnTheAreaYourLoopWillBeActiveIn")}
+            onChange={(e) => setValue("radius", e.target.valueAsNumber)}
+            step="0.1"
+            info={t("decideOnTheAreaYourLoopWillBeActiveIn")}
           />
 
           <TextForm
@@ -201,22 +197,34 @@ export default function ChainDetailsForm({
             label={t("description")}
             name="description"
             value={values.description}
-          />
-          <PopoverOnHover message={t("optionalFieldTypeAnything")} />
-
-          <CategoriesDropdown
-            selectedGenders={values.genders || []}
-            handleChange={handleCategoriesChange}
+            onChange={(e) => setValue("description", e.target.value)}
+            classes={{ root: "tw-mb-4 tw-w-full tw-max-w-xs" }}
+            info={t("optionalFieldTypeAnything")}
           />
 
-          <SizesDropdown
-            filteredGenders={values.genders || []}
-            selectedSizes={values.sizes || []}
-            handleChange={(val) => setFieldValue("sizes", val)}
-          />
-          <PopoverOnHover
-            message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
-          />
+          <div className="tw-mb-2 tw-w-full tw-max-w-xs">
+            <div className="tw-float-right -tw-mr-2 -tw-mt-2">
+              <PopoverOnHover
+                message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
+              />
+            </div>
+            <CategoriesDropdown
+              selectedGenders={values.genders || []}
+              handleChange={handleCategoriesChange}
+            />
+          </div>
+
+          <div className="tw-mb-6 tw-w-full tw-max-w-xs">
+            <SizesDropdown
+              filteredGenders={
+                values.genders?.length
+                  ? values.genders
+                  : [Genders.children, Genders.women, Genders.men]
+              }
+              selectedSizes={values.sizes || []}
+              handleChange={(v) => setValue("sizes", v)}
+            />
+          </div>
 
           <div className="tw-flex tw-flex-row">
             <button
