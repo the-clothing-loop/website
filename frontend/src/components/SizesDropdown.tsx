@@ -8,6 +8,7 @@ import { useDropdownCheckBox } from "../util/dropdown.hooks";
 export default function SizesDropdown(props: {
   filteredGenders: string[];
   selectedSizes: string[];
+  className?: string;
   handleChange: (selectedSizes: string[]) => void;
 }) {
   const { t } = useTranslation();
@@ -34,6 +35,7 @@ export default function SizesDropdown(props: {
       <li className={disabled ? "tw-disabled" : ""} key={size}>
         <label>
           <input
+            name="sizes"
             type="checkbox"
             checked={checked}
             disabled={disabled}
@@ -50,12 +52,12 @@ export default function SizesDropdown(props: {
     <div
       className={`tw-w-full tw-dropdown ${
         dropdown.open ? "tw-dropdown-open" : ""
-      }`}
+      } ${props.className}`}
       onBlur={() => dropdown.setOpen(false)}
     >
       <label
         tabIndex={0}
-        className="tw-btn tw-btn-outline tw-btn-secondary tw-w-full tw-flex tw-justify-between tw-flex-nowrap"
+        className="tw-btn tw-btn-outline tw-no-animation tw-btn-secondary tw-w-full tw-flex tw-justify-between tw-flex-nowrap"
         onClick={() => dropdown.toggle()}
       >
         <span className="tw-truncate">{btnLabel}</span>

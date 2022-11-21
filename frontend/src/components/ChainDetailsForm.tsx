@@ -10,7 +10,6 @@ import { TextForm } from "./FormFields";
 import PopoverOnHover from "./Popover";
 import SizesDropdown from "../components/SizesDropdown";
 import CategoriesDropdown from "../components/CategoriesDropdown";
-import { Chain } from "../api/types";
 import { RequestRegisterChain } from "../api/login";
 import { Genders, Sizes } from "../api/enums";
 
@@ -53,6 +52,7 @@ export default function ChainDetailsForm({
     longitude: 0,
     latitude: 0,
   });
+
   function setFieldValue<K = keyof RegisterChainForm>(key: K, value: any) {
     setValues((state) => ({
       ...state,

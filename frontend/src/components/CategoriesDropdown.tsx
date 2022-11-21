@@ -41,7 +41,7 @@ export default function CategoriesDropdown({
     >
       <label
         tabIndex={0}
-        className="tw-btn tw-btn-outline tw-btn-secondary tw-w-full tw-flex tw-justify-between tw-flex-nowrap"
+        className="tw-btn tw-btn-outline tw-no-animation tw-btn-secondary tw-w-full tw-flex tw-justify-between tw-flex-nowrap"
         onClick={() => dropdown.toggle()}
       >
         <span className="tw-truncate">{btnLabel}</span>
@@ -61,6 +61,7 @@ export default function CategoriesDropdown({
             <li>
               <label>
                 <input
+                  name="genders"
                   type="checkbox"
                   checked={checked}
                   className="tw-checkbox"
