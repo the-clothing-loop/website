@@ -60,7 +60,7 @@ const Counters = () => {
         <h3>{t("participants")}</h3>
       </div>
       <a className="isVisible" href="/loops/find">
-        <h1>3</h1>
+        <h1>6</h1>
         <h3>{t("countries")}</h3>
       </a>
       <div className={classes.counterLinkWrapper}>
