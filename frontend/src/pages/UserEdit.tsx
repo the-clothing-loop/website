@@ -4,12 +4,13 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
 import SizesDropdown from "../components/SizesDropdown";
+import { TextForm } from "../components/FormFields";
 import categories from "../util/categories";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { UID, User } from "../api/types";
 import { userGetByUID, userUpdate } from "../api/user";
-import FormJup from "../util/form-jup";
 import { PhoneFormField } from "../components/FormFields";
+import useForm from "../util/form.hooks";
 
 interface Params {
   userUID: UID;
@@ -19,13 +20,6 @@ interface State {
   chainUID: UID;
 }
 
-interface FormValues {
-  name: string;
-  phoneNumber: string;
-  newsletter: boolean;
-  sizes: string[];
-}
-
 export default function UserEdit() {
   const { t } = useTranslation();
   const history = useHistory();
@@ -33,10 +27,12 @@ export default function UserEdit() {
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [jsFields, setJsFields] = useState({
+  const [values, setValue, setValues] = useForm({
+    name: "",
     phone: "",
-    address: "",
     sizes: [] as string[],
+    address: "",
+    newsletter: false,
   });
 
   const [user, setUser] = useState<User>();
@@ -51,16 +47,15 @@ export default function UserEdit() {
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
-    const values = FormJup<FormValues>(e);
 
     (async () => {
       try {
         await userUpdate({
           name: values.name,
-          phone_number: values.phoneNumber,
-          newsletter: values.newsletter == "true",
-          address: jsFields.address,
-          sizes: jsFields.sizes,
+          phone_number: values.phone,
+          newsletter: values.newsletter,
+          address: values.address,
+          sizes: values.sizes,
         });
         setSubmitted(true);
         setTimeout(() => {
@@ -78,6 +73,13 @@ export default function UserEdit() {
       try {
         const user = (await userGetByUID(state.chainUID, params.userUID)).data;
         setUser(user);
+        setValues({
+          name: user.name,
+          phone: user.phone_number,
+          sizes: user.sizes,
+          address: user.address,
+          newsletter: false,
+        });
       } catch (error) {
         console.warn(error);
       }
@@ -90,68 +92,68 @@ export default function UserEdit() {
         <title>The Clothing Loop | Edit user</title>
         <meta name="description" content="Edit user" />
       </Helmet>
-      <div className="tw-w-full sm:tw-w-screen-sm tw-mx-auto tw-p-10">
-        <h1 className="tw-font-serif tw-font-bold tw-text-6xl">
+      <div className="tw-w-full tw-container sm:tw-max-w-screen-md tw-mx-auto tw-p-10">
+        <h1 className="tw-font-serif tw-font-bold tw-text-6xl tw-text-secondary tw-mb-4">
           {user.is_root_admin || userIsChainAdmin
             ? t("editAdminContacts")
             : t("editParticipantContacts")}
         </h1>
-        <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            placeholder={t("name")}
-            name="name"
-            className="tw-input"
-            required
-            min={2}
-          />
+        <form onSubmit={onSubmit} className="tw-relative">
+          <div className="tw-max-w-xs">
+            <TextForm
+              type="text"
+              label={t("name")}
+              name="name"
+              required
+              className="tw-w-full tw-mb-2"
+              min={2}
+              value={values.name}
+              onChange={(e: any) => setValue("name", e.target.value)}
+            />
 
-          <PhoneFormField />
+            <PhoneFormField classes={{ root: "tw-w-full tw-mb-4" }} />
 
-          <SizesDropdown
-            filteredGenders={Object.keys(categories)}
-            selectedSizes={jsFields.sizes || []}
-            handleChange={(v) =>
-              setJsFields((state) => ({ ...state, sizes: v }))
-            }
-          />
+            <SizesDropdown
+              filteredGenders={Object.keys(categories)}
+              selectedSizes={values.sizes || []}
+              className="tw-w-full tw-mb-4"
+              handleChange={(v) => setValue("sizes", v)}
+            />
 
-          <GeocoderSelector
-            address={jsFields.address}
-            onResult={(e) => {
-              setJsFields((state) => ({
-                ...state,
-                address: e.result.place_name,
-              }));
-            }}
-          />
-
-          <div className="tw-form-control">
-            <label className="tw-label tw-cursor-pointer">
-              <span className="tw-label-text">
-                {t("newsletterSubscription")}
-              </span>
-              <input
-                type="checkbox"
-                className="tw-checkbox"
-                name="newsletter"
+            <div className="tw-absolute tw-top-0 tw-right-0 tw-w-[calc(100%_-_352px)] tw-aspect-[4/3]">
+              <GeocoderSelector
+                address={values.address}
+                onResult={(e: any) => setValue("address", e.result.place_name)}
               />
-            </label>
-          </div>
+            </div>
 
-          <div className="tw-flex">
-            <button
-              type="button"
-              onClick={() => history.goBack()}
-              className="tw-btn tw-btn-primary tw-btn-outline"
-            >
-              {t("back")}
-            </button>
+            <div className="tw-form-control tw-mb-4">
+              <label className="tw-label tw-cursor-pointer">
+                <span className="tw-label-text">
+                  {t("newsletterSubscription")}
+                </span>
+                <input
+                  type="checkbox"
+                  className="tw-checkbox"
+                  name="newsletter"
+                />
+              </label>
+            </div>
 
-            <button type="submit" className="tw-btn tw-btn-secondary tw-ml-3">
-              {t("submit")}
-              <span className="feather feather-arrow-right tw-ml-4"></span>
-            </button>
+            <div className="tw-flex">
+              <button
+                type="button"
+                onClick={() => history.goBack()}
+                className="tw-btn tw-btn-primary tw-btn-outline"
+              >
+                {t("back")}
+              </button>
+
+              <button type="submit" className="tw-btn tw-btn-secondary tw-ml-3">
+                {t("submit")}
+                <span className="feather feather-arrow-right tw-ml-4"></span>
+              </button>
+            </div>
           </div>
         </form>
       </div>
