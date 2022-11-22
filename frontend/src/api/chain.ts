@@ -7,8 +7,14 @@ export function chainGet(chainUID: UID) {
     params: { chain_uid: chainUID },
   });
 }
-export function chainGetAll() {
-  return axios.get<Chain[]>("/v2/chain/all");
+
+interface RequestChainGetAllParams {
+  filter_sizes?: string[];
+  filter_genders?: string[];
+  filter_out_unpublished?: boolean;
+}
+export function chainGetAll(params?: RequestChainGetAllParams) {
+  return axios.get<Chain[]>("/v2/chain/all", { params });
 }
 
 export function chainCreate(chain: RequestRegisterChain) {

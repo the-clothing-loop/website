@@ -29,7 +29,7 @@ import { ChainsContext } from "../providers/ChainsProvider";
 import { DataExport } from "../components/DataExport";
 import theme from "../util/theme";
 import { AuthContext } from "../providers/AuthProvider";
-import { chainGet } from "../api/chain";
+import { chainGet, chainGetAll } from "../api/chain";
 import { Chain } from "../api/types";
 
 const rows = ["name", "location", "status"];
@@ -39,7 +39,6 @@ const ChainsList = () => {
   const classes = makeStyles(theme as any)();
   const history = useHistory();
   const { authUser } = useContext(AuthContext);
-  const allChains = useContext(ChainsContext);
   const [chains, setChains] = useState<Chain[]>();
   const [error, setError] = useState("");
 
@@ -48,7 +47,9 @@ const ChainsList = () => {
       if (authUser) {
         try {
           if (authUser.is_root_admin) {
-            setChains(allChains);
+            let data = await chainGetAll({ filter_out_unpublished: false });
+
+            setChains(data.data);
           } else {
             let data = await Promise.all(
               authUser.chains.map((c) => chainGet(c.chain_uid))

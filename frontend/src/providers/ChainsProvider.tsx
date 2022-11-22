@@ -9,7 +9,7 @@ export const ChainsProvider = ({ children }: { children: React.ReactNode }) => {
   const [chains, setChains] = React.useState<Chain[]>([]);
 
   React.useEffect(() => {
-    chainGetAll().then((res) => {
+    chainGetAll({ filter_out_unpublished: true }).then((res) => {
       setChains(res.data);
     });
   }, []);

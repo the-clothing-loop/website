@@ -110,8 +110,9 @@ func ChainGetAll(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		FilterSizes   []string `form:"filter_sizes"`
-		FilterGenders []string `form:"filter_genders"`
+		FilterSizes     []string `form:"filter_sizes"`
+		FilterGenders   []string `form:"filter_genders"`
+		FilterPublished bool     `form:"filter_out_unpublished"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
@@ -152,7 +153,9 @@ func ChainGetAll(c *gin.Context) {
 		tx.Where(strings.Join(whereSql, " AND "), args...)
 	}
 
-	tx.Where("chains.published = ?", true)
+	if query.FilterPublished {
+		tx.Where("chains.published = ?", true)
+	}
 	if res := tx.Find(&chains); res.Error != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
 		return
