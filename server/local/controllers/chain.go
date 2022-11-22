@@ -23,7 +23,7 @@ type ChainCreateRequestBody struct {
 	Address          string   `json:"address" binding:"required"`
 	Latitude         float64  `json:"latitude" binding:"required"`
 	Longitude        float64  `json:"longitude" binding:"required"`
-	Radius           float32  `json:"radius" binding:"required"`
+	Radius           float32  `json:"radius" binding:"required,gte=1.0,lte=70.0"`
 	OpenToNewMembers bool     `json:"open_to_new_members" binding:"required"`
 	Sizes            []string `json:"sizes" binding:"required"`
 	Genders          []string `json:"genders" binding:"required"`
