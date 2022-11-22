@@ -13,7 +13,7 @@ export default function About() {
         <meta name="description" content="About The Clothing Loop" />
       </Helmet>
       <main>
-        <div className="tw-max-w-screen-md tw-mx-auto tw-pt-10 tw-px-20">
+        <div className="tw-max-w-screen-md tw-mx-auto tw-pt-10 tw-px-1 md:tw-px-20">
           <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl">
             {t("aboutTheClothingLoop")}
           </h1>
@@ -60,7 +60,7 @@ export default function About() {
             alt=""
             className="tw-my-10 tw-w-full tw-max-h-[600px] tw-object-contain tw-object-center"
           />
-          <div className="tw-prose tw-mx-auto tw-pt-10 tw-px-20">
+          <div className="tw-prose tw-mx-auto tw-pt-10 tw-px-1 md:tw-px-20">
             <p>
               <Trans
                 i18nKey="thePeople"

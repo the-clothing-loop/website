@@ -38,7 +38,7 @@ export const SearchBar: React.FC<IProps> = ({
         e.preventDefault();
         handleSearch();
       }}
-      className="tw-container tw-mx-auto tw-flex tw-p-4 lg:tw-px-20 tw-bg-white tw-flex-wrap sm:tw-flex-nowrap tw-flex-col md:tw-flex-row"
+      className="tw-container tw-mx-auto tw-flex tw-p-4 lg:tw-px-1 md:tw-px-20 tw-bg-white tw-flex-wrap sm:tw-flex-nowrap tw-flex-col md:tw-flex-row"
     >
       <label className="tw-flex lg:tw-w-auto md:tw-flex-grow tw-h-12 md:tw-mr-4 tw-mb-4 md:tw-mb-0 tw-input tw-input-bordered tw-input-secondary focus-within:tw-outline-2 focus-within:tw-outline focus-within:tw-outline-secondary focus-within:tw-outline-offset-2">
         <span className="block tw-self-center tw-pr-3 feather feather-search"></span>

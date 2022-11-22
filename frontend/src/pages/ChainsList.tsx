@@ -49,7 +49,7 @@ const ChainsList = () => {
       <main>
         {chains ? (
           <div className="tw-container tw-mx-auto">
-            <div className="tw-px-20 tw-py-4">
+            <div className="tw-px-1 md:tw-px-20 tw-py-4">
               <h1 className="tw-text-2xl tw-font-bold tw-mb-3">{`${chains.length} Clothing Loops`}</h1>
               <DataExport chains={chains} />
             </div>

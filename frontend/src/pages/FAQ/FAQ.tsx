@@ -30,7 +30,7 @@ const FAQ = () => {
         <meta name="description" content="frequently asked questions" />
       </Helmet>
 
-      <main className="tw-container tw-mx-auto tw-px-20 tw-pt-10">
+      <main className="tw-container tw-mx-auto tw-px-1 md:tw-px-20 tw-pt-10">
         <div className="tw-flex tw-flex-col md:tw-flex-row">
           <div className="tw-w-full md:tw-w-1/2">
             <div className={styles.faqSection}>

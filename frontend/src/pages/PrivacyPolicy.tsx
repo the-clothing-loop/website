@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
         <title>The Clothing Loop | Privacy Policy</title>
         <meta name="description" content="privacy policy" />
       </Helmet>
-      <div className="tw-container tw-mx-auto tw-px-20 tw-py-10">
+      <div className="tw-container tw-mx-auto tw-px-1 md:tw-px-20 tw-py-10">
         <h1 className="tw-font-serif tw-text-secondary tw-font-bold tw-text-5xl tw-mb-4">
           {"Privacy Policy - The Clothing Loop"}
         </h1>

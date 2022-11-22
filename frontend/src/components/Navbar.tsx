@@ -16,7 +16,7 @@ function Navbar() {
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
     // Note: Not supported by IE 11. See https://material-ui.com/components/app-bar/#fixed-placement
 
-    <div className="tw-container tw-mx-auto tw-z-10 tw-bg-white tw-flex tw-flex-row tw-items-center tw-py-0 tw-px-20 tw-shadow-none tw-sticky">
+    <div className="tw-container tw-mx-auto tw-z-10 tw-bg-white tw-flex tw-flex-row tw-items-center tw-py-0 tw-px-1 md:tw-px-20 tw-shadow-none tw-sticky">
       <Link
         aria-label="Clothing Loop logo"
         to="/"

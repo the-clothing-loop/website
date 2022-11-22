@@ -61,7 +61,7 @@ export default function ChainEdit() {
         <title>The Clothing Loop | Edit Loop details</title>
         <meta name="description" content="Edit Loop details" />
       </Helmet>
-      <main className="tw-container tw-mx-auto tw-px-20 tw-pt-10">
+      <main className="tw-container tw-mx-auto tw-px-1 md:tw-px-20 tw-pt-10">
         <h1 className="tw-text-center tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl">
           {t("editLoopInformation")}
         </h1>

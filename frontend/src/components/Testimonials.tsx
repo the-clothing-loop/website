@@ -54,7 +54,7 @@ export default function Testimonials() {
 
   return (
     <section className="tw-text-secondary tw-mb-10">
-      <div className="tw-container tw-mx-auto tw-px-20 tw-flex tw-justify-between">
+      <div className="tw-container tw-mx-auto tw-px-1 md:tw-px-20 tw-flex tw-justify-between">
         <h2 className="tw-font-serif tw-font-bold tw-text-6xl">
           {t("testimonials")}
         </h2>

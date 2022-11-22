@@ -13,7 +13,7 @@ export default function MessageSubmitted(props: any) {
         <meta name="description" content="message submitted" />
       </Helmet>
 
-      <main className="tw-container tw-px-20 tw-pt-10 tw-mx-auto">
+      <main className="tw-container tw-px-1 md:tw-px-20 tw-pt-10 tw-mx-auto">
         <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl tw-mb-6">
           {t("thankYouForYourMessage")}
         </h1>
