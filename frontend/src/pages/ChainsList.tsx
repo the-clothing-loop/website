@@ -46,17 +46,18 @@ const ChainsList = () => {
     (async () => {
       if (authUser) {
         try {
+          let _chains: Chain[];
           if (authUser.is_root_admin) {
-            let data = await chainGetAll({ filter_out_unpublished: false });
-
-            setChains(data.data);
+            _chains = (await chainGetAll({ filter_out_unpublished: false }))
+              .data;
           } else {
             let data = await Promise.all(
               authUser.chains.map((c) => chainGet(c.chain_uid))
             );
 
-            setChains(data.map((d) => d.data));
+            _chains = data.map((d) => d.data);
           }
+          setChains(_chains.sort((a, b) => a.name.localeCompare(b.name)));
         } catch (rej: any) {
           setError(rej?.data || "Unknown error");
         }
@@ -75,7 +76,7 @@ const ChainsList = () => {
           <div className="table-container">
             <div className="table-head">
               <Typography variant="h5">{`${chains.length} Clothing Loops`}</Typography>
-              <DataExport />
+              <DataExport chains={chains} />
             </div>
             {error ? (
               <Alert className={classes.errorAlert} severity="error">

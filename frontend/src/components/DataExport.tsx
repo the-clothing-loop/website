@@ -35,26 +35,24 @@ interface ChainData {
   description: string;
 }
 
-const DataExport = () => {
+const DataExport = (props: { chains: Chain[] }) => {
   const { t } = useTranslation();
   const classes = makeStyles(theme as any)();
 
   const [chains, setChains] = useState<ChainData[]>();
-  const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
-      let chains = (await chainGetAll()).data;
-      let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
       setChains(
-        sortedChains.map((c) => ({
-          name: c.name,
-          address: c.address,
-          genders: c.genders?.map((g) => GenderI18nKeys[g]) || [],
-          sizes: c.sizes?.map((s) => SizeI18nKeys[s]) || [],
-          published: c.published,
-          description: c.description,
-        }))
+        props.chains
+          .map((c) => ({
+            name: c.name,
+            address: c.address,
+            genders: c.genders?.map((g) => GenderI18nKeys[g]) || [],
+            sizes: c.sizes?.map((s) => SizeI18nKeys[s]) || [],
+            published: c.published,
+            description: c.description,
+          }))
       );
     })();
   }, []);
