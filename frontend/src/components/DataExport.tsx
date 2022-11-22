@@ -44,15 +44,14 @@ const DataExport = (props: { chains: Chain[] }) => {
   useEffect(() => {
     (async () => {
       setChains(
-        props.chains
-          .map((c) => ({
-            name: c.name,
-            address: c.address,
-            genders: c.genders?.map((g) => GenderI18nKeys[g]) || [],
-            sizes: c.sizes?.map((s) => SizeI18nKeys[s]) || [],
-            published: c.published,
-            description: c.description,
-          }))
+        props.chains.map((c) => ({
+          name: c.name,
+          address: c.address,
+          genders: c.genders?.map((g) => GenderI18nKeys[g]) || [],
+          sizes: c.sizes?.map((s) => SizeI18nKeys[s]) || [],
+          published: c.published,
+          description: c.description,
+        }))
       );
     })();
   }, []);
