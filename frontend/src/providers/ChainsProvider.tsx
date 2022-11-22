@@ -8,7 +8,7 @@ export function ChainsProvider({ children }: PropsWithChildren<{}>) {
   const [chains, setChains] = useState<Chain[]>([]);
 
   useEffect(() => {
-    chainGetAll().then((res) => {
+    chainGetAll({ filter_out_unpublished: true }).then((res) => {
       setChains(res.data);
     });
   }, []);

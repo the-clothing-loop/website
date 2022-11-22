@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-import { ChainsContext } from "../providers/ChainsProvider";
 import { DataExport } from "../components/DataExport";
 import { AuthContext } from "../providers/AuthProvider";
-import { chainGet } from "../api/chain";
+import { chainGet, chainGetAll } from "../api/chain";
 import { Chain } from "../api/types";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
@@ -14,7 +13,6 @@ import { GinParseErrors } from "../util/gin-errors";
 const ChainsList = () => {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
-  const allChains = useContext(ChainsContext);
   const { addToastError } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>();
 
@@ -22,15 +20,18 @@ const ChainsList = () => {
     (async () => {
       if (authUser) {
         try {
+          let _chains: Chain[];
           if (authUser.is_root_admin) {
-            setChains(allChains);
+            _chains = (await chainGetAll({ filter_out_unpublished: false }))
+              .data;
           } else {
             let data = await Promise.all(
               authUser.chains.map((c) => chainGet(c.chain_uid))
             );
 
-            setChains(data.map((d) => d.data));
+            _chains = data.map((d) => d.data);
           }
+          setChains(_chains.sort((a, b) => a.name.localeCompare(b.name)));
         } catch (e: any) {
           console.error(e);
           addToastError(GinParseErrors(t, e?.data || "Unknown error"));
@@ -50,7 +51,7 @@ const ChainsList = () => {
           <div className="tw-container tw-mx-auto">
             <div className="tw-px-20 tw-py-4">
               <h1 className="tw-text-2xl tw-font-bold tw-mb-3">{`${chains.length} Clothing Loops`}</h1>
-              <DataExport />
+              <DataExport chains={chains} />
             </div>
 
             <div className="sm:tw-overflow-x-auto">

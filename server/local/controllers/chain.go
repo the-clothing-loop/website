@@ -23,7 +23,7 @@ type ChainCreateRequestBody struct {
 	Address          string   `json:"address" binding:"required"`
 	Latitude         float64  `json:"latitude" binding:"required"`
 	Longitude        float64  `json:"longitude" binding:"required"`
-	Radius           float32  `json:"radius" binding:"required"`
+	Radius           float32  `json:"radius" binding:"required,gte=1.0,lte=70.0"`
 	OpenToNewMembers bool     `json:"open_to_new_members" binding:"required"`
 	Sizes            []string `json:"sizes" binding:"required"`
 	Genders          []string `json:"genders" binding:"required"`
@@ -110,8 +110,9 @@ func ChainGetAll(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		FilterSizes   []string `form:"filter_sizes"`
-		FilterGenders []string `form:"filter_genders"`
+		FilterSizes     []string `form:"filter_sizes"`
+		FilterGenders   []string `form:"filter_genders"`
+		FilterPublished bool     `form:"filter_out_unpublished"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
@@ -152,7 +153,9 @@ func ChainGetAll(c *gin.Context) {
 		tx.Where(strings.Join(whereSql, " AND "), args...)
 	}
 
-	tx.Where("chains.published = ?", true)
+	if query.FilterPublished {
+		tx.Where("chains.published = ?", true)
+	}
 	if res := tx.Find(&chains); res.Error != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
 		return

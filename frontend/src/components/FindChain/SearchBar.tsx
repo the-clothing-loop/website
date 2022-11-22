@@ -46,7 +46,7 @@ export const SearchBar: React.FC<IProps> = ({
           type="search"
           value={searchTerm}
           onChange={handleSearchTermChange}
-          onKeyDown={handleSearchEnter}
+          onKeyUp={handleSearchEnter}
           placeholder={t("searchLocation")}
           className="tw-w-full tw-border-0 tw-text-sm tw-outline-none tw-my-2 tw-mr-2"
         />

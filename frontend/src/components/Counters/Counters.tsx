@@ -58,7 +58,7 @@ export default function Counters() {
 
       <div className="tw-stat">
         <div className="tw-mb-3 tw-stat-value tw-text-6xl tw-font-serif tw-text-stroke-base-100">
-          3
+          6
         </div>
         <div className="tw-stat-title">{t("countries")}</div>
       </div>

@@ -61,7 +61,7 @@ export default function GeocoderSelector(props: Props) {
             mapboxApiAccessToken={MAPBOX_TOKEN}
             position="top-left"
             placeholder={
-              props.address === "" ? props.address : t("enterYourAddress")
+              props.address ? props.address : t("enterYourAddress") + "*"
             }
             address={props.address}
           />

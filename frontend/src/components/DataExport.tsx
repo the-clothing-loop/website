@@ -30,17 +30,15 @@ interface ChainData {
   description: string;
 }
 
-const DataExport = () => {
+const DataExport = (props: { chains: Chain[] }) => {
   const { t } = useTranslation();
 
   const [chains, setChains] = useState<ChainData[]>();
 
   useEffect(() => {
     (async () => {
-      let chains = (await chainGetAll()).data;
-      let sortedChains = chains.sort((a, b) => a.name.localeCompare(b.name));
       setChains(
-        sortedChains.map((c) => ({
+        props.chains.map((c) => ({
           name: c.name,
           address: c.address,
           genders: c.genders?.map((g) => GenderI18nKeys[g]) || [],
