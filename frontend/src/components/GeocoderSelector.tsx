@@ -65,7 +65,9 @@ const GeocoderSelector = ({ onResult, ...props }: GeocoderSelectorProps) => {
             mapboxApiAccessToken={MAPBOX_TOKEN}
             position="top-left"
             placeholder={
-              props.userAddress ? props.userAddress : t("enterYourAddress")
+              props.userAddress
+                ? props.userAddress
+                : t("enterYourAddress") + "*"
             }
             userAddress={props.userAddress}
           />
