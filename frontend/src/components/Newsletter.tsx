@@ -42,7 +42,7 @@ export const Newsletter = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="tw-bg-teal-light tw-w-1/2 tw-py-14 tw-px-16 tw-min-h-[456px]"
+      className="tw-bg-teal-light lg:tw-w-1/2 tw-mb-4 lg:tw-mb-0 tw-p-10 lg:tw-py-14 lg:tw-px-16 lg:tw-min-h-[456px]"
     >
       {submitted ? (
         <div className="tw-max-w-[600px]">
