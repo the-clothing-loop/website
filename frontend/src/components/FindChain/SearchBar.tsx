@@ -9,6 +9,7 @@ import SizesDropdown from "../SizesDropdown";
 
 // Project resources
 import theme from "../../util/theme";
+import { KeyboardEvent } from "react";
 
 interface IProps {
   searchTerm: string;
@@ -33,6 +34,12 @@ export const SearchBar: React.FC<IProps> = ({
 
   const { t } = useTranslation();
 
+  function handleKeyUp(e: KeyboardEvent) {
+    if (e.code === "Enter") {
+      handleSearch();
+    }
+  }
+
   return (
     <Paper className={classes.root2}>
       <TextField
@@ -42,6 +49,7 @@ export const SearchBar: React.FC<IProps> = ({
         className={classes.input}
         value={searchTerm}
         onChange={handleSearchTermChange}
+        onKeyUp={handleKeyUp}
         InputProps={{
           style: {
             color: "#48808B",
