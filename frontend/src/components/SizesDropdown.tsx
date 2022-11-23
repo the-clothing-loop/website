@@ -1,174 +1,95 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  Input,
-  OutlinedInput,
-  MenuItem,
-  Checkbox,
-  ListItemText,
-  Typography,
-  SelectChangeEvent,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
 import categories from "../util/categories";
-import { Genders, SizeI18nKeys } from "../api/enums";
+import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
+import { useDropdownCheckBox } from "../util/dropdown.hooks";
 
-interface IProps {
-  variant: "outlined" | "standard";
-  showInputLabel: boolean;
-  label: string;
-  // gender enum
-  genders: string[];
-  sizes: string[];
-  handleSelectedCategoriesChange: (selectedCategories: string[]) => void;
-  style?: React.CSSProperties;
-}
-
-const SizesDropdown: React.FC<IProps> = ({
-  variant,
-  showInputLabel,
-  label,
-  genders,
-  sizes,
-  handleSelectedCategoriesChange,
-}: IProps) => {
-  const classes = makeStyles(theme as any)();
+export default function SizesDropdown(props: {
+  filteredGenders: string[];
+  selectedSizes: string[];
+  className?: string;
+  handleChange: (selectedSizes: string[]) => void;
+}) {
   const { t } = useTranslation();
 
-  const handleOnChange = (event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event;
+  const dropdown = useDropdownCheckBox({
+    selected: props.selectedSizes,
+    handleChange: props.handleChange,
+  });
 
-    handleSelectedCategoriesChange(
-      typeof value === "string" ? value.split(",") : value
+  let btnLabel = React.useMemo(() => {
+    if (props.selectedSizes.length) {
+      return [...props.selectedSizes]
+        .sort()
+        .map((s) => t(SizeI18nKeys[s]))
+        .join(", ");
+    } else {
+      return t("sizes");
+    }
+  }, [t, props.selectedSizes]);
+
+  function Item(size: string, disabled: boolean) {
+    let checked = props.selectedSizes.includes(size);
+    return (
+      <li className={disabled ? "disabled" : ""} key={size}>
+        <label>
+          <input
+            name="sizes"
+            type="checkbox"
+            checked={checked}
+            disabled={disabled}
+            className="checkbox"
+            onClick={() => dropdown.change(size)}
+          />
+          {t(SizeI18nKeys[size])}
+        </label>
+      </li>
     );
-  };
+  }
 
   return (
-    <FormControl classes={{ root: classes.specificSpacing }} fullWidth>
-      {showInputLabel && (
-        <InputLabel classes={{ root: classes.labelSelect }}>{label}</InputLabel>
-      )}
-      <Select
-        multiple
-        displayEmpty
-        input={
-          variant === "outlined" ? (
-            <OutlinedInput
-              classes={{
-                root: classes.selectInputOutlined,
-              }}
-            />
-          ) : (
-            <Input
-              classes={{
-                root: classes.selectInputStandard,
-              }}
-            />
-          )
-        }
-        classes={{
-          select:
-            variant === "outlined"
-              ? classes.selectOutlined
-              : classes.selectStandard,
-        }}
-        variant={variant}
-        value={sizes}
-        onChange={handleOnChange}
-        renderValue={(selected: string[]) => {
-          if (!selected.length) {
-            return showInputLabel ? null : (
-              <Typography
-                component="span"
-                classes={{ root: classes.emptyRenderValue }}
-              >
-                {label}
-              </Typography>
-            );
-          } else {
-            return selected.map((size) => t(SizeI18nKeys[size])).join(", ");
-          }
-        }}
+    <div
+      className={`w-full dropdown ${dropdown.open ? "dropdown-open" : ""} ${
+        props.className
+      }`}
+      onBlur={() => dropdown.setOpen(false)}
+    >
+      <label
+        tabIndex={0}
+        className="btn btn-outline no-animation btn-secondary w-full flex justify-between flex-nowrap"
+        onClick={() => dropdown.toggle()}
       >
-        <Typography component="p" className={classes.label}>
-          {t("childrenSizes")}
-        </Typography>
-        {categories[Genders.children].map((size) => (
-          <MenuItem
-            key={size}
-            value={size}
-            disabled={!genders.includes(Genders.children) && !!genders.length}
-            classes={{
-              root: classes.menuItemSpacingAndColor,
-              selected: classes.selected,
-            }}
-          >
-            <Checkbox color="secondary" checked={sizes.includes(size)} />
-            <ListItemText
-              primary={t(SizeI18nKeys[size])}
-              classes={{
-                primary: classes.listItemTextFontSize,
-              }}
-            />
-          </MenuItem>
-        ))}
+        <span className="truncate">{btnLabel}</span>
+        <span
+          className={`pl-2 feather ${
+            dropdown.open ? "feather-arrow-up" : "feather-arrow-down"
+          }`}
+        ></span>
+      </label>
+      <ul
+        className="dropdown-content menu bg-white shadow w-64 sm:w-full"
+        tabIndex={0}
+      >
+        {Object.entries(categories).map(([gender, sizes]) => {
+          let disabled =
+            props.filteredGenders.find((g) => g == gender) == undefined;
 
-        <Typography component="p" className={classes.label}>
-          {t("womenSizes")}
-        </Typography>
-        {categories[Genders.women].map((size) => (
-          <MenuItem
-            key={size}
-            value={size}
-            disabled={!genders.includes(Genders.women) && !!genders.length}
-            classes={{
-              root: classes.menuItemSpacingAndColor,
-              selected: classes.selected,
-            }}
-          >
-            <Checkbox color="secondary" checked={sizes.includes(size)} />
-            <ListItemText
-              primary={t(SizeI18nKeys[size])}
-              classes={{
-                primary: classes.listItemTextFontSize,
-              }}
-            />
-          </MenuItem>
-        ))}
-
-        <Typography component="p" className={classes.label}>
-          {t("menSizes")}
-        </Typography>
-        {categories[Genders.men].map((size) => (
-          <MenuItem
-            key={size}
-            value={size}
-            disabled={!genders.includes(Genders.men) && !!genders.length}
-            classes={{
-              root: classes.menuItemSpacingAndColor,
-              selected: classes.selected,
-            }}
-          >
-            <Checkbox color="secondary" checked={sizes.includes(size)} />
-            <ListItemText
-              primary={t(SizeI18nKeys[size])}
-              classes={{
-                primary: classes.listItemTextFontSize,
-              }}
-            />
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+          return (
+            <>
+              <li
+                key={gender}
+                className={`px-2 pt-2 capitalize ${
+                  disabled ? "text-base-300" : ""
+                }`}
+              >
+                {GenderI18nKeys[gender]}
+              </li>
+              {sizes.map((size) => Item(size as string, disabled))}
+            </>
+          );
+        })}
+      </ul>
+    </div>
   );
-};
-
-export default SizesDropdown;
+}

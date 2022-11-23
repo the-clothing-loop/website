@@ -1,19 +1,12 @@
-//MUI
-import { Popover, Typography } from "@mui/material";
-import { HelpOutline as Help } from "@mui/icons-material";
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
 import { useState } from "react";
 
 interface IProps {
   message: string;
+  className?: string;
 }
 
-const PopoverOnHover: React.FC<IProps> = ({ message }: IProps) => {
+export default function PopoverOnHover({ message, className }: IProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-  const classes = makeStyles(theme as any)();
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -26,43 +19,15 @@ const PopoverOnHover: React.FC<IProps> = ({ message }: IProps) => {
   const open = Boolean(anchorEl);
 
   return (
-    <div className={classes.popoverWrapper}>
-      <Typography
-        aria-owns={open ? "mouse-over-popover" : undefined}
-        aria-haspopup="true"
-        onMouseEnter={handlePopoverOpen}
-        onMouseLeave={handlePopoverClose}
-      >
-        <Help className={classes.icon} />
-      </Typography>
-      <Popover
-        id="mouse-over-popover"
-        sx={{
-          pointerEvents: "none",
-        }}
-        open={open}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        onClose={handlePopoverClose}
-        disableRestoreFocus
-      >
-        <Typography
-          className={classes.specificSpacing}
-          sx={{ p: 1 }}
-          style={{ maxWidth: "300px" }}
-        >
-          {message}
-        </Typography>
-      </Popover>
+    <div
+      tabIndex={0}
+      className={`tooltip tooltip-bottom focus:tooltip-open btn-sm btn-circle btn-ghost flex items-center justify-center z-10 ${
+        className || ""
+      }`}
+      aria-label={message}
+      data-tip={message}
+    >
+      <span className="feather feather-help-circle text-lg" />
     </div>
   );
-};
-
-export default PopoverOnHover;
+}

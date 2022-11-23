@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { loginValidate as apiLogin, logout as apiLogout } from "../api/login";
 import { User } from "../api/types";
@@ -19,7 +19,7 @@ export type AuthProps = {
   authUserRefresh: () => Promise<UserRefreshState>;
 };
 
-export const AuthContext = React.createContext<AuthProps>({
+export const AuthContext = createContext<AuthProps>({
   authUser: null,
   loading: true,
   authLoginValidate: (apiKey) => Promise.reject(),
@@ -29,10 +29,10 @@ export const AuthContext = React.createContext<AuthProps>({
 
 const LOCALSTORAGE_USER_UID = "user_uid";
 
-export const AuthProvider = ({ children }: any) => {
+export function AuthProvider({ children }: PropsWithChildren<{}>) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const authLoginValidate = (apiKey: string) => {
+  function authLoginValidate(apiKey: string) {
     setLoading(true);
     return (async () => {
       try {
@@ -46,8 +46,8 @@ export const AuthProvider = ({ children }: any) => {
       }
       setLoading(false);
     })();
-  };
-  const authLogout = () => {
+  }
+  function authLogout() {
     setLoading(true);
     return (async () => {
       await apiLogout().catch((e) => console.warn(e));
@@ -55,9 +55,10 @@ export const AuthProvider = ({ children }: any) => {
       setUser(null);
       setLoading(false);
     })();
-  };
-  const authUserRefresh = () => {
+  }
+  function authUserRefresh() {
     setLoading(true);
+    console.log("trying to login");
     return (async () => {
       let oldUserUID = window.localStorage.getItem(LOCALSTORAGE_USER_UID);
       if (oldUserUID != null) {
@@ -69,16 +70,23 @@ export const AuthProvider = ({ children }: any) => {
           window.localStorage.setItem(LOCALSTORAGE_USER_UID, user.uid);
           setLoading(false);
         } catch (e) {
-          await authLogout();
+          await authLogout().catch((e) => {
+            console.error("force logout failed:", e);
+          });
+          console.log("force logout");
           return UserRefreshState.ForceLoggedOut;
         }
+        console.log("logged in");
         return UserRefreshState.LoggedIn;
       }
+
+      console.log("never logged in");
       return UserRefreshState.NeverLoggedIn;
     })();
-  };
+  }
   const history = useHistory();
   useEffect(() => {
+    console.log("trying to login");
     authUserRefresh().then((res) => {
       if (res == UserRefreshState.ForceLoggedOut) {
         if (history.location.pathname != "/") {
@@ -97,4 +105,4 @@ export const AuthProvider = ({ children }: any) => {
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-};
+}

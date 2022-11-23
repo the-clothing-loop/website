@@ -1,49 +1,63 @@
-import { useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { Link } from "react-router-dom";
-
-import { Typography, TextField, Button, Alert } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
+import { Link, Redirect } from "react-router-dom";
 
 // Project resources
 import { TwoColumnLayout } from "../components/Layouts";
 
-//media
-import RightArrow from "../images/right-arrow-white.svg";
-import CirclesFrame from "../images/circles.png";
-import LoginImg from "../images/Login.jpg";
-
 import { Helmet } from "react-helmet";
 import { loginEmail } from "../api/login";
+import { ToastContext } from "../providers/ToastProvider";
+import FormJup from "../util/form-jup";
+import { AuthContext } from "../providers/AuthProvider";
+import { GinParseErrors } from "../util/gin-errors";
+
+//media
+const CirclesFrame = "/images/circles.png";
+const LoginImg = "/images/Login.jpg";
 
 const Login = () => {
+  const { authUser } = useContext(AuthContext);
+  const { addToast, addToastError } = useContext(ToastContext);
   const { t } = useTranslation();
-  const classes = makeStyles(theme as any)();
-  const [submitted, setSubmitted] = useState(false);
+
   const [error, setError] = useState("");
 
-  const validate = Yup.object({
-    email: Yup.string().email(t("pleaseEnterAValid.emailAddress")),
-  });
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    const values = FormJup<{ email: string }>(e);
 
-  const onSubmit = async (data: any) => {
-    if (!submitted) {
+    const email = values.email;
+
+    if (email === "") {
+      setError("email");
+      return;
+    }
+
+    (async () => {
       try {
-        const continueUrl = `${
-          process.env.REACT_APP_BASE_URL
-        }/users/login-email-finished/${encodeURI(data.email)}`;
-        await loginEmail(data.email);
-        setSubmitted(true);
+        await loginEmail(email);
+        addToast({
+          type: "info",
+          message: t("loginEmailSent"),
+        });
       } catch (e: any) {
         console.error(e);
-        setError(t("noResultsFound"));
+        setError("email");
+        addToastError(
+          e?.data ? GinParseErrors(t, e.data) : t("noResultsFound")
+        );
       }
-    }
-  };
+    })();
+  }
+  if (authUser) {
+    addToast({
+      type: "info",
+      message: t("userIsLoggedIn"),
+    });
+    return <Redirect to="/admin/dashboard" />;
+  }
 
   return (
     <>
@@ -52,76 +66,46 @@ const Login = () => {
         <meta name="description" content="Login" />
       </Helmet>
 
-      <div className="background-frame-login"></div>
-      <img className="circles-frame-login" src={CirclesFrame} alt="" />
-      <div className="login-container">
+      <main className="pt-10">
         <TwoColumnLayout img={LoginImg}>
-          <div className="login-content">
-            <Typography variant="h3" className={classes.pageTitle}>
-              {t("login")}
-            </Typography>
-            <div className={classes.pageDescription}>
-              <Typography component="p" className={classes.p}>
+          <div className="relative p-10">
+            <div className="p-10 bg-teal-light">
+              <img
+                className="absolute bottom-[-12px] left-[-12px] -z-10"
+                src={CirclesFrame}
+                alt=""
+              />
+              <h1 className="font-serif font-bold text-5xl text-secondary mb-8">
+                {t("login")}
+              </h1>
+              <p className="leading-7 mb-6">
                 <Trans
                   i18nKey="areYouAlreadyHosting<a>JoinAnExistingLoop"
                   components={{
-                    a: (
-                      <Link className={classes.a} to="../../loops/find"></Link>
-                    ),
+                    a: <Link className="link" to="../../loops/find"></Link>,
                   }}
                 ></Trans>
-              </Typography>
-            </div>
+              </p>
 
-            <Formik
-              initialValues={{
-                email: "",
-              }}
-              validationSchema={validate}
-              onSubmit={async (v) => onSubmit(v)}
-            >
-              {(formik) => (
-                <Form className="login-form">
-                  <TextField
-                    className={classes.textField}
-                    {...formik.getFieldProps("email")}
-                    label={t("email")}
-                    variant="standard"
-                    type="email"
-                    required
-                    fullWidth
-                  />
-                  {formik.submitCount > 0 && formik.errors.email && (
-                    <Alert severity="error">{formik.errors.email}</Alert>
-                  )}
-                  <div className="single-submit-btn">
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      fullWidth
-                    >
-                      {t("submit")}
-                      <img src={RightArrow} alt="" />
-                    </Button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-            {error && (
-              <Alert className={classes.errorAlert} severity="error">
-                {error}
-              </Alert>
-            )}
-            {submitted && (
-              <Alert className={classes.infoAlert} severity="info">
-                {t("loginEmailSent")}
-              </Alert>
-            )}
+              <form onSubmit={onSubmit} className="flex flex-col">
+                <input
+                  className={`input w-full invalid:input-warning ${
+                    error ? "input-error" : "input-secondary"
+                  }`}
+                  placeholder={t("email")}
+                  type="email"
+                  name="email"
+                  required
+                />
+                <button type="submit" className="btn btn-primary w-full mt-6">
+                  {t("submit")}
+                  <span className="feather feather-arrow-right ml-4"></span>
+                </button>
+              </form>
+            </div>
           </div>
         </TwoColumnLayout>
-      </div>
+      </main>
     </>
   );
 };

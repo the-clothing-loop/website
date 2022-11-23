@@ -1,36 +1,15 @@
-import {
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from "@mui/material";
-import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
-import { makeStyles } from "@mui/styles";
-
-//Project Resources
-import theme from "../util/theme";
-
-const AccordionFaq = ({ question, answer }: any) => {
-  const classes = makeStyles(theme as any)();
-
+export default function AccordionFaq(props: {
+  question: string;
+  answer: string;
+}) {
   return (
-    <div>
-      <Accordion classes={{ root: classes.MuiAccordionRoot }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography className={classes.AccordionTypographyRoot}>
-            {question}
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography dangerouslySetInnerHTML={{ __html: answer }}></Typography>
-        </AccordionDetails>
-      </Accordion>
-    </div>
+    <details className="collapse collapse-plus border border-base-300 bg-base-100">
+      <summary tabIndex={0} className="collapse-title text-xl font-medium">
+        {props.question}
+      </summary>
+      <div className="collapse-content">
+        <p dangerouslySetInnerHTML={{ __html: props.answer }}></p>
+      </div>
+    </details>
   );
-};
-
-export default AccordionFaq;
+}

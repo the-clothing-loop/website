@@ -1,14 +1,13 @@
-import React from "react";
-
 import { Chain } from "../api/types";
 import { chainGetAll } from "../api/chain";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
-export const ChainsContext = React.createContext<Chain[]>([]);
+export const ChainsContext = createContext<Chain[]>([]);
 
-export const ChainsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [chains, setChains] = React.useState<Chain[]>([]);
+export function ChainsProvider({ children }: PropsWithChildren<{}>) {
+  const [chains, setChains] = useState<Chain[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     chainGetAll({ filter_out_unpublished: true }).then((res) => {
       setChains(res.data);
     });
@@ -17,4 +16,4 @@ export const ChainsProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ChainsContext.Provider value={chains}>{children}</ChainsContext.Provider>
   );
-};
+}

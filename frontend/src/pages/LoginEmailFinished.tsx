@@ -1,35 +1,23 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-
-import { Alert } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-import theme from "../util/theme";
 import { AuthContext } from "../providers/AuthProvider";
+import { ToastContext } from "../providers/ToastProvider";
 
-const LoginEmailFinished = () => {
+export default function LoginEmailFinished() {
   const { t } = useTranslation();
-  const classes = makeStyles(theme as any)();
   const history = useHistory();
-  const location = useLocation();
-  const apiKey = new URLSearchParams(location.search).get("apiKey");
-  const { authUser, authLoginValidate } = useContext(AuthContext);
 
-  const [finished, setFinished] = useState(false);
-  const [error, setError] = useState("");
+  const search = useLocation().search;
+  const apiKey = new URLSearchParams(search).get("apiKey");
+  const { authLoginValidate } = useContext(AuthContext);
+  const { addToast, addToastError } = useContext(ToastContext);
 
   useEffect(() => {
     (async () => {
-      if (!!authUser) {
-        setTimeout(() => {
-          history.replace("/admin/dashboard");
-        }, 1700);
-        return;
-      }
-
       try {
         if (!apiKey) {
           throw "apiKey does not exist";
@@ -40,10 +28,15 @@ const LoginEmailFinished = () => {
           history.replace("/admin/dashboard");
         }, 1700);
       } catch (e: any) {
-        console.error(e);
-        setError(e?.data || typeof e === "string" ? e : JSON.stringify(e));
+        addToastError(t("errorLoggingIn"));
+        console.error("Error logging in", e);
+        history.push("/");
+        addToast({
+          message: t("userIsLoggedIn"),
+          type: "info",
+        });
+        history.push("/admin/dashboard");
       }
-      setFinished(true);
     })();
   }, [apiKey]);
 
@@ -53,23 +46,6 @@ const LoginEmailFinished = () => {
         <title>The Clothing Loop | Login finishing</title>
         <meta name="description" content="Login finishing" />
       </Helmet>
-      {error && (
-        <Alert className={classes.errorAlert} severity="error">
-          {t("errorLoggingIn")}: {error}
-        </Alert>
-      )}
-      {finished && !error && (
-        <Alert className={classes.infoAlert} severity="info">
-          {t("finishingLoggingIn")}
-        </Alert>
-      )}
-      {authUser && (
-        <Alert className={classes.successAlert} severity="success">
-          {t("userIsLoggedIn")}
-        </Alert>
-      )}
     </>
   );
-};
-
-export default LoginEmailFinished;
+}

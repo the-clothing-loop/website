@@ -1,10 +1,7 @@
 import { Helmet } from "react-helmet";
 
-import { Typography, Grid } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
 import AccordionFaq from "../../components/AccordionFaq";
-import theme from "../../util/theme";
+
 import styles from "./FAQ.module.css";
 import { useTranslation } from "react-i18next";
 
@@ -15,7 +12,6 @@ interface AccordionFaqTranslation {
 
 const FAQ = () => {
   const { t } = useTranslation("faq");
-  const classes = makeStyles(theme as any)();
 
   const arrHosts = t("arrHosts", {
     returnObjects: true,
@@ -34,13 +30,13 @@ const FAQ = () => {
         <meta name="description" content="frequently asked questions" />
       </Helmet>
 
-      <div className={styles.faqWrapper}>
-        <Grid container spacing={0}>
-          <Grid item sm={12} md={6}>
+      <main className="container mx-auto px-1 md:px-20 pt-10">
+        <div className="flex flex-col md:flex-row">
+          <div className="w-full md:w-1/2">
             <div className={styles.faqSection}>
-              <Typography component="h1" className={classes.pageTitle}>
+              <h1 className="font-serif font-bold text-secondary text-4xl">
                 {t("faqForParticipants")}
-              </Typography>
+              </h1>
               {arrParticipants.map((el, index) => (
                 <AccordionFaq
                   key={index}
@@ -49,12 +45,12 @@ const FAQ = () => {
                 />
               ))}
             </div>
-          </Grid>
-          <Grid item sm={12} md={6}>
+          </div>
+          <div className="w-full md:w-1/2">
             <div className={styles.faqSection}>
-              <Typography component="h1" className={classes.pageTitle}>
+              <h1 className="font-serif font-bold text-secondary text-4xl">
                 {t("faqForHosts")}
-              </Typography>
+              </h1>
               {arrHosts.map((el, index) => (
                 <AccordionFaq
                   key={index}
@@ -63,9 +59,9 @@ const FAQ = () => {
                 />
               ))}
             </div>
-          </Grid>
-        </Grid>
-      </div>
+          </div>
+        </div>
+      </main>
     </>
   );
 };

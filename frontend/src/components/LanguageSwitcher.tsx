@@ -1,70 +1,60 @@
-import {
-  Box,
-  Select,
-  FormControl,
-  MenuItem,
-  SelectChangeEvent,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-//project resources
-import theme from "../util/theme";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useDropdown } from "../util/dropdown.hooks";
 
-const LanguageSwitcher = () => {
+const LanguageSwitcher = (props: { className?: string }) => {
   const languages = [
     { lng: "en", title: "English", flag: "/icons/flags/gb.svg" },
     { lng: "nl", title: "Dutch", flag: "/icons/flags/nl.svg" },
   ];
-  const classes = makeStyles(theme as any)();
   const { i18n } = useTranslation();
 
-  const handleChange = (e: SelectChangeEvent<string>) => {
-    let language = e.target.value;
-    i18n.changeLanguage(language);
+  const dropdown = useDropdown();
+
+  const handleChange = (lng: string) => {
+    i18n.changeLanguage(lng);
+    dropdown.setOpen(false);
   };
 
+  const btnLabelLanguage = useMemo(() => {
+    return languages.find((l) => l.lng == i18n.language) || languages[0];
+  }, [i18n.language]);
+
   return (
-    <Box sx={{ paddingLeft: "18px" }}>
-      <FormControl fullWidth>
-        <Select<string>
-          sx={{ textTransform: "unset" }}
-          value={i18n.language}
-          onChange={handleChange}
-          className={classes.simpleSelect}
-        >
-          {languages.map((el, i) => {
-            return (
-              <MenuItem
-                className={classes.menuItem}
-                key={i}
-                value={el.lng}
-                disabled={el.lng === i18n.language}
-                sx={{
-                  "&::selection, &::-moz-selection": {
-                    background: "white",
-                  },
-                  "&.Mui-disabled": {
-                    display: "none",
-                  },
-                }}
+    <div
+      className={`dropdown dropdown-end dropdown-bottom ${
+        dropdown.open ? "dropdown-open" : ""
+      } ${props.className || ""}`}
+      onBlur={() => dropdown.setOpen(false)}
+    >
+      <label tabIndex={0} className="btn btn-outline" onClick={dropdown.toggle}>
+        {btnLabelLanguage.title}
+        <img
+          className="w-6 ml-2"
+          src={btnLabelLanguage.flag}
+          alt={btnLabelLanguage.title + " flag"}
+        />
+      </label>
+      <ul
+        tabIndex={0}
+        className="dropdown-content menu w-36 shadow bg-base-100"
+      >
+        {languages.map((el) => {
+          let active = btnLabelLanguage.lng == el.lng;
+          return (
+            <li key={el.lng} className={active ? "hidden" : ""}>
+              <button
+                className="flex justify-between"
+                onClick={() => handleChange(el.lng)}
               >
                 {el.title}
-                <img
-                  style={{
-                    marginLeft: "8px",
-                    width: "18px",
-                    verticalAlign: "middle",
-                  }}
-                  src={el.flag}
-                  alt={el.title + " flag"}
-                />
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-    </Box>
+                <img className="w-6" src={el.flag} alt={el.title + " flag"} />
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 };
 

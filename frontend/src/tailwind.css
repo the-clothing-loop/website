@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-stroke-yellow-darkest {
+    color: transparent;
+    -webkit-text-stroke: 1.5px #c58c41;
+    -moz-text-stroke: 1.5px #c58c41;
+  }
+  .text-stroke-secondary {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsla(var(--s));
+    -moz-text-stroke: 1.5px hsla(var(--s));
+  }
+  .text-stroke-accent {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsla(var(--a));
+    -moz-text-stroke: 1.5px hsla(var(--a));
+  }
+  .text-stroke-base-100 {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsla(var(--b1));
+    -moz-text-stroke: 1.5px hsla(var(--b1));
+  }
+
+  .bg-instagram {
+    background: -webkit-radial-gradient(
+        32% 106%,
+        circle cover,
+        rgb(255, 225, 125) 0%,
+        rgb(255, 205, 105) 10%,
+        rgb(250, 145, 55) 28%,
+        rgb(235, 65, 65) 42%,
+        transparent 82%
+      ),
+      -webkit-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190)
+            58%);
+    background: -moz-radial-gradient(
+        32% 106%,
+        circle cover,
+        rgb(255, 225, 125) 0%,
+        rgb(255, 205, 105) 10%,
+        rgb(250, 145, 55) 28%,
+        rgb(235, 65, 65) 42%,
+        transparent 82%
+      ),
+      -moz-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
+    background: -ms-radial-gradient(
+        32% 106%,
+        circle cover,
+        rgb(255, 225, 125) 0%,
+        rgb(255, 205, 105) 10%,
+        rgb(250, 145, 55) 28%,
+        rgb(235, 65, 65) 42%,
+        transparent 82%
+      ),
+      -ms-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
+    background: -o-radial-gradient(
+        32% 106%,
+        circle cover,
+        rgb(255, 225, 125) 0%,
+        rgb(255, 205, 105) 10%,
+        rgb(250, 145, 55) 28%,
+        rgb(235, 65, 65) 42%,
+        transparent 82%
+      ),
+      -o-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
+    background: radial-gradient(
+        circle farthest-corner at 32% 106%,
+        rgb(255, 225, 125) 0%,
+        rgb(255, 205, 105) 10%,
+        rgb(250, 145, 55) 28%,
+        rgb(235, 65, 65) 42%,
+        transparent 82%
+      ),
+      linear-gradient(135deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
+  }
+}
+
+:root {
+  --rounded-btn: 0;
+  --btn-text-case: default;
+}
+
+.prose {
+  @apply prose-headings:font-serif prose-headings:text-secondary prose-headings:font-bold prose-a:link max-w-screen-md;
+}
+
+.table th:first-child {
+  @apply static;
+}
+
+#root .mapboxgl-ctrl-geocoder {
+  @apply w-full max-w-none;
+}
+#root .mapboxgl-ctrl-geocoder--input {
+  @apply h-12 px-10 border border-solid border-secondary transition-colors w-full;
+}
+#root .mapboxgl-ctrl-geocoder--icon.mapboxgl-ctrl-geocoder--icon-search {
+  @apply top-3.5 left-3;
+}
+#root .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--pin-right > * {
+  @apply top-3.5 right-3;
+}

@@ -1,65 +1,27 @@
-import { Grid } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { PropsWithChildren } from "react";
 
-import theme from "../util/theme";
-
-interface ITwoColumnsLayout {
-  children: any;
-  img: any;
-}
-
-interface IThreeColumnsLayout {
-  children: any;
-}
-
-interface IOneColumnLayout {
-  children: any;
-}
-
-// Standard responsive three column grid used in the app
-const ThreeColumnLayout: React.FC<IThreeColumnsLayout> = ({ children }) => {
-  const classes = makeStyles(theme as any)();
-
+export function TwoColumnLayout({
+  children,
+  img,
+}: PropsWithChildren<{ img: string }>) {
   return (
-    <Grid container className={classes.threeColumnsFormWrapper}>
-      <Grid item sm />
-      <Grid item sm className={classes.threeColumnsForm}>
-        {children}
-      </Grid>
-      <Grid item sm />
-    </Grid>
-  );
-};
-
-const TwoColumnLayout: React.FC<ITwoColumnsLayout> = ({ children, img }) => {
-  const classes = makeStyles(theme as any)();
-
-  return (
-    <div className={classes.formContainer}>
-      <Grid container className={classes.form}>
-        <Grid item sm className={classes.formGridItem}>
-          <img src={img} alt="form-img" className={classes.formImg} />
-        </Grid>
-        <Grid item sm className={classes.formGridItem}>
-          {children}
-        </Grid>
-      </Grid>
+    <div className="flex">
+      <div className="w-1/2 flex justify-end pr-10">
+        <img src={img} alt="form-img" className="max-w-[600px] max-h-[600px]" />
+      </div>
+      <div className="1/2">
+        <div className="max-w-[600px] w-full">{children}</div>
+      </div>
     </div>
   );
-};
+}
 
-const OneColumnLayout: React.FC<IOneColumnLayout> = ({ children }) => {
-  const classes = makeStyles(theme as any)();
-
+export function OneColumnLayout({ children }: PropsWithChildren<{}>) {
   return (
-    <div className={classes.formContainer}>
-      <Grid container className={classes.singleForm}>
-        <Grid item sm>
-          {children}
-        </Grid>
-      </Grid>
+    <div className="container">
+      <div className="flex">
+        <div className="w-1/2">{children}</div>
+      </div>
     </div>
   );
-};
-
-export { ThreeColumnLayout, TwoColumnLayout, OneColumnLayout };
+}

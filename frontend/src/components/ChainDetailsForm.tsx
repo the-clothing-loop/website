@@ -1,28 +1,18 @@
 import { useState } from "react";
-import * as Yup from "yup";
 import destination from "@turf/destination";
 import ReactMapGL, { SVGOverlay, FlyToInterpolator } from "react-map-gl";
 import { useTranslation } from "react-i18next";
-import { Form, Formik } from "formik";
 
-import { Button, Typography, Alert, Grid } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-// Project resources
 import categories from "../util/categories";
 import { IViewPort } from "../types";
-import theme from "../util/theme";
 import Geocoding from "../pages/Geocoding";
-import { TextForm, NumberField, SelectField } from "./FormFields";
+import { TextForm } from "./FormFields";
 import PopoverOnHover from "./Popover";
 import SizesDropdown from "../components/SizesDropdown";
 import CategoriesDropdown from "../components/CategoriesDropdown";
-import { Chain } from "../api/types";
-
-//media
-import RightArrow from "../images/right-arrow-white.svg";
 import { RequestRegisterChain } from "../api/login";
 import { Genders, Sizes } from "../api/enums";
+import useForm from "../util/form.hooks";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
@@ -38,13 +28,12 @@ export type RegisterChainForm = Omit<
   "address" | "open_to_new_members"
 >;
 
-const ChainDetailsForm = ({
+export default function ChainDetailsForm({
   onSubmit,
   submitError,
   initialValues,
   submitted,
-}: IProps) => {
-  const classes = makeStyles(theme as any)();
+}: IProps) {
   const { t } = useTranslation();
 
   const [viewport, setViewport] = useState<IViewPort>({
@@ -55,17 +44,17 @@ const ChainDetailsForm = ({
     zoom: initialValues ? 10 : 1,
   });
 
-  const formSchema = Yup.object().shape({
-    name: Yup.string().min(2, t("mustBeAtLeastChar")).required(t("required")),
-    description: Yup.string(),
-    radius: Yup.number().required(t("required")),
-    genders: Yup.array().of(Yup.string()).required(t("required")),
-    sizes: Yup.array().of(Yup.string()).required(t("required")),
-    longitude: Yup.number(),
-    latitude: Yup.number(),
-  } as Record<keyof RegisterChainForm, any>);
+  const [values, setValue, setValues] = useForm<RegisterChainForm>({
+    name: "",
+    description: "",
+    radius: 3,
+    genders: [],
+    sizes: [],
+    longitude: 0,
+    latitude: 0,
+  });
 
-  const flyToLocation = (longitude: number, latitude: number) => {
+  function flyToLocation(longitude: number, latitude: number) {
     setViewport({
       ...viewport,
       longitude: longitude,
@@ -74,259 +63,180 @@ const ChainDetailsForm = ({
       transitionDuration: 500,
       transitionInterpolator: new FlyToInterpolator(),
     });
-  };
+  }
 
-  const handleGeolocationResult = ({
+  function handleGeolocationResult({
     result: { center },
   }: {
     result: { center: [number, number] };
-  }) => {
+  }) {
     flyToLocation(...center);
-  };
+  }
 
-  const getPlaceName = async (longitude: number, latitude: number) => {
+  async function getPlaceName(longitude: number, latitude: number) {
     const response = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
     );
     const data = await response.json();
     return data.features[0].place_name;
-  };
+  }
 
-  const onSubmitWrapper = async (values: any) => {
+  async function onSubmitWrapper(values: any) {
     values.address = await getPlaceName(values.longitude, values.latitude);
     return onSubmit(values);
-  };
+  }
 
-  const defaultValues: RegisterChainForm = {
-    name: "",
-    description: "",
-    radius: 3,
-    genders: [],
-    sizes: [],
-    longitude: 0,
-    latitude: 0,
-  };
+  function handleMapClick(event: any) {
+    const targetClass = String(event.srcEvent.target?.className);
+    if (targetClass.includes("mapboxgl-ctrl-geocoder")) {
+      // ignore clicks on geocoding search bar, which is on top of map
+      return;
+    }
+    setValue("longitude", event.lngLat[0]);
+    setValue("latitude", event.lngLat[1]);
+    flyToLocation(event.lngLat[0], event.lngLat[1]);
+  }
 
+  function redrawLoop({ project }: { project: any }) {
+    if (values.longitude === null || values.latitude === null) {
+      return;
+    }
+    const [centerX, centerY] = project([values.longitude, values.latitude]);
+    // get the coordinates of a point the right distance away from center
+    const boundaryPoint = destination(
+      [values.longitude, values.latitude],
+      values.radius,
+      0, // due north
+      { units: "kilometers" }
+    );
+    const [_, boundaryY] = project(boundaryPoint.geometry.coordinates);
+    const projectedRadius = centerY - boundaryY;
+
+    return (
+      <>
+        <defs>
+          <radialGradient id="feather">
+            <stop offset="0%" stopColor="#F7C86F" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#F7C86F" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#F7C86F" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={projectedRadius}
+          fill="url(#feather)"
+        />
+        ;
+      </>
+    );
+  }
+  function handleCategoriesChange(selectedGenders: string[]) {
+    setValue("genders", selectedGenders as Genders[]);
+    // potentially remove some sizes if their parent category has been deselected
+    const filteredSizes = (values.sizes || []).filter(
+      (size) =>
+        selectedGenders.filter((gender) =>
+          categories[gender as Genders].includes(size as Sizes)
+        ).length > 0
+    );
+    setValue("sizes", filteredSizes);
+  }
   return (
-    <Formik<RegisterChainForm>
-      initialValues={Object.assign(defaultValues, initialValues)}
-      validationSchema={formSchema}
-      validateOnChange={false}
-      validate={(values) => {
-        if (values.longitude === 0 && values.latitude === 0) {
-          return {
-            longitude: t("pleaseSetTheLoopLocationByClick"),
-          };
-        }
-      }}
-      onSubmit={onSubmitWrapper}
-    >
-      {({ values, errors, touched, setFieldValue, handleChange }) => {
-        const handleMapClick = (event: any) => {
-          const targetClass = String(event.srcEvent.target?.className);
-          if (targetClass.includes("mapboxgl-ctrl-geocoder")) {
-            // ignore clicks on geocoding search bar, which is on top of map
-            return;
-          }
-          setFieldValue("longitude", event.lngLat[0]);
-          setFieldValue("latitude", event.lngLat[1]);
-          flyToLocation(event.lngLat[0], event.lngLat[1]);
-        };
+    <div className="flex flex-row">
+      <div className="w-1/2 pr-4">
+        <div className="aspect-square">
+          <ReactMapGL
+            mapboxApiAccessToken={accessToken}
+            mapStyle="mapbox://styles/mapbox/light-v10"
+            {...viewport}
+            onViewportChange={(newView: IViewPort) => setViewport(newView)}
+            onClick={handleMapClick}
+            getCursor={() => "pointer"}
+            className="cursor-pointer shadow-lg"
+            width="100%"
+            height="100%"
+          >
+            <Geocoding
+              onResult={handleGeolocationResult}
+              className="absolute top-5 left-5"
+            />
+            {values.longitude !== null && values.latitude !== null ? (
+              <SVGOverlay redraw={redrawLoop} />
+            ) : null}
+          </ReactMapGL>
+        </div>
+      </div>
+      <div className="w-1/2 pl-4">
+        <form noValidate>
+          <p className="mb-2">{t("clickToSetLoopLocation")}</p>
+          <TextForm
+            classes={{ root: "" }}
+            required
+            label={t("loopName")}
+            name="name"
+            type="text"
+            value={values.name}
+            onChange={(e) => setValue("name", e.target.value)}
+            info={t("upToYouUsuallyTheGeopraphic")}
+          />
 
-        const redrawLoop = ({ project }: { project: any }) => {
-          if (values.longitude === null || values.latitude === null) {
-            return;
-          }
-          const [centerX, centerY] = project([
-            values.longitude,
-            values.latitude,
-          ]);
-          // get the coordinates of a point the right distance away from center
-          const boundaryPoint = destination(
-            [values.longitude, values.latitude],
-            values.radius,
-            0, // due north
-            { units: "kilometers" }
-          );
-          const [_, boundaryY] = project(boundaryPoint.geometry.coordinates);
-          const projectedRadius = centerY - boundaryY;
+          <TextForm
+            type="number"
+            required
+            label={t("radius")}
+            name="radius"
+            value={values.radius}
+            onChange={(e) => setValue("radius", e.target.valueAsNumber)}
+            step="0.1"
+            info={t("decideOnTheAreaYourLoopWillBeActiveIn")}
+          />
 
-          return (
-            <>
-              <defs>
-                <radialGradient id="feather">
-                  <stop
-                    offset="0%"
-                    stopColor={theme.palette.primary.main}
-                    stopOpacity="0.4"
-                  />
-                  <stop
-                    offset="50%"
-                    stopColor={theme.palette.primary.main}
-                    stopOpacity="0.4"
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor={theme.palette.primary.main}
-                    stopOpacity="0"
-                  />
-                </radialGradient>
-              </defs>
-              <circle
-                cx={centerX}
-                cy={centerY}
-                r={projectedRadius}
-                fill="url(#feather)"
+          <TextForm
+            type="text"
+            label={t("description")}
+            name="description"
+            value={values.description}
+            onChange={(e) => setValue("description", e.target.value)}
+            classes={{ root: "mb-4 w-full max-w-xs" }}
+            info={t("optionalFieldTypeAnything")}
+          />
+
+          <div className="mb-2 w-full max-w-xs">
+            <div className="float-right -mr-2 -mt-2">
+              <PopoverOnHover
+                message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
               />
-              ;
-            </>
-          );
-        };
+            </div>
+            <CategoriesDropdown
+              selectedGenders={values.genders || []}
+              handleChange={handleCategoriesChange}
+            />
+          </div>
 
-        const handleCategoriesChange = (selectedGenders: string[]) => {
-          setFieldValue("genders", selectedGenders as Genders[]);
-          // potentially remove some sizes if their parent category has been deselected
-          const filteredSizes = (values.sizes || []).filter(
-            (size) =>
-              selectedGenders.filter((gender) =>
-                categories[gender as Genders].includes(size as Sizes)
-              ).length > 0
-          );
-          setFieldValue("sizes", filteredSizes);
-        };
+          <div className="mb-6 w-full max-w-xs">
+            <SizesDropdown
+              filteredGenders={
+                values.genders?.length
+                  ? values.genders
+                  : [Genders.children, Genders.women, Genders.men]
+              }
+              selectedSizes={values.sizes || []}
+              handleChange={(v) => setValue("sizes", v)}
+            />
+          </div>
 
-        return (
-          <Grid container style={{ padding: "1% 2%" }}>
-            <Grid item xs={12} sm={6}>
-              <ReactMapGL
-                mapboxApiAccessToken={accessToken}
-                mapStyle="mapbox://styles/mapbox/light-v10"
-                {...viewport}
-                onViewportChange={(newView: IViewPort) => setViewport(newView)}
-                onClick={handleMapClick}
-                getCursor={() => "pointer"}
-                className={classes.newLoopMap}
-                width="100%"
-              >
-                <Geocoding
-                  onResult={handleGeolocationResult}
-                  className={classes.inMapSearchBar}
-                />
-                {values.longitude !== null && values.latitude !== null ? (
-                  <SVGOverlay redraw={redrawLoop} />
-                ) : null}
-              </ReactMapGL>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Form noValidate>
-                <Grid container style={{ paddingBottom: "5%" }}>
-                  <Typography className="formSubtitle">
-                    {t("clickToSetLoopLocation")}
-                  </Typography>
-                  <Grid item xs={12}>
-                    <TextForm
-                      required
-                      label={t("loopName")}
-                      name="name"
-                      type="text"
-                      value={values.name}
-                      error={touched.name && Boolean(errors.name)}
-                      helperText={
-                        touched.name && errors.name ? errors.name : null
-                      }
-                      className={classes.textField}
-                    />
-
-                    <PopoverOnHover
-                      message={t("upToYouUsuallyTheGeopraphic")}
-                    />
-                  </Grid>
-                  <Grid item xs={3} style={{ paddingTop: "10px" }}>
-                    <NumberField
-                      required
-                      label={t("radius")}
-                      name="radius"
-                      value={values.radius}
-                      error={touched.radius && Boolean(errors.radius)}
-                      helperText={
-                        touched.radius && errors.radius ? errors.radius : null
-                      }
-                      className={classes.textField}
-                      step={0.1}
-                    />
-                    <PopoverOnHover
-                      message={t("decideOnTheAreaYourLoopWillBeActiveIn")}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} style={{ position: "relative" }}>
-                    <TextForm
-                      label={t("description")}
-                      name="description"
-                      value={values.description}
-                      error={touched.description && Boolean(errors.description)}
-                      helperText={
-                        touched.description && errors.description
-                          ? errors.description
-                          : null
-                      }
-                      className={classes.textField}
-                    />
-                    <PopoverOnHover message={t("optionalFieldTypeAnything")} />
-                  </Grid>
-                  <Grid item xs={12} style={{ position: "relative" }}>
-                    <div style={{ paddingTop: "10px" }}>
-                      <CategoriesDropdown
-                        variant="standard"
-                        showInputLabel
-                        genders={values.genders || []}
-                        handleSelectedCategoriesChange={handleCategoriesChange}
-                      />
-                    </div>
-                    <div style={{ paddingTop: "10px", position: "relative" }}>
-                      <SizesDropdown
-                        variant="standard"
-                        showInputLabel
-                        label={t("sizes")}
-                        genders={values.genders || []}
-                        sizes={values.sizes || []}
-                        handleSelectedCategoriesChange={(val) =>
-                          setFieldValue("sizes", val)
-                        }
-                      />
-                      <PopoverOnHover
-                        message={t(
-                          "mixedBagsUsuallyWorkBestThereforeWeRecommentTo"
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                  {touched.longitude && errors.longitude ? (
-                    <Grid item xs={12}>
-                      <Typography color="error">{errors.longitude}</Typography>
-                    </Grid>
-                  ) : null}
-                </Grid>
-
-                {submitError && <Alert severity="error">{submitError}</Alert>}
-                {submitted && <Alert security="success">{t("saved")}</Alert>}
-                <div className={classes.formSubmitActions}>
-                  <Button type="submit" className={classes.buttonOutlined}>
-                    {t("back")}
-                  </Button>
-                  <Button type="submit" className={classes.button}>
-                    {t("submit")}
-                    <img src={RightArrow} alt="" />
-                  </Button>
-                </div>
-              </Form>
-            </Grid>
-          </Grid>
-        );
-      }}
-    </Formik>
+          <div className="flex flex-row">
+            <button type="submit" className="btn btn-primary btn-outline">
+              {t("back")}
+            </button>
+            <button type="submit" className="btn btn-primary ml-4">
+              {t("submit")}
+              <span className="feather feather-arrow-right ml-4"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
-};
-
-export type { Chain };
-export default ChainDetailsForm;
+}

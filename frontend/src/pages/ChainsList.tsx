@@ -1,46 +1,20 @@
 import { useState, useContext, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Circle as IconCircle } from "@mui/icons-material";
 import { Helmet } from "react-helmet";
 
-import {
-  Alert,
-  Button,
-  CircularProgress,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TablePagination,
-  Paper,
-  TableContainer,
-  Box,
-  Typography,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-//media
-import RightArrow from "../images/right-arrow-white.svg";
-
-// Project resources
-import { ChainsContext } from "../providers/ChainsProvider";
 import { DataExport } from "../components/DataExport";
-import theme from "../util/theme";
 import { AuthContext } from "../providers/AuthProvider";
 import { chainGet, chainGetAll } from "../api/chain";
 import { Chain } from "../api/types";
-
-const rows = ["name", "location", "status"];
+import { ToastContext } from "../providers/ToastProvider";
+import { GinParseErrors } from "../util/gin-errors";
 
 const ChainsList = () => {
   const { t } = useTranslation();
-  const classes = makeStyles(theme as any)();
-  const history = useHistory();
   const { authUser } = useContext(AuthContext);
+  const { addToastError } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>();
-  const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -54,12 +28,12 @@ const ChainsList = () => {
             let data = await Promise.all(
               authUser.chains.map((c) => chainGet(c.chain_uid))
             );
-
             _chains = data.map((d) => d.data);
           }
           setChains(_chains.sort((a, b) => a.name.localeCompare(b.name)));
-        } catch (rej: any) {
-          setError(rej?.data || "Unknown error");
+        } catch (e: any) {
+          console.error(e);
+          addToastError(GinParseErrors(t, e?.data || "Unknown error"));
         }
       }
     })();
@@ -71,118 +45,78 @@ const ChainsList = () => {
         <title>The Clothing Loop | Loops List</title>
         <meta name="description" content="Loops List" />z
       </Helmet>
-      <div>
-        {chains ? (
-          <div className="table-container">
-            <div className="table-head">
-              <Typography variant="h5">{`${chains.length} Clothing Loops`}</Typography>
+      <main>
+        <div className={`container mx-auto ${chains ? "" : "animate-pulse"}`}>
+          <div className="px-1 md:px-20 py-4">
+            <h1 className="text-2xl font-bold mb-3">{`${
+              chains?.length || 0
+            } Clothing Loops`}</h1>
+            {chains ? (
               <DataExport chains={chains} />
-            </div>
-            {error ? (
-              <Alert className={classes.errorAlert} severity="error">
-                {error}
-              </Alert>
-            ) : null}
+            ) : (
+              <button className="btn btn-outline btn-primary" disabled>
+                ...
+              </button>
+            )}
+          </div>
 
-            <TableContainer component={Paper}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow className="table-row-head">
-                    {rows.map((row, i) => {
-                      return (
-                        <TableCell
-                          component="th"
-                          key={i}
-                          className={classes.tableCellRoot}
-                        >
-                          {t(row)}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {chains.map((chain, i) => {
+          <div className="sm:overflow-x-auto">
+            <table className="table table-compact w-full">
+              <thead>
+                <tr>
+                  <th align="left">{t("name")}</th>
+                  <th align="left">{t("location")}</th>
+                  <th align="center">{t("status")}</th>
+                  <th align="right" />
+                </tr>
+              </thead>
+              <tbody>
+                {chains
+                  ?.sort((a, b) => a.name.localeCompare(b.name))
+                  .map((chain, i) => {
                     let isUserAdmin =
                       authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
                         ?.is_chain_admin || false;
                     return (
-                      <TableRow
-                        key={chain.name}
-                        className="chains-list__table-row"
-                      >
-                        <TableCell
-                          component="th"
-                          scope="row"
-                          className={classes.tableCell}
-                        >
+                      <tr key={chain.name}>
+                        <td className="font-bold w-32 whitespace-normal">
                           {chain.name}
-                        </TableCell>
-                        <TableCell
-                          key="chain-address"
-                          align="left"
-                          className={classes.tableCell}
-                        >
+                        </td>
+                        <td align="left" className="whitespace-normal">
                           {chain.address}
-                        </TableCell>
-                        <TableCell
-                          key="chain-status"
-                          align="left"
-                          className={classes.tableCell}
-                        >
+                        </td>
+                        <td align="center">
                           {chain.published ? (
-                            <div style={{ display: "flex" }}>
-                              <IconCircle
-                                sx={{ color: "#4CAF50", marginRight: 1 }}
-                              />
-                              <Typography variant="body2">
-                                {"published"}
-                              </Typography>
+                            <div className="tooltip" data-tip="published">
+                              <span className="feather feather-eye  text-lg text-green" />
                             </div>
                           ) : (
-                            <div style={{ display: "flex" }}>
-                              <Typography variant="body2">
-                                <IconCircle
-                                  sx={{ color: "#EF5350", marginRight: 1 }}
-                                />
-                                {"unpublished"}
-                              </Typography>
+                            <div className="tooltip" data-tip="draft">
+                              <span className="feather feather-eye-off  text-lg text-red" />
                             </div>
                           )}
-                        </TableCell>
-                        <TableCell align="right" className={classes.tableCell}>
+                        </td>
+                        <td align="right">
                           {(isUserAdmin || authUser?.is_root_admin) && (
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              className={classes.button}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                history.push(`/loops/${chain.uid}/members`);
-                              }}
+                            <Link
+                              className={`btn btn-primary flex-nowrap ${
+                                chains?.length > 5 ? "btn-sm" : ""
+                              }`}
+                              to={`/loops/${chain.uid}/members`}
                             >
                               {t("view")}
-                              <img src={RightArrow} alt="" />
-                            </Button>
+                              <span className="feather feather-arrow-right ml-3"></span>
+                            </Link>
                           )}
-                        </TableCell>
-                      </TableRow>
+                        </td>
+                      </tr>
                     );
                   })}
-                </TableBody>
-              </Table>
-            </TableContainer>
+              </tbody>
+            </table>
           </div>
-        ) : (
-          <Box className={classes.progressBox}>
-            <CircularProgress
-              color="inherit"
-              className={classes.progressAnimation}
-            />
-            <h3>{t("loadingListOfAllLoops")}</h3>
-          </Box>
-        )}
-      </div>
+        </div>
+      </main>
     </>
   );
 };

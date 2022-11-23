@@ -1,14 +1,9 @@
 import { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
 import { useTranslation } from "react-i18next";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import { Download as DownloadIcon } from "@mui/icons-material";
-import { makeStyles } from "@mui/styles";
-
-// Project resources
-import theme from "../util/theme";
-import { Chain, User } from "../api/types";
+import { Chain } from "../api/types";
 import { chainGet, chainGetAll } from "../api/chain";
 import { userGetAllByChain } from "../api/user";
 import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
@@ -37,7 +32,6 @@ interface ChainData {
 
 const DataExport = (props: { chains: Chain[] }) => {
   const { t } = useTranslation();
-  const classes = makeStyles(theme as any)();
 
   const [chains, setChains] = useState<ChainData[]>();
 
@@ -57,16 +51,15 @@ const DataExport = (props: { chains: Chain[] }) => {
   }, []);
 
   return (
-    <div className={classes.buttonExport}>
-      <CSVLink
-        data={chains ? chains : ""}
-        headers={chainsHeaders}
-        filename={"Loops-list.csv"}
-      >
-        {t("exportData")}
-        <DownloadIcon />
-      </CSVLink>
-    </div>
+    <CSVLink
+      data={chains ? chains : ""}
+      headers={chainsHeaders}
+      filename={"Loops-list.csv"}
+      className="btn btn-primary btn-outline"
+    >
+      {t("exportData")}
+      <span className="feather feather-download ml-3" />
+    </CSVLink>
   );
 };
 
@@ -91,10 +84,8 @@ interface UserData {
 const UserDataExport = () => {
   const { t } = useTranslation();
   const { chainUID } = useParams<Params>();
-  const classes = makeStyles(theme as any)();
   const [chain, setChain] = useState<Chain>();
   const [users, setUsers] = useState<UserData[]>();
-  const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -119,16 +110,15 @@ const UserDataExport = () => {
   }, []);
 
   return (
-    <div className={classes.buttonExport}>
-      <CSVLink
-        data={users ? users : ""}
-        headers={usersHeaders}
-        filename={`${chain?.name}-participants.csv`}
-      >
-        {t("exportData")}
-        <DownloadIcon />
-      </CSVLink>
-    </div>
+    <CSVLink
+      data={users ? users : ""}
+      headers={usersHeaders}
+      filename={`${chain?.name}-participants.csv`}
+      className="btn btn-primary btn-outline"
+    >
+      {t("exportData")}
+      <span className="feather feather-download ml-3" />
+    </CSVLink>
   );
 };
 

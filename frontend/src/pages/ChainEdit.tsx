@@ -3,11 +3,6 @@ import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-import { Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-import theme from "../util/theme";
-
 // Project resources
 import ChainDetailsForm, {
   RegisterChainForm,
@@ -19,13 +14,12 @@ interface Params {
   chainUID: string;
 }
 
-const ChainEdit = () => {
+export default function ChainEdit() {
   const { t } = useTranslation();
   let history = useHistory();
   const { chainUID } = useParams<Params>();
 
   const [chain, setChain] = useState<Chain>();
-  const classes = makeStyles(theme as any)();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
@@ -67,28 +61,18 @@ const ChainEdit = () => {
         <title>The Clothing Loop | Edit Loop details</title>
         <meta name="description" content="Edit Loop details" />
       </Helmet>
-      <div className={classes.formContainerLocation}>
-        <div className={classes.newLoopLocationForm}>
-          <Typography
-            variant="h3"
-            className={classes.pageTitle}
-            style={{ textAlign: "center" }}
-          >
-            {t("editLoopInformation")}
-          </Typography>
-          <Typography className="formSubtitle">
-            {t("clickToChangeLoopLocation")}
-          </Typography>
-          <ChainDetailsForm
-            onSubmit={handleSubmit}
-            submitError={error}
-            submitted={submitted}
-            initialValues={chain}
-          />
-        </div>
-      </div>
+      <main className="container mx-auto px-1 md:px-20 pt-10">
+        <h1 className="text-center font-serif font-bold text-secondary text-6xl">
+          {t("editLoopInformation")}
+        </h1>
+        <p className="formSubtitle">{t("clickToChangeLoopLocation")}</p>
+        <ChainDetailsForm
+          onSubmit={handleSubmit}
+          submitError={error}
+          submitted={submitted}
+          initialValues={chain}
+        />
+      </main>
     </>
   );
-};
-
-export default ChainEdit;
+}

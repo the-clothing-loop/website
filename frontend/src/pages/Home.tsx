@@ -1,92 +1,75 @@
 // Material
-import React from "react";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
-
-import theme from "../util/theme";
-import { ArrowDownward as ArrowDownwardIcon } from "@mui/icons-material";
-import { makeStyles } from "@mui/styles";
+import { Link, useHistory } from "react-router-dom";
 
 // Project resources
-import { ChainsContext } from "../providers/ChainsProvider";
-import LandingPageMobile from "./LandingPageMobile";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
-import Donations from "../components/Donations";
 import Testimonials from "../components/Testimonials";
 
-//Media
-import HeroImg from "../images/Kirsten-Rosan.jpg";
-import SectionThreeImg from "../images/image_3.png";
-import BagImage from "../images/Utrecht.jpeg";
-import MapImage from "../images/map_image.png";
-import ClothesImage from "../images/Nichon_zelfportret.jpg";
-import CirclesFrame from "../images/circles.png";
-import HorizontalArrow from "../images/horizontal_arrow.svg";
-import ArrowRightIcon from "../images/right-arrow-yellow.svg";
-import Selfies from "../images/Selfies.jpg";
-import DoorImg from "../images/numbered-bag-outdoors.jpg";
-//Logos
-import SfmLogo from "../images/logos/sfm_logo.png";
-import CollActionLogo from "../images/logos/Logo-CollAction.png";
-import ImpactHubLogo from "../images/logos/Logo_impact_hub.png";
-import EssenseLogo from "../images/logos/essense-logo.svg";
-import WdcdLogo from "../images/logos/Logo_WDCD.png";
-import DoenLogo from "../images/logos/DOEN.png";
-import PNHLogo from "../images/logos/PNH_logo.png";
 import { StandaloneSearchBar } from "../components/FindChain/StandaloneSearchBar";
+//Media
+const HeroImg = "/images/Kirsten-Rosan.jpg";
+const MapImage = "/images/map_image.png";
+const ClothesImage = "/images/Nichon_zelfportret.jpg";
+const CirclesFrame = "/images/circles.png";
+const Selfies = "/images/Selfies.jpg";
+const DoorImg = "/images/numbered-bag-outdoors.jpg";
+//Logos
+const SfmLogo = "/images/logos/sfm_logo.png";
+const CollActionLogo = "/images/logos/Logo-CollAction.png";
+const ImpactHubLogo = "/images/logos/Logo_impact_hub.png";
+const EssenseLogo = "/images/logos/essense-logo.svg";
+const WdcdLogo = "/images/logos/Logo_WDCD.png";
+const DoenLogo = "/images/logos/DOEN.png";
+const PNHLogo = "/images/logos/PNH_logo.png";
 
-const Home = () => {
-  const chainsCount = React.useContext(ChainsContext).length;
+export default function Home() {
   const { t } = useTranslation();
 
-  const classes = makeStyles(theme as any)();
   let history = useHistory();
 
   const supporters = [
-    {
-      logo: SfmLogo,
-      url: "https://slowfashion.global/",
-      width: "200px",
-      height: "200px",
-    },
-    {
-      logo: DoenLogo,
-      url: "https://www.doen.nl/en",
-      width: "150px",
-      height: "150px",
-    },
-    {
-      logo: WdcdLogo,
-      url: "https://www.whatdesigncando.com/",
-      width: "150px",
-      height: "150px",
-    },
-    {
-      logo: ImpactHubLogo,
-      url: "https://impacthub.net/",
-      width: "150px",
-      height: "150px",
-    },
-    {
-      logo: PNHLogo,
-      url: "https://www.noord-holland.nl/",
-      width: "250px",
-      height: "auto",
-    },
-    {
-      logo: EssenseLogo,
-      url: "https://essense.eu/",
-      width: "250px",
-      height: "auto",
-    },
-    {
-      logo: CollActionLogo,
-      url: "https://www.collaction.org/",
-      width: "250px",
-      height: "auto",
-    },
+    [
+      {
+        logo: SfmLogo,
+        url: "https://slowfashion.global/",
+        alt: "Slow Fashion Movement",
+      },
+      {
+        logo: DoenLogo,
+        url: "https://www.doen.nl/en",
+        alt: "Stichting Doen",
+      },
+      {
+        logo: WdcdLogo,
+        url: "https://www.whatdesigncando.com/",
+        alt: "What Design Can Do",
+      },
+      {
+        logo: ImpactHubLogo,
+        url: "https://impacthub.net/",
+        alt: "Impact Hub",
+      },
+    ],
+    [
+      {
+        logo: PNHLogo,
+        url: "https://www.noord-holland.nl/",
+        alt: "Provincie Noord-Holland",
+      },
+      {
+        logo: EssenseLogo,
+        url: "https://essense.eu/",
+        alt: "Essense",
+      },
+      {
+        logo: CollActionLogo,
+        url: "https://www.collaction.org/",
+        alt: "CollAction",
+      },
+    ],
   ];
 
   return (
@@ -98,148 +81,243 @@ const Home = () => {
 
       <StandaloneSearchBar />
 
-      <div id="landing-page-desktop" className={classes.landingPageDesktop}>
-        <div className={classes.landingPageWrapper}>
-          <div className="background-box">
-            <div className="circles-frame">
-              <img src={CirclesFrame} alt="circles-frame" />
-              <img src={CirclesFrame} alt="circles-frame" />
+      <div className="">
+        <section className="mb-24">
+          <div className="w-full absolute bg-teal-light">
+            <div className="p-8 ml-[40%] pb-14 flex">
+              <img src={CirclesFrame} alt="" />
+              <img className="pl-2" src={CirclesFrame} alt="" />
             </div>
           </div>
-          <div className="landing-page-hero">
-            <div className="hero-text-wrapper">
-              <h1 dangerouslySetInnerHTML={{ __html: t("swapDontShop") }}></h1>
-              <p>{t("swapDontShopMessage")}</p>
-              <button
-                className="slide"
-                onClick={() => history.push("/loops/find")}
-              >
-                {t("findALoop")}
-                <img src={ArrowRightIcon} alt="" className="btn-icon" />
-              </button>
+          <div className="relative z-10 flex">
+            <div className="pt-20 pl-40 pr-20 w-1/2 flex justify-end">
+              <div className="max-w-[500px]">
+                <h1
+                  className="font-serif font-bold text-accent text-9xl [&_span]:text-stroke-accent mb-8"
+                  dangerouslySetInnerHTML={{ __html: t("swapDontShop") }}
+                ></h1>
+                <p className="">{t("swapDontShopMessage")}</p>
+                <button
+                  className="btn btn-primary btn-outline mt-4"
+                  onClick={() => history.push("/loops/find")}
+                >
+                  {t("findALoop")}
+                  <span className="feather feather-arrow-right ml-3" />
+                </button>
+              </div>
             </div>
-            <div className="hero-image-wrapper">
-              <div className="image-wrapper">
-                <img src={HeroImg} alt="Kledingketting" />
-                <p>{t("photo")}: Martijn van den Dobbelsteen/de Brug</p>
+            <div className="pt-16 pr-40 w-1/2">
+              <div>
+                <img
+                  className="w-[30hw]"
+                  src={HeroImg}
+                  alt="Bringing a bag full clothes to another's doorstep"
+                />
+                <p className="text-sm my-1">
+                  {t("photo")}: Martijn van den Dobbelsteen/de Brug
+                </p>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <section className={classes.sectionsWrapper} id="section-one">
-          <div className="single-section-wrapper">
-            <div className="image-wrapper">
+        <section>
+          <div className="flex flex-col md:flex-row items-center md:items-start mb-16">
+            <div className="flex md:w-1/2 md:justify-end px-5">
               <iframe
                 src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
                 allow="autoplay; fullscreen; picture-in-picture"
-                className="vimeo-video"
+                className="w-full sm:w-[600px] aspect-video"
               ></iframe>
             </div>
 
-            <div className="text-wrapper">
-              <h1>1</h1>
-              <h3
-                dangerouslySetInnerHTML={{ __html: t("findOutHowItWorks") }}
-              ></h3>
-              <p>
-                <a href="/loops/find">{t("findALoopNearYou")}</a>
-              </p>
+            <div className="w-full md:w-1/2 px-5">
+              <h2 className="text-accent font-serif font-bold text-6xl mb-4">
+                <span className="inline md:block mr-4 font-serif font-bold text-9xl text-stroke-accent">
+                  1
+                </span>
+                <span
+                  className="[&_br]:hidden md:[&_br]:block"
+                  dangerouslySetInnerHTML={{ __html: t("findOutHowItWorks") }}
+                ></span>
+              </h2>
+              <Link className="link link-accent text-lg" to="/loops/find">
+                {t("findALoopNearYou")}
+              </Link>
             </div>
           </div>
-          <div className="single-section-wrapper-2">
-            <div className="text-wrapper">
-              <h1>2</h1>
-              <div>
-                <h3>{t("joinALoop")}</h3>
-                <p>{t("joinALoopMessage")}</p>
+
+          <div className="flex flex-col md:flex-row items-center mb-20">
+            <div className="text-secondary w-full md:w-1/2 x-10 flex justify-end">
+              <div className="max-w-[600px] p-6 pt-0">
+                <h2 className="font-serif font-bold text-6xl mb-6">
+                  <span className="inline md:block mr-4 text-9xl text-stroke-secondary">
+                    2
+                  </span>
+                  <span className="">{t("joinALoop")}</span>
+                </h2>
+                <p className="text-lg">{t("joinALoopMessage")}</p>
+                <Link
+                  to="/loops/find"
+                  className="btn btn-outline btn-circle btn-secondary mt-6"
+                >
+                  <span className="feather feather-arrow-right"></span>
+                </Link>
               </div>
             </div>
-            <div className={classes.imageAnimatedWrapper}>
-              <a href="./loops/find">
-                <img src={MapImage} alt="map image" />
-              </a>
+            <div className="flex md:w-1/2 justify-center items-center p-20">
+              <div className="relative w-full max-w-[600px]">
+                <Link
+                  to="/loops/find"
+                  className="ring-0 hover:ring-[2rem] ring-secondary transition-[box-shadow] z-20 block"
+                >
+                  <img src={MapImage} alt="map image" />
+                </Link>
+                <img
+                  className="-z-10 absolute -right-20 -top-20"
+                  src={CirclesFrame}
+                />
+                <img
+                  className="-z-10 absolute -left-20 -bottom-20"
+                  src={CirclesFrame}
+                />
+              </div>
             </div>
-            <img className="circles-frame" src={CirclesFrame} />
           </div>
-          <div className="single-section-wrapper-3">
+
+          <div className="flex flex-col md:flex-row items-center mb-40">
+            <div className="relative w-1/2 pr-20 flex justify-end">
+              <img src={DoorImg} className="w-full max-w-[600px]" />
+
+              <div className="absolute -z-10 bg-yellow/30 w-[600px] h-5/6 bottom-[-4rem] right-[2rem]">
+                &nbsp;
+              </div>
+            </div>
+
+            <div className="w-1/2">
+              <div className="w-full max-w-[600px]">
+                <h2 className="font-serif font-bold text-6xl text-yellow-darkest mb-6">
+                  <span className="inline md:block md:mb-4 mr-4 text-9xl text-stroke-yellow-darkest">
+                    3
+                  </span>
+                  {t("getReadyToSwap")}
+                </h2>
+                <p className="text-lg">{t("getReadyToSwapMessage")}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="flex flex-col md:flex-row items-center mb-20 bg-accent font-bold">
+          <div className="w-1/2 flex justify-end px-10 text-base-100">
+            <div className="w-full max-w-[600px]">
+              <h2 className="text-8xl font-serif mb-6">{t("ourImpact")}</h2>
+              <Counters />
+            </div>
+          </div>
+
+          <div className="w-1/2">
             <img
-              className="circles-frame"
-              src={CirclesFrame}
-              alt="circles frame"
+              className="object-cover object-top w-full max-h-[600px]"
+              src={Selfies}
+              alt="selfies of different people wearing clothes shared via their local Loop"
             />
-            <div className="background-box"></div>
-
-            <div className="image-wrapper">
-              <img src={DoorImg} />
-            </div>
-
-            <div className="text-wrapper">
-              <h1>3</h1>
-              <div>
-                <h3>{t("getReadyToSwap")}</h3>
-                <p>{t("getReadyToSwapMessage")}</p>
-              </div>
-            </div>
           </div>
         </section>
 
-        <section className={classes.projectNumbersWrapper}>
-          <div className="inner-wrapper">
-            <h1>{t("ourImpact")}</h1>
-            <Counters />
+        <section className="flex flex-col md:flex-row items-center mb-20">
+          <div className="w-1/2">
+            <img
+              src={ClothesImage}
+              className="object-cover object-top w-full max-h-[600px]"
+              alt="Nichon taking clothes out of a Clothing Loop bag"
+            />
           </div>
-
-          <div className="images-wrapper">
-            <img src={Selfies} alt="" />
-          </div>
-        </section>
-
-        <section className={classes.aboutSectionWrapper}>
-          <div className="image-wrapper">
-            <img src={ClothesImage} alt="" />
-          </div>
-          <div className="text-wrapper">
-            <h3>{t("fromLocalLockdownToSuccess")}</h3>
-            <p>{t("fromLocalLockdownToSuccessMessage")}</p>
-
-            <h5>
-              <a href="/about">{t("readMoreAboutUs")}</a>
-            </h5>
+          <div className="w-1/2 px-10 text-secondary">
+            <div className="w-full max-w-[600px]">
+              <h2 className="font-serif font-bold text-6xl mb-6">
+                {t("fromLocalLockdownToSuccess")}
+              </h2>
+              <p className="text-base mb-3">
+                {t("fromLocalLockdownToSuccessMessage")}
+              </p>
+              <Link className="link link-secondary font-bold" to="/about">
+                {t("readMoreAboutUs")}
+              </Link>
+            </div>
           </div>
         </section>
 
         <Testimonials />
-        <Donations />
 
-        <div className={classes.supportersSection}>
-          <div className="background-box"></div>
-          <h2>{t("Partners & Sponsors")}</h2>
-          <h5>
-            {t("wantToSupportUsToo") + " "}
-            <a href="mailto:hello@clothingloop.org">
-              {t("wedLoveToHearFromYou")}
-            </a>{" "}
-          </h5>
-          <div className="logos-wrapper">
-            {supporters.map((el, i) => {
+        <section className="flex flex-col md:flex-row items-end mb-20">
+          <div className="w-1/2 flex justify-end">
+            <img
+              src="/images/TCL-Jewellery.jpg"
+              alt="jewellery"
+              className="w-full max-w-[500px]"
+            />
+          </div>
+
+          <div className="w-1/2 flex">
+            <div className="relative p-10 max-w-[400px]">
+              <div className="-z-10 absolute w-full h-[300px] bg-yellow/10 -left-10 bottom-0"></div>
+              <h2
+                className="font-serif font-bold text-4xl text-primary-focus [&_span]:text-2xl mb-7"
+                dangerouslySetInnerHTML={{
+                  __html: t("smallActsCanChangeTheWorld"),
+                }}
+              ></h2>
+              <p className="mb-4">
+                {t("weAreWorkingOnMakingTheClothingLoopBetter")}
+              </p>
+              <Link
+                to="/donate"
+                className="btn btn-outline btn-primary text-base border-2"
+              >
+                {t("donate")}
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div className="relative container mx-auto font-serif font-bold text-secondary mb-6">
+            <div className="bg-teal-light absolute -left-10 top-10 -z-10 w-[600px] h-[200px]">
+              &nbsp;
+            </div>
+            <h2 className="text-7xl mb-4">{t("Partners & Sponsors")}</h2>
+            <p className="text-xl">
+              {t("wantToSupportUsToo") + " "}
+              <a className="link" href="mailto:hello@clothingloop.org">
+                {t("wedLoveToHearFromYou")}
+              </a>{" "}
+            </p>
+          </div>
+          <ul className="max-w-screen-md mx-auto flex flex-wrap items-center justify-evenly mb-20">
+            {supporters[0].map((el, i) => {
               return (
-                <div key={i} style={{ width: el.width, height: el.height }}>
-                  <a href={el.url} target="_blank">
-                    <img src={el.logo} alt="" />
+                <li className="w-1/2 md:w-1/4 flex justify-center mb-4 md:mb-0">
+                  <a key={i} className="w-40" href={el.url} target="_blank">
+                    <img className="w-full" src={el.logo} alt={el.alt} />
                   </a>
-                </div>
+                </li>
               );
             })}
-          </div>
-        </div>
+            {supporters[1].map((el, i) => {
+              return (
+                <li className="w-full md:w-1/3 flex justify-center mb-4 md:mb-0">
+                  <a key={i} className="w-52" href={el.url} target="_blank">
+                    <img className="w-full" src={el.logo} alt={el.alt} />
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
 
         <Carousel />
       </div>
-
-      <LandingPageMobile />
     </>
   );
-};
-
-export default Home;
+}

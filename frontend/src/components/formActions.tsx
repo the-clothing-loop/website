@@ -1,66 +1,45 @@
-import { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { CheckboxField } from "../components/FormFields";
-import theme from "../util/theme";
 
-import { Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
-interface IProps {
-  handleClick: (e: any, action: any) => void;
-}
-
-const FormActions: React.FC<IProps> = ({ handleClick }: IProps) => {
-  const classes = makeStyles(theme as any)();
+export default function FormActions() {
   const { t } = useTranslation();
 
   return (
-    <div style={{ padding: "5% 0" }}>
-      <CheckboxField
-        required={false}
-        label={
-          <>
-            <Typography component="p" className={classes.p}>
-              {t("subscribeToTheClothingLoopNewsletter")}
-            </Typography>
-          </>
-        }
-        name="newsletter"
-      />
-      <CheckboxField
-        className="privacy-policy-action"
-        required
-        label={
-          <>
-            <div className={classes.actionsWrapper}>
-              <Typography component="p" className={classes.p}>
-                <Trans
-                  i18nKey="iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star"
-                  components={{
-                    "1": (
-                      <a
-                        href="/terms-of-use"
-                        target="_blank"
-                        className={classes.a}
-                      ></a>
-                    ),
-                    "2": (
-                      <a
-                        href="/privacy-policy"
-                        target="_blank"
-                        className={classes.a}
-                      ></a>
-                    ),
-                  }}
-                ></Trans>
-              </Typography>
-            </div>
-          </>
-        }
-        name="privacyPolicy"
-      />
+    <div>
+      <div className="form-control">
+        <label className="label cursor-pointer">
+          <span className="label-text">
+            {t("subscribeToTheClothingLoopNewsletter")}
+          </span>
+          <input type="checkbox" className="checkbox" name="newsletter" />
+        </label>
+      </div>
+      <div className="form-control">
+        <label className="label cursor-pointer">
+          <span className="label-text">
+            <Trans
+              i18nKey="iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star"
+              components={{
+                "1": (
+                  <a href="/terms-of-use" target="_blank" className="link"></a>
+                ),
+                "2": (
+                  <a
+                    href="/privacy-policy"
+                    target="_blank"
+                    className="link"
+                  ></a>
+                ),
+              }}
+            ></Trans>
+          </span>
+          <input
+            type="checkbox"
+            required
+            className="checkbox"
+            name="privacyPolicy"
+          />
+        </label>
+      </div>
     </div>
   );
-};
-
-export default FormActions;
+}

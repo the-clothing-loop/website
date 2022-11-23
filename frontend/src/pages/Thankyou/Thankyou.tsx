@@ -1,16 +1,9 @@
 import { useHistory } from "react-router-dom";
-import styles from "./Thankyou.module.css";
-
-// Material
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-import { Button, Grid, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 
 //Project resources
-import theme from "../../util/theme";
 import { TwoColumnLayout } from "../../components/Layouts";
-import Img from "../../images/party-image.jpg";
 
 export interface IProps {
   heading: string;
@@ -18,54 +11,37 @@ export interface IProps {
   confirmationEmail: string;
 }
 
-const Content = ({ heading, subheading, confirmationEmail }: IProps) => {
-  const classes = makeStyles(theme as any)();
+function Content({ heading, subheading, confirmationEmail }: IProps) {
   let history = useHistory();
   const { t } = useTranslation();
 
   return (
-    <Grid container className={styles.pageWrapper}>
-      <Typography className={styles.h3} component="h3">
+    <main>
+      <h1 className="font-serif font-bold text-2xl text-secondary">
         {heading}
-      </Typography>
-      <Typography component="p">{subheading}</Typography>
-      <Typography component="p" className={styles.p}>
-        {confirmationEmail}
-      </Typography>
-      <Typography component="p" className={styles.p}>
-        {t("happySwapping")}
-      </Typography>
-      <Grid container className={styles.buttonsWrapper}>
-        <Grid item xs={6}>
-          <Button
-            className={classes.buttonOutlined}
-            variant="contained"
-            color="primary"
-            onClick={() => history.push("/")}
-            key={"btn-submit-1"}
-            style={{ margin: "2% 0" }}
-          >
-            {t("home")}
-          </Button>
-        </Grid>
-        <Grid item xs={6}>
-          <Button
-            className={classes.button}
-            variant="contained"
-            color="primary"
-            onClick={() => history.push("/about")}
-            key={"btn-submit-1"}
-            style={{ margin: "2% 0" }}
-          >
-            {t("About")}
-          </Button>
-        </Grid>
-      </Grid>
-    </Grid>
+      </h1>
+      <p className="text-lg">{subheading}</p>
+      <p>{confirmationEmail}</p>
+      <p>{t("happySwapping")}</p>
+      <div className="flex flex-row justify-start">
+        <button
+          className="btn btn-primary btn-outline"
+          onClick={() => history.push("/")}
+        >
+          {t("home")}
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => history.push("/about")}
+        >
+          {t("About")}
+        </button>
+      </div>
+    </main>
   );
-};
+}
 
-const NewLoopConfirmation = (props: any) => {
+export function NewLoopConfirmation(props: any) {
   const { t } = useTranslation();
 
   return (
@@ -74,9 +50,8 @@ const NewLoopConfirmation = (props: any) => {
         <title>The Clothing Loop | New Loop Confirmation</title>
         <meta name="description" content="New Loop Confirmation" />
       </Helmet>
-
       <TwoColumnLayout
-        img={Img}
+        img="/images/party-image.jpg"
         children={
           <Content
             heading={t("thankYouForStartingThisLoop")}
@@ -87,9 +62,9 @@ const NewLoopConfirmation = (props: any) => {
       ></TwoColumnLayout>
     </>
   );
-};
+}
 
-const JoinLoopConfirmation = (props: any) => {
+export function JoinLoopConfirmation(props: any) {
   const { t } = useTranslation();
 
   return (
@@ -98,9 +73,8 @@ const JoinLoopConfirmation = (props: any) => {
         <title>The Clothing Loop | Thank you for joining</title>
         <meta name="description" content="Thank you for joining" />
       </Helmet>
-
       <TwoColumnLayout
-        img={Img}
+        img="/images/party-image.jpg"
         children={
           <Content
             heading={t("thankYouForSigningUp")}
@@ -111,6 +85,4 @@ const JoinLoopConfirmation = (props: any) => {
       ></TwoColumnLayout>
     </>
   );
-};
-
-export { NewLoopConfirmation, JoinLoopConfirmation };
+}

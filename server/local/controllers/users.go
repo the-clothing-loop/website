@@ -14,9 +14,9 @@ import (
 )
 
 type UserCreateRequestBody struct {
-	Email       string   `json:"email" binding:"required"`
-	Name        string   `json:"name" binding:"required"`
-	Address     string   `json:"address"`
+	Email       string   `json:"email" binding:"required,email"`
+	Name        string   `json:"name" binding:"required,min=3"`
+	Address     string   `json:"address" binding:"required,min=3"`
 	PhoneNumber string   `json:"phone_number" binding:"required"`
 	Newsletter  bool     `json:"newsletter"`
 	Sizes       []string `json:"sizes"`
