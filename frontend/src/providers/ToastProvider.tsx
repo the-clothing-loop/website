@@ -37,7 +37,7 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
     setToasts([...toasts, { ...t, id }]);
 
     setTimeout(() => {
-      setToasts((s) => s.filter((t) => t.id != id));
+      setToasts((s) => s.filter((t) => t.id !== id));
     }, 7000);
   }
 
@@ -55,7 +55,7 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
             text: t("close"),
             type: "ghost",
             fn: () => {
-              setToasts((s) => s.filter((t) => t.id != id));
+              setToasts((s) => s.filter((t) => t.id !== id));
             },
           },
         ],

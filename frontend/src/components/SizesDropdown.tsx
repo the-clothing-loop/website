@@ -73,7 +73,7 @@ export default function SizesDropdown(props: {
       >
         {Object.entries(categories).map(([gender, sizes]) => {
           let disabled =
-            props.filteredGenders.find((g) => g == gender) == undefined;
+            props.filteredGenders.find((g) => g === gender) === undefined;
 
           return (
             <>

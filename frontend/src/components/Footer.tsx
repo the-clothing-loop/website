@@ -81,17 +81,16 @@ export default function Footer() {
                     <a
                       href="https://www.instagram.com/theclothingloop/"
                       target="_blank"
+                      rel="noreferrer"
                       className="btn btn-circle btn-outline feather feather-instagram text-lg mr-3 hover:bg-instagram"
                       aria-label="link to our instagram account"
                     ></a>
-                    <a
-                      href="#"
+                    <span
                       tabIndex={1}
                       className={`tooltip tooltip-bottom text-sm ${
                         copying === "@theclothingloop" ? "tooltip-open" : ""
                       }`}
                       onClick={copyToClipboard}
-                      aria-hidden
                       data-tip={
                         copying === "@theclothingloop"
                           ? t("copiedToClipboard")
@@ -99,7 +98,7 @@ export default function Footer() {
                       }
                     >
                       @theclothingloop
-                    </a>
+                    </span>
                   </li>
                   <li className="inline-flex items-center">
                     <a
@@ -107,10 +106,8 @@ export default function Footer() {
                       aria-label="Our email address"
                       className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0375b9] feather feather-at-sign text-lg"
                     ></a>
-                    <a
-                      href="#"
+                    <span
                       tabIndex={1}
-                      aria-hidden
                       className={`tooltip tooltip-bottom text-sm ${
                         copying === "hello@clothingloop.com"
                           ? "tooltip-open"
@@ -124,7 +121,7 @@ export default function Footer() {
                       }
                     >
                       hello@clothingloop.com
-                    </a>
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -152,6 +149,7 @@ export default function Footer() {
               className="btn btn-ghost text-white text-base font-normal"
               href="https://github.com/CollActionteam/clothing-loop"
               target="_blank"
+              rel="noreferrer"
             >
               {t("contribute")}
             </a>

@@ -1,8 +1,4 @@
 import { useState } from "react";
-interface Props<O> {
-  selected: O[];
-  handleChange: (o: O[]) => void;
-}
 
 export function useDropdown() {
   const [open, setOpenState] = useState(false);
@@ -29,8 +25,8 @@ export function useDropdownCheckBox<O extends string | number>(props: {
   const { open, setOpen, toggle } = useDropdown();
 
   const change = (value: O) => {
-    if (props.selected.find((o) => o == value)) {
-      props.handleChange(props.selected.filter((o) => o != value));
+    if (props.selected.find((o) => o === value)) {
+      props.handleChange(props.selected.filter((o) => o !== value));
     } else {
       props.handleChange([...props.selected, value]);
     }
@@ -51,7 +47,7 @@ export function useDropdownRadio<O extends string | number>(props: {
   const { open, setOpen, toggle } = useDropdown();
 
   const change = (value: O) => {
-    if (props.selected != value) {
+    if (props.selected !== value) {
       props.handleChange(value);
     }
   };

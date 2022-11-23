@@ -125,6 +125,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center md:items-start mb-16">
             <div className="flex md:w-1/2 md:justify-end px-5">
               <iframe
+                title="video about what is the Clothing Loop"
                 src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
                 allow="autoplay; fullscreen; picture-in-picture"
                 className="w-full sm:w-[600px] aspect-video"
@@ -171,14 +172,18 @@ export default function Home() {
                   to="/loops/find"
                   className="ring-0 hover:ring-[2rem] ring-secondary transition-[box-shadow] z-20 block"
                 >
-                  <img src={MapImage} alt="map image" />
+                  <img src={MapImage} alt="map" />
                 </Link>
                 <img
                   className="-z-10 absolute -right-20 -top-20"
                   src={CirclesFrame}
+                  aria-hidden
+                  alt=""
                 />
                 <img
                   className="-z-10 absolute -left-20 -bottom-20"
+                  aria-hidden
+                  alt=""
                   src={CirclesFrame}
                 />
               </div>
@@ -187,7 +192,11 @@ export default function Home() {
 
           <div className="flex flex-col md:flex-row items-center mb-40">
             <div className="relative w-1/2 pr-20 flex justify-end">
-              <img src={DoorImg} className="w-full max-w-[600px]" />
+              <img
+                src={DoorImg}
+                className="w-full max-w-[600px]"
+                alt="receiving a bag of clothes from another"
+              />
 
               <div className="absolute -z-10 bg-yellow/30 w-[600px] h-5/6 bottom-[-4rem] right-[2rem]">
                 &nbsp;
@@ -298,7 +307,13 @@ export default function Home() {
             {supporters[0].map((el, i) => {
               return (
                 <li className="w-1/2 md:w-1/4 flex justify-center mb-4 md:mb-0">
-                  <a key={i} className="w-40" href={el.url} target="_blank">
+                  <a
+                    key={i}
+                    className="w-40"
+                    href={el.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <img className="w-full" src={el.logo} alt={el.alt} />
                   </a>
                 </li>
@@ -307,7 +322,13 @@ export default function Home() {
             {supporters[1].map((el, i) => {
               return (
                 <li className="w-full md:w-1/3 flex justify-center mb-4 md:mb-0">
-                  <a key={i} className="w-52" href={el.url} target="_blank">
+                  <a
+                    key={i}
+                    className="w-52"
+                    href={el.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <img className="w-full" src={el.logo} alt={el.alt} />
                   </a>
                 </li>

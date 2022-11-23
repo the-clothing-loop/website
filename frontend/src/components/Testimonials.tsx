@@ -26,7 +26,7 @@ export default function Testimonials() {
     let scrollLeft = e.scrollLeft;
 
     let scroll =
-      o == CarouselOperation.PLUS
+      o === CarouselOperation.PLUS
         ? scrollLeft + slideSize
         : scrollLeft - slideSize;
 

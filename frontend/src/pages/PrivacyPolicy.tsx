@@ -128,6 +128,7 @@ export default function PrivacyPolicy() {
             <a
               href="https://firebase.google.com/support/privacy"
               target="_blank"
+              rel="noreferrer"
             >
               here
             </a>
@@ -216,7 +217,11 @@ export default function PrivacyPolicy() {
           </p>
           <p>
             For further information, visit{" "}
-            <a href="https://www.allaboutcookies.org/" target="_blank">
+            <a
+              href="https://www.allaboutcookies.org/"
+              rel="noreferrer"
+              target="_blank"
+            >
               allaboutcookies.org.
             </a>
           </p>
@@ -255,7 +260,7 @@ export default function PrivacyPolicy() {
             app we created for you in Glide. The use of this app is optional.
             Our privacy policy applies only to our website, so as soon as you
             leave{" "}
-            <a href="www.clothingloop.org" target="_blank">
+            <a href="www.clothingloop.org" rel="noreferrer" target="_blank">
               www.clothingloop.org
             </a>{" "}
             to visit a third party website, their privacy policy applies

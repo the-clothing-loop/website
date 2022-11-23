@@ -2,11 +2,11 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useDropdown } from "../util/dropdown.hooks";
 
+const languages = [
+  { lng: "en", title: "English", flag: "/icons/flags/gb.svg" },
+  { lng: "nl", title: "Dutch", flag: "/icons/flags/nl.svg" },
+];
 const LanguageSwitcher = (props: { className?: string }) => {
-  const languages = [
-    { lng: "en", title: "English", flag: "/icons/flags/gb.svg" },
-    { lng: "nl", title: "Dutch", flag: "/icons/flags/nl.svg" },
-  ];
   const { i18n } = useTranslation();
 
   const dropdown = useDropdown();
@@ -17,7 +17,7 @@ const LanguageSwitcher = (props: { className?: string }) => {
   };
 
   const btnLabelLanguage = useMemo(() => {
-    return languages.find((l) => l.lng == i18n.language) || languages[0];
+    return languages.find((l) => l.lng === i18n.language) || languages[0];
   }, [i18n.language]);
 
   return (
@@ -40,7 +40,7 @@ const LanguageSwitcher = (props: { className?: string }) => {
         className="dropdown-content menu w-36 shadow bg-base-100"
       >
         {languages.map((el) => {
-          let active = btnLabelLanguage.lng == el.lng;
+          let active = btnLabelLanguage.lng === el.lng;
           return (
             <li key={el.lng} className={active ? "hidden" : ""}>
               <button

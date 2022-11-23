@@ -44,8 +44,8 @@ export default function ChainMemberList() {
 
   const isChainAdmin = useMemo(
     () =>
-      authUser?.chains.find((c) => c.chain_uid == chain?.uid)?.is_chain_admin ||
-      false,
+      authUser?.chains.find((c) => c.chain_uid === chain?.uid)
+        ?.is_chain_admin || false,
     [authUser, chain]
   );
 
@@ -98,6 +98,7 @@ export default function ChainMemberList() {
         console.error(`Error getting chain: ${error}`);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
 
   async function refresh() {

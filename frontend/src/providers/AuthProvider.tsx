@@ -88,12 +88,13 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
   useEffect(() => {
     console.log("trying to login");
     authUserRefresh().then((res) => {
-      if (res == UserRefreshState.ForceLoggedOut) {
-        if (history.location.pathname != "/") {
+      if (res === UserRefreshState.ForceLoggedOut) {
+        if (history.location.pathname !== "/") {
           history.push("/");
         }
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const contextValue: AuthProps = {
     authUser: user,

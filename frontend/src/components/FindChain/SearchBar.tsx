@@ -27,7 +27,7 @@ export const SearchBar: React.FC<IProps> = ({
   const { t } = useTranslation();
 
   function handleSearchEnter(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key == "Enter") {
+    if (e.key === "Enter") {
       handleSearch();
     }
   }
