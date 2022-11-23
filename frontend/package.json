@@ -72,10 +72,10 @@
     "rules": {
       "import/no-webpack-loader-syntax": "off",
       "react-hooks/exhaustive-deps": "off",
-      "@typescript-eslint/no-unused-vars": "warn",
-      "jsx-a11y/anchor-has-content":"warn",
-      "no-useless-escape": "warn",
-      "no-throw-literal": "warn"
+      "@typescript-eslint/no-unused-vars": "off",
+      "jsx-a11y/anchor-has-content":"off",
+      "no-useless-escape": "off",
+      "no-throw-literal": "off"
     }
   },
   "browserslist": {
