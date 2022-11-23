@@ -102,9 +102,9 @@ export default function Signup() {
           <meta name="description" content="Signup user" />
         </Helmet>
 
-        <main className="signup-wrapper">
+        <main className="">
           <TwoColumnLayout img="/images/Join-Loop.jpg">
-            <div id="container" className="signup-content">
+            <div id="container" className="">
               <h1 className="tw-font-serif tw-font-bold tw-text-4xl tw-text-secondary">
                 {t("join")}
                 <span> {chain?.name}</span>
