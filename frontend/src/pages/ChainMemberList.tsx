@@ -98,7 +98,6 @@ export default function ChainMemberList() {
         console.error(`Error getting chain: ${error}`);
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
 
   async function refresh() {

@@ -94,7 +94,6 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
         }
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const contextValue: AuthProps = {
     authUser: user,
