@@ -1,12 +1,9 @@
-import { useState, useCallback, useRef } from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import MapGL from "react-map-gl";
-// @ts-ignore
-import Geocoder from "react-map-gl-geocoder";
+import { useState, useCallback, useRef, useEffect } from "react";
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import { useTranslation } from "react-i18next";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 
-const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
+const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY || "";
 
 interface Props {
   onResult: (address: any) => any;
@@ -14,39 +11,36 @@ interface Props {
 }
 
 export default function GeocoderSelector(props: Props) {
-  const [viewport, setViewPort] = useState({
-    latitude: 0,
-    longitude: 0,
-    zoom: 2,
-  });
-
   const mapRef = useRef<any>();
   const { t } = useTranslation();
+  const refDiv = useRef<any>();
+  // const [geocoder, setGeocoder] = useState<MapboxGeocoder>();
 
-  const handleViewportChange = useCallback(
-    (newViewport) => setViewPort(newViewport),
-    []
-  );
+  useEffect(() => {
+    const _geocoder = new MapboxGeocoder({
+      accessToken: MAPBOX_TOKEN,
+      placeholder: t("enterYourAddress"),
+    });
 
-  const handleGeocoderViewportChange = useCallback(
-    (newViewport) => {
-      const geocoderDefaultOverrides = { transitionDuration: 1000 };
+    _geocoder.addTo(refDiv.current);
 
-      return handleViewportChange({
-        ...newViewport,
-        ...geocoderDefaultOverrides,
-      });
-    },
-    [handleViewportChange]
-  );
+    // setGeocoder(_geocoder);
+    return () => {
+      _geocoder.clear();
+    };
+  }, []);
 
   return (
-    <div className="geocoder-wrapper w-full">
-      <div className="geocoder-wrapper-2 h-14 px-4">
-        <MapGL
-          className="geocoding-map"
-          mapStyle="mapbox://styles/mapbox/streets-v11"
-          ref={mapRef}
+    <div className="relative z-20" ref={refDiv}>
+      {/* <input
+        type="text"
+        className="input input-secondary"
+        placeholder={
+          props.address ? props.address : t("enterYourAddress") + "*"
+        }
+      /> */}
+      {/* <input
+        ref={mapRef}
           {...viewport}
           width="100%"
           height="100%"
@@ -60,14 +54,11 @@ export default function GeocoderSelector(props: Props) {
             onViewportChange={handleGeocoderViewportChange}
             mapboxApiAccessToken={MAPBOX_TOKEN}
             position="top-left"
-            placeholder={
-              props.address ? props.address : t("enterYourAddress") + "*"
-            }
             address={props.address}
           />
         </MapGL>
       </div>
-      <div />
+      <div /> */}
     </div>
   );
 }

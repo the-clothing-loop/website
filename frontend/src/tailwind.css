@@ -90,3 +90,16 @@
 .table th:first-child {
   @apply static;
 }
+
+#root .mapboxgl-ctrl-geocoder {
+  @apply w-full max-w-none;
+}
+#root .mapboxgl-ctrl-geocoder--input {
+  @apply h-12 px-10 border border-solid border-secondary transition-colors w-full;
+}
+#root .mapboxgl-ctrl-geocoder--icon.mapboxgl-ctrl-geocoder--icon-search {
+  @apply top-3.5 left-3;
+}
+#root .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--pin-right > * {
+  @apply top-3.5 right-3;
+}

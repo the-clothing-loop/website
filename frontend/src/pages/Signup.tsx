@@ -1,5 +1,5 @@
 // React / plugins
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Redirect, useParams, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -14,6 +14,8 @@ import { Chain } from "../api/types";
 import { chainGet } from "../api/chain";
 import { registerBasicUser } from "../api/login";
 import FormJup from "../util/form-jup";
+import { ToastContext } from "../providers/ToastProvider";
+import { GinParseErrors } from "../util/gin-errors";
 
 interface Params {
   chainUID: string;
@@ -22,9 +24,10 @@ interface Params {
 interface RegisterUserForm {
   name: string;
   email: string;
-  phoneNumber: string;
-  newsletter: boolean;
+  phone: string;
   sizes: string[];
+  privacyPolicy: boolean;
+  newsletter: boolean;
 }
 
 export default function Signup() {
@@ -32,13 +35,12 @@ export default function Signup() {
   const { chainUID } = useParams<Params>();
   const [chain, setChain] = useState<Chain | null>(null);
   const { t } = useTranslation();
+  const { addToastError } = useContext(ToastContext);
   const [submitted, setSubmitted] = useState(false);
   const [geocoderResult, setGeocoderResult] = useState({
     result: { place_name: "" },
   });
-  const [error, setError] = useState("");
   const [jsValues, setJsValues] = useState({
-    phone: "",
     address: "",
     sizes: [] as string[],
   });
@@ -58,8 +60,16 @@ export default function Signup() {
   }, [chainUID]);
 
   // Gather data from form, validate and send to firebase
-  function onSubmit(e: FormEvent<RegisterUserForm>) {
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     const values = FormJup<RegisterUserForm>(e);
+
+    if (values.privacyPolicy !== "on") {
+      addToastError(t("required") + " " + t("privacyPolicy"));
+      return;
+    }
+
+    console.log(values);
 
     (async () => {
       try {
@@ -67,9 +77,9 @@ export default function Signup() {
           {
             name: values.name,
             email: values.email,
-            phone_number: jsValues.phone,
+            phone_number: values.phone,
             address: geocoderResult.result.place_name,
-            newsletter: values.newsletter === "true",
+            newsletter: values.newsletter === "on",
             sizes: jsValues.sizes,
           },
           chainUID
@@ -78,19 +88,13 @@ export default function Signup() {
       } catch (e: any) {
         console.error(`Error creating user: ${JSON.stringify(e)}`);
         e.code === "auth/invalid-phone-number"
-          ? setError(t("pleaseEnterAValid.phoneNumber"))
-          : setError(e?.data || `Error: ${JSON.stringify(e)}`);
+          ? addToastError(t("pleaseEnterAValid.phoneNumber"))
+          : addToastError(
+              GinParseErrors(t, e?.data || `Error: ${JSON.stringify(e)}`)
+            );
       }
     })();
   }
-
-  const handleClickAction = (
-    e: React.MouseEvent<HTMLElement>,
-    setAction: any
-  ) => {
-    e.preventDefault();
-    setAction(true);
-  };
 
   if (submitted) {
     return <Redirect to={"/thankyou"} />;
@@ -102,15 +106,15 @@ export default function Signup() {
           <meta name="description" content="Signup user" />
         </Helmet>
 
-        <main className="">
+        <main className="p-10">
           <TwoColumnLayout img="/images/Join-Loop.jpg">
             <div id="container" className="">
-              <h1 className="font-serif font-bold text-4xl text-secondary">
+              <h1 className="font-semibold text-3xl text-secondary mb-3">
                 {t("join")}
                 <span> {chain?.name}</span>
               </h1>
 
-              <form>
+              <form onSubmit={onSubmit}>
                 <TextForm label={t("name")} name="name" type="text" required />
                 <TextForm
                   label={t("email")}
@@ -121,9 +125,13 @@ export default function Signup() {
 
                 <PhoneFormField />
 
-                <GeocoderSelector onResult={setGeocoderResult} />
-
-                <div className="">
+                <div className="max-w-xs mb-6">
+                  <div className="form-control w-full mb-4">
+                    <label className="label">
+                      <span className="label-text">{t("address")}</span>
+                    </label>
+                    <GeocoderSelector onResult={setGeocoderResult} />
+                  </div>
                   <SizesDropdown
                     filteredGenders={chain?.genders || []}
                     selectedSizes={jsValues.sizes}
@@ -134,30 +142,24 @@ export default function Signup() {
                   <PopoverOnHover
                     message={t("weWouldLikeToKnowThisEquallyRepresented")}
                   />
+                  <FormActions />
                 </div>
 
-                <FormActions />
-
-                <div className="">
+                <div className="mb-4">
                   <button
-                    type="submit"
-                    className="btn btn-primary btn-outline"
-                    onClick={() =>
-                      history.push({
-                        pathname: "/loops/find",
-                        state: { detail: "something" },
-                      })
-                    }
+                    type="button"
+                    className="btn btn-secondary btn-outline mr-3"
+                    onClick={() => history.goBack()}
                   >
                     {t("back")}
                   </button>
-                  <button type="submit" className="btn btn-primary btn-outline">
+                  <button type="submit" className="btn btn-primary">
                     {t("join")}
                     <span className="feather feather-arrow-right ml-4"></span>
                   </button>
                 </div>
               </form>
-              <div className="">
+              <div className="text-sm">
                 <p className="text">{t("troublesWithTheSignupContactUs")}</p>
                 <a
                   className="link"

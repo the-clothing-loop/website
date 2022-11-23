@@ -32,7 +32,12 @@ export default function FormActions() {
               }}
             ></Trans>
           </span>
-          <input type="checkbox" className="checkbox" name="privacyPolicy" />
+          <input
+            type="checkbox"
+            required
+            className="checkbox"
+            name="privacyPolicy"
+          />
         </label>
       </div>
     </div>

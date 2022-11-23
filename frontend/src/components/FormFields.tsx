@@ -19,31 +19,38 @@ interface PhoneFormFieldProps {
   classes?: {
     root?: string;
   };
+  required?: boolean;
 }
 export function PhoneFormField(props: PhoneFormFieldProps) {
   const { t } = useTranslation();
 
-  const [invalid, setInvalid] = useState(true);
+  const [valid, setValid] = useState(true);
 
   function onBlur(e: FocusEvent<HTMLInputElement>) {
-    console.log(e.target.value, phoneRegExp.test(e.target.value));
+    let v = phoneRegExp.test(e.target.value);
+    console.log(e.target.value, v);
 
-    setInvalid(!phoneRegExp.test(e.target.value));
+    setValid(v);
   }
 
   return (
-    <div className={`form-control ${props.classes?.root || "w-full max-w-xs"}`}>
+    <div className={`form-control w-full max-w-xs ${props.classes?.root}`}>
       <label className="label">
         <span className="label-text">{t("phoneNumber")}</span>
       </label>
       <input
         type="phone"
         name="phone"
-        aria-invalid={!!invalid}
+        aria-invalid={!valid}
         onBlur={onBlur}
         className={`input input-bordered w-full ${
-          invalid ? "input-error" : "input-secondary"
+          valid
+            ? "input-secondary"
+            : props.required
+            ? "input-error"
+            : "input-warning"
         }`}
+        required={props.required}
       />
     </div>
   );
@@ -68,9 +75,7 @@ export function TextForm({
   ...props
 }: TextFormProps & InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <div
-      className={`form-control relative ${classes?.root || "w-full max-w-xs"}`}
-    >
+    <div className={`form-control relative w-full max-w-xs ${classes?.root}`}>
       <label className="label">
         <span className="label-text">{label}</span>
       </label>
