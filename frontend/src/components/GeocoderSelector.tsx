@@ -41,8 +41,8 @@ export default function GeocoderSelector(props: Props) {
   );
 
   return (
-    <div className="geocoder-wrapper tw-w-full">
-      <div className="geocoder-wrapper-2 tw-h-14 tw-px-4">
+    <div className="geocoder-wrapper w-full">
+      <div className="geocoder-wrapper-2 h-14 px-4">
         <MapGL
           className="geocoding-map"
           mapStyle="mapbox://styles/mapbox/streets-v11"

@@ -28,8 +28,6 @@ const colors = {
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  prefix: "tw-",
-  important: "#root",
   theme: {
     screens: {
       xs: "481px",

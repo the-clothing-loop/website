@@ -134,14 +134,11 @@ function ChainNotFound({
       <p>{t("ThereIsNoActiveLoopInYourRegion")}</p>
 
       <div>
-        <button
-          className="tw-btn tw-btn-primary tw-btn-outline"
-          onClick={backAction}
-        >
+        <button className="btn btn-primary btn-outline" onClick={backAction}>
           {t("joinWaitingList")}
         </button>
         <button
-          className="tw-btn tw-btn-primary"
+          className="btn btn-primary"
           onClick={() => history.push("/loops/new/users/signup")}
           type="submit"
         >

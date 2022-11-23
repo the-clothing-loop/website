@@ -33,47 +33,47 @@ export default function Counters() {
   });
 
   return (
-    <div ref={containerRef} className="tw-grid tw-grid-cols-2">
-      <div className="tw-stat">
-        <div className="tw-mb-3 tw-stat-value tw-text-6xl tw-font-serif tw-text-stroke-base-100">
+    <div ref={containerRef} className="grid grid-cols-2">
+      <div className="stat">
+        <div className="mb-3 stat-value text-6xl font-serif text-stroke-base-100">
           {isVisible ? (
             <SingleCounter end={info?.total_chains || 0} step={2} />
           ) : (
             "0"
           )}
         </div>
-        <div className="tw-stat-title">{t("Loops")}</div>
+        <div className="stat-title">{t("Loops")}</div>
       </div>
 
-      <div className="tw-stat">
-        <div className="tw-mb-3 tw-stat-value tw-text-6xl tw-font-serif tw-text-stroke-base-100">
+      <div className="stat">
+        <div className="mb-3 stat-value text-6xl font-serif text-stroke-base-100">
           {isVisible ? (
             <SingleCounter end={info?.total_users || 0} step={20} />
           ) : (
             "0"
           )}
         </div>
-        <div className="tw-stat-title">{t("participants")}</div>
+        <div className="stat-title">{t("participants")}</div>
       </div>
 
-      <div className="tw-stat">
-        <div className="tw-mb-3 tw-stat-value tw-text-6xl tw-font-serif tw-text-stroke-base-100">
+      <div className="stat">
+        <div className="mb-3 stat-value text-6xl font-serif text-stroke-base-100">
           6
         </div>
-        <div className="tw-stat-title">{t("countries")}</div>
+        <div className="stat-title">{t("countries")}</div>
       </div>
 
-      <div className="tw-stat">
-        <div className="tw-mb-3 tw-stat-value tw-text-6xl tw-font-serif tw-text-stroke-base-100">
+      <div className="stat">
+        <div className="mb-3 stat-value text-6xl font-serif text-stroke-base-100">
           <Link
             to="/loops/find"
             target="_blank"
-            className="tw-btn tw-btn-primary tw-btn-circle"
+            className="btn btn-primary btn-circle"
           >
             <span className="feather feather-arrow-right" />
           </Link>
         </div>
-        <div className="tw-stat-title tw-opacity-100">{t("ourGoals")}</div>
+        <div className="stat-title opacity-100">{t("ourGoals")}</div>
       </div>
     </div>
   );

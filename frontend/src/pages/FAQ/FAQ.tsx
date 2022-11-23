@@ -30,11 +30,11 @@ const FAQ = () => {
         <meta name="description" content="frequently asked questions" />
       </Helmet>
 
-      <main className="tw-container tw-mx-auto tw-px-1 md:tw-px-20 tw-pt-10">
-        <div className="tw-flex tw-flex-col md:tw-flex-row">
-          <div className="tw-w-full md:tw-w-1/2">
+      <main className="container mx-auto px-1 md:px-20 pt-10">
+        <div className="flex flex-col md:flex-row">
+          <div className="w-full md:w-1/2">
             <div className={styles.faqSection}>
-              <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-4xl">
+              <h1 className="font-serif font-bold text-secondary text-4xl">
                 {t("faqForParticipants")}
               </h1>
               {arrParticipants.map((el, index) => (
@@ -46,9 +46,9 @@ const FAQ = () => {
               ))}
             </div>
           </div>
-          <div className="tw-w-full md:tw-w-1/2">
+          <div className="w-full md:w-1/2">
             <div className={styles.faqSection}>
-              <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-4xl">
+              <h1 className="font-serif font-bold text-secondary text-4xl">
                 {t("faqForHosts")}
               </h1>
               {arrHosts.map((el, index) => (

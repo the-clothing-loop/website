@@ -25,82 +25,70 @@ export default function Footer() {
   }
 
   return (
-    <footer className="tw-bg-white tw-pt-8 lg:tw-pt-32 tw-w-full">
-      <div className="tw-relative">
+    <footer className="bg-white pt-8 lg:pt-32 w-full">
+      <div className="relative">
         <div
-          className="tw-absolute tw-hidden lg:tw-block tw-top-0 tw-right-0 tw-bottom-0 tw-bg-teal-light tw-w-1/2"
+          className="absolute hidden lg:block top-0 right-0 bottom-0 bg-teal-light w-1/2"
           aria-hidden
         ></div>
-        <div className="lg:tw-container lg:tw-px-20 tw-mx-auto tw-flex tw-flex-col lg:tw-flex-row-reverse tw-relative tw-z-10">
+        <div className="lg:container lg:px-20 mx-auto flex flex-col lg:flex-row-reverse relative z-10">
           <Newsletter />
-          <div className="tw-container tw-mx-auto lg:tw-mx-0 lg:tw-w-1/2">
-            <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-3 lg:tw-grid-cols-2 xl:tw-grid-cols-3 tw-items-center md:tw-items-start sm:tw-justify-end tw-text-center md:tw-text-left lg:tw-mb-4 lg:tw-mt-4">
-              <div className="tw-flex tw-flex-col tw-items-center md:tw-items-start tw-p-4 tw-pt-0">
-                <span className="tw-text-secondary tw-font-bold tw-text-2xl tw-mb-3">
+          <div className="container mx-auto lg:mx-0 lg:w-1/2">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 items-center md:items-start sm:justify-end text-center md:text-left lg:mb-4 lg:mt-4">
+              <div className="flex flex-col items-center md:items-start p-4 pt-0">
+                <span className="text-secondary font-bold text-2xl mb-3">
                   {t("learnMore")}
                 </span>
-                <Link className="tw-link tw-link-hover tw-mb-1" to="/faq">
+                <Link className="link link-hover mb-1" to="/faq">
                   {t("faqs")}
                 </Link>
-                <Link
-                  className="tw-link tw-link-hover tw-mb-1"
-                  to="/contact-us"
-                >
+                <Link className="link link-hover mb-1" to="/contact-us">
                   {t("help")}
                 </Link>
-                <Link className="tw-link tw-link-hover tw-mb-1" to="/about">
+                <Link className="link link-hover mb-1" to="/about">
                   {t("about")}
                 </Link>
               </div>
-              <div className="tw-flex tw-flex-col tw-items-center md:tw-items-start tw-p-4 tw-pt-0">
-                <span className="tw-text-secondary tw-font-bold tw-text-2xl tw-mb-3">
+              <div className="flex flex-col items-center md:items-start p-4 pt-0">
+                <span className="text-secondary font-bold text-2xl mb-3">
                   {t("loops")}
                 </span>
-                <Link
-                  className="tw-link tw-link-hover tw-mb-1"
-                  to="/loops/find"
-                >
+                <Link className="link link-hover mb-1" to="/loops/find">
                   {t("findingALoop")}
                 </Link>
                 <Link
-                  className="tw-link tw-link-hover tw-mb-1"
+                  className="link link-hover mb-1"
                   to="/loops/new/users/signup"
                 >
                   {t("startingALoop")}
                 </Link>
                 {authUser ? (
-                  <Link
-                    className="tw-link tw-link-hover tw-mb-1"
-                    to="/users/logout"
-                  >
+                  <Link className="link link-hover mb-1" to="/users/logout">
                     {t("logout")}
                   </Link>
                 ) : (
-                  <Link
-                    className="tw-link tw-link-hover tw-mb-1"
-                    to="/users/login"
-                  >
+                  <Link className="link link-hover mb-1" to="/users/login">
                     {t("login")}
                   </Link>
                 )}
               </div>
-              <div className="tw-p-4 tw-pt-0">
-                <span className="tw-block tw-text-secondary tw-font-bold tw-text-2xl tw-mb-3">
+              <div className="p-4 pt-0">
+                <span className="block text-secondary font-bold text-2xl mb-3">
                   {t("findUs")}
                 </span>
-                <ul className="tw-inline-flex tw-flex-col">
-                  <li className="tw-mb-3 tw-inline-flex tw-items-center">
+                <ul className="inline-flex flex-col">
+                  <li className="mb-3 inline-flex items-center">
                     <a
                       href="https://www.instagram.com/theclothingloop/"
                       target="_blank"
-                      className="tw-btn tw-btn-circle tw-btn-outline feather feather-instagram tw-text-lg tw-mr-3 hover:tw-bg-instagram"
+                      className="btn btn-circle btn-outline feather feather-instagram text-lg mr-3 hover:bg-instagram"
                       aria-label="link to our instagram account"
                     ></a>
                     <a
                       href="#"
                       tabIndex={1}
-                      className={`tw-tooltip tw-tooltip-bottom tw-text-sm ${
-                        copying === "@theclothingloop" ? "tw-tooltip-open" : ""
+                      className={`tooltip tooltip-bottom text-sm ${
+                        copying === "@theclothingloop" ? "tooltip-open" : ""
                       }`}
                       onClick={copyToClipboard}
                       aria-hidden
@@ -113,19 +101,19 @@ export default function Footer() {
                       @theclothingloop
                     </a>
                   </li>
-                  <li className="tw-inline-flex tw-items-center">
+                  <li className="inline-flex items-center">
                     <a
                       href="mailto:hello@clothingloop.com"
                       aria-label="Our email address"
-                      className="tw-btn tw-btn-circle tw-btn-outline tw-mr-3 tw-flex tw-justify-center hover:tw-bg-[#0375b9] feather feather-at-sign tw-text-lg"
+                      className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0375b9] feather feather-at-sign text-lg"
                     ></a>
                     <a
                       href="#"
                       tabIndex={1}
                       aria-hidden
-                      className={`tw-tooltip tw-tooltip-bottom tw-text-sm ${
+                      className={`tooltip tooltip-bottom text-sm ${
                         copying === "hello@clothingloop.com"
-                          ? "tw-tooltip-open"
+                          ? "tooltip-open"
                           : ""
                       }`}
                       onClick={copyToClipboard}
@@ -145,23 +133,23 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="tw-bg-teal tw-text-white">
-        <div className="tw-container tw-mx-auto tw-px-1 md:tw-px-20 tw-py-4 tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-items-center">
-          <div className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-flex-wrap tw-mb-2 md:tw-mb-0">
+      <div className="bg-teal text-white">
+        <div className="container mx-auto px-1 md:px-20 py-4 flex flex-col md:flex-row justify-between items-center">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap mb-2 md:mb-0">
             <Link
-              className="tw-btn tw-btn-ghost tw-text-white tw-text-base tw-font-normal"
+              className="btn btn-ghost text-white text-base font-normal"
               to="/terms-of-use"
             >
               {t("termsOfService")}
             </Link>
             <Link
-              className="tw-btn tw-btn-ghost tw-text-white tw-text-base tw-font-normal"
+              className="btn btn-ghost text-white text-base font-normal"
               to="/privacy-policy"
             >
               {t("privacy")}
             </Link>
             <a
-              className="tw-btn tw-btn-ghost tw-text-white tw-text-base tw-font-normal"
+              className="btn btn-ghost text-white text-base font-normal"
               href="https://github.com/CollActionteam/clothing-loop"
               target="_blank"
             >
@@ -169,8 +157,8 @@ export default function Footer() {
             </a>
           </div>
 
-          <p className="tw-text-center sm:tw-text-right" aria-label="copyright">
-            <span className="tw-font-bold">The Clothing Loop</span>
+          <p className="text-center sm:text-right" aria-label="copyright">
+            <span className="font-bold">The Clothing Loop</span>
             &nbsp;&copy;&nbsp;2022
           </p>
         </div>

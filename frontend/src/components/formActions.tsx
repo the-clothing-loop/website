@@ -5,38 +5,34 @@ export default function FormActions() {
 
   return (
     <div>
-      <div className="tw-form-control">
-        <label className="tw-label cursor-pointer">
-          <span className="tw-label-text">
+      <div className="form-control">
+        <label className="label cursor-pointer">
+          <span className="label-text">
             {t("subscribeToTheClothingLoopNewsletter")}
           </span>
-          <input type="checkbox" className="tw-checkbox" name="newsletter" />
+          <input type="checkbox" className="checkbox" name="newsletter" />
         </label>
       </div>
-      <div className="tw-form-control">
-        <label className="tw-label cursor-pointer">
-          <span className="tw-label-text">
+      <div className="form-control">
+        <label className="label cursor-pointer">
+          <span className="label-text">
             <Trans
               i18nKey="iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star"
               components={{
                 "1": (
-                  <a
-                    href="/terms-of-use"
-                    target="_blank"
-                    className="tw-link"
-                  ></a>
+                  <a href="/terms-of-use" target="_blank" className="link"></a>
                 ),
                 "2": (
                   <a
                     href="/privacy-policy"
                     target="_blank"
-                    className="tw-link"
+                    className="link"
                   ></a>
                 ),
               }}
             ></Trans>
           </span>
-          <input type="checkbox" className="tw-checkbox" name="privacyPolicy" />
+          <input type="checkbox" className="checkbox" name="privacyPolicy" />
         </label>
       </div>
     </div>

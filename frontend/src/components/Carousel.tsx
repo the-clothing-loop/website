@@ -6,15 +6,15 @@ const Carousel = () => {
   const featuredImages = [CarouselImgOne, CarouselImgTwo, CarouselImgOne];
 
   return (
-    <div className="tw-relative tw-w-full tw-overflow-hidden tw-h-[40vh]">
-      <figure className="tw-relative tw-flex  tw-h-full tw-animate-slide">
+    <div className="relative w-full overflow-hidden h-[40vh]">
+      <figure className="relative flex  h-full animate-slide">
         {featuredImages.map((img, i) => {
           return (
             <img
               src={img}
               key={i}
               alt="bags full of clothes"
-              className="tw-inline tw-h-full"
+              className="inline h-full"
             />
           );
         })}

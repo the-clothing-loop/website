@@ -21,58 +21,48 @@ function Navbar() {
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
     // Note: Not supported by IE 11. See https://material-ui.com/components/app-bar/#fixed-placement
 
-    <div className="tw-container tw-mx-auto tw-z-50 tw-bg-white tw-flex tw-flex-row tw-justify-between lg:tw-justify-start tw-items-center tw-py-0 tw-px-1 md:tw-px-20 tw-shadow-none">
+    <div className="container mx-auto z-50 bg-white flex flex-row justify-between lg:justify-start items-center py-0 px-1 md:px-20 shadow-none">
       <Link
         aria-label="Clothing Loop logo"
         to="/"
-        className="tw-bg-center tw-w-48 tw-h-36 tw-bg-no-repeat tw-relative tw-z-[60]"
+        className="bg-center w-48 h-36 bg-no-repeat relative z-[60]"
         style={{
           backgroundImage: "url('/images/logos/the_clothing_loop_logo.png')",
           backgroundSize: "auto 180px",
         }}
       ></Link>
-      <input
-        type="checkbox"
-        className="tw-hidden tw-peer"
-        id="header-hamburger"
-      />
+      <input type="checkbox" className="hidden peer" id="header-hamburger" />
       <label
         htmlFor="header-hamburger"
-        className="tw-btn-lg tw-btn-circle tw-btn-ghost hover:tw-bg-base-200 peer-checked:tw-text-secondary peer-checked:tw-animate-[spin-half_300ms_linear] tw-flex tw-justify-center tw-items-center lg:tw-hidden tw-relative tw-z-[60] checked:tw-ring-2 checked:tw-ring-offset-2 tw-ring-teal"
+        className="btn-lg btn-circle btn-ghost hover:bg-base-200 peer-checked:text-secondary peer-checked:animate-[spin-half_300ms_linear] flex justify-center items-center lg:hidden relative z-[60] checked:ring-2 checked:ring-offset-2 ring-teal"
       >
-        <span className="feather feather-menu tw-text-2xl"></span>
+        <span className="feather feather-menu text-2xl"></span>
       </label>
-      <div className="tw-hidden peer-checked:tw-block tw-fixed tw-inset-0 lg:!tw-hidden tw-z-50 tw-bg-white">
+      <div className="hidden peer-checked:block fixed inset-0 lg:!hidden z-50 bg-white">
         <nav
           aria-label="mobile site navigation"
-          className="tw-container tw-mx-auto tw-px-20 tw-flex tw-flex-col tw-items-center tw-pt-40"
+          className="container mx-auto px-20 flex flex-col items-center pt-40"
         >
           <Link
             to="/loops/new/users/signup"
-            className="tw-mb-3 tw-btn tw-btn-primary tw-btn-outline"
+            className="mb-3 btn btn-primary btn-outline"
           >
-            <span className="feather feather-arrow-left tw-mr-4"></span>
+            <span className="feather feather-arrow-left mr-4"></span>
             {t("startNewLoop")}
           </Link>
-          <Link
-            to="/loops/find"
-            className="tw-mb-3 tw-btn tw-btn-primary tw-btn-outline"
-          >
+          <Link to="/loops/find" className="mb-3 btn btn-primary btn-outline">
             {t("findLoops")}
-            <span className="feather feather-arrow-right tw-ml-4"></span>
+            <span className="feather feather-arrow-right ml-4"></span>
           </Link>
 
-          <Link
-            to="/donate"
-            className="tw-mb-3 tw-btn tw-btn-ghost tw-text-base"
-          >
+          <Link to="/donate" className="mb-3 btn btn-ghost text-base">
             {t("donate")}
           </Link>
 
           {authUser && (
             <Link
               to="/admin/dashboard"
-              className="tw-mb-3 tw-btn tw-btn-ghost tw-text-base"
+              className="mb-3 btn btn-ghost text-base"
             >
               {t("account")}
             </Link>
@@ -80,29 +70,26 @@ function Navbar() {
 
           <Link
             to={authUser ? "/users/logout" : "/users/login"}
-            className="tw-mb-3 tw-btn tw-btn-ghost tw-text-base"
+            className="mb-3 btn btn-ghost text-base"
           >
             {authUser ? t("logout") : t("login")}
           </Link>
 
-          <Link
-            to="/about"
-            className="tw-mb-3 tw-btn tw-btn-ghost tw-text-base"
-          >
+          <Link to="/about" className="mb-3 btn btn-ghost text-base">
             {t("about")}
           </Link>
           <LanguageSwitcher />
         </nav>
       </div>
-      <div className="tw-hidden lg:tw-flex tw-items-center tw-justify-end tw-flex-grow">
+      <div className="hidden lg:flex items-center justify-end flex-grow">
         <nav
           aria-label="site navigation"
-          className="tw-flex tw-items-center tw-min-h-[4rem]"
+          className="flex items-center min-h-[4rem]"
         >
           {["/loops/find", "/"].indexOf(location.pathname) !== -1 && (
             <Link
               to="/loops/new/users/signup"
-              className="tw-btn tw-btn-primary tw-btn-outline"
+              className="btn btn-primary btn-outline"
             >
               {t("startNewLoop")}
             </Link>
@@ -110,26 +97,20 @@ function Navbar() {
 
           {authUser === null &&
           ["/loops/find", "/"].indexOf(location.pathname) === -1 ? (
-            <Link
-              to="/loops/find"
-              className="tw-ml-4 tw-btn tw-btn-primary tw-btn-outline"
-            >
+            <Link to="/loops/find" className="ml-4 btn btn-primary btn-outline">
               {t("findLoops")}
-              <span className="feather feather-arrow-right tw-ml-4"></span>
+              <span className="feather feather-arrow-right ml-4"></span>
             </Link>
           ) : null}
 
-          <Link
-            to="/donate"
-            className="tw-ml-4 tw-btn tw-btn-ghost tw-text-base"
-          >
+          <Link to="/donate" className="ml-4 btn btn-ghost text-base">
             {t("donate")}
           </Link>
 
           {authUser && (
             <Link
               to="/admin/dashboard"
-              className="tw-ml-4 tw-btn tw-btn-ghost tw-text-base"
+              className="ml-4 btn btn-ghost text-base"
             >
               {t("account")}
             </Link>
@@ -137,21 +118,18 @@ function Navbar() {
 
           <Link
             to={authUser ? "/users/logout" : "/users/login"}
-            className="tw-ml-4 tw-btn tw-btn-ghost tw-text-base"
+            className="ml-4 btn btn-ghost text-base"
           >
             {authUser ? t("logout") : t("login")}
           </Link>
 
           {authUser === null && (
-            <Link
-              to="/about"
-              className="tw-ml-4 tw-btn tw-btn-ghost tw-text-base"
-            >
+            <Link to="/about" className="ml-4 btn btn-ghost text-base">
               {t("about")}
             </Link>
           )}
 
-          <LanguageSwitcher className="tw-ml-4" />
+          <LanguageSwitcher className="ml-4" />
         </nav>
       </div>
     </div>

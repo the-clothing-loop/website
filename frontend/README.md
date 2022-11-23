@@ -52,5 +52,3 @@ This is to be phased out.
 Motive behind moving to tailwind is to decrease the bundle size of the website [Tailwind CSS vs. CSS: An in-depth comparison (speed, file size, etc.)](https://www.programonaut.com/tailwind-css-vs-css-an-in-depth-comparison-speed-file-size-etc/)
 
 Component specific styling uses [TailwindCSS](https://tailwindcss.com/).
-
-The `tw-` prefix is used to differentiate between tailwind classes and legacy css or mui classes [docs](https://tailwindcss.com/docs/configuration#prefix).

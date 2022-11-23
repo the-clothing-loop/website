@@ -10,19 +10,19 @@ export default function AdminDashboard() {
   const { authUser } = useContext(AuthContext);
 
   return (
-    <main className="tw-pt-10">
+    <main className="pt-10">
       {authUser && (
         <TwoColumnLayout img="/images/Denise.png">
-          <div className="tw-pt-32 tw-pl-10 tw-pr-20 tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-center">
-            <h3 className="tw-font-serif tw-font-bold tw-text-5xl tw-text-secondary tw-mb-8">{`Hello, ${authUser?.name}`}</h3>
-            <p className="tw-mb-6">{t("thankYouForBeingHere")}</p>
+          <div className="pt-32 pl-10 pr-20 flex flex-col items-center justify-center text-center">
+            <h3 className="font-serif font-bold text-5xl text-secondary mb-8">{`Hello, ${authUser?.name}`}</h3>
+            <p className="mb-6">{t("thankYouForBeingHere")}</p>
 
-            <Link className="tw-btn tw-btn-primary tw-mb-4" to="/loops">
+            <Link className="btn btn-primary mb-4" to="/loops">
               {t("viewLoops")}
             </Link>
 
             <Link
-              className="tw-btn tw-btn-primary tw-btn-link tw-text-base tw-block"
+              className="btn btn-primary btn-link text-base block"
               target="_blank"
               to={{
                 pathname:

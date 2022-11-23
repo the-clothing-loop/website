@@ -17,21 +17,21 @@ function Content({ heading, subheading, confirmationEmail }: IProps) {
 
   return (
     <main>
-      <h1 className="tw-font-serif tw-font-bold tw-text-2xl tw-text-secondary">
+      <h1 className="font-serif font-bold text-2xl text-secondary">
         {heading}
       </h1>
-      <p className="tw-text-lg">{subheading}</p>
+      <p className="text-lg">{subheading}</p>
       <p>{confirmationEmail}</p>
       <p>{t("happySwapping")}</p>
-      <div className="tw-flex tw-flex-row tw-justify-start">
+      <div className="flex flex-row justify-start">
         <button
-          className="tw-btn tw-btn-primary tw-btn-outline"
+          className="btn btn-primary btn-outline"
           onClick={() => history.push("/")}
         >
           {t("home")}
         </button>
         <button
-          className="tw-btn tw-btn-primary"
+          className="btn btn-primary"
           onClick={() => history.push("/about")}
         >
           {t("About")}

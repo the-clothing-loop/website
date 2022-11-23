@@ -92,66 +92,62 @@ export default function UserEdit() {
         <title>The Clothing Loop | Edit user</title>
         <meta name="description" content="Edit user" />
       </Helmet>
-      <div className="tw-w-full tw-container sm:tw-max-w-screen-md tw-mx-auto tw-p-10">
-        <h1 className="tw-font-serif tw-font-bold tw-text-6xl tw-text-secondary tw-mb-4">
+      <div className="w-full container sm:max-w-screen-md mx-auto p-10">
+        <h1 className="font-serif font-bold text-6xl text-secondary mb-4">
           {user.is_root_admin || userIsChainAdmin
             ? t("editAdminContacts")
             : t("editParticipantContacts")}
         </h1>
-        <form onSubmit={onSubmit} className="tw-relative">
-          <div className="tw-max-w-xs">
+        <form onSubmit={onSubmit} className="relative">
+          <div className="max-w-xs">
             <TextForm
               type="text"
               label={t("name")}
               name="name"
               required
-              className="tw-w-full tw-mb-2"
+              className="w-full mb-2"
               min={2}
               value={values.name}
               onChange={(e: any) => setValue("name", e.target.value)}
             />
 
-            <PhoneFormField classes={{ root: "tw-w-full tw-mb-4" }} />
+            <PhoneFormField classes={{ root: "w-full mb-4" }} />
 
             <SizesDropdown
               filteredGenders={Object.keys(categories)}
               selectedSizes={values.sizes || []}
-              className="tw-w-full tw-mb-4"
+              className="w-full mb-4"
               handleChange={(v) => setValue("sizes", v)}
             />
 
-            <div className="tw-absolute tw-top-0 tw-right-0 tw-w-[calc(100%_-_352px)] tw-aspect-[4/3]">
+            <div className="absolute top-0 right-0 w-[calc(100%_-_352px)] aspect-[4/3]">
               <GeocoderSelector
                 address={values.address}
                 onResult={(e: any) => setValue("address", e.result.place_name)}
               />
             </div>
 
-            <div className="tw-form-control tw-mb-4">
-              <label className="tw-label tw-cursor-pointer">
-                <span className="tw-label-text">
+            <div className="form-control mb-4">
+              <label className="label cursor-pointer">
+                <span className="label-text">
                   {t("newsletterSubscription")}
                 </span>
-                <input
-                  type="checkbox"
-                  className="tw-checkbox"
-                  name="newsletter"
-                />
+                <input type="checkbox" className="checkbox" name="newsletter" />
               </label>
             </div>
 
-            <div className="tw-flex">
+            <div className="flex">
               <button
                 type="button"
                 onClick={() => history.goBack()}
-                className="tw-btn tw-btn-primary tw-btn-outline"
+                className="btn btn-primary btn-outline"
               >
                 {t("back")}
               </button>
 
-              <button type="submit" className="tw-btn tw-btn-secondary tw-ml-3">
+              <button type="submit" className="btn btn-secondary ml-3">
                 {t("submit")}
-                <span className="feather feather-arrow-right tw-ml-4"></span>
+                <span className="feather feather-arrow-right ml-4"></span>
               </button>
             </div>
           </div>

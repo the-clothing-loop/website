@@ -44,7 +44,7 @@ export default function App() {
     <Router>
       <AuthProvider>
         <ChainsProvider>
-          <div className="tw-min-h-screen">
+          <div className="min-h-screen">
             <ToastProvider>
               <ScrollToTop>
                 <Navbar />

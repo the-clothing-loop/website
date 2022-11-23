@@ -32,14 +32,14 @@ export default function SizesDropdown(props: {
   function Item(size: string, disabled: boolean) {
     let checked = props.selectedSizes.includes(size);
     return (
-      <li className={disabled ? "tw-disabled" : ""} key={size}>
+      <li className={disabled ? "disabled" : ""} key={size}>
         <label>
           <input
             name="sizes"
             type="checkbox"
             checked={checked}
             disabled={disabled}
-            className="tw-checkbox"
+            className="checkbox"
             onClick={() => dropdown.change(size)}
           />
           {t(SizeI18nKeys[size])}
@@ -50,25 +50,25 @@ export default function SizesDropdown(props: {
 
   return (
     <div
-      className={`tw-w-full tw-dropdown ${
-        dropdown.open ? "tw-dropdown-open" : ""
-      } ${props.className}`}
+      className={`w-full dropdown ${dropdown.open ? "dropdown-open" : ""} ${
+        props.className
+      }`}
       onBlur={() => dropdown.setOpen(false)}
     >
       <label
         tabIndex={0}
-        className="tw-btn tw-btn-outline tw-no-animation tw-btn-secondary tw-w-full tw-flex tw-justify-between tw-flex-nowrap"
+        className="btn btn-outline no-animation btn-secondary w-full flex justify-between flex-nowrap"
         onClick={() => dropdown.toggle()}
       >
-        <span className="tw-truncate">{btnLabel}</span>
+        <span className="truncate">{btnLabel}</span>
         <span
-          className={`tw-pl-2 feather ${
+          className={`pl-2 feather ${
             dropdown.open ? "feather-arrow-up" : "feather-arrow-down"
           }`}
         ></span>
       </label>
       <ul
-        className="tw-dropdown-content tw-menu tw-bg-white tw-shadow tw-w-64 sm:tw-w-full"
+        className="dropdown-content menu bg-white shadow w-64 sm:w-full"
         tabIndex={0}
       >
         {Object.entries(categories).map(([gender, sizes]) => {
@@ -79,8 +79,8 @@ export default function SizesDropdown(props: {
             <>
               <li
                 key={gender}
-                className={`tw-px-2 tw-pt-2 tw-capitalize ${
-                  disabled ? "tw-text-base-300" : ""
+                className={`px-2 pt-2 capitalize ${
+                  disabled ? "text-base-300" : ""
                 }`}
               >
                 {GenderI18nKeys[gender]}

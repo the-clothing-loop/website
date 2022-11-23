@@ -33,8 +33,8 @@ export default function ChainParticipantsTable({
 
   return (
     <>
-      <div className="tw-overflow-x-auto tw-mt-10">
-        <table className="tw-table tw-w-full">
+      <div className="overflow-x-auto mt-10">
+        <table className="table w-full">
           <thead>
             <tr>
               {columns.map(({ headerName }) => {
@@ -67,7 +67,7 @@ export default function ChainParticipantsTable({
                       text = "" + text;
                     }
                     return (
-                      <td className="tw-border-none" key={u.uid + propertyName}>
+                      <td className="border-none" key={u.uid + propertyName}>
                         {text}
                       </td>
                     );
@@ -76,7 +76,7 @@ export default function ChainParticipantsTable({
                   {authUser?.is_root_admin && (
                     <>
                       {edit && (
-                        <td className="tw-border-none" key={u.uid + "editlink"}>
+                        <td className="border-none" key={u.uid + "editlink"}>
                           <Link
                             to={{
                               pathname: `/users/${u.uid}/edit`,
@@ -90,7 +90,7 @@ export default function ChainParticipantsTable({
                         </td>
                       )}
                       {remove && onRemoveUser && (
-                        <td className="tw-border-none" key={u.uid + "dellink"}>
+                        <td className="border-none" key={u.uid + "dellink"}>
                           <button
                             className="feather feather-x"
                             aria-label=""

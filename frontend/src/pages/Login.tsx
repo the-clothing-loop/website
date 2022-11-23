@@ -66,43 +66,40 @@ const Login = () => {
         <meta name="description" content="Login" />
       </Helmet>
 
-      <main className="tw-pt-10">
+      <main className="pt-10">
         <TwoColumnLayout img={LoginImg}>
-          <div className="tw-relative tw-p-10">
-            <div className="tw-p-10 tw-bg-teal-light">
+          <div className="relative p-10">
+            <div className="p-10 bg-teal-light">
               <img
-                className="tw-absolute tw-bottom-[-12px] tw-left-[-12px] -tw-z-10"
+                className="absolute bottom-[-12px] left-[-12px] -z-10"
                 src={CirclesFrame}
                 alt=""
               />
-              <h1 className="tw-font-serif tw-font-bold tw-text-5xl tw-text-secondary tw-mb-8">
+              <h1 className="font-serif font-bold text-5xl text-secondary mb-8">
                 {t("login")}
               </h1>
-              <p className="tw-leading-7 tw-mb-6">
+              <p className="leading-7 mb-6">
                 <Trans
                   i18nKey="areYouAlreadyHosting<a>JoinAnExistingLoop"
                   components={{
-                    a: <Link className="tw-link" to="../../loops/find"></Link>,
+                    a: <Link className="link" to="../../loops/find"></Link>,
                   }}
                 ></Trans>
               </p>
 
-              <form onSubmit={onSubmit} className="tw-flex tw-flex-col">
+              <form onSubmit={onSubmit} className="flex flex-col">
                 <input
-                  className={`tw-input tw-w-full invalid:tw-input-warning ${
-                    error ? "tw-input-error" : "tw-input-secondary"
+                  className={`input w-full invalid:input-warning ${
+                    error ? "input-error" : "input-secondary"
                   }`}
                   placeholder={t("email")}
                   type="email"
                   name="email"
                   required
                 />
-                <button
-                  type="submit"
-                  className="tw-btn tw-btn-primary tw-w-full tw-mt-6"
-                >
+                <button type="submit" className="btn btn-primary w-full mt-6">
                   {t("submit")}
-                  <span className="feather feather-arrow-right tw-ml-4"></span>
+                  <span className="feather feather-arrow-right ml-4"></span>
                 </button>
               </form>
             </div>

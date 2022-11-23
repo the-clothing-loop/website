@@ -55,10 +55,10 @@ const DataExport = (props: { chains: Chain[] }) => {
       data={chains ? chains : ""}
       headers={chainsHeaders}
       filename={"Loops-list.csv"}
-      className="tw-btn tw-btn-primary tw-btn-outline"
+      className="btn btn-primary btn-outline"
     >
       {t("exportData")}
-      <span className="feather feather-download tw-ml-3" />
+      <span className="feather feather-download ml-3" />
     </CSVLink>
   );
 };
@@ -114,10 +114,10 @@ const UserDataExport = () => {
       data={users ? users : ""}
       headers={usersHeaders}
       filename={`${chain?.name}-participants.csv`}
-      className="tw-btn tw-btn-primary tw-btn-outline"
+      className="btn btn-primary btn-outline"
     >
       {t("exportData")}
-      <span className="feather feather-download tw-ml-3" />
+      <span className="feather feather-download ml-3" />
     </CSVLink>
   );
 };

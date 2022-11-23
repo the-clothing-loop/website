@@ -105,7 +105,7 @@ export default function Signup() {
         <main className="">
           <TwoColumnLayout img="/images/Join-Loop.jpg">
             <div id="container" className="">
-              <h1 className="tw-font-serif tw-font-bold tw-text-4xl tw-text-secondary">
+              <h1 className="font-serif font-bold text-4xl text-secondary">
                 {t("join")}
                 <span> {chain?.name}</span>
               </h1>
@@ -141,7 +141,7 @@ export default function Signup() {
                 <div className="">
                   <button
                     type="submit"
-                    className="tw-btn tw-btn-primary tw-btn-outline"
+                    className="btn btn-primary btn-outline"
                     onClick={() =>
                       history.push({
                         pathname: "/loops/find",
@@ -151,12 +151,9 @@ export default function Signup() {
                   >
                     {t("back")}
                   </button>
-                  <button
-                    type="submit"
-                    className="tw-btn tw-btn-primary tw-btn-outline"
-                  >
+                  <button type="submit" className="btn btn-primary btn-outline">
                     {t("join")}
-                    <span className="feather feather-arrow-right tw-ml-4"></span>
+                    <span className="feather feather-arrow-right ml-4"></span>
                   </button>
                 </div>
               </form>

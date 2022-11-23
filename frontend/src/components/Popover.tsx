@@ -21,13 +21,13 @@ export default function PopoverOnHover({ message, className }: IProps) {
   return (
     <div
       tabIndex={0}
-      className={`tw-tooltip tw-tooltip-bottom focus:tw-tooltip-open tw-btn-sm tw-btn-circle tw-btn-ghost tw-flex tw-items-center tw-justify-center tw-z-10 ${
+      className={`tooltip tooltip-bottom focus:tooltip-open btn-sm btn-circle btn-ghost flex items-center justify-center z-10 ${
         className || ""
       }`}
       aria-label={message}
       data-tip={message}
     >
-      <span className="feather feather-help-circle tw-text-lg" />
+      <span className="feather feather-help-circle text-lg" />
     </div>
   );
 }

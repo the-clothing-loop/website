@@ -7,12 +7,12 @@ export default function TermsOfUse() {
         <title>The Clothing Loop | Terms of Use</title>
         <meta name="description" content="Terms of use" />
       </Helmet>
-      <div className="tw-container tw-mx-auto tw-px-1 md:tw-px-20 tw-py-10">
-        <h1 className="tw-font-serif tw-text-secondary tw-font-bold tw-text-5xl tw-mb-4">
+      <div className="container mx-auto px-1 md:px-20 py-10">
+        <h1 className="font-serif text-secondary font-bold text-5xl mb-4">
           {"Terms of Use - The Clothing Loop"}
         </h1>
 
-        <div className="tw-prose">
+        <div className="prose">
           <p>Version dated 2022, January 29th</p>
 
           <h2>Terms of Use</h2>

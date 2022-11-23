@@ -10,9 +10,9 @@ export default function ProgressBar({ activeStep }: Props) {
   const { t } = useTranslation();
 
   return (
-    <ul className="tw-steps tw-text-sm">
+    <ul className="steps text-sm">
       {steps.map((step, i) => (
-        <li className={`tw-step ${activeStep >= i ? "tw-step-secondary" : ""}`}>
+        <li className={`step ${activeStep >= i ? "step-secondary" : ""}`}>
           {t(step)}
         </li>
       ))}

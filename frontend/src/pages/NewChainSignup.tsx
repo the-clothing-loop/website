@@ -85,8 +85,8 @@ export default function Signup() {
         <title>The Clothing Loop | Create user for new Loop</title>
         <meta name="description" content="Create user for new loop" />
       </Helmet>
-      <main className="tw-max-w-screen-sm tw-mx-auto">
-        <h3 className="tw-font-serif tw-font-bold tw-text-6xl tw-text-secondary">
+      <main className="max-w-screen-sm mx-auto">
+        <h3 className="font-serif font-bold text-6xl text-secondary">
           {t("startNewLoop")}
         </h3>
 
@@ -129,22 +129,22 @@ export default function Signup() {
           />
           <FormActions />
 
-          <div className="tw-flex tw-justify-end">
+          <div className="flex justify-end">
             <button
               type="submit"
-              className="tw-btn tw-btn-primary tw-btn-outline"
+              className="btn btn-primary btn-outline"
               onClick={() => history.push("/loops/find")}
             >
               {t("back")}
             </button>
-            <button type="submit" className="tw-btn tw-btn-primary">
+            <button type="submit" className="btn btn-primary">
               {t("next")}
-              <span className="feather feather-arrow-right tw-ml-4"></span>
+              <span className="feather feather-arrow-right ml-4"></span>
             </button>
           </div>
         </form>
         <div className="">
-          <p className="tw-text-sm">{t("troublesWithTheSignupContactUs")}</p>
+          <p className="text-sm">{t("troublesWithTheSignupContactUs")}</p>
           <a
             className="link"
             href="mailto:hello@clothingloop.org?subject=Troubles signing up to The Clothing Loop"

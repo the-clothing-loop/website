@@ -22,41 +22,33 @@ const LanguageSwitcher = (props: { className?: string }) => {
 
   return (
     <div
-      className={`tw-dropdown tw-dropdown-end tw-dropdown-bottom ${
-        dropdown.open ? "tw-dropdown-open" : ""
+      className={`dropdown dropdown-end dropdown-bottom ${
+        dropdown.open ? "dropdown-open" : ""
       } ${props.className || ""}`}
       onBlur={() => dropdown.setOpen(false)}
     >
-      <label
-        tabIndex={0}
-        className="tw-btn tw-btn-outline"
-        onClick={dropdown.toggle}
-      >
+      <label tabIndex={0} className="btn btn-outline" onClick={dropdown.toggle}>
         {btnLabelLanguage.title}
         <img
-          className="tw-w-6 tw-ml-2"
+          className="w-6 ml-2"
           src={btnLabelLanguage.flag}
           alt={btnLabelLanguage.title + " flag"}
         />
       </label>
       <ul
         tabIndex={0}
-        className="tw-dropdown-content tw-menu tw-w-36 tw-shadow tw-bg-base-100"
+        className="dropdown-content menu w-36 shadow bg-base-100"
       >
         {languages.map((el) => {
           let active = btnLabelLanguage.lng == el.lng;
           return (
-            <li key={el.lng} className={active ? "tw-hidden" : ""}>
+            <li key={el.lng} className={active ? "hidden" : ""}>
               <button
-                className="tw-flex tw-justify-between"
+                className="flex justify-between"
                 onClick={() => handleChange(el.lng)}
               >
                 {el.title}
-                <img
-                  className="tw-w-6"
-                  src={el.flag}
-                  alt={el.title + " flag"}
-                />
+                <img className="w-6" src={el.flag} alt={el.title + " flag"} />
               </button>
             </li>
           );

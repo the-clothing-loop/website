@@ -116,47 +116,47 @@ export default function ChainMemberList() {
       </Helmet>
 
       <main>
-        <div className="tw-flex tw-flex-col lg:tw-flex-row tw-max-w-screen-xl tw-mx-auto tw-pt-4 lg:tw-mb-6">
-          <section className="lg:tw-w-1/3 tw-mb-6 lg:tw-mb-0">
-            <div className="tw-relative tw-bg-teal-light tw-p-8">
+        <div className="flex flex-col lg:flex-row max-w-screen-xl mx-auto pt-4 lg:mb-6">
+          <section className="lg:w-1/3 mb-6 lg:mb-0">
+            <div className="relative bg-teal-light p-8">
               <Link
-                className="tw-absolute tw-top-6 tw-right-8 tw-btn tw-btn-ghost tw-btn-circle"
+                className="absolute top-6 right-8 btn btn-ghost btn-circle"
                 to={`/loops/${chainUID}/edit`}
               >
                 <span className="feather feather-edit-2" />
               </Link>
 
-              <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-mb-6 tw-text-4xl">
+              <h1 className="font-serif font-bold text-secondary mb-6 text-4xl">
                 {chain.name}
               </h1>
-              <p className="tw-text-lg tw-mb-6">{chain.description}</p>
+              <p className="text-lg mb-6">{chain.description}</p>
 
               <dl>
-                <dt className="tw-font-bold tw-mb-1">{t("categories")}</dt>
-                <dd className="tw-mb-2">
+                <dt className="font-bold mb-1">{t("categories")}</dt>
+                <dd className="mb-2">
                   {chain?.genders && GenderBadges(t, chain.genders)}
                 </dd>
-                <dt className="tw-font-bold tw-mb-1">{t("sizes")}</dt>
-                <dd className="tw-mb-2">
+                <dt className="font-bold mb-1">{t("sizes")}</dt>
+                <dd className="mb-2">
                   {chain?.sizes && SizeBadges(t, chain.sizes)}
                 </dd>
-                <dt className="tw-font-bold tw-mb-2">{t("participants")}</dt>
-                <dd className="tw-text-sm tw-mb-1">
+                <dt className="font-bold mb-2">{t("participants")}</dt>
+                <dd className="text-sm mb-1">
                   {users.length.toString()}{" "}
                   {t("peopleWithCount", { count: users.length })}
                 </dd>
               </dl>
 
-              <div className="tw-flex tw-flex-col">
-                <div className="tw-form-control tw-w-full">
-                  <label className="tw-cursor-pointer tw-label tw-px-0">
-                    <span className="tw-label-text">
+              <div className="flex flex-col">
+                <div className="form-control w-full">
+                  <label className="cursor-pointer label px-0">
+                    <span className="label-text">
                       {published ? t("published") : t("draft")}
                     </span>
                     <input
                       type="checkbox"
-                      className={`tw-toggle tw-toggle-secondary ${
-                        error === "published" ? "tw-border-error" : ""
+                      className={`toggle toggle-secondary ${
+                        error === "published" ? "border-error" : ""
                       }`}
                       name="published"
                       checked={published}
@@ -164,15 +164,15 @@ export default function ChainMemberList() {
                     />
                   </label>
                 </div>
-                <div className="tw-form-control tw-w-full">
-                  <label className="tw-cursor-pointer tw-label tw-px-0 -tw-mb-2">
-                    <span className="tw-label-text">
+                <div className="form-control w-full">
+                  <label className="cursor-pointer label px-0 -mb-2">
+                    <span className="label-text">
                       {openToNewMembers ? t("openToNewMembers") : t("closed")}
                     </span>
                     <input
                       type="checkbox"
-                      className={`tw-toggle tw-toggle-secondary ${
-                        error === "openToNewMembers" ? "tw-border-error" : ""
+                      className={`toggle toggle-secondary ${
+                        error === "openToNewMembers" ? "border-error" : ""
                       }`}
                       name="openToNewMembers"
                       checked={openToNewMembers}
@@ -193,8 +193,8 @@ export default function ChainMemberList() {
           />
         </div>
 
-        <div className="tw-max-w-screen-xl tw-mx-auto tw-px-8">
-          <h2 className="tw-font-semibold tw-text-secondary tw-text-3xl tw-mb-6">
+        <div className="max-w-screen-xl mx-auto px-8">
+          <h2 className="font-semibold text-secondary text-3xl mb-6">
             Loop Participants
           </h2>
           <UserDataExport />
@@ -281,19 +281,17 @@ function HostTable(props: {
   }
 
   return (
-    <section className="lg:tw-w-2/3 tw-relative tw-p-8 tw-pt-0 tw-bg-secondary-light">
-      <h2 className="tw-font-semibold tw-text-secondary tw-mb-6 max-md:tw-mt-6 tw-text-3xl">
+    <section className="lg:w-2/3 relative p-8 pt-0 bg-secondary-light">
+      <h2 className="font-semibold text-secondary mb-6 max-md:mt-6 text-3xl">
         Loop Admin
       </h2>
 
-      <div className="tw-overflow-x-auto">
-        <table className="tw-table tw-w-full">
+      <div className="overflow-x-auto">
+        <table className="table w-full">
           <thead>
             <tr>
               {props.isChainAdmin ||
-                (props.authUser?.is_root_admin && (
-                  <th className="tw-sticky"></th>
-                ))}
+                (props.authUser?.is_root_admin && <th className="sticky"></th>)}
               <th>{t("name")}</th>
               <th>{t("email")}</th>
               <th>{t("phone")}</th>
@@ -306,11 +304,11 @@ function HostTable(props: {
                 <tr key={u.uid}>
                   {props.isChainAdmin ||
                     (props.authUser?.is_root_admin && (
-                      <td className="tw-sticky">
+                      <td className="sticky">
                         <input
                           type="checkbox"
                           name="selectedChainAdmin"
-                          className="tw-checkbox tw-checkbox-sm tw-checkbox-primary"
+                          className="checkbox checkbox-sm checkbox-primary"
                           checked={selected === u.uid}
                           onChange={onChangeSelect}
                           value={u.uid}
@@ -325,40 +323,36 @@ function HostTable(props: {
           </tbody>
         </table>
       </div>
-      <div className="tw-rounded-b-lg tw-w-full tw-flex tw-justify-between tw-bg-base-200">
-        <div className="tw-flex tw-items-center tw-m-3 tw-bg-base-100 tw-rounded-lg tw-p-2">
-          <p className={`tw-mx-2 ${selected ? "" : "tw-text-base-300"}`}>
+      <div className="rounded-b-lg w-full flex justify-between bg-base-200">
+        <div className="flex items-center m-3 bg-base-100 rounded-lg p-2">
+          <p className={`mx-2 ${selected ? "" : "text-base-300"}`}>
             {t("selected")}
           </p>
-          <div className="tw-tooltip tw-tooltip-bottom" data-tip="edit">
+          <div className="tooltip tooltip-bottom" data-tip="edit">
             <Link
-              className={`tw-btn tw-btn-sm tw-btn-circle tw-mr-2 feather feather-edit ${
-                selected.length
-                  ? "tw-btn-primary"
-                  : "tw-btn-disabled tw-opacity-60"
+              className={`btn btn-sm btn-circle mr-2 feather feather-edit ${
+                selected.length ? "btn-primary" : "btn-disabled opacity-60"
               }`}
               aria-label="edit"
               aria-disabled={!selected}
               to={editHost}
             ></Link>
           </div>
-          <div className="tw-tooltip tw-tooltip-bottom" data-tip="demote">
+          <div className="tooltip tooltip-bottom" data-tip="demote">
             <button
               type="button"
               onClick={onDemote}
-              className={`tw-btn tw-btn-sm tw-btn-circle feather feather-shield-off ${
-                selected.length
-                  ? "tw-btn-error"
-                  : "tw-btn-disabled tw-opacity-60"
+              className={`btn btn-sm btn-circle feather feather-shield-off ${
+                selected.length ? "btn-error" : "btn-disabled opacity-60"
               }`}
               aria-label="demote"
               disabled={!selected}
             ></button>
           </div>
         </div>
-        <form className="tw-flex tw-p-3 tw-items-end" onSubmit={onAddCoHost}>
+        <form className="flex p-3 items-end" onSubmit={onAddCoHost}>
           <select
-            className="tw-select tw-select-sm tw-rounded-l-lg disabled:tw-text-base-300"
+            className="select select-sm rounded-l-lg disabled:text-base-300"
             name="participant"
             ref={refSelect}
             disabled={filteredUsersNotHost.length === 0}
@@ -373,10 +367,8 @@ function HostTable(props: {
             ))}
           </select>
           <button
-            className={`tw-btn tw-btn-sm tw-rounded-r-lg ${
-              filteredUsersNotHost.length === 0
-                ? "tw-btn-disabled"
-                : "tw-btn-primary"
+            className={`btn btn-sm rounded-r-lg ${
+              filteredUsersNotHost.length === 0 ? "btn-disabled" : "btn-primary"
             }`}
             type="submit"
           >
@@ -435,12 +427,12 @@ function ParticipantsTable(props: {
 
   return (
     <>
-      <div className="tw-mt-10 tw-relative">
-        <div className="tw-overflow-x-auto">
-          <table className="tw-table tw-table-compact tw-w-full">
+      <div className="mt-10 relative">
+        <div className="overflow-x-auto">
+          <table className="table table-compact w-full">
             <thead>
               <tr>
-                <th className="tw-sticky tw-z-0"></th>
+                <th className="sticky z-0"></th>
                 <th>{t("name")}</th>
                 <th>{t("address")}</th>
                 <th>{t("contact")}</th>
@@ -452,11 +444,11 @@ function ParticipantsTable(props: {
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((u: User) => (
                   <tr key={u.uid}>
-                    <td className="tw-sticky">
+                    <td className="sticky">
                       <input
                         type="checkbox"
                         name="selectedChainAdmin"
-                        className="tw-checkbox tw-checkbox-sm tw-checkbox-primary"
+                        className="checkbox checkbox-sm checkbox-primary"
                         checked={selected.includes(u.uid)}
                         onChange={onChangeSelect}
                         value={u.uid}
@@ -464,18 +456,18 @@ function ParticipantsTable(props: {
                     </td>
                     <td>{u.name}</td>
                     <td>
-                      <span className="tw-block tw-w-48 tw-text-sm tw-whitespace-normal">
+                      <span className="block w-48 text-sm whitespace-normal">
                         {u.address}
                       </span>
                     </td>
-                    <td className="tw-text-sm tw-leading-relaxed">
+                    <td className="text-sm leading-relaxed">
                       {u.email}
                       <br />
                       {u.phone_number}
                     </td>
-                    <td className="tw-align-middle">
+                    <td className="align-middle">
                       <span
-                        className="tw-block tw-min-w-[12rem] tw-bg-base-100 tw-rounded-lg tw-whitespace-normal [&_span]:tw-mb-2 -tw-mb-2"
+                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
                         tabIndex={0}
                       >
                         {SizeBadges(t, u.sizes)}
@@ -486,34 +478,30 @@ function ParticipantsTable(props: {
             </tbody>
           </table>
         </div>
-        <div className="tw-rounded-b-lg tw-flex tw-justify-between tw-bg-base-200 tw-sticky tw-z-10 tw-bottom-0">
-          <div className="tw-flex tw-m-3 tw-bg-base-100 tw-rounded-lg tw-p-2">
-            <p className="tw-block tw-mx-2">
-              <span className="tw-text-2xl tw-font-bold tw-mr-2">
-                {selected.length}
-              </span>
+        <div className="rounded-b-lg flex justify-between bg-base-200 sticky z-10 bottom-0">
+          <div className="flex m-3 bg-base-100 rounded-lg p-2">
+            <p className="block mx-2">
+              <span className="text-2xl font-bold mr-2">{selected.length}</span>
               {t("selected")}
             </p>
-            <div className="tw-tooltip tw-tooltip-bottom" data-tip="edit">
+            <div className="tooltip tooltip-bottom" data-tip="edit">
               <Link
-                className={`tw-btn tw-btn-sm tw-btn-circle tw-mr-2 feather feather-edit ${
+                className={`btn btn-sm btn-circle mr-2 feather feather-edit ${
                   selected.length === 1
-                    ? "tw-btn-primary"
-                    : "tw-btn-disabled tw-opacity-60"
+                    ? "btn-primary"
+                    : "btn-disabled opacity-60"
                 }`}
                 aria-label="edit"
                 aria-disabled={!selected}
                 to={edit}
               ></Link>
             </div>
-            <div className="tw-tooltip tw-tooltip-bottom" data-tip="remove">
+            <div className="tooltip tooltip-bottom" data-tip="remove">
               <button
                 type="button"
                 onClick={onRemove}
-                className={`tw-btn tw-btn-sm tw-btn-circle feather feather-user-x ${
-                  selected.length
-                    ? "tw-btn-error"
-                    : "tw-btn-disabled tw-opacity-60"
+                className={`btn btn-sm btn-circle feather feather-user-x ${
+                  selected.length ? "btn-error" : "btn-disabled opacity-60"
                 }`}
                 aria-label="remove"
                 disabled={!selected}

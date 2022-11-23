@@ -143,9 +143,9 @@ export default function ChainDetailsForm({
     setValue("sizes", filteredSizes);
   }
   return (
-    <div className="tw-flex tw-flex-row">
-      <div className="tw-w-1/2 tw-pr-4">
-        <div className="tw-aspect-square">
+    <div className="flex flex-row">
+      <div className="w-1/2 pr-4">
+        <div className="aspect-square">
           <ReactMapGL
             mapboxApiAccessToken={accessToken}
             mapStyle="mapbox://styles/mapbox/light-v10"
@@ -153,13 +153,13 @@ export default function ChainDetailsForm({
             onViewportChange={(newView: IViewPort) => setViewport(newView)}
             onClick={handleMapClick}
             getCursor={() => "pointer"}
-            className="tw-cursor-pointer tw-shadow-lg"
+            className="cursor-pointer shadow-lg"
             width="100%"
             height="100%"
           >
             <Geocoding
               onResult={handleGeolocationResult}
-              className="tw-absolute tw-top-5 tw-left-5"
+              className="absolute top-5 left-5"
             />
             {values.longitude !== null && values.latitude !== null ? (
               <SVGOverlay redraw={redrawLoop} />
@@ -167,9 +167,9 @@ export default function ChainDetailsForm({
           </ReactMapGL>
         </div>
       </div>
-      <div className="tw-w-1/2 tw-pl-4">
+      <div className="w-1/2 pl-4">
         <form noValidate>
-          <p className="tw-mb-2">{t("clickToSetLoopLocation")}</p>
+          <p className="mb-2">{t("clickToSetLoopLocation")}</p>
           <TextForm
             classes={{ root: "" }}
             required
@@ -198,12 +198,12 @@ export default function ChainDetailsForm({
             name="description"
             value={values.description}
             onChange={(e) => setValue("description", e.target.value)}
-            classes={{ root: "tw-mb-4 tw-w-full tw-max-w-xs" }}
+            classes={{ root: "mb-4 w-full max-w-xs" }}
             info={t("optionalFieldTypeAnything")}
           />
 
-          <div className="tw-mb-2 tw-w-full tw-max-w-xs">
-            <div className="tw-float-right -tw-mr-2 -tw-mt-2">
+          <div className="mb-2 w-full max-w-xs">
+            <div className="float-right -mr-2 -mt-2">
               <PopoverOnHover
                 message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
               />
@@ -214,7 +214,7 @@ export default function ChainDetailsForm({
             />
           </div>
 
-          <div className="tw-mb-6 tw-w-full tw-max-w-xs">
+          <div className="mb-6 w-full max-w-xs">
             <SizesDropdown
               filteredGenders={
                 values.genders?.length
@@ -226,16 +226,13 @@ export default function ChainDetailsForm({
             />
           </div>
 
-          <div className="tw-flex tw-flex-row">
-            <button
-              type="submit"
-              className="tw-btn tw-btn-primary tw-btn-outline"
-            >
+          <div className="flex flex-row">
+            <button type="submit" className="btn btn-primary btn-outline">
               {t("back")}
             </button>
-            <button type="submit" className="tw-btn tw-btn-primary tw-ml-4">
+            <button type="submit" className="btn btn-primary ml-4">
               {t("submit")}
-              <span className="feather feather-arrow-right tw-ml-4"></span>
+              <span className="feather feather-arrow-right ml-4"></span>
             </button>
           </div>
         </form>

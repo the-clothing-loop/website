@@ -46,26 +46,22 @@ const ChainsList = () => {
         <meta name="description" content="Loops List" />z
       </Helmet>
       <main>
-        <div
-          className={`tw-container tw-mx-auto ${
-            chains ? "" : "tw-animate-pulse"
-          }`}
-        >
-          <div className="tw-px-1 md:tw-px-20 tw-py-4">
-            <h1 className="tw-text-2xl tw-font-bold tw-mb-3">{`${
+        <div className={`container mx-auto ${chains ? "" : "animate-pulse"}`}>
+          <div className="px-1 md:px-20 py-4">
+            <h1 className="text-2xl font-bold mb-3">{`${
               chains?.length || 0
             } Clothing Loops`}</h1>
             {chains ? (
               <DataExport chains={chains} />
             ) : (
-              <button className="tw-btn tw-btn-outline tw-btn-primary" disabled>
+              <button className="btn btn-outline btn-primary" disabled>
                 ...
               </button>
             )}
           </div>
 
-          <div className="sm:tw-overflow-x-auto">
-            <table className="tw-table tw-table-compact tw-w-full">
+          <div className="sm:overflow-x-auto">
+            <table className="table table-compact w-full">
               <thead>
                 <tr>
                   <th align="left">{t("name")}</th>
@@ -83,33 +79,33 @@ const ChainsList = () => {
                         ?.is_chain_admin || false;
                     return (
                       <tr key={chain.name}>
-                        <td className="tw-font-bold tw-w-32 tw-whitespace-normal">
+                        <td className="font-bold w-32 whitespace-normal">
                           {chain.name}
                         </td>
-                        <td align="left" className="tw-whitespace-normal">
+                        <td align="left" className="whitespace-normal">
                           {chain.address}
                         </td>
                         <td align="center">
                           {chain.published ? (
-                            <div className="tw-tooltip" data-tip="published">
-                              <span className="feather feather-eye  tw-text-lg tw-text-green" />
+                            <div className="tooltip" data-tip="published">
+                              <span className="feather feather-eye  text-lg text-green" />
                             </div>
                           ) : (
-                            <div className="tw-tooltip" data-tip="draft">
-                              <span className="feather feather-eye-off  tw-text-lg tw-text-red" />
+                            <div className="tooltip" data-tip="draft">
+                              <span className="feather feather-eye-off  text-lg text-red" />
                             </div>
                           )}
                         </td>
                         <td align="right">
                           {(isUserAdmin || authUser?.is_root_admin) && (
                             <Link
-                              className={`tw-btn tw-btn-primary tw-flex-nowrap ${
-                                chains?.length > 5 ? "tw-btn-sm" : ""
+                              className={`btn btn-primary flex-nowrap ${
+                                chains?.length > 5 ? "btn-sm" : ""
                               }`}
                               to={`/loops/${chain.uid}/members`}
                             >
                               {t("view")}
-                              <span className="feather feather-arrow-right tw-ml-3"></span>
+                              <span className="feather feather-arrow-right ml-3"></span>
                             </Link>
                           )}
                         </td>

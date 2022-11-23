@@ -32,21 +32,17 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
   }
 
   return (
-    <div
-      className={`tw-form-control ${
-        props.classes?.root || "tw-w-full tw-max-w-xs"
-      }`}
-    >
-      <label className="tw-label">
-        <span className="tw-label-text">{t("phoneNumber")}</span>
+    <div className={`form-control ${props.classes?.root || "w-full max-w-xs"}`}>
+      <label className="label">
+        <span className="label-text">{t("phoneNumber")}</span>
       </label>
       <input
         type="phone"
         name="phone"
         aria-invalid={!!invalid}
         onBlur={onBlur}
-        className={`tw-input tw-input-bordered tw-w-full ${
-          invalid ? "tw-input-error" : "tw-input-secondary"
+        className={`input input-bordered w-full ${
+          invalid ? "input-error" : "input-secondary"
         }`}
       />
     </div>
@@ -73,25 +69,20 @@ export function TextForm({
 }: TextFormProps & InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div
-      className={`tw-form-control tw-relative ${
-        classes?.root || "tw-w-full tw-max-w-xs"
-      }`}
+      className={`form-control relative ${classes?.root || "w-full max-w-xs"}`}
     >
-      <label className="tw-label">
-        <span className="tw-label-text">{label}</span>
+      <label className="label">
+        <span className="label-text">{label}</span>
       </label>
       <input
         aria-invalid={invalid}
-        className={`tw-input tw-input-bordered tw-input-secondary tw-w-full ${
-          invalid ? "tw-input-error" : ""
+        className={`input input-bordered input-secondary w-full ${
+          invalid ? "input-error" : ""
         }`}
         {...props}
       />
       {!!info && (
-        <PopoverOnHover
-          message={info}
-          className="tw-absolute tw-top-0 -tw-right-2"
-        />
+        <PopoverOnHover message={info} className="absolute top-0 -right-2" />
       )}
     </div>
   );

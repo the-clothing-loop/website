@@ -38,34 +38,30 @@ export const SearchBar: React.FC<IProps> = ({
         e.preventDefault();
         handleSearch();
       }}
-      className="tw-container tw-mx-auto tw-flex tw-p-4 lg:tw-px-1 md:tw-px-20 tw-bg-white tw-flex-wrap sm:tw-flex-nowrap tw-flex-col md:tw-flex-row"
+      className="container mx-auto flex p-4 lg:px-1 md:px-20 bg-white flex-wrap sm:flex-nowrap flex-col md:flex-row"
     >
-      <label className="tw-flex lg:tw-w-auto md:tw-flex-grow tw-h-12 md:tw-mr-4 tw-mb-4 md:tw-mb-0 tw-input tw-input-bordered tw-input-secondary focus-within:tw-outline-2 focus-within:tw-outline focus-within:tw-outline-secondary focus-within:tw-outline-offset-2">
-        <span className="block tw-self-center tw-pr-3 feather feather-search"></span>
+      <label className="flex lg:w-auto md:flex-grow h-12 md:mr-4 mb-4 md:mb-0 input input-bordered input-secondary focus-within:outline-2 focus-within:outline focus-within:outline-secondary focus-within:outline-offset-2">
+        <span className="block self-center pr-3 feather feather-search"></span>
         <input
           type="search"
           value={searchTerm}
           onChange={handleSearchTermChange}
           onKeyUp={handleSearchEnter}
           placeholder={t("searchLocation")}
-          className="tw-w-full tw-border-0 tw-text-sm tw-outline-none tw-my-2 tw-mr-2"
+          className="w-full border-0 text-sm outline-none my-2 mr-2"
         />
       </label>
 
-      <div
-        className={`tw-flex ${
-          searchTerm.length > 0 ? "" : "tw-hidden md:tw-flex"
-        }`}
-      >
-        <div className="tw-flex">
-          <div className="tw-w-36 sm:tw-w-48 tw-pr-4">
+      <div className={`flex ${searchTerm.length > 0 ? "" : "hidden md:flex"}`}>
+        <div className="flex">
+          <div className="w-36 sm:w-48 pr-4">
             <CategoriesDropdown
               selectedGenders={selectedGenders}
               handleChange={handleSelectedGenderChange}
             />
           </div>
 
-          <div className="tw-w-36 sm:tw-w-48 tw-pr-4">
+          <div className="w-36 sm:w-48 pr-4">
             <SizesDropdown
               filteredGenders={
                 selectedGenders.length
@@ -78,7 +74,7 @@ export const SearchBar: React.FC<IProps> = ({
           </div>
         </div>
 
-        <button type="submit" className="tw-grow tw-btn tw-btn-primary">
+        <button type="submit" className="grow btn btn-primary">
           {t("search")}
         </button>
       </div>

@@ -56,29 +56,29 @@ const Contacts = () => {
         <title>The Clothing Loop | Contact Us</title>
         <meta name="description" content="Contact us" />
       </Helmet>
-      <main className="tw-max-w-screen-sm tw-mx-auto tw-pt-10">
-        <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl tw-mb-8">
+      <main className="max-w-screen-sm mx-auto pt-10">
+        <h1 className="font-serif font-bold text-secondary text-6xl mb-8">
           Contact us
         </h1>
-        <p className="tw-mb-6">
+        <p className="mb-6">
           Questions? Funny stories? Tips? Press enquiries? We’d love to hear
           from you! (Please do check our FAQ first!)
         </p>
 
-        <form className="tw-flex tw-flex-col" onSubmit={onSubmit}>
+        <form className="flex flex-col" onSubmit={onSubmit}>
           <input
             placeholder={t("name")}
             name="name"
             type="text"
             min={2}
-            className="tw-input tw-input-secondary tw-mb-4"
+            className="input input-secondary mb-4"
             required
           />
           <input
             placeholder={t("email")}
             name="email"
             type="text"
-            className="tw-input tw-input-secondary tw-mb-4"
+            className="input input-secondary mb-4"
             required
           />
           <textarea
@@ -87,18 +87,18 @@ const Contacts = () => {
             required
             minLength={2}
             maxLength={CHARACTER_LIMIT}
-            className="tw-textarea tw-textarea-secondary tw-mb-4"
+            className="textarea textarea-secondary mb-4"
             rows={10}
           />
 
           <button
             type="submit"
-            className={`tw-btn tw-btn-primary ${
-              error ? "tw-ring-2 tw-ring-offset-2 tw-ring-error" : ""
+            className={`btn btn-primary ${
+              error ? "ring-2 ring-offset-2 ring-error" : ""
             }`}
           >
             {t("submit")}
-            <span className="feather feather-arrow-right tw-ml-4"></span>
+            <span className="feather feather-arrow-right ml-4"></span>
           </button>
         </form>
       </main>

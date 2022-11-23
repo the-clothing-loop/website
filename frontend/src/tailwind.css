@@ -3,28 +3,28 @@
 @tailwind utilities;
 
 @layer utilities {
-  .tw-text-stroke-yellow-darkest {
+  .text-stroke-yellow-darkest {
     color: transparent;
     -webkit-text-stroke: 1.5px #c58c41;
     -moz-text-stroke: 1.5px #c58c41;
   }
-  .tw-text-stroke-secondary {
+  .text-stroke-secondary {
     color: transparent;
     -webkit-text-stroke: 1.5px hsla(var(--s));
     -moz-text-stroke: 1.5px hsla(var(--s));
   }
-  .tw-text-stroke-accent {
+  .text-stroke-accent {
     color: transparent;
     -webkit-text-stroke: 1.5px hsla(var(--a));
     -moz-text-stroke: 1.5px hsla(var(--a));
   }
-  .tw-text-stroke-base-100 {
+  .text-stroke-base-100 {
     color: transparent;
     -webkit-text-stroke: 1.5px hsla(var(--b1));
     -moz-text-stroke: 1.5px hsla(var(--b1));
   }
 
-  .tw-bg-instagram {
+  .bg-instagram {
     background: -webkit-radial-gradient(
         32% 106%,
         circle cover,
@@ -83,10 +83,10 @@
   --btn-text-case: default;
 }
 
-.tw-prose {
-  @apply prose-headings:tw-font-serif prose-headings:tw-text-secondary prose-headings:tw-font-bold prose-a:tw-link tw-max-w-screen-md;
+.prose {
+  @apply prose-headings:font-serif prose-headings:text-secondary prose-headings:font-bold prose-a:link max-w-screen-md;
 }
 
-.tw-table th:first-child {
-  @apply tw-static;
+.table th:first-child {
+  @apply static;
 }

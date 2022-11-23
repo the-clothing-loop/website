@@ -3,7 +3,7 @@ import { GenderI18nKeys, Genders, SizeI18nKeys, Sizes } from "../api/enums";
 
 export function GenderBadges(t: TFunction, arr: Array<string | Genders>) {
   return arr.map((g) => (
-    <span className="tw-badge tw-badge-outline tw-mr-2" key={g}>
+    <span className="badge badge-outline mr-2" key={g}>
       {t(GenderI18nKeys[g])}
     </span>
   ));
@@ -26,7 +26,7 @@ export const SizeLetters: Record<Sizes | string, string> = {
 export function SizeBadges(t: TFunction, arr: Array<string | Sizes>) {
   return arr.map((s) => (
     <span
-      className="tw-badge tw-badge-outline tw-mr-2 tw-tooltip tw-tooltip-top"
+      className="badge badge-outline mr-2 tooltip tooltip-top"
       key={s}
       data-tip={t(SizeI18nKeys[s])}
     >

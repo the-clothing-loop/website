@@ -7,12 +7,12 @@ export default function PrivacyPolicy() {
         <title>The Clothing Loop | Privacy Policy</title>
         <meta name="description" content="privacy policy" />
       </Helmet>
-      <div className="tw-container tw-mx-auto tw-px-1 md:tw-px-20 tw-py-10">
-        <h1 className="tw-font-serif tw-text-secondary tw-font-bold tw-text-5xl tw-mb-4">
+      <div className="container mx-auto px-1 md:px-20 py-10">
+        <h1 className="font-serif text-secondary font-bold text-5xl mb-4">
           {"Privacy Policy - The Clothing Loop"}
         </h1>
 
-        <div className="tw-prose">
+        <div className="prose">
           <p>Version dated 2022, February 9th</p>
           <p>
             The Clothing Loop is part of the foundation Slow Fashion Movement,

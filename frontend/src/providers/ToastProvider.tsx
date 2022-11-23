@@ -82,7 +82,7 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
   }
 
   function CreateToastComponent(t: ToastWithID) {
-    let classes = "tw-alert";
+    let classes = "alert";
     let icon = "feather";
     switch (t.type) {
       case "info":
@@ -90,38 +90,38 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
         icon += " feather-info";
         break;
       case "success":
-        classes += " tw-alert-success tw-text-base-100";
+        classes += " alert-success text-base-100";
         icon += " feather-check-circle";
         break;
       case "warning":
-        classes += " tw-alert-warning tw-text-base-100";
+        classes += " alert-warning text-base-100";
         icon += " feather-alert-triangle";
         break;
       case "error":
-        classes += " tw-alert-error tw-text-base-100";
+        classes += " alert-error text-base-100";
         icon += " feather-alert-octagon";
         break;
     }
 
     return (
       <li className={classes} key={t.id}>
-        <div className="tw-w-[300px]">
+        <div className="w-[300px]">
           <span className={icon}></span>
-          <span className="tw-font-bold">{t.message}</span>
+          <span className="font-bold">{t.message}</span>
         </div>
         {t.actions && (
-          <div className="tw-flex-none">
+          <div className="flex-none">
             {t.actions?.map((a) => {
-              let classes = "tw-btn tw-btn-sm";
+              let classes = "btn btn-sm";
               switch (a.type) {
                 case "ghost":
-                  classes += " tw-btn-ghost";
+                  classes += " btn-ghost";
                   break;
                 case "primary":
-                  classes += " tw-btn-primary";
+                  classes += " btn-primary";
                   break;
                 case "secondary":
-                  classes += " tw-btn-secondary";
+                  classes += " btn-secondary";
                   break;
               }
               return (
@@ -140,8 +140,8 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
     <ToastContext.Provider value={{ addToast, addToastError, addStaticToast }}>
       <>
         <ol
-          className={`tw-toast tw-fixed tw-toast-bottom sm:tw-toast-right lg:tw-toast-top tw-toast-center tw-z-50 ${
-            toasts.length ? "" : "tw-hidden"
+          className={`toast fixed toast-bottom sm:toast-right lg:toast-top toast-center z-50 ${
+            toasts.length ? "" : "hidden"
           }`}
         >
           {toasts.map(CreateToastComponent)}

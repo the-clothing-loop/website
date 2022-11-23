@@ -142,13 +142,13 @@ function DonationFormContent() {
 
   function oneOffRadio(item: RadioItem) {
     return (
-      <label key={"oneoff" + item.text} className="tw-flex">
+      <label key={"oneoff" + item.text} className="flex">
         <input
           type="radio"
           name="oneoff_radio"
           value={item.value}
           defaultChecked={item.value === oneOff[1].value}
-          className="tw-radio tw-radio-secondary tw-mr-3"
+          className="radio radio-secondary mr-3"
         />
         {item.text}
       </label>
@@ -157,14 +157,11 @@ function DonationFormContent() {
 
   function recurringRadio(item: RadioItem) {
     return (
-      <label
-        key={"recurring" + item.text}
-        className="tw-flex tw-items-center tw-h-12"
-      >
+      <label key={"recurring" + item.text} className="flex items-center h-12">
         <input
           type="radio"
           name="recurring_radio"
-          className="tw-radio tw-radio-secondary tw-mr-3"
+          className="radio radio-secondary mr-3"
           defaultChecked={item.value === recurring[1].value}
           value={item.value}
         />
@@ -181,13 +178,11 @@ function DonationFormContent() {
   return (
     <div>
       <form onSubmit={onSubmit} id="donation-form">
-        <p className="tw-mb-3">
-          {t("howDoYouWantToContributeToTheClothingLoop")}
-        </p>
-        <div className="tw-mb-6">
+        <p className="mb-3">{t("howDoYouWantToContributeToTheClothingLoop")}</p>
+        <div className="mb-6">
           <button
-            className={`tw-mr-3 tw-btn tw-btn-secondary ${
-              !isRecurring ? "" : "tw-btn-outline"
+            className={`mr-3 btn btn-secondary ${
+              !isRecurring ? "" : "btn-outline"
             }`}
             type="button"
             onClick={() => setIsRecurring(false)}
@@ -196,43 +191,39 @@ function DonationFormContent() {
           </button>
 
           <button
-            className={`tw-btn tw-btn-secondary ${
-              isRecurring ? "" : "tw-btn-outline"
-            }`}
+            className={`btn btn-secondary ${isRecurring ? "" : "btn-outline"}`}
             type="button"
             onClick={() => setIsRecurring(true)}
           >
             {t("becomeAMember")}
           </button>
         </div>
-        <p className="tw-mb-3">
+        <p className="mb-3">
           {isRecurring
             ? t("iWillSupportTheClothingLoopWithAMonthlyDonation")
             : t("iWillSupportTheClothingLoopWithAOneTimeDonation")}
         </p>
 
         <div
-          className={`tw-mb-6 tw-grid tw-grid-cols-3 tw-grid-rows-2 tw-gap-3 tw-items-center ${
-            isRecurring ? "tw-hidden" : ""
+          className={`mb-6 grid grid-cols-3 grid-rows-2 gap-3 items-center ${
+            isRecurring ? "hidden" : ""
           }`}
         >
           {oneOff.map((item) => oneOffRadio(item))}
 
-          <div className="tw-flex tw-items-center">
+          <div className="flex items-center">
             <input
               name="oneoff_radio"
               type="radio"
               value=""
               aria-label="type a custom amount in the next text input"
-              className="tw-invisible -tw-z-10 tw-mr-3 tw-absolute"
+              className="invisible -z-10 mr-3 absolute"
             />
 
             <input
               name="oneoff_custom"
-              className={`tw-input invalid:tw-input-error tw-w-full ${
-                error === "oneoff_custom"
-                  ? "tw-input-error"
-                  : "tw-input-secondary"
+              className={`input invalid:input-error w-full ${
+                error === "oneoff_custom" ? "input-error" : "input-secondary"
               }`}
               type="number"
               aria-invalid={error === "oneoff_custom"}
@@ -242,8 +233,8 @@ function DonationFormContent() {
           </div>
         </div>
         <div
-          className={`tw-mb-6 tw-grid tw-grid-cols-3 tw-gap-3 ${
-            isRecurring ? "" : "tw-hidden"
+          className={`mb-6 grid grid-cols-3 gap-3 ${
+            isRecurring ? "" : "hidden"
           }`}
         >
           {recurring.map((i) => recurringRadio(i))}
@@ -251,8 +242,8 @@ function DonationFormContent() {
         <div>
           <input
             name="email"
-            className={`tw-input invalid:tw-input-error ${
-              error === "email" ? "tw-input-error" : "tw-input-secondary"
+            className={`input invalid:input-error ${
+              error === "email" ? "input-error" : "input-secondary"
             }`}
             type="email"
             placeholder={t("email")}
@@ -263,19 +254,19 @@ function DonationFormContent() {
         <br />
 
         {isRecurring && (
-          <p className="tw-base-300 tw-text-sm tw-mb-2">
+          <p className="base-300 text-sm mb-2">
             {t("dontHaveACreditCardChooseSepa")}
           </p>
         )}
 
         <div>
           {loading ? (
-            <span className="feather feather-loader tw-animate-spin" />
+            <span className="feather feather-loader animate-spin" />
           ) : (
             <button
               type="submit"
-              className={`tw-btn bw-btn-primary ${
-                !error ? "" : "tw-ring-2 tw-ring-offset-2 tw-ring-error"
+              className={`btn bw-btn-primary ${
+                !error ? "" : "ring-2 ring-offset-2 ring-error"
               }`}
             >
               {t("donate")}
@@ -283,9 +274,9 @@ function DonationFormContent() {
           )}
         </div>
 
-        <p className="tw-text-xs tw-mt-2">
+        <p className="text-xs mt-2">
           {t("byDonatingYouAgreeWithOur")}
-          <a href="/privacy-policy" target="_blank" className="tw-link">
+          <a href="/privacy-policy" target="_blank" className="link">
             {t("privacyPolicy")}
           </a>
           .
@@ -303,12 +294,12 @@ export default function DonationForm() {
     const stripePromise = loadStripe(stripePublicKey);
 
     return (
-      <div className="tw-max-w-screen-sm tw-mx-auto">
-        <h1 className="tw-text-4xl tw-text-secondary tw-font-serif tw-font-bold tw-mb-6">
+      <div className="max-w-screen-sm mx-auto">
+        <h1 className="text-4xl text-secondary font-serif font-bold mb-6">
           {t("donateToTheClothingLoop")}
         </h1>
         <p
-          className="tw-leading-relaxed tw-mb-6"
+          className="leading-relaxed mb-6"
           dangerouslySetInnerHTML={{
             __html: t("thanksForConsideringADonation"),
           }}

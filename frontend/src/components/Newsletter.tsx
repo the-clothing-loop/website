@@ -42,54 +42,54 @@ export const Newsletter = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="tw-bg-teal-light lg:tw-w-1/2 tw-mb-4 lg:tw-mb-0 tw-p-10 lg:tw-py-14 lg:tw-px-16 lg:tw-min-h-[456px]"
+      className="bg-teal-light lg:w-1/2 mb-4 lg:mb-0 p-10 lg:py-14 lg:px-16 lg:min-h-[456px]"
     >
       {submitted ? (
-        <div className="tw-max-w-[600px]">
-          <p className="tw-font-serif tw-text-secondary tw-font-bold tw-text-5xl tw-mb-4 tw-leading-snug">
+        <div className="max-w-[600px]">
+          <p className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
             {t("thankYouForSigningUp")}
           </p>
           <p className="">{t("youAreNowSubscribedToOurMonthlyNewsletter")}</p>
         </div>
       ) : isError ? (
-        <div className="tw-max-w-[600px]">
-          <p className="tw-font-serif tw-text-secondary tw-font-bold tw-text-5xl tw-mb-4 tw-leading-snug">
+        <div className="max-w-[600px]">
+          <p className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
             {t("somethingIsWrong")}
           </p>
           <p className="">{t("pleaseTryAgainInSeconds")}</p>
         </div>
       ) : (
-        <div className="tw-max-w-[600px]">
-          <h2 className="tw-font-serif tw-text-secondary tw-font-bold tw-text-5xl tw-mb-4 tw-leading-snug">
+        <div className="max-w-[600px]">
+          <h2 className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
             {t("keepUpWithOurLatestNews")}
           </h2>
-          <p className="tw-mb-8">{t("subscribeToRecieveOurLatestNews")}</p>
+          <p className="mb-8">{t("subscribeToRecieveOurLatestNews")}</p>
 
-          <div className="tw-flex tw-flex-row tw-mb-5">
-            <label className="tw-form-control tw-w-52 tw-mr-4">
+          <div className="flex flex-row mb-5">
+            <label className="form-control w-52 mr-4">
               <input
                 type="text"
                 name="name"
-                className="tw-input tw-input-bordered tw-w-full tw-input-secondary"
+                className="input input-bordered w-full input-secondary"
                 placeholder={t("name")}
                 min={3}
                 required
               />
             </label>
-            <label className="tw-form-control tw-w-52">
+            <label className="form-control w-52">
               <input
                 type="email"
                 name="email"
                 placeholder={t("emailAddress")}
-                className="tw-input tw-input-bordered tw-w-full tw-input-secondary"
+                className="input input-bordered w-full input-secondary"
                 required
               />
             </label>
           </div>
-          <div className="tw-bg-white tw-inline-block">
-            <button className="tw-btn tw-btn-primary" type="submit">
+          <div className="bg-white inline-block">
+            <button className="btn btn-primary" type="submit">
               {t("submit")}
-              <span className="feather feather-arrow-right tw-ml-3"></span>
+              <span className="feather feather-arrow-right ml-3"></span>
             </button>
           </div>
         </div>

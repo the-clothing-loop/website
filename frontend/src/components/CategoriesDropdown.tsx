@@ -34,25 +34,23 @@ export default function CategoriesDropdown({
 
   return (
     <div
-      className={`tw-w-full tw-dropdown ${
-        dropdown.open ? "tw-dropdown-open" : ""
-      }`}
+      className={`w-full dropdown ${dropdown.open ? "dropdown-open" : ""}`}
       onBlur={() => dropdown.setOpen(false)}
     >
       <label
         tabIndex={0}
-        className="tw-btn tw-btn-outline tw-no-animation tw-btn-secondary tw-w-full tw-flex tw-justify-between tw-flex-nowrap"
+        className="btn btn-outline no-animation btn-secondary w-full flex justify-between flex-nowrap"
         onClick={() => dropdown.toggle()}
       >
-        <span className="tw-truncate">{btnLabel}</span>
+        <span className="truncate">{btnLabel}</span>
         <span
-          className={`tw-pl-2 feather ${
+          className={`pl-2 feather ${
             dropdown.open ? "feather-arrow-up" : "feather-arrow-down"
           }`}
         ></span>
       </label>
       <ul
-        className="tw-dropdown-content tw-menu tw-bg-white tw-shadow tw-w-44 sm:tw-w-full"
+        className="dropdown-content menu bg-white shadow w-44 sm:w-full"
         tabIndex={0}
       >
         {Object.keys(categories).map((gender: string | Genders) => {
@@ -64,7 +62,7 @@ export default function CategoriesDropdown({
                   name="genders"
                   type="checkbox"
                   checked={checked}
-                  className="tw-checkbox"
+                  className="checkbox"
                   onClick={() => dropdown.change(gender)}
                 />
                 {t(GenderI18nKeys[gender])}

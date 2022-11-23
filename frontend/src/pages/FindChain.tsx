@@ -322,11 +322,11 @@ const FindChain = ({ location }: { location: Location }) => {
             dynamicPosition
             onClose={() => setShowPopup(false)}
           >
-            <div className="tw-card">
-              <div className="tw-card-body">
-                <h1 className="tw-mb-3">{selectedChain.name}</h1>
+            <div className="card">
+              <div className="card-body">
+                <h1 className="mb-3">{selectedChain.name}</h1>
                 <p id="description">{selectedChain.description}</p>
-                <div className="tw-flex tw-flex-col tw-w-full tw-pt-8">
+                <div className="flex flex-col w-full pt-8">
                   <h3>{t("categories")}:</h3>
                   <div id="categories-container">
                     {selectedChain.genders
@@ -346,20 +346,20 @@ const FindChain = ({ location }: { location: Location }) => {
                 </div>
               </div>
 
-              <div className="tw-card-action">
+              <div className="card-action">
                 <button
                   key={"btn-join"}
                   type="button"
-                  className="tw-btn tw-btn-primary"
+                  className="btn btn-primary"
                   onClick={(e) => signupToChain(e)}
                 >
                   {t("join")}
-                  <span className="feather feather-arrow-right tw-ml-4"></span>
+                  <span className="feather feather-arrow-right ml-4"></span>
                 </button>
                 {authUser?.is_root_admin && (
                   <button
                     key={"btn-view"}
-                    className="tw-btn tw-btn-primary"
+                    className="btn btn-primary"
                     onClick={(e) => viewChain(e)}
                   >
                     {t("viewChain")}
@@ -371,33 +371,33 @@ const FindChain = ({ location }: { location: Location }) => {
         ) : null}
       </ReactMapGL>
 
-      <div className="tw-flex tw-flex-col tw-absolute tw-bottom-[5%] tw-right-2.5">
+      <div className="flex flex-col absolute bottom-[5%] right-2.5">
         <button
-          className="tw-btn tw-btn-circle tw-btn-outline tw-glass tw-bg-white/70 hover:tw-bg-white/90 tw-mb-4"
+          className="btn btn-circle btn-outline glass bg-white/70 hover:bg-white/90 mb-4"
           onClick={() => handleLocation()}
         >
-          <span className="feather feather-crosshair tw-text-base-content" />
+          <span className="feather feather-crosshair text-base-content" />
         </button>
-        <div className="tw-btn-group tw-btn-group-vertical">
+        <div className="btn-group btn-group-vertical">
           <button
-            className={`tw-btn tw-rounded-t-full ${
+            className={`btn rounded-t-full ${
               viewport.zoom >= 12
-                ? "tw-btn-disabled tw-bg-white/30"
-                : "tw-glass tw-bg-white/60 hover:tw-bg-white/90"
+                ? "btn-disabled bg-white/30"
+                : "glass bg-white/60 hover:bg-white/90"
             }`}
             onClick={() => mapZoom(viewport, ZoomOperation.PLUS)}
           >
-            <span className="feather feather-plus tw-text-base-content" />
+            <span className="feather feather-plus text-base-content" />
           </button>
           <button
-            className={`tw-btn tw-rounded-b-full -tw-mt-px ${
+            className={`btn rounded-b-full -mt-px ${
               viewport.zoom <= 1
-                ? "tw-btn-disabled tw-bg-white/30"
-                : "tw-glass tw-bg-white/60 hover:tw-bg-white/90"
+                ? "btn-disabled bg-white/30"
+                : "glass bg-white/60 hover:bg-white/90"
             }`}
             onClick={() => mapZoom(viewport, ZoomOperation.MINUS)}
           >
-            <span className="feather feather-minus tw-text-base-content" />
+            <span className="feather feather-minus text-base-content" />
           </button>
         </div>
       </div>

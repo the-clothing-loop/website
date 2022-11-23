@@ -87,12 +87,12 @@ const NewChainLocation = ({ location }: { location: any }) => {
         <title>The Clothing Loop | Create New Loop</title>
         <meta name="description" content="Create New Loop" />
       </Helmet>
-      <main className="tw-container lg:tw-max-w-screen-lg tw-mx-auto tw-px-1 md:tw-px-20 tw-pt-4">
-        <div className="tw-bg-teal-light tw-p-8">
-          <h1 className="tw-text-center tw-font-medium tw-text-secondary tw-text-5xl tw-mb-6">
+      <main className="container lg:max-w-screen-lg mx-auto px-1 md:px-20 pt-4">
+        <div className="bg-teal-light p-8">
+          <h1 className="text-center font-medium text-secondary text-5xl mb-6">
             {t("startNewLoop")}
           </h1>
-          <div className="tw-text-center tw-mb-6">
+          <div className="text-center mb-6">
             <ProgressBar activeStep={1} />
           </div>
           <ChainDetailsForm onSubmit={onSubmit} submitError={error} />

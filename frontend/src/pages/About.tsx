@@ -13,31 +13,31 @@ export default function About() {
         <meta name="description" content="About The Clothing Loop" />
       </Helmet>
       <main>
-        <div className="tw-max-w-screen-md tw-mx-auto tw-pt-10 tw-px-1 md:tw-px-20">
-          <h1 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-6xl">
+        <div className="max-w-screen-md mx-auto pt-10 px-1 md:px-20">
+          <h1 className="font-serif font-bold text-secondary text-6xl">
             {t("aboutTheClothingLoop")}
           </h1>
-          <div className="tw-flex tw-justify-center tw-my-10">
+          <div className="flex justify-center my-10">
             <iframe
               src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
               allow="autoplay; fullscreen; picture-in-picture"
-              className="tw-w-2/3 tw-aspect-video"
+              className="w-2/3 aspect-video"
             ></iframe>
           </div>
 
-          <div className="tw-prose tw-mx-auto">
+          <div className="prose mx-auto">
             <p>
               <Trans
                 i18nKey="p"
                 ns="about"
                 components={{
                   p: <p></p>,
-                  aFind: <Link className="tw-link" to="/loops/find"></Link>,
+                  aFind: <Link className="link" to="/loops/find"></Link>,
                 }}
               ></Trans>
             </p>
           </div>
-          <h2 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-4xl tw-mb-6">
+          <h2 className="font-serif font-bold text-secondary text-4xl mb-6">
             {t("team")}:
           </h2>
           <Trans
@@ -48,7 +48,7 @@ export default function About() {
                 <a
                   href="https://slowfashion.global/"
                   target="_blank"
-                  className="tw-link"
+                  className="link"
                 ></a>
               ),
             }}
@@ -58,9 +58,9 @@ export default function About() {
           <img
             src="/images/press-clippings-site.jpg"
             alt=""
-            className="tw-my-10 tw-w-full tw-max-h-[600px] tw-object-contain tw-object-center"
+            className="my-10 w-full max-h-[600px] object-contain object-center"
           />
-          <div className="tw-prose tw-mx-auto tw-pt-10 tw-px-1 md:tw-px-20">
+          <div className="prose mx-auto pt-10 px-1 md:px-20">
             <p>
               <Trans
                 i18nKey="thePeople"
@@ -71,7 +71,7 @@ export default function About() {
                     <img
                       src="/images/Team-pics.jpg"
                       alt="faces of Paloeka and Nichon"
-                      className="tw-h-60 tw-mx-auto"
+                      className="h-60 mx-auto"
                     />
                   ),
                 }}
