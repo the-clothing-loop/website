@@ -328,24 +328,27 @@ function HostTable(props: {
           <p className={`mx-2 ${selected ? "" : "text-base-300"}`}>
             {t("selected")}
           </p>
-          <div className="tooltip tooltip-bottom" data-tip="edit">
+          <div className="tooltip tooltip-bottom" data-tip={t("edit")}>
             <Link
               className={`btn btn-sm btn-circle mr-2 feather feather-edit ${
                 selected.length ? "btn-primary" : "btn-disabled opacity-60"
               }`}
-              aria-label="edit"
+              aria-label={t("edit")}
               aria-disabled={!selected}
               to={editHost}
             ></Link>
           </div>
-          <div className="tooltip tooltip-bottom" data-tip="demote">
+          <div
+            className="tooltip tooltip-bottom"
+            data-tip={t("setAsAParticipant")}
+          >
             <button
               type="button"
               onClick={onDemote}
               className={`btn btn-sm btn-circle feather feather-shield-off ${
                 selected.length ? "btn-error" : "btn-disabled opacity-60"
               }`}
-              aria-label="demote"
+              aria-label={t("setAsAParticipant")}
               disabled={!selected}
             ></button>
           </div>
@@ -484,26 +487,29 @@ function ParticipantsTable(props: {
               <span className="text-2xl font-bold mr-2">{selected.length}</span>
               {t("selected")}
             </p>
-            <div className="tooltip tooltip-bottom" data-tip="edit">
+            <div className="tooltip tooltip-bottom" data-tip={t("edit")}>
               <Link
                 className={`btn btn-sm btn-circle mr-2 feather feather-edit ${
                   selected.length === 1
                     ? "btn-primary"
                     : "btn-disabled opacity-60"
                 }`}
-                aria-label="edit"
+                aria-label={t("edit")}
                 aria-disabled={!selected}
                 to={edit}
               ></Link>
             </div>
-            <div className="tooltip tooltip-bottom" data-tip="remove">
+            <div
+              className="tooltip tooltip-bottom"
+              data-tip={t("removeFromLoop")}
+            >
               <button
                 type="button"
                 onClick={onRemove}
                 className={`btn btn-sm btn-circle feather feather-user-x ${
                   selected.length ? "btn-error" : "btn-disabled opacity-60"
                 }`}
-                aria-label="remove"
+                aria-label={t("removeFromLoop")}
                 disabled={!selected}
               ></button>
             </div>

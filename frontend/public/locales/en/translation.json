@@ -1,4 +1,6 @@
 {
+  "removeFromLoop":"Remove From Loop",
+  "setAsAParticipant": "Set as a participant",
   "selected": "Selected",
   "selectParticipant": "Select participant",
   "addCoHost": "Add co-host",
