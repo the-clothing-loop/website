@@ -7,7 +7,7 @@ import {
   FormEvent,
   useRef,
 } from "react";
-import { useParams, Link, useHistory, Redirect } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
@@ -116,8 +116,8 @@ export default function ChainMemberList() {
       </Helmet>
 
       <main>
-        <div className="tw-flex tw-flex-col md:tw-flex-row tw-container tw-mx-auto tw-pt-4">
-          <section className="tw-w-1/3">
+        <div className="tw-flex tw-flex-col lg:tw-flex-row tw-max-w-screen-xl tw-mx-auto tw-pt-4 lg:tw-mb-6">
+          <section className="lg:tw-w-1/3 tw-mb-6 lg:tw-mb-0">
             <div className="tw-relative tw-bg-teal-light tw-p-8">
               <Link
                 className="tw-absolute tw-top-6 tw-right-8 tw-btn tw-btn-ghost tw-btn-circle"
@@ -193,8 +193,8 @@ export default function ChainMemberList() {
           />
         </div>
 
-        <div className="tw-container tw-mx-auto">
-          <h2 className="tw-font-serif tw-font-bold tw-text-secondary tw-text-4xl tw-mb-6">
+        <div className="tw-max-w-screen-xl tw-mx-auto tw-px-8">
+          <h2 className="tw-font-semibold tw-text-secondary tw-text-3xl tw-mb-6">
             Loop Participants
           </h2>
           <UserDataExport />
@@ -281,60 +281,51 @@ function HostTable(props: {
   }
 
   return (
-    <section className="tw-w-2/3 tw-relative tw-p-8 tw-bg-secondary-light">
-      <Link
-        className="tw-absolute tw-top-6 tw-right-8  tw-btn tw-btn-ghost tw-btn-circle"
-        to={{
-          pathname: `/users/${props.authUser?.uid}/edit`,
-          state: {
-            chainUID: props.chain.uid,
-          },
-        }}
-      >
-        <span className="feather feather-edit-2" />
-      </Link>
-      <h2 className="tw-font-serif tw-font-bold tw-text-secondary tw-mb-6 tw-text-4xl">
+    <section className="lg:tw-w-2/3 tw-relative tw-p-8 tw-pt-0 tw-bg-secondary-light">
+      <h2 className="tw-font-semibold tw-text-secondary tw-mb-6 max-md:tw-mt-6 tw-text-3xl">
         Loop Admin
       </h2>
 
-      <table className="tw-table tw-w-full">
-        <thead>
-          <tr>
-            {props.isChainAdmin ||
-              (props.authUser?.is_root_admin && (
-                <th className="tw-sticky"></th>
+      <div className="tw-overflow-x-auto">
+        <table className="tw-table tw-w-full">
+          <thead>
+            <tr>
+              {props.isChainAdmin ||
+                (props.authUser?.is_root_admin && (
+                  <th className="tw-sticky"></th>
+                ))}
+              <th>{t("name")}</th>
+              <th>{t("email")}</th>
+              <th>{t("phone")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsersHost
+              ?.sort((a, b) => a.name.localeCompare(b.name))
+              .map((u) => (
+                <tr key={u.uid}>
+                  {props.isChainAdmin ||
+                    (props.authUser?.is_root_admin && (
+                      <td className="tw-sticky">
+                        <input
+                          type="checkbox"
+                          name="selectedChainAdmin"
+                          className="tw-checkbox tw-checkbox-sm tw-checkbox-primary"
+                          checked={selected === u.uid}
+                          onChange={onChangeSelect}
+                          value={u.uid}
+                        />
+                      </td>
+                    ))}
+                  <td>{u.name}</td>
+                  <td>{u.email}</td>
+                  <td>{u.phone_number}</td>
+                </tr>
               ))}
-            <th>{t("name")}</th>
-            <th>{t("email")}</th>
-            <th>{t("phone")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsersHost
-            ?.sort((a, b) => a.name.localeCompare(b.name))
-            .map((u) => (
-              <tr key={u.uid}>
-                {props.isChainAdmin ||
-                  (props.authUser?.is_root_admin && (
-                    <td className="tw-sticky">
-                      <input
-                        type="checkbox"
-                        name="selectedChainAdmin"
-                        className="tw-checkbox tw-checkbox-sm tw-checkbox-primary"
-                        checked={selected === u.uid}
-                        onChange={onChangeSelect}
-                        value={u.uid}
-                      />
-                    </td>
-                  ))}
-                <td>{u.name}</td>
-                <td>{u.email}</td>
-                <td>{u.phone_number}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-      <div className="tw-rounded-b-lg tw-flex tw-justify-between tw-bg-base-200">
+          </tbody>
+        </table>
+      </div>
+      <div className="tw-rounded-b-lg tw-w-full tw-flex tw-justify-between tw-bg-base-200">
         <div className="tw-flex tw-items-center tw-m-3 tw-bg-base-100 tw-rounded-lg tw-p-2">
           <p className={`tw-mx-2 ${selected ? "" : "tw-text-base-300"}`}>
             {t("selected")}
@@ -367,9 +358,10 @@ function HostTable(props: {
         </div>
         <form className="tw-flex tw-p-3 tw-items-end" onSubmit={onAddCoHost}>
           <select
-            className="tw-select tw-select-sm tw-rounded-l-lg"
+            className="tw-select tw-select-sm tw-rounded-l-lg disabled:tw-text-base-300"
             name="participant"
             ref={refSelect}
+            disabled={filteredUsersNotHost.length === 0}
           >
             <option disabled selected value="">
               {t("selectParticipant")}
@@ -381,7 +373,11 @@ function HostTable(props: {
             ))}
           </select>
           <button
-            className="tw-btn tw-btn-primary tw-btn-sm tw-rounded-r-lg"
+            className={`tw-btn tw-btn-sm tw-rounded-r-lg ${
+              filteredUsersNotHost.length === 0
+                ? "tw-btn-disabled"
+                : "tw-btn-primary"
+            }`}
             type="submit"
           >
             {t("addCoHost")}
@@ -439,58 +435,58 @@ function ParticipantsTable(props: {
 
   return (
     <>
-      <div className="tw-mt-10">
-        <table className="tw-table tw-table-compact tw-w-full">
-          <thead>
-            <tr>
-              <th className="tw-sticky"></th>
-              <th>{t("name")}</th>
-              <th>{t("address")}</th>
-              <th>{t("contact")}</th>
-              <th>{t("interested size")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {props.users
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((u: User) => (
-                <tr key={u.uid}>
-                  <td className="tw-sticky">
-                    <input
-                      type="checkbox"
-                      name="selectedChainAdmin"
-                      className="tw-checkbox tw-checkbox-sm tw-checkbox-primary"
-                      checked={selected.includes(u.uid)}
-                      onChange={onChangeSelect}
-                      value={u.uid}
-                    />
-                  </td>
-                  <td>{u.name}</td>
-                  <td>
-                    <span className="tw-block tw-w-48 tw-text-sm tw-whitespace-normal">
-                      {u.address}
-                    </span>
-                  </td>
-                  <td className="tw-text-sm tw-leading-relaxed">
-                    {u.email}
-                    <br />
-                    {u.phone_number}
-                  </td>
-                  <td className="tw-p-0">
-                    <div className="tw-w-48 tw-h-10 tw-overflow-hidden hover:tw-overflow-visible focus-within:tw-overflow-visible">
+      <div className="tw-mt-10 tw-relative">
+        <div className="tw-overflow-x-auto">
+          <table className="tw-table tw-table-compact tw-w-full">
+            <thead>
+              <tr>
+                <th className="tw-sticky tw-z-0"></th>
+                <th>{t("name")}</th>
+                <th>{t("address")}</th>
+                <th>{t("contact")}</th>
+                <th>{t("interested size")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {props.users
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((u: User) => (
+                  <tr key={u.uid}>
+                    <td className="tw-sticky">
+                      <input
+                        type="checkbox"
+                        name="selectedChainAdmin"
+                        className="tw-checkbox tw-checkbox-sm tw-checkbox-primary"
+                        checked={selected.includes(u.uid)}
+                        onChange={onChangeSelect}
+                        value={u.uid}
+                      />
+                    </td>
+                    <td>{u.name}</td>
+                    <td>
+                      <span className="tw-block tw-w-48 tw-text-sm tw-whitespace-normal">
+                        {u.address}
+                      </span>
+                    </td>
+                    <td className="tw-text-sm tw-leading-relaxed">
+                      {u.email}
+                      <br />
+                      {u.phone_number}
+                    </td>
+                    <td className="tw-align-middle">
                       <span
-                        className="tw-block tw-w-48 tw-px-2 tw-pt-2 tw-bg-base-100 tw-rounded-lg tw-whitespace-normal [&_span]:tw-mb-2"
+                        className="tw-block tw-min-w-[12rem] tw-bg-base-100 tw-rounded-lg tw-whitespace-normal [&_span]:tw-mb-2 -tw-mb-2"
                         tabIndex={0}
                       >
                         {SizeBadges(t, u.sizes)}
                       </span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <div className="tw-rounded-b-lg tw-flex tw-justify-between tw-bg-base-200">
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="tw-rounded-b-lg tw-flex tw-justify-between tw-bg-base-200 tw-sticky tw-z-10 tw-bottom-0">
           <div className="tw-flex tw-m-3 tw-bg-base-100 tw-rounded-lg tw-p-2">
             <p className="tw-block tw-mx-2">
               <span className="tw-text-2xl tw-font-bold tw-mr-2">

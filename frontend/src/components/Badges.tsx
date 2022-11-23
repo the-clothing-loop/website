@@ -9,10 +9,28 @@ export function GenderBadges(t: TFunction, arr: Array<string | Genders>) {
   ));
 }
 
+export const SizeLetters: Record<Sizes | string, string> = {
+  "1": "Baby",
+  "2": "<4",
+  "3": "5-12",
+  "4": "S",
+  "5": "M",
+  "6": "L",
+  "7": "+",
+  "8": "S",
+  "9": "M",
+  A: "L",
+  B: "+",
+};
+
 export function SizeBadges(t: TFunction, arr: Array<string | Sizes>) {
   return arr.map((s) => (
-    <span className="tw-badge tw-badge-outline tw-mr-2" key={s}>
-      {t(SizeI18nKeys[s])}
+    <span
+      className="tw-badge tw-badge-outline tw-mr-2 tw-tooltip tw-tooltip-top"
+      key={s}
+      data-tip={t(SizeI18nKeys[s])}
+    >
+      {SizeLetters[s]}
     </span>
   ));
 }
