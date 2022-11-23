@@ -10,7 +10,7 @@ export default function AdminDashboard() {
   const { authUser } = useContext(AuthContext);
 
   return (
-    <main className="tw-pt-20">
+    <main className="tw-pt-10">
       {authUser && (
         <TwoColumnLayout img="/images/Denise.png">
           <div className="tw-pt-32 tw-pl-10 tw-pr-20 tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-center">
