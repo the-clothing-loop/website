@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useDropdown } from "../util/dropdown.hooks";
 
-const LanguageSwitcher = () => {
+const LanguageSwitcher = (props: { className?: string }) => {
   const languages = [
     { lng: "en", title: "English", flag: "/icons/flags/gb.svg" },
     { lng: "nl", title: "Dutch", flag: "/icons/flags/nl.svg" },
@@ -22,9 +22,9 @@ const LanguageSwitcher = () => {
 
   return (
     <div
-      className={`tw-ml-4 tw-dropdown tw-dropdown-end tw-dropdown-bottom ${
+      className={`tw-dropdown tw-dropdown-end tw-dropdown-bottom ${
         dropdown.open ? "tw-dropdown-open" : ""
-      }`}
+      } ${props.className || ""}`}
       onBlur={() => dropdown.setOpen(false)}
     >
       <label

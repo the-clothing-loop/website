@@ -56,6 +56,14 @@ module.exports = {
             left: "0px",
           },
         },
+        "spin-half": {
+          from: {
+            transform: "rotate(0deg)",
+          },
+          to: {
+            transform: "rotate(180deg)",
+          },
+        },
       },
       animation: {
         slide: "30s linear 0s slide infinite",
