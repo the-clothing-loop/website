@@ -136,7 +136,7 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 	err := json.Unmarshal(event.Data.Raw, session)
 	if err != nil {
 		c.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Incorrect response from stripe"))
 		return
 	}
 

@@ -59,7 +59,12 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 		return false, nil, nil
 	}
 
-	user.AddUserChainsToObject(db)
+	err = user.AddUserChainsToObject(db)
+	if err != nil {
+		c.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.AddUserChainsToObjectErr)
+		return false, nil, nil
+	}
 
 	// 4. Root User
 	if user.IsRootAdmin {

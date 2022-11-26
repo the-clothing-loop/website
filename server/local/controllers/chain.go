@@ -251,7 +251,8 @@ func ChainUpdate(c *gin.Context) {
 	}
 
 	if res := db.Model(chain).Updates(valuesToUpdate); res.Error != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
+		c.Error(res.Error)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to update loop values"))
 	}
 }
 
@@ -350,7 +351,13 @@ func ChainRemoveUser(c *gin.Context) {
 	if !ok {
 		return
 	}
-	user.AddUserChainsToObject(db)
+	err := user.AddUserChainsToObject(db)
+	if err != nil {
+		c.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.AddUserChainsToObjectErr)
+		return
+	}
+
 	isUserChainAdmin := false
 	for _, c := range user.Chains {
 		if c.ChainID == chain.ID {

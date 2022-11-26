@@ -85,6 +85,8 @@ WHERE user_chains.user_id = ?
 	return results, nil
 }
 
+var AddUserChainsToObjectErr = errors.New("Unable to add associated loops to user")
+
 func (u *User) AddUserChainsToObject(db *gorm.DB) error {
 	userChains := []UserChain{}
 	err := db.Raw(`

@@ -87,14 +87,14 @@ LIMIT 1
 	`, token).First(user).Error
 	if err != nil {
 		c.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to find user that matches authentication token"))
 		return
 	}
 
 	err = user.AddUserChainsToObject(db)
 	if err != nil {
 		c.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.AddUserChainsToObjectErr)
 		return
 	}
 
@@ -120,7 +120,7 @@ WHERE user_chains.chain_id = ?
 	`, chainIDs).Scan(&results).Error
 	if err != nil {
 		c.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to find associated loop admins"))
 		return
 	}
 	if user.Email.Valid {
