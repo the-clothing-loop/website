@@ -3,6 +3,7 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app"
@@ -86,12 +87,14 @@ WHERE user_tokens.token = ?
 LIMIT 1
 	`, token).First(user).Error
 	if err != nil {
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
 
 	err = user.AddUserChainsToObject(db)
 	if err != nil {
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
@@ -117,6 +120,7 @@ WHERE user_chains.chain_id = ?
 	AND users.enabled = TRUE
 	`, chainIDs).Scan(&results).Error
 	if err != nil {
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}

@@ -135,7 +135,7 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 	session := new(stripe.CheckoutSession)
 	err := json.Unmarshal(event.Data.Raw, session)
 	if err != nil {
-		log.Print(err)
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
@@ -145,7 +145,7 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 		Email:  session.CustomerEmail,
 	}).Error
 	if err != nil {
-		log.Print(err)
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to update payment in database"))
 		return
 	}

@@ -80,6 +80,7 @@ LIMIT 1
 
 	err := user.AddUserChainsToObject(db)
 	if err != nil {
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
@@ -127,6 +128,7 @@ WHERE users.id IN (
 )
 	`, query.ChainUID).Scan(allUserChains).Error
 	if err != nil {
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
@@ -138,6 +140,7 @@ LEFT JOIN chains      ON chains.id = user_chains.chain_id
 WHERE chains.uid = ? AND users.is_email_verified = ?
 	`, query.ChainUID, true).Scan(users).Error
 	if err != nil {
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 		return
 	}
@@ -212,12 +215,14 @@ func UserUpdate(c *gin.Context) {
 				Name:  user.Name,
 			})
 			if res.Error != nil {
+				c.Error(res.Error)
 				gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 				return
 			}
 		} else {
 			res := db.Where("email = ?", user.Email).Delete(&models.Newsletter{})
 			if res.Error != nil {
+				c.Error(res.Error)
 				gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 				return
 			}
