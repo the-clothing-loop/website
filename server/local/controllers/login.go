@@ -114,7 +114,7 @@ LIMIT 1
 SELECT users.name as name, users.email as email
 FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id 
-WHERE user_chains.chain_id = ?
+WHERE user_chains.chain_id IN ?
 	AND user_chains.is_chain_admin = TRUE
 	AND users.enabled = TRUE
 	`, chainIDs).Scan(&results).Error
