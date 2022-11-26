@@ -3,7 +3,6 @@ package controllers
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app"
