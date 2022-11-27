@@ -13,6 +13,7 @@ import SearchBar from "./SearchBar";
 import { ChainsContext } from "../../providers/ChainsProvider";
 import { defaultTruePredicate, ChainPredicate } from "../../pages/FindChain";
 import { Chain } from "../../api/types";
+import { ToastContext } from "../../providers/ToastProvider";
 
 const hasCommonElements = (arr1: string[], arr2: string[]) =>
   arr1.some((item: string) => arr2.includes(item));
@@ -24,22 +25,24 @@ export interface SearchValues {
 }
 
 interface IProps {
-  setFilterChainPredicate: Dispatch<SetStateAction<ChainPredicate>>;
-  handleFindChainCallback: (findChainPredicate: ChainPredicate) => boolean;
-  initialValues?: any;
+  setSearchValues: Dispatch<SetStateAction<ChainPredicate>>;
+  onSearchCallback: (findChainPredicate: ChainPredicate) => boolean;
+  initialValues: SearchValues;
 }
 
 export default function FindChainSearchBarContainer({
-  setFilterChainPredicate,
-  handleFindChainCallback,
+  setSearchValues,
+  onSearchCallback,
   initialValues,
 }: IProps) {
+  const chains = useContext(ChainsContext);
+  const { addToast } = useContext(ToastContext);
+  const { t } = useTranslation();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
-  const [isChainNotFound, setIsChainNotFound] = useState(false);
   const [formAutoFilled, setFormAutoFilled] = useState(false);
-  const chains = useContext(ChainsContext);
 
   const handleSearchTermChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -55,7 +58,7 @@ export default function FindChainSearchBarContainer({
       );
     };
 
-    setFilterChainPredicate(() => newChainFilterPredicate);
+    setSearchValues(() => newChainFilterPredicate);
 
     if (!searchTerm) {
       return;
@@ -64,17 +67,28 @@ export default function FindChainSearchBarContainer({
     const newChainFindPredicate = (chain: Chain) =>
       chain.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const isFindChainResult = handleFindChainCallback(newChainFindPredicate);
+    const isFindChainResult = onSearchCallback(newChainFindPredicate);
 
-    !isFindChainResult && setIsChainNotFound(true);
+    if (!isFindChainResult) {
+      addToast({
+        type: "error",
+        message: t("noLoopsFoundIn") + ": " + searchTerm,
+        actions: [
+          {
+            fn: () => setSearchTerm(""),
+            text: t("clear"),
+            type: "ghost",
+          },
+        ],
+      });
+    }
   };
 
   const handleBack = () => {
     setSearchTerm("");
     setSelectedSizes([]);
     setSelectedGenders([]);
-    setIsChainNotFound(false);
-    setFilterChainPredicate(() => defaultTruePredicate);
+    setSearchValues(() => defaultTruePredicate);
   };
 
   useEffect(() => {
@@ -110,55 +124,6 @@ export default function FindChainSearchBarContainer({
         setSelectedSizes={setSelectedSizes}
         handleSearch={handleSearch}
       />
-
-      {isChainNotFound && (
-        <ChainNotFound searchTerm={searchTerm} backAction={handleBack} />
-      )}
     </>
-  );
-}
-
-function ChainNotFound({
-  searchTerm,
-  backAction,
-}: {
-  searchTerm: string;
-  backAction: any;
-}) {
-  const { t } = useTranslation();
-  const history = useHistory();
-
-  return (
-    <div className="absolute z-30 max-w-screen">
-      <div className="shadow-lg rounded-lg bg-white m-4 p-4 sm:w-72">
-        <button
-          aria-label="close"
-          className="absolute top-6 right-6 btn btn-sm btn-circle btn-ghost feather feather-x"
-          onClick={backAction}
-        />
-
-        <h1 className="font-semibold text-secondary mb-2 pr-10">
-          {`${t("noLoopsFoundIn")}`} <span>{searchTerm}</span>
-        </h1>
-
-        <p className="mb-4">{t("ThereIsNoActiveLoopInYourRegion")}</p>
-
-        <div>
-          <button
-            className="btn btn-secondary btn-sm btn-outline"
-            onClick={backAction}
-          >
-            {t("back")}
-          </button>
-          <button
-            className="btn btn-primary btn-sm ml-3"
-            onClick={() => history.push("/loops/new/users/signup")}
-            type="submit"
-          >
-            {t("startNewLoop")}
-          </button>
-        </div>
-      </div>
-    </div>
   );
 }

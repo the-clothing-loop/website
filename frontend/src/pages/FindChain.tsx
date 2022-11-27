@@ -10,7 +10,9 @@ import mapboxgl from "mapbox-gl";
 // import { ChainsContext } from "../providers/ChainsProvider";
 import { AuthContext } from "../providers/AuthProvider";
 import { IViewPort } from "../types";
-import FindChainSearchBarContainer from "../components/FindChain/FindChainSearchBarContainer";
+import FindChainSearchBarContainer, {
+  SearchValues,
+} from "../components/FindChain/FindChainSearchBarContainer";
 import { Chain, UID } from "../api/types";
 // import { GenderI18nKeys, Genders, SizeI18nKeys } from "../api/enums";
 import { chainAddUser, chainGetAll } from "../api/chain";

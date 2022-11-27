@@ -1,4 +1,4 @@
-import { FlyToInterpolator } from "react-map-gl";
+// import { FlyToInterpolator } from "react-map-gl";
 
 export interface IViewPort {
   longitude: number;
@@ -7,5 +7,5 @@ export interface IViewPort {
   height: string;
   zoom: number;
   transitionDuration?: number;
-  transitionInterpolator?: FlyToInterpolator;
+  transitionInterpolator?: null; // FlyToInterpolator;
 }

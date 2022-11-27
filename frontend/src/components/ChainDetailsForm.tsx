@@ -1,10 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import destination from "@turf/destination";
-import ReactMapGL, {
-  SVGOverlay,
-  FlyToInterpolator,
-  MapEvent,
-} from "react-map-gl";
+// import ReactMapGL, { SVGOverlay, FlyToInterpolator } from "react-map-gl";
 import { useTranslation } from "react-i18next";
 
 import categories from "../util/categories";
@@ -70,7 +66,7 @@ export default function ChainDetailsForm({
       latitude: latitude,
       zoom: 10,
       transitionDuration: 500,
-      transitionInterpolator: new FlyToInterpolator(),
+      transitionInterpolator: null, //new FlyToInterpolator(),
     });
   }
 
@@ -174,10 +170,10 @@ export default function ChainDetailsForm({
     setValue("sizes", filteredSizes);
   }
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="md:w-1/2 md:pr-4">
-        <div className="aspect-square mb-6 md:mb-0">
-          <ReactMapGL
+    <div className="flex flex-row">
+      <div className="w-1/2 pr-4">
+        <div className="aspect-square">
+          {/* <ReactMapGL
             mapboxApiAccessToken={accessToken}
             mapStyle="mapbox://styles/mapbox/light-v10"
             {...viewport}
@@ -195,7 +191,7 @@ export default function ChainDetailsForm({
             {values.longitude !== null && values.latitude !== null ? (
               <SVGOverlay redraw={redrawLoop} />
             ) : null}
-          </ReactMapGL>
+          </ReactMapGL> */}
         </div>
       </div>
       <div className="md:w-1/2 md:pl-4">
