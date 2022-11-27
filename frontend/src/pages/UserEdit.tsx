@@ -40,8 +40,8 @@ export default function UserEdit() {
 
   const userIsChainAdmin = useMemo(
     () =>
-      user?.chains.find((c) => c.chain_uid === state.chainUID)?.is_chain_admin ||
-      false,
+      user?.chains.find((c) => c.chain_uid === state.chainUID)
+        ?.is_chain_admin || false,
     [user]
   );
 

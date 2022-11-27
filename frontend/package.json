@@ -73,7 +73,7 @@
       "import/no-webpack-loader-syntax": "off",
       "react-hooks/exhaustive-deps": "off",
       "@typescript-eslint/no-unused-vars": "off",
-      "jsx-a11y/anchor-has-content":"off",
+      "jsx-a11y/anchor-has-content": "off",
       "no-useless-escape": "off",
       "no-throw-literal": "off"
     }

@@ -62,7 +62,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	err = user.AddUserChainsToObject(db)
 	if err != nil {
 		c.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.AddUserChainsToObjectErr)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
 		return false, nil, nil
 	}
 

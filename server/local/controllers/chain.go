@@ -354,7 +354,7 @@ func ChainRemoveUser(c *gin.Context) {
 	err := user.AddUserChainsToObject(db)
 	if err != nil {
 		c.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.AddUserChainsToObjectErr)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
 		return
 	}
 
