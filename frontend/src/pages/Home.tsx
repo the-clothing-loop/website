@@ -89,9 +89,9 @@ export default function Home() {
               <img className="pl-2" src={CirclesFrame} alt="" />
             </div>
           </div>
-          <div className="relative z-10 flex">
-            <div className="pt-20 pl-40 pr-20 w-1/2 flex justify-end">
-              <div className="max-w-[500px]">
+          <div className="relative z-10 flex flex-col md:flex-row">
+            <div className="p-5 md:pt-20 md:pl-40 md:pr-20 md:w-1/2 flex justify-center md:justify-end">
+              <div className="max-w-screen-xs md:max-w-[500px]">
                 <h1
                   className="font-serif font-bold text-accent text-9xl [&_span]:text-stroke-accent mb-8"
                   dangerouslySetInnerHTML={{ __html: t("swapDontShop") }}
@@ -106,7 +106,7 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            <div className="pt-16 pr-40 w-1/2">
+            <div className="md:pt-16 md:pr-40 md:w-1/2">
               <div>
                 <img
                   className="w-[30hw]"
