@@ -56,7 +56,7 @@ const Contacts = () => {
         <title>The Clothing Loop | Contact Us</title>
         <meta name="description" content="Contact us" />
       </Helmet>
-      <main className="max-w-screen-sm mx-auto pt-10">
+      <main className="max-w-screen-sm mx-auto pt-10 px-4">
         <h1 className="font-serif font-bold text-secondary text-6xl mb-8">
           Contact us
         </h1>
