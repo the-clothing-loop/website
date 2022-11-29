@@ -19,7 +19,7 @@ import (
 
 type ChainCreateRequestBody struct {
 	Name             string   `json:"name" binding:"required"`
-	Description      string   `json:"description" binding:"required"`
+	Description      string   `json:"description"`
 	Address          string   `json:"address" binding:"required"`
 	Latitude         float64  `json:"latitude" binding:"required"`
 	Longitude        float64  `json:"longitude" binding:"required"`

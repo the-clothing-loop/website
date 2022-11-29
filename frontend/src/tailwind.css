@@ -84,7 +84,7 @@
 }
 
 .prose {
-  @apply prose-headings:font-serif prose-headings:text-secondary prose-headings:font-bold prose-a:link max-w-screen-md;
+  @apply prose-headings:font-serif prose-headings:text-secondary prose-headings:font-bold prose-a:link max-w-screen-md prose-p:my-3;
 }
 
 .table th:first-child {
@@ -95,7 +95,7 @@
   @apply w-full max-w-none;
 }
 #root .mapboxgl-ctrl-geocoder--input {
-  @apply h-12 px-10 border border-solid border-secondary transition-colors w-full;
+  @apply h-12 px-10 border border-solid border-secondary input input-secondary w-full;
 }
 #root .mapboxgl-ctrl-geocoder--icon.mapboxgl-ctrl-geocoder--icon-search {
   @apply top-3.5 left-3;

@@ -8,9 +8,11 @@ import { useDropdownCheckBox } from "../util/dropdown.hooks";
 interface IProps {
   selectedGenders: Array<Genders | string>;
   handleChange: (genders: Array<Genders | string>) => void;
+  className?: string;
 }
 
 export default function CategoriesDropdown({
+  className,
   selectedGenders,
   handleChange,
 }: IProps) {
@@ -34,7 +36,9 @@ export default function CategoriesDropdown({
 
   return (
     <div
-      className={`w-full dropdown ${dropdown.open ? "dropdown-open" : ""}`}
+      className={`w-full dropdown ${
+        dropdown.open ? "dropdown-open" : ""
+      } ${className}`}
       onBlur={() => dropdown.setOpen(false)}
     >
       <label

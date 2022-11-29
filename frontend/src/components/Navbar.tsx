@@ -17,6 +17,13 @@ function Navbar() {
   const { authUser } = useContext(AuthContext);
   let location = useLocation();
 
+  function onClickMobileNavLink() {
+    const el = document.getElementById("header-hamburger") as HTMLInputElement;
+    console.log(el.value);
+
+    el.checked = false;
+  }
+
   return (
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
     // Note: Not supported by IE 11. See https://material-ui.com/components/app-bar/#fixed-placement
@@ -41,6 +48,7 @@ function Navbar() {
       <div className="hidden peer-checked:block fixed inset-0 lg:!hidden z-50 bg-white">
         <nav
           aria-label="mobile site navigation"
+          onClick={onClickMobileNavLink}
           className="container mx-auto px-20 flex flex-col items-center pt-40"
         >
           <Link

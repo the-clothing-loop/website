@@ -34,7 +34,7 @@ export default function Footer() {
         <div className="lg:container lg:px-20 mx-auto flex flex-col lg:flex-row-reverse relative z-10">
           <Newsletter />
           <div className="container mx-auto lg:mx-0 lg:w-1/2">
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 items-center md:items-start sm:justify-end text-center md:text-left lg:mb-4 lg:mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-center md:items-start sm:justify-end text-center md:text-left lg:mb-4 lg:mt-4">
               <div className="flex flex-col items-center md:items-start p-4 pt-0">
                 <span className="text-secondary font-bold text-2xl mb-3">
                   {t("learnMore")}

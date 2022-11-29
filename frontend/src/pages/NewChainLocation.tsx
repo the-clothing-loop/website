@@ -36,11 +36,15 @@ const NewChainLocation = ({ location }: { location: any }) => {
       return;
     }
     const newChain: RequestRegisterChain = {
-      ...values,
-      address: user!.address,
-      open_to_new_members: true,
-      longitude: values.longitude,
+      name: values.name,
+      description: values.description,
+      address: values.address,
       latitude: values.latitude,
+      longitude: values.longitude,
+      radius: values.radius,
+      open_to_new_members: true,
+      sizes: values.sizes,
+      genders: values.genders,
     };
 
     console.log(`creating chain: ${JSON.stringify(newChain)}`);
@@ -63,7 +67,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
             address: user.address,
             phone_number: user.phone_number,
             newsletter: state.register_user?.newsletter || false,
-            sizes: user.sizes,
+            sizes: values.sizes || [],
           },
           newChain
         );
@@ -93,9 +97,16 @@ const NewChainLocation = ({ location }: { location: any }) => {
             {t("startNewLoop")}
           </h1>
           <div className="text-center mb-6">
-            <ProgressBar activeStep={1} />
+            <ProgressBar
+              activeStep={1}
+              disabledStep={state.only_create_chain ? 0 : undefined}
+            />
           </div>
-          <ChainDetailsForm onSubmit={onSubmit} submitError={error} />
+          <ChainDetailsForm
+            onSubmit={onSubmit}
+            submitError={error}
+            showBack={!state.only_create_chain}
+          />
         </div>
       </main>
     </>

@@ -49,14 +49,14 @@ export const Newsletter = () => {
           <p className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
             {t("thankYouForSigningUp")}
           </p>
-          <p className="">{t("youAreNowSubscribedToOurMonthlyNewsletter")}</p>
+          <p>{t("youAreNowSubscribedToOurMonthlyNewsletter")}</p>
         </div>
       ) : isError ? (
         <div className="max-w-[600px]">
           <p className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
             {t("somethingIsWrong")}
           </p>
-          <p className="">{t("pleaseTryAgainInSeconds")}</p>
+          <p>{t("pleaseTryAgainInSeconds")}</p>
         </div>
       ) : (
         <div className="max-w-[600px]">

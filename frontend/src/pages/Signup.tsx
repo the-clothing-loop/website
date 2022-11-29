@@ -16,6 +16,7 @@ import { registerBasicUser } from "../api/login";
 import FormJup from "../util/form-jup";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
+import useForm from "../util/form.hooks";
 
 interface Params {
   chainUID: string;
@@ -37,10 +38,7 @@ export default function Signup() {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
   const [submitted, setSubmitted] = useState(false);
-  const [geocoderResult, setGeocoderResult] = useState({
-    result: { place_name: "" },
-  });
-  const [jsValues, setJsValues] = useState({
+  const [jsValues, setJsValue] = useForm({
     address: "",
     sizes: [] as string[],
   });
@@ -69,8 +67,6 @@ export default function Signup() {
       return;
     }
 
-    console.log(values);
-
     (async () => {
       try {
         await registerBasicUser(
@@ -78,7 +74,7 @@ export default function Signup() {
             name: values.name,
             email: values.email,
             phone_number: values.phone,
-            address: geocoderResult.result.place_name,
+            address: jsValues.address,
             newsletter: values.newsletter === "on",
             sizes: jsValues.sizes,
           },
@@ -108,7 +104,7 @@ export default function Signup() {
 
         <main className="p-10">
           <TwoColumnLayout img="/images/Join-Loop.jpg">
-            <div id="container" className="">
+            <div id="container">
               <h1 className="font-semibold text-3xl text-secondary mb-3">
                 {t("join")}
                 <span> {chain?.name}</span>
@@ -130,14 +126,14 @@ export default function Signup() {
                     <label className="label">
                       <span className="label-text">{t("address")}</span>
                     </label>
-                    <GeocoderSelector onResult={setGeocoderResult} />
+                    <GeocoderSelector
+                      onResult={(e) => setJsValue("address", e.place_name)}
+                    />
                   </div>
                   <SizesDropdown
                     filteredGenders={chain?.genders || []}
                     selectedSizes={jsValues.sizes}
-                    handleChange={(s) =>
-                      setJsValues((state) => ({ ...state, sizes: s }))
-                    }
+                    handleChange={(s) => setJsValue("sizes", s)}
                   />
                   <PopoverOnHover
                     message={t("weWouldLikeToKnowThisEquallyRepresented")}

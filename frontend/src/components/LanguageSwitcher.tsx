@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useDropdown } from "../util/dropdown.hooks";
 
@@ -20,6 +20,13 @@ const LanguageSwitcher = (props: { className?: string }) => {
     return languages.find((l) => l.lng === i18n.language) || languages[0];
   }, [i18n.language]);
 
+  function onToggle(e: MouseEvent<HTMLLabelElement>) {
+    // This ensures that the onClick event doesn't bubble up to the mobile navbar
+    // see Navbar.tsx
+    e.stopPropagation();
+    dropdown.toggle();
+  }
+
   return (
     <div
       className={`dropdown dropdown-end dropdown-bottom ${
@@ -27,7 +34,7 @@ const LanguageSwitcher = (props: { className?: string }) => {
       } ${props.className || ""}`}
       onBlur={() => dropdown.setOpen(false)}
     >
-      <label tabIndex={0} className="btn btn-outline" onClick={dropdown.toggle}>
+      <label tabIndex={0} className="btn btn-outline" onClick={onToggle}>
         {btnLabelLanguage.title}
         <img
           className="w-6 ml-2"

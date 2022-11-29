@@ -13,7 +13,7 @@ export default function AdminDashboard() {
     <main className="pt-10">
       {authUser && (
         <TwoColumnLayout img="/images/Denise.png">
-          <div className="pt-32 pl-10 pr-20 flex flex-col items-center justify-center text-center">
+          <div className="md:pl-10 md:pr-20 flex flex-col items-center justify-center text-center max-md:mb-10">
             <h3 className="font-serif font-bold text-5xl text-secondary mb-8">{`Hello, ${authUser?.name}`}</h3>
             <p className="mb-6">{t("thankYouForBeingHere")}</p>
 
