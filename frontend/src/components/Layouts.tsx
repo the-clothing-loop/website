@@ -19,13 +19,3 @@ export function TwoColumnLayout({
     </div>
   );
 }
-
-export function OneColumnLayout({ children }: PropsWithChildren<{}>) {
-  return (
-    <div className="container">
-      <div className="flex">
-        <div className="w-1/2">{children}</div>
-      </div>
-    </div>
-  );
-}
