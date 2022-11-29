@@ -10,10 +10,7 @@ import { Logout } from "./pages/Logout";
 import { ChainsProvider } from "./providers/ChainsProvider";
 
 // Pages
-import {
-  NewLoopConfirmation,
-  JoinLoopConfirmation,
-} from "./pages/Thankyou/Thankyou";
+import { NewLoopConfirmation, JoinLoopConfirmation } from "./pages/Thankyou";
 import Home from "./pages/Home";
 import { ToastProvider } from "./providers/ToastProvider";
 
@@ -36,7 +33,7 @@ const Donate = React.lazy(() => import("./pages/Donations/Donate"));
 const About = React.lazy(() => import("./pages/About"));
 const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfUse = React.lazy(() => import("./pages/TermsOfUse"));
-const FAQ = React.lazy(() => import("./pages/FAQ/FAQ"));
+const FAQ = React.lazy(() => import("./pages/FAQ"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 
 export default function App() {

@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
 //Project resources
-import { TwoColumnLayout } from "../../components/Layouts";
+import { TwoColumnLayout } from "../components/Layouts";
 
 export interface IProps {
   heading: string;
