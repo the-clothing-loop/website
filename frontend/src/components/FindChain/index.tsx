@@ -124,7 +124,7 @@ function ChainNotFound({
   const history = useHistory();
 
   return (
-    <div className="">
+    <div>
       <span className="feather feather-x" onClick={backAction} />
 
       <h1>

@@ -34,10 +34,10 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
   }
 
   return (
-    <div className={`form-control w-full max-w-xs ${props.classes?.root}`}>
-      <label className="label">
+    <label className={`form-control w-full ${props.classes?.root}`}>
+      <div className="label">
         <span className="label-text">{t("phoneNumber")}</span>
-      </label>
+      </div>
       <input
         type="phone"
         name="phone"
@@ -52,7 +52,7 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
         }`}
         required={props.required}
       />
-    </div>
+    </label>
   );
 }
 
@@ -75,10 +75,13 @@ export function TextForm({
   ...props
 }: TextFormProps & InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <div className={`form-control relative w-full max-w-xs ${classes?.root}`}>
-      <label className="label">
+    <label className={`form-control relative w-full ${classes?.root}`}>
+      <div className="label">
         <span className="label-text">{label}</span>
-      </label>
+      </div>
+      {!!info && (
+        <PopoverOnHover message={info} className="absolute top-0 -right-2" />
+      )}
       <input
         aria-invalid={invalid}
         className={`input input-bordered input-secondary w-full ${
@@ -86,9 +89,6 @@ export function TextForm({
         }`}
         {...props}
       />
-      {!!info && (
-        <PopoverOnHover message={info} className="absolute top-0 -right-2" />
-      )}
-    </div>
+    </label>
   );
 }

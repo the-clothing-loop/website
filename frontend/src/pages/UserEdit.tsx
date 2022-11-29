@@ -92,7 +92,7 @@ export default function UserEdit() {
         <title>The Clothing Loop | Edit user</title>
         <meta name="description" content="Edit user" />
       </Helmet>
-      <div className="w-full container sm:max-w-screen-md mx-auto p-10">
+      <main className="w-full container sm:max-w-screen-md mx-auto p-10">
         <h1 className="font-serif font-bold text-6xl text-secondary mb-4">
           {user.is_root_admin || userIsChainAdmin
             ? t("editAdminContacts")
@@ -152,7 +152,7 @@ export default function UserEdit() {
             </div>
           </div>
         </form>
-      </div>
+      </main>
     </>
   );
 }

@@ -10,7 +10,11 @@ export default function FormActions() {
           <span className="label-text">
             {t("subscribeToTheClothingLoopNewsletter")}
           </span>
-          <input type="checkbox" className="checkbox" name="newsletter" />
+          <input
+            type="checkbox"
+            className="checkbox border-black"
+            name="newsletter"
+          />
         </label>
       </div>
       <div className="form-control">
@@ -35,7 +39,7 @@ export default function FormActions() {
           <input
             type="checkbox"
             required
-            className="checkbox"
+            className="checkbox border-black"
             name="privacyPolicy"
           />
         </label>

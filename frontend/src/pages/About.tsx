@@ -56,7 +56,7 @@ export default function About() {
             }}
           ></Trans>
         </div>
-        <div className="">
+        <div>
           <img
             src="/images/press-clippings-site.jpg"
             alt=""

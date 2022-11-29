@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import destination from "@turf/destination";
-import ReactMapGL, { SVGOverlay, FlyToInterpolator } from "react-map-gl";
+import ReactMapGL, {
+  SVGOverlay,
+  FlyToInterpolator,
+  MapEvent,
+} from "react-map-gl";
 import { useTranslation } from "react-i18next";
 
 import categories from "../util/categories";
@@ -13,6 +17,9 @@ import CategoriesDropdown from "../components/CategoriesDropdown";
 import { RequestRegisterChain } from "../api/login";
 import { Genders, Sizes } from "../api/enums";
 import useForm from "../util/form.hooks";
+import { useHistory } from "react-router";
+import { useContext } from "react";
+import { ToastContext } from "../providers/ToastProvider";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
@@ -21,11 +28,12 @@ interface IProps {
   submitted?: boolean;
   submitError?: string;
   initialValues?: RegisterChainForm;
+  showBack?: boolean;
 }
 
 export type RegisterChainForm = Omit<
   RequestRegisterChain,
-  "address" | "open_to_new_members"
+  "open_to_new_members"
 >;
 
 export default function ChainDetailsForm({
@@ -33,8 +41,11 @@ export default function ChainDetailsForm({
   submitError,
   initialValues,
   submitted,
+  showBack,
 }: IProps) {
   const { t } = useTranslation();
+  const { addToastError } = useContext(ToastContext);
+  const history = useHistory();
 
   const [viewport, setViewport] = useState<IViewPort>({
     longitude: initialValues ? initialValues.longitude : 0,
@@ -47,6 +58,7 @@ export default function ChainDetailsForm({
   const [values, setValue, setValues] = useForm<RegisterChainForm>({
     name: "",
     description: "",
+    address: "",
     radius: 3,
     genders: [],
     sizes: [],
@@ -65,36 +77,58 @@ export default function ChainDetailsForm({
     });
   }
 
-  function handleGeolocationResult({
-    result: { center },
-  }: {
+  function handleGeolocationResult(e: {
     result: { center: [number, number] };
   }) {
-    flyToLocation(...center);
+    flyToLocation(...e.result.center);
   }
 
-  async function getPlaceName(longitude: number, latitude: number) {
+  async function getPlaceName(
+    longitude: number,
+    latitude: number
+  ): Promise<string> {
     const response = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
     );
     const data = await response.json();
-    return data.features[0].place_name;
+    return data.features[0]?.place_name || "";
   }
 
-  async function onSubmitWrapper(values: any) {
-    values.address = await getPlaceName(values.longitude, values.latitude);
-    return onSubmit(values);
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!values.genders?.length) {
+      addToastError(t("required") + ": " + t("categories"));
+      return;
+    }
+    if (!values.sizes?.length) {
+      addToastError(t("required") + ": " + t("sizes"));
+      return;
+    }
+
+    (async () => {
+      values.address = await getPlaceName(values.longitude, values.latitude);
+      console.log("getPlaceName", values.address);
+
+      if (values.address.length < 6) {
+        addToastError(t("required") + ": " + t("address"));
+        return;
+      }
+
+      onSubmit(values);
+    })();
   }
 
-  function handleMapClick(event: any) {
-    const targetClass = String(event.srcEvent.target?.className);
-    if (targetClass.includes("mapboxgl-ctrl-geocoder")) {
+  function handleMapClick(e: MapEvent) {
+    const el = e.srcEvent.target as HTMLElement | undefined;
+    if (el?.className.toString().includes("mapboxgl-ctrl-geocoder")) {
       // ignore clicks on geocoding search bar, which is on top of map
       return;
     }
-    setValue("longitude", event.lngLat[0]);
-    setValue("latitude", event.lngLat[1]);
-    flyToLocation(event.lngLat[0], event.lngLat[1]);
+
+    setValue("longitude", e.lngLat[0]);
+    setValue("latitude", e.lngLat[1]);
+    flyToLocation(e.lngLat[0], e.lngLat[1]);
   }
 
   function redrawLoop({ project }: { project: any }) {
@@ -168,11 +202,12 @@ export default function ChainDetailsForm({
         </div>
       </div>
       <div className="w-1/2 pl-4">
-        <form noValidate>
+        <form onSubmit={handleSubmit}>
           <p className="mb-2">{t("clickToSetLoopLocation")}</p>
           <TextForm
             classes={{ root: "" }}
             required
+            min={3}
             label={t("loopName")}
             name="name"
             type="text"
@@ -192,44 +227,58 @@ export default function ChainDetailsForm({
             info={t("decideOnTheAreaYourLoopWillBeActiveIn")}
           />
 
-          <TextForm
-            type="text"
-            label={t("description")}
-            name="description"
-            value={values.description}
-            onChange={(e) => setValue("description", e.target.value)}
-            classes={{ root: "mb-4 w-full max-w-xs" }}
-            info={t("optionalFieldTypeAnything")}
-          />
-
-          <div className="mb-2 w-full max-w-xs">
-            <div className="float-right -mr-2 -mt-2">
-              <PopoverOnHover
-                message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
-              />
+          <label className="form-control relative w-full mb-4">
+            <div className="label">
+              <span className="label-text">{t("description")}</span>
             </div>
+            <textarea
+              className="textarea textarea-secondary w-full"
+              name="description"
+              cols={3}
+              value={values.description}
+              onChange={(e) => setValue("description", e.target.value)}
+            />
+            <PopoverOnHover
+              message={t("optionalFieldTypeAnything")}
+              className="absolute top-0 -right-2"
+            />
+          </label>
+
+          <div className="grid sm:grid-cols-2 gap-4 items-end mb-6">
             <CategoriesDropdown
+              className="dropdown-top"
               selectedGenders={values.genders || []}
               handleChange={handleCategoriesChange}
             />
-          </div>
-
-          <div className="mb-6 w-full max-w-xs">
-            <SizesDropdown
-              filteredGenders={
-                values.genders?.length
-                  ? values.genders
-                  : [Genders.children, Genders.women, Genders.men]
-              }
-              selectedSizes={values.sizes || []}
-              handleChange={(v) => setValue("sizes", v)}
-            />
+            <div>
+              <div className="flex justify-end -mr-2 -mt-3">
+                <PopoverOnHover
+                  message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
+                />
+              </div>
+              <SizesDropdown
+                className="dropdown-top"
+                filteredGenders={
+                  values.genders?.length
+                    ? values.genders
+                    : [Genders.children, Genders.women, Genders.men]
+                }
+                selectedSizes={values.sizes || []}
+                handleChange={(v) => setValue("sizes", v)}
+              />
+            </div>
           </div>
 
           <div className="flex flex-row">
-            <button type="submit" className="btn btn-primary btn-outline">
-              {t("back")}
-            </button>
+            {showBack && (
+              <button
+                type="button"
+                className="btn btn-secondary btn-outline"
+                onClick={() => history.goBack()}
+              >
+                {t("back")}
+              </button>
+            )}
             <button type="submit" className="btn btn-primary ml-4">
               {t("submit")}
               <span className="feather feather-arrow-right ml-4"></span>

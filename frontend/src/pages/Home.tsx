@@ -81,7 +81,7 @@ export default function Home() {
 
       <StandaloneSearchBar />
 
-      <div className="">
+      <div>
         <section className="mb-24">
           <div className="w-full absolute bg-teal-light">
             <div className="p-8 ml-[40%] pb-14 flex">
@@ -96,7 +96,7 @@ export default function Home() {
                   className="font-serif font-bold text-accent text-9xl [&_span]:text-stroke-accent mb-8"
                   dangerouslySetInnerHTML={{ __html: t("swapDontShop") }}
                 ></h1>
-                <p className="">{t("swapDontShopMessage")}</p>
+                <p>{t("swapDontShopMessage")}</p>
                 <button
                   className="btn btn-primary btn-outline mt-4"
                   onClick={() => history.push("/loops/find")}
@@ -155,7 +155,7 @@ export default function Home() {
                   <span className="inline md:block mr-4 text-9xl text-stroke-secondary">
                     2
                   </span>
-                  <span className="">{t("joinALoop")}</span>
+                  <span>{t("joinALoop")}</span>
                 </h2>
                 <p className="text-lg">{t("joinALoopMessage")}</p>
                 <Link

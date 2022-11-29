@@ -1,6 +1,6 @@
 import { useState, useContext, ChangeEvent, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import ProgressBar from "../components/ProgressBar";
@@ -11,6 +11,8 @@ import FormActions from "../components/formActions";
 import { State as LoopsNewState } from "./NewChainLocation";
 import { RequestRegisterUser } from "../api/login";
 import FormJup from "../util/form-jup";
+import useForm from "../util/form.hooks";
+import { ToastContext } from "../providers/ToastProvider";
 
 interface FormHtmlValues {
   name: string;
@@ -26,50 +28,48 @@ export default function Signup() {
   const { t } = useTranslation();
   const history = useHistory();
   const authUser = useContext(AuthContext).authUser;
-  const [error, setError] = useState("");
+  const { addToastError } = useContext(ToastContext);
   const [registerUser, setRegisterUser] = useState<RequestRegisterUser | null>(
     null
   );
-  const [JsValues, setJsValues] = useState<FormJsValues>({
+  const [jsValues, setJsValue, setJsValues] = useForm<FormJsValues>({
     address: "",
   });
 
   if (registerUser) {
-    return (
-      <Redirect
-        to={{
-          pathname: "/loops/new",
-          state: {
-            only_create_chain: false,
-            register_user: registerUser,
-          } as LoopsNewState,
-        }}
-      />
-    );
+    history.push({
+      pathname: "/loops/new",
+      state: {
+        only_create_chain: false,
+        register_user: registerUser,
+      } as LoopsNewState,
+    });
   }
 
   if (authUser) {
-    return (
-      <Redirect
-        to={{
-          pathname: "/loops/new",
-          state: { only_create_chain: true } as LoopsNewState,
-        }}
-      />
-    );
+    history.replace({
+      pathname: "/loops/new",
+      state: { only_create_chain: true } as LoopsNewState,
+    });
   }
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
 
     const values = FormJup<FormHtmlValues>(e);
+    console.info("submit", { ...values, ...jsValues });
+
+    if (jsValues.address.length < 6) {
+      addToastError(t("required") + ": " + t("address"));
+      return;
+    }
 
     (async () => {
       let registerUser: RequestRegisterUser = {
         name: values.name,
         email: values.email,
         phone_number: values.phoneNumber,
-        address: JsValues.address,
+        address: jsValues.address,
         newsletter: values.newsletter === "true",
         sizes: [],
       };
@@ -85,72 +85,78 @@ export default function Signup() {
         <title>The Clothing Loop | Create user for new Loop</title>
         <meta name="description" content="Create user for new loop" />
       </Helmet>
-      <main className="max-w-screen-sm mx-auto">
-        <h3 className="font-serif font-bold text-6xl text-secondary">
-          {t("startNewLoop")}
-        </h3>
+      <main className="container lg:max-w-screen-lg mx-auto px-1 md:px-20 pt-4">
+        <div className="bg-teal-light p-8">
+          <h1 className="text-center font-medium text-secondary text-5xl mb-6">
+            {t("startNewLoop")}
+          </h1>
 
-        <ProgressBar activeStep={0} />
-        <p className="">{t("startingALoopIsFunAndEasy")}</p>
-        <p className="">{t("inOurManualYoullFindAllTheStepsNewSwapEmpire")}</p>
-
-        <p className="">{t("firstRegisterYourLoopViaThisForm")}</p>
-
-        <p className="">{t("secondLoginViaLink")}</p>
-        <p className="">{t("thirdSendFriendsToWebsite")}</p>
-
-        <p className="">{t("allDataOfNewParticipantsCanBeAccessed")}</p>
-        <p className="">{t("happySwapping")}</p>
-        <form onSubmit={onSubmit}>
-          <TextForm
-            min={2}
-            required
-            label={t("name")}
-            name="name"
-            type="text"
-          />
-
-          <TextForm
-            required
-            min={2}
-            label={t("email")}
-            name="email"
-            type="email"
-          />
-          <PhoneFormField />
-
-          <GeocoderSelector
-            onResult={(g) =>
-              setJsValues((state) => ({
-                ...state,
-                address: g.result.place_name,
-              }))
-            }
-          />
-          <FormActions />
-
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="btn btn-primary btn-outline"
-              onClick={() => history.push("/loops/find")}
-            >
-              {t("back")}
-            </button>
-            <button type="submit" className="btn btn-primary">
-              {t("next")}
-              <span className="feather feather-arrow-right ml-4"></span>
-            </button>
+          <div className="text-center mb-6">
+            <ProgressBar activeStep={0} />
           </div>
-        </form>
-        <div className="">
-          <p className="text-sm">{t("troublesWithTheSignupContactUs")}</p>
-          <a
-            className="link"
-            href="mailto:hello@clothingloop.org?subject=Troubles signing up to The Clothing Loop"
-          >
-            hello@clothingloop.org
-          </a>
+          <div className="flex flex-col md:flex-row">
+            <div className="w-full md:w-1/2 md:pr-4">
+              <div className="prose">
+                <p>{t("startingALoopIsFunAndEasy")}</p>
+                <p>{t("inOurManualYoullFindAllTheStepsNewSwapEmpire")}</p>
+
+                <p>{t("firstRegisterYourLoopViaThisForm")}</p>
+
+                <p>{t("secondLoginViaLink")}</p>
+                <p>{t("thirdSendFriendsToWebsite")}</p>
+
+                <p>{t("allDataOfNewParticipantsCanBeAccessed")}</p>
+                <p>{t("happySwapping")}</p>
+              </div>
+            </div>
+            <div className="w-full md:w-1/2 md:pl-4">
+              <form onSubmit={onSubmit}>
+                <TextForm
+                  min={2}
+                  required
+                  label={t("name") + "*"}
+                  name="name"
+                  type="text"
+                />
+
+                <TextForm
+                  required
+                  min={2}
+                  label={t("email") + "*"}
+                  name="email"
+                  type="email"
+                />
+                <PhoneFormField />
+
+                <label className="form-control w-full mb-4">
+                  <div className="label">
+                    <span className="label-text">{t("address") + "*"}</span>
+                  </div>
+                  <GeocoderSelector
+                    required
+                    onResult={(g) => setJsValue("address", g.place_name)}
+                  />
+                </label>
+                <FormActions />
+
+                <div className="mt-4">
+                  <button type="submit" className="btn btn-primary">
+                    {t("next")}
+                    <span className="feather feather-arrow-right ml-4"></span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div className="text-sm text-center mt-4 text-black/80">
+            <p>{t("troublesWithTheSignupContactUs")}</p>
+            <a
+              className="link"
+              href="mailto:hello@clothingloop.org?subject=Troubles signing up to The Clothing Loop"
+            >
+              hello@clothingloop.org
+            </a>
+          </div>
         </div>
       </main>
     </>
