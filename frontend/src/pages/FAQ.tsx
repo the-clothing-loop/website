@@ -71,7 +71,7 @@ export default function FAQ() {
         <meta name="description" content="frequently asked questions" />
       </Helmet>
 
-      <main className="container mx-auto px-4 md:px-20 pt-10">
+      <main className="container mx-auto px-3 md:px-20 pt-10">
         <div className="flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 md:pr-5">
             <div className="mb-6">

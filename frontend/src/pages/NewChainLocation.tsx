@@ -91,7 +91,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
         <title>The Clothing Loop | Create New Loop</title>
         <meta name="description" content="Create New Loop" />
       </Helmet>
-      <main className="container lg:max-w-screen-lg mx-auto px-1 md:px-20 pt-4">
+      <main className="container lg:max-w-screen-lg mx-auto md:px-20 pt-4">
         <div className="bg-teal-light p-8">
           <h1 className="text-center font-medium text-secondary text-5xl mb-6">
             {t("startNewLoop")}
