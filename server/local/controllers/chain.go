@@ -358,13 +358,21 @@ func ChainRemoveUser(c *gin.Context) {
 			break
 		}
 	}
-	if !isUserChainAdmin && user.UID != body.UserUID {
+	if !(isUserChainAdmin || user.IsRootAdmin || user.UID == body.UserUID) {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to remove a different user"))
 		return
 	}
 
-	if res := db.Exec(`DELETE FROM user_chains WHERE user_id = ? AND chain_id = ?`, user.ID,
+	if res := db.Exec(`
+DELETE FROM user_chains
+WHERE user_id = (
+	SELECT users.id
+	FROM users
+	WHERE users.uid = ?
+) AND chain_id = ?
+		`, body.UserUID,
 		chain.ID); res.Error != nil {
+		c.Error(res.Error)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be removed from chain due to unknown error"))
 		return
 	}
@@ -372,13 +380,13 @@ func ChainRemoveUser(c *gin.Context) {
 	// remove chain if this is there are no more users of that chain
 	db.Exec(`
 UPDATE chains
-SET chains.deleted_at = NOW()
+SET chains.deleted_at = NOW(), chains.published = FALSE
 WHERE chains.id IN (
 	SELECT chains.id
 	FROM chains
 	LEFT JOIN user_chains ON user_chains.chain_id = chains.id
-	WHERE chains.id = ?
-	HAVING COUNT(user_chains.id) = 0
+	GROUP BY user_chains.chain_id  
+	HAVING COUNT(user_chains.id) = 0	AND chains.id = ?
 )
 	`, chain.ID)
 }
