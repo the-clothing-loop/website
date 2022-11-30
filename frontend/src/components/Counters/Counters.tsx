@@ -63,7 +63,7 @@ export default function Counters() {
       <div className="stat">
         <div className="mb-3 stat-value text-6xl font-serif text-stroke-base-100">
           <a
-            href="https://issuu.com/clothingloop/docs/impact_report_v11_losse_pagina_s"
+            href="https://heyzine.com/flip-book/0c17a4fe2a.html"
             target="_blank"
             rel="noreferrer"
             className="btn btn-primary btn-circle"
