@@ -64,6 +64,7 @@ export default function ChainDetailsForm({
     sizes: [],
     longitude: 0,
     latitude: 0,
+    ...initialValues,
   });
 
   function flyToLocation(longitude: number, latitude: number) {
@@ -177,9 +178,9 @@ export default function ChainDetailsForm({
     setValue("sizes", filteredSizes);
   }
   return (
-    <div className="flex flex-row">
-      <div className="w-1/2 pr-4">
-        <div className="aspect-square">
+    <div className="flex flex-col md:flex-row">
+      <div className="md:w-1/2 md:pr-4">
+        <div className="aspect-square mb-6 md:mb-0">
           <ReactMapGL
             mapboxApiAccessToken={accessToken}
             mapStyle="mapbox://styles/mapbox/light-v10"
@@ -201,7 +202,7 @@ export default function ChainDetailsForm({
           </ReactMapGL>
         </div>
       </div>
-      <div className="w-1/2 pl-4">
+      <div className="md:w-1/2 md:pl-4">
         <form onSubmit={handleSubmit}>
           <p className="mb-2">{t("clickToSetLoopLocation")}</p>
           <TextForm
@@ -273,13 +274,13 @@ export default function ChainDetailsForm({
             {showBack && (
               <button
                 type="button"
-                className="btn btn-secondary btn-outline"
+                className="btn btn-secondary btn-outline mr-4"
                 onClick={() => history.goBack()}
               >
                 {t("back")}
               </button>
             )}
-            <button type="submit" className="btn btn-primary ml-4">
+            <button type="submit" className="btn btn-primary">
               {t("submit")}
               <span className="feather feather-arrow-right ml-4"></span>
             </button>
