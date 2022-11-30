@@ -15,6 +15,17 @@
       rel="stylesheet"
     />
 
+    <script>
+      // Only load on production environment.
+      if (window.location.host !== "www.clothingloop.org")
+        window.goatcounter = { no_onload: true };
+    </script>
+    <script
+      data-goatcounter="https://clothingloop.goatcounter.com/count"
+      async
+      src="//gc.zgo.at/count.js"
+    ></script>
+
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="stylesheet" href="%PUBLIC_URL%/icons/feather/style.css" />
     <link rel="stylesheet" href="%PUBLIC_URL%/fonts/montserrat/style.css" />
