@@ -1,12 +1,9 @@
 import { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-//project resources
 import SingleCounter from "./SingleCounter";
 import useIntersectionObserver from "./hooks";
-
-import { useTranslation } from "react-i18next";
 import { InfoBody, infoGet } from "../../api/info";
-import { Link } from "react-router-dom";
 
 export default function Counters() {
   const { t } = useTranslation();
@@ -65,13 +62,14 @@ export default function Counters() {
 
       <div className="stat">
         <div className="mb-3 stat-value text-6xl font-serif text-stroke-base-100">
-          <Link
-            to="/loops/find"
+          <a
+            href="https://issuu.com/clothingloop/docs/impact_report_v11_losse_pagina_s"
             target="_blank"
+            rel="noreferrer"
             className="btn btn-primary btn-circle"
           >
             <span className="feather feather-arrow-right" />
-          </Link>
+          </a>
         </div>
         <div className="stat-title opacity-100">{t("ourGoals")}</div>
       </div>
