@@ -28,7 +28,7 @@ export default function FAQ() {
       >
         <summary
           tabIndex={0}
-          className="p-2 marker:content-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 rounded-lg"
+          className="p-2 marker:content-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 rounded-lg cursor-pointer"
           onClick={props.onChange}
         >
           <span>{props.question}</span>
