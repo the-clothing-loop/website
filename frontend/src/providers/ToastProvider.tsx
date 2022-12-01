@@ -38,7 +38,7 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
 
     setTimeout(() => {
       setToasts((s) => s.filter((t) => t.id !== id));
-    }, 7000);
+    }, 5000);
   }
 
   function addStaticToast(toast: Toast) {
