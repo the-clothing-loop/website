@@ -102,7 +102,7 @@ export default function Signup() {
           <meta name="description" content="Signup user" />
         </Helmet>
 
-        <main className="p-10">
+        <main className="md:p-10">
           <TwoColumnLayout img="/images/Join-Loop.jpg">
             <div id="container">
               <h1 className="font-semibold text-3xl text-secondary mb-3">
@@ -110,10 +110,15 @@ export default function Signup() {
                 <span> {chain?.name}</span>
               </h1>
 
-              <form onSubmit={onSubmit}>
-                <TextForm label={t("name")} name="name" type="text" required />
+              <form onSubmit={onSubmit} className="max-w-xs">
                 <TextForm
-                  label={t("email")}
+                  label={t("name") + "*"}
+                  name="name"
+                  type="text"
+                  required
+                />
+                <TextForm
+                  label={t("email") + "*"}
                   name="email"
                   type="email"
                   required
@@ -121,16 +126,17 @@ export default function Signup() {
 
                 <PhoneFormField />
 
-                <div className="max-w-xs mb-6">
+                <div className="mb-6">
                   <div className="form-control w-full mb-4">
                     <label className="label">
-                      <span className="label-text">{t("address")}</span>
+                      <span className="label-text">{t("address") + "*"}</span>
                     </label>
                     <GeocoderSelector
                       onResult={(e) => setJsValue("address", e.place_name)}
                     />
                   </div>
                   <SizesDropdown
+                    className="md:dropdown-left md:[&_.dropdown-content]:-top-80"
                     filteredGenders={chain?.genders || []}
                     selectedSizes={jsValues.sizes}
                     handleChange={(s) => setJsValue("sizes", s)}
