@@ -42,24 +42,24 @@ export const Newsletter = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="bg-teal-light lg:w-1/2 mb-4 lg:mb-0 p-10 lg:py-14 lg:px-16 lg:min-h-[456px]"
+      className="bg-teal-light lg:w-1/2 p-6 sm:p-10 lg:py-14 lg:px-16 lg:min-h-[456px]"
     >
       {submitted ? (
-        <div className="max-w-[600px]">
+        <div className="max-w-[600px] mx-auto lg:mx-0">
           <p className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
             {t("thankYouForSigningUp")}
           </p>
           <p>{t("youAreNowSubscribedToOurMonthlyNewsletter")}</p>
         </div>
       ) : isError ? (
-        <div className="max-w-[600px]">
+        <div className="max-w-[600px] mx-auto lg:mx-0">
           <p className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
             {t("somethingIsWrong")}
           </p>
           <p>{t("pleaseTryAgainInSeconds")}</p>
         </div>
       ) : (
-        <div className="max-w-[600px]">
+        <div className="max-w-[600px] mx-auto lg:mx-0">
           <h2 className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
             {t("keepUpWithOurLatestNews")}
           </h2>

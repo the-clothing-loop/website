@@ -101,7 +101,7 @@ export default function ChainMemberList() {
   }, [history]);
 
   async function refresh() {
-    const chainUsers = (await userGetAllByChain(chain!.uid)).data;
+    const chainUsers = (await userGetAllByChain(chainUID)).data;
     setUsers(chainUsers);
   }
 

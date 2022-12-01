@@ -13,7 +13,7 @@ export default function About() {
         <meta name="description" content="About The Clothing Loop" />
       </Helmet>
       <main>
-        <div className="max-w-screen-md mx-auto pt-10 px-1 md:px-20">
+        <div className="max-w-screen-md mx-auto pt-10 px-3 md:px-20">
           <h1 className="font-serif font-bold text-secondary text-6xl">
             {t("aboutTheClothingLoop")}
           </h1>
@@ -62,7 +62,7 @@ export default function About() {
             alt=""
             className="my-10 w-full max-h-[600px] object-contain object-center"
           />
-          <div className="prose mx-auto pt-10 px-1 md:px-20">
+          <div className="prose mx-auto pt-10 px-3 md:px-20">
             <p>
               <Trans
                 i18nKey="thePeople"
@@ -73,7 +73,7 @@ export default function About() {
                     <img
                       src="/images/Team-pics.jpg"
                       alt="faces of Paloeka and Nichon"
-                      className="h-60 mx-auto"
+                      className="h-60 mx-auto object-contain object-center"
                     />
                   ),
                 }}

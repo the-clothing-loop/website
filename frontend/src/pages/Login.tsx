@@ -68,7 +68,7 @@ const Login = () => {
 
       <main className="pt-10">
         <TwoColumnLayout img={LoginImg}>
-          <div className="relative p-10">
+          <div className="relative sm:p-10 -mx-4 sm:mx-0">
             <div className="p-10 bg-teal-light">
               <img
                 className="absolute bottom-[-12px] left-[-12px] -z-10"

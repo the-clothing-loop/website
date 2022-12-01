@@ -28,7 +28,7 @@ export default function FAQ() {
       >
         <summary
           tabIndex={0}
-          className="p-2 marker:content-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 rounded-lg"
+          className="p-2 marker:content-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 rounded-lg cursor-pointer"
           onClick={props.onChange}
         >
           <span>{props.question}</span>
@@ -71,7 +71,7 @@ export default function FAQ() {
         <meta name="description" content="frequently asked questions" />
       </Helmet>
 
-      <main className="container mx-auto px-4 md:px-20 pt-10">
+      <main className="container mx-auto px-3 md:px-20 pt-10">
         <div className="flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 md:pr-5">
             <div className="mb-6">
