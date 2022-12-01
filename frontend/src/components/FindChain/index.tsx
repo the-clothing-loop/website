@@ -124,26 +124,35 @@ function ChainNotFound({
   const history = useHistory();
 
   return (
-    <div>
-      <span className="feather feather-x" onClick={backAction} />
-
-      <h1>
-        {`${t("noLoopsFoundIn")}`} <span>{searchTerm}</span>
-      </h1>
-
-      <p>{t("ThereIsNoActiveLoopInYourRegion")}</p>
-
-      <div>
-        <button className="btn btn-primary btn-outline" onClick={backAction}>
-          {t("joinWaitingList")}
-        </button>
+    <div className="absolute z-30 max-w-screen">
+      <div className="shadow-lg rounded-lg bg-white m-4 p-4 sm:w-72">
         <button
-          className="btn btn-primary"
-          onClick={() => history.push("/loops/new/users/signup")}
-          type="submit"
-        >
-          {t("startNewLoop")}
-        </button>
+          aria-label="close"
+          className="absolute top-6 right-6 btn btn-sm btn-circle btn-ghost feather feather-x"
+          onClick={backAction}
+        />
+
+        <h1 className="font-semibold text-secondary mb-2 pr-10">
+          {`${t("noLoopsFoundIn")}`} <span>{searchTerm}</span>
+        </h1>
+
+        <p className="mb-4">{t("ThereIsNoActiveLoopInYourRegion")}</p>
+
+        <div>
+          <button
+            className="btn btn-secondary btn-sm btn-outline"
+            onClick={backAction}
+          >
+            {t("back")}
+          </button>
+          <button
+            className="btn btn-primary btn-sm ml-3"
+            onClick={() => history.push("/loops/new/users/signup")}
+            type="submit"
+          >
+            {t("startNewLoop")}
+          </button>
+        </div>
       </div>
     </div>
   );
