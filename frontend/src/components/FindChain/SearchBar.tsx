@@ -38,7 +38,7 @@ export default function SearchBar({
         e.preventDefault();
         handleSearch();
       }}
-      className="container mx-auto flex p-4 lg:px-1 md:px-20 bg-white flex-wrap sm:flex-nowrap flex-col md:flex-row"
+      className="container mx-auto flex p-4 md:px-20 bg-white flex-wrap sm:flex-nowrap flex-col md:flex-row"
     >
       <label className="flex lg:w-auto md:flex-grow h-12 md:mr-4 mb-4 md:mb-0 input input-bordered input-secondary focus-within:outline-2 focus-within:outline focus-within:outline-secondary focus-within:outline-offset-2">
         <span className="block self-center pr-3 feather feather-search"></span>

@@ -28,7 +28,7 @@ function Navbar() {
     // Use sticky position to make content start below the Navbar, instead of being covered by it.
     // Note: Not supported by IE 11. See https://material-ui.com/components/app-bar/#fixed-placement
 
-    <div className="container mx-auto z-50 bg-white flex flex-row justify-between lg:justify-start items-center py-0 px-1 md:px-20 shadow-none">
+    <div className="container mx-auto z-50 bg-white flex flex-row justify-between lg:justify-start items-center md:px-20 shadow-none">
       <Link
         aria-label="Clothing Loop logo"
         to="/"
@@ -41,34 +41,44 @@ function Navbar() {
       <input type="checkbox" className="hidden peer" id="header-hamburger" />
       <label
         htmlFor="header-hamburger"
-        className="btn-lg btn-circle btn-ghost hover:bg-base-200 peer-checked:text-secondary peer-checked:animate-[spin-half_300ms_linear] flex justify-center items-center lg:hidden relative z-[60] checked:ring-2 checked:ring-offset-2 ring-teal"
+        className="mr-3 btn-lg btn-circle btn-ghost hover:bg-base-200 peer-checked:text-secondary peer-checked:animate-[spin-half_300ms_linear] flex justify-center items-center lg:hidden relative z-[60] checked:ring-2 checked:ring-offset-2 ring-teal"
       >
         <span className="feather feather-menu text-2xl"></span>
       </label>
-      <div className="hidden peer-checked:block fixed inset-0 lg:!hidden z-50 bg-white">
+      <div className="hidden peer-checked:block fixed inset-0 lg:!hidden z-40 bg-white"></div>
+      <div className="hidden peer-checked:block absolute inset-0 lg:!hidden z-50">
         <nav
           aria-label="mobile site navigation"
-          onClick={onClickMobileNavLink}
-          className="container mx-auto px-20 flex flex-col items-center pt-40"
+          className="container mx-auto  flex flex-col items-center pt-52"
         >
           <Link
+            onClick={onClickMobileNavLink}
             to="/loops/new/users/signup"
             className="mb-3 btn btn-primary btn-outline"
           >
-            <span className="feather feather-arrow-left mr-4"></span>
+            <span className="feather feather-arrow-left mr-3"></span>
             {t("startNewLoop")}
           </Link>
-          <Link to="/loops/find" className="mb-3 btn btn-primary btn-outline">
+          <Link
+            onClick={onClickMobileNavLink}
+            to="/loops/find"
+            className="mb-3 btn btn-primary btn-outline"
+          >
             {t("findLoops")}
-            <span className="feather feather-arrow-right ml-4"></span>
+            <span className="feather feather-arrow-right ml-3"></span>
           </Link>
 
-          <Link to="/donate" className="mb-3 btn btn-ghost text-base">
+          <Link
+            onClick={onClickMobileNavLink}
+            to="/donate"
+            className="mb-3 btn btn-ghost text-base"
+          >
             {t("donate")}
           </Link>
 
           {authUser && (
             <Link
+              onClick={onClickMobileNavLink}
               to="/admin/dashboard"
               className="mb-3 btn btn-ghost text-base"
             >
@@ -77,13 +87,18 @@ function Navbar() {
           )}
 
           <Link
+            onClick={onClickMobileNavLink}
             to={authUser ? "/users/logout" : "/users/login"}
             className="mb-3 btn btn-ghost text-base"
           >
             {authUser ? t("logout") : t("login")}
           </Link>
 
-          <Link to="/about" className="mb-3 btn btn-ghost text-base">
+          <Link
+            onClick={onClickMobileNavLink}
+            to="/about"
+            className="mb-3 btn btn-ghost text-base"
+          >
             {t("about")}
           </Link>
           <LanguageSwitcher />
@@ -97,7 +112,7 @@ function Navbar() {
           {["/loops/find", "/"].indexOf(location.pathname) !== -1 && (
             <Link
               to="/loops/new/users/signup"
-              className="btn btn-primary btn-outline"
+              className="mr-4 btn btn-primary btn-outline"
             >
               {t("startNewLoop")}
             </Link>
@@ -105,34 +120,31 @@ function Navbar() {
 
           {authUser === null &&
           ["/loops/find", "/"].indexOf(location.pathname) === -1 ? (
-            <Link to="/loops/find" className="ml-4 btn btn-primary btn-outline">
+            <Link to="/loops/find" className="mr-4 btn btn-primary btn-outline">
               {t("findLoops")}
               <span className="feather feather-arrow-right ml-4"></span>
             </Link>
           ) : null}
 
-          <Link to="/donate" className="ml-4 btn btn-ghost text-base">
+          <Link to="/donate" className="btn btn-ghost text-base">
             {t("donate")}
           </Link>
 
           {authUser && (
-            <Link
-              to="/admin/dashboard"
-              className="ml-4 btn btn-ghost text-base"
-            >
+            <Link to="/admin/dashboard" className="btn btn-ghost text-base">
               {t("account")}
             </Link>
           )}
 
           <Link
             to={authUser ? "/users/logout" : "/users/login"}
-            className="ml-4 btn btn-ghost text-base"
+            className="btn btn-ghost text-base"
           >
             {authUser ? t("logout") : t("login")}
           </Link>
 
           {authUser === null && (
-            <Link to="/about" className="ml-4 btn btn-ghost text-base">
+            <Link to="/about" className="btn btn-ghost text-base">
               {t("about")}
             </Link>
           )}
