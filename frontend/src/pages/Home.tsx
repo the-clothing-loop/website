@@ -82,18 +82,18 @@ export default function Home() {
       <StandaloneSearchBar />
 
       <div>
-        <section className="mb-24">
-          <div className="w-full absolute bg-teal-light">
+        <section className="mb-12 md:mb-24">
+          <div className="hidden md:block overflow-hidden w-full absolute bg-teal-light">
             <div className="p-8 ml-[40%] pb-14 flex">
               <img src={CirclesFrame} alt="" />
               <img className="pl-2" src={CirclesFrame} alt="" />
             </div>
           </div>
           <div className="relative z-10 flex flex-col md:flex-row">
-            <div className="p-5 md:pt-20 md:pl-40 md:pr-20 md:w-1/2 flex justify-center md:justify-end">
+            <div className="p-6 md:pt-20 md:pl-40 md:pr-20 md:w-1/2 flex justify-center md:justify-end">
               <div className="max-w-screen-xs md:max-w-[500px]">
                 <h1
-                  className="font-serif font-bold text-accent text-9xl [&_span]:text-stroke-accent mb-8"
+                  className="font-serif font-bold text-accent text-8xl md:text-9xl [&_span]:text-stroke-accent mb-8"
                   dangerouslySetInnerHTML={{ __html: t("swapDontShop") }}
                 ></h1>
                 <p>{t("swapDontShopMessage")}</p>
@@ -122,8 +122,8 @@ export default function Home() {
         </section>
 
         <section>
-          <div className="flex flex-col md:flex-row items-center md:items-start mb-16">
-            <div className="flex md:w-1/2 md:justify-end px-5">
+          <div className="flex flex-col md:flex-row items-center md:items-start mb-6 md:mb-16">
+            <div className="flex md:w-1/2 md:justify-end px-6">
               <iframe
                 title="video about what is the Clothing Loop"
                 src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
@@ -132,8 +132,8 @@ export default function Home() {
               ></iframe>
             </div>
 
-            <div className="w-full md:w-1/2 px-5">
-              <h2 className="text-accent font-serif font-bold text-6xl mb-4">
+            <div className="w-full md:w-1/2 px-6">
+              <h2 className="text-accent font-serif font-bold text-4xl md:text-6xl mb-4">
                 <span className="inline md:block mr-4 font-serif font-bold text-9xl text-stroke-accent">
                   1
                 </span>
@@ -148,10 +148,10 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center mb-20">
+          <div className="flex flex-col md:flex-row items-center md:mb-20">
             <div className="text-secondary w-full md:w-1/2 x-10 flex justify-end">
-              <div className="max-w-[600px] p-6 pt-0">
-                <h2 className="font-serif font-bold text-6xl mb-6">
+              <div className="md:max-w-[600px] p-6 pt-0">
+                <h2 className="font-serif font-bold text-4xl md:text-6xl mb-6">
                   <span className="inline md:block mr-4 text-9xl text-stroke-secondary">
                     2
                   </span>
@@ -167,10 +167,10 @@ export default function Home() {
               </div>
             </div>
             <div className="flex md:w-1/2 justify-center items-center p-20">
-              <div className="relative w-full max-w-[600px]">
+              <div className="relative w-full md:max-w-[600px]">
                 <Link
                   to="/loops/find"
-                  className="ring-0 hover:ring-[2rem] ring-secondary transition-[box-shadow] z-20 block"
+                  className="ring-[1rem] md:ring-0 hover:ring-[2rem] ring-secondary transition-[box-shadow] z-20 block"
                 >
                   <img src={MapImage} alt="map" />
                 </Link>
@@ -190,11 +190,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center mb-40">
-            <div className="relative w-1/2 pr-20 flex justify-end">
+          <div className="flex flex-col-reverse md:flex-row items-center mb-6 md:mb-40">
+            <div className="relative md:w-1/2 pr-20 flex justify-end">
               <img
                 src={DoorImg}
-                className="w-full max-w-[600px]"
+                className="w-full md:max-w-[600px]"
                 alt="receiving a bag of clothes from another"
               />
 
@@ -203,9 +203,9 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="w-1/2">
-              <div className="w-full max-w-[600px]">
-                <h2 className="font-serif font-bold text-6xl text-yellow-darkest mb-6">
+            <div className="md:w-1/2">
+              <div className="w-full md:max-w-[600px] p-6">
+                <h2 className="font-serif font-bold text-4xl md:text-6xl text-yellow-darkest mb-6">
                   <span className="inline md:block md:mb-4 mr-4 text-9xl text-stroke-yellow-darkest">
                     3
                   </span>
@@ -217,15 +217,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="flex flex-col md:flex-row items-center mb-20 bg-accent font-bold">
-          <div className="w-1/2 flex justify-end px-10 text-base-100">
-            <div className="w-full max-w-[600px]">
-              <h2 className="text-8xl font-serif mb-6">{t("ourImpact")}</h2>
+        <section className="flex flex-col md:flex-row items-center mb-6 md:mb-20 bg-accent font-bold">
+          <div className="w-screen md:w-1/2 flex justify-end p-6 md:px-10 md:py-0 text-base-100">
+            <div className="w-full md:max-w-[600px]">
+              <h2 className="text-6xl md:text-8xl font-serif mb-6">
+                {t("ourImpact")}
+              </h2>
               <Counters />
             </div>
           </div>
 
-          <div className="w-1/2">
+          <div className="md:w-1/2">
             <img
               className="object-cover object-top w-full max-h-[600px]"
               src={Selfies}
@@ -234,17 +236,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="flex flex-col md:flex-row items-center mb-20">
-          <div className="w-1/2">
+        <section className="flex flex-col md:flex-row items-center mb-12 md:mb-20">
+          <div className="md:w-1/2">
             <img
               src={ClothesImage}
-              className="object-cover object-top w-full max-h-[600px]"
+              className="object-cover object-top w-full max-h-[600px] mb-6 md:mb-0"
               alt="Nichon taking clothes out of a Clothing Loop bag"
             />
           </div>
-          <div className="w-1/2 px-10 text-secondary">
-            <div className="w-full max-w-[600px]">
-              <h2 className="font-serif font-bold text-6xl mb-6">
+          <div className="md:w-1/2 px-6 md:px-10 text-secondary">
+            <div className="w-full md:max-w-[600px]">
+              <h2 className="font-serif font-bold text-4xl md:text-6xl mb-6">
                 {t("fromLocalLockdownToSuccess")}
               </h2>
               <p className="text-base mb-3">
@@ -259,18 +261,18 @@ export default function Home() {
 
         <Testimonials />
 
-        <section className="flex flex-col md:flex-row items-end mb-20">
-          <div className="w-1/2 flex justify-end">
+        <section className="flex flex-col md:flex-row items-end mb-8 md:mb-20">
+          <div className="md:w-1/2 flex justify-end">
             <img
               src="/images/TCL-Jewellery.jpg"
               alt="jewellery"
-              className="w-full max-w-[500px]"
+              className="w-full md:max-w-[500px]"
             />
           </div>
 
-          <div className="w-1/2 flex">
-            <div className="relative p-10 max-w-[400px]">
-              <div className="-z-10 absolute w-full h-[300px] bg-yellow/10 -left-10 bottom-0"></div>
+          <div className="md:w-1/2 flex">
+            <div className="relative p-10 md:max-w-[400px] bg-yellow/10 md:bg-transparent">
+              <div className="hidden md:block -z-10 absolute w-full h-[300px] bg-yellow/10 -left-5 bottom-0"></div>
               <h2
                 className="font-serif font-bold text-4xl text-primary-focus [&_span]:text-2xl mb-7"
                 dangerouslySetInnerHTML={{
@@ -291,11 +293,13 @@ export default function Home() {
         </section>
 
         <section>
-          <div className="relative container mx-auto font-serif font-bold text-secondary mb-6">
-            <div className="bg-teal-light absolute -left-10 top-10 -z-10 w-[600px] h-[200px]">
+          <div className="relative container mx-auto font-serif font-bold text-secondary mb-6 px-6 md:px-0">
+            <div className="hidden md:block bg-teal-light absolute -left-10 top-10 -z-10 w-[600px] h-[200px]">
               &nbsp;
             </div>
-            <h2 className="text-7xl mb-4">{t("Partners & Sponsors")}</h2>
+            <h2 className="text-6xl md:text-7xl mb-4">
+              {t("Partners & Sponsors")}
+            </h2>
             <p className="text-xl">
               {t("wantToSupportUsToo") + " "}
               <a className="link" href="mailto:hello@clothingloop.org">
@@ -303,7 +307,7 @@ export default function Home() {
               </a>{" "}
             </p>
           </div>
-          <ul className="max-w-screen-md mx-auto flex flex-wrap items-center justify-evenly mb-20">
+          <ul className="max-w-screen-md mx-auto flex flex-wrap items-center justify-evenly mb-2 md:mb-20">
             {supporters[0].map((el, i) => {
               return (
                 <li className="w-1/2 md:w-1/4 flex justify-center mb-4 md:mb-0">
