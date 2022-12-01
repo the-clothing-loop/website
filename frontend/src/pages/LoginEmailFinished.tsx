@@ -23,19 +23,15 @@ export default function LoginEmailFinished() {
           throw "apiKey does not exist";
         }
         await authLoginValidate(apiKey!);
-
-        setTimeout(() => {
-          history.replace("/admin/dashboard");
-        }, 1700);
+        addToast({
+          message: t("userIsLoggedIn"),
+          type: "success",
+        });
+        history.replace("/admin/dashboard");
       } catch (e: any) {
         addToastError(t("errorLoggingIn"));
         console.error("Error logging in", e);
-        history.push("/");
-        addToast({
-          message: t("userIsLoggedIn"),
-          type: "info",
-        });
-        history.push("/admin/dashboard");
+        history.replace("/");
       }
     })();
   }, [apiKey]);

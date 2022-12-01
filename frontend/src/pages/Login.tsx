@@ -1,11 +1,9 @@
 import { FormEvent, useContext, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { Link, Redirect } from "react-router-dom";
-
-// Project resources
-import { TwoColumnLayout } from "../components/Layouts";
-
+import { Link, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
+
+import { TwoColumnLayout } from "../components/Layouts";
 import { loginEmail } from "../api/login";
 import { ToastContext } from "../providers/ToastProvider";
 import FormJup from "../util/form-jup";
@@ -16,8 +14,9 @@ import { GinParseErrors } from "../util/gin-errors";
 const CirclesFrame = "/images/circles.png";
 const LoginImg = "/images/Login.jpg";
 
-const Login = () => {
+export default function Login() {
   const { authUser } = useContext(AuthContext);
+  const history = useHistory();
   const { addToast, addToastError } = useContext(ToastContext);
   const { t } = useTranslation();
 
@@ -53,10 +52,11 @@ const Login = () => {
   }
   if (authUser) {
     addToast({
-      type: "info",
+      type: "success",
       message: t("userIsLoggedIn"),
     });
-    return <Redirect to="/admin/dashboard" />;
+
+    history.replace("/admin/dashboard");
   }
 
   return (
@@ -108,6 +108,4 @@ const Login = () => {
       </main>
     </>
   );
-};
-
-export default Login;
+}
