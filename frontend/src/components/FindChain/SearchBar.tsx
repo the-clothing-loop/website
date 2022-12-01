@@ -15,7 +15,7 @@ interface IProps {
   handleSearch: any;
 }
 
-export const SearchBar: React.FC<IProps> = ({
+export default function SearchBar({
   searchTerm,
   handleSearchTermChange,
   selectedGenders,
@@ -23,7 +23,7 @@ export const SearchBar: React.FC<IProps> = ({
   selectedSizes,
   setSelectedSizes,
   handleSearch,
-}: IProps) => {
+}: IProps) {
   const { t } = useTranslation();
 
   function handleSearchEnter(e: KeyboardEvent<HTMLInputElement>) {
@@ -80,4 +80,4 @@ export const SearchBar: React.FC<IProps> = ({
       </div>
     </form>
   );
-};
+}

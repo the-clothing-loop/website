@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 
-import { SearchBar } from "./SearchBar";
+import SearchBar from "./SearchBar";
 
 import { ChainsContext } from "../../providers/ChainsProvider";
 import { defaultTruePredicate, ChainPredicate } from "../../pages/FindChain";
@@ -22,11 +22,11 @@ interface IProps {
   initialValues?: any;
 }
 
-export const FindChainSearchBarContainer = ({
+export default function FindChainSearchBar({
   setFilterChainPredicate,
   handleFindChainCallback,
   initialValues,
-}: IProps) => {
+}: IProps) {
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [selectedSizes, setSelectedSizes] = React.useState<string[]>([]);
   const [selectedGenders, setSelectedGenders] = React.useState<string[]>([]);
@@ -111,7 +111,7 @@ export const FindChainSearchBarContainer = ({
       )}
     </>
   );
-};
+}
 
 function ChainNotFound({
   searchTerm,
