@@ -51,6 +51,8 @@ export default function UserEdit() {
     (async () => {
       try {
         await userUpdate({
+          user_uid: params.userUID,
+          chain_uid: state.chainUID,
           name: values.name,
           phone_number: values.phone,
           newsletter: values.newsletter,
