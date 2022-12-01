@@ -346,8 +346,7 @@ func ChainRemoveUser(c *gin.Context) {
 		return
 	}
 
-	minimumAuthState := auth.AuthState2UserOfChain
-	ok, user, chain := auth.Authenticate(c, db, minimumAuthState, body.ChainUID)
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
 	if !ok {
 		return
 	}
