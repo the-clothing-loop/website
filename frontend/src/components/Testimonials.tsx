@@ -53,8 +53,8 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="text-secondary mb-10">
-      <div className="container mx-auto px-6 md:px-20 flex justify-between">
+    <section className="text-secondary mb-10 max-w-screen-lg mx-auto">
+      <div className="container mx-auto px-6 flex justify-between">
         <h2 className="font-serif font-bold text-4xl md:text-6xl">
           {t("testimonials")}
         </h2>
