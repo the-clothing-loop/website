@@ -47,7 +47,7 @@ const ChainsList = () => {
       </Helmet>
       <main>
         <div className={`container mx-auto ${chains ? "" : "animate-pulse"}`}>
-          <div className="px-1 md:px-20 py-4">
+          <div className="px-4 md:px-20 py-4">
             <h1 className="text-2xl font-bold mb-3">{`${
               chains?.length || 0
             } Clothing Loops`}</h1>
