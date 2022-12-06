@@ -6,6 +6,14 @@
 
 The Clothing Loop is an easy-to-access initiative for swapping clothes with other people in your area or neighborhood. It’s fun, it’s free, it’s sustainable!
 
+## Translators
+
+Are you multilingual? Help us translate this website into your local tongue with Crowdin:
+
+https://crowdin.com/project/the-clothing-loop
+
+:netherlands: :de: :fr: :it: :es: :portugal: :sweden: :iran: :united_arab_emirates: :cn:
+
 ## Developers getting started
 
 For learning how to setup your local environment to help out checkout these readmes:
