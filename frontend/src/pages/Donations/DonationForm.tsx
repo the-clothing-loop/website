@@ -192,9 +192,9 @@ function DonationFormContent() {
     <div>
       <form onSubmit={onSubmit} id="donation-form">
         <p className="mb-3">{t("howDoYouWantToContributeToTheClothingLoop")}</p>
-        <div className="mb-6">
+        <div className="flex flex-col items-stretch sm:flex-row mb-6">
           <button
-            className={`mr-3 btn btn-secondary ${
+            className={`sm:mr-3 mb-3 sm:mb-0 btn btn-secondary ${
               !isRecurring ? "" : "btn-outline"
             }`}
             type="button"
@@ -218,7 +218,7 @@ function DonationFormContent() {
         </p>
 
         <div
-          className={`mb-6 grid grid-cols-3 grid-rows-2 gap-3 items-center ${
+          className={`mb-6 grid grid-cols-2 sm:grid-cols-3 auto-rows-fr gap-3 items-center ${
             isRecurring ? "hidden" : ""
           }`}
         >
@@ -315,7 +315,7 @@ export default function DonationForm() {
     const stripePromise = loadStripe(stripePublicKey);
 
     return (
-      <div className="max-w-screen-sm mx-auto">
+      <div className="max-w-screen-sm mx-auto px-4">
         <h1 className="text-4xl text-secondary font-serif font-bold mb-6">
           {t("donateToTheClothingLoop")}
         </h1>
