@@ -102,25 +102,25 @@ export default function Footer() {
                   </li>
                   <li className="inline-flex items-center">
                     <a
-                      href="mailto:hello@clothingloop.com"
+                      href="mailto:hello@clothingloop.org"
                       aria-label="Our email address"
                       className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0375b9] feather feather-at-sign text-lg"
                     ></a>
                     <span
                       tabIndex={1}
                       className={`tooltip tooltip-bottom text-sm ${
-                        copying === "hello@clothingloop.com"
+                        copying === "hello@clothingloop.org"
                           ? "tooltip-open"
                           : ""
                       }`}
                       onClick={copyToClipboard}
                       data-tip={
-                        copying === "hello@clothingloop.com"
+                        copying === "hello@clothingloop.org"
                           ? t("copiedToClipboard")
                           : t("copy")
                       }
                     >
-                      hello@clothingloop.com
+                      hello@clothingloop.org
                     </span>
                   </li>
                 </ul>
