@@ -99,7 +99,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 }
 
 // This runs Authenticate and defines minimumAuthState depending on the input
-// The any of the following rules pass authentication
+// Any of the following rules pass authentication
 //
 // 1. authUser UID is the same as the given userUID
 // 2. authUser is a chain admin of chain and user is part of ch

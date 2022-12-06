@@ -269,11 +269,13 @@ func ChainAddUser(c *gin.Context) {
 		return
 	}
 
-	minimumAuthState := auth.AuthState2UserOfChain
+	var ok bool
+	var chain *models.Chain
 	if body.IsChainAdmin {
-		minimumAuthState = auth.AuthState3AdminChainUser
+		ok, _, chain = auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+	} else {
+		ok, _, _, chain = auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
 	}
-	ok, _, chain := auth.Authenticate(c, db, minimumAuthState, body.ChainUID)
 	if !ok {
 		return
 	}
