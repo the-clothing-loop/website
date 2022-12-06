@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Redirect, useParams } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import ProgressBar from "../components/ProgressBar";
@@ -21,16 +21,15 @@ export interface State {
 }
 
 const NewChainLocation = ({ location }: { location: any }) => {
+  const history = useHistory();
   const { t } = useTranslation();
-
-  const state = location.state as State;
+  const state = location.state as State | undefined;
   const { authUser, authUserRefresh } = useContext(AuthContext);
 
   const [error, setError] = useState("");
-  const [submitted, setSubmitted] = useState<boolean>(false);
 
   const onSubmit = async (values: RegisterChainForm) => {
-    let user = state.only_create_chain ? authUser : state.register_user;
+    let user = state!.only_create_chain ? authUser : state!.register_user;
     if (!user) {
       setError("User is not availible");
       return;
@@ -48,11 +47,12 @@ const NewChainLocation = ({ location }: { location: any }) => {
     };
 
     console.log(`creating chain: ${JSON.stringify(newChain)}`);
-    if (state.only_create_chain) {
+    if (state!.only_create_chain) {
       try {
         await chainCreate(newChain);
         await authUserRefresh();
-        setSubmitted(true);
+
+        history.replace("/loops/new/confirmation");
       } catch (e: any) {
         console.error(`Error creating chain: ${JSON.stringify(e)}`);
         setError(e?.data || `Error: ${JSON.stringify(e)}`);
@@ -66,23 +66,21 @@ const NewChainLocation = ({ location }: { location: any }) => {
             email: user.email,
             address: user.address,
             phone_number: user.phone_number,
-            newsletter: state.register_user?.newsletter || false,
+            newsletter: state!.register_user?.newsletter || false,
             sizes: values.sizes || [],
           },
           newChain
         );
-        setSubmitted(true);
+        history.replace("/loops/new/confirmation");
       } catch (e: any) {
         console.error(`Error creating user and chain: ${JSON.stringify(e)}`);
         setError(e?.data || `Error: ${JSON.stringify(e)}`);
       }
     }
-
-    await newChain;
   };
 
-  if (submitted) {
-    return <Redirect to="/loops/new/confirmation" />;
+  if (!state || (state.only_create_chain == false && !state.register_user)) {
+    return <Redirect to="/loops/new/users/signup" />;
   }
 
   return (

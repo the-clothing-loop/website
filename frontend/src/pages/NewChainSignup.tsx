@@ -29,22 +29,9 @@ export default function Signup() {
   const history = useHistory();
   const authUser = useContext(AuthContext).authUser;
   const { addToastError } = useContext(ToastContext);
-  const [registerUser, setRegisterUser] = useState<RequestRegisterUser | null>(
-    null
-  );
   const [jsValues, setJsValue, setJsValues] = useForm<FormJsValues>({
     address: "",
   });
-
-  if (registerUser) {
-    history.push({
-      pathname: "/loops/new",
-      state: {
-        only_create_chain: false,
-        register_user: registerUser,
-      } as LoopsNewState,
-    });
-  }
 
   if (authUser) {
     history.replace({
@@ -64,19 +51,25 @@ export default function Signup() {
       return;
     }
 
-    (async () => {
-      let registerUser: RequestRegisterUser = {
-        name: values.name,
-        email: values.email,
-        phone_number: values.phoneNumber,
-        address: jsValues.address,
-        newsletter: values.newsletter === "true",
-        sizes: [],
-      };
-      console.log("submit", registerUser);
+    let registerUser: RequestRegisterUser = {
+      name: values.name,
+      email: values.email,
+      phone_number: values.phoneNumber,
+      address: jsValues.address,
+      newsletter: values.newsletter === "true",
+      sizes: [],
+    };
+    console.log("submit", registerUser);
 
-      setRegisterUser(registerUser);
-    })();
+    if (registerUser) {
+      history.push({
+        pathname: "/loops/new",
+        state: {
+          only_create_chain: false,
+          register_user: registerUser,
+        } as LoopsNewState,
+      });
+    }
   }
 
   return (
