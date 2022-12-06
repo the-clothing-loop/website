@@ -314,9 +314,9 @@ function HostTable(props: {
           <p className={`mx-2 ${selected ? "" : "text-base-300"}`}>
             {t("selected")}
           </p>
-          <div className="tooltip tooltip-bottom" data-tip={t("edit")}>
+          <div className="tooltip mr-2" data-tip={t("edit")}>
             <Link
-              className={`btn btn-sm btn-circle mr-2 feather feather-edit ${
+              className={`btn btn-sm btn-circle feather feather-edit ${
                 selected.length ? "btn-primary" : "btn-disabled opacity-60"
               }`}
               aria-label={t("edit")}
@@ -324,10 +324,7 @@ function HostTable(props: {
               to={editHost}
             ></Link>
           </div>
-          <div
-            className="tooltip tooltip-bottom"
-            data-tip={t("setAsAParticipant")}
-          >
+          <div className="tooltip" data-tip={t("setAsAParticipant")}>
             <button
               type="button"
               onClick={onDemote}
@@ -472,9 +469,9 @@ function ParticipantsTable(props: {
               <span className="text-2xl font-bold mr-2">{selected.length}</span>
               {t("selected")}
             </p>
-            <div className="tooltip tooltip-bottom" data-tip={t("edit")}>
+            <div className="tooltip mr-2" data-tip={t("edit")}>
               <Link
-                className={`btn btn-sm btn-circle mr-2 feather feather-edit ${
+                className={`btn btn-sm btn-circle feather feather-edit ${
                   selected.length === 1
                     ? "btn-primary"
                     : "btn-disabled opacity-60"
@@ -484,10 +481,7 @@ function ParticipantsTable(props: {
                 to={edit}
               ></Link>
             </div>
-            <div
-              className="tooltip tooltip-bottom"
-              data-tip={t("removeFromLoop")}
-            >
+            <div className="tooltip" data-tip={t("removeFromLoop")}>
               <button
                 type="button"
                 onClick={onRemove}
