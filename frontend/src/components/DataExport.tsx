@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CSVLink } from "react-csv";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { Chain } from "../api/types";
+import { Chain, User } from "../api/types";
 import { chainGet, chainGetAll } from "../api/chain";
 import { userGetAllByChain } from "../api/user";
 import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
@@ -82,40 +82,26 @@ interface UserData {
   newsletter: boolean;
 }
 
-function UserDataExport() {
+function UserDataExport(props: { chainName: string; chainUsers?: User[] }) {
   const { t } = useTranslation();
-  const { chainUID } = useParams<Params>();
-  const [chainName, setChainName] = useState("");
-  const [data, setData] = useState<UserData[]>();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const chain = (await chainGet(chainUID)).data;
-        setChainName(chain.name);
-        const chainUsers = (await userGetAllByChain(chainUID)).data;
-        setData(
-          chainUsers.map<UserData>((u) => ({
-            name: u.name,
-            address: u.address,
-            email: u.email,
-            phoneNumber: u.phone_number,
-            interestedSizes: u.sizes.map((s) => SizeI18nKeys[s]).join(","),
-            newsletter: false,
-          }))
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
+  const data = useMemo(() => {
+    return props.chainUsers?.map<UserData>((u) => ({
+      name: u.name,
+      address: u.address,
+      email: u.email,
+      phoneNumber: u.phone_number,
+      interestedSizes: u.sizes.map((s) => SizeI18nKeys[s]).join(","),
+      newsletter: false,
+    }));
+  }, [props.chainUsers]);
 
   return (
     <CSVLink
       separator=";"
       data={data ? data : ""}
       headers={usersHeaders}
-      filename={`${chainName}-participants.csv`}
+      filename={`${props.chainName}-participants.csv`}
       className="btn btn-secondary btn-outline"
     >
       {t("exportData")}

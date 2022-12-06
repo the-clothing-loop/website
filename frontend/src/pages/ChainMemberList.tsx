@@ -189,7 +189,7 @@ export default function ChainMemberList() {
           <h2 className="font-semibold text-secondary text-3xl mb-6">
             Loop Participants
           </h2>
-          <UserDataExport />
+          <UserDataExport chainName={chain.name} chainUsers={users} />
 
           <ParticipantsTable
             authUser={authUser}
