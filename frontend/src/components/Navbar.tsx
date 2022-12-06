@@ -6,12 +6,6 @@ import { useContext, useState } from "react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { AuthContext } from "../providers/AuthProvider";
 
-enum MenuState {
-  OPEN,
-  ANIMATING,
-  CLOSED,
-}
-
 function Navbar() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
@@ -109,17 +103,14 @@ function Navbar() {
           aria-label="site navigation"
           className="flex items-center min-h-[4rem]"
         >
-          {["/loops/find", "/"].indexOf(location.pathname) !== -1 && (
+          {["/loops/find", "/"].indexOf(location.pathname) !== -1 ? (
             <Link
               to="/loops/new/users/signup"
               className="mr-4 btn btn-primary btn-outline"
             >
               {t("startNewLoop")}
             </Link>
-          )}
-
-          {authUser === null &&
-          ["/loops/find", "/"].indexOf(location.pathname) === -1 ? (
+          ) : authUser === null ? (
             <Link to="/loops/find" className="mr-4 btn btn-primary btn-outline">
               {t("findLoops")}
               <span className="feather feather-arrow-right ml-4"></span>
