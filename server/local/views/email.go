@@ -16,6 +16,7 @@ func EmailAParticipantJoinedTheLoop(
 	participantName string,
 	participantEmail string,
 	participantPhoneNumber string,
+	participantAddress string,
 ) bool {
 	to := adminEmail
 	subject := "A participant just joined your Loop!"
@@ -26,6 +27,7 @@ func EmailAParticipantJoinedTheLoop(
 	<li>Name: %s</li>
 	<li>Email: %s</li>
 	<li>Phone: %s</li>
+	<li>Address: %s</li>
 </ul>
 <p>Best,</p>
 <p>Nichon, on behalf of the Clothing Loop team</p>`,
@@ -33,6 +35,7 @@ func EmailAParticipantJoinedTheLoop(
 		participantName,
 		participantEmail,
 		participantPhoneNumber,
+		participantAddress,
 	)
 
 	return app.MailSend(c, db, to, subject, body)

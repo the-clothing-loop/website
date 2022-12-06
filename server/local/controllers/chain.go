@@ -330,6 +330,7 @@ WHERE user_chains.chain_id = ?
 					user.Name,
 					user.Email.String,
 					user.PhoneNumber,
+					user.Address,
 				)
 			}
 		}

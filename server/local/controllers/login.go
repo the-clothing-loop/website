@@ -134,6 +134,7 @@ WHERE user_chains.chain_id IN ?
 					user.Name,
 					user.Email.String,
 					user.PhoneNumber,
+					user.Address,
 				)
 			}
 		}
