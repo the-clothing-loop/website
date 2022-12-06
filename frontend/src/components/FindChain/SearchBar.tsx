@@ -15,7 +15,7 @@ interface IProps {
   handleSearch: any;
 }
 
-export const SearchBar: React.FC<IProps> = ({
+export default function SearchBar({
   searchTerm,
   handleSearchTermChange,
   selectedGenders,
@@ -23,7 +23,7 @@ export const SearchBar: React.FC<IProps> = ({
   selectedSizes,
   setSelectedSizes,
   handleSearch,
-}: IProps) => {
+}: IProps) {
   const { t } = useTranslation();
 
   function handleSearchEnter(e: KeyboardEvent<HTMLInputElement>) {
@@ -38,9 +38,9 @@ export const SearchBar: React.FC<IProps> = ({
         e.preventDefault();
         handleSearch();
       }}
-      className="container mx-auto flex p-4 lg:px-1 md:px-20 bg-white flex-wrap sm:flex-nowrap flex-col md:flex-row"
+      className="container mx-auto flex p-4 md:px-20 bg-white flex-wrap sm:flex-nowrap flex-col md:flex-row"
     >
-      <label className="flex lg:w-auto md:flex-grow h-12 md:mr-4 mb-4 md:mb-0 input input-bordered input-secondary focus-within:outline-2 focus-within:outline focus-within:outline-secondary focus-within:outline-offset-2">
+      <label className="flex lg:w-auto md:flex-grow h-12 md:mr-4 sm:mb-4 md:mb-0 input input-bordered input-secondary focus-within:outline-2 focus-within:outline focus-within:outline-secondary focus-within:outline-offset-2">
         <span className="block self-center pr-3 feather feather-search"></span>
         <input
           type="search"
@@ -54,15 +54,16 @@ export const SearchBar: React.FC<IProps> = ({
 
       <div className={`flex ${searchTerm.length > 0 ? "" : "hidden md:flex"}`}>
         <div className="flex">
-          <div className="w-36 sm:w-48 pr-4">
+          <div className="w-36 sm:w-48 pr-0 sm:pr-4">
             <CategoriesDropdown
               selectedGenders={selectedGenders}
               handleChange={handleSelectedGenderChange}
             />
           </div>
 
-          <div className="w-36 sm:w-48 pr-4">
+          <div className="w-36 sm:w-48 pr-0 sm:pr-4">
             <SizesDropdown
+              className="max-xs:dropdown-end"
               filteredGenders={
                 selectedGenders.length
                   ? selectedGenders
@@ -75,9 +76,10 @@ export const SearchBar: React.FC<IProps> = ({
         </div>
 
         <button type="submit" className="grow btn btn-primary">
-          {t("search")}
+          <span className="hidden sm:inline">{t("search")}</span>
+          <span className="sm:hidden inline feather feather-search"></span>
         </button>
       </div>
     </form>
   );
-};
+}

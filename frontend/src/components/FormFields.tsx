@@ -3,6 +3,7 @@ import {
   FocusEvent,
   HTMLInputTypeAttribute,
   InputHTMLAttributes,
+  ChangeEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
 import PopoverOnHover from "./Popover";
@@ -20,6 +21,8 @@ interface PhoneFormFieldProps {
     root?: string;
   };
   required?: boolean;
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 export function PhoneFormField(props: PhoneFormFieldProps) {
   const { t } = useTranslation();
@@ -43,6 +46,7 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
         name="phone"
         aria-invalid={!valid}
         onBlur={onBlur}
+        onChange={props.onChange}
         className={`input input-bordered w-full ${
           valid
             ? "input-secondary"

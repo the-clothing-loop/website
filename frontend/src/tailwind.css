@@ -103,3 +103,7 @@
 #root .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--pin-right > * {
   @apply top-3.5 right-3;
 }
+
+#root .mapboxgl-popup-content {
+  @apply p-0 rounded-lg shadow-lg;
+}

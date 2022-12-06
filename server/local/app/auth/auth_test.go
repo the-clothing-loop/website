@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
+	"github.com/CollActionteam/clothing-loop/server/local/models"
 	"github.com/CollActionteam/clothing-loop/server/local/tests/mocks"
 	"github.com/stretchr/testify/assert"
 )
@@ -70,6 +71,92 @@ func TestAuthenticate(t *testing.T) {
 			} else {
 				assert.Nil(t, resultChain)
 			}
+		}
+	}
+}
+
+func TestAuthenticateUserOfChain(t *testing.T) {
+	type Sut struct {
+		MockAuthOptions mocks.MockChainAndUserOptions
+		MockUserOptions mocks.MockChainAndUserOptions
+		IsSameUser      bool
+		IsSameChain     bool
+		ExpectedResult  bool
+	}
+
+	suts := []Sut{
+		{
+			IsSameUser:     true,
+			IsSameChain:    true,
+			ExpectedResult: true,
+		}, {
+			MockAuthOptions: mocks.MockChainAndUserOptions{
+				IsRootAdmin: true,
+			},
+			IsSameChain:    false,
+			ExpectedResult: true,
+		}, {
+			MockAuthOptions: mocks.MockChainAndUserOptions{
+				IsRootAdmin: true,
+			},
+			IsSameChain:    true,
+			ExpectedResult: true,
+		}, {
+			MockAuthOptions: mocks.MockChainAndUserOptions{
+				IsChainAdmin: true,
+			},
+			IsSameChain:    false,
+			ExpectedResult: false,
+		}, {
+			MockAuthOptions: mocks.MockChainAndUserOptions{
+				IsChainAdmin: true,
+			},
+			IsSameChain:    true,
+			ExpectedResult: true,
+		}, {
+			IsSameChain:    true,
+			ExpectedResult: false,
+		}, {
+			ExpectedResult: false,
+		},
+	}
+
+	for _, sut := range suts {
+		authChain, authUser, token := mocks.MockChainAndUser(t, db, sut.MockAuthOptions)
+
+		var chain *models.Chain
+		var user *models.User
+		if sut.IsSameUser {
+			chain = authChain
+			user = authUser
+		} else {
+			if sut.IsSameChain {
+				chain = authChain
+				user, _ = mocks.MockUser(t, db, authChain.ID, sut.MockUserOptions)
+			} else {
+				chain, user, _ = mocks.MockChainAndUser(t, db, sut.MockUserOptions)
+			}
+		}
+
+		c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, token)
+		ok, resultUser, resultAuthUser, resultChain := auth.AuthenticateUserOfChain(c, db, chain.UID, user.UID)
+
+		assert.Equalf(t, sut.ExpectedResult, ok, "sut: %+v", sut)
+
+		if sut.ExpectedResult {
+			assert.NotNil(t, resultUser)
+			assert.Equal(t, user.ID, resultUser.ID)
+			if sut.IsSameUser {
+				assert.Equal(t, resultAuthUser.ID, resultUser.ID)
+			}
+			assert.Equal(t, chain.ID, resultChain.ID)
+			if sut.IsSameChain {
+				assert.Equal(t, authChain.ID, resultChain.ID)
+			} else {
+				assert.NotEqual(t, authChain.ID, resultChain.ID)
+			}
+		} else {
+			assert.Nil(t, resultUser)
 		}
 	}
 }

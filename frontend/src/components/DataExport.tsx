@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CSVLink } from "react-csv";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { Chain } from "../api/types";
+import { Chain, User } from "../api/types";
 import { chainGet, chainGetAll } from "../api/chain";
 import { userGetAllByChain } from "../api/user";
 import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
@@ -24,25 +24,25 @@ const chainsHeaders: Array<{ label: string; key: keyof ChainData }> = [
 interface ChainData {
   name: string;
   address: string;
-  genders: string[];
-  sizes: string[];
+  genders: string;
+  sizes: string;
   published: boolean;
   description: string;
 }
 
-const DataExport = (props: { chains: Chain[] }) => {
+function DataExport(props: { chains: Chain[] }) {
   const { t } = useTranslation();
 
-  const [chains, setChains] = useState<ChainData[]>();
+  const [data, setData] = useState<ChainData[]>();
 
   useEffect(() => {
     (async () => {
-      setChains(
+      setData(
         props.chains.map((c) => ({
           name: c.name,
           address: c.address,
-          genders: c.genders?.map((g) => GenderI18nKeys[g]) || [],
-          sizes: c.sizes?.map((s) => SizeI18nKeys[s]) || [],
+          genders: (c.genders?.map((g) => GenderI18nKeys[g]) || []).join(","),
+          sizes: (c.sizes?.map((s) => SizeI18nKeys[s]) || []).join(","),
           published: c.published,
           description: c.description,
         }))
@@ -52,16 +52,17 @@ const DataExport = (props: { chains: Chain[] }) => {
 
   return (
     <CSVLink
-      data={chains ? chains : ""}
+      separator=";"
+      data={data ? data : ""}
       headers={chainsHeaders}
       filename={"Loops-list.csv"}
-      className="btn btn-primary btn-outline"
+      className="btn btn-secondary btn-outline"
     >
       {t("exportData")}
       <span className="feather feather-download ml-3" />
     </CSVLink>
   );
-};
+}
 
 const usersHeaders: Array<{ label: string; key: keyof UserData }> = [
   { label: "Name", key: "name" },
@@ -77,49 +78,36 @@ interface UserData {
   address: string;
   email: string;
   phoneNumber: string;
-  interestedSizes: string[];
+  interestedSizes: string;
   newsletter: boolean;
 }
 
-const UserDataExport = () => {
+function UserDataExport(props: { chainName: string; chainUsers?: User[] }) {
   const { t } = useTranslation();
-  const { chainUID } = useParams<Params>();
-  const [chain, setChain] = useState<Chain>();
-  const [users, setUsers] = useState<UserData[]>();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const chainData = (await chainGet(chainUID)).data;
-        setChain(chainData);
-        const chainUsers = (await userGetAllByChain(chainUID)).data;
-        setUsers(
-          chainUsers.map((u) => ({
-            name: u.name,
-            address: u.address,
-            email: u.email,
-            phoneNumber: u.phone_number,
-            interestedSizes: u.sizes.map((s) => SizeI18nKeys[s]),
-            newsletter: false,
-          }))
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
+  const data = useMemo(() => {
+    return props.chainUsers?.map<UserData>((u) => ({
+      name: u.name,
+      address: u.address,
+      email: u.email,
+      phoneNumber: u.phone_number,
+      interestedSizes: u.sizes.map((s) => SizeI18nKeys[s]).join(","),
+      newsletter: false,
+    }));
+  }, [props.chainUsers]);
 
   return (
     <CSVLink
-      data={users ? users : ""}
+      separator=";"
+      data={data ? data : ""}
       headers={usersHeaders}
-      filename={`${chain?.name}-participants.csv`}
-      className="btn btn-primary btn-outline"
+      filename={`${props.chainName}-participants.csv`}
+      className="btn btn-secondary btn-outline"
     >
       {t("exportData")}
       <span className="feather feather-download ml-3" />
     </CSVLink>
   );
-};
+}
 
 export { DataExport, UserDataExport };

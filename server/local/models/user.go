@@ -110,14 +110,15 @@ WHERE users.id = ?
 	return nil
 }
 
-func (u *User) IsPartOfChain(db *gorm.DB, chainID uint) bool {
-	var count int
-	db.Raw(`
-SELECT COUNT(user_chains.id)
-FROM user_chains
-LEFT JOIN users ON user_chains.user_id = users.id
-WHERE user_chains.user_id = ?
-	AND user_chains.chain_id = ?
-	`, u.ID, chainID).Scan(&count)
-	return count != 0
+// This required user to have run AddUserChainsToObject before this
+func (u *User) IsPartOfChain(chainUID string) (ok, isChainAdmin bool) {
+	for _, c := range u.Chains {
+		if c.ChainUID == chainUID {
+			ok = true
+			isChainAdmin = c.IsChainAdmin
+			break
+		}
+	}
+
+	return ok, isChainAdmin
 }

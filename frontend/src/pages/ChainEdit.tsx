@@ -61,12 +61,13 @@ export default function ChainEdit() {
         <title>The Clothing Loop | Edit Loop details</title>
         <meta name="description" content="Edit Loop details" />
       </Helmet>
-      <main className="container mx-auto px-1 md:px-20 pt-10">
-        <h1 className="text-center font-serif font-bold text-secondary text-6xl">
+      <main className="container mx-auto px-4 md:px-20 pt-10">
+        <h1 className="text-center font-sans font-semibold text-secondary text-4xl mb-4">
           {t("editLoopInformation")}
         </h1>
-        <p className="formSubtitle">{t("clickToChangeLoopLocation")}</p>
+        <p className="text-sm mb-1">{t("clickToChangeLoopLocation")}</p>
         <ChainDetailsForm
+          showBack
           onSubmit={handleSubmit}
           submitError={error}
           submitted={submitted}

@@ -55,6 +55,19 @@ const oneOff: RadioItem[] = [
   },
 ];
 
+interface PaymentMethod {
+  src: string;
+  alt: string;
+}
+const paymentMethods: PaymentMethod[] = [
+  // {src: "/images/payment-methods/creditcard.png", alt:"Credit Card"},
+  // {src: "/images/payment-methods/bancontact.png", alt:"BanContact"},
+  { src: "/images/payment-methods/ideal.png", alt: "iDeal" },
+  { src: "/images/payment-methods/visa.png", alt: "Visa" },
+  { src: "/images/payment-methods/mastercard.png", alt: "MasterCard" },
+  { src: "/images/payment-methods/amex.png", alt: "American Express" },
+];
+
 function DonationFormContent() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -259,7 +272,7 @@ function DonationFormContent() {
           </p>
         )}
 
-        <div>
+        <div className="mb-2">
           {loading ? (
             <span className="feather feather-loader animate-spin" />
           ) : (
@@ -274,13 +287,21 @@ function DonationFormContent() {
           )}
         </div>
 
-        <p className="text-xs mt-2">
+        <p className="text-xs mb-2">
           {t("byDonatingYouAgreeWithOur")}
           <a href="/privacy-policy" target="_blank" className="link">
             {t("privacyPolicy")}
           </a>
           .
         </p>
+
+        <ul className="flex flex-row mb-2">
+          {paymentMethods.map((pm) => (
+            <li className="mr-2 last:mr-0">
+              <img className="w-8 h-6" src={pm.src} alt={pm.alt} />
+            </li>
+          ))}
+        </ul>
       </form>
     </div>
   );

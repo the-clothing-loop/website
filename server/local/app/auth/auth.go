@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
@@ -24,7 +25,7 @@ const (
 // 2. User connected to the chain in question
 // 3. Admin User of the chain in question
 // 4. Root User
-func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID string) (ok bool, user *models.User, chain *models.Chain) {
+func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID string) (ok bool, authUser *models.User, chain *models.Chain) {
 	// 0. Guest - this middleware is then not required
 	if minimumAuthState == AuthState0Guest {
 		return true, nil, nil
@@ -36,7 +37,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 		return false, nil, nil
 	}
 
-	user, ok = TokenAuthenticate(db, token)
+	authUser, ok = TokenAuthenticate(db, token)
 	if !ok {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Invalid token"))
 		return false, nil, nil
@@ -44,7 +45,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	// 1. User of a different/unknown chain
 	if minimumAuthState == AuthState1AnyUser && chainUID == "" {
-		return true, user, nil
+		return true, authUser, nil
 	}
 
 	if chainUID == "" {
@@ -59,7 +60,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 		return false, nil, nil
 	}
 
-	err = user.AddUserChainsToObject(db)
+	err = authUser.AddUserChainsToObject(db)
 	if err != nil {
 		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
@@ -67,26 +68,26 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	// 4. Root User
-	if user.IsRootAdmin {
-		return true, user, chain
+	if authUser.IsRootAdmin {
+		return true, authUser, chain
 	}
 
 	// 1. User of a different/unknown chain
 	if minimumAuthState == AuthState1AnyUser {
-		return true, user, chain
+		return true, authUser, chain
 	}
 
 	if minimumAuthState == AuthState2UserOfChain || minimumAuthState == AuthState3AdminChainUser {
-		for _, userChain := range user.Chains {
+		for _, userChain := range authUser.Chains {
 			if userChain.ChainID == chain.ID {
 				// 2. User connected to the chain in question
 				if minimumAuthState == AuthState2UserOfChain {
-					return true, user, chain
+					return true, authUser, chain
 				}
 
 				// 3. Admin User of the chain in question
 				if minimumAuthState == AuthState3AdminChainUser && userChain.IsChainAdmin {
-					return true, user, chain
+					return true, authUser, chain
 				}
 				break
 			}
@@ -95,4 +96,60 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("User role not high enough"))
 	return false, nil, nil
+}
+
+// This runs Authenticate and defines minimumAuthState depending on the input
+// The any of the following rules pass authentication
+//
+// 1. authUser UID is the same as the given userUID
+// 2. authUser is a chain admin of chain and user is part of ch
+// 3. authUser is a root admin
+func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID string) (ok bool, user, authUser *models.User, chain *models.Chain) {
+	if chainUID != "" && userUID == "" {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("user UID must be set if chain UID is set"))
+		return false, nil, nil, nil
+	}
+
+	ok, authUser, chain = Authenticate(c, db, AuthState1AnyUser, chainUID)
+	if !ok {
+		return ok, nil, nil, nil
+	}
+
+	// 1. authUser UID is the same as the given userUID
+	// 3. authUser is a root admin
+	if authUser.UID == userUID || (authUser.IsRootAdmin && userUID == "") {
+		return true, authUser, authUser, chain
+	}
+
+	// get user
+	user = &models.User{}
+	if userUID != "" {
+		err := db.Raw(`SELECT * FROM users WHERE uid = ? LIMIT 1`, userUID).Scan(user).Error
+		if err == nil && user.ID != 0 {
+			err = user.AddUserChainsToObject(db)
+		}
+		if err != nil {
+			c.Error(err)
+		}
+	}
+	if user.ID == 0 {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("user UID must be set if chain UID is set"))
+		return false, nil, nil, nil
+	}
+
+	// 3. authUser is a root admin
+	if authUser.IsRootAdmin {
+		return true, user, authUser, chain
+	}
+
+	_, isAuthUserChainAdmin := authUser.IsPartOfChain(chainUID)
+	isUserPartOfChain, _ := user.IsPartOfChain(chainUID)
+
+	//	2. authUser is a chain admin of chain and user is part of chain
+	if isAuthUserChainAdmin && isUserPartOfChain {
+		return true, user, authUser, chain
+	}
+
+	gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to alter a different user"))
+	return false, nil, nil, nil
 }

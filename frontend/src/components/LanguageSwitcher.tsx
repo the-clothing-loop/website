@@ -2,10 +2,23 @@ import { useMemo, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useDropdown } from "../util/dropdown.hooks";
 
-const languages = [
+const IS_PRODUCTION =
+  process.env.REACT_APP_BASE_URL === "https://www.clothingloop.org";
+
+const testLanguages = [
+  { lng: "de", title: "German", flag: "/icons/flags/de.svg" },
+  { lng: "fr", title: "French", flag: "/icons/flags/fr.svg" },
+];
+
+let languages = [
   { lng: "en", title: "English", flag: "/icons/flags/gb.svg" },
   { lng: "nl", title: "Dutch", flag: "/icons/flags/nl.svg" },
 ];
+
+if (!IS_PRODUCTION) {
+  languages.push(...testLanguages);
+}
+
 const LanguageSwitcher = (props: { className?: string }) => {
   const { i18n } = useTranslation();
 

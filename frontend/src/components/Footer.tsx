@@ -33,9 +33,9 @@ export default function Footer() {
         ></div>
         <div className="lg:container lg:px-20 mx-auto flex flex-col lg:flex-row-reverse relative z-10">
           <Newsletter />
-          <div className="container mx-auto lg:mx-0 lg:w-1/2">
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-center md:items-start sm:justify-end text-center md:text-left lg:mb-4 lg:mt-4">
-              <div className="flex flex-col items-center md:items-start p-4 pt-0">
+          <div className="container mx-auto lg:mx-0 lg:w-1/2 pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-center md:items-start sm:justify-end text-center md:text-left lg:mt-8">
+              <div className="flex flex-col items-center md:items-start px-3 pb-6 pt-0">
                 <span className="text-secondary font-bold text-2xl mb-3">
                   {t("learnMore")}
                 </span>
@@ -49,7 +49,7 @@ export default function Footer() {
                   {t("about")}
                 </Link>
               </div>
-              <div className="flex flex-col items-center md:items-start p-4 pt-0">
+              <div className="flex flex-col items-center md:items-start px-3 pb-6 pt-0">
                 <span className="text-secondary font-bold text-2xl mb-3">
                   {t("loops")}
                 </span>
@@ -72,7 +72,7 @@ export default function Footer() {
                   </Link>
                 )}
               </div>
-              <div className="p-4 pt-0">
+              <div className="px-3 pb-6 pt-0">
                 <span className="block text-secondary font-bold text-2xl mb-3">
                   {t("findUs")}
                 </span>
@@ -102,25 +102,25 @@ export default function Footer() {
                   </li>
                   <li className="inline-flex items-center">
                     <a
-                      href="mailto:hello@clothingloop.com"
+                      href="mailto:hello@clothingloop.org"
                       aria-label="Our email address"
                       className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0375b9] feather feather-at-sign text-lg"
                     ></a>
                     <span
                       tabIndex={1}
                       className={`tooltip tooltip-bottom text-sm ${
-                        copying === "hello@clothingloop.com"
+                        copying === "hello@clothingloop.org"
                           ? "tooltip-open"
                           : ""
                       }`}
                       onClick={copyToClipboard}
                       data-tip={
-                        copying === "hello@clothingloop.com"
+                        copying === "hello@clothingloop.org"
                           ? t("copiedToClipboard")
                           : t("copy")
                       }
                     >
-                      hello@clothingloop.com
+                      hello@clothingloop.org
                     </span>
                   </li>
                 </ul>

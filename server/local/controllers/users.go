@@ -164,12 +164,9 @@ WHERE chains.uid = ? AND users.is_email_verified = ?
 func UserUpdate(c *gin.Context) {
 	db := getDB(c)
 
-	ok, user, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
-	if !ok {
-		return
-	}
-
 	var body struct {
+		ChainUID    string    `json:"chain_uid,omitempty" binding:"uuid"`
+		UserUID     string    `json:"user_uid,omitempty" binding:"uuid"`
 		Name        *string   `json:"name,omitempty"`
 		PhoneNumber *string   `json:"phone_number,omitempty"`
 		Newsletter  *bool     `json:"newsletter,omitempty"`
@@ -180,6 +177,12 @@ func UserUpdate(c *gin.Context) {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
+
+	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	if !ok {
+		return
+	}
+
 	if body.Sizes != nil {
 		if ok := models.ValidateAllSizeEnum(*body.Sizes); !ok {
 			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Invalid size enum"))

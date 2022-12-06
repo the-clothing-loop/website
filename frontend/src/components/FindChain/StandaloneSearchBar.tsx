@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import { SearchBar } from "./SearchBar";
+import SearchBar from "./SearchBar";
 
 /*
  * A searchbar for finding loops that can be used separately from the "find

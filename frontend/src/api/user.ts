@@ -1,5 +1,5 @@
 import axios from "./axios";
-import { User } from "./types";
+import { UID, User } from "./types";
 
 export function userGetByUID(chainUID: string | null, userUID: string) {
   interface Params {
@@ -30,6 +30,8 @@ export function userGetByEmail(chainUID: string, email: string) {
 }
 
 export interface UserUpdateBody {
+  user_uid: UID;
+  chain_uid: UID;
   name?: string;
   phone_number?: string;
   newsletter?: boolean;

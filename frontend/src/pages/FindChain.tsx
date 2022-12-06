@@ -17,10 +17,10 @@ import mapboxgl from "mapbox-gl";
 import { ChainsContext } from "../providers/ChainsProvider";
 import { AuthContext } from "../providers/AuthProvider";
 import { IViewPort } from "../types";
-import { FindChainSearchBarContainer } from "../components/FindChain";
+import FindChainSearchBar from "../components/FindChain/index";
 import { Chain } from "../api/types";
-import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
 import { chainAddUser } from "../api/chain";
+import { GenderBadges, SizeBadges } from "../components/Badges";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
@@ -237,7 +237,7 @@ const FindChain = ({ location }: { location: Location }) => {
         <meta name="description" content="Find Loop" />
       </Helmet>
 
-      <FindChainSearchBarContainer
+      <FindChainSearchBar
         setFilterChainPredicate={setFilterChainPredicate}
         handleFindChainCallback={handleFindChainCallback}
         initialValues={{
@@ -320,51 +320,56 @@ const FindChain = ({ location }: { location: Location }) => {
             longitude={selectedChain.longitude}
             closeOnClick={false}
             dynamicPosition
+            closeButton={false}
             onClose={() => setShowPopup(false)}
           >
-            <div className="card">
-              <div className="card-body">
-                <h1 className="mb-3">{selectedChain.name}</h1>
-                <p id="description">{selectedChain.description}</p>
-                <div className="flex flex-col w-full pt-8">
-                  <h3>{t("categories")}:</h3>
-                  <div id="categories-container">
+            <div className="p-4 w-72">
+              <div className="mb-2">
+                <button
+                  type="button"
+                  className="absolute top-2 right-2 btn btn-sm btn-circle btn-ghost feather feather-x"
+                  onClick={() => setShowPopup(false)}
+                ></button>
+                <h1 className="font-semibold text-secondary mb-3 pr-10">
+                  {selectedChain.name}
+                </h1>
+                <p className="mb-3">{selectedChain.description}</p>
+                <div className="flex flex-col w-full text-sm">
+                  <h2 className="mb-1">{t("categories")}:</h2>
+                  <div className="mb-2">
                     {selectedChain.genders
-                      ? selectedChain.genders.sort().map((gender, i) => {
-                          return <p key={i}>{t(GenderI18nKeys[gender])}</p>;
-                        })
-                      : null}
+                      ? GenderBadges(t, selectedChain.genders)
+                      : "-"}
                   </div>
-                  <h3>{t("sizes")}:</h3>
-                  <div id="sizes-container">
+                  <h2 className="mb-1">{t("sizes")}:</h2>
+                  <div className="mb-2">
                     {selectedChain.sizes
-                      ? selectedChain.sizes.sort().map((size, i) => {
-                          return <p key={i}>{t(SizeI18nKeys[size])}</p>;
-                        })
-                      : null}
+                      ? SizeBadges(t, selectedChain.sizes)
+                      : "-"}
                   </div>
                 </div>
               </div>
 
-              <div className="card-action">
-                <button
-                  key={"btn-join"}
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={(e) => signupToChain(e)}
-                >
-                  {t("join")}
-                  <span className="feather feather-arrow-right ml-4"></span>
-                </button>
+              <div className="flex flex-col items-start">
                 {authUser?.is_root_admin && (
                   <button
                     key={"btn-view"}
-                    className="btn btn-primary"
+                    className="btn btn-sm btn-secondary btn-outline mb-3"
                     onClick={(e) => viewChain(e)}
                   >
                     {t("viewChain")}
+                    <span className="feather feather-shield ml-3"></span>
                   </button>
                 )}
+                <button
+                  key={"btn-join"}
+                  type="button"
+                  className="btn btn-sm btn-primary"
+                  onClick={(e) => signupToChain(e)}
+                >
+                  {t("join")}
+                  <span className="feather feather-arrow-right ml-3"></span>
+                </button>
               </div>
             </div>
           </Popup>
