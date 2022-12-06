@@ -42,13 +42,6 @@ export default function ChainMemberList() {
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
 
-  const isChainAdmin = useMemo(
-    () =>
-      authUser?.chains.find((c) => c.chain_uid === chain?.uid)
-        ?.is_chain_admin || false,
-    [authUser, chain]
-  );
-
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
     let oldValue = published;
@@ -188,7 +181,6 @@ export default function ChainMemberList() {
             authUser={authUser}
             users={users}
             chain={chain}
-            isChainAdmin={isChainAdmin}
             refresh={refresh}
           />
         </div>
@@ -203,7 +195,6 @@ export default function ChainMemberList() {
             authUser={authUser}
             users={users}
             chain={chain}
-            isChainAdmin={isChainAdmin}
             refresh={refresh}
           />
         </div>
@@ -216,7 +207,6 @@ function HostTable(props: {
   authUser: User | null;
   chain: Chain;
   users: User[];
-  isChainAdmin: boolean;
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
@@ -290,8 +280,7 @@ function HostTable(props: {
         <table className="table w-full">
           <thead>
             <tr>
-              {props.isChainAdmin ||
-                (props.authUser?.is_root_admin && <th className="sticky"></th>)}
+              <th className="sticky"></th>
               <th>{t("name")}</th>
               <th>{t("email")}</th>
               <th>{t("phone")}</th>
@@ -302,19 +291,16 @@ function HostTable(props: {
               ?.sort((a, b) => a.name.localeCompare(b.name))
               .map((u) => (
                 <tr key={u.uid}>
-                  {props.isChainAdmin ||
-                    (props.authUser?.is_root_admin && (
-                      <td className="sticky">
-                        <input
-                          type="checkbox"
-                          name="selectedChainAdmin"
-                          className="checkbox checkbox-sm checkbox-primary"
-                          checked={selected === u.uid}
-                          onChange={onChangeSelect}
-                          value={u.uid}
-                        />
-                      </td>
-                    ))}
+                  <td className="sticky">
+                    <input
+                      type="checkbox"
+                      name="selectedChainAdmin"
+                      className="checkbox checkbox-sm checkbox-primary"
+                      checked={selected === u.uid}
+                      onChange={onChangeSelect}
+                      value={u.uid}
+                    />
+                  </td>
                   <td>{u.name}</td>
                   <td>{u.email}</td>
                   <td>{u.phone_number}</td>
@@ -387,7 +373,6 @@ function ParticipantsTable(props: {
   authUser: User | null;
   users: User[];
   chain: Chain;
-  isChainAdmin: boolean;
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
