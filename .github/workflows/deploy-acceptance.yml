@@ -1,8 +1,9 @@
-name: Deploy Production v2
+name: Deploy Acceptance
 on:
   workflow_dispatch:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
 
 jobs:
   deploy-api:
@@ -14,11 +15,14 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: "1.19"
+          check-latest: true
+          cache: true
+          cache-dependency-path: server/go.sum
       - name: Build binary
         run: make build-server
         working-directory: ./server
       - name: Rename binary
-        run: mv server cl-api-production
+        run: mv server cl-api-acceptance
         working-directory: ./server
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -27,24 +31,30 @@ jobs:
           known_hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
       - name: Send binary to vps and restart service
         run: |
-          rsync -az --delete ./server/cl-api-production admin@vpsnode1.vps.webdock.cloud:/home/admin/
+          rsync -az --delete ./server/cl-api-acceptance admin@vpsnode1.vps.webdock.cloud:/home/admin/
           ssh admin@vpsnode1.vps.webdock.cloud "\
-          sudo rm /home/clothingloop/opt/api-production; \
-          sudo cp /home/admin/cl-api-production /home/clothingloop/opt/api-production; \
-          sudo chown root:root /home/clothingloop/opt/api-production; \
-          sudo chmod 0775 /home/clothingloop/opt/api-production; \
-          sudo systemctl restart cl-api-production"
+          sudo rm /home/clothingloop/opt/api-acceptance; \
+          sudo cp /home/admin/cl-api-acceptance /home/clothingloop/opt/api-acceptance; \
+          sudo chown root:root /home/clothingloop/opt/api-acceptance; \
+          sudo chmod 0775 /home/clothingloop/opt/api-acceptance; \
+          sudo systemctl restart cl-api-acceptance"
           echo "done"
   deploy-frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
       - name: Install Dependencies Frontend
         run: npm ci
         working-directory: ./frontend
       - name: Build public files
-        run: npm run build:production
+        run: npm run build:acceptance
         working-directory: ./frontend
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -53,9 +63,9 @@ jobs:
           known_hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
       - name: Send public files to vps
         run: |
-          ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-fe-production"
-          rsync -az --delete ./frontend/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-fe-production/
+          ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-fe-acceptance"
+          rsync -az --delete ./frontend/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-fe-acceptance/
           ssh admin@vpsnode1.vps.webdock.cloud "\
-          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-fe-production/ /var/caddy/clothingloop.org/; \
+          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-fe-acceptance/ /var/caddy/acc.clothingloop.org/; \
           sudo systemctl reload caddy"
           echo "done"
