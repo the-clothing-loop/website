@@ -79,7 +79,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
     }
   };
 
-  if (!state || (state.only_create_chain == false && !state.register_user)) {
+  if (!state || (state.only_create_chain === false && !state.register_user)) {
     return <Redirect to="/loops/new/users/signup" />;
   }
 
