@@ -64,9 +64,9 @@ To do so run this command:
 
 To document, test and use the server independently, [Postman](https://www.postman.com/) is to be used.
 
-#### 6.1. Install Insomnia
+#### 6.1. Install Postman
 
-Install one of the Insomnia Rest client options here:
+Install one of the Postman Rest client options here:
 
 a. app: https://www.postman.com/downloads/
 b. browser agent: https://www.postman.com/downloads/postman-agent/
