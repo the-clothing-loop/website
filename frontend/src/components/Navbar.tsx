@@ -26,10 +26,9 @@ function Navbar() {
       <Link
         aria-label="Clothing Loop logo"
         to="/"
-        className="bg-center w-48 h-36 bg-no-repeat relative z-[60]"
+        className="bg-center w-32 md:w-40 h-20 md:h-28 bg-no-repeat relative z-[60] bg-[auto_120px] md:bg-[auto_139px]"
         style={{
           backgroundImage: "url('/images/logos/the_clothing_loop_logo.png')",
-          backgroundSize: "auto 180px",
         }}
       ></Link>
       <input type="checkbox" className="hidden peer" id="header-hamburger" />
