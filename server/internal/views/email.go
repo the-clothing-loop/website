@@ -4,6 +4,7 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
@@ -15,7 +16,10 @@ import (
 var emailsFS embed.FS
 
 var emailsHeaders = map[string]map[string]string{}
-var emailsTemplates = mustParseFS(emailsFS, "emails/*.gohtml")
+var emailsTemplates = map[string]*template.Template{
+	"en": mustParseFS(emailsFS, "emails/en/*.gohtml"),
+	"nl": mustParseFS(emailsFS, "emails/nl/*.gohtml"),
+}
 
 func init() {
 	lang := []string{"en", "nl"}
@@ -62,7 +66,7 @@ func EmailAParticipantJoinedTheLoop(
 
 	to := adminEmail
 	subject := emailsHeaders[i18n]["a_participant_joined_the_loop"]
-	body, err := executeTemplate(c, emailsTemplates, fmt.Sprintf("%s_a_participant_joined_the_loop.gohtml", i18n), gin.H{
+	body, err := executeTemplate(c, emailsTemplates[i18n], "a_participant_joined_the_loop.gohtml", gin.H{
 		"Name": adminName,
 		"Participant": gin.H{
 			"Name":    participantName,
@@ -95,7 +99,7 @@ func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name string, email st
 	i18n := getI18n(c)
 	to := email
 	subject := emailsHeaders[i18n]["contact_confirmation"]
-	body, err := executeTemplate(c, emailsTemplates, fmt.Sprintf("%s_contact_confirmation.gohtml", i18n), gin.H{
+	body, err := executeTemplate(c, emailsTemplates[i18n], "contact_confirmation.gohtml", gin.H{
 		"Name":    name,
 		"Message": message,
 	})
@@ -110,7 +114,7 @@ func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB, name string, email 
 	i18n := getI18n(c)
 	to := email
 	subject := emailsHeaders[i18n]["subscribed_to_newsletter"]
-	body, err := executeTemplate(c, emailsTemplates, fmt.Sprintf("%s_subscribed_to_newsletter.gohtml", i18n), gin.H{"Name": name})
+	body, err := executeTemplate(c, emailsTemplates[i18n], "subscribed_to_newsletter.gohtml", gin.H{"Name": name})
 	if err != nil {
 		return false
 	}
