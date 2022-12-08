@@ -1,10 +1,7 @@
 project_id_env: CROWDIN_PROJECT_ID
 api_token_env: CROWDIN_PERSONAL_TOKEN
-
 files:
   - source: /frontend/public/locales/en/*.json
     translation: /frontend/public/locales/%two_letters_code%/%original_file_name%
-  - source: /server/internal/views/**/en_*.*
-    translation: /server/internal/views/**/%two_letters_code%_%original_file_name%
-    translation_replace:
-      "en_": ""
+  - source: /server/internal/views/emails/en/*.*
+    translation: /server/internal/views/emails/%two_letters_code%/%original_file_name%
