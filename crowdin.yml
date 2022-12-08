@@ -7,4 +7,4 @@ files:
   - source: /server/internal/views/**/en_*.*
     translation: /server/internal/views/**/%two_letters_code%_%original_file_name%
     translation_replace:
-      - "en_": ""
+      "en_": ""
