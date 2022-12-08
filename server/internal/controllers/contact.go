@@ -16,7 +16,7 @@ func ContactNewsletter(c *gin.Context) {
 	var body struct {
 		Name      string `json:"name" binding:"required"`
 		Email     string `json:"email" binding:"required,email"`
-		Subscribe bool   `json:"subscribe" binding:"required"`
+		Subscribe bool   `json:"subscribe"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
