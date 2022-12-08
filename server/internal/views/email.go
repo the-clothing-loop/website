@@ -25,7 +25,7 @@ func init() {
 	lang := []string{"en", "nl"}
 
 	for _, l := range lang {
-		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s_headers.json", l))
+		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/headers.json", l))
 		if err != nil {
 			log.Fatalf("Header not found: %+v", err)
 			return
