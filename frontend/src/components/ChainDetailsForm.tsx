@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import destination from "@turf/destination";
 import ReactMapGL, {
   SVGOverlay,
@@ -25,8 +25,6 @@ const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
 interface IProps {
   onSubmit: (values: RegisterChainForm) => void;
-  submitted?: boolean;
-  submitError?: string;
   initialValues?: RegisterChainForm;
   showBack?: boolean;
 }
@@ -38,9 +36,7 @@ export type RegisterChainForm = Omit<
 
 export default function ChainDetailsForm({
   onSubmit,
-  submitError,
   initialValues,
-  submitted,
   showBack,
 }: IProps) {
   const { t } = useTranslation();
