@@ -38,7 +38,9 @@ func init() {
 
 func getI18n(c *gin.Context) string {
 	i18n, _ := c.Cookie("i18next")
-	if i18n == "" {
+	switch i18n {
+	case "nl":
+	default:
 		i18n = "en"
 	}
 	return i18n
@@ -54,25 +56,24 @@ func EmailAParticipantJoinedTheLoop(
 	participantPhoneNumber string,
 	participantAddress string,
 ) bool {
+	// ? language hardcoded to english until language preference can be determined in the database
+	// i18n := getI18n(c)
+	i18n := "en"
+
 	to := adminEmail
-	subject := "A participant just joined your Loop!"
-	body := fmt.Sprintf(`<p>Hi, %s</p>
-<p>A new participant just joined your Loop.</p>
-<p>Please find below the participant's contact information:</p>
-<ul>
-	<li>Name: %s</li>
-	<li>Email: %s</li>
-	<li>Phone: %s</li>
-	<li>Address: %s</li>
-</ul>
-<p>Best,</p>
-<p>Nichon, on behalf of the Clothing Loop team</p>`,
-		adminName,
-		participantName,
-		participantEmail,
-		participantPhoneNumber,
-		participantAddress,
-	)
+	subject := emailsHeaders[i18n]["a_participant_joined_the_loop"]
+	body, err := executeTemplate(c, emailsTemplates, fmt.Sprintf("%s_a_participant_joined_the_loop.gohtml", i18n), gin.H{
+		"Name": adminName,
+		"Participant": gin.H{
+			"Name":    participantName,
+			"Email":   participantEmail,
+			"Phone":   participantPhoneNumber,
+			"Address": participantAddress,
+		},
+	})
+	if err != nil {
+		return false
+	}
 
 	return app.MailSend(c, db, to, subject, body)
 }
@@ -91,18 +92,16 @@ func EmailContactUserMessage(c *gin.Context, db *gorm.DB, name string, email str
 }
 
 func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name string, email string, message string) bool {
+	i18n := getI18n(c)
 	to := email
-	subject := "Thank you for contacting the Clothing Loop"
-	body := fmt.Sprintf(`<p>Hi %s,</p>
-<p>Thank you for your message!</p>
-<p>You wrote:</p>
-<p>%s</p>
-<p>We will contact you as soon as possible.</p>
-<p>Regards,</p>
-<p>Nichon, on behalf of the Clothing Loop team</p>`,
-		name,
-		message,
-	)
+	subject := emailsHeaders[i18n]["contact_confirmation"]
+	body, err := executeTemplate(c, emailsTemplates, fmt.Sprintf("%s_contact_confirmation.gohtml", i18n), gin.H{
+		"Name":    name,
+		"Message": message,
+	})
+	if err != nil {
+		return false
+	}
 
 	return app.MailSend(c, db, to, subject, body)
 }
@@ -110,7 +109,6 @@ func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name string, email st
 func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB, name string, email string) bool {
 	i18n := getI18n(c)
 	to := email
-
 	subject := emailsHeaders[i18n]["subscribed_to_newsletter"]
 	body, err := executeTemplate(c, emailsTemplates, fmt.Sprintf("%s_subscribed_to_newsletter.gohtml", i18n), gin.H{"Name": name})
 	if err != nil {
