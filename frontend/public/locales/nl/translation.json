@@ -8,7 +8,7 @@
   "draft": "Ontwerp",
   "openToNewMembers": "Openen voor nieuwe leden",
   "closed": "Gesloten",
-  "peopleWithCount_one": "{{ count }} personen",
+  "peopleWithCount_one": "{{ count }} persoon",
   "peopleWithCount_other": "{{ count }} mensen",
   "contribute": "Bijdragen",
   "copiedToClipboard": "Naar klembord gekopieerd",
