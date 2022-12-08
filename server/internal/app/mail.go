@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"net/smtp"
 
-	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
-	"github.com/CollActionteam/clothing-loop/server/local/models"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/gin-gonic/gin"
 	"github.com/jordan-wright/email"
 	"gopkg.in/guregu/null.v3/zero"

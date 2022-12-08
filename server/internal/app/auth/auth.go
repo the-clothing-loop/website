@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
-	"github.com/CollActionteam/clothing-loop/server/local/models"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )

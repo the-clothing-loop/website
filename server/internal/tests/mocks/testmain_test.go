@@ -3,7 +3,7 @@ package mocks_test
 import (
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/local/app"
+	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"gorm.io/gorm"
 )
 

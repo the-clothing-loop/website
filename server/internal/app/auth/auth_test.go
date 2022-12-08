@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/local/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/local/models"
-	"github.com/CollActionteam/clothing-loop/server/local/tests/mocks"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
+	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	"github.com/CollActionteam/clothing-loop/server/internal/tests/mocks"
 	"github.com/stretchr/testify/assert"
 )
 

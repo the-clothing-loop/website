@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/local/models"
+	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	Faker "github.com/jaswdr/faker"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3/zero"

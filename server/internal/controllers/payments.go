@@ -8,9 +8,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/local/app"
-	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
-	"github.com/CollActionteam/clothing-loop/server/local/models"
+	"github.com/CollActionteam/clothing-loop/server/internal/app"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/gin-gonic/gin"
 	"github.com/stripe/stripe-go/v73"
 	stripe_session "github.com/stripe/stripe-go/v73/checkout/session"

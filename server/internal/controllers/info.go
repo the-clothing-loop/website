@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,4 +1,4 @@
-package local
+package internal
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/CollActionteam/clothing-loop/server/local/app"
-	"github.com/CollActionteam/clothing-loop/server/local/controllers"
+	"github.com/CollActionteam/clothing-loop/server/internal/app"
+	"github.com/CollActionteam/clothing-loop/server/internal/controllers"
 	"github.com/gin-gonic/gin"
 )
 

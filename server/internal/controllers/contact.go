@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/local/app/gin_utils"
-	"github.com/CollActionteam/clothing-loop/server/local/models"
-	"github.com/CollActionteam/clothing-loop/server/local/views"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	"github.com/CollActionteam/clothing-loop/server/internal/views"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm/clause"
 )

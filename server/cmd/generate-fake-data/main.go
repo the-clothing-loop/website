@@ -4,9 +4,9 @@ import (
 	"log"
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/local/app"
-	"github.com/CollActionteam/clothing-loop/server/local/models"
-	"github.com/CollActionteam/clothing-loop/server/local/tests/mocks"
+	"github.com/CollActionteam/clothing-loop/server/internal/app"
+	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	"github.com/CollActionteam/clothing-loop/server/internal/tests/mocks"
 	Faker "github.com/jaswdr/faker"
 )
 

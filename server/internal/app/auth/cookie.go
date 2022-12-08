@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/CollActionteam/clothing-loop/server/local/app"
+	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/gin-gonic/gin"
 )
 
