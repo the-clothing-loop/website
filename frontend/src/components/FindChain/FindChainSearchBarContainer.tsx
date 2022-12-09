@@ -1,42 +1,47 @@
-import React, { useContext, useEffect } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router";
 
 import SearchBar from "./SearchBar";
-
 import { ChainsContext } from "../../providers/ChainsProvider";
 import { defaultTruePredicate, ChainPredicate } from "../../pages/FindChain";
 import { Chain } from "../../api/types";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router";
 
 const hasCommonElements = (arr1: string[], arr2: string[]) =>
   arr1.some((item: string) => arr2.includes(item));
 
-interface FormValues {
+export interface SearchValues {
   searchTerm: string;
   sizes: string[];
   genders: string[];
 }
+
 interface IProps {
-  setFilterChainPredicate: React.Dispatch<React.SetStateAction<ChainPredicate>>;
+  setFilterChainPredicate: Dispatch<SetStateAction<ChainPredicate>>;
   handleFindChainCallback: (findChainPredicate: ChainPredicate) => boolean;
   initialValues?: any;
 }
 
-export default function FindChainSearchBar({
+export default function FindChainSearchBarContainer({
   setFilterChainPredicate,
   handleFindChainCallback,
   initialValues,
 }: IProps) {
-  const [searchTerm, setSearchTerm] = React.useState<string>("");
-  const [selectedSizes, setSelectedSizes] = React.useState<string[]>([]);
-  const [selectedGenders, setSelectedGenders] = React.useState<string[]>([]);
-  const [isChainNotFound, setIsChainNotFound] = React.useState<boolean>(false);
-  const [formAutoFilled, setFormAutoFilled] = React.useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
+  const [isChainNotFound, setIsChainNotFound] = useState(false);
+  const [formAutoFilled, setFormAutoFilled] = useState(false);
   const chains = useContext(ChainsContext);
 
-  const handleSearchTermChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSearchTermChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
