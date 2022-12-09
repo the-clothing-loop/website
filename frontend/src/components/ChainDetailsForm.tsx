@@ -112,7 +112,7 @@ export default function ChainDetailsForm({
     })();
   }
 
-  function handleMapClick(e: MapEvent) {
+  function handleMapClick(e: any /*MapEvent*/) {
     const el = e.srcEvent.target as HTMLElement | undefined;
     if (el?.className.toString().includes("mapboxgl-ctrl-geocoder")) {
       // ignore clicks on geocoding search bar, which is on top of map

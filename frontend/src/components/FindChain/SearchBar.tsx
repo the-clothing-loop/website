@@ -1,42 +1,40 @@
-import { KeyboardEvent } from "react";
+import { ChangeEvent, KeyboardEvent } from "react";
 import { useTranslation } from "react-i18next";
-import categories from "../../util/categories";
 
+import categories from "../../util/categories";
+import { SetValue } from "../../util/form.hooks";
 import CategoriesDropdown from "../CategoriesDropdown";
 import SizesDropdown from "../SizesDropdown";
 
-interface IProps {
+export interface SearchValues {
   searchTerm: string;
-  handleSearchTermChange: React.ChangeEventHandler<HTMLInputElement>;
-  selectedGenders: string[];
-  handleSelectedGenderChange: (g: string[]) => void;
-  selectedSizes: string[];
-  setSelectedSizes: (el: string[]) => void;
-  handleSearch: any;
+  sizes: string[];
+  genders: string[];
 }
 
-export default function SearchBar({
-  searchTerm,
-  handleSearchTermChange,
-  selectedGenders,
-  handleSelectedGenderChange,
-  selectedSizes,
-  setSelectedSizes,
-  handleSearch,
-}: IProps) {
+interface Props {
+  values: SearchValues;
+  setValue: SetValue<SearchValues>;
+  onSearch: () => void;
+}
+
+export default function SearchBar(props: Props) {
   const { t } = useTranslation();
 
   function handleSearchEnter(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
-      handleSearch();
+      props.onSearch();
     }
+  }
+  function handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
+    props.setValue("searchTerm", e.target.value);
   }
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        handleSearch();
+        props.onSearch();
       }}
       className="container mx-auto flex p-4 md:px-20 bg-white flex-wrap sm:flex-nowrap flex-col md:flex-row"
     >
@@ -44,20 +42,24 @@ export default function SearchBar({
         <span className="block self-center pr-3 feather feather-search"></span>
         <input
           type="search"
-          value={searchTerm}
-          onChange={handleSearchTermChange}
+          value={props.values.searchTerm}
+          onChange={handleSearchChange}
           onKeyUp={handleSearchEnter}
           placeholder={t("searchLocation")}
           className="w-full border-0 text-sm outline-none my-2 mr-2"
         />
       </label>
 
-      <div className={`flex ${searchTerm.length > 0 ? "" : "hidden md:flex"}`}>
+      <div
+        className={`flex ${
+          props.values.searchTerm.length > 0 ? "" : "hidden md:flex"
+        }`}
+      >
         <div className="flex">
           <div className="w-36 sm:w-48 pr-0 sm:pr-4">
             <CategoriesDropdown
-              selectedGenders={selectedGenders}
-              handleChange={handleSelectedGenderChange}
+              selectedGenders={props.values.genders}
+              handleChange={(gs) => props.setValue("genders", gs)}
             />
           </div>
 
@@ -65,12 +67,12 @@ export default function SearchBar({
             <SizesDropdown
               className="max-xs:dropdown-end"
               filteredGenders={
-                selectedGenders.length
-                  ? selectedGenders
+                props.values.genders.length
+                  ? props.values.genders
                   : Object.keys(categories)
               }
-              selectedSizes={selectedSizes}
-              handleChange={setSelectedSizes}
+              selectedSizes={props.values.sizes}
+              handleChange={(s) => props.setValue("sizes", s)}
             />
           </div>
         </div>

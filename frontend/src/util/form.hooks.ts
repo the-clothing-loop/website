@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 
-type SetValue<V> = <K extends keyof V>(key: K, value: V[K]) => void;
-type SetValues<V> = Dispatch<SetStateAction<V>>;
+export type SetValue<V> = <K extends keyof V>(key: K, value: V[K]) => void;
+export type SetValues<V> = Dispatch<SetStateAction<V>>;
 
 export default function useForm<V extends {}>(
   initialValues: V

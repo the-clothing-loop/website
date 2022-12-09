@@ -9,14 +9,13 @@ import mapboxgl from "mapbox-gl";
 // Project resources
 // import { ChainsContext } from "../providers/ChainsProvider";
 import { AuthContext } from "../providers/AuthProvider";
-import { IViewPort } from "../types";
-import FindChainSearchBarContainer, {
-  SearchValues,
-} from "../components/FindChain/FindChainSearchBarContainer";
 import { Chain, UID } from "../api/types";
 // import { GenderI18nKeys, Genders, SizeI18nKeys } from "../api/enums";
-import { chainAddUser, chainGetAll } from "../api/chain";
+import { chainGetAll } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
+import useForm from "../util/form.hooks";
+import SearchBar, { SearchValues } from "../components/FindChain/SearchBar";
+import { GenderBadges, SizeBadges } from "../components/Badges";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
@@ -36,8 +35,6 @@ type GeoJSONChains = GeoJSONTypes.FeatureCollection<
     size: string;
   }
 >;
-
-const binary = {};
 
 export const defaultTruePredicate = () => true;
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY || "";
@@ -71,31 +68,19 @@ export default function FindChain({ location }: { location: Location }) {
 
   const history = useHistory();
   const { t } = useTranslation();
-  const { authUser } = useContext(AuthContext);
   const { addToastError } = useContext(ToastContext);
 
   const [map, setMap] = useState<mapboxgl.Map>();
   const [zoom, setZoom] = useState(4);
-  const [, _setSearchValues] = useState<SearchValues>();
-
-  /*
-  const [viewport, setViewport] = useState<IViewPort>({
-    latitude: 26.3351,
-    longitude: 17.2283,
-    width: "100vw",
-    height: "80vh",
-    zoom: 1.45,
-  });
-  const [selectedChain, setSelectedChain] = useState<Chain | null>(null);
-  const [showPopup, setShowPopup] = useState(false);
-
-  const [filterChainPredicate, setFilterChainPredicate] =
-    useState<ChainPredicate>(() => defaultTruePredicate);
-
-  const filteredChains = publishedChains.filter(filterChainPredicate);
-
-  
-  */
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [searchValues, setSearchValue, setSearchValues] = useForm<SearchValues>(
+    {
+      searchTerm: urlParams.get("searchTerm") || "",
+      sizes: urlParams.getAll("sizes") || [],
+      genders: urlParams.getAll("genders") || [],
+    }
+  );
+  const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
 
   const mapRef = useRef<any>();
 
@@ -124,41 +109,68 @@ export default function FindChain({ location }: { location: Location }) {
           type: "geojson",
           data: mapToGeoJSONChains(_chains),
           cluster: true,
-          clusterMaxZoom: 12,
+          clusterMaxZoom: 10,
           clusterRadius: 30,
         });
         _map.addLayer({
           id: "chain-cluster",
           type: "circle",
           source: "chains",
-          filter: ["==", "cluster", true],
+          filter: ["has", "point_count"],
           paint: {
-            "circle-color": "#ef953d",
-            "circle-radius": 20,
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#ffffff",
+            "circle-color": ["rgba", 239, 149, 61, 0.6], // #ef953d
+            "circle-radius": 15,
+            "circle-stroke-width": 0,
+          },
+        });
+        _map.addLayer({
+          id: "chain-cluster-count",
+          type: "symbol",
+          source: "chains",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": ["get", "point_count_abbreviated"],
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 12,
           },
         });
         _map.addLayer({
           id: "chain-single",
           type: "circle",
           source: "chains",
-          filter: ["!=", "cluster", true],
+          filter: ["!", ["has", "point_count"]],
           paint: {
             "circle-color": [
               "case",
               ["in", ["get", "gender"], "2"],
-              "#dc77a3",
+              ["rgba", 220, 119, 163, 0.6], // #dc77a3
               ["in", ["get", "gender"], "3"],
-              "#1467b3",
+              ["rgba", 20, 103, 179, 0.6], // #1467b3
               ["in", ["get", "gender"], "1"],
-              "#f0c449",
-              "#000",
+              ["rgba", 240, 196, 73, 0.6], // #f0c449
+              ["rgba", 0, 0, 0, 0.6], // #000
             ],
             "circle-radius": ["get", "radius"],
-            "circle-stroke-width": 2,
+            "circle-stroke-width": 0,
             "circle-stroke-color": "#ffffff",
           },
+        });
+        _map.on("click", ["chain-cluster", "chain-single"], (e) => {
+          if (e.features) {
+            let uids = e.features
+              .map((f) => f.properties?.uid)
+              .filter((f) => f) as UID[];
+
+            // filter unique
+            uids = [...new Set(uids)];
+
+            let _selectedChains = uids.map((uid) =>
+              _chains.find((c) => c.uid === uid)
+            ) as Chain[];
+            if (_selectedChains.length) {
+              setSelectedChains(_selectedChains);
+            }
+          }
         });
       });
     });
@@ -172,16 +184,14 @@ export default function FindChain({ location }: { location: Location }) {
   }, []);
 
   // https://docs.mapbox.com/mapbox-gl-js/style-spec/other/#set-membership-filters
-  function setSearchValues(sv: SearchValues) {
+  function handleSearch() {
     let filterOptions: any[] = [true];
-    if (sv.sizes.length) {
-      filterOptions = ["in", "size", ...sv.sizes];
-    } else if (sv.genders.length) {
-      filterOptions = ["in", "gender", ...sv.genders];
+    if (searchValues.sizes.length) {
+      filterOptions = ["in", "size", ...searchValues.sizes];
+    } else if (searchValues.genders.length) {
+      filterOptions = ["in", "gender", ...searchValues.genders];
     }
-    // map?.setFilter("chains", filterOptions);
-
-    _setSearchValues(sv);
+    map?.setFilter("chains", filterOptions);
   }
 
   // useEffect(() => {
@@ -233,12 +243,15 @@ export default function FindChain({ location }: { location: Location }) {
   // };
 
   function handleLocation() {
+    setLocationLoading(true);
     window.navigator.geolocation.getCurrentPosition(
       (pos) => {
         map?.setZoom(10);
         map?.setCenter([pos.coords.longitude, pos.coords.latitude]);
+        setLocationLoading(false);
       },
       (err) => {
+        setLocationLoading(false);
         console.error(`Couldn't receive location: ${err.message}`);
         addToastError(`Couldn't receive location: ${err.message}`);
       }
@@ -309,17 +322,13 @@ export default function FindChain({ location }: { location: Location }) {
       </Helmet>
 
       <main>
-        <FindChainSearchBarContainer
-          setSearchValues={() => setSearchValues}
-          onSearchCallback={() => false}
-          initialValues={{
-            searchTerm: urlParams.get("searchTerm") || "",
-            sizes: urlParams.getAll("sizes") || [],
-            genders: urlParams.getAll("genders") || [],
-          }}
+        <SearchBar
+          values={searchValues}
+          setValue={setSearchValue}
+          onSearch={handleSearch}
         />
 
-        <div className="relative h-[600px]">
+        <div className="relative h-[80vh]">
           <div ref={mapRef} className="h-full"></div>
 
           <div className="flex flex-col absolute z-30 bottom-[5%] right-2.5">
@@ -327,30 +336,86 @@ export default function FindChain({ location }: { location: Location }) {
               className="btn btn-circle btn-outline glass bg-white/70 hover:bg-white/90 mb-4"
               onClick={() => handleLocation()}
             >
-              <span className="feather feather-crosshair text-base-content" />
+              <span
+                className={`feather text-base-content text-lg ${
+                  locationLoading
+                    ? "feather-loader animate-spin"
+                    : "feather-navigation"
+                }`}
+              />
             </button>
             <div className="btn-group btn-group-vertical">
               <button
-                className={`btn rounded-t-full ${
+                className={`btn rounded-t-full p-0 w-12 h-12 ${
                   zoom >= maxZoom
                     ? "btn-disabled bg-white/30"
                     : "glass bg-white/60 hover:bg-white/90"
                 }`}
                 onClick={() => mapZoom("+")}
               >
-                <span className="feather feather-plus text-base-content" />
+                <span className="feather feather-plus text-base-content text-lg" />
               </button>
               <button
-                className={`btn rounded-b-full -mt-px ${
+                className={`btn rounded-b-full p-0 w-12 h-12 -mt-px ${
                   zoom <= minZoom
                     ? "btn-disabled bg-white/30"
                     : "glass bg-white/60 hover:bg-white/90"
                 }`}
                 onClick={() => mapZoom("-")}
               >
-                <span className="feather feather-minus text-base-content" />
+                <span className="feather feather-minus text-base-content text-lg" />
               </button>
             </div>
+          </div>
+
+          <div
+            className={`absolute z-30 top-4 left-4 max-h-full w-72 overflow-y-auto ${
+              selectedChains.length ? "" : "hidden"
+            }`}
+          >
+            <button
+              key="close"
+              type="button"
+              onClick={() => setSelectedChains([])}
+              className="absolute top-2 right-2 btn btn-sm btn-circle btn-outline"
+            >
+              <span className="feather feather-arrow-left"></span>
+            </button>
+            {selectedChains.map((chain) => (
+              <div
+                className="p-4 w-full mb-4 rounded-lg bg-base-100"
+                key={chain.uid}
+              >
+                <div className="mb-2">
+                  <h1 className="font-semibold text-secondary mb-3 pr-10">
+                    {chain.name}
+                  </h1>
+                  <p className="mb-3">{chain.description}</p>
+                  <div className="flex flex-col w-full text-sm">
+                    {chain.genders?.length ? (
+                      <>
+                        <h2 className="mb-1">{t("categories")}:</h2>
+                        <div className="mb-2">
+                          {GenderBadges(t, chain.genders)}
+                        </div>
+                      </>
+                    ) : null}
+                    {chain.sizes?.length ? (
+                      <>
+                        <h2 className="mb-1">{t("sizes")}:</h2>
+                        <div className="mb-2">{SizeBadges(t, chain.sizes)}</div>
+                      </>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="flex flex-col items-start">
+                  <button type="button" className="btn btn-sm btn-primary">
+                    {t("join")}
+                    <span className="feather feather-arrow-right ml-3"></span>
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </main>

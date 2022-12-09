@@ -7,8 +7,8 @@ import { Link, useHistory } from "react-router-dom";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Testimonials from "../components/Testimonials";
+import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
 
-import { StandaloneSearchBar } from "../components/FindChain/StandaloneSearchBar";
 //Media
 const HeroImg = "/images/Kirsten-Rosan.jpg";
 const MapImage = "/images/map_image.png";

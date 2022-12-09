@@ -1,46 +1,40 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import SearchBar from "./SearchBar";
+import useForm from "../../util/form.hooks";
+import SearchBar, { SearchValues } from "./SearchBar";
 
 /*
  * A searchbar for finding loops that can be used separately from the "find
  * loops" page. It takes the user to the "find loops" page then carries out a
  * search with whatever values were entered
  */
-export const StandaloneSearchBar = () => {
+export default function StandaloneSearchBar() {
   const history = useHistory();
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
 
-  const handleSearchTermChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSearchTerm(event.target.value);
-  };
+  const [search, setSearchValue] = useForm<SearchValues>({
+    searchTerm: "",
+    sizes: [],
+    genders: [],
+  });
 
-  const handleSearch = () => {
+  function handleSearch() {
     const queryParams = new URLSearchParams();
-    queryParams.append("searchTerm", searchTerm);
-    for (const size of selectedSizes) {
+    queryParams.append("searchTerm", search.searchTerm);
+    for (const size of search.sizes) {
       queryParams.append("sizes", size);
     }
-    for (const gender of selectedGenders) {
+    for (const gender of search.genders) {
       queryParams.append("genders", gender);
     }
     history.push("/loops/find?" + queryParams.toString());
-  };
+  }
 
   return (
     <SearchBar
-      searchTerm={searchTerm}
-      handleSearchTermChange={handleSearchTermChange}
-      selectedGenders={selectedGenders}
-      handleSelectedGenderChange={setSelectedGenders}
-      selectedSizes={selectedSizes}
-      setSelectedSizes={setSelectedSizes}
-      handleSearch={handleSearch}
+      values={search}
+      setValue={setSearchValue}
+      onSearch={handleSearch}
     />
   );
-};
+}
