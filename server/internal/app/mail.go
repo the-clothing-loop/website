@@ -1,6 +1,7 @@
 package app
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"net/http"
@@ -38,9 +39,13 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 	var err error
 	switch Config.SMTP_PORT {
 	case 465:
-		err = e.SendWithStartTLS(smtpAddr, smtpAuth, nil)
+		err = e.SendWithStartTLS(smtpAddr, smtpAuth, &tls.Config{
+			InsecureSkipVerify: true,
+		})
 	case 587:
-		err = e.SendWithTLS(smtpAddr, smtpAuth, nil)
+		err = e.SendWithTLS(smtpAddr, smtpAuth, &tls.Config{
+			InsecureSkipVerify: true,
+		})
 	default:
 		err = e.Send(smtpAddr, smtpAuth)
 	}
