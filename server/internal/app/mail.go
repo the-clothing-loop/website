@@ -35,7 +35,15 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 	e.Subject = subject
 	e.Text = []byte("")
 	e.HTML = []byte(body)
-	err := e.Send(smtpAddr, smtpAuth)
+	var err error
+	switch Config.SMTP_PORT {
+	case 465:
+		err = e.SendWithStartTLS(smtpAddr, smtpAuth, nil)
+	case 587:
+		err = e.SendWithTLS(smtpAddr, smtpAuth, nil)
+	default:
+		err = e.Send(smtpAddr, smtpAuth)
+	}
 
 	db.Create(&models.Mail{
 		To:      to,
