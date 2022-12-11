@@ -2,9 +2,28 @@ vpsnode1.vps.webdock.cloud {
 	respond "Hello, world!"
 }
 
-next.clothingloop.org, clothingloop.org, acc.clothingloop.org, admin.clothingloop.org, www.clothingloop.org {
+next.clothingloop.org, clothingloop.org, admin.clothingloop.org, www.clothingloop.org {
 	root * /var/caddy/maint.clothingloop.org
 	file_server
 	encode zstd gzip
 	try_files {path} /index.html
+}
+
+acc.clothingloop.org {
+	log {
+		output file /var/log/caddy/acc.clothingloop.org-error.log
+		format console
+		level ERROR
+	}
+
+	handle_path /api/* {
+		reverse_proxy 127.0.0.1:8082
+	}
+
+	handle {
+		root * /var/caddy/acc.clothingloop.org
+		file_server
+		encode zstd gzip
+		try_files {path} /index.html
+	}
 }
