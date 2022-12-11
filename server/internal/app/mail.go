@@ -45,6 +45,7 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 	})
 
 	if err != nil {
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to send email"))
 		return false
 	}
