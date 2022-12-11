@@ -4,7 +4,11 @@ vpsnode1.vps.webdock.cloud {
 
 next.clothingloop.org, clothingloop.org, admin.clothingloop.org, www.clothingloop.org {
 	root * /var/caddy/maint.clothingloop.org
-	file_server
+	file_server {
+		root /var/caddy/maint.clothingloop.org
+		
+		status 503
+	}
 	encode zstd gzip
 	try_files {path} /index.html
 }
