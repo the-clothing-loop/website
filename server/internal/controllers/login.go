@@ -45,8 +45,9 @@ LIMIT 1
 }
 
 func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool {
-	token, ok := auth.TokenCreateUnverified(db, user.ID)
-	if !ok {
+	token, err := auth.TokenCreateUnverified(db, user.ID)
+	if err != nil {
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
 		return false
 	}
