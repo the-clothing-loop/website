@@ -1,8 +1,7 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import { useTranslation } from "react-i18next";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import { MapboxEvent } from "mapbox-gl";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY || "";
 

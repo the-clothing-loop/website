@@ -133,7 +133,7 @@ export default function ChainDetailsForm({
   }
 
   function redrawLoop({ project }: { project: any }) {
-    if (values.longitude === null || values.latitude === null) {
+    if (!values.longitude || !values.latitude) {
       return;
     }
     const [centerX, centerY] = project([values.longitude, values.latitude]);
