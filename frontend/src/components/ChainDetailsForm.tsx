@@ -48,11 +48,11 @@ export default function ChainDetailsForm({
   const history = useHistory();
 
   const [viewport, setViewport] = useState<IViewPort>({
-    longitude: initialValues ? initialValues.longitude : 0,
-    latitude: initialValues ? initialValues.latitude : 0,
+    longitude: initialValues ? initialValues.longitude : 17.2283,
+    latitude: initialValues ? initialValues.latitude : 26.3351,
     width: "40vw",
     height: "40vh",
-    zoom: initialValues ? 10 : 1,
+    zoom: initialValues?.latitude && initialValues?.longitude ? 10 : 1,
   });
 
   const [values, setValue, setValues] = useForm<RegisterChainForm>({
