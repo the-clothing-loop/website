@@ -26,7 +26,7 @@ func TokenReadFromRequest(c *gin.Context) (string, bool) {
 	return token, true
 }
 
-func TokenCreateUnverified(db *gorm.DB, userID uint) (string, bool) {
+func TokenCreateUnverified(db *gorm.DB, userID uint) (string, error) {
 	// create token
 	token := uuid.NewV4().String()
 
@@ -37,10 +37,10 @@ func TokenCreateUnverified(db *gorm.DB, userID uint) (string, bool) {
 		UserID:   userID,
 	})
 	if res.Error != nil {
-		return "", false
+		return "", res.Error
 	}
 
-	return token, true
+	return token, nil
 }
 
 func TokenVerify(db *gorm.DB, token string) bool {

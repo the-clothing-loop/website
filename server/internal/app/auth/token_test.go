@@ -36,8 +36,8 @@ func TestLoginFlowToken(t *testing.T) {
 	})
 
 	// create unverified token
-	token, ok := auth.TokenCreateUnverified(db, user.ID)
-	assert.True(t, ok, "CreateUnverifiedToken should return a true ok")
+	token, err := auth.TokenCreateUnverified(db, user.ID)
+	assert.Nil(t, err, "CreateUnverifiedToken should return a nil err")
 
 	// ensure that token is in database
 	userToken := models.UserToken{}
@@ -52,7 +52,7 @@ LIMIT 1
 	assert.Equalf(t, user.ID, userToken.UserID, "New token (%s) not found in search", userToken)
 
 	// ensure unverified token is not usable for authenticate
-	_, ok = auth.TokenAuthenticate(db, token)
+	_, ok := auth.TokenAuthenticate(db, token)
 	assert.Falsef(t, ok, "Unverified token (%s) should not be useable", token)
 
 	// verify token

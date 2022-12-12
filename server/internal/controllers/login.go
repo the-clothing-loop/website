@@ -36,7 +36,7 @@ FROM users
 WHERE email = ?
 LIMIT 1
 	`, body.Email).Scan(&user)
-	if res.Error != nil {
+	if res.Error != nil || user.ID == 0 {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Email is not yet registered"))
 		return
 	}
@@ -45,8 +45,9 @@ LIMIT 1
 }
 
 func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool {
-	token, ok := auth.TokenCreateUnverified(db, user.ID)
-	if !ok {
+	token, err := auth.TokenCreateUnverified(db, user.ID)
+	if err != nil {
+		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
 		return false
 	}
