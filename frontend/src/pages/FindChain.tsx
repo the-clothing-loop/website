@@ -16,6 +16,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import useForm from "../util/form.hooks";
 import SearchBar, { SearchValues } from "../components/FindChain/SearchBar";
 import { GenderBadges, SizeBadges } from "../components/Badges";
+import { circleRadiusKm } from "../util/maps";
 
 // The following is required to stop "npm build" from transpiling mapbox code.
 // notice the exclamation point in the import.
@@ -54,7 +55,7 @@ function mapToGeoJSONChains(chains: Chain[]): GeoJSONChains {
         properties: {
           uid: chain.uid,
           chainIndex: chainIndex,
-          radius: chain.radius * 6,
+          radius: circleRadiusKm((chain.radius * 1000) / 6, chain.latitude),
           gender: chain.genders?.join("") || "",
           size: chain.sizes?.join("") || "",
         },
@@ -66,7 +67,6 @@ function mapToGeoJSONChains(chains: Chain[]): GeoJSONChains {
 export default function FindChain({ location }: { location: Location }) {
   const urlParams = new URLSearchParams(location.search);
 
-  const history = useHistory();
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
 
@@ -88,6 +88,7 @@ export default function FindChain({ location }: { location: Location }) {
     const _map = new mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
+      projection: { name: "mercator" },
       zoom: 4,
       minZoom: 1,
       maxZoom: 13,
@@ -150,7 +151,16 @@ export default function FindChain({ location }: { location: Location }) {
               ["rgba", 240, 196, 73, 0.6], // #f0c449
               ["rgba", 0, 0, 0, 0.6], // #000
             ],
-            "circle-radius": ["get", "radius"],
+            "circle-radius": [
+              "interpolate",
+              ["exponential", 2],
+              ["zoom"],
+              0,
+              0,
+              20,
+              ["get", "radius"],
+            ],
+            //  ["get", "radius"],
             "circle-stroke-width": 0,
             "circle-stroke-color": "#ffffff",
           },
@@ -168,6 +178,7 @@ export default function FindChain({ location }: { location: Location }) {
               _chains.find((c) => c.uid === uid)
             ) as Chain[];
             if (_selectedChains.length) {
+              _selectedChains.forEach((c) => console.log(c.name, c.radius));
               setSelectedChains(_selectedChains);
             }
           }
