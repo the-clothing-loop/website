@@ -160,12 +160,12 @@ function DonationFormContent() {
 
   function oneOffRadio(item: RadioItem) {
     return (
-      <label key={"oneoff" + item.text} className="flex">
+      <label key={"oneoff" + item.id} className="flex">
         <input
           type="radio"
           name="oneoff_radio"
           className="radio radio-secondary mr-3"
-          value={item.id}
+          checked={values.oneoff_radio === item.id}
           onChange={() => setValue("oneoff_radio", item.id)}
         />
         {item.text}
@@ -175,12 +175,12 @@ function DonationFormContent() {
 
   function recurringRadio(item: RadioItem) {
     return (
-      <label key={"recurring" + item.text} className="flex items-center h-12">
+      <label key={"recurring" + item.id} className="flex items-center h-12">
         <input
           type="radio"
           name="recurring_radio"
           className="radio radio-secondary mr-3"
-          value={item.id}
+          checked={values.recurring_radio === item.id}
           onChange={() => setValue("recurring_radio", item.id)}
         />
         {item.text}
@@ -235,11 +235,11 @@ function DonationFormContent() {
         >
           {oneOff.map((item) => oneOffRadio(item))}
 
-          <div className="flex items-center">
+          <div className="flex items-center relative">
             <input
               name="oneoff_radio"
               type="radio"
-              value=""
+              checked={values.oneoff_radio === ""}
               aria-label="type a custom amount in the next text input"
               className="invisible -z-10 mr-3 absolute"
             />
@@ -251,13 +251,15 @@ function DonationFormContent() {
               className={`input invalid:input-error w-full pl-8 ${
                 error === "oneoff_custom" ? "input-error" : "input-secondary"
               } ${
-                values.oneoff_radio === ""
+                values.oneoff_radio === "custom"
                   ? "ring-2 ring-offset-2 ring-secondary/50"
                   : ""
               }`}
               type="number"
+              value={values.oneoff_custom}
               aria-invalid={error === "oneoff_custom"}
               onChange={deselectOneOffRadio}
+              onFocus={() => setValue("oneoff_radio", "custom")}
               placeholder={t("otherAmount")}
             />
           </div>
