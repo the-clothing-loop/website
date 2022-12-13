@@ -27,7 +27,7 @@
     - name: Add config for acceptance
       vars:
         api_config_port: 8082
-        api_config_base_url_api: https://acc.clothingloop.org/api
+        api_config_base_url_api: https://acc.api.clothingloop.org
         api_config_base_url_fe: https://acc.clothingloop.org
         api_config_cookie_https_only: "true"
         api_config_stripe_secret_key: "{{ stripe_cl_acceptance_secret_key }}"

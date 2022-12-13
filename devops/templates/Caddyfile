@@ -44,14 +44,26 @@ acc.clothingloop.org {
 		level ERROR
 	}
 
-	handle_path /api/* {
-		reverse_proxy 127.0.0.1:8082
+	header Access-Control-Allow-Origin *
+	route {
+		header Cache-Control max-age=3600
+		header /assets/* Cache-Control max-age=31536000
 	}
 
-	handle {
-		root * /var/caddy/acc.clothingloop.org
-		file_server
-		encode zstd gzip
-		try_files {path} /index.html
+	root * /var/caddy/acc.clothingloop.org
+	file_server
+	encode zstd gzip
+	try_files {path} /index.html
+}
+
+acc.api.clothingloop.org {
+	log {
+		output file /var/log/caddy/acc.clothingloop.org-error.log
+		format console
+		level ERROR
 	}
+
+	header Cache-Control no-cache
+
+	reverse_proxy 127.0.0.1:8082
 }
