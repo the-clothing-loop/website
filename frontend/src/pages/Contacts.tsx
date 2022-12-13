@@ -7,6 +7,7 @@ import { contactMailSend } from "../api/contact";
 import FormJup from "../util/form-jup";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
+import useForm from "../util/form.hooks";
 
 interface FormValues {
   name: string;
@@ -19,14 +20,17 @@ const Contacts = () => {
   const { addToastError } = useContext(ToastContext);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [values, setValue] = useForm({
+    name: "",
+    email: "",
+    message: "",
+  });
 
   const CHARACTER_LIMIT = 2000;
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
-    const values = FormJup<FormValues>(e);
-
     console.log(`sending mail: ${values.email}`);
 
     (async () => {
@@ -70,6 +74,8 @@ const Contacts = () => {
             placeholder={t("name")}
             name="name"
             type="text"
+            value={values.name}
+            onChange={(e) => setValue("name", e.target.value)}
             min={2}
             className="input input-secondary mb-4"
             required
@@ -78,12 +84,16 @@ const Contacts = () => {
             placeholder={t("email")}
             name="email"
             type="text"
+            value={values.email}
+            onChange={(e) => setValue("email", e.target.value)}
             className="input input-secondary mb-4"
             required
           />
           <textarea
             placeholder={t("yourMessage")}
             name="message"
+            value={values.message}
+            onChange={(e) => setValue("message", e.target.value)}
             required
             minLength={2}
             maxLength={CHARACTER_LIMIT}
