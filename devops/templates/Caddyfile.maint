@@ -22,27 +22,20 @@ acc.clothingloop.org {
 		level ERROR
 	}
 
-	header Access-Control-Allow-Origin *
 	route {
 		header Cache-Control max-age=3600
 		header /assets/* Cache-Control max-age=31536000
+		header /api/* Cache-Control no-cache
 	}
 
-	root * /var/caddy/acc.clothingloop.org
-	file_server
-	encode zstd gzip
-	try_files {path} /index.html
-}
-
-acc.api.clothingloop.org {
-	log {
-		output file /var/log/caddy/acc.clothingloop.org-error.log
-		format console
-		level ERROR
+	handle_path /api/* {
+		reverse_proxy 127.0.0.1:8082
 	}
 
-	header Cache-Control no-cache
-	header Access-Control-Allow-Origin https://acc.clothingloop.org
-
-	reverse_proxy 127.0.0.1:8082
+	handle {
+		root * /var/caddy/acc.clothingloop.org
+		file_server
+		encode zstd gzip
+		try_files {path} /index.html
+	}
 }
