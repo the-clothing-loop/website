@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDropdown } from "../util/dropdown.hooks";
 
 const IS_PRODUCTION =
-  process.env.REACT_APP_BASE_URL === "https://www.clothingloop.org";
+  import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
 
 const testLanguages = [
   { lng: "de", title: "German", flag: "/icons/flags/de.svg" },

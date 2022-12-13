@@ -1,8 +1,7 @@
-import react, { useState, useEffect, useRef, createRef } from "react";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import { useState, useEffect, createRef } from "react";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
-const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
 interface IProps {
   onResult: (event: any) => void;
@@ -17,7 +16,7 @@ const Geocoding = ({ onResult, className }: IProps) => {
 
   useEffect(() => {
     if (MAPBOX_TOKEN) {
-      const geocoder = new MapboxGeocoder({
+      const geocoder = new window.MapboxGeocoder({
         accessToken: MAPBOX_TOKEN,
         types: "country,region,place,postcode,locality,neighborhood",
       });

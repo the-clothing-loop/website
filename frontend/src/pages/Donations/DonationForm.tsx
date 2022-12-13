@@ -310,7 +310,7 @@ function DonationFormContent() {
 export default function DonationForm() {
   const { t } = useTranslation();
 
-  const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY || "";
+  const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY || "";
   if (stripePublicKey) {
     const stripePromise = loadStripe(stripePublicKey);
 

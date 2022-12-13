@@ -21,7 +21,7 @@ import { useHistory } from "react-router";
 import { useContext } from "react";
 import { ToastContext } from "../providers/ToastProvider";
 
-const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
+const accessToken = import.meta.env.VITE_MAPBOX_KEY || "";
 
 interface IProps {
   onSubmit: (values: RegisterChainForm) => void;

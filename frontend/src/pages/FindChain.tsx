@@ -11,8 +11,6 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import * as GeoJSONTypes from "geojson";
 
-import mapboxgl from "../util/mapbox-gl";
-
 // Project resources
 import { ChainsContext } from "../providers/ChainsProvider";
 import { AuthContext } from "../providers/AuthProvider";
@@ -27,7 +25,7 @@ export type ChainPredicate = (chain: Chain) => boolean;
 export const defaultTruePredicate = () => true;
 
 const accessToken = {
-  mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_KEY,
+  mapboxApiAccessToken: import.meta.env.VITE_MAPBOX_KEY,
 };
 const maxZoom = 13;
 const minZoom = 1;
