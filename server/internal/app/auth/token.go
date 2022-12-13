@@ -43,6 +43,7 @@ func TokenCreateUnverified(db *gorm.DB, userID uint) (string, error) {
 	return token, nil
 }
 
+// Returns the user before it was verified
 func TokenVerify(db *gorm.DB, token string) (bool, *models.User) {
 	timeElapsed := time.Now().Add(-24 * time.Hour)
 
@@ -69,14 +70,8 @@ WHERE user_tokens.token = ?
 	if res := db.Exec(`
 UPDATE users
 SET is_email_verified = ?, enabled = ?
-WHERE id = (
-	SELECT users.id
-	FROM user_tokens
-	LEFT JOIN users ON user_tokens.user_id = users.id
-	WHERE user_tokens.token = ?
-	LIMIT 1
-)
-	`, true, true, token); res.Error != nil {
+WHERE id = ?
+	`, true, true, user.ID); res.Error != nil {
 		return false, nil
 	}
 

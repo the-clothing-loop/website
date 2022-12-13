@@ -125,6 +125,9 @@ WHERE user_chains.chain_id IN ?
 			}
 		}
 	}
+	// re-add enabled, see TokenVerify
+	user.IsEmailVerified = true
+	user.Enabled = true
 
 	// set token as cookie
 	auth.CookieSet(c, token)
