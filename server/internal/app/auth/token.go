@@ -49,16 +49,16 @@ func TokenVerify(db *gorm.DB, token string) (bool, *models.User) {
 
 	if res := db.Exec(`
 UPDATE user_tokens
-SET user_tokens.verified = ?
+SET user_tokens.verified = TRUE
 WHERE user_tokens.token = ?
-	AND user_tokens.verified = ?
+	AND user_tokens.verified = FALSE
 	AND user_tokens.created_at > ?
-	`, true, token, false, timeElapsed.Unix()); res.Error != nil || res.RowsAffected == 0 {
+	`, token, timeElapsed.Unix()); res.Error != nil || res.RowsAffected == 0 {
 		return false, nil
 	}
 
 	user := &models.User{}
-	db.Raw(`SELECT users.id
+	db.Raw(`SELECT users.*
 	FROM user_tokens
 	LEFT JOIN users ON user_tokens.user_id = users.id
 	WHERE user_tokens.token = ?
