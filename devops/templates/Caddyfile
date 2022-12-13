@@ -9,6 +9,12 @@ www.clothingloop.org {
 		level ERROR
 	}
 
+	route {
+		header Cache-Control max-age=3600
+		header /assets/* Cache-Control max-age=31536000
+		header /api/* Cache-Control no-cache
+	}
+
 	handle_path /api/* {
 		reverse_proxy 127.0.0.1:8081
 	}
@@ -42,6 +48,12 @@ acc.clothingloop.org {
 		output file /var/log/caddy/acc.clothingloop.org-error.log
 		format console
 		level ERROR
+	}
+
+	route {
+		header Cache-Control max-age=3600
+		header /assets/* Cache-Control max-age=31536000
+		header /api/* Cache-Control no-cache
 	}
 
 	handle_path /api/* {
