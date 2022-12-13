@@ -20,16 +20,14 @@ export default function MessageSubmitted(props: any) {
         <p className="mb-6">{t("weWillReplySoon")}</p>
         <div className="flex flex-row">
           <button
-            className="btn btn-primary btn-outline"
+            className="btn btn-secondary btn-outline"
             onClick={() => history.push("/")}
-            key={"btn-submit-1"}
           >
             {t("home")}
           </button>
           <button
-            className="btn btn-primary"
+            className="btn btn-primary ml-4"
             onClick={() => history.push("/faq")}
-            key={"btn-submit-1"}
           >
             {t("FAQ's")}
           </button>
