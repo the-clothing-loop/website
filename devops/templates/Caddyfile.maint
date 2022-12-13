@@ -3,10 +3,12 @@ vpsnode1.vps.webdock.cloud {
 }
 
 api.clothingloop.org, clothingloop.org, admin.clothingloop.org, www.clothingloop.org {
+	header Cache-Control no-cache
+
 	root * /var/caddy/maint.clothingloop.org
 	file_server {
 		root /var/caddy/maint.clothingloop.org
-		
+
 		status 503
 	}
 	encode zstd gzip
@@ -18,6 +20,12 @@ acc.clothingloop.org {
 		output file /var/log/caddy/acc.clothingloop.org-error.log
 		format console
 		level ERROR
+	}
+
+	header Access-Control-Allow-Origin *
+	route {
+		header Cache-Control max-age=3600
+		header /assets/* Cache-Control max-age=31536000
 	}
 
 	root * /var/caddy/acc.clothingloop.org
@@ -32,6 +40,9 @@ acc.api.clothingloop.org {
 		format console
 		level ERROR
 	}
+
+	header Cache-Control no-cache
+	header Access-Control-Allow-Origin https://acc.clothingloop.org
 
 	reverse_proxy 127.0.0.1:8082
 }
