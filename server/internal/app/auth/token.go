@@ -43,7 +43,7 @@ func TokenCreateUnverified(db *gorm.DB, userID uint) (string, error) {
 	return token, nil
 }
 
-func TokenVerify(db *gorm.DB, token string) bool {
+func TokenVerify(db *gorm.DB, token string) (bool, *models.User) {
 	timeElapsed := time.Now().Add(-24 * time.Hour)
 
 	if res := db.Exec(`
@@ -53,7 +53,17 @@ WHERE user_tokens.token = ?
 	AND user_tokens.verified = ?
 	AND user_tokens.created_at > ?
 	`, true, token, false, timeElapsed.Unix()); res.Error != nil || res.RowsAffected == 0 {
-		return false
+		return false, nil
+	}
+
+	user := &models.User{}
+	db.Raw(`SELECT users.id
+	FROM user_tokens
+	LEFT JOIN users ON user_tokens.user_id = users.id
+	WHERE user_tokens.token = ?
+	LIMIT 1`, token).Scan(user)
+	if user.ID == 0 {
+		return false, nil
 	}
 
 	if res := db.Exec(`
@@ -67,7 +77,7 @@ WHERE id = (
 	LIMIT 1
 )
 	`, true, true, token); res.Error != nil {
-		return false
+		return false, nil
 	}
 
 	if res := db.Exec(`
@@ -81,10 +91,10 @@ WHERE email = (
 	LIMIT 1
 )
 	`, true, token); res.Error != nil {
-		return false
+		return false, nil
 	}
 
-	return true
+	return true, user
 }
 
 func TokenAuthenticate(db *gorm.DB, token string) (user *models.User, ok bool) {

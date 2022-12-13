@@ -71,28 +71,13 @@ func LoginValidate(c *gin.Context) {
 	}
 	token := query.Key
 
-	ok := auth.TokenVerify(db, token)
+	ok, user := auth.TokenVerify(db, token)
 	if !ok {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Invalid token"))
 		return
 	}
 
-	// get user
-	user := &models.User{}
-	err := db.Raw(`
-SELECT users.*
-FROM users
-LEFT JOIN user_tokens ON user_tokens.user_id = users.id
-WHERE user_tokens.token = ?
-LIMIT 1
-	`, token).First(user).Error
-	if err != nil {
-		c.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to find user that matches authentication token"))
-		return
-	}
-
-	err = user.AddUserChainsToObject(db)
+	err := user.AddUserChainsToObject(db)
 	if err != nil {
 		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
@@ -124,7 +109,7 @@ WHERE user_chains.chain_id IN ?
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to find associated loop admins"))
 		return
 	}
-	if user.Email.Valid {
+	if user.Email.Valid && !user.IsEmailVerified {
 		for _, result := range results {
 			if result.Email.Valid {
 				go views.EmailAParticipantJoinedTheLoop(

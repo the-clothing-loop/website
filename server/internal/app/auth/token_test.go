@@ -56,7 +56,7 @@ LIMIT 1
 	assert.Falsef(t, ok, "Unverified token (%s) should not be useable", token)
 
 	// verify token
-	ok = auth.TokenVerify(db, token)
+	ok, _ = auth.TokenVerify(db, token)
 	assert.Truef(t, ok, "Token should pass verification (%s)", token)
 
 	// ensure verified token is usable for authenticate
