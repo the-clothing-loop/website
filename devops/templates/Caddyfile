@@ -29,7 +29,10 @@ api.clothingloop.org {
 	}
 
 	header Cache-Control no-cache
-	header Access-Control-Allow-Origin https://www.clothingloop.org
+	header Access-Control-Allow-Origin *
+	header Access-Control-Allow-Credentials true
+	header Access-Control-Allow-Methods "POST, GET, OPTIONS, PUT, DELETE"
+	header Access-Control-Allow-Headers "X-Requested-With, Content-Type, X-Auth-Token, Origin, Authorization"
 
 	reverse_proxy 127.0.0.1:8081
 }
@@ -58,6 +61,9 @@ acc.clothingloop.org {
 	}
 
 	header Access-Control-Allow-Origin *
+	header Access-Control-Allow-Credentials true
+	header Access-Control-Allow-Methods "POST, GET, OPTIONS, PUT, DELETE"
+	header Access-Control-Allow-Headers "X-Requested-With, Content-Type, X-Auth-Token, Origin, Authorization"
 	route {
 		header Cache-Control max-age=3600
 		header /assets/* Cache-Control max-age=31536000
@@ -77,7 +83,10 @@ acc.api.clothingloop.org {
 	}
 
 	header Cache-Control no-cache
-	header Access-Control-Allow-Origin https://acc.clothingloop.org
+	header Access-Control-Allow-Origin *
+	header Access-Control-Allow-Credentials true
+	header Access-Control-Allow-Methods "POST, GET, OPTIONS, PUT, DELETE"
+	header Access-Control-Allow-Headers "X-Requested-With, Content-Type, X-Auth-Token, Origin, Authorization"
 
 	reverse_proxy 127.0.0.1:8082
 }
