@@ -20,5 +20,5 @@ func MiddlewareSetDB(db *gorm.DB) gin.HandlerFunc {
 }
 
 func Preflight(c *gin.Context) {
-	c.Data(204, "", nil)
+	c.Status(204)
 }
