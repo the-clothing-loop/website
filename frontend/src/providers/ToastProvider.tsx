@@ -66,6 +66,7 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
   function addToastError(msg: string) {
     // ensure that message is a string during runtime
     msg = msg + "";
+    window.airbrake?.notify(msg);
     addToast({
       type: "error",
       message: msg,
