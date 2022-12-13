@@ -18,3 +18,7 @@ func MiddlewareSetDB(db *gorm.DB) gin.HandlerFunc {
 		c.Set("DB", db)
 	}
 }
+
+func Preflight(c *gin.Context) {
+	c.Data(204, "", nil)
+}
