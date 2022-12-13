@@ -26,31 +26,31 @@ const recurring: RadioItem[] = [
   {
     id: "2_50",
     cents: 250,
-    text: "€2.50",
+    text: "€ 2.50",
     priceID: priceIDs.recurring_2_50,
   },
   {
     id: "5_00",
     cents: 500,
-    text: "€5.00",
+    text: "€ 5.00",
     priceID: priceIDs.recurring_5_00,
   },
   {
     id: "10_00",
     cents: 1000,
-    text: "€10.00",
+    text: "€ 10.00",
     priceID: priceIDs.recurring_10_00,
   },
 ];
 const oneOff: RadioItem[] = [
-  { id: "5_00", cents: 500, text: "€5.00", priceID: priceIDs.oneOff_any },
-  { id: "10_00", cents: 1000, text: "€10.00", priceID: priceIDs.oneOff_any },
-  { id: "20_00", cents: 2000, text: "€20.00", priceID: priceIDs.oneOff_any },
-  { id: "50_00", cents: 5000, text: "€50.00", priceID: priceIDs.oneOff_any },
+  { id: "5_00", cents: 500, text: "€ 5.00", priceID: priceIDs.oneOff_any },
+  { id: "10_00", cents: 1000, text: "€ 10.00", priceID: priceIDs.oneOff_any },
+  { id: "20_00", cents: 2000, text: "€ 20.00", priceID: priceIDs.oneOff_any },
+  { id: "50_00", cents: 5000, text: "€ 50.00", priceID: priceIDs.oneOff_any },
   {
     id: "100_00",
     cents: 10000,
-    text: "€100.00",
+    text: "€ 100.00",
     priceID: priceIDs.oneOff_any,
   },
 ];
@@ -244,10 +244,16 @@ function DonationFormContent() {
               className="invisible -z-10 mr-3 absolute"
             />
 
+            <span className="absolute ml-3">&euro;</span>
+
             <input
               name="oneoff_custom"
-              className={`input invalid:input-error w-full ${
+              className={`input invalid:input-error w-full pl-8 ${
                 error === "oneoff_custom" ? "input-error" : "input-secondary"
+              } ${
+                values.oneoff_radio === ""
+                  ? "ring-2 ring-offset-2 ring-secondary/50"
+                  : ""
               }`}
               type="number"
               aria-invalid={error === "oneoff_custom"}
