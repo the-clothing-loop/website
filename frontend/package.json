@@ -30,7 +30,7 @@
     "@types/mapbox__mapbox-gl-geocoder": "^4.7.1",
     "@types/react-csv": "^1.1.2",
     "@types/react-helmet": "^6.1.1",
-    "deck.gl": "^8.4.13",
+    "deck.gl": "^8.8.20",
     "i18next": "^20.1.0",
     "i18next-browser-languagedetector": "^6.1.0",
     "i18next-http-backend": "^1.2.0",
