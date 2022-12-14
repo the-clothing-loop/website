@@ -69,15 +69,15 @@ WHERE user_tokens.token = ?
 
 	if res := db.Exec(`
 UPDATE users
-SET is_email_verified = ?, enabled = ?
+SET is_email_verified = TRUE, enabled = TRUE
 WHERE id = ?
-	`, true, true, user.ID); res.Error != nil {
+	`, user.ID); res.Error != nil {
 		return false, nil
 	}
 
 	if res := db.Exec(`
 UPDATE newsletters
-SET verified = ?
+SET verified = TRUE
 WHERE email = (
 	SELECT users.email
 	FROM user_tokens
@@ -85,7 +85,7 @@ WHERE email = (
 	WHERE user_tokens.token = ?
 	LIMIT 1
 )
-	`, true, token); res.Error != nil {
+	`, token); res.Error != nil {
 		return false, nil
 	}
 
@@ -98,9 +98,9 @@ func TokenAuthenticate(db *gorm.DB, token string) (user *models.User, ok bool) {
 SELECT users.*
 FROM user_tokens
 LEFT JOIN users ON user_tokens.user_id = users.id
-WHERE user_tokens.token = ? AND user_tokens.verified = ?
+WHERE user_tokens.token = ? AND user_tokens.verified = TRUE
 LIMIT 1
-	`, token, true).Scan(user)
+	`, token).Scan(user)
 	if res.Error != nil || user.ID == 0 {
 		return nil, false
 	}

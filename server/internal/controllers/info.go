@@ -14,8 +14,8 @@ func InfoGet(c *gin.Context) {
 	err := db.Raw(`
 SELECT COUNT(chains.id)
 FROM chains
-WHERE chains.published = ? AND chains.deleted_at IS NULL
-	`, true).Scan(&totalChains).Error
+WHERE chains.published = TRUE AND chains.deleted_at IS NULL
+	`).Scan(&totalChains).Error
 	if err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
 		return
@@ -25,8 +25,8 @@ WHERE chains.published = ? AND chains.deleted_at IS NULL
 	err = db.Raw(`
 SELECT COUNT(users.id)
 FROM users
-WHERE users.enabled = ?
-	`, true).Scan(&totalUsers).Error
+WHERE users.enabled = TRUE
+	`).Scan(&totalUsers).Error
 	if err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
 		return
