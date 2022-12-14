@@ -34,6 +34,7 @@ func Routes() *gin.Engine {
 	// router
 	r := gin.New()
 	r.Use(gin.Logger())
+	app.AirbrakeInit(r)
 	r.Use(controllers.MiddlewareSetDB(db))
 
 	// router groups
