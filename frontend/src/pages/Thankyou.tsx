@@ -54,7 +54,7 @@ export function NewLoopConfirmation(props: any) {
       </Helmet>
       <main>
         <TwoColumnLayout
-          img="/images/party-image.jpg"
+          img="https://ucarecdn.com/1145cf2e-d731-4e0c-8644-fa117c2ccc6c/-/resize/x600/-/format/auto/-/quality/smart/partyimage.jpg"
           children={
             <Content
               heading={t("thankYouForStartingThisLoop")}
@@ -79,7 +79,7 @@ export function JoinLoopConfirmation(props: any) {
       </Helmet>
       <main>
         <TwoColumnLayout
-          img="/images/party-image.jpg"
+          img="https://ucarecdn.com/1145cf2e-d731-4e0c-8644-fa117c2ccc6c/-/resize/x600/-/format/auto/-/quality/smart/partyimage.jpg"
           children={
             <Content
               heading={t("thankYouForSigningUp")}

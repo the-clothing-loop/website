@@ -1,6 +1,8 @@
 //media
-const CarouselImgOne = "/images/Tassen-voor-carrousel3.jpg";
-const CarouselImgTwo = "/images/Tassen-voor-carrousel2.jpg";
+const CarouselImgOne =
+  "https://ucarecdn.com/35bdfbb0-4885-44b8-903e-132358febffd/-/format/auto/Tassenvoorcarrousel3.jpg";
+const CarouselImgTwo =
+  "https://ucarecdn.com/d19a0904-9b27-4ec1-8b3d-9e4dd1f7b136/-/format/auto/Tassenvoorcarrousel2.jpg";
 
 const Carousel = () => {
   const featuredImages = [CarouselImgOne, CarouselImgTwo, CarouselImgOne];

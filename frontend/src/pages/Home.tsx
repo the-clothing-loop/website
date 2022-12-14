@@ -10,20 +10,33 @@ import Testimonials from "../components/Testimonials";
 
 import { StandaloneSearchBar } from "../components/FindChain/StandaloneSearchBar";
 //Media
-const HeroImg = "/images/Kirsten-Rosan.jpg";
-const MapImage = "/images/map_image.png";
-const ClothesImage = "/images/Nichon_zelfportret.jpg";
-const CirclesFrame = "/images/circles.png";
-const Selfies = "/images/Selfies.jpg";
-const DoorImg = "/images/numbered-bag-outdoors.jpg";
+const HeroImg =
+  "https://ucarecdn.com/4464c0ab-9b67-4e07-a0d3-cab38ea9b7c4/-/resize/600x/-/format/auto/-/quality/smart/kirsten_rosan.jpg";
+const MapImage =
+  "https://ucarecdn.com/672db23d-6237-48f1-9c32-7946d449514b/-/resize/600x/-/format/auto/-/quality/smart/map_image.png";
+const ClothesImage =
+  "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/1280x/-/format/auto/Nichon_zelfportret.jpg";
+const CirclesFrame =
+  "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
+const Selfies =
+  "https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/1280x/-/format/auto/selfies.jpg";
+const DoorImg =
+  "https://ucarecdn.com/f54270d7-9258-43c8-bdc2-ffb3856e4ce1/-/resize/600x/-/format/auto/-/quality/smart/numberedbagoutdoors.jpg";
 //Logos
-const SfmLogo = "/images/logos/sfm_logo.png";
-const CollActionLogo = "/images/logos/Logo-CollAction.png";
-const ImpactHubLogo = "/images/logos/Logo_impact_hub.png";
-const EssenseLogo = "/images/logos/essense-logo.svg";
-const WdcdLogo = "/images/logos/Logo_WDCD.png";
-const DoenLogo = "/images/logos/DOEN.png";
-const PNHLogo = "/images/logos/PNH_logo.png";
+const SfmLogo =
+  "https://ucarecdn.com/c439bd53-ac76-4ece-afce-727772d2f408/-/resize/160x/-/format/auto/-/quality/smart/sfm_logo.png";
+const CollActionLogo =
+  "https://ucarecdn.com/f7ee756a-8be7-4fb2-ba0f-283ab0d43b4f/-/resize/208x/-/format/auto/-/quality/smart/LogoCollAction.png";
+const ImpactHubLogo =
+  "https://ucarecdn.com/356b6da2-f0b2-41df-9960-0dcedfe31052/-/resize/600x/-/format/auto/-/quality/smart/logoimpacthub.svg";
+const EssenseLogo =
+  "https://ucarecdn.com/094bfc52-77b6-4810-99af-9e22c3b4e646/-/resize/208x/-/format/auto/-/quality/smart/essenselogo.svg";
+const WdcdLogo =
+  "https://ucarecdn.com/a26cc9ab-5e8e-4305-b3c1-58a2f217b860/-/resize/160x/-/format/auto/-/quality/smart/logo_wdcd.png";
+const DoenLogo =
+  "https://ucarecdn.com/929c3a9f-d9a6-479a-8b8c-c319d45382d9/-/resize/160x/-/format/auto/-/quality/smart/doen.png";
+const PNHLogo =
+  "https://ucarecdn.com/40eb9c1f-27cd-4275-a449-a1a5d269eb5d/-/resize/208x/-/format/auto/-/quality/smart/pnh_logo.png";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -109,7 +122,7 @@ export default function Home() {
             <div className="md:pt-16 md:pr-40 md:w-1/2">
               <div>
                 <img
-                  className="w-[30hw]"
+                  className="w-[30hw] max-w-[600px]"
                   src={HeroImg}
                   alt="Bringing a bag full clothes to another's doorstep"
                 />
@@ -264,7 +277,7 @@ export default function Home() {
         <section className="flex flex-col md:flex-row items-end mb-8 md:mb-20">
           <div className="md:w-1/2 flex justify-end">
             <img
-              src="/images/TCL-Jewellery.jpg"
+              src="https://ucarecdn.com/50733287-769c-4de3-aae8-fea5f5949e80/-/resize/500x/-/format/auto/-/quality/smart/tcl_jewellery.jpg"
               alt="jewellery"
               className="w-full md:max-w-[500px]"
             />

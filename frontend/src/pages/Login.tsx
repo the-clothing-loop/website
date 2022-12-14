@@ -11,8 +11,10 @@ import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
 
 //media
-const CirclesFrame = "/images/circles.png";
-const LoginImg = "/images/Login.jpg";
+const CirclesFrame =
+  "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
+const LoginImg =
+  "https://ucarecdn.com/cac06018-e1b6-4124-865f-26b816df54c7/-/resize/x600/-/format/auto/-/quality/smart/login.jpg";
 
 export default function Login() {
   const { authUser } = useContext(AuthContext);
