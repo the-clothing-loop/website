@@ -2,10 +2,8 @@ package controllers
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
@@ -13,7 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3/zero"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -41,22 +38,13 @@ LIMIT 1
 		return
 	}
 
-	sendVerificationEmail(c, db, &user)
-}
-
-func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool {
 	token, err := auth.TokenCreateUnverified(db, user.ID)
 	if err != nil {
 		c.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
-		return false
+		return
 	}
-
-	subject := "Verify e-mail for the Clothing Loop"
-	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s/users/login/validate?apiKey=%s">here</a> to verify your e-mail and activate your Clothing Loop account.<br><br>Regards,<br>The Clothing Loop team!`, user.Name, app.Config.SITE_BASE_URL_FE, token)
-
-	// email user with token
-	return app.MailSend(c, db, user.Email.String, subject, messageHtml)
+	views.EmailLoginVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func LoginValidate(c *gin.Context) {
@@ -202,7 +190,13 @@ func RegisterChainAdmin(c *gin.Context) {
 		})
 	}
 
-	sendVerificationEmail(c, db, user)
+	token, err := auth.TokenCreateUnverified(db, user.ID)
+	if err != nil {
+		c.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
+		return
+	}
+	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func RegisterBasicUser(c *gin.Context) {
@@ -262,7 +256,13 @@ func RegisterBasicUser(c *gin.Context) {
 		})
 	}
 
-	sendVerificationEmail(c, db, user)
+	token, err := auth.TokenCreateUnverified(db, user.ID)
+	if err != nil {
+		c.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
+		return
+	}
+	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func Logout(c *gin.Context) {
