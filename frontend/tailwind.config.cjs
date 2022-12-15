@@ -45,13 +45,10 @@ module.exports = {
       keyframes: {
         slide: {
           "0%": {
-            left: "0px",
-          },
-          "50%": {
-            left: "-100vw",
+            transform: "translateX(0)",
           },
           "100%": {
-            left: "0px",
+            transform: `translateX(-${1213 * 2}px)`,
           },
         },
         "spin-half": {
