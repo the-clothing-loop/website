@@ -3,11 +3,11 @@ package internal
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/CollActionteam/clothing-loop/server/internal/controllers"
+	glog "github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,7 +24,7 @@ func Routes() *gin.Engine {
 		logFilePath := fmt.Sprintf("/var/log/clothingloop-api/%s.log", app.Config.ENV)
 		f, err := os.Create(logFilePath)
 		if err != nil {
-			log.Fatalf("could not create log file at '%s'", logFilePath)
+			glog.Fatalf("could not create log file at '%s'", logFilePath)
 		}
 		gin.DefaultWriter = io.MultiWriter(f)
 	} else {

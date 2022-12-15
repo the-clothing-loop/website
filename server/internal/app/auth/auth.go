@@ -7,6 +7,7 @@ import (
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	glog "github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -49,6 +50,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	if chainUID == "" {
+		glog.Error("ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen")
 		gin_utils.GinAbortWithErrorBody(c, http.StatusTeapot, errors.New("ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen"))
 		return false, nil, nil
 	}
@@ -62,7 +64,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	err = authUser.AddUserChainsToObject(db)
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
 		return false, nil, nil
 	}
@@ -129,7 +131,7 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 			err = user.AddUserChainsToObject(db)
 		}
 		if err != nil {
-			c.Error(err)
+			glog.Error(err)
 		}
 	}
 	if user.ID == 0 {

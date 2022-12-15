@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"log"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/gin-gonic/gin"
+	glog "github.com/airbrake/glog/v4"
 	"gorm.io/gorm"
 )
 
@@ -27,13 +27,13 @@ func init() {
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/headers.json", l))
 		if err != nil {
-			log.Fatalf("Header not found: %+v", err)
+			glog.Fatalf("Header not found: %+v", err)
 			return
 		}
 		var header map[string]string
 		err = json.Unmarshal(b, &header)
 		if err != nil {
-			log.Fatalf("Header invalid json: %+v", err)
+			glog.Fatalf("Header invalid json: %+v", err)
 			return
 		}
 		emailsHeaders[l] = header

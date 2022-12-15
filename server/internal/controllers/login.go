@@ -8,6 +8,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/CollActionteam/clothing-loop/server/internal/views"
+	glog "github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3/zero"
@@ -40,7 +41,7 @@ LIMIT 1
 
 	token, err := auth.TokenCreateUnverified(db, user.ID)
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
 		return
 	}
@@ -67,7 +68,7 @@ func LoginValidate(c *gin.Context) {
 
 	err := user.AddUserChainsToObject(db)
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
 		return
 	}
@@ -93,7 +94,7 @@ WHERE user_chains.chain_id IN ?
 	AND users.enabled = TRUE
 	`, chainIDs).Scan(&results).Error
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to find associated loop admins"))
 		return
 	}
@@ -192,7 +193,7 @@ func RegisterChainAdmin(c *gin.Context) {
 
 	token, err := auth.TokenCreateUnverified(db, user.ID)
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
 		return
 	}
@@ -258,7 +259,7 @@ func RegisterBasicUser(c *gin.Context) {
 
 	token, err := auth.TokenCreateUnverified(db, user.ID)
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
 		return
 	}

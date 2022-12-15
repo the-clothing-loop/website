@@ -3,7 +3,8 @@ module github.com/CollActionteam/clothing-loop/server
 go 1.18
 
 require (
-	github.com/airbrake/gobrake/v5 v5.6.0
+	github.com/airbrake/glog/v4 v4.1.1
+	github.com/airbrake/gobrake/v5 v5.6.1
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/jaswdr/faker v1.15.0
@@ -18,14 +19,14 @@ require (
 )
 
 require (
-	github.com/caio/go-tdigest v3.1.0+incompatible // indirect
+	github.com/caio/go-tdigest/v4 v4.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/goccy/go-json v0.10.0 // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/golang/glog v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jonboulle/clockwork v0.3.0 // indirect
