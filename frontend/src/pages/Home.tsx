@@ -278,12 +278,12 @@ export default function Home() {
 
         <Testimonials />
 
-        <section className="flex flex-col md:flex-row items-end mb-8 md:mb-20">
-          <div className="md:w-1/2 flex justify-end">
+        <section className="flex flex-col md:flex-row items-center md:items-end mb-8 md:mb-20">
+          <div className="md:w-1/2 flex justify-center md:justify-end mb-8 md:mb-0">
             <img
               src="https://ucarecdn.com/50733287-769c-4de3-aae8-fea5f5949e80/-/resize/500x/-/format/auto/-/quality/smart/tcl_jewellery.jpg"
               alt="jewellery"
-              className="w-full md:max-w-[500px]"
+              className="w-1/2 md:w-full md:max-w-[500px]"
             />
           </div>
 
