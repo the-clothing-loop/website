@@ -15,11 +15,11 @@ const HeroImg =
 const MapImage =
   "https://ucarecdn.com/672db23d-6237-48f1-9c32-7946d449514b/-/resize/600x/-/format/auto/-/quality/smart/map_image.png";
 const ClothesImage =
-  "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/1280x/-/format/auto/Nichon_zelfportret.jpg";
+  "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
 const CirclesFrame =
   "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
 const Selfies =
-  "https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/1280x/-/format/auto/selfies.jpg";
+  "https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/768x/-/format/auto/selfies.jpg";
 const DoorImg =
   "https://ucarecdn.com/f54270d7-9258-43c8-bdc2-ffb3856e4ce1/-/resize/600x/-/format/auto/-/quality/smart/numberedbagoutdoors.jpg";
 //Logos
@@ -94,9 +94,9 @@ export default function Home() {
 
       <StandaloneSearchBar />
 
-      <div>
+      <div className="max-w-screen-xl mx-auto">
         <section className="mb-12 md:mb-24">
-          <div className="hidden md:block overflow-hidden w-full absolute bg-teal-light">
+          <div className="hidden md:block overflow-hidden w-full absolute left-0 bg-teal-light">
             <div className="p-8 ml-[40%] pb-14 flex">
               <img src={CirclesFrame} alt="" />
               <img className="pl-2" src={CirclesFrame} alt="" />
@@ -122,7 +122,7 @@ export default function Home() {
             <div className="md:pt-16 md:pr-40 md:w-1/2">
               <div>
                 <img
-                  className="w-[30hw] max-w-[600px]"
+                  className="w-full max-w-[600px]"
                   src={HeroImg}
                   alt="Bringing a bag full clothes to another's doorstep"
                 />
@@ -229,26 +229,30 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <section className="flex flex-col md:flex-row items-center mb-6 md:mb-20 bg-accent font-bold">
-          <div className="w-screen md:w-1/2 flex justify-end p-6 md:px-10 md:py-0 text-base-100">
-            <div className="w-full md:max-w-[600px]">
-              <h2 className="text-6xl md:text-8xl font-serif mb-6">
-                {t("ourImpact")}
-              </h2>
-              <Counters />
+      </div>
+      <div className="bg-turquoise">
+        <div className="max-w-screen-xl mx-auto">
+          <section className="flex flex-col md:flex-row items-center mb-6 md:mb-20 font-bold">
+            <div className="w-screen md:w-1/2 flex justify-end p-6 md:px-10 md:py-0 text-base-100">
+              <div className="w-full md:max-w-[600px]">
+                <h2 className="text-6xl md:text-8xl font-serif mb-6">
+                  {t("ourImpact")}
+                </h2>
+                <Counters />
+              </div>
             </div>
-          </div>
 
-          <div className="md:w-1/2">
-            <img
-              className="object-cover object-top w-full max-h-[600px]"
-              src={Selfies}
-              alt="selfies of different people wearing clothes shared via their local Loop"
-            />
-          </div>
-        </section>
-
+            <div className="md:w-1/2">
+              <img
+                className="object-cover object-top w-full max-h-[600px]"
+                src={Selfies}
+                alt="selfies of different people wearing clothes shared via their local Loop"
+              />
+            </div>
+          </section>
+        </div>
+      </div>
+      <div className="max-w-screen-xl mx-auto">
         <section className="flex flex-col md:flex-row items-center mb-12 md:mb-20">
           <div className="md:w-1/2">
             <img
@@ -353,9 +357,8 @@ export default function Home() {
             })}
           </ul>
         </section>
-
-        <Carousel />
       </div>
+      <Carousel />
     </>
   );
 }
