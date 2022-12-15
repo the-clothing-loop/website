@@ -4,41 +4,28 @@ const CarouselImgOne =
 const CarouselImgTwo =
   "https://ucarecdn.com/d19a0904-9b27-4ec1-8b3d-9e4dd1f7b136/-/format/auto/-/resize/x320/Tassenvoorcarrousel2.jpg";
 
-const Carousel = () => {
-  const featuredImages = [
-    CarouselImgOne,
-    CarouselImgTwo,
-    CarouselImgOne,
-    CarouselImgTwo,
-  ];
+const featuredImages = [
+  CarouselImgOne,
+  CarouselImgTwo,
+  CarouselImgOne,
+  CarouselImgTwo,
+];
 
+export default function Carousel() {
   return (
-    <div className="relative w-full max-h-80 h-[30vw] overflow-hidden">
-      <figure className="relative flex h-full animate-slide">
+    <div className="relative w-full h-60 md:h-80 overflow-hidden">
+      <div className="relative flex h-full animate-slide-small md:animate-slide">
         {featuredImages.map((img, i) => {
           return (
             <img
               src={img}
               key={i}
               alt="bags full of clothes"
-              className="inline h-full"
+              className="inline h-full max-w-none"
             />
           );
         })}
-      </figure>
+      </div>
     </div>
   );
-};
-
-export default Carousel;
-/**
- * 
- * <div className="overflow-hidden animate-slide h-[30vw] max-h-80 w-full">
-      <div
-        className="h-full w-[200vw] bg-repeat-x"
-        style={{
-          backgroundImage: `url('${CarouselImgOne}')`,
-        }}
-      />
-    </div>
- */
+}

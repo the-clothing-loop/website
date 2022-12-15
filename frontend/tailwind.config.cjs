@@ -51,6 +51,14 @@ module.exports = {
             transform: `translateX(-${1213 * 2}px)`,
           },
         },
+        "slide-small": {
+          "0%": {
+            transform: "translateX(0)",
+          },
+          "100%": {
+            transform: `translateX(-${909 * 2}px)`,
+          },
+        },
         "spin-half": {
           from: {
             transform: "rotate(0deg)",
@@ -62,6 +70,7 @@ module.exports = {
       },
       animation: {
         slide: "30s linear 0s slide infinite",
+        "slide-small": "30s linear 0s slide-small infinite",
       },
       typography: {
         DEFAULT: {
