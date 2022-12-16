@@ -4,7 +4,6 @@ import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
 import { contactMailSend } from "../api/contact";
-import FormJup from "../util/form-jup";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import useForm from "../util/form.hooks";
