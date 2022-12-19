@@ -9,7 +9,7 @@ export default function PrivacyPolicy() {
       </Helmet>
       <div className="container mx-auto px-4 md:px-20 py-10">
         <h1 className="font-serif text-secondary font-bold text-5xl mb-4">
-          {"Privacy Policy - The Clothing Loop"}
+          Privacy Policy - The Clothing Loop
         </h1>
 
         <div className="prose">
@@ -29,10 +29,10 @@ export default function PrivacyPolicy() {
           <h2>Table of content</h2>
 
           <ul>
-            <li> What data do we collect?</li>
-            <li> How do we collect your data?</li>
+            <li>What data do we collect?</li>
+            <li>How do we collect your data?</li>
             <li>How will we use your data?</li>
-            <li> How do we store your data?</li>
+            <li>How do we store your data?</li>
             <li>
               Newsletter and communication What are your data protection rights?
             </li>
@@ -42,7 +42,7 @@ export default function PrivacyPolicy() {
               Privacy policies of other websites Changes to our privacy policy
               How to contact us?
             </li>
-            <li> How to contact the appropriate authorities</li>
+            <li>How to contact the appropriate authorities</li>
           </ul>
 
           <h2>What data do we collect?</h2>
@@ -149,11 +149,11 @@ export default function PrivacyPolicy() {
 
           <p>
             Subscriber’s personal information (such as name, email, phone
-            number, address) are stored by the Clothing Loop in Firebase
-            database, which is a Google cloud service - more information about
-            their privacy policy{" "}
+            number, address) are stored by the Clothing Loop on a Webdock VPS
+            server, which is located in Helsinki, Europe - more information
+            about their privacy policy{" "}
             <a
-              href="https://firebase.google.com/support/privacy"
+              href="https://webdock.io/en/docs/legal/privacy-policy"
               target="_blank"
               rel="noreferrer"
             >
