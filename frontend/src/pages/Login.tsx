@@ -41,12 +41,10 @@ export default function Login() {
           type: "info",
           message: t("loginEmailSent"),
         });
-      } catch (e: any) {
-        console.error(e);
+      } catch (err: any) {
+        console.error(err);
         setError("email");
-        addToastError(
-          e?.data ? GinParseErrors(t, e.data) : t("noResultsFound")
-        );
+        addToastError(GinParseErrors(t, err));
       }
     })();
   }

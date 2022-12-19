@@ -31,9 +31,9 @@ const ChainsList = () => {
             _chains = data.map((d) => d.data);
           }
           setChains(_chains.sort((a, b) => a.name.localeCompare(b.name)));
-        } catch (e: any) {
-          console.error(e);
-          addToastError(GinParseErrors(t, e?.data || "Unknown error"));
+        } catch (err: any) {
+          console.error(err);
+          addToastError(GinParseErrors(t, err));
         }
       }
     })();

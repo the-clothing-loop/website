@@ -36,11 +36,9 @@ export default function ChainEdit() {
       setTimeout(() => {
         history.goBack();
       }, 1200);
-    } catch (e: any) {
-      console.error(`Error updating chain: ${JSON.stringify(e)}`);
-      addToastError(
-        GinParseErrors(t, e?.data || `Error: ${JSON.stringify(e)}`)
-      );
+    } catch (err: any) {
+      console.error(`Error updating chain: ${JSON.stringify(err)}`);
+      addToastError(GinParseErrors(t, err));
     }
   };
 
@@ -50,11 +48,9 @@ export default function ChainEdit() {
         let chain = (await chainGet(chainUID)).data;
 
         setChain(chain);
-      } catch (e: any) {
+      } catch (err: any) {
         console.error(`chain ${chainUID} does not exist`);
-        addToastError(
-          GinParseErrors(t, e?.data || `Error: ${JSON.stringify(e)}`)
-        );
+        addToastError(GinParseErrors(t, err));
       }
     })();
   }, [chainUID]);

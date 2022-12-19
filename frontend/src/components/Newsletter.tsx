@@ -25,9 +25,9 @@ export const Newsletter = () => {
     (async () => {
       try {
         await contactNewsletterSet(values.name, values.email, true);
-      } catch (e: any) {
-        console.error(e);
-        addToastError(e?.data ? GinParseErrors(t, e.data) : e);
+      } catch (err: any) {
+        console.error(err);
+        addToastError(GinParseErrors(t, err));
 
         setIsError(true);
         setTimeout(() => setIsError(false), 3000);

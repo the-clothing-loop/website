@@ -62,9 +62,9 @@ export default function UserEdit() {
         setTimeout(() => {
           history.goBack();
         }, 1200);
-      } catch (e: any) {
+      } catch (err: any) {
         console.error(`Error updating user: ${JSON.stringify(e)}`);
-        addToastError(GinParseErrors(t, e?.data || "Error updating user"));
+        addToastError(GinParseErrors(t, e));
       }
     })();
   }

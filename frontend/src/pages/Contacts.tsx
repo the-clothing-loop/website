@@ -33,15 +33,11 @@ const Contacts = () => {
       try {
         await contactMailSend(values.name, values.email, values.message);
         setSubmitted(true);
-      } catch (e: any) {
-        console.error(e);
+      } catch (err: any) {
+        console.error(err);
         setError("submit");
 
-        addToastError(
-          e?.data
-            ? GinParseErrors(t, e.data)
-            : t("pleaseEnterAValid.emailAddress")
-        );
+        addToastError(GinParseErrors(t, err));
       }
     })();
   }

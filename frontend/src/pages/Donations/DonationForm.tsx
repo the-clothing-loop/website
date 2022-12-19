@@ -142,7 +142,7 @@ function DonationFormContent() {
         setError(e?.data || e?.message || "submit");
         addToastError(
           e?.data
-            ? GinParseErrors(t, e.data)
+            ? GinParseErrors(t, e)
             : e?.message || t("anErrorOccurredDuringCheckout")
         );
         setLoading(false);
