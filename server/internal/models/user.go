@@ -52,7 +52,7 @@ type UserChain struct {
 	ChainID      uint      `json:"-"`
 	ChainUID     string    `json:"chain_uid" gorm:"-:migration;<-:false"`
 	IsChainAdmin bool      `json:"is_chain_admin"`
-	CreatedAt    time.Time `json:"-"`
+	CreatedAt    time.Time `json:"created_at"`
 }
 
 type UserChainResponse struct {
