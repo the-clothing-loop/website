@@ -29,10 +29,10 @@ export default function SizesDropdown(props: {
     }
   }, [t, props.selectedSizes]);
 
-  function Item(size: string, disabled: boolean) {
+  function Item(size: string, gender: string, disabled: boolean) {
     let checked = props.selectedSizes.includes(size);
     return (
-      <li className={disabled ? "disabled" : ""} key={size}>
+      <li className={disabled ? "disabled" : ""} key={gender + "_" + size}>
         <label>
           <input
             name="sizes"
@@ -40,7 +40,7 @@ export default function SizesDropdown(props: {
             checked={checked}
             disabled={disabled}
             className="checkbox"
-            onClick={() => dropdown.change(size)}
+            onChange={() => dropdown.change(size)}
           />
           {t(SizeI18nKeys[size])}
         </label>
@@ -85,7 +85,7 @@ export default function SizesDropdown(props: {
               >
                 {GenderI18nKeys[gender]}
               </li>
-              {sizes.map((size) => Item(size as string, disabled))}
+              {sizes.map((size) => Item(size as string, gender, disabled))}
             </>
           );
         })}
