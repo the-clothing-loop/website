@@ -1,11 +1,11 @@
-import { FormEvent, useEffect, useState } from "react";
-import destination from "@turf/destination";
-// import ReactMapGL, { SVGOverlay, FlyToInterpolator } from "react-map-gl";
+import { FormEvent, useEffect, useRef, useState, useContext } from "react";
+import { useHistory } from "react-router";
 import { useTranslation } from "react-i18next";
+import mapboxgl from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import type * as GeoJSONTypes from "geojson";
 
 import categories from "../util/categories";
-import { IViewPort } from "../types";
-import Geocoding from "../pages/Geocoding";
 import { TextForm } from "./FormFields";
 import PopoverOnHover from "./Popover";
 import SizesDropdown from "../components/SizesDropdown";
@@ -13,13 +13,12 @@ import CategoriesDropdown from "../components/CategoriesDropdown";
 import { RequestRegisterChain } from "../api/login";
 import { Genders, Sizes } from "../api/enums";
 import useForm from "../util/form.hooks";
-import { useHistory } from "react-router";
-import { useContext } from "react";
 import { ToastContext } from "../providers/ToastProvider";
+import { circleRadiusKm } from "../util/maps";
 
 const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
 
-interface IProps {
+interface Props {
   onSubmit: (values: RegisterChainForm) => void;
   initialValues?: RegisterChainForm;
   showBack?: boolean;
@@ -30,23 +29,50 @@ export type RegisterChainForm = Omit<
   "open_to_new_members"
 >;
 
+type GeoJSONPoint = GeoJSONTypes.FeatureCollection<
+  GeoJSONTypes.Geometry,
+  { radius: number }
+>;
+
+interface Point {
+  longitude: number;
+  latitude: number;
+  radius: number;
+}
+
+const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY || "";
+
+function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
+  return {
+    type: "FeatureCollection",
+    features: point
+      ? [
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [point.longitude, point.latitude],
+            },
+            properties: {
+              radius: circleRadiusKm((point.radius * 1000) / 6, point.latitude),
+            },
+          },
+        ]
+      : [],
+  };
+}
+
 export default function ChainDetailsForm({
   onSubmit,
   initialValues,
   showBack,
-}: IProps) {
+}: Props) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
   const history = useHistory();
 
-  const [viewport, setViewport] = useState<IViewPort>({
-    longitude: initialValues ? initialValues.longitude : 0,
-    latitude: initialValues ? initialValues.latitude : 0,
-    width: "40vw",
-    height: "40vh",
-    zoom: initialValues ? 10 : 1,
-  });
-
+  const mapRef = useRef<any>();
+  const [map, setMap] = useState<mapboxgl.Map>();
   const [values, setValue, setValues] = useForm<RegisterChainForm>({
     name: "",
     description: "",
@@ -59,22 +85,86 @@ export default function ChainDetailsForm({
     ...initialValues,
   });
 
-  function flyToLocation(longitude: number, latitude: number) {
-    setViewport({
-      ...viewport,
-      longitude: longitude,
-      latitude: latitude,
-      zoom: 10,
-      transitionDuration: 500,
-      transitionInterpolator: null, //new FlyToInterpolator(),
+  useEffect(() => {
+    const hasCenter = !!(values.longitude && values.latitude);
+    const _map = new mapboxgl.Map({
+      accessToken: MAPBOX_TOKEN,
+      container: mapRef.current,
+      projection: { name: "mercator" },
+      zoom: hasCenter ? 10 : 4,
+      minZoom: 1,
+      maxZoom: 13,
+      center: (hasCenter
+        ? [values.longitude, values.latitude]
+        : [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
+      style: "mapbox://styles/mapbox/light-v11",
     });
-  }
+    _map.addControl(new MapboxGeocoder({ accessToken: MAPBOX_TOKEN }));
 
-  function handleGeolocationResult(e: {
-    result: { center: [number, number] };
-  }) {
-    flyToLocation(...e.result.center);
-  }
+    _map.on("load", () => {
+      _map.addSource("source", {
+        type: "geojson",
+        data: mapToGeoJSON(
+          hasCenter
+            ? {
+                longitude: values.longitude,
+                latitude: values.latitude,
+                radius: values.radius,
+              }
+            : undefined
+        ),
+        cluster: true,
+        clusterMaxZoom: 10,
+        clusterRadius: 30,
+      });
+
+      _map.addLayer({
+        id: "single",
+        type: "circle",
+        source: "source",
+        paint: {
+          "circle-color": ["rgba", 240, 196, 73, 0.6], // #f0c449
+          "circle-radius": [
+            "interpolate",
+            ["exponential", 2],
+            ["zoom"],
+            0,
+            0,
+            20,
+            ["get", "radius"],
+          ],
+          "circle-stroke-width": 0,
+        },
+      });
+
+      _map.on("click", (e) => {
+        const el = e.originalEvent.target as HTMLElement | undefined;
+        if (el?.classList.contains("mapboxgl-ctrl-geocoder")) {
+          // ignore clicks on geocoding search bar, which is on top of map
+          return;
+        }
+
+        setValue("longitude", e.lngLat.lng);
+        setValue("latitude", e.lngLat.lat);
+      });
+    });
+
+    setMap(_map);
+    return () => {
+      _map.remove();
+      setMap(undefined);
+    };
+  }, []);
+
+  useEffect(() => {
+    (map?.getSource("source") as mapboxgl.GeoJSONSource)?.setData(
+      mapToGeoJSON({
+        longitude: values.longitude,
+        latitude: values.latitude,
+        radius: values.radius,
+      })
+    );
+  }, [values.longitude, values.latitude, values.radius]);
 
   async function getPlaceName(
     longitude: number,
@@ -112,52 +202,6 @@ export default function ChainDetailsForm({
     })();
   }
 
-  function handleMapClick(e: any /*MapEvent*/) {
-    const el = e.srcEvent.target as HTMLElement | undefined;
-    if (el?.className.toString().includes("mapboxgl-ctrl-geocoder")) {
-      // ignore clicks on geocoding search bar, which is on top of map
-      return;
-    }
-
-    setValue("longitude", e.lngLat[0]);
-    setValue("latitude", e.lngLat[1]);
-    flyToLocation(e.lngLat[0], e.lngLat[1]);
-  }
-
-  function redrawLoop({ project }: { project: any }) {
-    if (values.longitude === null || values.latitude === null) {
-      return;
-    }
-    const [centerX, centerY] = project([values.longitude, values.latitude]);
-    // get the coordinates of a point the right distance away from center
-    const boundaryPoint = destination(
-      [values.longitude, values.latitude],
-      values.radius,
-      0, // due north
-      { units: "kilometers" }
-    );
-    const [_, boundaryY] = project(boundaryPoint.geometry.coordinates);
-    const projectedRadius = centerY - boundaryY;
-
-    return (
-      <>
-        <defs>
-          <radialGradient id="feather">
-            <stop offset="0%" stopColor="#F7C86F" stopOpacity="0.4" />
-            <stop offset="50%" stopColor="#F7C86F" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#F7C86F" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={projectedRadius}
-          fill="url(#feather)"
-        />
-        ;
-      </>
-    );
-  }
   function handleCategoriesChange(selectedGenders: string[]) {
     setValue("genders", selectedGenders as Genders[]);
     // potentially remove some sizes if their parent category has been deselected
@@ -172,27 +216,7 @@ export default function ChainDetailsForm({
   return (
     <div className="flex flex-row">
       <div className="w-1/2 pr-4">
-        <div className="aspect-square">
-          {/* <ReactMapGL
-            mapboxApiAccessToken={accessToken}
-            mapStyle="mapbox://styles/mapbox/light-v10"
-            {...viewport}
-            onViewportChange={(newView: IViewPort) => setViewport(newView)}
-            onClick={handleMapClick}
-            getCursor={() => "pointer"}
-            className="cursor-pointer shadow-lg"
-            width="100%"
-            height="100%"
-          >
-            <Geocoding
-              onResult={handleGeolocationResult}
-              className="absolute top-5 left-5"
-            />
-            {values.longitude !== null && values.latitude !== null ? (
-              <SVGOverlay redraw={redrawLoop} />
-            ) : null}
-          </ReactMapGL> */}
-        </div>
+        <div className="aspect-square cursor-pointer" ref={mapRef} />
       </div>
       <div className="md:w-1/2 md:pl-4">
         <form onSubmit={handleSubmit}>

@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, useRef, MouseEvent } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
-import * as GeoJSONTypes from "geojson";
+import type * as GeoJSONTypes from "geojson";
 
 import mapboxgl from "mapbox-gl";
 
