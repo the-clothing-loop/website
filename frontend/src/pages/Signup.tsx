@@ -81,13 +81,14 @@ export default function Signup() {
           chainUID
         );
         setSubmitted(true);
-      } catch (e: any) {
-        console.error(`Error creating user: ${JSON.stringify(e)}`);
-        e.code === "auth/invalid-phone-number"
-          ? addToastError(t("pleaseEnterAValid.phoneNumber"))
-          : addToastError(
-              GinParseErrors(t, e?.data || `Error: ${JSON.stringify(e)}`)
-            );
+      } catch (err: any) {
+        console.error(`Error creating user: ${JSON.stringify(err)}`);
+
+        if (err?.code === "auth/invalid-phone-number") {
+          addToastError(t("pleaseEnterAValid.phoneNumber"));
+        } else {
+          addToastError(GinParseErrors(t, err));
+        }
       }
     })();
   }

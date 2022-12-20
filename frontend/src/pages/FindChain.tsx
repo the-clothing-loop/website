@@ -1,226 +1,317 @@
-import { useEffect, useState, useContext, useRef } from "react";
+import { useEffect, useState, useContext, useRef, MouseEvent } from "react";
 import { useHistory } from "react-router-dom";
-import ReactMapGL, {
-  Source,
-  Layer,
-  Popup,
-  MapEvent,
-  MapRef,
-} from "react-map-gl";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
-import * as GeoJSONTypes from "geojson";
+import type * as GeoJSONTypes from "geojson";
+import mapboxgl from "mapbox-gl";
 
 // Project resources
-import { ChainsContext } from "../providers/ChainsProvider";
 import { AuthContext } from "../providers/AuthProvider";
-import { IViewPort } from "../types";
-import FindChainSearchBar from "../components/FindChain/index";
-import { Chain } from "../api/types";
-import { chainAddUser } from "../api/chain";
+import { Chain, UID } from "../api/types";
+import { chainAddUser, chainGetAll } from "../api/chain";
+import { ToastContext } from "../providers/ToastProvider";
+import SearchBar, {
+  SearchValues,
+  toUrlSearchParams,
+} from "../components/FindChain/SearchBar";
 import { GenderBadges, SizeBadges } from "../components/Badges";
+import { circleRadiusKm } from "../util/maps";
+import { GinParseErrors } from "../util/gin-errors";
+
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
 export type ChainPredicate = (chain: Chain) => boolean;
 
-export const defaultTruePredicate = () => true;
-
-const accessToken = {
-  mapboxApiAccessToken: import.meta.env.VITE_MAPBOX_KEY,
-};
-const maxZoom = 13;
-const minZoom = 1;
-
-enum ZoomOperation {
-  PLUS,
-  MINUS,
-}
-
-const FindChain = ({ location }: { location: Location }) => {
-  const urlParams = new URLSearchParams(location.search);
-
-  const history = useHistory();
-  const { t } = useTranslation();
-  const { authUser } = useContext(AuthContext);
-
-  const chains = useContext(ChainsContext);
-  const publishedChains = chains.filter(({ published }) => published);
-
-  const [viewport, setViewport] = useState<IViewPort>({
-    latitude: 26.3351,
-    longitude: 17.2283,
-    width: "100vw",
-    height: "80vh",
-    zoom: 1.45,
-  });
-  const [selectedChain, setSelectedChain] = useState<Chain | null>(null);
-  const [showPopup, setShowPopup] = useState(false);
-  const [showDutchLoopsDialog, setShowDutchLoopsDialog] = useState(false);
-  const [netherlandsPopup, setNetherlandsPopup] = useState(false);
-
-  const [filterChainPredicate, setFilterChainPredicate] =
-    useState<ChainPredicate>(() => defaultTruePredicate);
-
-  const filteredChains = publishedChains.filter(filterChainPredicate);
-
-  const handleFindChainCallback = (findChainPredicate: ChainPredicate) => {
-    const matchingChain = filteredChains.find(findChainPredicate);
-
-    matchingChain &&
-      setViewport({
-        latitude: matchingChain?.latitude,
-        longitude: matchingChain?.longitude,
-        width: "100vw",
-        height: "80vh",
-        zoom: 12,
-      });
-
-    return !!matchingChain;
-  };
-
-  const mapRef = useRef<MapRef>(null);
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((location) => {
-      const { longitude, latitude } = location.coords;
-      fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken.mapboxApiAccessToken}&types=country`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.features[0].properties.short_code === "nl") {
-            setShowDutchLoopsDialog(true);
-          }
-        });
-    });
-  }, []);
-
-  if (!accessToken.mapboxApiAccessToken) {
-    return <div>Access tokens not configured</div>;
-  }
-
-  const signupToChain = async (e: any) => {
-    e.preventDefault();
-    if (authUser && selectedChain) {
-      await chainAddUser(selectedChain.uid, authUser.uid, false);
-      history.push({ pathname: "/thankyou" });
-    } else {
-      history.push({
-        pathname: `/loops/${selectedChain?.uid}/users/signup`,
-        state: {
-          chainId: selectedChain?.uid,
-        },
-      });
-    }
-  };
-
-  const viewChain = (e: any) => {
-    e.preventDefault();
-    history.push(`/loops/${selectedChain?.uid}/members`);
-  };
-
-  const handleLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setViewport({
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude,
-          width: "100vw",
-          height: "75vh",
-          zoom: 10,
-        });
-      },
-      (err) => {
-        console.error(`Couldn't receive location: ${err.message}`);
-      }
-    );
-  };
-
-  function mapZoom(viewport: IViewPort, o: ZoomOperation) {
-    switch (o) {
-      case ZoomOperation.PLUS:
-        if (viewport.zoom < maxZoom) {
-          setViewport({ ...viewport, zoom: viewport.zoom + 1 });
-        }
-        break;
-      case ZoomOperation.MINUS:
-        if (viewport.zoom > minZoom) {
-          setViewport({ ...viewport, zoom: viewport.zoom - 1 });
-        }
-        break;
-    }
-  }
-
-  interface FeatureProperties {
-    radius: number;
+type GeoJSONChains = GeoJSONTypes.FeatureCollection<
+  GeoJSONTypes.Geometry,
+  {
+    uid: UID;
     chainIndex: number;
+    radius: number;
     gender: string;
+    size: string;
   }
+>;
 
-  interface Feature<FP> extends GeoJSONTypes.Feature<GeoJSONTypes.Point, FP> {
-    layer: { id: string };
-  }
+export const defaultTruePredicate = () => true;
+const maxZoom = 13;
+const minZoom = 3;
 
-  const handleMapClick = (event: MapEvent) => {
-    const mapFeatures = (event.features || []) as Feature<any>[];
-    console.log("mapFeatures", mapFeatures);
-    const topMostFeature = mapFeatures[0];
-
-    const layerId = topMostFeature.layer.id;
-
-    if (layerId === "chains") {
-      const selectedChainIndex = topMostFeature.properties.chainIndex;
-
-      setSelectedChain(filteredChains[selectedChainIndex]);
-      setShowPopup(true);
-    } else if (layerId === "cluster" || layerId === "cluster-count") {
-      const clusterId = topMostFeature.properties.cluster_id;
-
-      const mapboxSource = mapRef!.current!.getMap().getSource("chains");
-
-      mapboxSource.getClusterExpansionZoom(
-        clusterId,
-        (err: any, zoom: number) => {
-          if (err) {
-            return;
-          }
-
-          setViewport({
-            ...viewport,
-            longitude: topMostFeature.geometry.coordinates[0],
-            latitude: topMostFeature.geometry.coordinates[1],
-            zoom,
-            transitionDuration: 500,
-          });
-        }
-      );
-    }
-  };
-
-  const geoJSONFilteredChains: GeoJSONTypes.FeatureCollection<
-    GeoJSONTypes.Geometry,
-    FeatureProperties
-  > = {
+function mapToGeoJSONChains(
+  chains: Chain[],
+  filterFunc: (c: Chain) => boolean = () => true
+): GeoJSONChains {
+  return {
     type: "FeatureCollection",
-    features: filteredChains.map((filteredChain, filteredChainIndex) => {
-      let filterGender =
-        filteredChain.genders?.find(
-          (g) => g === "1" || g === "2" || g === "3"
-        ) || "0";
-
+    features: chains.filter(filterFunc).map((chain, chainIndex) => {
       return {
         type: "Feature",
         geometry: {
           type: "Point",
-          coordinates: [filteredChain.longitude, filteredChain.latitude],
+          coordinates: [chain.longitude, chain.latitude],
         },
         properties: {
-          radius: filteredChain.radius * 6,
-          chainIndex: filteredChainIndex,
-          gender: filterGender, // GeoJSON doesn't support nested array, see https://github.com/mapbox/mapbox-gl-js/issues/2434
+          uid: chain.uid,
+          chainIndex: chainIndex,
+          radius: circleRadiusKm((chain.radius * 1000) / 6, chain.latitude),
+          gender: chain.genders?.join("") || "",
+          size: chain.sizes?.join("") || "",
         },
       };
     }),
   };
+}
+
+export default function FindChain({ location }: { location: Location }) {
+  const history = useHistory();
+  const urlParams = new URLSearchParams(location.search);
+
+  const { t } = useTranslation();
+  const { authUser } = useContext(AuthContext);
+  const { addToastError } = useContext(ToastContext);
+
+  const [chains, setChains] = useState<Chain[]>();
+  const [map, setMap] = useState<mapboxgl.Map>();
+  const [zoom, setZoom] = useState(4);
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
+
+  const mapRef = useRef<any>();
+
+  useEffect(() => {
+    const _center = [
+      Number.parseFloat(urlParams.get("lo") || ""),
+      Number.parseFloat(urlParams.get("la") || ""),
+    ];
+    const hasCenter = !!(_center.at(0) && _center.at(1));
+    const _map = new mapboxgl.Map({
+      accessToken: MAPBOX_TOKEN,
+      container: mapRef.current,
+      projection: { name: "mercator" },
+      zoom: hasCenter ? 10 : 4,
+      minZoom: 1,
+      maxZoom: 13,
+      center: (hasCenter
+        ? _center
+        : [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
+      style: "mapbox://styles/mapbox/light-v11",
+    });
+
+    setZoom(4);
+
+    chainGetAll({ filter_out_unpublished: true }).then((res) => {
+      const _chains = res.data;
+
+      _map.on("zoomend", (e) => {
+        setZoom(e.target.getZoom());
+      });
+
+      _map.on("load", () => {
+        _map.addSource("chains", {
+          type: "geojson",
+          data: mapToGeoJSONChains(_chains),
+          cluster: true,
+          clusterMaxZoom: 10,
+          clusterRadius: 30,
+        });
+        _map.addLayer({
+          id: "chain-cluster",
+          type: "circle",
+          source: "chains",
+          filter: ["has", "point_count"],
+          paint: {
+            "circle-color": ["rgba", 239, 149, 61, 0.6], // #ef953d
+            "circle-radius": 15,
+            "circle-stroke-width": 0,
+          },
+        });
+        _map.addLayer({
+          id: "chain-cluster-count",
+          type: "symbol",
+          source: "chains",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": ["get", "point_count_abbreviated"],
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 12,
+          },
+        });
+        _map.addLayer({
+          id: "chain-single",
+          type: "circle",
+          source: "chains",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-color": ["rgba", 240, 196, 73, 0.6], // #f0c449
+            "circle-radius": [
+              "interpolate",
+              ["exponential", 2],
+              ["zoom"],
+              0,
+              0,
+              20,
+              ["get", "radius"],
+            ],
+            "circle-stroke-width": 0,
+          },
+        });
+        _map.on("click", "chain-single", (e) => {
+          if (e.features) {
+            let uids = e.features
+              .map((f) => f.properties?.uid)
+              .filter((f) => f) as UID[];
+            // filter unique
+            uids = [...new Set(uids)];
+
+            let _selectedChains = uids.map((uid) =>
+              _chains.find((c) => c.uid === uid)
+            ) as Chain[];
+            if (_selectedChains.length) {
+              _selectedChains.forEach((c) => console.info(c.name, c.uid));
+              setSelectedChains(_selectedChains);
+            }
+          }
+        });
+        // zoom during click on a cluster
+        _map.on("click", "chain-cluster", (e) => {
+          const features = _map.queryRenderedFeatures(e.point, {
+            layers: ["chain-cluster"],
+          });
+          const clusterId = features[0].properties?.cluster_id;
+          (
+            _map.getSource("chains") as mapboxgl.GeoJSONSource
+          ).getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err) return;
+
+            _map.easeTo({
+              center: (features[0].geometry as any).coordinates,
+              zoom: zoom,
+            });
+          });
+        });
+      });
+      setChains(_chains);
+    });
+
+    setMap(_map);
+
+    return () => {
+      _map.remove();
+      setMap(undefined);
+    };
+  }, []);
+
+  // https://docs.mapbox.com/mapbox-gl-js/style-spec/other/#set-membership-filters
+  function handleSearch(
+    search: SearchValues,
+    longLat: GeoJSON.Position | undefined
+  ) {
+    if (!chains || !map) return;
+    // filter
+    let filterFunc = (c: Chain) => true;
+    if (search.sizes.length) {
+      filterFunc = (c) => {
+        let res = true;
+        search.sizes.forEach((s) => {
+          if (!c.sizes?.includes(s)) res = false;
+        });
+        return res;
+      };
+    } else if (search.genders.length) {
+      filterFunc = (c) => {
+        let res = true;
+        search.genders.forEach((s) => {
+          if (!c.genders?.includes(s)) res = false;
+        });
+        return res;
+      };
+    }
+    // filter map by gender or sizes
+    (map.getSource("chains") as mapboxgl.GeoJSONSource).setData(
+      mapToGeoJSONChains(chains, filterFunc)
+    );
+
+    // search
+    if (longLat) {
+      map.setCenter(longLat as mapboxgl.LngLatLike);
+      map.setZoom(10);
+    }
+
+    window.history.replaceState(
+      {},
+      "",
+      window.location.origin +
+        window.location.pathname +
+        toUrlSearchParams(search, longLat)
+    );
+
+    setSelectedChains([]);
+  }
+
+  function handleClickJoin(e: MouseEvent<HTMLButtonElement>, chainUID: UID) {
+    e.preventDefault();
+    if (authUser && chainUID) {
+      chainAddUser(chainUID, authUser.uid, false)
+        .then(() => {
+          history.push({ pathname: "/thankyou" });
+        })
+        .catch((err) => {
+          addToastError(GinParseErrors(t, err));
+        });
+    } else {
+      history.push({
+        pathname: `/loops/${chainUID}/users/signup`,
+        state: {
+          chainId: chainUID,
+        },
+      });
+    }
+  }
+
+  function handleClickViewChain(
+    e: MouseEvent<HTMLButtonElement>,
+    chainUID: UID
+  ) {
+    e.preventDefault();
+    history.push(`/loops/${chainUID}/members`);
+  }
+
+  function handleLocation() {
+    setLocationLoading(true);
+    window.navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        map?.setZoom(10);
+        map?.setCenter([pos.coords.longitude, pos.coords.latitude]);
+        setLocationLoading(false);
+      },
+      (err) => {
+        setLocationLoading(false);
+        console.error(`Couldn't receive location: ${err.message}`);
+        addToastError(`Couldn't receive location: ${err.message}`);
+      }
+    );
+  }
+
+  function mapZoom(o: "+" | "-") {
+    let z = map?.getZoom() || 4;
+    switch (o) {
+      case "+":
+        if (z < maxZoom) {
+          map?.setZoom(z + 1);
+        }
+        break;
+      case "-":
+        if (z > minZoom) {
+          map?.setZoom(z - 1);
+        }
+        break;
+    }
+  }
+
+  if (!MAPBOX_TOKEN) {
+    addToastError("Access tokens not configured");
+    return <div></div>;
+  }
 
   return (
     <>
@@ -229,177 +320,164 @@ const FindChain = ({ location }: { location: Location }) => {
         <meta name="description" content="Find Loop" />
       </Helmet>
 
-      <FindChainSearchBar
-        setFilterChainPredicate={setFilterChainPredicate}
-        handleFindChainCallback={handleFindChainCallback}
-        initialValues={{
-          searchTerm: urlParams.get("searchTerm") || "",
-          sizes: urlParams.getAll("sizes") || [],
-          genders: urlParams.getAll("genders") || [],
-        }}
-      />
+      <main>
+        <SearchBar
+          initialValues={{
+            searchTerm: urlParams.get("q") || "",
+            sizes: urlParams.getAll("s") || [],
+            genders: urlParams.getAll("g") || [],
+          }}
+          onSearch={handleSearch}
+        />
 
-      <ReactMapGL
-        className={"main-map"}
-        mapboxApiAccessToken={accessToken.mapboxApiAccessToken}
-        mapStyle="mapbox://styles/mapbox/light-v10"
-        {...viewport}
-        onViewportChange={(newView: IViewPort) => setViewport(newView)}
-        onClick={handleMapClick}
-        ref={mapRef}
-        scrollZoom
-      >
-        <Source
-          id="chains"
-          type="geojson"
-          data={geoJSONFilteredChains}
-          cluster
-          clusterMaxZoom={12}
-          clusterRadius={50}
-        >
-          <Layer
-            id="chains"
-            type="circle"
-            filter={["!", ["has", "point_count"]]}
-            paint={{
-              "circle-color": [
-                "match",
-                ["get", "gender"],
-                "women",
-                "pink",
-                "men",
-                "#9a8cb4",
-                "children",
-                "#86CBAC",
-                "#EF953D",
-              ],
-              "circle-radius": ["get", "radius"],
-              "circle-blur": 0.8,
-            }}
-          />
-          <Layer
-            id="cluster"
-            type="circle"
-            filter={["has", "point_count"]}
-            paint={{
-              "circle-color": [
-                "step",
-                ["get", "point_count"],
-                "#513484",
-                100,
-                "#513484",
-                750,
-                "#513484",
-              ],
-              "circle-radius": 30,
-              "circle-blur": 0.7,
-            }}
-          />
-          <Layer
-            id="cluster-count"
-            type="symbol"
-            filter={["has", "point_count"]}
-            layout={{
-              "text-field": "{point_count_abbreviated}",
-            }}
-            paint={{ "text-color": "white" }}
-          />
-        </Source>
+        <div className="relative h-[80vh]">
+          <div ref={mapRef} className="h-full"></div>
 
-        {selectedChain && showPopup ? (
-          <Popup
-            latitude={selectedChain.latitude}
-            longitude={selectedChain.longitude}
-            closeOnClick={false}
-            dynamicPosition
-            closeButton={false}
-            onClose={() => setShowPopup(false)}
+          <div className="flex flex-col absolute z-30 bottom-[5%] right-2.5">
+            <button
+              className="btn btn-circle btn-outline glass bg-white/70 hover:bg-white/90 mb-4"
+              onClick={() => handleLocation()}
+            >
+              <span
+                className={`feather text-base-content text-lg ${
+                  locationLoading
+                    ? "feather-loader animate-spin"
+                    : "feather-navigation"
+                }`}
+              />
+            </button>
+            <div className="btn-group btn-group-vertical">
+              <button
+                className={`btn rounded-t-full p-0 w-12 h-12 ${
+                  zoom >= maxZoom
+                    ? "btn-disabled bg-white/30"
+                    : "glass bg-white/60 hover:bg-white/90 btn-outline"
+                }`}
+                onClick={() => mapZoom("+")}
+              >
+                <span className="feather feather-plus text-base-content text-lg" />
+              </button>
+              <button
+                className={`btn rounded-b-full p-0 w-12 h-12 ${
+                  zoom <= minZoom
+                    ? "btn-disabled bg-white/30"
+                    : "glass bg-white/60 hover:bg-white/90 btn-outline"
+                }`}
+                onClick={() => mapZoom("-")}
+              >
+                <span className="feather feather-minus text-base-content text-lg" />
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={`absolute z-30 top-4 left-4 max-h-full w-72 overflow-y-auto ${
+              selectedChains.length ? "" : "hidden"
+            }`}
           >
-            <div className="p-4 w-72">
-              <div className="mb-2">
-                <button
-                  type="button"
-                  className="absolute top-2 right-2 btn btn-sm btn-circle btn-ghost feather feather-x"
-                  onClick={() => setShowPopup(false)}
-                ></button>
-                <h1 className="font-semibold text-secondary mb-3 pr-10">
-                  {selectedChain.name}
-                </h1>
-                <p className="mb-3">{selectedChain.description}</p>
-                <div className="flex flex-col w-full text-sm">
-                  <h2 className="mb-1">{t("categories")}:</h2>
-                  <div className="mb-2">
-                    {selectedChain.genders
-                      ? GenderBadges(t, selectedChain.genders)
-                      : "-"}
-                  </div>
-                  <h2 className="mb-1">{t("sizes")}:</h2>
-                  <div className="mb-2">
-                    {selectedChain.sizes
-                      ? SizeBadges(t, selectedChain.sizes)
-                      : "-"}
+            <button
+              key="close"
+              type="button"
+              onClick={() => setSelectedChains([])}
+              className="absolute top-2 right-2 btn btn-sm btn-circle btn-outline"
+            >
+              <span className="feather feather-arrow-left"></span>
+            </button>
+            {selectedChains.map((chain) => (
+              <div
+                className="p-4 w-full mb-4 rounded-lg bg-base-100"
+                key={chain.uid}
+              >
+                <div className="mb-2">
+                  <h1 className="font-semibold text-secondary mb-3 pr-10">
+                    {chain.name}
+                  </h1>
+                  {chain.description ? (
+                    chain.description.length > 200 ? (
+                      <div className="mb-3">
+                        <input
+                          type="checkbox"
+                          className="hidden peer"
+                          id={"checkbox-desc-more-" + chain.uid}
+                        />
+                        <p
+                          className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12"
+                          tabIndex={0}
+                          onClick={(e) => {
+                            let input = (
+                              e.target as HTMLParagraphElement
+                            ).parentElement?.querySelector("input");
+                            console.log("input", input);
+
+                            if (input) input.checked = true;
+                          }}
+                        >
+                          {chain.description.split("\n").map((s, i) => {
+                            if (i === 0) return s;
+
+                            return (
+                              <>
+                                <br />
+                                {s}
+                              </>
+                            );
+                          })}
+                        </p>
+                        <label
+                          htmlFor={"checkbox-desc-more-" + chain.uid}
+                          aria-label="expand"
+                          className="btn btn-xs btn-secondary btn-ghost feather feather-more-horizontal"
+                        ></label>
+                      </div>
+                    ) : (
+                      <p className="mb-3 text-sm break-words">
+                        {chain.description}
+                      </p>
+                    )
+                  ) : null}
+                  <div className="flex flex-col w-full text-sm">
+                    {chain.genders?.length ? (
+                      <>
+                        <h2 className="mb-1">{t("categories")}:</h2>
+                        <div className="mb-2">
+                          {GenderBadges(t, chain.genders)}
+                        </div>
+                      </>
+                    ) : null}
+                    {chain.sizes?.length ? (
+                      <>
+                        <h2 className="mb-1">{t("sizes")}:</h2>
+                        <div className="mb-2">{SizeBadges(t, chain.sizes)}</div>
+                      </>
+                    ) : null}
                   </div>
                 </div>
-              </div>
+                <div className="flex flex-col items-start">
+                  {authUser?.is_root_admin ? (
+                    <button
+                      key={"btn-view"}
+                      className="btn btn-sm btn-secondary btn-outline"
+                      onClick={(e) => handleClickViewChain(e, chain.uid)}
+                    >
+                      {t("viewChain")}
+                      <span className="feather feather-shield ml-3"></span>
+                    </button>
+                  ) : null}
 
-              <div className="flex flex-col items-start">
-                {authUser?.is_root_admin && (
                   <button
-                    key={"btn-view"}
-                    className="btn btn-sm btn-secondary btn-outline mb-3"
-                    onClick={(e) => viewChain(e)}
+                    onClick={(e) => handleClickJoin(e, chain.uid)}
+                    type="button"
+                    className="btn btn-sm btn-primary"
                   >
-                    {t("viewChain")}
-                    <span className="feather feather-shield ml-3"></span>
+                    {t("join")}
+                    <span className="feather feather-arrow-right ml-3"></span>
                   </button>
-                )}
-                <button
-                  key={"btn-join"}
-                  type="button"
-                  className="btn btn-sm btn-primary"
-                  onClick={(e) => signupToChain(e)}
-                >
-                  {t("join")}
-                  <span className="feather feather-arrow-right ml-3"></span>
-                </button>
+                </div>
               </div>
-            </div>
-          </Popup>
-        ) : null}
-      </ReactMapGL>
-
-      <div className="flex flex-col absolute bottom-[5%] right-2.5">
-        <button
-          className="btn btn-circle btn-outline glass bg-white/70 hover:bg-white/90 mb-4"
-          onClick={() => handleLocation()}
-        >
-          <span className="feather feather-crosshair text-base-content" />
-        </button>
-        <div className="btn-group btn-group-vertical">
-          <button
-            className={`btn rounded-t-full ${
-              viewport.zoom >= 12
-                ? "btn-disabled bg-white/30"
-                : "glass bg-white/60 hover:bg-white/90"
-            }`}
-            onClick={() => mapZoom(viewport, ZoomOperation.PLUS)}
-          >
-            <span className="feather feather-plus text-base-content" />
-          </button>
-          <button
-            className={`btn rounded-b-full -mt-px ${
-              viewport.zoom <= 1
-                ? "btn-disabled bg-white/30"
-                : "glass bg-white/60 hover:bg-white/90"
-            }`}
-            onClick={() => mapZoom(viewport, ZoomOperation.MINUS)}
-          >
-            <span className="feather feather-minus text-base-content" />
-          </button>
+            ))}
+          </div>
         </div>
-      </div>
+      </main>
     </>
   );
-};
-
-export default FindChain;
+}

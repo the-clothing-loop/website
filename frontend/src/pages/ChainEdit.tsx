@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -9,6 +9,8 @@ import ChainDetailsForm, {
 } from "../components/ChainDetailsForm";
 import { chainGet, chainUpdate, ChainUpdateBody } from "../api/chain";
 import { Chain } from "../api/types";
+import { ToastContext } from "../providers/ToastProvider";
+import { GinParseErrors } from "../util/gin-errors";
 
 interface Params {
   chainUID: string;
@@ -16,12 +18,11 @@ interface Params {
 
 export default function ChainEdit() {
   const { t } = useTranslation();
-  let history = useHistory();
+  const history = useHistory();
+  const { addToastError } = useContext(ToastContext);
   const { chainUID } = useParams<Params>();
 
   const [chain, setChain] = useState<Chain>();
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
 
   const handleSubmit = async (values: RegisterChainForm) => {
     const newChainData: ChainUpdateBody = {
@@ -32,13 +33,12 @@ export default function ChainEdit() {
     console.log(`updating chain information: ${JSON.stringify(newChainData)}`);
     try {
       await chainUpdate(newChainData);
-      setSubmitted(true);
       setTimeout(() => {
         history.goBack();
       }, 1200);
-    } catch (e: any) {
-      console.error(`Error updating chain: ${JSON.stringify(e)}`);
-      setError(e?.data || `Error: ${JSON.stringify(e)}`);
+    } catch (err: any) {
+      console.error(`Error updating chain: ${JSON.stringify(err)}`);
+      addToastError(GinParseErrors(t, err));
     }
   };
 
@@ -48,14 +48,14 @@ export default function ChainEdit() {
         let chain = (await chainGet(chainUID)).data;
 
         setChain(chain);
-      } catch (e: any) {
+      } catch (err: any) {
         console.error(`chain ${chainUID} does not exist`);
-        setError(e?.data || `Error: ${JSON.stringify(e)}`);
+        addToastError(GinParseErrors(t, err));
       }
     })();
   }, [chainUID]);
 
-  return !chain ? null : (
+  return chain ? (
     <>
       <Helmet>
         <title>The Clothing Loop | Edit Loop details</title>
@@ -69,11 +69,9 @@ export default function ChainEdit() {
         <ChainDetailsForm
           showBack
           onSubmit={handleSubmit}
-          submitError={error}
-          submitted={submitted}
           initialValues={chain}
         />
       </main>
     </>
-  );
+  ) : null;
 }

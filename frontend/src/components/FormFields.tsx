@@ -84,7 +84,10 @@ export function TextForm({
         <span className="label-text">{label}</span>
       </div>
       {!!info && (
-        <PopoverOnHover message={info} className="absolute top-0 -right-2" />
+        <PopoverOnHover
+          message={info}
+          className="absolute top-0 -right-2 tooltip-left"
+        />
       )}
       <input
         aria-invalid={invalid}

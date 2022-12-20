@@ -102,7 +102,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
           </div>
           <ChainDetailsForm
             onSubmit={onSubmit}
-            submitError={error}
+            //submitError={error}
             showBack={!state.only_create_chain}
           />
         </div>

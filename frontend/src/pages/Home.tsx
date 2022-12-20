@@ -7,8 +7,8 @@ import { Link, useHistory } from "react-router-dom";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Testimonials from "../components/Testimonials";
+import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
 
-import { StandaloneSearchBar } from "../components/FindChain/StandaloneSearchBar";
 //Media
 const HeroImg =
   "https://ucarecdn.com/4464c0ab-9b67-4e07-a0d3-cab38ea9b7c4/-/resize/600x/-/format/auto/-/quality/smart/kirsten_rosan.jpg";
