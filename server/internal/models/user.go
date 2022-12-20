@@ -46,12 +46,13 @@ type UserToken struct {
 }
 
 type UserChain struct {
-	ID           uint   `json:"-"`
-	UserID       uint   `json:"-" gorm:"index"`
-	UserUID      string `json:"user_uid" gorm:"-:migration;<-:false"`
-	ChainID      uint   `json:"-"`
-	ChainUID     string `json:"chain_uid" gorm:"-:migration;<-:false"`
-	IsChainAdmin bool   `json:"is_chain_admin"`
+	ID           uint      `json:"-"`
+	UserID       uint      `json:"-" gorm:"index"`
+	UserUID      string    `json:"user_uid" gorm:"-:migration;<-:false"`
+	ChainID      uint      `json:"-"`
+	ChainUID     string    `json:"chain_uid" gorm:"-:migration;<-:false"`
+	IsChainAdmin bool      `json:"is_chain_admin"`
+	CreatedAt    time.Time `json:"created_at"`
 }
 
 type UserChainResponse struct {

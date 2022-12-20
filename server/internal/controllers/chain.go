@@ -12,6 +12,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/CollActionteam/clothing-loop/server/internal/views"
+	glog "github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3/zero"
@@ -251,7 +252,7 @@ func ChainUpdate(c *gin.Context) {
 	}
 
 	if res := db.Model(chain).Updates(valuesToUpdate); res.Error != nil {
-		c.Error(res.Error)
+		glog.Error(res.Error)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to update loop values"))
 	}
 }
@@ -355,7 +356,7 @@ func ChainRemoveUser(c *gin.Context) {
 	}
 	err := user.AddUserChainsToObject(db)
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
 		return
 	}
@@ -381,7 +382,7 @@ WHERE user_id = (
 ) AND chain_id = ?
 		`, body.UserUID,
 		chain.ID); res.Error != nil {
-		c.Error(res.Error)
+		glog.Error(res.Error)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be removed from chain due to unknown error"))
 		return
 	}

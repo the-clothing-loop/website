@@ -113,13 +113,13 @@ export default function ChainMemberList() {
           <section className="lg:w-1/3 mb-6 lg:mb-0">
             <div className="relative bg-teal-light p-8">
               <Link
-                className="absolute top-6 right-8 btn btn-ghost btn-circle"
+                className="absolute top-4 right-4 btn btn-outline btn-circle"
                 to={`/loops/${chainUID}/edit`}
               >
                 <span className="feather feather-edit-2" />
               </Link>
 
-              <h1 className="font-serif font-bold text-secondary mb-6 text-4xl">
+              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl">
                 {chain.name}
               </h1>
               <p className="text-lg mb-6">{chain.description}</p>
@@ -309,9 +309,9 @@ function HostTable(props: {
           </tbody>
         </table>
       </div>
-      <div className="rounded-b-lg w-full flex justify-between bg-base-200">
-        <div className="flex items-center m-3 bg-base-100 rounded-lg p-2">
-          <p className={`mx-2 ${selected ? "" : "text-base-300"}`}>
+      <div className="rounded-b-lg w-full flex flex-col md:flex-row justify-between bg-base-200 pb-3 pr-3 ">
+        <div className="flex items-center mt-3 ml-3 bg-base-100 rounded-lg p-2">
+          <p className={`mx-2 flex-grow ${selected ? "" : "text-base-300"}`}>
             {t("selected")}
           </p>
           <div className="tooltip mr-2" data-tip={t("edit")}>
@@ -336,9 +336,12 @@ function HostTable(props: {
             ></button>
           </div>
         </div>
-        <form className="flex p-3 items-end" onSubmit={onAddCoHost}>
+        <form
+          className="flex flex-col md:flex-row items-stretch md:items-start mt-3 ml-3 items-end"
+          onSubmit={onAddCoHost}
+        >
           <select
-            className="select select-sm rounded-l-lg disabled:text-base-300"
+            className="select select-sm rounded-t-lg md:rounded-l-lg md:rounded-none disabled:text-base-300"
             name="participant"
             ref={refSelect}
             disabled={filteredUsersNotHost.length === 0}
@@ -353,7 +356,7 @@ function HostTable(props: {
             ))}
           </select>
           <button
-            className={`btn btn-sm rounded-r-lg ${
+            className={`btn btn-sm rounded-b-lg md:rounded-r-lg md:rounded-none ${
               filteredUsersNotHost.length === 0 ? "btn-disabled" : "btn-primary"
             }`}
             type="submit"
@@ -463,9 +466,9 @@ function ParticipantsTable(props: {
             </tbody>
           </table>
         </div>
-        <div className="rounded-b-lg flex justify-between bg-base-200 sticky z-10 bottom-0">
-          <div className="flex m-3 bg-base-100 rounded-lg p-2">
-            <p className="block mx-2">
+        <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
+          <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
+            <p className="block mx-2 flex-grow">
               <span className="text-2xl font-bold mr-2">{selected.length}</span>
               {t("selected")}
             </p>

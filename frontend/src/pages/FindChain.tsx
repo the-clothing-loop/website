@@ -4,8 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import type * as GeoJSONTypes from "geojson";
 
-import mapboxgl from "mapbox-gl";
-
 // Project resources
 import { AuthContext } from "../providers/AuthProvider";
 import { Chain, UID } from "../api/types";
@@ -19,12 +17,6 @@ import SearchBar, {
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import { circleRadiusKm } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
-
-// The following is required to stop "npm build" from transpiling mapbox code.
-// notice the exclamation point in the import.
-// @ts-ignore
-mapboxgl.workerClass =
-  require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 export type ChainPredicate = (chain: Chain) => boolean;
 

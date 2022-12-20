@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Circulate and reuse clothing with The Clothing Loop!"
+    />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/icons/feather/style.css" />
+    <link rel="stylesheet" href="/fonts/montserrat/style.css" />
+    <link rel="stylesheet" href="/fonts/playfair-display/style.css" />
+
+    <script>
+      // Only load on production environment.
+      if (window.location.host !== "www.clothingloop.org")
+        window.goatcounter = { no_onload: true };
+    </script>
+    <script
+      data-goatcounter="https://clothingloop.goatcounter.com/count"
+      async
+      src="https://gc.zgo.at/count.js"
+    ></script>
+
+    <title>The Clothing Loop</title>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>

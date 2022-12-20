@@ -2,18 +2,16 @@ package controllers
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/CollActionteam/clothing-loop/server/internal/views"
+	glog "github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3/zero"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -41,22 +39,13 @@ LIMIT 1
 		return
 	}
 
-	sendVerificationEmail(c, db, &user)
-}
-
-func sendVerificationEmail(c *gin.Context, db *gorm.DB, user *models.User) bool {
 	token, err := auth.TokenCreateUnverified(db, user.ID)
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
-		return false
+		return
 	}
-
-	subject := "Verify e-mail for the Clothing Loop"
-	messageHtml := fmt.Sprintf(`Hi %s,<br><br>Click <a href="%s/users/login/validate?apiKey=%s">here</a> to verify your e-mail and activate your Clothing Loop account.<br><br>Regards,<br>The Clothing Loop team!`, user.Name, app.Config.SITE_BASE_URL_FE, token)
-
-	// email user with token
-	return app.MailSend(c, db, user.Email.String, subject, messageHtml)
+	views.EmailLoginVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func LoginValidate(c *gin.Context) {
@@ -71,30 +60,15 @@ func LoginValidate(c *gin.Context) {
 	}
 	token := query.Key
 
-	ok := auth.TokenVerify(db, token)
+	ok, user := auth.TokenVerify(db, token)
 	if !ok {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Invalid token"))
 		return
 	}
 
-	// get user
-	user := &models.User{}
-	err := db.Raw(`
-SELECT users.*
-FROM users
-LEFT JOIN user_tokens ON user_tokens.user_id = users.id
-WHERE user_tokens.token = ?
-LIMIT 1
-	`, token).First(user).Error
+	err := user.AddUserChainsToObject(db)
 	if err != nil {
-		c.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to find user that matches authentication token"))
-		return
-	}
-
-	err = user.AddUserChainsToObject(db)
-	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
 		return
 	}
@@ -120,11 +94,11 @@ WHERE user_chains.chain_id IN ?
 	AND users.enabled = TRUE
 	`, chainIDs).Scan(&results).Error
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to find associated loop admins"))
 		return
 	}
-	if user.Email.Valid {
+	if user.Email.Valid && !user.IsEmailVerified {
 		for _, result := range results {
 			if result.Email.Valid {
 				go views.EmailAParticipantJoinedTheLoop(
@@ -140,6 +114,9 @@ WHERE user_chains.chain_id IN ?
 			}
 		}
 	}
+	// re-add enabled, see TokenVerify
+	user.IsEmailVerified = true
+	user.Enabled = true
 
 	// set token as cookie
 	auth.CookieSet(c, token)
@@ -214,7 +191,13 @@ func RegisterChainAdmin(c *gin.Context) {
 		})
 	}
 
-	sendVerificationEmail(c, db, user)
+	token, err := auth.TokenCreateUnverified(db, user.ID)
+	if err != nil {
+		glog.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
+		return
+	}
+	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func RegisterBasicUser(c *gin.Context) {
@@ -274,7 +257,13 @@ func RegisterBasicUser(c *gin.Context) {
 		})
 	}
 
-	sendVerificationEmail(c, db, user)
+	token, err := auth.TokenCreateUnverified(db, user.ID)
+	if err != nil {
+		glog.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
+		return
+	}
+	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func Logout(c *gin.Context) {

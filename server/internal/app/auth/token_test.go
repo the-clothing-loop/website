@@ -44,9 +44,9 @@ func TestLoginFlowToken(t *testing.T) {
 	res := db.Raw(`
 SELECT *
 FROM user_tokens
-WHERE user_id = ? AND token = ? AND verified = ?
+WHERE user_id = ? AND token = ? AND verified = FALSE
 LIMIT 1
-	`, user.ID, token, false).Scan(&userToken)
+	`, user.ID, token).Scan(&userToken)
 
 	assert.Nil(t, res.Error, "Database call responded with an error")
 	assert.Equalf(t, user.ID, userToken.UserID, "New token (%s) not found in search", userToken)
@@ -56,7 +56,7 @@ LIMIT 1
 	assert.Falsef(t, ok, "Unverified token (%s) should not be useable", token)
 
 	// verify token
-	ok = auth.TokenVerify(db, token)
+	ok, _ = auth.TokenVerify(db, token)
 	assert.Truef(t, ok, "Token should pass verification (%s)", token)
 
 	// ensure verified token is usable for authenticate
@@ -68,8 +68,8 @@ LIMIT 1
 	db.Raw(`
 SELECT *
 FROM user_tokens
-WHERE user_id = ? AND token = ? AND verified = ?
-	`, user.ID, token, true).Scan(&userTokens)
+WHERE user_id = ? AND token = ? AND verified = TRUE
+	`, user.ID, token).Scan(&userTokens)
 	assert.Equal(t, 1, len(userTokens), "token record should exist")
 
 	// remove token

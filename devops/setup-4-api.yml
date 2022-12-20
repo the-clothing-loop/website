@@ -47,8 +47,8 @@
     - name: Add config for production
       vars:
         api_config_port: 8081
-        api_config_base_url_api: https://clothingloop.org/api
-        api_config_base_url_fe: https://clothingloop.org
+        api_config_base_url_api: https://www.clothingloop.org/api
+        api_config_base_url_fe: https://www.clothingloop.org
         api_config_cookie_https_only: "true"
         api_config_stripe_secret_key: "{{ stripe_cl_production_secret_key }}"
         api_config_stripe_webhook: "{{ stripe_cl_production_webhook }}"

@@ -4,53 +4,53 @@ import { ChangeEvent, FormEvent, useContext, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { paymentInitiate, priceIDs } from "../../api/payment";
-import FormJup from "../../util/form-jup";
 import { ToastContext } from "../../providers/ToastProvider";
 import { GinParseErrors } from "../../util/gin-errors";
+import useForm from "../../util/form.hooks";
 
 interface RadioItem {
-  value: string;
+  id: string;
   cents: number;
   text: string;
   priceID: string;
 }
 
 interface FormValues {
+  recurring_radio: string;
   oneoff_radio: string;
   oneoff_custom: string;
-  recurring_radio: string;
   email: string;
 }
 
 const recurring: RadioItem[] = [
   {
-    value: "2_50",
+    id: "2_50",
     cents: 250,
-    text: "€2.50",
+    text: "€ 2.50",
     priceID: priceIDs.recurring_2_50,
   },
   {
-    value: "5_00",
+    id: "5_00",
     cents: 500,
-    text: "€5.00",
+    text: "€ 5.00",
     priceID: priceIDs.recurring_5_00,
   },
   {
-    value: "10_00",
+    id: "10_00",
     cents: 1000,
-    text: "€10.00",
+    text: "€ 10.00",
     priceID: priceIDs.recurring_10_00,
   },
 ];
 const oneOff: RadioItem[] = [
-  { value: "5_00", cents: 500, text: "€5.00", priceID: priceIDs.oneOff_any },
-  { value: "10_00", cents: 1000, text: "€10.00", priceID: priceIDs.oneOff_any },
-  { value: "20_00", cents: 2000, text: "€20.00", priceID: priceIDs.oneOff_any },
-  { value: "50_00", cents: 5000, text: "€50.00", priceID: priceIDs.oneOff_any },
+  { id: "5_00", cents: 500, text: "€ 5.00", priceID: priceIDs.oneOff_any },
+  { id: "10_00", cents: 1000, text: "€ 10.00", priceID: priceIDs.oneOff_any },
+  { id: "20_00", cents: 2000, text: "€ 20.00", priceID: priceIDs.oneOff_any },
+  { id: "50_00", cents: 5000, text: "€ 50.00", priceID: priceIDs.oneOff_any },
   {
-    value: "100_00",
+    id: "100_00",
     cents: 10000,
-    text: "€100.00",
+    text: "€ 100.00",
     priceID: priceIDs.oneOff_any,
   },
 ];
@@ -76,11 +76,16 @@ function DonationFormContent() {
   const { t } = useTranslation();
 
   const { addToastError } = useContext(ToastContext);
+  const [values, setValue, setValues] = useForm<FormValues>({
+    recurring_radio: "10_00",
+    oneoff_radio: "5_00",
+    oneoff_custom: "",
+    email: "",
+  });
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
-    const values = FormJup<FormValues>(e);
 
     let radioObj: RadioItem | undefined;
 
@@ -90,25 +95,25 @@ function DonationFormContent() {
     }
 
     if (isRecurring) {
-      let value = values?.recurring_radio || "";
-      if (value === "") {
+      let id = values.recurring_radio;
+      if (id === "") {
         addToastError("This error should not happen");
         return;
       }
-      radioObj = recurring.find((v) => v.value === value);
+      radioObj = recurring.find((v) => v.id === id);
     } else {
-      let value = values?.recurring_radio || "";
+      let id = values?.oneoff_radio || "";
 
-      radioObj = oneOff.find((v) => v.value === value);
+      radioObj = oneOff.find((v) => v.id === id);
 
       if (!radioObj) {
-        let cents = Number.parseInt(value);
+        let cents = Number.parseInt(values.oneoff_custom) * 100;
         if (!cents) {
           setError("oneoff_custom");
           return;
         }
         radioObj = {
-          value: value,
+          id,
           cents,
           text: "",
           priceID: priceIDs.oneOff_any,
@@ -155,13 +160,13 @@ function DonationFormContent() {
 
   function oneOffRadio(item: RadioItem) {
     return (
-      <label key={"oneoff" + item.text} className="flex">
+      <label key={"oneoff" + item.id} className="flex">
         <input
           type="radio"
           name="oneoff_radio"
-          value={item.value}
-          defaultChecked={item.value === oneOff[1].value}
           className="radio radio-secondary mr-3"
+          checked={values.oneoff_radio === item.id}
+          onChange={() => setValue("oneoff_radio", item.id)}
         />
         {item.text}
       </label>
@@ -170,13 +175,13 @@ function DonationFormContent() {
 
   function recurringRadio(item: RadioItem) {
     return (
-      <label key={"recurring" + item.text} className="flex items-center h-12">
+      <label key={"recurring" + item.id} className="flex items-center h-12">
         <input
           type="radio"
           name="recurring_radio"
           className="radio radio-secondary mr-3"
-          defaultChecked={item.value === recurring[1].value}
-          value={item.value}
+          checked={values.recurring_radio === item.id}
+          onChange={() => setValue("recurring_radio", item.id)}
         />
         {item.text}
       </label>
@@ -184,6 +189,12 @@ function DonationFormContent() {
   }
 
   function deselectOneOffRadio(e: ChangeEvent<HTMLInputElement>) {
+    const priceCents = e.target.value;
+    setValues((s) => ({
+      ...s,
+      oneoff_custom: priceCents,
+      oneoff_radio: "",
+    }));
     let el = e.target.form?.elements?.namedItem("oneoff_radio");
     (el as RadioNodeList).value = "";
   }
@@ -224,23 +235,31 @@ function DonationFormContent() {
         >
           {oneOff.map((item) => oneOffRadio(item))}
 
-          <div className="flex items-center">
+          <div className="flex items-center relative">
             <input
               name="oneoff_radio"
               type="radio"
-              value=""
+              checked={values.oneoff_radio === ""}
               aria-label="type a custom amount in the next text input"
               className="invisible -z-10 mr-3 absolute"
             />
 
+            <span className="absolute ml-3">&euro;</span>
+
             <input
               name="oneoff_custom"
-              className={`input invalid:input-error w-full ${
+              className={`input invalid:input-error w-full pl-8 ${
                 error === "oneoff_custom" ? "input-error" : "input-secondary"
+              } ${
+                values.oneoff_radio === "custom"
+                  ? "ring-2 ring-offset-2 ring-secondary/50"
+                  : ""
               }`}
               type="number"
+              value={values.oneoff_custom}
               aria-invalid={error === "oneoff_custom"}
               onChange={deselectOneOffRadio}
+              onFocus={() => setValue("oneoff_radio", "custom")}
               placeholder={t("otherAmount")}
             />
           </div>
@@ -259,6 +278,8 @@ function DonationFormContent() {
               error === "email" ? "input-error" : "input-secondary"
             }`}
             type="email"
+            value={values.email}
+            onChange={(e) => setValue("email", e.target.value)}
             placeholder={t("email")}
             aria-invalid={error === "email"}
           />
@@ -310,7 +331,7 @@ function DonationFormContent() {
 export default function DonationForm() {
   const { t } = useTranslation();
 
-  const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY || "";
+  const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY || "";
   if (stripePublicKey) {
     const stripePromise = loadStripe(stripePublicKey);
 

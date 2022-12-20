@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	glog "github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
 	"github.com/stripe/stripe-go/v73"
 	stripe_session "github.com/stripe/stripe-go/v73/checkout/session"
@@ -80,7 +80,7 @@ func PaymentsInitiate(c *gin.Context) {
 
 	session, err := stripe_session.New(checkout)
 	if err != nil {
-		log.Print(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusUnavailableForLegalReasons, errors.New("Something went wrong when processing your checkout request..."))
 		return
 	}
@@ -92,7 +92,7 @@ func PaymentsInitiate(c *gin.Context) {
 		SessionStripeID: zero.StringFrom(session.ID),
 		Status:          string(session.Status),
 	}).Error; err != nil {
-		log.Print(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to add payment to database"))
 		return
 	}
@@ -119,7 +119,7 @@ func PaymentsWebhook(c *gin.Context) {
 		return
 	}
 
-	log.Printf("event.Type: %+v", event.Type)
+	glog.Infof("event.Type: %+v", event.Type)
 
 	switch event.Type {
 	case "checkout.session.completed":
@@ -135,7 +135,7 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 	session := new(stripe.CheckoutSession)
 	err := json.Unmarshal(event.Data.Raw, session)
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Incorrect response from stripe"))
 		return
 	}
@@ -145,7 +145,7 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 		Email:  session.CustomerEmail,
 	}).Error
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to update payment in database"))
 		return
 	}

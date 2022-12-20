@@ -2,11 +2,11 @@ package mocks
 
 import (
 	"fmt"
-	"log"
 	"math/rand"
 	"testing"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	glog "github.com/airbrake/glog/v4"
 	Faker "github.com/jaswdr/faker"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3/zero"
@@ -52,7 +52,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		},
 	}
 	if res := db.Create(user); res.Error != nil {
-		log.Fatalf("Unable to create testUser: %v", res.Error)
+		glog.Fatalf("Unable to create testUser: %v", res.Error)
 	}
 
 	t.Cleanup(func() {
@@ -82,7 +82,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 	}
 
 	if res := db.Create(&chain); res.Error != nil {
-		log.Fatalf("Unable to create testChain: %v", res.Error)
+		glog.Fatalf("Unable to create testChain: %v", res.Error)
 	}
 
 	// Cleanup runs FiLo

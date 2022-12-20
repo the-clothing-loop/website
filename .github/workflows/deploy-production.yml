@@ -46,7 +46,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
       - name: Install Dependencies Frontend
@@ -68,3 +68,12 @@ jobs:
           sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-fe-production/ /var/caddy/clothingloop.org/; \
           sudo systemctl reload caddy"
           echo "done"
+      - name: Deploy tracking
+        uses: mtchavez/airbrake-deploy-github-action@v1
+        with:
+          project-id: 469844
+          project-key: 54266d5c3488dee6d57c2d8b75fbe84a
+          environment: production
+          repository: https://github.com/CollActionteam/clothing-loop
+          revision: ${{ github.sha }}
+          user: ${{ github.actor }}

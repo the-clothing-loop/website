@@ -2,7 +2,7 @@ import react, { useEffect, useRef } from "react";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
-const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
 type MapboxType =
   | "country"

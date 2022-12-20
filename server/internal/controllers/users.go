@@ -9,6 +9,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	glog "github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm/clause"
 )
@@ -62,16 +63,16 @@ func UserGet(c *gin.Context) {
 		db.Raw(`
 SELECT users.*
 FROM users
-WHERE users.uid = ? AND is_email_verified = ?
+WHERE users.uid = ? AND is_email_verified = TRUE
 LIMIT 1
-		`, query.UserUID, true).First(user)
+		`, query.UserUID).First(user)
 	} else if query.Email != "" {
 		db.Raw(`
 SELECT users.*
 FROM users
-WHERE users.email = ? AND is_email_verified = ?
+WHERE users.email = ? AND is_email_verified = TRUE
 LIMIT 1
-		`, query.Email, true).First(user)
+		`, query.Email).First(user)
 	}
 	if user.ID == 0 {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("User not found"))
@@ -80,7 +81,7 @@ LIMIT 1
 
 	err := user.AddUserChainsToObject(db)
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
 		return
 	}
@@ -128,7 +129,7 @@ WHERE users.id IN (
 )
 	`, query.ChainUID).Scan(allUserChains).Error
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associated users of loop"))
 		return
 	}
@@ -137,10 +138,10 @@ SELECT users.*
 FROM users
 LEFT JOIN user_chains ON user_chains.user_id = users.id 
 LEFT JOIN chains      ON chains.id = user_chains.chain_id
-WHERE chains.uid = ? AND users.is_email_verified = ?
-	`, query.ChainUID, true).Scan(users).Error
+WHERE chains.uid = ? AND users.is_email_verified = TRUE
+	`, query.ChainUID).Scan(users).Error
 	if err != nil {
-		c.Error(err)
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associated loops of the users of a loop"))
 		return
 	}
@@ -151,7 +152,7 @@ WHERE chains.uid = ? AND users.is_email_verified = ?
 		for ii := range *allUserChains {
 			userChain := (*allUserChains)[ii]
 			if userChain.UserID == user.ID {
-				// log.Printf("userchain is added (userChain.ID: %d -> user.ID: %d)\n", userChain.ID, user.ID)
+				// glog.Infof("userchain is added (userChain.ID: %d -> user.ID: %d)\n", userChain.ID, user.ID)
 				thisUserChains = append(thisUserChains, userChain)
 			}
 		}
@@ -218,14 +219,14 @@ func UserUpdate(c *gin.Context) {
 				Name:  user.Name,
 			})
 			if res.Error != nil {
-				c.Error(res.Error)
+				glog.Error(res.Error)
 				gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 				return
 			}
 		} else {
 			res := db.Where("email = ?", user.Email).Delete(&models.Newsletter{})
 			if res.Error != nil {
-				c.Error(res.Error)
+				glog.Error(res.Error)
 				gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 				return
 			}

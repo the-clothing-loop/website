@@ -58,8 +58,8 @@ export default function About() {
         </div>
         <div>
           <img
-            src="/images/press-clippings-site.jpg"
-            alt=""
+            src="https://ucarecdn.com/a1229917-0a48-4401-9e16-d8939509c0b8/-/resize/x600/-/format/auto/-/quality/smart/pressclippingssite.jpg"
+            alt="Press clippings related to Clothing Loop"
             className="my-10 w-full max-h-[600px] object-contain object-center"
           />
           <div className="prose mx-auto pt-10 px-3 md:px-20">
@@ -71,7 +71,7 @@ export default function About() {
                   p: <p></p>,
                   imgTeam: (
                     <img
-                      src="/images/Team-pics.jpg"
+                      src="https://ucarecdn.com/88ce5a09-71f6-4b03-aa10-fc3a172f7f4e/-/resize/x240/-/format/auto/-/quality/smart/Teampics.jpg"
                       alt="faces of Paloeka and Nichon"
                       className="h-60 mx-auto object-contain object-center"
                     />

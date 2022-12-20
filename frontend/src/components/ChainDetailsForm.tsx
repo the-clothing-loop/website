@@ -16,7 +16,7 @@ import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
 import { circleRadiusKm } from "../util/maps";
 
-const accessToken = process.env.REACT_APP_MAPBOX_KEY || "";
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY || "";
 
 interface Props {
   onSubmit: (values: RegisterChainForm) => void;
@@ -40,7 +40,6 @@ interface Point {
   radius: number;
 }
 
-const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY || "";
 
 function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
   return {
@@ -171,7 +170,7 @@ export default function ChainDetailsForm({
     latitude: number
   ): Promise<string> {
     const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${accessToken}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${MAPBOX_TOKEN}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
     );
     const data = await response.json();
     return data.features[0]?.place_name || "";

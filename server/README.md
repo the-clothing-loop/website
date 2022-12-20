@@ -38,7 +38,7 @@ This is required for payment calls, if you are not working on those calls these 
 2. Download and install the stripe cli https://stripe.com/docs/stripe-cli
 3. From https://dashboard.stripe.com/test/apikeys
    1. Copy secret key to `stripe_secret_key` in `/server/config.yml`
-   2. Copy publishable key to `REACT_APP_STRIPE_PUBLIC_KEY` in `/frontend/.env`
+   2. Copy publishable key to `VITE_STRIPE_PUBLIC_KEY` in `/frontend/.env`
 4. Go to [webhooks](https://dashboard.stripe.com/test/webhooks) and click **Add an endpoint**
    1. Set Endpoint url `http://localhost:8080/v1/payment/webhook`
    2. Click **add endpoint**

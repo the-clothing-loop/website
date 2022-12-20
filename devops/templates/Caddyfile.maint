@@ -2,11 +2,13 @@ vpsnode1.vps.webdock.cloud {
 	respond "Hello, world!"
 }
 
-next.clothingloop.org, clothingloop.org, admin.clothingloop.org, www.clothingloop.org {
+api.clothingloop.org, clothingloop.org, admin.clothingloop.org, www.clothingloop.org {
+	header Cache-Control no-cache
+
 	root * /var/caddy/maint.clothingloop.org
 	file_server {
 		root /var/caddy/maint.clothingloop.org
-		
+
 		status 503
 	}
 	encode zstd gzip
@@ -18,6 +20,12 @@ acc.clothingloop.org {
 		output file /var/log/caddy/acc.clothingloop.org-error.log
 		format console
 		level ERROR
+	}
+
+	route {
+		header Cache-Control max-age=3600
+		header /assets/* Cache-Control max-age=31536000
+		header /api/* Cache-Control no-cache
 	}
 
 	handle_path /api/* {

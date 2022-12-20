@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"log"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/gin-gonic/gin"
+	glog "github.com/airbrake/glog/v4"
 	"gorm.io/gorm"
 )
 
@@ -27,13 +27,13 @@ func init() {
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/headers.json", l))
 		if err != nil {
-			log.Fatalf("Header not found: %+v", err)
+			glog.Fatalf("Header not found: %+v", err)
 			return
 		}
 		var header map[string]string
 		err = json.Unmarshal(b, &header)
 		if err != nil {
-			log.Fatalf("Header invalid json: %+v", err)
+			glog.Fatalf("Header invalid json: %+v", err)
 			return
 		}
 		emailsHeaders[l] = header
@@ -53,11 +53,11 @@ func getI18n(c *gin.Context) string {
 func EmailAParticipantJoinedTheLoop(
 	c *gin.Context,
 	db *gorm.DB,
-	adminEmail string,
-	adminName string,
-	participantName string,
-	participantEmail string,
-	participantPhoneNumber string,
+	adminEmail,
+	adminName,
+	participantName,
+	participantEmail,
+	participantPhoneNumber,
 	participantAddress string,
 ) bool {
 	// ? language hardcoded to english until language preference can be determined in the database
@@ -82,7 +82,7 @@ func EmailAParticipantJoinedTheLoop(
 	return app.MailSend(c, db, to, subject, body)
 }
 
-func EmailContactUserMessage(c *gin.Context, db *gorm.DB, name string, email string, message string) bool {
+func EmailContactUserMessage(c *gin.Context, db *gorm.DB, name, email, message string) bool {
 	to := app.Config.SMTP_SENDER
 	subject := fmt.Sprintf("Clothing Loop Contact Form - %s", name)
 	body := fmt.Sprintf(`<h3>Name</h3>
@@ -95,7 +95,7 @@ func EmailContactUserMessage(c *gin.Context, db *gorm.DB, name string, email str
 	return app.MailSend(c, db, to, subject, body)
 }
 
-func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name string, email string, message string) bool {
+func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name, email, message string) bool {
 	i18n := getI18n(c)
 	to := email
 	subject := emailsHeaders[i18n]["contact_confirmation"]
@@ -110,11 +110,43 @@ func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name string, email st
 	return app.MailSend(c, db, to, subject, body)
 }
 
-func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB, name string, email string) bool {
+func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB, name, email string) bool {
 	i18n := getI18n(c)
 	to := email
 	subject := emailsHeaders[i18n]["subscribed_to_newsletter"]
 	body, err := executeTemplate(c, emailsTemplates[i18n], "subscribed_to_newsletter.gohtml", gin.H{"Name": name})
+	if err != nil {
+		return false
+	}
+
+	return app.MailSend(c, db, to, subject, body)
+}
+
+func EmailRegisterVerification(c *gin.Context, db *gorm.DB, name, email, token string) bool {
+	i18n := getI18n(c)
+	to := email
+	subject := emailsHeaders[i18n]["register_verification"]
+	body, err := executeTemplate(c, emailsTemplates[i18n], "register_verification.gohtml", gin.H{
+		"Name":    name,
+		"BaseURL": app.Config.SITE_BASE_URL_FE,
+		"Token":   token,
+	})
+	if err != nil {
+		return false
+	}
+
+	return app.MailSend(c, db, to, subject, body)
+}
+
+func EmailLoginVerification(c *gin.Context, db *gorm.DB, name, email, token string) bool {
+	i18n := getI18n(c)
+	to := email
+	subject := emailsHeaders[i18n]["login_verification"]
+	body, err := executeTemplate(c, emailsTemplates[i18n], "login_verification.gohtml", gin.H{
+		"Name":    name,
+		"BaseURL": app.Config.SITE_BASE_URL_FE,
+		"Token":   token,
+	})
 	if err != nil {
 		return false
 	}
