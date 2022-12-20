@@ -40,7 +40,6 @@ interface Point {
   radius: number;
 }
 
-
 function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
   return {
     type: "FeatureCollection",
