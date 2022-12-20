@@ -129,7 +129,7 @@ function DonationFormContent() {
           price_id: radioObj.priceID,
         });
 
-        console.log(res.data);
+        console.info("payment response:", res.data);
         if (!res.data?.session_id) throw "Couldn't find session ID";
         if (!stripe) throw "Stripe object does not exist";
         const err = (

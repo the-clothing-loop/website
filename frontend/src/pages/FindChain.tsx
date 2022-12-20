@@ -39,8 +39,8 @@ type GeoJSONChains = GeoJSONTypes.FeatureCollection<
   }
 >;
 
-export const defaultTruePredicate = () => true;
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY || "";
+export const defaultTruePredicate = () => true;
 const maxZoom = 13;
 const minZoom = 3;
 
@@ -214,7 +214,6 @@ export default function FindChain({ location }: { location: Location }) {
     longLat: GeoJSON.Position | undefined
   ) {
     if (!chains || !map) return;
-    console.log("search");
     // filter
     let filterFunc = (c: Chain) => true;
     if (search.sizes.length) {
