@@ -3,13 +3,13 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import type * as GeoJSONTypes from "geojson";
+import mapboxgl from "mapbox-gl";
 
 // Project resources
 import { AuthContext } from "../providers/AuthProvider";
 import { Chain, UID } from "../api/types";
 import { chainAddUser, chainGetAll } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
-import useForm from "../util/form.hooks";
 import SearchBar, {
   SearchValues,
   toUrlSearchParams,
@@ -17,6 +17,8 @@ import SearchBar, {
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import { circleRadiusKm } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
+
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
 export type ChainPredicate = (chain: Chain) => boolean;
 
@@ -31,7 +33,6 @@ type GeoJSONChains = GeoJSONTypes.FeatureCollection<
   }
 >;
 
-const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY || "";
 export const defaultTruePredicate = () => true;
 const maxZoom = 13;
 const minZoom = 3;
