@@ -50,7 +50,8 @@ export default function Geocoding(props: Props) {
       });
 
       if (props.initialAddress) {
-        geocoder.setInput(props.initialAddress);
+        const input = (geoRef.current as HTMLElement)?.querySelector("input");
+        if (input) input.value = props.initialAddress;
       }
 
       geocoder.on("results", (e: MapboxGeocoder.Results) => {

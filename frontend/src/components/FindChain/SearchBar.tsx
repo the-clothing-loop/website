@@ -94,6 +94,7 @@ export default function SearchBar(props: Props) {
     >
       <label className="flex lg:w-auto md:flex-grow h-12 md:mr-4 sm:mb-4 md:mb-0">
         <Geocoding
+          initialAddress={values.searchTerm}
           className="z-40 w-full"
           onResult={handleSearchChange}
           onEstimate={handleSetEstimate}
