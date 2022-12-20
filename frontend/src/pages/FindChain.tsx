@@ -12,7 +12,10 @@ import { Chain, UID } from "../api/types";
 import { chainAddUser, chainGetAll } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
 import useForm from "../util/form.hooks";
-import SearchBar, { SearchValues } from "../components/FindChain/SearchBar";
+import SearchBar, {
+  SearchValues,
+  toUrlSearchParams,
+} from "../components/FindChain/SearchBar";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import { circleRadiusKm } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
@@ -66,8 +69,6 @@ function mapToGeoJSONChains(
   };
 }
 
-function mapInit() {}
-
 export default function FindChain({ location }: { location: Location }) {
   const history = useHistory();
   const urlParams = new URLSearchParams(location.search);
@@ -80,26 +81,26 @@ export default function FindChain({ location }: { location: Location }) {
   const [map, setMap] = useState<mapboxgl.Map>();
   const [zoom, setZoom] = useState(4);
   const [locationLoading, setLocationLoading] = useState(false);
-  const [searchValues, setSearchValue, setSearchValues] = useForm<SearchValues>(
-    {
-      searchTerm: urlParams.get("searchTerm") || "",
-      sizes: urlParams.getAll("sizes") || [],
-      genders: urlParams.getAll("genders") || [],
-    }
-  );
   const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
 
   const mapRef = useRef<any>();
 
   useEffect(() => {
+    const _center = [
+      Number.parseFloat(urlParams.get("lo") || ""),
+      Number.parseFloat(urlParams.get("la") || ""),
+    ];
+    const hasCenter = !!(_center.at(0) && _center.at(1));
     const _map = new mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
       projection: { name: "mercator" },
-      zoom: 4,
+      zoom: hasCenter ? 10 : 4,
       minZoom: 1,
       maxZoom: 13,
-      center: [4.8998197, 52.3673008],
+      center: (hasCenter
+        ? _center
+        : [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
       style: "mapbox://styles/mapbox/light-v11",
     });
 
@@ -208,38 +209,51 @@ export default function FindChain({ location }: { location: Location }) {
   }, []);
 
   // https://docs.mapbox.com/mapbox-gl-js/style-spec/other/#set-membership-filters
-  function handleSearch() {
+  function handleSearch(
+    search: SearchValues,
+    longLat: GeoJSON.Position | undefined
+  ) {
     if (!chains || !map) return;
     console.log("search");
     // filter
     let filterFunc = (c: Chain) => true;
-    if (searchValues.sizes.length) {
+    if (search.sizes.length) {
       filterFunc = (c) => {
         let res = true;
-        searchValues.sizes.forEach((s) => {
+        search.sizes.forEach((s) => {
           if (!c.sizes?.includes(s)) res = false;
         });
         return res;
       };
-    } else if (searchValues.genders.length) {
+    } else if (search.genders.length) {
       filterFunc = (c) => {
         let res = true;
-        searchValues.genders.forEach((s) => {
+        search.genders.forEach((s) => {
           if (!c.genders?.includes(s)) res = false;
         });
         return res;
       };
     }
-    // map.stop();
-    // map.removeSource("chains");
+    // filter map by gender or sizes
     (map.getSource("chains") as mapboxgl.GeoJSONSource).setData(
       mapToGeoJSONChains(chains, filterFunc)
     );
 
     // search
-    // if (searchValues.searchTerm.length) {
-    // map?.setCenter();
-    // }
+    if (longLat) {
+      map.setCenter(longLat as mapboxgl.LngLatLike);
+      map.setZoom(10);
+    }
+
+    window.history.replaceState(
+      {},
+      "",
+      window.location.origin +
+        window.location.pathname +
+        toUrlSearchParams(search, longLat)
+    );
+
+    setSelectedChains([]);
   }
 
   function handleClickJoin(e: MouseEvent<HTMLButtonElement>, chainUID: UID) {
@@ -316,8 +330,11 @@ export default function FindChain({ location }: { location: Location }) {
 
       <main>
         <SearchBar
-          values={searchValues}
-          setValue={setSearchValue}
+          initialValues={{
+            searchTerm: urlParams.get("q") || "",
+            sizes: urlParams.getAll("s") || [],
+            genders: urlParams.getAll("g") || [],
+          }}
           onSearch={handleSearch}
         />
 
@@ -342,17 +359,17 @@ export default function FindChain({ location }: { location: Location }) {
                 className={`btn rounded-t-full p-0 w-12 h-12 ${
                   zoom >= maxZoom
                     ? "btn-disabled bg-white/30"
-                    : "glass bg-white/60 hover:bg-white/90"
+                    : "glass bg-white/60 hover:bg-white/90 btn-outline"
                 }`}
                 onClick={() => mapZoom("+")}
               >
                 <span className="feather feather-plus text-base-content text-lg" />
               </button>
               <button
-                className={`btn rounded-b-full p-0 w-12 h-12 -mt-px ${
+                className={`btn rounded-b-full p-0 w-12 h-12 ${
                   zoom <= minZoom
                     ? "btn-disabled bg-white/30"
-                    : "glass bg-white/60 hover:bg-white/90"
+                    : "glass bg-white/60 hover:bg-white/90 btn-outline"
                 }`}
                 onClick={() => mapZoom("-")}
               >
@@ -391,7 +408,18 @@ export default function FindChain({ location }: { location: Location }) {
                           className="hidden peer"
                           id={"checkbox-desc-more-" + chain.uid}
                         />
-                        <p className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12">
+                        <p
+                          className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12"
+                          tabIndex={0}
+                          onClick={(e) => {
+                            let input = (
+                              e.target as HTMLParagraphElement
+                            ).parentElement?.querySelector("input");
+                            console.log("input", input);
+
+                            if (input) input.checked = true;
+                          }}
+                        >
                           {chain.description.split("\n").map((s, i) => {
                             if (i === 0) return s;
 

@@ -1,47 +1,79 @@
-import react, { useState, useEffect, useRef, createRef } from "react";
+import react, { useEffect, useRef } from "react";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_KEY;
 
-interface IProps {
-  onResult: (event: any) => void;
-  className?: string;
+type MapboxType =
+  | "country"
+  | "region"
+  | "postcode"
+  | "district"
+  | "place"
+  | "locality"
+  | "neighborhood"
+  | "address"
+  | "poi"
+  | "poi.landmark";
+
+export interface Estimate {
+  query: string;
+  first?: MapboxGeocoder.Result;
 }
 
-const Geocoding = ({ onResult, className }: IProps) => {
-  const [address, setAddress] = useState<string>();
-  const [results, setResults] = useState({});
+interface Props {
+  onResult: (event: MapboxGeocoder.Result) => void;
+  onEstimate?: (estimate: Estimate) => void;
+  initialAddress?: string;
+  className?: string;
+  types: MapboxType[];
+}
 
-  const geoRef = createRef();
+export default function Geocoding(props: Props) {
+  const geoRef = useRef<any>();
 
   useEffect(() => {
+    let geocoder: MapboxGeocoder;
     if (MAPBOX_TOKEN) {
-      const geocoder = new MapboxGeocoder({
+      geocoder = new MapboxGeocoder({
         accessToken: MAPBOX_TOKEN,
-        types: "country,region,place,postcode,locality,neighborhood",
+        types: props.types.join(","), //"country,region,place,postcode,locality,neighborhood",
       });
 
       if (geoRef) {
-        geocoder.addTo("#geocoding");
-        setResults(geocoder);
+        geocoder.addTo(geoRef.current);
       }
 
       // Add geocoder result to container.
-      geocoder.on("result", (e: any) => {
-        onResult(e);
-        setAddress(e.result.place_name);
+      geocoder.on("result", (e: { result: MapboxGeocoder.Result }) => {
+        props.onResult(e.result);
+      });
+
+      if (props.initialAddress) {
+        geocoder.setInput(props.initialAddress);
+      }
+
+      geocoder.on("results", (e: MapboxGeocoder.Results) => {
+        props.onEstimate &&
+          props.onEstimate({
+            query: e.query.at(0) || "",
+            first: e.features.at(0) as MapboxGeocoder.Result,
+          });
+      });
+
+      geocoder.on("clear", () => {
+        props.onEstimate &&
+          props.onEstimate({
+            query: "",
+            first: undefined,
+          });
       });
     }
+
+    return () => {
+      geocoder?.clear();
+    };
   }, []);
 
-  return (
-    <div
-      id="geocoding"
-      className={className}
-      ref={geoRef as React.RefObject<HTMLDivElement>}
-    ></div>
-  );
-};
-
-export default Geocoding;
+  return <div className={props.className} ref={geoRef}></div>;
+}

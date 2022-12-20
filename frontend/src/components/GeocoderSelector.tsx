@@ -34,41 +34,10 @@ export default function GeocoderSelector(props: Props) {
       props.onResult(e.result);
     });
 
-    // setGeocoder(_geocoder);
     return () => {
       _geocoder.clear();
     };
   }, []);
 
-  return (
-    <div className="relative z-20" ref={refDiv}>
-      {/* <input
-        type="text"
-        className="input input-secondary"
-        placeholder={
-          props.address ? props.address : t("enterYourAddress") + "*"
-        }
-      /> */}
-      {/* <input
-        ref={mapRef}
-          {...viewport}
-          width="100%"
-          height="100%"
-          onViewportChange={handleViewportChange}
-          mapboxApiAccessToken={MAPBOX_TOKEN}
-        >
-          <Geocoder
-            className="address-geocoder"
-            onResult={useCallback((result) => props.onResult(result), [])}
-            mapRef={mapRef}
-            onViewportChange={handleGeocoderViewportChange}
-            mapboxApiAccessToken={MAPBOX_TOKEN}
-            position="top-left"
-            address={props.address}
-          />
-        </MapGL>
-      </div>
-      <div /> */}
-    </div>
-  );
+  return <div className="relative z-20" ref={refDiv}></div>;
 }
