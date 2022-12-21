@@ -155,7 +155,18 @@ export default function FindChain({ location }: { location: Location }) {
             "circle-stroke-width": 0,
           },
         });
-        _map.on("click", "chain-single", (e) => {
+        _map.addLayer({
+          id: "chain-single-minimum",
+          type: "circle",
+          source: "chains",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-color": ["rgba", 240, 196, 73, 0.6], // #f0c449
+            "circle-radius": 5,
+            "circle-stroke-width": 0,
+          },
+        });
+        _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
           if (e.features) {
             let uids = e.features
               .map((f) => f.properties?.uid)
