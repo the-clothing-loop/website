@@ -71,7 +71,7 @@ export default function Counters() {
             <span className="feather feather-arrow-right" />
           </a>
         </div>
-        <div className="stat-title opacity-100">{t("ourGoals")}</div>
+        <div className="stat-title opacity-100">{t("readOurImpactReport")}</div>
       </div>
     </div>
   );
