@@ -5,18 +5,20 @@ export function GinParseErrors(
   t: TFunction<"translation", undefined>,
   e: string | { data: string } | any
 ): string {
-  if (!(typeof e?.data === "string")) {
-    if (typeof e === "string" && e !== "") return e;
-
-    return t("genericError") + ": " + JSON.stringify(e);
+  if (typeof e === "string") {
+    return e !== "" ? e : t("genericError");
   }
-  let m = e.matchAll(regx);
-  let res = Array.from(m) as string[];
-  let errs = res.map((a) => a.at(3) || "");
+  if (e?.data && typeof e.data === "string") {
+    let m = e.data.matchAll(regx);
+    let res = Array.from(m) as string[];
+    let errs = res.map((a) => a.at(3) || "");
 
-  if (!errs.length) {
-    return e;
+    if (!errs.length) {
+      return e.data;
+    }
+
+    return t("required") + ": " + errs.join(", ");
   }
 
-  return t("required") + ": " + errs.join(", ");
+  return t("genericError") + ": " + JSON.stringify(e?.data || e);
 }
