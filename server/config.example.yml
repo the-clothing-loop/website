@@ -1,7 +1,7 @@
 host: "127.0.0.1"
 port: 8084
 
-site_base_url_api: "http://localhost:8084"
+site_base_url_api: "http://localhost:3000/api"
 site_base_url_fe: "http://localhost:3000"
 
 cookie_domain: "localhost"
