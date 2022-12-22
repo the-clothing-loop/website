@@ -48,7 +48,7 @@
         window.devicePixelRatio || 1,
       ],
       b: is_bot(),
-      q: location.search,
+      q: "",
     };
 
     var rcb, pcb, tcb; // Save callbacks to apply later.
