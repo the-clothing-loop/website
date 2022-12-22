@@ -121,7 +121,7 @@ export default function ChainDetailsForm({
         type: "circle",
         source: "source",
         paint: {
-          "circle-color": ["rgba", 240, 196, 73, 0.6], // #f0c449
+          "circle-color": ["rgba", 240, 196, 73, 0.9], // #f0c449
           "circle-radius": [
             "interpolate",
             ["exponential", 2],
@@ -132,6 +132,7 @@ export default function ChainDetailsForm({
             ["get", "radius"],
           ],
           "circle-stroke-width": 0,
+          "circle-blur": 0.6,
         },
       });
 
