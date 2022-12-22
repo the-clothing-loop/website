@@ -327,9 +327,11 @@ export default function Home() {
           <ul className="max-w-screen-md mx-auto flex flex-wrap items-center justify-evenly mb-2 md:mb-20">
             {supporters[0].map((el, i) => {
               return (
-                <li className="w-1/2 md:w-1/4 flex justify-center mb-4 md:mb-0">
+                <li
+                  className="w-1/2 md:w-1/4 flex justify-center mb-4 md:mb-0"
+                  key={i}
+                >
                   <a
-                    key={i}
                     className="w-40"
                     href={el.url}
                     target="_blank"
@@ -342,9 +344,11 @@ export default function Home() {
             })}
             {supporters[1].map((el, i) => {
               return (
-                <li className="w-full md:w-1/3 flex justify-center mb-4 md:mb-0">
+                <li
+                  className="w-full md:w-1/3 flex justify-center mb-4 md:mb-0"
+                  key={i}
+                >
                   <a
-                    key={i}
                     className="w-52"
                     href={el.url}
                     target="_blank"

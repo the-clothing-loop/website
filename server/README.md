@@ -15,7 +15,7 @@ These extensions will popup as advised extensions
 
 #### 1.3. Install the golang extension dependencies
 
-1. Press `ctrl` + `t`
+1. Press `ctrl` + `p` (MacOS: `command` + `p`)
 2. Paste `>Go: Install/Update Tools` into text input
 3. Select all options
 4. click **OK**
@@ -26,7 +26,7 @@ These extensions will popup as advised extensions
 
 ### 3. Setup config files
 
-Copy `/server/config.example.yml` to `/server/config.yml`
+Copy `/server/config.example.yml` to `/server/config.dev.yml`
 
 Some values are obfuscated how to add these are explained below
 
@@ -47,7 +47,13 @@ This is required for payment calls, if you are not working on those calls these 
 
 You must do this for the server to run properly.
 
-Copy the value of `MYSQL_PASSWORD` found in `/server/docker/docker-compose.yml`, use the password to fill in `db_pass` in `/server/config.yml`
+Copy the value of `MYSQL_PASSWORD` found in `/server/docker/docker-compose.yml`, use the password to fill in `db_pass` in `/server/config.dev.yml`
+
+#### 3.3 Copy to test config
+
+Copy `/server/config.dev.yml` to `/server/config.test.yml`
+
+This enables tests to use the same database.
 
 ### 4. Start server
 
@@ -68,9 +74,9 @@ To document, test and use the server independently, [Postman](https://www.postma
 
 Install one of the Postman Rest client options here:
 
-a. app: https://www.postman.com/downloads/
-b. browser agent: https://www.postman.com/downloads/postman-agent/
-c. cli: https://learning.postman.com/docs/postman-cli/postman-cli-installation/
+1. app: https://www.postman.com/downloads/
+2. browser agent: https://www.postman.com/downloads/postman-agent/
+3. cli: https://learning.postman.com/docs/postman-cli/postman-cli-installation/
 
 #### 6.2. Use project in postman
 

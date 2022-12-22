@@ -7,8 +7,8 @@ import (
 	"html/template"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
-	"github.com/gin-gonic/gin"
 	glog "github.com/airbrake/glog/v4"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 

@@ -60,14 +60,14 @@ export default function CategoriesDropdown({
         {Object.keys(categories).map((gender: string | Genders) => {
           let checked = selectedGenders.includes(gender);
           return (
-            <li>
+            <li key={gender}>
               <label>
                 <input
                   name="genders"
                   type="checkbox"
                   checked={checked}
                   className="checkbox"
-                  onClick={() => dropdown.change(gender)}
+                  onChange={() => dropdown.change(gender)}
                 />
                 {t(GenderI18nKeys[gender])}
               </label>
