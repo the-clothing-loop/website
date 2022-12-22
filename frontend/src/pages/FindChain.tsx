@@ -142,7 +142,7 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: ["!", ["has", "point_count"]],
           paint: {
-            "circle-color": ["rgba", 240, 196, 73, 0.6], // #f0c449
+            "circle-color": ["rgba", 240, 196, 73, 0.9], // #f0c449
             "circle-radius": [
               "interpolate",
               ["exponential", 2],
@@ -153,6 +153,7 @@ export default function FindChain({ location }: { location: Location }) {
               ["get", "radius"],
             ],
             "circle-stroke-width": 0,
+            "circle-blur": 0.6,
           },
         });
         _map.addLayer({
@@ -467,7 +468,7 @@ export default function FindChain({ location }: { location: Location }) {
                   {authUser?.is_root_admin ? (
                     <button
                       key={"btn-view"}
-                      className="btn btn-sm btn-secondary btn-outline"
+                      className="btn btn-sm btn-secondary btn-outline mb-3"
                       onClick={(e) => handleClickViewChain(e, chain.uid)}
                     >
                       {t("viewChain")}
