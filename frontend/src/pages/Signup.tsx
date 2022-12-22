@@ -36,7 +36,7 @@ export default function Signup() {
   const { chainUID } = useParams<Params>();
   const [chain, setChain] = useState<Chain | null>(null);
   const { t } = useTranslation();
-  const { addToastError } = useContext(ToastContext);
+  const { addToastError, addToastStatic } = useContext(ToastContext);
   const [submitted, setSubmitted] = useState(false);
   const [jsValues, setJsValue] = useForm({
     address: "",
@@ -82,11 +82,27 @@ export default function Signup() {
         );
         setSubmitted(true);
       } catch (err: any) {
-        console.error(`Error creating user: ${JSON.stringify(err)}`);
+        console.error("Error creating user:", err);
 
         if (err?.code === "auth/invalid-phone-number") {
+          console.log("1");
           addToastError(t("pleaseEnterAValid.phoneNumber"));
+        } else if (err?.status === 409) {
+          console.log("2");
+
+          addToastStatic({
+            type: "info",
+            message: err.data,
+            actions: [
+              {
+                text: t("login"),
+                type: "primary",
+                fn: () => history.push("/users/login"),
+              },
+            ],
+          });
         } else {
+          console.log("3");
           addToastError(GinParseErrors(t, err));
         }
       }
