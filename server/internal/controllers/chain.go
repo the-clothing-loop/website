@@ -289,7 +289,7 @@ func ChainAddUser(c *gin.Context) {
 
 	userChain := &models.UserChain{}
 	if res := db.Where("user_id = ? AND chain_id = ?", user.ID, chain.ID).First(userChain); res.Error == nil {
-		if userChain.IsChainAdmin != body.IsChainAdmin {
+		if !userChain.IsChainAdmin && body.IsChainAdmin {
 			userChain.IsChainAdmin = body.IsChainAdmin
 			db.Save(userChain)
 		}
