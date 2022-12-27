@@ -3,6 +3,24 @@
 <!-- prettier-ignore -->
 | Name                 | Hex       | Colour                                                             |
 |:---------------------|:---------:|:-------------------------------------------------------------------|
+| Black                | `#3c3c3b` | ![](https://img.shields.io/badge/-black-%233c3c3b)                 |
+| Grey                 | `#a5a5a5` | ![](https://img.shields.io/badge/-grey-%23a5a5a5)                  |
+| Grey light           | `#e8e8e8` | ![](https://img.shields.io/badge/-grey--light-%23e8e8e8)           |
+| White                | `#ffffff` | ![](https://img.shields.io/badge/-white-%23ffffff)                 |
+|                      |           |                                                                    |
+| **Current**          |           |                                                                    |
+| Teal                 | `#48808b` | ![](https://img.shields.io/badge/-teal-%2348808b)                  |
+| Teal light           | `#ecf2f3` | ![](https://img.shields.io/badge/-teal--light-%23ecf2f3)           |
+| Yellow darkest       | `#c58c41` | ![](https://img.shields.io/badge/-yellow--darkest-%23c58c41)       |
+| Yellow darker        | `#f1a40f` | ![](https://img.shields.io/badge/-yellow--darker-%23f1a40f)        |
+| Yellow dark          | `#f4b63f` | ![](https://img.shields.io/badge/-yellow--dark-%23f4b63f)          |
+| Yellow               | `#f7c86f` | ![](https://img.shields.io/badge/-yellow-%23f7c86f)                |
+| Light Blue           | `#98d9de` | ![](https://img.shields.io/badge/-light--blue-%2398d9de)           |
+| Turquoise            | `#518d7e` | ![](https://img.shields.io/badge/-turquoise-%23518d7e)             |
+| Green                | `#4caf50` | ![](https://img.shields.io/badge/-green-%234caf50)                 |
+| Red                  | `#ef5350` | ![](https://img.shields.io/badge/-red-%23ef5350)                   |
+|                      |           |                                                                    |
+| **Original**         |           |                                                                    |
 | Sky blue             | `#7ecfe0` | ![](https://img.shields.io/badge/-sky--blue-%237ecfe0)             |
 | Sky blue light       | `#bfe7ef` | ![](https://img.shields.io/badge/-sky--blue--light-%23bfe7ef)      |
 | Blue                 | `#1467b3` | ![](https://img.shields.io/badge/-blue-%231467b3)                  |
