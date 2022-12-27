@@ -30,5 +30,5 @@ export interface Chain {
   genders: string[] | null;
   sizes: string[] | null;
   published: boolean;
-  openToNewMembers: boolean;
+  open_to_new_members: boolean;
 }
