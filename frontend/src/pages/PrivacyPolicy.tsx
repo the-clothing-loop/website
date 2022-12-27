@@ -149,9 +149,9 @@ export default function PrivacyPolicy() {
 
           <p>
             Subscriber’s personal information (such as name, email, phone
-            number, address) are stored by the Clothing Loop on a Webdock VPS
-            server, which is located in Helsinki, Europe - more information
-            about their privacy policy{" "}
+            number, address) are stored by the Clothing Loop on a European based
+            server that falls under European Law. More information about their
+            privacy policy{" "}
             <a
               href="https://webdock.io/en/docs/legal/privacy-policy"
               target="_blank"
@@ -159,15 +159,16 @@ export default function PrivacyPolicy() {
             >
               here
             </a>
+            .
           </p>
           <p>
             The Clothing Loop will keep your personal data for a time-period as
             long as you are enrolled with the Clothing Loop. Once this time
             period has expired your data will be deleted by the Clothing Loop
-            Admin team. The local host will delete your data from the glide-app,
+            Admin team. The local host will delete your data from the Glide-app,
             if used, or from any other tool or list for sharing your data with
             other local members of the Clothing Loop and you yourself can leave
-            the relevant local app-groups, facebook groups etc.
+            the relevant local app-group, Facebook group etc.
           </p>
 
           <h2>Newsletter and communication:</h2>
@@ -181,7 +182,9 @@ export default function PrivacyPolicy() {
           <p>
             If you have agreed to receive our newsletter, you may always opt out
             at a later date. You can unsubscribe via the unsubscribe option at
-            the bottom of the newsletter.
+            the bottom of the newsletter. If you are a Loop Host, you will
+            automatically receive our email updates as they contain relevant
+            information for hosting a Loop.
           </p>
 
           <h2>What are your data protection rights?</h2>
