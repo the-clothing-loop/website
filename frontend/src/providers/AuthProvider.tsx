@@ -1,5 +1,6 @@
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { History } from "history";
 import { loginValidate as apiLogin, logout as apiLogout } from "../api/login";
 import { User } from "../api/types";
 import { userGetByUID } from "../api/user";
@@ -94,6 +95,8 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
         }
       }
     });
+
+    runGoatCounter(history);
   }, []);
   const contextValue: AuthProps = {
     authUser: user,
@@ -105,4 +108,18 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
+}
+
+function runGoatCounter(history: History) {
+  if (window.location.host !== "www.clothingloop.org") return;
+  if (!window.goatcounter) return;
+
+  window.goatcounter.count({
+    path: location.pathname,
+  });
+  history.listen((location, action) => {
+    window.goatcounter.count({
+      path: location.pathname,
+    });
+  });
 }

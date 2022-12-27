@@ -17,15 +17,12 @@
     <link rel="stylesheet" href="/fonts/playfair-display/style.css" />
 
     <script>
-      // Only load on production environment.
-      if (window.location.host !== "www.clothingloop.org")
-        window.goatcounter = { no_onload: true };
+      window.goatcounter = {
+        no_onload: true,
+        endpoint: "https://clothingloop.goatcounter.com/count",
+      };
     </script>
-    <script
-      data-goatcounter="https://clothingloop.goatcounter.com/count"
-      async
-      src="https://gc.zgo.at/count.js"
-    ></script>
+    <script async type="module" src="/src/util/goatcounter.js"></script>
 
     <title>The Clothing Loop</title>
   </head>

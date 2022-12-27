@@ -69,7 +69,7 @@ export default function ChainMemberList() {
     try {
       await chainUpdate({
         uid: chainUID,
-        openToNewMembers: isChecked,
+        open_to_new_members: isChecked,
       });
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
@@ -86,7 +86,7 @@ export default function ChainMemberList() {
         const chainUsers = (await userGetAllByChain(chainUID)).data;
         setUsers(chainUsers);
         setPublished(chainData.published);
-        setOpenToNewMembers(chainData.openToNewMembers);
+        setOpenToNewMembers(chainData.open_to_new_members);
       } catch (error: any) {
         console.error(`Error getting chain: ${error}`);
       }
