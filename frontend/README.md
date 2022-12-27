@@ -1,5 +1,18 @@
 # Vite Frontend
 
+## Development install
+
+1. Install NodeJS, this project tries to stay on the latest LTS version (v18 as of writing)
+
+   For Windows or Mac: https://nodejs.org/en/
+   For Linux: https://nodejs.org/en/download/package-manager/
+
+2. `cd` into the frontend directory.
+3. Copy the env file `cp .env-example .env` and fill in the omitted values inside.
+4. Run `npm i` to install all necessary dependencies.
+5. Ensure that the api server is running.
+6. Run `npm run start`
+
 ## Commands
 
 In the project directory, you can run:
