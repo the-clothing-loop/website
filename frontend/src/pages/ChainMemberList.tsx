@@ -135,7 +135,6 @@ export default function ChainMemberList() {
                 </dd>
                 <dt className="font-bold mb-2">{t("participants")}</dt>
                 <dd className="text-sm mb-1">
-                  {users.length.toString()}{" "}
                   {t("peopleWithCount", { count: users.length })}
                 </dd>
               </dl>
