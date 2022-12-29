@@ -1,10 +1,9 @@
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { FormEvent, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Geocoding, { Estimate } from "../../pages/Geocoding";
 
 import categories from "../../util/categories";
-import useForm, { SetValue } from "../../util/form.hooks";
+import useForm from "../../util/form.hooks";
 import CategoriesDropdown from "../CategoriesDropdown";
 import SizesDropdown from "../SizesDropdown";
 
@@ -43,8 +42,6 @@ export function toUrlSearchParams(
 
 export default function SearchBar(props: Props) {
   const { t } = useTranslation();
-  const [estimate, setEstimate] = useState<Estimate>();
-  const [isEstimate, setIsEstimate] = useState(false);
   const [longLat, setLongLat] = useState<GeoJSON.Position>();
   const [values, setValue] = useForm<SearchValues>({
     searchTerm: "",
@@ -53,30 +50,15 @@ export default function SearchBar(props: Props) {
     ...props.initialValues,
   });
 
-  function handleSearchChange(e: MapboxGeocoder.Result) {
-    setValue("searchTerm", e.place_name);
-    setLongLat(e.geometry.coordinates);
-    setIsEstimate(false);
+  function handleSearchChange(e: Estimate) {
+    setValue("searchTerm", e.query);
+    setLongLat(e.first);
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    let _longLat = longLat;
-    let _search = values;
 
-    // This happens when the user cancels address selection
-    if (isEstimate && estimate) {
-      console.log("estimate", estimate);
-      _longLat = estimate.first?.geometry.coordinates;
-      _search.searchTerm = estimate.query;
-    }
-
-    props.onSearch(_search, _longLat);
-  }
-
-  function handleSetEstimate(e: Estimate) {
-    setEstimate(e);
-    setIsEstimate(true);
+    props.onSearch(values, longLat);
   }
 
   const emptyValues = useMemo(
@@ -97,7 +79,6 @@ export default function SearchBar(props: Props) {
           initialAddress={values.searchTerm}
           className="z-40 w-full"
           onResult={handleSearchChange}
-          onEstimate={handleSetEstimate}
           types={["country", "region", "place", "postcode", "address"]}
         />
       </label>
