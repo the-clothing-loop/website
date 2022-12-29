@@ -127,7 +127,7 @@ export default function Signup() {
                   </div>
                   <GeocoderSelector
                     required
-                    onResult={(g) => setJsValue("address", g.place_name)}
+                    onResult={(g) => setJsValue("address", g.query)}
                   />
                 </label>
                 <FormActions />
