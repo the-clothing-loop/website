@@ -52,3 +52,9 @@ export function userAddAsChainAdmin(chainUID: string, userUID: string) {
 export function userDelete(chainUID: string, userUID: string) {
   return axios.delete(`/v2/user/?user_uid=${userUID}&chain_uid=${chainUID}`);
 }
+//in user.uid
+//out user with userUID deleted from data base
+export function purge(userUID: string) {
+  console.log("User has been purged from the system");
+  return axios.delete(`v2/user/purge?user_uid=${userUID}`);
+}
