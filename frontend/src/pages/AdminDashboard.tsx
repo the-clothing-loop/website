@@ -5,7 +5,7 @@ import { AuthContext } from "../providers/AuthProvider";
 import { purge } from "../api/user";
 //added useHistory for boot out after account deletion
 import { Link, useHistory } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext} from "react";
 import { useTranslation } from "react-i18next";
 
 export default function AdminDashboard() {
@@ -56,7 +56,7 @@ export default function AdminDashboard() {
                 className="btn btn-primary bg-red block"
                 onClick={deleteClicked}
               >
-                {t("Delete User")}
+                {t("Delete User")} {/*replace with translate tag when available*/}
               </button>
             </div>
           </div>
