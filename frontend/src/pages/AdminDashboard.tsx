@@ -18,7 +18,7 @@ export default function AdminDashboard() {
     console.log("Delete Clicked");
     if (
       window.confirm(
-        "Account Deletion is permanent, Are you sure you wish to proceed?"
+        "Account Deletion is permanent: proceed?"
       )
     ) {
       purge(authUser?.uid);
