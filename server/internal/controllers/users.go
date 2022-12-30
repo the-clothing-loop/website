@@ -261,3 +261,32 @@ func UserDelete(c *gin.Context) {
 
 	db.Delete(&models.User{}, userID)
 }
+
+// similar to ../sql/delete-user
+func Purge(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		UserUID string `form:"user_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
+		return
+	}
+
+	var userID uint //db.Raw ret SELECT to .Scan: userID = id WHERE uid == UserUID
+	db.Raw("SELECT id FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&userID)
+	if userID == 0 {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("User is not found"))
+		return
+	}
+	//VAR needed for newsletters, newsletters.id not equivalent to user_id
+	var email string
+	db.Raw("SELECT email FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&email)
+	// DELETE FROM {table} WHERE user_id = userID;
+	db.Where("user_id = ?", userID).Delete(&models.UserToken{})
+	db.Where("user_id = ?", userID).Delete(&models.UserChain{})
+	db.Delete(&models.User{}, userID)
+	//DELETE FROM newsletters WHERE email = email
+	db.Where("email = ?", email).Delete(&models.Newsletter{})
+}
