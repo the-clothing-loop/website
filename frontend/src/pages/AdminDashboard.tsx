@@ -1,7 +1,9 @@
 //Resources
 import { TwoColumnLayout } from "../components/Layouts";
 import { AuthContext } from "../providers/AuthProvider";
+//account settings
 import { purge } from "../api/user";
+//added useHistory for boot out after account deletion
 import { Link, useHistory } from "react-router-dom";
 import { useContext} from "react";
 import { useTranslation } from "react-i18next";
@@ -10,13 +12,13 @@ export default function AdminDashboard() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
 
-  const history = useHistory(); 
+  const history = useHistory(); //added history
   function deleteClicked() {
-
+    //prompt user, if(selection) purge user
     console.log("Delete Clicked");
     if (
       window.confirm(
-        "Account Deletion is permanent, Are you sure you wish to proceed?"
+        "Account Deletion is permanent: proceed?"
       )
     ) {
       purge(authUser?.uid);
@@ -38,7 +40,7 @@ export default function AdminDashboard() {
             </Link>
 
             <Link
-              className="btn btn-primary btn-link text-base block mb-4" 
+              className="btn btn-primary btn-link text-base block mb-4" //added mb-4
               target="_blank"
               to={{
                 pathname:
@@ -48,15 +50,15 @@ export default function AdminDashboard() {
               {t("goToTheToolkitFolder")}
             </Link>
 
+            {/*container for del-btn set appears at bottom of parent*/}
             <div className="relative align-bottom">
               <button
                 className="btn btn-primary bg-red block"
                 onClick={deleteClicked}
               >
-                {t("Delete User")} 
+                {t("Delete User")} {/*replace with translate tag when available*/}
               </button>
             </div>
-
           </div>
         </TwoColumnLayout>
       )}
