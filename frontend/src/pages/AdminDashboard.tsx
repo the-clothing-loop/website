@@ -1,4 +1,4 @@
-
+//Resources
 import { TwoColumnLayout } from "../components/Layouts";
 import { AuthContext } from "../providers/AuthProvider";
 import { purge } from "../api/user";
