@@ -1,19 +1,36 @@
-
+//Resources
 import { TwoColumnLayout } from "../components/Layouts";
 import { AuthContext } from "../providers/AuthProvider";
 import { purge } from "../api/user";
+import { ToastContext } from "../providers/ToastProvider";
 import { Link, useHistory } from "react-router-dom";
-import { useContext} from "react";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { Warning } from "postcss";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
 
-  const history = useHistory(); 
+  const history = useHistory();
+  const { addToastStatic } = useContext(ToastContext);
   function deleteClicked() {
-
-    console.log("Delete Clicked");
+    addToastStatic({
+      message: "Deletion is Permanent: Proceed?",
+      type: "warning",
+      actions: [
+        {
+          text: t("Continue"),
+          type: "ghost",
+          fn: () => {
+            purge(authUser?.uid);
+            console.log("User");
+            history.push("/users/logout");
+          },
+        },
+      ],
+    });
+    /*console.log("Delete Clicked");
     if (
       window.confirm(
         "Account Deletion is permanent, Are you sure you wish to proceed?"
@@ -22,7 +39,7 @@ export default function AdminDashboard() {
       purge(authUser?.uid);
       console.log("User");
       history.push("/users/logout");
-    }
+    }*/
   }
 
   return (
@@ -38,7 +55,7 @@ export default function AdminDashboard() {
             </Link>
 
             <Link
-              className="btn btn-primary btn-link text-base block mb-4" 
+              className="btn btn-primary btn-link text-base block mb-4"
               target="_blank"
               to={{
                 pathname:
@@ -53,10 +70,9 @@ export default function AdminDashboard() {
                 className="btn btn-primary bg-red block"
                 onClick={deleteClicked}
               >
-                {t("Delete User")} 
+                {t("Delete User")}
               </button>
             </div>
-
           </div>
         </TwoColumnLayout>
       )}
