@@ -2,6 +2,7 @@
 import { TwoColumnLayout } from "../components/Layouts";
 import { AuthContext } from "../providers/AuthProvider";
 import { purge } from "../api/user";
+import { ToastContext } from "../providers/ToastProvider";
 import { Link, useHistory } from "react-router-dom";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,14 +11,21 @@ export default function AdminDashboard() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
 
-  const history = useHistory();
+  const history = useHistory(); 
+  const { addToastStatic} = useContext(ToastContext);
   function deleteClicked() {
-    console.log("Delete Clicked");
-    if (window.confirm("Account Deletion is permanent: proceed?")) {
-      purge(authUser?.uid);
-      console.log("User");
-      history.push("/users/logout");
-    }
+    addToastStatic({
+      message: ("Deletion is Permanent: Proceed?"),
+      type: "warning",
+      actions: [ {
+        text: t("Continue"),
+        type: "ghost",
+        fn: () => { 
+          purge(authUser?.uid);
+          console.log("User");
+          history.push("/users/logout");},
+      },]
+    });
   }
 
   return (
