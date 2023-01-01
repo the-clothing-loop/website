@@ -4,7 +4,7 @@ import { AuthContext } from "../providers/AuthProvider";
 import { purge } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { Link, useHistory } from "react-router-dom";
-import { useContext} from "react";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Warning } from "postcss";
 
@@ -42,7 +42,7 @@ export default function AdminDashboard() {
             </Link>
 
             <Link
-              className="btn btn-primary btn-link text-base block mb-4" 
+              className="btn btn-primary btn-link text-base block mb-4"
               target="_blank"
               to={{
                 pathname:
@@ -57,10 +57,9 @@ export default function AdminDashboard() {
                 className="btn btn-primary bg-red block"
                 onClick={deleteClicked}
               >
-                {t("Delete User")} 
+                {t("Delete User")}
               </button>
             </div>
-
           </div>
         </TwoColumnLayout>
       )}
