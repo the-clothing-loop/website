@@ -35,9 +35,9 @@ stripe-dev:
 	stripe listen --forward-to localhost:8084/v2/payment/webhook
 
 docker-start:
-	@cd docker; docker-compose up -d
+	@cd docker; docker compose up -d
 docker-stop:
-	@cd docker; docker-compose down
+	@cd docker; docker compose down
 
 firebase-migrate:
 	@go run cmd/firebase-migrate/main.go
