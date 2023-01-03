@@ -283,8 +283,18 @@ func Purge(c *gin.Context) {
 	var email string
 	db.Raw("SELECT email FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&email)
 
+	var testChain uint
+	db.Raw("SELECT chain_id FROM user_chains Where user_id = ? AND is_chain_admin = 1", userID).Scan(&testChain)
+	var adminCount uint
+	db.Raw("SELECT COUNT(*) FROM `user_chains` WHERE chain_id = ? AND is_chain_admin = 1", testChain).Scan(&adminCount)
+	if adminCount <= 1 {
+		db.Where("chain_id = ?", testChain).Delete(&models.UserChain{})
+		db.Where("id = ?", testChain).Delete(&models.Chain{})
+	} else {
+		db.Where("user_id = ?", userID).Delete(&models.UserChain{})
+	}
 	db.Where("user_id = ?", userID).Delete(&models.UserToken{})
-	db.Where("user_id = ?", userID).Delete(&models.UserChain{})
 	db.Delete(&models.User{}, userID)
 	db.Where("email = ?", email).Delete(&models.Newsletter{})
+
 }
