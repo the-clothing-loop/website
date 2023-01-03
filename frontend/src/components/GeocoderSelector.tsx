@@ -41,7 +41,7 @@ export default function GeocoderSelector(props: Props) {
     _geocoder.on("results", (e: MapboxGeocoder.Results) => {
       props.onResult({
         query: (e as any)?.config.query || "",
-        first: e.features.at(0)?.geometry.coordinates,
+        first: e.features[0]?.geometry.coordinates,
       });
     });
 

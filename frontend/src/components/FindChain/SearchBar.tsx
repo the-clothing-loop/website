@@ -27,8 +27,8 @@ export function toUrlSearchParams(
 ) {
   const queryParams = new URLSearchParams();
   if (longLat) {
-    queryParams.append("lo", longLat.at(0)!.toString());
-    queryParams.append("la", longLat.at(1)!.toString());
+    queryParams.append("lo", longLat[0]!.toString());
+    queryParams.append("la", longLat[1]!.toString());
   }
   if (search.searchTerm) queryParams.append("q", search.searchTerm);
   for (const size of search.sizes) {

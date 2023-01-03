@@ -108,7 +108,7 @@ export default function FindChain({ location }: { location: Location }) {
       Number.parseFloat(urlParams.get("lo") || ""),
       Number.parseFloat(urlParams.get("la") || ""),
     ];
-    const hasCenter = !!(_center.at(0) && _center.at(1));
+    const hasCenter = !!(_center[0] && _center[1]);
     const _map = new mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
