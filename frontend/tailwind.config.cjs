@@ -3,25 +3,25 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 const colors = {
   transparent: "transparent",
   white: "#ffff",
-  black: "#3C3C3B",
+  black: "#3c3c3b",
   teal: {
     light: "#ecf2f3",
-    DEFAULT: "#48808B",
+    DEFAULT: "#48808b",
   },
   yellow: {
     DEFAULT: "#f7c86f",
-    dark: "#F4B63F",
-    darker: "#F1A40F",
-    darkest: "#C58C41",
+    dark: "#f4b63f",
+    darker: "#f1a40f",
+    darkest: "#c58c41",
   },
-  // aqua: "#D5ECDF",
-  lightBlue: "#98D9DE",
-  turquoise: "#518D7E",
-  green: "#4CAF50",
-  red: "#EF5350",
+  // aqua: "#d5ecdf",
+  lightBlue: "#98d9de",
+  turquoise: "#518d7e",
+  green: "#4caf50",
+  red: "#ef5350",
   grey: {
     light: "#e8e8e8",
-    DEFAULT: "#A5A5A5",
+    DEFAULT: "#a5a5a5",
   },
 };
 
