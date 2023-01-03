@@ -231,10 +231,10 @@ export default function Home() {
         </section>
       </div>
       <div className="bg-turquoise">
-        <div className="max-w-screen-xl mx-auto">
+        <div className="w-full sm:max-md:max-w-screen-sm md:max-w-screen-xl mx-auto">
           <section className="flex flex-col md:flex-row items-center mb-6 md:mb-20 font-bold">
-            <div className="w-screen md:w-1/2 flex justify-end p-6 md:px-10 md:py-0 text-base-100">
-              <div className="w-full md:max-w-[600px]">
+            <div className="w-full md:w-1/2 flex justify-end p-6 md:px-10 md:py-0 text-base-100">
+              <div className="w-full md:max-w-screen-sm">
                 <h2 className="text-6xl md:text-8xl font-serif mb-6">
                   {t("ourImpact")}
                 </h2>
@@ -242,7 +242,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="md:w-1/2">
+            <div className="md:w-1/2 sm:max-md:pb-8">
               <img
                 className="object-cover object-top w-full max-h-[600px]"
                 src={Selfies}
