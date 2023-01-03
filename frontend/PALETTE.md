@@ -41,17 +41,17 @@ The level AAA requires a contrast ratio of at least **7:1** for normal text and 
 | Mustard light        | `#f7e2a3` | ![](https://img.shields.io/badge/-mustard--light-%23f7e2a3)        | [8.6:1](https://coolors.co/contrast-checker/3c3c3b-f7e2a3)   |
 | Teak                 | `#cc8c2a` | ![](https://img.shields.io/badge/-teak-%23cc8c2a)                  | [3.87:1](https://coolors.co/contrast-checker/3c3c3b-cc8c2a)  |
 | Teak light           | `#e5c594` | ![](https://img.shields.io/badge/-teak--light-%23e5c594)           | [6.7:1](https://coolors.co/contrast-checker/3c3c3b-e5c594)   |
-| Orange               | `#ef953d` | ![](https://img.shields.io/badge/-orange-%23ef953d)                | [](https://coolors.co/contrast-checker/ffffff-ef953d)  |
-| Orange light         | `#f6c99f` | ![](https://img.shields.io/badge/-orange--light-%23f6c99f)         | [](https://coolors.co/contrast-checker/ffffff-f6c99f)  |
-| Beige                | `#c0b46c` | ![](https://img.shields.io/badge/-beige-%23c0b46c)                 | [](https://coolors.co/contrast-checker/ffffff-c0b46c)  |
-| Beige light          | `#dfd9b5` | ![](https://img.shields.io/badge/-beige--light-%23dfd9b5)          | [](https://coolors.co/contrast-checker/ffffff-dfd9b5)  |
-| Leaf green           | `#a6c665` | ![](https://img.shields.io/badge/-leaf--green-%23a6c665)           | [](https://coolors.co/contrast-checker/ffffff-a6c665)  |
-| Leaf green light     | `#d2e2b3` | ![](https://img.shields.io/badge/-leaf--green--light-%23d2e2b3)    | [](https://coolors.co/contrast-checker/ffffff-d2e2b3)  |
-| Pine                 | `#66926e` | ![](https://img.shields.io/badge/-pine-%2366926e)                  | [](https://coolors.co/contrast-checker/ffffff-66926e)  |
-| Pine light           | `#b1c8b6` | ![](https://img.shields.io/badge/-pine--light-%23b1c8b6)           | [](https://coolors.co/contrast-checker/ffffff-b1c8b6)  |
-| Mint                 | `#86cbac` | ![](https://img.shields.io/badge/-mint-%2386cbac)                  | [](https://coolors.co/contrast-checker/ffffff-86cbac)  |
-| Mint light           | `#c3e5d5` | ![](https://img.shields.io/badge/-mint--light-%23c3e5d5)           | [](https://coolors.co/contrast-checker/ffffff-c3e5d5)  |
-| Brown                | `#ad4641` | ![](https://img.shields.io/badge/-brown-%23ad4641)                 | [](https://coolors.co/contrast-checker/ffffff-ad4641)  |
-| Brown light          | `#d5a29f` | ![](https://img.shields.io/badge/-brown--light-%23d5a29f)          | [](https://coolors.co/contrast-checker/ffffff-d5a29f)  |
-| Red                  | `#c73643` | ![](https://img.shields.io/badge/-red-%23c73643)                   | [](https://coolors.co/contrast-checker/ffffff-c73643)  |
-| Red light            | `#e3979e` | ![](https://img.shields.io/badge/-red--light-%23e3979e)            | [](https://coolors.co/contrast-checker/ffffff-e3979e)  |
+| Orange               | `#ef953d` | ![](https://img.shields.io/badge/-orange-%23ef953d)                | [2.32:1](https://coolors.co/contrast-checker/ffffff-ef953d)  |
+| Orange light         | `#f6c99f` | ![](https://img.shields.io/badge/-orange--light-%23f6c99f)         | [7.24:1](https://coolors.co/contrast-checker/3c3c3b-f6c99f)  |
+| Beige                | `#c0b46c` | ![](https://img.shields.io/badge/-beige-%23c0b46c)                 | [5.25](https://coolors.co/contrast-checker/3c3c3b-c0b46c)    |
+| Beige light          | `#dfd9b5` | ![](https://img.shields.io/badge/-beige--light-%23dfd9b5)          | [7.75:1](https://coolors.co/contrast-checker/3c3c3b-dfd9b5)  |
+| Leaf green           | `#a6c665` | ![](https://img.shields.io/badge/-leaf--green-%23a6c665)           | [5.73:1](https://coolors.co/contrast-checker/3c3c3b-a6c665)  |
+| Leaf green light     | `#d2e2b3` | ![](https://img.shields.io/badge/-leaf--green--light-%23d2e2b3)    | [8.03:1](https://coolors.co/contrast-checker/3c3c3b-d2e2b3)  |
+| Pine                 | `#66926e` | ![](https://img.shields.io/badge/-pine-%2366926e)                  | [3.56:1](https://coolors.co/contrast-checker/ffffff-66926e)  |
+| Pine light           | `#b1c8b6` | ![](https://img.shields.io/badge/-pine--light-%23b1c8b6)           | [6.21:1](https://coolors.co/contrast-checker/3c3c3b-b1c8b6)  |
+| Mint                 | `#86cbac` | ![](https://img.shields.io/badge/-mint-%2386cbac)                  | [5.86:1](https://coolors.co/contrast-checker/3c3c3b-86cbac)  |
+| Mint light           | `#c3e5d5` | ![](https://img.shields.io/badge/-mint--light-%23c3e5d5)           | [8.15:1](https://coolors.co/contrast-checker/3c3c3b-c3e5d5)  |
+| Brown                | `#ad4641` | ![](https://img.shields.io/badge/-brown-%23ad4641)                 | [5.63:1](https://coolors.co/contrast-checker/ffffff-ad4641)  |
+| Brown light          | `#d5a29f` | ![](https://img.shields.io/badge/-brown--light-%23d5a29f)          | [4.99:1](https://coolors.co/contrast-checker/3c3c3b-d5a29f)  |
+| Red                  | `#c73643` | ![](https://img.shields.io/badge/-red-%23c73643)                   | [5.2:1](https://coolors.co/contrast-checker/ffffff-c73643)   |
+| Red light            | `#e3979e` | ![](https://img.shields.io/badge/-red--light-%23e3979e)            | [4.83:1](https://coolors.co/contrast-checker/3c3c3b-e3979e)  |
