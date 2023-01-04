@@ -262,7 +262,7 @@ func UserDelete(c *gin.Context) {
 	db.Delete(&models.User{}, userID)
 }
 
-func Purge(c *gin.Context) {
+func UserPurge(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
@@ -273,26 +273,26 @@ func Purge(c *gin.Context) {
 		return
 	}
 
-	var userID uint
-	db.Raw("SELECT id FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&userID)
-	if userID == 0 {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("User is not found"))
+	ok, _, _, _ := auth.AuthenticateUserOfChain(c, db, " ", query.UserUID)
+	if !ok {
 		return
 	}
+
+	var userID uint
+	db.Raw("SELECT id FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&userID)
 
 	var email string
 	db.Raw("SELECT email FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&email)
 
 	var testChain uint
-	db.Raw("SELECT chain_id FROM user_chains Where user_id = ? AND is_chain_admin = 1", userID).Scan(&testChain)
-	var adminCount uint
-	db.Raw("SELECT COUNT(*) FROM `user_chains` WHERE chain_id = ? AND is_chain_admin = 1", testChain).Scan(&adminCount)
-	if adminCount <= 1 {
-		db.Where("chain_id = ?", testChain).Delete(&models.UserChain{})
-		db.Where("id = ?", testChain).Delete(&models.Chain{})
-	} else {
-		db.Where("user_id = ?", userID).Delete(&models.UserChain{})
-	}
+	db.Raw(
+		`SELECT chain_id FROM user_chains WHERE user_id = ? 
+		AND is_chain_admin = 1 
+		HAVING COUNT(is_chain_admin) = 1;`,
+		userID).Scan(&testChain)
+	db.Exec(`DELETE FROM user_chains WHERE chain_id = ?`, testChain)
+	db.Exec(`DElETE FROM chains WHERE id = ?`, testChain)
+
 	db.Where("user_id = ?", userID).Delete(&models.UserToken{})
 	db.Delete(&models.User{}, userID)
 	db.Where("email = ?", email).Delete(&models.Newsletter{})
