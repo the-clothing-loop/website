@@ -59,12 +59,12 @@ module.exports = {
             transform: `translateX(-${909 * 2}px)`,
           },
         },
-        "spin-half": {
+        "spin-quarter": {
           from: {
             transform: "rotate(0deg)",
           },
           to: {
-            transform: "rotate(180deg)",
+            transform: "rotate(90deg)",
           },
         },
       },
