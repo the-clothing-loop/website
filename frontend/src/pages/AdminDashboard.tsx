@@ -54,10 +54,7 @@ export default function AdminDashboard() {
             </Link>
 
             <div className="relative align-bottom">
-              <button
-                className="btn btn-error block"
-                onClick={deleteClicked}
-              >
+              <button className="btn btn-error block" onClick={deleteClicked}>
                 {t("deleteUserBtn")}
               </button>
             </div>
