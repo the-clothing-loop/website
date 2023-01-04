@@ -13,7 +13,7 @@ import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
 const HeroImg =
   "https://ucarecdn.com/4464c0ab-9b67-4e07-a0d3-cab38ea9b7c4/-/resize/600x/-/format/auto/-/quality/smart/kirsten_rosan.jpg";
 const MapImage =
-  "https://ucarecdn.com/672db23d-6237-48f1-9c32-7946d449514b/-/resize/600x/-/format/auto/-/quality/smart/map_image.png";
+  "https://ucarecdn.com/428a0de6-3226-4e89-afd1-78f31e20f5d5/-/crop/4:3/-/resize/600x/-/format/auto/-/quality/smart/map_image.jpg";
 const ClothesImage =
   "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
 const CirclesFrame =
