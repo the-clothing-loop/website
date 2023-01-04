@@ -1,11 +1,29 @@
 # Color Palette
 
+## Most important text colors
+
+<!-- prettier-ignore -->
+| Name                  | Hex       | Color                                                              | Contrast                                                     |
+|:----------------------|:---------:|:-------------------------------------------------------------------|:------------------------------------------------------------:|
+| Black                 | `#3c3c3b` | ![](https://img.shields.io/badge/-black-%233c3c3b)                 | [11.04:1](https://coolors.co/contrast-checker/3c3c3b-ffffff) |
+| Black / Grey          | `#a5a5a5` | ![](https://img.shields.io/badge/-grey-%23a5a5a5)                  | [4.48:1](https://coolors.co/contrast-checker/3c3c3b-a5a5a5)  |
+| Black / Grey light    | `#e8e8e8` | ![](https://img.shields.io/badge/-grey--light-%23e8e8e8)           | [9.01:1](https://coolors.co/contrast-checker/3c3c3b-e8e8e8)  |
+| Teal / White          | `#48808b` | ![](https://img.shields.io/badge/-teal-%2348808b)                  | [4.43:1](https://coolors.co/contrast-checker/48808b-ffffff)  |
+| Black / Teal light    | `#ecf2f3` | ![](https://img.shields.io/badge/-teal--light-%23ecf2f3)           | [9.76:1](https://coolors.co/contrast-checker/3c3c3b-ecf2f3)  |
+| Black / Yellow        | `#f7c86f` | ![](https://img.shields.io/badge/-yellow-%23f7c86f)                | [7.07:1](https://coolors.co/contrast-checker/3c3c3b-f7c86f)  |
+| Yellow / White        | `#f7c86f` | ![](https://img.shields.io/badge/-yellow-%23f7c86f)                | [1.56:1](https://coolors.co/contrast-checker/f7c86f-ffffff) :warning:  |
+| White / Turquoise     | `#518d7e` | ![](https://img.shields.io/badge/-turquoise-%23518d7e)             | [3.85:1](https://coolors.co/contrast-checker/ffffff-518d7e)  |
+| Turquoise / White     | `#518d7e` | ![](https://img.shields.io/badge/-turquoise-%23518d7e)             | [3.85:1](https://coolors.co/contrast-checker/518d7e-ffffff)  |
+| Yellow light / darker | `#f1a40f` | ![](https://img.shields.io/badge/-yellow--darker-%23f1a40f)        | [2.01:1](https://coolors.co/contrast-checker/f1a40f-fffaf0) :warning: |
+
+## Contrast table
+
 The level AA requires a contrast ratio of at least **4.5:1** for normal text and **3:1** for large text (at least 18pt) or bold text.
 
 The level AAA requires a contrast ratio of at least **7:1** for normal text and **4.5:1** for large text or bold text.
 
 <!-- prettier-ignore -->
-| Name                 | Hex       | Colour                                                             | Contrast                                                     |
+| Name                 | Hex       | Color                                                              | Contrast                                                     |
 |:---------------------|:---------:|:-------------------------------------------------------------------|:------------------------------------------------------------:|
 | Black                | `#3c3c3b` | ![](https://img.shields.io/badge/-black-%233c3c3b)                 | [11.04:1](https://coolors.co/contrast-checker/3c3c3b-ffffff) |
 | Grey                 | `#a5a5a5` | ![](https://img.shields.io/badge/-grey-%23a5a5a5)                  | [4.48:1](https://coolors.co/contrast-checker/3c3c3b-a5a5a5)  |
@@ -19,6 +37,7 @@ The level AAA requires a contrast ratio of at least **7:1** for normal text and 
 | Yellow darker        | `#f1a40f` | ![](https://img.shields.io/badge/-yellow--darker-%23f1a40f)        | [5.29:1](https://coolors.co/contrast-checker/3c3c3b-f1a40f)  |
 | Yellow dark          | `#f4b63f` | ![](https://img.shields.io/badge/-yellow--dark-%23f4b63f)          | [6.11:1](https://coolors.co/contrast-checker/3c3c3b-f4b63f)  |
 | Yellow               | `#f7c86f` | ![](https://img.shields.io/badge/-yellow-%23f7c86f)                | [7.07:1](https://coolors.co/contrast-checker/3c3c3b-f7c86f)  |
+| Yellow light         | `#fffaf0` | ![](https://img.shields.io/badge/-yellow--light-%23fffaf0)         | [10.61:1](https://coolors.co/contrast-checker/3c3c3b-fffaf0) |
 | Light Blue           | `#98d9de` | ![](https://img.shields.io/badge/-light--blue-%2398d9de)           | [7:1](https://coolors.co/contrast-checker/3c3c3b-98d9de)     |
 | Turquoise            | `#518d7e` | ![](https://img.shields.io/badge/-turquoise-%23518d7e)             | [3.85:1](https://coolors.co/contrast-checker/ffffff-518d7e)  |
 | Green                | `#4caf50` | ![](https://img.shields.io/badge/-green-%234caf50)                 | [2.78:1](https://coolors.co/contrast-checker/ffffff-4caf50)  |
