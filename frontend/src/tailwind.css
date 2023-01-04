@@ -107,3 +107,7 @@
 #root .mapboxgl-popup-content {
   @apply p-0 rounded-lg shadow-lg;
 }
+
+.btn-primary.btn-outline {
+  @apply text-black border-yellow-darker;
+}
