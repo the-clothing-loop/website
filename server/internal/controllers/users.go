@@ -18,7 +18,7 @@ type UserCreateRequestBody struct {
 	Email       string   `json:"email" binding:"required,email"`
 	Name        string   `json:"name" binding:"required,min=3"`
 	Address     string   `json:"address" binding:"required,min=3"`
-	PhoneNumber string   `json:"phone_number"`
+	PhoneNumber string   `json:"phone_number" binding:"required,min=3"`
 	Newsletter  bool     `json:"newsletter"`
 	Sizes       []string `json:"sizes"`
 }

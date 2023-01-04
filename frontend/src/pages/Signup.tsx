@@ -141,7 +141,7 @@ export default function Signup() {
                   required
                 />
 
-                <PhoneFormField />
+                <PhoneFormField required />
 
                 <div className="mb-6">
                   <div className="form-control w-full mb-4">

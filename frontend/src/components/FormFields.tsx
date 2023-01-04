@@ -39,7 +39,10 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
   return (
     <label className={`form-control w-full ${props.classes?.root}`}>
       <div className="label">
-        <span className="label-text">{t("phoneNumber")}</span>
+        <span className="label-text">
+          {t("phoneNumber")}
+          {props.required ? "*" : ""}
+        </span>
       </div>
       <input
         type="phone"

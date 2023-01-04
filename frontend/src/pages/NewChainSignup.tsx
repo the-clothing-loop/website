@@ -119,7 +119,7 @@ export default function Signup() {
                   name="email"
                   type="email"
                 />
-                <PhoneFormField />
+                <PhoneFormField required />
 
                 <label className="form-control w-full mb-4">
                   <div className="label">
