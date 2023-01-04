@@ -1,7 +1,7 @@
 //Resources
 import { TwoColumnLayout } from "../components/Layouts";
 import { AuthContext } from "../providers/AuthProvider";
-import { purge } from "../api/user";
+import { userPurge } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { Link, useHistory } from "react-router-dom";
 import { useContext } from "react";
@@ -11,20 +11,22 @@ export default function AdminDashboard() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
 
-  const history = useHistory(); 
-  const { addToastStatic} = useContext(ToastContext);
+  const history = useHistory();
+  const { addToastStatic } = useContext(ToastContext);
   function deleteClicked() {
     addToastStatic({
-      message: ("Deletion is Permanent: Proceed?"),
+      message: t("deleteAccount"),
       type: "warning",
-      actions: [ {
-        text: t("Continue"),
-        type: "ghost",
-        fn: () => { 
-          purge(authUser?.uid);
-          console.log("User");
-          history.push("/users/logout");},
-      },]
+      actions: [
+        {
+          text: t("continue"),
+          type: "ghost",
+          fn: () => {
+            userPurge(authUser?.uid);
+            history.push("/users/logout");
+          },
+        },
+      ],
     });
   }
 
@@ -53,10 +55,10 @@ export default function AdminDashboard() {
 
             <div className="relative align-bottom">
               <button
-                className="btn btn-primary bg-red block"
+                className="btn btn-error block"
                 onClick={deleteClicked}
               >
-                {t("Delete User")}
+                {t("deleteUserBtn")}
               </button>
             </div>
           </div>
