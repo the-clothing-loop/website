@@ -32,7 +32,7 @@ function Navbar() {
       <input type="checkbox" className="hidden peer" id="header-hamburger" />
       <label
         htmlFor="header-hamburger"
-        className="mr-3 btn-lg btn-circle btn-ghost hover:bg-base-200 peer-checked:text-secondary peer-checked:animate-[spin-quarter_150ms_linear] flex justify-center items-center lg:hidden relative z-[60] checked:ring-2 checked:ring-offset-2 ring-teal peer-[:checked_>:nth-of-type(1)]:hidden peer-[:checked_>:nth-of-type(2)]:block"
+        className="mr-3 btn-lg btn-circle btn-ghost hover:bg-base-200 peer-checked:text-secondary peer-checked:animate-[spin-quarter_150ms_linear] flex justify-center items-center lg:hidden relative z-[60] checked:ring-2 checked:ring-offset-2 ring-teal peer-[:checked_>:nth-of-type(1)]:hidden peer-[:checked_>:nth-of-type(2)]:block cursor-pointer"
       >
         <span className="feather feather-menu text-2xl block"></span>
         <span className="feather feather-x text-2xl hidden"></span>
@@ -41,7 +41,7 @@ function Navbar() {
       <div className="hidden peer-checked:block absolute inset-0 lg:!hidden z-50">
         <nav
           aria-label="mobile site navigation"
-          className="container mx-auto  flex flex-col items-center pt-52"
+          className="container mx-auto h-screen flex flex-col items-center justify-center"
         >
           <Link
             onClick={onClickMobileNavLink}
