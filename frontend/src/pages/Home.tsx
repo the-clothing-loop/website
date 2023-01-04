@@ -135,7 +135,7 @@ export default function Home() {
         </section>
 
         <section>
-          <div className="flex flex-col md:flex-row items-center md:items-start mb-6 md:mb-16">
+          <div className="flex flex-col-reverse md:flex-row items-center md:items-start md:mb-16">
             <div className="flex md:w-1/2 md:justify-end px-6">
               <iframe
                 title="video about what is the Clothing Loop"
@@ -145,7 +145,7 @@ export default function Home() {
               ></iframe>
             </div>
 
-            <div className="w-full md:w-1/2 px-6">
+            <div className="w-full md:w-1/2 px-6 mb-6 md:mb-0">
               <h2 className="text-accent font-serif font-bold text-4xl md:text-6xl mb-4">
                 <span className="inline md:block mr-4 font-serif font-bold text-9xl text-stroke-accent">
                   1
