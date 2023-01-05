@@ -21,7 +21,7 @@
   "address": "Address",
   "delete": "Delete",
   "cancel": "Cancel",
-  "deleteAccount": "Account Deletion is permanent: Proceed?",
+  "deleteAccount": "Are you sure you want to permanently delete your account?",
   "deleteUserBtn": "Delete User",
   "edit": "Edit",
   "editUserDetails": "Edit user details",
