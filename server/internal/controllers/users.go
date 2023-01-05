@@ -273,28 +273,34 @@ func UserPurge(c *gin.Context) {
 		return
 	}
 
-	ok, _, _, _ := auth.AuthenticateUserOfChain(c, db, " ", query.UserUID)
+	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, "", query.UserUID)
 	if !ok {
 		return
 	}
 
-	var userID uint
-	db.Raw("SELECT id FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&userID)
+	// find chains where user is the last chain admin
+	chainIDsToDelete := []uint{}
+	db.Raw(`
+SELECT uc.chain_id 
+FROM  user_chains AS uc
+GROUP BY uc.chain_id 
+HAVING COUNT(uc.id) = 1 AND uc.chain_id IN (
+	SELECT uc2.chain_id
+	FROM user_chains AS uc2
+	WHERE uc2.is_chain_admin = TRUE AND uc2.user_id = ?
+)
+	`, user.ID).Scan(&chainIDsToDelete)
 
-	var email string
-	db.Raw("SELECT email FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&email)
+	tx := db.Begin()
+	tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID)
+	tx.Exec(`DELETE FROM user_tokens WHERE user_id = ?`, user.ID)
+	tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID)
+	if len(chainIDsToDelete) > 0 {
+		tx.Exec(`DElETE FROM chains WHERE id IN ?`, chainIDsToDelete)
+	}
 
-	var testChain uint
-	db.Raw(
-		`SELECT chain_id FROM user_chains WHERE user_id = ? 
-		AND is_chain_admin = 1 
-		HAVING COUNT(is_chain_admin) = 1;`,
-		userID).Scan(&testChain)
-	db.Exec(`DELETE FROM user_chains WHERE chain_id = ?`, testChain)
-	db.Exec(`DElETE FROM chains WHERE id = ?`, testChain)
-
-	db.Where("user_id = ?", userID).Delete(&models.UserToken{})
-	db.Delete(&models.User{}, userID)
-	db.Where("email = ?", email).Delete(&models.Newsletter{})
-
+	if user.Email.Valid {
+		tx.Exec(`DELETE FROM newsletters WHERE email = ?`, user.Email.String)
+	}
+	tx.Commit()
 }

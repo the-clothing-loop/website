@@ -19,10 +19,10 @@ export default function AdminDashboard() {
       type: "warning",
       actions: [
         {
-          text: t("continue"),
+          text: t("delete"),
           type: "ghost",
           fn: () => {
-            userPurge(authUser?.uid);
+            userPurge(authUser!.uid);
             history.push("/users/logout");
           },
         },
@@ -43,7 +43,7 @@ export default function AdminDashboard() {
             </Link>
 
             <Link
-              className="btn btn-primary btn-link text-base block mb-4"
+              className="btn btn-link text-base block h-auto mb-4 text-black"
               target="_blank"
               to={{
                 pathname:
@@ -53,11 +53,9 @@ export default function AdminDashboard() {
               {t("goToTheToolkitFolder")}
             </Link>
 
-            <div className="relative align-bottom">
-              <button className="btn btn-error block" onClick={deleteClicked}>
-                {t("deleteUserBtn")}
-              </button>
-            </div>
+            <button className="btn btn-error block" onClick={deleteClicked}>
+              {t("deleteUserBtn")}
+            </button>
           </div>
         </TwoColumnLayout>
       )}

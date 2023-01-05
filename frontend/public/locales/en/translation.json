@@ -17,7 +17,7 @@
   "account": "Account",
   "actions": "Actions",
   "address": "Address",
-  "continue": "Continue",
+  "delete": "Delete",
   "cancel": "Cancel",
   "deleteAccount": "Account Deletion is permanent: Proceed?",
   "deleteUserBtn": "Delete User",
