@@ -124,7 +124,7 @@ export default function UserEdit() {
               </label>
               <GeocoderSelector
                 address={values.address}
-                onResult={(e) => setValue("address", e.place_name)}
+                onResult={(e) => setValue("address", e.query)}
               />
             </div>
 

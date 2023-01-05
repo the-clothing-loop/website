@@ -141,7 +141,7 @@ export default function Signup() {
                   required
                 />
 
-                <PhoneFormField />
+                <PhoneFormField required />
 
                 <div className="mb-6">
                   <div className="form-control w-full mb-4">
@@ -149,7 +149,7 @@ export default function Signup() {
                       <span className="label-text">{t("address") + "*"}</span>
                     </label>
                     <GeocoderSelector
-                      onResult={(e) => setJsValue("address", e.place_name)}
+                      onResult={(e) => setJsValue("address", e.query)}
                     />
                   </div>
                   <SizesDropdown

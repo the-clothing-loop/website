@@ -93,17 +93,17 @@ func ChainGet(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"uid":              chain.UID,
-		"name":             chain.Name,
-		"description":      chain.Description,
-		"address":          chain.Address,
-		"latitude":         chain.Latitude,
-		"longitude":        chain.Longitude,
-		"radius":           chain.Radius,
-		"sizes":            chain.Sizes,
-		"genders":          chain.Genders,
-		"published":        chain.Published,
-		"openToNewMembers": chain.OpenToNewMembers,
+		"uid":                 chain.UID,
+		"name":                chain.Name,
+		"description":         chain.Description,
+		"address":             chain.Address,
+		"latitude":            chain.Latitude,
+		"longitude":           chain.Longitude,
+		"radius":              chain.Radius,
+		"sizes":               chain.Sizes,
+		"genders":             chain.Genders,
+		"published":           chain.Published,
+		"open_to_new_members": chain.OpenToNewMembers,
 	})
 }
 
@@ -165,17 +165,17 @@ func ChainGetAll(c *gin.Context) {
 	chainsJson := []*gin.H{}
 	for _, chain := range chains {
 		chainsJson = append(chainsJson, &gin.H{
-			"uid":              chain.UID,
-			"name":             chain.Name,
-			"description":      chain.Description,
-			"address":          chain.Address,
-			"latitude":         chain.Latitude,
-			"longitude":        chain.Longitude,
-			"radius":           chain.Radius,
-			"sizes":            chain.Sizes,
-			"genders":          chain.Genders,
-			"published":        chain.Published,
-			"openToNewMembers": chain.OpenToNewMembers,
+			"uid":                 chain.UID,
+			"name":                chain.Name,
+			"description":         chain.Description,
+			"address":             chain.Address,
+			"latitude":            chain.Latitude,
+			"longitude":           chain.Longitude,
+			"radius":              chain.Radius,
+			"sizes":               chain.Sizes,
+			"genders":             chain.Genders,
+			"published":           chain.Published,
+			"open_to_new_members": chain.OpenToNewMembers,
 		})
 	}
 
@@ -186,16 +186,17 @@ func ChainUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		UID         string    `json:"uid" binding:"required"`
-		Name        *string   `json:"name,omitempty"`
-		Description *string   `json:"description,omitempty"`
-		Address     *string   `json:"address,omitempty"`
-		Latitude    *float32  `json:"latitude,omitempty"`
-		Longitude   *float32  `json:"longitude,omitempty"`
-		Radius      *float32  `json:"radius,omitempty"`
-		Sizes       *[]string `json:"sizes,omitempty"`
-		Genders     *[]string `json:"genders,omitempty"`
-		Published   *bool     `json:"published,omitempty"`
+		UID              string    `json:"uid" binding:"required"`
+		Name             *string   `json:"name,omitempty"`
+		Description      *string   `json:"description,omitempty"`
+		Address          *string   `json:"address,omitempty"`
+		Latitude         *float32  `json:"latitude,omitempty"`
+		Longitude        *float32  `json:"longitude,omitempty"`
+		Radius           *float32  `json:"radius,omitempty"`
+		Sizes            *[]string `json:"sizes,omitempty"`
+		Genders          *[]string `json:"genders,omitempty"`
+		Published        *bool     `json:"published,omitempty"`
+		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
@@ -249,6 +250,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Published != nil {
 		valuesToUpdate["published"] = *(body.Published)
+	}
+	if body.OpenToNewMembers != nil {
+		valuesToUpdate["open_to_new_members"] = *(body.OpenToNewMembers)
 	}
 
 	if res := db.Model(chain).Updates(valuesToUpdate); res.Error != nil {

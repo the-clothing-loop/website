@@ -33,7 +33,6 @@ type GeoJSONChains = GeoJSONTypes.FeatureCollection<
   }
 >;
 
-export const defaultTruePredicate = () => true;
 const maxZoom = 13;
 const minZoom = 3;
 
@@ -62,6 +61,32 @@ function mapToGeoJSONChains(
   };
 }
 
+function createFilterFunc(
+  genders: string[],
+  sizes: string[]
+): (c: Chain) => boolean {
+  let filterFunc = (c: Chain) => true;
+  if (sizes?.length) {
+    filterFunc = (c) => {
+      for (let s of sizes) {
+        if (c.sizes?.includes(s)) return true;
+      }
+      if (c.uid === "f3dc978d-8bf3-4c75-835a-1e24324f2be2") {
+        console.log("not found", c.sizes, sizes);
+      }
+      return false;
+    };
+  } else if (genders?.length) {
+    filterFunc = (c) => {
+      for (let g of genders) {
+        if (c.genders?.includes(g)) return true;
+      }
+      return false;
+    };
+  }
+  return filterFunc;
+}
+
 export default function FindChain({ location }: { location: Location }) {
   const history = useHistory();
   const urlParams = new URLSearchParams(location.search);
@@ -83,7 +108,7 @@ export default function FindChain({ location }: { location: Location }) {
       Number.parseFloat(urlParams.get("lo") || ""),
       Number.parseFloat(urlParams.get("la") || ""),
     ];
-    const hasCenter = !!(_center.at(0) && _center.at(1));
+    const hasCenter = !!(_center[0] && _center[1]);
     const _map = new mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
@@ -106,10 +131,15 @@ export default function FindChain({ location }: { location: Location }) {
         setZoom(e.target.getZoom());
       });
 
+      const filterFunc = createFilterFunc(
+        urlParams.getAll("g"),
+        urlParams.getAll("s")
+      );
+
       _map.on("load", () => {
         _map.addSource("chains", {
           type: "geojson",
-          data: mapToGeoJSONChains(_chains),
+          data: mapToGeoJSONChains(_chains, filterFunc),
           cluster: true,
           clusterMaxZoom: 10,
           clusterRadius: 30,
@@ -219,28 +249,10 @@ export default function FindChain({ location }: { location: Location }) {
     longLat: GeoJSON.Position | undefined
   ) {
     if (!chains || !map) return;
-    // filter
-    let filterFunc = (c: Chain) => true;
-    if (search.sizes.length) {
-      filterFunc = (c) => {
-        let res = true;
-        search.sizes.forEach((s) => {
-          if (!c.sizes?.includes(s)) res = false;
-        });
-        return res;
-      };
-    } else if (search.genders.length) {
-      filterFunc = (c) => {
-        let res = true;
-        search.genders.forEach((s) => {
-          if (!c.genders?.includes(s)) res = false;
-        });
-        return res;
-      };
-    }
+
     // filter map by gender or sizes
     (map.getSource("chains") as mapboxgl.GeoJSONSource).setData(
-      mapToGeoJSONChains(chains, filterFunc)
+      mapToGeoJSONChains(chains, createFilterFunc(search.genders, search.sizes))
     );
 
     // search

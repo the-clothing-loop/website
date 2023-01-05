@@ -17,11 +17,14 @@ https://crowdin.com/project/the-clothing-loop
 
 ## Developers getting started
 
-For learning how to setup your local environment to help out checkout these readmes:
+Go here to setup your computer to run this website locally and create contributions: [ONBOARDING_DEVS.md](/ONBOARDING_DEVS.md)
+
+Checkout these readmes for more indepth documentation:
 
 - Golang Server: [README.md](/server/README.md)
 - React Frontend: [README.md](/frontend/README.md)
 - Ansible Devops: [README.md](/devops/README.md)
+- SQL scripts: [README.md](/server/sql/README.md)
 
 ## License
 

@@ -19,9 +19,6 @@ function Navbar() {
   }
 
   return (
-    // Use sticky position to make content start below the Navbar, instead of being covered by it.
-    // Note: Not supported by IE 11. See https://material-ui.com/components/app-bar/#fixed-placement
-
     <div className="container mx-auto z-50 bg-white flex flex-row justify-between lg:justify-start items-center md:px-20 shadow-none">
       <Link
         aria-label="Clothing Loop logo"
@@ -35,15 +32,16 @@ function Navbar() {
       <input type="checkbox" className="hidden peer" id="header-hamburger" />
       <label
         htmlFor="header-hamburger"
-        className="mr-3 btn-lg btn-circle btn-ghost hover:bg-base-200 peer-checked:text-secondary peer-checked:animate-[spin-half_300ms_linear] flex justify-center items-center lg:hidden relative z-[60] checked:ring-2 checked:ring-offset-2 ring-teal"
+        className="mr-3 btn-lg btn-circle btn-ghost hover:bg-base-200 peer-checked:text-secondary peer-checked:animate-[spin-quarter_150ms_linear] flex justify-center items-center lg:hidden relative z-[60] checked:ring-2 checked:ring-offset-2 ring-teal peer-[:checked_>:nth-of-type(1)]:hidden peer-[:checked_>:nth-of-type(2)]:block cursor-pointer"
       >
-        <span className="feather feather-menu text-2xl"></span>
+        <span className="feather feather-menu text-2xl block"></span>
+        <span className="feather feather-x text-2xl hidden"></span>
       </label>
-      <div className="hidden peer-checked:block fixed inset-0 lg:!hidden z-40 bg-white"></div>
+      <div className="hidden peer-checked:block fixed inset-0 lg:!hidden z-50 bg-white"></div>
       <div className="hidden peer-checked:block absolute inset-0 lg:!hidden z-50">
         <nav
           aria-label="mobile site navigation"
-          className="container mx-auto  flex flex-col items-center pt-52"
+          className="container mx-auto h-screen flex flex-col items-center justify-center"
         >
           <Link
             onClick={onClickMobileNavLink}

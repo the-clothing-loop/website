@@ -14,10 +14,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "paths": {
-      "!mapbox": ["./node_modules/mapbox"]
-    }
+    "jsx": "react-jsx"
   },
   "include": ["src"]
 }

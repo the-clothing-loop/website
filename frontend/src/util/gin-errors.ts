@@ -11,7 +11,7 @@ export function GinParseErrors(
   if (e?.data && typeof e.data === "string") {
     let m = e.data.matchAll(regx);
     let res = Array.from(m) as string[];
-    let errs = res.map((a) => a.at(3) || "");
+    let errs = res.map((a) => a[3] || "");
 
     if (!errs.length) {
       return e.data;

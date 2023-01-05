@@ -18,12 +18,11 @@ type MapboxType =
 
 export interface Estimate {
   query: string;
-  first?: MapboxGeocoder.Result;
+  first?: GeoJSON.Position;
 }
 
 interface Props {
-  onResult: (event: MapboxGeocoder.Result) => void;
-  onEstimate?: (estimate: Estimate) => void;
+  onResult: (e: Estimate) => void;
   initialAddress?: string;
   className?: string;
   types: MapboxType[];
@@ -43,31 +42,31 @@ export default function Geocoding(props: Props) {
       if (geoRef) {
         geocoder.addTo(geoRef.current);
       }
-
-      // Add geocoder result to container.
-      geocoder.on("result", (e: { result: MapboxGeocoder.Result }) => {
-        props.onResult(e.result);
-      });
-
       if (props.initialAddress) {
         const input = (geoRef.current as HTMLElement)?.querySelector("input");
         if (input) input.value = props.initialAddress;
       }
 
+      // Add geocoder result to container.
+      geocoder.on("result", (e: { result: MapboxGeocoder.Result }) => {
+        props.onResult({
+          query: e.result.place_name,
+          first: e.result.geometry.coordinates,
+        });
+      });
+
       geocoder.on("results", (e: MapboxGeocoder.Results) => {
-        props.onEstimate &&
-          props.onEstimate({
-            query: e.query.at(0) || "",
-            first: e.features.at(0) as MapboxGeocoder.Result,
-          });
+        props.onResult({
+          query: (e as any)?.config.query || "",
+          first: e.features[0]?.geometry.coordinates,
+        });
       });
 
       geocoder.on("clear", () => {
-        props.onEstimate &&
-          props.onEstimate({
-            query: "",
-            first: undefined,
-          });
+        props.onResult({
+          query: "",
+          first: undefined,
+        });
       });
     }
 

@@ -13,7 +13,7 @@ import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
 const HeroImg =
   "https://ucarecdn.com/4464c0ab-9b67-4e07-a0d3-cab38ea9b7c4/-/resize/600x/-/format/auto/-/quality/smart/kirsten_rosan.jpg";
 const MapImage =
-  "https://ucarecdn.com/672db23d-6237-48f1-9c32-7946d449514b/-/resize/600x/-/format/auto/-/quality/smart/map_image.png";
+  "https://ucarecdn.com/428a0de6-3226-4e89-afd1-78f31e20f5d5/-/crop/4:3/-/resize/600x/-/format/auto/-/quality/smart/map_image.jpg";
 const ClothesImage =
   "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
 const CirclesFrame =
@@ -135,7 +135,7 @@ export default function Home() {
         </section>
 
         <section>
-          <div className="flex flex-col md:flex-row items-center md:items-start mb-6 md:mb-16">
+          <div className="flex flex-col-reverse md:flex-row items-center md:items-start md:mb-16">
             <div className="flex md:w-1/2 md:justify-end px-6">
               <iframe
                 title="video about what is the Clothing Loop"
@@ -145,7 +145,7 @@ export default function Home() {
               ></iframe>
             </div>
 
-            <div className="w-full md:w-1/2 px-6">
+            <div className="w-full md:w-1/2 px-6 mb-6 md:mb-0">
               <h2 className="text-accent font-serif font-bold text-4xl md:text-6xl mb-4">
                 <span className="inline md:block mr-4 font-serif font-bold text-9xl text-stroke-accent">
                   1
@@ -231,10 +231,10 @@ export default function Home() {
         </section>
       </div>
       <div className="bg-turquoise">
-        <div className="max-w-screen-xl mx-auto">
+        <div className="w-full sm:max-md:max-w-screen-sm md:max-w-screen-xl mx-auto">
           <section className="flex flex-col md:flex-row items-center mb-6 md:mb-20 font-bold">
-            <div className="w-screen md:w-1/2 flex justify-end p-6 md:px-10 md:py-0 text-base-100">
-              <div className="w-full md:max-w-[600px]">
+            <div className="w-full md:w-1/2 flex justify-end p-6 md:px-10 md:py-0 text-base-100">
+              <div className="w-full md:max-w-screen-sm">
                 <h2 className="text-6xl md:text-8xl font-serif mb-6">
                   {t("ourImpact")}
                 </h2>
@@ -242,7 +242,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="md:w-1/2">
+            <div className="md:w-1/2 sm:max-md:pb-8">
               <img
                 className="object-cover object-top w-full max-h-[600px]"
                 src={Selfies}

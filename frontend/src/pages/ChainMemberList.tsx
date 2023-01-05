@@ -69,7 +69,7 @@ export default function ChainMemberList() {
     try {
       await chainUpdate({
         uid: chainUID,
-        openToNewMembers: isChecked,
+        open_to_new_members: isChecked,
       });
     } catch (e: any) {
       console.error(`Error updating chain: ${JSON.stringify(e)}`);
@@ -86,7 +86,7 @@ export default function ChainMemberList() {
         const chainUsers = (await userGetAllByChain(chainUID)).data;
         setUsers(chainUsers);
         setPublished(chainData.published);
-        setOpenToNewMembers(chainData.openToNewMembers);
+        setOpenToNewMembers(chainData.open_to_new_members);
       } catch (error: any) {
         console.error(`Error getting chain: ${error}`);
       }
@@ -135,7 +135,6 @@ export default function ChainMemberList() {
                 </dd>
                 <dt className="font-bold mb-2">{t("participants")}</dt>
                 <dd className="text-sm mb-1">
-                  {users.length.toString()}{" "}
                   {t("peopleWithCount", { count: users.length })}
                 </dd>
               </dl>
@@ -337,11 +336,11 @@ function HostTable(props: {
           </div>
         </div>
         <form
-          className="flex flex-col md:flex-row items-stretch md:items-start mt-3 ml-3 items-end"
+          className="flex flex-col md:flex-row items-stretch md:items-end mt-3 ml-3"
           onSubmit={onAddCoHost}
         >
           <select
-            className="select select-sm rounded-t-lg md:rounded-l-lg md:rounded-none disabled:text-base-300"
+            className="select select-sm rounded-t-lg md:rounded-l-lg md:rounded-none disabled:text-base-300 md:max-w-sm"
             name="participant"
             ref={refSelect}
             disabled={filteredUsersNotHost.length === 0}

@@ -119,7 +119,7 @@ export default function Signup() {
                   name="email"
                   type="email"
                 />
-                <PhoneFormField />
+                <PhoneFormField required />
 
                 <label className="form-control w-full mb-4">
                   <div className="label">
@@ -127,7 +127,7 @@ export default function Signup() {
                   </div>
                   <GeocoderSelector
                     required
-                    onResult={(g) => setJsValue("address", g.place_name)}
+                    onResult={(g) => setJsValue("address", g.query)}
                   />
                 </label>
                 <FormActions />

@@ -2,11 +2,12 @@ import { useRef, useEffect } from "react";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import { useTranslation } from "react-i18next";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import { Estimate } from "../pages/Geocoding";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY || "";
 
 interface Props {
-  onResult: (address: MapboxGeocoder.Result) => any;
+  onResult: (e: Estimate) => any;
   address?: string;
   required?: boolean;
 }
@@ -31,7 +32,21 @@ export default function GeocoderSelector(props: Props) {
     }
 
     _geocoder.on("result", (e: { result: MapboxGeocoder.Result }) => {
-      props.onResult(e.result);
+      props.onResult({
+        query: e.result.place_name,
+        first: e.result.geometry.coordinates,
+      });
+    });
+
+    _geocoder.on("results", (e: MapboxGeocoder.Results) => {
+      props.onResult({
+        query: (e as any)?.config.query || "",
+        first: e.features[0]?.geometry.coordinates,
+      });
+    });
+
+    _geocoder.on("clear", () => {
+      props.onResult({ query: "", first: undefined });
     });
 
     return () => {
