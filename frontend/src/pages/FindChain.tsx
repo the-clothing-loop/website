@@ -92,7 +92,7 @@ export default function FindChain({ location }: { location: Location }) {
   const urlParams = new URLSearchParams(location.search);
 
   const { t } = useTranslation();
-  const { authUser } = useContext(AuthContext);
+  const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addToastError } = useContext(ToastContext);
 
   const [chains, setChains] = useState<Chain[]>();
@@ -277,6 +277,7 @@ export default function FindChain({ location }: { location: Location }) {
     if (authUser && chainUID) {
       chainAddUser(chainUID, authUser.uid, false)
         .then(() => {
+          authUserRefresh();
           history.push({ pathname: "/thankyou" });
         })
         .catch((err) => {

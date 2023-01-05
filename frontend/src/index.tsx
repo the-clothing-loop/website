@@ -9,7 +9,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Suspense fallback={Fallback}>
+    <Suspense fallback={<Fallback />}>
       <App />
     </Suspense>
     {/* <Fallback /> */}

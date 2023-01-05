@@ -5,39 +5,67 @@ import { Helmet } from "react-helmet";
 
 import { DataExport } from "../components/DataExport";
 import { AuthContext } from "../providers/AuthProvider";
-import { chainGet, chainGetAll } from "../api/chain";
+import { chainGet, chainGetAll, chainRemoveUser } from "../api/chain";
 import { Chain } from "../api/types";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 
 const ChainsList = () => {
   const { t } = useTranslation();
-  const { authUser } = useContext(AuthContext);
-  const { addToastError } = useContext(ToastContext);
+  const { authUser, authUserRefresh } = useContext(AuthContext);
+  const { addToastError, addToastStatic } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>();
 
   useEffect(() => {
-    (async () => {
-      if (authUser) {
-        try {
-          let _chains: Chain[];
-          if (authUser.is_root_admin) {
-            _chains = (await chainGetAll({ filter_out_unpublished: false }))
-              .data;
-          } else {
-            let data = await Promise.all(
-              authUser.chains.map((c) => chainGet(c.chain_uid))
-            );
-            _chains = data.map((d) => d.data);
-          }
-          setChains(_chains.sort((a, b) => a.name.localeCompare(b.name)));
-        } catch (err: any) {
-          console.error(err);
-          addToastError(GinParseErrors(t, err));
-        }
-      }
-    })();
+    load();
   }, [authUser]);
+
+  async function load() {
+    if (authUser) {
+      try {
+        let _chains: Chain[];
+        if (authUser.is_root_admin) {
+          _chains = (await chainGetAll({ filter_out_unpublished: false })).data;
+        } else {
+          let data = await Promise.all(
+            authUser.chains.map((c) => chainGet(c.chain_uid))
+          );
+          _chains = data.map((d) => d.data);
+        }
+        setChains(_chains.sort((a, b) => a.name.localeCompare(b.name)));
+      } catch (err: any) {
+        console.error(err);
+        addToastError(GinParseErrors(t, err));
+      }
+    }
+  }
+
+  function handleClickUnsubscribe(chain: Chain) {
+    addToastStatic({
+      message: t("areYouSureLeaveLoop", {
+        name: authUser?.name,
+        chain: chain.name,
+      }),
+      type: "warning",
+      actions: [
+        {
+          text: t("leave"),
+          type: "ghost",
+          fn: () => {
+            chainRemoveUser(chain.uid, authUser!.uid).then(
+              () => {
+                authUserRefresh();
+              },
+              (err: any) => {
+                console.error(err);
+                addToastError(GinParseErrors(t, err));
+              }
+            );
+          },
+        },
+      ],
+    });
+  }
 
   return (
     <>
@@ -73,12 +101,12 @@ const ChainsList = () => {
               <tbody>
                 {chains
                   ?.sort((a, b) => a.name.localeCompare(b.name))
-                  .map((chain, i) => {
+                  .map((chain) => {
                     let isUserAdmin =
                       authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
                         ?.is_chain_admin || false;
                     return (
-                      <tr key={chain.name}>
+                      <tr key={chain.uid}>
                         <td className="font-bold w-32 whitespace-normal">
                           {chain.name}
                         </td>
@@ -97,17 +125,44 @@ const ChainsList = () => {
                           )}
                         </td>
                         <td align="right">
-                          {(isUserAdmin || authUser?.is_root_admin) && (
-                            <Link
-                              className={`btn btn-primary flex-nowrap ${
-                                chains?.length > 5 ? "btn-sm" : ""
-                              }`}
-                              to={`/loops/${chain.uid}/members`}
-                            >
-                              {t("view")}
-                              <span className="feather feather-arrow-right ml-3"></span>
-                            </Link>
-                          )}
+                          <div className="flex justify-end">
+                            {(isUserAdmin || authUser?.is_root_admin) && (
+                              <Link
+                                className={`btn btn-primary justify-between w-28 ${
+                                  chains?.length > 5 ? "btn-sm" : ""
+                                }`}
+                                to={`/loops/${chain.uid}/members`}
+                              >
+                                {t("view")}
+                                <span className="feather feather-arrow-right ml-3"></span>
+                              </Link>
+                            )}
+                            <div className="dropdown dropdown-left">
+                              <label
+                                tabIndex={0}
+                                className={`btn btn-ghost ${
+                                  chains?.length > 5 ? "btn-sm" : ""
+                                }`}
+                              >
+                                <span className="text-xl feather feather-more-vertical" />
+                              </label>
+                              <ul
+                                tabIndex={0}
+                                className="dropdown-content menu shadow bg-base-100 w-52"
+                              >
+                                <li>
+                                  <a
+                                    href="#"
+                                    onClick={() =>
+                                      handleClickUnsubscribe(chain)
+                                    }
+                                  >
+                                    {t("leave")}
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
                         </td>
                       </tr>
                     );

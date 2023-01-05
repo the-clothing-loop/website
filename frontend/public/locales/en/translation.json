@@ -1,6 +1,8 @@
 {
   "genericError": "Unknown error occurred",
   "removeFromLoop": "Remove From Loop",
+  "leave":"Leave",
+  "areYouSureLeaveLoop":"Are you sure you want {{ name }} to leave “{{ chain }}” Loop?",
   "setAsAParticipant": "Set as a participant",
   "selected": "Selected",
   "selectParticipant": "Select participant",
@@ -68,6 +70,9 @@
   "womenMedium": "Medium",
   "womenLarge": "(Extra) Large",
   "join": "Join",
+  "joined": "Joined",
+  "new": "New",
+  "waiting": "Waiting",
   "back": "Back",
   "participants": "Participants",
   "submit": "Submit",
