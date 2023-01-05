@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/icons/feather/style.css" />
     <link rel="stylesheet" href="/fonts/montserrat/style.css" />
     <link rel="stylesheet" href="/fonts/playfair-display/style.css" />
+    <link rel="stylesheet" href="/src/tailwind.css" />
 
     <script>
       window.goatcounter = {
@@ -28,8 +29,45 @@
   </head>
 
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="w-screen min-h-screen">
+        <div
+          class="container mx-auto bg-white flex flex-row justify-between lg:justify-start items-center md:px-20"
+        >
+          <div class="w-32 md:w-40 h-20 md:h-28 animate-pulse">
+            <div
+              class="bg-center w-32 md:w-40 h-20 md:h-28 bg-no-repeat relative z-[60] bg-[auto_120px] md:bg-[auto_139px]"
+              style="
+                background-image: url('https://ucarecdn.com/886c01f0-c666-44dc-9d2a-cea4893ed134/-/resize/x139/-/format/auto/-/quality/smart/the_clothing_loop_logo.png');
+              "
+            ></div>
+          </div>
+
+          <div
+            class="mr-3 btn-lg btn-circle btn-ghost flex justify-center items-center lg:hidden relative ring-teal"
+          >
+            <span class="feather feather-menu text-2xl animate-pulse" />
+          </div>
+
+          <div class="hidden lg:flex items-center justify-end flex-grow">
+            <div class="h-10 bg-grey-light animate-pulse w-2/3"></div>
+          </div>
+        </div>
+
+        <div
+          class="container mx-auto flex p-4 md:px-20 flex-wrap sm:flex-nowrap flex-col md:flex-row"
+        >
+          <div class="h-10 bg-grey-light animate-pulse w-full"></div>
+        </div>
+
+        <div
+          class="bg-teal-light h-[600px] flex flex-col justify-center items-center animate-pulse font-bold opacity-50 p-6 text-center"
+        >
+          <span>Loading...</span>
+          <noscript>You need to enable JavaScript to run this app.</noscript>
+        </div>
+      </div>
+    </div>
 
     <script type="module" src="/src/index.tsx"></script>
   </body>
