@@ -19,6 +19,14 @@
         owner: root
         group: root
         mode: "0644"
+    - name: Replace PRERENDER_TOKEN
+      replace:
+        path: /etc/caddy/Caddyfile
+        regexp: "PRERENDER_TOKEN"
+        replace: "{{ prerender_token }}"
+        owner: root
+        group: root
+        mode: "0644"
     - name: Add maintenance caddy file
       template:
         src: templates/Caddyfile.maint

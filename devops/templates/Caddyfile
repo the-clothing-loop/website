@@ -9,6 +9,42 @@ www.clothingloop.org {
 		level ERROR
 	}
 
+	@searchbot {
+		header User-Agent googlebot
+		header User-Agent bingbot
+		header User-Agent yandex
+		header User-Agent baiduspider
+		header User-Agent facebookexternalhit
+		header User-Agent twitterbot
+		header User-Agent rogerbot
+		header User-Agent linkedinbot
+		header User-Agent embedly
+		header User-Agent "quora link preview"
+		header User-Agent showyoubot
+		header User-Agent outbrain
+		header User-Agent pinterest\/0\.
+		header User-Agent pinterestbot
+		header User-Agent slackbot
+		header User-Agent vkShare
+		header User-Agent W3C_Validator
+		header User-Agent whatsapp
+		header User-Agent redditbot
+		header User-Agent applebot
+		header User-Agent flipboard
+		header User-Agent tumblr
+		header User-Agent bitlybot
+		header User-Agent skypeuripreview
+		header User-Agent nuzzel
+		header User-Agent discordbot
+		header User-Agent "google page speed"
+		header User-Agent qwantify
+		header User-Agent "bitrix link preview"
+		header User-Agent xing-contenttabreceiver
+		header User-Agent chrome-lighthouse
+		header User-Agent telegrambot
+		not path_regexp .*?(\.js|\.css|\.xml|\.less|\.png|\.jpg|\.jpeg|\.gif|\.pdf|\.doc|\.txt|\.ico|\.rss|\.zip|\.mp3|\.rar|\.exe|\.wmv|\.doc|\.avi|\.ppt|\.mpg|\.mpeg|\.tif|\.wav|\.mov|\.psd|\.ai|\.xls|\.mp4|\.m4a|\.swf|\.dat|\.dmg|\.iso|\.flv|\.m4v|\.torrent|\.ttf|\.woff|\.svg)
+	}
+
 	route {
 		header Cache-Control max-age=3600
 		header /assets/* Cache-Control max-age=31536000
@@ -17,6 +53,12 @@ www.clothingloop.org {
 
 	handle_path /api/* {
 		reverse_proxy 127.0.0.1:8081
+	}
+
+	handle @searchbot {
+		request_header X-Prerender-Token PRERENDER_TOKEN
+		rewrite * /{scheme}://{host}{uri}
+		reverse_proxy https://service.prerender.io
 	}
 
 	handle {
