@@ -261,3 +261,46 @@ func UserDelete(c *gin.Context) {
 
 	db.Delete(&models.User{}, userID)
 }
+
+func UserPurge(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		UserUID string `form:"user_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
+		return
+	}
+
+	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, "", query.UserUID)
+	if !ok {
+		return
+	}
+
+	// find chains where user is the last chain admin
+	chainIDsToDelete := []uint{}
+	db.Raw(`
+SELECT uc.chain_id 
+FROM  user_chains AS uc
+GROUP BY uc.chain_id 
+HAVING COUNT(uc.id) = 1 AND uc.chain_id IN (
+	SELECT uc2.chain_id
+	FROM user_chains AS uc2
+	WHERE uc2.is_chain_admin = TRUE AND uc2.user_id = ?
+)
+	`, user.ID).Scan(&chainIDsToDelete)
+
+	tx := db.Begin()
+	tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID)
+	tx.Exec(`DELETE FROM user_tokens WHERE user_id = ?`, user.ID)
+	tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID)
+	if len(chainIDsToDelete) > 0 {
+		tx.Exec(`DElETE FROM chains WHERE id IN ?`, chainIDsToDelete)
+	}
+
+	if user.Email.Valid {
+		tx.Exec(`DELETE FROM newsletters WHERE email = ?`, user.Email.String)
+	}
+	tx.Commit()
+}

@@ -1,13 +1,34 @@
-import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 //Resources
 import { TwoColumnLayout } from "../components/Layouts";
 import { AuthContext } from "../providers/AuthProvider";
+import { userPurge } from "../api/user";
+import { ToastContext } from "../providers/ToastProvider";
+import { Link, useHistory } from "react-router-dom";
+import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
+
+  const history = useHistory();
+  const { addToastStatic } = useContext(ToastContext);
+  function deleteClicked() {
+    addToastStatic({
+      message: t("deleteAccount"),
+      type: "warning",
+      actions: [
+        {
+          text: t("delete"),
+          type: "ghost",
+          fn: () => {
+            userPurge(authUser!.uid);
+            history.push("/users/logout");
+          },
+        },
+      ],
+    });
+  }
 
   return (
     <main className="pt-10">
@@ -22,7 +43,7 @@ export default function AdminDashboard() {
             </Link>
 
             <Link
-              className="btn btn-primary btn-link text-base block"
+              className="btn btn-link text-base block h-auto mb-4 text-black"
               target="_blank"
               to={{
                 pathname:
@@ -31,6 +52,10 @@ export default function AdminDashboard() {
             >
               {t("goToTheToolkitFolder")}
             </Link>
+
+            <button className="btn btn-error block" onClick={deleteClicked}>
+              {t("deleteUserBtn")}
+            </button>
           </div>
         </TwoColumnLayout>
       )}
