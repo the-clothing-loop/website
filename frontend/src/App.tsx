@@ -1,5 +1,12 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Link,
+  Redirect,
+  Route,
+  Switch,
+  useLocation,
+} from "react-router-dom";
 import { AuthProvider } from "./providers/AuthProvider";
 import ScrollToTop from "./util/scrollToTop";
 
@@ -13,6 +20,8 @@ import { ChainsProvider } from "./providers/ChainsProvider";
 import { NewLoopConfirmation, JoinLoopConfirmation } from "./pages/Thankyou";
 import Home from "./pages/Home";
 import { ToastProvider } from "./providers/ToastProvider";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 // Lazy
 const FindChain = React.lazy(() => import("./pages/FindChain"));
@@ -36,6 +45,14 @@ const TermsOfUse = React.lazy(() => import("./pages/TermsOfUse"));
 const FAQ = React.lazy(() => import("./pages/FAQ"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 
+const IS_PRODUCTION =
+  import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
+
+let base = "/:locale(en|nl)";
+if (!IS_PRODUCTION) {
+  base = "/:locale(en|nl|de|fr)";
+}
+
 export default function App() {
   return (
     <Router>
@@ -46,77 +63,103 @@ export default function App() {
               <ScrollToTop>
                 <Navbar />
                 <Switch>
-                  <Route exact path="/" component={Home} />
+                  <Route exact path={`${base}/`} component={Home} />
                   <Route
                     exact
-                    path="/thankyou"
+                    path={`${base}/thankyou`}
                     component={JoinLoopConfirmation}
                   />
-                  <Route exact path="/donate/:status?" component={Donate} />
                   <Route
                     exact
-                    path="/message-submitted"
+                    path={`${base}/donate/:status?`}
+                    component={Donate}
+                  />
+                  <Route
+                    exact
+                    path={`${base}/message-submitted`}
                     component={MessageSubmitted}
                   />
 
                   <Route
                     exact
-                    path="/users/login/validate"
+                    path={`${base}/users/login/validate`}
                     component={LoginEmailFinished}
                   />
-                  <Route exact path="/users/login" component={Login} />
-                  <Route exact path="/users/logout" component={Logout} />
+                  <Route exact path={`${base}/users/login`} component={Login} />
                   <Route
                     exact
-                    path="/users/:userUID/edit"
+                    path={`${base}/users/logout`}
+                    component={Logout}
+                  />
+                  <Route
+                    exact
+                    path={`${base}/users/:userUID/edit`}
                     component={UserEdit}
                   />
 
-                  <Route exact path="/loops" component={ChainsList} />
-                  <Route exact path="/loops/find" component={FindChain} />
+                  <Route exact path={`${base}/loops`} component={ChainsList} />
                   <Route
                     exact
-                    path="/loops/:chainUID/edit"
+                    path={`${base}/loops/find`}
+                    component={FindChain}
+                  />
+                  <Route
+                    exact
+                    path={`${base}/loops/:chainUID/edit`}
                     component={ChainEdit}
                   />
                   <Route
                     exact
-                    path="/loops/:chainUID/members"
+                    path={`${base}/loops/:chainUID/members`}
                     component={ChainMemberList}
                   />
                   <Route
                     exact
-                    path="/loops/new/users/signup"
+                    path={`${base}/loops/new/users/signup`}
                     component={NewChainSignup}
                   />
-                  <Route exact path="/loops/new" component={NewChainLocation} />
                   <Route
                     exact
-                    path="/loops/new/confirmation"
+                    path={`${base}/loops/new`}
+                    component={NewChainLocation}
+                  />
+                  <Route
+                    exact
+                    path={`${base}/loops/new/confirmation`}
                     component={NewLoopConfirmation}
                   />
                   <Route
                     exact
-                    path="/loops/:chainUID/users/signup"
+                    path={`${base}/loops/:chainUID/users/signup`}
                     component={Signup}
                   />
 
-                  <Route exact path="/faq" component={FAQ} />
-                  <Route exact path="/contact-us" component={Contacts} />
-                  <Route exact path="/about" component={About} />
-
-                  <Route exact path="/terms-of-use" component={TermsOfUse} />
+                  <Route exact path={`${base}/faq`} component={FAQ} />
                   <Route
                     exact
-                    path="/privacy-policy"
+                    path={`${base}/contact-us`}
+                    component={Contacts}
+                  />
+                  <Route exact path={`${base}/about`} component={About} />
+
+                  <Route
+                    exact
+                    path={`${base}/terms-of-use`}
+                    component={TermsOfUse}
+                  />
+                  <Route
+                    exact
+                    path={`${base}/privacy-policy`}
                     component={PrivacyPolicy}
                   />
 
                   <Route
                     exact
-                    path="/admin/dashboard"
+                    path={`${base}/admin/dashboard`}
                     component={AdminDashboard}
                   />
+                  <Route path={`${base}/*`} component={FileNotFound} />
+                  <Route path="*" component={I18nRedirect} />
                 </Switch>
                 <Footer />
               </ScrollToTop>
@@ -125,5 +168,33 @@ export default function App() {
         </ChainsProvider>
       </AuthProvider>
     </Router>
+  );
+}
+
+function I18nRedirect() {
+  const location = useLocation();
+  const { i18n } = useTranslation();
+
+  return (
+    <Redirect
+      to={{
+        pathname: "/" + i18n.language + location.pathname,
+        search: location.search,
+        state: location.state,
+      }}
+    />
+  );
+}
+
+function FileNotFound() {
+  return (
+    <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
+      <h1 className="font-serif text-secondary text-4xl font-bold my-10">
+        404 File not found
+      </h1>
+      <Link to="/" className="btn btn-primary">
+        {t("home")}
+      </Link>
+    </div>
   );
 }
