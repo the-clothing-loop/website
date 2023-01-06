@@ -51,7 +51,8 @@
     "react-places-autocomplete": "^7.3.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "redaxios": "^0.5.0"
+    "redaxios": "^0.5.0",
+    "sitemap": "^7.1.1"
   },
   "scripts": {
     "start": "vite --port 3000",
@@ -59,7 +60,8 @@
     "lint:test": "prettier --check .",
     "build": "tsc && vite build",
     "build:acceptance": "cp .env-acceptance .env; npm run build",
-    "build:production": "cp .env-production .env; npm run build"
+    "build:production": "cp .env-production .env; npm run build; npm run build:sitemap",
+    "build:sitemap": "node ./sitemap.js"
   },
   "browserslist": {
     "production": [
