@@ -17,7 +17,7 @@ import { ToastContext } from "../providers/ToastProvider";
 interface FormHtmlValues {
   name: string;
   email: string;
-  phoneNumber: string;
+  phone: string;
   newsletter: string;
 }
 interface FormJsValues {
@@ -54,7 +54,7 @@ export default function Signup() {
     let registerUser: RequestRegisterUser = {
       name: values.name,
       email: values.email,
-      phone_number: values.phoneNumber,
+      phone_number: values.phone,
       address: jsValues.address,
       newsletter: values.newsletter === "true",
       sizes: [],
