@@ -54,6 +54,13 @@ if (!IS_PRODUCTION) {
 }
 
 export default function App() {
+  const { i18n } = useTranslation();
+  useEffect(() => {
+    document
+      .getElementsByTagName("html")[0]
+      .setAttribute("lang", i18n.language);
+  }, [i18n.language]);
+
   return (
     <Router>
       <AuthProvider>
