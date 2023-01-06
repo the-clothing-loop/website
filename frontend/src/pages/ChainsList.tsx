@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, MouseEvent } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -40,7 +40,8 @@ const ChainsList = () => {
     }
   }
 
-  function handleClickUnsubscribe(chain: Chain) {
+  function handleClickUnsubscribe(e: MouseEvent, chain: Chain) {
+    e.preventDefault();
     addToastStatic({
       message: t("areYouSureLeaveLoop", {
         name: authUser?.name,
@@ -153,8 +154,8 @@ const ChainsList = () => {
                                 <li>
                                   <a
                                     href="#"
-                                    onClick={() =>
-                                      handleClickUnsubscribe(chain)
+                                    onClick={(e) =>
+                                      handleClickUnsubscribe(e, chain)
                                     }
                                   >
                                     {t("leave")}
