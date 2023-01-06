@@ -90,7 +90,9 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     console.log("trying to login");
     authUserRefresh().then((res) => {
       if (res === UserRefreshState.ForceLoggedOut) {
-        if (history.location.pathname !== "/") {
+        const isHomeI18n = history.location.pathname.substring(3) === "/";
+        const isHome = history.location.pathname === "/";
+        if (!(isHome || isHomeI18n)) {
           history.push("/");
         }
       }
