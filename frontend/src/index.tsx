@@ -12,7 +12,6 @@ ReactDOM.render(
     <Suspense fallback={<Fallback />}>
       <App />
     </Suspense>
-    {/* <Fallback /> */}
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -101,7 +101,8 @@ function Navbar() {
           aria-label="site navigation"
           className="flex items-center min-h-[4rem]"
         >
-          {["/loops/find", "/"].indexOf(location.pathname) !== -1 ? (
+          {["/loops/find", "/"].indexOf(location.pathname.substring(3)) !==
+          -1 ? (
             <Link
               to="/loops/new/users/signup"
               className="mr-4 btn btn-primary btn-outline"
