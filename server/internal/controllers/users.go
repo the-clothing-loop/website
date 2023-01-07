@@ -310,3 +310,25 @@ HAVING COUNT(uc.id) = 1 AND uc.chain_id IN (
 	}
 	tx.Commit()
 }
+
+func UserNewsLetterStatus(c *gin.Context) {
+	db := getDB(c)
+	var query struct {
+		UserUID string `form:"user_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
+		return
+	}
+
+	var isEnrolled uint
+	db.Raw(`SELECT id FROM newsletters WHERE email IN(
+		SELCET email FROM users WHERE uid = ?)`, query.UserUID).Scan(isEnrolled)
+
+	if isEnrolled != 0 {
+		c.JSON(http.StatusOK, gin.H{"data": true})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"data": false})
+	}
+
+}
