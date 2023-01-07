@@ -142,7 +142,14 @@ export default function UserEdit() {
                 <span className="label-text">
                   {t("newsletterSubscription")}
                 </span>
-                <input type="checkbox" className="checkbox" name="newsletter" />
+                <input
+                  type="checkbox"
+                  required={
+                    user.is_root_admin || userIsChainAdmin ? true : false
+                  }
+                  className="checkbox"
+                  name="newsletter"
+                />
               </label>
             </div>
 

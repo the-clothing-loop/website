@@ -184,6 +184,8 @@ func UserUpdate(c *gin.Context) {
 		return
 	}
 
+	isChainAdmin, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+
 	if body.Sizes != nil {
 		if ok := models.ValidateAllSizeEnum(*body.Sizes); !ok {
 			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Invalid size enum"))
@@ -231,6 +233,10 @@ func UserUpdate(c *gin.Context) {
 				return
 			}
 		}
+	} else if body.Newsletter == nil && isChainAdmin {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("Newsletter-Box must be checked to create a new loop admin."))
+		return
+
 	}
 }
 
