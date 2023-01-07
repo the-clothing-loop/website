@@ -1,5 +1,6 @@
 import { useMemo, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
+import { useHistory, useLocation } from "react-router";
 import { useDropdown } from "../util/dropdown.hooks";
 
 const IS_PRODUCTION =
@@ -21,11 +22,17 @@ if (!IS_PRODUCTION) {
 
 const LanguageSwitcher = (props: { className?: string }) => {
   const { i18n } = useTranslation();
+  const history = useHistory();
 
   const dropdown = useDropdown();
 
   const handleChange = (lng: string) => {
     i18n.changeLanguage(lng);
+    history.replace(
+      // from /en/about to /nl/about
+      `/${lng}${history.location.pathname.substring(3)}`,
+      history.location.state
+    );
     dropdown.setOpen(false);
   };
 

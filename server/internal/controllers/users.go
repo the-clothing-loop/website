@@ -162,6 +162,28 @@ WHERE chains.uid = ? AND users.is_email_verified = TRUE
 	c.JSON(200, users)
 }
 
+func UserHasNewsletter(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		UserUID string `form:"user_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		return
+	}
+
+	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, "", query.UserUID)
+	if !ok {
+		return
+	}
+
+	hasNewsletter := 0
+	db.Raw(`SELECT COUNT(*) FROM newsletters WHERE email = ? LIMIT 1`, user.Email.String).Scan(&hasNewsletter)
+
+	c.JSON(200, gin.H{"has_newsletter": hasNewsletter > 0})
+}
+
 func UserUpdate(c *gin.Context) {
 	db := getDB(c)
 

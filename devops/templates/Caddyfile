@@ -92,6 +92,8 @@ acc.clothingloop.org {
 		level ERROR
 	}
 
+	header X-Robots-Tag noindex
+
 	route {
 		header Cache-Control max-age=3600
 		header /assets/* Cache-Control max-age=31536000
