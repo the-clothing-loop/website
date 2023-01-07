@@ -62,6 +62,7 @@ func Routes() *gin.Engine {
 	// user
 	v2.GET("/user", controllers.UserGet)
 	v2.GET("/user/all-chain", controllers.UserGetAllOfChain)
+	v2.GET("/user/newsletter", controllers.UserHasNewsletter)
 	v2.PATCH("/user", controllers.UserUpdate)
 	v2.DELETE("/user", controllers.UserDelete)
 	v2.DELETE("/user/purge", controllers.UserPurge)
