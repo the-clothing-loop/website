@@ -412,6 +412,16 @@ function ParticipantsTable(props: {
     );
   }
 
+  function signedUpOn(signedUpToLoopDate: any) {
+    //console.log(signedUpToLoopDate);
+    //let sampleDate = "2023-02-04 15:22:49.682";
+    let day = new Date(signedUpToLoopDate[0]).getDate();
+    let month = new Date(signedUpToLoopDate[0]).getMonth() + 1;
+    let year = new Date(signedUpToLoopDate[0]).getFullYear();
+    let fromattedSignedUpToLoopDate = `${day}/${month}/${year}`;
+    return fromattedSignedUpToLoopDate;
+  }
+
   return (
     <>
       <div className="mt-10 relative">
@@ -424,6 +434,7 @@ function ParticipantsTable(props: {
                 <th>{t("address")}</th>
                 <th>{t("contact")}</th>
                 <th>{t("interested size")}</th>
+                <th>{t("signedup at")}</th>
               </tr>
             </thead>
             <tbody>
@@ -459,6 +470,9 @@ function ParticipantsTable(props: {
                       >
                         {SizeBadges(t, u.sizes)}
                       </span>
+                    </td>
+                    <td className="text-center">
+                      {signedUpOn(u.chains.map((c) => c.created_at))}
                     </td>
                   </tr>
                 ))}
