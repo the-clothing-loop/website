@@ -412,7 +412,7 @@ function ParticipantsTable(props: {
     );
   }
 
-  function signedUpOn(signedUpToLoopDate: any) {
+  function signedUpOn(signedUpToLoopDate: string[]) {
     //console.log(signedUpToLoopDate);
     //let sampleDate = "2023-02-04 15:22:49.682";
     let day = new Date(signedUpToLoopDate[0]).getDate();
