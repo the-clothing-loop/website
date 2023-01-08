@@ -202,6 +202,7 @@ export default function ChainMemberList() {
   );
 }
 
+
 function HostTable(props: {
   authUser: User | null;
   chain: Chain;
@@ -210,6 +211,7 @@ function HostTable(props: {
 }) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
+  const { addToastStatic } = useContext(ToastContext);
 
   const refSelect: any = useRef<HTMLSelectElement>();
   const [selected, setSelected] = useState("");
@@ -249,14 +251,29 @@ function HostTable(props: {
   }
 
   function onDemote() {
-    if (!selected) return;
-    let chainUID = props.chain.uid;
+      addToastStatic({
+        message: t("demote"),
+        type: "warning",
+        actions: [
+          {
+            text: t("revoke"),
+            type: "ghost",
+            fn: () => {
+               if (!selected) return;
+               let chainUID = props.chain.uid;
 
-    chainAddUser(chainUID, selected, false).finally(() => {
-      setSelected("");
-      return props.refresh();
-    });
-  }
+              chainAddUser(chainUID, selected, false).finally(() => {
+              setSelected("");
+              return props.refresh(); 
+              });
+            }, 
+          },],
+      },
+      
+      )
+    }
+
+  /* */
 
   function onAddCoHost(e: FormEvent) {
     e.preventDefault();
@@ -376,7 +393,8 @@ function ParticipantsTable(props: {
 }) {
   const { t } = useTranslation();
   const { addToastError, addToast } = useContext(ToastContext);
-
+  const { addToastStatic } = useContext(ToastContext);
+  
   const [selected, setSelected] = useState<string[]>([]);
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
@@ -403,15 +421,27 @@ function ParticipantsTable(props: {
   }
 
   function onRemove() {
-    let chainUID = props.chain.uid;
-    Promise.all(selected.map((s) => chainRemoveUser(chainUID, s))).finally(
-      () => {
-        setSelected([]);
-        return props.refresh();
-      }
-    );
+    addToastStatic({
+      message: t("removeParticipant"),
+      type: "warning",
+      actions: [
+        {
+          text: t("remove"),
+          type: "ghost",
+          fn: () => {
+            let chainUID = props.chain.uid;
+            Promise.all(selected.map((s) => chainRemoveUser(chainUID, s))).finally(
+              () => {
+                setSelected([]);
+                return props.refresh();
+              }
+            );
+          },
+        },
+      ],
+    });
   }
-
+  
   return (
     <>
       <div className="mt-10 relative">
