@@ -202,7 +202,6 @@ export default function ChainMemberList() {
   );
 }
 
-
 function HostTable(props: {
   authUser: User | null;
   chain: Chain;
@@ -251,27 +250,26 @@ function HostTable(props: {
   }
 
   function onDemote() {
-      addToastStatic({
-        message: t("demote"),
-        type: "warning",
-        actions: [
-          {
-            text: t("revoke"),
-            type: "ghost",
-            fn: () => {
-               if (!selected) return;
-               let chainUID = props.chain.uid;
+    addToastStatic({
+      message: t("demote"),
+      type: "warning",
+      actions: [
+        {
+          text: t("revoke"),
+          type: "ghost",
+          fn: () => {
+            if (!selected) return;
+            let chainUID = props.chain.uid;
 
-              chainAddUser(chainUID, selected, false).finally(() => {
+            chainAddUser(chainUID, selected, false).finally(() => {
               setSelected("");
-              return props.refresh(); 
-              });
-            }, 
-          },],
-      },
-      
-      )
-    }
+              return props.refresh();
+            });
+          },
+        },
+      ],
+    });
+  }
 
   /* */
 
@@ -394,7 +392,7 @@ function ParticipantsTable(props: {
   const { t } = useTranslation();
   const { addToastError, addToast } = useContext(ToastContext);
   const { addToastStatic } = useContext(ToastContext);
-  
+
   const [selected, setSelected] = useState<string[]>([]);
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
@@ -430,18 +428,18 @@ function ParticipantsTable(props: {
           type: "ghost",
           fn: () => {
             let chainUID = props.chain.uid;
-            Promise.all(selected.map((s) => chainRemoveUser(chainUID, s))).finally(
-              () => {
-                setSelected([]);
-                return props.refresh();
-              }
-            );
+            Promise.all(
+              selected.map((s) => chainRemoveUser(chainUID, s))
+            ).finally(() => {
+              setSelected([]);
+              return props.refresh();
+            });
           },
         },
       ],
     });
   }
-  
+
   return (
     <>
       <div className="mt-10 relative">
