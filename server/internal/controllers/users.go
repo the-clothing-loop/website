@@ -205,8 +205,7 @@ func UserUpdate(c *gin.Context) {
 	if !ok {
 		return
 	}
-
-	isChainAdmin, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+	isAnyChainAdmin := user.IsAnyChainAdmin()
 
 	if body.Sizes != nil {
 		if ok := models.ValidateAllSizeEnum(*body.Sizes); !ok {
@@ -248,6 +247,11 @@ func UserUpdate(c *gin.Context) {
 				return
 			}
 		} else {
+			if isAnyChainAdmin {
+				gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("Newsletter-Box must be checked to create a new loop admin."))
+				return
+			}
+
 			res := db.Where("email = ?", user.Email).Delete(&models.Newsletter{})
 			if res.Error != nil {
 				glog.Error(res.Error)
@@ -255,10 +259,6 @@ func UserUpdate(c *gin.Context) {
 				return
 			}
 		}
-	} else if body.Newsletter == nil && isChainAdmin {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("Newsletter-Box must be checked to create a new loop admin."))
-		return
-
 	}
 }
 
@@ -332,4 +332,3 @@ HAVING COUNT(uc.id) = 1 AND uc.chain_id IN (
 	}
 	tx.Commit()
 }
-
