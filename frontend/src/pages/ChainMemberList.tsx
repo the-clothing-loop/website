@@ -413,12 +413,9 @@ function ParticipantsTable(props: {
   }
 
   function signedUpOn(signedUpToLoopDate: string[]) {
-    //console.log(signedUpToLoopDate);
-    //let sampleDate = "2023-02-04 15:22:49.682";
-    let day = new Date(signedUpToLoopDate[0]).getDate();
-    let month = new Date(signedUpToLoopDate[0]).getMonth() + 1;
-    let year = new Date(signedUpToLoopDate[0]).getFullYear();
-    let fromattedSignedUpToLoopDate = `${day}/${month}/${year}`;
+    let fromattedSignedUpToLoopDate = new Date(
+      signedUpToLoopDate[0]
+    ).toLocaleDateString();
     return fromattedSignedUpToLoopDate;
   }
 
