@@ -44,6 +44,10 @@ export default function UserEdit() {
         ?.is_chain_admin || false,
     [user]
   );
+  const userIsAnyChainAdmin = useMemo(
+    () => !!user?.chains.find((uc) => uc.is_chain_admin),
+    [user]
+  );
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -87,7 +91,9 @@ export default function UserEdit() {
     })();
   }, [history]);
 
-  return !user ? null : (
+  if (!user) return null;
+  const isNewsletterRequired = user.is_root_admin ? false : userIsAnyChainAdmin;
+  return (
     <>
       <Helmet>
         <title>The Clothing Loop | Edit user</title>
@@ -144,9 +150,7 @@ export default function UserEdit() {
                 </span>
                 <input
                   type="checkbox"
-                  required={
-                    user.is_root_admin || userIsChainAdmin ? true : false
-                  }
+                  required={isNewsletterRequired}
                   className="checkbox"
                   name="newsletter"
                 />

@@ -42,7 +42,6 @@ export default function Signup() {
     address: "",
     sizes: [] as string[],
   });
-  const newsLetterRequired = false;
 
   // Get chain id from the URL and save to state
   useEffect(() => {
@@ -162,7 +161,7 @@ export default function Signup() {
                   <PopoverOnHover
                     message={t("weWouldLikeToKnowThisEquallyRepresented")}
                   />
-                  <FormActions isNewsLetterRequired={newsLetterRequired} />
+                  <FormActions isNewsletterRequired={false} />
                 </div>
 
                 <div className="mb-4">
