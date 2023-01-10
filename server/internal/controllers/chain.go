@@ -303,14 +303,15 @@ func ChainAddUser(c *gin.Context) {
 			ChainID:      chain.ID,
 			IsChainAdmin: false,
 		}); res.Error != nil {
+			glog.Error(res.Error)
 			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be added to chain due to unknown error"))
 			return
 		}
 
-		var results []struct {
+		results := []struct {
 			Name  string
 			Email zero.String
-		}
+		}{}
 		db.Raw(`
 SELECT users.name as name, users.email as email
 FROM user_chains AS uc
@@ -321,6 +322,7 @@ WHERE uc.chain_id = ?
 `, chain.ID).Scan(&results)
 
 		if len(results) == 0 {
+			glog.Errorf("Empty chain that is still public: ChainID: %d", chain.ID)
 			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("No admins exist for this loop"))
 			return
 		}
