@@ -20,7 +20,7 @@ import {
   chainRemoveUser,
   chainUpdate,
 } from "../api/chain";
-import { Chain, User } from "../api/types";
+import { Chain, User, UserChain } from "../api/types";
 import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
@@ -374,7 +374,7 @@ function ParticipantsTable(props: {
   chain: Chain;
   refresh: () => Promise<void>;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { addToastError, addToast } = useContext(ToastContext);
 
   const [selected, setSelected] = useState<string[]>([]);
@@ -412,11 +412,16 @@ function ParticipantsTable(props: {
     );
   }
 
-  function signedUpOn(signedUpToLoopDate: string[]) {
-    let fromattedSignedUpToLoopDate = new Date(
-      signedUpToLoopDate[0]
-    ).toLocaleDateString();
-    return fromattedSignedUpToLoopDate;
+  function signedUpOn(uc: UserChain): string {
+    let date = new Date(uc.created_at);
+    let locale = i18n.language;
+    if (locale === "en" && window.navigator.language === "en-US") {
+      locale = "en-US";
+    } else {
+      locale = "en-GB";
+    }
+
+    return date.toLocaleDateString(locale);
   }
 
   return (
@@ -437,42 +442,46 @@ function ParticipantsTable(props: {
             <tbody>
               {props.users
                 .sort((a, b) => a.name.localeCompare(b.name))
-                .map((u: User) => (
-                  <tr key={u.uid}>
-                    <td className="sticky">
-                      <input
-                        type="checkbox"
-                        name="selectedChainAdmin"
-                        className="checkbox checkbox-sm checkbox-primary"
-                        checked={selected.includes(u.uid)}
-                        onChange={onChangeSelect}
-                        value={u.uid}
-                      />
-                    </td>
-                    <td>{u.name}</td>
-                    <td>
-                      <span className="block w-48 text-sm whitespace-normal">
-                        {u.address}
-                      </span>
-                    </td>
-                    <td className="text-sm leading-relaxed">
-                      {u.email}
-                      <br />
-                      {u.phone_number}
-                    </td>
-                    <td className="align-middle">
-                      <span
-                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
-                        tabIndex={0}
-                      >
-                        {SizeBadges(t, u.sizes)}
-                      </span>
-                    </td>
-                    <td className="text-center">
-                      {signedUpOn(u.chains.map((c) => c.created_at))}
-                    </td>
-                  </tr>
-                ))}
+                .map((u: User) => {
+                  const userChain = u.chains.find(
+                    (uc) => uc.chain_uid === props.chain.uid
+                  )!;
+
+                  return (
+                    <tr key={u.uid}>
+                      <td className="sticky">
+                        <input
+                          type="checkbox"
+                          name="selectedChainAdmin"
+                          className="checkbox checkbox-sm checkbox-primary"
+                          checked={selected.includes(u.uid)}
+                          onChange={onChangeSelect}
+                          value={u.uid}
+                        />
+                      </td>
+                      <td>{u.name}</td>
+                      <td>
+                        <span className="block w-48 text-sm whitespace-normal">
+                          {u.address}
+                        </span>
+                      </td>
+                      <td className="text-sm leading-relaxed">
+                        {u.email}
+                        <br />
+                        {u.phone_number}
+                      </td>
+                      <td className="align-middle">
+                        <span
+                          className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                          tabIndex={0}
+                        >
+                          {SizeBadges(t, u.sizes)}
+                        </span>
+                      </td>
+                      <td className="text-center">{signedUpOn(userChain)}</td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
