@@ -252,9 +252,10 @@ function HostTable(props: {
     if (!selected) return;
     const _selected = selected;
     const chainUID = props.chain.uid;
+    const userName = props.users.find((u) => u.uid === _selected)?.name || "";
 
     addToastStatic({
-      message: t("demote"),
+      message: t("areYouSureRevokeHost", { name: userName }),
       type: "warning",
       actions: [
         {
@@ -419,9 +420,12 @@ function ParticipantsTable(props: {
     if (!selected.length) return;
     const chainUID = props.chain.uid;
     const _selected = selected;
+    const userNames = props.users
+      .filter((u) => _selected.includes(u.uid))
+      .map((u) => u.name);
 
     addToastStatic({
-      message: t("removeParticipant"),
+      message: t("areYouSureRemoveParticipant", { user: userNames.join(", ") }),
       type: "warning",
       actions: [
         {
