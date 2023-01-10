@@ -301,7 +301,7 @@ SELECT * FROM user_chains
 WHERE user_id = ? AND chain_id = ?
 LIMIT 1
 	`, user.ID, chain.ID).Scan(userChain); res.Error == nil {
-		if !userChain.IsChainAdmin && body.IsChainAdmin {
+		if (!userChain.IsChainAdmin && body.IsChainAdmin) || (userChain.IsChainAdmin && !body.IsChainAdmin) {
 			userChain.IsChainAdmin = body.IsChainAdmin
 			db.Save(userChain)
 		}
