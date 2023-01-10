@@ -28,7 +28,7 @@ const ChainsList = () => {
           _chains = (await chainGetAll({ filter_out_unpublished: false })).data;
         } else {
           let data = await Promise.all(
-            authUser.chains.map((c) => chainGet(c.chain_uid))
+            authUser.chains.map((uc) => chainGet(uc.chain_uid))
           );
           _chains = data.map((d) => d.data);
         }
