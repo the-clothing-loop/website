@@ -209,8 +209,7 @@ function HostTable(props: {
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
-  const { addToastError } = useContext(ToastContext);
-  const { addToastStatic } = useContext(ToastContext);
+  const { addToastError, addToastStatic } = useContext(ToastContext);
 
   const refSelect: any = useRef<HTMLSelectElement>();
   const [selected, setSelected] = useState("");
@@ -250,6 +249,10 @@ function HostTable(props: {
   }
 
   function onDemote() {
+    if (!selected) return;
+    const _selected = selected;
+    const chainUID = props.chain.uid;
+
     addToastStatic({
       message: t("demote"),
       type: "warning",
@@ -258,10 +261,7 @@ function HostTable(props: {
           text: t("revoke"),
           type: "ghost",
           fn: () => {
-            if (!selected) return;
-            let chainUID = props.chain.uid;
-
-            chainAddUser(chainUID, selected, false).finally(() => {
+            chainAddUser(chainUID, _selected, false).finally(() => {
               setSelected("");
               return props.refresh();
             });
@@ -270,8 +270,6 @@ function HostTable(props: {
       ],
     });
   }
-
-  /* */
 
   function onAddCoHost(e: FormEvent) {
     e.preventDefault();
@@ -390,8 +388,7 @@ function ParticipantsTable(props: {
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
-  const { addToastError, addToast } = useContext(ToastContext);
-  const { addToastStatic } = useContext(ToastContext);
+  const { addToastError, addToastStatic } = useContext(ToastContext);
 
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -419,6 +416,10 @@ function ParticipantsTable(props: {
   }
 
   function onRemove() {
+    if (!selected.length) return;
+    const chainUID = props.chain.uid;
+    const _selected = selected;
+
     addToastStatic({
       message: t("removeParticipant"),
       type: "warning",
@@ -427,9 +428,8 @@ function ParticipantsTable(props: {
           text: t("remove"),
           type: "ghost",
           fn: () => {
-            let chainUID = props.chain.uid;
             Promise.all(
-              selected.map((s) => chainRemoveUser(chainUID, s))
+              _selected.map((s) => chainRemoveUser(chainUID, s))
             ).finally(() => {
               setSelected([]);
               return props.refresh();
