@@ -424,7 +424,7 @@ function ParticipantsTable(props: {
       .map((u) => u.name);
 
     addToastStatic({
-      message: t("areYouSureRemoveParticipant", { user: userNames.join(", ") }),
+      message: t("areYouSureRemoveParticipant", { name: userNames.join(", ") }),
       type: "warning",
       actions: [
         {
