@@ -316,6 +316,7 @@ LIMIT 1
 			return
 		}
 
+		// find admin users related to the chain to email
 		results := []struct {
 			Name  string
 			Email zero.String
