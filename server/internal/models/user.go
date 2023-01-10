@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"gopkg.in/guregu/null.v3/zero"
@@ -55,37 +54,6 @@ type UserChain struct {
 	CreatedAt    time.Time `json:"created_at"`
 }
 
-type UserChainResponse struct {
-	ChainUID     string `json:"chain_uid"`
-	UserUID      string `json:"user_uid"`
-	IsChainAdmin bool   `json:"is_chain_admin"`
-}
-
-// Use of an empty user with just the ID included is fine
-//
-// ```go
-// user := &User{ID: id}
-// user.GetChainUIDsAndIsAdminByUserID(db)
-// ```
-func (u *User) GetUserChainResponse(db *gorm.DB) (results *[]UserChainResponse, err error) {
-	results = &[]UserChainResponse{}
-	err = db.Raw(`
-SELECT
-	chains.uid AS chain_uid,
-	users.uid AS user_uid,
-	user_chains.is_chain_admin AS is_chain_admin
-FROM user_chains
-LEFT JOIN chains ON user_chains.chain_id = chains.id 
-LEFT JOIN users ON user_chains.user_id = users.id 
-WHERE user_chains.user_id = ?
-	`, u.ID).Scan(results).Error
-	if err != nil {
-		return nil, fmt.Errorf("unable to look for chains related to user")
-	}
-
-	return results, nil
-}
-
 var ErrAddUserChainsToObject = errors.New("Unable to add associated loops to user")
 
 func (u *User) AddUserChainsToObject(db *gorm.DB) error {
@@ -97,7 +65,8 @@ SELECT
 	chains.uid                 AS chain_uid,
 	user_chains.user_id        AS user_id,
 	users.uid                  AS user_uid,
-	user_chains.is_chain_admin AS is_chain_admin
+	user_chains.is_chain_admin AS is_chain_admin,
+	user_chains.created_at     AS created_at
 FROM user_chains
 LEFT JOIN chains ON user_chains.chain_id = chains.id
 LEFT JOIN users ON user_chains.user_id = users.id
