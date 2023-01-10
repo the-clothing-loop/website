@@ -87,15 +87,23 @@ export default function ChainMemberList() {
         setUsers(chainUsers);
         setPublished(chainData.published);
         setOpenToNewMembers(chainData.open_to_new_members);
-      } catch (error: any) {
-        console.error(`Error getting chain: ${error}`);
+      } catch (err: any) {
+        if (err?.status === 401) {
+          history.replace("/loops");
+        }
       }
     })();
   }, [history]);
 
   async function refresh() {
-    const chainUsers = (await userGetAllByChain(chainUID)).data;
-    setUsers(chainUsers);
+    try {
+      const chainUsers = (await userGetAllByChain(chainUID)).data;
+      setUsers(chainUsers);
+    } catch (err: any) {
+      if (err?.status === 401) {
+        history.replace("/loops");
+      }
+    }
   }
 
   if (!chain || !users) {

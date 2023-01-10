@@ -58,11 +58,13 @@ WHERE user_tokens.token = ?
 	}
 
 	user := &models.User{}
-	db.Raw(`SELECT users.*
-	FROM user_tokens
-	LEFT JOIN users ON user_tokens.user_id = users.id
-	WHERE user_tokens.token = ?
-	LIMIT 1`, token).Scan(user)
+	db.Raw(`
+SELECT users.*
+FROM user_tokens
+LEFT JOIN users ON user_tokens.user_id = users.id
+WHERE user_tokens.token = ?
+LIMIT 1
+	`, token).Scan(user)
 	if user.ID == 0 {
 		return false, nil
 	}

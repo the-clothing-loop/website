@@ -286,14 +286,22 @@ func ChainAddUser(c *gin.Context) {
 	}
 
 	user := models.User{}
-	if res := db.Where("uid = ? AND enabled = ? AND is_email_verified = ?", body.UserUID, true, true).First(&user); res.Error != nil {
+	if res := db.Raw(`
+SELECT * FROM users
+WHERE uid = ? AND enabled = TRUE AND is_email_verified = TRUE
+LIMIT 1
+	`, body.UserUID).Scan(&user); res.Error != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrUserNotFound)
 		return
 	}
 
 	userChain := &models.UserChain{}
-	if res := db.Where("user_id = ? AND chain_id = ?", user.ID, chain.ID).First(userChain); res.Error == nil {
-		if !userChain.IsChainAdmin && body.IsChainAdmin {
+	if res := db.Raw(`
+SELECT * FROM user_chains
+WHERE user_id = ? AND chain_id = ?
+LIMIT 1
+	`, user.ID, chain.ID).Scan(userChain); res.Error == nil {
+		if (!userChain.IsChainAdmin && body.IsChainAdmin) || (userChain.IsChainAdmin && !body.IsChainAdmin) {
 			userChain.IsChainAdmin = body.IsChainAdmin
 			db.Save(userChain)
 		}
@@ -303,24 +311,27 @@ func ChainAddUser(c *gin.Context) {
 			ChainID:      chain.ID,
 			IsChainAdmin: false,
 		}); res.Error != nil {
+			glog.Error(res.Error)
 			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be added to chain due to unknown error"))
 			return
 		}
 
-		var results []struct {
+		// find admin users related to the chain to email
+		results := []struct {
 			Name  string
 			Email zero.String
-		}
+		}{}
 		db.Raw(`
 SELECT users.name as name, users.email as email
-FROM user_chains
-LEFT JOIN users ON user_chains.user_id = users.id 
-WHERE user_chains.chain_id = ?
-	AND user_chains.is_chain_admin = TRUE
+FROM user_chains AS uc
+LEFT JOIN users ON uc.user_id = users.id 
+WHERE uc.chain_id = ?
+	AND uc.is_chain_admin = TRUE
 	AND users.enabled = TRUE
 `, chain.ID).Scan(&results)
 
 		if len(results) == 0 {
+			glog.Errorf("Empty chain that is still public: ChainID: %d", chain.ID)
 			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("No admins exist for this loop"))
 			return
 		}

@@ -24,8 +24,8 @@ func DatabaseInit() *gorm.DB {
 	return db
 }
 
-func DatabaseAutoMigrate(db *gorm.DB) error {
-	return db.AutoMigrate(
+func DatabaseAutoMigrate(db *gorm.DB) {
+	db.AutoMigrate(
 		&models.Chain{},
 		&models.Mail{},
 		&models.Newsletter{},
@@ -34,4 +34,12 @@ func DatabaseAutoMigrate(db *gorm.DB) error {
 		&models.UserChain{},
 		&models.Payment{},
 	)
+
+	if !db.Migrator().HasConstraint(&models.UserChain{}, "uci_user_id_chain_id") {
+		db.Exec(`
+ALTER TABLE user_chains
+ADD CONSTRAINT uci_user_id_chain_id
+UNIQUE (user_id, chain_id)
+		`)
+	}
 }

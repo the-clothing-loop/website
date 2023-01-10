@@ -11,7 +11,6 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	glog "github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm/clause"
 )
 
 type UserCreateRequestBody struct {
@@ -239,12 +238,15 @@ func UserUpdate(c *gin.Context) {
 
 	if body.Newsletter != nil {
 		if *body.Newsletter {
-			res := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
-				Email: user.Email.String,
-				Name:  user.Name,
-			})
-			if res.Error != nil {
-				glog.Error(res.Error)
+			n := &models.Newsletter{
+				Email:    user.Email.String,
+				Name:     user.Name,
+				Verified: true,
+			}
+
+			err := n.CreateOrUpdate(db)
+			if err != nil {
+				glog.Error(err)
 				gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 				return
 			}
