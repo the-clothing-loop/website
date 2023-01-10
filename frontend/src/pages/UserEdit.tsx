@@ -62,7 +62,6 @@ export default function UserEdit() {
         setTimeout(() => {
           history.goBack();
         }, 1200);
-        console.log(values.newsletter);
       } catch (err: any) {
         console.error(`Error updating user: ${JSON.stringify(e)}`);
         addToastError(GinParseErrors(t, e));
@@ -77,7 +76,6 @@ export default function UserEdit() {
         const isEnrolled = (
           await userHasNewsletter(state.chainUID, params.userUID)
         ).data;
-        console.log(isEnrolled);
         setUser(user);
         setValues({
           name: user.name,
