@@ -413,15 +413,10 @@ function ParticipantsTable(props: {
   }
 
   function signedUpOn(uc: UserChain): string {
-    let date = new Date(uc.created_at);
     let locale = i18n.language;
-    if (locale === "en" && window.navigator.language === "en-US") {
-      locale = "en-US";
-    } else {
-      locale = "en-GB";
-    }
+    if (locale === "en") locale = "default";
 
-    return date.toLocaleDateString(locale);
+    return new Date(uc.created_at).toLocaleDateString(locale);
   }
 
   return (
