@@ -209,7 +209,7 @@ function HostTable(props: {
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
-  const { addToastError } = useContext(ToastContext);
+  const { addToastError, addToastStatic } = useContext(ToastContext);
 
   const refSelect: any = useRef<HTMLSelectElement>();
   const [selected, setSelected] = useState("");
@@ -250,11 +250,25 @@ function HostTable(props: {
 
   function onDemote() {
     if (!selected) return;
-    let chainUID = props.chain.uid;
+    const _selected = selected;
+    const chainUID = props.chain.uid;
+    const userName = props.users.find((u) => u.uid === _selected)?.name || "";
 
-    chainAddUser(chainUID, selected, false).finally(() => {
-      setSelected("");
-      return props.refresh();
+    addToastStatic({
+      message: t("areYouSureRevokeHost", { name: userName }),
+      type: "warning",
+      actions: [
+        {
+          text: t("revoke"),
+          type: "ghost",
+          fn: () => {
+            chainAddUser(chainUID, _selected, false).finally(() => {
+              setSelected("");
+              return props.refresh();
+            });
+          },
+        },
+      ],
     });
   }
 
@@ -375,7 +389,7 @@ function ParticipantsTable(props: {
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
-  const { addToastError, addToast } = useContext(ToastContext);
+  const { addToastError, addToastStatic } = useContext(ToastContext);
 
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -403,13 +417,31 @@ function ParticipantsTable(props: {
   }
 
   function onRemove() {
-    let chainUID = props.chain.uid;
-    Promise.all(selected.map((s) => chainRemoveUser(chainUID, s))).finally(
-      () => {
-        setSelected([]);
-        return props.refresh();
-      }
-    );
+    if (!selected.length) return;
+    const chainUID = props.chain.uid;
+    const _selected = selected;
+    const userNames = props.users
+      .filter((u) => _selected.includes(u.uid))
+      .map((u) => u.name);
+
+    addToastStatic({
+      message: t("areYouSureRemoveParticipant", { user: userNames.join(", ") }),
+      type: "warning",
+      actions: [
+        {
+          text: t("remove"),
+          type: "ghost",
+          fn: () => {
+            Promise.all(
+              _selected.map((s) => chainRemoveUser(chainUID, s))
+            ).finally(() => {
+              setSelected([]);
+              return props.refresh();
+            });
+          },
+        },
+      ],
+    });
   }
 
   return (
