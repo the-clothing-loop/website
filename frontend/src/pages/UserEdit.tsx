@@ -8,7 +8,7 @@ import { TextForm } from "../components/FormFields";
 import categories from "../util/categories";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { UID, User } from "../api/types";
-import { userGetByUID, userUpdate } from "../api/user";
+import { userGetByUID, userHasNewsletter, userUpdate } from "../api/user";
 import { PhoneFormField } from "../components/FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
@@ -62,6 +62,7 @@ export default function UserEdit() {
         setTimeout(() => {
           history.goBack();
         }, 1200);
+        console.log(values.newsletter);
       } catch (err: any) {
         console.error(`Error updating user: ${JSON.stringify(e)}`);
         addToastError(GinParseErrors(t, e));
@@ -73,13 +74,17 @@ export default function UserEdit() {
     (async () => {
       try {
         const user = (await userGetByUID(state.chainUID, params.userUID)).data;
+        const isEnrolled = (
+          await userHasNewsletter(state.chainUID, params.userUID)
+        ).data;
+        console.log(isEnrolled);
         setUser(user);
         setValues({
           name: user.name,
           phone: user.phone_number,
           sizes: user.sizes,
           address: user.address,
-          newsletter: false,
+          newsletter: isEnrolled.has_newsletter,
         });
       } catch (error) {
         console.warn(error);
@@ -144,6 +149,8 @@ export default function UserEdit() {
                 </span>
                 <input
                   type="checkbox"
+                  checked={values.newsletter}
+                  onChange={() => setValue("newsletter", !values.newsletter)}
                   required={
                     user.is_root_admin || userIsChainAdmin ? true : false
                   }

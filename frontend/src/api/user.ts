@@ -57,6 +57,11 @@ export function userPurge(userUID: string) {
   return axios.delete(`v2/user/purge?user_uid=${userUID}`);
 }
 
-export function userHasNewsletter(userUID: string) {
-  return axios.get(`v2/user/newsletter?user_uid=${userUID}`);
+export function userHasNewsletter(chainUID: string, userUID: string) {
+  return axios.get("v2/user/newsletter", {
+    params: {
+      chain_uid: chainUID,
+      user_uid: userUID,
+    },
+  });
 }

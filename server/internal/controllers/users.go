@@ -166,21 +166,36 @@ func UserHasNewsletter(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UserUID string `form:"user_uid" binding:"required,uuid"`
+		UserUID  string `form:"user_uid" binding:"required,uuid"`
+		ChainUID string `form:"chain_uid" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
-	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, "", query.UserUID)
+	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, query.ChainUID, query.UserUID)
 	if !ok {
 		return
 	}
 
+	//isChainAdmin, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+
+	/*
+		ok, user, _, _ := auth.Authenticate(c, db, "", query.UserUID)
+		if !ok {
+			return
+		}
+	*/
+
 	hasNewsletter := 0
 	db.Raw(`SELECT COUNT(*) FROM newsletters WHERE email = ? LIMIT 1`, user.Email.String).Scan(&hasNewsletter)
 
+	/*
+		var hasNewsletter uint
+		db.Raw(`SELECT id FROM newsletters WHERE email IN(
+			SELECT email FROM users WHERE uid = ?)`, query.UserUID).Scan(&hasNewsletter)
+	*/
 	c.JSON(200, gin.H{"has_newsletter": hasNewsletter > 0})
 }
 
@@ -332,4 +347,3 @@ HAVING COUNT(uc.id) = 1 AND uc.chain_id IN (
 	}
 	tx.Commit()
 }
-
