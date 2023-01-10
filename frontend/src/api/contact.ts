@@ -5,7 +5,7 @@ export function contactNewsletterSet(
   email: string,
   subscribe: boolean
 ) {
-  return axios.post("/v2/contact/newsletter", {
+  return axios.post<never>("/v2/contact/newsletter", {
     name,
     email,
     subscribe,
@@ -13,7 +13,7 @@ export function contactNewsletterSet(
 }
 
 export function contactMailSend(name: string, email: string, message: string) {
-  return axios.post("/v2/contact/email", {
+  return axios.post<never>("/v2/contact/email", {
     name,
     email,
     message,

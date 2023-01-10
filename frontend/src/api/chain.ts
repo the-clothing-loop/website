@@ -18,13 +18,13 @@ export function chainGetAll(params?: RequestChainGetAllParams) {
 }
 
 export function chainCreate(chain: RequestRegisterChain) {
-  return axios.post("/v2/chain", chain);
+  return axios.post<never>("/v2/chain", chain);
 }
 
 export type ChainUpdateBody = Partial<Chain> & { uid: UID };
 
 export function chainUpdate(chain: ChainUpdateBody) {
-  return axios.patch("/v2/chain", chain);
+  return axios.patch<never>("/v2/chain", chain);
 }
 
 export function chainAddUser(
@@ -32,7 +32,7 @@ export function chainAddUser(
   userUID: UID,
   isChainAdmin: boolean
 ) {
-  return axios.post("/v2/chain/add-user", {
+  return axios.post<never>("/v2/chain/add-user", {
     user_uid: userUID,
     chain_uid: chainUID,
     is_chain_admin: isChainAdmin,
@@ -40,14 +40,14 @@ export function chainAddUser(
 }
 
 export function chainRemoveUser(chainUID: UID, userUID: UID) {
-  return axios.post("/v2/chain/remove-user", {
+  return axios.post<never>("/v2/chain/remove-user", {
     user_uid: userUID,
     chain_uid: chainUID,
   });
 }
 
 export function userDelete(chainUID: string, userUID: string) {
-  return axios.delete("/v2/user", {
+  return axios.delete<never>("/v2/user", {
     params: { user_uid: userUID, chain_uid: chainUID },
   });
 }

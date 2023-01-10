@@ -39,22 +39,24 @@ export interface UserUpdateBody {
   address?: string;
 }
 export function userUpdate(user: UserUpdateBody) {
-  return axios.patch("/v2/user", user);
+  return axios.patch<never>("/v2/user", user);
 }
 
 export function userAddAsChainAdmin(chainUID: string, userUID: string) {
-  return axios.post("/v2/user/add-as-chain-admin", {
+  return axios.post<never>("/v2/user/add-as-chain-admin", {
     user_uid: userUID,
     chain_uid: chainUID,
   });
 }
 
 export function userDelete(chainUID: string, userUID: string) {
-  return axios.delete(`/v2/user/?user_uid=${userUID}&chain_uid=${chainUID}`);
+  return axios.delete<never>(
+    `/v2/user/?user_uid=${userUID}&chain_uid=${chainUID}`
+  );
 }
 
 export function userPurge(userUID: string) {
-  return axios.delete(`v2/user/purge?user_uid=${userUID}`);
+  return axios.delete<never>(`v2/user/purge?user_uid=${userUID}`);
 }
 
 export function userHasNewsletter(chainUID: string, userUID: string) {
