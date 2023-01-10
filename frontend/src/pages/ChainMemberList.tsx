@@ -219,7 +219,7 @@ function HostTable(props: {
     let host: User[] = [];
     let notHost: User[] = [];
     props.users?.forEach((u) => {
-      let uc = u.chains.find((c) => c.chain_uid === props.chain?.uid);
+      let uc = u.chains.find((uc) => uc.chain_uid === props.chain?.uid);
       if (uc?.is_chain_admin) host.push(u);
       else notHost.push(u);
     });
