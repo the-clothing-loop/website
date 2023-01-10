@@ -12,7 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3/zero"
-	"gorm.io/gorm/clause"
 )
 
 func LoginEmail(c *gin.Context) {
@@ -254,11 +253,12 @@ func RegisterBasicUser(c *gin.Context) {
 		IsChainAdmin: false,
 	})
 	if body.User.Newsletter {
-		db.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
+		n := &models.Newsletter{
 			Email:    body.User.Email,
 			Name:     body.User.Name,
 			Verified: false,
-		})
+		}
+		n.CreateOrUpdate(db)
 	}
 
 	token, err := auth.TokenCreateUnverified(db, user.ID)

@@ -1,13 +1,14 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/CollActionteam/clothing-loop/server/internal/views"
+	glog "github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm/clause"
 )
 
 func ContactNewsletter(c *gin.Context) {
@@ -36,11 +37,17 @@ func ContactNewsletter(c *gin.Context) {
 		name = row.Name
 	}
 
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&models.Newsletter{
+	n := &models.Newsletter{
 		Name:     name,
 		Email:    body.Email,
 		Verified: true,
-	})
+	}
+	err := n.CreateOrUpdate(db)
+	if err != nil {
+		glog.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
+		return
+	}
 
 	views.EmailSubscribeToNewsletter(c, db, name, body.Email)
 }
