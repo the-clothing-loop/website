@@ -1,12 +1,12 @@
 {
-  "faqForParticipants": "FAQ for Participants",
+  "faqForParticipants": "Question-réponse pour les participants",
   "arrParticipants": [
     {
-      "question": "Are there rules on how much you can take out, and do you have to donate the same amount of clothes as you take out?",
-      "answer": "No, there are no rules here. Sometimes you take a bit more, sometimes you give more. Please don't add clothes to the bags that aren't of good quality, just to add something! It's better to have a bag half full of treasures, than to have a full bag that is of less quality."
+      "question": "Y a-t-il des règles concernant le nombre de vêtements que l'on peut prendre, et doit-on remettre la même quantité de vêtements que l'on prend ?",
+      "answer": "Non, il n'y a pas de règles en la matière. Parfois vous prenez un peu plus, parfois vous donnerez plus. Veuillez ne pas ajouter des vêtements de mauvaise qualité dans les sacs, juste pour mettre quelque chose ! Il est préférable d'avoir un sac à moitié rempli de trésors que d'avoir un sac plein de vêtements de moindre qualité."
     },
     {
-      "question": "Can all sizes of clothing be in the same bag?",
+      "question": "Peut-on mettre toutes les tailles de vêtements dans le même sac ?",
       "answer": "Mixed bags work perfectly well usually, as sizes vary per brand and proportions are different as well. But this only works within a certain width. We recommend having a mix of items from size 36 - 42 (S, M and L) and starting a new Clothing Loop for smaller or bigger sizes."
     },
     {
@@ -22,7 +22,7 @@
       "answer": "The short answer is yes, but keep in mind: shoes are more difficult to pass along than clothes. There are many more sizes, and they show wear a lot quicker than garments. So please be very selective with shoes! Only add “as good as new” pairs, and have no more than 2 pairs per bag."
     }
   ],
-  "faqForHosts": "FAQ for Hosts",
+  "faqForHosts": "Question-réponse pour les organisateurs",
   "arrHosts": [
     {
       "question": "How can I start using the app?",
