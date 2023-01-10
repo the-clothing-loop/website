@@ -182,7 +182,7 @@ func UserHasNewsletter(c *gin.Context) {
 	hasNewsletter := 0
 	db.Raw(`SELECT COUNT(*) FROM newsletters WHERE email = ? LIMIT 1`, user.Email.String).Scan(&hasNewsletter)
 
-	c.JSON(200, gin.H{"has_newsletter": hasNewsletter > 0})
+	c.JSON(200, hasNewsletter > 0)
 }
 
 func UserUpdate(c *gin.Context) {

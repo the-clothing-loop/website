@@ -77,7 +77,7 @@ export default function UserEdit() {
     (async () => {
       try {
         const user = (await userGetByUID(state.chainUID, params.userUID)).data;
-        const isEnrolled = (
+        const hasNewsletter = (
           await userHasNewsletter(state.chainUID, params.userUID)
         ).data;
         setUser(user);
@@ -86,7 +86,7 @@ export default function UserEdit() {
           phone: user.phone_number,
           sizes: user.sizes,
           address: user.address,
-          newsletter: isEnrolled.has_newsletter,
+          newsletter: hasNewsletter,
         });
       } catch (error) {
         console.warn(error);

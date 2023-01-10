@@ -58,7 +58,7 @@ export function userPurge(userUID: string) {
 }
 
 export function userHasNewsletter(chainUID: string, userUID: string) {
-  return axios.get("v2/user/newsletter", {
+  return axios.get<boolean>("v2/user/newsletter", {
     params: {
       chain_uid: chainUID,
       user_uid: userUID,
