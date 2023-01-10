@@ -8,7 +8,7 @@ import { TextForm } from "../components/FormFields";
 import categories from "../util/categories";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { UID, User } from "../api/types";
-import { userGetByUID, userUpdate } from "../api/user";
+import { userGetByUID, userHasNewsletter, userUpdate } from "../api/user";
 import { PhoneFormField } from "../components/FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
@@ -44,6 +44,10 @@ export default function UserEdit() {
         ?.is_chain_admin || false,
     [user]
   );
+  const userIsAnyChainAdmin = useMemo(
+    () => !!user?.chains.find((uc) => uc.is_chain_admin),
+    [user]
+  );
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -73,13 +77,16 @@ export default function UserEdit() {
     (async () => {
       try {
         const user = (await userGetByUID(state.chainUID, params.userUID)).data;
+        const hasNewsletter = (
+          await userHasNewsletter(state.chainUID, params.userUID)
+        ).data;
         setUser(user);
         setValues({
           name: user.name,
           phone: user.phone_number,
           sizes: user.sizes,
           address: user.address,
-          newsletter: false,
+          newsletter: hasNewsletter,
         });
       } catch (error) {
         console.warn(error);
@@ -87,7 +94,9 @@ export default function UserEdit() {
     })();
   }, [history]);
 
-  return !user ? null : (
+  if (!user) return null;
+  const isNewsletterRequired = user.is_root_admin ? false : userIsAnyChainAdmin;
+  return (
     <>
       <Helmet>
         <title>The Clothing Loop | Edit user</title>
@@ -142,7 +151,16 @@ export default function UserEdit() {
                 <span className="label-text">
                   {t("newsletterSubscription")}
                 </span>
-                <input type="checkbox" className="checkbox" name="newsletter" />
+                <input
+                  type="checkbox"
+                  checked={values.newsletter}
+                  onChange={() => setValue("newsletter", !values.newsletter)}
+                  required={
+                    user.is_root_admin || userIsChainAdmin ? true : false
+                  }
+                  className="checkbox"
+                  name="newsletter"
+                />
               </label>
             </div>
 

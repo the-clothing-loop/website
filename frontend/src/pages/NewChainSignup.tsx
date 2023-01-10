@@ -130,7 +130,7 @@ export default function Signup() {
                     onResult={(g) => setJsValue("address", g.query)}
                   />
                 </label>
-                <FormActions />
+                <FormActions isNewsletterRequired={true} />
 
                 <div className="mt-4">
                   <button type="submit" className="btn btn-primary">

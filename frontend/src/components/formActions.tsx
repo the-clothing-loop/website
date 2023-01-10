@@ -1,6 +1,6 @@
 import { Trans, useTranslation } from "react-i18next";
 
-export default function FormActions() {
+export default function FormActions(props: { isNewsletterRequired: boolean }) {
   const { t } = useTranslation();
 
   return (
@@ -12,6 +12,7 @@ export default function FormActions() {
           </span>
           <input
             type="checkbox"
+            required={props.isNewsletterRequired}
             className="checkbox border-black"
             name="newsletter"
           />

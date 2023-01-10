@@ -161,7 +161,7 @@ export default function Signup() {
                   <PopoverOnHover
                     message={t("weWouldLikeToKnowThisEquallyRepresented")}
                   />
-                  <FormActions />
+                  <FormActions isNewsletterRequired={false} />
                 </div>
 
                 <div className="mb-4">

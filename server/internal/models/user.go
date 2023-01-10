@@ -123,3 +123,15 @@ func (u *User) IsPartOfChain(chainUID string) (ok, isChainAdmin bool) {
 
 	return ok, isChainAdmin
 }
+
+// This required user to have run AddUserChainsToObject before this
+func (u *User) IsAnyChainAdmin() (isAnyChainAdmin bool) {
+	for _, c := range u.Chains {
+		if c.IsChainAdmin {
+			isAnyChainAdmin = c.IsChainAdmin
+			break
+		}
+	}
+
+	return isAnyChainAdmin
+}
