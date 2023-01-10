@@ -40,8 +40,12 @@ export default function UserEdit() {
 
   const userIsChainAdmin = useMemo(
     () =>
-      user?.chains.find((c) => c.chain_uid === state.chainUID)
+      user?.chains.find((uc) => uc.chain_uid === state.chainUID)
         ?.is_chain_admin || false,
+    [user]
+  );
+  const userIsAnyChainAdmin = useMemo(
+    () => !!user?.chains.find((uc) => uc.is_chain_admin),
     [user]
   );
 
@@ -90,7 +94,9 @@ export default function UserEdit() {
     })();
   }, [history]);
 
-  return !user ? null : (
+  if (!user) return null;
+  const isNewsletterRequired = user.is_root_admin ? false : userIsAnyChainAdmin;
+  return (
     <>
       <Helmet>
         <title>The Clothing Loop | Edit user</title>

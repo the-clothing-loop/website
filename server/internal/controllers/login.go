@@ -190,10 +190,9 @@ func RegisterChainAdmin(c *gin.Context) {
 			Name:     body.User.Name,
 			Verified: false,
 		})
-	} else if !(body.User.Newsletter) {
+	} else {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("Newsletter-Box must be checked to create a new loop admin."))
 		return
-
 	}
 
 	token, err := auth.TokenCreateUnverified(db, user.ID)

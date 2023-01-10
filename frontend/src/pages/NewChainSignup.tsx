@@ -32,7 +32,6 @@ export default function Signup() {
   const [jsValues, setJsValue, setJsValues] = useForm<FormJsValues>({
     address: "",
   });
-  const newsLetterRequired = true;
 
   if (authUser) {
     history.replace({
@@ -120,7 +119,7 @@ export default function Signup() {
                   name="email"
                   type="email"
                 />
-                <PhoneFormField required={false} />
+                <PhoneFormField required />
 
                 <label className="form-control w-full mb-4">
                   <div className="label">
@@ -131,7 +130,7 @@ export default function Signup() {
                     onResult={(g) => setJsValue("address", g.query)}
                   />
                 </label>
-                <FormActions isNewsLetterRequired={newsLetterRequired} />
+                <FormActions isNewsletterRequired={true} />
 
                 <div className="mt-4">
                   <button type="submit" className="btn btn-primary">
