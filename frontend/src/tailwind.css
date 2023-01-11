@@ -112,6 +112,6 @@
   @apply text-black border-yellow-darker;
 }
 
-details.marker\:content-none::-webkit-details-marker {
+summary.marker\:content-none::-webkit-details-marker {
   display: none;
 }
