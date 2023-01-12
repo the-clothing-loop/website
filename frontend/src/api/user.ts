@@ -37,6 +37,7 @@ export interface UserUpdateBody {
   newsletter?: boolean;
   sizes?: string[];
   address?: string;
+  is_approved?: boolean;
 }
 export function userUpdate(user: UserUpdateBody) {
   return axios.patch<never>("/v2/user", user);
@@ -61,6 +62,15 @@ export function userPurge(userUID: string) {
 
 export function userHasNewsletter(chainUID: string, userUID: string) {
   return axios.get<boolean>("v2/user/newsletter", {
+    params: {
+      chain_uid: chainUID,
+      user_uid: userUID,
+    },
+  });
+}
+
+export function userApprove(chainUID: string, userUID: string) {
+  return axios.get<boolean>(`v2/user/approve`, {
     params: {
       chain_uid: chainUID,
       user_uid: userUID,

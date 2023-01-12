@@ -21,7 +21,7 @@ import {
   chainUpdate,
 } from "../api/chain";
 import { Chain, User, UserChain } from "../api/types";
-import { userGetAllByChain } from "../api/user";
+import { userGetAllByChain, userApprove} from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
@@ -450,6 +450,35 @@ function ParticipantsTable(props: {
       ],
     });
   }
+  
+  function onApprove(){ //Replace code with the function code needed v2/approve
+        if (!selected.length) return;
+    const chainUID = props.chain.uid;
+    const _selected = selected;
+    const userNames = props.users
+      .filter((u) => _selected.includes(u.uid))
+      .map((u) => u.name);
+
+    addToastStatic({
+      message: t("approveParticipant", { name: userNames.join(", ") }),
+      type: "warning",
+      actions: [
+        {
+          text: t("approve"),
+          type: "ghost",
+          fn: () => {
+            Promise.all(
+              _selected.map((s) => chainRemoveUser(chainUID, s))
+            ).finally(() => {
+              setSelected([]);
+              return props.refresh();
+            });
+          },
+        },
+      ],
+    });
+
+  }
 
   function signedUpOn(uc: UserChain): string {
     let locale = i18n.language;
@@ -537,7 +566,7 @@ function ParticipantsTable(props: {
                 to={edit}
               ></Link>
             </div>
-            <div className="tooltip" data-tip={t("removeFromLoop")}>
+            <div className="tooltip mr-2" data-tip={t("removeFromLoop")}>
               <button
                 type="button"
                 onClick={onRemove}
@@ -546,6 +575,16 @@ function ParticipantsTable(props: {
                 }`}
                 aria-label={t("removeFromLoop")}
                 disabled={!selected}
+              ></button>
+            </div>
+            
+            <div className="tooltip" data-tip={t("approveUser")} /*added code for add-accept remove comment upon completion*/> 
+                <button 
+                  type ="button"
+                  onClick={onApprove}
+                  className={`btn btn-sm btn-circle feather feather-user-x ${
+                    selected.length ? "btn-error" : "btn-disabled opacity-60"
+                  }`}
               ></button>
             </div>
           </div>
