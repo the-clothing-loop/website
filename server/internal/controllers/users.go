@@ -185,33 +185,27 @@ func UserHasNewsletter(c *gin.Context) {
 	c.JSON(200, hasNewsletter > 0)
 }
 
-func UserApprove(c *gin.Context) { //remove after 
+func UserIsApproved(c *gin.Context) { //remove after
 	db := getDB(c)
 
 	var query struct {
-		UserUID  string `form:"user_uid" binding:"required,uuid"`
-		ChainUID string `form:"chain_uid" binding:"omitempty,uuid"`
+		UserUID string `form:"user_uid" binding:"required,uuid"`
+		ChainID string `form:"chain_id" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
-	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, query.ChainUID, query.UserUID)
+	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, "", query.UserUID)
 	if !ok {
 		return
 	}
 
-	var adminID uint
-	db.Raw("SELECT user_id FROM user_chains WHERE uid = ? LIMIT 1", query.ChainUID).Scan(&adminID)
-	if adminID == 0 {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("User is not found"))
-		return
-	}
+	isPending := 0
+	db.Raw("SELECT is_approved FROM user_chains WHERE uid = ? AND chain_id = ? LIMIT 1", user.ID, query.ChainID).Scan(&isPending)
 
-	db.Exec(`UPDATE user_chains SET is_approved = 1 WHERE user_id = ? AND chain_id IN(
-		SELECT chain_id FROM user_chains WHERE user_id = ? AND is_admin = 1)`, user.ID, adminID,
-	)
+	c.JSON(200, isPending > 0)
 
 }
 

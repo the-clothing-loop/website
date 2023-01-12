@@ -22,10 +22,11 @@ import {
   chainUserApprove
 } from "../api/chain";
 import { Chain, User, UserChain } from "../api/types";
-import { userGetAllByChain, /*userApprove*/} from "../api/user";
+import { userGetAllByChain, userIsApproved} from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
+import { ucs2 } from "punycode";
 
 interface Params {
   chainUID: string;
@@ -215,6 +216,7 @@ function HostTable(props: {
   authUser: User | null;
   chain: Chain;
   users: User[];
+  userChain: UserChain;
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
@@ -487,6 +489,12 @@ function ParticipantsTable(props: {
 
     return new Date(uc.created_at).toLocaleDateString(locale);
   }
+  
+  function isPendingApproval(ap: UserChain) : boolean {
+  
+    console.log(ap.user_uid)
+    return  ap.is_approved
+  }
 
   return (
     <>
@@ -508,7 +516,7 @@ function ParticipantsTable(props: {
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((u: User) => {
                   const userChain = u.chains.find(
-                    (uc) => uc.chain_uid === props.chain.uid
+                    (uc) => uc.chain_uid === props.chain.uid,
                   )!;
 
                   return (

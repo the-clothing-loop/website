@@ -68,13 +68,12 @@ export function userHasNewsletter(chainUID: string, userUID: string) {
     },
   });
 }
-/*
-export function userApprove(chainUID: string, userUID: string) {
-  return axios.get<boolean>(`v2/user/approve`, {
+
+export function userIsApproved(chainUID: string, chainID: bigint) {
+  return axios.get<boolean>(`v2/user/is-approved`, {
     params: {
       chain_uid: chainUID,
-      user_uid: userUID,
+      chain_id: chainID,
     },
   });
 }
-*/
