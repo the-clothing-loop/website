@@ -93,7 +93,7 @@ WHERE email = (
 
 	if res := db.Exec(`
 		UPDATE user_chains 
-		SET is_approved = 1 
+		SET is_approved = TRUE 
 		WHERE user_id =(
 			SELECT user_id WHERE is chain_admin = 1 
 			AND user_id = ?
@@ -101,14 +101,14 @@ WHERE email = (
 	`, user.ID); res.Error != nil {
 		db.Exec(`
 		UPDATE user_chains 
-		SET is_approved = 0
+		SET is_approved = FALSE
 		WHERE user_id =(
 			SELECT user_id WHERE is chain_admin = 1 
 			AND user_id = ?
 		)
 	`, user.ID)
 	}
-	
+
 	return true, user
 }
 

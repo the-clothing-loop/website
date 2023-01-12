@@ -17,6 +17,7 @@ export interface UserChain {
   chain_uid: UID;
   is_chain_admin: boolean;
   created_at: string;
+  is_approved: boolean;
 }
 
 export interface Chain {

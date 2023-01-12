@@ -512,37 +512,37 @@ function ParticipantsTable(props: {
                   )!;
 
                   return (
-                    <tr key={u.uid}>
-                      <td className="sticky">
-                        <input
-                          type="checkbox"
-                          name="selectedChainAdmin"
-                          className="checkbox checkbox-sm checkbox-primary"
-                          checked={selected.includes(u.uid)}
-                          onChange={onChangeSelect}
-                          value={u.uid}
-                        />
-                      </td>
-                      <td>{u.name}</td>
-                      <td>
-                        <span className="block w-48 text-sm whitespace-normal">
-                          {u.address}
-                        </span>
-                      </td>
-                      <td className="text-sm leading-relaxed">
-                        {u.email}
-                        <br />
-                        {u.phone_number}
-                      </td>
-                      <td className="align-middle">
-                        <span
-                          className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
-                          tabIndex={0}
-                        >
-                          {SizeBadges(t, u.sizes)}
-                        </span>
-                      </td>
-                      <td className="text-center">{signedUpOn(userChain)}</td>
+                    <tr key={u.uid} >
+                        <td className="sticky">
+                          <input
+                            type="checkbox"
+                            name="selectedChainAdmin"
+                            className="checkbox checkbox-sm checkbox-primary"
+                            checked={selected.includes(u.uid)}
+                            onChange={onChangeSelect}
+                            value={u.uid}
+                          />
+                        </td>
+                        <td>{u.name}</td>
+                        <td>
+                          <span className="block w-48 text-sm whitespace-normal">
+                            {u.address}
+                          </span>
+                        </td>
+                        <td className="text-sm leading-relaxed">
+                          {u.email}
+                          <br />
+                          {u.phone_number}
+                        </td>
+                        <td className="align-middle">
+                          <span
+                            className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                            tabIndex={0}
+                          >
+                            {SizeBadges(t, u.sizes)}
+                          </span>
+                        </td>
+                        <td className="text-center">{signedUpOn(userChain)}</td>
                     </tr>
                   );
                 })}

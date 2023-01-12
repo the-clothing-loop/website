@@ -453,7 +453,7 @@ func ChainApproveUser(c *gin.Context) {
 
 	db.Exec(`
 	UPDATE user_chains
-	SET user_chains.is_approved = 1 WHERE user_id =(
+	SET user_chains.is_approved = TRUE WHERE user_id =(
 		SELECT users.id
 		FROM users
 		WHERE users.uid = ?
