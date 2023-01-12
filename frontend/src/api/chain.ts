@@ -46,8 +46,16 @@ export function chainRemoveUser(chainUID: UID, userUID: UID) {
   });
 }
 
+
 export function userDelete(chainUID: string, userUID: string) {
   return axios.delete<never>("/v2/user", {
     params: { user_uid: userUID, chain_uid: chainUID },
+  });
+}
+
+export function chainUserApprove(chainUID: string, userUID: string) {
+  return axios.patch<never>("/v2/chain/approve-user", {
+    user_uid: userUID,
+    chain_uid: chainUID,
   });
 }

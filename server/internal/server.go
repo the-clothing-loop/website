@@ -63,7 +63,7 @@ func Routes() *gin.Engine {
 	v2.GET("/user", controllers.UserGet)
 	v2.GET("/user/all-chain", controllers.UserGetAllOfChain)
 	v2.GET("/user/newsletter", controllers.UserHasNewsletter)
-	v2.PATCH("/user/approve", controllers.UserApprove)
+	v2.PATCH("/user/approve", controllers.UserApprove) //remove after test
 	v2.PATCH("/user", controllers.UserUpdate)
 	v2.DELETE("/user", controllers.UserDelete)
 	v2.DELETE("/user/purge", controllers.UserPurge)
@@ -75,6 +75,7 @@ func Routes() *gin.Engine {
 	v2.POST("/chain", controllers.ChainCreate)
 	v2.POST("/chain/add-user", controllers.ChainAddUser)
 	v2.POST("/chain/remove-user", controllers.ChainRemoveUser)
+	v2.PATCH("/chain/approve-user", controllers.ChainApproveUser)
 
 	// contact
 	v2.POST("/contact/newsletter", controllers.ContactNewsletter)

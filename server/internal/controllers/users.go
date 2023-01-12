@@ -185,7 +185,7 @@ func UserHasNewsletter(c *gin.Context) {
 	c.JSON(200, hasNewsletter > 0)
 }
 
-func UserApprove(c *gin.Context) {
+func UserApprove(c *gin.Context) { //remove after 
 	db := getDB(c)
 
 	var query struct {

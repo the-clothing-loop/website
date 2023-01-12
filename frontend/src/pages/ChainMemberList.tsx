@@ -19,9 +19,10 @@ import {
   chainGet,
   chainRemoveUser,
   chainUpdate,
+  chainUserApprove
 } from "../api/chain";
 import { Chain, User, UserChain } from "../api/types";
-import { userGetAllByChain, userApprove} from "../api/user";
+import { userGetAllByChain, /*userApprove*/} from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
@@ -468,7 +469,7 @@ function ParticipantsTable(props: {
           type: "ghost",
           fn: () => {
             Promise.all(
-              _selected.map((s) => chainRemoveUser(chainUID, s))
+              _selected.map((s) => chainUserApprove(chainUID, s))
             ).finally(() => {
               setSelected([]);
               return props.refresh();
