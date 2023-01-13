@@ -29,6 +29,7 @@ import FormJup from "../util/form-jup";
 import { ucs2 } from "punycode";
 import { isBooleanObject } from "util/types";
 import { promises } from "stream";
+import clothingCategories from "../util/categories";
 
 interface Params {
   chainUID: string;
@@ -494,18 +495,24 @@ function ParticipantsTable(props: {
     return new Date(uc.created_at).toLocaleDateString(locale);
   }
   
-  
-  function isApproved(uc: UserChain): any {
-
-    console.log((uc.is_approved))
-    
-   }
-  
-   const approval = async(u: string, uc: string)  => {
-    console.log(  (await userIsApproved(u, uc)).data)
-    return (await userIsApproved(u, uc)).data
-   }
-   //approval(u.uid, userChain.chain_uid).then(x => {console.log(x)})
+  function pendingColor(uc: UserChain){
+    if(uc.is_approved != 1){
+      return "bg-yellow/[.60] "
+    }
+    return ""
+  }
+  function pendingSizeButtons(uc: UserChain){
+    if(uc.is_approved != 1){
+      return "bg-yellow/[.0] "
+    }
+    return ""
+  }
+  function pendingCheck(uc: UserChain){
+    if(uc.is_approved != 1){
+      return "border-grey " 
+    }
+    return ""
+  }
 
   return (
     <>
@@ -519,49 +526,53 @@ function ParticipantsTable(props: {
                 <th>{t("address")}</th>
                 <th>{t("contact")}</th>
                 <th>{t("interested size")}</th>
-                <th>{t("signedup at")}</th>
+                <th>{t("signedup ON")}</th>
+                <th>{t("approvalStatus")}</th>
               </tr>
             </thead>
             <tbody>
               {props.users
                 .sort((a, b) => a.name.localeCompare(b.name))
+                .sort((a: User, b: User) => a.chains[0].is_approved)
                 .map((u: User) => {
                   const userChain = u.chains.find(
                     (uc) => uc.chain_uid === props.chain.uid,
                   )!;
+                  
 
                   return (
-                    <tr key={u.uid} >
-                        <td className="sticky">
+                    <tr className ="" key={u.uid}>
+                        <td className={pendingColor(userChain)?.concat("stick")}>
                           <input
                             type="checkbox"
                             name="selectedChainAdmin"
-                            className="checkbox checkbox-sm checkbox-primary"
+                            className={pendingCheck(userChain)?.concat("checkbox checkbox-sm checkbox-primary")}
                             checked={selected.includes(u.uid)}
                             onChange={onChangeSelect}
                             value={u.uid}
-                          />
+                         />
                         </td>
-                        <td>{u.name}</td>
-                        <td>
-                          <span className="block w-48 text-sm whitespace-normal">
+                        <td className={pendingColor(userChain)}>{u.name}</td>
+                        <td className={pendingColor(userChain)}>
+                          <span className=" block w-48 text-sm whitespace-normal">
                             {u.address}
                           </span>
                         </td>
-                        <td className="text-sm leading-relaxed">
+                        <td className={pendingColor(userChain)?.concat("text-sm leading-relaxed")}>
                           {u.email}
                           <br />
                           {u.phone_number}
                         </td>
-                        <td className="align-middle">
+                        <td className={pendingColor(userChain)?.concat("align-middle")}>
                           <span
-                            className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                            className={pendingSizeButtons(userChain)?.concat("block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2")}
                             tabIndex={0}
                           >
                             {SizeBadges(t, u.sizes)}
                           </span>
                         </td>
-                        <td className="text-center">{ userChain.is_approved ?  signedUpOn(userChain) : "Pending Approval"  } </td>
+                        <td className={pendingColor(userChain)?.concat("text-center")}>{  signedUpOn(userChain) } </td>
+                        <td className={pendingColor(userChain)?.concat("text-center")}>{ userChain.is_approved ? "Approved" : "Pending Approval"} </td>
                     </tr>
                   );
                 })}
