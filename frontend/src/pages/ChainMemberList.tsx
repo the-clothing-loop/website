@@ -22,7 +22,7 @@ import {
   chainUserApprove
 } from "../api/chain";
 import { Chain, User, UserChain } from "../api/types";
-import { userGetAllByChain, userIsApproved} from "../api/user";
+import { userAddAsChainAdmin, userGetAllByChain, userIsApproved} from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
