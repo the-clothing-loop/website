@@ -230,6 +230,7 @@ function HostTable(props: {
     let notHost: User[] = [];
     props.users?.forEach((u) => {
       let uc = u.chains.find((uc) => uc.chain_uid === props.chain?.uid);
+      let ap = u.chains.find((ap) => ap.chain_id === props.chain?.id);
       if (uc?.is_chain_admin) host.push(u);
       else notHost.push(u);
     });
@@ -490,11 +491,15 @@ function ParticipantsTable(props: {
     return new Date(uc.created_at).toLocaleDateString(locale);
   }
   
-  function isPendingApproval(ap: UserChain) : boolean {
+  function isPendingApproval(uc: string, uid: string) : any {
   
-    console.log(ap.user_uid)
-    return  ap.is_approved
+   console.log(uc)
+   console.log(uid)
+   const returnData = async () => { 
+   (await userIsApproved(uc, uid)).data;
   }
+  console.log(userIsApproved(uc, uid))
+}
 
   return (
     <>
@@ -550,7 +555,7 @@ function ParticipantsTable(props: {
                             {SizeBadges(t, u.sizes)}
                           </span>
                         </td>
-                        <td className="text-center">{signedUpOn(userChain)}</td>
+                        <td className="text-center">{isPendingApproval(u.uid, userChain.chain_uid) + signedUpOn(userChain)}</td>
                     </tr>
                   );
                 })}
