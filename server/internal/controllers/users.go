@@ -117,7 +117,8 @@ SELECT
 	user_chains.user_id        AS user_id,
 	users.uid                  AS user_uid,
 	user_chains.is_chain_admin AS is_chain_admin,
-	user_chains.created_at     AS created_at
+	user_chains.created_at     AS created_at,
+	user_chains.is_approved    AS is_approved
 FROM user_chains
 LEFT JOIN chains ON user_chains.chain_id = chains.id
 LEFT JOIN users ON user_chains.user_id = users.id

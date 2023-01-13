@@ -27,6 +27,8 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { ucs2 } from "punycode";
+import { isBooleanObject } from "util/types";
+import { promises } from "stream";
 
 interface Params {
   chainUID: string;
@@ -108,6 +110,7 @@ export default function ChainMemberList() {
     }
   }
 
+ 
   if (!chain || !users) {
     return null;
   }
@@ -230,7 +233,7 @@ function HostTable(props: {
     let notHost: User[] = [];
     props.users?.forEach((u) => {
       let uc = u.chains.find((uc) => uc.chain_uid === props.chain?.uid);
-      let ap = u.chains.find((ap) => ap.chain_id === props.chain?.id);
+
       if (uc?.is_chain_admin) host.push(u);
       else notHost.push(u);
     });
@@ -491,15 +494,18 @@ function ParticipantsTable(props: {
     return new Date(uc.created_at).toLocaleDateString(locale);
   }
   
-  function isPendingApproval(uc: string, uid: string) : any {
   
-   console.log(uc)
-   console.log(uid)
-   const returnData = async () => { 
-   (await userIsApproved(uc, uid)).data;
-  }
-  console.log(userIsApproved(uc, uid))
-}
+  function isApproved(uc: UserChain): any {
+
+    console.log((uc.is_approved))
+    
+   }
+  
+   const approval = async(u: string, uc: string)  => {
+    console.log(  (await userIsApproved(u, uc)).data)
+    return (await userIsApproved(u, uc)).data
+   }
+   //approval(u.uid, userChain.chain_uid).then(x => {console.log(x)})
 
   return (
     <>
@@ -555,7 +561,7 @@ function ParticipantsTable(props: {
                             {SizeBadges(t, u.sizes)}
                           </span>
                         </td>
-                        <td className="text-center">{isPendingApproval(u.uid, userChain.chain_uid) + signedUpOn(userChain)}</td>
+                        <td className="text-center">{ userChain.is_approved ?  signedUpOn(userChain) : "Pending Approval"  } </td>
                     </tr>
                   );
                 })}
