@@ -483,7 +483,7 @@ func ChainGetUnapprovedUsers(c *gin.Context) {
 
 	tx := db.Begin()
 	err := tx.Raw(`
-SELECT
+	SELECT
 	user_chains.id             AS id,
 	user_chains.chain_id       AS chain_id,
 	chains.uid                 AS chain_uid,
@@ -499,7 +499,7 @@ WHERE users.id IN (
 	SELECT user_chains.user_id
 	FROM user_chains
 	LEFT JOIN chains ON chains.id = user_chains.chain_id
-	WHERE chains.uid = ? AND is_approved = FALSE
+	WHERE chains.uid = ?
 )
 	`, query.ChainUID).Scan(unapprovedUserChains).Error
 	if err != nil {
@@ -512,7 +512,7 @@ SELECT users.*
 FROM users
 LEFT JOIN user_chains ON user_chains.user_id = users.id 
 LEFT JOIN chains      ON chains.id = user_chains.chain_id
-WHERE chains.uid = ? AND users.is_email_verified = TRUE
+WHERE chains.uid = ? AND users.is_email_verified = TRUE AND user_chains.is_approved = false
 	`, query.ChainUID).Scan(users).Error
 	if err != nil {
 		glog.Error(err)
@@ -536,7 +536,7 @@ WHERE chains.uid = ? AND users.is_email_verified = TRUE
 	c.JSON(200, users)
 }
 
-func ChainDeleteUnapproved(c *gin.Context){
+func ChainDeleteUnapproved(c *gin.Context) {
 	db := getDB(c)
 	var query struct {
 		UserUID  string `form:"user_uid" binding:"required,uuid"`
@@ -552,7 +552,7 @@ func ChainDeleteUnapproved(c *gin.Context){
 		return
 	}
 
-db.Exec(`
+	db.Exec(`
 DELETE FROM user_chains
 WHERE user_id IN(
 	SELECT users.id
@@ -562,8 +562,7 @@ WHERE user_id IN(
 	SELECT chains.id 
 	FROM chains
 	WHERE chains.uid = ?
-) AND is_approved = FALSE`,	
-	  query.UserUID,
+) AND is_approved = FALSE`,
+		query.UserUID,
 		query.ChainUID)
 }
-

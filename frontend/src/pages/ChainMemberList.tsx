@@ -18,6 +18,7 @@ import {
   chainAddUser,
   chainDeleteUnapproved,
   chainGet,
+  chainGetUnapproved,
   chainRemoveUser,
   chainUpdate,
   chainUserApprove,
@@ -522,6 +523,11 @@ function ParticipantsTable(props: {
     return "";
   }
 
+  async function testUnapprovedChain(uc: UserChain){
+    let array = (await ( chainGetUnapproved(uc.chain_uid))).data
+    console.log(array);
+  }
+
   return (
     <>
       <div className="mt-10 relative">
@@ -553,9 +559,9 @@ function ParticipantsTable(props: {
                         <input
                           type="checkbox"
                           name="selectedChainAdmin"
-                          className={pendingCheck(userChain)?.concat(
+                          className={/*pendingCheck(userChain)?.concat(
                             "checkbox checkbox-sm checkbox-primary"
-                          )}
+                          ) */testUnapprovedChain(userChain)!}
                           checked={selected.includes(u.uid)}
                           onChange={onChangeSelect}
                           value={u.uid}
