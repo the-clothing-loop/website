@@ -447,7 +447,7 @@ func ChainApproveUser(c *gin.Context) {
 		}
 	}
 	if !(isUserChainAdmin || user.IsRootAdmin || user.UID == body.UserUID) {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to remove a different user"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to approve a user's request to join the loop"))
 		return
 	}
 
@@ -461,3 +461,124 @@ func ChainApproveUser(c *gin.Context) {
 		`, body.UserUID,
 		chain.ID)
 }
+
+func ChainGetUnapprovedUsers(c *gin.Context) {
+	db := getDB(c)
+	var query struct {
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		return
+	}
+
+	ok, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+	if !ok {
+		return
+	}
+
+	// retrieve user from query
+	users := &[]models.User{}
+	unapprovedUserChains := &[]models.UserChain{}
+
+	tx := db.Begin()
+	err := tx.Raw(`
+SELECT
+	user_chains.id             AS id,
+	user_chains.chain_id       AS chain_id,
+	chains.uid                 AS chain_uid,
+	user_chains.user_id        AS user_id,
+	users.uid                  AS user_uid,
+	user_chains.is_chain_admin AS is_chain_admin,
+	user_chains.created_at     AS created_at,
+	user_chains.is_approved    AS is_approved
+FROM user_chains
+LEFT JOIN chains ON user_chains.chain_id = chains.id
+LEFT JOIN users ON user_chains.user_id = users.id
+WHERE users.id IN (
+	SELECT user_chains.user_id
+	FROM user_chains
+	LEFT JOIN chains ON chains.id = user_chains.chain_id
+	WHERE chains.uid = ? AND is_approved = FALSE
+)
+	`, query.ChainUID).Scan(unapprovedUserChains).Error
+	if err != nil {
+		glog.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associated users of loop"))
+		return
+	}
+	err = tx.Raw(`
+SELECT users.*
+FROM users
+LEFT JOIN user_chains ON user_chains.user_id = users.id 
+LEFT JOIN chains      ON chains.id = user_chains.chain_id
+WHERE chains.uid = ? AND users.is_email_verified = TRUE
+	`, query.ChainUID).Scan(users).Error
+	if err != nil {
+		glog.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associated loops of the users of a loop"))
+		return
+	}
+	tx.Commit()
+
+	for i, user := range *users {
+		thisUserChains := []models.UserChain{}
+		for ii := range *unapprovedUserChains {
+			userChain := (*unapprovedUserChains)[ii]
+			if userChain.UserID == user.ID {
+				// glog.Infof("userchain is added (userChain.ID: %d -> user.ID: %d)\n", userChain.ID, user.ID)
+				thisUserChains = append(thisUserChains, userChain)
+			}
+		}
+		(*users)[i].Chains = thisUserChains
+	}
+
+	c.JSON(200, users)
+}
+
+func ChainDeleteUnapproved(c *gin.Context){
+	db := getDB(c)
+
+	var body struct {
+		UserUID  string `json:"user_uid" binding:"required,uuid"`
+		ChainUID string `json:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		return
+	}
+
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	if !ok {
+		return
+	}
+	err := user.AddUserChainsToObject(db)
+	if err != nil {
+		glog.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
+		return
+	}
+
+	isUserChainAdmin := false
+	for _, c := range user.Chains {
+		if c.ChainID == chain.ID {
+			isUserChainAdmin = c.IsChainAdmin
+			break
+		}
+	}
+	if !(isUserChainAdmin || user.IsRootAdmin || user.UID == body.UserUID) {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to deny an unapproved user"))
+		return
+	}
+
+	db.Exec(`
+	DELETE FROM user_chains
+	WHERE user_chains.is_approved = FALSE AND user_id =(
+		SELECT users.id
+		FROM users
+		WHERE users.uid = ?
+	) AND chain_id = ?
+		`, body.UserUID,
+		chain.ID)
+}
+

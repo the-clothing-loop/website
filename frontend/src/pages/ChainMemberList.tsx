@@ -19,18 +19,13 @@ import {
   chainGet,
   chainRemoveUser,
   chainUpdate,
-  chainUserApprove
+  chainUserApprove,
 } from "../api/chain";
 import { Chain, User, UserChain } from "../api/types";
-import { userAddAsChainAdmin, userGetAllByChain, userIsApproved} from "../api/user";
+import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
-import { ucs2 } from "punycode";
-import { isBooleanObject } from "util/types";
-import { promises } from "stream";
-import clothingCategories from "../util/categories";
-
 interface Params {
   chainUID: string;
 }
@@ -111,7 +106,6 @@ export default function ChainMemberList() {
     }
   }
 
- 
   if (!chain || !users) {
     return null;
   }
@@ -458,9 +452,10 @@ function ParticipantsTable(props: {
       ],
     });
   }
-  
-  function onApprove(){ //Replace code with the function code needed v2/approve
-        if (!selected.length) return;
+
+  function onApprove() {
+    //Replace code with the function code needed v2/approve
+    if (!selected.length) return;
     const chainUID = props.chain.uid;
     const _selected = selected;
     const userNames = props.users
@@ -485,7 +480,6 @@ function ParticipantsTable(props: {
         },
       ],
     });
-
   }
 
   function signedUpOn(uc: UserChain): string {
@@ -494,24 +488,24 @@ function ParticipantsTable(props: {
 
     return new Date(uc.created_at).toLocaleDateString(locale);
   }
-  
-  function pendingColor(uc: UserChain){
-    if(uc.is_approved != 1){
-      return "bg-yellow/[.60] "
+
+  function pendingColor(uc: UserChain) {
+    if (uc.is_approved != 1) {
+      return "bg-yellow/[.60] ";
     }
-    return ""
+    return "";
   }
-  function pendingSizeButtons(uc: UserChain){
-    if(uc.is_approved != 1){
-      return "bg-yellow/[.0] "
+  function pendingSizeButtons(uc: UserChain) {
+    if (uc.is_approved != 1) {
+      return "bg-yellow/[.0] ";
     }
-    return ""
+    return "";
   }
-  function pendingCheck(uc: UserChain){
-    if(uc.is_approved != 1){
-      return "border-grey " 
+  function pendingCheck(uc: UserChain) {
+    if (uc.is_approved != 1) {
+      return "border-grey ";
     }
-    return ""
+    return "";
   }
 
   return (
@@ -536,43 +530,68 @@ function ParticipantsTable(props: {
                 .sort((a: User, b: User) => a.chains[0].is_approved)
                 .map((u: User) => {
                   const userChain = u.chains.find(
-                    (uc) => uc.chain_uid === props.chain.uid,
+                    (uc) => uc.chain_uid === props.chain.uid
                   )!;
-                  
 
                   return (
-                    <tr className ="" key={u.uid}>
-                        <td className={pendingColor(userChain)?.concat("stick")}>
-                          <input
-                            type="checkbox"
-                            name="selectedChainAdmin"
-                            className={pendingCheck(userChain)?.concat("checkbox checkbox-sm checkbox-primary")}
-                            checked={selected.includes(u.uid)}
-                            onChange={onChangeSelect}
-                            value={u.uid}
-                         />
-                        </td>
-                        <td className={pendingColor(userChain)}>{u.name}</td>
-                        <td className={pendingColor(userChain)}>
-                          <span className=" block w-48 text-sm whitespace-normal">
-                            {u.address}
-                          </span>
-                        </td>
-                        <td className={pendingColor(userChain)?.concat("text-sm leading-relaxed")}>
-                          {u.email}
-                          <br />
-                          {u.phone_number}
-                        </td>
-                        <td className={pendingColor(userChain)?.concat("align-middle")}>
-                          <span
-                            className={pendingSizeButtons(userChain)?.concat("block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2")}
-                            tabIndex={0}
-                          >
-                            {SizeBadges(t, u.sizes)}
-                          </span>
-                        </td>
-                        <td className={pendingColor(userChain)?.concat("text-center")}>{  signedUpOn(userChain) } </td>
-                        <td className={pendingColor(userChain)?.concat("text-center")}>{ userChain.is_approved ? "Approved" : "Pending Approval"} </td>
+                    <tr className="" key={u.uid}>
+                      <td className={pendingColor(userChain)?.concat("stick")}>
+                        <input
+                          type="checkbox"
+                          name="selectedChainAdmin"
+                          className={pendingCheck(userChain)?.concat(
+                            "checkbox checkbox-sm checkbox-primary"
+                          )}
+                          checked={selected.includes(u.uid)}
+                          onChange={onChangeSelect}
+                          value={u.uid}
+                        />
+                      </td>
+                      <td className={pendingColor(userChain)}>{u.name}</td>
+                      <td className={pendingColor(userChain)}>
+                        <span className=" block w-48 text-sm whitespace-normal">
+                          {u.address}
+                        </span>
+                      </td>
+                      <td
+                        className={pendingColor(userChain)?.concat(
+                          "text-sm leading-relaxed"
+                        )}
+                      >
+                        {u.email}
+                        <br />
+                        {u.phone_number}
+                      </td>
+                      <td
+                        className={pendingColor(userChain)?.concat(
+                          "align-middle"
+                        )}
+                      >
+                        <span
+                          className={pendingSizeButtons(userChain)?.concat(
+                            "block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                          )}
+                          tabIndex={0}
+                        >
+                          {SizeBadges(t, u.sizes)}
+                        </span>
+                      </td>
+                      <td
+                        className={pendingColor(userChain)?.concat(
+                          "text-center"
+                        )}
+                      >
+                        {signedUpOn(userChain)}{" "}
+                      </td>
+                      <td
+                        className={pendingColor(userChain)?.concat(
+                          "text-center"
+                        )}
+                      >
+                        {userChain.is_approved
+                          ? "Approved"
+                          : "Pending Approval"}{" "}
+                      </td>
                     </tr>
                   );
                 })}
@@ -608,14 +627,19 @@ function ParticipantsTable(props: {
                 disabled={!selected}
               ></button>
             </div>
-            
-            <div className="tooltip" data-tip={t("approveUser")} /*added code for add-accept remove comment upon completion*/> 
-                <button 
-                  type ="button"
-                  onClick={onApprove}
-                  className={`btn btn-sm btn-circle feather feather-user-x ${
-                    selected.length ? "btn-error" : "btn-disabled opacity-60"
-                  }`}
+
+            <div
+              className="tooltip"
+              data-tip={t(
+                "approveUser"
+              )} /*added code for add-accept remove comment upon completion*/
+            >
+              <button
+                type="button"
+                onClick={onApprove}
+                className={`btn btn-sm btn-circle feather feather-user-x ${
+                  selected.length ? "btn-error" : "btn-disabled opacity-60"
+                }`}
               ></button>
             </div>
           </div>
