@@ -106,6 +106,8 @@ const ChainsList = () => {
                     let isUserAdmin =
                       authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
                         ?.is_chain_admin || false;
+                      let isPendingApproval =
+                       authUser?.chains.find((ap) => ap.chain_uid === chain.uid)?.is_approved|| false;
                     return (
                       <tr key={chain.uid}>
                         <td className="font-bold w-32 whitespace-normal">
@@ -115,7 +117,7 @@ const ChainsList = () => {
                           {chain.address}
                         </td>
                         <td align="center">
-                          {chain.published ? (
+                          {isPendingApproval ? (  chain.published ? (
                             <div className="tooltip" data-tip="published">
                               <span className="feather feather-eye  text-lg text-green" />
                             </div>
@@ -123,7 +125,8 @@ const ChainsList = () => {
                             <div className="tooltip" data-tip="draft">
                               <span className="feather feather-eye-off  text-lg text-red" />
                             </div>
-                          )}
+                          )):(<p>Awaiting Admin approval</p>)  
+                          }
                         </td>
                         <td align="right">
                           <div className="flex justify-end">
