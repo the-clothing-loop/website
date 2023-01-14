@@ -16,6 +16,7 @@ import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
+  chainDeleteUnapproved,
   chainGet,
   chainRemoveUser,
   chainUpdate,
@@ -478,6 +479,19 @@ function ParticipantsTable(props: {
             });
           },
         },
+        {
+          text: t("deny"),
+          type: "ghost",
+          fn: () => {
+            Promise.all(
+              _selected.map((s) => chainDeleteUnapproved(chainUID, s))
+            ).finally(() => {
+              setSelected([]);
+              return props.refresh();
+            });
+          },
+        },
+      
       ],
     });
   }

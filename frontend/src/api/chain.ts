@@ -60,9 +60,7 @@ export function chainUserApprove(chainUID: string, userUID: string) {
 }
 
 export function chainDeleteUnapproved(chainUID: string, userUID: string) {
-  return axios.delete<never>("/v2/chain/unapproved-user", {
-    params: { user_uid: userUID, chain_uid: chainUID },
-  });
+  return axios.delete<never>(`/v2/chain/unapproved-user?user_uid=${userUID}&chain_uid=${chainUID}`);
 }
 
 export function chainGetUnapproved(chainUID: string) {

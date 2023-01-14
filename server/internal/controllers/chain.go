@@ -538,47 +538,32 @@ WHERE chains.uid = ? AND users.is_email_verified = TRUE
 
 func ChainDeleteUnapproved(c *gin.Context){
 	db := getDB(c)
-
-	var body struct {
-		UserUID  string `json:"user_uid" binding:"required,uuid"`
-		ChainUID string `json:"chain_uid" binding:"required,uuid"`
+	var query struct {
+		UserUID  string `form:"user_uid" binding:"required,uuid"`
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
 	}
-	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+	if err := c.ShouldBindQuery(&query); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
 		return
 	}
 
-	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	ok, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
 	if !ok {
 		return
 	}
-	err := user.AddUserChainsToObject(db)
-	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
-		return
-	}
 
-	isUserChainAdmin := false
-	for _, c := range user.Chains {
-		if c.ChainID == chain.ID {
-			isUserChainAdmin = c.IsChainAdmin
-			break
-		}
-	}
-	if !(isUserChainAdmin || user.IsRootAdmin || user.UID == body.UserUID) {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to deny an unapproved user"))
-		return
-	}
-
-	db.Exec(`
-	DELETE FROM user_chains
-	WHERE user_chains.is_approved = FALSE AND user_id =(
-		SELECT users.id
-		FROM users
-		WHERE users.uid = ?
-	) AND chain_id = ?
-		`, body.UserUID,
-		chain.ID)
+db.Exec(`
+DELETE FROM user_chains
+WHERE user_id IN(
+	SELECT users.id
+	FROM users
+	WHERE users.uid = ?
+) AND chain_id IN(
+	SELECT chains.id 
+	FROM chains
+	WHERE chains.uid = ?
+) AND is_approved = FALSE`,	
+	  query.UserUID,
+		query.ChainUID)
 }
 
