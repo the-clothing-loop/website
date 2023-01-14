@@ -505,19 +505,19 @@ function ParticipantsTable(props: {
   }
 
   function pendingColor(uc: UserChain) {
-    if (uc.is_approved != 1) {
+    if (uc.is_approved != true) {
       return "bg-yellow/[.60] ";
     }
     return "";
   }
   function pendingSizeButtons(uc: UserChain) {
-    if (uc.is_approved != 1) {
+    if (uc.is_approved != true) {
       return "bg-yellow/[.0] ";
     }
     return "";
   }
   function pendingCheck(uc: UserChain) {
-    if (uc.is_approved != 1) {
+    if (uc.is_approved != true) {
       return "border-grey ";
     }
     return "";
@@ -544,10 +544,11 @@ function ParticipantsTable(props: {
                 <th>{t("approvalStatus")}</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody> 
               {props.users
+               //a.chains[0].is_approved == 0 ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name))
                 .sort((a, b) => a.name.localeCompare(b.name))
-                .sort((a: User, b: User) => a.chains[0].is_approved)
+                .sort((a: User, b: User) => a.chains[0].is_approved == false ?  0: 1)
                 .map((u: User) => {
                   const userChain = u.chains.find(
                     (uc) => uc.chain_uid === props.chain.uid
@@ -559,9 +560,9 @@ function ParticipantsTable(props: {
                         <input
                           type="checkbox"
                           name="selectedChainAdmin"
-                          className={/*pendingCheck(userChain)?.concat(
+                          className={pendingCheck(userChain)?.concat(
                             "checkbox checkbox-sm checkbox-primary"
-                          ) */testUnapprovedChain(userChain)!}
+                          ) /*testUnapprovedChain(userChain)*/}
                           checked={selected.includes(u.uid)}
                           onChange={onChangeSelect}
                           value={u.uid}

@@ -107,7 +107,7 @@ const ChainsList = () => {
                       authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
                         ?.is_chain_admin || false;
                       let isPendingApproval =
-                       authUser?.chains.find((ap) => ap.chain_uid === chain.uid)?.is_approved == 1|| false;
+                       authUser?.chains.find((ap) => ap.chain_uid === chain.uid)?.is_approved == true|| false;
                     return (
                       <tr key={chain.uid}>
                         <td className="font-bold w-32 whitespace-normal">
