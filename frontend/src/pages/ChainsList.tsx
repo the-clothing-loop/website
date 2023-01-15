@@ -125,7 +125,10 @@ const ChainsList = () => {
                             <div className="tooltip" data-tip="draft">
                               <span className="feather feather-eye-off  text-lg text-red" />
                             </div>
-                          )):(<p>Awaiting Admin approval</p>)  
+                          )):(
+                          <div className="tooltip" data-tip={t("pendingApproval")}>
+                            <span className="feather btn-circle btn-lg feather-user-check text-yellow-darkest"/>
+                          </div>)  
                           }
                         </td>
                         <td align="right">

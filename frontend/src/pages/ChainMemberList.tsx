@@ -24,7 +24,7 @@ import {
   chainUserApprove,
 } from "../api/chain";
 import { Chain, User, UserChain } from "../api/types";
-import { userGetAllByChain } from "../api/user";
+import { userAddAsChainAdmin, userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
@@ -496,7 +496,7 @@ function ParticipantsTable(props: {
       ],
     });
   }
-
+  
   function signedUpOn(uc: UserChain): string {
     let locale = i18n.language;
     if (locale === "en") locale = "default";
@@ -504,29 +504,48 @@ function ParticipantsTable(props: {
     return new Date(uc.created_at).toLocaleDateString(locale);
   }
 
-  function pendingColor(uc: UserChain) {
-    if (uc.is_approved != true) {
-      return "bg-yellow/[.60] ";
-    }
-    return "";
-  }
-  function pendingSizeButtons(uc: UserChain) {
-    if (uc.is_approved != true) {
-      return "bg-yellow/[.0] ";
-    }
-    return "";
-  }
-  function pendingCheck(uc: UserChain) {
-    if (uc.is_approved != true) {
-      return "border-grey ";
-    }
-    return "";
+  function simplifyDays(uc: UserChain): string {
+    
+    var createdAt = new Date(uc.created_at);
+    var currDate = new Date();
+    
+    const Day = 10000*60*60*24
+    const diff = createdAt.getTime() - currDate.getTime();
+    let numDays = Math.round(diff/ Day)
+    
+    let daysToString
+    
+    if ( numDays < 30){
+       daysToString = String(numDays)
+       return t("memberFor") + " " + daysToString + " " + t("days")
+      }else if(numDays > 30 && numDays < 365){
+        numDays = Math.round(numDays/30)
+        daysToString = String(numDays)
+        return t("memberFor") + " " + (daysToString) + " " + t("months")
+      }else{ 
+        numDays = Math.round(numDays/365)
+        daysToString = String(numDays)
+        return t("memberFor") + " " + daysToString + " " + t("years")
+      }    
   }
 
-  async function testUnapprovedChain(uc: UserChain){
-    let array = (await ( chainGetUnapproved(uc.chain_uid))).data
-    console.log(array);
+
+
+  function pendingColor(uc: UserChain, elName: string) {
+    if (uc.is_approved != true){
+      if (elName ==""){
+        return "bg-yellow/[.60] ";
+      }
+      else if(elName == "sizeButtons"){
+        return "bg-yellow/[.0] ";
+      }
+      else if(elName == "checkBox"){
+          return "border-grey ";
+      }
+    }
+    return "";      
   }
+
 
   return (
     <>
@@ -540,8 +559,8 @@ function ParticipantsTable(props: {
                 <th>{t("address")}</th>
                 <th>{t("contact")}</th>
                 <th>{t("interested size")}</th>
-                <th>{t("signedup ON")}</th>
-                <th>{t("approvalStatus")}</th>
+                <th>{t("signedUpOn")}</th>
+                <th className="text-center">{t("status")}</th>
               </tr>
             </thead>
             <tbody> 
@@ -556,11 +575,11 @@ function ParticipantsTable(props: {
 
                   return (
                     <tr className="" key={u.uid}>
-                      <td className={pendingColor(userChain)?.concat("stick")}>
+                      <td className={pendingColor(userChain,"")?.concat("stick")}>
                         <input
                           type="checkbox"
                           name="selectedChainAdmin"
-                          className={pendingCheck(userChain)?.concat(
+                          className={pendingColor(userChain, "checkBox")?.concat(
                             "checkbox checkbox-sm checkbox-primary"
                           ) /*testUnapprovedChain(userChain)*/}
                           checked={selected.includes(u.uid)}
@@ -568,14 +587,14 @@ function ParticipantsTable(props: {
                           value={u.uid}
                         />
                       </td>
-                      <td className={pendingColor(userChain)}>{u.name}</td>
-                      <td className={pendingColor(userChain)}>
+                      <td className={pendingColor(userChain, "")}>{u.name}</td>
+                      <td className={pendingColor(userChain, "")}>
                         <span className=" block w-48 text-sm whitespace-normal">
                           {u.address}
                         </span>
                       </td>
                       <td
-                        className={pendingColor(userChain)?.concat(
+                        className={pendingColor(userChain, "")?.concat(
                           "text-sm leading-relaxed"
                         )}
                       >
@@ -584,12 +603,12 @@ function ParticipantsTable(props: {
                         {u.phone_number}
                       </td>
                       <td
-                        className={pendingColor(userChain)?.concat(
+                        className={pendingColor(userChain, "")?.concat(
                           "align-middle"
                         )}
                       >
                         <span
-                          className={pendingSizeButtons(userChain)?.concat(
+                          className={pendingColor(userChain, "sizeButtons")?.concat(
                             "block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
                           )}
                           tabIndex={0}
@@ -598,20 +617,20 @@ function ParticipantsTable(props: {
                         </span>
                       </td>
                       <td
-                        className={pendingColor(userChain)?.concat(
+                        className={pendingColor(userChain, "")?.concat(
                           "text-center"
                         )}
                       >
                         {signedUpOn(userChain)}{" "}
                       </td>
                       <td
-                        className={pendingColor(userChain)?.concat(
+                        className={pendingColor(userChain, "")?.concat(
                           "text-center"
                         )}
                       >
                         {userChain.is_approved
-                          ? "Approved"
-                          : "Pending Approval"}{" "}
+                          ? simplifyDays(userChain)
+                          : t("pendingApproval")}
                       </td>
                     </tr>
                   );
@@ -658,9 +677,10 @@ function ParticipantsTable(props: {
               <button
                 type="button"
                 onClick={onApprove}
-                className={`btn btn-sm btn-circle feather feather-user-x ${
-                  selected.length ? "btn-error" : "btn-disabled opacity-60"
+                className={`btn btn-sm btn-circle feather feather-user-check ${
+                  selected.length ? "btn-secondary" : "btn-disabled opacity-60"
                 }`}
+                aria-label={t("approveUser")}
               ></button>
             </div>
           </div>
