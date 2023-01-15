@@ -106,8 +106,9 @@ const ChainsList = () => {
                     let isUserAdmin =
                       authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
                         ?.is_chain_admin || false;
-                      let isPendingApproval =
-                       authUser?.chains.find((ap) => ap.chain_uid === chain.uid)?.is_approved == true|| false;
+                    let isPendingApproval =
+                      authUser?.chains.find((ap) => ap.chain_uid === chain.uid)
+                        ?.is_approved == true || false;
                     return (
                       <tr key={chain.uid}>
                         <td className="font-bold w-32 whitespace-normal">
@@ -117,19 +118,24 @@ const ChainsList = () => {
                           {chain.address}
                         </td>
                         <td align="center">
-                          {isPendingApproval||isUserAdmin ? (  chain.published ? (
-                            <div className="tooltip" data-tip="published">
-                              <span className="feather feather-eye  text-lg text-green" />
-                            </div>
+                          {isPendingApproval || isUserAdmin ? (
+                            chain.published ? (
+                              <div className="tooltip" data-tip="published">
+                                <span className="feather feather-eye  text-lg text-green" />
+                              </div>
+                            ) : (
+                              <div className="tooltip" data-tip="draft">
+                                <span className="feather feather-eye-off  text-lg text-red" />
+                              </div>
+                            )
                           ) : (
-                            <div className="tooltip" data-tip="draft">
-                              <span className="feather feather-eye-off  text-lg text-red" />
+                            <div
+                              className="tooltip"
+                              data-tip={t("pendingApproval")}
+                            >
+                              <span className="feather btn-circle btn-lg feather-user-check text-yellow-darkest" />
                             </div>
-                          )):(
-                          <div className="tooltip" data-tip={t("pendingApproval")}>
-                            <span className="feather btn-circle btn-lg feather-user-check text-yellow-darkest"/>
-                          </div>)  
-                          }
+                          )}
                         </td>
                         <td align="right">
                           <div className="flex justify-end">

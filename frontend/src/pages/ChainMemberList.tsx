@@ -40,6 +40,7 @@ export default function ChainMemberList() {
 
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
+  //const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null)>;
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
@@ -86,6 +87,7 @@ export default function ChainMemberList() {
         const chainData = (await chainGet(chainUID)).data;
         setChain(chainData);
         const chainUsers = (await userGetAllByChain(chainUID)).data;
+        //   const unapprovedUsers = (await chainGetUnapproved(chainUID)).data;
         setUsers(chainUsers);
         setPublished(chainData.published);
         setOpenToNewMembers(chainData.open_to_new_members);
@@ -492,11 +494,10 @@ function ParticipantsTable(props: {
             });
           },
         },
-      
       ],
     });
   }
-  
+
   function signedUpOn(uc: UserChain): string {
     let locale = i18n.language;
     if (locale === "en") locale = "default";
@@ -505,47 +506,59 @@ function ParticipantsTable(props: {
   }
 
   function simplifyDays(uc: UserChain): string {
-    
     var createdAt = new Date(uc.created_at);
     var currDate = new Date();
-    
-    const Day = 10000*60*60*24
+
+    const Day = 10000 * 60 * 60 * 24;
     const diff = createdAt.getTime() - currDate.getTime();
-    let numDays = Math.round(diff/ Day)
-    
-    let daysToString
-    
-    if ( numDays < 30){
-       daysToString = String(numDays)
-       return t("memberFor") + " " + daysToString + " " + t("days")
-      }else if(numDays > 30 && numDays < 365){
-        numDays = Math.round(numDays/30)
-        daysToString = String(numDays)
-        return t("memberFor") + " " + (daysToString) + " " + t("months")
-      }else{ 
-        numDays = Math.round(numDays/365)
-        daysToString = String(numDays)
-        return t("memberFor") + " " + daysToString + " " + t("years")
-      }    
+    let numDays = Math.round(diff / Day);
+
+    let daysToString;
+
+    if (numDays < 30) {
+      daysToString = String(numDays);
+      return t("memberFor") + " " + daysToString + " " + t("days");
+    } else if (numDays > 30 && numDays < 365) {
+      numDays = Math.round(numDays / 30);
+      daysToString = String(numDays);
+      return t("memberFor") + " " + daysToString + " " + t("months");
+    } else {
+      numDays = Math.round(numDays / 365);
+      daysToString = String(numDays);
+      return t("memberFor") + " " + daysToString + " " + t("years");
+    }
   }
 
+  function isApprovedUser() {
+    if (!selected.length) return;
 
+    let _selected = selected;
+    let chain_uid = props.chain.uid;
+    let theirChainsProp = props.users
+      .filter((u) => _selected.includes(u.uid))
+      .map((u) => u.chains);
+    let listUserChain = theirChainsProp[0].map((u) => u);
+
+    let i = 0;
+    while (listUserChain[i].chain_uid != chain_uid) {
+      i++;
+    }
+    console.log(listUserChain[i].is_approved);
+    return listUserChain[i].is_approved;
+  }
 
   function pendingColor(uc: UserChain, elName: string) {
-    if (uc.is_approved != true){
-      if (elName ==""){
+    if (uc.is_approved != true) {
+      if (elName == "") {
         return "bg-yellow/[.60] ";
-      }
-      else if(elName == "sizeButtons"){
+      } else if (elName == "sizeButtons") {
         return "bg-yellow/[.0] ";
-      }
-      else if(elName == "checkBox"){
-          return "border-grey ";
+      } else if (elName == "checkBox") {
+        return "border-grey ";
       }
     }
-    return "";      
+    return "";
   }
-
 
   return (
     <>
@@ -563,11 +576,13 @@ function ParticipantsTable(props: {
                 <th className="text-center">{t("status")}</th>
               </tr>
             </thead>
-            <tbody> 
+            <tbody>
               {props.users
-               //a.chains[0].is_approved == 0 ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name))
+                //a.chains[0].is_approved == 0 ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name))
                 .sort((a, b) => a.name.localeCompare(b.name))
-                .sort((a: User, b: User) => a.chains[0].is_approved == false ?  0: 1)
+                .sort((a: User, b: User) =>
+                  a.chains[0].is_approved == false ? 0 : 1
+                )
                 .map((u: User) => {
                   const userChain = u.chains.find(
                     (uc) => uc.chain_uid === props.chain.uid
@@ -575,13 +590,17 @@ function ParticipantsTable(props: {
 
                   return (
                     <tr className="" key={u.uid}>
-                      <td className={pendingColor(userChain,"")?.concat("stick")}>
+                      <td
+                        className={pendingColor(userChain, "")?.concat("stick")}
+                      >
                         <input
                           type="checkbox"
                           name="selectedChainAdmin"
-                          className={pendingColor(userChain, "checkBox")?.concat(
-                            "checkbox checkbox-sm checkbox-primary"
-                          ) /*testUnapprovedChain(userChain)*/}
+                          className={
+                            pendingColor(userChain, "checkBox")?.concat(
+                              "checkbox checkbox-sm checkbox-primary"
+                            ) /*testUnapprovedChain(userChain)*/
+                          }
                           checked={selected.includes(u.uid)}
                           onChange={onChangeSelect}
                           value={u.uid}
@@ -608,7 +627,10 @@ function ParticipantsTable(props: {
                         )}
                       >
                         <span
-                          className={pendingColor(userChain, "sizeButtons")?.concat(
+                          className={pendingColor(
+                            userChain,
+                            "sizeButtons"
+                          )?.concat(
                             "block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
                           )}
                           tabIndex={0}
@@ -638,6 +660,7 @@ function ParticipantsTable(props: {
             </tbody>
           </table>
         </div>
+
         <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
           <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
             <p className="block mx-2 flex-grow">
@@ -647,12 +670,12 @@ function ParticipantsTable(props: {
             <div className="tooltip mr-2" data-tip={t("edit")}>
               <Link
                 className={`btn btn-sm btn-circle feather feather-edit ${
-                  selected.length === 1
+                  selected.length === 1 && isApprovedUser()
                     ? "btn-primary"
                     : "btn-disabled opacity-60"
                 }`}
                 aria-label={t("edit")}
-                aria-disabled={!selected}
+                aria-disabled={!selected || !isApprovedUser()}
                 to={edit}
               ></Link>
             </div>
@@ -661,10 +684,12 @@ function ParticipantsTable(props: {
                 type="button"
                 onClick={onRemove}
                 className={`btn btn-sm btn-circle feather feather-user-x ${
-                  selected.length ? "btn-error" : "btn-disabled opacity-60"
+                  selected.length && isApprovedUser()
+                    ? "btn-error"
+                    : "btn-disabled opacity-60"
                 }`}
                 aria-label={t("removeFromLoop")}
-                disabled={!selected}
+                disabled={!selected || !isApprovedUser()}
               ></button>
             </div>
 
@@ -681,7 +706,10 @@ function ParticipantsTable(props: {
                   selected.length ? "btn-secondary" : "btn-disabled opacity-60"
                 }`}
                 aria-label={t("approveUser")}
-              ></button>
+                disabled={!selected || isApprovedUser()}
+              >
+                {isApprovedUser()}
+              </button>
             </div>
           </div>
         </div>
