@@ -153,3 +153,30 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB, name, email, token stri
 
 	return app.MailSend(c, db, to, subject, body)
 }
+
+func EmailAdminApprovedOrDeniedUserJoinLoop(
+	c *gin.Context,
+	db *gorm.DB,
+	participantName string,
+	participantEmail string,
+	loopName string,
+	headerName string,
+	templateName string,
+) bool {
+	// ? language hardcoded to english until language preference can be determined in the database
+	// i18n := getI18n(c)
+	i18n := "en"
+
+	to := participantEmail
+	subject := emailsHeaders[i18n][headerName]
+	body, err := executeTemplate(c, emailsTemplates[i18n], templateName, gin.H{
+		"Name": participantName,
+		"loopName" : loopName,
+		
+	})
+	if err != nil {
+		return false
+	}
+
+	return app.MailSend(c, db, to, subject, body)
+}

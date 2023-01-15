@@ -460,6 +460,15 @@ func ChainApproveUser(c *gin.Context) {
 	) AND chain_id = ?
 		`, body.UserUID,
 		chain.ID)
+
+	var userEmail string
+	db.Raw(`SELECT email from users WHERE uid =?`, body.UserUID).Scan(&userEmail)
+	var Name string
+	db.Raw(`SELECT name from users WHERE uid =?`, body.UserUID).Scan(&Name)
+	views.EmailAdminApprovedOrDeniedUserJoinLoop(c, db, Name, userEmail, chain.Name,
+		 "an_admin_approved_your_join_request", 
+		 "an_admin_approved_your_join_request.gohtml")
+
 }
 
 func ChainGetUnapprovedUsers(c *gin.Context) {
@@ -552,6 +561,13 @@ func ChainDeleteUnapproved(c *gin.Context) {
 		return
 	}
 
+		var userEmail string
+	db.Raw(`SELECT email from users WHERE uid =?`, query.UserUID).Scan(&userEmail)
+	var Name string
+	db.Raw(`SELECT name from users WHERE uid =?`, query.UserUID).Scan(&Name)
+	var chainName string
+	db.Raw(`SELECT name from chains users WHERE uid =?`, query.ChainUID).Scan(&chainName)
+
 	db.Exec(`
 DELETE FROM user_chains
 WHERE user_id IN(
@@ -565,4 +581,8 @@ WHERE user_id IN(
 ) AND is_approved = FALSE`,
 		query.UserUID,
 		query.ChainUID)
+
+	views.EmailAdminApprovedOrDeniedUserJoinLoop(c, db, Name, userEmail, chainName,
+		 "an_admin_denied_your_join_request", 
+		 "an_admin_denied_your_join_request.gohtml")
 }
