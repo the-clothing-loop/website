@@ -35,7 +35,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.Payment{},
 	)
 
-	if !db.Migrator().HasConstraint(&models.UserChain{}, "uci_user_id_chain_id") {
+	if !db.Migrator().HasConstraint("user_chains", "uci_user_id_chain_id") {
 		db.Exec(`
 ALTER TABLE user_chains
 ADD CONSTRAINT uci_user_id_chain_id
