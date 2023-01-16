@@ -49,7 +49,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 							tx.Rollback()
 							break
 						}
-						err = tx.Exec(`ALTER TABLE user_tokens CHANGE new_created_at created_at`)
+						err = tx.Exec(`ALTER TABLE user_tokens RENAME COLUMN new_created_at TO created_at`)
 						if err != nil {
 							tx.Rollback()
 							break
