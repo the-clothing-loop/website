@@ -22,7 +22,6 @@ type User struct {
 	PhoneNumber     string      `json:"phone_number"`
 	Address         string      `json:"address"`
 	Sizes           []string    `json:"sizes" gorm:"serializer:json"`
-	Enabled         bool        `json:"enabled"`
 	LastSignedInAt  zero.Time   `json:"-"`
 	UserToken       []UserToken `json:"-"`
 	Chains          []UserChain `json:"chains"`

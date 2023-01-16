@@ -22,7 +22,6 @@ type MockChainAndUserOptions struct {
 	IsTokenUnverified  bool
 	IsRootAdmin        bool
 	IsChainAdmin       bool
-	IsDisabled         bool
 	IsNotPublished     bool
 	IsOpenToNewMembers bool
 }
@@ -37,7 +36,6 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		PhoneNumber:     faker.Person().Contact().Phone,
 		Sizes:           mockSizes(false),
 		Address:         faker.Address().Address(),
-		Enabled:         !o.IsDisabled,
 		UserToken: []models.UserToken{
 			{
 				Token:    uuid.NewV4().String(),

@@ -288,7 +288,7 @@ func ChainAddUser(c *gin.Context) {
 	user := models.User{}
 	if res := db.Raw(`
 SELECT * FROM users
-WHERE uid = ? AND enabled = TRUE AND is_email_verified = TRUE
+WHERE uid = ? AND is_email_verified = TRUE
 LIMIT 1
 	`, body.UserUID).Scan(&user); res.Error != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrUserNotFound)
@@ -327,7 +327,7 @@ FROM user_chains AS uc
 LEFT JOIN users ON uc.user_id = users.id 
 WHERE uc.chain_id = ?
 	AND uc.is_chain_admin = TRUE
-	AND users.enabled = TRUE
+	AND users.email_is_verified = TRUE
 `, chain.ID).Scan(&results)
 
 		if len(results) == 0 {

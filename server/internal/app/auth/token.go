@@ -71,7 +71,7 @@ LIMIT 1
 
 	if res := db.Exec(`
 UPDATE users
-SET is_email_verified = TRUE, enabled = TRUE
+SET is_email_verified = TRUE
 WHERE id = ?
 	`, user.ID); res.Error != nil {
 		return false, nil
