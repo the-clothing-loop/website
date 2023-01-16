@@ -45,15 +45,13 @@ func TokenCreateUnverified(db *gorm.DB, userID uint) (string, error) {
 
 // Returns the user before it was verified
 func TokenVerify(db *gorm.DB, token string) (bool, *models.User) {
-	timeElapsed := time.Now().Add(-24 * time.Hour)
-
 	if res := db.Exec(`
 UPDATE user_tokens
 SET user_tokens.verified = TRUE
 WHERE user_tokens.token = ?
 	AND user_tokens.verified = FALSE
-	AND user_tokens.created_at > ?
-	`, token, timeElapsed.Unix()); res.Error != nil || res.RowsAffected == 0 {
+	AND user_tokens.created_at > ADDDATE(NOW(), INTERVAL -24 HOUR)
+	`, token); res.Error != nil || res.RowsAffected == 0 {
 		return false, nil
 	}
 

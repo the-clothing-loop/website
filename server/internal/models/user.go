@@ -40,7 +40,7 @@ type UserToken struct {
 	Token     string `gorm:"unique"`
 	Verified  bool
 	UserID    uint
-	CreatedAt int64
+	CreatedAt time.Time
 }
 
 type UserChain struct {
