@@ -585,8 +585,8 @@ function ParticipantsTable(props: {
             <tbody>
               {props.users
                 .sort((a, b) => a.name.localeCompare(b.name))
-                .sort((a: User, b: User) =>
-                  a.chains[0].is_approved == false ? 0 : 1
+                .sort((a, b) =>
+                  String(a.chains[0].is_approved == false ? 0 : 1).localeCompare(String(b.chains[0].is_approved == false ? 0 : 1))
                 )
                 .map((u: User) => {
                   const userChain = u.chains.find(
