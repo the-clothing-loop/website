@@ -58,5 +58,4 @@ func main() {
 		}
 		log.Printf("Added     -> User\t(ID: %d)\tto Chain (ID: %d)", user.ID, chain.ID)
 	}
-
 }
