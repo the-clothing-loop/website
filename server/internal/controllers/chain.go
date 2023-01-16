@@ -465,7 +465,7 @@ func ChainApproveUser(c *gin.Context) {
 	db.Raw(`SELECT email from users WHERE uid =?`, body.UserUID).Scan(&userEmail)
 	var Name string
 	db.Raw(`SELECT name from users WHERE uid =?`, body.UserUID).Scan(&Name)
-	views.EmailAdminApprovedOrDeniedUserJoinLoop(c, db, Name, userEmail, chain.Name,
+	views.EmailToLoopParticipant(c, db, Name, userEmail, chain.Name,
 		 "an_admin_approved_your_join_request", 
 		 "an_admin_approved_your_join_request.gohtml")
 
@@ -582,7 +582,7 @@ WHERE user_id IN(
 		query.UserUID,
 		query.ChainUID)
 
-	views.EmailAdminApprovedOrDeniedUserJoinLoop(c, db, Name, userEmail, chainName,
+	views.EmailToLoopParticipant(c, db, Name, userEmail, chainName,
 		 "an_admin_denied_your_join_request", 
 		 "an_admin_denied_your_join_request.gohtml")
 }

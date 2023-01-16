@@ -154,7 +154,7 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB, name, email, token stri
 	return app.MailSend(c, db, to, subject, body)
 }
 
-func EmailAdminApprovedOrDeniedUserJoinLoop(
+func EmailToLoopParticipant(
 	c *gin.Context,
 	db *gorm.DB,
 	participantName string,
