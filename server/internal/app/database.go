@@ -25,6 +25,44 @@ func DatabaseInit() *gorm.DB {
 }
 
 func DatabaseAutoMigrate(db *gorm.DB) {
+	if db.Migrator().HasTable("user_tokens") {
+		columnTypes, err := db.Migrator().ColumnTypes("user_tokens")
+		if err == nil {
+			for _, ct := range columnTypes {
+				if ct.Name() == "created_at" {
+					t, _ := ct.ColumnType()
+					if t == "bigint(20)" {
+						tx := db.Begin()
+
+						err := tx.Exec(`ALTER TABLE user_tokens ADD new_created_at datetime(3) DEFAULT NULL`)
+						if err != nil {
+							tx.Rollback()
+							break
+						}
+						err = tx.Exec(`UPDATE user_tokens SET new_created_at = FROM_UNIXTIME(created_at)`)
+						if err != nil {
+							tx.Rollback()
+							break
+						}
+						err = tx.Exec(`ALTER TABLE user_tokens DROP created_at`)
+						if err != nil {
+							tx.Rollback()
+							break
+						}
+						err = tx.Exec(`ALTER TABLE user_tokens CHANGE new_created_at created_at`)
+						if err != nil {
+							tx.Rollback()
+							break
+						}
+
+						tx.Commit()
+					}
+					break
+				}
+			}
+		}
+	}
+
 	db.AutoMigrate(
 		&models.Chain{},
 		&models.Mail{},
