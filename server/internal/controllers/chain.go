@@ -509,7 +509,7 @@ WHERE users.id IN (
 	FROM user_chains
 	LEFT JOIN chains ON chains.id = user_chains.chain_id
 	WHERE chains.uid = ?
-)
+) AND user_chains.is_approved = FALSE
 	`, query.ChainUID).Scan(unapprovedUserChains).Error
 	if err != nil {
 		glog.Error(err)

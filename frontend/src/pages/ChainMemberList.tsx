@@ -40,7 +40,8 @@ export default function ChainMemberList() {
 
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
-  //const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null)>;
+  const [unapprovedUsers, setUnapproved] = useState<User[] | null>(null);
+
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
@@ -87,8 +88,9 @@ export default function ChainMemberList() {
         const chainData = (await chainGet(chainUID)).data;
         setChain(chainData);
         const chainUsers = (await userGetAllByChain(chainUID)).data;
-        //   const unapprovedUsers = (await chainGetUnapproved(chainUID)).data;
         setUsers(chainUsers);
+        const unapprovedUsers = (await chainGetUnapproved(chainUID)).data;
+        setUnapproved(unapprovedUsers);
         setPublished(chainData.published);
         setOpenToNewMembers(chainData.open_to_new_members);
       } catch (err: any) {
@@ -103,6 +105,8 @@ export default function ChainMemberList() {
     try {
       const chainUsers = (await userGetAllByChain(chainUID)).data;
       setUsers(chainUsers);
+      const unapprovedUsers = (await chainGetUnapproved(chainUID)).data;
+      setUnapproved(unapprovedUsers);
     } catch (err: any) {
       if (err?.status === 401) {
         history.replace("/loops");
@@ -147,7 +151,9 @@ export default function ChainMemberList() {
                 </dd>
                 <dt className="font-bold mb-2">{t("participants")}</dt>
                 <dd className="text-sm mb-1">
-                  {t("peopleWithCount", { count: users.length })}
+                  {t("peopleWithCount", {
+                    count: users.length - unapprovedUsers?.length,
+                  })}
                 </dd>
               </dl>
 
@@ -578,7 +584,6 @@ function ParticipantsTable(props: {
             </thead>
             <tbody>
               {props.users
-                //a.chains[0].is_approved == 0 ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name))
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .sort((a: User, b: User) =>
                   a.chains[0].is_approved == false ? 0 : 1
@@ -596,11 +601,10 @@ function ParticipantsTable(props: {
                         <input
                           type="checkbox"
                           name="selectedChainAdmin"
-                          className={
-                            pendingColor(userChain, "checkBox")?.concat(
-                              "checkbox checkbox-sm checkbox-primary"
-                            ) /*testUnapprovedChain(userChain)*/
-                          }
+                          className={pendingColor(
+                            userChain,
+                            "checkBox"
+                          )?.concat("checkbox checkbox-sm checkbox-primary")}
                           checked={selected.includes(u.uid)}
                           onChange={onChangeSelect}
                           value={u.uid}
@@ -693,12 +697,7 @@ function ParticipantsTable(props: {
               ></button>
             </div>
 
-            <div
-              className="tooltip"
-              data-tip={t(
-                "approveUser"
-              )} /*added code for add-accept remove comment upon completion*/
-            >
+            <div className="tooltip" data-tip={t("approveUser")}>
               <button
                 type="button"
                 onClick={onApprove}

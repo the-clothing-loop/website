@@ -118,7 +118,9 @@ const ChainsList = () => {
                           {chain.address}
                         </td>
                         <td align="center">
-                          {isPendingApproval || isUserAdmin ? (
+                          {isPendingApproval ||
+                          isUserAdmin ||
+                          authUser?.is_root_admin ? (
                             chain.published ? (
                               <div className="tooltip" data-tip="published">
                                 <span className="feather feather-eye  text-lg text-green" />
@@ -170,7 +172,11 @@ const ChainsList = () => {
                                       handleClickUnsubscribe(e, chain)
                                     }
                                   >
-                                    {t("leave")}
+                                    {isPendingApproval ||
+                                    isUserAdmin ||
+                                    authUser?.is_root_admin
+                                      ? t("leave")
+                                      : t("leaveWaitlist")}
                                   </a>
                                 </li>
                               </ul>

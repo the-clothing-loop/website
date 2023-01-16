@@ -68,12 +68,3 @@ export function userHasNewsletter(chainUID: string, userUID: string) {
     },
   });
 }
-
-export function userIsApproved(userUID: string, chainUID: string) {
-  return axios.get<boolean>(`v2/user/is-approved`, {
-    params: {
-      user_uid: userUID,
-      chain_uid: chainUID,
-    },
-  });
-}

@@ -194,6 +194,7 @@
   "signedUpOn": "Signed up on",
   "memberFor": "Member for",
   "days": "days",
+  "leaveWaitlist": "Leave Waitlist",
   "pleaseEnterAValid": {
     "emailAddress": "Please enter a valid e-mail address",
     "phoneNumber": "Please enter a valid phone number"

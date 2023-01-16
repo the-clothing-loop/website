@@ -186,31 +186,6 @@ func UserHasNewsletter(c *gin.Context) {
 	c.JSON(200, hasNewsletter > 0)
 }
 
-func UserIsApproved(c *gin.Context) { //remove after
-	db := getDB(c)
-
-	var query struct {
-		UserUID  string `form:"user_uid" binding:"required,uuid"`
-		ChainUID string `form:"chain_uid" binding:"required,uuid"`
-	}
-	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
-		return
-	}
-
-	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, "", query.UserUID)
-	if !ok {
-		return
-	}
-
-	isPending := 0
-	db.Raw(`SELECT is_approved FROM user_chains WHERE user_id = ? 
-		AND chain_id IN(SELECT id FROM chains WHERE uid = ?) LIMIT 1`,
-		user.ID, query.ChainUID).Scan(&isPending)
-
-	c.JSON(200, isPending > 0)
-
-}
 
 func UserUpdate(c *gin.Context) {
 	db := getDB(c)
@@ -363,3 +338,4 @@ HAVING COUNT(uc.id) = 1 AND uc.chain_id IN (
 	}
 	tx.Commit()
 }
+
