@@ -18,16 +18,16 @@ import {
   chainAddUser,
   chainDeleteUnapproved,
   chainGet,
-  chainGetUnapproved,
   chainRemoveUser,
   chainUpdate,
   chainUserApprove,
 } from "../api/chain";
 import { Chain, User, UserChain } from "../api/types";
-import { userAddAsChainAdmin, userGetAllByChain } from "../api/user";
+import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
+
 interface Params {
   chainUID: string;
 }
@@ -40,7 +40,7 @@ export default function ChainMemberList() {
 
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
-  const [unapprovedUsers, setUnapproved] = useState<User[] | null>(null);
+  const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
 
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
@@ -83,30 +83,26 @@ export default function ChainMemberList() {
   }
 
   useEffect(() => {
-    (async () => {
-      try {
-        const chainData = (await chainGet(chainUID)).data;
-        setChain(chainData);
-        const chainUsers = (await userGetAllByChain(chainUID)).data;
-        setUsers(chainUsers);
-        const unapprovedUsers = (await chainGetUnapproved(chainUID)).data;
-        setUnapproved(unapprovedUsers);
-        setPublished(chainData.published);
-        setOpenToNewMembers(chainData.open_to_new_members);
-      } catch (err: any) {
-        if (err?.status === 401) {
-          history.replace("/loops");
-        }
-      }
-    })();
+    refresh();
   }, [history]);
 
   async function refresh() {
     try {
+      const chainData = (await chainGet(chainUID)).data;
+      setChain(chainData);
       const chainUsers = (await userGetAllByChain(chainUID)).data;
-      setUsers(chainUsers);
-      const unapprovedUsers = (await chainGetUnapproved(chainUID)).data;
-      setUnapproved(unapprovedUsers);
+      setUsers(
+        chainUsers.filter(
+          (u) => u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved
+        )
+      );
+      setUnapprovedUsers(
+        chainUsers.filter(
+          (u) =>
+            u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved ==
+            false
+        )
+      );
     } catch (err: any) {
       if (err?.status === 401) {
         history.replace("/loops");
@@ -114,7 +110,8 @@ export default function ChainMemberList() {
     }
   }
 
-  if (!chain || !users) {
+  if (!(chain && users && unapprovedUsers)) {
+    console.log(chain, users, unapprovedUsers);
     return null;
   }
   return (
@@ -151,9 +148,7 @@ export default function ChainMemberList() {
                 </dd>
                 <dt className="font-bold mb-2">{t("participants")}</dt>
                 <dd className="text-sm mb-1">
-                  {t("peopleWithCount", {
-                    count: users.length - unapprovedUsers?.length,
-                  })}
+                  {t("peopleWithCount", { count: users.length })}
                 </dd>
               </dl>
 
@@ -211,6 +206,7 @@ export default function ChainMemberList() {
           <ParticipantsTable
             authUser={authUser}
             users={users}
+            unapprovedUsers={unapprovedUsers}
             chain={chain}
             refresh={refresh}
           />
@@ -224,7 +220,6 @@ function HostTable(props: {
   authUser: User | null;
   chain: Chain;
   users: User[];
-  userChain: UserChain;
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
@@ -238,7 +233,6 @@ function HostTable(props: {
     let notHost: User[] = [];
     props.users?.forEach((u) => {
       let uc = u.chains.find((uc) => uc.chain_uid === props.chain?.uid);
-
       if (uc?.is_chain_admin) host.push(u);
       else notHost.push(u);
     });
@@ -405,15 +399,17 @@ function HostTable(props: {
 function ParticipantsTable(props: {
   authUser: User | null;
   users: User[];
+  unapprovedUsers: User[];
   chain: Chain;
   refresh: () => Promise<void>;
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addToastStatic } = useContext(ToastContext);
+  const [isSelectApproved, setIsSelectApproved] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
-    if (selected.length !== 1) {
+    if (selected.length !== 1 || !isSelectApproved) {
       return "#";
     }
     let userUID = props.users?.find((u) => u.uid === selected[0])?.uid;
@@ -429,10 +425,20 @@ function ParticipantsTable(props: {
     };
   }, [selected, props.users, props.chain]);
 
-  function onChangeSelect(e: ChangeEvent<HTMLInputElement>) {
+  function onChangeSelect(
+    e: ChangeEvent<HTMLInputElement>,
+    isApproved: boolean
+  ) {
     let value = e.target.value;
-    if (e.target.checked) setSelected([...selected, value]);
+    let isSelectTypeChanged = isApproved !== isSelectApproved;
+
+    if (isSelectTypeChanged) setSelected([value]);
+    else if (e.target.checked) setSelected([...selected, value]);
     else setSelected(selected.filter((s) => s !== value));
+
+    if (isSelectTypeChanged) {
+      setIsSelectApproved(isApproved);
+    }
   }
 
   function onRemove() {
@@ -464,11 +470,10 @@ function ParticipantsTable(props: {
   }
 
   function onApprove() {
-    //Replace code with the function code needed v2/approve
     if (!selected.length) return;
     const chainUID = props.chain.uid;
     const _selected = selected;
-    const userNames = props.users
+    const userNames = props.unapprovedUsers
       .filter((u) => _selected.includes(u.uid))
       .map((u) => u.name);
 
@@ -535,35 +540,8 @@ function ParticipantsTable(props: {
     }
   }
 
-  function isApprovedUser() {
-    if (!selected.length) return;
-
-    let _selected = selected;
-    let chain_uid = props.chain.uid;
-    let theirChainsProp = props.users
-      .filter((u) => _selected.includes(u.uid))
-      .map((u) => u.chains);
-    let listUserChain = theirChainsProp[0].map((u) => u);
-
-    let i = 0;
-    while (listUserChain[i].chain_uid != chain_uid) {
-      i++;
-    }
-    console.log(listUserChain[i].is_approved);
-    return listUserChain[i].is_approved;
-  }
-
-  function pendingColor(uc: UserChain, elName: string) {
-    if (uc.is_approved != true) {
-      if (elName == "") {
-        return "bg-yellow/[.60] ";
-      } else if (elName == "sizeButtons") {
-        return "bg-yellow/[.0] ";
-      } else if (elName == "checkBox") {
-        return "border-grey ";
-      }
-    }
-    return "";
+  function getUserChain(u: User): UserChain {
+    return u.chains.find((uc) => uc.chain_uid === props.chain.uid)!;
   }
 
   return (
@@ -577,90 +555,107 @@ function ParticipantsTable(props: {
                 <th>{t("name")}</th>
                 <th>{t("address")}</th>
                 <th>{t("contact")}</th>
-                <th>{t("interested size")}</th>
+                <th>{t("interestedSizes")}</th>
                 <th>{t("signedUpOn")}</th>
-                <th className="text-center">{t("status")}</th>
               </tr>
             </thead>
             <tbody>
-              {props.users
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .sort((a, b) =>
-                  String(
-                    a.chains[0].is_approved == false ? 0 : 1
-                  ).localeCompare(
-                    String(b.chains[0].is_approved == false ? 0 : 1)
-                  )
-                )
-                .map((u: User) => {
-                  const userChain = u.chains.find(
-                    (uc) => uc.chain_uid === props.chain.uid
-                  )!;
+              {props.unapprovedUsers
+                .sort((a, b) => {
+                  const ucA = getUserChain(a);
+                  const ucB = getUserChain(b);
+
+                  return new Date(ucA.created_at) > new Date(ucB.created_at)
+                    ? -1
+                    : 1;
+                })
+                .map((u) => {
+                  const userChain = getUserChain(u);
 
                   return (
-                    <tr className="" key={u.uid}>
-                      <td
-                        className={pendingColor(userChain, "")?.concat("stick")}
-                      >
+                    <tr key={u.uid}>
+                      <td className="bg-yellow/[.6] sticky">
                         <input
                           type="checkbox"
                           name="selectedChainAdmin"
-                          className={pendingColor(
-                            userChain,
-                            "checkBox"
-                          )?.concat("checkbox checkbox-sm checkbox-primary")}
+                          className="checkbox checkbox-sm checkbox-accent"
                           checked={selected.includes(u.uid)}
-                          onChange={onChangeSelect}
+                          onChange={(e) => onChangeSelect(e, false)}
                           value={u.uid}
                         />
                       </td>
-                      <td className={pendingColor(userChain, "")}>{u.name}</td>
-                      <td className={pendingColor(userChain, "")}>
-                        <span className=" block w-48 text-sm whitespace-normal">
+                      <td className="bg-yellow/[.6]">{u.name}</td>
+                      <td className="bg-yellow/[.6]">
+                        <span className="block w-48 text-sm whitespace-normal">
                           {u.address}
                         </span>
                       </td>
-                      <td
-                        className={pendingColor(userChain, "")?.concat(
-                          "text-sm leading-relaxed"
-                        )}
-                      >
+                      <td className="bg-yellow/[.6] text-sm leading-relaxed">
                         {u.email}
                         <br />
                         {u.phone_number}
                       </td>
-                      <td
-                        className={pendingColor(userChain, "")?.concat(
-                          "align-middle"
-                        )}
-                      >
+                      <td className="bg-yellow/[.6] align-middle"></td>
+                      <td className="bg-yellow/[.6] text-center">
                         <span
-                          className={pendingColor(
-                            userChain,
-                            "sizeButtons"
-                          )?.concat(
-                            "block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
-                          )}
+                          tabIndex={0}
+                          className="tooltip tooltip-top"
+                          data-tip={signedUpOn(userChain)}
+                        >
+                          {userChain.is_approved
+                            ? simplifyDays(userChain)
+                            : t("pendingApproval")}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              {props.users
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((u: User) => {
+                  const userChain = getUserChain(u);
+
+                  return (
+                    <tr key={u.uid}>
+                      <td className="sticky">
+                        <input
+                          type="checkbox"
+                          name="selectedChainAdmin"
+                          className="checkbox checkbox-sm checkbox-primary"
+                          checked={selected.includes(u.uid)}
+                          onChange={(e) => onChangeSelect(e, true)}
+                          value={u.uid}
+                        />
+                      </td>
+                      <td>{u.name}</td>
+                      <td>
+                        <span className="block w-48 text-sm whitespace-normal">
+                          {u.address}
+                        </span>
+                      </td>
+                      <td className="text-sm leading-relaxed">
+                        {u.email}
+                        <br />
+                        {u.phone_number}
+                      </td>
+                      <td className="align-middle">
+                        <span
+                          className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
                           tabIndex={0}
                         >
                           {SizeBadges(t, u.sizes)}
                         </span>
                       </td>
-                      <td
-                        className={pendingColor(userChain, "")?.concat(
-                          "text-center"
-                        )}
-                      >
-                        {signedUpOn(userChain)}{" "}
-                      </td>
-                      <td
-                        className={pendingColor(userChain, "")?.concat(
-                          "text-center"
-                        )}
-                      >
-                        {userChain.is_approved
-                          ? simplifyDays(userChain)
-                          : t("pendingApproval")}
+                      <td className="text-center">
+                        <span
+                          tabIndex={0}
+                          className="tooltip tooltip-top"
+                          data-tip={signedUpOn(userChain)}
+                        >
+                          {userChain.is_approved
+                            ? simplifyDays(userChain)
+                            : t("pendingApproval")}
+                        </span>
                       </td>
                     </tr>
                   );
@@ -678,12 +673,12 @@ function ParticipantsTable(props: {
             <div className="tooltip mr-2" data-tip={t("edit")}>
               <Link
                 className={`btn btn-sm btn-circle feather feather-edit ${
-                  selected.length === 1 && isApprovedUser()
+                  selected.length === 1 && isSelectApproved
                     ? "btn-primary"
                     : "btn-disabled opacity-60"
                 }`}
                 aria-label={t("edit")}
-                aria-disabled={!selected || !isApprovedUser()}
+                aria-disabled={!selected || !isSelectApproved}
                 to={edit}
               ></Link>
             </div>
@@ -692,12 +687,10 @@ function ParticipantsTable(props: {
                 type="button"
                 onClick={onRemove}
                 className={`btn btn-sm btn-circle feather feather-user-x ${
-                  selected.length && isApprovedUser()
-                    ? "btn-error"
-                    : "btn-disabled opacity-60"
+                  selected.length ? "btn-error" : "btn-disabled opacity-60"
                 }`}
                 aria-label={t("removeFromLoop")}
-                disabled={!selected || !isApprovedUser()}
+                disabled={!selected || !isSelectApproved}
               ></button>
             </div>
 
@@ -709,10 +702,8 @@ function ParticipantsTable(props: {
                   selected.length ? "btn-secondary" : "btn-disabled opacity-60"
                 }`}
                 aria-label={t("approveUser")}
-                disabled={!selected || isApprovedUser()}
-              >
-                {isApprovedUser()}
-              </button>
+                disabled={!selected || isSelectApproved}
+              ></button>
             </div>
           </div>
         </div>

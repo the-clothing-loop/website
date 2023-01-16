@@ -1,4 +1,4 @@
-import { Chain, UID, User } from "./types";
+import { Chain, UID } from "./types";
 import axios from "./axios";
 import { RequestRegisterChain } from "./login";
 
@@ -63,10 +63,4 @@ export function chainDeleteUnapproved(chainUID: string, userUID: string) {
   return axios.delete<never>(
     `/v2/chain/unapproved-user?user_uid=${userUID}&chain_uid=${chainUID}`
   );
-}
-
-export function chainGetUnapproved(chainUID: string) {
-  return axios.get<User[]>("v2/chain/unapproved-users", {
-    params: { chain_uid: chainUID },
-  });
 }

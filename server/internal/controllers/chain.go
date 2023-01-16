@@ -369,35 +369,10 @@ func ChainRemoveUser(c *gin.Context) {
 	if !ok {
 		return
 	}
-	err := user.AddUserChainsToObject(db)
+
+	err := db.Exec(`DELETE FROM user_chains WHERE user_id = ? AND chain_id = ?`, user.ID, chain.ID).Error
 	if err != nil {
 		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
-		return
-	}
-
-	isUserChainAdmin := false
-	for _, c := range user.Chains {
-		if c.ChainID == chain.ID {
-			isUserChainAdmin = c.IsChainAdmin
-			break
-		}
-	}
-	if !(isUserChainAdmin || user.IsRootAdmin || user.UID == body.UserUID) {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to remove a different user"))
-		return
-	}
-
-	if res := db.Exec(`
-DELETE FROM user_chains
-WHERE user_id = (
-	SELECT users.id
-	FROM users
-	WHERE users.uid = ?
-) AND chain_id = ?
-		`, body.UserUID,
-		chain.ID); res.Error != nil {
-		glog.Error(res.Error)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be removed from chain due to unknown error"))
 		return
 	}
@@ -432,117 +407,18 @@ func ChainApproveUser(c *gin.Context) {
 	if !ok {
 		return
 	}
-	err := user.AddUserChainsToObject(db)
-	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
-		return
-	}
-
-	isUserChainAdmin := false
-	for _, c := range user.Chains {
-		if c.ChainID == chain.ID {
-			isUserChainAdmin = c.IsChainAdmin
-			break
-		}
-	}
-	if !(isUserChainAdmin || user.IsRootAdmin || user.UID == body.UserUID) {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to approve a user's request to join the loop"))
-		return
-	}
 
 	db.Exec(`
-	UPDATE user_chains
-	SET user_chains.is_approved = TRUE WHERE user_id =(
-		SELECT users.id
-		FROM users
-		WHERE users.uid = ?
-	) AND chain_id = ?
-		`, body.UserUID,
-		chain.ID)
+UPDATE user_chains
+SET user_chains.is_approved = TRUE
+WHERE user_id = ? AND chain_id = ?
+	`, user.ID, chain.ID)
 
-	var userEmail string
-	db.Raw(`SELECT email from users WHERE uid =?`, body.UserUID).Scan(&userEmail)
-	var Name string
-	db.Raw(`SELECT name from users WHERE uid =?`, body.UserUID).Scan(&Name)
-	views.EmailToLoopParticipant(c, db, Name, userEmail, chain.Name,
-		 "an_admin_approved_your_join_request", 
-		 "an_admin_approved_your_join_request.gohtml")
-
-}
-
-func ChainGetUnapprovedUsers(c *gin.Context) {
-	db := getDB(c)
-	var query struct {
-		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	if user.Email.Valid {
+		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
+			"an_admin_approved_your_join_request",
+			"an_admin_approved_your_join_request.gohtml")
 	}
-	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
-		return
-	}
-
-	ok, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
-	if !ok {
-		return
-	}
-
-	// retrieve user from query
-	users := &[]models.User{}
-	unapprovedUserChains := &[]models.UserChain{}
-
-	tx := db.Begin()
-	err := tx.Raw(`
-	SELECT
-	user_chains.id             AS id,
-	user_chains.chain_id       AS chain_id,
-	chains.uid                 AS chain_uid,
-	user_chains.user_id        AS user_id,
-	users.uid                  AS user_uid,
-	user_chains.is_chain_admin AS is_chain_admin,
-	user_chains.created_at     AS created_at,
-	user_chains.is_approved    AS is_approved
-FROM user_chains
-LEFT JOIN chains ON user_chains.chain_id = chains.id
-LEFT JOIN users ON user_chains.user_id = users.id
-WHERE users.id IN (
-	SELECT user_chains.user_id
-	FROM user_chains
-	LEFT JOIN chains ON chains.id = user_chains.chain_id
-	WHERE chains.uid = ?
-) AND user_chains.is_approved = FALSE
-	`, query.ChainUID).Scan(unapprovedUserChains).Error
-	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associated users of loop"))
-		return
-	}
-	err = tx.Raw(`
-SELECT users.*
-FROM users
-LEFT JOIN user_chains ON user_chains.user_id = users.id 
-LEFT JOIN chains      ON chains.id = user_chains.chain_id
-WHERE chains.uid = ? AND users.is_email_verified = TRUE AND user_chains.is_approved = false
-	`, query.ChainUID).Scan(users).Error
-	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associated loops of the users of a loop"))
-		return
-	}
-	tx.Commit()
-
-	for i, user := range *users {
-		thisUserChains := []models.UserChain{}
-		for ii := range *unapprovedUserChains {
-			userChain := (*unapprovedUserChains)[ii]
-			if userChain.UserID == user.ID {
-				// glog.Infof("userchain is added (userChain.ID: %d -> user.ID: %d)\n", userChain.ID, user.ID)
-				thisUserChains = append(thisUserChains, userChain)
-			}
-		}
-		(*users)[i].Chains = thisUserChains
-	}
-
-	c.JSON(200, users)
 }
 
 func ChainDeleteUnapproved(c *gin.Context) {
@@ -556,33 +432,19 @@ func ChainDeleteUnapproved(c *gin.Context) {
 		return
 	}
 
-	ok, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, query.ChainUID, query.UserUID)
 	if !ok {
 		return
 	}
 
-		var userEmail string
-	db.Raw(`SELECT email from users WHERE uid =?`, query.UserUID).Scan(&userEmail)
-	var Name string
-	db.Raw(`SELECT name from users WHERE uid =?`, query.UserUID).Scan(&Name)
-	var chainName string
-	db.Raw(`SELECT name from chains users WHERE uid =?`, query.ChainUID).Scan(&chainName)
-
 	db.Exec(`
 DELETE FROM user_chains
-WHERE user_id IN(
-	SELECT users.id
-	FROM users
-	WHERE users.uid = ?
-) AND chain_id IN(
-	SELECT chains.id 
-	FROM chains
-	WHERE chains.uid = ?
-) AND is_approved = FALSE`,
-		query.UserUID,
-		query.ChainUID)
+WHERE user_id = ? AND chain_id = ? AND is_approved = FALSE
+	`, user.ID, chain.ID)
 
-	views.EmailToLoopParticipant(c, db, Name, userEmail, chainName,
-		 "an_admin_denied_your_join_request", 
-		 "an_admin_denied_your_join_request.gohtml")
+	if user.Email.Valid {
+		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
+			"an_admin_denied_your_join_request",
+			"an_admin_denied_your_join_request.gohtml")
+	}
 }

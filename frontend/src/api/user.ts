@@ -37,7 +37,6 @@ export interface UserUpdateBody {
   newsletter?: boolean;
   sizes?: string[];
   address?: string;
-  is_approved?: boolean;
 }
 export function userUpdate(user: UserUpdateBody) {
   return axios.patch<never>("/v2/user", user);

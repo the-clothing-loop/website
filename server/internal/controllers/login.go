@@ -112,7 +112,7 @@ WHERE user_chains.chain_id IN ?
 			}
 		}
 	}
-
+	// re-add IsEmailVerified, see TokenVerify
 	user.IsEmailVerified = true
 
 	// set token as cookie

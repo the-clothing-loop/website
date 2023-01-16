@@ -159,7 +159,7 @@ func EmailToLoopParticipant(
 	db *gorm.DB,
 	participantName string,
 	participantEmail string,
-	loopName string,
+	chainName string,
 	headerName string,
 	templateName string,
 ) bool {
@@ -170,9 +170,8 @@ func EmailToLoopParticipant(
 	to := participantEmail
 	subject := emailsHeaders[i18n][headerName]
 	body, err := executeTemplate(c, emailsTemplates[i18n], templateName, gin.H{
-		"Name": participantName,
-		"loopName" : loopName,
-		
+		"Name":      participantName,
+		"ChainName": chainName,
 	})
 	if err != nil {
 		return false
