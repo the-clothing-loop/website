@@ -47,12 +47,14 @@ func main() {
 		chainIndex := faker.IntBetween(0, len(chains)-1)
 		chain := chains[chainIndex]
 
-		if err := db.Create(&models.UserChain{
-			UserID:       user.ID,
-			ChainID:      chain.ID,
-			IsChainAdmin: false,
-		}).Error; err != nil {
-			log.Fatal(err)
+		var count int
+		db.Raw(`SELECT COUNT(*) FROM user_chains WHERE user_id = ? AND chain_id = ?`, user.ID, chain.ID).Scan(&count)
+		if count == 0 {
+			db.Create(&models.UserChain{
+				UserID:       user.ID,
+				ChainID:      chain.ID,
+				IsChainAdmin: false,
+			})
 		}
 		log.Printf("Added     -> User\t(ID: %d)\tto Chain (ID: %d)", user.ID, chain.ID)
 	}

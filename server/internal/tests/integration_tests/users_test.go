@@ -8,7 +8,6 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/internal/controllers"
 	"github.com/CollActionteam/clothing-loop/server/internal/tests/mocks"
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,7 +18,7 @@ func TestUserGetUID(t *testing.T) {
 	})
 
 	// create gin.Context mock
-	url := fmt.Sprintf("/v1/user?user_uid=%s&chain_uid=%s", user.UID, chain.UID)
+	url := fmt.Sprintf("/v2/user?user_uid=%s&chain_uid=%s", user.UID, chain.UID)
 	c, resultFunc := mocks.MockGinContext(db, http.MethodGet, url, nil, token)
 
 	// run sut
@@ -42,11 +41,10 @@ func TestUserGetUID(t *testing.T) {
 		chainUser := chainUserAny.(map[string]any)
 		if chainUser["chain_uid"] == chain.UID {
 			found = true
-			assert.EqualValues(t, chainUser, gin.H{
-				"chain_uid":      chain.UID,
-				"user_uid":       user.UID,
-				"is_chain_admin": true,
-			})
+
+			assert.Equal(t, chainUser["chain_uid"], chain.UID)
+			assert.Equal(t, chainUser["user_uid"], user.UID)
+			assert.Equal(t, chainUser["is_chain_admin"], true)
 		}
 	}
 	assert.Truef(t, found, "chainUser of chain_uid: %s not found", chain.UID)
