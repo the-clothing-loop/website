@@ -86,8 +86,9 @@ func ChainGet(c *gin.Context) {
 		return
 	}
 
-	chain := models.Chain{}
-	if res := db.First(&chain, "chains.uid = ?", query.ChainUID); res.Error != nil {
+	chain := &models.Chain{}
+	err := db.Raw(`SELECT * FROM chains WHERE uid = ? LIMIT 1`, query.ChainUID).Scan(chain).Error
+	if err != nil || chain.ID == 0 {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
 		return
 	}
