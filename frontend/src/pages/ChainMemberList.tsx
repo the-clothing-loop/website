@@ -524,19 +524,13 @@ function ParticipantsTable(props: {
     const diff = createdAt.getTime() - currDate.getTime();
     let numDays = Math.round(diff / Day);
 
-    let daysToString;
-
-    if (numDays < 30) {
-      daysToString = String(numDays);
-      return t("memberFor") + " " + daysToString + " " + t("days");
-    } else if (numDays > 30 && numDays < 365) {
-      numDays = Math.round(numDays / 30);
-      daysToString = String(numDays);
-      return t("memberFor") + " " + daysToString + " " + t("months");
+    if (numDays < 1) {
+      return t("new");
+    } else if (numDays < 30) {
+      return t("nDays", { n: numDays });
     } else {
-      numDays = Math.round(numDays / 365);
-      daysToString = String(numDays);
-      return t("memberFor") + " " + daysToString + " " + t("years");
+      let numMonths = Math.round(numDays / 30);
+      return t("nMonths", { n: numMonths });
     }
   }
 

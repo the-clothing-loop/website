@@ -192,8 +192,8 @@
   "anErrorOccurredDuringCheckout": "An error occurred during checkout...",
   "pleaseEnterYourEmail": "Please enter your e-mail address",
   "signedUpOn": "Signed up on",
-  "memberFor": "Member for",
-  "days": "days",
+  "nDays": "{{ n }} days",
+  "nMonths": "{{ n }} months",
   "leaveWaitlist": "Leave Waitlist",
   "pleaseEnterAValid": {
     "emailAddress": "Please enter a valid e-mail address",
