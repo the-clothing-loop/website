@@ -36,22 +36,24 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 					if t == "bigint(20)" {
 						tx := db.Begin()
 
-						err := tx.Exec(`ALTER TABLE user_tokens ADD new_created_at datetime(3) DEFAULT NULL`)
+						if !db.Migrator().HasColumn(&models.UserToken{}, "new_created_at") {
+							err := tx.Exec(`ALTER TABLE user_tokens ADD new_created_at datetime(3) DEFAULT NULL`).Error
+							if err != nil {
+								tx.Rollback()
+								break
+							}
+						}
+						err = tx.Exec(`UPDATE user_tokens SET new_created_at = FROM_UNIXTIME(created_at)`).Error
 						if err != nil {
 							tx.Rollback()
 							break
 						}
-						err = tx.Exec(`UPDATE user_tokens SET new_created_at = FROM_UNIXTIME(created_at)`)
+						err = tx.Exec(`ALTER TABLE user_tokens DROP created_at`).Error
 						if err != nil {
 							tx.Rollback()
 							break
 						}
-						err = tx.Exec(`ALTER TABLE user_tokens DROP created_at`)
-						if err != nil {
-							tx.Rollback()
-							break
-						}
-						err = tx.Exec(`ALTER TABLE user_tokens RENAME COLUMN new_created_at TO created_at`)
+						err = tx.Exec(`ALTER TABLE user_tokens RENAME COLUMN new_created_at TO created_at`).Error
 						if err != nil {
 							tx.Rollback()
 							break
