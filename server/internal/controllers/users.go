@@ -231,8 +231,8 @@ func UserUpdate(c *gin.Context) {
 			j, _ := json.Marshal(body.Sizes)
 			userChanges["sizes"] = string(j)
 		}
-		if res := db.Model(user).Updates(userChanges); res.Error != nil {
-			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, res.Error)
+		if err := db.Model(user).Updates(userChanges).Error; err != nil {
+			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
 			return
 		}
 	}
@@ -257,9 +257,9 @@ func UserUpdate(c *gin.Context) {
 				return
 			}
 
-			res := db.Where("email = ?", user.Email).Delete(&models.Newsletter{})
-			if res.Error != nil {
-				glog.Error(res.Error)
+			err := db.Exec("DELETE FROM newsletters WHERE email = ?", user.Email).Error
+			if err != nil {
+				glog.Error(err)
 				gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
 				return
 			}

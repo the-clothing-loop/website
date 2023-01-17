@@ -17,6 +17,7 @@ func main() {
 		flag.Set("log_dir", "/var/log/clothingloop-api/")
 		flag.Set("alsologtostderr", "true")
 	} else {
+		flag.Set("log_dir", "./")
 		flag.Set("logtostderr", "true")
 	}
 	flag.Parse()

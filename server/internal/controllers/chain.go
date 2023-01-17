@@ -67,7 +67,7 @@ func ChainCreate(c *gin.Context) {
 			{UserID: user.ID, IsChainAdmin: true},
 		},
 	}
-	if res := db.Create(&chain); res.Error != nil {
+	if err := db.Create(&chain).Error; err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create chain"))
 		return
 	}
@@ -158,7 +158,7 @@ func ChainGetAll(c *gin.Context) {
 	if query.FilterPublished {
 		tx.Where("chains.published = ?", true)
 	}
-	if res := tx.Find(&chains); res.Error != nil {
+	if err := tx.Find(&chains).Error; err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
 		return
 	}
@@ -256,8 +256,9 @@ func ChainUpdate(c *gin.Context) {
 		valuesToUpdate["open_to_new_members"] = *(body.OpenToNewMembers)
 	}
 
-	if res := db.Model(chain).Updates(valuesToUpdate); res.Error != nil {
-		glog.Error(res.Error)
+	err := db.Model(chain).Updates(valuesToUpdate).Error
+	if err != nil {
+		glog.Error(err)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to update loop values"))
 	}
 }
@@ -287,32 +288,34 @@ func ChainAddUser(c *gin.Context) {
 	}
 
 	user := models.User{}
-	if res := db.Raw(`
+	db.Raw(`
 SELECT * FROM users
 WHERE uid = ? AND is_email_verified = TRUE
 LIMIT 1
-	`, body.UserUID).Scan(&user); res.Error != nil {
+	`, body.UserUID).Scan(&user)
+	if user.ID == 0 {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrUserNotFound)
 		return
 	}
 
 	userChain := &models.UserChain{}
-	if res := db.Raw(`
+	db.Raw(`
 SELECT * FROM user_chains
 WHERE user_id = ? AND chain_id = ?
 LIMIT 1
-	`, user.ID, chain.ID).Scan(userChain); res.Error == nil {
+	`, user.ID, chain.ID).Scan(userChain)
+	if userChain.ID != 0 {
 		if (!userChain.IsChainAdmin && body.IsChainAdmin) || (userChain.IsChainAdmin && !body.IsChainAdmin) {
 			userChain.IsChainAdmin = body.IsChainAdmin
 			db.Save(userChain)
 		}
 	} else {
-		if res := db.Create(&models.UserChain{
+		if err := db.Create(&models.UserChain{
 			UserID:       user.ID,
 			ChainID:      chain.ID,
 			IsChainAdmin: false,
-		}); res.Error != nil {
-			glog.Error(res.Error)
+		}).Error; err != nil {
+			glog.Error(err)
 			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be added to chain due to unknown error"))
 			return
 		}
@@ -328,7 +331,7 @@ FROM user_chains AS uc
 LEFT JOIN users ON uc.user_id = users.id 
 WHERE uc.chain_id = ?
 	AND uc.is_chain_admin = TRUE
-	AND users.email_is_verified = TRUE
+	AND users.is_email_verified = TRUE
 `, chain.ID).Scan(&results)
 
 		if len(results) == 0 {

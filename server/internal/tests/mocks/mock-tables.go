@@ -49,8 +49,8 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 			},
 		},
 	}
-	if res := db.Create(user); res.Error != nil {
-		glog.Fatalf("Unable to create testUser: %v", res.Error)
+	if err := db.Create(user).Error; err != nil {
+		glog.Fatalf("Unable to create testUser: %v", err)
 	}
 
 	t.Cleanup(func() {
@@ -79,8 +79,8 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		UserChains:       []models.UserChain{},
 	}
 
-	if res := db.Create(&chain); res.Error != nil {
-		glog.Fatalf("Unable to create testChain: %v", res.Error)
+	if err := db.Create(&chain).Error; err != nil {
+		glog.Fatalf("Unable to create testChain: %v", err)
 	}
 
 	// Cleanup runs FiLo

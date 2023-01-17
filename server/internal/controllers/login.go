@@ -170,7 +170,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Sizes:           body.User.Sizes,
 		Address:         body.User.Address,
 	}
-	if res := db.Create(user); res.Error != nil {
+	if err := db.Create(user).Error; err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("User already exists"))
 		return
 	}
