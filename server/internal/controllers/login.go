@@ -197,7 +197,8 @@ func RegisterChainAdmin(c *gin.Context) {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
 		return
 	}
-	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
+
+	go views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func RegisterBasicUser(c *gin.Context) {
