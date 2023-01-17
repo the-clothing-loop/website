@@ -90,7 +90,6 @@ FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id 
 WHERE user_chains.chain_id IN ?
 	AND user_chains.is_chain_admin = TRUE
-	AND users.enabled = TRUE
 	`, chainIDs).Scan(&results).Error
 	if err != nil {
 		glog.Error(err)
@@ -113,9 +112,8 @@ WHERE user_chains.chain_id IN ?
 			}
 		}
 	}
-	// re-add enabled, see TokenVerify
+	// re-add IsEmailVerified, see TokenVerify
 	user.IsEmailVerified = true
-	user.Enabled = true
 
 	// set token as cookie
 	auth.CookieSet(c, token)
@@ -171,7 +169,6 @@ func RegisterChainAdmin(c *gin.Context) {
 		PhoneNumber:     body.User.PhoneNumber,
 		Sizes:           body.User.Sizes,
 		Address:         body.User.Address,
-		Enabled:         false,
 	}
 	if res := db.Create(user); res.Error != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("User already exists"))
@@ -241,7 +238,6 @@ func RegisterBasicUser(c *gin.Context) {
 		PhoneNumber:     body.User.PhoneNumber,
 		Sizes:           body.User.Sizes,
 		Address:         body.User.Address,
-		Enabled:         false,
 	}
 	if res := db.Create(user); res.Error != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("User already exists"))

@@ -103,9 +103,11 @@ const ChainsList = () => {
                 {chains
                   ?.sort((a, b) => a.name.localeCompare(b.name))
                   .map((chain) => {
-                    let isUserAdmin =
-                      authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
-                        ?.is_chain_admin || false;
+                    let userChain = authUser?.chains.find(
+                      (uc) => uc.chain_uid === chain.uid
+                    );
+                    let isUserAdmin = userChain?.is_chain_admin || false;
+
                     return (
                       <tr key={chain.uid}>
                         <td className="font-bold w-32 whitespace-normal">
@@ -115,19 +117,29 @@ const ChainsList = () => {
                           {chain.address}
                         </td>
                         <td align="center">
-                          {chain.published ? (
-                            <div className="tooltip" data-tip="published">
-                              <span className="feather feather-eye  text-lg text-green" />
-                            </div>
+                          {userChain?.is_approved ? (
+                            chain.published ? (
+                              <div className="tooltip" data-tip="published">
+                                <span className="feather feather-eye  text-lg text-green" />
+                              </div>
+                            ) : (
+                              <div className="tooltip" data-tip="draft">
+                                <span className="feather feather-eye-off  text-lg text-red" />
+                              </div>
+                            )
                           ) : (
-                            <div className="tooltip" data-tip="draft">
-                              <span className="feather feather-eye-off  text-lg text-red" />
+                            <div
+                              className="tooltip"
+                              data-tip={t("pendingApproval")}
+                            >
+                              <span className="feather btn-circle btn-lg feather-user-check text-yellow-darkest" />
                             </div>
                           )}
                         </td>
                         <td align="right">
                           <div className="flex justify-end">
-                            {(isUserAdmin || authUser?.is_root_admin) && (
+                            {(isUserAdmin || authUser?.is_root_admin) &&
+                            userChain?.is_approved ? (
                               <Link
                                 className={`btn btn-primary justify-between w-28 ${
                                   chains?.length > 5 ? "btn-sm" : ""
@@ -137,7 +149,7 @@ const ChainsList = () => {
                                 {t("view")}
                                 <span className="feather feather-arrow-right ml-3"></span>
                               </Link>
-                            )}
+                            ) : null}
                             <div className="dropdown dropdown-left">
                               <label
                                 tabIndex={0}
@@ -149,16 +161,19 @@ const ChainsList = () => {
                               </label>
                               <ul
                                 tabIndex={0}
-                                className="dropdown-content menu shadow bg-base-100 w-52"
+                                className="dropdown-content menu shadow bg-base-100 w-52 h-full"
                               >
-                                <li>
+                                <li className="h-full">
                                   <a
+                                    className="h-full text-red font-bold"
                                     href="#"
                                     onClick={(e) =>
                                       handleClickUnsubscribe(e, chain)
                                     }
                                   >
-                                    {t("leave")}
+                                    {userChain?.is_approved
+                                      ? t("leave")
+                                      : t("leaveWaitlist")}
                                   </a>
                                 </li>
                               </ul>

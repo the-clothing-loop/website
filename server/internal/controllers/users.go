@@ -99,7 +99,7 @@ func UserGetAllOfChain(c *gin.Context) {
 		return
 	}
 
-	ok, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
 	if !ok {
 		return
 	}
@@ -117,7 +117,8 @@ SELECT
 	user_chains.user_id        AS user_id,
 	users.uid                  AS user_uid,
 	user_chains.is_chain_admin AS is_chain_admin,
-	user_chains.created_at     AS created_at
+	user_chains.created_at     AS created_at,
+	user_chains.is_approved    AS is_approved
 FROM user_chains
 LEFT JOIN chains ON user_chains.chain_id = chains.id
 LEFT JOIN users ON user_chains.user_id = users.id
@@ -125,12 +126,12 @@ WHERE users.id IN (
 	SELECT user_chains.user_id
 	FROM user_chains
 	LEFT JOIN chains ON chains.id = user_chains.chain_id
-	WHERE chains.uid = ?
+	WHERE chains.id = ?
 )
-	`, query.ChainUID).Scan(allUserChains).Error
+	`, chain.ID).Scan(allUserChains).Error
 	if err != nil {
 		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associated users of loop"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associations between a loop and its users"))
 		return
 	}
 	err = tx.Raw(`
@@ -138,11 +139,11 @@ SELECT users.*
 FROM users
 LEFT JOIN user_chains ON user_chains.user_id = users.id 
 LEFT JOIN chains      ON chains.id = user_chains.chain_id
-WHERE chains.uid = ? AND users.is_email_verified = TRUE
-	`, query.ChainUID).Scan(users).Error
+WHERE chains.id = ? AND users.is_email_verified = TRUE
+	`, chain.ID).Scan(users).Error
 	if err != nil {
 		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associated loops of the users of a loop"))
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associated users of a loop"))
 		return
 	}
 	tx.Commit()

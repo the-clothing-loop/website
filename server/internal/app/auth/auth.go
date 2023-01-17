@@ -104,7 +104,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 // Any of the following rules pass authentication
 //
 // 1. authUser UID is the same as the given userUID
-// 2. authUser is a chain admin of chain and user is part of ch
+// 2. authUser is a chain admin of chain and user is part that same chain
 // 3. authUser is a root admin
 func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID string) (ok bool, user, authUser *models.User, chain *models.Chain) {
 	if chainUID != "" && userUID == "" {

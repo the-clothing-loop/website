@@ -288,7 +288,7 @@ func ChainAddUser(c *gin.Context) {
 	user := models.User{}
 	if res := db.Raw(`
 SELECT * FROM users
-WHERE uid = ? AND enabled = TRUE AND is_email_verified = TRUE
+WHERE uid = ? AND is_email_verified = TRUE
 LIMIT 1
 	`, body.UserUID).Scan(&user); res.Error != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrUserNotFound)
@@ -327,7 +327,7 @@ FROM user_chains AS uc
 LEFT JOIN users ON uc.user_id = users.id 
 WHERE uc.chain_id = ?
 	AND uc.is_chain_admin = TRUE
-	AND users.enabled = TRUE
+	AND users.email_is_verified = TRUE
 `, chain.ID).Scan(&results)
 
 		if len(results) == 0 {
@@ -369,35 +369,10 @@ func ChainRemoveUser(c *gin.Context) {
 	if !ok {
 		return
 	}
-	err := user.AddUserChainsToObject(db)
+
+	err := db.Exec(`DELETE FROM user_chains WHERE user_id = ? AND chain_id = ?`, user.ID, chain.ID).Error
 	if err != nil {
 		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
-		return
-	}
-
-	isUserChainAdmin := false
-	for _, c := range user.Chains {
-		if c.ChainID == chain.ID {
-			isUserChainAdmin = c.IsChainAdmin
-			break
-		}
-	}
-	if !(isUserChainAdmin || user.IsRootAdmin || user.UID == body.UserUID) {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to remove a different user"))
-		return
-	}
-
-	if res := db.Exec(`
-DELETE FROM user_chains
-WHERE user_id = (
-	SELECT users.id
-	FROM users
-	WHERE users.uid = ?
-) AND chain_id = ?
-		`, body.UserUID,
-		chain.ID); res.Error != nil {
-		glog.Error(res.Error)
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be removed from chain due to unknown error"))
 		return
 	}
@@ -414,4 +389,62 @@ WHERE chains.id IN (
 	HAVING COUNT(user_chains.id) = 0	AND chains.id = ?
 )
 	`, chain.ID)
+}
+
+func ChainApproveUser(c *gin.Context) {
+	db := getDB(c)
+
+	var body struct {
+		UserUID  string `json:"user_uid" binding:"required,uuid"`
+		ChainUID string `json:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		return
+	}
+
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	if !ok {
+		return
+	}
+
+	db.Exec(`
+UPDATE user_chains
+SET user_chains.is_approved = TRUE
+WHERE user_id = ? AND chain_id = ?
+	`, user.ID, chain.ID)
+
+	if user.Email.Valid {
+		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
+			"an_admin_approved_your_join_request",
+			"an_admin_approved_your_join_request.gohtml")
+	}
+}
+
+func ChainDeleteUnapproved(c *gin.Context) {
+	db := getDB(c)
+	var query struct {
+		UserUID  string `form:"user_uid" binding:"required,uuid"`
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
+		return
+	}
+
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, query.ChainUID, query.UserUID)
+	if !ok {
+		return
+	}
+
+	db.Exec(`
+DELETE FROM user_chains
+WHERE user_id = ? AND chain_id = ? AND is_approved = FALSE
+	`, user.ID, chain.ID)
+
+	if user.Email.Valid {
+		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
+			"an_admin_denied_your_join_request",
+			"an_admin_denied_your_join_request.gohtml")
+	}
 }

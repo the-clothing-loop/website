@@ -16,9 +16,11 @@ import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
+  chainDeleteUnapproved,
   chainGet,
   chainRemoveUser,
   chainUpdate,
+  chainUserApprove,
 } from "../api/chain";
 import { Chain, User, UserChain } from "../api/types";
 import { userGetAllByChain } from "../api/user";
@@ -38,6 +40,8 @@ export default function ChainMemberList() {
 
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
+  const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
+
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
@@ -79,26 +83,26 @@ export default function ChainMemberList() {
   }
 
   useEffect(() => {
-    (async () => {
-      try {
-        const chainData = (await chainGet(chainUID)).data;
-        setChain(chainData);
-        const chainUsers = (await userGetAllByChain(chainUID)).data;
-        setUsers(chainUsers);
-        setPublished(chainData.published);
-        setOpenToNewMembers(chainData.open_to_new_members);
-      } catch (err: any) {
-        if (err?.status === 401) {
-          history.replace("/loops");
-        }
-      }
-    })();
+    refresh();
   }, [history]);
 
   async function refresh() {
     try {
+      const chainData = (await chainGet(chainUID)).data;
+      setChain(chainData);
       const chainUsers = (await userGetAllByChain(chainUID)).data;
-      setUsers(chainUsers);
+      setUsers(
+        chainUsers.filter(
+          (u) => u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved
+        )
+      );
+      setUnapprovedUsers(
+        chainUsers.filter(
+          (u) =>
+            u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved ==
+            false
+        )
+      );
     } catch (err: any) {
       if (err?.status === 401) {
         history.replace("/loops");
@@ -106,7 +110,8 @@ export default function ChainMemberList() {
     }
   }
 
-  if (!chain || !users) {
+  if (!(chain && users && unapprovedUsers)) {
+    console.log(chain, users, unapprovedUsers);
     return null;
   }
   return (
@@ -201,6 +206,7 @@ export default function ChainMemberList() {
           <ParticipantsTable
             authUser={authUser}
             users={users}
+            unapprovedUsers={unapprovedUsers}
             chain={chain}
             refresh={refresh}
           />
@@ -393,15 +399,17 @@ function HostTable(props: {
 function ParticipantsTable(props: {
   authUser: User | null;
   users: User[];
+  unapprovedUsers: User[];
   chain: Chain;
   refresh: () => Promise<void>;
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addToastStatic } = useContext(ToastContext);
+  const [isSelectApproved, setIsSelectApproved] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
-    if (selected.length !== 1) {
+    if (selected.length !== 1 || !isSelectApproved) {
       return "#";
     }
     let userUID = props.users?.find((u) => u.uid === selected[0])?.uid;
@@ -417,10 +425,20 @@ function ParticipantsTable(props: {
     };
   }, [selected, props.users, props.chain]);
 
-  function onChangeSelect(e: ChangeEvent<HTMLInputElement>) {
+  function onChangeSelect(
+    e: ChangeEvent<HTMLInputElement>,
+    isApproved: boolean
+  ) {
     let value = e.target.value;
-    if (e.target.checked) setSelected([...selected, value]);
+    let isSelectTypeChanged = isApproved !== isSelectApproved;
+
+    if (isSelectTypeChanged) setSelected([value]);
+    else if (e.target.checked) setSelected([...selected, value]);
     else setSelected(selected.filter((s) => s !== value));
+
+    if (isSelectTypeChanged) {
+      setIsSelectApproved(isApproved);
+    }
   }
 
   function onRemove() {
@@ -451,11 +469,73 @@ function ParticipantsTable(props: {
     });
   }
 
+  function onApprove() {
+    if (!selected.length) return;
+    const chainUID = props.chain.uid;
+    const _selected = selected;
+    const userNames = props.unapprovedUsers
+      .filter((u) => _selected.includes(u.uid))
+      .map((u) => u.name);
+
+    addToastStatic({
+      message: t("approveParticipant", { name: userNames.join(", ") }),
+      type: "warning",
+      actions: [
+        {
+          text: t("approve"),
+          type: "ghost",
+          fn: () => {
+            Promise.all(
+              _selected.map((s) => chainUserApprove(chainUID, s))
+            ).finally(() => {
+              setSelected([]);
+              return props.refresh();
+            });
+          },
+        },
+        {
+          text: t("deny"),
+          type: "ghost",
+          fn: () => {
+            Promise.all(
+              _selected.map((s) => chainDeleteUnapproved(chainUID, s))
+            ).finally(() => {
+              setSelected([]);
+              return props.refresh();
+            });
+          },
+        },
+      ],
+    });
+  }
+
   function signedUpOn(uc: UserChain): string {
     let locale = i18n.language;
     if (locale === "en") locale = "default";
 
     return new Date(uc.created_at).toLocaleDateString(locale);
+  }
+
+  function simplifyDays(uc: UserChain): string {
+    var createdAt = new Date(uc.created_at);
+    var currDate = new Date();
+
+    const Day = 10000 * 60 * 60 * 24;
+    const diff = createdAt.getTime() - currDate.getTime();
+    let numDays = Math.round(diff / Day);
+
+    if (numDays < 1) {
+      return t("new");
+    } else if (numDays < 30) {
+      return t("nDays", { n: numDays });
+    } else {
+      let numMonths = Math.round(numDays / 30);
+      return t("nMonths", { n: numMonths });
+    }
+  }
+
+  function getUserChain(u: User): UserChain {
+    return u.chains.find((uc) => uc.chain_uid === props.chain.uid)!;
   }
 
   return (
@@ -469,17 +549,65 @@ function ParticipantsTable(props: {
                 <th>{t("name")}</th>
                 <th>{t("address")}</th>
                 <th>{t("contact")}</th>
-                <th>{t("interested size")}</th>
-                <th>{t("signedup at")}</th>
+                <th>{t("interestedSizes")}</th>
+                <th>{t("signedUpOn")}</th>
               </tr>
             </thead>
             <tbody>
+              {props.unapprovedUsers
+                .sort((a, b) => {
+                  const ucA = getUserChain(a);
+                  const ucB = getUserChain(b);
+
+                  return new Date(ucA.created_at) > new Date(ucB.created_at)
+                    ? -1
+                    : 1;
+                })
+                .map((u) => {
+                  const userChain = getUserChain(u);
+
+                  return (
+                    <tr key={u.uid}>
+                      <td className="bg-yellow/[.6] sticky">
+                        <input
+                          type="checkbox"
+                          name="selectedChainAdmin"
+                          className="checkbox checkbox-sm checkbox-accent"
+                          checked={selected.includes(u.uid)}
+                          onChange={(e) => onChangeSelect(e, false)}
+                          value={u.uid}
+                        />
+                      </td>
+                      <td className="bg-yellow/[.6]">{u.name}</td>
+                      <td className="bg-yellow/[.6]">
+                        <span className="block w-48 text-sm whitespace-normal">
+                          {u.address}
+                        </span>
+                      </td>
+                      <td className="bg-yellow/[.6] text-sm leading-relaxed">
+                        {u.email}
+                        <br />
+                        {u.phone_number}
+                      </td>
+                      <td className="bg-yellow/[.6] align-middle"></td>
+                      <td className="bg-yellow/[.6] text-center">
+                        <span
+                          tabIndex={0}
+                          className="tooltip tooltip-top"
+                          data-tip={signedUpOn(userChain)}
+                        >
+                          {userChain.is_approved
+                            ? simplifyDays(userChain)
+                            : t("pendingApproval")}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               {props.users
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((u: User) => {
-                  const userChain = u.chains.find(
-                    (uc) => uc.chain_uid === props.chain.uid
-                  )!;
+                  const userChain = getUserChain(u);
 
                   return (
                     <tr key={u.uid}>
@@ -489,7 +617,7 @@ function ParticipantsTable(props: {
                           name="selectedChainAdmin"
                           className="checkbox checkbox-sm checkbox-primary"
                           checked={selected.includes(u.uid)}
-                          onChange={onChangeSelect}
+                          onChange={(e) => onChangeSelect(e, true)}
                           value={u.uid}
                         />
                       </td>
@@ -512,13 +640,24 @@ function ParticipantsTable(props: {
                           {SizeBadges(t, u.sizes)}
                         </span>
                       </td>
-                      <td className="text-center">{signedUpOn(userChain)}</td>
+                      <td className="text-center">
+                        <span
+                          tabIndex={0}
+                          className="tooltip tooltip-top"
+                          data-tip={signedUpOn(userChain)}
+                        >
+                          {userChain.is_approved
+                            ? simplifyDays(userChain)
+                            : t("pendingApproval")}
+                        </span>
+                      </td>
                     </tr>
                   );
                 })}
             </tbody>
           </table>
         </div>
+
         <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
           <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
             <p className="block mx-2 flex-grow">
@@ -528,16 +667,16 @@ function ParticipantsTable(props: {
             <div className="tooltip mr-2" data-tip={t("edit")}>
               <Link
                 className={`btn btn-sm btn-circle feather feather-edit ${
-                  selected.length === 1
+                  selected.length === 1 && isSelectApproved
                     ? "btn-primary"
                     : "btn-disabled opacity-60"
                 }`}
                 aria-label={t("edit")}
-                aria-disabled={!selected}
+                aria-disabled={!selected || !isSelectApproved}
                 to={edit}
               ></Link>
             </div>
-            <div className="tooltip" data-tip={t("removeFromLoop")}>
+            <div className="tooltip mr-2" data-tip={t("removeFromLoop")}>
               <button
                 type="button"
                 onClick={onRemove}
@@ -545,7 +684,19 @@ function ParticipantsTable(props: {
                   selected.length ? "btn-error" : "btn-disabled opacity-60"
                 }`}
                 aria-label={t("removeFromLoop")}
-                disabled={!selected}
+                disabled={!selected || !isSelectApproved}
+              ></button>
+            </div>
+
+            <div className="tooltip" data-tip={t("approveUser")}>
+              <button
+                type="button"
+                onClick={onApprove}
+                className={`btn btn-sm btn-circle feather feather-user-check ${
+                  selected.length ? "btn-secondary" : "btn-disabled opacity-60"
+                }`}
+                aria-label={t("approveUser")}
+                disabled={!selected || isSelectApproved}
               ></button>
             </div>
           </div>

@@ -25,7 +25,7 @@ WHERE chains.published = TRUE AND chains.deleted_at IS NULL
 	err = db.Raw(`
 SELECT COUNT(users.id)
 FROM users
-WHERE users.enabled = TRUE
+WHERE users.is_email_verified = TRUE
 	`).Scan(&totalUsers).Error
 	if err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
