@@ -287,21 +287,23 @@ func ChainAddUser(c *gin.Context) {
 	}
 
 	user := models.User{}
-	if res := db.Raw(`
+	err := db.Raw(`
 SELECT * FROM users
 WHERE uid = ? AND enabled = TRUE AND is_email_verified = TRUE
 LIMIT 1
-	`, body.UserUID).Scan(&user); res.Error != nil {
+	`, body.UserUID).Scan(&user).Error
+	if err != nil || user.ID == 0 {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrUserNotFound)
 		return
 	}
 
 	userChain := &models.UserChain{}
-	if res := db.Raw(`
+	err = db.Raw(`
 SELECT * FROM user_chains
 WHERE user_id = ? AND chain_id = ?
 LIMIT 1
-	`, user.ID, chain.ID).Scan(userChain); res.Error == nil {
+	`, user.ID, chain.ID).Scan(userChain).Error
+	if err == nil && userChain.ID != 0 {
 		if (!userChain.IsChainAdmin && body.IsChainAdmin) || (userChain.IsChainAdmin && !body.IsChainAdmin) {
 			userChain.IsChainAdmin = body.IsChainAdmin
 			db.Save(userChain)
