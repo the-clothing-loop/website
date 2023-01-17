@@ -368,7 +368,7 @@ function HostTable(props: {
           onSubmit={onAddCoHost}
         >
           <select
-            className="select select-sm rounded-t-lg md:rounded-l-lg md:rounded-none disabled:text-base-300 md:max-w-sm"
+            className="select select-sm rounded-t-lg md:rounded-l-lg md:rounded-none disabled:text-base-300 md:max-w-xs"
             name="participant"
             ref={refSelect}
             disabled={filteredUsersNotHost.length === 0}
