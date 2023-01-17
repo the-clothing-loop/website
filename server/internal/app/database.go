@@ -25,6 +25,8 @@ func DatabaseInit() *gorm.DB {
 }
 
 func DatabaseAutoMigrate(db *gorm.DB) {
+	hadIsApprovedColumn := db.Migrator().HasColumn(&models.UserChain{}, "is_approved")
+
 	if db.Migrator().HasTable("user_tokens") {
 		columnTypes, err := db.Migrator().ColumnTypes("user_tokens")
 		if err == nil {
@@ -78,6 +80,23 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 ALTER TABLE user_chains
 ADD CONSTRAINT uci_user_id_chain_id
 UNIQUE (user_id, chain_id)
+		`)
+	}
+	if !hadIsApprovedColumn {
+		db.Exec(`
+UPDATE user_chains SET is_approved = TRUE WHERE id IN (
+	SELECT uc.id FROM user_chains AS uc
+	LEFT JOIN users AS u ON u.id = uc.user_id
+	WHERE u.is_email_verified = TRUE && uc.is_approved IS NULL 
+)
+		`)
+
+		db.Exec(`
+UPDATE user_chains SET is_approved = FALSE WHERE id IN (
+	SELECT uc.id FROM user_chains AS uc
+	LEFT JOIN users AS u ON u.id = uc.user_id
+	WHERE u.is_email_verified = FALSE && uc.is_approved IS NULL 
+)
 		`)
 	}
 }
