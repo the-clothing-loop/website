@@ -34,7 +34,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Fake " + faker.Person().Name(),
 		PhoneNumber:     faker.Person().Contact().Phone,
-		Sizes:           mockSizes(false),
+		Sizes:           MockSizes(false),
 		Address:         faker.Address().Address(),
 		UserToken: []models.UserToken{
 			{
@@ -71,11 +71,11 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		Address:          faker.Address().Address(),
 		Latitude:         faker.Address().Latitude(),
 		Longitude:        faker.Address().Latitude(),
-		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
+		Radius:           float32(faker.RandomFloat(3, 2, 30)),
 		Published:        !o.IsNotPublished,
 		OpenToNewMembers: o.IsOpenToNewMembers,
-		Sizes:            mockSizes(true),
-		Genders:          mockGenders(false),
+		Sizes:            MockSizes(true),
+		Genders:          MockGenders(false),
 		UserChains:       []models.UserChain{},
 	}
 
@@ -94,7 +94,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 	return chain, user, token
 }
 
-func mockSizes(zeroOrMore bool) []string {
+func MockSizes(zeroOrMore bool) []string {
 	return randomEnums([]string{
 		models.SizeEnumBaby,
 		models.SizeEnum1_4YearsOld,
@@ -109,7 +109,7 @@ func mockSizes(zeroOrMore bool) []string {
 		models.SizeEnumMenPlusSize,
 	}, zeroOrMore)
 }
-func mockGenders(zeroOrMore bool) (genders []string) {
+func MockGenders(zeroOrMore bool) (genders []string) {
 	return randomEnums([]string{
 		models.GenderEnumChildren,
 		models.GenderEnumWomen,
