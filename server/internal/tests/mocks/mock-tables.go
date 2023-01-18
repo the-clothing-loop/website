@@ -35,7 +35,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Fake " + faker.Person().Name(),
 		PhoneNumber:     faker.Person().Contact().Phone,
-		Sizes:           mockSizes(false),
+		Sizes:           MockSizes(false),
 		Address:         faker.Address().Address(),
 		Enabled:         !o.IsDisabled,
 		UserToken: []models.UserToken{
@@ -57,7 +57,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 
 	t.Cleanup(func() {
 		tx := db.Begin()
-		tx.Exec(`DELETE FROM user_chains WHERE chain_id = ?`, chainID)
+		tx.Exec(`DELETE FROM user_chains WHERE user_id = ? OR chain_id = ?`, user.ID, chainID)
 		tx.Exec(`DELETE FROM user_tokens WHERE user_id = ?`, user.ID)
 		tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID)
 		tx.Commit()
@@ -76,8 +76,8 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
 		Published:        !o.IsNotPublished,
 		OpenToNewMembers: o.IsOpenToNewMembers,
-		Sizes:            mockSizes(true),
-		Genders:          mockGenders(false),
+		Sizes:            MockSizes(true),
+		Genders:          MockGenders(false),
 		UserChains:       []models.UserChain{},
 	}
 
@@ -96,7 +96,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 	return chain, user, token
 }
 
-func mockSizes(zeroOrMore bool) []string {
+func MockSizes(zeroOrMore bool) []string {
 	return randomEnums([]string{
 		models.SizeEnumBaby,
 		models.SizeEnum1_4YearsOld,
@@ -111,7 +111,7 @@ func mockSizes(zeroOrMore bool) []string {
 		models.SizeEnumMenPlusSize,
 	}, zeroOrMore)
 }
-func mockGenders(zeroOrMore bool) (genders []string) {
+func MockGenders(zeroOrMore bool) (genders []string) {
 	return randomEnums([]string{
 		models.GenderEnumChildren,
 		models.GenderEnumWomen,
