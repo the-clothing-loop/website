@@ -6,7 +6,6 @@ import {
   useMemo,
   FormEvent,
   useRef,
-
 } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
@@ -616,16 +615,16 @@ function ParticipantsTable(props: {
                   </span>
                 </th>
                 <th>
-                  <span >{t("interestedSizes")}</span>
+                  <span>{t("interestedSizes")}</span>
                   <span className="fwd-min float-right relative">
                     <DummyButton />
                   </span>
                 </th>
                 <th>
                   <span className="float-left">{t("signedUpOn")}</span>
-                <span className="wd-min relative">
+                  <span className="wd-min relative">
                     <DummyButton />
-                </span>
+                  </span>
                 </th>
                 <th>
                   <span className="float-right">
