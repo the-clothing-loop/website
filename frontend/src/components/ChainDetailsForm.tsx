@@ -213,13 +213,13 @@ export default function ChainDetailsForm({
     setValue("sizes", filteredSizes);
   }
   return (
-    <div className="flex flex-row">
-      <div className="w-1/2 pr-4">
+    <div className="flex flex-col md:flex-row">
+      <div className="md:w-1/2 md:pr-4">
         <div className="aspect-square cursor-pointer" ref={mapRef} />
       </div>
       <div className="md:w-1/2 md:pl-4">
         <form onSubmit={handleSubmit}>
-          <p className="mb-2">{t("clickToSetLoopLocation")}</p>
+          <p className="mb-2 text-sm">{t("clickToSetLoopLocation")}</p>
           <TextForm
             classes={{ root: "" }}
             required
@@ -243,22 +243,24 @@ export default function ChainDetailsForm({
             info={t("decideOnTheAreaYourLoopWillBeActiveIn")}
           />
 
-          <label className="form-control relative w-full mb-4">
-            <div className="label">
-              <span className="label-text">{t("description")}</span>
-            </div>
-            <textarea
-              className="textarea textarea-secondary w-full"
-              name="description"
-              cols={3}
-              value={values.description}
-              onChange={(e) => setValue("description", e.target.value)}
-            />
+          <div className="form-control relative w-full mb-4">
             <PopoverOnHover
               message={t("optionalFieldTypeAnything")}
-              className="absolute top-0 -right-2"
+              className="absolute top-0 -right-2 tooltip-left"
             />
-          </label>
+            <label>
+              <div className="label">
+                <span className="label-text">{t("description")}</span>
+              </div>
+              <textarea
+                className="textarea textarea-secondary w-full"
+                name="description"
+                cols={3}
+                value={values.description}
+                onChange={(e) => setValue("description", e.target.value)}
+              />
+            </label>
+          </div>
 
           <div className="grid sm:grid-cols-2 gap-4 items-end mb-6">
             <CategoriesDropdown
@@ -270,6 +272,7 @@ export default function ChainDetailsForm({
               <div className="flex justify-end -mr-2 -mt-3">
                 <PopoverOnHover
                   message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
+                  className="tooltip-left"
                 />
               </div>
               <SizesDropdown

@@ -170,7 +170,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Sizes:           body.User.Sizes,
 		Address:         body.User.Address,
 	}
-	if res := db.Create(user); res.Error != nil {
+	if err := db.Create(user).Error; err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("User already exists"))
 		return
 	}
@@ -197,7 +197,8 @@ func RegisterChainAdmin(c *gin.Context) {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
 		return
 	}
-	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
+
+	go views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func RegisterBasicUser(c *gin.Context) {
