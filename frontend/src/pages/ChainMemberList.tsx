@@ -594,7 +594,7 @@ function ParticipantsTable(props: {
               <tr>
                 <th className="sticky z-0"></th>
                 <th>
-                  <span className="absolute align-bottom">{t("name")}</span>
+                  <span>{t("name")}</span>
                   <span className="wd-min float-right relative">
                     <IconButton
                       onClick={() => setSortBy(["name", !sortBy[1]])}
@@ -609,21 +609,26 @@ function ParticipantsTable(props: {
                 </th>
                 <th>
                   <span>{t("contact")}</span>
-                  <span className="wd-min float-right relative">
+                  <span className="float-right">
                     <IconButton
                       onClick={() => setSortBy(["email", !sortBy[1]])}
                     />
                   </span>
                 </th>
-                <th className="text-left">
-                  {t("interestedSizes")}
-                  <span className="wd-min float-right relative">
+                <th>
+                  <span >{t("interestedSizes")}</span>
+                  <span className="fwd-min float-right relative">
                     <DummyButton />
                   </span>
                 </th>
                 <th>
-                  {t("signedUpOn")}
-                  <span className="wd-min float-right relative">
+                  <span className="float-left">{t("signedUpOn")}</span>
+                <span className="wd-min relative">
+                    <DummyButton />
+                </span>
+                </th>
+                <th>
+                  <span className="float-right">
                     <IconButton
                       onClick={() => setSortBy(["date", !sortBy[1]])}
                     />
