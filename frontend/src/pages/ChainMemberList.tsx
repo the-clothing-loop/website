@@ -6,12 +6,13 @@ import {
   useMemo,
   FormEvent,
   useRef,
+
 } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-
+import { IconButton, DummyButton } from "../components/IconButton";
 import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
@@ -407,6 +408,7 @@ function ParticipantsTable(props: {
   const { addToastError, addToastStatic } = useContext(ToastContext);
   const [isSelectApproved, setIsSelectApproved] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<[string, boolean]>(["date", true]);
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
     if (selected.length !== 1 || !isSelectApproved) {
@@ -517,12 +519,9 @@ function ParticipantsTable(props: {
   }
 
   function simplifyDays(uc: UserChain): string {
-    var createdAt = new Date(uc.created_at);
-    var currDate = new Date();
-
-    const Day = 10000 * 60 * 60 * 24;
-    const diff = createdAt.getTime() - currDate.getTime();
-    let numDays = Math.round(diff / Day);
+    var createdAt = new Date(uc.created_at).getTime();
+    var currDate = new Date().getTime();
+    let numDays = Math.round(((currDate - createdAt) / (10 ** 6 * 864)) * 10);
 
     if (numDays < 1) {
       return t("new");
@@ -538,6 +537,54 @@ function ParticipantsTable(props: {
     return u.chains.find((uc) => uc.chain_uid === props.chain.uid)!;
   }
 
+  function sortorder(sortBy: [string, boolean]): User[] {
+    console.log(sortBy);
+    let userArr;
+    if (sortBy[0] == "name") {
+      if (sortBy[1] == true) {
+        userArr = props.users.sort((a, b) =>
+          a.name.localeCompare(b.name) == 1 ? 1 : -1
+        );
+        return userArr;
+      } else {
+        userArr = props.users.sort((a, b) =>
+          a.name.localeCompare(b.name) == 1 ? -1 : 1
+        );
+        return userArr;
+      }
+    }
+
+    if (sortBy[0] == "email") {
+      if (sortBy[1] == true) {
+        userArr = props.users.sort((a, b) =>
+          a.email.localeCompare(b.email) == 1 ? -1 : 1
+        );
+        return userArr;
+      } else {
+        userArr = props.users.sort((a, b) =>
+          a.email.localeCompare(b.email) == 1 ? 1 : -1
+        );
+        return userArr;
+      }
+    }
+
+    if (sortBy[0] == "date" && sortBy[1] == false) {
+      return (userArr = props.users.sort((a, b) => {
+        const ucA = getUserChain(a);
+        const ucB = getUserChain(b);
+
+        return new Date(ucA.created_at) > new Date(ucB.created_at) ? 1 : -1;
+      }));
+    }
+
+    return (userArr = props.users.sort((a, b) => {
+      const ucA = getUserChain(a);
+      const ucB = getUserChain(b);
+
+      return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
+    }));
+  }
+
   return (
     <>
       <div className="mt-10 relative">
@@ -546,11 +593,42 @@ function ParticipantsTable(props: {
             <thead>
               <tr>
                 <th className="sticky z-0"></th>
-                <th>{t("name")}</th>
-                <th>{t("address")}</th>
-                <th>{t("contact")}</th>
-                <th>{t("interestedSizes")}</th>
-                <th>{t("signedUpOn")}</th>
+                <th>
+                  <span className="absolute align-bottom">{t("name")}</span>
+                  <span className="wd-min float-right relative">
+                    <IconButton
+                      onClick={() => setSortBy(["name", !sortBy[1]])}
+                    />
+                  </span>
+                </th>
+                <th>
+                  <span>{t("address")}</span>
+                  <span className="wd-min float-right relative">
+                    <DummyButton />
+                  </span>
+                </th>
+                <th>
+                  <span>{t("contact")}</span>
+                  <span className="wd-min float-right relative">
+                    <IconButton
+                      onClick={() => setSortBy(["email", !sortBy[1]])}
+                    />
+                  </span>
+                </th>
+                <th className="text-left">
+                  {t("interestedSizes")}
+                  <span className="wd-min float-right relative">
+                    <DummyButton />
+                  </span>
+                </th>
+                <th>
+                  {t("signedUpOn")}
+                  <span className="wd-min float-right relative">
+                    <IconButton
+                      onClick={() => setSortBy(["date", !sortBy[1]])}
+                    />
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -604,56 +682,54 @@ function ParticipantsTable(props: {
                     </tr>
                   );
                 })}
-              {props.users
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((u: User) => {
-                  const userChain = getUserChain(u);
+              {sortorder(sortBy).map((u: User) => {
+                const userChain = getUserChain(u);
 
-                  return (
-                    <tr key={u.uid}>
-                      <td className="sticky">
-                        <input
-                          type="checkbox"
-                          name="selectedChainAdmin"
-                          className="checkbox checkbox-sm checkbox-primary"
-                          checked={selected.includes(u.uid)}
-                          onChange={(e) => onChangeSelect(e, true)}
-                          value={u.uid}
-                        />
-                      </td>
-                      <td>{u.name}</td>
-                      <td>
-                        <span className="block w-48 text-sm whitespace-normal">
-                          {u.address}
-                        </span>
-                      </td>
-                      <td className="text-sm leading-relaxed">
-                        {u.email}
-                        <br />
-                        {u.phone_number}
-                      </td>
-                      <td className="align-middle">
-                        <span
-                          className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
-                          tabIndex={0}
-                        >
-                          {SizeBadges(t, u.sizes)}
-                        </span>
-                      </td>
-                      <td className="text-center">
-                        <span
-                          tabIndex={0}
-                          className="tooltip tooltip-top"
-                          data-tip={signedUpOn(userChain)}
-                        >
-                          {userChain.is_approved
-                            ? simplifyDays(userChain)
-                            : t("pendingApproval")}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
+                return (
+                  <tr key={u.uid}>
+                    <td className="sticky">
+                      <input
+                        type="checkbox"
+                        name="selectedChainAdmin"
+                        className="checkbox checkbox-sm checkbox-primary"
+                        checked={selected.includes(u.uid)}
+                        onChange={(e) => onChangeSelect(e, true)}
+                        value={u.uid}
+                      />
+                    </td>
+                    <td>{u.name}</td>
+                    <td>
+                      <span className="block w-48 text-sm whitespace-normal">
+                        {u.address}
+                      </span>
+                    </td>
+                    <td className="text-sm leading-relaxed">
+                      {u.email}
+                      <br />
+                      {u.phone_number}
+                    </td>
+                    <td className="align-middle">
+                      <span
+                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                        tabIndex={0}
+                      >
+                        {SizeBadges(t, u.sizes)}
+                      </span>
+                    </td>
+                    <td className="text-center">
+                      <span
+                        tabIndex={0}
+                        className="tooltip tooltip-top"
+                        data-tip={signedUpOn(userChain)}
+                      >
+                        {userChain.is_approved
+                          ? simplifyDays(userChain)
+                          : t("pendingApproval")}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
