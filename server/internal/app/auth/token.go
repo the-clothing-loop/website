@@ -94,14 +94,14 @@ WHERE email = (
 
 func TokenAuthenticate(db *gorm.DB, token string) (user *models.User, ok bool) {
 	user = &models.User{}
-	res := db.Raw(`
+	err := db.Raw(`
 SELECT users.*
 FROM user_tokens
 LEFT JOIN users ON user_tokens.user_id = users.id
 WHERE user_tokens.token = ? AND user_tokens.verified = TRUE
 LIMIT 1
-	`, token).Scan(user)
-	if res.Error != nil || user.ID == 0 {
+	`, token).Scan(user).Error
+	if err != nil || user.ID == 0 {
 		return nil, false
 	}
 

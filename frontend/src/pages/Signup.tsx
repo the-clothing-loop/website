@@ -159,6 +159,7 @@ export default function Signup() {
                     handleChange={(s) => setJsValue("sizes", s)}
                   />
                   <PopoverOnHover
+                    className="tooltip-right"
                     message={t("weWouldLikeToKnowThisEquallyRepresented")}
                   />
                   <FormActions isNewsletterRequired={false} />

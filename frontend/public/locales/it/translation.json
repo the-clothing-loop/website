@@ -25,6 +25,11 @@
   "deleteUserBtn": "Elimina Utente",
   "edit": "Modifica",
   "editUserDetails": "Modifica dettagli utente",
+  "approveParticipant": "Approve “{{ name }}'s” request to join the loop?",
+  "approve": "Approve",
+  "pendingApproval": "Pending Admin Approval",
+  "deny": "Deny",
+  "approveUser": "Approve or deny requests to join.",
   "areYouSureRemoveParticipant": "Are you sure you wish to remove “{{ name }}” from the loop?",
   "remove": "Remove",
   "areYouSureRevokeHost": "Are you sure you would like to revoke host privileges from “{{ name }}”?",
@@ -186,6 +191,10 @@
   "howDoYouWantToContributeToTheClothingLoop": "Come vorresti contribuire a The Clothing Loop?",
   "anErrorOccurredDuringCheckout": "An error occurred during checkout...",
   "pleaseEnterYourEmail": "Inserisci il tuo indirizzo email",
+  "signedUpOn": "Signed up on",
+  "nDays": "{{ n }} days",
+  "nMonths": "{{ n }} months",
+  "leaveWaitlist": "Leave Waitlist",
   "pleaseEnterAValid": {
     "emailAddress": "Inserisci un indirizzo email valido",
     "phoneNumber": "Inserisci un numero di telefono valido"

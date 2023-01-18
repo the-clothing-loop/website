@@ -82,23 +82,27 @@ export function TextForm({
   ...props
 }: TextFormProps & InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <label className={`form-control relative w-full ${classes?.root}`}>
-      <div className="label">
-        <span className="label-text">{label}</span>
-      </div>
+    <div
+      className={"form-control relative w-full ".concat(classes?.root || "")}
+    >
       {!!info && (
         <PopoverOnHover
           message={info}
           className="absolute top-0 -right-2 tooltip-left"
         />
       )}
-      <input
-        aria-invalid={invalid}
-        className={`input input-bordered input-secondary w-full ${
-          invalid ? "input-error" : ""
-        }`}
-        {...props}
-      />
-    </label>
+      <label>
+        <div className="label">
+          <span className="label-text">{label}</span>
+        </div>
+        <input
+          aria-invalid={invalid}
+          className={`input input-bordered input-secondary w-full ${
+            invalid ? "input-error" : ""
+          }`}
+          {...props}
+        />
+      </label>
+    </div>
   );
 }
