@@ -9,7 +9,6 @@ import (
 )
 
 var db *gorm.DB
-
 var faker = Faker.New()
 
 func TestMain(m *testing.M) {
