@@ -2,6 +2,7 @@
   "genericError": "Er is een onbekende fout opgetreden",
   "removeFromLoop": "Verwijder uit Loop",
   "leave": "Verlaat",
+  "leaveLoop": "Leave Loop",
   "areYouSureLeaveLoop": "Weet je zeker dat je “{{ name }}” uit \"{{ chain }}\" Loop wilt stappen?",
   "setAsAParticipant": "Instellen als deelnemer",
   "selected": "Geselecteerd",
@@ -22,7 +23,7 @@
   "delete": "Verwijder",
   "cancel": "Annuleren",
   "deleteAccount": "Weet je zeker dat je je account permanent wil verwijderen?",
-  "deleteUserBtn": "Verwijder gebruiker",
+  "deleteUserBtn": "Delete Account",
   "edit": "Aanpassen",
   "editUserDetails": "Gebruikersgegevens bewerken",
   "approveParticipant": "Approve “{{ name }}'s” request to join the loop?",
@@ -224,5 +225,6 @@
   "thirdSendFriendsToWebsite": "3. stuur vrienden en buren naar deze website om zich in te schrijven, en wacht tot de aanmeldingen binnenstromen!",
   "allDataOfNewParticipantsCanBeAccessed": "Alle gegevens van nieuwe deelnemers zijn toegankelijk op je persoonlijke pagina.",
   "areYouAlreadyHosting<a>JoinAnExistingLoop": "Host je al een Loop? Log hier in om toegang te krijgen tot de mensen die zich hebben aangemeld voor de Loop die jij host. Ze staan te popelen om deel uit te maken van jouw Loop!<br>Wil je gewoon meedoen als deelnemer en dus niet je eigen Loop starten? <a>Dat kan!</a>",
-  "weWouldLikeToKnowThisEquallyRepresented": "We zouden dit graag willen weten, om te zien of er binnen je Loop alle verschillende maten worden vertegenwoordigd. Ook kan je makkelijker in zien, na verloop van tijd, voor een splitsen van route, afhankelijk van maat!"
+  "weWouldLikeToKnowThisEquallyRepresented": "We zouden dit graag willen weten, om te zien of er binnen je Loop alle verschillende maten worden vertegenwoordigd. Ook kan je makkelijker in zien, na verloop van tijd, voor een splitsen van route, afhankelijk van maat!",
+  "sort": "Sort"
 }
