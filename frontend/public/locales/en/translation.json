@@ -2,7 +2,7 @@
   "genericError": "Unknown error occurred",
   "removeFromLoop": "Remove From Loop",
   "leave": "Leave",
-  "leaveLoop":"Leave Loop",
+  "leaveLoop": "Leave Loop",
   "areYouSureLeaveLoop": "Are you sure you want “{{ name }}” to leave “{{ chain }}” Loop?",
   "setAsAParticipant": "Set as a participant",
   "selected": "Selected",
