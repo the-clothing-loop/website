@@ -27,7 +27,6 @@ func UserGet(c *gin.Context) {
 
 	var query struct {
 		UserUID  string `form:"user_uid" binding:"omitempty,uuid"`
-		Email    string `form:"email" binding:"omitempty,email"`
 		ChainUID string `form:"chain_uid" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
@@ -36,7 +35,7 @@ func UserGet(c *gin.Context) {
 	}
 
 	// retrieve user from query
-	if query.UserUID == "" && query.Email == "" {
+	if query.UserUID == "" {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Add uid or email to query"))
 		return
 	}
@@ -46,7 +45,7 @@ func UserGet(c *gin.Context) {
 		okk, authUser, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
 		ok = okk
 
-		if ok && !(query.UserUID == authUser.UID || query.Email == authUser.Email.String) {
+		if !ok || query.UserUID != authUser.UID {
 			gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("For elevated privileges include a chain_uid"))
 			return
 		}
@@ -65,13 +64,6 @@ FROM users
 WHERE users.uid = ? AND is_email_verified = TRUE
 LIMIT 1
 		`, query.UserUID).First(user)
-	} else if query.Email != "" {
-		db.Raw(`
-SELECT users.*
-FROM users
-WHERE users.email = ? AND is_email_verified = TRUE
-LIMIT 1
-		`, query.Email).First(user)
 	}
 	if user.ID == 0 {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("User not found"))

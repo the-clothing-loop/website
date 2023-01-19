@@ -20,15 +20,6 @@ export function userGetAllByChain(chainUID: string) {
   });
 }
 
-export function userGetByEmail(chainUID: string, email: string) {
-  return axios.get<User>("/v2/user", {
-    params: {
-      chain_uid: chainUID,
-      email: email,
-    },
-  });
-}
-
 export interface UserUpdateBody {
   user_uid: UID;
   chain_uid: UID;
