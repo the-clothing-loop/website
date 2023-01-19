@@ -281,7 +281,7 @@ export default function FindChain({ location }: { location: Location }) {
           history.push({ pathname: "/thankyou" });
         })
         .catch((err) => {
-          addToastError(GinParseErrors(t, err));
+          addToastError(GinParseErrors(t, err), err?.status);
         });
     } else {
       history.push({
@@ -311,8 +311,7 @@ export default function FindChain({ location }: { location: Location }) {
       },
       (err) => {
         setLocationLoading(false);
-        console.error(`Couldn't receive location: ${err.message}`);
-        addToastError(`Couldn't receive location: ${err.message}`);
+        console.error(`Couldn't receive location: ${err.message}`, 400);
       }
     );
   }
@@ -334,7 +333,7 @@ export default function FindChain({ location }: { location: Location }) {
   }
 
   if (!MAPBOX_TOKEN) {
-    addToastError("Access tokens not configured");
+    addToastError("Access tokens not configured", 500);
     return <div></div>;
   }
 

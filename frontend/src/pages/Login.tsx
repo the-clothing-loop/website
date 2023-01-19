@@ -46,7 +46,7 @@ export default function Login() {
       } catch (err: any) {
         console.error(err);
         setError("email");
-        addToastError(GinParseErrors(t, err));
+        addToastError(GinParseErrors(t, err), err?.status);
       }
     })();
   }

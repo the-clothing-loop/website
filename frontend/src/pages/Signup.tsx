@@ -50,7 +50,7 @@ export default function Signup() {
         try {
           const chain = (await chainGet(chainUID)).data;
           setChain(chain);
-        } catch (e) {
+        } catch (err) {
           console.error(`chain ${chainUID} does not exist`);
         }
       }
@@ -63,7 +63,7 @@ export default function Signup() {
     const values = FormJup<RegisterUserForm>(e);
 
     if (values.privacyPolicy !== "on") {
-      addToastError(t("required") + " " + t("privacyPolicy"));
+      addToastError(t("required") + " " + t("privacyPolicy"), 400);
       return;
     }
 
@@ -86,7 +86,7 @@ export default function Signup() {
 
         if (err?.code === "auth/invalid-phone-number") {
           console.log("1");
-          addToastError(t("pleaseEnterAValid.phoneNumber"));
+          addToastError(t("pleaseEnterAValid.phoneNumber"), 400);
         } else if (err?.status === 409) {
           console.log("2");
 
@@ -103,7 +103,7 @@ export default function Signup() {
           });
         } else {
           console.log("3");
-          addToastError(GinParseErrors(t, err));
+          addToastError(GinParseErrors(t, err), 400);
         }
       }
     })();

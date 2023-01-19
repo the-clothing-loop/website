@@ -14,6 +14,8 @@ import {
 } from "../api/login";
 import { AuthContext } from "../providers/AuthProvider";
 import { chainCreate } from "../api/chain";
+import { ToastContext } from "../providers/ToastProvider";
+import { GinParseErrors } from "../util/gin-errors";
 
 export interface State {
   only_create_chain: boolean;
@@ -25,13 +27,12 @@ const NewChainLocation = ({ location }: { location: any }) => {
   const { t } = useTranslation();
   const state = location.state as State | undefined;
   const { authUser, authUserRefresh } = useContext(AuthContext);
-
-  const [error, setError] = useState("");
+  const { addToastError } = useContext(ToastContext);
 
   const onSubmit = async (values: RegisterChainForm) => {
     let user = state!.only_create_chain ? authUser : state!.register_user;
     if (!user) {
-      setError("User is not availible");
+      addToastError("User is not availible", 400);
       return;
     }
     const newChain: RequestRegisterChain = {
@@ -53,9 +54,9 @@ const NewChainLocation = ({ location }: { location: any }) => {
         await authUserRefresh();
 
         history.replace("/loops/new/confirmation");
-      } catch (e: any) {
-        console.error(`Error creating chain: ${JSON.stringify(e)}`);
-        setError(e?.data || `Error: ${JSON.stringify(e)}`);
+      } catch (err: any) {
+        console.error(`Error creating chain: ${JSON.stringify(err)}`);
+        addToastError(GinParseErrors(t, err), err?.status);
       }
     } else {
       console.log(`creating user: ${JSON.stringify(user)}`);
@@ -72,9 +73,9 @@ const NewChainLocation = ({ location }: { location: any }) => {
           newChain
         );
         history.replace("/loops/new/confirmation");
-      } catch (e: any) {
-        console.error(`Error creating user and chain: ${JSON.stringify(e)}`);
-        setError(e?.data || `Error: ${JSON.stringify(e)}`);
+      } catch (err: any) {
+        console.error(`Error creating user and chain: ${JSON.stringify(err)}`);
+        addToastError(GinParseErrors(t, err), err?.status);
       }
     }
   };

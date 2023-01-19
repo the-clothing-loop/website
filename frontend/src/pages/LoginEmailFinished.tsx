@@ -28,9 +28,9 @@ export default function LoginEmailFinished() {
           type: "success",
         });
         history.replace("/admin/dashboard");
-      } catch (e: any) {
-        addToastError(t("errorLoggingIn"));
-        console.error("Error logging in", e);
+      } catch (err: any) {
+        addToastError(t("errorLoggingIn"), 401);
+        console.error("Error logging in", err);
         history.replace("/");
       }
     })();

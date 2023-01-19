@@ -68,7 +68,7 @@ export default function UserEdit() {
         }, 1200);
       } catch (err: any) {
         console.error(`Error updating user: ${JSON.stringify(e)}`);
-        addToastError(GinParseErrors(t, e));
+        addToastError(GinParseErrors(t, err), err?.status);
       }
     })();
   }

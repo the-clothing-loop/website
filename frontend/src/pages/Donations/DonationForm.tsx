@@ -97,7 +97,7 @@ function DonationFormContent() {
     if (isRecurring) {
       let id = values.recurring_radio;
       if (id === "") {
-        addToastError("This error should not happen");
+        addToastError("This error should not happen", 500);
         return;
       }
       radioObj = recurring.find((v) => v.id === id);
@@ -122,7 +122,7 @@ function DonationFormContent() {
     }
 
     if (!radioObj) {
-      addToastError(t("anErrorOccurredDuringCheckout"));
+      addToastError(t("anErrorOccurredDuringCheckout"), 500);
       return;
     }
     (async () => {
@@ -143,12 +143,13 @@ function DonationFormContent() {
           })
         ).error;
         if (err) throw err;
-      } catch (e: any) {
-        setError(e?.data || e?.message || "submit");
+      } catch (err: any) {
+        setError(err?.data || err?.message || "submit");
         addToastError(
-          e?.data
-            ? GinParseErrors(t, e)
-            : e?.message || t("anErrorOccurredDuringCheckout")
+          err?.data
+            ? GinParseErrors(t, err)
+            : err?.message || t("anErrorOccurredDuringCheckout"),
+          err?.status
         );
         setLoading(false);
         setTimeout(() => {

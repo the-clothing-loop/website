@@ -56,9 +56,9 @@ export default function ChainMemberList() {
         uid: chainUID,
         published: isChecked,
       });
-    } catch (e: any) {
-      console.error("Error updating chain: ", e);
-      setError(e?.data || `Error: ${JSON.stringify(e)}`);
+    } catch (err: any) {
+      console.error("Error updating chain: ", err);
+      setError(err?.data || `Error: ${JSON.stringify(err)}`);
       setPublished(oldValue);
     }
   }
@@ -75,9 +75,9 @@ export default function ChainMemberList() {
         uid: chainUID,
         open_to_new_members: isChecked,
       });
-    } catch (e: any) {
-      console.error(`Error updating chain: ${JSON.stringify(e)}`);
-      setError(e?.data || `Error: ${JSON.stringify(e)}`);
+    } catch (err: any) {
+      console.error(`Error updating chain: ${JSON.stringify(err)}`);
+      setError(err?.data || `Error: ${JSON.stringify(err)}`);
       setOpenToNewMembers(oldValue);
     }
   }
@@ -246,7 +246,7 @@ function HostTable(props: {
     }
     let userUID = props.users?.find((u) => u.uid === selected)?.uid;
     if (!userUID) {
-      addToastError("Edit button coundn't find user of: " + selected);
+      addToastError("Edit button coundn't find user of: " + selected, 500);
     }
 
     return {
@@ -415,7 +415,7 @@ function ParticipantsTable(props: {
     }
     let userUID = props.users?.find((u) => u.uid === selected[0])?.uid;
     if (!userUID) {
-      addToastError("Edit button coundn't find user of: " + selected);
+      addToastError("Edit button coundn't find user of: " + selected, 500);
     }
 
     return {

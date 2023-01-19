@@ -47,7 +47,7 @@ export default function Signup() {
     console.info("submit", { ...values, ...jsValues });
 
     if (jsValues.address.length < 6) {
-      addToastError(t("required") + ": " + t("address"));
+      addToastError(t("required") + ": " + t("address"), 400);
       return;
     }
 

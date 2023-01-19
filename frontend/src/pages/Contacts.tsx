@@ -40,7 +40,7 @@ const Contacts = () => {
         console.error(err);
         setError("submit");
 
-        addToastError(GinParseErrors(t, err));
+        addToastError(GinParseErrors(t, err), err?.status);
       }
     })();
   }

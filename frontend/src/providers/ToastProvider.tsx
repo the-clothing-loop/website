@@ -15,13 +15,13 @@ export interface Toast {
 type ToastWithID = Toast & { id: number };
 interface ContextValue {
   addToast: (t: Toast) => void;
-  addToastError: (msg: string) => void;
+  addToastError: (msg: string, status: number | undefined) => void;
   addToastStatic: (t: Toast) => void;
 }
 
 export const ToastContext = createContext<ContextValue>({
   addToast: (t) => {},
-  addToastError: (msg: string) => {},
+  addToastError: (msg, status) => {},
   addToastStatic: (t) => {},
 });
 
@@ -61,10 +61,10 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
     ]);
   }
 
-  function addToastError(msg: string) {
+  function addToastError(msg: string, status = 999) {
     // ensure that message is a string during runtime
     msg = msg + "";
-    window.airbrake?.notify(msg);
+    if (status >= 500) window.airbrake?.notify(msg);
     addToast({
       type: "error",
       message: msg,

@@ -180,11 +180,11 @@ export default function ChainDetailsForm({
     e.preventDefault();
 
     if (!values.genders?.length) {
-      addToastError(t("required") + ": " + t("categories"));
+      addToastError(t("required") + ": " + t("categories"), 400);
       return;
     }
     if (!values.sizes?.length) {
-      addToastError(t("required") + ": " + t("sizes"));
+      addToastError(t("required") + ": " + t("sizes"), 400);
       return;
     }
 
@@ -193,7 +193,7 @@ export default function ChainDetailsForm({
       console.log("getPlaceName", values.address);
 
       if (values.address.length < 6) {
-        addToastError(t("required") + ": " + t("address"));
+        addToastError(t("required") + ": " + t("address"), 400);
         return;
       }
 

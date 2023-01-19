@@ -49,9 +49,9 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
         setUser(user);
 
         Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
-      } catch (e) {
+      } catch (err) {
         setLoading(false);
-        throw e;
+        throw err;
       }
       setLoading(false);
     })();
@@ -78,9 +78,9 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
 
           Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
           setLoading(false);
-        } catch (e) {
-          await authLogout().catch((e) => {
-            console.error("force logout failed:", e);
+        } catch (err) {
+          await authLogout().catch((err) => {
+            console.error("force logout failed:", err);
           });
           console.log("force logout");
           return UserRefreshState.ForceLoggedOut;

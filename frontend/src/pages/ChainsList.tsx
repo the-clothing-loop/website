@@ -35,7 +35,7 @@ const ChainsList = () => {
         setChains(_chains.sort((a, b) => a.name.localeCompare(b.name)));
       } catch (err: any) {
         console.error(err);
-        addToastError(GinParseErrors(t, err));
+        addToastError(GinParseErrors(t, err), err.status);
       }
     }
   }
@@ -59,7 +59,7 @@ const ChainsList = () => {
               },
               (err: any) => {
                 console.error(err);
-                addToastError(GinParseErrors(t, err));
+                addToastError(GinParseErrors(t, err), err?.status);
               }
             );
           },

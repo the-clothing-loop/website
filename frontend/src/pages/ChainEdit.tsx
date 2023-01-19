@@ -38,7 +38,7 @@ export default function ChainEdit() {
       }, 1200);
     } catch (err: any) {
       console.error(`Error updating chain: ${JSON.stringify(err)}`);
-      addToastError(GinParseErrors(t, err));
+      addToastError(GinParseErrors(t, err), err?.status);
     }
   };
 
@@ -50,7 +50,7 @@ export default function ChainEdit() {
         setChain(chain);
       } catch (err: any) {
         console.error(`chain ${chainUID} does not exist`);
-        addToastError(GinParseErrors(t, err));
+        addToastError(GinParseErrors(t, err), err?.status);
       }
     })();
   }, [chainUID]);

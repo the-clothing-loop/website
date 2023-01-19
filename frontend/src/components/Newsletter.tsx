@@ -27,7 +27,7 @@ export const Newsletter = () => {
         await contactNewsletterSet(values.name, values.email, true);
       } catch (err: any) {
         console.error(err);
-        addToastError(GinParseErrors(t, err));
+        addToastError(GinParseErrors(t, err), err?.status);
 
         setIsError(true);
         setTimeout(() => setIsError(false), 3000);
