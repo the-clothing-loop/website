@@ -105,10 +105,13 @@ export default function Home() {
           <div className="relative z-10 flex flex-col md:flex-row">
             <div className="p-6 md:pt-20 md:pl-40 md:pr-20 md:w-1/2 flex justify-center md:justify-end">
               <div className="max-w-screen-xs md:max-w-[500px]">
-                <h1
-                  className="font-serif font-bold text-accent text-8xl md:text-9xl [&_span]:text-stroke-accent mb-8"
-                  dangerouslySetInnerHTML={{ __html: t("swapDontShop") }}
-                ></h1>
+                <h1 className="font-serif font-bold text-accent text-8xl md:text-9xl [&_span]:text-stroke-accent mb-8">
+                  Swap, <br />
+                  <span>
+                    don't <br />
+                    shop!
+                  </span>
+                </h1>
                 <p>{t("swapDontShopMessage")}</p>
                 <button
                   className="btn btn-primary btn-outline mt-4"
