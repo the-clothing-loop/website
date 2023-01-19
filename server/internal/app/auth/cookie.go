@@ -1,9 +1,15 @@
 package auth
 
 import (
+	"net/http"
+	"net/url"
+
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/gin-gonic/gin"
 )
+
+// seconds in one year
+const cookieMaxAge = 3600 * 24 * 365
 
 func cookieRead(c *gin.Context) (string, bool) {
 	token, err := c.Cookie("token")
@@ -12,9 +18,27 @@ func cookieRead(c *gin.Context) (string, bool) {
 }
 
 func CookieRemove(c *gin.Context) {
-	c.SetCookie("token", "", -1, "", "", app.Config.COOKIE_HTTPS_ONLY, true)
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "token",
+		Value:    url.QueryEscape(""),
+		MaxAge:   -1,
+		Path:     "/",
+		Domain:   "",
+		SameSite: http.SameSiteStrictMode,
+		Secure:   app.Config.COOKIE_HTTPS_ONLY,
+		HttpOnly: true,
+	})
 }
 
 func CookieSet(c *gin.Context, token string) {
-	c.SetCookie("token", token, 0, "/", app.Config.COOKIE_DOMAIN, app.Config.COOKIE_HTTPS_ONLY, true)
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "token",
+		Value:    url.QueryEscape(token),
+		MaxAge:   cookieMaxAge,
+		Path:     "/",
+		Domain:   app.Config.COOKIE_DOMAIN,
+		SameSite: http.SameSiteStrictMode,
+		Secure:   app.Config.COOKIE_HTTPS_ONLY,
+		HttpOnly: true,
+	})
 }

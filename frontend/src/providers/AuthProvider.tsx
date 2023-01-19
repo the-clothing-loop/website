@@ -4,6 +4,9 @@ import { History } from "history";
 import { loginValidate as apiLogin, logout as apiLogout } from "../api/login";
 import { User } from "../api/types";
 import { userGetByUID } from "../api/user";
+import Cookies from "js-cookie";
+
+const IS_DEV_MODE = import.meta.env.DEV;
 
 export enum UserRefreshState {
   NeverLoggedIn,
@@ -28,7 +31,12 @@ export const AuthContext = createContext<AuthProps>({
   authUserRefresh: () => Promise.reject(UserRefreshState.NeverLoggedIn),
 });
 
-const LOCALSTORAGE_USER_UID = "user_uid";
+const KEY_USER_UID = "user_uid";
+const cookieOptions: Cookies.CookieAttributes = {
+  secure: !IS_DEV_MODE,
+  expires: 364,
+  sameSite: "strict",
+};
 
 export function AuthProvider({ children }: PropsWithChildren<{}>) {
   const [user, setUser] = useState<User | null>(null);
@@ -40,7 +48,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
         const user = (await apiLogin(apiKey)).data;
         setUser(user);
 
-        window.localStorage.setItem(LOCALSTORAGE_USER_UID, user.uid);
+        Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
       } catch (e) {
         setLoading(false);
         throw e;
@@ -52,7 +60,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     setLoading(true);
     return (async () => {
       await apiLogout().catch((e) => console.warn(e));
-      window.localStorage.removeItem(LOCALSTORAGE_USER_UID);
+      Cookies.remove(KEY_USER_UID, cookieOptions);
       setUser(null);
       setLoading(false);
     })();
@@ -61,14 +69,14 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     setLoading(true);
     console.log("trying to login");
     return (async () => {
-      let oldUserUID = window.localStorage.getItem(LOCALSTORAGE_USER_UID);
-      if (oldUserUID != null) {
+      let oldUserUID = getOldStorageUserUID();
+      if (oldUserUID) {
         // check if authentication still works
         try {
           const user = (await userGetByUID(null, oldUserUID)).data;
           setUser(user);
 
-          window.localStorage.setItem(LOCALSTORAGE_USER_UID, user.uid);
+          Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
           setLoading(false);
         } catch (e) {
           await authLogout().catch((e) => {
@@ -124,4 +132,15 @@ function runGoatCounter(history: History) {
       path: location.pathname.substring(3),
     });
   });
+}
+
+function getOldStorageUserUID(): string | null | undefined {
+  let oldUserUID: string | null | undefined =
+    window.localStorage.getItem(KEY_USER_UID);
+  if (oldUserUID) {
+    window.localStorage.removeItem(KEY_USER_UID);
+  } else {
+    oldUserUID = Cookies.get(KEY_USER_UID);
+  }
+  return oldUserUID;
 }
