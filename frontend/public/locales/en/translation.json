@@ -23,7 +23,7 @@
   "delete": "Delete",
   "cancel": "Cancel",
   "deleteAccount": "Are you sure you want to permanently delete your account?",
-  "deleteUserBtn": "Delete User",
+  "deleteUserBtn": "Delete Account",
   "edit": "Edit",
   "editUserDetails": "Edit user details",
   "approveParticipant": "Approve “{{ name }}'s” request to join the loop?",
