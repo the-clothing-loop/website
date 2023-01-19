@@ -2,6 +2,7 @@
   "genericError": "Une erreur inconnue est survenue",
   "removeFromLoop": "Supprimer du Loop",
   "leave": "Quitter",
+  "leaveLoop": "Leave Loop",
   "areYouSureLeaveLoop": "Vous êtes sûr que vous voulez que \"{{ name }}\" quitte le Loop \"{{ chain }}\" ?",
   "setAsAParticipant": "Définir en tant que participant",
   "selected": "Sélectionné",
@@ -22,7 +23,7 @@
   "delete": "Supprimer",
   "cancel": "Annuler",
   "deleteAccount": "Êtes-vous sûr de vouloir supprimer définitivement votre compte ?",
-  "deleteUserBtn": "Supprimer utilisateur",
+  "deleteUserBtn": "Delete Account",
   "edit": "Modifier",
   "editUserDetails": "Modifier les détails de l'utilisateur",
   "approveParticipant": "Approve “{{ name }}'s” request to join the loop?",
@@ -224,5 +225,6 @@
   "thirdSendFriendsToWebsite": "3. Invitez vos amis et voisins à s'inscrire sur ce site web et laissez les inscriptions vous arriver en masse !",
   "allDataOfNewParticipantsCanBeAccessed": "Toutes les données sur les nouveaux participants sont accessibles sur votre page personnelle.",
   "areYouAlreadyHosting<a>JoinAnExistingLoop": "Vous êtes déjà organisateur d'un Loop ? Connectez-vous ici pour accéder aux personnes qui se sont inscrites à votre Loop. Elles sont impatientes de se joindre à vous !<br>Souhaitez-vous vous inscrire en tant que participant et non pas lancer votre propre Loop ? <a>Pas de problème.</a>",
-  "weWouldLikeToKnowThisEquallyRepresented": "Nous aimerions savoir ceci pour voir comment les demandes de tailles différentes sont représentées dans votre Loop. Avec ces informations vous pouvez décider, après une certaine période de fonctionnement, de diviser l'itinéraire en fonction des demandes de différentes tailles !"
+  "weWouldLikeToKnowThisEquallyRepresented": "Nous aimerions savoir ceci pour voir comment les demandes de tailles différentes sont représentées dans votre Loop. Avec ces informations vous pouvez décider, après une certaine période de fonctionnement, de diviser l'itinéraire en fonction des demandes de différentes tailles !",
+  "sort": "Sort"
 }
