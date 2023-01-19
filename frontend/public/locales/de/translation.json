@@ -2,6 +2,7 @@
   "genericError": "Unknown error occurred",
   "removeFromLoop": "Remove From Loop",
   "leave": "Leave",
+  "leaveLoop": "Leave Loop",
   "areYouSureLeaveLoop": "Are you sure you want “{{ name }}” to leave “{{ chain }}” Loop?",
   "setAsAParticipant": "Set as a participant",
   "selected": "Selected",
@@ -22,7 +23,7 @@
   "delete": "Delete",
   "cancel": "Abbrechen",
   "deleteAccount": "Are you sure you want to permanently delete your account?",
-  "deleteUserBtn": "Delete User",
+  "deleteUserBtn": "Delete Account",
   "edit": "Ändern",
   "editUserDetails": "Benutzerdaten bearbeiten",
   "approveParticipant": "Approve “{{ name }}'s” request to join the loop?",
@@ -223,5 +224,6 @@
   "thirdSendFriendsToWebsite": "3. send friends and neighbors to this website to sign up, and wait for the sign-ups to pour in!",
   "allDataOfNewParticipantsCanBeAccessed": "All information about new participants can be accessed on your personal page.",
   "areYouAlreadyHosting<a>JoinAnExistingLoop": "Are you already hosting a Loop? Log in here to access the people who have signed up for your Loop. They are eager to join!<br>Would you like to join as a participant and not start your own Loop? <a>Sure you can.</a>",
-  "weWouldLikeToKnowThisEquallyRepresented": "We would like to know this, to see if different size interests are equally represented within your Loop. Also, knowing this makes it easier to split the route over time, depending on size interest!"
+  "weWouldLikeToKnowThisEquallyRepresented": "We would like to know this, to see if different size interests are equally represented within your Loop. Also, knowing this makes it easier to split the route over time, depending on size interest!",
+  "sort": "Sort"
 }
