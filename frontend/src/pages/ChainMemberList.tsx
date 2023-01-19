@@ -6,12 +6,12 @@ import {
   useMemo,
   FormEvent,
   useRef,
+  MouseEventHandler,
 } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-import { IconButton, DummyButton } from "../components/IconButton";
 import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
@@ -407,7 +407,7 @@ function ParticipantsTable(props: {
   const { addToastError, addToastStatic } = useContext(ToastContext);
   const [isSelectApproved, setIsSelectApproved] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<[string, boolean]>(["date", true]);
+  const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
     if (selected.length !== 1 || !isSelectApproved) {
@@ -536,52 +536,25 @@ function ParticipantsTable(props: {
     return u.chains.find((uc) => uc.chain_uid === props.chain.uid)!;
   }
 
-  function sortorder(sortBy: [string, boolean]): User[] {
-    console.log(sortBy);
-    let userArr;
-    if (sortBy[0] == "name") {
-      if (sortBy[1] == true) {
-        userArr = props.users.sort((a, b) =>
-          a.name.localeCompare(b.name) == 1 ? 1 : -1
+  function sortOrder(_sortBy: typeof sortBy): User[] {
+    switch (_sortBy) {
+      case "email":
+      case "name":
+        return props.users.sort((a, b) =>
+          a[_sortBy].localeCompare(b[_sortBy]) == 1 ? 1 : -1
         );
-        return userArr;
-      } else {
-        userArr = props.users.sort((a, b) =>
-          a.name.localeCompare(b.name) == 1 ? -1 : 1
-        );
-        return userArr;
-      }
+      case "date":
+        return props.users.sort((a, b) => {
+          const ucA = getUserChain(a);
+          const ucB = getUserChain(b);
+
+          return new Date(ucA.created_at) > new Date(ucB.created_at) ? 1 : -1;
+        });
     }
+  }
 
-    if (sortBy[0] == "email") {
-      if (sortBy[1] == true) {
-        userArr = props.users.sort((a, b) =>
-          a.email.localeCompare(b.email) == 1 ? -1 : 1
-        );
-        return userArr;
-      } else {
-        userArr = props.users.sort((a, b) =>
-          a.email.localeCompare(b.email) == 1 ? 1 : -1
-        );
-        return userArr;
-      }
-    }
-
-    if (sortBy[0] == "date" && sortBy[1] == false) {
-      return (userArr = props.users.sort((a, b) => {
-        const ucA = getUserChain(a);
-        const ucB = getUserChain(b);
-
-        return new Date(ucA.created_at) > new Date(ucB.created_at) ? 1 : -1;
-      }));
-    }
-
-    return (userArr = props.users.sort((a, b) => {
-      const ucA = getUserChain(a);
-      const ucB = getUserChain(b);
-
-      return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
-    }));
+  function toggleSortBy(_sortBy: typeof sortBy) {
+    setSortBy(sortBy !== _sortBy ? _sortBy : "date");
   }
 
   return (
@@ -594,44 +567,33 @@ function ParticipantsTable(props: {
                 <th className="sticky z-0"></th>
                 <th>
                   <span>{t("name")}</span>
-                  <span className="wd-min float-right relative">
-                    <IconButton
-                      onClick={() => setSortBy(["name", !sortBy[1]])}
-                    />
-                  </span>
+                  <SortButton
+                    isSelected={sortBy === "name"}
+                    className="float-right"
+                    onClick={() => toggleSortBy("name")}
+                  />
                 </th>
                 <th>
                   <span>{t("address")}</span>
-                  <span className="wd-min float-right relative">
-                    <DummyButton />
-                  </span>
                 </th>
                 <th>
                   <span>{t("contact")}</span>
-                  <span className="float-right">
-                    <IconButton
-                      onClick={() => setSortBy(["email", !sortBy[1]])}
-                    />
-                  </span>
+                  <SortButton
+                    isSelected={sortBy === "email"}
+                    className="float-right"
+                    onClick={() => toggleSortBy("email")}
+                  />
                 </th>
                 <th>
                   <span>{t("interestedSizes")}</span>
-                  <span className="fwd-min float-right relative">
-                    <DummyButton />
-                  </span>
                 </th>
                 <th>
                   <span className="float-left">{t("signedUpOn")}</span>
-                  <span className="wd-min relative">
-                    <DummyButton />
-                  </span>
-                </th>
-                <th>
-                  <span className="float-right">
-                    <IconButton
-                      onClick={() => setSortBy(["date", !sortBy[1]])}
-                    />
-                  </span>
+                  <SortButton
+                    isSelected={sortBy === "date"}
+                    className="float-right"
+                    onClick={() => toggleSortBy("date")}
+                  />
                 </th>
               </tr>
             </thead>
@@ -686,7 +648,7 @@ function ParticipantsTable(props: {
                     </tr>
                   );
                 })}
-              {sortorder(sortBy).map((u: User) => {
+              {sortOrder(sortBy).map((u: User) => {
                 const userChain = getUserChain(u);
 
                 return (
@@ -783,5 +745,30 @@ function ParticipantsTable(props: {
         </div>
       </div>
     </>
+  );
+}
+
+function SortButton(props: {
+  className?: string;
+  onClick: MouseEventHandler;
+  isSelected: boolean;
+}) {
+  const { t } = useTranslation();
+
+  const classIcon = props.isSelected
+    ? "btn-outline text-secondary"
+    : "btn-ghost";
+
+  return (
+    <button
+      aria-label={t("sort")}
+      className={
+        "btn btn-xs btn-circle feather feather-chevrons-down " +
+        props.className +
+        " " +
+        classIcon
+      }
+      onClick={props.onClick}
+    ></button>
   );
 }
