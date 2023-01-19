@@ -189,11 +189,14 @@ export default function ChainDetailsForm({
     }
 
     (async () => {
+      if (!(values.longitude && values.latitude)) {
+        addToastError(t("required") + ": " + t("loopLocation"), 400);
+        return;
+      }
       values.address = await getPlaceName(values.longitude, values.latitude);
-      console.log("getPlaceName", values.address);
-
-      if (values.address.length < 6) {
-        addToastError(t("required") + ": " + t("address"), 400);
+      if (!(values.longitude && values.latitude)) {
+        console.error("getPlaceName", values.address);
+        addToastError(t("required") + ": " + t("loopLocation"), 500);
         return;
       }
 

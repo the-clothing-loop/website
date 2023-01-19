@@ -47,6 +47,11 @@ const NewChainLocation = ({ location }: { location: any }) => {
       genders: values.genders,
     };
 
+    if (!(newChain.address?.length > 5)) {
+      addToastError(t("required") + ": " + t("loopLocation"), 400);
+      return;
+    }
+
     console.log(`creating chain: ${JSON.stringify(newChain)}`);
     if (state!.only_create_chain) {
       try {
