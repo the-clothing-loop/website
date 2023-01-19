@@ -68,15 +68,7 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
     addToast({
       type: "error",
       message: msg,
-      actions: [
-        {
-          fn: () => {
-            navigator.clipboard.writeText(msg);
-          },
-          type: "ghost",
-          text: t("copy"),
-        },
-      ],
+      actions: [],
     });
   }
 
