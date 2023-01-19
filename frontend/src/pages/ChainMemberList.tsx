@@ -6,12 +6,12 @@ import {
   useMemo,
   FormEvent,
   useRef,
+  MouseEventHandler,
 } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-
 import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
@@ -407,6 +407,7 @@ function ParticipantsTable(props: {
   const { addToastError, addToastStatic } = useContext(ToastContext);
   const [isSelectApproved, setIsSelectApproved] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
     if (selected.length !== 1 || !isSelectApproved) {
@@ -517,12 +518,9 @@ function ParticipantsTable(props: {
   }
 
   function simplifyDays(uc: UserChain): string {
-    var createdAt = new Date(uc.created_at);
-    var currDate = new Date();
-
-    const Day = 10000 * 60 * 60 * 24;
-    const diff = createdAt.getTime() - currDate.getTime();
-    let numDays = Math.round(diff / Day);
+    var createdAt = new Date(uc.created_at).getTime();
+    var currDate = new Date().getTime();
+    let numDays = Math.round(((currDate - createdAt) / (10 ** 6 * 864)) * 10);
 
     if (numDays < 1) {
       return t("new");
@@ -538,6 +536,27 @@ function ParticipantsTable(props: {
     return u.chains.find((uc) => uc.chain_uid === props.chain.uid)!;
   }
 
+  function sortOrder(_sortBy: typeof sortBy): User[] {
+    switch (_sortBy) {
+      case "email":
+      case "name":
+        return props.users.sort((a, b) =>
+          a[_sortBy].localeCompare(b[_sortBy]) == 1 ? 1 : -1
+        );
+      case "date":
+        return props.users.sort((a, b) => {
+          const ucA = getUserChain(a);
+          const ucB = getUserChain(b);
+
+          return new Date(ucA.created_at) > new Date(ucB.created_at) ? 1 : -1;
+        });
+    }
+  }
+
+  function toggleSortBy(_sortBy: typeof sortBy) {
+    setSortBy(sortBy !== _sortBy ? _sortBy : "date");
+  }
+
   return (
     <>
       <div className="mt-10 relative">
@@ -546,11 +565,36 @@ function ParticipantsTable(props: {
             <thead>
               <tr>
                 <th className="sticky z-0"></th>
-                <th>{t("name")}</th>
-                <th>{t("address")}</th>
-                <th>{t("contact")}</th>
-                <th>{t("interestedSizes")}</th>
-                <th>{t("signedUpOn")}</th>
+                <th>
+                  <span>{t("name")}</span>
+                  <SortButton
+                    isSelected={sortBy === "name"}
+                    className="float-right"
+                    onClick={() => toggleSortBy("name")}
+                  />
+                </th>
+                <th>
+                  <span>{t("address")}</span>
+                </th>
+                <th>
+                  <span>{t("contact")}</span>
+                  <SortButton
+                    isSelected={sortBy === "email"}
+                    className="float-right"
+                    onClick={() => toggleSortBy("email")}
+                  />
+                </th>
+                <th>
+                  <span>{t("interestedSizes")}</span>
+                </th>
+                <th>
+                  <span className="float-left">{t("signedUpOn")}</span>
+                  <SortButton
+                    isSelected={sortBy === "date"}
+                    className="float-right"
+                    onClick={() => toggleSortBy("date")}
+                  />
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -604,56 +648,54 @@ function ParticipantsTable(props: {
                     </tr>
                   );
                 })}
-              {props.users
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((u: User) => {
-                  const userChain = getUserChain(u);
+              {sortOrder(sortBy).map((u: User) => {
+                const userChain = getUserChain(u);
 
-                  return (
-                    <tr key={u.uid}>
-                      <td className="sticky">
-                        <input
-                          type="checkbox"
-                          name="selectedChainAdmin"
-                          className="checkbox checkbox-sm checkbox-primary"
-                          checked={selected.includes(u.uid)}
-                          onChange={(e) => onChangeSelect(e, true)}
-                          value={u.uid}
-                        />
-                      </td>
-                      <td>{u.name}</td>
-                      <td>
-                        <span className="block w-48 text-sm whitespace-normal">
-                          {u.address}
-                        </span>
-                      </td>
-                      <td className="text-sm leading-relaxed">
-                        {u.email}
-                        <br />
-                        {u.phone_number}
-                      </td>
-                      <td className="align-middle">
-                        <span
-                          className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
-                          tabIndex={0}
-                        >
-                          {SizeBadges(t, u.sizes)}
-                        </span>
-                      </td>
-                      <td className="text-center">
-                        <span
-                          tabIndex={0}
-                          className="tooltip tooltip-top"
-                          data-tip={signedUpOn(userChain)}
-                        >
-                          {userChain.is_approved
-                            ? simplifyDays(userChain)
-                            : t("pendingApproval")}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
+                return (
+                  <tr key={u.uid}>
+                    <td className="sticky">
+                      <input
+                        type="checkbox"
+                        name="selectedChainAdmin"
+                        className="checkbox checkbox-sm checkbox-primary"
+                        checked={selected.includes(u.uid)}
+                        onChange={(e) => onChangeSelect(e, true)}
+                        value={u.uid}
+                      />
+                    </td>
+                    <td>{u.name}</td>
+                    <td>
+                      <span className="block w-48 text-sm whitespace-normal">
+                        {u.address}
+                      </span>
+                    </td>
+                    <td className="text-sm leading-relaxed">
+                      {u.email}
+                      <br />
+                      {u.phone_number}
+                    </td>
+                    <td className="align-middle">
+                      <span
+                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                        tabIndex={0}
+                      >
+                        {SizeBadges(t, u.sizes)}
+                      </span>
+                    </td>
+                    <td className="text-center">
+                      <span
+                        tabIndex={0}
+                        className="tooltip tooltip-top"
+                        data-tip={signedUpOn(userChain)}
+                      >
+                        {userChain.is_approved
+                          ? simplifyDays(userChain)
+                          : t("pendingApproval")}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -703,5 +745,30 @@ function ParticipantsTable(props: {
         </div>
       </div>
     </>
+  );
+}
+
+function SortButton(props: {
+  className?: string;
+  onClick: MouseEventHandler;
+  isSelected: boolean;
+}) {
+  const { t } = useTranslation();
+
+  const classIcon = props.isSelected
+    ? "btn-outline text-secondary"
+    : "btn-ghost";
+
+  return (
+    <button
+      aria-label={t("sort")}
+      className={
+        "btn btn-xs btn-circle feather feather-chevrons-down " +
+        props.className +
+        " " +
+        classIcon
+      }
+      onClick={props.onClick}
+    ></button>
   );
 }
