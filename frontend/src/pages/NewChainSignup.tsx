@@ -56,7 +56,7 @@ export default function Signup() {
       email: values.email,
       phone_number: values.phone,
       address: jsValues.address,
-      newsletter: values.newsletter === "true",
+      newsletter: values.newsletter === "on",
       sizes: [],
     };
     console.log("submit", registerUser);

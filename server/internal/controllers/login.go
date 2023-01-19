@@ -149,6 +149,11 @@ func RegisterChainAdmin(c *gin.Context) {
 		return
 	}
 
+	if !body.User.Newsletter {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Newsletter-Box must be checked to create a new loop admin."))
+		return
+	}
+
 	chain := &models.Chain{
 		UID:              uuid.NewV4().String(),
 		Name:             body.Chain.Name,
@@ -183,16 +188,11 @@ func RegisterChainAdmin(c *gin.Context) {
 	}}
 	db.Create(chain)
 
-	if body.User.Newsletter {
-		db.Create(&models.Newsletter{
-			Email:    body.User.Email,
-			Name:     body.User.Name,
-			Verified: false,
-		})
-	} else {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("Newsletter-Box must be checked to create a new loop admin."))
-		return
-	}
+	db.Create(&models.Newsletter{
+		Email:    body.User.Email,
+		Name:     body.User.Name,
+		Verified: false,
+	})
 
 	token, err := auth.TokenCreateUnverified(db, user.ID)
 	if err != nil {
