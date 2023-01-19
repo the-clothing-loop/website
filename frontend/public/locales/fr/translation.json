@@ -225,5 +225,6 @@
   "allDataOfNewParticipantsCanBeAccessed": "Toutes les données sur les nouveaux participants sont accessibles sur votre page personnelle.",
   "areYouAlreadyHosting<a>JoinAnExistingLoop": "Vous êtes déjà organisateur d'un Loop ? Connectez-vous ici pour accéder aux personnes qui se sont inscrites à votre Loop. Elles sont impatientes de se joindre à vous !<br>Souhaitez-vous vous inscrire en tant que participant et non pas lancer votre propre Loop ? <a>Pas de problème.</a>",
   "weWouldLikeToKnowThisEquallyRepresented": "Nous aimerions savoir ceci pour voir comment les demandes de tailles différentes sont représentées dans votre Loop. Avec ces informations vous pouvez décider, après une certaine période de fonctionnement, de diviser l'itinéraire en fonction des demandes de différentes tailles !",
-  "sort": "Sort"
+  "sort": "Sort",
+  "loopLocation": "Loop location"
 }
