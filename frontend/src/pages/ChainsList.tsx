@@ -172,7 +172,7 @@ const ChainsList = () => {
                                     }
                                   >
                                     {userChain?.is_approved
-                                      ? t("leave")
+                                      ? t("leaveLoop")
                                       : t("leaveWaitlist")}
                                   </a>
                                 </li>
