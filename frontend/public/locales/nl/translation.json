@@ -225,5 +225,6 @@
   "allDataOfNewParticipantsCanBeAccessed": "Alle gegevens van nieuwe deelnemers zijn toegankelijk op je persoonlijke pagina.",
   "areYouAlreadyHosting<a>JoinAnExistingLoop": "Host je al een Loop? Log hier in om toegang te krijgen tot de mensen die zich hebben aangemeld voor de Loop die jij host. Ze staan te popelen om deel uit te maken van jouw Loop!<br>Wil je gewoon meedoen als deelnemer en dus niet je eigen Loop starten? <a>Dat kan!</a>",
   "weWouldLikeToKnowThisEquallyRepresented": "We zouden dit graag willen weten, om te zien of er binnen je Loop alle verschillende maten worden vertegenwoordigd. Ook kan je makkelijker in zien, na verloop van tijd, voor een splitsen van route, afhankelijk van maat!",
-  "sort": "Sort"
+  "sort": "Sort",
+  "loopLocation": "Loop location"
 }
