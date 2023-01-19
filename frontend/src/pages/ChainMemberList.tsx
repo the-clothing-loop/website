@@ -509,10 +509,20 @@ function ParticipantsTable(props: {
     });
   }
 
+  function signedUpOn(uc: UserChain): string {
+    let locale = i18n.language;
+    if (locale === "en") locale = "default";
+
+    return new Date(uc.created_at).toLocaleDateString(locale);
+  }
+
   function simplifyDays(uc: UserChain): string {
-    var createdAt = new Date(uc.created_at).getTime();
-    var currDate = new Date().getTime();
-    let numDays = Math.round(((currDate - createdAt) / (10 ** 6 * 864)) * 10);
+    var createdAt = new Date(uc.created_at);
+    var currDate = new Date();
+
+    const Day = 10000 * 60 * 60 * 24;
+    const diff = createdAt.getTime() - currDate.getTime();
+    let numDays = Math.round(diff / Day);
 
     if (numDays < 1) {
       return t("new");
