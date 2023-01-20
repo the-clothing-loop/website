@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Geocoding, { Estimate } from "../../pages/Geocoding";
 
@@ -49,10 +49,17 @@ export default function SearchBar(props: Props) {
     genders: [],
     ...props.initialValues,
   });
+  let refSubmit = useRef<any>();
 
   function handleSearchChange(e: Estimate) {
     setValue("searchTerm", e.query);
     setLongLat(e.first);
+  }
+  function handleSearchSelected() {
+    (refSubmit.current as HTMLButtonElement).focus({
+      preventScroll: true,
+      focusVisible: true,
+    } as any);
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -79,6 +86,7 @@ export default function SearchBar(props: Props) {
           initialAddress={values.searchTerm}
           className="z-40 w-full"
           onResult={handleSearchChange}
+          onSelectResult={handleSearchSelected}
           types={["country", "region", "place", "postcode", "address"]}
         />
       </label>
@@ -108,7 +116,7 @@ export default function SearchBar(props: Props) {
           </div>
         </div>
 
-        <button type="submit" className="grow btn btn-primary">
+        <button type="submit" className="grow btn btn-primary" ref={refSubmit}>
           <span className="hidden sm:inline">{t("search")}</span>
           <span className="sm:hidden inline feather feather-search"></span>
         </button>

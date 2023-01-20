@@ -23,6 +23,7 @@ export interface Estimate {
 
 interface Props {
   onResult: (e: Estimate) => void;
+  onSelectResult: () => void;
   initialAddress?: string;
   className?: string;
   types: MapboxType[];
@@ -53,6 +54,7 @@ export default function Geocoding(props: Props) {
           query: e.result.place_name,
           first: e.result.geometry.coordinates,
         });
+        props.onSelectResult();
       });
 
       geocoder.on("results", (e: MapboxGeocoder.Results) => {
