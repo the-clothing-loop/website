@@ -193,7 +193,6 @@
   "pleaseEnterYourEmail": "Inserisci il tuo indirizzo email",
   "signedUpOn": "Signed up on",
   "nDays": "{{ n }} days",
-  "nMonths": "{{ n }} months",
   "leaveWaitlist": "Leave Waitlist",
   "pleaseEnterAValid": {
     "emailAddress": "Inserisci un indirizzo email valido",

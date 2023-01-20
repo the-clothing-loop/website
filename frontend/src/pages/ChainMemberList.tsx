@@ -510,13 +510,6 @@ function ParticipantsTable(props: {
     });
   }
 
-  function signedUpOn(uc: UserChain): string {
-    let locale = i18n.language;
-    if (locale === "en") locale = "default";
-
-    return new Date(uc.created_at).toLocaleDateString(locale);
-  }
-
   function simplifyDays(uc: UserChain): string {
     var createdAt = new Date(uc.created_at).getTime();
     var currDate = new Date().getTime();
@@ -524,11 +517,13 @@ function ParticipantsTable(props: {
 
     if (numDays < 1) {
       return t("new");
-    } else if (numDays < 30) {
+    } else if (numDays < 7) {
       return t("nDays", { n: numDays });
     } else {
-      let numMonths = Math.round(numDays / 30);
-      return t("nMonths", { n: numMonths });
+      let locale = i18n.language;
+      if (locale === "en") locale = "default";
+
+      return new Date(uc.created_at).toLocaleDateString(locale);
     }
   }
 
@@ -548,7 +543,7 @@ function ParticipantsTable(props: {
           const ucA = getUserChain(a);
           const ucB = getUserChain(b);
 
-          return new Date(ucA.created_at) > new Date(ucB.created_at) ? 1 : -1;
+          return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
         });
     }
   }
@@ -569,7 +564,7 @@ function ParticipantsTable(props: {
                   <span>{t("name")}</span>
                   <SortButton
                     isSelected={sortBy === "name"}
-                    className="float-right"
+                    className="ml-1"
                     onClick={() => toggleSortBy("name")}
                   />
                 </th>
@@ -580,7 +575,7 @@ function ParticipantsTable(props: {
                   <span>{t("contact")}</span>
                   <SortButton
                     isSelected={sortBy === "email"}
-                    className="float-right"
+                    className="ml-1"
                     onClick={() => toggleSortBy("email")}
                   />
                 </th>
@@ -591,7 +586,7 @@ function ParticipantsTable(props: {
                   <span className="float-left">{t("signedUpOn")}</span>
                   <SortButton
                     isSelected={sortBy === "date"}
-                    className="float-right"
+                    className="ml-1"
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
@@ -635,15 +630,7 @@ function ParticipantsTable(props: {
                       </td>
                       <td className="bg-yellow/[.6] align-middle"></td>
                       <td className="bg-yellow/[.6] text-center">
-                        <span
-                          tabIndex={0}
-                          className="tooltip tooltip-top"
-                          data-tip={signedUpOn(userChain)}
-                        >
-                          {userChain.is_approved
-                            ? simplifyDays(userChain)
-                            : t("pendingApproval")}
-                        </span>
+                        {t("pendingApproval")}
                       </td>
                     </tr>
                   );
@@ -682,17 +669,7 @@ function ParticipantsTable(props: {
                         {SizeBadges(t, u.sizes)}
                       </span>
                     </td>
-                    <td className="text-center">
-                      <span
-                        tabIndex={0}
-                        className="tooltip tooltip-top"
-                        data-tip={signedUpOn(userChain)}
-                      >
-                        {userChain.is_approved
-                          ? simplifyDays(userChain)
-                          : t("pendingApproval")}
-                      </span>
-                    </td>
+                    <td className="text-center">{simplifyDays(userChain)}</td>
                   </tr>
                 );
               })}

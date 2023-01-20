@@ -193,7 +193,6 @@
   "pleaseEnterYourEmail": "Vul je e-mailadres in",
   "signedUpOn": "Signed up on",
   "nDays": "{{ n }} days",
-  "nMonths": "{{ n }} months",
   "leaveWaitlist": "Leave Waitlist",
   "pleaseEnterAValid": {
     "emailAddress": "Voer een geldig e-mailadres in",
