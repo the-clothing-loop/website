@@ -7,14 +7,14 @@ const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
 
 const testLanguages = [
-  { lng: "de", title: "German", flag: "/icons/flags/de.svg" },
-  { lng: "fr", title: "French", flag: "/icons/flags/fr.svg" },
-  { lng: "es", title: "Spanish", flag: "/icons/flags/es.svg" },
+  { lng: "de", title: "German", flag: "/images/flags/de.svg" },
+  { lng: "fr", title: "French", flag: "/images/flags/fr.svg" },
+  { lng: "es", title: "Spanish", flag: "/images/flags/es.svg" },
 ];
 
 let languages = [
-  { lng: "en", title: "English", flag: "/icons/flags/gb.svg" },
-  { lng: "nl", title: "Dutch", flag: "/icons/flags/nl.svg" },
+  { lng: "en", title: "English", flag: "/images/flags/gb.svg" },
+  { lng: "nl", title: "Dutch", flag: "/images/flags/nl.svg" },
 ];
 
 if (!IS_PRODUCTION) {
