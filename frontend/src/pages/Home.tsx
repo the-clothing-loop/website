@@ -246,10 +246,15 @@ export default function Home() {
             </div>
 
             <div className="md:w-1/2 sm:max-md:pb-8">
-              <img
+              <video
+                autoPlay
+                loop
+                muted
+                webkit-playsinline
+                playsInline
                 className="object-cover object-top w-full max-h-[600px]"
-                src={Selfies}
-                alt="selfies of different people wearing clothes shared via their local Loop"
+                src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/webm/-/quality/normal/impact-rapport.webm"
+                title="selfies of different people wearing clothes shared via their local Loop"
               />
             </div>
           </section>
@@ -284,7 +289,7 @@ export default function Home() {
         <section className="flex flex-col md:flex-row items-center md:items-end mb-8 md:mb-20">
           <div className="md:w-1/2 flex justify-center md:justify-end mb-8 md:mb-0">
             <img
-              src="https://ucarecdn.com/50733287-769c-4de3-aae8-fea5f5949e80/-/resize/500x/-/format/auto/-/quality/smart/tcl_jewellery.jpg"
+              src="https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/500x/-/format/auto/-/quality/smart/selfies.jpg"
               alt="jewellery"
               className="w-1/2 md:w-full md:max-w-[500px]"
             />
