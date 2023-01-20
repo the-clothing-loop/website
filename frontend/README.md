@@ -48,8 +48,18 @@ Tries to fix any missing spaces or tabs required by Prettier
 
 `npm run lint`
 
-## Styling
+## Libraries
 
 ### TailwindCSS
 
 Motive behind moving to tailwind is to decrease the bundle size of the website [Tailwind CSS vs. CSS: An in-depth comparison (speed, file size, etc.)](https://www.programonaut.com/tailwind-css-vs-css-an-in-depth-comparison-speed-file-size-etc/)
+
+### Flags
+
+Flag icons come from: https://flagicons.lipis.dev/
+[MIT LICENSE](https://github.com/lipis/flag-icons/blob/main/LICENSE)
+
+### Icons
+
+Icons on this website uses https://feathericons.com/
+[MIT LICENSE](https://github.com/feathericons/feather/blob/master/LICENSE)
