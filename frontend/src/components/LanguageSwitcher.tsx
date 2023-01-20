@@ -1,6 +1,6 @@
 import { useMemo, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import { useDropdown } from "../util/dropdown.hooks";
 
 const IS_PRODUCTION =
@@ -9,6 +9,7 @@ const IS_PRODUCTION =
 const testLanguages = [
   { lng: "de", title: "German", flag: "/icons/flags/de.svg" },
   { lng: "fr", title: "French", flag: "/icons/flags/fr.svg" },
+  { lng: "es", title: "Spanish", flag: "/icons/flags/es.svg" },
 ];
 
 let languages = [
