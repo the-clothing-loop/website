@@ -418,7 +418,7 @@ func ChainApproveUser(c *gin.Context) {
 
 	db.Exec(`
 UPDATE user_chains
-SET user_chains.is_approved = TRUE
+SET is_approved = TRUE, created_at = NOW()
 WHERE user_id = ? AND chain_id = ?
 	`, user.ID, chain.ID)
 
