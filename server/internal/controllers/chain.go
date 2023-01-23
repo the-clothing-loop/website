@@ -64,7 +64,11 @@ func ChainCreate(c *gin.Context) {
 		Sizes:            body.Sizes,
 		Genders:          body.Genders,
 		UserChains: []models.UserChain{
-			{UserID: user.ID, IsChainAdmin: true},
+			{
+				UserID:       user.ID,
+				IsChainAdmin: true,
+				IsApproved:   true,
+			},
 		},
 	}
 	if err := db.Create(&chain).Error; err != nil {

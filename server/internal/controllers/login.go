@@ -182,6 +182,7 @@ func RegisterChainAdmin(c *gin.Context) {
 	chain.UserChains = []models.UserChain{{
 		UserID:       user.ID,
 		IsChainAdmin: true,
+		IsApproved:   true,
 	}}
 	db.Create(chain)
 
@@ -248,6 +249,7 @@ func RegisterBasicUser(c *gin.Context) {
 		UserID:       user.ID,
 		ChainID:      chainID,
 		IsChainAdmin: false,
+		IsApproved:   false,
 	})
 	if body.User.Newsletter {
 		n := &models.Newsletter{
