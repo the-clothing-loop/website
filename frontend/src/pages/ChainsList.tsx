@@ -117,7 +117,8 @@ const ChainsList = () => {
                           {chain.address}
                         </td>
                         <td align="center">
-                          {userChain?.is_approved ? (
+                          {userChain?.is_approved ||
+                          (!userChain && authUser?.is_root_admin) ? (
                             chain.published ? (
                               <div className="tooltip" data-tip="published">
                                 <span className="feather feather-eye  text-lg text-green" />
@@ -138,8 +139,8 @@ const ChainsList = () => {
                         </td>
                         <td align="right">
                           <div className="flex justify-end">
-                            {(isUserAdmin || authUser?.is_root_admin) &&
-                            userChain?.is_approved ? (
+                            {(isUserAdmin && userChain?.is_approved) ||
+                            authUser?.is_root_admin ? (
                               <Link
                                 className={`btn btn-primary justify-between w-28 ${
                                   chains?.length > 5 ? "btn-sm" : ""
@@ -155,28 +156,30 @@ const ChainsList = () => {
                                 tabIndex={0}
                                 className={`btn btn-ghost ${
                                   chains?.length > 5 ? "btn-sm" : ""
-                                }`}
+                                } ${userChain ? "" : "btn-disabled"}`}
                               >
                                 <span className="text-xl feather feather-more-vertical" />
                               </label>
-                              <ul
-                                tabIndex={0}
-                                className="dropdown-content menu shadow bg-base-100 w-52 h-full"
-                              >
-                                <li className="h-full">
-                                  <a
-                                    className="h-full text-red font-bold"
-                                    href="#"
-                                    onClick={(e) =>
-                                      handleClickUnsubscribe(e, chain)
-                                    }
-                                  >
-                                    {userChain?.is_approved
-                                      ? t("leaveLoop")
-                                      : t("leaveWaitlist")}
-                                  </a>
-                                </li>
-                              </ul>
+                              {userChain ? (
+                                <ul
+                                  tabIndex={0}
+                                  className="dropdown-content menu shadow bg-base-100 w-52 h-full"
+                                >
+                                  <li className="h-full">
+                                    <a
+                                      className="h-full text-red font-bold"
+                                      href="#"
+                                      onClick={(e) =>
+                                        handleClickUnsubscribe(e, chain)
+                                      }
+                                    >
+                                      {userChain?.is_approved
+                                        ? t("leaveLoop")
+                                        : t("leaveWaitlist")}
+                                    </a>
+                                  </li>
+                                </ul>
+                              ) : null}
                             </div>
                           </div>
                         </td>
