@@ -8,13 +8,13 @@ const IS_PRODUCTION =
 
 const testLanguages = [
   { lng: "de", title: "German", flag: "/images/flags/de.svg" },
-  { lng: "fr", title: "French", flag: "/images/flags/fr.svg" },
   { lng: "es", title: "Spanish", flag: "/images/flags/es.svg" },
 ];
 
 let languages = [
   { lng: "en", title: "English", flag: "/images/flags/gb.svg" },
   { lng: "nl", title: "Dutch", flag: "/images/flags/nl.svg" },
+  { lng: "fr", title: "French", flag: "/images/flags/fr.svg" },
 ];
 
 if (!IS_PRODUCTION) {

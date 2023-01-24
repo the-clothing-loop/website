@@ -13,7 +13,7 @@ sitemap.pipe(writeStream);
 function i18nUrl(url) {
   return {
     url: url,
-    links: ["en", "nl"].map((lng) => ({
+    links: ["en", "nl", "fr"].map((lng) => ({
       lang: lng,
       url: `/${lng}${url}`,
     })),
