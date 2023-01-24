@@ -20,12 +20,12 @@ var smtpAuth smtp.Auth
 
 func MailInit() {
 	smtpAddr = fmt.Sprintf("%s:%d", Config.SMTP_HOST, Config.SMTP_PORT)
-	smtpAuth = smtp.PlainAuth("", Config.SMTP_SENDER, Config.SMTP_PASS, Config.SMTP_HOST)
+	smtpAuth = smtp.PlainAuth("", Config.SMTP_USER, Config.SMTP_PASS, Config.SMTP_HOST)
 }
 
 func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body string) bool {
 	if Config.ENV != EnvEnumProduction {
-		to = "hello@clothingloop.org"
+		to = "test@clothingloop.org"
 	}
 
 	e := email.NewEmail()
