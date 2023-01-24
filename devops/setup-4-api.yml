@@ -2,16 +2,16 @@
   become: true
   tasks:
     - name: Add the user clothingloop
-      user:
+      ansible.builtin.user:
         name: clothingloop
         uid: 1077
-        shell: /bin/bash
-        createhome: yes
+        ansible.builtin.shell: /bin/bash
+        createhome: true
         home: /home/clothingloop
     - name: Add user opt directory
       file:
         path: "/home/clothingloop/opt"
-        recurse: no
+        recurse: false
         state: directory
         mode: "0775"
         group: "clothingloop"
@@ -19,7 +19,7 @@
     - name: Add log directory
       file:
         path: "/var/log/clothingloop-api"
-        recurse: no
+        recurse: false
         state: directory
         mode: "0775"
         group: "clothingloop"
@@ -38,7 +38,7 @@
         api_config_smtp_host: "{{ smtp_cl_acceptance_host }}"
         api_config_smtp_user: "{{ smtp_cl_acceptance_user }}"
         api_config_smtp_pass: "{{ smtp_cl_acceptance_password }}"
-      template:
+      ansible.builtin.template:
         src: templates/config.yml.j2
         dest: /home/clothingloop/opt/config.acc.yml
         owner: clothingloop
@@ -58,7 +58,7 @@
         api_config_smtp_host: "{{ smtp_cl_production_host }}"
         api_config_smtp_user: "{{ smtp_cl_production_user }}"
         api_config_smtp_pass: "{{ smtp_cl_production_password }}"
-      template:
+      ansible.builtin.template:
         src: templates/config.yml.j2
         dest: /home/clothingloop/opt/config.prod.yml
         owner: clothingloop
@@ -71,7 +71,7 @@
         api_service_env: production
         api_service_exec: /home/clothingloop/opt/api-production
         api_service_path: /home/clothingloop/opt
-      template:
+      ansible.builtin.template:
         src: templates/api.service.j2
         dest: /etc/systemd/system/cl-api-production.service
         owner: root
@@ -84,20 +84,20 @@
         api_service_env: acceptance
         api_service_exec: /home/clothingloop/opt/api-acceptance
         api_service_path: /home/clothingloop/opt
-      template:
+      ansible.builtin.template:
         src: templates/api.service.j2
         dest: /etc/systemd/system/cl-api-acceptance.service
         owner: root
         group: root
         mode: "0644"
     - name: Systemd reload
-      shell: |
+      ansible.builtin.shell: |
         systemctl daemon-reload
     - name: Enable service api production
-      service:
+      ansible.builtin.service:
         name: cl-api-production
-        enabled: yes
+        enabled: true
     - name: Enable service api acceptance
-      service:
+      ansible.builtin.service:
         name: cl-api-acceptance
-        enabled: yes
+        enabled: true

@@ -5,7 +5,7 @@
       package_facts:
         manager: "auto"
     - name: Install caddy
-      shell: |
+      ansible.builtin.shell: |
         apt install -y debian-keyring debian-archive-keyring apt-transport-https
         curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
         curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
@@ -13,7 +13,7 @@
         apt install caddy -y
       when: "ansible_facts.packages['caddy'] is undefined"
     - name: Add caddy file
-      template:
+      ansible.builtin.template:
         src: templates/Caddyfile
         dest: /etc/caddy/Caddyfile
         owner: root
@@ -28,21 +28,21 @@
         group: root
         mode: "0644"
     - name: Add maintenance caddy file
-      template:
+      ansible.builtin.template:
         src: templates/Caddyfile.maint
         dest: /etc/caddy/Caddyfile.maint
         owner: root
         group: root
         mode: "0644"
     - name: Disable caddy-api service
-      service:
+      ansible.builtin.service:
         name: caddy-api
-        enabled: no
+        enabled: false
         state: stopped
     - name: Create caddy server files
       file:
         path: "{{ item }}"
-        recurse: yes
+        recurse: true
         state: directory
         mode: "0775"
         group: "caddy"
@@ -62,7 +62,7 @@
         - src: templates/maint/index.html
           dest: /var/caddy/maint.clothingloop.org/index.html
     - name: Setup caddy service
-      service:
+      ansible.builtin.service:
         name: caddy
-        enabled: yes
+        enabled: true
         state: reloaded

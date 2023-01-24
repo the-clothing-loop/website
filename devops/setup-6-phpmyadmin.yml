@@ -2,7 +2,7 @@
   become: true
   tasks:
     - name: Install phpmyadmin
-      apt:
+      ansible.builtin.apt:
         pkg:
           - phpmyadmin
           - php-fpm
@@ -17,11 +17,11 @@
           - php-zip
           - php-gd
     - name: Disable apache service
-      service:
+      ansible.builtin.service:
         name: apache2
-        enabled: no
+        enabled: false
         state: stopped
     - name: reload caddy service
-      service:
+      ansible.builtin.service:
         name: caddy
         state: reloaded

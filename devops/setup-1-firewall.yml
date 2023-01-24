@@ -2,12 +2,12 @@
   become: true
   tasks:
     - name: Install apt packages
-      apt:
+      ansible.builtin.apt:
         pkg: [curl, ufw]
         state: present
         update_cache: true
     - name: Reset ufw settings
-      shell: |
+      ansible.builtin.shell: |
         ufw --force reset
         ufw default deny incoming
         ufw default allow outgoing
@@ -16,12 +16,12 @@
         ufw allow 443
         ufw --force enable
     - name: Enable ufw service
-      service:
+      ansible.builtin.service:
         name: ufw
         state: started
         enabled: true
     - name: Cleanup ufw backups
-      shell: |
+      ansible.builtin.shell: |
         rm /etc/ufw/after6.rules.* || true
         rm /etc/ufw/after.rules.* || true
         rm /etc/ufw/before6.rules.* || true

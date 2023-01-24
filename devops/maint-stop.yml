@@ -2,13 +2,13 @@
   become: true
   tasks:
     - name: Start maintenance
-      shell: |
+      ansible.builtin.shell: |
         if [ -f /etc/caddy/Caddyfile.live ]; then
           mv /etc/caddy/Caddyfile.live /etc/caddy/Caddyfile
         fi
       args:
         executable: /bin/bash
     - name: Reload caddy service
-      service:
+      ansible.builtin.service:
         name: caddy
         state: reloaded

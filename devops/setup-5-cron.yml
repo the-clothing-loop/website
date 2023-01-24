@@ -1,7 +1,8 @@
 - hosts: server
   become: true
   tasks:
-    - cron:
+    - name: Add auto update cron
+      ansible.builtin.cron:
         name: autoupdate
         # https://crontab.guru/#5_4_*_*/2_2
         weekday: "2"
@@ -10,5 +11,4 @@
         hour: "4"
         minute: "5"
         user: root
-        job: "apt update -y && apt upgrade -y"
-        # && systemctl stop app-production app-acceptance && systemctl restart mariadb && sleep 30 && systemctl start app-production app-acceptance"
+        job: "apt update -y && apt upgrade -y && systemctl stop app-production app-acceptance && systemctl restart mariadb && sleep 30 && systemctl start app-production app-acceptance && systemctl reload caddy"

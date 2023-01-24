@@ -1,11 +1,17 @@
 - hosts: server
   become: true
   tasks:
-    - name: Start maintenance
-      shell: |
-        mv /etc/caddy/Caddyfile /etc/caddy/Caddyfile.live
-        cp /etc/caddy/Caddyfile.maint /etc/caddy/Caddyfile
+    - name: Backup live caddyfile
+      ansible.builtin.copy:
+        src: /etc/caddy/Caddyfile
+        dest: /etc/caddy/Caddyfile.live
+        mode: preserve
+    - name: Set maint caddyfile
+      ansible.builtin.copy:
+        src: /etc/caddy/Caddyfile.maint
+        dest: /etc/caddy/Caddyfile
+        mode: preserve
     - name: Reload caddy service
-      service:
+      ansible.builtin.service:
         name: caddy
         state: reloaded

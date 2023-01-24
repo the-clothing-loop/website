@@ -2,12 +2,12 @@
   become: true
   tasks:
     - name: Install mariadb
-      apt:
+      ansible.builtin.apt:
         pkg:
           - mariadb-server
           - python3-mysqldb
     - name: Start mariadb
-      service:
+      ansible.builtin.service:
         name: mariadb
         enabled: true
         state: started
