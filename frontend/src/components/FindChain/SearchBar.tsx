@@ -87,7 +87,16 @@ export default function SearchBar(props: Props) {
           className="z-40 w-full"
           onResult={handleSearchChange}
           onSelectResult={handleSearchSelected}
-          types={["country", "region", "place", "postcode", "address"]}
+          types={[
+            "country",
+            "region",
+            "place",
+            "locality",
+            "neighborhood",
+            "postcode",
+            "address",
+            "poi",
+          ]}
         />
       </label>
 
