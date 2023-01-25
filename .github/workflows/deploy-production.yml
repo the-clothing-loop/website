@@ -24,10 +24,10 @@ jobs:
         run: mv server cl-api-production
         working-directory: ./server
       - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
+        uses: enoitchantre/setup-ssh-authentication-action@1.0.1
         with:
-          key: ${{ secrets.VPS1_PRIVKEY }}
-          known_hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
+          private-key: ${{ secrets.VPS1_PRIVKEY }}
+          known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
       - name: Send binary to vps and restart service
         run: |
           rsync -az --delete ./server/cl-api-production admin@vpsnode1.vps.webdock.cloud:/home/admin/
@@ -56,10 +56,10 @@ jobs:
         run: npm run build:production
         working-directory: ./frontend
       - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
+        uses: enoitchantre/setup-ssh-authentication-action@1.0.1
         with:
-          key: ${{ secrets.VPS1_PRIVKEY }}
-          known_hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
+          private-key: ${{ secrets.VPS1_PRIVKEY }}
+          known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
       - name: Send public files to vps
         run: |
           ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-fe-production"
