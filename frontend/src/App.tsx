@@ -32,7 +32,6 @@ const Signup = React.lazy(() => import("./pages/Signup"));
 const NewChainLocation = React.lazy(() => import("./pages/NewChainLocation"));
 const UserEdit = React.lazy(() => import("./pages/UserEdit"));
 const ChainEdit = React.lazy(() => import("./pages/ChainEdit"));
-const ChainsList = React.lazy(() => import("./pages/ChainsList"));
 const LoginEmailFinished = React.lazy(
   () => import("./pages/LoginEmailFinished")
 );
@@ -104,7 +103,11 @@ export default function App() {
                     component={UserEdit}
                   />
 
-                  <Route exact path={`${base}/loops`} component={ChainsList} />
+                  <Route
+                    exact
+                    path={`${base}/loops`}
+                    component={() => <Redirect to="/loops" />}
+                  />
                   <Route
                     exact
                     path={`${base}/loops/find`}
