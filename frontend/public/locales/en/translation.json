@@ -227,5 +227,6 @@
   "sort": "Sort",
   "loopLocation": "Loop location",
   "helloN": "Hello, {{ n }}",
-  "toolkitFolder": "Toolkit Folder"
+  "toolkitFolder": "Toolkit Folder",
+  "editAccount": "Edit Account"
 }

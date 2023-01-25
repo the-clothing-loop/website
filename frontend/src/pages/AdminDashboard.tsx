@@ -8,6 +8,7 @@ import { TwoColumnLayout } from "../components/Layouts";
 import { AuthContext } from "../providers/AuthProvider";
 import { userPurge } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
+import ChainsList from "../components/ChainsList";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
@@ -42,9 +43,9 @@ export default function AdminDashboard() {
       </Helmet>
       <main className="">
         <section className="bg-teal-light">
-          <div className="container mx-auto flex items-stretch justify-between px-20">
-            <div className="flex flex-col items-between max-w-screen-xs py-8">
-              <div className="flex-grow">
+          <div className="container mx-auto flex items-stretch justify-between px-5 md:px-20">
+            <div className="flex flex-col items-between py-8">
+              <div className="flex-grow max-w-screen-xs">
                 <h1 className="font-serif font-bold text-4xl text-secondary mb-3">
                   {t("helloN", { n: authUser.name })}
                 </h1>
@@ -56,9 +57,9 @@ export default function AdminDashboard() {
                 </p>
               </div>
 
-              <div className="flex flex-row flex-wrap">
+              <div className="flex flex-col sm:flex-row flex-wrap">
                 <Link
-                  className="btn btn-primary h-auto mr-4 text-black"
+                  className="btn btn-primary h-auto mb-4 sm:mr-4 text-black"
                   target="_blank"
                   to={{
                     pathname:
@@ -69,8 +70,16 @@ export default function AdminDashboard() {
                   <span className="feather feather-external-link ml-2"></span>
                 </Link>
 
+                <Link
+                  className="btn btn-secondary btn-outline bg-white mb-4 sm:mr-4"
+                  to={`/users/${authUser.uid}/edit`}
+                >
+                  {t("editAccount")}
+                  <span className="feather feather-edit ml-2"></span>
+                </Link>
+
                 <button
-                  className="btn btn-error btn-outline block mr-4"
+                  className="btn btn-error btn-outline bg-white mb-4 sm:mr-4"
                   onClick={deleteClicked}
                 >
                   <span className="text-black">{t("deleteUserBtn")}</span>
@@ -79,11 +88,12 @@ export default function AdminDashboard() {
               </div>
             </div>
             <img
-              className="block h-64 w-64 my-6 rounded-full object-cover self-center"
+              className="hidden lg:block h-64 w-64 my-6 rounded-full object-cover self-center"
               src="https://ucarecdn.com/6ac2be4c-b2d6-4303-a5a0-c7283759a8e9/-/scale_crop/256x256/smart/-/format/auto/-/quality/smart/denise.png"
             />
           </div>
         </section>
+        <ChainsList />
       </main>
     </>
   );

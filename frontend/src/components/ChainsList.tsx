@@ -76,10 +76,10 @@ const ChainsList = () => {
       </Helmet>
       <main>
         <div className={`container mx-auto ${chains ? "" : "animate-pulse"}`}>
-          <div className="px-4 md:px-20 py-4">
-            <h1 className="text-2xl font-bold mb-3">{`${
+          <div className="flex flex-row justify-between px-4 md:px-20 py-4">
+            <h2 className="text-2xl font-bold mb-3">{`${
               chains?.length || 0
-            } Clothing Loops`}</h1>
+            } Clothing Loops`}</h2>
             {chains ? (
               <DataExport chains={chains} />
             ) : (
