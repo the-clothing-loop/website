@@ -490,6 +490,12 @@ function ParticipantsTable(props: {
               _selected.map((s) => chainUserApprove(chainUID, s))
             ).finally(() => {
               setSelected([]);
+              if (window.goatcounter)
+                window.goatcounter.count({
+                  path: "approve-user",
+                  title: "Approve user",
+                  event: true,
+                });
               return props.refresh();
             });
           },
@@ -502,6 +508,12 @@ function ParticipantsTable(props: {
               _selected.map((s) => chainDeleteUnapproved(chainUID, s))
             ).finally(() => {
               setSelected([]);
+              if (window.goatcounter)
+                window.goatcounter.count({
+                  path: "deny-user",
+                  title: "Deny user",
+                  event: true,
+                });
               return props.refresh();
             });
           },

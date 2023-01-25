@@ -58,6 +58,12 @@ const NewChainLocation = ({ location }: { location: any }) => {
         await chainCreate(newChain);
         await authUserRefresh();
 
+        if (window.goatcounter)
+          window.goatcounter.count({
+            path: "new-chain",
+            title: "New chain",
+            event: true,
+          });
         history.replace("/loops/new/confirmation");
       } catch (err: any) {
         console.error(`Error creating chain: ${JSON.stringify(err)}`);
@@ -77,6 +83,18 @@ const NewChainLocation = ({ location }: { location: any }) => {
           },
           newChain
         );
+        if (window.goatcounter) {
+          window.goatcounter.count({
+            path: "new-chain",
+            title: "New chain",
+            event: true,
+          });
+          window.goatcounter.count({
+            path: "new-user",
+            title: "New user",
+            event: true,
+          });
+        }
         history.replace("/loops/new/confirmation");
       } catch (err: any) {
         console.error(`Error creating user and chain: ${JSON.stringify(err)}`);
