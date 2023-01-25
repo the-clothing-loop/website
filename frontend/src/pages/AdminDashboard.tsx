@@ -1,11 +1,13 @@
 //Resources
+import { Link, Redirect, useHistory } from "react-router-dom";
+import { useContext } from "react";
+import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
+
 import { TwoColumnLayout } from "../components/Layouts";
 import { AuthContext } from "../providers/AuthProvider";
 import { userPurge } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
-import { Link, useHistory } from "react-router-dom";
-import { useContext } from "react";
-import { useTranslation } from "react-i18next";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
@@ -30,35 +32,59 @@ export default function AdminDashboard() {
     });
   }
 
+  if (!authUser) return null;
+
   return (
-    <main className="pt-10">
-      {authUser && (
-        <TwoColumnLayout img="https://ucarecdn.com/6ac2be4c-b2d6-4303-a5a0-c7283759a8e9/-/resize/x600/-/format/auto/-/quality/smart/denise.png">
-          <div className="md:pl-10 md:pr-20 flex flex-col items-center justify-center text-center max-md:mb-10">
-            <h3 className="font-serif font-bold text-5xl text-secondary mb-8">{`Hello, ${authUser?.name}`}</h3>
-            <p className="mb-6">{t("thankYouForBeingHere")}</p>
+    <>
+      <Helmet>
+        <title>The Clothing Loop | Account</title>
+        <meta name="description" content="Account" />z
+      </Helmet>
+      <main className="">
+        <section className="bg-teal-light">
+          <div className="container mx-auto flex items-stretch justify-between px-20">
+            <div className="flex flex-col items-between max-w-screen-xs py-8">
+              <div className="flex-grow">
+                <h1 className="font-serif font-bold text-4xl text-secondary mb-3">
+                  {t("helloN", { n: authUser.name })}
+                </h1>
+                <p className="mb-6">
+                  {t("thankYouForBeingHere")}
+                  <br />
+                  <br />
+                  {t("goToTheToolkitFolder")}
+                </p>
+              </div>
 
-            <Link className="btn btn-primary mb-4" to="/loops">
-              {t("viewLoops")}
-            </Link>
+              <div className="flex flex-row flex-wrap">
+                <Link
+                  className="btn btn-primary h-auto mr-4 text-black"
+                  target="_blank"
+                  to={{
+                    pathname:
+                      "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27",
+                  }}
+                >
+                  {t("toolkitFolder")}
+                  <span className="feather feather-external-link ml-2"></span>
+                </Link>
 
-            <Link
-              className="btn btn-link text-base block h-auto mb-4 text-black"
-              target="_blank"
-              to={{
-                pathname:
-                  "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27",
-              }}
-            >
-              {t("goToTheToolkitFolder")}
-            </Link>
-
-            <button className="btn btn-error block" onClick={deleteClicked}>
-              {t("deleteUserBtn")}
-            </button>
+                <button
+                  className="btn btn-error btn-outline block mr-4"
+                  onClick={deleteClicked}
+                >
+                  <span className="text-black">{t("deleteUserBtn")}</span>
+                  <span className="feather feather-alert-octagon ml-2"></span>
+                </button>
+              </div>
+            </div>
+            <img
+              className="block h-64 w-64 my-6 rounded-full object-cover self-center"
+              src="https://ucarecdn.com/6ac2be4c-b2d6-4303-a5a0-c7283759a8e9/-/scale_crop/256x256/smart/-/format/auto/-/quality/smart/denise.png"
+            />
           </div>
-        </TwoColumnLayout>
-      )}
-    </main>
+        </section>
+      </main>
+    </>
   );
 }
