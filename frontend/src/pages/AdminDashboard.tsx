@@ -42,7 +42,7 @@ export default function AdminDashboard() {
         <meta name="description" content="Account" />z
       </Helmet>
       <main className="">
-        <section className="bg-teal-light">
+        <section className="bg-teal-light mb-6">
           <div className="container mx-auto flex items-stretch justify-between px-5 md:px-20">
             <div className="flex flex-col items-between py-8">
               <div className="flex-grow max-w-screen-xs">
