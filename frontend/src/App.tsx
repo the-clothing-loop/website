@@ -106,7 +106,7 @@ export default function App() {
                   <Route
                     exact
                     path={`${base}/loops`}
-                    component={() => <Redirect to="/loops" />}
+                    component={() => <Redirect to="/admin/dashboard" />}
                   />
                   <Route
                     exact
