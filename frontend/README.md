@@ -8,7 +8,7 @@
    For Linux: https://nodejs.org/en/download/package-manager/
 
 2. `cd` into the frontend directory.
-3. Copy the env file `cp .env-example .env` and fill in the omitted values inside.
+3. Copy the env file `cp .env-example .env`.
 4. Run `npm i` to install all necessary dependencies.
 5. Ensure that the api server is running.
 6. Run `npm run start`
