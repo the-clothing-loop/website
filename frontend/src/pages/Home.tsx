@@ -250,7 +250,7 @@ export default function Home() {
                 playsInline
                 className="object-cover object-top w-full max-h-[600px]"
                 src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/webm/-/quality/normal/impact-rapport.webm"
-                title="selfies of different people wearing clothes shared via their local Loop"
+                title="pages of the impact report"
               />
             </div>
           </section>
@@ -286,7 +286,7 @@ export default function Home() {
           <div className="w-full md:w-1/2 flex justify-center md:justify-end">
             <img
               src="https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/900x/-/format/auto/-/quality/smart/selfies.jpg"
-              alt="jewellery"
+              alt="selfies of different people wearing clothes shared via their local Loop"
               className="w-full md:max-w-[500px] max-md:object-cover object-top h-60 md:h-auto"
             />
           </div>
