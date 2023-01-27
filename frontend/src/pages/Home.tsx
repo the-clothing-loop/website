@@ -283,11 +283,11 @@ export default function Home() {
         <Testimonials />
 
         <section className="flex flex-col md:flex-row items-center md:items-end mb-8 md:mb-20">
-          <div className="md:w-1/2 flex justify-center md:justify-end mb-8 md:mb-0">
+          <div className="w-full md:w-1/2 flex justify-center md:justify-end">
             <img
-              src="https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/500x/-/format/auto/-/quality/smart/selfies.jpg"
+              src="https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/900x/-/format/auto/-/quality/smart/selfies.jpg"
               alt="jewellery"
-              className="w-1/2 md:w-full md:max-w-[500px]"
+              className="w-full md:max-w-[500px] max-md:object-cover object-top h-60 md:h-auto"
             />
           </div>
 
