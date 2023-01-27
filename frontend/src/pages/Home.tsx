@@ -18,8 +18,6 @@ const CirclesFrame =
   "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
 const Selfies =
   "https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/768x/-/format/auto/selfies.jpg";
-const DoorImg =
-  "https://ucarecdn.com/f54270d7-9258-43c8-bdc2-ffb3856e4ce1/-/resize/600x/-/format/auto/-/quality/smart/numberedbagoutdoors.jpg";
 //Logos
 const SfmLogo =
   "https://ucarecdn.com/c439bd53-ac76-4ece-afce-727772d2f408/-/resize/160x/-/format/auto/-/quality/smart/sfm_logo.png";
@@ -202,15 +200,15 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-col-reverse md:flex-row items-center mb-6 md:mb-40">
-            <div className="relative md:w-1/2 pr-20 flex justify-end">
+          <div className="flex flex-col-reverse md:flex-row items-center mb-8 md:mb-40">
+            <div className="relative w-full md:w-1/2 md:pr-20 flex justify-end">
               <img
-                src={DoorImg}
-                className="w-full md:max-w-[600px]"
-                alt="receiving a bag of clothes from another"
+                src="https://ucarecdn.com/f54270d7-9258-43c8-bdc2-ffb3856e4ce1/-/resize/900x/-/format/auto/-/quality/smart/numberedbagoutdoors.jpg"
+                className="w-full md:max-w-[600px] object-cover object-bottom h-96"
+                alt="A numbered bag in front of a door and another in front of some letterboxes"
               />
 
-              <div className="absolute -z-10 bg-yellow/30 w-[600px] h-5/6 bottom-[-4rem] right-[2rem]">
+              <div className="hidden md:block absolute -z-10 bg-yellow/30 w-[600px] h-5/6 bottom-[-4rem] right-[2rem]">
                 &nbsp;
               </div>
             </div>
