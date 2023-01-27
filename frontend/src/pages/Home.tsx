@@ -10,8 +10,6 @@ import Testimonials from "../components/Testimonials";
 import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
 
 //Media
-const HeroImg =
-  "https://ucarecdn.com/4464c0ab-9b67-4e07-a0d3-cab38ea9b7c4/-/resize/600x/-/format/auto/-/quality/smart/kirsten_rosan.jpg";
 const MapImage =
   "https://ucarecdn.com/428a0de6-3226-4e89-afd1-78f31e20f5d5/-/crop/4:3/-/resize/600x/-/format/auto/-/quality/smart/map_image.jpg";
 const ClothesImage =
@@ -122,17 +120,15 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            <div className="md:pt-16 md:pr-40 md:w-1/2">
-              <div>
-                <img
-                  className="w-full max-w-[600px]"
-                  src={HeroImg}
-                  alt="Bringing a bag full clothes to another's doorstep"
-                />
-                <p className="text-sm my-1">
-                  {t("photo")}: Martijn van den Dobbelsteen/de Brug
-                </p>
-              </div>
+            <div className="md:pt-16 md:pr-20 lg:pr-40 md:w-1/2">
+              <img
+                className="w-full lg:max-w-[600px] sm:h-96 md:h-auto object-cover object-top"
+                src="https://ucarecdn.com/4464c0ab-9b67-4e07-a0d3-cab38ea9b7c4/-/resize/900x/-/format/auto/-/quality/smart/kirsten_rosan.jpg"
+                alt="Bringing a bag full clothes to another's doorstep"
+              />
+              <p className="text-sm my-1">
+                {t("photo")}: Martijn van den Dobbelsteen/de Brug
+              </p>
             </div>
           </div>
         </section>
