@@ -147,7 +147,7 @@ export default function Footer() {
             </Link>
             <a
               className="btn btn-ghost text-white text-base font-normal"
-              href="https://github.com/CollActionteam/clothing-loop"
+              href="https://github.com/the-clothing-loop/website"
               target="_blank"
               rel="noreferrer"
             >
