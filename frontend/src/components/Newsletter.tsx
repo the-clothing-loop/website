@@ -59,38 +59,44 @@ export const Newsletter = () => {
           <p>{t("pleaseTryAgainInSeconds")}</p>
         </div>
       ) : (
-        <div className="max-w-[600px] mx-auto lg:mx-0">
-          <h2 className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
-            {t("keepUpWithOurLatestNews")}
-          </h2>
-          <p className="mb-8">{t("subscribeToRecieveOurLatestNews")}</p>
-
-          <div className="flex flex-row mb-5">
-            <label className="form-control w-52 mr-4">
-              <input
-                type="text"
-                name="name"
-                className="input input-bordered w-full input-secondary"
-                placeholder={t("name")}
-                min={3}
-                required
-              />
-            </label>
-            <label className="form-control w-52">
-              <input
-                type="email"
-                name="email"
-                placeholder={t("emailAddress")}
-                className="input input-bordered w-full input-secondary"
-                required
-              />
-            </label>
+        <div className="flex flex-col sm:flex-row lg:flex-col max-w-screen-md mx-auto">
+          <div className="w-full sm:w-1/2 md:w-2/3 lg:w-full sm:pr-8">
+            <h2 className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
+              {t("keepUpWithOurLatestNews")}
+            </h2>
+            <p className="mb-8 sm:mb-0 lg:mb-8">
+              {t("subscribeToRecieveOurLatestNews")}
+            </p>
           </div>
-          <div className="bg-white inline-block">
-            <button className="btn btn-primary" type="submit">
-              {t("submit")}
-              <span className="feather feather-arrow-right ml-3"></span>
-            </button>
+
+          <div className="w-full sm:w-1/2 md:w-1/3 lg:w-full flex flex-col sm:pl-4 md:pl-0 justify-center">
+            <div className="flex flex-col lg:flex-row max-w-screen-xs">
+              <label className="form-control mb-5 lg:mr-5">
+                <input
+                  type="text"
+                  name="name"
+                  className="input input-bordered w-full input-secondary"
+                  placeholder={t("name")}
+                  min={3}
+                  required
+                />
+              </label>
+              <label className="form-control mb-5">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder={t("emailAddress")}
+                  className="input input-bordered w-full input-secondary"
+                  required
+                />
+              </label>
+            </div>
+            <div className="inline-block">
+              <button className="btn btn-primary" type="submit">
+                {t("submit")}
+                <span className="feather feather-arrow-right ml-3"></span>
+              </button>
+            </div>
           </div>
         </div>
       )}
