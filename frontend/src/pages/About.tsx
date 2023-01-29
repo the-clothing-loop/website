@@ -3,6 +3,11 @@ import { Helmet } from "react-helmet";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+
+// Media
+const CirclesFrame =
+  "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
+
 export default function About() {
   const { t } = useTranslation("about");
 
@@ -17,9 +22,11 @@ export default function About() {
           <h1 className="font-serif font-bold text-secondary text-6xl mb-16">
             {t("aboutTheClothingLoop")}
           </h1>
-          {/*           <div className="flex flex-col-reverse md:flex-row items-center md:items-start md:mb-16"> */}
-          <div className="flex flex-col-reverse md:flex-row items-center md:mb-16 sm:mb-6">
-            <div className="prose mx-auto w-full md:w-1/2 px-6 mb-6 md:mb-0">
+
+
+
+          <div className="flex flex-col-reverse lg:flex-row items-center md:mb-16">
+            <div className="prose mx-auto w-full lg:w-1/2 px-6 lg-6 md:mb-0">
               <p>
                 <Trans
                   i18nKey="p1"
@@ -31,20 +38,35 @@ export default function About() {
                 ></Trans>
               </p>
             </div>
-            <div className="flex md:w-1/2 justify-center md:px-6">
+            <div className="flex lg:w-1/2 justify-center px-6">
+            <div className="relative w-full md:max-w-[600px] sm:min-w-[600px] md:min-w-[400px] mb-16 lg:mb-0">
+
               <iframe
                 title="what is the Clothing Loop"
                 src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
                 allow="autoplay; fullscreen; picture-in-picture"
                 className="w-full aspect-video"
               ></iframe>
+                <img
+                  className="-z-10 absolute -right-10 -top-10"
+                  src={CirclesFrame}
+                  aria-hidden
+                  alt=""
+                />
+                <img
+                  className="-z-10 absolute -left-10 -bottom-10"
+                  aria-hidden
+                  alt=""
+                  src={CirclesFrame}
+                />
+                </div>
             </div>
           </div>
-
+          
           <div className="flex flex-col md:flex-row md:items-center md:mb-16">
-            <div className="prose md:w-1/3 mb-6 md:mb-0 px-0 mx-auto items-center">
+            <div className="prose md:w-1/3 mb-6 md:mb-0 mx-auto items-center bg-teal-light py-20 px-10">
               <h2 className="text-accent font-serif font-bold text-lg md:text-lg mb-4 px-5 my-auto">
-                <span className="inline md:block mr-4 font-serif font-bold text-6xl text-stroke-accent">
+                <span className="inline md:block mr-4 font-serif font-bold text-5xl text-stroke-accent">
                   Want to Join?
                 </span>
                 <span>
@@ -103,10 +125,10 @@ export default function About() {
             <img
               src="https://ucarecdn.com/a1229917-0a48-4401-9e16-d8939509c0b8/-/resize/x600/-/format/auto/-/quality/smart/pressclippingssite.jpg"
               alt="Press clippings related to Clothing Loop"
-              className="my-10 mx-auto w-full min-h-[600px] object-contain object-center px-6"
+              className="md:my-20 mx-auto w-full lg:w-5/6 min-h-[600px] object-contain object-center px-6"
             />
           </div>
-          <div className="flex flex-col md:flex-row items-center md:items-start md:mb-16 pt-20">
+          <div className="flex flex-col md:flex-row items-center md:items-start mb-6">
             <div className="prose md:w-1/2 mx-auto px-6">
               <p>
                 <Trans
@@ -125,7 +147,7 @@ export default function About() {
                 ></Trans>
               </p>
             </div>
-            <div className="prose mx-auto md:w-1/2 px-6 mb-6 md:mb-0">
+            <div className="prose mx-auto md:w-1/2 px-6">
               <p>
                 <Trans
                   i18nKey="thePeople2"
