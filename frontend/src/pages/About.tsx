@@ -99,6 +99,14 @@ export default function About() {
             </div>
           </div>
 
+          <div>
+            <img
+              src="https://ucarecdn.com/a1229917-0a48-4401-9e16-d8939509c0b8/-/resize/x600/-/format/auto/-/quality/smart/pressclippingssite.jpg"
+              alt="Press clippings related to Clothing Loop"
+              className="my-10 mx-auto w-full lg:w-5/6 object-contain object-center px-6"
+            />
+          </div>
+          
           <div className="px-6">
             <h2 className="font-serif font-bold text-secondary text-4xl mb-6">
               {t("team")}:
@@ -118,13 +126,7 @@ export default function About() {
               }}
             ></Trans>
           </div>
-          <div>
-            <img
-              src="https://ucarecdn.com/a1229917-0a48-4401-9e16-d8939509c0b8/-/resize/x600/-/format/auto/-/quality/smart/pressclippingssite.jpg"
-              alt="Press clippings related to Clothing Loop"
-              className="my-10 md:my-20 mx-auto w-full lg:w-5/6 object-contain object-center px-6"
-            />
-          </div>
+
           <div className="flex flex-col md:flex-row items-center md:items-start mb-6 md:mb-0">
             <div className="prose md:w-1/2 mx-auto px-6">
               <p>
