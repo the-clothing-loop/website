@@ -115,3 +115,11 @@
 summary.marker\:content-none::-webkit-details-marker {
   display: none;
 }
+
+/* CSS for other than iOS devices */
+@supports not (-webkit-touch-callout: none) {
+  /* android scrolls too fast when scroll-snap-type */
+  .carousel {
+    @apply max-sm:snap-none;
+  }
+}
