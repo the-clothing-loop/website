@@ -100,7 +100,7 @@ export default function Footer() {
                       @theclothingloop
                     </span>
                   </li>
-                  <li className="inline-flex items-center">
+                  <li className="mb-3 inline-flex items-center">
                     <a
                       href="mailto:hello@clothingloop.org"
                       aria-label="Our email address"
@@ -122,6 +122,15 @@ export default function Footer() {
                     >
                       hello@clothingloop.org
                     </span>
+                  </li>
+                  <li className="inline-flex items-center">
+                    <a
+                      href="https://www.linkedin.com/groups/12746791/"
+                      rel="noreferrer"
+                      aria-label="Our LinkedIn"
+                      className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0a66c2] feather feather-linkedin text-lg"
+                    ></a>
+                    <span className="text-sm">LinkedIn</span>
                   </li>
                 </ul>
               </div>
