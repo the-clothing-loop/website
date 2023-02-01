@@ -373,9 +373,21 @@ func ChainRemoveUser(c *gin.Context) {
 		return
 	}
 
-	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	ok, user, authUser, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
 	if !ok {
 		return
+	}
+
+	if authUser.ID == user.ID && !authUser.IsRootAdmin {
+		if _, isChainAdmin := user.IsPartOfChain(chain.UID); isChainAdmin {
+			amountChainAdmins := -1
+			db.Raw(`SELECT COUNT(*) FROM user_chains WHERE chain_id = ? AND is_chain_admin = TRUE`, chain.ID).Scan(&amountChainAdmins)
+
+			if amountChainAdmins == 1 {
+				gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("Unable to remove last host of loop"))
+				return
+			}
+		}
 	}
 
 	err := db.Exec(`DELETE FROM user_chains WHERE user_id = ? AND chain_id = ?`, user.ID, chain.ID).Error
@@ -384,19 +396,6 @@ func ChainRemoveUser(c *gin.Context) {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("User could not be removed from chain due to unknown error"))
 		return
 	}
-
-	// remove chain if this is there are no more users of that chain
-	db.Exec(`
-UPDATE chains
-SET chains.deleted_at = NOW(), chains.published = FALSE
-WHERE chains.id IN (
-	SELECT chains.id
-	FROM chains
-	LEFT JOIN user_chains ON user_chains.chain_id = chains.id
-	GROUP BY user_chains.chain_id  
-	HAVING COUNT(user_chains.id) = 0	AND chains.id = ?
-)
-	`, chain.ID)
 }
 
 func ChainApproveUser(c *gin.Context) {

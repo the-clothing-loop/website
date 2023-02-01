@@ -27,6 +27,7 @@ import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
+import { GinParseErrors } from "../util/gin-errors";
 
 interface Params {
   chainUID: string;
@@ -461,7 +462,11 @@ function ParticipantsTable(props: {
           type: "ghost",
           fn: () => {
             Promise.all(
-              _selected.map((s) => chainRemoveUser(chainUID, s))
+              _selected.map((s) =>
+                chainRemoveUser(chainUID, s).catch((err) => {
+                  addToastError(GinParseErrors(t, err), err.status);
+                })
+              )
             ).finally(() => {
               setSelected([]);
               return props.refresh();
@@ -489,7 +494,11 @@ function ParticipantsTable(props: {
           type: "ghost",
           fn: () => {
             Promise.all(
-              _selected.map((s) => chainUserApprove(chainUID, s))
+              _selected.map((s) =>
+                chainUserApprove(chainUID, s).catch((err) => {
+                  addToastError(GinParseErrors(t, err), err.status);
+                })
+              )
             ).finally(() => {
               setSelected([]);
               if (window.goatcounter)
