@@ -265,13 +265,15 @@ export default function ChainDetailsForm({
             </label>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4 items-end mb-6">
-            <CategoriesDropdown
-              className="dropdown-top"
-              selectedGenders={values.genders || []}
-              handleChange={handleCategoriesChange}
-            />
-            <div>
+          <div className="flex flex-col sm:flex-row items-end mb-6">
+            <div className="w-full sm:w-1/2 pb-4 sm:pb-0 sm:pr-4">
+              <CategoriesDropdown
+                className="dropdown-top"
+                selectedGenders={values.genders || []}
+                handleChange={handleCategoriesChange}
+              />
+            </div>
+            <div className="w-full sm:w-1/2">
               <div className="flex justify-end -mr-2 -mt-3">
                 <PopoverOnHover
                   message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}

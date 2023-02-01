@@ -301,7 +301,7 @@ function HostTable(props: {
   }
 
   return (
-    <section className="lg:w-2/3 relative p-8 pt-0 bg-secondary-light">
+    <section className="lg:w-2/3 relative p-8 pt-0 bg-secondary-light overflow-hidden">
       <h2 className="font-semibold text-secondary mb-6 max-md:mt-6 text-3xl">
         Loop Admin
       </h2>
@@ -577,7 +577,7 @@ function ParticipantsTable(props: {
 
   return (
     <>
-      <div className="mt-10 relative">
+      <div className="mt-10 relative overflow-hidden">
         <div className="overflow-x-auto">
           <table className="table table-compact w-full">
             <thead>
@@ -606,7 +606,7 @@ function ParticipantsTable(props: {
                   <span>{t("interestedSizes")}</span>
                 </th>
                 <th>
-                  <span className="float-left">{t("signedUpOn")}</span>
+                  <span>{t("signedUpOn")}</span>
                   <SortButton
                     isSelected={sortBy === "date"}
                     className="ml-1"
