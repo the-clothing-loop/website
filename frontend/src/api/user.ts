@@ -35,13 +35,15 @@ export function userAddAsChainAdmin(chainUID: string, userUID: string) {
 }
 
 export function userDelete(chainUID: string, userUID: string) {
-  return axios.delete<never>(
-    `/v2/user/?user_uid=${userUID}&chain_uid=${chainUID}`
-  );
+  return axios.delete<never>("/v2/user/", {
+    params: { user_uid: userUID, chain_uid: chainUID },
+  });
 }
 
 export function userPurge(userUID: string) {
-  return axios.delete<never>(`v2/user/purge?user_uid=${userUID}`);
+  return axios.delete<never>("v2/user/purge", {
+    params: { user_uid: userUID },
+  });
 }
 
 export function userHasNewsletter(
