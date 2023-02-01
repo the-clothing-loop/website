@@ -1,6 +1,7 @@
 /docker/database
 /server
 /cmd/server-fcgi/static/app.fcgi
+/sql/.dbeaver
 
 /config.*.yml
 !/config.example.yml
