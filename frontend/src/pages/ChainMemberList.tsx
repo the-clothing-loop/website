@@ -134,10 +134,10 @@ export default function ChainMemberList() {
                 <span className="feather feather-edit-2" />
               </Link>
 
-              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl">
+              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl break-words">
                 {chain.name}
               </h1>
-              <p className="text-lg mb-6">{chain.description}</p>
+              <p className="text-lg mb-6 break-words">{chain.description}</p>
 
               <dl>
                 <dt className="font-bold mb-1">{t("categories")}</dt>
