@@ -182,7 +182,7 @@ func UserUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		ChainUID    string    `json:"chain_uid,omitempty" binding:"uuid"`
+		ChainUID    string    `json:"chain_uid,omitempty" binding:"omitempty,uuid"`
 		UserUID     string    `json:"user_uid,omitempty" binding:"uuid"`
 		Name        *string   `json:"name,omitempty"`
 		PhoneNumber *string   `json:"phone_number,omitempty"`
