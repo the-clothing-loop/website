@@ -103,6 +103,8 @@ export default function ChainMemberList() {
             false
         )
       );
+      setPublished(chainData.published);
+      setOpenToNewMembers(chainData.open_to_new_members);
     } catch (err: any) {
       if (err?.status === 401) {
         history.replace("/loops");
