@@ -11,3 +11,9 @@ Use the **\*.sql** files to quickly change or view things in the database.
 5. Paste the file contents from your clipboard in the text aria provided.
 6. If there is an _email_ or an _id_ (of `0`) change the values to your liking.
 7. Click the `go` button at the bottom right.
+
+## Using DBeaver
+
+- **File**
+- **Open Projects from File System...**
+- Select `.../server/sql/` directory from your file manager.

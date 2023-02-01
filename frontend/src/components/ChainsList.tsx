@@ -10,7 +10,7 @@ import { Chain } from "../api/types";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 
-const ChainsList = () => {
+export default function ChainsList() {
   const { t } = useTranslation();
   const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addToastError, addToastStatic } = useContext(ToastContext);
@@ -52,16 +52,15 @@ const ChainsList = () => {
         {
           text: t("leave"),
           type: "ghost",
-          fn: () => {
-            chainRemoveUser(chain.uid, authUser!.uid).then(
-              () => {
-                authUserRefresh();
-              },
-              (err: any) => {
-                console.error(err);
-                addToastError(GinParseErrors(t, err), err?.status);
-              }
-            );
+          fn: async () => {
+            try {
+              await chainRemoveUser(chain.uid, authUser!.uid);
+            } catch (err: any) {
+              console.error(err);
+              addToastError(GinParseErrors(t, err), err.status);
+            }
+
+            authUserRefresh();
           },
         },
       ],
@@ -193,6 +192,4 @@ const ChainsList = () => {
       </main>
     </>
   );
-};
-
-export default ChainsList;
+}
