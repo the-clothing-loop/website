@@ -125,7 +125,8 @@ export default function Footer() {
                   </li>
                   <li className="inline-flex items-center">
                     <a
-                      href="#"
+                      href="https://www.linkedin.com/groups/12746791/"
+                      rel="noreferrer"
                       aria-label="Our LinkedIn"
                       className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0a66c2] feather feather-linkedin text-lg"
                     ></a>
