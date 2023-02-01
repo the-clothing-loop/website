@@ -18,7 +18,7 @@ type Newsletter struct {
 func (n *Newsletter) CreateOrUpdate(db *gorm.DB) error {
 	if err := db.Create(n).Error; err != nil {
 		err = db.Exec(`
-UPDATE newsletter
+UPDATE newsletters
 SET name = ?, verified = ?
 WHERE email = ?
 		`, n.Name, n.Verified, n.Email).Error

@@ -72,7 +72,7 @@ export default function AdminDashboard() {
 
                 <Link
                   className="btn btn-secondary btn-outline bg-white mb-4 sm:mr-4"
-                  to={`/users/${authUser.uid}/edit`}
+                  to="/users/me/edit"
                 >
                   {t("editAccount")}
                   <span className="feather feather-edit ml-2"></span>
