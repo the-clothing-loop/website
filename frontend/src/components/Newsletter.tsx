@@ -70,7 +70,7 @@ export const Newsletter = () => {
           </div>
 
           <div className="w-full sm:w-1/2 md:w-1/3 lg:w-full flex flex-col sm:pl-4 md:pl-0 justify-center">
-            <div className="flex flex-col lg:flex-row max-w-screen-xs">
+            <div className="flex flex-col lg:flex-row lg:max-w-screen-xs">
               <label className="form-control mb-5 lg:mr-5">
                 <input
                   type="text"
@@ -92,7 +92,10 @@ export const Newsletter = () => {
               </label>
             </div>
             <div className="inline-block">
-              <button className="btn btn-primary" type="submit">
+              <button
+                className="btn btn-primary w-full sm:w-auto"
+                type="submit"
+              >
                 {t("submit")}
                 <span className="feather feather-arrow-right ml-3"></span>
               </button>
