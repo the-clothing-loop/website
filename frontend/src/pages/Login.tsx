@@ -28,6 +28,7 @@ export default function Login() {
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (active) return;
     setError("");
     const values = FormJup<{ email: string }>(e);
 
@@ -51,7 +52,7 @@ export default function Login() {
         setLoading(false);
         setTimeout(() => {
           setActive(false);
-        }, 5000);
+        }, 1000 * 60 * 2 /* 2 min */);
       } catch (err: any) {
         console.error(err);
         setActive(false);
