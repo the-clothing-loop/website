@@ -8,12 +8,6 @@ import {
 import { useTranslation } from "react-i18next";
 import PopoverOnHover from "./Popover";
 
-interface ClassesObj {
-  root?: string;
-  label?: string;
-  input?: string;
-}
-
 const phoneRegExp = /^\+?\(?[0-9]{1,3}\)?[-\s\./0-9]+$/g;
 
 interface PhoneFormFieldProps {
@@ -50,6 +44,7 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
         aria-invalid={!valid}
         onBlur={onBlur}
         onChange={props.onChange}
+        value={props.value}
         className={`input input-bordered w-full ${
           valid
             ? "input-secondary"

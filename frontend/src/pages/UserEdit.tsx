@@ -8,25 +8,31 @@ import { TextForm } from "../components/FormFields";
 import categories from "../util/categories";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { UID, User } from "../api/types";
-import { userGetByUID, userHasNewsletter, userUpdate } from "../api/user";
+import {
+  userGetByUID,
+  userHasNewsletter,
+  userUpdate,
+  UserUpdateBody,
+} from "../api/user";
 import { PhoneFormField } from "../components/FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
+import { AuthContext } from "../providers/AuthProvider";
 
 interface Params {
   userUID: UID;
 }
 
 interface State {
-  chainUID: UID;
+  chainUID?: UID;
 }
 
 export default function UserEdit() {
   const { t } = useTranslation();
   const history = useHistory();
   const { addToastError } = useContext(ToastContext);
-  const state = useLocation<State>().state;
+  const { chainUID } = useLocation<State>().state || {};
   const [values, setValue, setValues] = useForm({
     name: "",
     phone: "",
@@ -36,12 +42,16 @@ export default function UserEdit() {
   });
 
   const [user, setUser] = useState<User>();
+  const { authUser } = useContext(AuthContext);
   const params = useParams<Params>();
+
+  const userUID: string =
+    params.userUID == "me" ? authUser!.uid : params.userUID;
 
   const userIsChainAdmin = useMemo(
     () =>
-      user?.chains.find((uc) => uc.chain_uid === state.chainUID)
-        ?.is_chain_admin || false,
+      user?.chains.find((uc) => uc.chain_uid === chainUID)?.is_chain_admin ||
+      false,
     [user]
   );
   const userIsAnyChainAdmin = useMemo(
@@ -54,15 +64,16 @@ export default function UserEdit() {
 
     (async () => {
       try {
-        await userUpdate({
-          user_uid: params.userUID,
-          chain_uid: state.chainUID,
+        let userUpdateBody: UserUpdateBody = {
+          user_uid: userUID,
           name: values.name,
           phone_number: values.phone,
           newsletter: values.newsletter,
           address: values.address,
           sizes: values.sizes,
-        });
+        };
+        if (chainUID) userUpdateBody.chain_uid = chainUID;
+        await userUpdate(userUpdateBody);
         setTimeout(() => {
           history.goBack();
         }, 1200);
@@ -76,10 +87,8 @@ export default function UserEdit() {
   useEffect(() => {
     (async () => {
       try {
-        const user = (await userGetByUID(state.chainUID, params.userUID)).data;
-        const hasNewsletter = (
-          await userHasNewsletter(state.chainUID, params.userUID)
-        ).data;
+        const user = (await userGetByUID(chainUID, userUID)).data;
+        const hasNewsletter = (await userHasNewsletter(chainUID, userUID)).data;
         setUser(user);
         setValues({
           name: user.name,
@@ -95,7 +104,6 @@ export default function UserEdit() {
   }, [history]);
 
   if (!user) return null;
-  const isNewsletterRequired = user.is_root_admin ? false : userIsAnyChainAdmin;
   return (
     <>
       <Helmet>
@@ -105,9 +113,11 @@ export default function UserEdit() {
       <main className="">
         <div className="bg-teal-light w-full container sm:max-w-screen-xs mx-auto p-10">
           <h1 className="font-sans font-semibold text-3xl text-secondary mb-4">
-            {user.is_root_admin || userIsChainAdmin
-              ? t("editAdminContacts")
-              : t("editParticipantContacts")}
+            {chainUID
+              ? user.is_root_admin || userIsChainAdmin
+                ? t("editAdminContacts")
+                : t("editParticipantContacts")
+              : t("editAccount")}
           </h1>
           <form onSubmit={onSubmit} className="relative">
             <div className="mb-2">
@@ -156,7 +166,7 @@ export default function UserEdit() {
                   checked={values.newsletter}
                   onChange={() => setValue("newsletter", !values.newsletter)}
                   required={
-                    user.is_root_admin || userIsChainAdmin ? true : false
+                    user.is_root_admin || userIsAnyChainAdmin ? true : false
                   }
                   className="checkbox"
                   name="newsletter"
