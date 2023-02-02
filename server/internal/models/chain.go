@@ -27,7 +27,7 @@ type Chain struct {
 	Sizes            []string `gorm:"serializer:json"`
 	Genders          []string `gorm:"serializer:json"`
 	UserChains       []UserChain
-	CreatedAt        time.Time
+	Route 				   []string `gorm:"serializer:json"` 
 	UpdatedAt        time.Time
 	DeletedAt        zero.Time
 }

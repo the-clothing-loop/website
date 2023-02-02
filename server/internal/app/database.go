@@ -66,6 +66,15 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 			}
 		}
 	}
+	
+	var chainCount uint
+	db.Raw("SELECT COUNT(*) FROM chains LIMIT 1").Scan(&chainCount)
+	for chainCount != 0{
+		db.Exec(`
+			
+		`)
+		chainCount --;
+	}
 
 	db.AutoMigrate(
 		&models.Chain{},
