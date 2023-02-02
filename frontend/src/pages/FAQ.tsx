@@ -38,7 +38,7 @@ export default function FAQ() {
             }`}
           />
         </summary>
-        <div className="p-2">
+        <div className="p-2 prose">
           <p dangerouslySetInnerHTML={{ __html: props.answer }}></p>
         </div>
       </details>
