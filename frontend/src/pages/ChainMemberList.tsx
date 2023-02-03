@@ -27,6 +27,7 @@ import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
+import { GinParseErrors } from "../util/gin-errors";
 
 interface Params {
   chainUID: string;
@@ -103,6 +104,8 @@ export default function ChainMemberList() {
             false
         )
       );
+      setPublished(chainData.published);
+      setOpenToNewMembers(chainData.open_to_new_members);
     } catch (err: any) {
       if (err?.status === 401) {
         history.replace("/loops");
@@ -132,10 +135,10 @@ export default function ChainMemberList() {
                 <span className="feather feather-edit-2" />
               </Link>
 
-              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl">
+              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl break-words">
                 {chain.name}
               </h1>
-              <p className="text-lg mb-6">{chain.description}</p>
+              <p className="text-lg mb-6 break-words">{chain.description}</p>
 
               <dl>
                 <dt className="font-bold mb-1">{t("categories")}</dt>
@@ -298,7 +301,7 @@ function HostTable(props: {
   }
 
   return (
-    <section className="lg:w-2/3 relative p-8 pt-0 bg-secondary-light">
+    <section className="lg:w-2/3 relative p-8 pt-0 bg-secondary-light overflow-hidden">
       <h2 className="font-semibold text-secondary mb-6 max-md:mt-6 text-3xl">
         Loop Admin
       </h2>
@@ -459,7 +462,11 @@ function ParticipantsTable(props: {
           type: "ghost",
           fn: () => {
             Promise.all(
-              _selected.map((s) => chainRemoveUser(chainUID, s))
+              _selected.map((s) =>
+                chainRemoveUser(chainUID, s).catch((err) => {
+                  addToastError(GinParseErrors(t, err), err.status);
+                })
+              )
             ).finally(() => {
               setSelected([]);
               return props.refresh();
@@ -487,7 +494,11 @@ function ParticipantsTable(props: {
           type: "ghost",
           fn: () => {
             Promise.all(
-              _selected.map((s) => chainUserApprove(chainUID, s))
+              _selected.map((s) =>
+                chainUserApprove(chainUID, s).catch((err) => {
+                  addToastError(GinParseErrors(t, err), err.status);
+                })
+              )
             ).finally(() => {
               setSelected([]);
               if (window.goatcounter)
@@ -566,7 +577,7 @@ function ParticipantsTable(props: {
 
   return (
     <>
-      <div className="mt-10 relative">
+      <div className="mt-10 relative overflow-hidden">
         <div className="overflow-x-auto">
           <table className="table table-compact w-full">
             <thead>
@@ -595,7 +606,7 @@ function ParticipantsTable(props: {
                   <span>{t("interestedSizes")}</span>
                 </th>
                 <th>
-                  <span className="float-left">{t("signedUpOn")}</span>
+                  <span>{t("signedUpOn")}</span>
                   <SortButton
                     isSelected={sortBy === "date"}
                     className="ml-1"

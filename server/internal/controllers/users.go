@@ -182,7 +182,7 @@ func UserUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		ChainUID    string    `json:"chain_uid,omitempty" binding:"uuid"`
+		ChainUID    string    `json:"chain_uid,omitempty" binding:"omitempty,uuid"`
 		UserUID     string    `json:"user_uid,omitempty" binding:"uuid"`
 		Name        *string   `json:"name,omitempty"`
 		PhoneNumber *string   `json:"phone_number,omitempty"`
@@ -308,12 +308,13 @@ func UserPurge(c *gin.Context) {
 	db.Raw(`
 SELECT uc.chain_id 
 FROM  user_chains AS uc
-GROUP BY uc.chain_id 
-HAVING COUNT(uc.id) = 1 AND uc.chain_id IN (
+WHERE uc.chain_id IN (
 	SELECT uc2.chain_id
 	FROM user_chains AS uc2
 	WHERE uc2.is_chain_admin = TRUE AND uc2.user_id = ?
 )
+GROUP BY uc.chain_id 
+HAVING COUNT(uc.id) = 1
 	`, user.ID).Scan(&chainIDsToDelete)
 
 	tx := db.Begin()

@@ -10,18 +10,12 @@ import Testimonials from "../components/Testimonials";
 import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
 
 //Media
-const HeroImg =
-  "https://ucarecdn.com/4464c0ab-9b67-4e07-a0d3-cab38ea9b7c4/-/resize/600x/-/format/auto/-/quality/smart/kirsten_rosan.jpg";
-const MapImage =
-  "https://ucarecdn.com/428a0de6-3226-4e89-afd1-78f31e20f5d5/-/crop/4:3/-/resize/600x/-/format/auto/-/quality/smart/map_image.jpg";
 const ClothesImage =
   "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
 const CirclesFrame =
   "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
 const Selfies =
   "https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/768x/-/format/auto/selfies.jpg";
-const DoorImg =
-  "https://ucarecdn.com/f54270d7-9258-43c8-bdc2-ffb3856e4ce1/-/resize/600x/-/format/auto/-/quality/smart/numberedbagoutdoors.jpg";
 //Logos
 const SfmLogo =
   "https://ucarecdn.com/c439bd53-ac76-4ece-afce-727772d2f408/-/resize/160x/-/format/auto/-/quality/smart/sfm_logo.png";
@@ -122,24 +116,22 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            <div className="md:pt-16 md:pr-40 md:w-1/2">
-              <div>
-                <img
-                  className="w-full max-w-[600px]"
-                  src={HeroImg}
-                  alt="Bringing a bag full clothes to another's doorstep"
-                />
-                <p className="text-sm my-1">
-                  {t("photo")}: Martijn van den Dobbelsteen/de Brug
-                </p>
-              </div>
+            <div className="md:pt-16 md:pr-20 lg:pr-40 md:w-1/2">
+              <img
+                className="w-full lg:max-w-[600px] sm:h-96 md:h-auto object-cover object-top"
+                src="https://ucarecdn.com/4464c0ab-9b67-4e07-a0d3-cab38ea9b7c4/-/resize/900x/-/format/auto/-/quality/smart/kirsten_rosan.jpg"
+                alt="Bringing a bag full clothes to another's doorstep"
+              />
+              <p className="text-sm my-1">
+                {t("photo")}: Martijn van den Dobbelsteen/de Brug
+              </p>
             </div>
           </div>
         </section>
 
         <section>
           <div className="flex flex-col-reverse md:flex-row items-center md:items-start md:mb-16">
-            <div className="flex md:w-1/2 md:justify-end px-6">
+            <div className="flex w-full md:w-1/2 md:justify-end">
               <iframe
                 title="video about what is the Clothing Loop"
                 src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
@@ -176,7 +168,7 @@ export default function Home() {
                 <p className="text-lg">{t("joinALoopMessage")}</p>
                 <Link
                   to="/loops/find"
-                  className="btn btn-outline btn-circle btn-secondary mt-6"
+                  className="hidden md:flex btn btn-outline btn-circle btn-secondary mt-6"
                 >
                   <span className="feather feather-arrow-right"></span>
                 </Link>
@@ -188,7 +180,13 @@ export default function Home() {
                   to="/loops/find"
                   className="ring-[1rem] md:ring-0 hover:ring-[2rem] ring-secondary transition-[box-shadow] z-20 block"
                 >
-                  <img src={MapImage} alt="map" />
+                  <img
+                    src="https://ucarecdn.com/428a0de6-3226-4e89-afd1-78f31e20f5d5/-/crop/4:3/-/resize/600x/-/format/auto/-/quality/smart/map_image.jpg"
+                    alt="map"
+                  />
+                  <span className="md:hidden z-10 absolute left-1/2 bottom-8 -translate-x-1/2 font-semibold rounded-full bg-white py-2 px-4 border border-secondary cursor-pointer">
+                    {t("findLoops")}
+                  </span>
                 </Link>
                 <img
                   className="-z-10 absolute -right-20 -top-20"
@@ -206,15 +204,15 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-col-reverse md:flex-row items-center mb-6 md:mb-40">
-            <div className="relative md:w-1/2 pr-20 flex justify-end">
+          <div className="flex flex-col-reverse md:flex-row items-center mb-8 md:mb-40">
+            <div className="relative w-full md:w-1/2 md:pr-20 flex justify-end">
               <img
-                src={DoorImg}
-                className="w-full md:max-w-[600px]"
-                alt="receiving a bag of clothes from another"
+                src="https://ucarecdn.com/f54270d7-9258-43c8-bdc2-ffb3856e4ce1/-/resize/900x/-/format/auto/-/quality/smart/numberedbagoutdoors.jpg"
+                className="w-full md:max-w-[600px] object-cover object-bottom h-96"
+                alt="A numbered bag in front of a door and another in front of some letterboxes"
               />
 
-              <div className="absolute -z-10 bg-yellow/30 w-[600px] h-5/6 bottom-[-4rem] right-[2rem]">
+              <div className="hidden md:block absolute -z-10 bg-yellow/30 w-[600px] h-5/6 bottom-[-4rem] right-[2rem]">
                 &nbsp;
               </div>
             </div>
@@ -253,23 +251,31 @@ export default function Home() {
                 webkit-playsinline
                 playsInline
                 className="object-cover object-top w-full max-h-[600px]"
-                src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/webm/-/quality/normal/impact-rapport.webm"
-                title="selfies of different people wearing clothes shared via their local Loop"
-              />
+                title="pages of the impact report"
+              >
+                <source
+                  src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/webm/-/quality/normal/impact-rapport.webm"
+                  type="video/webm"
+                />
+                <source
+                  src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/mp4/-/quality/normal/impact-rapport.mp4"
+                  type="video/mp4"
+                />
+              </video>
             </div>
           </section>
         </div>
       </div>
       <div className="max-w-screen-xl mx-auto">
-        <section className="flex flex-col md:flex-row items-center mb-12 md:mb-20">
+        <section className="flex flex-col-reverse md:flex-row items-center mb-12 md:mb-20">
           <div className="md:w-1/2">
             <img
               src={ClothesImage}
-              className="object-cover object-top w-full max-h-[600px] mb-6 md:mb-0"
+              className="object-cover object-top w-full max-h-[600px]"
               alt="Nichon taking clothes out of a Clothing Loop bag"
             />
           </div>
-          <div className="md:w-1/2 px-6 md:px-10 text-secondary">
+          <div className="md:w-1/2 px-6 md:px-10 text-secondary mb-6 md:mb-0">
             <div className="w-full md:max-w-[600px]">
               <h2 className="font-serif font-bold text-4xl md:text-6xl mb-6">
                 {t("fromLocalLockdownToSuccess")}
@@ -287,11 +293,11 @@ export default function Home() {
         <Testimonials />
 
         <section className="flex flex-col md:flex-row items-center md:items-end mb-8 md:mb-20">
-          <div className="md:w-1/2 flex justify-center md:justify-end mb-8 md:mb-0">
+          <div className="w-full md:w-1/2 flex justify-center md:justify-end">
             <img
-              src="https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/500x/-/format/auto/-/quality/smart/selfies.jpg"
-              alt="jewellery"
-              className="w-1/2 md:w-full md:max-w-[500px]"
+              src="https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/900x/-/format/auto/-/quality/smart/selfies.jpg"
+              alt="selfies of different people wearing clothes shared via their local Loop"
+              className="w-full md:max-w-[500px] max-md:object-cover object-top h-60 md:h-auto"
             />
           </div>
 

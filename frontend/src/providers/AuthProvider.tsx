@@ -73,7 +73,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
       if (oldUserUID) {
         // check if authentication still works
         try {
-          const user = (await userGetByUID(null, oldUserUID)).data;
+          const user = (await userGetByUID(undefined, oldUserUID)).data;
           setUser(user);
 
           Cookies.set(KEY_USER_UID, user.uid, cookieOptions);

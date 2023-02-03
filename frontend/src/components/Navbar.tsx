@@ -23,6 +23,7 @@ function Navbar() {
       <Link
         aria-label="Clothing Loop logo"
         to="/"
+        onClick={onClickMobileNavLink}
         className="bg-center w-32 md:w-40 h-20 md:h-28 bg-no-repeat relative z-[60] bg-[auto_120px] md:bg-[auto_139px]"
         style={{
           backgroundImage:
@@ -43,6 +44,13 @@ function Navbar() {
           aria-label="mobile site navigation"
           className="container mx-auto h-screen flex flex-col items-center justify-center"
         >
+          <Link
+            onClick={onClickMobileNavLink}
+            to="/"
+            className="mb-3 btn btn-ghost text-base"
+          >
+            {t("home")}
+          </Link>
           <Link
             onClick={onClickMobileNavLink}
             to="/loops/new/users/signup"

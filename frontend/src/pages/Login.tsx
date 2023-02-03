@@ -1,6 +1,6 @@
 import { FormEvent, useContext, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { Link, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import { TwoColumnLayout } from "../components/Layouts";
@@ -23,9 +23,12 @@ export default function Login() {
   const { t } = useTranslation();
 
   const [error, setError] = useState("");
+  const [active, setActive] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (active) return;
     setError("");
     const values = FormJup<{ email: string }>(e);
 
@@ -36,27 +39,37 @@ export default function Login() {
       return;
     }
 
+    setLoading(true);
+    setActive(true);
+
     (async () => {
       try {
         await loginEmail(email);
         addToast({
-          type: "info",
+          type: "success",
           message: t("loginEmailSent"),
         });
+        setLoading(false);
+        setTimeout(() => {
+          setActive(false);
+        }, 1000 * 60 * 2 /* 2 min */);
       } catch (err: any) {
         console.error(err);
+        setActive(false);
+        setLoading(false);
         setError("email");
         addToastError(GinParseErrors(t, err), err?.status);
       }
     })();
   }
+
   if (authUser) {
     addToast({
       type: "success",
       message: t("userIsLoggedIn"),
     });
 
-    history.replace("/admin/dashboard");
+    return <Redirect push={false} to="/admin/dashboard" />;
   }
 
   return (
@@ -97,10 +110,21 @@ export default function Login() {
                   name="email"
                   required
                 />
-                <button type="submit" className="btn btn-primary w-full mt-6">
-                  {t("submit")}
-                  <span className="feather feather-arrow-right ml-4"></span>
-                </button>
+                {active ? (
+                  <div className="text-white bg-green border-green w-full flex items-center justify-center font-semibold h-12 px-3 mt-6">
+                    {t("submit")}
+                    {loading ? (
+                      <span className="feather feather-loader animate-spin ml-4"></span>
+                    ) : (
+                      <span className="feather feather-check ml-4"></span>
+                    )}
+                  </div>
+                ) : (
+                  <button type="submit" className="btn btn-primary w-full mt-6">
+                    {t("submit")}
+                    <span className="feather feather-arrow-right ml-4"></span>
+                  </button>
+                )}
               </form>
             </div>
           </div>

@@ -417,7 +417,7 @@ export default function FindChain({ location }: { location: Location }) {
                   key={chain.uid}
                 >
                   <div className="mb-2">
-                    <h1 className="font-semibold text-secondary mb-3 pr-10">
+                    <h1 className="font-semibold text-secondary mb-3 pr-10 break-words">
                       {chain.name}
                     </h1>
                     {chain.description ? (
