@@ -560,6 +560,104 @@ function ParticipantsTable(props: {
     setSortBy(sortBy !== _sortBy ? _sortBy : "date");
   }
 
+  function displayKebabMenu(u: User) {
+    const userChain = getUserChain(u);
+
+    return(
+
+    <div className="dropdown dropdown-right">
+    <label
+      tabIndex={0}
+      className={`btn btn-ghost btn-small`}
+    >
+      <span className="text-xl feather feather-more-vertical" />
+    </label>
+    {userChain ? (
+      <ul
+        tabIndex={0}
+        className="dropdown-content menu shadow bg-base-100 w-52 h-full"
+      >
+        <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
+          <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
+            <p className="block mx-2 flex-grow">
+              <span className="text-2xl font-bold mr-2">
+                {selected.length}
+              </span>
+              {t("selected")}
+            </p>
+            <li>
+              <div
+                className="tooltip mr-2"
+                data-tip={t("edit")}
+              >
+                <Link
+                  className={`btn btn-sm btn-circle feather feather-edit ${
+                    selected.length === 1 &&
+                    isSelectApproved
+                      ? "btn-primary"
+                      : "btn-disabled opacity-60"
+                  }`}
+                  aria-label={t("edit")}
+                  aria-disabled={
+                    !selected || !isSelectApproved
+                  }
+                  to={edit}
+                ></Link>
+              </div>
+            </li>
+            <li>
+              <div
+                className="tooltip mr-2"
+                data-tip={t("removeFromLoop")}
+              >
+                <button
+                  type="button"
+                  onClick={onRemove}
+                  className={`btn btn-sm btn-circle feather feather-user-x ${
+                    selected.length
+                      ? "btn-error"
+                      : "btn-disabled opacity-60"
+                  }`}
+                  aria-label={t("removeFromLoop")}
+                  disabled={
+                    !selected || !isSelectApproved
+                  }
+                ></button>
+              </div>
+            </li>
+
+            <div
+              className="tooltip"
+              data-tip={t("approveUser")}
+            >
+              <li>
+                <div
+                  className="tooltip"
+                  data-tip={t("approveUser")}
+                >
+
+                  <button
+                    type="button"
+                    onClick={(e) =>
+                      onApprove(e, u)
+                    }
+                    className={`btn btn-sm btn-circle feather feather-user-check ${
+                      selected.length ? "btn-secondary" : "btn-disabled opacity-60"
+                    }`}
+                    aria-label={t("approveUser")}
+                    disabled={isSelectApproved}
+                  ></button>
+                </div>
+              </li>
+            </div>
+          </div>
+        </div>
+      </ul>
+    ) : null}
+  </div>
+    );
+  }
+
   return (
     <>
       <div className="mt-10 relative">
@@ -601,6 +699,7 @@ function ParticipantsTable(props: {
               </tr>
             </thead>
             <tbody>
+              
               {props.unapprovedUsers
                 .sort((a, b) => {
                   const ucA = getUserChain(a);
@@ -611,98 +710,11 @@ function ParticipantsTable(props: {
                     : 1;
                 })
                 .map((u) => {
-                  const userChain = getUserChain(u);
 
                   return (
                     <tr key={u.uid}>
                       <td className="bg-yellow/[.6] sticky">
-                        <div className="dropdown dropdown-right">
-                          <label
-                            tabIndex={0}
-                            className={`btn btn-ghost btn-small`}
-                          >
-                            <span className="text-xl feather feather-more-vertical" />
-                          </label>
-                          {userChain ? (
-                            <ul
-                              tabIndex={0}
-                              className="dropdown-content menu shadow bg-base-100 w-52 h-full"
-                            >
-                              <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
-                                <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
-                                  <p className="block mx-2 flex-grow">
-                                    <span className="text-2xl font-bold mr-2">
-                                      {selected.length}
-                                    </span>
-                                    {t("selected")}
-                                  </p>
-                                  <li>
-                                    <div
-                                      className="tooltip mr-2"
-                                      data-tip={t("edit")}
-                                    >
-                                      <Link
-                                        className={`btn btn-sm btn-circle feather feather-edit ${
-                                          selected.length === 1 &&
-                                          isSelectApproved
-                                            ? "btn-primary"
-                                            : "btn-disabled opacity-60"
-                                        }`}
-                                        aria-label={t("edit")}
-                                        aria-disabled={
-                                          !selected || !isSelectApproved
-                                        }
-                                        to={edit}
-                                      ></Link>
-                                    </div>
-                                  </li>
-                                  <li>
-                                    <div
-                                      className="tooltip mr-2"
-                                      data-tip={t("removeFromLoop")}
-                                    >
-                                      <button
-                                        type="button"
-                                        onClick={onRemove}
-                                        className={`btn btn-sm btn-circle feather feather-user-x ${
-                                          selected.length
-                                            ? "btn-error"
-                                            : "btn-disabled opacity-60"
-                                        }`}
-                                        aria-label={t("removeFromLoop")}
-                                        disabled={
-                                          !selected || !isSelectApproved
-                                        }
-                                      ></button>
-                                    </div>
-                                  </li>
-
-                                  <div
-                                    className="tooltip"
-                                    data-tip={t("approveUser")}
-                                  >
-                                    <li>
-                                      <div
-                                        className="tooltip"
-                                        data-tip={t("approveUser")}
-                                      >
-                                        <a
-                                          type="button"
-                                          //onClick={onApprove}
-                                          onClick={(e) =>
-                                            onApprove(e, u)
-                                          }
-                                          className={`btn btn-sm btn-circle feather feather-user-check btn-secondary`}
-                                          aria-label={t("approveUser")}
-                                        ></a>
-                                      </div>
-                                    </li>
-                                  </div>
-                                </div>
-                              </div>
-                            </ul>
-                          ) : null}
-                        </div>
+                      {displayKebabMenu(u)}
                       </td>
                       <td className="bg-yellow/[.6]">{u.name}</td>
                       <td className="bg-yellow/[.6]">
@@ -728,14 +740,7 @@ function ParticipantsTable(props: {
                 return (
                   <tr key={u.uid}>
                     <td className="sticky">
-                      <input
-                        type="checkbox"
-                        name="selectedChainAdmin"
-                        className="checkbox checkbox-sm checkbox-primary"
-                        checked={selected.includes(u.uid)}
-                        onChange={(e) => onChangeSelect(e, true)}
-                        value={u.uid}
-                      />
+                    {displayKebabMenu(u)}
                     </td>
                     <td>{u.name}</td>
                     <td>
