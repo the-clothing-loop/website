@@ -414,9 +414,10 @@ function ParticipantsTable(props: {
   const { addToastError, addToastStatic } = useContext(ToastContext);
   const [isSelectApproved, setIsSelectApproved] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
+  const [sortBy, setSortBy] = useState<"name" | "email" | "date" | "route">("date");
   const [route, setRoute] = useState<string[] | null>(props.chain.route);
-  
+  const [dragRoute, setDragRoute] = useState<boolean>(false);
+
   //may remove later
   useEffect(()=>{
     routeUpdate();
@@ -446,7 +447,10 @@ function ParticipantsTable(props: {
 
   
   //
-
+  useEffect(() => {
+    console.log(dragRoute)
+  }, [dragRoute])
+  //
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
     if (selected.length !== 1 || !isSelectApproved) {
@@ -611,6 +615,12 @@ function ParticipantsTable(props: {
 
           return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
         });
+        case "route": //route case may remove later
+          return props.users.sort((a, b) => {
+            const ucA = getUserChain(a);
+            const ucB = getUserChain(b);
+            return route!.indexOf(ucA.user_uid) < route!.indexOf(ucB.user_uid) ? -1 : 1;
+          });
     }
   }
 
@@ -658,8 +668,17 @@ function ParticipantsTable(props: {
                 </th>
                 <th>
                   <span>
-                    Route
+                   {t("Route")}
                   </span>
+                  <SortButton
+                   isSelected={sortBy === "route"}
+                   className="ml-1"
+                   onClick={() => {toggleSortBy("route"); 
+                   setDragRoute(!(dragRoute))}}
+                  />
+                  <SortButton
+                   className="ml-1"
+                  />
                 </th>
               </tr>
             </thead>
@@ -713,7 +732,7 @@ function ParticipantsTable(props: {
                 const userChain = getUserChain(u);
 
                 return (
-                  <tr key={u.uid}>
+                  <tr key={u.uid} draggable={dragRoute}>
                     <td className="sticky">
                       <input
                         type="checkbox"
@@ -744,6 +763,9 @@ function ParticipantsTable(props: {
                       </span>
                     </td>
                     <td className="text-center">{simplifyDays(userChain)}</td>
+                    <td className="text-center">
+                    {route!.indexOf(u.uid) + 1}
+                    </td>
                   </tr>
                 );
               })}
