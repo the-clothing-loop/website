@@ -674,7 +674,7 @@ function ParticipantsTable(props: {
                    isSelected={sortBy === "route"}
                    className="ml-1"
                    onClick={() => {toggleSortBy("route"); 
-                   setDragRoute(!(dragRoute))}}
+                   }}
                   />
                   <SortButton
                    className="ml-1"
@@ -732,7 +732,7 @@ function ParticipantsTable(props: {
                 const userChain = getUserChain(u);
 
                 return (
-                  <tr key={u.uid} draggable={dragRoute}>
+                  <tr key={u.uid} draggable={(sortBy==="route")}>
                     <td className="sticky">
                       <input
                         type="checkbox"
