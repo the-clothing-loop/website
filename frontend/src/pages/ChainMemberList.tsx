@@ -407,7 +407,9 @@ function ParticipantsTable(props: {
   unapprovedUsers: User[];
   chain: Chain;
   refresh: () => Promise<void>;
-}) {
+}) 
+{
+
   const { t, i18n } = useTranslation();
   const { addToastError, addToastStatic } = useContext(ToastContext);
   const [isSelectApproved, setIsSelectApproved] = useState(false);
@@ -439,11 +441,10 @@ function ParticipantsTable(props: {
           console.log(chainRoute)
           setRoute(chainRoute)
         }
-        return
-      
+       return
     }
 
-  }
+  
   //
 
 
