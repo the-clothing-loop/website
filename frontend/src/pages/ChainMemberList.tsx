@@ -6,8 +6,10 @@ import {
   useMemo,
   FormEvent,
   useRef,
+  MouseEvent,
   MouseEventHandler,
 } from "react";
+
 import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
@@ -27,7 +29,7 @@ import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
-import { GinParseErrors } from "../util/gin-errors";
+import { userInfo } from "os";
 
 interface Params {
   chainUID: string;
@@ -104,8 +106,6 @@ export default function ChainMemberList() {
             false
         )
       );
-      setPublished(chainData.published);
-      setOpenToNewMembers(chainData.open_to_new_members);
     } catch (err: any) {
       if (err?.status === 401) {
         history.replace("/loops");
@@ -135,10 +135,10 @@ export default function ChainMemberList() {
                 <span className="feather feather-edit-2" />
               </Link>
 
-              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl break-words">
+              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl">
                 {chain.name}
               </h1>
-              <p className="text-lg mb-6 break-words">{chain.description}</p>
+              <p className="text-lg mb-6">{chain.description}</p>
 
               <dl>
                 <dt className="font-bold mb-1">{t("categories")}</dt>
@@ -301,7 +301,7 @@ function HostTable(props: {
   }
 
   return (
-    <section className="lg:w-2/3 relative p-8 pt-0 bg-secondary-light overflow-hidden">
+    <section className="lg:w-2/3 relative p-8 pt-0 bg-secondary-light">
       <h2 className="font-semibold text-secondary mb-6 max-md:mt-6 text-3xl">
         Loop Admin
       </h2>
@@ -462,11 +462,7 @@ function ParticipantsTable(props: {
           type: "ghost",
           fn: () => {
             Promise.all(
-              _selected.map((s) =>
-                chainRemoveUser(chainUID, s).catch((err) => {
-                  addToastError(GinParseErrors(t, err), err.status);
-                })
-              )
+              _selected.map((s) => chainRemoveUser(chainUID, s))
             ).finally(() => {
               setSelected([]);
               return props.refresh();
@@ -477,47 +473,37 @@ function ParticipantsTable(props: {
     });
   }
 
-  function onApprove() {
-    if (!selected.length) return;
+  function onApprove(e: MouseEvent, user: User) {
+    e.preventDefault();
+
     const chainUID = props.chain.uid;
     const _selected = selected;
-    const userNames = props.unapprovedUsers
-      .filter((u) => _selected.includes(u.uid))
-      .map((u) => u.name);
+    const userName = user.name
+    const userID = user.uid
 
     addToastStatic({
-      message: t("approveParticipant", { name: userNames.join(", ") }),
+      message: t("approveParticipant", { name: userName }),
       type: "warning",
       actions: [
         {
           text: t("approve"),
           type: "ghost",
           fn: () => {
-            Promise.all(
-              _selected.map((s) =>
-                chainUserApprove(chainUID, s).catch((err) => {
-                  addToastError(GinParseErrors(t, err), err.status);
-                })
-              )
-            ).finally(() => {
-              setSelected([]);
-              if (window.goatcounter)
-                window.goatcounter.count({
-                  path: "approve-user",
-                  title: "Approve user",
-                  event: true,
-                });
-              return props.refresh();
-            });
+           chainUserApprove(chainUID, userID);
+            if (window.goatcounter)
+              window.goatcounter.count({
+                path: "approve-user",
+                title: "Approve user",
+                event: true,
+              });
+            return props.refresh();
           },
         },
         {
           text: t("deny"),
           type: "ghost",
           fn: () => {
-            Promise.all(
-              _selected.map((s) => chainDeleteUnapproved(chainUID, s))
-            ).finally(() => {
+            chainDeleteUnapproved(chainUID, userID)
               setSelected([]);
               if (window.goatcounter)
                 window.goatcounter.count({
@@ -526,7 +512,6 @@ function ParticipantsTable(props: {
                   event: true,
                 });
               return props.refresh();
-            });
           },
         },
       ],
@@ -577,7 +562,7 @@ function ParticipantsTable(props: {
 
   return (
     <>
-      <div className="mt-10 relative overflow-hidden">
+      <div className="mt-10 relative">
         <div className="overflow-x-auto">
           <table className="table table-compact w-full">
             <thead>
@@ -606,7 +591,7 @@ function ParticipantsTable(props: {
                   <span>{t("interestedSizes")}</span>
                 </th>
                 <th>
-                  <span>{t("signedUpOn")}</span>
+                  <span className="float-left">{t("signedUpOn")}</span>
                   <SortButton
                     isSelected={sortBy === "date"}
                     className="ml-1"
@@ -631,14 +616,93 @@ function ParticipantsTable(props: {
                   return (
                     <tr key={u.uid}>
                       <td className="bg-yellow/[.6] sticky">
-                        <input
-                          type="checkbox"
-                          name="selectedChainAdmin"
-                          className="checkbox checkbox-sm checkbox-accent"
-                          checked={selected.includes(u.uid)}
-                          onChange={(e) => onChangeSelect(e, false)}
-                          value={u.uid}
-                        />
+                        <div className="dropdown dropdown-right">
+                          <label
+                            tabIndex={0}
+                            className={`btn btn-ghost btn-small`}
+                          >
+                            <span className="text-xl feather feather-more-vertical" />
+                          </label>
+                          {userChain ? (
+                            <ul
+                              tabIndex={0}
+                              className="dropdown-content menu shadow bg-base-100 w-52 h-full"
+                            >
+                              <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
+                                <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
+                                  <p className="block mx-2 flex-grow">
+                                    <span className="text-2xl font-bold mr-2">
+                                      {selected.length}
+                                    </span>
+                                    {t("selected")}
+                                  </p>
+                                  <li>
+                                    <div
+                                      className="tooltip mr-2"
+                                      data-tip={t("edit")}
+                                    >
+                                      <Link
+                                        className={`btn btn-sm btn-circle feather feather-edit ${
+                                          selected.length === 1 &&
+                                          isSelectApproved
+                                            ? "btn-primary"
+                                            : "btn-disabled opacity-60"
+                                        }`}
+                                        aria-label={t("edit")}
+                                        aria-disabled={
+                                          !selected || !isSelectApproved
+                                        }
+                                        to={edit}
+                                      ></Link>
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      className="tooltip mr-2"
+                                      data-tip={t("removeFromLoop")}
+                                    >
+                                      <button
+                                        type="button"
+                                        onClick={onRemove}
+                                        className={`btn btn-sm btn-circle feather feather-user-x ${
+                                          selected.length
+                                            ? "btn-error"
+                                            : "btn-disabled opacity-60"
+                                        }`}
+                                        aria-label={t("removeFromLoop")}
+                                        disabled={
+                                          !selected || !isSelectApproved
+                                        }
+                                      ></button>
+                                    </div>
+                                  </li>
+
+                                  <div
+                                    className="tooltip"
+                                    data-tip={t("approveUser")}
+                                  >
+                                    <li>
+                                      <div
+                                        className="tooltip"
+                                        data-tip={t("approveUser")}
+                                      >
+                                        <a
+                                          type="button"
+                                          //onClick={onApprove}
+                                          onClick={(e) =>
+                                            onApprove(e, u)
+                                          }
+                                          className={`btn btn-sm btn-circle feather feather-user-check btn-secondary`}
+                                          aria-label={t("approveUser")}
+                                        ></a>
+                                      </div>
+                                    </li>
+                                  </div>
+                                </div>
+                              </div>
+                            </ul>
+                          ) : null}
+                        </div>
                       </td>
                       <td className="bg-yellow/[.6]">{u.name}</td>
                       <td className="bg-yellow/[.6]">
@@ -733,7 +797,7 @@ function ParticipantsTable(props: {
             <div className="tooltip" data-tip={t("approveUser")}>
               <button
                 type="button"
-                onClick={onApprove}
+                //onClick={onApprove}
                 className={`btn btn-sm btn-circle feather feather-user-check ${
                   selected.length ? "btn-secondary" : "btn-disabled opacity-60"
                 }`}
@@ -772,3 +836,4 @@ function SortButton(props: {
     ></button>
   );
 }
+
