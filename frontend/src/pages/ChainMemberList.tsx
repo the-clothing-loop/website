@@ -8,7 +8,7 @@ import {
   useRef,
   MouseEventHandler,
 } from "react";
-import { useParams, Link, useHistory } from "react-router-dom";
+import { useParams, Link, useHistory, Route } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
@@ -46,6 +46,7 @@ export default function ChainMemberList() {
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
+  const [route, setRoute] = useState<string[] | null>(null);
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
@@ -64,6 +65,7 @@ export default function ChainMemberList() {
     }
   }
 
+  
   async function handleChangeOpenToNewMembers(
     e: ChangeEvent<HTMLInputElement>
   ) {
@@ -411,6 +413,39 @@ function ParticipantsTable(props: {
   const [isSelectApproved, setIsSelectApproved] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
+  const [route, setRoute] = useState<string[] | null>(props.chain.route);
+  
+  //may remove later
+  useEffect(()=>{
+    routeUpdate();
+  }, [route])
+
+  async function routeUpdate(){
+    await chainUpdate({
+      uid: props.chain.uid,
+      route: route,
+    })
+    console.log(route); 
+  }
+
+  async function routePop( userUID: string ){
+    let chainRoute = new Array();
+    if (route != null){chainRoute = route}
+    console.log(chainRoute)
+   
+        const toPop = route?.indexOf(userUID);
+        if(toPop){ 
+          chainRoute.splice(toPop,1)
+          console.log(chainRoute)
+          setRoute(chainRoute)
+        }
+        return
+      
+    }
+
+  }
+  //
+
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
     if (selected.length !== 1 || !isSelectApproved) {
@@ -468,6 +503,7 @@ function ParticipantsTable(props: {
                 })
               )
             ).finally(() => {
+              _selected.map((s) => routePop(s));
               setSelected([]);
               return props.refresh();
             });
@@ -480,11 +516,13 @@ function ParticipantsTable(props: {
   function onApprove() {
     if (!selected.length) return;
     const chainUID = props.chain.uid;
+    let chainRoute = new Array();
+    if (route != null){chainRoute = route}
     const _selected = selected;
     const userNames = props.unapprovedUsers
       .filter((u) => _selected.includes(u.uid))
       .map((u) => u.name);
-
+    
     addToastStatic({
       message: t("approveParticipant", { name: userNames.join(", ") }),
       type: "warning",
@@ -495,10 +533,10 @@ function ParticipantsTable(props: {
           fn: () => {
             Promise.all(
               _selected.map((s) =>
+            
                 chainUserApprove(chainUID, s).catch((err) => {
                   addToastError(GinParseErrors(t, err), err.status);
-                })
-              )
+                })),
             ).finally(() => {
               setSelected([]);
               if (window.goatcounter)
@@ -507,6 +545,10 @@ function ParticipantsTable(props: {
                   title: "Approve user",
                   event: true,
                 });
+                
+              _selected.map((s) => chainRoute?.push(s))
+              {console.log(chainRoute)}
+              setRoute(chainRoute)
               return props.refresh();
             });
           },
@@ -613,6 +655,11 @@ function ParticipantsTable(props: {
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
+                <th>
+                  <span>
+                    Route
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -654,6 +701,9 @@ function ParticipantsTable(props: {
                       <td className="bg-yellow/[.6] align-middle"></td>
                       <td className="bg-yellow/[.6] text-center">
                         {t("pendingApproval")}
+                      </td>
+                      <td className="bg-yellow/[.6] text-center">
+                        {t("N/A")}
                       </td>
                     </tr>
                   );

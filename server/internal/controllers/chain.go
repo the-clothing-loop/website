@@ -28,6 +28,7 @@ type ChainCreateRequestBody struct {
 	OpenToNewMembers bool     `json:"open_to_new_members" binding:"required"`
 	Sizes            []string `json:"sizes" binding:"required"`
 	Genders          []string `json:"genders" binding:"required"`
+	Route            []string `json:"route" binding:"required"`
 }
 
 func ChainCreate(c *gin.Context) {
@@ -63,6 +64,7 @@ func ChainCreate(c *gin.Context) {
 		OpenToNewMembers: true,
 		Sizes:            body.Sizes,
 		Genders:          body.Genders,
+		Route:            body.Route,
 		UserChains: []models.UserChain{
 			{
 				UserID:       user.ID,
@@ -107,6 +109,7 @@ func ChainGet(c *gin.Context) {
 		"radius":              chain.Radius,
 		"sizes":               chain.Sizes,
 		"genders":             chain.Genders,
+		"route":               chain.Route,
 		"published":           chain.Published,
 		"open_to_new_members": chain.OpenToNewMembers,
 	})
@@ -180,6 +183,7 @@ func ChainGetAll(c *gin.Context) {
 			"sizes":               chain.Sizes,
 			"genders":             chain.Genders,
 			"published":           chain.Published,
+			"route":               chain.Route,
 			"open_to_new_members": chain.OpenToNewMembers,
 		})
 	}
@@ -200,6 +204,7 @@ func ChainUpdate(c *gin.Context) {
 		Radius           *float32  `json:"radius,omitempty"`
 		Sizes            *[]string `json:"sizes,omitempty"`
 		Genders          *[]string `json:"genders,omitempty"`
+		Route            *[]string `json:"route,omitempty"`
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 	}
@@ -252,6 +257,10 @@ func ChainUpdate(c *gin.Context) {
 	if body.Genders != nil {
 		j, _ := json.Marshal(body.Genders)
 		valuesToUpdate["genders"] = string(j)
+	}
+	if body.Route != nil { 
+		j, _ := json.Marshal(body.Route)
+		valuesToUpdate["route"] = string(j)
 	}
 	if body.Published != nil {
 		valuesToUpdate["published"] = *(body.Published)
