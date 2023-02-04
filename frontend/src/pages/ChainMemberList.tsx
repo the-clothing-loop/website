@@ -429,6 +429,7 @@ function ParticipantsTable(props: {
     };
   }, [selected, props.users, props.chain]);
 
+  // TODO: add useMemo
   function editMe(user: User, isParticipantApproved: boolean){
 
     if(!isParticipantApproved){
@@ -625,12 +626,6 @@ function ParticipantsTable(props: {
       >
         <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
           <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
-            <p className="block mx-2 flex-grow">
-              <span className="text-2xl font-bold mr-2">
-                {selected.length}
-              </span>
-              {t("selected")}
-            </p>
             <li>
               <div
                 className="tooltip mr-2"
@@ -781,8 +776,6 @@ function ParticipantsTable(props: {
                   <tr key={u.uid}>
                     <td className="sticky">
                     {displayKebabMenu(u, true)}
-                      {console.log("Selected: ")}
-                      {console.log(selected)}
                     </td>
                     <td>{u.name}</td>
                     <td>
@@ -811,49 +804,7 @@ function ParticipantsTable(props: {
           </table>
         </div>
 
-        <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
-          <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
-            <p className="block mx-2 flex-grow">
-              <span className="text-2xl font-bold mr-2">{selected.length}</span>
-              {t("selected")}
-            </p>
-            <div className="tooltip mr-2" data-tip={t("edit")}>
-              <Link
-                className={`btn btn-sm btn-circle feather feather-edit ${
-                  selected.length === 1 && isSelectApproved
-                    ? "btn-primary"
-                    : "btn-disabled opacity-60"
-                }`}
-                aria-label={t("edit")}
-                aria-disabled={!selected || !isSelectApproved}
-                to={edit}
-              ></Link>
-            </div>
-            <div className="tooltip mr-2" data-tip={t("removeFromLoop")}>
-              <button
-                type="button"
-                //onClick={onRemove}
-                className={`btn btn-sm btn-circle feather feather-user-x ${
-                  selected.length ? "btn-error" : "btn-disabled opacity-60"
-                }`}
-                aria-label={t("removeFromLoop")}
-                disabled={!selected || !isSelectApproved}
-              ></button>
-            </div>
-
-            <div className="tooltip" data-tip={t("approveUser")}>
-              <button
-                type="button"
-                //onClick={onApprove}
-                className={`btn btn-sm btn-circle feather feather-user-check ${
-                  selected.length ? "btn-secondary" : "btn-disabled opacity-60"
-                }`}
-                aria-label={t("approveUser")}
-                disabled={!selected || isSelectApproved}
-              ></button>
-            </div>
-          </div>
-        </div>
+        <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0"/>
       </div>
     </>
   );
