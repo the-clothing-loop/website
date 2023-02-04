@@ -429,6 +429,25 @@ function ParticipantsTable(props: {
     };
   }, [selected, props.users, props.chain]);
 
+  function editMe(user: User, isParticipantApproved: boolean){
+
+    if(!isParticipantApproved){
+      return "#";
+    }
+
+    if (!(user.uid)) {
+      addToastError("Edit button coundn't find user of: " + user.name, 500);
+    }
+
+
+    return {
+      pathname: `/users/${user.uid}/edit`,
+      state: {
+        chainUID: props.chain.uid,
+      },
+    };
+
+  }
 
   // Do i need this function since we are doing it one at a time? This seems like a way to keep track
   // of multiple selected particpants
@@ -622,8 +641,8 @@ function ParticipantsTable(props: {
                     isTheUserApproved? "btn-primary" : "btn-disabled opacity-60"
                   }`}
                   aria-label={t("edit")}
-                  aria-disabled={!isSelectApproved}
-                  to={edit}
+                  aria-disabled={!isTheUserApproved}
+                  to={editMe(u, isTheUserApproved)}
                 ></Link>
               </div>
             </li>
