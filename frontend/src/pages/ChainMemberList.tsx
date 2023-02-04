@@ -429,12 +429,21 @@ function ParticipantsTable(props: {
     };
   }, [selected, props.users, props.chain]);
 
+
+  // Do i need this function since we are doing it one at a time? This seems like a way to keep track
+  // of multiple selected particpants
   function onChangeSelect(
     e: ChangeEvent<HTMLInputElement>,
     isApproved: boolean
   ) {
     let value = e.target.value;
+    console.log("value is: ")
+    console.log(value)
+    // So value is the userid
     let isSelectTypeChanged = isApproved !== isSelectApproved;
+    console.log("isSelectTypeChanged is: ")
+    console.log(isSelectTypeChanged)
+    //Selected type is for unapproved and approved users
 
     if (isSelectTypeChanged) setSelected([value]);
     else if (e.target.checked) setSelected([...selected, value]);
@@ -445,28 +454,39 @@ function ParticipantsTable(props: {
     }
   }
 
-  function onRemove() {
-    if (!selected.length) return;
+  function isUserApproved(
+    e: MouseEvent,
+    isApproved: boolean
+    ){
+      let isSelectTypeChanged = isApproved !== isSelectApproved;
+
+      if (isSelectTypeChanged) {
+        setIsSelectApproved(isApproved);
+      }
+      console.log("isApproved: ")
+      console.log(isApproved)
+            return isApproved
+
+  }
+
+  function onRemove(e: MouseEvent, user: User) {
+    e.preventDefault();
+
     const chainUID = props.chain.uid;
     const _selected = selected;
-    const userNames = props.users
-      .filter((u) => _selected.includes(u.uid))
-      .map((u) => u.name);
+    const userName = user.name
+    const userID = user.uid
 
     addToastStatic({
-      message: t("areYouSureRemoveParticipant", { name: userNames.join(", ") }),
+      message: t("areYouSureRemoveParticipant", { name: userName }),
       type: "warning",
       actions: [
         {
           text: t("remove"),
           type: "ghost",
           fn: () => {
-            Promise.all(
-              _selected.map((s) => chainRemoveUser(chainUID, s))
-            ).finally(() => {
-              setSelected([]);
-              return props.refresh();
-            });
+            chainRemoveUser(chainUID, userID)
+            return props.refresh();
           },
         },
       ],
@@ -560,12 +580,19 @@ function ParticipantsTable(props: {
     setSortBy(sortBy !== _sortBy ? _sortBy : "date");
   }
 
-  function displayKebabMenu(u: User) {
+  
+  function displayKebabMenu(u: User, isTheUserApproved: boolean) {
+
+    console.log("is user approved")
+    console.log(isTheUserApproved)
+
     const userChain = getUserChain(u);
 
     return(
 
-    <div className="dropdown dropdown-right">
+    <div className="dropdown dropdown-right" >
+      
+
     <label
       tabIndex={0}
       className={`btn btn-ghost btn-small`}
@@ -592,15 +619,10 @@ function ParticipantsTable(props: {
               >
                 <Link
                   className={`btn btn-sm btn-circle feather feather-edit ${
-                    selected.length === 1 &&
-                    isSelectApproved
-                      ? "btn-primary"
-                      : "btn-disabled opacity-60"
+                    isTheUserApproved? "btn-primary" : "btn-disabled opacity-60"
                   }`}
                   aria-label={t("edit")}
-                  aria-disabled={
-                    !selected || !isSelectApproved
-                  }
+                  aria-disabled={!isSelectApproved}
                   to={edit}
                 ></Link>
               </div>
@@ -612,16 +634,15 @@ function ParticipantsTable(props: {
               >
                 <button
                   type="button"
-                  onClick={onRemove}
+                  onClick={(e) => onRemove(e, u)
+                  }
                   className={`btn btn-sm btn-circle feather feather-user-x ${
-                    selected.length
+                    isTheUserApproved
                       ? "btn-error"
                       : "btn-disabled opacity-60"
                   }`}
                   aria-label={t("removeFromLoop")}
-                  disabled={
-                    !selected || !isSelectApproved
-                  }
+                  disabled={!isTheUserApproved}
                 ></button>
               </div>
             </li>
@@ -642,10 +663,10 @@ function ParticipantsTable(props: {
                       onApprove(e, u)
                     }
                     className={`btn btn-sm btn-circle feather feather-user-check ${
-                      selected.length ? "btn-secondary" : "btn-disabled opacity-60"
+                      !isTheUserApproved? "btn-secondary" : "btn-disabled opacity-60"
                     }`}
                     aria-label={t("approveUser")}
-                    disabled={isSelectApproved}
+                    disabled={isTheUserApproved}
                   ></button>
                 </div>
               </li>
@@ -713,8 +734,8 @@ function ParticipantsTable(props: {
 
                   return (
                     <tr key={u.uid}>
-                      <td className="bg-yellow/[.6] sticky">
-                      {displayKebabMenu(u)}
+                      <td className="bg-yellow/[.6] sticky">                      
+                      {displayKebabMenu(u, false)}
                       </td>
                       <td className="bg-yellow/[.6]">{u.name}</td>
                       <td className="bg-yellow/[.6]">
@@ -740,7 +761,9 @@ function ParticipantsTable(props: {
                 return (
                   <tr key={u.uid}>
                     <td className="sticky">
-                    {displayKebabMenu(u)}
+                    {displayKebabMenu(u, true)}
+                      {console.log("Selected: ")}
+                      {console.log(selected)}
                     </td>
                     <td>{u.name}</td>
                     <td>
@@ -790,7 +813,7 @@ function ParticipantsTable(props: {
             <div className="tooltip mr-2" data-tip={t("removeFromLoop")}>
               <button
                 type="button"
-                onClick={onRemove}
+                //onClick={onRemove}
                 className={`btn btn-sm btn-circle feather feather-user-x ${
                   selected.length ? "btn-error" : "btn-disabled opacity-60"
                 }`}
