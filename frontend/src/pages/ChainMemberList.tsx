@@ -417,7 +417,9 @@ function ParticipantsTable(props: {
   const [sortBy, setSortBy] = useState<"name" | "email" | "date" | "route">("date");
   const [route, setRoute] = useState<string[] | null>(props.chain.route);
   const [dragRoute, setDragRoute] = useState<boolean>(false);
-
+  const [dragging, setDragging] = useState<string>("");
+  const [dragTarget, setDragTarget] = useState<string>("");
+  const [dragDrop, setDragDrop] = useState<boolean>(false);
   //may remove later
   useEffect(()=>{
     routeUpdate();
@@ -628,6 +630,32 @@ function ParticipantsTable(props: {
     setSortBy(sortBy !== _sortBy ? _sortBy : "date");
   }
 
+
+
+  function endDrag(){
+    setDragDrop(true)
+  }
+
+  function dragMouseOver(evt: string){
+    let chainRoute = new Array();
+    if (route != null){chainRoute = route}
+    console.log(chainRoute)
+    
+    if(dragDrop == true){
+      setDragDrop(false)
+     
+      console.log("dragTarg" + evt)
+      const userA = route!.indexOf(dragging);
+      const userB = route!.indexOf(evt);
+      console.log(route)
+      chainRoute[userA] = chainRoute[userB]
+      chainRoute[userB] = dragging
+      console.log(chainRoute)
+      setRoute(chainRoute)
+      routeUpdate();
+  }
+  }
+
   return (
     <>
       <div className="mt-10 relative overflow-hidden">
@@ -732,7 +760,15 @@ function ParticipantsTable(props: {
                 const userChain = getUserChain(u);
 
                 return (
-                  <tr key={u.uid} draggable={(sortBy==="route")}>
+                  <tr 
+                    key={u.uid} draggable={(sortBy==="route")} 
+                    onDragStart={() =>{ setDragging(u.uid);}}
+                    onDrag={() => { setDragging(u.uid); console.log(dragging)}}
+                    onDragEnd={()=>{endDrag()}}
+                    onMouseOver={()=>{dragMouseOver(u.uid)}}
+              
+                   //onMouseOver={()=>{setDragging([u.uid]); console.log(dragging)}}
+                  >
                     <td className="sticky">
                       <input
                         type="checkbox"
