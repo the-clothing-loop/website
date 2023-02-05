@@ -46,7 +46,6 @@ export default function ChainMemberList() {
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
-  const [route, setRoute] = useState<string[] | null>(null);
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
@@ -416,11 +415,11 @@ function ParticipantsTable(props: {
   const [selected, setSelected] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<"name" | "email" | "date" | "route">("date");
   const [route, setRoute] = useState<string[] | null>(props.chain.route);
-  const [dragRoute, setDragRoute] = useState<boolean>(false);
   const [dragging, setDragging] = useState<string>("");
   const [dragTarget, setDragTarget] = useState<string>("");
-  const [dragDrop, setDragDrop] = useState<boolean>(false);
-  //may remove later
+ 
+  const dragColor= "bg-grey/[.1]"
+
   useEffect(()=>{
     routeUpdate();
   }, [route])
@@ -448,11 +447,6 @@ function ParticipantsTable(props: {
     }
 
   
-  //
-  useEffect(() => {
-    console.log(dragRoute)
-  }, [dragRoute])
-  //
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
     if (selected.length !== 1 || !isSelectApproved) {
@@ -632,29 +626,22 @@ function ParticipantsTable(props: {
 
 
 
-  function endDrag(){
-    setDragDrop(true)
-  }
-
-  function dragMouseOver(evt: string){
+  function draggingEnd(evt: string){
     let chainRoute = new Array();
     if (route != null){chainRoute = route}
-    console.log(chainRoute)
     
-    if(dragDrop == true){
-      setDragDrop(false)
-     
-      console.log("dragTarg" + evt)
-      const userA = route!.indexOf(dragging);
-      const userB = route!.indexOf(evt);
-      console.log(route)
-      chainRoute[userA] = chainRoute[userB]
-      chainRoute[userB] = dragging
-      console.log(chainRoute)
-      setRoute(chainRoute)
-      routeUpdate();
+    const userA = route!.indexOf(dragging);
+    const userB = route!.indexOf(dragTarget);
+
+    chainRoute[userA] = chainRoute[userB]
+    chainRoute[userB] = dragging
+
+    setDragTarget("")
+    setRoute(chainRoute)
+    routeUpdate();
   }
-  }
+
+  
 
   return (
     <>
@@ -764,12 +751,13 @@ function ParticipantsTable(props: {
                     key={u.uid} draggable={(sortBy==="route")} 
                     onDragStart={() =>{ setDragging(u.uid);}}
                     onDrag={() => { setDragging(u.uid); console.log(dragging)}}
-                    onDragEnd={()=>{endDrag()}}
-                    onMouseOver={()=>{dragMouseOver(u.uid)}}
-              
-                   //onMouseOver={()=>{setDragging([u.uid]); console.log(dragging)}}
+                    onDragEnd={()=>{draggingEnd(u.uid)}}
+                    onDragOver={() => {setDragTarget(u.uid)}}
+                   
                   >
-                    <td className="sticky">
+                    <td className={`sticky ${u.uid == dragTarget ? dragColor : ""}`}
+                  
+                  >
                       <input
                         type="checkbox"
                         name="selectedChainAdmin"
@@ -779,27 +767,27 @@ function ParticipantsTable(props: {
                         value={u.uid}
                       />
                     </td>
-                    <td>{u.name}</td>
-                    <td>
-                      <span className="block w-48 text-sm whitespace-normal">
+                    <td className={`${u.uid == dragTarget ? dragColor : ""}`}>{u.name}</td>
+                    <td className={`${u.uid == dragTarget ? dragColor : ""}`}>
+                      <span className={`block w-48 text-sm whitespace-normal`}>
                         {u.address}
                       </span>
                     </td>
-                    <td className="text-sm leading-relaxed">
+                    <td className={`text-sm leading-relaxed ${u.uid == dragTarget ? dragColor : ""}`}>
                       {u.email}
                       <br />
                       {u.phone_number}
                     </td>
-                    <td className="align-middle">
+                    <td className={`align-middle ${u.uid == dragTarget ? dragColor : ""}`}>
                       <span
-                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                        className={`block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2  ${u.uid == dragTarget ? "bg-grey/[.02]": ""}`}
                         tabIndex={0}
                       >
                         {SizeBadges(t, u.sizes)}
                       </span>
                     </td>
-                    <td className="text-center">{simplifyDays(userChain)}</td>
-                    <td className="text-center">
+                    <td className={`text-center ${u.uid == dragTarget ? dragColor : ""}`}>{simplifyDays(userChain)}</td>
+                    <td className={`text-center ${u.uid == dragTarget ? dragColor : ""}`}>
                     {route!.indexOf(u.uid) + 1}
                     </td>
                   </tr>
