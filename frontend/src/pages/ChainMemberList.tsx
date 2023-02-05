@@ -457,13 +457,7 @@ function ParticipantsTable(props: {
     isApproved: boolean
   ) {
     let value = e.target.value;
-    console.log("value is: ")
-    console.log(value)
-    // So value is the userid
     let isSelectTypeChanged = isApproved !== isSelectApproved;
-    console.log("isSelectTypeChanged is: ")
-    console.log(isSelectTypeChanged)
-    //Selected type is for unapproved and approved users
 
     if (isSelectTypeChanged) setSelected([value]);
     else if (e.target.checked) setSelected([...selected, value]);
@@ -474,26 +468,10 @@ function ParticipantsTable(props: {
     }
   }
 
-  function isUserApproved(
-    e: MouseEvent,
-    isApproved: boolean
-    ){
-      let isSelectTypeChanged = isApproved !== isSelectApproved;
-
-      if (isSelectTypeChanged) {
-        setIsSelectApproved(isApproved);
-      }
-      console.log("isApproved: ")
-      console.log(isApproved)
-            return isApproved
-
-  }
-
   function onRemove(e: MouseEvent, user: User) {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
-    const _selected = selected;
     const userName = user.name
     const userID = user.uid
 
@@ -517,7 +495,6 @@ function ParticipantsTable(props: {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
-    const _selected = selected;
     const userName = user.name
     const userID = user.uid
 
@@ -603,16 +580,10 @@ function ParticipantsTable(props: {
   
   function displayKebabMenu(u: User, isTheUserApproved: boolean) {
 
-    console.log("is user approved")
-    console.log(isTheUserApproved)
-
     const userChain = getUserChain(u);
-
+    
     return(
-
     <div className="dropdown dropdown-right" >
-      
-
     <label
       tabIndex={0}
       className={`btn btn-ghost btn-small`}
