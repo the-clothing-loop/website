@@ -611,7 +611,7 @@ function ParticipantsTable(props: {
 
           return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
         });
-        case "route": //route case may remove later
+        case "route": 
           return props.users.sort((a, b) => {
             const ucA = getUserChain(a);
             const ucB = getUserChain(b);
