@@ -111,6 +111,13 @@ export default function About() {
             <h2 className="font-serif font-bold text-secondary text-4xl mb-6">
               {t("team")}:
             </h2>
+
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center md:items-start mb-6 md:mb-0">
+            
+            <div className="prose md:w-1/2 mx-auto px-6">
+              <p>
             <Trans
               i18nKey="theClothingLoopIsAnIndependent<a>"
               ns="about"
@@ -125,10 +132,7 @@ export default function About() {
                 ),
               }}
             ></Trans>
-          </div>
-
-          <div className="flex flex-col md:flex-row items-center md:items-start mb-6 md:mb-0">
-            <div className="prose md:w-1/2 mx-auto px-6">
+            </p>
               <p>
                 <Trans
                   i18nKey="thePeople1"
