@@ -140,7 +140,6 @@
   "donate": "Faire un don",
   "editLoop": "Modifier le Loop",
   "viewLoop": "Voir le Loop",
-  "viewLoops": "Voir les Loops",
   "thankYouForStartingThisLoop": "Merci d'avoir lancé ce Loop !",
   "youAreUnlockingTheClothesSwapPotential": "Vous libérez le potentiel du troc de vêtements pour tant de personnes dans votre voisinage ; nous espérons que vous êtes aussi enthousiastes que nous !",
   "hostConfirmationEmailIsOnItsWay": "Notre message de confirmation est en route. Veuillez le vérifier avant de vous connecter.",
@@ -225,5 +224,8 @@
   "areYouAlreadyHosting<a>JoinAnExistingLoop": "Vous êtes déjà organisateur d'un Loop ? Connectez-vous ici pour accéder aux personnes qui se sont inscrites à votre Loop. Elles sont impatientes de se joindre à vous !<br>Souhaitez-vous vous inscrire en tant que participant et non pas lancer votre propre Loop ? <a>Pas de problème.</a>",
   "weWouldLikeToKnowThisEquallyRepresented": "Nous aimerions savoir ceci pour voir comment les demandes de tailles différentes sont représentées dans votre Loop. Avec ces informations vous pouvez décider, après une certaine période de fonctionnement, de diviser l'itinéraire en fonction des demandes de différentes tailles !",
   "sort": "Sort",
-  "loopLocation": "Loop location"
+  "loopLocation": "Loop location",
+  "helloN": "Hello, {{ n }}",
+  "toolkitFolder": "Toolkit Folder",
+  "editAccount": "Edit Account"
 }
