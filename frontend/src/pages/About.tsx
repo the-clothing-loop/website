@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-
 // Media
 const CirclesFrame =
   "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
@@ -36,14 +35,13 @@ export default function About() {
               </p>
             </div>
             <div className="flex md:w-1/2 justify-center px-0 md:px-6">
-            <div className="relative w-full md:max-w-[600px] mb-6 md:mb-16">
-
-              <iframe
-                title="what is the Clothing Loop"
-                src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
-                allow="autoplay; fullscreen; picture-in-picture"
-                className="w-full aspect-video"
-              ></iframe>
+              <div className="relative w-full md:max-w-[600px] mb-6 md:mb-16">
+                <iframe
+                  title="what is the Clothing Loop"
+                  src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  className="w-full aspect-video"
+                ></iframe>
                 <img
                   className="max-sm:hidden -z-10 absolute -right-10 -top-10"
                   src={CirclesFrame}
@@ -56,10 +54,10 @@ export default function About() {
                   alt=""
                   src={CirclesFrame}
                 />
-                </div>
+              </div>
             </div>
           </div>
-          
+
           <div className="flex flex-col md:flex-row md:items-center md:mb-16">
             <div className="prose md:w-1/3 mb-6 md:mb-0 mx-auto items-center bg-teal-light py-10 md:py-20 px-0 md:px-6">
               <h2 className="text-accent font-serif font-bold text-lg md:text-lg mb-4 px-5 my-auto">
@@ -106,33 +104,31 @@ export default function About() {
               className="my-10 mx-auto w-full lg:w-5/6 object-contain object-center px-6"
             />
           </div>
-          
+
           <div className="px-6">
             <h2 className="font-serif font-bold text-secondary text-4xl mb-6">
               {t("team")}:
             </h2>
-
           </div>
 
           <div className="flex flex-col md:flex-row items-center md:items-start mb-6 md:mb-0">
-            
             <div className="prose md:w-1/2 mx-auto px-6">
               <p>
-            <Trans
-              i18nKey="theClothingLoopIsAnIndependent<a>"
-              ns="about"
-              components={{
-                aSlowFashion: (
-                  <a
-                    href="https://slowfashion.global/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="link"
-                  ></a>
-                ),
-              }}
-            ></Trans>
-            </p>
+                <Trans
+                  i18nKey="theClothingLoopIsAnIndependent<a>"
+                  ns="about"
+                  components={{
+                    aSlowFashion: (
+                      <a
+                        href="https://slowfashion.global/"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="link"
+                      ></a>
+                    ),
+                  }}
+                ></Trans>
+              </p>
               <p>
                 <Trans
                   i18nKey="thePeople1"
