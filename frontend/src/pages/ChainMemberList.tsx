@@ -430,16 +430,14 @@ function ParticipantsTable(props: {
   }, [selected, props.users, props.chain]);
 
   // TODO: add useMemo
-  function editMe(user: User, isParticipantApproved: boolean){
-
-    if(!isParticipantApproved){
+  function editMe(user: User, isParticipantApproved: boolean) {
+    if (!isParticipantApproved) {
       return "#";
     }
 
-    if (!(user.uid)) {
+    if (!user.uid) {
       addToastError("Edit button coundn't find user of: " + user.name, 500);
     }
-
 
     return {
       pathname: `/users/${user.uid}/edit`,
@@ -447,11 +445,8 @@ function ParticipantsTable(props: {
         chainUID: props.chain.uid,
       },
     };
-
   }
 
-  // Do i need this function since we are doing it one at a time? This seems like a way to keep track
-  // of multiple selected particpants
   function onChangeSelect(
     e: ChangeEvent<HTMLInputElement>,
     isApproved: boolean
@@ -472,8 +467,8 @@ function ParticipantsTable(props: {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
-    const userName = user.name
-    const userID = user.uid
+    const userName = user.name;
+    const userID = user.uid;
 
     addToastStatic({
       message: t("areYouSureRemoveParticipant", { name: userName }),
@@ -483,7 +478,7 @@ function ParticipantsTable(props: {
           text: t("remove"),
           type: "ghost",
           fn: () => {
-            chainRemoveUser(chainUID, userID)
+            chainRemoveUser(chainUID, userID);
             return props.refresh();
           },
         },
@@ -495,8 +490,8 @@ function ParticipantsTable(props: {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
-    const userName = user.name
-    const userID = user.uid
+    const userName = user.name;
+    const userID = user.uid;
 
     addToastStatic({
       message: t("approveParticipant", { name: userName }),
@@ -506,7 +501,7 @@ function ParticipantsTable(props: {
           text: t("approve"),
           type: "ghost",
           fn: () => {
-           chainUserApprove(chainUID, userID);
+            chainUserApprove(chainUID, userID);
             if (window.goatcounter)
               window.goatcounter.count({
                 path: "approve-user",
@@ -520,15 +515,15 @@ function ParticipantsTable(props: {
           text: t("deny"),
           type: "ghost",
           fn: () => {
-            chainDeleteUnapproved(chainUID, userID)
-              setSelected([]);
-              if (window.goatcounter)
-                window.goatcounter.count({
-                  path: "deny-user",
-                  title: "Deny user",
-                  event: true,
-                });
-              return props.refresh();
+            chainDeleteUnapproved(chainUID, userID);
+            setSelected([]);
+            if (window.goatcounter)
+              window.goatcounter.count({
+                path: "deny-user",
+                title: "Deny user",
+                event: true,
+              });
+            return props.refresh();
           },
         },
       ],
@@ -577,90 +572,73 @@ function ParticipantsTable(props: {
     setSortBy(sortBy !== _sortBy ? _sortBy : "date");
   }
 
-  
   function displayKebabMenu(u: User, isTheUserApproved: boolean) {
-
     const userChain = getUserChain(u);
-    
-    return(
-    <div className="dropdown dropdown-right" >
-    <label
-      tabIndex={0}
-      className={`btn btn-ghost btn-small`}
-    >
-      <span className="text-xl feather feather-more-vertical" />
-    </label>
-    {userChain ? (
-      <ul
-        tabIndex={0}
-        className="dropdown-content menu shadow bg-base-100 w-52 h-full"
-      >
-        <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
-          <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
-            <li>
-              <div
-                className="tooltip mr-2"
-                data-tip={t("edit")}
-              >
-                <Link
-                  className={`btn btn-sm btn-circle feather feather-edit ${
-                    isTheUserApproved? "btn-primary" : "btn-disabled opacity-60"
-                  }`}
-                  aria-label={t("edit")}
-                  aria-disabled={!isTheUserApproved}
-                  to={editMe(u, isTheUserApproved)}
-                ></Link>
-              </div>
-            </li>
-            <li>
-              <div
-                className="tooltip mr-2"
-                data-tip={t("removeFromLoop")}
-              >
-                <button
-                  type="button"
-                  onClick={(e) => onRemove(e, u)
-                  }
-                  className={`btn btn-sm btn-circle feather feather-user-x ${
-                    isTheUserApproved
-                      ? "btn-error"
-                      : "btn-disabled opacity-60"
-                  }`}
-                  aria-label={t("removeFromLoop")}
-                  disabled={!isTheUserApproved}
-                ></button>
-              </div>
-            </li>
 
-            <div
-              className="tooltip"
-              data-tip={t("approveUser")}
-            >
-              <li>
-                <div
-                  className="tooltip"
-                  data-tip={t("approveUser")}
-                >
+    return (
+      <div className="dropdown dropdown-right">
+        <label tabIndex={0} className={`btn btn-ghost btn-small`}>
+          <span className="text-xl feather feather-more-vertical" />
+        </label>
+        {userChain ? (
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu shadow bg-base-100 w-52 h-full"
+          >
+            <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
+              <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
+                <li>
+                  <div className="tooltip mr-2" data-tip={t("edit")}>
+                    <Link
+                      className={`btn btn-sm btn-circle feather feather-edit ${
+                        isTheUserApproved
+                          ? "btn-primary"
+                          : "btn-disabled opacity-60"
+                      }`}
+                      aria-label={t("edit")}
+                      aria-disabled={!isTheUserApproved}
+                      to={editMe(u, isTheUserApproved)}
+                    ></Link>
+                  </div>
+                </li>
+                <li>
+                  <div className="tooltip mr-2" data-tip={t("removeFromLoop")}>
+                    <button
+                      type="button"
+                      onClick={(e) => onRemove(e, u)}
+                      className={`btn btn-sm btn-circle feather feather-user-x ${
+                        isTheUserApproved
+                          ? "btn-error"
+                          : "btn-disabled opacity-60"
+                      }`}
+                      aria-label={t("removeFromLoop")}
+                      disabled={!isTheUserApproved}
+                    ></button>
+                  </div>
+                </li>
 
-                  <button
-                    type="button"
-                    onClick={(e) =>
-                      onApprove(e, u)
-                    }
-                    className={`btn btn-sm btn-circle feather feather-user-check ${
-                      !isTheUserApproved? "btn-secondary" : "btn-disabled opacity-60"
-                    }`}
-                    aria-label={t("approveUser")}
-                    disabled={isTheUserApproved}
-                  ></button>
+                <div className="tooltip" data-tip={t("approveUser")}>
+                  <li>
+                    <div className="tooltip" data-tip={t("approveUser")}>
+                      <button
+                        type="button"
+                        onClick={(e) => onApprove(e, u)}
+                        className={`btn btn-sm btn-circle feather feather-user-check ${
+                          !isTheUserApproved
+                            ? "btn-secondary"
+                            : "btn-disabled opacity-60"
+                        }`}
+                        aria-label={t("approveUser")}
+                        disabled={isTheUserApproved}
+                      ></button>
+                    </div>
+                  </li>
                 </div>
-              </li>
+              </div>
             </div>
-          </div>
-        </div>
-      </ul>
-    ) : null}
-  </div>
+          </ul>
+        ) : null}
+      </div>
     );
   }
 
@@ -705,7 +683,6 @@ function ParticipantsTable(props: {
               </tr>
             </thead>
             <tbody>
-              
               {props.unapprovedUsers
                 .sort((a, b) => {
                   const ucA = getUserChain(a);
@@ -716,11 +693,10 @@ function ParticipantsTable(props: {
                     : 1;
                 })
                 .map((u) => {
-
                   return (
                     <tr key={u.uid}>
-                      <td className="bg-yellow/[.6] sticky">                      
-                      {displayKebabMenu(u, false)}
+                      <td className="bg-yellow/[.6] sticky">
+                        {displayKebabMenu(u, false)}
                       </td>
                       <td className="bg-yellow/[.6]">{u.name}</td>
                       <td className="bg-yellow/[.6]">
@@ -745,9 +721,7 @@ function ParticipantsTable(props: {
 
                 return (
                   <tr key={u.uid}>
-                    <td className="sticky">
-                    {displayKebabMenu(u, true)}
-                    </td>
+                    <td className="sticky">{displayKebabMenu(u, true)}</td>
                     <td>{u.name}</td>
                     <td>
                       <span className="block w-48 text-sm whitespace-normal">
@@ -775,7 +749,7 @@ function ParticipantsTable(props: {
           </table>
         </div>
 
-        <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0"/>
+        <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0" />
       </div>
     </>
   );
@@ -805,4 +779,3 @@ function SortButton(props: {
     ></button>
   );
 }
-
