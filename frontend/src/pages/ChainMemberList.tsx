@@ -444,7 +444,7 @@ function ParticipantsTable(props: {
           fn: () => {
             const reason = t("rOutOfArea");
             Promise.all(
-              _selected.map((s) => chainDeleteUnapproved(chainUID, s, a)),
+              _selected.map((s) => chainDeleteUnapproved(chainUID, s, reason)),
             ).finally(() => {
               setSelected([]);
               if (window.goatcounter)
@@ -464,7 +464,7 @@ function ParticipantsTable(props: {
             const reason = t("rSizesGenders")
             Promise.all(
               _selected.map((s) => chainDeleteUnapproved(chainUID, s, reason)),
-            ).finally(() => {
+            ).finally(() => { 
               setSelected([]);
               if (window.goatcounter)
                 window.goatcounter.count({
@@ -480,7 +480,7 @@ function ParticipantsTable(props: {
           text: t("other"),
           type: "ghost",
           fn: () => {
-            const reason = "rOther"
+            const reason = t("rOther")
             Promise.all(
               _selected.map((s) => chainDeleteUnapproved(chainUID, s, reason)),
             ).finally(() => { 
