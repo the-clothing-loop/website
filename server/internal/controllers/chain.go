@@ -423,8 +423,10 @@ WHERE user_id = ? AND chain_id = ?
 
 	if user.Email.Valid {
 		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
+			"",
 			"an_admin_approved_your_join_request",
-			"an_admin_approved_your_join_request.gohtml")
+			"an_admin_approved_your_join_request.gohtml",
+			)
 	}
 }
 
@@ -433,6 +435,7 @@ func ChainDeleteUnapproved(c *gin.Context) {
 	var query struct {
 		UserUID  string `form:"user_uid" binding:"required,uuid"`
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+		Reason string `form:"reason" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
@@ -451,7 +454,10 @@ WHERE user_id = ? AND chain_id = ? AND is_approved = FALSE
 
 	if user.Email.Valid {
 		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
+			query.Reason,
 			"an_admin_denied_your_join_request",
-			"an_admin_denied_your_join_request.gohtml")
+			"an_admin_denied_your_join_request.gohtml",
+	)
 	}
+
 }

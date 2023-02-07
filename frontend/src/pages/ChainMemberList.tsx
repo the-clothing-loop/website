@@ -429,6 +429,78 @@ function ParticipantsTable(props: {
     };
   }, [selected, props.users, props.chain]);
 
+  function userDenial(){
+   if (!selected.length) return;
+    const chainUID = props.chain.uid;
+    const _selected = selected;
+   
+    addToastStatic({
+      message: t("ReasonForDenyingJoin"),
+      type: "info",
+      actions: [
+        {
+          text: t("outOfArea"),
+          type: "ghost",
+          fn: () => {
+            const reason = t("rOutOfArea");
+            Promise.all(
+              _selected.map((s) => chainDeleteUnapproved(chainUID, s, a)),
+            ).finally(() => {
+              setSelected([]);
+              if (window.goatcounter)
+                window.goatcounter.count({
+                  path: "deny-user",
+                  title: "Deny user",
+                  event: true,
+                });
+                return props.refresh();
+            });
+          },
+        },
+        {
+          text: t("otherSizesGenders"),
+          type: "ghost",
+          fn: () => {
+            const reason = t("rSizesGenders")
+            Promise.all(
+              _selected.map((s) => chainDeleteUnapproved(chainUID, s, reason)),
+            ).finally(() => {
+              setSelected([]);
+              if (window.goatcounter)
+                window.goatcounter.count({
+                  path: "deny-user",
+                  title: "Deny user",
+                  event: true,
+                });
+                return props.refresh();
+            });
+          },
+        },
+        {
+          text: t("other"),
+          type: "ghost",
+          fn: () => {
+            const reason = "rOther"
+            Promise.all(
+              _selected.map((s) => chainDeleteUnapproved(chainUID, s, reason)),
+            ).finally(() => { 
+              setSelected([]);
+              if (window.goatcounter)
+                window.goatcounter.count({
+                  path: "deny-user",
+                  title: "Deny user",
+                  event: true,
+                });
+                return props.refresh();
+            });
+          },
+        },
+      ],
+    });
+  
+
+  };
+
   function onChangeSelect(
     e: ChangeEvent<HTMLInputElement>,
     isApproved: boolean
@@ -515,19 +587,9 @@ function ParticipantsTable(props: {
           text: t("deny"),
           type: "ghost",
           fn: () => {
-            Promise.all(
-              _selected.map((s) => chainDeleteUnapproved(chainUID, s))
-            ).finally(() => {
-              setSelected([]);
-              if (window.goatcounter)
-                window.goatcounter.count({
-                  path: "deny-user",
-                  title: "Deny user",
-                  event: true,
-                });
+            userDenial();
               return props.refresh();
-            });
-          },
+            }
         },
       ],
     });

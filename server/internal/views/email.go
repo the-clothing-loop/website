@@ -160,6 +160,7 @@ func EmailToLoopParticipant(
 	participantName string,
 	participantEmail string,
 	chainName string,
+	textBody string,
 	headerName string,
 	templateName string,
 ) bool {
@@ -172,6 +173,7 @@ func EmailToLoopParticipant(
 	body, err := executeTemplate(c, emailsTemplates[i18n], templateName, gin.H{
 		"Name":      participantName,
 		"ChainName": chainName,
+		"textBody": textBody,
 	})
 	if err != nil {
 		return false
