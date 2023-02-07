@@ -13,8 +13,6 @@ import { GinParseErrors } from "../util/gin-errors";
 //media
 const CirclesFrame =
   "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
-const LoginImg =
-  "https://ucarecdn.com/cac06018-e1b6-4124-865f-26b816df54c7/-/resize/x600/-/format/auto/-/quality/smart/login.jpg";
 
 export default function Login() {
   const { authUser } = useContext(AuthContext);
@@ -80,7 +78,12 @@ export default function Login() {
       </Helmet>
 
       <main className="pt-10">
-        <TwoColumnLayout img={LoginImg}>
+        <TwoColumnLayout
+          t={t}
+          img="https://ucarecdn.com/cac06018-e1b6-4124-865f-26b816df54c7/-/resize/x600/-/format/auto/-/quality/smart/login.jpg"
+          alt="Nichon wearing a red jacket and holding an Ikea bag full of clothes"
+          credit="Anke Teunissen"
+        >
           <div className="relative sm:p-10 -mx-4 sm:mx-0">
             <div className="p-10 bg-teal-light">
               <img
