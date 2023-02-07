@@ -3,11 +3,11 @@
   "arrParticipants": [
     {
       "question": "I signed up, when will I be added to the route?",
-      "answer": "If you have received our confirmation email, your subscription has come through successfully!<br/>The host of the Loop has been notified and will contact you to add you to the route.<br/>This can sometimes take a little while as all hosts manage the Loop in their spare time. Most hosts add new members once every 2 to 4 weeks."
+      "answer": "If you have received our confirmation email, your subscription has come through successfully! The host of the Loop has been notified and will contact you to add you to the route.<br/>This can sometimes take a little while as all hosts manage the Loop in their spare time. Most hosts add new members once every 2 to 4 weeks."
     },
     {
       "question": "Are there rules on how much you can keep?",
-      "answer": "No, there are no hard rules here, but keep in mind the system works best when in balance. Every bag is different. Sometimes you find more, sometimes you don’t find anything. Every garment that is worn again is a win!"
+      "answer": "No, there are no hard rules here, but keep in mind the system works best when in balance. <b>Every bag is different.</b> Sometimes you find more, sometimes you don’t find anything. Every garment that is worn again is a win!"
     },
     {
       "question": "Do you have to donate the same amount of clothes as you take out?",
@@ -23,38 +23,34 @@
     },
     {
       "question": "What to do with bulky clothes (like winter coats) that don’t fit in the bag?",
-      "answer": "Big items can be photographed and shared via your communication channel, or through the <u>Glide app</u>. In a private message, people can respond and organize pick up."
+      "answer": "Big items can be photographed and shared via your communication channel, or through the <a target='_blank' href='https://docs.google.com/document/d/12YcVwD4jzVKDcLxssnzqq7B2fzYC8kcewsnyFJ-A7cE/edit'>Glide app</a>. In a private message, people can respond and organize pick up."
     },
     {
       "question": "Can I put shoes in the bag as well?",
-      "answer": "That is up to your local host to decide. If your Loop allows you to add shoes to the bag, only add “as good as new” pairs, and no more than 2 pairs per bag. And please wrap them in a separate bag to avoid them touching the clothes. "
-    },
-    {
-      "question": "Can I put shoes in the bag as well?",
-      "answer": "That is up to your local host to decide. If your Loop allows you to add shoes to the bag, only add “as good as new” pairs, and no more than 2 pairs per bag. And please wrap them in a separate bag to avoid them touching the clothes."
+      "answer": "That is up to your local host to decide. If your Loop allows you to add shoes to the bag, only add “as good as new” pairs, and <u>no more than 2 pairs per bag</u>. And please wrap them in a separate bag to avoid them touching the clothes. "
     },
     {
       "question": "I get the error: “your account already exists”.",
-      "answer": "You have previously created an account at the Clothing Loop already. To sign up for a new Loop, you will need to log in first. Click in the top right corner on login<br/>Enter the email address you used to register your Loop.<br/>Check your email (and spam folder!) for our verification link. We use a link instead of a password! Then you will be able to sign up for a new Loop."
+      "answer": "You have previously created an account at the Clothing Loop already. To sign up for a new Loop, you will need to log in first:<ol><li>Click in the top right corner on login.</li><li>Enter the email address you used to register your Loop.</li><li>Check your email (and spam folder!) for our verification link. We use a link instead of a password!</li><li>Then you will be able to sign up for a new Loop.</li></ol>"
     }
   ],
   "faqForHosts": "FAQ for Hosts",
   "arrHosts": [
     {
       "question": "How do I start a Loop?",
-      "answer": "We got you covered! We wrote a simple manual with all the instructions that can be found in our <a href='https://drive.google.com/drive/u/0/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Please benefit from the lessons we learned in the many years we have been doing this!"
+      "answer": "We got you covered! We wrote a simple manual with all the instructions that can be found in our <a target='_blank' href='https://drive.google.com/drive/u/0/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Please benefit from the lessons we learned in the many years we have been doing this!"
     },
     {
       "question": "How to find people to join my Loop?",
-      "answer": "Start small! Ask friends and acquaintances in your direct environment like your sports club or dance school. When you have a small crowd gathered, you can ask everyone to invite at least one more person, then the group will grow organically. You can also send out a press release to your local media. We already drafted you a <a href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'>template</a> to fill in!"
+      "answer": "Start small! Ask friends and acquaintances in your direct environment like your sports club or dance school. When you have a small crowd gathered, you can ask everyone to invite at least one more person, then the group will grow organically. You can also send out a press release to your local media. We already drafted you a <a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'>template</a> to fill in!"
     },
     {
       "question": "How much time will hosting a Loop cost me?",
-      "answer": "Our volunteers say they spend on average 1,5 hours per month on hosting the Loop."
+      "answer": "Our volunteers say they spend on average 1&#189; hours per month on hosting the Loop."
     },
     {
       "question": "How do I sign up a new Loop?",
-      "answer": "We made you <a href='https://drive.google.com/drive/folders/1UiokapMTKu6nrX5sg6s8FFkS8jDTtu86'>a simple guide</a> with screenshots of every step. Still run into an issue? Send us an email!"
+      "answer": "We made you <a target='_blank' href='https://drive.google.com/drive/folders/1UiokapMTKu6nrX5sg6s8FFkS8jDTtu86'>a simple guide</a> with screenshots of every step. Still run into an issue? Send us an email!"
     },
     {
       "question": "How do I sign in on the website?",
@@ -62,11 +58,11 @@
     },
     {
       "question": "How can I start using the Glide app?",
-      "answer": "Yes! We made an app that you can very easily set up for your own Loop.<br/><br/>You can copy the app and use it within your group. You only have to fill in the address list in our <a href='https://docs.google.com/document/d/12YcVwD4jzVKDcLxssnzqq7B2fzYC8kcewsnyFJ-A7cE/edit'>downloadable template</a>. It is super easy! Please get in touch via our email if you still run into trouble!"
+      "answer": "Yes! We made an app that you can very easily set up for your own Loop.<br/><br/>You can copy the app and use it within your group. You only have to fill in the address list in our <a target='_blank' href='https://docs.google.com/document/d/12YcVwD4jzVKDcLxssnzqq7B2fzYC8kcewsnyFJ-A7cE/edit'>downloadable template</a>. It is super easy! Please get in touch via our email if you still run into trouble!"
     },
     {
       "question": "Are there images or graphic templates we can use?",
-      "answer": "Absolutely, we made you a <a href='https://drive.google.com/drive/u/0/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a> where you can find logos, pictures and templates. Use as many as you like!"
+      "answer": "Absolutely, we made you a <a target='_blank' href='https://drive.google.com/drive/u/0/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a> where you can find logos, pictures and templates. Use as many as you like!"
     },{
       "question": "Introducing a “Ghost rider” in the Loop",
       "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! <b>You can then introduce a “ghost rider” bag that travels in the other direction,</b> so all of a sudden you have other people before you in the route, and also other styles in the bag. If you do so, please make people aware that they shouldn’t put any items in the “ghost rider” bag that they have previously taken out of a regular bag. And keep the number of ghost rider bags limited to 1 or 2, to keep it special and simple. "
@@ -81,13 +77,13 @@
       "answer": "If someone signed up for your Loop but lives too far outside of your Loop area, it is up to you to decide if they may join. If they cannot, please send them an email to let them know. When in doubt: one thing you can do to decrease the distance between addresses, is to ask that person to find other participants between their area and the original Loop location."
     },{
       "question": "What is an ideal group size?",
-      "answer": "We’d recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognise anything in the bag anymore, so you can continue swapping. There is no real maximum, it is up to you what still works! In the Netherlands an average Loop is 45 people. But there are Loops running smoothly with over 180 people!"
+      "answer": "We’d recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognise anything in the bag anymore, so you can continue swapping. <b>There is no real maximum</b>, it is up to you what still works! In the Netherlands an average Loop is 45 people. But there are Loops running smoothly with over 180 people!"
     },{
       "question": "What if somebody moves house and wants to join in another area?",
       "answer": "You as Loop host can remove them from your Loop when signed in on our website. If they want to join again in their new neighborhood, ask them to simply sign up again with their new address."
     },{
       "question": "What to do if the Clothing Loop doesn’t work well?",
-      "answer": "Make sure that everyone shares the responsibility for only adding good quality items.<br/><br/>Do you see something that shouldn’t be in a bag? Try to donate it to your local textile recycling program. If in doubt, ask the person next to you on the address list  if they agree. It is good to have a few people function as ‘checkpoints’ along the route, to make sure the bags stay in good condition. Because if the quality of the clothing isn’t high enough, people might leave the Loop and that would be a shame!<br/><br/>A <a href='https://www.philips.nl/c-p/GC026_00/ontpiller'>fabric shaver</a> can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, set a good example yourself: share some nice photos and encourage others to do the same! Seeing where items end up is a huge motivation for people to donate nice items."
+      "answer": "Make sure that everyone shares the responsibility for only adding good quality items.<br/><br/>Do you see something that shouldn’t be in a bag? Try to donate it to your local textile recycling program. If in doubt, ask the person next to you on the address list  if they agree. It is good to have a few people function as ‘checkpoints’ along the route, to make sure the bags stay in good condition. Because if the quality of the clothing isn’t high enough, people might leave the Loop and that would be a shame!<br/><br/>A <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>fabric shaver</a> can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, set a good example yourself: share some nice photos and encourage others to do the same! Seeing where items end up is a huge motivation for people to donate nice items."
     }
   ]
 }

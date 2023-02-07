@@ -77,6 +77,9 @@ module.exports = {
         DEFAULT: {
           css: {
             color: colors.black,
+            "strong, b": {
+              fontWeight: 500,
+            },
           },
         },
       },
