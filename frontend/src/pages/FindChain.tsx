@@ -395,7 +395,7 @@ export default function FindChain({ location }: { location: Location }) {
           </div>
 
           <div
-            className={`absolute z-30 top-4 left-4 max-h-full w-72 overflow-y-auto ${
+            className={`absolute z-30 top-4 left-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
               selectedChains.length ? "" : "hidden"
             }`}
           >
