@@ -24,7 +24,7 @@ jobs:
         run: mv server cl-api-production
         working-directory: ./server
       - name: Install SSH key
-        uses: enoitchantre/setup-ssh-authentication-action@1.0.1
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
           private-key: ${{ secrets.VPS1_PRIVKEY }}
           known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
@@ -56,7 +56,7 @@ jobs:
         run: npm run build:production
         working-directory: ./frontend
       - name: Install SSH key
-        uses: enoitchantre/setup-ssh-authentication-action@1.0.1
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
           private-key: ${{ secrets.VPS1_PRIVKEY }}
           known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
