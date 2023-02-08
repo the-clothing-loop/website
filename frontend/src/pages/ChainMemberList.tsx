@@ -572,6 +572,9 @@ function ParticipantsTable(props: {
     setSortBy(sortBy !== _sortBy ? _sortBy : "date");
   }
 
+  // menu shadow bg-base-100 w-52 h-full
+  //rounded-b-lg flex flex-col justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0
+  // flex flex-col mt-3 ml-3 bg-base-100 rounded-lg p-2
   function displayKebabMenu(u: User, isTheUserApproved: boolean) {
     const userChain = getUserChain(u);
 
@@ -583,10 +586,8 @@ function ParticipantsTable(props: {
         {userChain ? (
           <ul
             tabIndex={0}
-            className="dropdown-content menu shadow bg-base-100 w-52 h-full"
+            className="dropdown-content menu shadow bg-base-100 rounded-lg"
           >
-            <div className="rounded-b-lg flex flex-col justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
-              <div className="flex flex-col mt-3 ml-3 bg-base-100 rounded-lg p-2">
                 {isTheUserApproved && (
                   <div>
                     <li>
@@ -624,8 +625,6 @@ function ParticipantsTable(props: {
                       </button>
                   </li>
                 }
-              </div>
-            </div>
           </ul>
         ) : null}
       </div>
