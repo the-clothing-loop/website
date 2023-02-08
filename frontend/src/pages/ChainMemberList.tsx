@@ -585,55 +585,45 @@ function ParticipantsTable(props: {
             tabIndex={0}
             className="dropdown-content menu shadow bg-base-100 w-52 h-full"
           >
-            <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
-              <div className="flex mt-3 ml-3 bg-base-100 rounded-lg p-2">
-                <li>
-                  <div className="tooltip mr-2" data-tip={t("edit")}>
-                    <Link
-                      className={`btn btn-sm btn-circle feather feather-edit ${
-                        isTheUserApproved
-                          ? "btn-primary"
-                          : "btn-disabled opacity-60"
-                      }`}
-                      aria-label={t("edit")}
-                      aria-disabled={!isTheUserApproved}
-                      to={editMe(u, isTheUserApproved)}
-                    ></Link>
+            <div className="rounded-b-lg flex flex-col justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0">
+              <div className="flex flex-col mt-3 ml-3 bg-base-100 rounded-lg p-2">
+                {isTheUserApproved && (
+                  <div>
+                    <li>
+                      <Link
+                        className={"h-full text-yellow font-bold"}
+                        aria-label={t("edit")}
+                        aria-disabled={!isTheUserApproved}
+                        to={editMe(u, isTheUserApproved)}
+                      >
+                        {t("edit")}
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        onClick={(e) => onRemove(e, u)}
+                        className={"h-full text-red font-bold"}
+                        aria-label={t("removeFromLoop")}
+                        disabled={!isTheUserApproved}
+                      >
+                        {t("removeFromLoop")}
+                      </button>
+                    </li>
                   </div>
-                </li>
-                <li>
-                  <div className="tooltip mr-2" data-tip={t("removeFromLoop")}>
-                    <button
-                      type="button"
-                      onClick={(e) => onRemove(e, u)}
-                      className={`btn btn-sm btn-circle feather feather-user-x ${
-                        isTheUserApproved
-                          ? "btn-error"
-                          : "btn-disabled opacity-60"
-                      }`}
-                      aria-label={t("removeFromLoop")}
-                      disabled={!isTheUserApproved}
-                    ></button>
-                  </div>
-                </li>
-
-                <div className="tooltip" data-tip={t("approveUser")}>
+                ) || 
                   <li>
-                    <div className="tooltip" data-tip={t("approveUser")}>
                       <button
                         type="button"
                         onClick={(e) => onApprove(e, u)}
-                        className={`btn btn-sm btn-circle feather feather-user-check ${
-                          !isTheUserApproved
-                            ? "btn-secondary"
-                            : "btn-disabled opacity-60"
-                        }`}
+                        className={"h-full text-teal font-bold"}
                         aria-label={t("approveUser")}
                         disabled={isTheUserApproved}
-                      ></button>
-                    </div>
+                      >
+                        {t("approveUser")}
+                      </button>
                   </li>
-                </div>
+                }
               </div>
             </div>
           </ul>
