@@ -1,43 +1,43 @@
 {
-  "faqForParticipants": "FAQ für Teilnehmer",
+  "faqForParticipants": "FAQ for Participants",
   "arrParticipants": [
     {
-      "question": "Gibt es Regeln, wie viel Du herausnehmen darfst, und musst Du die gleiche Menge an Kleidung geben wie Du rausnimmst?",
-      "answer": "Nein, es gibt hier keine Regeln. Manchmal nimmst Du ein bisschen mehr und manchmal gibst Du mehr. Bitte gib keine Kleidung in die Taschen, die keine gute Qualität haben, nur um etwas hinzulegen! Es ist besser, eine halbe Tasche voller Schätze zu haben, als eine ganze Tasche von weniger Qualität zu erhalten."
+      "question": "Are there rules on how much you can take out, and do you have to donate the same amount of clothes as you take out?",
+      "answer": "No, there are no rules here. Sometimes you take a bit more, sometimes you give more. Please don't add clothes to the bags that aren't of good quality, just to add something! It's better to have a bag half full of treasures, than to have a full bag that is of less quality."
     },
     {
-      "question": "Können alle Größen der Kleidung in der gleichen Tasche sein?",
-      "answer": "Gemischte Taschen funktionieren normalerweise sehr gut, da die Größen je nach Marke variieren und auch die Proportionen unterschiedlich sind, aber das funktioniert nur innerhalb eines bestimmten Umfangs. Wir empfehlen einen Mix von Artikeln der Größen 36 - 42 (S, M und L) und den Start eines neuen Clothing Loops für kleinere oder größere Größen."
+      "question": "Can all sizes of clothing be in the same bag?",
+      "answer": "Mixed bags work perfectly well usually, as sizes vary per brand and proportions are different as well. But this only works within a certain width. We recommend having a mix of items from size 36 - 42 (S, M and L) and starting a new Clothing Loop for smaller or bigger sizes."
     },
     {
-      "question": "Wie vermeidet man „Finders Keeper, Verlierer Keiler“?",
-      "answer": "Es gibt keine Garantien, dass Du etwas findest, was Dir gefällt. Manchmal bekommst ein paar Taschen hintereinander, in denen Du möglicherweise nichts für Dich findest. Aber denk daran: Es lohnt sich, ein Traumstück zu finden, als 10 Sachen in Deinem Schrank zu haben, die Du nicht trägst. Und jemanden mit etwas glücklich zu machen, das Staub in Deinem Kleiderschrank angesammelt hat, ist auch ein wichtiger (und spaßiger!) Teil der Clothing Loop Mentalität!"
+      "question": "How to avoid “Finders keepers, losers weepers”?",
+      "answer": "There are no guarantees that you will find something that you like. Sometimes a few bags will pass your house that may not have an item for you. But remember: finding one dream item is more worth than having 10 items in your wardrobe that you do not wear. And making someone else very happy with something that was collecting dust in your wardrobe is also a significant (and fun!) part of the Clothing Loop mentality!"
     },
     {
-      "question": "Was ist mit sperrigen Kleidern (wie Wintermänteln) zu tun, die nicht in die Tasche passen?",
-      "answer": "Große Elemente können über den Kommunikationskanal oder über die Glide App fotografiert und geteilt werden. In einer privaten Nachricht können die Leute reagieren und die Abholung organisieren."
+      "question": "What to do with bulky clothes (like winter coats) that don't fit in the bag?",
+      "answer": "Big items can be photographed and shared via the communication channel, or through the Glide app. In a private message, people can respond and organize pick up."
     },
     {
-      "question": "Kann ich auch Schuhe in die Tasche legen?",
-      "answer": "Die kurze Antwort lautet ja, aber denk dran: Schuhe sind schwieriger zu tauschen als Klamotten. Es gibt viel mehr Größen, und sie zeigen viel schneller Tragespuren als Kleidungsstücke. Bitte sei daher sehr selektiv mit Schuhen und gib nur „so gut wie neue“ Paare und nicht mehr als 2 Paare pro Tasche."
+      "question": "Can I put shoes in the bag as well?",
+      "answer": "The short answer is yes, but keep in mind: shoes are more difficult to pass along than clothes. There are many more sizes, and they show wear a lot quicker than garments. So please be very selective with shoes! Only add “as good as new” pairs, and have no more than 2 pairs per bag."
     }
   ],
-  "faqForHosts": "FAQ für Hosts",
+  "faqForHosts": "FAQ for Hosts",
   "arrHosts": [
     {
-      "question": "Wie kann ich die App verwenden?",
-      "answer": "Du kannst die App kopieren und in Deiner Gruppe verwenden. Du musst nur die Adressliste in unserer herunterladbaren Vorlage eingeben. Es ist super einfach! Wir haben ein Video Tutorial und ein Slide Deck erstellt um Dir zu helfen. Bitte melde Dich hier, wenn Du trotzdem Schwierigkeiten hast!"
+      "question": "How can I start using the app?",
+      "answer": "You can copy the app and use it within your group. You only have to fill in the address list in our downloadable template. It is super easy! We created a video tutorial and slide deck to help you get started. Please get in touch here if you still run into trouble!"
     },
     {
-      "question": "Gibt es Grafikvorlagen, die wir verwenden können?",
-      "answer": "Auf jeden Fall, wir haben für Dich einen Ordner gemacht, in dem Du die Vorlagen, Handbücher und alles finden kannst. Verwende so viele wie Du möchtest!"
+      "question": "Are there graphic templates we can use?",
+      "answer": "Absolutely, we made you a folder where you can find logo's templates, manuals and all. Use as many as you like!"
     },
     {
       "question": "Introducing a “Ghost rider” in the Loop",
       "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! You can then introduce a “ghost rider” bag that travels in the other direction, so all of a sudden you have other people before you in the route, and also other styles in the bag. If you do so, please make people aware that they shouldn't put any items in the “ghost rider” bag that they have previously taken out of a regular bag. And keep the number of ghost rider bags limited to 1 or 2, to keep it special and also simple."
     },
     {
-      "question": "Wie kann man eine große Gruppe von Menschen im Kommunikationskanal verwalten?",
+      "question": "How to manage a large group of people in the communication channel?",
       "answer": "Especially when groups get bigger, it is important to make sure people aren't bombarded with (irrelevant) messages. You can set up some rules for what should and shouldn't be shared via the group app. For example:<br /><br /><span>Yes,</span> in the app:<ul><li>Selfies of nice things you took from the bag or nice things that you are putting in</li><li>Compliments to others</li><li>Logistics and organizational relevant updates</li></ul><span>No,</span> not in the app:<ul><li>Everything unrelated to the Clothing Loop (requests for surveys, invites for new groups, Fund raising, memes, etc). If you want to ask everyone's input on something, use a polling app like LouLou instead</li></ul>"
     },
     {
