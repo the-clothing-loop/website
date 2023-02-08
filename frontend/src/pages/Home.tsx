@@ -20,7 +20,7 @@ const Selfies =
 const SfmLogo =
   "https://ucarecdn.com/c439bd53-ac76-4ece-afce-727772d2f408/-/resize/160x/-/format/auto/-/quality/smart/sfm_logo.png";
 const CollActionLogo =
-  "https://ucarecdn.com/f7ee756a-8be7-4fb2-ba0f-283ab0d43b4f/-/resize/208x/-/format/auto/-/quality/smart/LogoCollAction.png";
+  "https://ucarecdn.com/f7ee756a-8be7-4fb2-ba0f-283ab0d43b4f/-/crop/5:1/-/resize/208x/-/format/auto/-/quality/smart/LogoCollAction.png";
 const ImpactHubLogo =
   "https://ucarecdn.com/356b6da2-f0b2-41df-9960-0dcedfe31052/-/resize/600x/-/format/auto/-/quality/smart/logoimpacthub.svg";
 const EssenseLogo =
@@ -31,13 +31,20 @@ const DoenLogo =
   "https://ucarecdn.com/929c3a9f-d9a6-479a-8b8c-c319d45382d9/-/resize/160x/-/format/auto/-/quality/smart/doen.png";
 const PNHLogo =
   "https://ucarecdn.com/40eb9c1f-27cd-4275-a449-a1a5d269eb5d/-/resize/208x/-/format/auto/-/quality/smart/pnh_logo.png";
+const MEAXLogo = "https://ucarecdn.com/9f740812-f9bd-4085-8b4f-3cb638d19f73/";
+
+interface Supporter {
+  logo: string;
+  url: string;
+  alt: string;
+}
 
 export default function Home() {
   const { t } = useTranslation();
 
   let history = useHistory();
 
-  const supporters = [
+  const supporters: Supporter[][] = [
     [
       {
         logo: SfmLogo,
@@ -65,6 +72,11 @@ export default function Home() {
         logo: PNHLogo,
         url: "https://www.noord-holland.nl/",
         alt: "Provincie Noord-Holland",
+      },
+      {
+        logo: MEAXLogo,
+        url: "https://maex.nl/#/initiative/8be552d9-8b8a-4b9e-ac00-9d425e627696",
+        alt: "MEAX",
       },
       {
         logo: EssenseLogo,
@@ -338,11 +350,11 @@ export default function Home() {
               </a>{" "}
             </p>
           </div>
-          <ul className="max-w-screen-md mx-auto flex flex-wrap items-center justify-evenly mb-2 md:mb-20">
+          <ul className="max-w-screen-md mx-auto flex flex-wrap items-center justify-evenly mb-2 sm:mb-20">
             {supporters[0].map((el, i) => {
               return (
                 <li
-                  className="w-1/2 md:w-1/4 flex justify-center mb-4 md:mb-0"
+                  className="w-1/2 md:w-1/4 flex justify-center mb-4 md:mb-8"
                   key={i}
                 >
                   <a
@@ -359,7 +371,7 @@ export default function Home() {
             {supporters[1].map((el, i) => {
               return (
                 <li
-                  className="w-full md:w-1/3 flex justify-center mb-4 md:mb-0"
+                  className="w-1/2 flex justify-center mb-8 sm:my-4 px-6"
                   key={i}
                 >
                   <a

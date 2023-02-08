@@ -126,7 +126,12 @@ export default function Signup() {
         </Helmet>
 
         <main className="md:p-10">
-          <TwoColumnLayout img="https://ucarecdn.com/1cd88d9e-e408-4582-bf4a-7849a65aae3c/-/resize/x600/-/format/auto/-/quality/smart/join_loop.jpg">
+          <TwoColumnLayout
+            t={t}
+            img="https://ucarecdn.com/1cd88d9e-e408-4582-bf4a-7849a65aae3c/-/resize/x600/-/format/auto/-/quality/smart/join_loop.jpg"
+            alt="Nichon giving a large bag of clothes to another woman"
+            credit="Anke Teunissen"
+          >
             <div id="container">
               <h1 className="font-semibold text-3xl text-secondary mb-3">
                 {t("join")}
