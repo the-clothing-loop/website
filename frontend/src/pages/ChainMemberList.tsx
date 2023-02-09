@@ -588,43 +588,43 @@ function ParticipantsTable(props: {
             tabIndex={0}
             className="dropdown-content menu shadow rounded-lg bg-base-100"
           >
-                {isTheUserApproved && (
-                  <div>
-                    <li>
-                      <Link
-                        className={"h-full text-yellow font-bold"}
-                        aria-label={t("edit")}
-                        aria-disabled={!isTheUserApproved}
-                        to={editMe(u, isTheUserApproved)}
-                      >
-                        {t("edit")}
-                      </Link>
-                    </li>
-                    <li>
-                      <button
-                        type="button"
-                        onClick={(e) => onRemove(e, u)}
-                        className={"h-full text-red font-bold"}
-                        aria-label={t("removeFromLoop")}
-                        disabled={!isTheUserApproved}
-                      >
-                        {t("removeFromLoop")}
-                      </button>
-                    </li>
-                  </div>
-                ) || 
-                  <li>
-                      <button
-                        type="button"
-                        onClick={(e) => onApprove(e, u)}
-                        className={"h-full text-teal font-bold"}
-                        aria-label={t("approveUser")}
-                        disabled={isTheUserApproved}
-                      >
-                        {t("approveUser")}
-                      </button>
-                  </li>
-                }
+            {(isTheUserApproved && (
+              <div>
+                <li>
+                  <button
+                    type="button"
+                    onClick={(e) => onRemove(e, u)}
+                    className={"h-full text-red font-bold"}
+                    aria-label={t("removeFromLoop")}
+                    disabled={!isTheUserApproved}
+                  >
+                    {t("removeFromLoop")}
+                  </button>
+                </li>
+                <li>
+                  <Link
+                    className={"h-full text-yellow font-bold"}
+                    aria-label={t("edit")}
+                    aria-disabled={!isTheUserApproved}
+                    to={editMe(u, isTheUserApproved)}
+                  >
+                    {t("edit")}
+                  </Link>
+                </li>
+              </div>
+            )) || (
+              <li>
+                <button
+                  type="button"
+                  onClick={(e) => onApprove(e, u)}
+                  className={"h-full text-teal font-bold"}
+                  aria-label={t("approveUser")}
+                  disabled={isTheUserApproved}
+                >
+                  {t("approveUser")}
+                </button>
+              </li>
+            )}
           </ul>
         ) : null}
       </div>
