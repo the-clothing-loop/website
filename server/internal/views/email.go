@@ -179,3 +179,27 @@ func EmailToLoopParticipant(
 
 	return app.MailSend(c, db, to, subject, body)
 }
+
+func EmailPoke(
+	c *gin.Context,
+	db *gorm.DB,
+	participantName,
+	participantEmail,
+	chainName,
+	headerName,
+	templateName string,
+) bool {
+	i18n := getI18n(c)
+	to := email
+	subject := emailsHeaders[i18n]["login_verification"]
+	body, err := executeTemplate(c, emailsTemplates[i18n], "login_verification.gohtml", gin.H{
+		"Name":    name,
+		"BaseURL": app.Config.SITE_BASE_URL_FE,
+		"Token":   token,
+	})
+	if err != nil {
+		return false
+	}
+
+	return app.MailSend(c, db, to, subject, body)
+}

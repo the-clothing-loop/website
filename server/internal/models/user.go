@@ -23,6 +23,7 @@ type User struct {
 	Address         string      `json:"address"`
 	Sizes           []string    `json:"sizes" gorm:"serializer:json"`
 	LastSignedInAt  zero.Time   `json:"-"`
+	LastPokeAt      zero.Time   `json:"-"`
 	UserToken       []UserToken `json:"-"`
 	Chains          []UserChain `json:"chains"`
 	CreatedAt       time.Time   `json:"-"`
@@ -104,4 +105,16 @@ func (u *User) IsAnyChainAdmin() (isAnyChainAdmin bool) {
 	}
 
 	return isAnyChainAdmin
+}
+
+func (u *User) LastPokeTooRecent() bool {
+	if !u.LastPokeAt.Valid {
+		return true
+	}
+
+	return !u.LastPokeAt.Time.Before(time.Now().Add(-24 * time.Hour))
+}
+
+func (u *User) SetLastPokeToNow(db *gorm.DB) error {
+	return db.Raw(`UPDATE users SET last_poke_at = NOW() WHERE id = ?`, u.ID).Error
 }
