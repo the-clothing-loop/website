@@ -181,11 +181,20 @@ export default function ChainsList() {
                           {userChain ? (
                             <ul
                               tabIndex={0}
-                              className="dropdown-content menu shadow bg-base-100 w-52"
+                              className={`dropdown-content menu shadow bg-base-100 w-52 ${
+                                userChain.is_approved ? "h-full" : ""
+                              }`}
                             >
-                              <li className="" key="leave">
+                              <li
+                                className={
+                                  userChain.is_approved ? "h-full" : ""
+                                }
+                                key="leave"
+                              >
                                 <a
-                                  className="text-red font-bold"
+                                  className={`text-red font-bold ${
+                                    userChain.is_approved ? "h-full" : ""
+                                  }`}
                                   href="#"
                                   onClick={(e) =>
                                     handleClickUnsubscribe(e, chain)
@@ -196,15 +205,19 @@ export default function ChainsList() {
                                     : t("leaveWaitlist")}
                                 </a>
                               </li>
-                              <li>
-                                <a
-                                  className="font-bold"
-                                  href="#"
-                                  onClick={(e) => handleClickPoke(e, chain.uid)}
-                                >
-                                  {t("pokeHost")}
-                                </a>
-                              </li>
+                              {userChain.is_approved ? null : (
+                                <li key="poke">
+                                  <a
+                                    className="font-bold"
+                                    href="#"
+                                    onClick={(e) =>
+                                      handleClickPoke(e, chain.uid)
+                                    }
+                                  >
+                                    {t("pokeHost")}
+                                  </a>
+                                </li>
+                              )}
                             </ul>
                           ) : null}
                         </div>

@@ -183,19 +183,18 @@ func EmailToLoopParticipant(
 func EmailPoke(
 	c *gin.Context,
 	db *gorm.DB,
+	hostName,
+	email,
 	participantName,
-	participantEmail,
-	chainName,
-	headerName,
-	templateName string,
+	chainName string,
 ) bool {
-	i18n := getI18n(c)
+	i18n := "en"
 	to := email
-	subject := emailsHeaders[i18n]["login_verification"]
-	body, err := executeTemplate(c, emailsTemplates[i18n], "login_verification.gohtml", gin.H{
-		"Name":    name,
-		"BaseURL": app.Config.SITE_BASE_URL_FE,
-		"Token":   token,
+	subject := emailsHeaders[i18n]["poke"]
+	body, err := executeTemplate(c, emailsTemplates[i18n], "poke.gohtml", gin.H{
+		"Name":            hostName,
+		"ParticipantName": participantName,
+		"ChainName":       chainName,
 	})
 	if err != nil {
 		return false

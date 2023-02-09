@@ -109,12 +109,12 @@ func (u *User) IsAnyChainAdmin() (isAnyChainAdmin bool) {
 
 func (u *User) LastPokeTooRecent() bool {
 	if !u.LastPokeAt.Valid {
-		return true
+		return false
 	}
 
-	return !u.LastPokeAt.Time.Before(time.Now().Add(-24 * time.Hour))
+	return !u.LastPokeAt.Time.Before(time.Now().Add(-24 * 7 * time.Hour))
 }
 
 func (u *User) SetLastPokeToNow(db *gorm.DB) error {
-	return db.Raw(`UPDATE users SET last_poke_at = NOW() WHERE id = ?`, u.ID).Error
+	return db.Exec(`UPDATE users SET last_poke_at = NOW() WHERE id = ?`, u.ID).Error
 }
