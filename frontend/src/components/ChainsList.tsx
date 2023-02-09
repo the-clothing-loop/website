@@ -98,7 +98,7 @@ export default function ChainsList() {
         )}
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto pb-40">
         <table className="table table-compact w-full">
           <thead>
             <tr>
@@ -181,7 +181,7 @@ export default function ChainsList() {
                           {userChain ? (
                             <ul
                               tabIndex={0}
-                              className="dropdown-content menu shadow bg-base-100 w-52 h-full"
+                              className="dropdown-content menu shadow bg-base-100 w-52"
                             >
                               <li className="" key="leave">
                                 <a
@@ -202,7 +202,7 @@ export default function ChainsList() {
                                   href="#"
                                   onClick={(e) => handleClickPoke(e, chain.uid)}
                                 >
-                                  {t("poke")}
+                                  {t("pokeHost")}
                                 </a>
                               </li>
                             </ul>
