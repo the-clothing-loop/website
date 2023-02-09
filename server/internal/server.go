@@ -76,6 +76,7 @@ func Routes() *gin.Engine {
 	v2.POST("/chain/remove-user", controllers.ChainRemoveUser)
 	v2.PATCH("/chain/approve-user", controllers.ChainApproveUser)
 	v2.DELETE("/chain/unapproved-user", controllers.ChainDeleteUnapproved)
+	v2.POST("/chain/poke", controllers.Poke)
 
 	// contact
 	v2.POST("/contact/newsletter", controllers.ContactNewsletter)

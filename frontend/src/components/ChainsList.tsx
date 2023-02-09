@@ -4,15 +4,20 @@ import { useTranslation } from "react-i18next";
 
 import { DataExport } from "../components/DataExport";
 import { AuthContext } from "../providers/AuthProvider";
-import { chainGet, chainGetAll, chainRemoveUser } from "../api/chain";
-import { Chain } from "../api/types";
+import {
+  chainGet,
+  chainGetAll,
+  chainPoke,
+  chainRemoveUser,
+} from "../api/chain";
+import { Chain, UID } from "../api/types";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 
 export default function ChainsList() {
   const { t } = useTranslation();
   const { authUser, authUserRefresh } = useContext(AuthContext);
-  const { addToastError, addToastStatic } = useContext(ToastContext);
+  const { addToastError, addToastStatic, addToast } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>();
 
   useEffect(() => {
@@ -37,6 +42,18 @@ export default function ChainsList() {
         addToastError(GinParseErrors(t, err), err.status);
       }
     }
+  }
+
+  function handleClickPoke(e: MouseEvent, chainUID: UID) {
+    e.preventDefault();
+
+    chainPoke(chainUID)
+      .then((res) => {
+        addToast({ type: "success", message: t("pokeSucceeded") });
+      })
+      .catch((err) => {
+        addToastError(GinParseErrors(t, err), err.status);
+      });
   }
 
   function handleClickUnsubscribe(e: MouseEvent, chain: Chain) {
@@ -166,9 +183,9 @@ export default function ChainsList() {
                               tabIndex={0}
                               className="dropdown-content menu shadow bg-base-100 w-52 h-full"
                             >
-                              <li className="h-full">
+                              <li className="" key="leave">
                                 <a
-                                  className="h-full text-red font-bold"
+                                  className="text-red font-bold"
                                   href="#"
                                   onClick={(e) =>
                                     handleClickUnsubscribe(e, chain)
@@ -177,6 +194,15 @@ export default function ChainsList() {
                                   {userChain?.is_approved
                                     ? t("leaveLoop")
                                     : t("leaveWaitlist")}
+                                </a>
+                              </li>
+                              <li>
+                                <a
+                                  className="font-bold"
+                                  href="#"
+                                  onClick={(e) => handleClickPoke(e, chain.uid)}
+                                >
+                                  {t("poke")}
                                 </a>
                               </li>
                             </ul>
