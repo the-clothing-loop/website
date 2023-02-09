@@ -580,13 +580,13 @@ function ParticipantsTable(props: {
 
     return (
       <div className="dropdown dropdown-right">
-        <label tabIndex={0} className={`btn btn-ghost btn-small`}>
+        <label tabIndex={0} className={`btn btn-ghost btn-small m-4`}>
           <span className="text-xl feather feather-more-vertical" />
         </label>
         {userChain ? (
           <ul
             tabIndex={0}
-            className="dropdown-content menu shadow bg-base-100 rounded-lg"
+            className="dropdown-content menu shadow rounded-lg bg-base-100"
           >
                 {isTheUserApproved && (
                   <div>
