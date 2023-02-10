@@ -190,7 +190,7 @@ func EmailPoke(
 ) bool {
 	i18n := "en"
 	to := email
-	subject := emailsHeaders[i18n]["poke"]
+	subject := fmt.Sprintf(emailsHeaders[i18n]["poke"], participantName, chainName)
 	body, err := executeTemplate(c, emailsTemplates[i18n], "poke.gohtml", gin.H{
 		"Name":            hostName,
 		"ParticipantName": participantName,
