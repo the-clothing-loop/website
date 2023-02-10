@@ -395,7 +395,7 @@ export default function FindChain({ location }: { location: Location }) {
           </div>
 
           <div
-            className={`absolute z-30 top-4 left-4 max-h-full w-72 overflow-y-auto ${
+            className={`absolute z-30 top-4 left-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
               selectedChains.length ? "" : "hidden"
             }`}
           >
@@ -508,7 +508,7 @@ export default function FindChain({ location }: { location: Location }) {
                           <span className="feather feather-user-check ml-3"></span>
                         </p>
                       )
-                    ) : (
+                    ) : chain.open_to_new_members ? (
                       <button
                         onClick={(e) => handleClickJoin(e, chain.uid)}
                         type="button"
@@ -517,6 +517,11 @@ export default function FindChain({ location }: { location: Location }) {
                         {t("join")}
                         <span className="feather feather-arrow-right ml-3"></span>
                       </button>
+                    ) : (
+                      <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
+                        {t("closed")}
+                        <span className="feather feather-lock ml-3"></span>
+                      </p>
                     )}
                   </div>
                 </div>

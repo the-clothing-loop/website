@@ -15,6 +15,7 @@ let languages = [
   { lng: "en", title: "English", flag: "/images/flags/gb.svg" },
   { lng: "nl", title: "Dutch", flag: "/images/flags/nl.svg" },
   { lng: "fr", title: "French", flag: "/images/flags/fr.svg" },
+  { lng: "sv", title: "Swedish", flag: "/images/flags/se.svg" },
 ];
 
 if (!IS_PRODUCTION) {
