@@ -510,7 +510,22 @@ function ParticipantsTable(props: {
               });
             return props.refresh();
           },
-        },
+        }
+      ],
+    });
+  }
+
+  function onDeny(e: MouseEvent, user: User) {
+    e.preventDefault();
+
+    const chainUID = props.chain.uid;
+    const userName = user.name;
+    const userID = user.uid;
+
+    addToastStatic({
+      message: t("denyParticipant", { name: userName }),
+      type: "warning",
+      actions: [
         {
           text: t("deny"),
           type: "ghost",
@@ -525,7 +540,7 @@ function ParticipantsTable(props: {
               });
             return props.refresh();
           },
-        },
+        }
       ],
     });
   }
@@ -613,17 +628,30 @@ function ParticipantsTable(props: {
                 </li>
               </div>
             )) || (
-              <li>
-                <button
-                  type="button"
-                  onClick={(e) => onApprove(e, u)}
-                  className={"h-full text-teal font-bold"}
-                  aria-label={t("approveUser")}
-                  disabled={isTheUserApproved}
-                >
-                  {t("approveUser")}
-                </button>
-              </li>
+              <div>
+                <li>
+                  <button
+                    type="button"
+                    onClick={(e) => onApprove(e, u)}
+                    className={"h-full text-teal font-bold"}
+                    aria-label={t("approveUser")}
+                    disabled={isTheUserApproved}
+                  >
+                    {t("approveUser")}
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={(e) => onDeny(e, u)}
+                    className={"h-full text-red font-bold"}
+                    aria-label={t("denyUser")}
+                    disabled={isTheUserApproved}
+                  >
+                    {t("denyUser")}
+                  </button>
+                </li>
+              </div>
             )}
           </ul>
         ) : null}
