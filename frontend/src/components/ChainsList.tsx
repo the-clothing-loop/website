@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect, MouseEvent } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import Cookies from "js-cookie";
 
 import { DataExport } from "../components/DataExport";
 import { AuthContext } from "../providers/AuthProvider";
@@ -13,12 +14,14 @@ import {
 import { Chain, UID } from "../api/types";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
+import dayjs from "dayjs";
 
 export default function ChainsList() {
   const { t } = useTranslation();
   const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addToastError, addToastStatic, addToast } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>();
+  const [isPokeable, setIsPokeable] = useState(false);
 
   useEffect(() => {
     load();
@@ -41,6 +44,8 @@ export default function ChainsList() {
         console.error(err);
         addToastError(GinParseErrors(t, err), err.status);
       }
+
+      setIsPokeable(!(Cookies.get("poke") === authUser.uid));
     }
   }
 
@@ -49,10 +54,17 @@ export default function ChainsList() {
 
     chainPoke(chainUID)
       .then((res) => {
-        addToast({ type: "success", message: t("pokeSucceeded") });
+        addToast({ type: "success", message: t("reminderEmailSent") });
+        Cookies.set("poke", authUser!.uid, { expires: 7 });
+        setIsPokeable(false);
       })
       .catch((err) => {
         addToastError(GinParseErrors(t, err), err.status);
+        if (err.status === 429) {
+          // hide for a day
+          Cookies.set("poke", authUser!.uid, { expires: 1 });
+          setIsPokeable(false);
+        }
       });
   }
 
@@ -122,6 +134,12 @@ export default function ChainsList() {
                   (uc) => uc.chain_uid === chain.uid
                 );
                 let isUserAdmin = userChain?.is_chain_admin || false;
+                let userChainPokeable =
+                  isPokeable &&
+                  userChain?.is_approved === false &&
+                  dayjs(userChain.created_at).isBefore(
+                    dayjs().subtract(7, "days")
+                  );
 
                 return (
                   <tr key={chain.uid}>
@@ -182,18 +200,16 @@ export default function ChainsList() {
                             <ul
                               tabIndex={0}
                               className={`dropdown-content menu shadow bg-base-100 w-52 ${
-                                userChain.is_approved ? "h-full" : ""
+                                userChainPokeable ? "" : "h-full"
                               }`}
                             >
                               <li
-                                className={
-                                  userChain.is_approved ? "h-full" : ""
-                                }
+                                className={userChainPokeable ? "" : "h-full"}
                                 key="leave"
                               >
                                 <a
                                   className={`text-red font-bold ${
-                                    userChain.is_approved ? "h-full" : ""
+                                    userChainPokeable ? "" : "h-full"
                                   }`}
                                   href="#"
                                   onClick={(e) =>
@@ -205,7 +221,7 @@ export default function ChainsList() {
                                     : t("leaveWaitlist")}
                                 </a>
                               </li>
-                              {userChain.is_approved ? null : (
+                              {userChainPokeable ? (
                                 <li key="poke">
                                   <a
                                     className="font-bold"
@@ -214,10 +230,10 @@ export default function ChainsList() {
                                       handleClickPoke(e, chain.uid)
                                     }
                                   >
-                                    {t("pokeHost")}
+                                    {t("remindHost")}
                                   </a>
                                 </li>
-                              )}
+                              ) : null}
                             </ul>
                           ) : null}
                         </div>
