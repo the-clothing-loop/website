@@ -12,6 +12,8 @@ import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
+
 import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
@@ -534,9 +536,7 @@ function ParticipantsTable(props: {
   }
 
   function simplifyDays(uc: UserChain): string {
-    var createdAt = new Date(uc.created_at).getTime();
-    var currDate = new Date().getTime();
-    let numDays = Math.round(((currDate - createdAt) / (10 ** 6 * 864)) * 10);
+    var numDays = dayjs().diff(dayjs(uc.created_at), "days");
 
     if (numDays < 1) {
       return t("new");
