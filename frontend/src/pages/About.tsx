@@ -59,28 +59,27 @@ export default function About() {
           </div>
 
           <div className="flex flex-col md:flex-row md:items-center md:mb-16">
-            <div className="prose md:w-1/3 mb-6 md:mb-0 mx-auto items-center bg-teal-light py-10 md:py-20 px-0 md:px-6">
-              <h2 className="text-accent font-serif font-bold text-lg md:text-lg mb-4 px-5 my-auto">
-                <span className="inline md:block mr-4 font-serif font-bold text-5xl text-stroke-accent">
+            <div className="md:w-1/3 mb-6 md:mb-0 mx-auto items-center prose font-serif font-bold bg-teal-light p-12 md:p-8">
+              <h2 className="font-serif font-bold text-lg md:text-lg mb-4 my-auto">
+                <span className="inline md:block mb-8 text-5xl text-stroke-accent">
                   Want to Join?
                 </span>
-                <span>
-                  <Trans
-                    i18nKey="callToAction"
-                    ns="about"
-                    components={{
-                      p: <p></p>,
-                      aFind: (
-                        <Link
-                          className="link text-secondary font-bold"
-                          to="/loops/find"
-                        ></Link>
-                      ),
-                    }}
-                  ></Trans>
-                </span>
               </h2>
-              <p></p>
+              <p className="text-lg tracking-wide">
+                <Trans
+                  i18nKey="callToAction"
+                  ns="about"
+                  components={{
+                    p: <p></p>,
+                    aFind: (
+                      <Link
+                        className="link text-secondary font-bold"
+                        to="/loops/find"
+                      ></Link>
+                    ),
+                  }}
+                ></Trans>
+              </p>
             </div>
 
             <div className="prose md:w-2/3 mb-6 md:mb-0 px-6 mx-auto">
