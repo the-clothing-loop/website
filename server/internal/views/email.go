@@ -22,7 +22,7 @@ var emailsTemplates = map[string]*template.Template{
 }
 
 func init() {
-	lang := []string{"en", "nl", "fr"}
+	lang := []string{"en", "nl", "fr", "sv"}
 
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/headers.json", l))
