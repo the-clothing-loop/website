@@ -62,7 +62,7 @@ export default function About() {
             <div className="md:w-1/3 mb-6 md:mb-0 mx-auto items-center prose font-serif font-bold bg-teal-light p-12 md:p-8">
               <h2 className="font-serif font-bold text-lg md:text-lg mb-4 my-auto">
                 <span className="inline md:block mb-8 text-5xl text-stroke-accent">
-                  {t('wantToJoin')}
+                  {t("wantToJoin")}
                 </span>
               </h2>
               <p className="text-lg tracking-wide">
