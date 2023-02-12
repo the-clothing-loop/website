@@ -1,60 +1,60 @@
 {
-  "faqForParticipants": "FAQ for Participants",
+  "faqForParticipants": "FAQ för deltagare",
   "arrParticipants": [
     {
-      "question": "Are there rules on how much you can take out, and do you have to donate the same amount of clothes as you take out?",
-      "answer": "No, there are no rules here. Sometimes you take a bit more, sometimes you give more. Please don't add clothes to the bags that aren't of good quality, just to add something! It's better to have a bag half full of treasures, than to have a full bag that is of less quality."
+      "question": "Finns det regler för hur mycket man får ta ut, och måste man skänka lika mycket kläder som man tar ut?",
+      "answer": "Nej, det finns inga regler här. Ibland tar man lite mer, ibland ger man mer. Vänligen lägg inte till kläder i väskorna som inte är av bra kvalitet, bara för att lägga till något! Det är bättre att ha en påse halvfull med skatter, än att ha en hel påse som är av sämre kvalitet."
     },
     {
-      "question": "Can all sizes of clothing be in the same bag?",
-      "answer": "Mixed bags work perfectly well usually, as sizes vary per brand and proportions are different as well. But this only works within a certain width. We recommend having a mix of items from size 36 - 42 (S, M and L) and starting a new Clothing Loop for smaller or bigger sizes."
+      "question": "Får alla storlekar på kläder vara i samma väska?",
+      "answer": "Blandade påsar fungerar vanligtvis utmärkt, eftersom storlekarna varierar per märke och proportionerna också är olika. Men detta fungerar bara i viss mån. Vi rekommenderar att ha en blandning av artiklar från storlek 36 - 42 (S, M och L) och starta en ny klädslinga för mindre eller större storlekar."
     },
     {
-      "question": "How to avoid “Finders keepers, losers weepers”?",
-      "answer": "There are no guarantees that you will find something that you like. Sometimes a few bags will pass your house that may not have an item for you. But remember: finding one dream item is more worth than having 10 items in your wardrobe that you do not wear. And making someone else very happy with something that was collecting dust in your wardrobe is also a significant (and fun!) part of the Clothing Loop mentality!"
+      "question": "Hur undviker man \"Finders keepers, losers weepers\"?",
+      "answer": "Det finns inga garantier för att du hittar något som du gillar. Ibland passerar några väskor ditt hus som kanske inte har något för dig. Kom ihåg: att hitta ett drömplagg är mer värt än att ha 10 saker i din garderob som du inte bär. Och att göra någon annan väldigt nöjd med något som samlade damm i din garderob är också en betydande (och rolig!) del av Clothing Loop-mentaliteten!"
     },
     {
-      "question": "What to do with bulky clothes (like winter coats) that don't fit in the bag?",
-      "answer": "Big items can be photographed and shared via the communication channel, or through the Glide app. In a private message, people can respond and organize pick up."
+      "question": "Vad ska man göra med skrymmande kläder (som vinterrockar) som inte får plats i väskan?",
+      "answer": "Stora plagg kan fotograferas och delas via kommunikationskanalen eller genom Glide-appen. I ett privat meddelande kan människor svara och organisera hämtning."
     },
     {
-      "question": "Can I put shoes in the bag as well?",
-      "answer": "The short answer is yes, but keep in mind: shoes are more difficult to pass along than clothes. There are many more sizes, and they show wear a lot quicker than garments. So please be very selective with shoes! Only add “as good as new” pairs, and have no more than 2 pairs per bag."
+      "question": "Kan jag lägga skor i väskan också?",
+      "answer": "Korta svaret är ja, men kom ihåg: skor är svårare att förmedla än kläder. Det finns många fler storlekar, och de bär mycket snabbare än plagg. Så var mycket selektiv med skor! Lägg bara till \"så gott som nytt\" par och ha inte mer än 2 par per påse."
     }
   ],
-  "faqForHosts": "FAQ for Hosts",
+  "faqForHosts": "FAQ för värdar",
   "arrHosts": [
     {
-      "question": "How can I start using the app?",
-      "answer": "You can copy the app and use it within your group. You only have to fill in the address list in our downloadable template. It is super easy! We created a video tutorial and slide deck to help you get started. Please get in touch here if you still run into trouble!"
+      "question": "Hur kan jag börja använda appen?",
+      "answer": "Du kan kopiera appen och använda den inom din grupp. Du behöver bara fylla i adresslistan i vår nedladdningsbara mall. Det är superlätt! Vi skapade en videohandledning och ett bildspel för att hjälpa dig komma igång. Hör av dig här om du fortfarande stöter på problem!"
     },
     {
-      "question": "Are there graphic templates we can use?",
-      "answer": "Absolutely, we made you a folder where you can find logo's templates, manuals and all. Use as many as you like!"
+      "question": "Finns det grafiska mallar vi kan använda?",
+      "answer": "Absolut, vi har gjort en mapp till dig där du kan hitta logotypers mallar, manualer och allt. Använd så många du vill!"
     },
     {
-      "question": "Introducing a “Ghost rider” in the Loop",
-      "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! You can then introduce a “ghost rider” bag that travels in the other direction, so all of a sudden you have other people before you in the route, and also other styles in the bag. If you do so, please make people aware that they shouldn't put any items in the “ghost rider” bag that they have previously taken out of a regular bag. And keep the number of ghost rider bags limited to 1 or 2, to keep it special and also simple."
+      "question": "Starta med en \"spökryttare\" i slingan",
+      "answer": "När din slingan har pågått ett tag kanske du vill ändra på saker och ting lite! Du kan sedan introducera en \"spökryttare\"-väska som åker åt andra hållet, så helt plötsligt har du andra människor före dig på rutten, och även andra stilar i väskan. Om du gör det, vänligen gör folk medvetna om att de inte ska lägga några plagg i \"spökryttare\"-väskan som de tidigare har tagit ur en vanlig väska. Och håll antalet \"spökryttare\"-väskor begränsat till 1 eller 2, för att hålla det speciellt och även enkelt."
     },
     {
-      "question": "How to manage a large group of people in the communication channel?",
-      "answer": "Especially when groups get bigger, it is important to make sure people aren't bombarded with (irrelevant) messages. You can set up some rules for what should and shouldn't be shared via the group app. For example:<br /><br /><span>Yes,</span> in the app:<ul><li>Selfies of nice things you took from the bag or nice things that you are putting in</li><li>Compliments to others</li><li>Logistics and organizational relevant updates</li></ul><span>No,</span> not in the app:<ul><li>Everything unrelated to the Clothing Loop (requests for surveys, invites for new groups, Fund raising, memes, etc). If you want to ask everyone's input on something, use a polling app like LouLou instead</li></ul>"
+      "question": "Hur hanterar man en stor grupp människor i kommunikationskanalen?",
+      "answer": "Speciellt när grupper blir större är det viktigt att se till att människor inte bombarderas med (överflödig) meddelanden. Du kan sätta upp några regler för vad som ska och inte ska delas via gruppappen. Till exempel:<br /><br /><span>Ja,</span> i appen:<ul><li>Selfies av fina saker du tagit ur väskan eller fina saker som du stoppar i</li ><li>Kompliment till andra</li><li>Logistik- och organisationsrelevanta uppdateringar</li></ul><span>Nej,</span> inte i appen:<ul><li>Allt som inte har med klädslingan (förfrågningar om undersökningar, inbjudningar till nya grupper, insamlingar, memes, etc). Om du vill fråga allas synpunkter på något, använd en omröstningsapp som LouLou istället</li></ul>"
     },
     {
-      "question": "What if I no longer have time to manage the Clothing Loop I started?",
-      "answer": "Use the group! Ask if someone else wants to take over and host the loop."
+      "question": "Vad händer om jag inte längre har tid att hantera klädslingan jag startade?",
+      "answer": "Använd gruppen! Fråga om någon annan vill ta över och vara värd för slingan."
     },
     {
-      "question": "What if someone wants to join but lives too far away?",
-      "answer": "If someone signed up for your Loop but lives too far outside of your Loop area, it is up to you to decide if he/she/them may join. One thing you can do to decrease the distance between addresses, is to ask that person to find other participants between their area and the original Loop location."
+      "question": "Tänk om någon vill vara med men bor för långt bort?",
+      "answer": "Om någon har registrerat sig för din Loop men bor för långt utanför ditt Loop-område är det upp till dig att bestämma om han/hon/dem får gå med. En sak du kan göra för att minska avståndet mellan adresser är att be den personen att hitta andra deltagare mellan sitt område och den ursprungliga Loop-platsen."
     },
     {
-      "question": "What is an ideal group size?",
-      "answer": "We'd recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognize anything in the bag anymore, so you can keep swapping. There is no real maximum, it is up to you what still works! In the Netherlands a loop is on average 45 people. But there are loops running smoothly with 130 people!"
+      "question": "Vad är en idealisk gruppstorlek?",
+      "answer": "Vi rekommenderar att ha minst 20 personer i en grupp: efter 20 adresser känner du vanligtvis inte igen något i väskan längre, så du kan fortsätta byta. Det finns inget riktigt maximum, det är upp till dig vad som fortfarande fungerar! I Nederländerna är en loop i genomsnitt 45 personer. Men det finns loopar som går smidigt med 130 personer!"
     },
     {
-      "question": "What to do if the Clothing Loop does not work well?",
-      "answer": "If the quality of the clothing isn't high enough, people might leave the Loop. Make sure that everyone shares the responsibility for only adding good quality items.<br/><br/>Do you see anything that shouldn't be in the Loop? Take it out and donate it to a clothing container. This way, it can still be recycled. If in doubt, ask the person next to you if he/she agrees and decide then.<br/><br/>A fabric shaver can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, set a good example yourself; share some nice photos and encourage others to do the same!"
+      "question": "Vad ska man göra om klädslingan inte fungerar bra?",
+      "answer": "Om kvaliteten på kläderna inte är tillräckligt hög kan folk lämna loopen. Se till att alla delar ansvaret för att bara lägga till plagg av god kvalitet.<br/><br/>Ser du något som inte borde finnas i slingan? Ta ut den och donera den till en loppis och insamlingsställe för kläder. På så sätt kan den fortfarande återvinnas. Om du är osäker, fråga personen bredvid dig om han/hon håller med och bestäm dig då.<br/><br/>En tygrakapparat kan förlänga livslängden för ett klädesplagg enormt! Du kan dela med dig av dessa råd inom din gemenskap.<br/><br/>Och sist men inte minst, föregå med gott exempel själv; dela några fina bilder och uppmuntra andra att göra detsamma!"
     }
   ]
 }

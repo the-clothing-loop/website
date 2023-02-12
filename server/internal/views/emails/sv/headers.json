@@ -1,9 +1,9 @@
 {
-  "subscribed_to_newsletter": "Thank you for subscribing to the Clothing Loop",
-  "contact_confirmation": "Thank you for contacting the Clothing Loop",
-  "a_participant_joined_the_loop": "A participant just joined your Loop!",
-  "an_admin_approved_your_join_request": "An admin has approved of your request to join a loop!",
-  "login_verification": "Verify e-mail for the Clothing Loop",
-  "an_admin_denied_your_join_request": "Your request to join a loop has been denied",
-  "register_verification": "Verify e-mail for the Clothing Loop"
+  "subscribed_to_newsletter": "Tack för att du prenumererar på Clothing Loop",
+  "contact_confirmation": "Tack för att du prenumererar på Clothing Loop",
+  "a_participant_joined_the_loop": "En deltagare gick just med i din loop!",
+  "an_admin_approved_your_join_request": "En administratör har godkänt din begäran om att gå med i en loop!",
+  "login_verification": "Verifiera e-post för Clothing Loop",
+  "an_admin_denied_your_join_request": "Din begäran om att gå med i en loop har nekats",
+  "register_verification": "Verifiera e-post för Clothing Loop"
 }
