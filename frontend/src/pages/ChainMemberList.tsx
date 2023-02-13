@@ -442,22 +442,6 @@ function ParticipantsTable(props: {
     };
   }
 
-  function onChangeSelect(
-    e: ChangeEvent<HTMLInputElement>,
-    isApproved: boolean
-  ) {
-    let value = e.target.value;
-    let isSelectTypeChanged = isApproved !== isSelectApproved;
-
-    if (isSelectTypeChanged) setSelected([value]);
-    else if (e.target.checked) setSelected([...selected, value]);
-    else setSelected(selected.filter((s) => s !== value));
-
-    if (isSelectTypeChanged) {
-      setIsSelectApproved(isApproved);
-    }
-  }
-
   function onRemove(e: MouseEvent, user: User) {
     e.preventDefault();
 
@@ -634,7 +618,6 @@ function ParticipantsTable(props: {
                 })
                 .map((u) => {
                   const userChain = getUserChain(u);
-
                   return (
                     <tr key={u.uid}>
                       <td className="bg-yellow/[.6] sticky">
