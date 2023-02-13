@@ -429,12 +429,7 @@ function ParticipantsTable(props: {
     };
   }, [selected, props.users, props.chain]);
 
-  // TODO: add useMemo
-  function editMe(user: User, isParticipantApproved: boolean) {
-    if (!isParticipantApproved) {
-      return "#";
-    }
-
+  function editMe(user: User) {
     if (!user.uid) {
       addToastError("Edit button coundn't find user of: " + user.name, 500);
     }
@@ -510,7 +505,7 @@ function ParticipantsTable(props: {
               });
             return props.refresh();
           },
-        }
+        },
       ],
     });
   }
@@ -540,7 +535,7 @@ function ParticipantsTable(props: {
               });
             return props.refresh();
           },
-        }
+        },
       ],
     });
   }
@@ -585,78 +580,6 @@ function ParticipantsTable(props: {
 
   function toggleSortBy(_sortBy: typeof sortBy) {
     setSortBy(sortBy !== _sortBy ? _sortBy : "date");
-  }
-
-  // menu shadow bg-base-100 w-52 h-full
-  //rounded-b-lg flex flex-col justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0
-  // flex flex-col mt-3 ml-3 bg-base-100 rounded-lg p-2
-  function displayKebabMenu(u: User, isTheUserApproved: boolean) {
-    const userChain = getUserChain(u);
-
-    return (
-      <div className="dropdown dropdown-right">
-        <label tabIndex={0} className={`btn btn-ghost btn-small m-4`}>
-          <span className="text-xl feather feather-more-vertical" />
-        </label>
-        {userChain ? (
-          <ul
-            tabIndex={0}
-            className="dropdown-content menu shadow rounded-lg bg-base-100"
-          >
-            {(isTheUserApproved && (
-              <div>
-                <li>
-                  <button
-                    type="button"
-                    onClick={(e) => onRemove(e, u)}
-                    className={"h-full text-red font-bold"}
-                    aria-label={t("removeFromLoop")}
-                    disabled={!isTheUserApproved}
-                  >
-                    {t("removeFromLoop")}
-                  </button>
-                </li>
-                <li>
-                  <Link
-                    className={"h-full text-yellow font-bold"}
-                    aria-label={t("edit")}
-                    aria-disabled={!isTheUserApproved}
-                    to={editMe(u, isTheUserApproved)}
-                  >
-                    {t("edit")}
-                  </Link>
-                </li>
-              </div>
-            )) || (
-              <div>
-                <li>
-                  <button
-                    type="button"
-                    onClick={(e) => onApprove(e, u)}
-                    className={"h-full text-teal font-bold"}
-                    aria-label={t("approveUser")}
-                    disabled={isTheUserApproved}
-                  >
-                    {t("approveUser")}
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    onClick={(e) => onDeny(e, u)}
-                    className={"h-full text-red font-bold"}
-                    aria-label={t("denyUser")}
-                    disabled={isTheUserApproved}
-                  >
-                    {t("denyUser")}
-                  </button>
-                </li>
-              </div>
-            )}
-          </ul>
-        ) : null}
-      </div>
-    );
   }
 
   return (
@@ -710,10 +633,49 @@ function ParticipantsTable(props: {
                     : 1;
                 })
                 .map((u) => {
+                  const userChain = getUserChain(u);
+
                   return (
                     <tr key={u.uid}>
                       <td className="bg-yellow/[.6] sticky">
-                        {displayKebabMenu(u, false)}
+                        <div className="dropdown dropdown-right">
+                          <label
+                            tabIndex={0}
+                            className={`btn btn-ghost btn-small m-4`}
+                          >
+                            <span className="text-xl feather feather-more-vertical" />
+                          </label>
+
+                          {userChain ? (
+                            <ul
+                              tabIndex={0}
+                              className="dropdown-content menu shadow rounded-lg bg-base-100"
+                            >
+                              <div>
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => onApprove(e, u)}
+                                    className={"h-full text-teal font-bold"}
+                                    aria-label={t("approveUser")}
+                                  >
+                                    {t("approveUser")}
+                                  </button>
+                                </li>
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => onDeny(e, u)}
+                                    className={"h-full text-red font-bold"}
+                                    aria-label={t("denyUser")}
+                                  >
+                                    {t("denyUser")}
+                                  </button>
+                                </li>
+                              </div>
+                            </ul>
+                          ) : null}
+                        </div>
                       </td>
                       <td className="bg-yellow/[.6]">{u.name}</td>
                       <td className="bg-yellow/[.6]">
@@ -738,7 +700,42 @@ function ParticipantsTable(props: {
 
                 return (
                   <tr key={u.uid}>
-                    <td className="sticky">{displayKebabMenu(u, true)}</td>
+                    <td className="sticky">
+                      <div className="dropdown dropdown-right">
+                        <label
+                          tabIndex={0}
+                          className={`btn btn-ghost btn-small m-4`}
+                        >
+                          <span className="text-xl feather feather-more-vertical" />
+                        </label>
+                        <ul
+                          tabIndex={0}
+                          className="dropdown-content menu shadow rounded-lg bg-base-100"
+                        >
+                          <div>
+                            <li>
+                              <button
+                                type="button"
+                                onClick={(e) => onRemove(e, u)}
+                                className={"h-full text-red font-bold"}
+                                aria-label={t("removeFromLoop")}
+                              >
+                                {t("removeFromLoop")}
+                              </button>
+                            </li>
+                            <li>
+                              <Link
+                                className={"h-full text-yellow font-bold"}
+                                aria-label={t("edit")}
+                                to={editMe(u)}
+                              >
+                                {t("edit")}
+                              </Link>
+                            </li>
+                          </div>
+                        </ul>
+                      </div>
+                    </td>
                     <td>{u.name}</td>
                     <td>
                       <span className="block w-48 text-sm whitespace-normal">
