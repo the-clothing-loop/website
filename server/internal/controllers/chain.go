@@ -68,6 +68,7 @@ func ChainCreate(c *gin.Context) {
 				UserID:       user.ID,
 				IsChainAdmin: true,
 				IsApproved:   true,
+				RouteOrder:   0,
 			},
 		},
 	}
@@ -200,6 +201,7 @@ func ChainUpdate(c *gin.Context) {
 		Radius           *float32  `json:"radius,omitempty"`
 		Sizes            *[]string `json:"sizes,omitempty"`
 		Genders          *[]string `json:"genders,omitempty"`
+		Route            *[]string `json:"route,omitempty"`
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 	}

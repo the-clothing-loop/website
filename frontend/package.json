@@ -34,6 +34,7 @@
     "@types/mapbox__mapbox-gl-geocoder": "^4.7.1",
     "@types/react-csv": "^1.1.2",
     "@types/react-helmet": "^6.1.1",
+    "dayjs": "^1.11.7",
     "deck.gl": "^8.8.20",
     "events": "^3.3.0",
     "i18next": "^22.4.6",
