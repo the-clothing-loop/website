@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, MouseEvent, useRef } from "react";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
@@ -17,19 +17,22 @@ export default function FAQ() {
     question: string;
     answer: string;
     open: boolean;
+    id: number;
     onChange: () => void;
   }) {
     return (
       <details
-        className={`last-of-type:mb border-none rounded-lg p-2 ${
-          props.open ? "bg-teal-light" : ""
+        className={`last-of-type:mb border-none rounded-lg p-2 overflow-hidden transition-[max-height] duration-700 ease-in-out ${
+          props.open ? `bg-teal-light max-h-96` : ""
         }`}
         open={props.open}
+        id={"detailsID" + props.id}
       >
         <summary
           tabIndex={0}
           className="p-2 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 rounded-lg cursor-pointer"
-          onClick={props.onChange}
+          onClick={(e) => eventHandler(e)}
+          id={"questionID" + props.id}
         >
           <span>{props.question}</span>
           <span
@@ -43,8 +46,37 @@ export default function FAQ() {
         </div>
       </details>
     );
-  }
 
+    function getClosedHeight() {
+      const question = document.getElementById("questionID" + props.id);
+      let questionHeight = question?.offsetHeight;
+
+      // Account for padding
+      if(questionHeight){
+      questionHeight += 16
+      }
+      return questionHeight;
+    }
+
+    function eventHandler(e: MouseEvent) {
+      e.preventDefault();
+
+      let details = document.getElementById("detailsID" + props.id);
+      let detailsHeight = getClosedHeight();
+
+      if (props.open) {
+
+      //  details!.classList.add("max-h-[60px]");
+        details!.classList.add("max-h-["+detailsHeight?.toString()+"px]");
+
+        setTimeout(() => {
+          props.onChange();
+        }, 700);
+      } else {
+        props.onChange();
+      }
+    }
+  }
   function setOpen(
     set: Dispatch<SetStateAction<number>>,
     index: number
@@ -85,6 +117,7 @@ export default function FAQ() {
                   key={index}
                   question={el.question}
                   answer={el.answer}
+                  id={index}
                 />
               ))}
             </div>
@@ -101,6 +134,7 @@ export default function FAQ() {
                   key={index}
                   question={el.question}
                   answer={el.answer}
+                  id={index + 5}
                 />
               ))}
             </div>
