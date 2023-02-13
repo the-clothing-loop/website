@@ -64,3 +64,9 @@ export function chainDeleteUnapproved(chainUID: string, userUID: string) {
     `/v2/chain/unapproved-user?user_uid=${userUID}&chain_uid=${chainUID}`
   );
 }
+
+export function chainPoke(chainUID: UID) {
+  return axios.post<never>("/v2/chain/poke", {
+    chain_uid: chainUID,
+  });
+}
