@@ -47,9 +47,9 @@ const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
 
-let base = "/:locale(en|nl|fr)";
+let base = "/:locale(en|nl|fr|sv)";
 if (!IS_PRODUCTION) {
-  base = "/:locale(en|nl|de|fr|es)";
+  base = "/:locale(en|nl|de|fr|es|sv)";
 }
 
 export default function App() {

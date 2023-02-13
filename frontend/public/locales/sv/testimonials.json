@@ -1,29 +1,29 @@
 {
-  "testimonials": "Testimonials",
+  "testimonials": "Rekommendationer",
   "arrTestimonials": [
     {
       "name": "Roos",
-      "message": "I think it's great to be able to 'shop' regularly without burdening my wallet or the environment."
+      "message": "Jag tycker att det är fantastiskt att kunna 'shoppa' regelbundet utan att belasta min plånbok eller miljön."
     },
     {
-      "name": "Unknown",
-      "message": "Never too young to learn! My daughters, aged 13 and 16, regularly pick something cool from the bags. I love how this teaches them that clothes can very well be found second-hand. In my opinion, sustainability and environmental awareness should be an important part of any education!"
+      "name": "Okänd",
+      "message": "Aldrig för ung för att lära sig! Mina döttrar, 13 och 16 år, plockar regelbundet något coolt från påsarna. Jag älskar hur detta lär dem att kläder mycket väl kan hittas second hand. Enligt min mening borde hållbarhet och miljömedvetenhet vara en viktig del av all utbildning!"
     },
     {
-      "name": "Participant in Barendrecht",
-      "message": "Someone in my Loop landed a new job. Guess who's dress she wore to her interview?"
+      "name": "Deltagare i Barendrecht",
+      "message": "Någon i min Loop fick ett nytt jobb. Gissa vems klänning hon bar på sin intervju?"
     },
     {
       "name": "Nienke",
-      "message": "The best part is being able to try clothes that you would never pick in the store, and realizing that you really like them."
+      "message": "Det bästa är att kunna prova kläder som du aldrig skulle välja i butiken och inse att du verkligen gillar dem."
     },
     {
       "name": "Lia",
-      "message": "A nice bonus is that you get to know people in your neighborhood, usually neighbors with pretty green hearts as well. As a result, it is a small step – if you really need something but would rather not buy it – to toss a loan request into the Loop, such as for ski pants or a costume for a theme party!"
+      "message": "En trevlig bonus är att du lär känna människor i ditt närområde, oftast grannar med ganska gröna hjärtan också. Som ett resultat är det ett litet steg – om du verkligen behöver något men helst inte vill köpa det – att slänga in en låneförfrågan i Loop, som till exempel för skidbyxor eller en kostym till en temafest!"
     },
     {
       "name": "Ella",
-      "message": "After receiving the third bag, it hits me just what an incredible amount of clothes we have in our closets!"
+      "message": "Efter att ha tagit emot den tredje väskan slog det mig precis vilken otrolig mängd kläder vi har i våra garderober!"
     }
   ]
 }
