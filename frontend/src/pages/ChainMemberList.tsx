@@ -31,7 +31,7 @@ import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
-import { userInfo } from "os";
+import { GinParseErrors } from "../util/gin-errors";
 
 interface Params {
   chainUID: string;
@@ -137,10 +137,10 @@ export default function ChainMemberList() {
                 <span className="feather feather-edit-2" />
               </Link>
 
-              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl">
+              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl break-words">
                 {chain.name}
               </h1>
-              <p className="text-lg mb-6">{chain.description}</p>
+              <p className="text-lg mb-6 break-words">{chain.description}</p>
 
               <dl>
                 <dt className="font-bold mb-1">{t("categories")}</dt>
@@ -448,18 +448,18 @@ function ParticipantsTable(props: {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
-    const userName = user.name;
-    const userID = user.uid;
 
     addToastStatic({
-      message: t("areYouSureRemoveParticipant", { name: userName }),
+      message: t("areYouSureRemoveParticipant", { name: user.name }),
       type: "warning",
       actions: [
         {
           text: t("remove"),
           type: "ghost",
           fn: () => {
-            chainRemoveUser(chainUID, userID);
+            try {
+              chainRemoveUser(chainUID, user.uid);
+            } catch (err: any) {}
             return props.refresh();
           },
         },
@@ -471,18 +471,16 @@ function ParticipantsTable(props: {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
-    const userName = user.name;
-    const userID = user.uid;
 
     addToastStatic({
-      message: t("approveParticipant", { name: userName }),
+      message: t("approveParticipant", { name: user.name }),
       type: "warning",
       actions: [
         {
           text: t("approve"),
           type: "ghost",
           fn: () => {
-            chainUserApprove(chainUID, userID);
+            chainUserApprove(chainUID, user.uid);
             if (window.goatcounter)
               window.goatcounter.count({
                 path: "approve-user",
@@ -500,8 +498,6 @@ function ParticipantsTable(props: {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
-    const userName = user.name;
-    const userID = user.uid;
 
     addToastStatic({
       message: t("denyParticipant", { name: userName }),
@@ -511,7 +507,7 @@ function ParticipantsTable(props: {
           text: t("deny"),
           type: "ghost",
           fn: () => {
-            chainDeleteUnapproved(chainUID, userID);
+            chainDeleteUnapproved(chainUID, user.uid);
             setSelected([]);
             if (window.goatcounter)
               window.goatcounter.count({
@@ -573,7 +569,6 @@ function ParticipantsTable(props: {
           <table className="table table-compact w-full">
             <thead>
               <tr>
-                <th className="sticky z-0"></th>
                 <th>
                   <span>{t("name")}</span>
                   <SortButton
@@ -604,6 +599,7 @@ function ParticipantsTable(props: {
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
+                <th className="sticky z-0"></th>
               </tr>
             </thead>
             <tbody>
@@ -618,8 +614,24 @@ function ParticipantsTable(props: {
                 })
                 .map((u) => {
                   const userChain = getUserChain(u);
+
                   return (
                     <tr key={u.uid}>
+                      <td className="bg-yellow/[.6]">{u.name}</td>
+                      <td className="bg-yellow/[.6]">
+                        <span className="block w-48 text-sm whitespace-normal">
+                          {u.address}
+                        </span>
+                      </td>
+                      <td className="bg-yellow/[.6] text-sm leading-relaxed">
+                        {u.email}
+                        <br />
+                        {u.phone_number}
+                      </td>
+                      <td className="bg-yellow/[.6] align-middle"></td>
+                      <td className="bg-yellow/[.6] text-center">
+                        {t("pendingApproval")}
+                      </td>
                       <td className="bg-yellow/[.6] sticky">
                         <div className="dropdown dropdown-right">
                           <label
@@ -660,21 +672,6 @@ function ParticipantsTable(props: {
                           ) : null}
                         </div>
                       </td>
-                      <td className="bg-yellow/[.6]">{u.name}</td>
-                      <td className="bg-yellow/[.6]">
-                        <span className="block w-48 text-sm whitespace-normal">
-                          {u.address}
-                        </span>
-                      </td>
-                      <td className="bg-yellow/[.6] text-sm leading-relaxed">
-                        {u.email}
-                        <br />
-                        {u.phone_number}
-                      </td>
-                      <td className="bg-yellow/[.6] align-middle"></td>
-                      <td className="bg-yellow/[.6] text-center">
-                        {t("pendingApproval")}
-                      </td>
                     </tr>
                   );
                 })}
@@ -683,6 +680,26 @@ function ParticipantsTable(props: {
 
                 return (
                   <tr key={u.uid}>
+                    <td>{u.name}</td>
+                    <td>
+                      <span className="block w-48 text-sm whitespace-normal">
+                        {u.address}
+                      </span>
+                    </td>
+                    <td className="text-sm leading-relaxed">
+                      {u.email}
+                      <br />
+                      {u.phone_number}
+                    </td>
+                    <td className="align-middle">
+                      <span
+                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                        tabIndex={0}
+                      >
+                        {SizeBadges(t, u.sizes)}
+                      </span>
+                    </td>
+                    <td className="text-center">{simplifyDays(userChain)}</td>
                     <td className="sticky">
                       <div className="dropdown dropdown-right">
                         <label
@@ -719,34 +736,12 @@ function ParticipantsTable(props: {
                         </ul>
                       </div>
                     </td>
-                    <td>{u.name}</td>
-                    <td>
-                      <span className="block w-48 text-sm whitespace-normal">
-                        {u.address}
-                      </span>
-                    </td>
-                    <td className="text-sm leading-relaxed">
-                      {u.email}
-                      <br />
-                      {u.phone_number}
-                    </td>
-                    <td className="align-middle">
-                      <span
-                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
-                        tabIndex={0}
-                      >
-                        {SizeBadges(t, u.sizes)}
-                      </span>
-                    </td>
-                    <td className="text-center">{simplifyDays(userChain)}</td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
         </div>
-
-        <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0" />
       </div>
     </>
   );
