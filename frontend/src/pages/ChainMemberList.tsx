@@ -12,6 +12,8 @@ import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
+
 import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
@@ -28,7 +30,6 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
-import { routeGetOrder } from "../api/route";
 
 interface Params {
   chainUID: string;
@@ -411,40 +412,7 @@ function ParticipantsTable(props: {
   const { addToastError, addToastStatic } = useContext(ToastContext);
   const [isSelectApproved, setIsSelectApproved] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<"name" | "email" | "date" | "route">(
-    "date"
-  );
-  const [route, setRoute] = useState<string[]>([]);
-  const [dragging, setDragging] = useState<string>("");
-  const [dragTarget, setDragTarget] = useState<string>("");
-
-  const dragColor = "bg-grey/[.1]";
-
-  useEffect(() => {
-    if (!props.chain) return;
-    routeUpdate();
-  }, [props.chain]);
-
-  async function routeUpdate() {
-    const res = await routeGetOrder(props.chain.uid);
-    setRoute(res.data);
-  }
-
-  async function routePop(userUID: string) {
-    let chainRoute = new Array();
-    if (route != null) {
-      chainRoute = route;
-    }
-    console.log(chainRoute);
-
-    const toPop = route?.indexOf(userUID);
-    if (toPop) {
-      chainRoute.splice(toPop, 1);
-      console.log(chainRoute);
-      setRoute(chainRoute);
-    }
-    return;
-  }
+  const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
     if (selected.length !== 1 || !isSelectApproved) {
@@ -568,9 +536,7 @@ function ParticipantsTable(props: {
   }
 
   function simplifyDays(uc: UserChain): string {
-    var createdAt = new Date(uc.created_at).getTime();
-    var currDate = new Date().getTime();
-    let numDays = Math.round(((currDate - createdAt) / (10 ** 6 * 864)) * 10);
+    var numDays = dayjs().diff(dayjs(uc.created_at), "days");
 
     if (numDays < 1) {
       return t("new");
@@ -602,29 +568,11 @@ function ParticipantsTable(props: {
 
           return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
         });
-      case "route":
-        return props.users.sort((a, b) => {
-          return route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1;
-        });
     }
   }
 
   function toggleSortBy(_sortBy: typeof sortBy) {
     setSortBy(sortBy !== _sortBy ? _sortBy : "date");
-  }
-
-  function draggingEnd(evt: string) {
-    let newRoute: string[] = route;
-
-    const userA = route.indexOf(dragging);
-    const userB = route.indexOf(dragTarget);
-
-    newRoute[userA] = newRoute[userB];
-    newRoute[userB] = dragging;
-
-    setDragTarget("");
-    setRoute(newRoute);
-    routeUpdate();
   }
 
   return (
@@ -665,16 +613,6 @@ function ParticipantsTable(props: {
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
-                <th>
-                  <span>{t("Route")}</span>
-                  <SortButton
-                    isSelected={sortBy === "route"}
-                    className="ml-1"
-                    onClick={() => {
-                      toggleSortBy("route");
-                    }}
-                  />
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -713,41 +651,19 @@ function ParticipantsTable(props: {
                         <br />
                         {u.phone_number}
                       </td>
-                      <td className="bg-yellow/[.6]"></td>
+                      <td className="bg-yellow/[.6] align-middle"></td>
                       <td className="bg-yellow/[.6] text-center">
                         {t("pendingApproval")}
                       </td>
-                      <td className="bg-yellow/[.6]"></td>
                     </tr>
                   );
                 })}
               {sortOrder(sortBy).map((u: User) => {
                 const userChain = getUserChain(u);
-                const routeOrderNumber = route.indexOf(u.uid) + 1;
 
                 return (
-                  <tr
-                    key={u.uid}
-                    draggable={sortBy === "route"}
-                    onDragStart={() => {
-                      setDragging(u.uid);
-                    }}
-                    onDrag={() => {
-                      setDragging(u.uid);
-                      console.log(dragging);
-                    }}
-                    onDragEnd={() => {
-                      draggingEnd(u.uid);
-                    }}
-                    onDragOver={() => {
-                      setDragTarget(u.uid);
-                    }}
-                  >
-                    <td
-                      className={`sticky ${
-                        u.uid == dragTarget ? dragColor : ""
-                      }`}
-                    >
+                  <tr key={u.uid}>
+                    <td className="sticky">
                       <input
                         type="checkbox"
                         name="selectedChainAdmin"
@@ -757,51 +673,26 @@ function ParticipantsTable(props: {
                         value={u.uid}
                       />
                     </td>
-                    <td className={`${u.uid == dragTarget ? dragColor : ""}`}>
-                      {u.name}
-                    </td>
-                    <td className={`${u.uid == dragTarget ? dragColor : ""}`}>
+                    <td>{u.name}</td>
+                    <td>
                       <span className="block w-48 text-sm whitespace-normal">
                         {u.address}
                       </span>
                     </td>
-                    <td
-                      className={`text-sm leading-relaxed ${
-                        u.uid == dragTarget ? dragColor : ""
-                      }`}
-                    >
+                    <td className="text-sm leading-relaxed">
                       {u.email}
                       <br />
                       {u.phone_number}
                     </td>
-                    <td
-                      className={`align-middle ${
-                        u.uid == dragTarget ? dragColor : ""
-                      }`}
-                    >
+                    <td className="align-middle">
                       <span
-                        className={`block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2  ${
-                          u.uid == dragTarget ? "bg-grey/[.02]" : ""
-                        }`}
+                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
                         tabIndex={0}
                       >
                         {SizeBadges(t, u.sizes)}
                       </span>
                     </td>
-                    <td
-                      className={`text-center ${
-                        u.uid == dragTarget ? dragColor : ""
-                      }`}
-                    >
-                      {simplifyDays(userChain)}
-                    </td>
-                    <td
-                      className={`text-center ${
-                        u.uid == dragTarget ? dragColor : ""
-                      }`}
-                    >
-                      {routeOrderNumber > 0 ? routeOrderNumber : ""}
-                    </td>
+                    <td className="text-center">{simplifyDays(userChain)}</td>
                   </tr>
                 );
               })}
