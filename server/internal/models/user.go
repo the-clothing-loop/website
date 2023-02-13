@@ -10,6 +10,7 @@ import (
 )
 
 var ErrUserNotFound = errors.New("User not found")
+var ErrAddUserChainsToObject = errors.New("Unable to add associated loops to user")
 
 type User struct {
 	ID              uint        `json:"-"`
@@ -29,33 +30,6 @@ type User struct {
 	CreatedAt       time.Time   `json:"-"`
 	UpdatedAt       time.Time   `json:"-"`
 }
-
-const (
-	RoleUser       = 1
-	RoleChainAdmin = 2
-	RoleRootAdmin  = 3
-)
-
-type UserToken struct {
-	ID        uint
-	Token     string `gorm:"unique"`
-	Verified  bool
-	UserID    uint
-	CreatedAt time.Time
-}
-
-type UserChain struct {
-	ID           uint      `json:"-"`
-	UserID       uint      `json:"-" gorm:"index"`
-	UserUID      string    `json:"user_uid" gorm:"-:migration;<-:false"`
-	ChainID      uint      `json:"-"`
-	ChainUID     string    `json:"chain_uid" gorm:"-:migration;<-:false"`
-	IsChainAdmin bool      `json:"is_chain_admin"`
-	CreatedAt    time.Time `json:"created_at"`
-	IsApproved   bool      `json:"is_approved"`
-}
-
-var ErrAddUserChainsToObject = errors.New("Unable to add associated loops to user")
 
 func (u *User) AddUserChainsToObject(db *gorm.DB) error {
 	userChains := []UserChain{}

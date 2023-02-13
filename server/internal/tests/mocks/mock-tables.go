@@ -24,6 +24,7 @@ type MockChainAndUserOptions struct {
 	IsChainAdmin       bool
 	IsNotPublished     bool
 	IsOpenToNewMembers bool
+	RouteOrderIndex    int
 }
 
 func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
@@ -46,6 +47,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 			{
 				ChainID:      chainID,
 				IsChainAdmin: o.IsChainAdmin,
+				RouteOrder:   o.RouteOrderIndex,
 			},
 		},
 	}
