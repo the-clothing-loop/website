@@ -227,5 +227,7 @@
   "loopLocation": "Loop plats",
   "helloN": "Hello, {{ n }}",
   "toolkitFolder": "Toolkit Folder",
-  "editAccount": "Edit Account"
+  "editAccount": "Edit Account",
+  "remindHost": "Remind Host",
+  "reminderEmailSent": "Reminder email sent"
 }
