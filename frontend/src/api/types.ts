@@ -18,7 +18,6 @@ export interface UserChain {
   is_chain_admin: boolean;
   is_approved: boolean;
   created_at: string;
-  route: string[];
 }
 
 export interface Chain {
@@ -31,7 +30,6 @@ export interface Chain {
   radius: number;
   genders: string[] | null;
   sizes: string[] | null;
-  route: string[] | null;
   published: boolean;
   open_to_new_members: boolean;
 }
