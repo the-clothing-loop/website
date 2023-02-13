@@ -36,16 +36,22 @@ type Chain struct {
 func (c *Chain) SetRouteOrderByUserUIDs(db *gorm.DB, userUIDs []string) error {
 	tx := db.Begin()
 	for i := 0; i < len(userUIDs); i++ {
-		userID := userUIDs[i]
-		err := tx.Exec(`UPDATE user_chains SET route_order = ? WHERE user_id = ? AND chain_id = ?`, i+1, userID, c.ID).Error
+		userUID := userUIDs[i]
+		err := tx.Exec(`
+UPDATE user_chains SET route_order = ?
+WHERE user_id = (
+	SELECT id FROM users
+	WHERE uid = ?
+	LIMIT 1
+)
+AND chain_id = ?
+		`, i+1, userUID, c.ID).Error
 		if err != nil {
 			tx.Rollback()
 			return err
 		}
 	}
-	tx.Commit()
-
-	return nil
+	return tx.Commit().Error
 }
 
 func (c *Chain) GetRouteOrderByUserUID(db *gorm.DB) ([]string, error) {
