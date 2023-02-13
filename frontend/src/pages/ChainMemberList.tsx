@@ -8,7 +8,7 @@ import {
   useRef,
   MouseEventHandler,
 } from "react";
-import { useParams, Link, useHistory, Route } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
@@ -28,6 +28,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
+import { routeGetOrder } from "../api/route";
 
 interface Params {
   chainUID: string;
@@ -413,22 +414,20 @@ function ParticipantsTable(props: {
   const [sortBy, setSortBy] = useState<"name" | "email" | "date" | "route">(
     "date"
   );
-  const [route, setRoute] = useState<string[] | null>(props.chain.route);
+  const [route, setRoute] = useState<string[]>([]);
   const [dragging, setDragging] = useState<string>("");
   const [dragTarget, setDragTarget] = useState<string>("");
 
   const dragColor = "bg-grey/[.1]";
 
   useEffect(() => {
+    if (!props.chain) return;
     routeUpdate();
-  }, [route]);
+  }, [props.chain]);
 
   async function routeUpdate() {
-    await chainUpdate({
-      uid: props.chain.uid,
-      route: route,
-    });
-    console.log(route);
+    const res = await routeGetOrder(props.chain.uid);
+    setRoute(res.data);
   }
 
   async function routePop(userUID: string) {
@@ -503,7 +502,6 @@ function ParticipantsTable(props: {
                 })
               )
             ).finally(() => {
-              _selected.map((s) => routePop(s));
               setSelected([]);
               return props.refresh();
             });
@@ -516,10 +514,6 @@ function ParticipantsTable(props: {
   function onApprove() {
     if (!selected.length) return;
     const chainUID = props.chain.uid;
-    let chainRoute = new Array();
-    if (route != null) {
-      chainRoute = route;
-    }
     const _selected = selected;
     const userNames = props.unapprovedUsers
       .filter((u) => _selected.includes(u.uid))
@@ -547,12 +541,6 @@ function ParticipantsTable(props: {
                   title: "Approve user",
                   event: true,
                 });
-
-              _selected.map((s) => chainRoute?.push(s));
-              {
-                console.log(chainRoute);
-              }
-              setRoute(chainRoute);
               return props.refresh();
             });
           },
@@ -616,11 +604,7 @@ function ParticipantsTable(props: {
         });
       case "route":
         return props.users.sort((a, b) => {
-          const ucA = getUserChain(a);
-          const ucB = getUserChain(b);
-          return route!.indexOf(ucA.user_uid) < route!.indexOf(ucB.user_uid)
-            ? -1
-            : 1;
+          return route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1;
         });
     }
   }
@@ -630,19 +614,16 @@ function ParticipantsTable(props: {
   }
 
   function draggingEnd(evt: string) {
-    let chainRoute = new Array();
-    if (route != null) {
-      chainRoute = route;
-    }
+    let newRoute: string[] = route;
 
-    const userA = route!.indexOf(dragging);
-    const userB = route!.indexOf(dragTarget);
+    const userA = route.indexOf(dragging);
+    const userB = route.indexOf(dragTarget);
 
-    chainRoute[userA] = chainRoute[userB];
-    chainRoute[userB] = dragging;
+    newRoute[userA] = newRoute[userB];
+    newRoute[userB] = dragging;
 
     setDragTarget("");
-    setRoute(chainRoute);
+    setRoute(newRoute);
     routeUpdate();
   }
 
@@ -693,7 +674,6 @@ function ParticipantsTable(props: {
                       toggleSortBy("route");
                     }}
                   />
-                  <SortButton className="ml-1" />
                 </th>
               </tr>
             </thead>
@@ -733,16 +713,17 @@ function ParticipantsTable(props: {
                         <br />
                         {u.phone_number}
                       </td>
-                      <td className="bg-yellow/[.6] align-middle"></td>
+                      <td className="bg-yellow/[.6]"></td>
                       <td className="bg-yellow/[.6] text-center">
                         {t("pendingApproval")}
                       </td>
-                      <td className="bg-yellow/[.6] text-center">{t("N/A")}</td>
+                      <td className="bg-yellow/[.6]"></td>
                     </tr>
                   );
                 })}
               {sortOrder(sortBy).map((u: User) => {
                 const userChain = getUserChain(u);
+                const routeOrderNumber = route.indexOf(u.uid) + 1;
 
                 return (
                   <tr
@@ -780,7 +761,7 @@ function ParticipantsTable(props: {
                       {u.name}
                     </td>
                     <td className={`${u.uid == dragTarget ? dragColor : ""}`}>
-                      <span className={`block w-48 text-sm whitespace-normal`}>
+                      <span className="block w-48 text-sm whitespace-normal">
                         {u.address}
                       </span>
                     </td>
@@ -819,7 +800,7 @@ function ParticipantsTable(props: {
                         u.uid == dragTarget ? dragColor : ""
                       }`}
                     >
-                      {route!.indexOf(u.uid) + 1}
+                      {routeOrderNumber > 0 ? routeOrderNumber : ""}
                     </td>
                   </tr>
                 );
