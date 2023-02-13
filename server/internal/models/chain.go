@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"gopkg.in/guregu/null.v3/zero"
+	"gorm.io/gorm"
 )
 
 var validate = validator.New()
@@ -27,8 +28,37 @@ type Chain struct {
 	Sizes            []string `gorm:"serializer:json"`
 	Genders          []string `gorm:"serializer:json"`
 	UserChains       []UserChain
-	Route 				   []string `gorm:"serializer:json; default:[]"`
-	CreatedAt        time.Time	
+	CreatedAt        time.Time
 	UpdatedAt        time.Time
 	DeletedAt        zero.Time
+}
+
+func (c *Chain) SetRouteOrderByUserUIDs(db *gorm.DB, userUIDs []string) error {
+	tx := db.Begin()
+	for i := 0; i < len(userUIDs); i++ {
+		userID := userUIDs[i]
+		err := tx.Exec(`UPDATE user_chains SET route_order = ? WHERE user_id = ? AND chain_id = ?`, i+1, userID, c.ID).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+	tx.Commit()
+
+	return nil
+}
+
+func (c *Chain) GetRouteOrderByUserUID(db *gorm.DB) ([]string, error) {
+	userUIDs := []string{}
+	err := db.Raw(`
+SELECT u.uid AS uid FROM user_chains AS uc
+LEFT JOIN users AS u ON u.id = uc.user_id
+WHERE chain_id = ?
+ORDER BY uc.route_order ASC
+	`, c.ID).Scan(&userUIDs).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return userUIDs, nil
 }
