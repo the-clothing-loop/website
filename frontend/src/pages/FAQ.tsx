@@ -23,7 +23,7 @@ export default function FAQ() {
     return (
       <details
         className={`last-of-type:mb border-none rounded-lg p-2 overflow-hidden transition-[max-height] duration-200 ease-in-out ${
-          props.open ? `bg-teal-light max-h-96` : ""
+          props.open ? "bg-teal-light max-h-96" : ""
         }`}
         open={props.open}
         id={"detailsID" + props.id}
@@ -31,7 +31,7 @@ export default function FAQ() {
         <summary
           tabIndex={0}
           className="p-2 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 rounded-lg cursor-pointer"
-          onClick={(e) => eventHandler(e)}
+          onClick={(e) => clickHandler(e)}
           id={"questionID" + props.id}
         >
           <span>{props.question}</span>
@@ -47,29 +47,15 @@ export default function FAQ() {
       </details>
     );
 
-    function getClosedHeight() {
-      const question = document.getElementById("questionID" + props.id);
-      let questionHeight = question?.offsetHeight;
-
-      // Account for padding
-      if(questionHeight){
-      questionHeight += 16
-      }
-      return questionHeight;
-    }
-
-    function eventHandler(e: MouseEvent) {
+    function clickHandler(e: MouseEvent) {
       e.preventDefault();
 
       let details = document.getElementById("detailsID" + props.id);
-      let detailsHeight = getClosedHeight();
 
       if (props.open) {
 
         details!.classList.add("max-h-[80px]");
         details!.classList.add("bg-transparent");
-
-      //  details!.classList.add("max-h-["+detailsHeight?.toString()+"px]");
 
         setTimeout(() => {
           props.onChange();
