@@ -228,10 +228,8 @@ function HostTable(props: {
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
-  const { addToastError, addToastStatic } = useContext(ToastContext);
-
+  const { addToastStatic } = useContext(ToastContext);
   const refSelect: any = useRef<HTMLSelectElement>();
-  const [selected, setSelected] = useState("");
 
   const [filteredUsersHost, filteredUsersNotHost] = useMemo(() => {
     let host: User[] = [];
@@ -245,46 +243,30 @@ function HostTable(props: {
     return [host, notHost];
   }, [props.users, props.chain]);
 
-  const editHost = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
-    if (!selected) {
-      return "#";
-    }
-    let userUID = props.users?.find((u) => u.uid === selected)?.uid;
-    if (!userUID) {
-      addToastError("Edit button coundn't find user of: " + selected, 500);
-    }
+  function getEditLocation(u: User): LocationDescriptor {
+    if (!u.uid) return "#";
 
     return {
-      pathname: `/users/${userUID}/edit`,
+      pathname: `/users/${u.uid}/edit`,
       state: {
         chainUID: props.chain.uid,
       },
     };
-  }, [selected, props.users, props.chain]);
-
-  function onChangeSelect(e: ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) setSelected(e.target.value);
-    else setSelected("");
   }
 
-  function onDemote() {
-    if (!selected) return;
-    const _selected = selected;
+  function onDemote(e: MouseEvent, u: User) {
+    e.preventDefault();
     const chainUID = props.chain.uid;
-    const userName = props.users.find((u) => u.uid === _selected)?.name || "";
 
     addToastStatic({
-      message: t("areYouSureRevokeHost", { name: userName }),
+      message: t("areYouSureRevokeHost", { name: u.name }),
       type: "warning",
       actions: [
         {
           text: t("revoke"),
           type: "ghost",
           fn: () => {
-            chainAddUser(chainUID, _selected, false).finally(() => {
-              setSelected("");
-              return props.refresh();
-            });
+            chainAddUser(chainUID, u.uid, false).finally(() => props.refresh());
           },
         },
       ],
@@ -303,19 +285,19 @@ function HostTable(props: {
   }
 
   return (
-    <section className="lg:w-2/3 relative p-8 pt-0 bg-secondary-light">
+    <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 pt-0 bg-secondary-light">
       <h2 className="font-semibold text-secondary mb-6 max-md:mt-6 text-3xl">
         Loop Admin
       </h2>
 
       <div className="overflow-x-auto">
-        <table className="table w-full">
+        <table className="table w-full mb-10">
           <thead>
             <tr>
-              <th className="sticky"></th>
               <th>{t("name")}</th>
               <th>{t("email")}</th>
               <th>{t("phone")}</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -323,80 +305,71 @@ function HostTable(props: {
               ?.sort((a, b) => a.name.localeCompare(b.name))
               .map((u) => (
                 <tr key={u.uid}>
-                  <td className="sticky">
-                    <input
-                      type="checkbox"
-                      name="selectedChainAdmin"
-                      className="checkbox checkbox-sm checkbox-primary"
-                      checked={selected === u.uid}
-                      onChange={onChangeSelect}
-                      value={u.uid}
-                    />
-                  </td>
                   <td>{u.name}</td>
                   <td>{u.email}</td>
                   <td>{u.phone_number}</td>
+                  <td className="text-right">
+                    <div className="dropdown dropdown-left">
+                      <label tabIndex={0} className="btn btn-ghost btn-small">
+                        <span className="text-xl feather feather-more-vertical" />
+                      </label>
+
+                      <ul
+                        tabIndex={0}
+                        className="dropdown-content menu shadow bg-base-100 font-bold text-teal"
+                      >
+                        <div>
+                          <li>
+                            <Link to={getEditLocation(u)}>{t("edit")}</Link>
+                          </li>
+                          {filteredUsersHost.length > 1 ? (
+                            <li>
+                              <button
+                                type="button"
+                                onClick={(e) => onDemote(e, u)}
+                                className="text-red"
+                              >
+                                {t("setAsAParticipant")}
+                              </button>
+                            </li>
+                          ) : null}
+                        </div>
+                      </ul>
+                    </div>
+                  </td>
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
-      <div className="rounded-b-lg w-full flex flex-col md:flex-row justify-between bg-base-200 pb-3 pr-3 ">
-        <div className="flex items-center mt-3 ml-3 bg-base-100 rounded-lg p-2">
-          <p className={`mx-2 flex-grow ${selected ? "" : "text-base-300"}`}>
-            {t("selected")}
-          </p>
-          <div className="tooltip mr-2" data-tip={t("edit")}>
-            <Link
-              className={`btn btn-sm btn-circle feather feather-edit ${
-                selected.length ? "btn-primary" : "btn-disabled opacity-60"
-              }`}
-              aria-label={t("edit")}
-              aria-disabled={!selected}
-              to={editHost}
-            ></Link>
-          </div>
-          <div className="tooltip" data-tip={t("setAsAParticipant")}>
-            <button
-              type="button"
-              onClick={onDemote}
-              className={`btn btn-sm btn-circle feather feather-shield-off ${
-                selected.length ? "btn-error" : "btn-disabled opacity-60"
-              }`}
-              aria-label={t("setAsAParticipant")}
-              disabled={!selected}
-            ></button>
-          </div>
-        </div>
-        <form
-          className="flex flex-col md:flex-row items-stretch md:items-end mt-3 ml-3"
-          onSubmit={onAddCoHost}
+      <form
+        className="rounded-b-lg w-full flex flex-col md:flex-row items-stretch md:items-end mb-6"
+        onSubmit={onAddCoHost}
+      >
+        <select
+          className="select select-sm rounded-t-lg md:rounded-l-lg md:rounded-none disabled:text-base-300 md:max-w-xs"
+          name="participant"
+          ref={refSelect}
+          disabled={filteredUsersNotHost.length === 0}
         >
-          <select
-            className="select select-sm rounded-t-lg md:rounded-l-lg md:rounded-none disabled:text-base-300 md:max-w-xs"
-            name="participant"
-            ref={refSelect}
-            disabled={filteredUsersNotHost.length === 0}
-          >
-            <option disabled selected value="">
-              {t("selectParticipant")}
+          <option disabled selected value="">
+            {t("selectParticipant")}
+          </option>
+          {filteredUsersNotHost?.map((u) => (
+            <option key={u.uid} value={u.uid}>
+              {u.name} {u.email}
             </option>
-            {filteredUsersNotHost?.map((u) => (
-              <option key={u.uid} value={u.uid}>
-                {u.name} {u.email}
-              </option>
-            ))}
-          </select>
-          <button
-            className={`btn btn-sm rounded-b-lg md:rounded-r-lg md:rounded-none ${
-              filteredUsersNotHost.length === 0 ? "btn-disabled" : "btn-primary"
-            }`}
-            type="submit"
-          >
-            {t("addCoHost")}
-          </button>
-        </form>
-      </div>
+          ))}
+        </select>
+        <button
+          className={`btn btn-sm rounded-b-lg md:rounded-r-lg md:rounded-none ${
+            filteredUsersNotHost.length === 0 ? "btn-disabled" : "btn-primary"
+          }`}
+          type="submit"
+        >
+          {t("addCoHost")}
+        </button>
+      </form>
     </section>
   );
 }
@@ -410,30 +383,12 @@ function ParticipantsTable(props: {
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addToastStatic } = useContext(ToastContext);
-  const [isSelectApproved, setIsSelectApproved] = useState(false);
-  const [selected, setSelected] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
 
-  const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
-    if (selected.length !== 1 || !isSelectApproved) {
-      return "#";
-    }
-    let userUID = props.users?.find((u) => u.uid === selected[0])?.uid;
-    if (!userUID) {
-      addToastError("Edit button coundn't find user of: " + selected, 500);
-    }
-
-    return {
-      pathname: `/users/${userUID}/edit`,
-      state: {
-        chainUID: props.chain.uid,
-      },
-    };
-  }, [selected, props.users, props.chain]);
-
-  function editMe(user: User) {
+  function getEditLocation(user: User): LocationDescriptor {
     if (!user.uid) {
       addToastError("Edit button coundn't find user of: " + user.name, 500);
+      return "#";
     }
 
     return {
@@ -500,7 +455,7 @@ function ParticipantsTable(props: {
     const chainUID = props.chain.uid;
 
     addToastStatic({
-      message: t("denyParticipant", { name: userName }),
+      message: t("denyParticipant", { name: user.name }),
       type: "warning",
       actions: [
         {
@@ -508,7 +463,6 @@ function ParticipantsTable(props: {
           type: "ghost",
           fn: () => {
             chainDeleteUnapproved(chainUID, user.uid);
-            setSelected([]);
             if (window.goatcounter)
               window.goatcounter.count({
                 path: "deny-user",
@@ -616,23 +570,21 @@ function ParticipantsTable(props: {
                   const userChain = getUserChain(u);
 
                   return (
-                    <tr key={u.uid}>
-                      <td className="bg-yellow/[.6]">{u.name}</td>
-                      <td className="bg-yellow/[.6]">
+                    <tr key={u.uid} className="[&>td]:bg-yellow/[.6]">
+                      <td>{u.name}</td>
+                      <td>
                         <span className="block w-48 text-sm whitespace-normal">
                           {u.address}
                         </span>
                       </td>
-                      <td className="bg-yellow/[.6] text-sm leading-relaxed">
+                      <td className="text-sm leading-relaxed">
                         {u.email}
                         <br />
                         {u.phone_number}
                       </td>
-                      <td className="bg-yellow/[.6] align-middle"></td>
-                      <td className="bg-yellow/[.6] text-center">
-                        {t("pendingApproval")}
-                      </td>
-                      <td className="bg-yellow/[.6] text-right">
+                      <td></td>
+                      <td className="text-center">{t("pendingApproval")}</td>
+                      <td className="text-right">
                         <div className="dropdown dropdown-left">
                           <label
                             tabIndex={0}
@@ -644,7 +596,7 @@ function ParticipantsTable(props: {
                           {userChain ? (
                             <ul
                               tabIndex={0}
-                              className="dropdown-content menu shadow rounded-lg bg-base-100 font-bold text-teal"
+                              className="dropdown-content menu shadow bg-base-100 font-bold text-teal"
                             >
                               <div>
                                 <li>
@@ -704,7 +656,7 @@ function ParticipantsTable(props: {
                         </label>
                         <ul
                           tabIndex={0}
-                          className="dropdown-content menu shadow rounded-lg bg-base-100 font-bold text-teal"
+                          className="dropdown-content menu shadow  bg-base-100 font-bold text-teal"
                         >
                           <li>
                             <button
@@ -716,7 +668,7 @@ function ParticipantsTable(props: {
                             </button>
                           </li>
                           <li>
-                            <Link to={editMe(u)}>{t("edit")}</Link>
+                            <Link to={getEditLocation(u)}>{t("edit")}</Link>
                           </li>
                         </ul>
                       </div>
