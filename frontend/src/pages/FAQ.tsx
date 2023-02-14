@@ -22,7 +22,7 @@ export default function FAQ() {
   }) {
     return (
       <details
-        className={`last-of-type:mb border-none rounded-lg p-2 overflow-hidden transition-[max-height] duration-700 ease-in-out ${
+        className={`last-of-type:mb border-none rounded-lg p-2 overflow-hidden transition-[max-height] duration-200 ease-in-out ${
           props.open ? `bg-teal-light max-h-96` : ""
         }`}
         open={props.open}
@@ -66,12 +66,14 @@ export default function FAQ() {
 
       if (props.open) {
 
-      //  details!.classList.add("max-h-[60px]");
-        details!.classList.add("max-h-["+detailsHeight?.toString()+"px]");
+        details!.classList.add("max-h-[80px]");
+        details!.classList.add("bg-transparent");
+
+      //  details!.classList.add("max-h-["+detailsHeight?.toString()+"px]");
 
         setTimeout(() => {
           props.onChange();
-        }, 700);
+        }, 200);
       } else {
         props.onChange();
       }
