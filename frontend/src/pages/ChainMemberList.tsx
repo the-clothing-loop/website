@@ -564,9 +564,9 @@ function ParticipantsTable(props: {
 
   return (
     <>
-      <div className="mt-10 relative">
+      <div className="mt-10 relative overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="table table-compact w-full">
+          <table className="table table-compact w-full mb-10">
             <thead>
               <tr>
                 <th>
@@ -592,7 +592,7 @@ function ParticipantsTable(props: {
                   <span>{t("interestedSizes")}</span>
                 </th>
                 <th>
-                  <span className="float-left">{t("signedUpOn")}</span>
+                  <span>{t("signedUpOn")}</span>
                   <SortButton
                     isSelected={sortBy === "date"}
                     className="ml-1"
@@ -632,11 +632,11 @@ function ParticipantsTable(props: {
                       <td className="bg-yellow/[.6] text-center">
                         {t("pendingApproval")}
                       </td>
-                      <td className="bg-yellow/[.6] sticky">
-                        <div className="dropdown dropdown-right">
+                      <td className="bg-yellow/[.6] text-right">
+                        <div className="dropdown dropdown-left">
                           <label
                             tabIndex={0}
-                            className={`btn btn-ghost btn-small m-4`}
+                            className="btn btn-ghost btn-small"
                           >
                             <span className="text-xl feather feather-more-vertical" />
                           </label>
@@ -644,27 +644,24 @@ function ParticipantsTable(props: {
                           {userChain ? (
                             <ul
                               tabIndex={0}
-                              className="dropdown-content menu shadow rounded-lg bg-base-100"
+                              className="dropdown-content menu shadow rounded-lg bg-base-100 font-bold text-teal"
                             >
                               <div>
                                 <li>
                                   <button
                                     type="button"
                                     onClick={(e) => onApprove(e, u)}
-                                    className={"h-full text-teal font-bold"}
-                                    aria-label={t("approveUser")}
                                   >
-                                    {t("approveUser")}
+                                    {t("approve")}
                                   </button>
                                 </li>
                                 <li>
                                   <button
                                     type="button"
                                     onClick={(e) => onDeny(e, u)}
-                                    className={"h-full text-red font-bold"}
-                                    aria-label={t("denyUser")}
+                                    className="text-red"
                                   >
-                                    {t("denyUser")}
+                                    {t("deny")}
                                   </button>
                                 </li>
                               </div>
@@ -700,39 +697,27 @@ function ParticipantsTable(props: {
                       </span>
                     </td>
                     <td className="text-center">{simplifyDays(userChain)}</td>
-                    <td className="sticky">
-                      <div className="dropdown dropdown-right">
-                        <label
-                          tabIndex={0}
-                          className={`btn btn-ghost btn-small m-4`}
-                        >
+                    <td className="text-right">
+                      <div className="dropdown dropdown-left">
+                        <label tabIndex={0} className="btn btn-ghost btn-small">
                           <span className="text-xl feather feather-more-vertical" />
                         </label>
                         <ul
                           tabIndex={0}
-                          className="dropdown-content menu shadow rounded-lg bg-base-100"
+                          className="dropdown-content menu shadow rounded-lg bg-base-100 font-bold text-teal"
                         >
-                          <div>
-                            <li>
-                              <button
-                                type="button"
-                                onClick={(e) => onRemove(e, u)}
-                                className={"h-full text-red font-bold"}
-                                aria-label={t("removeFromLoop")}
-                              >
-                                {t("removeFromLoop")}
-                              </button>
-                            </li>
-                            <li>
-                              <Link
-                                className={"h-full text-yellow font-bold"}
-                                aria-label={t("edit")}
-                                to={editMe(u)}
-                              >
-                                {t("edit")}
-                              </Link>
-                            </li>
-                          </div>
+                          <li>
+                            <button
+                              type="button"
+                              onClick={(e) => onRemove(e, u)}
+                              className="text-red"
+                            >
+                              {t("removeFromLoop")}
+                            </button>
+                          </li>
+                          <li>
+                            <Link to={editMe(u)}>{t("edit")}</Link>
+                          </li>
                         </ul>
                       </div>
                     </td>
