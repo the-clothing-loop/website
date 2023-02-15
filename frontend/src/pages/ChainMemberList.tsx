@@ -8,6 +8,7 @@ import {
   useRef,
   MouseEvent,
   MouseEventHandler,
+  ReactElement,
 } from "react";
 
 import { useParams, Link, useHistory } from "react-router-dom";
@@ -297,6 +298,20 @@ function HostTable(props: {
       });
   }
 
+  const dropdownItems = (u: User) => [
+    <Link to={getEditLocation(u)}>{t("edit")}</Link>,
+    ...(filteredUsersHost.length > 1
+      ? [
+          <button
+            type="button"
+            onClick={(e) => onDemote(e, u)}
+            className="text-red"
+          >
+            {t("setAsAParticipant")}
+          </button>,
+        ]
+      : []),
+  ];
   return (
     <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 pt-0 bg-secondary-light">
       <h2 className="font-semibold text-secondary mb-6 max-md:mt-6 text-3xl">
@@ -304,13 +319,14 @@ function HostTable(props: {
       </h2>
 
       <div className="overflow-x-auto">
-        <table className="table w-full mb-10">
+        <table className="table table-compact w-full mb-10">
           <thead>
             <tr>
+              <th className="md:hidden"></th>
               <th>{t("name")}</th>
               <th>{t("email")}</th>
               <th>{t("phone")}</th>
-              <th></th>
+              <th className="hidden md:table-cell"></th>
             </tr>
           </thead>
           <tbody>
@@ -318,37 +334,20 @@ function HostTable(props: {
               ?.sort((a, b) => a.name.localeCompare(b.name))
               .map((u) => (
                 <tr key={u.uid} className="[&_td]:hover:bg-base-200/[0.6]">
+                  <td className="md:hidden !px-0">
+                    <DropdownMenu
+                      direction="dropdown-right"
+                      items={dropdownItems(u)}
+                    />
+                  </td>
                   <td>{u.name}</td>
                   <td>{u.email}</td>
                   <td>{u.phone_number}</td>
-                  <td className="text-right">
-                    <div className="dropdown dropdown-left">
-                      <label tabIndex={0} className="btn btn-ghost">
-                        <span className="text-xl feather feather-more-vertical" />
-                      </label>
-
-                      <ul
-                        tabIndex={0}
-                        className="dropdown-content menu shadow bg-base-100 font-bold text-teal"
-                      >
-                        <div>
-                          <li>
-                            <Link to={getEditLocation(u)}>{t("edit")}</Link>
-                          </li>
-                          {filteredUsersHost.length > 1 ? (
-                            <li>
-                              <button
-                                type="button"
-                                onClick={(e) => onDemote(e, u)}
-                                className="text-red"
-                              >
-                                {t("setAsAParticipant")}
-                              </button>
-                            </li>
-                          ) : null}
-                        </div>
-                      </ul>
-                    </div>
+                  <td className="text-right hidden md:table-cell">
+                    <DropdownMenu
+                      direction="dropdown-left"
+                      items={dropdownItems(u)}
+                    />
                   </td>
                 </tr>
               ))}
@@ -547,6 +546,7 @@ function ParticipantsTable(props: {
           <table className="table table-compact w-full mb-10">
             <thead>
               <tr>
+                <th className="md:hidden"></th>
                 <th>
                   <span>{t("name")}</span>
                   <SortButton
@@ -577,7 +577,7 @@ function ParticipantsTable(props: {
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
-                <th className="sticky z-0"></th>
+                <th className="hidden md:table-cell"></th>
               </tr>
             </thead>
             <tbody>
@@ -592,12 +592,32 @@ function ParticipantsTable(props: {
                 })
                 .map((u) => {
                   const userChain = getUserChain(u);
+                  const dropdownItems = userChain
+                    ? [
+                        <button type="button" onClick={(e) => onApprove(e, u)}>
+                          {t("approve")}
+                        </button>,
+                        <button
+                          type="button"
+                          onClick={(e) => onDeny(e, u)}
+                          className="text-red"
+                        >
+                          {t("deny")}
+                        </button>,
+                      ]
+                    : [];
 
                   return (
                     <tr
                       key={u.uid}
                       className="[&>td]:bg-yellow/[.6] [&_td]:hover:bg-yellow/[.4]"
                     >
+                      <td className="md:hidden !px-0">
+                        <DropdownMenu
+                          direction="dropdown-right"
+                          items={dropdownItems}
+                        />
+                      </td>
                       <td>{u.name}</td>
                       <td>
                         <span className="block w-48 text-sm whitespace-normal">
@@ -611,51 +631,39 @@ function ParticipantsTable(props: {
                       </td>
                       <td></td>
                       <td className="text-center">{t("pendingApproval")}</td>
-                      <td className="text-right">
-                        <div className="dropdown dropdown-left">
-                          <label tabIndex={0} className="btn btn-ghost">
-                            <span className="text-xl feather feather-more-vertical" />
-                          </label>
-
-                          {userChain ? (
-                            <ul
-                              tabIndex={0}
-                              className="dropdown-content menu shadow bg-base-100 font-bold text-teal"
-                            >
-                              <div>
-                                <li>
-                                  <button
-                                    type="button"
-                                    onClick={(e) => onApprove(e, u)}
-                                  >
-                                    {t("approve")}
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    type="button"
-                                    onClick={(e) => onDeny(e, u)}
-                                    className="text-red"
-                                  >
-                                    {t("deny")}
-                                  </button>
-                                </li>
-                              </div>
-                            </ul>
-                          ) : null}
-                        </div>
+                      <td className="text-right hidden md:table-cell">
+                        <DropdownMenu
+                          direction="dropdown-left"
+                          items={dropdownItems}
+                        />
                       </td>
                     </tr>
                   );
                 })}
               {sortOrder(sortBy).map((u: User) => {
                 const userChain = getUserChain(u);
+                const dropdownItems = [
+                  <button
+                    type="button"
+                    onClick={(e) => onRemove(e, u)}
+                    className="text-red"
+                  >
+                    {t("removeFromLoop")}
+                  </button>,
+                  <Link to={getEditLocation(u)}>{t("edit")}</Link>,
+                ];
 
                 return (
                   <tr
                     key={u.uid}
                     className="[&_td]:hover:bg-base-200/[0.6] group"
                   >
+                    <td className="md:hidden !px-0">
+                      <DropdownMenu
+                        direction="dropdown-right"
+                        items={dropdownItems}
+                      />
+                    </td>
                     <td>{u.name}</td>
                     <td>
                       <span className="block w-48 text-sm whitespace-normal">
@@ -676,29 +684,11 @@ function ParticipantsTable(props: {
                       </span>
                     </td>
                     <td className="text-center">{simplifyDays(userChain)}</td>
-                    <td className="text-right">
-                      <div className="dropdown dropdown-left">
-                        <label tabIndex={0} className="btn btn-ghost">
-                          <span className="text-xl feather feather-more-vertical" />
-                        </label>
-                        <ul
-                          tabIndex={0}
-                          className="dropdown-content menu shadow bg-base-100 font-bold text-teal"
-                        >
-                          <li>
-                            <button
-                              type="button"
-                              onClick={(e) => onRemove(e, u)}
-                              className="text-red"
-                            >
-                              {t("removeFromLoop")}
-                            </button>
-                          </li>
-                          <li>
-                            <Link to={getEditLocation(u)}>{t("edit")}</Link>
-                          </li>
-                        </ul>
-                      </div>
+                    <td className="text-right hidden md:table-cell">
+                      <DropdownMenu
+                        direction="dropdown-left"
+                        items={dropdownItems}
+                      />
                     </td>
                   </tr>
                 );
@@ -733,5 +723,28 @@ function SortButton(props: {
       }
       onClick={props.onClick}
     ></button>
+  );
+}
+
+function DropdownMenu(props: {
+  items: ReactElement[];
+  direction: "dropdown-left" | "dropdown-right";
+}) {
+  return (
+    <div className={"dropdown ".concat(props.direction)}>
+      <label tabIndex={0} className="btn btn-ghost">
+        <span className="text-xl feather feather-more-vertical" />
+      </label>
+      <ul
+        tabIndex={0}
+        className="dropdown-content menu shadow bg-base-100 font-bold text-teal"
+      >
+        {props.items.map((item, i) => (
+          <li key={i} className={props.items.length === 1 ? "h-full" : ""}>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

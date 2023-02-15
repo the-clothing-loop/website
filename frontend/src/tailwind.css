@@ -126,5 +126,5 @@ summary.marker\:content-none::-webkit-details-marker {
 
 .table th,
 .table td {
-  @apply max-xs:p-2 max-xs:text-sm;
+  @apply max-xs:p-2 max-xs:text-sm rounded-none;
 }
