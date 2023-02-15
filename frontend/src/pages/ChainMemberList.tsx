@@ -317,7 +317,7 @@ function HostTable(props: {
             {filteredUsersHost
               ?.sort((a, b) => a.name.localeCompare(b.name))
               .map((u) => (
-                <tr key={u.uid}>
+                <tr key={u.uid} className="[&_td]:hover:bg-base-200/[0.6]">
                   <td>{u.name}</td>
                   <td>{u.email}</td>
                   <td>{u.phone_number}</td>
@@ -594,7 +594,10 @@ function ParticipantsTable(props: {
                   const userChain = getUserChain(u);
 
                   return (
-                    <tr key={u.uid} className="[&>td]:bg-yellow/[.6]">
+                    <tr
+                      key={u.uid}
+                      className="[&>td]:bg-yellow/[.6] [&_td]:hover:bg-yellow/[.4]"
+                    >
                       <td>{u.name}</td>
                       <td>
                         <span className="block w-48 text-sm whitespace-normal">
@@ -649,7 +652,10 @@ function ParticipantsTable(props: {
                 const userChain = getUserChain(u);
 
                 return (
-                  <tr key={u.uid}>
+                  <tr
+                    key={u.uid}
+                    className="[&_td]:hover:bg-base-200/[0.6] group"
+                  >
                     <td>{u.name}</td>
                     <td>
                       <span className="block w-48 text-sm whitespace-normal">
@@ -663,7 +669,7 @@ function ParticipantsTable(props: {
                     </td>
                     <td className="align-middle">
                       <span
-                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                        className="block min-w-[12rem] bg-base-100 group-hover:bg-base-200/[0.6] rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
                         tabIndex={0}
                       >
                         {SizeBadges(t, u.sizes)}
