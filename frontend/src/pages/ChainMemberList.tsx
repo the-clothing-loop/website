@@ -93,22 +93,27 @@ export default function ChainMemberList() {
 
   async function refresh() {
     try {
-      const chainData = (await chainGet(chainUID)).data;
-      setChain(chainData);
-      const chainUsers = (await userGetAllByChain(chainUID)).data;
+      const [chainData, chainUsers] = await Promise.all([
+        chainGet(chainUID),
+        userGetAllByChain(chainUID),
+      ]);
+      setChain(chainData.data);
       setUsers(
-        chainUsers.filter(
+        chainUsers.data.filter(
           (u) => u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved
         )
       );
       setUnapprovedUsers(
-        chainUsers.filter(
+        chainUsers.data.filter(
           (u) =>
             u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved ==
             false
         )
       );
+      setPublished(chainData.data.published);
+      setOpenToNewMembers(chainData.data.open_to_new_members);
     } catch (err: any) {
+      if (Array.isArray(err)) err = err[0];
       if (err?.status === 401) {
         history.replace("/loops");
       }
@@ -228,7 +233,7 @@ function HostTable(props: {
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
-  const { addToastStatic } = useContext(ToastContext);
+  const { addToastError, addToastStatic } = useContext(ToastContext);
   const refSelect: any = useRef<HTMLSelectElement>();
 
   const [filteredUsersHost, filteredUsersNotHost] = useMemo(() => {
@@ -266,7 +271,11 @@ function HostTable(props: {
           text: t("revoke"),
           type: "ghost",
           fn: () => {
-            chainAddUser(chainUID, u.uid, false).finally(() => props.refresh());
+            chainAddUser(chainUID, u.uid, false)
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => props.refresh());
           },
         },
       ],
@@ -278,10 +287,14 @@ function HostTable(props: {
     const values = FormJup<{ participant: string }>(e);
 
     let chainUID = props.chain.uid;
-    chainAddUser(chainUID, values.participant, true).finally(() => {
-      (refSelect.current as HTMLSelectElement).value = "";
-      return props.refresh();
-    });
+    chainAddUser(chainUID, values.participant, true)
+      .catch((err) => {
+        addToastError(GinParseErrors(t, err), err.status);
+      })
+      .finally(() => {
+        (refSelect.current as HTMLSelectElement).value = "";
+        return props.refresh();
+      });
   }
 
   return (
@@ -412,10 +425,11 @@ function ParticipantsTable(props: {
           text: t("remove"),
           type: "ghost",
           fn: () => {
-            try {
-              chainRemoveUser(chainUID, user.uid);
-            } catch (err: any) {}
-            return props.refresh();
+            chainRemoveUser(chainUID, user.uid)
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => props.refresh());
           },
         },
       ],
@@ -435,14 +449,19 @@ function ParticipantsTable(props: {
           text: t("approve"),
           type: "ghost",
           fn: () => {
-            chainUserApprove(chainUID, user.uid);
-            if (window.goatcounter)
-              window.goatcounter.count({
-                path: "approve-user",
-                title: "Approve user",
-                event: true,
-              });
-            return props.refresh();
+            chainUserApprove(chainUID, user.uid)
+              .then(() => {
+                if (window.goatcounter)
+                  window.goatcounter.count({
+                    path: "approve-user",
+                    title: "Approve user",
+                    event: true,
+                  });
+              })
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => props.refresh());
           },
         },
       ],
@@ -462,14 +481,19 @@ function ParticipantsTable(props: {
           text: t("deny"),
           type: "ghost",
           fn: () => {
-            chainDeleteUnapproved(chainUID, user.uid);
-            if (window.goatcounter)
-              window.goatcounter.count({
-                path: "deny-user",
-                title: "Deny user",
-                event: true,
-              });
-            return props.refresh();
+            chainDeleteUnapproved(chainUID, user.uid)
+              .then(() => {
+                if (window.goatcounter)
+                  window.goatcounter.count({
+                    path: "deny-user",
+                    title: "Deny user",
+                    event: true,
+                  });
+              })
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => props.refresh());
           },
         },
       ],
