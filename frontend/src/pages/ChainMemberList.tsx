@@ -207,7 +207,7 @@ export default function ChainMemberList() {
           />
         </div>
 
-        <div className="max-w-screen-xl mx-auto px-8">
+        <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
           <h2 className="font-semibold text-secondary text-3xl mb-6">
             Loop Participants
           </h2>
@@ -323,7 +323,7 @@ function HostTable(props: {
                   <td>{u.phone_number}</td>
                   <td className="text-right">
                     <div className="dropdown dropdown-left">
-                      <label tabIndex={0} className="btn btn-ghost btn-small">
+                      <label tabIndex={0} className="btn btn-ghost">
                         <span className="text-xl feather feather-more-vertical" />
                       </label>
 
@@ -610,10 +610,7 @@ function ParticipantsTable(props: {
                       <td className="text-center">{t("pendingApproval")}</td>
                       <td className="text-right">
                         <div className="dropdown dropdown-left">
-                          <label
-                            tabIndex={0}
-                            className="btn btn-ghost btn-small"
-                          >
+                          <label tabIndex={0} className="btn btn-ghost">
                             <span className="text-xl feather feather-more-vertical" />
                           </label>
 
@@ -675,12 +672,12 @@ function ParticipantsTable(props: {
                     <td className="text-center">{simplifyDays(userChain)}</td>
                     <td className="text-right">
                       <div className="dropdown dropdown-left">
-                        <label tabIndex={0} className="btn btn-ghost btn-small">
+                        <label tabIndex={0} className="btn btn-ghost">
                           <span className="text-xl feather feather-more-vertical" />
                         </label>
                         <ul
                           tabIndex={0}
-                          className="dropdown-content menu shadow  bg-base-100 font-bold text-teal"
+                          className="dropdown-content menu shadow bg-base-100 font-bold text-teal"
                         >
                           <li>
                             <button
