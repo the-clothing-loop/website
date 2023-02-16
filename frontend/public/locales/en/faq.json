@@ -23,11 +23,11 @@
     },
     {
       "question": "What to do with bulky clothes (like winter coats) that don’t fit in the bag?",
-      "answer": "Big items can be photographed and shared via your communication channel, or through the <a target='_blank' href='https://docs.google.com/document/d/12YcVwD4jzVKDcLxssnzqq7B2fzYC8kcewsnyFJ-A7cE/edit'>Glide app</a>. In a private message, people can respond and organize pick up."
+      "answer": "Big items can be photographed and shared via your communication channel, or through the <a target='_blank' href='https://template-clothing-loop.glideapp.io'>Glide app</a>. In a private message, people can respond and organize pick up."
     },
     {
       "question": "Can I put shoes in the bag as well?",
-      "answer": "That is up to your local host to decide. If your Loop allows you to add shoes to the bag, only add “as good as new” pairs, and <u>no more than 2 pairs per bag</u>. And please wrap them in a separate bag to avoid them touching the clothes. "
+      "answer": "That is up to your local host to decide. If your Loop allows you to add shoes to the bag, only add “as good as new” pairs, and <b>no more than 2 pairs per bag</b>. And please wrap them in a separate bag to avoid them touching the clothes. "
     },
     {
       "question": "I get the error: “your account already exists”.",
@@ -38,7 +38,7 @@
   "arrHosts": [
     {
       "question": "How do I start a Loop?",
-      "answer": "We got you covered! We wrote a simple manual with all the instructions that can be found in our <a target='_blank' href='https://drive.google.com/drive/u/0/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Please benefit from the lessons we learned in the many years we have been doing this!"
+      "answer": "We got you covered! We wrote a simple manual with all the instructions that can be found in our <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Please benefit from the lessons we learned in the many years we have been doing this!"
     },
     {
       "question": "How to find people to join my Loop?",
@@ -62,7 +62,7 @@
     },
     {
       "question": "Are there images or graphic templates we can use?",
-      "answer": "Absolutely, we made you a <a target='_blank' href='https://drive.google.com/drive/u/0/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a> where you can find logos, pictures and templates. Use as many as you like!"
+      "answer": "Absolutely, we made you a <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a> where you can find logos, pictures and templates. Use as many as you like!"
     },
     {
       "question": "Introducing a “Ghost rider” in the Loop",
