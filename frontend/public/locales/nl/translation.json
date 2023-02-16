@@ -27,6 +27,7 @@
   "edit": "Aanpassen",
   "editUserDetails": "Gebruikersgegevens bewerken",
   "approveParticipant": "Approve “{{ name }}'s” request to join the loop?",
+  "denyParticipant": "Deny “{{ name }}'s” request to join the loop?",
   "approve": "Approve",
   "pendingApproval": "Pending Admin Approval",
   "deny": "Deny",
