@@ -497,12 +497,10 @@ export default function FindChain({ location }: { location: Location }) {
 
                     {userChain ? (
                       userChain.is_approved ? (
-                        <>
-                          <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
-                            {t("joined")}
-                            <span className="feather feather-check ml-3"></span>
-                          </p>
-                        </>
+                        <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
+                          {t("joined")}
+                          <span className="feather feather-check ml-3"></span>
+                        </p>
                       ) : (
                         <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
                           {t("pendingApproval")}
