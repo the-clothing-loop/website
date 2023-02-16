@@ -11,7 +11,7 @@ export default function FAQ() {
   const { t } = useTranslation("faq");
 
   const [openForParticipants, setOpenForParticipants] = useState(-1);
-  const [openForHosts, setOpenForHosts] = useState(-1);
+  const [openForHosts, setOpenForHosts] = useState(0);
 
   function AccordionFaq(props: {
     question: string;
