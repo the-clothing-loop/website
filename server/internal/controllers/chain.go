@@ -197,7 +197,7 @@ func ChainUpdate(c *gin.Context) {
 		Address          *string   `json:"address,omitempty"`
 		Latitude         *float32  `json:"latitude,omitempty"`
 		Longitude        *float32  `json:"longitude,omitempty"`
-		Radius           *float32  `json:"radius,omitempty"`
+		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=70.0"`
 		Sizes            *[]string `json:"sizes,omitempty"`
 		Genders          *[]string `json:"genders,omitempty"`
 		Published        *bool     `json:"published,omitempty"`
