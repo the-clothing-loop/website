@@ -27,6 +27,7 @@
   "edit": "Redigera",
   "editUserDetails": "Redigera användarinformation",
   "approveParticipant": "Godkänna \"{{ name }} s\" begäran om att gå med i loopen?",
+  "denyParticipant": "Deny “{{ name }}'s” request to join the loop?",
   "approve": "Godkänna",
   "pendingApproval": "Väntar på administratörsgodkännande",
   "deny": "Förnäka",
@@ -227,5 +228,7 @@
   "loopLocation": "Loop plats",
   "helloN": "Hello, {{ n }}",
   "toolkitFolder": "Toolkit Folder",
-  "editAccount": "Edit Account"
+  "editAccount": "Edit Account",
+  "remindHost": "Remind Host",
+  "reminderEmailSent": "Reminder email sent"
 }

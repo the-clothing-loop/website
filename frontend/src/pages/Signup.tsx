@@ -10,13 +10,15 @@ import PopoverOnHover from "../components/Popover";
 import { TwoColumnLayout } from "../components/Layouts";
 import { PhoneFormField, TextForm } from "../components/FormFields";
 import FormActions from "../components/formActions";
-import { Chain } from "../api/types";
-import { chainGet } from "../api/chain";
+import { Chain, User } from "../api/types";
+import { chainAddUser, chainGet } from "../api/chain";
 import { registerBasicUser } from "../api/login";
 import FormJup from "../util/form-jup";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import useForm from "../util/form.hooks";
+import { AuthContext } from "../providers/AuthProvider";
+import { TFunction } from "i18next";
 
 interface Params {
   chainUID: string;
@@ -33,10 +35,12 @@ interface RegisterUserForm {
 
 export default function Signup() {
   const history = useHistory();
-  const { chainUID } = useParams<Params>();
-  const [chain, setChain] = useState<Chain | null>(null);
   const { t } = useTranslation();
   const { addToastError, addToastStatic } = useContext(ToastContext);
+  const { authUser, authUserRefresh } = useContext(AuthContext);
+
+  const { chainUID } = useParams<Params>();
+  const [chain, setChain] = useState<Chain | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [jsValues, setJsValue] = useForm({
     address: "",
@@ -57,8 +61,21 @@ export default function Signup() {
     })();
   }, [chainUID]);
 
+  function onSubmitCurrentUser(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (authUser && chainUID) {
+      chainAddUser(chainUID, authUser.uid, false)
+        .then(() => {
+          authUserRefresh();
+        })
+        .catch((err) => {
+          addToastError(GinParseErrors(t, err), err?.status);
+        });
+    }
+  }
+
   // Gather data from form, validate and send to firebase
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  function onSubmitNewUser(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const values = FormJup<RegisterUserForm>(e);
 
@@ -132,64 +149,82 @@ export default function Signup() {
             alt="Nichon giving a large bag of clothes to another woman"
             credit="Anke Teunissen"
           >
-            <div id="container">
+            <div>
               <h1 className="font-semibold text-3xl text-secondary mb-3">
                 {t("join")}
                 <span> {chain?.name}</span>
               </h1>
 
-              <form onSubmit={onSubmit} className="max-w-xs">
-                <TextForm
-                  label={t("name") + "*"}
-                  name="name"
-                  type="text"
-                  required
-                />
-                <TextForm
-                  label={t("email") + "*"}
-                  name="email"
-                  type="email"
-                  required
-                />
-
-                <PhoneFormField required />
-
-                <div className="mb-6">
-                  <div className="form-control w-full mb-4">
-                    <label className="label">
-                      <span className="label-text">{t("address") + "*"}</span>
-                    </label>
-                    <GeocoderSelector
-                      onResult={(e) => setJsValue("address", e.query)}
-                    />
+              {authUser ? (
+                <form onSubmit={onSubmitCurrentUser} className="max-w-xs">
+                  <dl>
+                    <dt className="font-bold mb-1">{t("name")}</dt>
+                    <dd className="mb-2">{authUser.name}</dd>
+                    <dt className="font-bold mb-1">{t("email")}</dt>
+                    <dd className="mb-2">{authUser.email}</dd>
+                  </dl>
+                  <div className="mb-4">
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-outline mr-3"
+                      onClick={() => history.goBack()}
+                    >
+                      {t("back")}
+                    </button>
+                    <SubmitButton t={t} chain={chain} user={authUser} />
                   </div>
-                  <SizesDropdown
-                    className="md:dropdown-left md:[&_.dropdown-content]:-top-80"
-                    filteredGenders={chain?.genders || []}
-                    selectedSizes={jsValues.sizes}
-                    handleChange={(s) => setJsValue("sizes", s)}
+                </form>
+              ) : (
+                <form onSubmit={onSubmitNewUser} className="max-w-xs">
+                  <TextForm
+                    label={t("name") + "*"}
+                    name="name"
+                    type="text"
+                    required
                   />
-                  <PopoverOnHover
-                    className="tooltip-right"
-                    message={t("weWouldLikeToKnowThisEquallyRepresented")}
+                  <TextForm
+                    label={t("email") + "*"}
+                    name="email"
+                    type="email"
+                    required
                   />
-                  <FormActions isNewsletterRequired={false} />
-                </div>
 
-                <div className="mb-4">
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-outline mr-3"
-                    onClick={() => history.goBack()}
-                  >
-                    {t("back")}
-                  </button>
-                  <button type="submit" className="btn btn-primary">
-                    {t("join")}
-                    <span className="feather feather-arrow-right ml-4"></span>
-                  </button>
-                </div>
-              </form>
+                  <PhoneFormField required />
+
+                  <div className="mb-6">
+                    <div className="form-control w-full mb-4">
+                      <label className="label">
+                        <span className="label-text">{t("address") + "*"}</span>
+                      </label>
+                      <GeocoderSelector
+                        onResult={(e) => setJsValue("address", e.query)}
+                      />
+                    </div>
+                    <SizesDropdown
+                      className="md:dropdown-left md:[&_.dropdown-content]:-top-80"
+                      filteredGenders={chain?.genders || []}
+                      selectedSizes={jsValues.sizes}
+                      handleChange={(s) => setJsValue("sizes", s)}
+                    />
+                    <PopoverOnHover
+                      className="tooltip-right"
+                      message={t("weWouldLikeToKnowThisEquallyRepresented")}
+                    />
+                    <FormActions isNewsletterRequired={false} />
+                  </div>
+
+                  <div className="mb-4">
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-outline mr-3"
+                      onClick={() => history.goBack()}
+                    >
+                      {t("back")}
+                    </button>
+                    <SubmitButton t={t} chain={chain} />
+                  </div>
+                </form>
+              )}
               <div className="text-sm">
                 <p className="text">{t("troublesWithTheSignupContactUs")}</p>
                 <a
@@ -205,4 +240,51 @@ export default function Signup() {
       </>
     );
   }
+}
+
+function SubmitButton({
+  t,
+  chain,
+  user,
+}: {
+  t: TFunction;
+  chain: Chain | null;
+  user?: User | null;
+}) {
+  if (chain?.open_to_new_members == false) {
+    return (
+      <p className="px-3 font-semibold text-sm border border-secondary h-12 inline-flex items-center text-secondary">
+        {t("closed")}
+        <span className="feather feather-lock ml-3"></span>
+      </p>
+    );
+  }
+
+  if (user && chain) {
+    let userChain = user.chains.find((uc) => uc.chain_uid === chain.uid);
+    if (userChain) {
+      if (userChain.is_approved) {
+        return (
+          <p className="bg-primary px-3 font-semibold text-sm border border-primary h-12 inline-flex items-center">
+            {t("joined")}
+            <span className="feather feather-check ml-3"></span>
+          </p>
+        );
+      } else {
+        return (
+          <p className="px-3 font-semibold text-sm border border-secondary h-12 inline-flex items-center text-secondary">
+            {t("pendingApproval")}
+            <span className="feather feather-user-check ml-3"></span>
+          </p>
+        );
+      }
+    }
+  }
+
+  return (
+    <button type="submit" className="btn btn-primary">
+      {t("join")}
+      <span className="feather feather-arrow-right ml-4"></span>
+    </button>
+  );
 }

@@ -11,7 +11,7 @@ export default function FAQ() {
   const { t } = useTranslation("faq");
 
   const [openForParticipants, setOpenForParticipants] = useState(-1);
-  const [openForHosts, setOpenForHosts] = useState(-1);
+  const [openForHosts, setOpenForHosts] = useState(0);
 
   function AccordionFaq(props: {
     question: string;
@@ -22,17 +22,16 @@ export default function FAQ() {
   }) {
     return (
       <details
-        className={`last-of-type:mb border-none rounded-lg p-2 overflow-hidden transition-[max-height] duration-200 ease-in-out ${
-          props.open ? "bg-teal-light max-h-96" : ""
+        className={`group last-of-type:mb border-none ${
+          props.open ? "bg-teal-light" : ""
         }`}
         open={props.open}
         id={"detailsID" + props.id}
       >
         <summary
           tabIndex={0}
-          className="p-2 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 rounded-lg cursor-pointer"
-          onClick={(e) => clickHandler(e)}
-          id={"questionID" + props.id}
+          className="p-3 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 group-open:bg-teal/10 cursor-pointer"
+          onClick={props.onChange}
         >
           <span>{props.question}</span>
           <span
@@ -41,7 +40,7 @@ export default function FAQ() {
             }`}
           />
         </summary>
-        <div className="p-2">
+        <div className="py-2 px-4 pt-0 prose">
           <p dangerouslySetInnerHTML={{ __html: props.answer }}></p>
         </div>
       </details>

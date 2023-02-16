@@ -8,12 +8,15 @@ import {
   useRef,
   MouseEvent,
   MouseEventHandler,
+  ReactElement,
 } from "react";
 
 import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
+
 import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
@@ -29,7 +32,7 @@ import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
-import { userInfo } from "os";
+import { GinParseErrors } from "../util/gin-errors";
 
 interface Params {
   chainUID: string;
@@ -39,15 +42,16 @@ export default function ChainMemberList() {
   const history = useHistory();
   const { t } = useTranslation();
   const { chainUID } = useParams<Params>();
-  const { authUser } = useContext<AuthProps>(AuthContext);
+  const { authUser } = useContext(AuthContext);
+  const { addToastError } = useContext(ToastContext);
 
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
   const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
-
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
+  const refSelect: any = useRef<HTMLSelectElement>();
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
@@ -85,28 +89,61 @@ export default function ChainMemberList() {
     }
   }
 
+  function onAddCoHost(e: FormEvent) {
+    e.preventDefault();
+    if (!chain) return;
+    const values = FormJup<{ participant: string }>(e);
+
+    let chainUID = chain.uid;
+    chainAddUser(chainUID, values.participant, true)
+      .catch((err) => {
+        addToastError(GinParseErrors(t, err), err.status);
+      })
+      .finally(() => {
+        (refSelect.current as HTMLSelectElement).value = "";
+        return refresh();
+      });
+  }
+
   useEffect(() => {
     refresh();
   }, [history]);
 
+  const [filteredUsersHost, filteredUsersNotHost] = useMemo(() => {
+    let host: User[] = [];
+    let notHost: User[] = [];
+    users?.forEach((u) => {
+      let uc = u.chains.find((uc) => uc.chain_uid === chain?.uid);
+      if (uc?.is_chain_admin) host.push(u);
+      else notHost.push(u);
+    });
+
+    return [host, notHost];
+  }, [users, chain]);
+
   async function refresh() {
     try {
-      const chainData = (await chainGet(chainUID)).data;
-      setChain(chainData);
-      const chainUsers = (await userGetAllByChain(chainUID)).data;
+      const [chainData, chainUsers] = await Promise.all([
+        chainGet(chainUID),
+        userGetAllByChain(chainUID),
+      ]);
+      setChain(chainData.data);
       setUsers(
-        chainUsers.filter(
+        chainUsers.data.filter(
           (u) => u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved
         )
       );
       setUnapprovedUsers(
-        chainUsers.filter(
+        chainUsers.data.filter(
           (u) =>
             u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved ==
             false
         )
       );
+      setPublished(chainData.data.published);
+      setOpenToNewMembers(chainData.data.open_to_new_members);
     } catch (err: any) {
+      if (Array.isArray(err)) err = err[0];
       if (err?.status === 401) {
         history.replace("/loops");
       }
@@ -126,7 +163,7 @@ export default function ChainMemberList() {
 
       <main>
         <div className="flex flex-col lg:flex-row max-w-screen-xl mx-auto pt-4 lg:mb-6">
-          <section className="lg:w-1/3 mb-6 lg:mb-0">
+          <section className="lg:w-1/3">
             <div className="relative bg-teal-light p-8">
               <Link
                 className="absolute top-4 right-4 btn btn-outline btn-circle"
@@ -135,10 +172,10 @@ export default function ChainMemberList() {
                 <span className="feather feather-edit-2" />
               </Link>
 
-              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl">
+              <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl break-words">
                 {chain.name}
               </h1>
-              <p className="text-lg mb-6">{chain.description}</p>
+              <p className="text-lg mb-6 break-words">{chain.description}</p>
 
               <dl>
                 <dt className="font-bold mb-1">{t("categories")}</dt>
@@ -192,15 +229,54 @@ export default function ChainMemberList() {
             </div>
           </section>
 
-          <HostTable
-            authUser={authUser}
-            users={users}
-            chain={chain}
-            refresh={refresh}
-          />
+          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 pt-0 bg-secondary-light">
+            <h2 className="font-semibold text-secondary mb-6 text-3xl">
+              Loop Admin
+            </h2>
+            <HostTable
+              authUser={authUser}
+              filteredUsersHost={filteredUsersHost}
+              chain={chain}
+              refresh={refresh}
+            />
+            <div className="flex justify-end">
+              <form
+                className="w-full md:w-1/2 flex flex-col sm:flex-row items-stretch md:pl-6"
+                onSubmit={onAddCoHost}
+              >
+                <div className="flex-grow">
+                  <select
+                    className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+                    name="participant"
+                    ref={refSelect}
+                    disabled={filteredUsersNotHost.length === 0}
+                  >
+                    <option disabled selected value="">
+                      {t("selectParticipant")}
+                    </option>
+                    {filteredUsersNotHost?.map((u) => (
+                      <option key={u.uid} value={u.uid}>
+                        {u.name} {u.email}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  className={`btn btn-sm rounded-none ${
+                    filteredUsersNotHost.length === 0
+                      ? "btn-disabled"
+                      : "btn-primary"
+                  }`}
+                  type="submit"
+                >
+                  {t("addCoHost")}
+                </button>
+              </form>
+            </div>
+          </section>
         </div>
 
-        <div className="max-w-screen-xl mx-auto px-8">
+        <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
           <h2 className="font-semibold text-secondary text-3xl mb-6">
             Loop Participants
           </h2>
@@ -222,180 +298,97 @@ export default function ChainMemberList() {
 function HostTable(props: {
   authUser: User | null;
   chain: Chain;
-  users: User[];
+  filteredUsersHost: User[];
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
   const { addToastError, addToastStatic } = useContext(ToastContext);
 
-  const refSelect: any = useRef<HTMLSelectElement>();
-  const [selected, setSelected] = useState("");
-
-  const [filteredUsersHost, filteredUsersNotHost] = useMemo(() => {
-    let host: User[] = [];
-    let notHost: User[] = [];
-    props.users?.forEach((u) => {
-      let uc = u.chains.find((uc) => uc.chain_uid === props.chain?.uid);
-      if (uc?.is_chain_admin) host.push(u);
-      else notHost.push(u);
-    });
-
-    return [host, notHost];
-  }, [props.users, props.chain]);
-
-  const editHost = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
-    if (!selected) {
-      return "#";
-    }
-    let userUID = props.users?.find((u) => u.uid === selected)?.uid;
-    if (!userUID) {
-      addToastError("Edit button coundn't find user of: " + selected, 500);
-    }
+  function getEditLocation(u: User): LocationDescriptor {
+    if (!u.uid) return "#";
 
     return {
-      pathname: `/users/${userUID}/edit`,
+      pathname: `/users/${u.uid}/edit`,
       state: {
         chainUID: props.chain.uid,
       },
     };
-  }, [selected, props.users, props.chain]);
-
-  function onChangeSelect(e: ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) setSelected(e.target.value);
-    else setSelected("");
   }
 
-  function onDemote() {
-    if (!selected) return;
-    const _selected = selected;
+  function onDemote(e: MouseEvent, u: User) {
+    e.preventDefault();
     const chainUID = props.chain.uid;
-    const userName = props.users.find((u) => u.uid === _selected)?.name || "";
 
     addToastStatic({
-      message: t("areYouSureRevokeHost", { name: userName }),
+      message: t("areYouSureRevokeHost", { name: u.name }),
       type: "warning",
       actions: [
         {
           text: t("revoke"),
           type: "ghost",
           fn: () => {
-            chainAddUser(chainUID, _selected, false).finally(() => {
-              setSelected("");
-              return props.refresh();
-            });
+            chainAddUser(chainUID, u.uid, false)
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => props.refresh());
           },
         },
       ],
     });
   }
 
-  function onAddCoHost(e: FormEvent) {
-    e.preventDefault();
-    const values = FormJup<{ participant: string }>(e);
-
-    let chainUID = props.chain.uid;
-    chainAddUser(chainUID, values.participant, true).finally(() => {
-      (refSelect.current as HTMLSelectElement).value = "";
-      return props.refresh();
-    });
-  }
-
-  return (
-    <section className="lg:w-2/3 relative p-8 pt-0 bg-secondary-light">
-      <h2 className="font-semibold text-secondary mb-6 max-md:mt-6 text-3xl">
-        Loop Admin
-      </h2>
-
-      <div className="overflow-x-auto">
-        <table className="table w-full">
-          <thead>
-            <tr>
-              <th className="sticky"></th>
-              <th>{t("name")}</th>
-              <th>{t("email")}</th>
-              <th>{t("phone")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsersHost
-              ?.sort((a, b) => a.name.localeCompare(b.name))
-              .map((u) => (
-                <tr key={u.uid}>
-                  <td className="sticky">
-                    <input
-                      type="checkbox"
-                      name="selectedChainAdmin"
-                      className="checkbox checkbox-sm checkbox-primary"
-                      checked={selected === u.uid}
-                      onChange={onChangeSelect}
-                      value={u.uid}
-                    />
-                  </td>
-                  <td>{u.name}</td>
-                  <td>{u.email}</td>
-                  <td>{u.phone_number}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="rounded-b-lg w-full flex flex-col md:flex-row justify-between bg-base-200 pb-3 pr-3 ">
-        <div className="flex items-center mt-3 ml-3 bg-base-100 rounded-lg p-2">
-          <p className={`mx-2 flex-grow ${selected ? "" : "text-base-300"}`}>
-            {t("selected")}
-          </p>
-          <div className="tooltip mr-2" data-tip={t("edit")}>
-            <Link
-              className={`btn btn-sm btn-circle feather feather-edit ${
-                selected.length ? "btn-primary" : "btn-disabled opacity-60"
-              }`}
-              aria-label={t("edit")}
-              aria-disabled={!selected}
-              to={editHost}
-            ></Link>
-          </div>
-          <div className="tooltip" data-tip={t("setAsAParticipant")}>
-            <button
-              type="button"
-              onClick={onDemote}
-              className={`btn btn-sm btn-circle feather feather-shield-off ${
-                selected.length ? "btn-error" : "btn-disabled opacity-60"
-              }`}
-              aria-label={t("setAsAParticipant")}
-              disabled={!selected}
-            ></button>
-          </div>
-        </div>
-        <form
-          className="flex flex-col md:flex-row items-stretch md:items-end mt-3 ml-3"
-          onSubmit={onAddCoHost}
-        >
-          <select
-            className="select select-sm rounded-t-lg md:rounded-l-lg md:rounded-none disabled:text-base-300 md:max-w-xs"
-            name="participant"
-            ref={refSelect}
-            disabled={filteredUsersNotHost.length === 0}
-          >
-            <option disabled selected value="">
-              {t("selectParticipant")}
-            </option>
-            {filteredUsersNotHost?.map((u) => (
-              <option key={u.uid} value={u.uid}>
-                {u.name} {u.email}
-              </option>
-            ))}
-          </select>
+  const dropdownItems = (u: User) => [
+    <Link to={getEditLocation(u)}>{t("edit")}</Link>,
+    ...(props.filteredUsersHost.length > 1
+      ? [
           <button
-            className={`btn btn-sm rounded-b-lg md:rounded-r-lg md:rounded-none ${
-              filteredUsersNotHost.length === 0 ? "btn-disabled" : "btn-primary"
-            }`}
-            type="submit"
+            type="button"
+            onClick={(e) => onDemote(e, u)}
+            className="text-red"
           >
-            {t("addCoHost")}
-          </button>
-        </form>
-      </div>
-    </section>
+            {t("setAsAParticipant")}
+          </button>,
+        ]
+      : []),
+  ];
+  return (
+    <div className="overflow-x-auto">
+      <table className="table table-compact w-full mb-10">
+        <thead>
+          <tr>
+            <th className="md:hidden w-[0.1%]"></th>
+            <th>{t("name")}</th>
+            <th>{t("email")}</th>
+            <th>{t("phone")}</th>
+            <th className="hidden md:table-cell w-[0.1%]"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.filteredUsersHost
+            ?.sort((a, b) => a.name.localeCompare(b.name))
+            .map((u) => (
+              <tr key={u.uid} className="[&_td]:hover:bg-base-200/[0.6]">
+                <td className="md:hidden !px-0">
+                  <DropdownMenu
+                    direction="dropdown-right"
+                    items={dropdownItems(u)}
+                  />
+                </td>
+                <td>{u.name}</td>
+                <td>{u.email}</td>
+                <td>{u.phone_number}</td>
+                <td className="text-right hidden md:table-cell">
+                  <DropdownMenu
+                    direction="dropdown-left"
+                    items={dropdownItems(u)}
+                  />
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -408,30 +401,12 @@ function ParticipantsTable(props: {
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addToastStatic } = useContext(ToastContext);
-  const [isSelectApproved, setIsSelectApproved] = useState(false);
-  const [selected, setSelected] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
 
-  const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
-    if (selected.length !== 1 || !isSelectApproved) {
-      return "#";
-    }
-    let userUID = props.users?.find((u) => u.uid === selected[0])?.uid;
-    if (!userUID) {
-      addToastError("Edit button coundn't find user of: " + selected, 500);
-    }
-
-    return {
-      pathname: `/users/${userUID}/edit`,
-      state: {
-        chainUID: props.chain.uid,
-      },
-    };
-  }, [selected, props.users, props.chain]);
-
-  function editMe(user: User) {
+  function getEditLocation(user: User): LocationDescriptor {
     if (!user.uid) {
       addToastError("Edit button coundn't find user of: " + user.name, 500);
+      return "#";
     }
 
     return {
@@ -446,19 +421,20 @@ function ParticipantsTable(props: {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
-    const userName = user.name;
-    const userID = user.uid;
 
     addToastStatic({
-      message: t("areYouSureRemoveParticipant", { name: userName }),
+      message: t("areYouSureRemoveParticipant", { name: user.name }),
       type: "warning",
       actions: [
         {
           text: t("remove"),
           type: "ghost",
           fn: () => {
-            chainRemoveUser(chainUID, userID);
-            return props.refresh();
+            chainRemoveUser(chainUID, user.uid)
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => props.refresh());
           },
         },
       ],
@@ -469,25 +445,28 @@ function ParticipantsTable(props: {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
-    const userName = user.name;
-    const userID = user.uid;
 
     addToastStatic({
-      message: t("approveParticipant", { name: userName }),
+      message: t("approveParticipant", { name: user.name }),
       type: "warning",
       actions: [
         {
           text: t("approve"),
           type: "ghost",
           fn: () => {
-            chainUserApprove(chainUID, userID);
-            if (window.goatcounter)
-              window.goatcounter.count({
-                path: "approve-user",
-                title: "Approve user",
-                event: true,
-              });
-            return props.refresh();
+            chainUserApprove(chainUID, user.uid)
+              .then(() => {
+                if (window.goatcounter)
+                  window.goatcounter.count({
+                    path: "approve-user",
+                    title: "Approve user",
+                    event: true,
+                  });
+              })
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => props.refresh());
           },
         },
       ],
@@ -498,26 +477,28 @@ function ParticipantsTable(props: {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
-    const userName = user.name;
-    const userID = user.uid;
 
     addToastStatic({
-      message: t("denyParticipant", { name: userName }),
+      message: t("denyParticipant", { name: user.name }),
       type: "warning",
       actions: [
         {
           text: t("deny"),
           type: "ghost",
           fn: () => {
-            chainDeleteUnapproved(chainUID, userID);
-            setSelected([]);
-            if (window.goatcounter)
-              window.goatcounter.count({
-                path: "deny-user",
-                title: "Deny user",
-                event: true,
-              });
-            return props.refresh();
+            chainDeleteUnapproved(chainUID, user.uid)
+              .then(() => {
+                if (window.goatcounter)
+                  window.goatcounter.count({
+                    path: "deny-user",
+                    title: "Deny user",
+                    event: true,
+                  });
+              })
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => props.refresh());
           },
         },
       ],
@@ -525,9 +506,7 @@ function ParticipantsTable(props: {
   }
 
   function simplifyDays(uc: UserChain): string {
-    var createdAt = new Date(uc.created_at).getTime();
-    var currDate = new Date().getTime();
-    let numDays = Math.round(((currDate - createdAt) / (10 ** 6 * 864)) * 10);
+    var numDays = dayjs().diff(dayjs(uc.created_at), "days");
 
     if (numDays < 1) {
       return t("new");
@@ -568,12 +547,12 @@ function ParticipantsTable(props: {
 
   return (
     <>
-      <div className="mt-10 relative">
+      <div className="mt-10 relative overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="table table-compact w-full">
+          <table className="table table-compact w-full mb-10">
             <thead>
               <tr>
-                <th className="sticky z-0"></th>
+                <th className="md:hidden w-[0.1%]"></th>
                 <th>
                   <span>{t("name")}</span>
                   <SortButton
@@ -597,13 +576,14 @@ function ParticipantsTable(props: {
                   <span>{t("interestedSizes")}</span>
                 </th>
                 <th>
-                  <span className="float-left">{t("signedUpOn")}</span>
+                  <span>{t("signedUpOn")}</span>
                   <SortButton
                     isSelected={sortBy === "date"}
                     className="ml-1"
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
+                <th className="hidden md:table-cell w-[0.1%]"></th>
               </tr>
             </thead>
             <tbody>
@@ -618,106 +598,77 @@ function ParticipantsTable(props: {
                 })
                 .map((u) => {
                   const userChain = getUserChain(u);
-                  return (
-                    <tr key={u.uid}>
-                      <td className="bg-yellow/[.6] sticky">
-                        <div className="dropdown dropdown-right">
-                          <label
-                            tabIndex={0}
-                            className={`btn btn-ghost btn-small m-4`}
-                          >
-                            <span className="text-xl feather feather-more-vertical" />
-                          </label>
+                  const dropdownItems = userChain
+                    ? [
+                        <button type="button" onClick={(e) => onApprove(e, u)}>
+                          {t("approve")}
+                        </button>,
+                        <button
+                          type="button"
+                          onClick={(e) => onDeny(e, u)}
+                          className="text-red"
+                        >
+                          {t("deny")}
+                        </button>,
+                      ]
+                    : [];
 
-                          {userChain ? (
-                            <ul
-                              tabIndex={0}
-                              className="dropdown-content menu shadow rounded-lg bg-base-100"
-                            >
-                              <div>
-                                <li>
-                                  <button
-                                    type="button"
-                                    onClick={(e) => onApprove(e, u)}
-                                    className={"h-full text-teal font-bold"}
-                                    aria-label={t("approveUser")}
-                                  >
-                                    {t("approveUser")}
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    type="button"
-                                    onClick={(e) => onDeny(e, u)}
-                                    className={"h-full text-red font-bold"}
-                                    aria-label={t("denyUser")}
-                                  >
-                                    {t("denyUser")}
-                                  </button>
-                                </li>
-                              </div>
-                            </ul>
-                          ) : null}
-                        </div>
+                  return (
+                    <tr
+                      key={u.uid}
+                      className="[&>td]:bg-yellow/[.6] [&_td]:hover:bg-yellow/[.4]"
+                    >
+                      <td className="md:hidden !px-0">
+                        <DropdownMenu
+                          direction="dropdown-right"
+                          items={dropdownItems}
+                        />
                       </td>
-                      <td className="bg-yellow/[.6]">{u.name}</td>
-                      <td className="bg-yellow/[.6]">
+                      <td>{u.name}</td>
+                      <td>
                         <span className="block w-48 text-sm whitespace-normal">
                           {u.address}
                         </span>
                       </td>
-                      <td className="bg-yellow/[.6] text-sm leading-relaxed">
+                      <td className="text-sm leading-relaxed">
                         {u.email}
                         <br />
                         {u.phone_number}
                       </td>
-                      <td className="bg-yellow/[.6] align-middle"></td>
-                      <td className="bg-yellow/[.6] text-center">
-                        {t("pendingApproval")}
+                      <td></td>
+                      <td className="text-center">{t("pendingApproval")}</td>
+                      <td className="text-right hidden md:table-cell">
+                        <DropdownMenu
+                          direction="dropdown-left"
+                          items={dropdownItems}
+                        />
                       </td>
                     </tr>
                   );
                 })}
               {sortOrder(sortBy).map((u: User) => {
                 const userChain = getUserChain(u);
+                const dropdownItems = [
+                  <button
+                    type="button"
+                    onClick={(e) => onRemove(e, u)}
+                    className="text-red"
+                  >
+                    {t("removeFromLoop")}
+                  </button>,
+                  <Link to={getEditLocation(u)}>{t("edit")}</Link>,
+                ];
 
                 return (
-                  <tr key={u.uid}>
-                    <td className="sticky">
-                      <div className="dropdown dropdown-right">
-                        <label
-                          tabIndex={0}
-                          className={`btn btn-ghost btn-small m-4`}
-                        >
-                          <span className="text-xl feather feather-more-vertical" />
-                        </label>
-                        <ul
-                          tabIndex={0}
-                          className="dropdown-content menu shadow rounded-lg bg-base-100"
-                        >
-                          <div>
-                            <li>
-                              <button
-                                type="button"
-                                onClick={(e) => onRemove(e, u)}
-                                className={"h-full text-red font-bold"}
-                                aria-label={t("removeFromLoop")}
-                              >
-                                {t("removeFromLoop")}
-                              </button>
-                            </li>
-                            <li>
-                              <Link
-                                className={"h-full text-yellow font-bold"}
-                                aria-label={t("edit")}
-                                to={editMe(u)}
-                              >
-                                {t("edit")}
-                              </Link>
-                            </li>
-                          </div>
-                        </ul>
-                      </div>
+                  <tr
+                    key={u.uid}
+                    className="[&_td]:hover:bg-base-200/[0.6] group"
+                  >
+                    <td className="md:hidden !px-0">
+                      <DropdownMenu
+                        direction="dropdown-right"
+                        items={dropdownItems}
+                      />
                     </td>
                     <td>{u.name}</td>
                     <td>
@@ -732,21 +683,25 @@ function ParticipantsTable(props: {
                     </td>
                     <td className="align-middle">
                       <span
-                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                        className="block min-w-[12rem] bg-base-100 group-hover:bg-base-200/[0.6] rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
                         tabIndex={0}
                       >
                         {SizeBadges(t, u.sizes)}
                       </span>
                     </td>
                     <td className="text-center">{simplifyDays(userChain)}</td>
+                    <td className="text-right hidden md:table-cell">
+                      <DropdownMenu
+                        direction="dropdown-left"
+                        items={dropdownItems}
+                      />
+                    </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
         </div>
-
-        <div className="rounded-b-lg flex flex-col md:flex-row justify-between pb-3 pr-3 bg-base-200 sticky z-10 bottom-0" />
       </div>
     </>
   );
@@ -774,5 +729,33 @@ function SortButton(props: {
       }
       onClick={props.onClick}
     ></button>
+  );
+}
+
+function DropdownMenu(props: {
+  items: ReactElement[];
+  direction: "dropdown-left" | "dropdown-right";
+}) {
+  return (
+    <div className={"dropdown ".concat(props.direction)}>
+      <label tabIndex={0} className="btn btn-ghost">
+        <span className="text-xl feather feather-more-vertical" />
+      </label>
+      <ul
+        tabIndex={0}
+        className={"dropdown-content menu shadow bg-base-100 font-bold text-teal ".concat(
+          props.items.length === 1 ? "h-full" : ""
+        )}
+      >
+        {props.items.map((item, i) => (
+          <li
+            key={i}
+            className={props.items.length === 1 ? "h-full [&>*]:h-full" : ""}
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

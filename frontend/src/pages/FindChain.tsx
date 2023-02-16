@@ -182,8 +182,9 @@ export default function FindChain({ location }: { location: Location }) {
               20,
               ["get", "radius"],
             ],
-            "circle-stroke-width": 0,
             "circle-blur": 0.6,
+            "circle-stroke-width": 40,
+            "circle-stroke-color": ["rgba", 0, 0, 0, 0.0],
           },
         });
         _map.addLayer({
@@ -496,12 +497,10 @@ export default function FindChain({ location }: { location: Location }) {
 
                     {userChain ? (
                       userChain.is_approved ? (
-                        <>
-                          <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
-                            {t("joined")}
-                            <span className="feather feather-check ml-3"></span>
-                          </p>
-                        </>
+                        <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
+                          {t("joined")}
+                          <span className="feather feather-check ml-3"></span>
+                        </p>
                       ) : (
                         <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
                           {t("pendingApproval")}

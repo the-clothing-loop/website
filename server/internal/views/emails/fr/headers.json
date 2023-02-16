@@ -5,5 +5,6 @@
   "an_admin_approved_your_join_request": "An admin has approved of your request to join a loop!",
   "login_verification": "Vérifier l'e-mail pour The Clothing Loop",
   "an_admin_denied_your_join_request": "Your request to join a loop has been denied",
-  "register_verification": "Vérifier l'e-mail pour The Clothing Loop"
+  "register_verification": "Vérifier l'e-mail pour The Clothing Loop",
+  "poke": "Reminder that %s would like to join your %s Loop"
 }

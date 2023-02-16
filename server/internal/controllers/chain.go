@@ -68,6 +68,7 @@ func ChainCreate(c *gin.Context) {
 				UserID:       user.ID,
 				IsChainAdmin: true,
 				IsApproved:   true,
+				RouteOrder:   0,
 			},
 		},
 	}
@@ -197,9 +198,10 @@ func ChainUpdate(c *gin.Context) {
 		Address          *string   `json:"address,omitempty"`
 		Latitude         *float32  `json:"latitude,omitempty"`
 		Longitude        *float32  `json:"longitude,omitempty"`
-		Radius           *float32  `json:"radius,omitempty"`
+		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=70.0"`
 		Sizes            *[]string `json:"sizes,omitempty"`
 		Genders          *[]string `json:"genders,omitempty"`
+		Route            *[]string `json:"route,omitempty"`
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 	}

@@ -27,6 +27,7 @@
   "edit": "Modifica",
   "editUserDetails": "Modifica dettagli utente",
   "approveParticipant": "Approve “{{ name }}'s” request to join the loop?",
+  "denyParticipant": "Deny “{{ name }}'s” request to join the loop?",
   "approve": "Approve",
   "pendingApproval": "Pending Admin Approval",
   "deny": "Deny",
@@ -227,5 +228,7 @@
   "loopLocation": "Loop location",
   "helloN": "Hello, {{ n }}",
   "toolkitFolder": "Toolkit Folder",
-  "editAccount": "Edit Account"
+  "editAccount": "Edit Account",
+  "remindHost": "Remind Host",
+  "reminderEmailSent": "Reminder email sent"
 }
