@@ -182,8 +182,9 @@ export default function FindChain({ location }: { location: Location }) {
               20,
               ["get", "radius"],
             ],
-            "circle-stroke-width": 0,
             "circle-blur": 0.6,
+            "circle-stroke-width": 40,
+            "circle-stroke-color": ["rgba", 0, 0, 0, 0.0],
           },
         });
         _map.addLayer({
