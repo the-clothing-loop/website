@@ -292,6 +292,10 @@ func ChainAddUser(c *gin.Context) {
 	if !ok {
 		return
 	}
+	if !chain.OpenToNewMembers {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("Loop is not open to new members"))
+		return
+	}
 
 	user := models.User{}
 	db.Raw(`
