@@ -11,7 +11,7 @@ import { TwoColumnLayout } from "../components/Layouts";
 import { PhoneFormField, TextForm } from "../components/FormFields";
 import FormActions from "../components/formActions";
 import { Chain, User } from "../api/types";
-import { chainGet } from "../api/chain";
+import { chainAddUser, chainGet } from "../api/chain";
 import { registerBasicUser } from "../api/login";
 import FormJup from "../util/form-jup";
 import { ToastContext } from "../providers/ToastProvider";
@@ -37,7 +37,7 @@ export default function Signup() {
   const history = useHistory();
   const { t } = useTranslation();
   const { addToastError, addToastStatic } = useContext(ToastContext);
-  const { authUser } = useContext(AuthContext);
+  const { authUser, authUserRefresh } = useContext(AuthContext);
 
   const { chainUID } = useParams<Params>();
   const [chain, setChain] = useState<Chain | null>(null);
@@ -63,6 +63,15 @@ export default function Signup() {
 
   function onSubmitCurrentUser(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (authUser && chainUID) {
+      chainAddUser(chainUID, authUser.uid, false)
+        .then(() => {
+          authUserRefresh();
+        })
+        .catch((err) => {
+          addToastError(GinParseErrors(t, err), err?.status);
+        });
+    }
   }
 
   // Gather data from form, validate and send to firebase
