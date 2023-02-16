@@ -1,19 +1,27 @@
 import { useState, useContext, useEffect, MouseEvent } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import Cookies from "js-cookie";
 
 import { DataExport } from "../components/DataExport";
 import { AuthContext } from "../providers/AuthProvider";
-import { chainGet, chainGetAll, chainRemoveUser } from "../api/chain";
-import { Chain } from "../api/types";
+import {
+  chainGet,
+  chainGetAll,
+  chainPoke,
+  chainRemoveUser,
+} from "../api/chain";
+import { Chain, UID } from "../api/types";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
+import dayjs from "dayjs";
 
 export default function ChainsList() {
   const { t } = useTranslation();
   const { authUser, authUserRefresh } = useContext(AuthContext);
-  const { addToastError, addToastStatic } = useContext(ToastContext);
+  const { addToastError, addToastStatic, addToast } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>();
+  const [isPokeable, setIsPokeable] = useState(false);
 
   useEffect(() => {
     load();
@@ -36,7 +44,28 @@ export default function ChainsList() {
         console.error(err);
         addToastError(GinParseErrors(t, err), err.status);
       }
+
+      setIsPokeable(!(Cookies.get("poke") === authUser.uid));
     }
+  }
+
+  function handleClickPoke(e: MouseEvent, chainUID: UID) {
+    e.preventDefault();
+
+    chainPoke(chainUID)
+      .then((res) => {
+        addToast({ type: "success", message: t("reminderEmailSent") });
+        Cookies.set("poke", authUser!.uid, { expires: 7 });
+        setIsPokeable(false);
+      })
+      .catch((err) => {
+        addToastError(GinParseErrors(t, err), err.status);
+        if (err.status === 429) {
+          // hide for a day
+          Cookies.set("poke", authUser!.uid, { expires: 1 });
+          setIsPokeable(false);
+        }
+      });
   }
 
   function handleClickUnsubscribe(e: MouseEvent, chain: Chain) {
@@ -81,7 +110,7 @@ export default function ChainsList() {
         )}
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto pb-40">
         <table className="table table-compact w-full">
           <thead>
             <tr>
@@ -105,6 +134,12 @@ export default function ChainsList() {
                   (uc) => uc.chain_uid === chain.uid
                 );
                 let isUserAdmin = userChain?.is_chain_admin || false;
+                let userChainPokeable =
+                  isPokeable &&
+                  userChain?.is_approved === false &&
+                  dayjs(userChain.created_at).isBefore(
+                    dayjs().subtract(7, "days")
+                  );
 
                 return (
                   <tr key={chain.uid}>
@@ -164,11 +199,18 @@ export default function ChainsList() {
                           {userChain ? (
                             <ul
                               tabIndex={0}
-                              className="dropdown-content menu shadow bg-base-100 w-52 h-full"
+                              className={`dropdown-content menu shadow bg-base-100 w-52 ${
+                                userChainPokeable ? "" : "h-full"
+                              }`}
                             >
-                              <li className="h-full">
+                              <li
+                                className={userChainPokeable ? "" : "h-full"}
+                                key="leave"
+                              >
                                 <a
-                                  className="h-full text-red font-bold"
+                                  className={`text-red font-bold ${
+                                    userChainPokeable ? "" : "h-full"
+                                  }`}
                                   href="#"
                                   onClick={(e) =>
                                     handleClickUnsubscribe(e, chain)
@@ -179,6 +221,19 @@ export default function ChainsList() {
                                     : t("leaveWaitlist")}
                                 </a>
                               </li>
+                              {userChainPokeable ? (
+                                <li key="poke">
+                                  <a
+                                    className="font-bold"
+                                    href="#"
+                                    onClick={(e) =>
+                                      handleClickPoke(e, chain.uid)
+                                    }
+                                  >
+                                    {t("remindHost")}
+                                  </a>
+                                </li>
+                              ) : null}
                             </ul>
                           ) : null}
                         </div>
