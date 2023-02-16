@@ -1,44 +1,44 @@
 {
-  "faqForParticipants": "FAQ for Participants",
+  "faqForParticipants": "Preguntas frecuentes para participantes",
   "arrParticipants": [
     {
-      "question": "Are there rules on how much you can take out, and do you have to donate the same amount of clothes as you take out?",
-      "answer": "No, there are no rules here. Sometimes you take a bit more, sometimes you give more. Please don't add clothes to the bags that aren't of good quality, just to add something! It's better to have a bag half full of treasures, than to have a full bag that is of less quality."
+      "question": "¿Existen reglas sobre cuánta ropa puedes tomar? ¿Tienes que donar la misma cantidad de ropa que tomaste?",
+      "answer": "Aquí no hay reglas. A veces te llevas un poco más y a veces donas un poco más. Te pedimos por favor que no pongas ropa de mala calidad en las bolsas solo por poner algo. Es mejor media bolsa de tesoros que una bolsa llena de artículos de menor calidad."
     },
     {
-      "question": "Can all sizes of clothing be in the same bag?",
-      "answer": "Mixed bags work perfectly well usually, as sizes vary per brand and proportions are different as well. But this only works within a certain width. We recommend having a mix of items from size 36 - 42 (S, M and L) and starting a new Clothing Loop for smaller or bigger sizes."
+      "question": "¿Se puede poner ropa de talla diferente en la misma bolsa?",
+      "answer": "Normalmente las bolsas mixtas funcionan bien, pues las tallas varían según la marca y las proporciones también son diferentes. Pero esto solo funciona para un determinado peso. Te recomendamos mezclar artículos de tallas 36 a 42 (S, M y L) y comenzar un nuevo Clothing Loop para tallas más grandes o más pequeñas."
     },
     {
-      "question": "How to avoid “Finders keepers, losers weepers”?",
-      "answer": "There are no guarantees that you will find something that you like. Sometimes a few bags will pass your house that may not have an item for you. But remember: finding one dream item is more worth than having 10 items in your wardrobe that you do not wear. And making someone else very happy with something that was collecting dust in your wardrobe is also a significant (and fun!) part of the Clothing Loop mentality!"
+      "question": "¿Cómo evitar la situación \"quien lo ve primero se lo queda\"?",
+      "answer": "No hay garantía de que vayas a encontrar algo que te gusta. A veces pasarán por tu casa bolsas que no contienen ningún artículo para ti. Recuerda que hallar tu artículo soñado vale más que tener 10 artículos que no usas en tu ropero. Además, hacer feliz a alguien con un artículo que juntaba polvo en tu ropero es un componente importante (¡y divertido!) de la mentalidad Clothing Loop!"
     },
     {
-      "question": "What to do with bulky clothes (like winter coats) that don't fit in the bag?",
-      "answer": "Big items can be photographed and shared via the communication channel, or through the Glide app. In a private message, people can respond and organize pick up."
+      "question": "¿Qué se hace con la ropa abultada, como los abrigos de invierno, que no entran en la bolsa?",
+      "answer": "Puedes hacer una foto del artículo y compartirla a través del canal de comunicación, o a través de la aplicación Gilde. Los participantes pueden responder por mensaje privado para organizar la entrega."
     },
     {
-      "question": "Can I put shoes in the bag as well?",
-      "answer": "The short answer is yes, but keep in mind: shoes are more difficult to pass along than clothes. There are many more sizes, and they show wear a lot quicker than garments. So please be very selective with shoes! Only add “as good as new” pairs, and have no more than 2 pairs per bag."
+      "question": "¿También puedo poner zapatos en la bolsa?",
+      "answer": "La respuesta simple es si. Pero no te olvides que donar zapatos es más complicado. Hay más cantidad de tallas y se desgastan más rápidamente que la ropa. Por eso, te pedimos por favor que seas selectiva con tus zapatos. Dona solo pares que están \"como nuevos\", y no pongas más de 2 pares en cada bolsa."
     }
   ],
-  "faqForHosts": "FAQ for Hosts",
+  "faqForHosts": "Preguntas frecuentes para anfitriones",
   "arrHosts": [
     {
-      "question": "How can I start using the app?",
-      "answer": "You can copy the app and use it within your group. You only have to fill in the address list in our downloadable template. It is super easy! We created a video tutorial and slide deck to help you get started. Please get in touch here if you still run into trouble!"
+      "question": "¿Qué hago para comenzar a utilizar la aplicación?",
+      "answer": "Puedes copiar la aplicación y utilizarla en tu grupo. Solo tienes que completar la lista de direcciones en nuestra plantilla descargable. ¡Es muy fácil! Hemos creado un video tutorial y una presentación para ayudarte a dar los primeros pasos. Si aún así tienes algún problema, ponte en contacto con nosotros!"
     },
     {
-      "question": "Are there graphic templates we can use?",
-      "answer": "Absolutely, we made you a folder where you can find logo's templates, manuals and all. Use as many as you like!"
+      "question": "¿Hay plantillas gráficas que podamos usar?",
+      "answer": "Por supuesto, hemos creado una carpeta donde encontrarás plantillas para logos, manuales y demás. ¡Usa tantos como quieras!"
     },
     {
-      "question": "Introducing a “Ghost rider” in the Loop",
-      "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! You can then introduce a “ghost rider” bag that travels in the other direction, so all of a sudden you have other people before you in the route, and also other styles in the bag. If you do so, please make people aware that they shouldn't put any items in the “ghost rider” bag that they have previously taken out of a regular bag. And keep the number of ghost rider bags limited to 1 or 2, to keep it special and also simple."
+      "question": "Presentación del \"Ghost rider\" en el Loop",
+      "answer": "Cuando tu Loop ya ha estado funcionando durante cierto tiempo, tal vez quieras cambiar algo. Puedes presentar una bolsa \"ghost rider\" para que viaje en la otra dirección, y de repente habrá otra gente antes que tú en la ruta, y otros estilos en la bolsa. Si haces eso, avisa que no hay que poner artículos en la bolsa ghost rider que la gente ha sacado previamente de una bolsa común. Trata de que la cantidad de bolsas ghost rider no supere 1 o 2 bolsas, para que sea especial y simple."
     },
     {
-      "question": "How to manage a large group of people in the communication channel?",
-      "answer": "Especially when groups get bigger, it is important to make sure people aren't bombarded with (irrelevant) messages. You can set up some rules for what should and shouldn't be shared via the group app. For example:<br /><br /><span>Yes,</span> in the app:<ul><li>Selfies of nice things you took from the bag or nice things that you are putting in</li><li>Compliments to others</li><li>Logistics and organizational relevant updates</li></ul><span>No,</span> not in the app:<ul><li>Everything unrelated to the Clothing Loop (requests for surveys, invites for new groups, Fund raising, memes, etc). If you want to ask everyone's input on something, use a polling app like LouLou instead</li></ul>"
+      "question": "¿Cómo se gestiona un grupo de muchas personas en el canal de comunicación?",
+      "answer": "Es importante asegurarse de que la gente no es bombardeada con mensajes sin importancia, especialmente cuando los grupos se agrandan. Puedes establecer reglas sobre qué se puede y qué no se puede compartir en el grupo de la aplicación. Por ejemplo:<br /><br /><span>Sí,</span> en la aplicación:<ul><li>Selfies de artículos lindos que sacaste de la bolsa o de artículos que pones en la bolsa</li><li>Cumplidos a las otras personas</li><li>Novedades importantes de logística y de organización</li><ul><span>No,</span>en la aplicación:<ul><li>Todo lo que no está relacionado con el Clothing Loop (encuestas, invitaciones a otros grupos, colecta de fondos, memes, etc.). Si quieres la opinión de todas las personas, usa una aplicación de encuestas, por ejemplo como LouLou"
     },
     {
       "question": "What if I no longer have time to manage the Clothing Loop I started?",
