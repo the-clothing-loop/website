@@ -42,15 +42,16 @@ export default function ChainMemberList() {
   const history = useHistory();
   const { t } = useTranslation();
   const { chainUID } = useParams<Params>();
-  const { authUser } = useContext<AuthProps>(AuthContext);
+  const { authUser } = useContext(AuthContext);
+  const { addToastError } = useContext(ToastContext);
 
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
   const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
-
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
+  const refSelect: any = useRef<HTMLSelectElement>();
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
@@ -88,9 +89,37 @@ export default function ChainMemberList() {
     }
   }
 
+  function onAddCoHost(e: FormEvent) {
+    e.preventDefault();
+    if (!chain) return;
+    const values = FormJup<{ participant: string }>(e);
+
+    let chainUID = chain.uid;
+    chainAddUser(chainUID, values.participant, true)
+      .catch((err) => {
+        addToastError(GinParseErrors(t, err), err.status);
+      })
+      .finally(() => {
+        (refSelect.current as HTMLSelectElement).value = "";
+        return refresh();
+      });
+  }
+
   useEffect(() => {
     refresh();
   }, [history]);
+
+  const [filteredUsersHost, filteredUsersNotHost] = useMemo(() => {
+    let host: User[] = [];
+    let notHost: User[] = [];
+    users?.forEach((u) => {
+      let uc = u.chains.find((uc) => uc.chain_uid === chain?.uid);
+      if (uc?.is_chain_admin) host.push(u);
+      else notHost.push(u);
+    });
+
+    return [host, notHost];
+  }, [users, chain]);
 
   async function refresh() {
     try {
@@ -134,7 +163,7 @@ export default function ChainMemberList() {
 
       <main>
         <div className="flex flex-col lg:flex-row max-w-screen-xl mx-auto pt-4 lg:mb-6">
-          <section className="lg:w-1/3 mb-6 lg:mb-0">
+          <section className="lg:w-1/3">
             <div className="relative bg-teal-light p-8">
               <Link
                 className="absolute top-4 right-4 btn btn-outline btn-circle"
@@ -200,12 +229,51 @@ export default function ChainMemberList() {
             </div>
           </section>
 
-          <HostTable
-            authUser={authUser}
-            users={users}
-            chain={chain}
-            refresh={refresh}
-          />
+          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 pt-0 bg-secondary-light">
+            <h2 className="font-semibold text-secondary mb-6 text-3xl">
+              Loop Admin
+            </h2>
+            <HostTable
+              authUser={authUser}
+              filteredUsersHost={filteredUsersHost}
+              chain={chain}
+              refresh={refresh}
+            />
+            <div className="flex justify-end">
+              <form
+                className="w-full md:w-1/2 flex flex-col sm:flex-row items-stretch md:pl-6"
+                onSubmit={onAddCoHost}
+              >
+                <div className="flex-grow">
+                  <select
+                    className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+                    name="participant"
+                    ref={refSelect}
+                    disabled={filteredUsersNotHost.length === 0}
+                  >
+                    <option disabled selected value="">
+                      {t("selectParticipant")}
+                    </option>
+                    {filteredUsersNotHost?.map((u) => (
+                      <option key={u.uid} value={u.uid}>
+                        {u.name} {u.email}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  className={`btn btn-sm rounded-none ${
+                    filteredUsersNotHost.length === 0
+                      ? "btn-disabled"
+                      : "btn-primary"
+                  }`}
+                  type="submit"
+                >
+                  {t("addCoHost")}
+                </button>
+              </form>
+            </div>
+          </section>
         </div>
 
         <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
@@ -230,24 +298,11 @@ export default function ChainMemberList() {
 function HostTable(props: {
   authUser: User | null;
   chain: Chain;
-  users: User[];
+  filteredUsersHost: User[];
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
   const { addToastError, addToastStatic } = useContext(ToastContext);
-  const refSelect: any = useRef<HTMLSelectElement>();
-
-  const [filteredUsersHost, filteredUsersNotHost] = useMemo(() => {
-    let host: User[] = [];
-    let notHost: User[] = [];
-    props.users?.forEach((u) => {
-      let uc = u.chains.find((uc) => uc.chain_uid === props.chain?.uid);
-      if (uc?.is_chain_admin) host.push(u);
-      else notHost.push(u);
-    });
-
-    return [host, notHost];
-  }, [props.users, props.chain]);
 
   function getEditLocation(u: User): LocationDescriptor {
     if (!u.uid) return "#";
@@ -283,24 +338,9 @@ function HostTable(props: {
     });
   }
 
-  function onAddCoHost(e: FormEvent) {
-    e.preventDefault();
-    const values = FormJup<{ participant: string }>(e);
-
-    let chainUID = props.chain.uid;
-    chainAddUser(chainUID, values.participant, true)
-      .catch((err) => {
-        addToastError(GinParseErrors(t, err), err.status);
-      })
-      .finally(() => {
-        (refSelect.current as HTMLSelectElement).value = "";
-        return props.refresh();
-      });
-  }
-
   const dropdownItems = (u: User) => [
     <Link to={getEditLocation(u)}>{t("edit")}</Link>,
-    ...(filteredUsersHost.length > 1
+    ...(props.filteredUsersHost.length > 1
       ? [
           <button
             type="button"
@@ -313,76 +353,42 @@ function HostTable(props: {
       : []),
   ];
   return (
-    <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 pt-0 bg-secondary-light">
-      <h2 className="font-semibold text-secondary mb-6 max-md:mt-6 text-3xl">
-        Loop Admin
-      </h2>
-
-      <div className="overflow-x-auto">
-        <table className="table table-compact w-full mb-10">
-          <thead>
-            <tr>
-              <th className="md:hidden"></th>
-              <th>{t("name")}</th>
-              <th>{t("email")}</th>
-              <th>{t("phone")}</th>
-              <th className="hidden md:table-cell"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsersHost
-              ?.sort((a, b) => a.name.localeCompare(b.name))
-              .map((u) => (
-                <tr key={u.uid} className="[&_td]:hover:bg-base-200/[0.6]">
-                  <td className="md:hidden !px-0">
-                    <DropdownMenu
-                      direction="dropdown-right"
-                      items={dropdownItems(u)}
-                    />
-                  </td>
-                  <td>{u.name}</td>
-                  <td>{u.email}</td>
-                  <td>{u.phone_number}</td>
-                  <td className="text-right hidden md:table-cell">
-                    <DropdownMenu
-                      direction="dropdown-left"
-                      items={dropdownItems(u)}
-                    />
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
-      <form
-        className="rounded-b-lg w-full flex flex-col md:flex-row items-stretch md:items-end mb-6"
-        onSubmit={onAddCoHost}
-      >
-        <select
-          className="select select-sm rounded-t-lg md:rounded-l-lg md:rounded-none disabled:text-base-300 md:max-w-xs"
-          name="participant"
-          ref={refSelect}
-          disabled={filteredUsersNotHost.length === 0}
-        >
-          <option disabled selected value="">
-            {t("selectParticipant")}
-          </option>
-          {filteredUsersNotHost?.map((u) => (
-            <option key={u.uid} value={u.uid}>
-              {u.name} {u.email}
-            </option>
-          ))}
-        </select>
-        <button
-          className={`btn btn-sm rounded-b-lg md:rounded-r-lg md:rounded-none ${
-            filteredUsersNotHost.length === 0 ? "btn-disabled" : "btn-primary"
-          }`}
-          type="submit"
-        >
-          {t("addCoHost")}
-        </button>
-      </form>
-    </section>
+    <div className="overflow-x-auto">
+      <table className="table table-compact w-full mb-10">
+        <thead>
+          <tr>
+            <th className="md:hidden w-[0.1%]"></th>
+            <th>{t("name")}</th>
+            <th>{t("email")}</th>
+            <th>{t("phone")}</th>
+            <th className="hidden md:table-cell w-[0.1%]"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.filteredUsersHost
+            ?.sort((a, b) => a.name.localeCompare(b.name))
+            .map((u) => (
+              <tr key={u.uid} className="[&_td]:hover:bg-base-200/[0.6]">
+                <td className="md:hidden !px-0">
+                  <DropdownMenu
+                    direction="dropdown-right"
+                    items={dropdownItems(u)}
+                  />
+                </td>
+                <td>{u.name}</td>
+                <td>{u.email}</td>
+                <td>{u.phone_number}</td>
+                <td className="text-right hidden md:table-cell">
+                  <DropdownMenu
+                    direction="dropdown-left"
+                    items={dropdownItems(u)}
+                  />
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -546,7 +552,7 @@ function ParticipantsTable(props: {
           <table className="table table-compact w-full mb-10">
             <thead>
               <tr>
-                <th className="md:hidden"></th>
+                <th className="md:hidden w-[0.1%]"></th>
                 <th>
                   <span>{t("name")}</span>
                   <SortButton
@@ -577,7 +583,7 @@ function ParticipantsTable(props: {
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
-                <th className="hidden md:table-cell"></th>
+                <th className="hidden md:table-cell w-[0.1%]"></th>
               </tr>
             </thead>
             <tbody>
@@ -737,10 +743,15 @@ function DropdownMenu(props: {
       </label>
       <ul
         tabIndex={0}
-        className="dropdown-content menu shadow bg-base-100 font-bold text-teal"
+        className={"dropdown-content menu shadow bg-base-100 font-bold text-teal ".concat(
+          props.items.length === 1 ? "h-full" : ""
+        )}
       >
         {props.items.map((item, i) => (
-          <li key={i} className={props.items.length === 1 ? "h-full" : ""}>
+          <li
+            key={i}
+            className={props.items.length === 1 ? "h-full [&>*]:h-full" : ""}
+          >
             {item}
           </li>
         ))}
