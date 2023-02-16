@@ -21,14 +21,14 @@ export default function FAQ() {
   }) {
     return (
       <details
-        className={`last-of-type:mb border-none rounded-lg p-2 ${
+        className={`group last-of-type:mb border-none ${
           props.open ? "bg-teal-light" : ""
         }`}
         open={props.open}
       >
         <summary
           tabIndex={0}
-          className="p-2 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 rounded-lg cursor-pointer"
+          className="p-3 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 group-open:bg-teal/10 cursor-pointer"
           onClick={props.onChange}
         >
           <span>{props.question}</span>
@@ -38,7 +38,7 @@ export default function FAQ() {
             }`}
           />
         </summary>
-        <div className="p-2 prose">
+        <div className="py-2 px-4 pt-0 prose">
           <p dangerouslySetInnerHTML={{ __html: props.answer }}></p>
         </div>
       </details>
