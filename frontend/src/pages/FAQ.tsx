@@ -22,8 +22,10 @@ export default function FAQ() {
   }) {
     return (
       <details
-        className={`group last-of-type:mb border-none ${
-          props.open ? "bg-teal-light" : ""
+        className={`group last-of-type:mb border-none overflow-hidden ${
+          props.open
+            ? "bg-teal-light max-h-[1000px] transition-[max-height] duration-300 ease-out"
+            : "transition-[min-height] duration-200 ease-out min-h-[60px]"
         }`}
         open={props.open}
         id={"detailsID" + props.id}
@@ -31,7 +33,7 @@ export default function FAQ() {
         <summary
           tabIndex={0}
           className="p-3 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 group-open:bg-teal/10 cursor-pointer"
-          onClick={props.onChange}
+          onClick={(e) => clickHandler(e)}
         >
           <span>{props.question}</span>
           <span
@@ -52,18 +54,21 @@ export default function FAQ() {
       let details = document.getElementById("detailsID" + props.id);
 
       if (props.open) {
-
-        details!.classList.add("max-h-[80px]");
-        details!.classList.add("bg-transparent");
+        details!.classList.add("max-h-20");
 
         setTimeout(() => {
           props.onChange();
-        }, 200);
+        }, 300);
       } else {
-        props.onChange();
+        details!.classList.add("min-h-[170px]");
+        
+        setTimeout(() => {
+          props.onChange();
+        }, 200);
       }
     }
   }
+
   function setOpen(
     set: Dispatch<SetStateAction<number>>,
     index: number
@@ -121,7 +126,7 @@ export default function FAQ() {
                   key={index}
                   question={el.question}
                   answer={el.answer}
-                  id={index + 5}
+                  id={index + arrParticipants.length}
                 />
               ))}
             </div>
