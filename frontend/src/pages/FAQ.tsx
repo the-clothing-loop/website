@@ -61,7 +61,7 @@ export default function FAQ() {
         }, 300);
       } else {
         details!.classList.add("min-h-[170px]");
-        
+
         setTimeout(() => {
           props.onChange();
         }, 200);
