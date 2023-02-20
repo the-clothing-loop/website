@@ -28,7 +28,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
-import { routeGetOrder } from "../api/route";
+import { routeGetOrder, routeSetOrder } from "../api/route";
 
 interface Params {
   chainUID: string;
@@ -428,22 +428,12 @@ function ParticipantsTable(props: {
   async function routeUpdate() {
     const res = await routeGetOrder(props.chain.uid);
     setRoute(res.data);
+    console.log(route);
   }
 
-  async function routePop(userUID: string) {
-    let chainRoute = new Array();
-    if (route != null) {
-      chainRoute = route;
-    }
-    console.log(chainRoute);
-
-    const toPop = route?.indexOf(userUID);
-    if (toPop) {
-      chainRoute.splice(toPop, 1);
-      console.log(chainRoute);
-      setRoute(chainRoute);
-    }
-    return;
+  async function changeRoute() {
+    const res = await routeSetOrder(props.chain.uid, route);
+    console.log(route);
   }
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
@@ -624,7 +614,7 @@ function ParticipantsTable(props: {
 
     setDragTarget("");
     setRoute(newRoute);
-    routeUpdate();
+    changeRoute();
   }
 
   return (
