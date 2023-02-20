@@ -428,6 +428,23 @@ function ParticipantsTable(props: {
   async function routeUpdate() {
     const res = await routeGetOrder(props.chain.uid);
     setRoute(res.data);
+    console.log(route)
+  }
+ 
+    async function routePop(userUID: string) {
+    let chainRoute = new Array();
+    if (route != null) {
+      chainRoute = route;
+    }
+    console.log(chainRoute);
+
+    const toPop = route?.indexOf(userUID);
+    if (toPop) {
+      chainRoute.splice(toPop, 1);
+      console.log(chainRoute);
+      setRoute(chainRoute);
+    }
+    return;
   }
 
   async function changeRoute() {
@@ -491,6 +508,8 @@ function ParticipantsTable(props: {
               )
             ).finally(() => {
               setSelected([]);
+              routePop(selected[0]);
+              changeRoute();
               return props.refresh();
             });
           },
@@ -529,6 +548,7 @@ function ParticipantsTable(props: {
                   title: "Approve user",
                   event: true,
                 });
+              changeRoute();
               return props.refresh();
             });
           },
