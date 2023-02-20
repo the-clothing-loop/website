@@ -10,6 +10,7 @@ import (
 )
 
 var ErrUserNotFound = errors.New("User not found")
+var ErrAddUserChainsToObject = errors.New("Unable to add associated loops to user")
 
 type User struct {
 	ID              uint        `json:"-"`
@@ -23,38 +24,12 @@ type User struct {
 	Address         string      `json:"address"`
 	Sizes           []string    `json:"sizes" gorm:"serializer:json"`
 	LastSignedInAt  zero.Time   `json:"-"`
+	LastPokeAt      zero.Time   `json:"-"`
 	UserToken       []UserToken `json:"-"`
 	Chains          []UserChain `json:"chains"`
 	CreatedAt       time.Time   `json:"-"`
 	UpdatedAt       time.Time   `json:"-"`
 }
-
-const (
-	RoleUser       = 1
-	RoleChainAdmin = 2
-	RoleRootAdmin  = 3
-)
-
-type UserToken struct {
-	ID        uint
-	Token     string `gorm:"unique"`
-	Verified  bool
-	UserID    uint
-	CreatedAt time.Time
-}
-
-type UserChain struct {
-	ID           uint      `json:"-"`
-	UserID       uint      `json:"-" gorm:"index"`
-	UserUID      string    `json:"user_uid" gorm:"-:migration;<-:false"`
-	ChainID      uint      `json:"-"`
-	ChainUID     string    `json:"chain_uid" gorm:"-:migration;<-:false"`
-	IsChainAdmin bool      `json:"is_chain_admin"`
-	CreatedAt    time.Time `json:"created_at"`
-	IsApproved   bool      `json:"is_approved"`
-}
-
-var ErrAddUserChainsToObject = errors.New("Unable to add associated loops to user")
 
 func (u *User) AddUserChainsToObject(db *gorm.DB) error {
 	userChains := []UserChain{}
@@ -104,4 +79,16 @@ func (u *User) IsAnyChainAdmin() (isAnyChainAdmin bool) {
 	}
 
 	return isAnyChainAdmin
+}
+
+func (u *User) LastPokeTooRecent() bool {
+	if !u.LastPokeAt.Valid {
+		return false
+	}
+
+	return !u.LastPokeAt.Time.Before(time.Now().Add(-24 * 7 * time.Hour))
+}
+
+func (u *User) SetLastPokeToNow(db *gorm.DB) error {
+	return db.Exec(`UPDATE users SET last_poke_at = NOW() WHERE id = ?`, u.ID).Error
 }

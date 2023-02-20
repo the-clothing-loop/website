@@ -6,9 +6,9 @@ import { initReactI18next } from "react-i18next";
 const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
 
-let supportedLngs = ["en", "nl", "fr"];
+let supportedLngs = ["en", "nl", "fr", "sv"];
 if (!IS_PRODUCTION) {
-  supportedLngs = ["en", "nl", "de", "fr"];
+  supportedLngs = ["en", "nl", "de", "fr", "sv"];
 }
 
 i18n

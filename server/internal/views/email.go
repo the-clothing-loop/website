@@ -22,7 +22,7 @@ var emailsTemplates = map[string]*template.Template{
 }
 
 func init() {
-	lang := []string{"en", "nl", "fr"}
+	lang := []string{"en", "nl", "fr", "sv"}
 
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/headers.json", l))
@@ -174,6 +174,29 @@ func EmailToLoopParticipant(
 		"Name":      participantName,
 		"ChainName": chainName,
 		"textBody": textBody,
+	})
+	if err != nil {
+		return false
+	}
+
+	return app.MailSend(c, db, to, subject, body)
+}
+
+func EmailPoke(
+	c *gin.Context,
+	db *gorm.DB,
+	hostName,
+	email,
+	participantName,
+	chainName string,
+) bool {
+	i18n := "en"
+	to := email
+	subject := fmt.Sprintf(emailsHeaders[i18n]["poke"], participantName, chainName)
+	body, err := executeTemplate(c, emailsTemplates[i18n], "poke.gohtml", gin.H{
+		"Name":            hostName,
+		"ParticipantName": participantName,
+		"ChainName":       chainName,
 	})
 	if err != nil {
 		return false

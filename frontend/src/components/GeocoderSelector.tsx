@@ -54,5 +54,10 @@ export default function GeocoderSelector(props: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    let inputEl = (refDiv.current as HTMLDivElement).querySelector("input");
+    if (inputEl) inputEl.value = props.address || "";
+  }, [props.address]);
+
   return <div className="relative z-20" ref={refDiv}></div>;
 }

@@ -28,6 +28,7 @@ const colors = {
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  safelist: ["list-none"],
   theme: {
     screens: {
       xs: "481px",
@@ -76,6 +77,9 @@ module.exports = {
         DEFAULT: {
           css: {
             color: colors.black,
+            "strong, b": {
+              fontWeight: 500,
+            },
           },
         },
       },

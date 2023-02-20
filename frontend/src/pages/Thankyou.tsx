@@ -54,15 +54,16 @@ export function NewLoopConfirmation(props: any) {
       </Helmet>
       <main>
         <TwoColumnLayout
+          t={t}
           img="https://ucarecdn.com/1145cf2e-d731-4e0c-8644-fa117c2ccc6c/-/resize/x600/-/format/auto/-/quality/smart/partyimage.jpg"
-          children={
-            <Content
-              heading={t("thankYouForStartingThisLoop")}
-              subheading={t("youAreUnlockingTheClothesSwapPotential")}
-              confirmationEmail={t("hostConfirmationEmailIsOnItsWay")}
-            />
-          }
-        ></TwoColumnLayout>
+          alt="A pink bag with the number nine duck-taped to the side, surrounded by balloons, flags, lint and candles"
+        >
+          <Content
+            heading={t("thankYouForStartingThisLoop")}
+            subheading={t("youAreUnlockingTheClothesSwapPotential")}
+            confirmationEmail={t("hostConfirmationEmailIsOnItsWay")}
+          />
+        </TwoColumnLayout>
       </main>
     </>
   );
@@ -79,17 +80,16 @@ export function JoinLoopConfirmation(props: any) {
       </Helmet>
       <main>
         <TwoColumnLayout
+          t={t}
           img="https://ucarecdn.com/1145cf2e-d731-4e0c-8644-fa117c2ccc6c/-/resize/x600/-/format/auto/-/quality/smart/partyimage.jpg"
-          children={
-            <Content
-              heading={t("thankYouForSigningUp")}
-              subheading={t(
-                "yourClosetIsAboutToBecomeAWholeLotMoreSustainable"
-              )}
-              confirmationEmail={t("confirmationEmailIsOnItsWay")}
-            />
-          }
-        ></TwoColumnLayout>
+          alt="A pink bag with the number nine duck-taped to the side, surrounded by balloons, flags, lint and candles"
+        >
+          <Content
+            heading={t("thankYouForSigningUp")}
+            subheading={t("yourClosetIsAboutToBecomeAWholeLotMoreSustainable")}
+            confirmationEmail={t("confirmationEmailIsOnItsWay")}
+          />
+        </TwoColumnLayout>
       </main>
     </>
   );
