@@ -17,7 +17,6 @@ export default function FAQ() {
     question: string;
     answer: string;
     open: boolean;
-    id: number;
     onChange: () => void;
   }) {
     return (
@@ -28,12 +27,11 @@ export default function FAQ() {
             : "transition-[min-height] duration-200 ease-out min-h-[60px]"
         }`}
         open={props.open}
-        id={"detailsID" + props.id}
       >
         <summary
           tabIndex={0}
           className="p-3 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 group-open:bg-teal/10 cursor-pointer"
-          onClick={(e) => clickHandler(e)}
+          onClick={clickHandler}
         >
           <span>{props.question}</span>
           <span
@@ -51,16 +49,16 @@ export default function FAQ() {
     function clickHandler(e: MouseEvent) {
       e.preventDefault();
 
-      let details = document.getElementById("detailsID" + props.id);
+      let detailsEl = (e.target as HTMLElement).parentElement;
 
       if (props.open) {
-        details!.classList.add("max-h-20");
+        detailsEl!.classList.add("max-h-20");
 
         setTimeout(() => {
           props.onChange();
         }, 300);
       } else {
-        details!.classList.add("min-h-[170px]");
+        detailsEl!.classList.add("min-h-[170px]");
 
         setTimeout(() => {
           props.onChange();
@@ -109,7 +107,6 @@ export default function FAQ() {
                   key={index}
                   question={el.question}
                   answer={el.answer}
-                  id={index}
                 />
               ))}
             </div>
@@ -126,7 +123,6 @@ export default function FAQ() {
                   key={index}
                   question={el.question}
                   answer={el.answer}
-                  id={index + arrParticipants.length}
                 />
               ))}
             </div>
