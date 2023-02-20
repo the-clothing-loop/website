@@ -2,59 +2,95 @@
   "faqForParticipants": "Preguntas frecuentes para participantes",
   "arrParticipants": [
     {
-      "question": "¿Existen reglas sobre cuánta ropa puedes tomar? ¿Tienes que donar la misma cantidad de ropa que tomaste?",
-      "answer": "Aquí no hay reglas. A veces te llevas un poco más y a veces donas un poco más. Te pedimos por favor que no pongas ropa de mala calidad en las bolsas solo por poner algo. Es mejor media bolsa de tesoros que una bolsa llena de artículos de menor calidad."
+      "question": "Me registré, ¿cuándo voy a ser añadida.o a la ruta?",
+      "answer": "Si has recibido nuestro correo electrónico de confirmación, tu suscripción ha llegado con éxito. La anfitriona o el anfitrión del Loop ha sido notificada.o y se pondrá en contacto contigo para añadirte a la ruta.<br/>Esto puede tomar un poco de tiempo ya que todos los anfitriones.as gestionan el Loop en su tiempo libre. La mayoría añade nuevos miembros una vez cada 2 a 4 semanas."
+    },
+    {
+      "question": "¿Hay reglas sobre cuánta cantidad de artículos se puede tomar de las bolsas?",
+      "answer": "No hay reglas estrictas pero ten en cuenta que el sistema funciona mejor cuando es equilibrado. <b>Cada bolsa es diferente.</b> A veces encuentras más, a veces no encuentras nada. ¡Pero cada artículo que se usa de nuevo es un buen negocio para todo el mundo!"
+    },
+    {
+      "question": "¿Tienes que donar la misma cantidad de ropa que sacas?",
+      "answer": "No necesariamente, pero ten en cuenta que el sistema funciona mejor si hay un buen equilibrio entre lo que se toma y lo que se da. Los artículos desgastados, manchados o dañados no son bienvenidos."
     },
     {
       "question": "¿Se puede poner ropa de talla diferente en la misma bolsa?",
-      "answer": "Normalmente las bolsas mixtas funcionan bien, pues las tallas varían según la marca y las proporciones también son diferentes. Pero esto solo funciona para un determinado peso. Te recomendamos mezclar artículos de tallas 36 a 42 (S, M y L) y comenzar un nuevo Clothing Loop para tallas más grandes o más pequeñas."
+      "answer": "Normalmente las bolsas mixtas funcionan bien, pues las tallas varían según la marca y las proporciones son diferentes según las personas. <br/>Te recomendamos mezclar artículos de tallas 36 a 42 (S, M y L) y abrir un Loop separado para las tallas más grandes o más pequeñas."
     },
     {
       "question": "¿Cómo evitar la situación \"quien lo ve primero se lo queda\"?",
-      "answer": "No hay garantía de que vayas a encontrar algo que te gusta. A veces pasarán por tu casa bolsas que no contienen ningún artículo para ti. Recuerda que hallar tu artículo soñado vale más que tener 10 artículos que no usas en tu ropero. Además, hacer feliz a alguien con un artículo que juntaba polvo en tu ropero es un componente importante (¡y divertido!) de la mentalidad Clothing Loop!"
+      "answer": "No hay garantía de que vayas a encontrar algo que te gusta. A veces pasarán por tu casa bolsas que no contienen ningún artículo para ti. <br/>Recuerda que hallar tu artículo soñado vale más que tener en tu ropero 10 artículos que no usas. Además, hacer feliz a alguien con un artículo que juntaba polvo en tu ropero es un componente importante (¡y divertido!) de la mentalidad Clothing Loop!"
     },
     {
       "question": "¿Qué se hace con la ropa abultada, como los abrigos de invierno, que no entran en la bolsa?",
-      "answer": "Puedes hacer una foto del artículo y compartirla a través del canal de comunicación, o a través de la aplicación Gilde. Los participantes pueden responder por mensaje privado para organizar la entrega."
+      "answer": "Puedes sacar fotos de los artículos grandes y compartirlas a través del canal de comunicación o en la aplicación <a target='_blank' href='https://template-clothing-loop.glideapp.io'>Glide</a>. La entrega se organiza entre las personas mediante mensaje privado."
     },
     {
       "question": "¿También puedo poner zapatos en la bolsa?",
-      "answer": "La respuesta simple es si. Pero no te olvides que donar zapatos es más complicado. Hay más cantidad de tallas y se desgastan más rápidamente que la ropa. Por eso, te pedimos por favor que seas selectiva con tus zapatos. Dona solo pares que están \"como nuevos\", y no pongas más de 2 pares en cada bolsa."
+      "answer": "El anfitrión o la anfitriona local decide si se puede o no añadir zapatos a la bolsa. Añade solo pares que están realmente \"como nuevos\", y <b>no más de 2 pares por bolsa</b>. Te pedimos que pongas los zapatos en una bolsa separada para evitar que toquen la ropa. "
+    },
+    {
+      "question": "Recibo el error: “tu cuenta ya existe”.",
+      "answer": "Ya has creado una cuenta en el The Clothing Loop. Para registrarte en un Loop nuevo, primero tienes que iniciar sesión:<ol><li>Haz clic en la esquina superior derecha en el inicio de sesión.</li><li>Introduce la dirección de correo electrónico que utilizaste para registrarte en tu Loop.</li><li>Busca en tu correo electrónico, incluso en tu carpeta de spam, nuestro enlace de verificación (utilizamos un enlace en lugar de una contraseña).</li><li>Podrás registrarte en un nuevo Loop.</li></ol>"
     }
   ],
   "faqForHosts": "Preguntas frecuentes para anfitriones",
   "arrHosts": [
     {
-      "question": "¿Qué hago para comenzar a utilizar la aplicación?",
-      "answer": "Puedes copiar la aplicación y utilizarla en tu grupo. Solo tienes que completar la lista de direcciones en nuestra plantilla descargable. ¡Es muy fácil! Hemos creado un video tutorial y una presentación para ayudarte a dar los primeros pasos. Si aún así tienes algún problema, ponte en contacto con nosotros!"
+      "question": "¿Cómo inicio un Loop?",
+      "answer": "¡No te preocupes! Escribimos un manual sencillo con todas las instrucciones que puedes encontrar en nuestra <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Caja de herramientas</a>. ¡Esperamos que saques provecho de lo que hemos aprendido durante todos estos años!"
+    },
+    {
+      "question": "¿Cómo encontrar gente para unirse a mi Loop?",
+      "answer": "Empieza de a poco. Pregúntele a amigos.as y conocidos.as en tu entorno directo, como tu gimnasio o tu escuela de baile. Cuando hayas juntado un pequeño grupo, puedes pedirle a cada persona que invite al menos a una persona más, el grupo crecerá orgánicamente. También puedes enviar un comunicado de prensa a los medios de comunicación locales. Hemos preparado una plantilla<a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'></a> para rellenar!"
+    },
+    {
+      "question": "¿Cuánto tiempo me llevará ser anfitrión.a de un Loop?",
+      "answer": "Nuestros voluntarios y voluntarias dedican 1&#189; horas por mes como anfitriones.as de un Loop."
+    },
+    {
+      "question": "¿Cómo registrar un nuevo Loop?",
+      "answer": "Hemos preparado <a target='_blank' href='https://drive.google.com/drive/folders/1UiokapMTKu6nrX5sg6s8FFkS8jDTtu86'>una guía sencilla</a> con capturas de pantalla de cada paso. Si aún tienes problemas para registrarte envíanos un correo electrónico."
+    },
+    {
+      "question": "¿Cómo inicio sesión en el sitio web?",
+      "answer": "<ol><li>Haz clic en la esquina superior derecha en el inicio de sesión.</li><li>Introduce la dirección de correo electrónico que utilizaste para registrarte en tu Loop.</li><li>Busca en tu correo electrónico, incluso en tu carpeta de spam, nuestro enlace de verificación (utilizamos un enlace en lugar de una contraseña).</li><li>Ahora que estás registrado.a puedes ver y editar tu(s) Loop(s), y ver los nuevos participantes.</li></ol>"
+    },
+    {
+      "question": "¿Cómo puedo empezar a usar la aplicación Glide?",
+      "answer": "Hemos creado una aplicación que puedes configurar fácilmente para tu propio Loop.<br/><br/>Puedes copiar la aplicación y usarla en tu grupo. Solo tienes que llenar la lista de direcciones en nuestra <a target='_blank' href='https://docs.google.com/document/d/12YcVwD4jzVKDcLxssnzqq7B2fzYC8kcewsnyFJ-A7cE/edit'>plantilla descargable</a>. ¡Es súper fácil! Si aún así tienes dificultades, envíanos un email."
     },
     {
       "question": "¿Hay plantillas gráficas que podamos usar?",
-      "answer": "Por supuesto, hemos creado una carpeta donde encontrarás plantillas para logos, manuales y demás. ¡Usa tantos como quieras!"
+      "answer": "Por supuesto, hemos preparado una <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Caja de herramientas</a> donde puedes encontrar logotipos, fotos y plantillas. ¡Usa tantos como quieras!"
     },
     {
       "question": "Presentación del \"Ghost rider\" en el Loop",
-      "answer": "Cuando tu Loop ya ha estado funcionando durante cierto tiempo, tal vez quieras cambiar algo. Puedes presentar una bolsa \"ghost rider\" para que viaje en la otra dirección, y de repente habrá otra gente antes que tú en la ruta, y otros estilos en la bolsa. Si haces eso, avisa que no hay que poner artículos en la bolsa ghost rider que la gente ha sacado previamente de una bolsa común. Trata de que la cantidad de bolsas ghost rider no supere 1 o 2 bolsas, para que sea especial y simple."
+      "answer": "Cuando tu Loop ya ha estado funcionando después de cierto tiempo, tal vez quieras cambiar algo. <b>Puedes incluir una bolsa \"ghost rider\" que viaja en la otra dirección para que de repente haya otras personas antes que tú en la ruta ¡y estilos diferentes en la bolsa! Si vas a incluir una bolsa ghost rider, avísale a la gente que no ponga los artículos que ha sacado previamente de una bolsa normal. Trata de que la cantidad no supere 1 o 2 bolsas ghost rider, para que sea especial y simple."
     },
     {
       "question": "¿Cómo se gestiona un grupo de muchas personas en el canal de comunicación?",
-      "answer": "Es importante asegurarse de que la gente no es bombardeada con mensajes sin importancia, especialmente cuando los grupos se agrandan. Puedes establecer reglas sobre qué se puede y qué no se puede compartir en el grupo de la aplicación. Por ejemplo:<br /><br /><span>Sí,</span> en la aplicación:<ul><li>Selfies de artículos lindos que sacaste de la bolsa o de artículos que pones en la bolsa</li><li>Cumplidos a las otras personas</li><li>Novedades importantes de logística y de organización</li><ul><span>No,</span>en la aplicación:<ul><li>Todo lo que no está relacionado con el Clothing Loop (encuestas, invitaciones a otros grupos, colecta de fondos, memes, etc.). Si quieres la opinión de todas las personas, usa una aplicación de encuestas, por ejemplo como LouLou"
+      "answer": "Es importante asegurarse de que la gente no es bombardeada con mensajes sin importancia, especialmente cuando los grupos se agrandan. Puedes establecer reglas sobre qué se puede y qué no se puede compartir en el grupo de la aplicación. Por ejemplo:<ul class='list-none'><li>En la aplicación<b>puedes compartir</b>:<ul><li>Selfies de artículos que sacas o pones en las bolsas.</li><li>Elogios y halagos (puedes usar la nueva función emoticón).</li><li>Novedades importantes de logística y de organización de los anfitriones</li><ul></li><li>En en la aplicación <b>no puedes compartir</b><ul><li>Cualquier cosa que no esté relacionada con The Clothing Loop (encuestas, invitaciones a otros grupos, colecta de fondos, memes, etc.). Si quieres obtener la opinión de las personas, usa una aplicación de encuestas, por ejemplo LouLou.</li><li>Usa la función de mensaje privado si tu mensaje se refiere a una sola persona.</li></ul></li></ul>"
     },
     {
-      "question": "What if I no longer have time to manage the Clothing Loop I started?",
-      "answer": "Use the group! Ask if someone else wants to take over and host the loop."
+      "question": "¿Qué pasa si ya no tengo tiempo para gestionar el Loop que inicié?",
+      "answer": "¡Acude al grupo! Pregunta quién puede ayudarte con la gestión del Loop. Con el tiempo quizá puedan ocuparse totalmente de la gestión."
     },
     {
-      "question": "What if someone wants to join but lives too far away?",
-      "answer": "If someone signed up for your Loop but lives too far outside of your Loop area, it is up to you to decide if he/she/them may join. One thing you can do to decrease the distance between addresses, is to ask that person to find other participants between their area and the original Loop location."
+      "question": "¿Qué pasa si alguien quiere unirse pero vive demasiado lejos?",
+      "answer": "Si alguien se registra en tu Loop pero vive demasiado lejos, depende de ti decidir si puede o no unirse. Si decides que no pueden, por favor envíales un correo electrónico para hacerles saber. Si tienes la duda, puedes pedirle a esa persona que busque participantes que vivan entre en su ubicación y la ubicación del Loop en el que se registraron."
     },
     {
-      "question": "What is an ideal group size?",
-      "answer": "We'd recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognize anything in the bag anymore, so you can keep swapping. There is no real maximum, it is up to you what still works! In the Netherlands a loop is on average 45 people. But there are loops running smoothly with 130 people!"
+      "question": "¿Cuál es el tamaño ideal de un grupo?",
+      "answer": "Te recomendamos tener al menos 20 personas en un grupo. En general, a partir de 20 direcciones ya no es posible reconocer los artículos en las bolsas, por lo que puedes continuar el intercambio. <b>No existe un tamaño máximo real</b>, depende de lo que a ti te funciona. En los Países Bajos hay 45 personas de promedio por Loop. Pero también hay Loops que funcionan con más de 180 personas sin problemas."
     },
     {
-      "question": "What to do if the Clothing Loop does not work well?",
-      "answer": "If the quality of the clothing isn't high enough, people might leave the Loop. Make sure that everyone shares the responsibility for only adding good quality items.<br/><br/>Do you see anything that shouldn't be in the Loop? Take it out and donate it to a clothing container. This way, it can still be recycled. If in doubt, ask the person next to you if he/she agrees and decide then.<br/><br/>A fabric shaver can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, set a good example yourself; share some nice photos and encourage others to do the same!"
+      "question": "¿Qué pasa si alguien se muda de casa y quiere unirse a un Loop en otra ubicación?",
+      "answer": "Como anfitrión.a puedes eliminarla de tu Loop mientras la persona está conectada a nuestro sitio. Si quiere unirse a un Loop en su nuevo barrio, pídele que simplemente se registre de nuevo con su nueva dirección."
+    },
+    {
+      "question": "¿Qué hacer si el Loop no funciona bien?",
+      "answer": "Asegúrate de que todos.as los participantes comparten la responsabilidad de añadir solo artículos de buena calidad.<br/><br/>¿Ves algo que no debería estar en una bolsa? Intenta donarlo a tu programa local de reciclaje textil. En caso de duda, pregúntale a la persona que está a tu lado en la lista de direcciones si está de acuerdo. Es bueno que algunas personas funcionen como “puntos de control” a lo largo de la ruta, para asegurarse de que las bolsas permanezcan en buenas condiciones. Porque si la calidad de la ropa no es lo suficientemente alta, la gente podría abandonar el Loop. Eso sería realmente una pena.<br/><br/>A <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>Un removedor de pelusa</a> puede extender de manera significativa la vida útil de la ropa. Puedes compartir este consejo con tu comunidad.<br/><br/>Por último pero no menos importante, sé un buen ejemplo: comparte fotos bonitas y anima a los demás a hacer lo mismo. Ver dónde acaban los artículos es una gran motivación para la gente que dona artículos bonitos."
     }
   ]
 }
