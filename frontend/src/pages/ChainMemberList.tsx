@@ -428,12 +428,10 @@ function ParticipantsTable(props: {
   async function routeUpdate() {
     const res = await routeGetOrder(props.chain.uid);
     setRoute(res.data);
-    console.log(route);
   }
 
   async function changeRoute() {
-    const res = await routeSetOrder(props.chain.uid, route);
-    console.log(route);
+    await routeSetOrder(props.chain.uid, route);
   }
 
   const edit = useMemo<LocationDescriptor<{ chainUID: string }>>(() => {
