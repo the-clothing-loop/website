@@ -507,7 +507,7 @@ function ParticipantsTable(props: {
           },
         },
         {
-          text: t("otherSizesGenders"),
+          text: t("differentSizes"),
           type: "secondary",
           fn: () => {
             chainDeleteUnapprovedReason(UnapprovedReason.SIZES_GENDERS);

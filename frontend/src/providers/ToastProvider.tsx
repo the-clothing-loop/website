@@ -100,6 +100,10 @@ function CreateToastComponent(props: {
 }) {
   let classes = "alert";
   let icon = "feather";
+  const isTooLarge = (props.toast.actions?.length || 0) > 2;
+  if (isTooLarge) {
+    classes += " flex-col items-start";
+  }
   switch (props.toast.type) {
     case "info":
       classes += " ";
@@ -131,7 +135,9 @@ function CreateToastComponent(props: {
         <span className="font-bold">{props.toast.message}</span>
       </div>
       {props.toast.actions && (
-        <div className="flex-none">
+        <div
+          className={isTooLarge ? "w-full items-stretch flex-col" : "flex-none"}
+        >
           {props.toast.actions?.map((a) => {
             let classes = "btn btn-sm";
             switch (a.type) {
