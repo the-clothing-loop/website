@@ -18,6 +18,12 @@ import (
 	"gopkg.in/guregu/null.v3/zero"
 )
 
+const (
+	UnapprovedReasonOther        = "other"
+	UnapprovedReasonOutOfAria    = "out_of_aria"
+	UnapprovedReasonSizesGenders = "sizes_genders"
+)
+
 type ChainCreateRequestBody struct {
 	Name             string   `json:"name" binding:"required"`
 	Description      string   `json:"description"`
@@ -432,7 +438,7 @@ WHERE user_id = ? AND chain_id = ?
 			"",
 			"an_admin_approved_your_join_request",
 			"an_admin_approved_your_join_request.gohtml",
-			)
+		)
 	}
 }
 
@@ -441,7 +447,7 @@ func ChainDeleteUnapproved(c *gin.Context) {
 	var query struct {
 		UserUID  string `form:"user_uid" binding:"required,uuid"`
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
-		Reason string `form:"reason" binding:"omitempty"`
+		Reason   string `form:"reason" binding:"required,oneof='other' 'too_far_away' 'sizes_genders'"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
@@ -463,7 +469,7 @@ WHERE user_id = ? AND chain_id = ? AND is_approved = FALSE
 			query.Reason,
 			"an_admin_denied_your_join_request",
 			"an_admin_denied_your_join_request.gohtml",
-	)
+		)
 	}
 
 }

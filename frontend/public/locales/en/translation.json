@@ -230,5 +230,9 @@
   "toolkitFolder": "Toolkit Folder",
   "editAccount": "Edit Account",
   "remindHost": "Remind Host",
-  "reminderEmailSent": "Reminder email sent"
+  "reminderEmailSent": "Reminder email sent",
+  "reasonForDenyingJoin": "Please give a reason to deny the request",
+  "tooFarAway": "Too far away",
+  "differentSizes": "Different sizes",
+  "other": "Other"
 }

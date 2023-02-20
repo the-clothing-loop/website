@@ -60,9 +60,9 @@ export function chainUserApprove(chainUID: UID, userUID: UID) {
 }
 
 export enum UnapprovedReason {
-  OUT_OF_ARIA = "out_of_aria",
-  SIZES_GENDERS = "sizes_genders",
   OTHER = "other",
+  TOO_FAR_AWAY = "too_far_away",
+  SIZES_GENDERS = "sizes_genders",
 }
 
 export function chainDeleteUnapproved(

@@ -157,11 +157,11 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB, name, email, token stri
 func EmailToLoopParticipant(
 	c *gin.Context,
 	db *gorm.DB,
-	participantName string,
-	participantEmail string,
-	chainName string,
-	textBody string,
-	headerName string,
+	participantName,
+	participantEmail,
+	chainName,
+	reason,
+	headerName,
 	templateName string,
 ) bool {
 	// ? language hardcoded to english until language preference can be determined in the database
@@ -173,7 +173,7 @@ func EmailToLoopParticipant(
 	body, err := executeTemplate(c, emailsTemplates[i18n], templateName, gin.H{
 		"Name":      participantName,
 		"ChainName": chainName,
-		"textBody": textBody,
+		"Reason":    reason,
 	})
 	if err != nil {
 		return false

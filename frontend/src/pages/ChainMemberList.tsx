@@ -496,26 +496,26 @@ function ParticipantsTable(props: {
         .finally(() => props.refresh());
 
     addToastStatic({
-      message: t("ReasonForDenyingJoin"),
+      message: t("reasonForDenyingJoin"),
       type: "info",
       actions: [
         {
-          text: t("outOfArea"),
-          type: "ghost",
+          text: t("tooFarAway"),
+          type: "secondary",
           fn: () => {
-            chainDeleteUnapprovedReason(UnapprovedReason.OUT_OF_ARIA);
+            chainDeleteUnapprovedReason(UnapprovedReason.TOO_FAR_AWAY);
           },
         },
         {
           text: t("otherSizesGenders"),
-          type: "ghost",
+          type: "secondary",
           fn: () => {
             chainDeleteUnapprovedReason(UnapprovedReason.SIZES_GENDERS);
           },
         },
         {
           text: t("other"),
-          type: "ghost",
+          type: "secondary",
           fn: () => {
             chainDeleteUnapprovedReason(UnapprovedReason.OTHER);
           },
