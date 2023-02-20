@@ -428,10 +428,10 @@ function ParticipantsTable(props: {
   async function routeUpdate() {
     const res = await routeGetOrder(props.chain.uid);
     setRoute(res.data);
-    console.log(route)
+    console.log(route);
   }
- 
-    async function routePop(userUID: string) {
+
+  async function routePop(userUID: string) {
     let chainRoute = new Array();
     if (route != null) {
       chainRoute = route;
