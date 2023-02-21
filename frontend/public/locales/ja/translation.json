@@ -44,7 +44,7 @@
   "newsletter": "Newsletter",
   "phoneNumber": "Phone number",
   "page": "Page",
-  "findChain": "Find Loop",
+  "findChain": "Find chain",
   "logout": "Logout",
   "loginEmailSent": "An e-mail has been sent to you allowing you to login",
   "noEmailProvidedLoggingIn": "Email address has not been verified.",
@@ -229,5 +229,9 @@
   "toolkitFolder": "Toolkit Folder",
   "editAccount": "Edit Account",
   "remindHost": "Remind Host",
-  "reminderEmailSent": "Reminder email sent"
+  "reminderEmailSent": "Reminder email sent",
+  "reasonForDenyingJoin": "Please give a reason to deny the request",
+  "tooFarAway": "Too far away",
+  "differentSizes": "Different sizes",
+  "other": "Other"
 }
