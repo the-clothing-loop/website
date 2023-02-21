@@ -30,10 +30,10 @@ export default function FAQ() {
       >
         <summary
           tabIndex={0}
-          className="p-3 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 group-open:bg-teal/10 cursor-pointer"
+          className="marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 group-open:bg-teal/10 cursor-pointer"
           onClick={clickHandler}
         >
-          <span>{props.question}</span>
+          <span className="p-3 w-full">{props.question}</span>
           <span
             className={`feather ml-3 ${
               props.open ? "feather-minus" : "feather-plus"
@@ -49,7 +49,7 @@ export default function FAQ() {
     function clickHandler(e: MouseEvent) {
       e.preventDefault();
 
-      let detailsEl = (e.target as HTMLElement).parentElement;
+      let detailsEl = (e.target as HTMLElement).parentElement!.parentElement;
 
       if (props.open) {
         detailsEl!.classList.add("max-h-20");
