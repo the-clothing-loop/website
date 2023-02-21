@@ -21,21 +21,19 @@ export default function FAQ() {
   }) {
     return (
       <details
-        className={`group last-of-type:mb border-none overflow-hidden ${
-          props.open
-            ? "bg-teal-light max-h-[1000px] transition-[max-height] duration-300 ease-out"
-            : "transition-[min-height] duration-200 ease-out min-h-[60px]"
+        className={`group last-of-type:mb border-none overflow-hidden transition-[max-height] duration-700 ease-in-out ${
+          props.open ? "bg-teal-light max-h-[600px]" : "max-h-[80px]"
         }`}
         open={props.open}
       >
         <summary
           tabIndex={0}
-          className="p-3 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 group-open:bg-teal/10 cursor-pointer"
+          className="marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 group-open:bg-teal/10 cursor-pointer"
           onClick={clickHandler}
         >
-          <span>{props.question}</span>
+          <span className="p-3 w-full">{props.question}</span>
           <span
-            className={`feather ml-3 ${
+            className={`feather p-3 ${
               props.open ? "feather-minus" : "feather-plus"
             }`}
           />
@@ -48,21 +46,18 @@ export default function FAQ() {
 
     function clickHandler(e: MouseEvent) {
       e.preventDefault();
-
-      let detailsEl = (e.target as HTMLElement).parentElement;
-
+      let detailsEl = (e.target as HTMLElement).parentElement!.parentElement;
       if (props.open) {
-        detailsEl!.classList.add("max-h-20");
+        let summaryEl = e.target as HTMLElement;
+        let minHeight = summaryEl!.getBoundingClientRect().height;
+
+        detailsEl!.classList.add("max-h-[" + minHeight + "px]");
 
         setTimeout(() => {
           props.onChange();
-        }, 300);
+        }, 700);
       } else {
-        detailsEl!.classList.add("min-h-[170px]");
-
-        setTimeout(() => {
-          props.onChange();
-        }, 200);
+        props.onChange();
       }
     }
   }
