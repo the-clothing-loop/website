@@ -44,7 +44,7 @@
   "newsletter": "Boletín Informativo",
   "phoneNumber": "Teléfono",
   "page": "Página",
-  "findChain": "Encontrar cadena",
+  "findChain": "Find chain",
   "logout": "Cerrar sesión",
   "loginEmailSent": "Se te ha enviado un correo electrónico que te permite iniciar sesión",
   "noEmailProvidedLoggingIn": "La dirección de correo electrónico no se ha verificado",
@@ -229,5 +229,9 @@
   "toolkitFolder": "Carpeta de herramientas",
   "editAccount": "Editar cuenta",
   "remindHost": "Recordar Anfitrión.a",
-  "reminderEmailSent": "Correo de recordatorio enviado"
+  "reminderEmailSent": "Correo de recordatorio enviado",
+  "reasonForDenyingJoin": "Please give a reason to deny the request",
+  "tooFarAway": "Too far away",
+  "differentSizes": "Different sizes",
+  "other": "Other"
 }
