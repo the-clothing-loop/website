@@ -46,22 +46,32 @@ export function chainRemoveUser(chainUID: UID, userUID: UID) {
   });
 }
 
-export function userDelete(chainUID: string, userUID: string) {
+export function userDelete(chainUID: UID, userUID: UID) {
   return axios.delete<never>("/v2/user", {
     params: { user_uid: userUID, chain_uid: chainUID },
   });
 }
 
-export function chainUserApprove(chainUID: string, userUID: string) {
+export function chainUserApprove(chainUID: UID, userUID: UID) {
   return axios.patch<never>("/v2/chain/approve-user", {
     user_uid: userUID,
     chain_uid: chainUID,
   });
 }
 
-export function chainDeleteUnapproved(chainUID: string, userUID: string) {
+export enum UnapprovedReason {
+  OTHER = "other",
+  TOO_FAR_AWAY = "too_far_away",
+  SIZES_GENDERS = "sizes_genders",
+}
+
+export function chainDeleteUnapproved(
+  chainUID: UID,
+  userUID: UID,
+  reason: UnapprovedReason
+) {
   return axios.delete<never>(
-    `/v2/chain/unapproved-user?user_uid=${userUID}&chain_uid=${chainUID}`
+    `/v2/chain/unapproved-user?user_uid=${userUID}&chain_uid=${chainUID}&reason=${reason}`
   );
 }
 
