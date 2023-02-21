@@ -53,7 +53,6 @@ export default function FAQ() {
 
         detailsEl!.classList.add("max-h-[" + minHeight + "px]");
 
-
         setTimeout(() => {
           props.onChange();
         }, 700);
