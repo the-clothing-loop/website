@@ -25,7 +25,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-white pt-8 lg:pt-32 w-full">
+    <footer className="bg-white pt-8 lg:pt-16 w-full">
       <div className="relative">
         <div
           className="absolute hidden lg:block top-0 right-0 bottom-0 bg-teal-light w-1/2"

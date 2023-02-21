@@ -109,7 +109,7 @@ export default function ChainsList() {
         )}
       </div>
 
-      <div className="overflow-x-auto pb-40">
+      <div className="overflow-x-auto pb-10">
         <table className="table table-compact w-full">
           <thead>
             <tr>
