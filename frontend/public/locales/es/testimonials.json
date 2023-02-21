@@ -1,29 +1,29 @@
 {
-  "testimonials": "Testimonials",
+  "testimonials": "Testimonios",
   "arrTestimonials": [
     {
       "name": "Roos",
-      "message": "I think it's great to be able to 'shop' regularly without burdening my wallet or the environment."
+      "message": "Me parece genial poder \"comprar ropa\" sin recargar mi bolsillo ni el medio ambiente."
     },
     {
-      "name": "Unknown",
-      "message": "Never too young to learn! My daughters, aged 13 and 16, regularly pick something cool from the bags. I love how this teaches them that clothes can very well be found second-hand. In my opinion, sustainability and environmental awareness should be an important part of any education!"
+      "name": "Anónimo",
+      "message": "¡Nunca es tarde para aprender! Mis hijas de 13 y 16 años a menudo encuentran cosas muy guay en las bolsas. Me encanta cómo esto les ha enseñado que es posible conseguir buena ropa de segunda mano. Pienso que la sostenibilidad y la consciencia medioambiental tendrían que tener un lugar más importante en la educación, ¡en todos los niveles!"
     },
     {
-      "name": "Participant in Barendrecht",
-      "message": "Someone in my Loop landed a new job. Guess who's dress she wore to her interview?"
+      "name": "Participante en Barendrecht",
+      "message": "En mi Loop, una participante consiguió un puesto de trabajo. ¿Adivina de quién era el vestido que se puso para la entrevista?"
     },
     {
       "name": "Nienke",
-      "message": "The best part is being able to try clothes that you would never pick in the store, and realizing that you really like them."
+      "message": "La mejor parte es poder probarte ropa que nunca hubieras elegido en una tienda, ¡y darte cuenta de que en realidad te gusta."
     },
     {
       "name": "Lia",
-      "message": "A nice bonus is that you get to know people in your neighborhood, usually neighbors with pretty green hearts as well. As a result, it is a small step – if you really need something but would rather not buy it – to toss a loan request into the Loop, such as for ski pants or a costume for a theme party!"
+      "message": "La ventaja extra es que conoces gente en tu barrio que también tiene corazón ambientalista. El resultado, un pequeño paso, es que si realmente necesitas algo, como un disfraz para una fiesta temática o pantalones de esquí, pero preferirías no comprarlo, lo pides prestado en el Loop!"
     },
     {
       "name": "Ella",
-      "message": "After receiving the third bag, it hits me just what an incredible amount of clothes we have in our closets!"
+      "message": "Después de recibir la tercera bolsa, tomé conciencia de la cantidad impresionante de ropa que guardamos en nuestros roperos!"
     }
   ]
 }

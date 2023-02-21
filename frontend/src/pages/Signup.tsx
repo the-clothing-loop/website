@@ -36,7 +36,7 @@ interface RegisterUserForm {
 export default function Signup() {
   const history = useHistory();
   const { t } = useTranslation();
-  const { addToastError, addToastStatic } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
   const { authUser, authUserRefresh } = useContext(AuthContext);
 
   const { chainUID } = useParams<Params>();
@@ -113,13 +113,12 @@ export default function Signup() {
         } else if (err?.status === 409) {
           console.log("2");
 
-          addToastStatic({
-            type: "info",
+          addModal({
             message: err.data,
             actions: [
               {
                 text: t("login"),
-                type: "primary",
+                type: "default",
                 fn: () => history.push("/users/login"),
               },
             ],

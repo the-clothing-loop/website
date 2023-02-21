@@ -1,6 +1,6 @@
 //Resources
-import { Link, Redirect, useHistory } from "react-router-dom";
-import { useContext } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
@@ -13,17 +13,16 @@ import ChainsList from "../components/ChainsList";
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
-
+  const { addModal } = useContext(ToastContext);
   const history = useHistory();
-  const { addToastStatic } = useContext(ToastContext);
+
   function deleteClicked() {
-    addToastStatic({
+    addModal({
       message: t("deleteAccount"),
-      type: "warning",
       actions: [
         {
           text: t("delete"),
-          type: "ghost",
+          type: "error",
           fn: () => {
             userPurge(authUser!.uid);
             history.push("/users/logout");
@@ -34,6 +33,11 @@ export default function AdminDashboard() {
   }
 
   if (!authUser) return null;
+
+  const isChainAdmin = useMemo(
+    () => !!authUser?.chains.find((uc) => uc.is_chain_admin),
+    [authUser]
+  );
 
   return (
     <>
@@ -58,17 +62,19 @@ export default function AdminDashboard() {
               </div>
 
               <div className="flex flex-col sm:flex-row flex-wrap">
-                <Link
-                  className="btn btn-primary h-auto mb-4 sm:mr-4 text-black"
-                  target="_blank"
-                  to={{
-                    pathname:
-                      "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27",
-                  }}
-                >
-                  {t("toolkitFolder")}
-                  <span className="feather feather-external-link ml-2"></span>
-                </Link>
+                {authUser.is_root_admin || isChainAdmin ? (
+                  <Link
+                    className="btn btn-primary h-auto mb-4 sm:mr-4 text-black"
+                    target="_blank"
+                    to={{
+                      pathname:
+                        "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27",
+                    }}
+                  >
+                    {t("toolkitFolder")}
+                    <span className="feather feather-external-link ml-2"></span>
+                  </Link>
+                ) : null}
 
                 <Link
                   className="btn btn-secondary btn-outline bg-white mb-4 sm:mr-4"

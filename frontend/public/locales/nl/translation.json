@@ -2,7 +2,7 @@
   "genericError": "Er is een onbekende fout opgetreden",
   "removeFromLoop": "Verwijder uit Loop",
   "leave": "Verlaat",
-  "leaveLoop": "Leave Loop",
+  "leaveLoop": "Loop verlaten",
   "areYouSureLeaveLoop": "Weet je zeker dat je “{{ name }}” uit \"{{ chain }}\" Loop wilt verwijderen?",
   "setAsAParticipant": "Instellen als deelnemer",
   "selected": "Geselecteerd",
@@ -93,7 +93,6 @@
   "close": "Sluiten",
   "interestedSizes": "Geïnteresseerde maten",
   "subscribeToTheClothingLoopNewsletter": "Abonneer je op de nieuwsbrief van de Clothing Loop",
-  "agreeToOur": "Ga akkoord met onze ",
   "childrenSizes": "Kindermaten",
   "womenSizes": "Damesmaten",
   "menSizes": "Herenmaten",
@@ -230,5 +229,9 @@
   "toolkitFolder": "Toolkit Folder",
   "editAccount": "Edit Account",
   "remindHost": "Remind Host",
-  "reminderEmailSent": "Reminder email sent"
+  "reminderEmailSent": "Reminder email sent",
+  "reasonForDenyingJoin": "Please give a reason to deny the request",
+  "tooFarAway": "Too far away",
+  "differentSizes": "Different sizes",
+  "other": "Other"
 }

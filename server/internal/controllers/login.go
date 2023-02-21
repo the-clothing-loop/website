@@ -223,7 +223,7 @@ func RegisterBasicUser(c *gin.Context) {
 		var row struct {
 			ID uint `gorm:"id"`
 		}
-		db.Raw("SELECT id FROM chains WHERE uid = ? AND deleted_at IS NULL LIMIT 1", body.ChainUID).Scan(&row)
+		db.Raw("SELECT id FROM chains WHERE uid = ? AND deleted_at IS NULL AND open_to_new_members = TRUE LIMIT 1", body.ChainUID).Scan(&row)
 		chainID = row.ID
 		if chainID == 0 {
 			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Chain does not exist"))

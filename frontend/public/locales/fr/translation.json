@@ -93,7 +93,6 @@
   "close": "Fermer",
   "interestedSizes": "Intéressé par les tailles",
   "subscribeToTheClothingLoopNewsletter": "Abonnez-vous à la newsletter de The Clothing Loop",
-  "agreeToOur": "Accepter nos ",
   "childrenSizes": "Tailles enfants",
   "womenSizes": "Tailles femmes",
   "menSizes": "Tailles hommes",
@@ -230,5 +229,9 @@
   "toolkitFolder": "Toolkit Folder",
   "editAccount": "Edit Account",
   "remindHost": "Remind Host",
-  "reminderEmailSent": "Reminder email sent"
+  "reminderEmailSent": "Reminder email sent",
+  "reasonForDenyingJoin": "Please give a reason to deny the request",
+  "tooFarAway": "Too far away",
+  "differentSizes": "Different sizes",
+  "other": "Other"
 }

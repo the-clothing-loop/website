@@ -17,7 +17,7 @@ import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 
-import { AuthContext, AuthProps } from "../providers/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
@@ -26,8 +26,9 @@ import {
   chainRemoveUser,
   chainUpdate,
   chainUserApprove,
+  UnapprovedReason,
 } from "../api/chain";
-import { Chain, User, UserChain } from "../api/types";
+import { Chain, UID, User, UserChain } from "../api/types";
 import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
@@ -302,7 +303,7 @@ function HostTable(props: {
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
-  const { addToastError, addToastStatic } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
 
   function getEditLocation(u: User): LocationDescriptor {
     if (!u.uid) return "#";
@@ -319,13 +320,12 @@ function HostTable(props: {
     e.preventDefault();
     const chainUID = props.chain.uid;
 
-    addToastStatic({
+    addModal({
       message: t("areYouSureRevokeHost", { name: u.name }),
-      type: "warning",
       actions: [
         {
           text: t("revoke"),
-          type: "ghost",
+          type: "error",
           fn: () => {
             chainAddUser(chainUID, u.uid, false)
               .catch((err) => {
@@ -400,7 +400,7 @@ function ParticipantsTable(props: {
   refresh: () => Promise<void>;
 }) {
   const { t, i18n } = useTranslation();
-  const { addToastError, addToastStatic } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
   const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
 
   function getEditLocation(user: User): LocationDescriptor {
@@ -422,13 +422,12 @@ function ParticipantsTable(props: {
 
     const chainUID = props.chain.uid;
 
-    addToastStatic({
+    addModal({
       message: t("areYouSureRemoveParticipant", { name: user.name }),
-      type: "warning",
       actions: [
         {
           text: t("remove"),
-          type: "ghost",
+          type: "error",
           fn: () => {
             chainRemoveUser(chainUID, user.uid)
               .catch((err) => {
@@ -446,13 +445,12 @@ function ParticipantsTable(props: {
 
     const chainUID = props.chain.uid;
 
-    addToastStatic({
+    addModal({
       message: t("approveParticipant", { name: user.name }),
-      type: "warning",
       actions: [
         {
           text: t("approve"),
-          type: "ghost",
+          type: "success",
           fn: () => {
             chainUserApprove(chainUID, user.uid)
               .then(() => {
@@ -473,32 +471,49 @@ function ParticipantsTable(props: {
     });
   }
 
-  function onDeny(e: MouseEvent, user: User) {
+  function onDeny(e: MouseEvent, userUID: UID) {
     e.preventDefault();
 
     const chainUID = props.chain.uid;
 
-    addToastStatic({
-      message: t("denyParticipant", { name: user.name }),
-      type: "warning",
+    const chainDeleteUnapprovedReason = (reason: UnapprovedReason) =>
+      chainDeleteUnapproved(chainUID, userUID, reason)
+        .then((res) => {
+          if (window.goatcounter)
+            window.goatcounter.count({
+              path: "deny-user",
+              title: "Deny user",
+              event: true,
+            });
+          return res;
+        })
+        .catch((err) => {
+          addToastError(GinParseErrors(t, err), err.status);
+        })
+        .finally(() => props.refresh());
+
+    addModal({
+      message: t("reasonForDenyingJoin"),
       actions: [
         {
-          text: t("deny"),
-          type: "ghost",
+          text: t("tooFarAway"),
+          type: "secondary",
           fn: () => {
-            chainDeleteUnapproved(chainUID, user.uid)
-              .then(() => {
-                if (window.goatcounter)
-                  window.goatcounter.count({
-                    path: "deny-user",
-                    title: "Deny user",
-                    event: true,
-                  });
-              })
-              .catch((err) => {
-                addToastError(GinParseErrors(t, err), err.status);
-              })
-              .finally(() => props.refresh());
+            chainDeleteUnapprovedReason(UnapprovedReason.TOO_FAR_AWAY);
+          },
+        },
+        {
+          text: t("differentSizes"),
+          type: "secondary",
+          fn: () => {
+            chainDeleteUnapprovedReason(UnapprovedReason.SIZES_GENDERS);
+          },
+        },
+        {
+          text: t("other"),
+          type: "secondary",
+          fn: () => {
+            chainDeleteUnapprovedReason(UnapprovedReason.OTHER);
           },
         },
       ],
@@ -605,7 +620,7 @@ function ParticipantsTable(props: {
                         </button>,
                         <button
                           type="button"
-                          onClick={(e) => onDeny(e, u)}
+                          onClick={(e) => onDeny(e, u.uid)}
                           className="text-red"
                         >
                           {t("deny")}
