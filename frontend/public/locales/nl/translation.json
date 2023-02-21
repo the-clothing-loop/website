@@ -44,7 +44,7 @@
   "newsletter": "Nieuwsbrief",
   "phoneNumber": "Telefoonnummer",
   "page": "Pagina",
-  "findChain": "Loop zoeken",
+  "findChain": "Find chain",
   "logout": "Uitloggen",
   "loginEmailSent": "Een e-mail is verstuurd waarmee je in kan loggen",
   "noEmailProvidedLoggingIn": "Je e-mailadres is nog niet geverifieerd.",
@@ -229,5 +229,9 @@
   "toolkitFolder": "Toolkit Folder",
   "editAccount": "Edit Account",
   "remindHost": "Remind Host",
-  "reminderEmailSent": "Reminder email sent"
+  "reminderEmailSent": "Reminder email sent",
+  "reasonForDenyingJoin": "Please give a reason to deny the request",
+  "tooFarAway": "Too far away",
+  "differentSizes": "Different sizes",
+  "other": "Other"
 }
