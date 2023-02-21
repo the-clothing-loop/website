@@ -204,26 +204,3 @@ func EmailPoke(
 
 	return app.MailSend(c, db, to, subject, body)
 }
-
-func EmailPoke(
-	c *gin.Context,
-	db *gorm.DB,
-	hostName,
-	email,
-	participantName,
-	chainName string,
-) bool {
-	i18n := "en"
-	to := email
-	subject := fmt.Sprintf(emailsHeaders[i18n]["poke"], participantName, chainName)
-	body, err := executeTemplate(c, emailsTemplates[i18n], "poke.gohtml", gin.H{
-		"Name":            hostName,
-		"ParticipantName": participantName,
-		"ChainName":       chainName,
-	})
-	if err != nil {
-		return false
-	}
-
-	return app.MailSend(c, db, to, subject, body)
-}
