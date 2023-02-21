@@ -229,5 +229,9 @@
   "toolkitFolder": "Carpeta de herramientas",
   "editAccount": "Editar cuenta",
   "remindHost": "Recordar Anfitrión.a",
-  "reminderEmailSent": "Correo de recordatorio enviado"
+  "reminderEmailSent": "Correo de recordatorio enviado",
+  "reasonForDenyingJoin": "Please give a reason to deny the request",
+  "tooFarAway": "Too far away",
+  "differentSizes": "Different sizes",
+  "other": "Other"
 }
