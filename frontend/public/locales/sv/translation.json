@@ -44,7 +44,7 @@
   "newsletter": "Nyhetsbrev",
   "phoneNumber": "Telefonnummer",
   "page": "Sida",
-  "findChain": "Hitta kedja",
+  "findChain": "Find chain",
   "logout": "Logga ut",
   "loginEmailSent": "Ett e-postmeddelande har skickats till dig som tillåter dig att logga in",
   "noEmailProvidedLoggingIn": "E-postadressen har inte verifierats.",
@@ -229,5 +229,9 @@
   "toolkitFolder": "Toolkit Folder",
   "editAccount": "Edit Account",
   "remindHost": "Remind Host",
-  "reminderEmailSent": "Reminder email sent"
+  "reminderEmailSent": "Reminder email sent",
+  "reasonForDenyingJoin": "Please give a reason to deny the request",
+  "tooFarAway": "Too far away",
+  "differentSizes": "Different sizes",
+  "other": "Other"
 }
