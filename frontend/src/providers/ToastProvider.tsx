@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+import * as focusTrap from "focus-trap";
 
 export interface Toast {
   type: "info" | "success" | "warning" | "error";
@@ -135,6 +136,7 @@ function ToastComponent(props: {
 
 function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
   const { t } = useTranslation();
+  let ref = useRef<any>();
 
   function handleActionClick(fn: () => void) {
     props.closeFunc();
@@ -143,6 +145,15 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
   function handleBackgroundClick() {
     if (window.innerWidth > 900) props.closeFunc();
   }
+
+  useEffect(() => {
+    const trap = focusTrap.createFocusTrap(ref.current as HTMLDialogElement);
+    trap.activate();
+
+    return () => {
+      trap.deactivate();
+    };
+  }, []);
 
   return (
     <dialog
