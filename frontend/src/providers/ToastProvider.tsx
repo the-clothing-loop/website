@@ -158,12 +158,12 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
   return (
     <dialog
       key="modal"
-      className="fixed inset-0 z-50 flex justify-center items-center"
+      className="fixed inset-0 z-50 flex justify-center items-center p-0"
       tabIndex={-1}
       ref={ref}
     >
       <div
-        className={"absolute inset-0 bg-white/30"}
+        className={"fixed inset-0 bg-white/30"}
         onClick={handleBackgroundClick}
       />
       <div
