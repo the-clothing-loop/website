@@ -1,34 +1,44 @@
-import { createContext, PropsWithChildren, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
-interface ToastAction {
-  fn: () => void;
-  type: "ghost" | "primary" | "secondary";
-  text: string;
-}
 export interface Toast {
   type: "info" | "success" | "warning" | "error";
   message: string;
-  actions?: ToastAction[];
+}
+export interface Modal {
+  message: string;
+  actions: ModalAction[];
+}
+interface ModalAction {
+  fn: () => void;
+  type: "ghost" | "default" | "secondary" | "success" | "error";
+  text: string;
 }
 
 type ToastWithID = Toast & { id: number };
 interface ContextValue {
   addToast: (t: Toast) => void;
   addToastError: (msg: string, status: number | undefined) => void;
-  addToastStatic: (t: Toast) => void;
+  addModal: (t: Modal) => void;
 }
 
 export const ToastContext = createContext<ContextValue>({
   addToast: (t) => {},
   addToastError: (msg, status) => {},
-  addToastStatic: (t) => {},
+  addModal: (t) => {},
 });
 
 export function ToastProvider({ children }: PropsWithChildren<{}>) {
   const { t } = useTranslation();
 
   const [toasts, setToasts] = useState<ToastWithID[]>([]);
+  const [openModal, setOpenModal] = useState<Modal>();
   const [idIndex, setIdIndex] = useState(1);
 
   function addToast(t: Toast) {
@@ -41,34 +51,21 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
     }, 5000);
   }
 
-  function addToastStatic(toast: Toast) {
-    const id = idIndex;
-    setIdIndex(idIndex + 1);
-    setToasts([
-      ...toasts,
-      {
-        ...toast,
-        id,
-        actions: [
-          ...(toast.actions || []),
-          {
-            text: t("close"),
-            type: "ghost",
-            fn: () => {},
-          },
-        ],
-      },
-    ]);
+  function addModal(modal: Modal) {
+    setOpenModal(modal);
+    setTimeout(() => {}, 0);
   }
 
   function addToastError(msg: string, status = 999) {
     // ensure that message is a string during runtime
+    if (typeof msg === "object") {
+      msg = JSON.stringify(msg);
+    }
     msg = msg + "";
     if (status >= 500) window.airbrake?.notify(msg);
     addToast({
       type: "error",
       message: msg,
-      actions: [],
     });
   }
 
@@ -76,8 +73,12 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
     setToasts((s) => s.filter((t) => t.id !== id));
   }
 
+  function closeModal() {
+    setOpenModal(undefined);
+  }
+
   return (
-    <ToastContext.Provider value={{ addToast, addToastError, addToastStatic }}>
+    <ToastContext.Provider value={{ addToast, addToastError, addModal }}>
       <>
         <ol
           className={`toast fixed toast-bottom sm:toast-right lg:toast-top toast-center z-50 ${
@@ -85,25 +86,24 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
           }`}
         >
           {toasts.map((t) => (
-            <CreateToastComponent toast={t} closeFunc={closeToast} />
+            <ToastComponent toast={t} closeFunc={closeToast} />
           ))}
         </ol>
+        {openModal ? (
+          <ModalComponent modal={openModal} closeFunc={closeModal} />
+        ) : null}
         {children}
       </>
     </ToastContext.Provider>
   );
 }
 
-function CreateToastComponent(props: {
+function ToastComponent(props: {
   toast: ToastWithID;
   closeFunc: (id: number) => void;
 }) {
   let classes = "alert";
   let icon = "feather";
-  const isTooLarge = (props.toast.actions?.length || 0) > 2;
-  if (isTooLarge) {
-    classes += " flex-col items-start";
-  }
   switch (props.toast.type) {
     case "info":
       classes += " ";
@@ -123,32 +123,64 @@ function CreateToastComponent(props: {
       break;
   }
 
-  function handleActionClick(fn: () => void) {
-    props.closeFunc(props.toast.id);
-    fn();
-  }
-
   return (
     <li className={classes} key={props.toast.id}>
       <div className="w-[300px]">
         <span className={icon}></span>
         <span className="font-bold">{props.toast.message}</span>
       </div>
-      {props.toast.actions && (
+    </li>
+  );
+}
+
+function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
+  const { t } = useTranslation();
+
+  function handleActionClick(fn: () => void) {
+    props.closeFunc();
+    fn();
+  }
+  function handleBackgroundClick() {
+    if (window.innerWidth > 900) props.closeFunc();
+  }
+
+  return (
+    <dialog
+      key="modal"
+      className="fixed inset-0 z-50 flex justify-center items-center"
+      tabIndex={-1}
+      ref={ref}
+    >
+      <div
+        className={"absolute inset-0 bg-white/30"}
+        onClick={handleBackgroundClick}
+      />
+      <div
+        className="bg-white max-w-screen-sm p-6 shadow-lg z-10"
+        role="document"
+      >
+        <h5 className="text-lg mb-6">{props.modal.message}</h5>
         <div
-          className={isTooLarge ? "w-full items-stretch flex-col" : "flex-none"}
+          className={
+            props.modal.actions.length === 1
+              ? "flex justify-between"
+              : "flex flex-col items-stretch gap-3"
+          }
         >
-          {props.toast.actions?.map((a) => {
+          {props.modal.actions.map((a) => {
             let classes = "btn btn-sm";
             switch (a.type) {
               case "ghost":
                 classes += " btn-ghost";
                 break;
-              case "primary":
-                classes += " btn-primary";
+              case "error":
+                classes += " btn-error";
+                break;
+              case "success":
+                classes += " btn-success";
                 break;
               case "secondary":
-                classes += " btn-secondary";
+                classes += " btn-ghost bg-teal-light text-teal";
                 break;
             }
             return (
@@ -161,8 +193,15 @@ function CreateToastComponent(props: {
               </button>
             );
           })}
+          <button
+            key="close"
+            className="btn btn-sm btn-ghost"
+            onClick={() => props.closeFunc()}
+          >
+            {t("close")}
+          </button>
         </div>
-      )}
-    </li>
+      </div>
+    </dialog>
   );
 }

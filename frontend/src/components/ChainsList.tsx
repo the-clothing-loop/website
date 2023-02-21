@@ -19,7 +19,7 @@ import dayjs from "dayjs";
 export default function ChainsList() {
   const { t } = useTranslation();
   const { authUser, authUserRefresh } = useContext(AuthContext);
-  const { addToastError, addToastStatic, addToast } = useContext(ToastContext);
+  const { addToastError, addModal, addToast } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>();
   const [isPokeable, setIsPokeable] = useState(false);
 
@@ -70,16 +70,15 @@ export default function ChainsList() {
 
   function handleClickUnsubscribe(e: MouseEvent, chain: Chain) {
     e.preventDefault();
-    addToastStatic({
+    addModal({
       message: t("areYouSureLeaveLoop", {
         name: authUser?.name,
         chain: chain.name,
       }),
-      type: "warning",
       actions: [
         {
           text: t("leave"),
-          type: "ghost",
+          type: "error",
           fn: async () => {
             try {
               await chainRemoveUser(chain.uid, authUser!.uid);

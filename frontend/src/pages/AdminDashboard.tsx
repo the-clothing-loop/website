@@ -13,17 +13,16 @@ import ChainsList from "../components/ChainsList";
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
-
+  const { addModal } = useContext(ToastContext);
   const history = useHistory();
-  const { addToastStatic } = useContext(ToastContext);
+
   function deleteClicked() {
-    addToastStatic({
+    addModal({
       message: t("deleteAccount"),
-      type: "warning",
       actions: [
         {
           text: t("delete"),
-          type: "ghost",
+          type: "error",
           fn: () => {
             userPurge(authUser!.uid);
             history.push("/users/logout");

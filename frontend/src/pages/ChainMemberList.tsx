@@ -303,7 +303,7 @@ function HostTable(props: {
   refresh: () => Promise<void>;
 }) {
   const { t } = useTranslation();
-  const { addToastError, addToastStatic } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
 
   function getEditLocation(u: User): LocationDescriptor {
     if (!u.uid) return "#";
@@ -320,13 +320,12 @@ function HostTable(props: {
     e.preventDefault();
     const chainUID = props.chain.uid;
 
-    addToastStatic({
+    addModal({
       message: t("areYouSureRevokeHost", { name: u.name }),
-      type: "warning",
       actions: [
         {
           text: t("revoke"),
-          type: "ghost",
+          type: "error",
           fn: () => {
             chainAddUser(chainUID, u.uid, false)
               .catch((err) => {
@@ -401,7 +400,7 @@ function ParticipantsTable(props: {
   refresh: () => Promise<void>;
 }) {
   const { t, i18n } = useTranslation();
-  const { addToastError, addToastStatic } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
   const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
 
   function getEditLocation(user: User): LocationDescriptor {
@@ -423,13 +422,12 @@ function ParticipantsTable(props: {
 
     const chainUID = props.chain.uid;
 
-    addToastStatic({
+    addModal({
       message: t("areYouSureRemoveParticipant", { name: user.name }),
-      type: "warning",
       actions: [
         {
           text: t("remove"),
-          type: "ghost",
+          type: "error",
           fn: () => {
             chainRemoveUser(chainUID, user.uid)
               .catch((err) => {
@@ -447,13 +445,12 @@ function ParticipantsTable(props: {
 
     const chainUID = props.chain.uid;
 
-    addToastStatic({
+    addModal({
       message: t("approveParticipant", { name: user.name }),
-      type: "warning",
       actions: [
         {
           text: t("approve"),
-          type: "ghost",
+          type: "success",
           fn: () => {
             chainUserApprove(chainUID, user.uid)
               .then(() => {
@@ -495,9 +492,8 @@ function ParticipantsTable(props: {
         })
         .finally(() => props.refresh());
 
-    addToastStatic({
+    addModal({
       message: t("reasonForDenyingJoin"),
-      type: "info",
       actions: [
         {
           text: t("tooFarAway"),
