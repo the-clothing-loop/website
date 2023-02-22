@@ -120,9 +120,7 @@ function AccordionFaq(props: {
         <span className="p-3 w-full">{props.item.question}</span>
         <span
           className={`feather p-3 ${
-            props.open && !props.prevActive
-              ? "feather-minus animate-[spin-quarter_150ms_linear_reverse]"
-              : "feather-plus animate-[spin-quarter_150ms_linear]"
+            props.open && !props.prevActive ? "feather-minus" : "feather-plus"
           }`}
         />
       </summary>
