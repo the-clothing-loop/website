@@ -44,12 +44,12 @@ module.exports = {
     },
     extend: {
       keyframes: {
-        "max-h-600": {
+        "max-h": {
           from: {
             maxHeight: "0px",
           },
           to: {
-            maxHeight: "600px",
+            maxHeight: "400px",
           },
         },
         slide: {
@@ -80,8 +80,6 @@ module.exports = {
       animation: {
         slide: "30s linear 0s slide infinite",
         "slide-small": "30s linear 0s slide-small infinite",
-        "h-expand": "500ms linear 0ms max-h-600 both",
-        "h-retract": "700ms linear 0ms max-h-600 reverse both",
       },
       typography: {
         DEFAULT: {

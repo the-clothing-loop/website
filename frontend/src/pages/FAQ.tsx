@@ -59,17 +59,22 @@ function AccordionFaqs(props: {
     props.initialOpen === undefined ? -1 : props.initialOpen
   );
   const [prevActive, setPrevActive] = useState(-1);
+  const [nextActive, setNextActive] = useState(-1);
 
   function handleOpenChange(index: number): () => void {
     return () => {
       if (open === index) {
         setPrevActive(open);
-        let n = setTimeout(() => {
+        setTimeout(() => {
           setPrevActive(-1);
           setOpen(-1);
-        }, 500);
+        }, 300);
       } else {
+        setNextActive(index);
         setOpen(index);
+        setTimeout(() => {
+          setNextActive(-1);
+        }, 300);
       }
     };
   }
@@ -80,6 +85,7 @@ function AccordionFaqs(props: {
         <AccordionFaq
           open={open === index}
           prevActive={prevActive === index}
+          nextActive={nextActive === index}
           onChange={handleOpenChange(index)}
           key={index}
           item={item}
@@ -93,6 +99,7 @@ function AccordionFaq(props: {
   item: AccordionFaqTranslation;
   open: boolean;
   prevActive: boolean;
+  nextActive: boolean;
   onChange: () => void;
 }) {
   function clickHandler(e: MouseEvent) {
@@ -114,8 +121,8 @@ function AccordionFaq(props: {
         <span
           className={`feather p-3 ${
             props.open && !props.prevActive
-              ? "feather-minus"
-              : "feather-plus spin-quarter_150ms_linear"
+              ? "feather-minus animate-[spin-quarter_150ms_linear_reverse]"
+              : "feather-plus animate-[spin-quarter_150ms_linear]"
           }`}
         />
       </summary>
@@ -124,9 +131,9 @@ function AccordionFaq(props: {
           .concat(props.open ? " bg-teal-light" : "")
           .concat(
             props.prevActive
-              ? " animate-h-retract"
-              : props.open
-              ? " animate-h-expand"
+              ? " animate-[200ms_linear_0ms_max-h_reverse_both]"
+              : props.nextActive
+              ? " animate-[200ms_linear_0ms_max-h]"
               : ""
           )}
       >
