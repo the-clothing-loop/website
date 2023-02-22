@@ -44,19 +44,27 @@ module.exports = {
     },
     extend: {
       keyframes: {
+        "max-h-600": {
+          from: {
+            maxHeight: "0px",
+          },
+          to: {
+            maxHeight: "600px",
+          },
+        },
         slide: {
-          "0%": {
+          from: {
             transform: "translateX(0)",
           },
-          "100%": {
+          to: {
             transform: `translateX(-${1213 * 2}px)`,
           },
         },
         "slide-small": {
-          "0%": {
+          from: {
             transform: "translateX(0)",
           },
-          "100%": {
+          to: {
             transform: `translateX(-${909 * 2}px)`,
           },
         },
@@ -72,6 +80,8 @@ module.exports = {
       animation: {
         slide: "30s linear 0s slide infinite",
         "slide-small": "30s linear 0s slide-small infinite",
+        "h-expand": "500ms linear 0ms max-h-600 both",
+        "h-retract": "700ms linear 0ms max-h-600 reverse both",
       },
       typography: {
         DEFAULT: {

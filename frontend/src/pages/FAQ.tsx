@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, MouseEvent } from "react";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
@@ -9,50 +9,6 @@ interface AccordionFaqTranslation {
 
 export default function FAQ() {
   const { t } = useTranslation("faq");
-
-  const [openForParticipants, setOpenForParticipants] = useState(-1);
-  const [openForHosts, setOpenForHosts] = useState(0);
-
-  function AccordionFaq(props: {
-    question: string;
-    answer: string;
-    open: boolean;
-    onChange: () => void;
-  }) {
-    return (
-      <details
-        className={`group last-of-type:mb border-none ${
-          props.open ? "bg-teal-light" : ""
-        }`}
-        open={props.open}
-      >
-        <summary
-          tabIndex={0}
-          className="p-3 marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 group-open:bg-teal/10 cursor-pointer"
-          onClick={props.onChange}
-        >
-          <span>{props.question}</span>
-          <span
-            className={`feather ml-3 ${
-              props.open ? "feather-minus" : "feather-plus"
-            }`}
-          />
-        </summary>
-        <div className="py-2 px-4 pt-0 prose">
-          <p dangerouslySetInnerHTML={{ __html: props.answer }}></p>
-        </div>
-      </details>
-    );
-  }
-
-  function setOpen(
-    set: Dispatch<SetStateAction<number>>,
-    index: number
-  ): () => void {
-    return () => {
-      set((state) => (state === index ? -1 : index));
-    };
-  }
 
   const arrHosts = t("arrHosts", {
     returnObjects: true,
@@ -78,15 +34,7 @@ export default function FAQ() {
               <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
                 {t("faqForParticipants")}
               </h1>
-              {arrParticipants.map((el, index) => (
-                <AccordionFaq
-                  open={openForParticipants === index}
-                  onChange={setOpen(setOpenForParticipants, index)}
-                  key={index}
-                  question={el.question}
-                  answer={el.answer}
-                />
-              ))}
+              <AccordionFaqs arr={arrParticipants} initialOpen={0} />
             </div>
           </div>
           <div className="w-full md:w-1/2 md:pl-5">
@@ -94,19 +42,99 @@ export default function FAQ() {
               <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
                 {t("faqForHosts")}
               </h1>
-              {arrHosts.map((el, index) => (
-                <AccordionFaq
-                  open={openForHosts === index}
-                  onChange={setOpen(setOpenForHosts, index)}
-                  key={index}
-                  question={el.question}
-                  answer={el.answer}
-                />
-              ))}
+              <AccordionFaqs arr={arrHosts} />
             </div>
           </div>
         </div>
       </main>
     </>
+  );
+}
+
+function AccordionFaqs(props: {
+  arr: AccordionFaqTranslation[];
+  initialOpen?: number;
+}) {
+  const [open, setOpen] = useState(() =>
+    props.initialOpen === undefined ? -1 : props.initialOpen
+  );
+  const [prevActive, setPrevActive] = useState(-1);
+
+  function handleOpenChange(index: number): () => void {
+    return () => {
+      if (open === index) {
+        setPrevActive(open);
+        let n = setTimeout(() => {
+          setPrevActive(-1);
+          setOpen(-1);
+        }, 500);
+      } else {
+        setOpen(index);
+      }
+    };
+  }
+
+  return (
+    <div>
+      {props.arr.map((item, index) => (
+        <AccordionFaq
+          open={open === index}
+          prevActive={prevActive === index}
+          onChange={handleOpenChange(index)}
+          key={index}
+          item={item}
+        />
+      ))}
+    </div>
+  );
+}
+
+function AccordionFaq(props: {
+  item: AccordionFaqTranslation;
+  open: boolean;
+  prevActive: boolean;
+  onChange: () => void;
+}) {
+  function clickHandler(e: MouseEvent) {
+    e.preventDefault();
+    props.onChange();
+  }
+
+  return (
+    <details
+      className={`group last-of-type:mb border-none overflow-hidden`}
+      open={props.open || props.prevActive}
+    >
+      <summary
+        tabIndex={0}
+        className="marker:content-none list-none text-lg font-medium flex justify-between items-center hover:bg-teal/10 group-open:bg-teal/10 cursor-pointer"
+        onClick={clickHandler}
+      >
+        <span className="p-3 w-full">{props.item.question}</span>
+        <span
+          className={`feather p-3 ${
+            props.open && !props.prevActive
+              ? "feather-minus"
+              : "feather-plus spin-quarter_150ms_linear"
+          }`}
+        />
+      </summary>
+      <div
+        className={"transition-colors"
+          .concat(props.open ? " bg-teal-light" : "")
+          .concat(
+            props.prevActive
+              ? " animate-h-retract"
+              : props.open
+              ? " animate-h-expand"
+              : ""
+          )}
+      >
+        <p
+          className="py-2 px-4 prose"
+          dangerouslySetInnerHTML={{ __html: props.item.answer }}
+        ></p>
+      </div>
+    </details>
   );
 }
