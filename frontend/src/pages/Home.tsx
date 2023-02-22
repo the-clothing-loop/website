@@ -8,6 +8,7 @@ import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Testimonials from "../components/Testimonials";
 import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
+import { useEffect, useState } from "react";
 
 //Media
 const ClothesImage =
@@ -43,6 +44,16 @@ export default function Home() {
   const { t } = useTranslation();
 
   let history = useHistory();
+  const [showVideo, setShowVideo] = useState(false);
+  useEffect(() => {
+    const element = document.querySelector("#impact-report-image")!;
+    window.addEventListener("scroll", () => {
+      const position = element.getBoundingClientRect();
+      if (position.top < window.innerHeight && position.bottom >= 0) {
+        setShowVideo(true);
+      }
+    });
+  }, []);
 
   const supporters: Supporter[][] = [
     [
@@ -255,25 +266,34 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="md:w-1/2 sm:max-md:pb-8">
-              <video
-                autoPlay
-                loop
-                muted
-                webkit-playsinline
-                playsInline
-                className="object-cover object-top w-full max-h-[600px]"
-                title="pages of the impact report"
-              >
-                <source
-                  src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/webm/-/quality/normal/impact-rapport.webm"
-                  type="video/webm"
-                />
-                <source
-                  src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/mp4/-/quality/normal/impact-rapport.mp4"
-                  type="video/mp4"
-                />
-              </video>
+            <div className="md:w-1/2 sm:max-md:pb-8" id="impact-report-image">
+              <img
+                className={"object-cover object-top w-full max-h-[600px]".concat(
+                  showVideo ? " hidden" : ""
+                )}
+                src="https://ucarecdn.com/397b41f4-0934-4a14-8f3f-3a9566b392f0/-/resize/x400/-/format/auto/-/quality/best/impact-rapport-preview.jpg"
+                alt="page of the impact report"
+              />
+              {showVideo ? (
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  webkit-playsinline
+                  playsInline
+                  className="object-cover object-top w-full max-h-[600px]"
+                  title="pages of the impact report"
+                >
+                  <source
+                    src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/webm/-/quality/normal/impact-rapport.webm"
+                    type="video/webm"
+                  />
+                  <source
+                    src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/mp4/-/quality/normal/impact-rapport.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              ) : null}
             </div>
           </section>
         </div>
