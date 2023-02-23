@@ -230,7 +230,7 @@ export default function ChainMemberList() {
             </div>
           </section>
 
-          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 pt-0 bg-secondary-light">
+          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 lg:pt-0 bg-secondary-light">
             <h2 className="font-semibold text-secondary mb-6 text-3xl">
               Loop Admin
             </h2>

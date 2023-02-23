@@ -1,10 +1,4 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as focusTrap from "focus-trap";
 
@@ -36,8 +30,6 @@ export const ToastContext = createContext<ContextValue>({
 });
 
 export function ToastProvider({ children }: PropsWithChildren<{}>) {
-  const { t } = useTranslation();
-
   const [toasts, setToasts] = useState<ToastWithID[]>([]);
   const [openModal, setOpenModal] = useState<Modal>();
   const [idIndex, setIdIndex] = useState(1);
@@ -54,7 +46,6 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
 
   function addModal(modal: Modal) {
     setOpenModal(modal);
-    setTimeout(() => {}, 0);
   }
 
   function addToastError(msg: string, status = 999) {
@@ -107,23 +98,23 @@ function ToastComponent(props: {
   toast: ToastWithID;
   closeFunc: (id: number) => void;
 }) {
-  let classes = "alert";
-  let icon = "feather";
+  let classes = "p-4 shadow-lg border";
+  let icon = "mr-3 feather";
   switch (props.toast.type) {
     case "info":
-      classes += " ";
       icon += " feather-info";
+      classes += " bg-base-100 border-teal";
       break;
     case "success":
-      classes += " alert-success text-base-100";
+      classes += " bg-success border-success";
       icon += " feather-check-circle";
       break;
     case "warning":
-      classes += " alert-warning text-base-100";
+      classes += " bg-yellow border-yellow";
       icon += " feather-alert-triangle";
       break;
     case "error":
-      classes += " alert-error text-base-100";
+      classes += " bg-error border-error";
       icon += " feather-alert-octagon";
       break;
   }
@@ -140,40 +131,67 @@ function ToastComponent(props: {
 
 function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
   const { t } = useTranslation();
-  let ref = useRef<any>();
+  const [trap, setTrap] = useState<focusTrap.FocusTrap>();
+
+  function asyncDeactivate() {
+    return new Promise((resolve, reject) => {
+      if (trap) {
+        try {
+          trap.deactivate({
+            onPostDeactivate: () => {
+              resolve(undefined);
+            },
+          });
+        } catch (err) {
+          reject(err);
+        }
+      } else reject(Error("trap not defined"));
+    }).catch((err) => {
+      console.error(err);
+    });
+  }
 
   function handleActionClick(fn: () => void) {
-    props.closeFunc();
-    fn();
+    asyncDeactivate().finally(() => {
+      props.closeFunc();
+      fn();
+    });
   }
   function handleBackgroundClick() {
-    if (window.innerWidth > 900) props.closeFunc();
+    if (window.innerWidth > 900) {
+      asyncDeactivate().finally(() => {
+        props.closeFunc();
+      });
+    }
   }
 
   useEffect(() => {
-    const trap = focusTrap.createFocusTrap(ref.current as HTMLDialogElement);
-    trap.activate();
-
-    return () => {
-      trap.deactivate();
-    };
+    const trap = focusTrap.createFocusTrap("#toast-modal", {
+      initialFocus: "#toast-modal-close",
+    });
+    try {
+      trap.activate();
+    } catch (e) {
+      console.error(e);
+    }
+    setTrap(trap);
   }, []);
 
   return (
     <dialog
       className="fixed inset-0 z-50 flex justify-center items-center p-0"
+      id="toast-modal"
       tabIndex={-1}
-      ref={ref}
     >
       <div
         className={"fixed inset-0 bg-white/30"}
         onClick={handleBackgroundClick}
       />
       <div
-        className="bg-white max-w-screen-sm p-6 shadow-lg z-10"
+        className="bg-white max-w-screen-sm container p-6 shadow-lg z-10"
         role="document"
       >
-        <h5 className="text-lg mb-6">{props.modal.message}</h5>
+        <h5 className="text-lg mb-6 min-w-[300px]">{props.modal.message}</h5>
         <div
           className={
             props.modal.actions.length === 1
@@ -209,8 +227,9 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
           })}
           <button
             key="close"
+            id="toast-modal-close"
             className="btn btn-sm btn-ghost"
-            onClick={() => props.closeFunc()}
+            onClick={() => handleActionClick(() => {})}
           >
             {t("close")}
           </button>
