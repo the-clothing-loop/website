@@ -34,6 +34,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
+import { count } from "console";
 
 interface Params {
   chainUID: string;
@@ -232,7 +233,7 @@ export default function ChainMemberList() {
 
           <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 lg:pt-0 bg-secondary-light">
             <h2 className="font-semibold text-secondary mb-6 text-3xl">
-              Loop Admin
+              {t("loopHost", { count: filteredUsersHost.length })}
             </h2>
             <HostTable
               authUser={authUser}
@@ -279,7 +280,9 @@ export default function ChainMemberList() {
 
         <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
           <h2 className="font-semibold text-secondary text-3xl mb-6">
-            Loop Participants
+            {t("loopParticipant", {
+              count: unapprovedUsers.length + users.length,
+            })}
           </h2>
           <UserDataExport chainName={chain.name} chainUsers={users} />
 

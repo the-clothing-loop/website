@@ -29,7 +29,7 @@
   "approveParticipant": "Approve “{{ name }}'s” request to join the loop?",
   "denyParticipant": "Deny “{{ name }}'s” request to join the loop?",
   "approve": "Approve",
-  "pendingApproval": "Pending Admin Approval",
+  "pendingApproval": "Pending Host Approval",
   "deny": "Deny",
   "approveUser": "Approve or deny requests to join.",
   "areYouSureRemoveParticipant": "Êtes-vous sûr de vouloir supprimer \"{{ name }}\" de ce Loop ?",
