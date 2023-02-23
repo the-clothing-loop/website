@@ -19,6 +19,7 @@ require (
 )
 
 require (
+	github.com/arran4/golang-ical v0.0.0-20230213232137-07c6aad5e4f0
 	github.com/caio/go-tdigest/v4 v4.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect

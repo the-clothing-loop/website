@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	glog "github.com/airbrake/glog/v4"
@@ -25,6 +26,10 @@ type MockChainAndUserOptions struct {
 	IsNotPublished     bool
 	IsOpenToNewMembers bool
 	RouteOrderIndex    int
+}
+
+type MockCalendarOptions struct {
+	IsNotPublished bool
 }
 
 func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
@@ -125,6 +130,31 @@ func shuffleSlice[T any](arr []T) []T {
 	})
 
 	return arr
+}
+
+func MockCalendar(t *testing.T, db *gorm.DB, o MockCalendarOptions) (calendar *models.Calendar) {
+	calendar = &models.Calendar{
+		UID:         uuid.NewV4().String(),
+		Name:        "Fake " + faker.Company().Name(),
+		Description: faker.Company().CatchPhrase(),
+		Latitude:    faker.Address().Latitude(),
+		Longitude:   faker.Address().Latitude(),
+		Date:        time.Now().Add(time.Duration(faker.IntBetween(-20, 20)) * time.Hour),
+		Genders:     MockGenders(false),
+		Published:   !o.IsNotPublished,
+	}
+
+	if err := db.Create(&calendar).Error; err != nil {
+		glog.Fatalf("Unable to create testCalendar: %v", err)
+	}
+
+	// Cleanup runs FiLo
+	// So Cleanup must happen before MockUser
+	t.Cleanup(func() {
+		db.Exec(`DELETE FROM calendars WHERE id = ?`, calendar.ID)
+	})
+
+	return calendar
 }
 
 func randomEnums(enums []string, zeroOrMore bool) (result []string) {

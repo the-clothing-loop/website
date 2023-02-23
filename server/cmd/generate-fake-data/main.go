@@ -42,6 +42,10 @@ func main() {
 		log.Printf("Generated -> User\t(ID: %d)", user.ID)
 		// userBasics = append(userBasics, user)
 	}
+	for i := 0; i < 5; i++ {
+		calendar := mocks.MockCalendar(t, db, mocks.MockCalendarOptions{})
+		log.Printf("Generated -> Calendar\t(ID: %d)", calendar.ID)
+	}
 
 	for _, user := range userChainAdmins {
 		chainIndex := faker.IntBetween(0, len(chains)-1)
