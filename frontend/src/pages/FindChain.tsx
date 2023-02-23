@@ -490,7 +490,7 @@ export default function FindChain({ location }: { location: Location }) {
                         className="btn btn-sm btn-secondary btn-outline mb-3"
                         onClick={(e) => handleClickViewChain(e, chain.uid)}
                       >
-                        {t("viewChain")}
+                        {t("viewLoop")}
                         <span className="feather feather-shield ml-3"></span>
                       </button>
                     ) : null}
