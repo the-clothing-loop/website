@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import categories from "../util/categories";
@@ -18,7 +18,7 @@ export default function SizesDropdown(props: {
     handleChange: props.handleChange,
   });
 
-  let btnLabel = React.useMemo(() => {
+  let btnLabel = useMemo(() => {
     if (props.selectedSizes.length) {
       return [...props.selectedSizes]
         .sort()
@@ -28,25 +28,6 @@ export default function SizesDropdown(props: {
       return t("sizes");
     }
   }, [t, props.selectedSizes]);
-
-  function Item(size: string, gender: string, disabled: boolean) {
-    let checked = props.selectedSizes.includes(size);
-    return (
-      <li className={disabled ? "disabled" : ""} key={gender + "_" + size}>
-        <label>
-          <input
-            name="sizes"
-            type="checkbox"
-            checked={checked}
-            disabled={disabled}
-            className="checkbox"
-            onChange={() => dropdown.change(size)}
-          />
-          {t(SizeI18nKeys[size])}
-        </label>
-      </li>
-    );
-  }
 
   return (
     <div
@@ -76,17 +57,34 @@ export default function SizesDropdown(props: {
             props.filteredGenders.find((g) => g === gender) === undefined;
 
           return (
-            <>
+            <Fragment key={gender}>
               <li
-                key={gender}
+                key={"g" + gender}
                 className={`px-2 pt-2 capitalize ${
                   disabled ? "text-base-300" : ""
                 }`}
               >
                 {GenderI18nKeys[gender]}
               </li>
-              {sizes.map((size) => Item(size as string, gender, disabled))}
-            </>
+              {sizes.map((size) => {
+                let checked = props.selectedSizes.includes(size);
+                return (
+                  <li className={disabled ? "disabled" : ""} key={"s" + size}>
+                    <label>
+                      <input
+                        name="sizes"
+                        type="checkbox"
+                        checked={checked}
+                        disabled={disabled}
+                        className="checkbox"
+                        onChange={() => dropdown.change(size)}
+                      />
+                      {t(SizeI18nKeys[size])}
+                    </label>
+                  </li>
+                );
+              })}
+            </Fragment>
           );
         })}
       </ul>

@@ -87,11 +87,15 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
           }`}
         >
           {toasts.map((t) => (
-            <ToastComponent toast={t} closeFunc={closeToast} />
+            <ToastComponent toast={t} closeFunc={closeToast} key={t.id} />
           ))}
         </ol>
         {openModal ? (
-          <ModalComponent modal={openModal} closeFunc={closeModal} />
+          <ModalComponent
+            modal={openModal}
+            closeFunc={closeModal}
+            key="modal"
+          />
         ) : null}
         {children}
       </>
@@ -125,7 +129,7 @@ function ToastComponent(props: {
   }
 
   return (
-    <li className={classes} key={props.toast.id}>
+    <li className={classes}>
       <div className="w-[300px]">
         <span className={icon}></span>
         <span className="font-bold">{props.toast.message}</span>
@@ -157,7 +161,6 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
 
   return (
     <dialog
-      key="modal"
       className="fixed inset-0 z-50 flex justify-center items-center p-0"
       tabIndex={-1}
       ref={ref}
