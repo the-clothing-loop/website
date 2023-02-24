@@ -43,6 +43,7 @@ const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfUse = React.lazy(() => import("./pages/TermsOfUse"));
 const FAQ = React.lazy(() => import("./pages/FAQ"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
+const Events = React.lazy(() => import("./pages/Events"));
 
 const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
@@ -79,6 +80,11 @@ export default function App() {
                     exact
                     path={`${base}/donate/:status?`}
                     component={Donate}
+                  />
+                                    <Route
+                    exact
+                    path={`${base}/events/`}
+                    component={Events}
                   />
                   <Route
                     exact
