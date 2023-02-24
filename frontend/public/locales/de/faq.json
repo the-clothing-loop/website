@@ -30,8 +30,8 @@
       "answer": "Das liegt an Deinem Host vor Ort. Wenn Dein Loop es Dir erlaubt, Schuhe zur Tasche hinzuzufügen, füge nur „so gut wie neue“ Paare hinzu, und <b>nicht mehr als 2 Paare pro Tasche</b>. Und lege sie bitte in einen separaten Beutel, um zu vermeiden, dass sie die Kleidung berühren. "
     },
     {
-      "question": "I get the error: “your account already exists”.",
-      "answer": "You have previously created an account at the Clothing Loop already. To sign up for a new Loop, you will need to log in first:<ol><li>Click in the top right corner on login.</li><li>Enter the email address you used to register your Loop.</li><li>Check your email (and spam folder!) for our verification link. We use a link instead of a password!</li><li>Then you will be able to sign up for a new Loop.</li></ol>"
+      "question": "Ich bekomme den Fehler: „Dein Konto existiert bereits“.",
+      "answer": "Du hast bereits ein Konto bei Clothing Loop erstellt. Um Dich für einen neuen Loop anzumelden, musst Du Dich zuerst einloggen:<ol><li>Klicke in der rechten oberen Ecke auf login.</li><li>Gib die E-Mail-Adresse ein, mit der Du Dich beim Loop registriert hast.</li><li>Überprüfe Deine E-Mail (und den Spam-Ordner!) auf unseren Bestätigungslink. Wir verwenden einen Link anstelle eines Passworts!</li><li>Dann kannst Du Dich für einen neuen Loop anmelden.</li></ol>"
     }
   ],
   "faqForHosts": "FAQ für Hosts",
@@ -69,28 +69,28 @@
       "answer": "Wenn die Qualität der Kleidung nicht hoch genug ist, verlassen die Leute möglicherweise den Loop. Sorge dafür, dass jeder die Verantwortung dafür trägt, dass nur Artikel von guter Qualität reingelegt werden.<br/><br/>Siehst Du etwas, das nicht im Loop sein sollte? Nimm es raus und spende es an einen Kleidercontainer. Auf diese Weise kann es immer noch recycelt werden. Frag im Zweifelsfall die Person nach Dir, ob sie damit einverstanden ist und entscheide dann.<br/><br/>Ein Textilrasierer kann die Lebensdauer eines Kleidungsstücks enorm verlängern! Du kannst diesen Rat in Deiner Community teilen.<br/><br/>Und last but not least, geh selbst mit gutem Beispiel voran. Teile ein paar schöne Fotos und ermutige andere, dasselbe zu tun!"
     },
     {
-      "question": "How to manage a large group of people in the communication channel?",
-      "answer": "Especially when groups get bigger, it is important to make sure people aren’t bombarded with (irrelevant) messages. You can set up some rules for what should and shouldn’t be shared via the group app. For example:<ul class='list-none'><li><b>Yes,</b> in the app:<ul><li>Selfies of nice things you took from the bag or nice things that you are putting in</li><li>Compliments to others (use the new emoticon function!)</li><li>Logistics and organizational relevant updates from the host</li></ul></li><li><b>No,</b> not in the app:<ul><li>Everything unrelated to the Clothing Loop (requests for surveys, invites for new groups, Fund raising, memes, etc). If you want to ask everyone’s input on something, use a polling app like LouLou instead</li><li>Use the private message function when your message only concerns one person.</li></ul></li></ul>"
+      "question": "Wie kann man eine große Gruppe von Menschen im Kommunikationskanal verwalten?",
+      "answer": "Besonders wenn Gruppen größer werden, ist es wichtig, sicherzustellen, dass Menschen nicht mit (irrelevanten) Nachrichten bombardiert werden. Du kannst einige Regeln einrichten, was über die Gruppenapplikation geteilt werden sollte und was nicht. Zum Beispiel:<ul class='list-none'><li><b>Ja,</b> in der App:<ul><li>Selfies von tollen Sachen die Du aus der Tasche genommen oder von denen die Du reingelegt hast</li><li>Komplimente an andere (benutze die neue Emoticon Funktion!)</li><li>Logistische und organisatorische relevante Updates vom Host</li></ul></li><li><b>Nein,</b> Nicht in der App:<ul><li>Alles ohne Bezug zum Clothing Loop (Anfragen für Umfragen, Einladungen für neue Gruppen, Fundraising, Erinnerungen, etc). Wenn Du alle Mitglieder zu etwas befragen willst, verwende stattdessen eine Polling-App wie LouLou</li><li>Verwende die private Nachrichtenfunktion, wenn Deine Nachricht nur eine Person betrifft.</li></ul></li></ul>"
     },
     {
-      "question": "What if I no longer have time to manage the Clothing Loop I started?",
-      "answer": "Use the group! Ask if someone else wants to help out hosting the Loop. Over time they may want to take over completely."
+      "question": "Was ist, wenn ich keine Zeit mehr habe, um den Clothing Loop zu verwalten, den ich gestartet habe?",
+      "answer": "Benutze die Gruppe! Frag, ob jemand anderes beim Hosten des Loops helfen möchte. Im Laufe der Zeit kann es sein, dass die Person dann die komplette Übernahme übernehmen möchte."
     },
     {
-      "question": "What if someone wants to join but lives too far away?",
-      "answer": "If someone signed up for your Loop but lives too far outside of your Loop area, it is up to you to decide if they may join. If they cannot, please send them an email to let them know. When in doubt: one thing you can do to decrease the distance between addresses, is to ask that person to find other participants between their area and the original Loop location."
+      "question": "Was ist, wenn jemand beitreten will, aber zu weit weg lebt?",
+      "answer": "Wenn sich jemand für Deinen Loop angemeldet hat, aber zu weit außerhalb deines Loop Gebiets wohnt, liegt es an Dir zu entscheiden, ob er/sie/sie teilnehmen darf. Eine Sache, die Du tun kannst, um den Abstand zwischen Adressen zu verringern, ist, diese Person zu bitten, andere Teilnehmer zwischen ihrem Bereich und dem ursprünglichen Loop Standort zu finden."
     },
     {
-      "question": "What is an ideal group size?",
-      "answer": "We’d recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognise anything in the bag anymore, so you can continue swapping. <b>There is no real maximum</b>, it is up to you what still works! In the Netherlands an average Loop is 45 people. But there are Loops running smoothly with over 180 people!"
+      "question": "Was ist eine ideale Gruppengröße?",
+      "answer": "Wir empfehlen Dir mindestens 20 Personen in einer Gruppe zu haben: Nach 20 Adressen erkennt man normalerweise nichts mehr in der Tasche so dass Du mit dem Swapping fortfahren kannst. <b>Es gibt kein echtes Maximum</b>, es liegt an Dir, was noch funktioniert! In den Niederlanden liegt ein durchschnittlicher Loop bei 45 Personen. Aber es gibt Loops mit mehr als 180 Leuten!"
     },
     {
-      "question": "What if somebody moves house and wants to join in another area?",
-      "answer": "You as Loop host can remove them from your Loop when signed in on our website. If they want to join again in their new neighborhood, ask them to simply sign up again with their new address."
+      "question": "Was ist, wenn jemand umzieht und in einer anderen Gegend mitmachen will?",
+      "answer": "Du als Loop Host kannst die Person aus Deinem Loop entfernen, wenn Du auf unserer Website angemeldet sind. Wenn er in der neuen Nachbarschaft beitreten will, bitte ihn, sich einfach wieder mit der neuen Adresse anzumelden."
     },
     {
-      "question": "What to do if the Clothing Loop doesn’t work well?",
-      "answer": "Make sure that everyone shares the responsibility for only adding good quality items.<br/><br/>Do you see something that shouldn’t be in a bag? Try to donate it to your local textile recycling program. If in doubt, ask the person next to you on the address list  if they agree. It is good to have a few people function as ‘checkpoints’ along the route, to make sure the bags stay in good condition. Because if the quality of the clothing isn’t high enough, people might leave the Loop and that would be a shame!<br/><br/>A <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>fabric shaver</a> can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, set a good example yourself: share some nice photos and encourage others to do the same! Seeing where items end up is a huge motivation for people to donate nice items."
+      "question": "Was tun, wenn der Clothing Loop nicht richtig funktioniert?",
+      "answer": "Stelle sicher, dass jeder die Verantwortung trägt, nur hochwertige Artikel hinzuzufügen.<br/><br/>Siehst Du etwas, das nicht in der Tasche sein soll? Versuche es an dein örtliches Textil-Recycling Programm zu spenden. Im Zweifelsfall frage die Person neben Dir auf der Adressliste, ob sie einverstanden ist. Es ist gut, dass ein paar Leute als „Kontrollpunkte“ auf der Strecke fungieren, um sicherzustellen, dass die Taschen in gutem Zustand bleiben. Denn wenn die Qualität der Kleidung nicht hoch genug ist, könnten die Leute den Loop verlassen, und das wäre sehr schade!<br/><br/>Ein <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>Stoff Rasierer</a> kann die Lebensdauer eines Kleidungsstücks enorm verlängern! Du kannst diesen Rat in Deiner Community teilen.<br/><br/>Und last but not least, setze selbst ein gutes Beispiel: Teile einige schöne Fotos und ermutige andere, das gleiche zu tun! Wenn man sieht, wo Sachen landen ist das eine große Motivation für Leute, nette Sachen zu spenden."
     }
   ]
 }
