@@ -510,6 +510,9 @@ function ParticipantsTable(props: {
                 addToastError(GinParseErrors(t, err), err.status);
               })
               .finally(() => {
+                let chainRoute = route;
+                chainRoute.push(user.uid);
+                setRoute(chainRoute);
                 changeRoute();
                 return props.refresh();
               });
