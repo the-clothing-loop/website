@@ -60,8 +60,8 @@ func (c *Chain) GetRouteOrderByUserUID(db *gorm.DB) ([]string, error) {
 	err := db.Raw(`
 SELECT u.uid AS uid FROM user_chains AS uc
 LEFT JOIN users AS u ON u.id = uc.user_id
-WHERE chain_id = ?
-AND is_approved = 1
+WHERE uc.chain_id = ?
+AND uc.is_approved = 1
 ORDER BY uc.route_order ASC
 	`, c.ID).Scan(&userUIDs).Error
 	if err != nil {

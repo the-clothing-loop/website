@@ -28,14 +28,13 @@ import {
   chainUserApprove,
   UnapprovedReason,
 } from "../api/chain";
-import { Chain, User, UserChain } from "../api/types";
+import { Chain, UID, User, UserChain } from "../api/types";
 import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { routeGetOrder, routeSetOrder } from "../api/route";
-import { count } from "console";
 
 interface Params {
   chainUID: string;
@@ -232,9 +231,9 @@ export default function ChainMemberList() {
             </div>
           </section>
 
-          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 pt-0 bg-secondary-light">
+          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 lg:pt-0 bg-secondary-light">
             <h2 className="font-semibold text-secondary mb-6 text-3xl">
-              Loop Admin
+              {t("loopHost", { count: filteredUsersHost.length })}
             </h2>
             <HostTable
               authUser={authUser}
@@ -281,7 +280,9 @@ export default function ChainMemberList() {
 
         <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
           <h2 className="font-semibold text-secondary text-3xl mb-6">
-            Loop Participants
+            {t("loopParticipant", {
+              count: unapprovedUsers.length + users.length,
+            })}
           </h2>
           <UserDataExport chainName={chain.name} chainUsers={users} />
 
@@ -327,7 +328,7 @@ function HostTable(props: {
       actions: [
         {
           text: t("revoke"),
-          type: "ghost",
+          type: "error",
           fn: () => {
             chainAddUser(chainUID, u.uid, false)
               .catch((err) => {
@@ -420,28 +421,14 @@ function ParticipantsTable(props: {
 
   async function routeUpdate() {
     const res = await routeGetOrder(props.chain.uid);
-    setRoute(res.data);
+    setRoute(res.data || []);
     console.log(route);
   }
-
-  async function routePop(userUID: string) {
-    let chainRoute = new Array();
-    if (route != null) {
-      chainRoute = route;
-    }
-    console.log(chainRoute);
-
-    const toPop = route?.indexOf(userUID);
-    if (toPop) {
-      chainRoute.splice(toPop, 1);
-      console.log(chainRoute);
-      setRoute(chainRoute);
-    }
-    return;
+  function routePop(userUID: string) {
+    setRoute(route.filter((r) => r != userUID));
   }
-
-  async function changeRoute() {
-    await routeSetOrder(props.chain.uid, route);
+  function changeRoute() {
+    return routeSetOrder(props.chain.uid, route);
   }
   function getEditLocation(user: User): LocationDescriptor {
     if (!user.uid) {
@@ -467,7 +454,7 @@ function ParticipantsTable(props: {
       actions: [
         {
           text: t("remove"),
-          type: "ghost",
+          type: "error",
           fn: () => {
             chainRemoveUser(chainUID, user.uid)
               .catch((err) => {
@@ -494,7 +481,7 @@ function ParticipantsTable(props: {
       actions: [
         {
           text: t("approve"),
-          type: "ghost",
+          type: "success",
           fn: () => {
             chainUserApprove(chainUID, user.uid)
               .then(() => {
@@ -665,8 +652,7 @@ function ParticipantsTable(props: {
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
-                <th className="hidden md:table-cell w-[0.1%]"></th>
-                <td>
+                <th>
                   <span>{t("Route")}</span>
                   <SortButton
                     isSelected={sortBy === "route"}
@@ -675,7 +661,8 @@ function ParticipantsTable(props: {
                       toggleSortBy("route");
                     }}
                   />
-                </td>
+                </th>
+                <th className="hidden md:table-cell w-[0.1%]"></th>
               </tr>
             </thead>
             <tbody>
@@ -697,7 +684,7 @@ function ParticipantsTable(props: {
                         </button>,
                         <button
                           type="button"
-                          onClick={(e) => onDeny(e, u)}
+                          onClick={(e) => onDeny(e, u.uid)}
                           className="text-red"
                         >
                           {t("deny")}
@@ -729,13 +716,7 @@ function ParticipantsTable(props: {
                       </td>
                       <td></td>
                       <td className="text-center">{t("pendingApproval")}</td>
-                      <td
-                        className={`text-center ${
-                          u.uid == dragTarget ? dragColor : ""
-                        }`}
-                      >
-                        {"N/A"}
-                      </td>
+                      <td className="text-center"></td>
                       <td className="text-right hidden md:table-cell">
                         <DropdownMenu
                           direction="dropdown-left"
@@ -760,6 +741,7 @@ function ParticipantsTable(props: {
                   <Link to={getEditLocation(u)}>{t("edit")}</Link>,
                 ];
 
+                const classTableCell = u.uid == dragTarget ? dragColor : "";
                 return (
                   <tr
                     key={u.uid}
@@ -785,52 +767,38 @@ function ParticipantsTable(props: {
                         items={dropdownItems}
                       />
                     </td>
-                    <td className={`${u.uid == dragTarget ? dragColor : ""}`}>
-                      {u.name}
-                    </td>
-                    <td className={`${u.uid == dragTarget ? dragColor : ""}`}>
+                    <td className={classTableCell}>{u.name}</td>
+                    <td className={classTableCell}>
                       <span className="block w-48 text-sm whitespace-normal">
                         {u.address}
                       </span>
                     </td>
-                    <td
-                      className={`text-sm leading-relaxed ${
-                        u.uid == dragTarget ? dragColor : ""
-                      }`}
-                    >
+                    <td className={`text-sm leading-relaxed ${classTableCell}`}>
                       {u.email}
                       <br />
                       {u.phone_number}
                     </td>
-                    <td
-                      className={`align-middle ${
-                        u.uid == dragTarget ? dragColor : ""
-                      }`}
-                    >
+                    <td className={`align-middle ${classTableCell}`}>
                       <span
-                        className={`block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2  ${
-                          u.uid == dragTarget ? "bg-grey/[.02]" : ""
-                        }`}
+                        className={`block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2  ${classTableCell}`}
                         tabIndex={0}
                       >
                         {SizeBadges(t, u.sizes)}
                       </span>
                     </td>
-                    <td
-                      className={`text-center ${
-                        u.uid == dragTarget ? dragColor : ""
-                      }`}
-                    >
+                    <td className={`text-center ${classTableCell}`}>
                       {simplifyDays(userChain)}
                     </td>
-                    <td
-                      className={`text-center ${
-                        u.uid == dragTarget ? dragColor : ""
-                      }`}
-                    >
+                    <td className={`text-center ${classTableCell}`}>
                       {routeOrderNumber > 0 ? routeOrderNumber : ""}
+                      <div
+                        aria-label="drag"
+                        className="btn btn-ghost feather feather-move"
+                      ></div>
                     </td>
-                    <td className="text-right hidden md:table-cell">
+                    <td
+                      className={`text-right hidden md:table-cell ${classTableCell}`}
+                    >
                       <DropdownMenu
                         direction="dropdown-left"
                         items={dropdownItems}
