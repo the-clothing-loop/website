@@ -307,7 +307,6 @@ function HostTable(props: {
   const { t } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
 
-
   function getEditLocation(u: User): LocationDescriptor {
     if (!u.uid) return "#";
 
@@ -668,15 +667,15 @@ function ParticipantsTable(props: {
                 </th>
                 <th className="hidden md:table-cell w-[0.1%]"></th>
                 <td>
-                        <span>{t("Route")}</span>
-                        <SortButton
-                          isSelected={sortBy === "route"}
-                          className="ml-1"
-                          onClick={() => {
-                            toggleSortBy("route");
-                          }}
-                        />
-                  </td>
+                  <span>{t("Route")}</span>
+                  <SortButton
+                    isSelected={sortBy === "route"}
+                    className="ml-1"
+                    onClick={() => {
+                      toggleSortBy("route");
+                    }}
+                  />
+                </td>
               </tr>
             </thead>
             <tbody>
@@ -731,12 +730,12 @@ function ParticipantsTable(props: {
                       <td></td>
                       <td className="text-center">{t("pendingApproval")}</td>
                       <td
-                      className={`text-center ${
-                        u.uid == dragTarget ? dragColor : ""
-                      }`}
-                    >
-                      {"N/A"}
-                    </td>
+                        className={`text-center ${
+                          u.uid == dragTarget ? dragColor : ""
+                        }`}
+                      >
+                        {"N/A"}
+                      </td>
                       <td className="text-right hidden md:table-cell">
                         <DropdownMenu
                           direction="dropdown-left"
