@@ -17,7 +17,7 @@ import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 
-import { AuthContext } from "../providers/AuthProvider";
+import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
@@ -28,12 +28,13 @@ import {
   chainUserApprove,
   UnapprovedReason,
 } from "../api/chain";
-import { Chain, UID, User, UserChain } from "../api/types";
+import { Chain, User, UserChain } from "../api/types";
 import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
+import { routeGetOrder, routeSetOrder } from "../api/route";
 import { count } from "console";
 
 interface Params {
@@ -231,9 +232,9 @@ export default function ChainMemberList() {
             </div>
           </section>
 
-          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 lg:pt-0 bg-secondary-light">
+          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 pt-0 bg-secondary-light">
             <h2 className="font-semibold text-secondary mb-6 text-3xl">
-              {t("loopHost", { count: filteredUsersHost.length })}
+              Loop Admin
             </h2>
             <HostTable
               authUser={authUser}
@@ -280,9 +281,7 @@ export default function ChainMemberList() {
 
         <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
           <h2 className="font-semibold text-secondary text-3xl mb-6">
-            {t("loopParticipant", {
-              count: unapprovedUsers.length + users.length,
-            })}
+            Loop Participants
           </h2>
           <UserDataExport chainName={chain.name} chainUsers={users} />
 
@@ -308,6 +307,7 @@ function HostTable(props: {
   const { t } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
 
+
   function getEditLocation(u: User): LocationDescriptor {
     if (!u.uid) return "#";
 
@@ -328,7 +328,7 @@ function HostTable(props: {
       actions: [
         {
           text: t("revoke"),
-          type: "error",
+          type: "ghost",
           fn: () => {
             chainAddUser(chainUID, u.uid, false)
               .catch((err) => {
@@ -404,8 +404,45 @@ function ParticipantsTable(props: {
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
-  const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
+  const [sortBy, setSortBy] = useState<"name" | "email" | "date" | "route">(
+    "date"
+  );
+  const [route, setRoute] = useState<string[]>([]);
+  const [dragging, setDragging] = useState<string>("");
+  const [dragTarget, setDragTarget] = useState<string>("");
 
+  const dragColor = "bg-grey/[.1]";
+
+  useEffect(() => {
+    if (!props.chain) return;
+    routeUpdate();
+  }, [props.chain]);
+
+  async function routeUpdate() {
+    const res = await routeGetOrder(props.chain.uid);
+    setRoute(res.data);
+    console.log(route);
+  }
+
+  async function routePop(userUID: string) {
+    let chainRoute = new Array();
+    if (route != null) {
+      chainRoute = route;
+    }
+    console.log(chainRoute);
+
+    const toPop = route?.indexOf(userUID);
+    if (toPop) {
+      chainRoute.splice(toPop, 1);
+      console.log(chainRoute);
+      setRoute(chainRoute);
+    }
+    return;
+  }
+
+  async function changeRoute() {
+    await routeSetOrder(props.chain.uid, route);
+  }
   function getEditLocation(user: User): LocationDescriptor {
     if (!user.uid) {
       addToastError("Edit button coundn't find user of: " + user.name, 500);
@@ -430,13 +467,17 @@ function ParticipantsTable(props: {
       actions: [
         {
           text: t("remove"),
-          type: "error",
+          type: "ghost",
           fn: () => {
             chainRemoveUser(chainUID, user.uid)
               .catch((err) => {
                 addToastError(GinParseErrors(t, err), err.status);
               })
-              .finally(() => props.refresh());
+              .finally(() => {
+                routePop(user.uid);
+                changeRoute();
+                props.refresh();
+              });
           },
         },
       ],
@@ -453,7 +494,7 @@ function ParticipantsTable(props: {
       actions: [
         {
           text: t("approve"),
-          type: "success",
+          type: "ghost",
           fn: () => {
             chainUserApprove(chainUID, user.uid)
               .then(() => {
@@ -467,7 +508,10 @@ function ParticipantsTable(props: {
               .catch((err) => {
                 addToastError(GinParseErrors(t, err), err.status);
               })
-              .finally(() => props.refresh());
+              .finally(() => {
+                changeRoute();
+                return props.refresh();
+              });
           },
         },
       ],
@@ -556,11 +600,28 @@ function ParticipantsTable(props: {
 
           return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
         });
+      case "route":
+        return props.users.sort((a, b) => {
+          return route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1;
+        });
     }
   }
 
   function toggleSortBy(_sortBy: typeof sortBy) {
     setSortBy(sortBy !== _sortBy ? _sortBy : "date");
+  }
+  function draggingEnd(evt: string) {
+    let newRoute: string[] = route;
+
+    const userA = route.indexOf(dragging);
+    const userB = route.indexOf(dragTarget);
+
+    newRoute[userA] = newRoute[userB];
+    newRoute[userB] = dragging;
+
+    setDragTarget("");
+    setRoute(newRoute);
+    changeRoute();
   }
 
   return (
@@ -602,6 +663,16 @@ function ParticipantsTable(props: {
                   />
                 </th>
                 <th className="hidden md:table-cell w-[0.1%]"></th>
+                <td>
+                        <span>{t("Route")}</span>
+                        <SortButton
+                          isSelected={sortBy === "route"}
+                          className="ml-1"
+                          onClick={() => {
+                            toggleSortBy("route");
+                          }}
+                        />
+                  </td>
               </tr>
             </thead>
             <tbody>
@@ -623,7 +694,7 @@ function ParticipantsTable(props: {
                         </button>,
                         <button
                           type="button"
-                          onClick={(e) => onDeny(e, u.uid)}
+                          onClick={(e) => onDeny(e, u)}
                           className="text-red"
                         >
                           {t("deny")}
@@ -655,6 +726,13 @@ function ParticipantsTable(props: {
                       </td>
                       <td></td>
                       <td className="text-center">{t("pendingApproval")}</td>
+                      <td
+                      className={`text-center ${
+                        u.uid == dragTarget ? dragColor : ""
+                      }`}
+                    >
+                      {"N/A"}
+                    </td>
                       <td className="text-right hidden md:table-cell">
                         <DropdownMenu
                           direction="dropdown-left"
@@ -666,6 +744,8 @@ function ParticipantsTable(props: {
                 })}
               {sortOrder(sortBy).map((u: User) => {
                 const userChain = getUserChain(u);
+                const routeOrderNumber = route.indexOf(u.uid) + 1;
+
                 const dropdownItems = [
                   <button
                     type="button"
@@ -681,6 +761,20 @@ function ParticipantsTable(props: {
                   <tr
                     key={u.uid}
                     className="[&_td]:hover:bg-base-200/[0.6] group"
+                    draggable={sortBy === "route"}
+                    onDragStart={() => {
+                      setDragging(u.uid);
+                    }}
+                    onDrag={() => {
+                      setDragging(u.uid);
+                      console.log(dragging);
+                    }}
+                    onDragEnd={() => {
+                      draggingEnd(u.uid);
+                    }}
+                    onDragOver={() => {
+                      setDragTarget(u.uid);
+                    }}
                   >
                     <td className="md:hidden !px-0">
                       <DropdownMenu
@@ -688,26 +782,51 @@ function ParticipantsTable(props: {
                         items={dropdownItems}
                       />
                     </td>
-                    <td>{u.name}</td>
-                    <td>
+                    <td className={`${u.uid == dragTarget ? dragColor : ""}`}>
+                      {u.name}
+                    </td>
+                    <td className={`${u.uid == dragTarget ? dragColor : ""}`}>
                       <span className="block w-48 text-sm whitespace-normal">
                         {u.address}
                       </span>
                     </td>
-                    <td className="text-sm leading-relaxed">
+                    <td
+                      className={`text-sm leading-relaxed ${
+                        u.uid == dragTarget ? dragColor : ""
+                      }`}
+                    >
                       {u.email}
                       <br />
                       {u.phone_number}
                     </td>
-                    <td className="align-middle">
+                    <td
+                      className={`align-middle ${
+                        u.uid == dragTarget ? dragColor : ""
+                      }`}
+                    >
                       <span
-                        className="block min-w-[12rem] bg-base-100 group-hover:bg-base-200/[0.6] rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                        className={`block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2  ${
+                          u.uid == dragTarget ? "bg-grey/[.02]" : ""
+                        }`}
                         tabIndex={0}
                       >
                         {SizeBadges(t, u.sizes)}
                       </span>
                     </td>
-                    <td className="text-center">{simplifyDays(userChain)}</td>
+                    <td
+                      className={`text-center ${
+                        u.uid == dragTarget ? dragColor : ""
+                      }`}
+                    >
+                      {simplifyDays(userChain)}
+                    </td>
+                    <td
+                      className={`text-center ${
+                        u.uid == dragTarget ? dragColor : ""
+                      }`}
+                    >
+                      {routeOrderNumber > 0 ? routeOrderNumber : ""}
+                    </td>
                     <td className="text-right hidden md:table-cell">
                       <DropdownMenu
                         direction="dropdown-left"
