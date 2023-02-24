@@ -70,7 +70,6 @@ const usersHeaders: Array<{ label: string; key: keyof UserData }> = [
   { label: "Email", key: "email" },
   { label: "Phone", key: "phoneNumber" },
   { label: "Interested Sizes", key: "interestedSizes" },
-  { label: "Newsletter", key: "newsletter" },
 ];
 
 interface UserData {
@@ -79,7 +78,6 @@ interface UserData {
   email: string;
   phoneNumber: string;
   interestedSizes: string;
-  newsletter: boolean;
 }
 
 function UserDataExport(props: { chainName: string; chainUsers?: User[] }) {
@@ -92,7 +90,6 @@ function UserDataExport(props: { chainName: string; chainUsers?: User[] }) {
       email: u.email,
       phoneNumber: u.phone_number,
       interestedSizes: u.sizes.map((s) => SizeI18nKeys[s]).join(","),
-      newsletter: false,
     }));
   }, [props.chainUsers]);
 
