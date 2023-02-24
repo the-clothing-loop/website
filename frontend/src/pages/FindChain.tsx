@@ -430,7 +430,7 @@ export default function FindChain({ location }: { location: Location }) {
                             id={"checkbox-desc-more-" + chain.uid}
                           />
                           <p
-                            className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12"
+                            className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12 relative before:block before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-white/90 before:to-transparent before:bottom-0 peer-checked:before:hidden"
                             tabIndex={0}
                             onClick={(e) => {
                               let input = (
@@ -455,7 +455,7 @@ export default function FindChain({ location }: { location: Location }) {
                           <label
                             htmlFor={"checkbox-desc-more-" + chain.uid}
                             aria-label="expand"
-                            className="btn btn-xs btn-secondary btn-ghost feather feather-more-horizontal"
+                            className="btn btn-xs btn-ghost bg-teal-light feather feather-more-horizontal"
                           ></label>
                         </div>
                       ) : (
