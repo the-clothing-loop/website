@@ -416,6 +416,7 @@ function ParticipantsTable(props: {
   useEffect(() => {
     if (!props.chain) return;
     routeUpdate();
+    console.log(route);
   }, [props.chain]);
 
   async function routeUpdate() {
