@@ -1,16 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import { CSVLink } from "react-csv";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 import { Chain, User } from "../api/types";
-import { chainGet, chainGetAll } from "../api/chain";
-import { userGetAllByChain } from "../api/user";
-import { GenderI18nKeys, SizeI18nKeys } from "../api/enums";
-
-interface Params {
-  chainUID: string;
-}
+import { GenderI18nKeys, Sizes } from "../api/enums";
 
 const chainsHeaders: Array<{ label: string; key: keyof ChainData }> = [
   { label: "Name", key: "name" },
@@ -30,6 +23,20 @@ interface ChainData {
   description: string;
 }
 
+export const SizeNames: Record<Sizes | string, string> = {
+  "1": "baby",
+  "2": "1_to_4",
+  "3": "5_to_12",
+  "4": "women_s",
+  "5": "women_m",
+  "6": "women_l",
+  "7": "women_plus",
+  "8": "men_s",
+  "9": "men_m",
+  A: "men_l",
+  B: "men_plus",
+};
+
 function DataExport(props: { chains: Chain[] }) {
   const { t } = useTranslation();
 
@@ -42,7 +49,7 @@ function DataExport(props: { chains: Chain[] }) {
           name: c.name,
           address: c.address,
           genders: (c.genders?.map((g) => GenderI18nKeys[g]) || []).join(","),
-          sizes: (c.sizes?.map((s) => SizeI18nKeys[s]) || []).join(","),
+          sizes: (c.sizes?.map((s) => SizeNames[s]) || []).join(","),
           published: c.published,
           description: c.description,
         }))
@@ -89,7 +96,7 @@ function UserDataExport(props: { chainName: string; chainUsers?: User[] }) {
       address: u.address,
       email: u.email,
       phoneNumber: u.phone_number,
-      interestedSizes: u.sizes.map((s) => SizeI18nKeys[s]).join(","),
+      interestedSizes: u.sizes.map((s) => SizeNames[s]).join(","),
     }));
   }, [props.chainUsers]);
 
