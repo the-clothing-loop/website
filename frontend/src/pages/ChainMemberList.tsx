@@ -15,9 +15,10 @@ import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
+import type { TFunction, i18n as I18n } from "i18next";
 import dayjs from "dayjs";
 
-import { AuthContext, AuthProps } from "../providers/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
@@ -53,6 +54,9 @@ export default function ChainMemberList() {
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
+  const [selectedTable, setSelectedTable] = useState<
+    "route" | "participants" | "unapproved"
+  >("route");
   const refSelect: any = useRef<HTMLSelectElement>();
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
@@ -243,7 +247,7 @@ export default function ChainMemberList() {
             />
             <div className="flex justify-end">
               <form
-                className="w-full md:w-1/2 flex flex-col sm:flex-row items-stretch md:pl-6"
+                className="w-full lg:w-1/2 flex flex-col sm:flex-row items-stretch md:pl-6"
                 onSubmit={onAddCoHost}
               >
                 <div className="flex-grow">
@@ -279,20 +283,96 @@ export default function ChainMemberList() {
         </div>
 
         <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
-          <h2 className="font-semibold text-secondary text-3xl mb-6">
-            {t("loopParticipant", {
-              count: unapprovedUsers.length + users.length,
-            })}
-          </h2>
-          <UserDataExport chainName={chain.name} chainUsers={users} />
+          <div className="grid gap-4 sm:grid-cols-3 justify-items-center sm:justify-items-start">
+            <h2 className="order-1 sm:col-span-3 font-semibold text-secondary text-3xl">
+              {t("loopParticipant", {
+                count: unapprovedUsers.length + users.length,
+              })}
+            </h2>
 
-          <ParticipantsTable
-            authUser={authUser}
-            users={users}
-            unapprovedUsers={unapprovedUsers}
-            chain={chain}
-            refresh={refresh}
-          />
+            <div className="order-3 sm:col-span-2 sm:order-2 border border-secondary">
+              <label>
+                <input
+                  type="radio"
+                  name="table-type"
+                  value="route"
+                  checked={selectedTable === "route"}
+                  onChange={(e) => setSelectedTable("route")}
+                  className="hidden peer"
+                />
+                <div className="btn btn-ghost bg-teal-light border-0 peer-checked:btn-secondary peer-checked:bg-secondary">
+                  {t("route")}
+                </div>
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="table-type"
+                  value="participants"
+                  checked={selectedTable === "participants"}
+                  onChange={(e) => setSelectedTable("participants")}
+                  className="hidden peer"
+                />
+                <div
+                  className={`btn border-0 ${
+                    unapprovedUsers.length
+                      ? "btn-ghost bg-teal-light peer-checked:btn-secondary peer-checked:bg-secondary"
+                      : "btn-muted"
+                  }`}
+                >
+                  {t("edit")}
+                </div>
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="table-type"
+                  value="unapproved"
+                  checked={selectedTable === "unapproved"}
+                  onChange={(e) => {
+                    if (unapprovedUsers.length) setSelectedTable("unapproved");
+                  }}
+                  className="hidden peer"
+                />
+                <div className="relative btn btn-ghost bg-teal-light border-0 peer-checked:btn-secondary peer-checked:bg-secondary">
+                  {t("approve")}
+                  <span className="absolute -top-3 -right-3 block py-1 px-2 rounded-lg bg-primary text-black">
+                    {unapprovedUsers.length}
+                  </span>
+                </div>
+              </label>
+            </div>
+            <div className="order-2 sm:justify-self-end sm:order-3">
+              <UserDataExport chainName={chain.name} chainUsers={users} />
+            </div>
+          </div>
+
+          {selectedTable === "unapproved" ? (
+            <ApproveTable
+              key="unapproved"
+              authUser={authUser}
+              unapprovedUsers={unapprovedUsers}
+              chain={chain}
+              refresh={refresh}
+            />
+          ) : selectedTable === "participants" ? (
+            <ParticipantsTable
+              key="participants"
+              authUser={authUser}
+              users={users}
+              unapprovedUsers={unapprovedUsers}
+              chain={chain}
+              refresh={refresh}
+            />
+          ) : (
+            <RouteTable
+              key="route"
+              authUser={authUser}
+              users={users}
+              chain={chain}
+              refresh={refresh}
+            />
+          )}
         </div>
       </main>
     </>
@@ -395,6 +475,189 @@ function HostTable(props: {
   );
 }
 
+function ApproveTable(props: {
+  authUser: User | null;
+  unapprovedUsers: User[];
+  chain: Chain;
+  refresh: () => Promise<void>;
+}) {
+  const { t } = useTranslation();
+  const { addToastError, addModal } = useContext(ToastContext);
+
+  function onApprove(e: MouseEvent, user: User) {
+    e.preventDefault();
+
+    const chainUID = props.chain.uid;
+
+    addModal({
+      message: t("approveParticipant", { name: user.name }),
+      actions: [
+        {
+          text: t("approve"),
+          type: "success",
+          fn: () => {
+            chainUserApprove(chainUID, user.uid)
+              .then(() => {
+                if (window.goatcounter)
+                  window.goatcounter.count({
+                    path: "approve-user",
+                    title: "Approve user",
+                    event: true,
+                  });
+              })
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => props.refresh());
+          },
+        },
+      ],
+    });
+  }
+
+  function onDeny(e: MouseEvent, userUID: UID) {
+    e.preventDefault();
+
+    const chainUID = props.chain.uid;
+
+    const chainDeleteUnapprovedReason = (reason: UnapprovedReason) =>
+      chainDeleteUnapproved(chainUID, userUID, reason)
+        .then((res) => {
+          if (window.goatcounter)
+            window.goatcounter.count({
+              path: "deny-user",
+              title: "Deny user",
+              event: true,
+            });
+          return res;
+        })
+        .catch((err) => {
+          addToastError(GinParseErrors(t, err), err.status);
+        })
+        .finally(() => props.refresh());
+
+    addModal({
+      message: t("reasonForDenyingJoin"),
+      actions: [
+        {
+          text: t("tooFarAway"),
+          type: "secondary",
+          fn: () => {
+            chainDeleteUnapprovedReason(UnapprovedReason.TOO_FAR_AWAY);
+          },
+        },
+        {
+          text: t("differentSizes"),
+          type: "secondary",
+          fn: () => {
+            chainDeleteUnapprovedReason(UnapprovedReason.SIZES_GENDERS);
+          },
+        },
+        {
+          text: t("other"),
+          type: "secondary",
+          fn: () => {
+            chainDeleteUnapprovedReason(UnapprovedReason.OTHER);
+          },
+        },
+      ],
+    });
+  }
+
+  return (
+    <>
+      <div className="mt-10 relative overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="table table-compact w-full mb-10">
+            <thead>
+              <tr>
+                <th className="lg:hidden w-[0.1%]"></th>
+                <th>
+                  <span>{t("name")}</span>
+                </th>
+                <th>
+                  <span>{t("address")}</span>
+                </th>
+                <th>
+                  <span>{t("contact")}</span>
+                </th>
+                <th className="hidden lg:table-cell w-[0.1%]"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {props.unapprovedUsers
+                .sort((a, b) => {
+                  const ucA = getUserChain(a, props.chain.uid);
+                  const ucB = getUserChain(b, props.chain.uid);
+
+                  return new Date(ucA.created_at) > new Date(ucB.created_at)
+                    ? -1
+                    : 1;
+                })
+                .map((u) => {
+                  return (
+                    <tr
+                      key={u.uid}
+                      className="[&>td]:bg-yellow/[.6] [&_td]:hover:bg-yellow/[.4]"
+                    >
+                      <td className="lg:hidden !px-0">
+                        <DropdownMenu
+                          direction="dropdown-right"
+                          items={[
+                            <button
+                              type="button"
+                              onClick={(e) => onApprove(e, u)}
+                            >
+                              {t("approve")}
+                            </button>,
+                            <button
+                              type="button"
+                              onClick={(e) => onDeny(e, u.uid)}
+                              className="text-red"
+                            >
+                              {t("deny")}
+                            </button>,
+                          ]}
+                        />
+                      </td>
+                      <td>{u.name}</td>
+                      <td>
+                        <span className="block w-48 text-sm whitespace-normal">
+                          {u.address}
+                        </span>
+                      </td>
+                      <td className="text-sm leading-relaxed">
+                        {u.email}
+                        <br />
+                        {u.phone_number}
+                      </td>
+                      <td className="text-right hidden lg:table-cell">
+                        <button
+                          className="btn btn-ghost hover:bg-white hover:text-green"
+                          type="button"
+                          onClick={(e) => onApprove(e, u)}
+                        >
+                          {t("approve")}
+                        </button>
+                        <button
+                          className="btn btn-ghost hover:bg-white hover:text-red"
+                          type="button"
+                          onClick={(e) => onDeny(e, u.uid)}
+                        >
+                          {t("deny")}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  );
+}
+
 function ParticipantsTable(props: {
   authUser: User | null;
   users: User[];
@@ -404,31 +667,10 @@ function ParticipantsTable(props: {
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
-  const [sortBy, setSortBy] = useState<"name" | "email" | "date" | "route">(
-    "date"
-  );
-  const [route, setRoute] = useState<string[]>([]);
-  const [dragging, setDragging] = useState<string>("");
-  const [dragTarget, setDragTarget] = useState<string>("");
-
-  const dragColor = "bg-grey/[.1]";
-
-  useEffect(() => {
-    if (!props.chain) return;
-    routeUpdate();
-    console.log(route);
-  }, [props.chain]);
+  const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
 
   async function routeUpdate() {
     const res = await routeGetOrder(props.chain.uid);
-    setRoute(res.data || []);
-    console.log(route);
-  }
-  function routePop(userUID: string) {
-    setRoute(route.filter((r) => r != userUID));
-  }
-  function changeRoute() {
-    return routeSetOrder(props.chain.uid, route);
   }
   function getEditLocation(user: User): LocationDescriptor {
     if (!user.uid) {
@@ -461,8 +703,6 @@ function ParticipantsTable(props: {
                 addToastError(GinParseErrors(t, err), err.status);
               })
               .finally(() => {
-                routePop(user.uid);
-                changeRoute();
                 props.refresh();
               });
           },
@@ -495,13 +735,7 @@ function ParticipantsTable(props: {
               .catch((err) => {
                 addToastError(GinParseErrors(t, err), err.status);
               })
-              .finally(() => {
-                let chainRoute = route;
-                chainRoute.push(user.uid);
-                setRoute(chainRoute);
-                changeRoute();
-                return props.refresh();
-              });
+              .finally(() => props.refresh());
           },
         },
       ],
@@ -590,28 +824,11 @@ function ParticipantsTable(props: {
 
           return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
         });
-      case "route":
-        return props.users.sort((a, b) => {
-          return route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1;
-        });
     }
   }
 
   function toggleSortBy(_sortBy: typeof sortBy) {
     setSortBy(sortBy !== _sortBy ? _sortBy : "date");
-  }
-  function draggingEnd(evt: string) {
-    let newRoute: string[] = route;
-
-    const userA = route.indexOf(dragging);
-    const userB = route.indexOf(dragTarget);
-
-    newRoute[userA] = newRoute[userB];
-    newRoute[userB] = dragging;
-
-    setDragTarget("");
-    setRoute(newRoute);
-    changeRoute();
   }
 
   return (
@@ -621,7 +838,7 @@ function ParticipantsTable(props: {
           <table className="table table-compact w-full mb-10">
             <thead>
               <tr>
-                <th className="md:hidden w-[0.1%]"></th>
+                <th className="lg:hidden w-[0.1%]"></th>
                 <th>
                   <span>{t("name")}</span>
                   <SortButton
@@ -652,83 +869,12 @@ function ParticipantsTable(props: {
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
-                <th>
-                  <span>{t("Route")}</span>
-                  <SortButton
-                    isSelected={sortBy === "route"}
-                    className="ml-1"
-                    onClick={() => {
-                      toggleSortBy("route");
-                    }}
-                  />
-                </th>
-                <th className="hidden md:table-cell w-[0.1%]"></th>
+                <th className="hidden lg:table-cell w-[0.1%]"></th>
               </tr>
             </thead>
             <tbody>
-              {props.unapprovedUsers
-                .sort((a, b) => {
-                  const ucA = getUserChain(a);
-                  const ucB = getUserChain(b);
-
-                  return new Date(ucA.created_at) > new Date(ucB.created_at)
-                    ? -1
-                    : 1;
-                })
-                .map((u) => {
-                  const userChain = getUserChain(u);
-                  const dropdownItems = userChain
-                    ? [
-                        <button type="button" onClick={(e) => onApprove(e, u)}>
-                          {t("approve")}
-                        </button>,
-                        <button
-                          type="button"
-                          onClick={(e) => onDeny(e, u.uid)}
-                          className="text-red"
-                        >
-                          {t("deny")}
-                        </button>,
-                      ]
-                    : [];
-
-                  return (
-                    <tr
-                      key={u.uid}
-                      className="[&>td]:bg-yellow/[.6] [&_td]:hover:bg-yellow/[.4]"
-                    >
-                      <td className="md:hidden !px-0">
-                        <DropdownMenu
-                          direction="dropdown-right"
-                          items={dropdownItems}
-                        />
-                      </td>
-                      <td>{u.name}</td>
-                      <td>
-                        <span className="block w-48 text-sm whitespace-normal">
-                          {u.address}
-                        </span>
-                      </td>
-                      <td className="text-sm leading-relaxed">
-                        {u.email}
-                        <br />
-                        {u.phone_number}
-                      </td>
-                      <td></td>
-                      <td className="text-center">{t("pendingApproval")}</td>
-                      <td className="text-center"></td>
-                      <td className="text-right hidden md:table-cell">
-                        <DropdownMenu
-                          direction="dropdown-left"
-                          items={dropdownItems}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
               {sortOrder(sortBy).map((u: User) => {
                 const userChain = getUserChain(u);
-                const routeOrderNumber = route.indexOf(u.uid) + 1;
 
                 const dropdownItems = [
                   <button
@@ -741,12 +887,132 @@ function ParticipantsTable(props: {
                   <Link to={getEditLocation(u)}>{t("edit")}</Link>,
                 ];
 
-                const classTableCell = u.uid == dragTarget ? dragColor : "";
                 return (
                   <tr
                     key={u.uid}
                     className="[&_td]:hover:bg-base-200/[0.6] group"
-                    draggable={sortBy === "route"}
+                  >
+                    <td className="lg:hidden !px-0">
+                      <DropdownMenu
+                        direction="dropdown-right"
+                        items={dropdownItems}
+                      />
+                    </td>
+                    <td>{u.name}</td>
+                    <td>
+                      <span className="block w-48 text-sm whitespace-normal">
+                        {u.address}
+                      </span>
+                    </td>
+                    <td className={`text-sm leading-relaxed`}>
+                      {u.email}
+                      <br />
+                      {u.phone_number}
+                    </td>
+                    <td className={`align-middle`}>
+                      <span
+                        className={`block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2 `}
+                        tabIndex={0}
+                      >
+                        {SizeBadges(t, u.sizes)}
+                      </span>
+                    </td>
+                    <td className={`text-center`}>{simplifyDays(userChain)}</td>
+                    <td className={`text-right hidden lg:table-cell`}>
+                      <DropdownMenu
+                        direction="dropdown-left"
+                        items={dropdownItems}
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function RouteTable(props: {
+  authUser: User | null;
+  users: User[];
+  chain: Chain;
+  refresh: () => Promise<void>;
+}) {
+  const { t } = useTranslation();
+  const [route, _setRoute] = useState<UID[]>([]);
+  const [dragging, setDragging] = useState<string>("");
+  const [dragTarget, setDragTarget] = useState<string>("");
+
+  useEffect(() => {
+    routeUpdate();
+  }, [props.chain]);
+
+  async function routeUpdate() {
+    const res = await routeGetOrder(props.chain.uid);
+    _setRoute(res.data || []);
+    console.log("routeUpdate", route);
+  }
+  function setRoute(r: typeof route) {
+    routeSetOrder(props.chain.uid, r);
+    _setRoute(r);
+  }
+  function draggingEnd(evt: string) {
+    const fromIndex = route.indexOf(dragging);
+    const toIndex = route.indexOf(dragTarget);
+
+    setDragTarget("");
+    setRoute(reOrder(route, fromIndex, toIndex));
+  }
+  function handleInputChangeRoute(e: ChangeEvent<HTMLInputElement>, uid: UID) {
+    const toIndex = e.target.valueAsNumber - 1;
+    const fromIndex = route.indexOf(uid);
+    setRoute(reOrder(route, fromIndex, toIndex));
+  }
+
+  const sortedUsers = props.users.sort((a, b) =>
+    route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1
+  );
+  return (
+    <>
+      <div className="mt-10 relative overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="table table-compact w-full mb-10">
+            <thead>
+              <tr>
+                <th className="lg:hidden w-[0.1%]"></th>
+                <th>
+                  <span>{t("name")}</span>
+                </th>
+                <th>
+                  <span>{t("address")}</span>
+                </th>
+                <th>
+                  <span>{t("contact")}</span>
+                </th>
+                <th>
+                  <span>{t("interestedSizes")}</span>
+                </th>
+                <th>
+                  <span>{t("signedUpOn")}</span>
+                </th>
+                <th>
+                  <span>{t("Route")}</span>
+                </th>
+                <th className="hidden lg:table-cell w-[0.1%]"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedUsers.map((u: User) => {
+                const routeOrderNumber = route.indexOf(u.uid) + 1;
+
+                const classTdDragging =
+                  dragging === u.uid ? "bg-grey/[.1]" : "";
+                return (
+                  <tr
+                    key={u.uid}
                     onDragStart={() => {
                       setDragging(u.uid);
                     }}
@@ -760,49 +1026,53 @@ function ParticipantsTable(props: {
                     onDragOver={() => {
                       setDragTarget(u.uid);
                     }}
+                    draggable
+                    className="[&_td]:hover:bg-base-200/[0.6] group"
                   >
-                    <td className="md:hidden !px-0">
-                      <DropdownMenu
-                        direction="dropdown-right"
-                        items={dropdownItems}
+                    <td className={`${classTdDragging} text-center`}>
+                      <span className="hidden lg:inline-block py-1 px-2 bg-base-200 rounded-lg font-semibold">
+                        {routeOrderNumber}
+                      </span>
+                      <input
+                        onClick={(e) => (e.target as any).select()}
+                        onChange={(e) => handleInputChangeRoute(e, u.uid)}
+                        max={route.length + 1}
+                        min={1}
+                        type="number"
+                        className="inline-block lg:hidden input-reset w-14 py-1 px-2 bg-base-200 rounded-lg font-semibold text-center"
+                        value={routeOrderNumber}
                       />
                     </td>
-                    <td className={classTableCell}>{u.name}</td>
-                    <td className={classTableCell}>
+                    <td className={`${classTdDragging} d:hidden !px-0`}></td>
+                    <td>{u.name}</td>
+                    <td>
                       <span className="block w-48 text-sm whitespace-normal">
                         {u.address}
                       </span>
                     </td>
-                    <td className={`text-sm leading-relaxed ${classTableCell}`}>
+                    <td
+                      className={`${classTdDragging} text-sm leading-relaxed`}
+                    >
                       {u.email}
                       <br />
                       {u.phone_number}
                     </td>
-                    <td className={`align-middle ${classTableCell}`}>
+                    <td className={`${classTdDragging} align-middle`}>
                       <span
-                        className={`block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2  ${classTableCell}`}
+                        className={`block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2 `}
                         tabIndex={0}
                       >
                         {SizeBadges(t, u.sizes)}
                       </span>
                     </td>
-                    <td className={`text-center ${classTableCell}`}>
-                      {simplifyDays(userChain)}
-                    </td>
-                    <td className={`text-center ${classTableCell}`}>
-                      {routeOrderNumber > 0 ? routeOrderNumber : ""}
-                      <div
-                        aria-label="drag"
-                        className="btn btn-ghost feather feather-move"
-                      ></div>
-                    </td>
                     <td
-                      className={`text-right hidden md:table-cell ${classTableCell}`}
+                      className={`${classTdDragging} text-right hidden lg:table-cell`}
                     >
-                      <DropdownMenu
-                        direction="dropdown-left"
-                        items={dropdownItems}
-                      />
+                      <div
+                        tabIndex={0}
+                        aria-label="drag"
+                        className="px-4 cursor-grab active:cursor-grabbing feather feather-move"
+                      ></div>
                     </td>
                   </tr>
                 );
@@ -866,4 +1136,35 @@ function DropdownMenu(props: {
       </ul>
     </div>
   );
+}
+
+function getUserChain(u: User, chainUID: UID): UserChain {
+  return u.chains.find((uc) => uc.chain_uid === chainUID)!;
+}
+
+function simplifyDays(t: TFunction, uc: UserChain): string {
+  var numDays = dayjs().diff(dayjs(uc.created_at), "days");
+
+  if (numDays < 1) {
+    return t("new");
+  } else if (numDays < 7) {
+    return t("nDays", { n: numDays });
+  } else {
+    let locale = i18n.language;
+    if (locale === "en") locale = "default";
+
+    return new Date(uc.created_at).toLocaleDateString(locale);
+  }
+}
+
+function reOrder(arr: string[], fromIndex: number, toIndex: number): string[] {
+  let item = arr[fromIndex];
+  arr = arr.filter((_, i) => i !== fromIndex);
+  let res: string[] = [];
+
+  res.push(...arr.slice(0, toIndex));
+  res.push(item);
+  res.push(...arr.slice(toIndex));
+
+  return res;
 }
