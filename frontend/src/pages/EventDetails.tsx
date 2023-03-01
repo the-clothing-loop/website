@@ -39,7 +39,7 @@ export default function EventDetails() {
                   alt=""
                 />
                 <img
-                  className="-z-10 absolute -left-16 -bottom-8"
+                  className="max-sm:hidden -z-10 absolute -left-16 -bottom-8"
                   aria-hidden
                   alt=""
                   src={CirclesFrame}
@@ -88,7 +88,7 @@ export default function EventDetails() {
               </div>
             </div>
 
-            <div className="md:py-10 mb-16 w-full md:w-2/3">
+            <div className="md:py-16 mb-4 w-full md:w-2/3">
               <h2 className="font-serif font-bold text-secondary text-2xl mb-8 px-0">
                 Event Details
               </h2>
