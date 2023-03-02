@@ -1,17 +1,17 @@
-<p>Hi, {{ .Name }}</p>
+<p>Hoi {{ .Name }}</p>
 
 {{ if .Reason "sizes_genders" }}
-<p>Unfortunately, your request to join The {{ .ChainName }} Loop has been denied, because your size and/or gender preferences regarding clothing differ from the Loop you tried to become a part of.</p>
+<p>Helaas, jouw verzoek om deel te nemen met {{ .ChainName }} Loop is geweigerd, omdat jouw opgegeven maat en/of gendervoorkeuren met betrekking tot kleding verschillen van de Loop waarvan u probeerde deel uit te maken.</p>
 
-<p>Maybe there is another Loop where you live, or you can start one yourself! Go to the website: www.clothingloop.org and start a new Loop.</p>
+<p>Misschien is er nog een andere Loop waar je woont, of je kunt er zelf een beginnen! Ga naar de website: www.clothingloop.org en start een nieuwe Loop.</p>
 {{ else if .Reason "too_far_away" }}
-<p>Unfortunately, your request to join The {{ .ChainName }} Loop has been denied, because you live outside the area where that Loop is active.</p>
+<p>Helaas, uw verzoek om toe te treden tot de {{ .ChainName }} Loop is geweigerd, omdat je buiten het gebied woont waar de Loop actief is.</p>
 
-<p>Maybe there is another Loop where you live, or you can start one yourself! Go to the website: www.clothingloop.org and start a new Loop.</p>
-{{ else if .Reason "other" }}
-<p>Unfortunately, your request to join The {{ .ChainName }} Loop has been denied for another reason.</p>
+<p>Misschien is er nog een andere Loop waar je woont, of je kunt er zelf een beginnen! Ga naar de website: www.clothingloop.org en start een nieuwe Loop.</p>
+{{ else if .Reason "too_far_away" }}
+<p>Helaas, jouw verzoek om deel te nemen met {{ .ChainName }} Loop is geweigerd om een overige reden.</p>
 
-<p>Go to the website: www.clothingloop.org and start a new Loop.</p>
+Ga naar de website: www.clothingloop.org en start een nieuwe Loop.</p>
 {{ end }}
 
-<p>Nichon, on behalf of the Clothing Loop team</p>
+<p>Nichon Glerum, namens het Clothing Loop-team</p>
