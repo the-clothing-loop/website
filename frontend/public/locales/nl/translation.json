@@ -40,6 +40,7 @@
   "remove": "Verwijderen",
   "areYouSureRevokeHost": "Weet u zeker dat u de host-privileges van \"{{ name }} \" wilt intrekken?",
   "revoke": "Intrekken",
+  "AreYouSureJoinLoop": "Are you sure you want to join “{{ chainName }}”?",
   "email": "E-mail",
   "emailAddress": "E-mail",
   "home": "Hoofdpagina",

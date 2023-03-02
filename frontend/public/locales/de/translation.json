@@ -40,6 +40,7 @@
   "remove": "Löschen",
   "areYouSureRevokeHost": "Bist Du sicher, dass Du die Host Privilegien von “{{ name }} ” widerrufen möchtest?",
   "revoke": "Aufheben",
+  "AreYouSureJoinLoop": "Are you sure you want to join “{{ chainName }}”?",
   "email": "E-Mail",
   "emailAddress": "E-Mail Adresse",
   "home": "Startseite",
