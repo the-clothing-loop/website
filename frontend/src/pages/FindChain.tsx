@@ -273,13 +273,9 @@ export default function FindChain({ location }: { location: Location }) {
     setSelectedChains([]);
   }
 
-  function handleClickJoin(
-    e: MouseEvent<HTMLButtonElement>,
-    chainUID: UID,
-    chain: Chain
-  ) {
+  function handleClickJoin(e: MouseEvent<HTMLButtonElement>, chain: Chain) {
     e.preventDefault();
-    if (authUser && chainUID) {
+    if (authUser && chain.uid) {
       addModal({
         message: t("AreYouSureJoinLoop", {
           chainName: chain.name,
@@ -289,7 +285,7 @@ export default function FindChain({ location }: { location: Location }) {
             text: t("join"),
             type: "secondary",
             fn: async () => {
-              chainAddUser(chainUID, authUser.uid, false)
+              chainAddUser(chain.uid, authUser.uid, false)
                 .then(() => {
                   authUserRefresh();
                   history.push({ pathname: "/thankyou" });
@@ -303,9 +299,9 @@ export default function FindChain({ location }: { location: Location }) {
       });
     } else {
       history.push({
-        pathname: `/loops/${chainUID}/users/signup`,
+        pathname: `/loops/${chain.uid}/users/signup`,
         state: {
-          chainId: chainUID,
+          chainId: chain.uid,
         },
       });
     }
@@ -526,7 +522,7 @@ export default function FindChain({ location }: { location: Location }) {
                       )
                     ) : chain.open_to_new_members ? (
                       <button
-                        onClick={(e) => handleClickJoin(e, chain.uid, chain)}
+                        onClick={(e) => handleClickJoin(e, chain)}
                         type="button"
                         className="btn btn-sm btn-primary"
                       >
