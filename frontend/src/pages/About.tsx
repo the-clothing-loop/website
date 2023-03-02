@@ -23,7 +23,7 @@ export default function About() {
           </h1>
           <div className="flex flex-col-reverse md:flex-row items-center mb-10 md:mb-8">
             <div className="prose mx-auto w-full md:w-1/2 px-6 md:mb-0">
-              <p>
+              <p className="">
                 <Trans
                   i18nKey="p1"
                   ns="about"
@@ -61,7 +61,7 @@ export default function About() {
           <div className="flex flex-col md:flex-row md:items-center md:mb-16">
             <div className="md:w-1/3 mb-6 md:mb-0 mx-auto items-center prose font-serif font-bold bg-teal-light p-12 md:p-8">
               <h2 className="font-serif font-bold text-lg md:text-lg mb-4 my-auto">
-                <span className="inline md:block mb-8 text-5xl text-stroke-accent">
+                <span className="inline md:block mb-8 text-5xl font-bold font-secondary">
                   {t("wantToJoin")}
                 </span>
               </h2>
@@ -136,10 +136,18 @@ export default function About() {
                     p: <p></p>,
                     imgTeam: (
                       <img
-                        src="https://ucarecdn.com/88ce5a09-71f6-4b03-aa10-fc3a172f7f4e/-/resize/x240/-/format/auto/-/quality/smart/Teampics.jpg"
-                        alt="faces of Paloeka and Nichon"
-                        className="-2/3 mx-auto object-contain object-center mb-6 md:mb-0"
+                        src="https://ucarecdn.com/11253a80-a1d5-4639-a3ca-166dddcae210/PaloekaNichonlandscape.jpg"
+                        alt="Paloeka and Nichon"
+                        className="-2/3 mx-auto object-contain object-center mb-6 md:mb-0 w-2/3"
                       />
+                    ),
+                    aNichonInstagram: (
+                      <a
+                        href="https://www.instagram.com/up_for_swaps/"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="link font-semibold"
+                      ></a>
                     ),
                   }}
                 ></Trans>
