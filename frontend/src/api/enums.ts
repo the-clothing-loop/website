@@ -37,3 +37,19 @@ export const GenderI18nKeys: Record<Genders | string, string> = {
   "2": "women",
   "3": "men",
 };
+
+export enum Distance {
+  km1 = "1",
+  km5 = "2",
+  km10 = "3",
+  km15 = "4",
+  km20 = "5",
+}
+
+export const DistanceI18nKeys: Record<Distance | string, string> = {
+  "1": "1 km",
+  "2": "5 km",
+  "3": "10 km",
+  "4": "15 km",
+  "5": "20 km",
+};

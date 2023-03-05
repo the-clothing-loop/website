@@ -5,6 +5,7 @@ import { useState, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import SizesDropdown from "../components/SizesDropdown";
+import DistanceDropdown from "../components/DistanceDropdown";
 import categories from "../util/categories";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
@@ -18,6 +19,7 @@ export default function Events() {
     name: "",
     sizes: [] as string[],
     genders: [] as string[],
+    distance: [] as string[],
     longitude: "",
     latitude: "",
     date: "",
@@ -53,8 +55,13 @@ export default function Events() {
               <SizesDropdown
                 filteredGenders={Object.keys(categories)}
                 selectedSizes={values.sizes || []}
-                className="w-[150px] md:w-[170px]"
+                className="w-[150px] md:w-[170px] mr-4 md:mr-8"
                 handleChange={(v) => setValue("sizes", v)}
+              />
+              <DistanceDropdown
+                className="w-[150px] md:w-[170px] mr-4 md:mr-8"
+                selectedDistance={values.genders}
+                handleChange={(d) => setValue("distance", d)}
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -79,7 +86,7 @@ export default function Events() {
           text: "Type in your location here",
           type: "textInput", // need to make this a text input instead of a button
           fn: () => {
-            console.log("inside fn")
+            console.log("inside fn");
           },
         },
         {
