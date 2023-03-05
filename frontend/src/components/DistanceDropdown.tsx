@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
-import categories from "../util/categories";
 import { DistanceI18nKeys, Distance } from "../api/enums";
 import { useDropdownCheckBox } from "../util/dropdown.hooks";
 
@@ -23,10 +22,6 @@ const distance = {
     Distance["km20"],
   ],
 };
-
-export const allSizes = Object.values(distance).reduce(
-  (prev, current) => prev.concat(current)
-);
 
 interface IProps {
   selectedDistance: Array<Distance | string>;
