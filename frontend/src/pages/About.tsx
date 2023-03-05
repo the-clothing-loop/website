@@ -138,7 +138,7 @@ export default function About() {
                       <img
                         src="https://ucarecdn.com/11253a80-a1d5-4639-a3ca-166dddcae210/PaloekaNichonlandscape.jpg"
                         alt="Paloeka and Nichon"
-                        className="-2/3 mx-auto object-contain object-center mb-6 md:mb-0 w-2/3"
+                        className="-2/3 mx-auto object-contain object-center mb-6 md:mb-0 w-full"
                       />
                     ),
                     aNichonInstagram: (
