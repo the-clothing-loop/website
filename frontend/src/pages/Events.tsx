@@ -70,6 +70,7 @@ export default function Events() {
                 selectedDistance={values.distance}
                 handleChange={(d) => setValue("distance", d)}
               />
+              <button className="btn btn-primary">Search </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               <EventItem />
