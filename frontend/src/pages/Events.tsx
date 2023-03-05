@@ -1,12 +1,13 @@
 import { Helmet } from "react-helmet";
 
 import { Trans, useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import SizesDropdown from "../components/SizesDropdown";
 import categories from "../util/categories";
 import useForm from "../util/form.hooks";
+import { ToastContext } from "../providers/ToastProvider";
 
 // Media
 const ClothesImage =
@@ -22,6 +23,8 @@ export default function Events() {
     date: "",
     description: "",
   });
+  const [locationLoading, setLocationLoading] = useState(false); // I think this is primarily for styling
+  const { addToastError, addModal, addToast } = useContext(ToastContext);
 
   return (
     <>
@@ -35,7 +38,10 @@ export default function Events() {
             Upcoming Events
           </h1>
           <div>
-            <div className="font-sans text-lg md:text-2xl mb-6 cursor-default inline-block hover:opacity-75 hover:underline">
+            <div
+              className="font-sans text-lg md:text-2xl mb-6 cursor-default inline-block hover:opacity-75 hover:underline"
+              onClick={handleLocation}
+            >
               Events Near San Francisco
             </div>
             <div className="mb-8">
@@ -62,6 +68,50 @@ export default function Events() {
       </main>
     </>
   );
+  function handleLocation() {
+    // pop up and asks to either type in the location or ask permission to use location from browser
+    // if user clicks use my location enter getLocationBrowser()
+    //e.preventDefault();
+    addModal({
+      message: "Enter your location or allow browser to see location",
+      actions: [
+        {
+          text: "Type in your location here",
+          type: "textInput", // need to make this a text input instead of a button
+          fn: () => {
+            console.log("inside fn")
+          },
+        },
+        {
+          text: "Allow browser access",
+          type: "secondary",
+          fn: () => {
+            getLocationBrowser();
+          },
+        },
+      ],
+    });
+  }
+
+  function displayModal() {
+    console.log("inside dispay");
+    return <div className="text-lg">Please enter region, city or zip</div>;
+  }
+
+  function getLocationBrowser() {
+    setLocationLoading(true);
+    window.navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        console.log(`Latitude : ${pos.coords.latitude}`);
+        console.log(`Longitude: ${pos.coords.longitude}`);
+        setLocationLoading(false);
+      },
+      (err) => {
+        setLocationLoading(false);
+        console.error(`Couldn't receive location: ${err.message}`, 400);
+      }
+    );
+  }
 }
 
 function EventItem() {
