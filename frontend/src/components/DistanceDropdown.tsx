@@ -29,7 +29,7 @@ interface IProps {
   className?: string;
 }
 
-export default function CategoriesDropdown({
+export default function DistanceDropdown({
   className,
   selectedDistance,
   handleChange,
