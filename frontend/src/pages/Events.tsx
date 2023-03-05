@@ -6,6 +6,8 @@ import { Link, useLocation } from "react-router-dom";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import SizesDropdown from "../components/SizesDropdown";
 import DistanceDropdown from "../components/DistanceDropdown";
+import WhenDropdown from "../components/WhenDropdown";
+
 import categories from "../util/categories";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
@@ -20,9 +22,9 @@ export default function Events() {
     sizes: [] as string[],
     genders: [] as string[],
     distance: [] as string[],
+    date: [] as string[],
     longitude: "",
     latitude: "",
-    date: "",
     description: "",
   });
   const [locationLoading, setLocationLoading] = useState(false); // I think this is primarily for styling
@@ -58,9 +60,14 @@ export default function Events() {
                 className="w-[150px] md:w-[170px] mr-4 md:mr-8"
                 handleChange={(v) => setValue("sizes", v)}
               />
+              <WhenDropdown
+                className="w-[150px] md:w-[170px] mr-4 md:mr-8"
+                selectedDate={values.date}
+                handleChange={(date) => setValue("date", date)}
+              />
               <DistanceDropdown
                 className="w-[150px] md:w-[170px] mr-4 md:mr-8"
-                selectedDistance={values.genders}
+                selectedDistance={values.distance}
                 handleChange={(d) => setValue("distance", d)}
               />
             </div>
