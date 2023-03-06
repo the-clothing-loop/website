@@ -285,11 +285,11 @@ export default function Home() {
                   title="pages of the impact report"
                 >
                   <source
-                    src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/webm/-/quality/normal/impact-rapport.webm"
+                    src="/public/videos/impact-rapport.webm"
                     type="video/webm"
                   />
                   <source
-                    src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/mp4/-/quality/normal/impact-rapport.mp4"
+                    src="/public/videos/impact-rapport.mp4"
                     type="video/mp4"
                   />
                 </video>
