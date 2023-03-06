@@ -193,6 +193,7 @@ export default function Home() {
                   to="/loops/find"
                   className="hidden md:flex btn btn-outline btn-circle btn-secondary mt-6"
                 >
+                  <span className="sr-only">find loop</span>
                   <span className="feather feather-arrow-right"></span>
                 </Link>
               </div>

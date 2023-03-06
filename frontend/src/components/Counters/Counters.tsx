@@ -69,6 +69,7 @@ export default function Counters() {
               rel="noreferrer"
               className="btn btn-primary btn-circle"
             >
+              <span className="sr-only">Our Impact</span>
               <span className="feather feather-arrow-right" />
             </a>
           </div>

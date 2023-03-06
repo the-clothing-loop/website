@@ -98,6 +98,7 @@ export default function SearchBar(props: Props) {
             "poi",
           ]}
         />
+        <span className="sr-only">Search</span>
       </label>
 
       <div

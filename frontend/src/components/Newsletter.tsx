@@ -80,6 +80,7 @@ export const Newsletter = () => {
                   min={3}
                   required
                 />
+                <span className="sr-only">Name</span>
               </label>
               <label className="form-control mb-5">
                 <input
@@ -89,6 +90,7 @@ export const Newsletter = () => {
                   className="input input-bordered w-full input-secondary"
                   required
                 />
+                <span className="sr-only">Email</span>
               </label>
             </div>
             <div className="inline-block">

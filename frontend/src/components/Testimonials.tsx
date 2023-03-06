@@ -63,12 +63,14 @@ export default function Testimonials() {
             className="btn btn-circle btn-secondary opacity-70"
             onClick={() => click(CarouselOperation.MINUS)}
           >
+            <span className="sr-only">next right</span>
             <span className="feather feather-arrow-left" />
           </button>
           <button
             className="btn btn-circle btn-secondary opacity-70 ml-4"
             onClick={() => click(CarouselOperation.PLUS)}
           >
+            <span className="sr-only">next left</span>
             <span className="feather feather-arrow-right" />
           </button>
         </div>
