@@ -71,7 +71,7 @@ export const Newsletter = () => {
 
           <div className="w-full sm:w-1/2 md:w-1/3 lg:w-full flex flex-col sm:pl-4 md:pl-0 justify-center">
             <div className="flex flex-col lg:flex-row lg:max-w-screen-xs">
-              <label className="form-control mb-5 lg:mr-5">
+              <label className="form-control mb-5 lg:mr-5" aria-label="name">
                 <input
                   type="text"
                   name="name"
@@ -80,9 +80,8 @@ export const Newsletter = () => {
                   min={3}
                   required
                 />
-                <span className="sr-only">Name</span>
               </label>
-              <label className="form-control mb-5">
+              <label className="form-control mb-5" aria-label="email">
                 <input
                   type="email"
                   name="email"
@@ -90,7 +89,6 @@ export const Newsletter = () => {
                   className="input input-bordered w-full input-secondary"
                   required
                 />
-                <span className="sr-only">Email</span>
               </label>
             </div>
             <div className="inline-block">

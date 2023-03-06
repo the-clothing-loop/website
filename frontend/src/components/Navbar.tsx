@@ -34,8 +34,8 @@ function Navbar() {
       <label
         htmlFor="header-hamburger"
         className="mr-3 btn-lg btn-circle btn-ghost hover:bg-base-200 peer-checked:text-secondary peer-checked:animate-[spin-quarter_150ms_linear] flex justify-center items-center lg:hidden relative z-[60] checked:ring-2 checked:ring-offset-2 ring-teal peer-[:checked_>:nth-of-type(1)]:hidden peer-[:checked_>:nth-of-type(2)]:block cursor-pointer"
+        aria-label="menu"
       >
-        <span className="sr-only">Menu</span>
         <span className="feather feather-menu text-2xl block"></span>
         <span className="feather feather-x text-2xl hidden"></span>
       </label>

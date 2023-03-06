@@ -62,15 +62,15 @@ export default function Testimonials() {
           <button
             className="btn btn-circle btn-secondary opacity-70"
             onClick={() => click(CarouselOperation.MINUS)}
+            aria-label="previous testimonial"
           >
-            <span className="sr-only">next right</span>
             <span className="feather feather-arrow-left" />
           </button>
           <button
             className="btn btn-circle btn-secondary opacity-70 ml-4"
             onClick={() => click(CarouselOperation.PLUS)}
+            aria-label="next testimonial"
           >
-            <span className="sr-only">next left</span>
             <span className="feather feather-arrow-right" />
           </button>
         </div>
