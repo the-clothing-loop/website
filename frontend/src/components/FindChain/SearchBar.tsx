@@ -81,7 +81,10 @@ export default function SearchBar(props: Props) {
       onSubmit={handleSubmit}
       className="container mx-auto flex p-4 md:px-20 bg-white flex-wrap sm:flex-nowrap flex-col md:flex-row group"
     >
-      <label className="flex lg:w-auto md:flex-grow h-12 md:mr-4 sm:mb-4 md:mb-0" aria-label="search">
+      <label
+        className="flex lg:w-auto md:flex-grow h-12 md:mr-4 sm:mb-4 md:mb-0"
+        aria-label="search"
+      >
         <Geocoding
           initialAddress={values.searchTerm}
           className="z-40 w-full"
