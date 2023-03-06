@@ -340,11 +340,13 @@ LIMIT 1
 		results := []struct {
 			Name  string
 			Email zero.String
+			Chain string
 		}{}
 		db.Raw(`
-SELECT users.name as name, users.email as email
+SELECT users.name AS name, users.email AS email, chains.name AS chain
 FROM user_chains AS uc
 LEFT JOIN users ON uc.user_id = users.id 
+LEFT JOIN chains ON chains.id = uc.chain_id
 WHERE uc.chain_id = ?
 	AND uc.is_chain_admin = TRUE
 	AND users.is_email_verified = TRUE
@@ -363,6 +365,7 @@ WHERE uc.chain_id = ?
 					db,
 					result.Email.String,
 					result.Name,
+					result.Chain,
 					user.Name,
 					user.Email.String,
 					user.PhoneNumber,
