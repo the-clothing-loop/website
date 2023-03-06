@@ -83,11 +83,16 @@ func LoginValidate(c *gin.Context) {
 	var results []struct {
 		Name  string
 		Email zero.String
+		Chain string
 	}
 	err = db.Raw(`
-SELECT users.name as name, users.email as email
+SELECT
+ users.name as name, 
+ users.email as email,
+ chains.name as chain
 FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id 
+LEFT JOIN chains ON chains.id = user_chains.chain_id
 WHERE user_chains.chain_id IN ?
 	AND user_chains.is_chain_admin = TRUE
 	`, chainIDs).Scan(&results).Error
@@ -104,6 +109,7 @@ WHERE user_chains.chain_id IN ?
 					db,
 					result.Email.String,
 					result.Name,
+					result.Chain,
 					user.Name,
 					user.Email.String,
 					user.PhoneNumber,
