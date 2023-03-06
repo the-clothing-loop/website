@@ -87,9 +87,9 @@ func LoginValidate(c *gin.Context) {
 	}
 	err = db.Raw(`
 SELECT
- users.name as name, 
- users.email as email,
- chains.name as chain
+ users.name AS name, 
+ users.email AS email,
+ chains.name AS chain
 FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id 
 LEFT JOIN chains ON chains.id = user_chains.chain_id

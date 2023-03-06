@@ -68,8 +68,8 @@ func EmailAParticipantJoinedTheLoop(
 	to := adminEmail
 	subject := emailsHeaders[i18n]["someone_is_interested_in_joining_your_loop"]
 	body, err := executeTemplate(c, emailsTemplates[i18n], "someone_is_interested_in_joining_your_loop.gohtml", gin.H{
-		"Name": adminName,
-		"chainName": chainName,
+		"Name":      adminName,
+		"ChainName": chainName,
 		"Participant": gin.H{
 			"Name":    participantName,
 			"Email":   participantEmail,

@@ -343,7 +343,7 @@ LIMIT 1
 			Chain string
 		}{}
 		db.Raw(`
-SELECT users.name as name, users.email as email, chains.name chain
+SELECT users.name AS name, users.email AS email, chains.name AS chain
 FROM user_chains AS uc
 LEFT JOIN users ON uc.user_id = users.id 
 LEFT JOIN chains ON chains.id = uc.chain_id
@@ -353,11 +353,11 @@ WHERE uc.chain_id = ?
 `, chain.ID).Scan(&results)
 
 		if len(results) == 0 {
-			glog.Errorf("Empty chain that is still public: eChainID: %d", chain.ID)
+			glog.Errorf("Empty chain that is still public: ChainID: %d", chain.ID)
 			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("No admins exist for this loop"))
 			return
 		}
-		
+
 		for _, result := range results {
 			if result.Email.Valid {
 				go views.EmailAParticipantJoinedTheLoop(
