@@ -93,7 +93,7 @@ export default function FindChain({ location }: { location: Location }) {
 
   const { t } = useTranslation();
   const { authUser, authUserRefresh } = useContext(AuthContext);
-  const { addToastError } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
 
   const [chains, setChains] = useState<Chain[]>();
   const [map, setMap] = useState<mapboxgl.Map>();
@@ -273,22 +273,35 @@ export default function FindChain({ location }: { location: Location }) {
     setSelectedChains([]);
   }
 
-  function handleClickJoin(e: MouseEvent<HTMLButtonElement>, chainUID: UID) {
+  function handleClickJoin(e: MouseEvent<HTMLButtonElement>, chain: Chain) {
     e.preventDefault();
-    if (authUser && chainUID) {
-      chainAddUser(chainUID, authUser.uid, false)
-        .then(() => {
-          authUserRefresh();
-          history.push({ pathname: "/thankyou" });
-        })
-        .catch((err) => {
-          addToastError(GinParseErrors(t, err), err?.status);
-        });
+    if (authUser && chain.uid) {
+      addModal({
+        message: t("AreYouSureJoinLoop", {
+          chainName: chain.name,
+        }),
+        actions: [
+          {
+            text: t("join"),
+            type: "secondary",
+            fn: async () => {
+              chainAddUser(chain.uid, authUser.uid, false)
+                .then(() => {
+                  authUserRefresh();
+                  history.push({ pathname: "/thankyou" });
+                })
+                .catch((err) => {
+                  addToastError(GinParseErrors(t, err), err?.status);
+                });
+            },
+          },
+        ],
+      });
     } else {
       history.push({
-        pathname: `/loops/${chainUID}/users/signup`,
+        pathname: `/loops/${chain.uid}/users/signup`,
         state: {
-          chainId: chainUID,
+          chainId: chain.uid,
         },
       });
     }
@@ -509,7 +522,7 @@ export default function FindChain({ location }: { location: Location }) {
                       )
                     ) : chain.open_to_new_members ? (
                       <button
-                        onClick={(e) => handleClickJoin(e, chain.uid)}
+                        onClick={(e) => handleClickJoin(e, chain)}
                         type="button"
                         className="btn btn-sm btn-primary"
                       >

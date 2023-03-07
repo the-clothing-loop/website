@@ -1,8 +1,8 @@
 //media
 const CarouselImgOne =
-  "https://ucarecdn.com/35bdfbb0-4885-44b8-903e-132358febffd/-/format/auto/-/resize/x320/Tassenvoorcarrousel3.jpg";
+  "https://images.clothingloop.org/x320/tassen_voor_carrousel3.jpg";
 const CarouselImgTwo =
-  "https://ucarecdn.com/d19a0904-9b27-4ec1-8b3d-9e4dd1f7b136/-/format/auto/-/resize/x320/Tassenvoorcarrousel2.jpg";
+  "https://images.clothingloop.org/x320/tassen_voor_carrousel2.jpg";
 
 const featuredImages = [
   CarouselImgOne,

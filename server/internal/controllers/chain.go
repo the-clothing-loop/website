@@ -142,34 +142,38 @@ func ChainGetAll(c *gin.Context) {
 	}
 
 	chains := []models.Chain{}
-	tx := db.Table("chains")
+	sql := "SELECT * FROM chains"
+	whereOrSql := []string{}
+	args := []any{}
 
 	// filter sizes and genders
 	isGendersEmpty := len(query.FilterGenders) == 0
 	isSizesEmpty := len(query.FilterSizes) == 0
 	if !isSizesEmpty || !isGendersEmpty {
-		var args []any
-		var whereSql []string
+		var whereAndSql []string
 		if !isSizesEmpty {
 			for _, size := range query.FilterSizes {
-				whereSql = append(whereSql, "chains.sizes LIKE ?")
+				whereAndSql = append(whereAndSql, "chains.sizes LIKE ?")
 				args = append(args, fmt.Sprintf("%%%s%%", size))
 			}
 		}
 		if !isGendersEmpty {
 			for _, gender := range query.FilterGenders {
-				whereSql = append(whereSql, "chains.genders LIKE ?")
+				whereAndSql = append(whereAndSql, "chains.genders LIKE ?")
 				args = append(args, fmt.Sprintf("%%%s%%", gender))
 			}
 		}
 
-		tx.Where(strings.Join(whereSql, " AND "), args...)
+		whereOrSql = append(whereOrSql, fmt.Sprintf("( %s )", strings.Join(whereAndSql, " AND ")))
 	}
 
 	if query.FilterPublished {
-		tx.Where("chains.published = ?", true)
+		whereOrSql = append(whereOrSql, "chains.published = TRUE")
 	}
-	if err := tx.Find(&chains).Error; err != nil {
+	if len(whereOrSql) > 0 {
+		sql = fmt.Sprintf("%s WHERE %s", sql, strings.Join(whereOrSql, " OR "))
+	}
+	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
 		return
 	}
@@ -340,11 +344,13 @@ LIMIT 1
 		results := []struct {
 			Name  string
 			Email zero.String
+			Chain string
 		}{}
 		db.Raw(`
-SELECT users.name as name, users.email as email
+SELECT users.name AS name, users.email AS email, chains.name AS chain
 FROM user_chains AS uc
 LEFT JOIN users ON uc.user_id = users.id 
+LEFT JOIN chains ON chains.id = uc.chain_id
 WHERE uc.chain_id = ?
 	AND uc.is_chain_admin = TRUE
 	AND users.is_email_verified = TRUE
@@ -363,6 +369,7 @@ WHERE uc.chain_id = ?
 					db,
 					result.Email.String,
 					result.Name,
+					result.Chain,
 					user.Name,
 					user.Email.String,
 					user.PhoneNumber,

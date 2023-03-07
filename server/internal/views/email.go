@@ -55,6 +55,7 @@ func EmailAParticipantJoinedTheLoop(
 	db *gorm.DB,
 	adminEmail,
 	adminName,
+	chainName,
 	participantName,
 	participantEmail,
 	participantPhoneNumber,
@@ -65,9 +66,10 @@ func EmailAParticipantJoinedTheLoop(
 	i18n := "en"
 
 	to := adminEmail
-	subject := emailsHeaders[i18n]["a_participant_joined_the_loop"]
-	body, err := executeTemplate(c, emailsTemplates[i18n], "a_participant_joined_the_loop.gohtml", gin.H{
-		"Name": adminName,
+	subject := emailsHeaders[i18n]["someone_is_interested_in_joining_your_loop"]
+	body, err := executeTemplate(c, emailsTemplates[i18n], "someone_is_interested_in_joining_your_loop.gohtml", gin.H{
+		"Name":      adminName,
+		"ChainName": chainName,
 		"Participant": gin.H{
 			"Name":    participantName,
 			"Email":   participantEmail,

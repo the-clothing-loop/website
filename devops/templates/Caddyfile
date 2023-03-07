@@ -111,3 +111,13 @@ acc.clothingloop.org {
 		try_files {path} /index.html
 	}
 }
+
+images.clothingloop.org {
+	handle_path /original/* {
+		root * /var/caddy/images.clothingloop.org
+		file_server
+	}
+	handle {
+		reverse_proxy 127.0.0.1:8083
+	}
+}
