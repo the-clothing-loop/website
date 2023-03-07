@@ -1,0 +1,13 @@
+[Unit]
+Description=ImageProxy
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User={{ api_service_user }}
+ExecStart={{ api_service_exec }}
+
+[Install]
+WantedBy=multi-user.target
