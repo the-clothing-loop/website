@@ -55,7 +55,7 @@ export function NewLoopConfirmation(props: any) {
       <main>
         <TwoColumnLayout
           t={t}
-          img="https://ucarecdn.com/1145cf2e-d731-4e0c-8644-fa117c2ccc6c/-/resize/x600/-/format/auto/-/quality/smart/partyimage.jpg"
+          img="https://images.clothingloop.org/x600/party_image.jpg"
           alt="A pink bag with the number nine duck-taped to the side, surrounded by balloons, flags, lint and candles"
         >
           <Content
@@ -81,7 +81,7 @@ export function JoinLoopConfirmation(props: any) {
       <main>
         <TwoColumnLayout
           t={t}
-          img="https://ucarecdn.com/1145cf2e-d731-4e0c-8644-fa117c2ccc6c/-/resize/x600/-/format/auto/-/quality/smart/partyimage.jpg"
+          img="https://images.clothingloop.org/x600/party_image.jpg"
           alt="A pink bag with the number nine duck-taped to the side, surrounded by balloons, flags, lint and candles"
         >
           <Content

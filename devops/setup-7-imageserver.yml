@@ -1,0 +1,34 @@
+- hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: Build imageproxy locally
+      shell: |
+        CGO_ENABLED=0 go install willnorris.com/go/imageproxy/cmd/imageproxy@latest
+        cp ~/go/bin/imageproxy $PWD/templates/
+- hosts: server
+  become: true
+  tasks:
+    - name: Copy imageproxy binary
+      copy:
+        src: "templates/imageproxy"
+        dest: "/usr/local/bin"
+        owner: root
+        group: root
+        mode: "0775"
+    - name: Add imageproxy service
+      vars:
+        api_service_user: clothingloop
+        api_service_exec: "/usr/local/bin/imageproxy -cache memory:200:8h -addr localhost:8083 -allowHosts images.clothingloop.org -baseURL https://images.clothingloop.org/original/"
+      ansible.builtin.template:
+        src: templates/image.service.j2
+        dest: /etc/systemd/system/cl-image.service
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Systemd reload
+      ansible.builtin.shell: |
+        systemctl daemon-reload
+    - name: Enable service image
+      ansible.builtin.service:
+        name: cl-image
+        enabled: true
