@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 // Media
 const CirclesFrame =
-  "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
+  "https://images.clothingloop.org/0x0/circles.png";
 
 export default function About() {
   const { t } = useTranslation("about");
@@ -136,7 +136,7 @@ export default function About() {
                     p: <p></p>,
                     imgTeam: (
                       <img
-                        src="https://ucarecdn.com/88ce5a09-71f6-4b03-aa10-fc3a172f7f4e/-/resize/x240/-/format/auto/-/quality/smart/Teampics.jpg"
+                        src="https://images.clothingloop.org/88ce5a09-71f6-4b03-aa10-fc3a172f7f4e/-/resize/x240/-/format/auto/-/quality/smart/Teampics.jpg"
                         alt="faces of Paloeka and Nichon"
                         className="-2/3 mx-auto object-contain object-center mb-6 md:mb-0"
                       />
