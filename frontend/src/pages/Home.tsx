@@ -8,7 +8,6 @@ import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Testimonials from "../components/Testimonials";
 import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
-import { useEffect, useState } from "react";
 
 //Media
 const ClothesImage =
@@ -38,16 +37,6 @@ export default function Home() {
   const { t } = useTranslation();
 
   let history = useHistory();
-  const [showVideo, setShowVideo] = useState(false);
-  useEffect(() => {
-    const element = document.querySelector("#impact-report-image")!;
-    window.addEventListener("scroll", () => {
-      const position = element.getBoundingClientRect();
-      if (position.top < window.innerHeight && position.bottom >= 0) {
-        setShowVideo(true);
-      }
-    });
-  }, []);
 
   const supporters: Supporter[][] = [
     [
@@ -259,35 +248,25 @@ export default function Home() {
                 <Counters />
               </div>
             </div>
-
-            <div className="md:w-1/2 sm:max-md:pb-8" id="impact-report-image">
-              <img
-                className={"object-cover object-top w-full max-h-[600px]".concat(
-                  showVideo ? " hidden" : ""
-                )}
-                src="https://images.clothingloop.org/x400,jpg/impact-rapport-preview.png"
-                alt="page of the impact report"
-              />
-              {showVideo ? (
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  webkit-playsinline
-                  playsInline
-                  className="object-cover object-top w-full max-h-[600px]"
-                  title="pages of the impact report"
-                >
-                  <source
-                    src="/public/videos/impact-rapport.webm"
-                    type="video/webm"
-                  />
-                  <source
-                    src="/public/videos/impact-rapport.mp4"
-                    type="video/mp4"
-                  />
-                </video>
-              ) : null}
+            <div className="md:w-1/2 sm:max-md:pb-8">
+              <video
+                autoPlay
+                loop
+                muted
+                webkit-playsinline
+                playsInline
+                className="object-cover object-top w-full max-h-[600px]"
+                title="pages of the impact report"
+              >
+                <source
+                  src="/public/videos/impact-rapport.webm"
+                  type="video/webm"
+                />
+                <source
+                  src="/public/videos/impact-rapport.mp4"
+                  type="video/mp4"
+                />
+              </video>
             </div>
           </section>
         </div>
