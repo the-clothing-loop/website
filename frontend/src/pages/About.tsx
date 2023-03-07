@@ -4,8 +4,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 // Media
-const CirclesFrame =
-  "https://images.clothingloop.org/0x0/circles.png";
+const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
 export default function About() {
   const { t } = useTranslation("about");
