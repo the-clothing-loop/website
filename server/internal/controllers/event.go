@@ -74,18 +74,37 @@ func EventCreate(c *gin.Context) {
 	}
 }
 
+const sqlSelectEvent = `SELECT
+events.id             AS id,
+events.uid            AS uid,
+events.name           AS name,
+events.description    AS description,
+events.latitude       AS latitude,
+events.longitude      AS longitude,
+events.address        AS address,
+events.date           AS date,
+events.genders        AS genders,
+events.chain_id       AS chain_id,
+chains.uid            AS chain_uid,
+events.created_at     AS created_at,
+events.updated_at     AS updated_at
+FROM events
+JOIN chains ON chains.id = events.chain_id`
+
 func EventGet(c *gin.Context) {
 	db := getDB(c)
 
-	var uri struct {
-		UID string `uri:"uid" binding:"required,uuid"`
+	var query struct {
+		UID string `form:"uid" binding:"required,uuid"`
 	}
-	if err := c.ShouldBindUri(&uri); err != nil {
+	if err := c.ShouldBindQuery(&query); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
-	event, err := models.EventFindByUID(db, uri.UID)
+	event := &models.Event{}
+	sql := fmt.Sprintf("%s WHERE event.uid = ?", sqlSelectEvent)
+	err := db.Raw(sql, query.UID).Scan(event).Error
 	if err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusNotFound, err)
 		return
@@ -98,20 +117,20 @@ func EventGetAll(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		FilterLongitude float32 `form:"filter_longitude" binding:"required,longitude"`
-		FilterLatitude  float32 `form:"filter_latitude" binding:"required,latitude"`
-		FilterRadius    float32 `form:"filter_radius" binding:"required"`
+		Latitude  float32 `form:"latitude" binding:"required,latitude"`
+		Longitude float32 `form:"longitude" binding:"required,longitude"`
+		Radius    float32 `form:"radius" binding:"required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
-	sql := "SELECT * FROM events"
+	sql := sqlSelectEvent
 	args := []any{}
-	if query.FilterLatitude != 0 && query.FilterLongitude != 0 && query.FilterRadius != 0 {
-		sql = fmt.Sprintf("%s WHERE %s <= ? ", sql, sqlCalcDistance("latitude", "longitude", "?", "?"))
-		args = append(args, query.FilterLatitude, query.FilterLongitude, query.FilterRadius)
+	if query.Latitude != 0 && query.Longitude != 0 && query.Radius != 0 {
+		sql = fmt.Sprintf("%s WHERE %s <= ? ", sql, sqlCalcDistance("events.latitude", "events.longitude", "?", "?"))
+		args = append(args, query.Latitude, query.Longitude, query.Radius)
 	}
 	events := []models.Event{}
 	err := db.Raw(sql, args...).Scan(&events).Error
@@ -132,15 +151,15 @@ func sqlCalcDistance(latA, longA, latB, longB string) string {
 func EventDelete(c *gin.Context) {
 	db := getDB(c)
 
-	var uri struct {
-		UID string `uri:"uid" binding:"required,uuid"`
+	var query struct {
+		UID string `form:"uid" binding:"required,uuid"`
 	}
-	if err := c.ShouldBindUri(&uri); err != nil {
+	if err := c.ShouldBindQuery(&query); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
 
-	ok, _, event := auth.AuthenticateEvent(c, db, uri.UID)
+	ok, _, event := auth.AuthenticateEvent(c, db, query.UID)
 	if !ok {
 		return
 	}

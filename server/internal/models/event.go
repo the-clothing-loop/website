@@ -18,6 +18,7 @@ type Event struct {
 	Date        time.Time   `json:"date"`
 	Genders     []string    `gorm:"serializer:json" json:"genders"`
 	ChainID     zero.Int    `json:"chain_id,omitempty"`
+	ChainUID    string      `json:"chain_uid" gorm:"-:migration;<-:false"`
 	UserEvents  []UserEvent `json:"-"`
 	CreatedAt   time.Time   `json:"-"`
 	UpdatedAt   time.Time   `json:"-"`

@@ -92,7 +92,7 @@ func Routes() *gin.Engine {
 	v2.GET("/event/all", controllers.EventGetAll)
 	v2.POST("/event", controllers.EventCreate)
 	v2.PATCH("/event", controllers.EventUpdate)
-	v2.DELETE("/event/:uid", controllers.EventDelete)
+	v2.DELETE("/event", controllers.EventDelete)
 
 	return r
 }
