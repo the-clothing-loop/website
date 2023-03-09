@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	glog "github.com/airbrake/glog/v4"
@@ -25,6 +26,10 @@ type MockChainAndUserOptions struct {
 	IsNotPublished     bool
 	IsOpenToNewMembers bool
 	RouteOrderIndex    int
+}
+
+type MockEventOptions struct {
+	IsNotPublished bool
 }
 
 func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
@@ -125,6 +130,33 @@ func shuffleSlice[T any](arr []T) []T {
 	})
 
 	return arr
+}
+
+func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint, o MockEventOptions) (event *models.Event) {
+	event = &models.Event{
+		UID:         uuid.NewV4().String(),
+		Name:        "Fake " + faker.Company().Name(),
+		Description: faker.Company().CatchPhrase(),
+		Latitude:    faker.Address().Latitude(),
+		Longitude:   faker.Address().Latitude(),
+		Date:        time.Now().Add(time.Duration(faker.IntBetween(-20, 20)) * time.Hour),
+		Genders:     MockGenders(false),
+		UserEvents:  []models.UserEvent{{UserID: userID}},
+		ChainID:     zero.IntFrom(int64(chainID)),
+	}
+
+	if err := db.Create(&event).Error; err != nil {
+		glog.Fatalf("Unable to create testEvent: %v", err)
+	}
+
+	// Cleanup runs FiLo
+	// So Cleanup must happen before MockUser
+	t.Cleanup(func() {
+		db.Exec(`DELETE FROM user_events WHERE event_id = ? AND user_id = ?`, event.ID, userID)
+		db.Exec(`DELETE FROM events WHERE id = ?`, event.ID)
+	})
+
+	return event
 }
 
 func randomEnums(enums []string, zeroOrMore bool) (result []string) {

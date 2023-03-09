@@ -41,6 +41,13 @@ func main() {
 		user, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{})
 		log.Printf("Generated -> User\t(ID: %d)", user.ID)
 		// userBasics = append(userBasics, user)
+
+		var eventChainID uint = 0
+		if i > 3 {
+			eventChainID = chain.ID
+		}
+		event := mocks.MockEvent(t, db, user.ID, eventChainID, mocks.MockEventOptions{})
+		log.Printf("Generated -> Event\t(ID: %d)", event.ID)
 	}
 
 	for _, user := range userChainAdmins {

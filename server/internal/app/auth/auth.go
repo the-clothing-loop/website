@@ -155,3 +155,25 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 	gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to alter a different user"))
 	return false, nil, nil, nil
 }
+
+func AuthenticateEvent(c *gin.Context, db *gorm.DB, eventUID string) (ok bool, user *models.User, event *models.Event) {
+	ok, user, _ = Authenticate(c, db, AuthState1AnyUser, "")
+	if !ok {
+		return false, nil, nil
+	}
+
+	event = &models.Event{}
+	err := db.Raw(`
+SELECT e.*
+FROM user_events AS ue
+LEFT JOIN events AS e ON e.id = ue.event_id
+WHERE ue.user_id = ? AND e.uid = ?
+LIMIT 1
+	`, user.ID, eventUID).Scan(event).Error
+	if err != nil || event.ID == 0 {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, fmt.Errorf("user must be connected to event"))
+		return false, nil, nil
+	}
+
+	return true, user, event
+}
