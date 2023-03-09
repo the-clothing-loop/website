@@ -132,7 +132,7 @@ func shuffleSlice[T any](arr []T) []T {
 	return arr
 }
 
-func MockEvent(t *testing.T, db *gorm.DB, o MockEventOptions) (event *models.Event) {
+func MockEvent(t *testing.T, db *gorm.DB, userID uint, o MockEventOptions) (event *models.Event) {
 	event = &models.Event{
 		UID:         uuid.NewV4().String(),
 		Name:        "Fake " + faker.Company().Name(),
@@ -141,7 +141,7 @@ func MockEvent(t *testing.T, db *gorm.DB, o MockEventOptions) (event *models.Eve
 		Longitude:   faker.Address().Latitude(),
 		Date:        time.Now().Add(time.Duration(faker.IntBetween(-20, 20)) * time.Hour),
 		Genders:     MockGenders(false),
-		Published:   !o.IsNotPublished,
+		UserEvents:  []models.UserEvent{{UserID: userID}},
 	}
 
 	if err := db.Create(&event).Error; err != nil {
@@ -151,6 +151,7 @@ func MockEvent(t *testing.T, db *gorm.DB, o MockEventOptions) (event *models.Eve
 	// Cleanup runs FiLo
 	// So Cleanup must happen before MockUser
 	t.Cleanup(func() {
+		db.Exec(`DELETE FROM user_events WHERE event_id = ? AND user_id = ?`, event.ID, userID)
 		db.Exec(`DELETE FROM events WHERE id = ?`, event.ID)
 	})
 
