@@ -3,25 +3,24 @@ package models
 import (
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 )
 
 type Event struct {
-	ID          uint
-	UID         string `gorm:"uniqueIndex"`
-	Name        string
-	Description string
-	Latitude    float64
-	Longitude   float64
-	Address     string
-	Date        time.Time
-	Genders     []string `gorm:"serializer:json"`
-	ChainID     zero.Int
-	UserEvents  []UserEvent
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID          uint        `json:"-"`
+	UID         string      `gorm:"uniqueIndex" json:"uid"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
+	Latitude    float64     `json:"latitude"`
+	Longitude   float64     `json:"longitude"`
+	Address     string      `json:"address"`
+	Date        time.Time   `json:"date"`
+	Genders     []string    `gorm:"serializer:json" json:"genders"`
+	ChainID     zero.Int    `json:"chain_id,omitempty"`
+	UserEvents  []UserEvent `json:"-"`
+	CreatedAt   time.Time   `json:"-"`
+	UpdatedAt   time.Time   `json:"-"`
 }
 
 func EventFindByUID(db *gorm.DB, uid string) (event *Event, err error) {
@@ -32,28 +31,6 @@ func EventFindByUID(db *gorm.DB, uid string) (event *Event, err error) {
 	}
 
 	return event, nil
-}
-
-func (event *Event) ResponseBody(db *gorm.DB) (body gin.H) {
-	body = gin.H{
-		"uid":         event.UID,
-		"name":        event.Name,
-		"description": event.Description,
-		"latitude":    event.Latitude,
-		"longitude":   event.Longitude,
-		"address":     event.Address,
-		"date":        event.Date,
-		"genders":     event.Genders,
-	}
-	if event.ChainID.Valid {
-		uid := ""
-		db.Raw(`SELECT uid FROM chains WHERE id = ?`, event.ChainID.Int64).Scan(&uid)
-		if uid != "" {
-			body["chain_uid"] = uid
-		}
-	}
-
-	return body
 }
 
 func (event *Event) LinkChain(db *gorm.DB, userID uint, chainID uint) error {

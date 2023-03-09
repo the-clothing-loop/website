@@ -3,6 +3,7 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -90,7 +91,42 @@ func EventGet(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, event.ResponseBody(db))
+	c.JSON(http.StatusOK, event)
+}
+
+func EventGetAll(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		FilterLongitude float32 `form:"filter_longitude" binding:"required,longitude"`
+		FilterLatitude  float32 `form:"filter_latitude" binding:"required,latitude"`
+		FilterRadius    float32 `form:"filter_radius" binding:"required"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		return
+	}
+
+	sql := "SELECT * FROM events"
+	args := []any{}
+	if query.FilterLatitude != 0 && query.FilterLongitude != 0 && query.FilterRadius != 0 {
+		sql = fmt.Sprintf("%s WHERE %s <= ? ", sql, sqlCalcDistance("latitude", "longitude", "?", "?"))
+		args = append(args, query.FilterLatitude, query.FilterLongitude, query.FilterRadius)
+	}
+	events := []models.Event{}
+	err := db.Raw(sql, args...).Scan(&events).Error
+	if err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, events)
+}
+
+// The distance between two longlat points calculated in km.
+// Remember to use "?" instead of the actual value in building queries.
+func sqlCalcDistance(latA, longA, latB, longB string) string {
+	return fmt.Sprintf("(ST_Distance(ST_GeomFromText('POINT(%s %s)'), ST_GeomFromText('POINT(%s %s)'))  * 111.195)", latA, longA, latB, longB)
 }
 
 func EventDelete(c *gin.Context) {
