@@ -72,10 +72,11 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.Mail{},
 		&models.Newsletter{},
 		&models.User{},
+		&models.Event{},
 		&models.UserToken{},
 		&models.UserChain{},
 		&models.Payment{},
-		&models.Event{},
+		&models.UserEvent{},
 	)
 
 	if !db.Migrator().HasConstraint("user_chains", "uci_user_id_chain_id") {
@@ -83,6 +84,13 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 ALTER TABLE user_chains
 ADD CONSTRAINT uci_user_id_chain_id
 UNIQUE (user_id, chain_id)
+		`)
+	}
+	if !db.Migrator().HasConstraint("user_events", "uci_user_id_event_id") {
+		db.Exec(`
+ALTER TABLE user_events
+ADD CONSTRAINT uci_user_id_event_id
+UNIQUE (user_id, event_id)
 		`)
 	}
 	if !hadIsApprovedColumn {
