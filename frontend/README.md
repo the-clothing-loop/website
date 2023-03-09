@@ -26,6 +26,13 @@ You will also see any errors in the console.
 
 Then open [http://localhost:3000](http://localhost:3000) on your preferred browser.
 
+### Test the app on your phone
+
+1. Run `npm run start:lan`
+2. Open port `3000` on your pc
+3. Figure out what LAN IP your pc is at generally starts with `192.168.x.x`
+4. Open your pc LAN IP on your phone e.g. `http://192.168.1.68:3000/`
+
 ### Build the app for production to the `build` folder
 
 It correctly bundles React in production mode and optimizes the build for the best performance.

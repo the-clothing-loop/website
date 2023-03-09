@@ -144,7 +144,7 @@ export default function Signup() {
         <main className="md:p-10">
           <TwoColumnLayout
             t={t}
-            img="https://ucarecdn.com/1cd88d9e-e408-4582-bf4a-7849a65aae3c/-/resize/x600/-/format/auto/-/quality/smart/join_loop.jpg"
+            img="https://images.clothingloop.org/x600/join_loop.jpg"
             alt="Nichon giving a large bag of clothes to another woman"
             credit="Anke Teunissen"
           >

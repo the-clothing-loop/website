@@ -93,7 +93,7 @@ export default function FindChain({ location }: { location: Location }) {
 
   const { t } = useTranslation();
   const { authUser, authUserRefresh } = useContext(AuthContext);
-  const { addToastError } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
 
   const [chains, setChains] = useState<Chain[]>();
   const [map, setMap] = useState<mapboxgl.Map>();
@@ -273,22 +273,35 @@ export default function FindChain({ location }: { location: Location }) {
     setSelectedChains([]);
   }
 
-  function handleClickJoin(e: MouseEvent<HTMLButtonElement>, chainUID: UID) {
+  function handleClickJoin(e: MouseEvent<HTMLButtonElement>, chain: Chain) {
     e.preventDefault();
-    if (authUser && chainUID) {
-      chainAddUser(chainUID, authUser.uid, false)
-        .then(() => {
-          authUserRefresh();
-          history.push({ pathname: "/thankyou" });
-        })
-        .catch((err) => {
-          addToastError(GinParseErrors(t, err), err?.status);
-        });
+    if (authUser && chain.uid) {
+      addModal({
+        message: t("AreYouSureJoinLoop", {
+          chainName: chain.name,
+        }),
+        actions: [
+          {
+            text: t("join"),
+            type: "secondary",
+            fn: async () => {
+              chainAddUser(chain.uid, authUser.uid, false)
+                .then(() => {
+                  authUserRefresh();
+                  history.push({ pathname: "/thankyou" });
+                })
+                .catch((err) => {
+                  addToastError(GinParseErrors(t, err), err?.status);
+                });
+            },
+          },
+        ],
+      });
     } else {
       history.push({
-        pathname: `/loops/${chainUID}/users/signup`,
+        pathname: `/loops/${chain.uid}/users/signup`,
         state: {
-          chainId: chainUID,
+          chainId: chain.uid,
         },
       });
     }
@@ -430,7 +443,7 @@ export default function FindChain({ location }: { location: Location }) {
                             id={"checkbox-desc-more-" + chain.uid}
                           />
                           <p
-                            className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12"
+                            className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12 relative before:block before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-white/90 before:to-transparent before:bottom-0 peer-checked:before:hidden"
                             tabIndex={0}
                             onClick={(e) => {
                               let input = (
@@ -455,7 +468,7 @@ export default function FindChain({ location }: { location: Location }) {
                           <label
                             htmlFor={"checkbox-desc-more-" + chain.uid}
                             aria-label="expand"
-                            className="btn btn-xs btn-secondary btn-ghost feather feather-more-horizontal"
+                            className="btn btn-xs btn-ghost bg-teal-light feather feather-more-horizontal"
                           ></label>
                         </div>
                       ) : (
@@ -509,7 +522,7 @@ export default function FindChain({ location }: { location: Location }) {
                       )
                     ) : chain.open_to_new_members ? (
                       <button
-                        onClick={(e) => handleClickJoin(e, chain.uid)}
+                        onClick={(e) => handleClickJoin(e, chain)}
                         type="button"
                         className="btn btn-sm btn-primary"
                       >

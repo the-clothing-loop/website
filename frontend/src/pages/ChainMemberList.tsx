@@ -17,7 +17,7 @@ import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 
-import { AuthContext } from "../providers/AuthProvider";
+import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
@@ -34,7 +34,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
-import { count } from "console";
+import { routeGetOrder, routeSetOrder } from "../api/route";
 
 interface Params {
   chainUID: string;
@@ -404,8 +404,32 @@ function ParticipantsTable(props: {
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
-  const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
+  const [sortBy, setSortBy] = useState<"name" | "email" | "date" | "route">(
+    "date"
+  );
+  const [route, setRoute] = useState<string[]>([]);
+  const [dragging, setDragging] = useState<string>("");
+  const [dragTarget, setDragTarget] = useState<string>("");
 
+  const dragColor = "bg-grey/[.1]";
+
+  useEffect(() => {
+    if (!props.chain) return;
+    routeUpdate();
+    console.log(route);
+  }, [props.chain]);
+
+  async function routeUpdate() {
+    const res = await routeGetOrder(props.chain.uid);
+    setRoute(res.data || []);
+    console.log(route);
+  }
+  function routePop(userUID: string) {
+    setRoute(route.filter((r) => r != userUID));
+  }
+  function changeRoute() {
+    return routeSetOrder(props.chain.uid, route);
+  }
   function getEditLocation(user: User): LocationDescriptor {
     if (!user.uid) {
       addToastError("Edit button coundn't find user of: " + user.name, 500);
@@ -436,7 +460,11 @@ function ParticipantsTable(props: {
               .catch((err) => {
                 addToastError(GinParseErrors(t, err), err.status);
               })
-              .finally(() => props.refresh());
+              .finally(() => {
+                routePop(user.uid);
+                changeRoute();
+                props.refresh();
+              });
           },
         },
       ],
@@ -467,7 +495,13 @@ function ParticipantsTable(props: {
               .catch((err) => {
                 addToastError(GinParseErrors(t, err), err.status);
               })
-              .finally(() => props.refresh());
+              .finally(() => {
+                let chainRoute = route;
+                chainRoute.push(user.uid);
+                setRoute(chainRoute);
+                changeRoute();
+                return props.refresh();
+              });
           },
         },
       ],
@@ -556,11 +590,28 @@ function ParticipantsTable(props: {
 
           return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
         });
+      case "route":
+        return props.users.sort((a, b) => {
+          return route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1;
+        });
     }
   }
 
   function toggleSortBy(_sortBy: typeof sortBy) {
     setSortBy(sortBy !== _sortBy ? _sortBy : "date");
+  }
+  function draggingEnd(evt: string) {
+    let newRoute: string[] = route;
+
+    const userA = route.indexOf(dragging);
+    const userB = route.indexOf(dragTarget);
+
+    newRoute[userA] = newRoute[userB];
+    newRoute[userB] = dragging;
+
+    setDragTarget("");
+    setRoute(newRoute);
+    changeRoute();
   }
 
   return (
@@ -599,6 +650,16 @@ function ParticipantsTable(props: {
                     isSelected={sortBy === "date"}
                     className="ml-1"
                     onClick={() => toggleSortBy("date")}
+                  />
+                </th>
+                <th>
+                  <span>{t("Route")}</span>
+                  <SortButton
+                    isSelected={sortBy === "route"}
+                    className="ml-1"
+                    onClick={() => {
+                      toggleSortBy("route");
+                    }}
                   />
                 </th>
                 <th className="hidden md:table-cell w-[0.1%]"></th>
@@ -655,6 +716,7 @@ function ParticipantsTable(props: {
                       </td>
                       <td></td>
                       <td className="text-center">{t("pendingApproval")}</td>
+                      <td className="text-center"></td>
                       <td className="text-right hidden md:table-cell">
                         <DropdownMenu
                           direction="dropdown-left"
@@ -666,6 +728,8 @@ function ParticipantsTable(props: {
                 })}
               {sortOrder(sortBy).map((u: User) => {
                 const userChain = getUserChain(u);
+                const routeOrderNumber = route.indexOf(u.uid) + 1;
+
                 const dropdownItems = [
                   <button
                     type="button"
@@ -677,10 +741,25 @@ function ParticipantsTable(props: {
                   <Link to={getEditLocation(u)}>{t("edit")}</Link>,
                 ];
 
+                const classTableCell = u.uid == dragTarget ? dragColor : "";
                 return (
                   <tr
                     key={u.uid}
                     className="[&_td]:hover:bg-base-200/[0.6] group"
+                    draggable={sortBy === "route"}
+                    onDragStart={() => {
+                      setDragging(u.uid);
+                    }}
+                    onDrag={() => {
+                      setDragging(u.uid);
+                      console.log(dragging);
+                    }}
+                    onDragEnd={() => {
+                      draggingEnd(u.uid);
+                    }}
+                    onDragOver={() => {
+                      setDragTarget(u.uid);
+                    }}
                   >
                     <td className="md:hidden !px-0">
                       <DropdownMenu
@@ -688,27 +767,38 @@ function ParticipantsTable(props: {
                         items={dropdownItems}
                       />
                     </td>
-                    <td>{u.name}</td>
-                    <td>
+                    <td className={classTableCell}>{u.name}</td>
+                    <td className={classTableCell}>
                       <span className="block w-48 text-sm whitespace-normal">
                         {u.address}
                       </span>
                     </td>
-                    <td className="text-sm leading-relaxed">
+                    <td className={`text-sm leading-relaxed ${classTableCell}`}>
                       {u.email}
                       <br />
                       {u.phone_number}
                     </td>
-                    <td className="align-middle">
+                    <td className={`align-middle ${classTableCell}`}>
                       <span
-                        className="block min-w-[12rem] bg-base-100 group-hover:bg-base-200/[0.6] rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
+                        className={`block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2  ${classTableCell}`}
                         tabIndex={0}
                       >
                         {SizeBadges(t, u.sizes)}
                       </span>
                     </td>
-                    <td className="text-center">{simplifyDays(userChain)}</td>
-                    <td className="text-right hidden md:table-cell">
+                    <td className={`text-center ${classTableCell}`}>
+                      {simplifyDays(userChain)}
+                    </td>
+                    <td className={`text-center ${classTableCell}`}>
+                      {routeOrderNumber > 0 ? routeOrderNumber : ""}
+                      <div
+                        aria-label="drag"
+                        className="btn btn-ghost feather feather-move"
+                      ></div>
+                    </td>
+                    <td
+                      className={`text-right hidden md:table-cell ${classTableCell}`}
+                    >
                       <DropdownMenu
                         direction="dropdown-left"
                         items={dropdownItems}

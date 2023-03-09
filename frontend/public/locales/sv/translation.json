@@ -40,6 +40,7 @@
   "remove": "Avlägsna",
   "areYouSureRevokeHost": "Är du säker på att du vill återkalla värdprivilegier från \"{{ namn }}\"?",
   "revoke": "Återkalla",
+  "AreYouSureJoinLoop": "Are you sure you want to join “{{ chainName }}”?",
   "email": "E-post",
   "emailAddress": "E-post adress",
   "home": "Hemma",

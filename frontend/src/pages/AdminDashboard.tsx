@@ -95,7 +95,7 @@ export default function AdminDashboard() {
             </div>
             <img
               className="hidden lg:block h-64 w-64 my-6 rounded-full object-cover self-center"
-              src="https://ucarecdn.com/6ac2be4c-b2d6-4303-a5a0-c7283759a8e9/-/scale_crop/256x256/smart/-/format/auto/-/quality/smart/denise.png"
+              src="https://images.clothingloop.org/256x256/denise.jpg"
             />
           </div>
         </section>
