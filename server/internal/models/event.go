@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 )
@@ -23,30 +24,62 @@ type Event struct {
 	UpdatedAt   time.Time
 }
 
-func (cal *Event) LinkChain(db *gorm.DB, userID uint, chainID uint) error {
+func EventFindByUID(db *gorm.DB, uid string) (event *Event, err error) {
+	event = &Event{}
+	err = db.Raw(`SELECT * FROM events WHERE uid = ? LIMIT 1`, uid).Scan(event).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return event, nil
+}
+
+func (event *Event) ResponseBody(db *gorm.DB) (body gin.H) {
+	body = gin.H{
+		"uid":         event.UID,
+		"name":        event.Name,
+		"description": event.Description,
+		"latitude":    event.Latitude,
+		"longitude":   event.Longitude,
+		"address":     event.Address,
+		"date":        event.Date,
+		"genders":     event.Genders,
+	}
+	if event.ChainID.Valid {
+		uid := ""
+		db.Raw(`SELECT uid FROM chains WHERE id = ?`, event.ChainID.Int64).Scan(&uid)
+		if uid != "" {
+			body["chain_uid"] = uid
+		}
+	}
+
+	return body
+}
+
+func (event *Event) LinkChain(db *gorm.DB, userID uint, chainID uint) error {
 	return db.Exec(`
 UPDATE user_events
 SET chain_id = ?
 WHERE event_id = ? AND user_id = ?
-	`, chainID, cal.ID, userID).Error
+	`, chainID, event.ID, userID).Error
 }
 
-func (cal *Event) UnlinkChain(db *gorm.DB, userID uint) error {
+func (event *Event) UnlinkChain(db *gorm.DB, userID uint) error {
 	return db.Exec(`
 UPDATE user_events
 SET chain_id = NULL
 WHERE event_id = ? AND user_id = ?
-	`, cal.ID, userID).Error
+	`, event.ID, userID).Error
 }
 
-func (cal *Event) GetConnectedUserUIDs(db *gorm.DB) (userUIDs *[]string, err error) {
+func (event *Event) GetConnectedUserUIDs(db *gorm.DB) (userUIDs *[]string, err error) {
 	userUIDs = &[]string{}
 	err = db.Raw(`
 SELECT users.uid AS uid
 FROM user_events AS ue
 LEFT JOIN users ON ue.user_id = users.id
 WHERE ue.event_id = ?
-	`, cal.ID).Scan(userUIDs).Error
+	`, event.ID).Scan(userUIDs).Error
 	if err != nil {
 		return nil, err
 	}

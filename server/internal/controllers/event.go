@@ -72,6 +72,26 @@ func EventCreate(c *gin.Context) {
 	}
 }
 
+func EventGet(c *gin.Context) {
+	db := getDB(c)
+
+	var uri struct {
+		UID string `uri:"uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindUri(&uri); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		return
+	}
+
+	event, err := models.EventFindByUID(db, uri.UID)
+	if err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusNotFound, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, event.ResponseBody(db))
+}
+
 func EventDelete(c *gin.Context) {
 	db := getDB(c)
 
