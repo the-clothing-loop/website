@@ -285,6 +285,17 @@ func EventICal(c *gin.Context) {
 		return
 	}
 
+	users := []struct {
+		Name  string `gorm:"name"`
+		Email string `gorm:"email"`
+	}{}
+	db.Raw(`
+SELECT u.name, u.email
+FROM users AS u
+JOIN user_events AS ue ON ue.user_id = u.id
+WHERE ue.event_id = ? AND u.email IS NOT NULL
+	`, event.ID).Scan(&users)
+
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodRequest)
 	icalE := cal.AddEvent(event.UID)
@@ -296,7 +307,9 @@ func EventICal(c *gin.Context) {
 	icalE.SetLocation(fmt.Sprintf("https://www.google.com/maps/@%v,%v,17z", event.Latitude, event.Longitude))
 	icalE.SetDescription(event.Description)
 	icalE.SetURL(fmt.Sprintf("%s/events/%s", app.Config.SITE_BASE_URL_FE, uri.UID))
-	icalE.SetOrganizer("sender@domain", ics.WithCN("This Machine"))
+	for _, u := range users {
+		icalE.SetOrganizer(u.Email, ics.WithCN(u.Name))
+	}
 
 	c.String(http.StatusOK, cal.Serialize())
 }
