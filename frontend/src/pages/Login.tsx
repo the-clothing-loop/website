@@ -11,8 +11,7 @@ import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
 
 //media
-const CirclesFrame =
-  "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
+const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
 export default function Login() {
   const { authUser } = useContext(AuthContext);
@@ -80,7 +79,7 @@ export default function Login() {
       <main className="pt-10">
         <TwoColumnLayout
           t={t}
-          img="https://ucarecdn.com/cac06018-e1b6-4124-865f-26b816df54c7/-/resize/x600/-/format/auto/-/quality/smart/login.jpg"
+          img="https://images.clothingloop.org/x600/login.jpg"
           alt="Nichon wearing a red jacket and holding an Ikea bag full of clothes"
           credit="Anke Teunissen"
         >

@@ -20,6 +20,18 @@
     {
       "question": "Mag ik ook schoenen in de tas doen?",
       "answer": "Het korte antwoord is ja, maar vergeet niet: schoenen zijn moeilijker te door te geven dan kleding. Er zijn veel meer formaten en ze laten zien dat ze veel sneller dan kledingstukken slijten. Wees dus zeer selectief met schoenen! Voeg alleen \"zo goed als nieuw\" paren toe en heb niet meer dan 2 paren per tas."
+    },
+    {
+      "question": "Wat te doen met grote kleren (zoals winterjas) die niet in de tas passen?",
+      "answer": "Grote items kunnen worden gefotografeerd en gedeeld via jouw communicatiekanaal, of via de <a target='_blank' href='https://template-clothing-loop.glideapp.io'>Glide app</a>. In een privébericht kunnen mensen reageren en het ophalen regelen."
+    },
+    {
+      "question": "Mag ik ook schoenen in de tas doen?",
+      "answer": "Dat is aan de lokale host om te beslissen. Als de Loop toestaat om schoenen aan de tas toe te voegen, stop dan alleen \"zo goed als nieuw\" schoenen toe, en <b>niet meer dan 2 paren per tas</b>. En stop de schoenen in een aparte tas om te voorkomen dat ze gescheiden blijven van de rest de kleding. "
+    },
+    {
+      "question": "Ik krijg de fout: “je account bestaat al”.",
+      "answer": "Je hebt eerder al een account aangemaakt bij de Clothing Loop. Om je bij een nieuwe Loop aan te melden, moet je eerst inloggen:<ol><li>Klik in de rechterbovenhoek om in te loggen.</li><li>Voer jouw e-mailadres in dat je hebt gebruikt om uw Loop te registreren.</li><li>Controleer jouw e-mail (en spamfolder!) voor onze verificatielink. We gebruiken een link in plaats van een wachtwoord!</li><li>Daarna kan jij je aanmelden bij de desbetreffende nieuwe Loop.</li></ol>"
     }
   ],
   "faqForHosts": "FAQ voor Beheerders",
@@ -55,6 +67,30 @@
     {
       "question": "Wat moeten we doen als de Clothing Loop niet goed werkt?",
       "answer": "Als de kwaliteit van de kleding niet hoog genoeg is, zouden mensen de Loop kunnen verlaten. Zorg ervoor dat iedereen de verantwoordelijkheid deelt om alleen producten van goede kwaliteit toe te voegen.<br/><br/>Zie je iets dat niet in de Loop zou moeten staan? Pak het uit en doneer het aan een kledingcontainer. Op die manier kan het nog steeds worden gerecycled. Vraag in geval van twijfel de persoon naast u of hij het daarmee eens is en dan een besluit neemt.<br/><br/>Een grondstofkleur kan de levensduur van een kledingstuk enorm verlengen! Je kan dit advies binnen jouw gemeenschap delen.<br/><br/>Tot slot stel zelf een goed voorbeeld; deel een paar mooie foto's en moedig anderen aan hetzelfde te doen!"
+    },
+    {
+      "question": "Hoe organiseer je een grote groep mensen in de communicatiekanalen?",
+      "answer": "Vooral wanneer groepen groter worden, is het belangrijk om ervoor te zorgen dat mensen niet worden gebombardeerd met (irrelevante) berichten. Je kunt enkele regels instellen voor wat wel en niet gedeeld mag worden via de app van de groep. Bijvoorbeeld:<br /><br /><span>Ja,</span> in de app:<ul><li>Selfies van leuke dingen die je van de tas of leuke dingen die je doet meeneemt</li><li>Complimenten aan anderen</li><li>Logistiek en organisatorische relevante updates</li></ul><span>Nee,</span> niet in de app:<ul><li>Alles niet gerelateerd aan de Clothing Loop (verzoeken voor enquêtes, uitnodigingen voor nieuwe groepen, fondswerving, memes, enz.). Als u van iedereen iets wilt vragen, gebruik dan een poll (enquête) in plaats daarvan</li></ul>"
+    },
+    {
+      "question": "Wat als ik geen tijd meer heb om de Loop te beheren die ik heb opgericht?",
+      "answer": "Gebruik de groep! Vraag of iemand anders wil helpen met het hosten van de Loop. Na verloop van tijd wil hen mogelijk de Loop volledig overnemen."
+    },
+    {
+      "question": "Wat als iemand wil meedoen, maar te ver weg woont?",
+      "answer": "Als iemand heeft aangemeld voor je Loop maar te ver buiten je Loop woont, het is aan jou om te beslissen of  hen zich mag aansluiten bij jouw Loop. Eén ding dat je kan doen om de afstand tussen adressen te verkleinen, is om die persoon te vragen andere deelnemers te vinden tussen hun adres en de oorspronkelijke Loop locatie."
+    },
+    {
+      "question": "Wat is een ideale groepsgrootte?",
+      "answer": "We raden aan om minimaal 20 personen in een groep te hebben: na 20 adressen herken je meestal niets meer in de tas zodat je kan blijven wisselen.  <b>Er is geen echt maximum <b>, het is aan jou wat er nog steeds werkt! In Nederland ligt een Loop op gemiddeld 45 mensen. Maar er zijn goed lopende Loops met meer dan 180 deelnemers!"
+    },
+    {
+      "question": "Wat als iemand verhuist en mee wilt doen in een hun nieuwe buurt?",
+      "answer": "Jij als Loop host kan hen uit jouw Loop verwijderen nadat je bent ingelogd op onze website. Als hen weer in hun nieuwe buurt wilt meedoen, vraag hen dan gewoon opnieuw aan te melden bij een Loop in diens buurt met hun nieuwe adres."
+    },
+    {
+      "question": "Wat moeten we doen als de Clothing Loop niet goed werkt?",
+      "answer": "Zorg ervoor dat iedereen de verantwoordelijkheid deelt om alleen kledingstukken van goede kwaliteit toe te voegen aan de tas.<br/><br/>Zie je iets dat niet in de tas zou moeten zitten? Probeer het te doneren aan je lokale textielrecyclingsprogramma. Vraag in geval van twijfel de persoon die naast jou op de adreslijst staat, of hen het daarmee eens is. Het is goed om een paar mensen te laten functioneren als ‘checkpoints’ langs de route, om ervoor te zorgen dat de tassen in goede staat blijven. Want als de kwaliteit van de kleding niet hoog genoeg is, kunnen mensen misschien de Loop verlaten en dat zou een schande zijn!<br/><br/>Een <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>pluizentondeuse</a> kan de levensduur van een kledingstuk enorm verlengen! Je kan deze tip delen in de groep.<br/><br/>En last but not least stel zelf een goed voorbeeld in: deel een paar mooie foto's en moedig anderen aan hetzelfde te doen! Het is voor mensen een enorme motivatie om dan leuke kledingstukken ook aan de tas te doneren."
     }
   ]
 }
