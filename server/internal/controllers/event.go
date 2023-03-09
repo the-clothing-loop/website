@@ -10,6 +10,7 @@ import (
 	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
 	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	glog "github.com/airbrake/glog/v4"
 	ics "github.com/arran4/golang-ical"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -116,7 +117,86 @@ func EventDelete(c *gin.Context) {
 }
 
 func EventUpdate(c *gin.Context) {
-	//TODO
+	db := getDB(c)
+
+	var body struct {
+		UID         string     `json:"uid" binding:"required,uuid"`
+		Name        *string    `json:"name,omitempty"`
+		Description *string    `json:"description,omitempty"`
+		Address     *string    `json:"address,omitempty"`
+		Latitude    *float32   `json:"latitude,omitempty" binding:"omitempty,latitude"`
+		Longitude   *float32   `json:"longitude,omitempty" binding:"omitempty,longitude"`
+		Date        *time.Time `json:"date,omitempty"`
+		Genders     *[]string  `json:"genders,omitempty"`
+		ChainUID    *string    `json:"chain_uid,omitempty"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		return
+	}
+	if body.Genders != nil {
+		if ok := models.ValidateAllGenderEnum(*(body.Genders)); !ok {
+			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrGenderInvalid)
+			return
+		}
+	}
+
+	ok, user, event := auth.AuthenticateEvent(c, db, body.UID)
+	if !ok {
+		return
+	}
+
+	// authenticate chain uid
+	if body.ChainUID != nil {
+		err := user.AddUserChainsToObject(db)
+		if err != nil {
+			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+			return
+		}
+
+		found := false
+		for _, uc := range user.Chains {
+			if uc.IsChainAdmin && uc.ChainUID == *body.ChainUID {
+				found = true
+			}
+		}
+		if !found {
+			gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Loop must be "))
+			return
+		}
+	}
+
+	valuesToUpdate := map[string]any{}
+	if body.Name != nil {
+		valuesToUpdate["name"] = *(body.Name)
+	}
+	if body.Description != nil {
+		valuesToUpdate["description"] = *(body.Description)
+	}
+	if body.Address != nil {
+		valuesToUpdate["address"] = *(body.Address)
+	}
+	if body.Latitude != nil {
+		valuesToUpdate["latitude"] = *(body.Latitude)
+	}
+	if body.Longitude != nil {
+		valuesToUpdate["longitude"] = *(body.Longitude)
+	}
+	if body.Date != nil {
+		valuesToUpdate["date"] = *(body.Date)
+	}
+	if body.Genders != nil {
+		valuesToUpdate["genders"] = *(body.Genders)
+	}
+	if body.ChainUID != nil {
+		valuesToUpdate["chain_uid"] = *(body.ChainUID)
+	}
+
+	err := db.Model(event).Updates(valuesToUpdate).Error
+	if err != nil {
+		glog.Error(err)
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to update loop values"))
+	}
 }
 
 func EventICal(c *gin.Context) {
