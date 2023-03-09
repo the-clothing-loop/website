@@ -164,7 +164,7 @@ func AuthenticateEvent(c *gin.Context, db *gorm.DB, eventUID string) (ok bool, u
 
 	event = &models.Event{}
 	err := db.Raw(`
-SELECT events.*
+SELECT e.*
 FROM user_events AS ue
 LEFT JOIN events AS e ON e.id = ue.event_id
 WHERE ue.user_id = ? AND e.uid = ?

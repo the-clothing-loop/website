@@ -3,7 +3,6 @@ package controllers
 import (
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"time"
 
@@ -89,7 +88,7 @@ chains.uid            AS chain_uid,
 events.created_at     AS created_at,
 events.updated_at     AS updated_at
 FROM events
-JOIN chains ON chains.id = events.chain_id`
+LEFT JOIN chains ON chains.id = events.chain_id`
 
 func EventGet(c *gin.Context) {
 	db := getDB(c)
@@ -103,7 +102,7 @@ func EventGet(c *gin.Context) {
 	}
 
 	event := &models.Event{}
-	sql := fmt.Sprintf("%s WHERE event.uid = ?", sqlSelectEvent)
+	sql := fmt.Sprintf("%s WHERE events.uid = ?", sqlSelectEvent)
 	err := db.Raw(sql, query.UID).Scan(event).Error
 	if err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusNotFound, err)
@@ -119,9 +118,9 @@ func EventGetAll(c *gin.Context) {
 	var query struct {
 		Latitude  float32 `form:"latitude" binding:"required,latitude"`
 		Longitude float32 `form:"longitude" binding:"required,longitude"`
-		Radius    float32 `form:"radius" binding:"required"`
+		Radius    float32 `form:"radius" binding:"required,min=0.001"`
 	}
-	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
+	if err := c.ShouldBindQuery(&query); err != nil {
 		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
 		return
 	}
@@ -145,7 +144,7 @@ func EventGetAll(c *gin.Context) {
 // The distance between two longlat points calculated in km.
 // Remember to use "?" instead of the actual value in building queries.
 func sqlCalcDistance(latA, longA, latB, longB string) string {
-	return fmt.Sprintf("(ST_Distance(ST_GeomFromText('POINT(%s %s)'), ST_GeomFromText('POINT(%s %s)'))  * 111.195)", latA, longA, latB, longB)
+	return fmt.Sprintf("(ST_Distance(POINT(%s, %s), POINT(%s, %s))  * 111.195)", latA, longA, latB, longB)
 }
 
 func EventDelete(c *gin.Context) {
@@ -164,8 +163,22 @@ func EventDelete(c *gin.Context) {
 		return
 	}
 
-	err := db.Exec(`DELETE FROM events WHERE id = ?`, event.ID).Error
+	tx := db.Begin()
+	err := tx.Exec(`DELETE FROM user_events WHERE event_id = ?`, event.ID).Error
 	if err != nil {
+		tx.Rollback()
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+		return
+	}
+	err = tx.Exec(`DELETE FROM events WHERE id = ?`, event.ID).Error
+	if err != nil {
+		tx.Rollback()
+		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+		return
+	}
+	err = tx.Commit().Error
+	if err != nil {
+		tx.Rollback()
 		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
 		return
 	}

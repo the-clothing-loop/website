@@ -17,21 +17,11 @@ type Event struct {
 	Address     string      `json:"address"`
 	Date        time.Time   `json:"date"`
 	Genders     []string    `gorm:"serializer:json" json:"genders"`
-	ChainID     zero.Int    `json:"chain_id,omitempty"`
+	ChainID     zero.Int    `json:"-"`
 	ChainUID    string      `json:"chain_uid" gorm:"-:migration;<-:false"`
 	UserEvents  []UserEvent `json:"-"`
 	CreatedAt   time.Time   `json:"-"`
 	UpdatedAt   time.Time   `json:"-"`
-}
-
-func EventFindByUID(db *gorm.DB, uid string) (event *Event, err error) {
-	event = &Event{}
-	err = db.Raw(`SELECT * FROM events WHERE uid = ? LIMIT 1`, uid).Scan(event).Error
-	if err != nil {
-		return nil, err
-	}
-
-	return event, nil
 }
 
 func (event *Event) LinkChain(db *gorm.DB, userID uint, chainID uint) error {
