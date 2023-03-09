@@ -86,8 +86,11 @@ func Routes() *gin.Engine {
 	v2.POST("/contact/newsletter", controllers.ContactNewsletter)
 	v2.POST("/contact/email", controllers.ContactMail)
 
-	// calendar
-	v2.GET("/ical/:uid", controllers.CalendarICal)
+	// event
+	v2.GET("/event/ical/:uid", controllers.EventICal)
+	v2.POST("/event", controllers.EventCreate)
+	// v2.PATCH("/event", controllers.EventUpdate)
+	v2.DELETE("/event/:uid", controllers.EventDelete)
 
 	return r
 }

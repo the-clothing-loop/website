@@ -28,7 +28,7 @@ type MockChainAndUserOptions struct {
 	RouteOrderIndex    int
 }
 
-type MockCalendarOptions struct {
+type MockEventOptions struct {
 	IsNotPublished bool
 }
 
@@ -132,8 +132,8 @@ func shuffleSlice[T any](arr []T) []T {
 	return arr
 }
 
-func MockCalendar(t *testing.T, db *gorm.DB, o MockCalendarOptions) (calendar *models.Calendar) {
-	calendar = &models.Calendar{
+func MockEvent(t *testing.T, db *gorm.DB, o MockEventOptions) (event *models.Event) {
+	event = &models.Event{
 		UID:         uuid.NewV4().String(),
 		Name:        "Fake " + faker.Company().Name(),
 		Description: faker.Company().CatchPhrase(),
@@ -144,17 +144,17 @@ func MockCalendar(t *testing.T, db *gorm.DB, o MockCalendarOptions) (calendar *m
 		Published:   !o.IsNotPublished,
 	}
 
-	if err := db.Create(&calendar).Error; err != nil {
-		glog.Fatalf("Unable to create testCalendar: %v", err)
+	if err := db.Create(&event).Error; err != nil {
+		glog.Fatalf("Unable to create testEvent: %v", err)
 	}
 
 	// Cleanup runs FiLo
 	// So Cleanup must happen before MockUser
 	t.Cleanup(func() {
-		db.Exec(`DELETE FROM calendars WHERE id = ?`, calendar.ID)
+		db.Exec(`DELETE FROM events WHERE id = ?`, event.ID)
 	})
 
-	return calendar
+	return event
 }
 
 func randomEnums(enums []string, zeroOrMore bool) (result []string) {

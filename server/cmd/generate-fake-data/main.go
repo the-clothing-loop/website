@@ -43,8 +43,8 @@ func main() {
 		// userBasics = append(userBasics, user)
 	}
 	for i := 0; i < 5; i++ {
-		calendar := mocks.MockCalendar(t, db, mocks.MockCalendarOptions{})
-		log.Printf("Generated -> Calendar\t(ID: %d)", calendar.ID)
+		event := mocks.MockEvent(t, db, mocks.MockEventOptions{})
+		log.Printf("Generated -> Event\t(ID: %d)", event.ID)
 	}
 
 	for _, user := range userChainAdmins {
