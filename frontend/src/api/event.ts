@@ -1,5 +1,5 @@
 import axios from "./axios";
-import { UID } from "./types";
+import { Event, UID } from "./types";
 
 export function eventGet(uid: UID) {
   return axios.get<Event>("/v2/event", {
