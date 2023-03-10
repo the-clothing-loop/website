@@ -10,11 +10,6 @@ const CirclesFrame =
   "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
 
 
-
-
-  
-
-
 export default function EventDetails() {
   return (
     <>
@@ -25,14 +20,12 @@ export default function EventDetails() {
       <main>
         <div className="bg-teal-light h-1/3 w-full overflow-visible absolute -z-10" />
         <div className="max-w-screen-xl mx-auto pt-10 px-6 md:px-20">
-          {" "}
           <button className="btn btn-primary inline w-fit float-right mt-16"
           onClick={(e) => subscribeHandler()}>
             <span className="pr-2 feather feather-calendar" />
             Add event to your calendar
           </button>
           <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-16 px-0">
-            {/*calendar.name*/}
             {"Mission Dolores Swapping Party"}
           </h1>
           <div className="md:mx-0 px-0">
