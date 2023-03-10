@@ -48,9 +48,21 @@ export default function Events() {
   const { authUser, authUserRefresh } = useContext(AuthContext);
   const [events, setEvents] = useState<Event[]>();
   const [hover, setHover] = useState(false);
-  const months = [ "Jan", "Feb", "March", "April", "May", "June", 
-  "July", "August", "September", "October", "November", "December" ];
-  
+  const months = [
+    "Jan",
+    "Feb",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   useEffect(() => {
     load();
   }, [authUser]);
@@ -117,9 +129,8 @@ export default function Events() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {events?.map((event) => {
                 //let thisEvent = events?.find((e) => e.uid === event.uid);
-                const date = new Date(event.date)
-                const genders = event.genders
-                console.log(genders)
+                const date = new Date(event.date);
+                const genders = event.genders;
                 return (
                   <div className="pb-10 px-0" key={event.uid}>
                     <Link to="/eventdetails">
@@ -130,8 +141,8 @@ export default function Events() {
                       >
                         <div className="container relative overflow-hidden">
                           <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
-                            
-                            <p>{months[date.getMonth()]}</p> <p className="font-light">{date.getDate()}</p>
+                            <p>{months[date.getMonth()]}</p>{" "}
+                            <p className="font-light">{date.getDate()}</p>
                           </div>
                           <img
                             src={ClothesImage}
@@ -171,12 +182,13 @@ export default function Events() {
                               {"Mission Dolores Park"}
                             </span>
                             <div className="p-2">
-                              <span className="badge badge-outline bg-teal-light mr-4">
-                                Women's
-                              </span>
-                              <span className="badge badge-outline bg-teal-light mr-4">
-                                Men's
-                              </span>
+                              {genders?.map((g) => {
+                                return (
+                                  <span className="badge badge-outline bg-teal-light mr-4">
+                                    {t(GenderI18nKeys[parseInt(g)])}
+                                  </span>
+                                );
+                              })}
                             </div>
                           </div>
                         </div>
