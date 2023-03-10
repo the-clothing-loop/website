@@ -184,7 +184,7 @@ export default function Events() {
                             <div className="p-2">
                               {genders?.map((g) => {
                                 return (
-                                  <span className="badge badge-outline bg-teal-light mr-4">
+                                  <span className="badge badge-outline bg-teal-light mr-4" key={g}>
                                     {t(GenderI18nKeys[parseInt(g)])}
                                   </span>
                                 );
@@ -203,6 +203,7 @@ export default function Events() {
       </main>
     </>
   );
+  
   function handleLocation() {
     // pop up and asks to either type in the location or ask permission to use location from browser
     // if user clicks use my location enter getLocationBrowser()
