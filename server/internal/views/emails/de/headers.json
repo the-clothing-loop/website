@@ -1,7 +1,7 @@
 {
   "subscribed_to_newsletter": "Vielen Dank, dass Du Clothing Loop abonniert hast",
   "contact_confirmation": "Vielen Dank, dass Du Clothing Loop kontaktiert hast",
-  "someone_is_interested_in_joining_your_loop": "Someone is interested in joining your loop!",
+  "someone_is_interested_in_joining_your_loop": "<p>Jemand ist daran interessiert, Deinem Loop beizutreten!</p>!",
   "an_admin_approved_your_join_request": "Ein Admin hat Deine Anfrage zur Teilnahme am Loop genehmigt!",
   "login_verification": "Bestätige die E-Mail Adresse für den Clothing Loop",
   "an_admin_denied_your_join_request": "Deine Anfrage, dem Loop beizutreten, wurde abgelehnt",
