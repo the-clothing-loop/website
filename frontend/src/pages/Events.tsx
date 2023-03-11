@@ -124,10 +124,12 @@ export default function Events() {
                 selectedDistance={values.distance}
                 handleChange={(d) => setValue("distance", d)}
               />
+              {console.log(values)}
               <button className="btn btn-primary">Search </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {events?.map((event) => {
+              {events?.sort((a, b) => a.date.localeCompare(b.date))
+              .map((event) => {
                 //let thisEvent = events?.find((e) => e.uid === event.uid);
                 const date = new Date(event.date);
                 const genders = event.genders;
@@ -203,7 +205,7 @@ export default function Events() {
       </main>
     </>
   );
-  
+
   function handleLocation() {
     // pop up and asks to either type in the location or ask permission to use location from browser
     // if user clicks use my location enter getLocationBrowser()
