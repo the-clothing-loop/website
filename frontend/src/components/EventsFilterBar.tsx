@@ -30,11 +30,7 @@ export default function EventsFilterBar(props: Props) {
     // latitude: "",
     ...props.initialValues,
   });
-  const [events, setEvents] = useState<Event[]>();
   let refSubmit = useRef<any>();
-  const urlParams = new URLSearchParams(location.search);
-  const [selectedEvents, setSelectedEvents] = useState<Event[]>([]);
-  const history = useHistory();
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
