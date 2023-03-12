@@ -1,20 +1,15 @@
 import { Helmet } from "react-helmet";
 
-import { useState, useContext, useEffect, useMemo } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
 import { ToastContext } from "../providers/ToastProvider";
 import { AuthContext } from "../providers/AuthProvider";
 
-import CategoriesDropdown from "../components/CategoriesDropdown";
-import SizesDropdown from "../components/SizesDropdown";
-import DistanceDropdown from "../components/DistanceDropdown";
-import WhenDropdown from "../components/WhenDropdown";
-
-import categories from "../util/categories";
 import useForm from "../util/form.hooks";
-import { Chain, UID, Event } from "../api/types";
+import { Event } from "../api/types";
 import { GenderI18nKeys } from "../api/enums";
+import EventsFilterBar from "../components/EventsFilterBar";
 
 import {
   eventGet,
@@ -26,6 +21,12 @@ import {
 } from "../api/event";
 import { GinParseErrors } from "../util/gin-errors";
 
+export interface SearchValues {
+  genders: string[];
+  date: string[];
+  distance: string[];
+}
+
 // Media
 const ClothesImage =
   "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
@@ -33,21 +34,15 @@ const ClothesImage =
 export default function Events() {
   const { t } = useTranslation();
 
-  const [values, setValue, setValues] = useForm({
-    name: "",
-    sizes: [] as string[],
-    genders: [] as string[],
-    distance: [] as string[],
-    date: [] as string[],
-    longitude: "",
-    latitude: "",
-    description: "",
-  });
   const [locationLoading, setLocationLoading] = useState(false); // I think this is primarily for styling
   const { addToastError, addModal, addToast } = useContext(ToastContext);
-  const { authUser, authUserRefresh } = useContext(AuthContext);
   const [events, setEvents] = useState<Event[]>();
   const [hover, setHover] = useState(false);
+  const [longLat, setLongLat] = useState<GeoJSON.Position>();
+  let refSubmit = useRef<any>();
+  const urlParams = new URLSearchParams(location.search);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
+
   const months = [
     "Jan",
     "Feb",
@@ -65,25 +60,35 @@ export default function Events() {
 
   useEffect(() => {
     load();
-  }, [authUser]);
+  }, []);
 
   async function load() {
+    const urlParams = new URLSearchParams("/events");
+
     try {
-      let _events = (
-        await eventGetAll({
-          latitude: 69.880514,
-          longitude: 98.599997,
-          radius: 10000,
-        })
-      ).data;
-      setEvents(_events);
-      // setChains(_chains.sort((a, b) => a.name.localeCompare(b.name)));
+      await eventGetAll({
+        latitude: 69.880514,
+        longitude: 98.599997,
+        radius: 10000,
+      }).then((res) => {
+        const _events = res.data;
+        console.log("_events are", _events);
+        setEvents(_events);
+        console.log("events are", events);
+
+        const filterFunc = createFilterFunc(
+          urlParams.getAll("genders")
+          //  urlParams.getAll("address"),
+          // urlParams.getAll("date")
+        );
+        // add other parameters later
+        setEvents(_events.filter(filterFunc));
+      });
     } catch (err: any) {
       console.error(err);
       addToastError(GinParseErrors(t, err), err.status);
     }
   }
-
   return (
     <>
       <Helmet>
@@ -102,109 +107,150 @@ export default function Events() {
             >
               Events Near San Francisco
             </div>
-            <div className="mb-8">
-              <CategoriesDropdown
-                className="w-[150px] md:w-[170px] mr-4 md:mr-8"
-                selectedGenders={values.genders}
-                handleChange={(gs) => setValue("genders", gs)}
-              />
-              <SizesDropdown
-                filteredGenders={Object.keys(categories)}
-                selectedSizes={values.sizes || []}
-                className="w-[150px] md:w-[170px] mr-4 md:mr-8"
-                handleChange={(v) => setValue("sizes", v)}
-              />
-              <WhenDropdown
-                className="w-[150px] md:w-[170px] mr-4 md:mr-8"
-                selectedDate={values.date}
-                handleChange={(date) => setValue("date", date)}
-              />
-              <DistanceDropdown
-                className="w-[150px] md:w-[170px] mr-4 md:mr-8"
-                selectedDistance={values.distance}
-                handleChange={(d) => setValue("distance", d)}
-              />
-              {console.log(values)}
-              <button className="btn btn-primary">Search </button>
-            </div>
+
+            <EventsFilterBar
+              initialValues={{
+                genders: urlParams.getAll("genders") || [],
+                date: urlParams.getAll("date") || [],
+                distance: urlParams.getAll("distance") || [],
+              }}
+              onSearch={handleSearch}
+            />
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {events?.sort((a, b) => a.date.localeCompare(b.date))
-              .map((event) => {
-                //let thisEvent = events?.find((e) => e.uid === event.uid);
-                const date = new Date(event.date);
-                const genders = event.genders;
-                return (
-                  <div className="pb-10 px-0" key={event.uid}>
-                    <Link to="/eventdetails">
-                      <div
-                        className="bg-teal-light mr-0 md:mr-6 mb-6 max-w-xl overflow-hidden"
-                        //onMouseOver={() => setHover(true)}
-                        //onMouseLeave={() => setHover(false)}
-                      >
-                        <div className="container relative overflow-hidden">
-                          <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
-                            <p>{months[date.getMonth()]}</p>{" "}
-                            <p className="font-light">{date.getDate()}</p>
-                          </div>
-                          <img
-                            src={ClothesImage}
-                            alt=""
-                            className={`w-full h-auto ${
-                              hover
-                                ? "transition ease-in-out duration-300 scale-[1.03]"
-                                : "transition ease-in-out duration-300 scale-1"
-                            }`}
-                          />
-                        </div>
-                        <div className="text-lg">
-                          <div
-                            className={`mt-4 pb-2 pl-4 text-xl text-teal font-bold ${
-                              hover
-                                ? "text-opacity-80 transition ease-in-out"
-                                : ""
-                            }`}
-                          >
-                            {event.name}
-                          </div>
-                          <div className="px-4 mb-2 pb-2">
-                            <span
-                              className={`feather feather-map-pin ${
+              {events
+                ?.sort((a, b) => a.date.localeCompare(b.date))
+                .map((event) => {
+                  const date = new Date(event.date);
+                  const genders = event.genders;
+
+                  return (
+                    <div className="pb-10 px-0" key={event.uid}>
+                      <Link to="/eventdetails">
+                        <div
+                          className="bg-teal-light mr-0 md:mr-6 mb-6 max-w-xl overflow-hidden"
+                          //onMouseOver={() => setHover(true)}
+                          //onMouseLeave={() => setHover(false)}
+                        >
+                          <div className="container relative overflow-hidden">
+                            <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
+                              <p>{months[date.getMonth()]}</p>{" "}
+                              <p className="font-light">{date.getDate()}</p>
+                            </div>
+                            <img
+                              src={ClothesImage}
+                              alt=""
+                              className={`w-full h-auto ${
                                 hover
-                                  ? "feather feather-map-pin opacity-60 transition ease-in-out"
+                                  ? "transition ease-in-out duration-300 scale-[1.03]"
+                                  : "transition ease-in-out duration-300 scale-1"
+                              }`}
+                            />
+                          </div>
+                          <div className="text-lg">
+                            <div
+                              className={`mt-4 pb-2 pl-4 text-xl text-teal font-bold ${
+                                hover
+                                  ? "text-opacity-80 transition ease-in-out"
                                   : ""
                               }`}
-                            ></span>
-
-                            <span
-                              className={`text-md px-2 ${
-                                hover ? "opacity-60 transition ease-in-out" : ""
-                              }`}
                             >
-                              {/*calendar.location*/}
-                              {"Mission Dolores Park"}
-                            </span>
-                            <div className="p-2">
-                              {genders?.map((g) => {
-                                return (
-                                  <span className="badge badge-outline bg-teal-light mr-4" key={g}>
-                                    {t(GenderI18nKeys[parseInt(g)])}
-                                  </span>
-                                );
-                              })}
+                              {event.name}
+                            </div>
+                            <div className="px-4 mb-2 pb-2">
+                              <span
+                                className={`feather feather-map-pin ${
+                                  hover
+                                    ? "feather feather-map-pin opacity-60 transition ease-in-out"
+                                    : ""
+                                }`}
+                              ></span>
+
+                              <span
+                                className={`text-md px-2 ${
+                                  hover
+                                    ? "opacity-60 transition ease-in-out"
+                                    : ""
+                                }`}
+                              >
+                                {/*Address is an emptry string in the fake data; name for now just for visible reasons*/}
+                                {event.address}
+                                {"Mission Dolores"}
+                              </span>
+                              <div className="p-2">
+                                {genders?.map((g) => {
+                                  return (
+                                    <span
+                                      className="badge badge-outline bg-teal-light mr-4"
+                                      key={g}
+                                    >
+                                      {t(GenderI18nKeys[parseInt(g)])}
+                                    </span>
+                                  );
+                                })}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  </div>
-                );
-              })}
+                      </Link>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>
       </main>
     </>
   );
+
+  function createFilterFunc(genders: string[]): (e: Event) => boolean {
+    console.log("in createFilterFunc");
+    let filterFunc = (e: Event) => true;
+    console.log("filterFunc in filter func: ", filterFunc);
+
+    console.log("genders in filterfunc: ", genders);
+    if (genders?.length) {
+      filterFunc = (c) => {
+        for (let g of genders) {
+          if (c.genders?.includes(g)) return true;
+        }
+        return false;
+      };
+    }
+    return filterFunc;
+  }
+
+  function handleSearch(search: SearchValues) {
+    if (!events) return;
+
+    const selectedEventsFilter = createFilterFunc(search.genders);
+
+    const filteredEvents = events.filter(selectedEventsFilter);
+
+    setFilteredEvents(filteredEvents);
+    console.log("selectedEvents are: ", filteredEvents);
+
+    setEvents(filteredEvents);
+    console.log(filteredEvents);
+    window.history.replaceState(
+      {},
+      "",
+      window.location.origin +
+        window.location.pathname +
+        toUrlSearchParams(search)
+    );
+
+    // setFilteredEvents([]);
+  }
+
+  function toUrlSearchParams(search: SearchValues) {
+    const queryParams = new URLSearchParams();
+
+    for (const gender of search.genders) {
+      queryParams.append("g", gender);
+    }
+    return "?" + queryParams.toString();
+  }
 
   function handleLocation() {
     // pop up and asks to either type in the location or ask permission to use location from browser
@@ -214,13 +260,6 @@ export default function Events() {
       message: "Enter your location or allow browser to see location",
       actions: [
         {
-          text: "Type in your location here",
-          type: "textInput", // need to make this a text input instead of a button
-          fn: () => {
-            console.log("inside fn");
-          },
-        },
-        {
           text: "Allow browser access",
           type: "secondary",
           fn: () => {
@@ -229,11 +268,6 @@ export default function Events() {
         },
       ],
     });
-  }
-
-  function displayModal() {
-    console.log("inside dispay");
-    return <div className="text-lg">Please enter region, city or zip</div>;
   }
 
   function getLocationBrowser() {
