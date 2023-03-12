@@ -39,7 +39,7 @@ export default function EventsFilterBar(props: Props) {
   }
 
   return (
-    <form className="flex flex-col" onSubmit={handleSubmit}>
+    <form className="flex flex-col md:flex-row" onSubmit={handleSubmit}>
       <div className="mb-8">
         <CategoriesDropdown
           className="w-[150px] md:w-[170px] mr-4 md:mr-8"
@@ -57,7 +57,7 @@ export default function EventsFilterBar(props: Props) {
           handleChange={(d) => setValue("distance", d)}
         />
       </div>
-      <button type="submit" className="grow btn btn-primary" ref={refSubmit}>
+      <button type="submit" className="btn btn-primary" ref={refSubmit}>
         <span className="hidden sm:inline">{t("search")}</span>
         <span className="sm:hidden inline feather feather-search"></span>
       </button>
