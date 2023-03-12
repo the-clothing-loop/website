@@ -42,7 +42,7 @@ export default function Events() {
   let refSubmit = useRef<any>();
   const urlParams = new URLSearchParams(location.search);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
-
+  const [immutableEvents, setImmutableEvents] = useState<Event[]>([]);
   const months = [
     "Jan",
     "Feb",
@@ -73,7 +73,7 @@ export default function Events() {
       }).then((res) => {
         const _events = res.data;
         console.log("_events are", _events);
-        setEvents(_events);
+        // setEvents(_events);
         console.log("events are", events);
 
         const filterFunc = createFilterFunc(
@@ -82,13 +82,16 @@ export default function Events() {
           // urlParams.getAll("date")
         );
         // add other parameters later
+        setImmutableEvents(_events.filter(filterFunc));
         setEvents(_events.filter(filterFunc));
+
       });
     } catch (err: any) {
       console.error(err);
       addToastError(GinParseErrors(t, err), err.status);
     }
   }
+
   return (
     <>
       <Helmet>
@@ -116,7 +119,6 @@ export default function Events() {
               }}
               onSearch={handleSearch}
             />
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {events
                 ?.sort((a, b) => a.date.localeCompare(b.date))
@@ -204,11 +206,8 @@ export default function Events() {
   );
 
   function createFilterFunc(genders: string[]): (e: Event) => boolean {
-    console.log("in createFilterFunc");
     let filterFunc = (e: Event) => true;
-    console.log("filterFunc in filter func: ", filterFunc);
 
-    console.log("genders in filterfunc: ", genders);
     if (genders?.length) {
       filterFunc = (c) => {
         for (let g of genders) {
@@ -223,15 +222,17 @@ export default function Events() {
   function handleSearch(search: SearchValues) {
     if (!events) return;
 
+    // Start with every event at a new search query
+   // setEvents(immutableEvents);
+    console.log("events at beginning of quert", events)
+
     const selectedEventsFilter = createFilterFunc(search.genders);
+    const filteredEvents = immutableEvents.filter(selectedEventsFilter);
 
-    const filteredEvents = events.filter(selectedEventsFilter);
-
-    setFilteredEvents(filteredEvents);
-    console.log("selectedEvents are: ", filteredEvents);
+    console.log("filteredEvents are: ", filteredEvents);
 
     setEvents(filteredEvents);
-    console.log(filteredEvents);
+    console.log("events after filter: ", events);
     window.history.replaceState(
       {},
       "",
@@ -239,8 +240,6 @@ export default function Events() {
         window.location.pathname +
         toUrlSearchParams(search)
     );
-
-    // setFilteredEvents([]);
   }
 
   function toUrlSearchParams(search: SearchValues) {
