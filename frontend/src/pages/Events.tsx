@@ -4,9 +4,7 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Link, useLocation, useHistory } from "react-router-dom";
 import { ToastContext } from "../providers/ToastProvider";
-import { AuthContext } from "../providers/AuthProvider";
 
-import useForm from "../util/form.hooks";
 import { Event } from "../api/types";
 import { GenderI18nKeys } from "../api/enums";
 import EventsFilterBar from "../components/EventsFilterBar";
@@ -39,10 +37,8 @@ export default function Events() {
   const [events, setEvents] = useState<Event[]>();
   const [hover, setHover] = useState(false);
   const [longLat, setLongLat] = useState<GeoJSON.Position>();
-  let refSubmit = useRef<any>();
   const urlParams = new URLSearchParams(location.search);
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
-  const [immutableEvents, setImmutableEvents] = useState<Event[]>([]);
+  const [allEvents, setAllEvents] = useState<Event[]>([]);
   const months = [
     "Jan",
     "Feb",
@@ -72,17 +68,14 @@ export default function Events() {
         radius: 10000,
       }).then((res) => {
         const _events = res.data;
-        console.log("_events are", _events);
-        // setEvents(_events);
-        console.log("events are", events);
 
         const filterFunc = createFilterFunc(
           urlParams.getAll("genders")
-          //  urlParams.getAll("address"),
+          // urlParams.getAll("address"),
           // urlParams.getAll("date")
         );
         // add other parameters later
-        setImmutableEvents(_events.filter(filterFunc));
+        setAllEvents(_events.filter(filterFunc));
         setEvents(_events.filter(filterFunc));
 
       });
@@ -222,17 +215,11 @@ export default function Events() {
   function handleSearch(search: SearchValues) {
     if (!events) return;
 
-    // Start with every event at a new search query
-   // setEvents(immutableEvents);
-    console.log("events at beginning of quert", events)
-
     const selectedEventsFilter = createFilterFunc(search.genders);
-    const filteredEvents = immutableEvents.filter(selectedEventsFilter);
-
-    console.log("filteredEvents are: ", filteredEvents);
+    const filteredEvents = allEvents.filter(selectedEventsFilter);
 
     setEvents(filteredEvents);
-    console.log("events after filter: ", events);
+
     window.history.replaceState(
       {},
       "",
