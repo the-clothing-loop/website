@@ -1,15 +1,6 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useEffect,
-  useState,
-  useRef,
-  FormEvent,
-} from "react";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as focusTrap from "focus-trap";
-import useForm from "../util/form.hooks";
-import Geocoding, { Estimate } from "../pages/Geocoding";
 
 export interface Toast {
   type: "info" | "success" | "warning" | "error";
@@ -21,7 +12,13 @@ export interface Modal {
 }
 interface ModalAction {
   fn: () => void;
-  type: "ghost" | "default" | "secondary" | "success" | "error" | "textInput";
+  type:
+    | "ghost"
+    | "default"
+    | "secondary"
+    | "success"
+    | "error"
+    | "enterLocation";
   text: string;
 }
 
@@ -141,9 +138,6 @@ function ToastComponent(props: {
 function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
   const { t } = useTranslation();
   const [trap, setTrap] = useState<focusTrap.FocusTrap>();
-  const [error, setError] = useState("");
-  const [longLat, setLongLat] = useState<GeoJSON.Position>();
-  let refSubmit = useRef<any>();
 
   function asyncDeactivate() {
     return new Promise((resolve, reject) => {
@@ -175,28 +169,6 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
         props.closeFunc();
       });
     }
-  }
-
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log("Am I here?");
-    setLongLat(longLat);
-    console.log(longLat);
-  }
-
-  // Every time you type
-  function handleSearchChange(e: Estimate) {
-    setLongLat(e.first);
-  }
-  // when you enter
-  // I still get long lat when this is empty??
-  // I think the actualy grabbing of the longlat is in the backend
-  function handleSearchSelected() {
-    console.log("refSubmit.current")
-
-    console.log(refSubmit.current)
-    //refSubmit.current as HTMLButtonElement;
-    
   }
 
   useEffect(() => {
@@ -248,38 +220,11 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
               case "secondary":
                 classes += " btn-ghost bg-teal-light text-teal";
                 break;
-              case "textInput":
-                
+              case "enterLocation":
                 return (
-                  <form className="flex flex-col" onSubmit={handleSubmit}>
-                    <label className="w-full">
-                      <Geocoding
-                        className="z-40 w-full"
-                        onResult={handleSearchChange}
-                        onSelectResult={handleSearchSelected}
-                        types={[
-                          "country",
-                          "region",
-                          "place",
-                          "locality",
-                          "neighborhood",
-                          "postcode",
-                          "address",
-                          "poi",
-                        ]}
-                      />
-                    </label>
-
-                    <button
-                      type="submit"
-                      className={`btn btn-primary ${
-                        error ? "ring-2 ring-offset-2 ring-error" : ""
-                      }`}
-                    >
-                      {t("submit")}
-                      <span className="feather feather-arrow-right ml-4"></span>
-                    </button>
-                  </form>
+                  <div key={a.text} className="">
+                    {a.fn()}
+                  </div>
                 );
             }
             return (
