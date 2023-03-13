@@ -71,7 +71,7 @@ Go to the GitHub project [link](https://github.com/CollActionteam/clothing-loop)
 Open a terminal and cd to your projects directory.
 
 After creating your own fork, copy the url and replace it in this command
-`git clone --depth 10 https://github.com/<user>/clothing-loop.git`
+`git clone --depth 10 https://github.com/<user>/website.git`
 
 Then this command adds the main repository as a remote.
 
