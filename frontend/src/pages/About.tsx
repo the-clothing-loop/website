@@ -135,8 +135,8 @@ export default function About() {
                     p: <p></p>,
                     imgTeam: (
                       <img
-                        src="https://images.clothingloop.org/88ce5a09-71f6-4b03-aa10-fc3a172f7f4e/-/resize/x240/-/format/auto/-/quality/smart/Teampics.jpg"
-                        alt="faces of Paloeka and Nichon"
+                        src="https://ucarecdn.com/11253a80-a1d5-4639-a3ca-166dddcae210/PaloekaNichonlandscape.jpg"
+                        alt="Paloeka and Nichon"
                         className="-2/3 mx-auto object-contain object-center mb-6 md:mb-0"
                       />
                     ),
