@@ -1,14 +1,13 @@
 package app
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"net/smtp"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
-	glog "github.com/airbrake/glog/v4"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jordan-wright/email"
 	"gopkg.in/guregu/null.v3/zero"
@@ -46,8 +45,8 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 	})
 
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to send email"))
+		goscope.Log.Errorf("Unable to send email: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to send email")
 		return false
 	}
 

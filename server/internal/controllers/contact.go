@@ -1,13 +1,12 @@
 package controllers
 
 import (
-	"errors"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/CollActionteam/clothing-loop/server/internal/views"
-	glog "github.com/airbrake/glog/v4"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +19,7 @@ func ContactNewsletter(c *gin.Context) {
 		Subscribe bool   `json:"subscribe"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -44,8 +43,8 @@ func ContactNewsletter(c *gin.Context) {
 	}
 	err := n.CreateOrUpdate(db)
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
+		goscope.Log.Errorf(err.Error())
+		c.String(http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
 
@@ -61,7 +60,7 @@ func ContactMail(c *gin.Context) {
 		Message string `json:"message" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 

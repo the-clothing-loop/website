@@ -36,6 +36,8 @@ var Config struct {
 	SMTP_SENDER       string `yaml:"smtp_sender"`
 	SMTP_USER         string `yaml:"smtp_user"`
 	SMTP_PASS         string `yaml:"smtp_pass"`
+	GOSCOPE2_USER     string `yaml:"goscope2_user"`
+	GOSCOPE2_PASS     string `yaml:"goscope2_pass"`
 }
 
 func ConfigInit(path string) {
