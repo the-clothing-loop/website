@@ -2,14 +2,12 @@ package controllers
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
-	glog "github.com/airbrake/glog/v4"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,13 +28,13 @@ func UserGet(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
 	// retrieve user from query
 	if query.UserUID == "" {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Add uid or email to query"))
+		c.String(http.StatusBadRequest, "Add uid or email to query")
 		return
 	}
 
@@ -46,7 +44,7 @@ func UserGet(c *gin.Context) {
 		ok = okk
 
 		if !ok || query.UserUID != authUser.UID {
-			gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("For elevated privileges include a chain_uid"))
+			c.String(http.StatusUnauthorized, "For elevated privileges include a chain_uid")
 			return
 		}
 	} else {
@@ -66,14 +64,14 @@ LIMIT 1
 		`, query.UserUID).First(user)
 	}
 	if user.ID == 0 {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("User not found"))
+		c.String(http.StatusBadRequest, "User not found")
 		return
 	}
 
 	err := user.AddUserChainsToObject(db)
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
+		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
+		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
 		return
 	}
 
@@ -87,7 +85,7 @@ func UserGetAllOfChain(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -122,8 +120,8 @@ WHERE users.id IN (
 )
 	`, chain.ID).Scan(allUserChains).Error
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associations between a loop and its users"))
+		goscope.Log.Errorf("Unable to retrieve associations between a loop and its users: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to retrieve associations between a loop and its users")
 		return
 	}
 	err = tx.Raw(`
@@ -134,8 +132,8 @@ LEFT JOIN chains      ON chains.id = user_chains.chain_id
 WHERE chains.id = ? AND users.is_email_verified = TRUE
 	`, chain.ID).Scan(users).Error
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to retrieve associated users of a loop"))
+		goscope.Log.Errorf("Unable to retrieve associated users of a loop: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to retrieve associated users of a loop")
 		return
 	}
 	tx.Commit()
@@ -145,7 +143,7 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 		for ii := range *allUserChains {
 			userChain := (*allUserChains)[ii]
 			if userChain.UserID == user.ID {
-				// glog.Infof("userchain is added (userChain.ID: %d -> user.ID: %d)\n", userChain.ID, user.ID)
+				// goscope.Log.Infof("userchain is added (userChain.ID: %d -> user.ID: %d)\n", userChain.ID, user.ID)
 				thisUserChains = append(thisUserChains, userChain)
 			}
 		}
@@ -163,7 +161,7 @@ func UserHasNewsletter(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -191,7 +189,7 @@ func UserUpdate(c *gin.Context) {
 		Address     *string   `json:"address,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -203,7 +201,7 @@ func UserUpdate(c *gin.Context) {
 
 	if body.Sizes != nil {
 		if ok := models.ValidateAllSizeEnum(*body.Sizes); !ok {
-			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Invalid size enum"))
+			c.String(http.StatusBadRequest, "Invalid size enum")
 			return
 		}
 	}
@@ -224,7 +222,8 @@ func UserUpdate(c *gin.Context) {
 			userChanges["sizes"] = string(j)
 		}
 		if err := db.Model(user).Updates(userChanges).Error; err != nil {
-			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+			goscope.Log.Errorf("Unable to update user: %v", err)
+			c.String(http.StatusInternalServerError, "Unable to update user")
 			return
 		}
 	}
@@ -239,20 +238,20 @@ func UserUpdate(c *gin.Context) {
 
 			err := n.CreateOrUpdate(db)
 			if err != nil {
-				glog.Error(err)
-				gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
+				goscope.Log.Errorf("%v", err)
+				c.String(http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
 		} else {
 			if isAnyChainAdmin {
-				gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("Newsletter-Box must be checked to create a new loop admin."))
+				c.String(http.StatusConflict, "Newsletter-Box must be checked to create a new loop admin.")
 				return
 			}
 
 			err := db.Exec("DELETE FROM newsletters WHERE email = ?", user.Email).Error
 			if err != nil {
-				glog.Error(err)
-				gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Internal Server Error"))
+				goscope.Log.Errorf("%v", err)
+				c.String(http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
 		}
@@ -267,7 +266,7 @@ func UserDelete(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -280,7 +279,7 @@ func UserDelete(c *gin.Context) {
 	var userID uint
 	db.Raw("SELECT id FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&userID)
 	if userID == 0 {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("User is not found"))
+		c.String(http.StatusBadRequest, "User is not found")
 		return
 	}
 
@@ -294,7 +293,7 @@ func UserPurge(c *gin.Context) {
 		UserUID string `form:"user_uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 

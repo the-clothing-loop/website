@@ -7,7 +7,8 @@ import (
 	"html/template"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
-	glog "github.com/airbrake/glog/v4"
+	"github.com/golang/glog"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -27,13 +28,13 @@ func init() {
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/headers.json", l))
 		if err != nil {
-			glog.Fatalf("Header not found: %+v", err)
+			glog.Fatalf("Header not found: %v", err)
 			return
 		}
 		var header map[string]string
 		err = json.Unmarshal(b, &header)
 		if err != nil {
-			glog.Fatalf("Header invalid json: %+v", err)
+			glog.Fatalf("Header invalid json: %v", err)
 			return
 		}
 		emailsHeaders[l] = header

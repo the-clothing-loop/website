@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +15,7 @@ func RouteOrderGet(c *gin.Context) {
 		ChainUID string `form:"chain_uid" binding:"required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -27,7 +26,7 @@ func RouteOrderGet(c *gin.Context) {
 
 	routeOrder, err := chain.GetRouteOrderByUserUID(db)
 	if err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
+		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return
 	}
 
@@ -42,7 +41,7 @@ func RouteOrderSet(c *gin.Context) {
 		RouteOrder []string `json:"route_order" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -53,7 +52,7 @@ func RouteOrderSet(c *gin.Context) {
 
 	err := chain.SetRouteOrderByUserUIDs(db, query.RouteOrder)
 	if err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
+		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return
 	}
 }
