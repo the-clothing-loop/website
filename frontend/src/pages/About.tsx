@@ -146,7 +146,7 @@ export default function About() {
                         href="https://www.instagram.com/up_for_swaps/"
                         target="_blank"
                         rel="noreferrer"
-                        className="link font-semibold"
+                        className="link"
                       ></a>
                     ),
                   }}
