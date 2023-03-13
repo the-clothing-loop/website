@@ -20,8 +20,9 @@ var faker = Faker.New()
 // some options are negatives of the used value
 // this is to keep the defaults to false when not specifically used
 type MockChainAndUserOptions struct {
-	IsEmailUnverified  bool
-	IsTokenUnverified  bool
+	IsNotEmailVerified bool
+	IsNotTokenVerified bool
+	IsNotApproved      bool
 	IsRootAdmin        bool
 	IsChainAdmin       bool
 	IsNotPublished     bool
@@ -33,7 +34,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain())),
-		IsEmailVerified: !o.IsEmailUnverified,
+		IsEmailVerified: !o.IsNotEmailVerified,
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Fake " + faker.Person().Name(),
 		PhoneNumber:     faker.Person().Contact().Phone,
@@ -42,13 +43,14 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		UserToken: []models.UserToken{
 			{
 				Token:    uuid.NewV4().String(),
-				Verified: !o.IsTokenUnverified,
+				Verified: !o.IsNotTokenVerified,
 			},
 		},
 		Chains: []models.UserChain{
 			{
 				ChainID:      chainID,
 				IsChainAdmin: o.IsChainAdmin,
+				IsApproved:   !o.IsNotApproved,
 				RouteOrder:   o.RouteOrderIndex,
 			},
 		},

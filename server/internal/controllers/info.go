@@ -17,7 +17,7 @@ FROM chains
 WHERE chains.published = TRUE AND chains.deleted_at IS NULL
 	`).Scan(&totalChains).Error
 	if err != nil {
-		goscope.Log.Errorf("Unable to retrieve information", err)
+		goscope.Log.Errorf("Unable to retrieve information: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to retrieve information")
 		return
 	}
@@ -29,7 +29,7 @@ FROM users
 WHERE users.is_email_verified = TRUE
 	`).Scan(&totalUsers).Error
 	if err != nil {
-		goscope.Log.Errorf("Unable to retrieve information", err)
+		goscope.Log.Errorf("Unable to retrieve information: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to retrieve information")
 		return
 	}
