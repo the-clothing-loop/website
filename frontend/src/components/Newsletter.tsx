@@ -71,7 +71,7 @@ export const Newsletter = () => {
 
           <div className="w-full sm:w-1/2 md:w-1/3 lg:w-full flex flex-col sm:pl-4 md:pl-0 justify-center">
             <div className="flex flex-col lg:flex-row lg:max-w-screen-xs">
-              <label className="form-control mb-5 lg:mr-5">
+              <label className="form-control mb-5 lg:mr-5" aria-label="name">
                 <input
                   type="text"
                   name="name"
@@ -81,7 +81,7 @@ export const Newsletter = () => {
                   required
                 />
               </label>
-              <label className="form-control mb-5">
+              <label className="form-control mb-5" aria-label="email">
                 <input
                   type="email"
                   name="email"

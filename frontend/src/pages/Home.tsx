@@ -175,6 +175,7 @@ export default function Home() {
                 <Link
                   to="/loops/find"
                   className="hidden md:flex btn btn-outline btn-circle btn-secondary mt-6"
+                  aria-label="find loop"
                 >
                   <span className="feather feather-arrow-right"></span>
                 </Link>
