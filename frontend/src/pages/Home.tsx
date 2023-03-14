@@ -21,11 +21,10 @@ const CollActionLogo =
 const ImpactHubLogo =
   "https://images.clothingloop.org/600x,jpg/logo_impacthub.svg";
 const EssenseLogo = "https://images.clothingloop.org/208x,jpg/essense_logo.svg";
-const WdcdLogo =
-  "https://ucarecdn.com/a26cc9ab-5e8e-4305-b3c1-58a2f217b860/-/resize/160x/-/format/auto/-/quality/smart/logo_wdcd.png";
+const WdcdLogo = "https://images.clothingloop.org/160x,jpg/logo_wdcd.png";
 const DoenLogo = "https://images.clothingloop.org/160x,jpeg/doen.png";
-const PNHLogo = "https://images.clothingloop.org/208x/pnh_logo.png";
-const MEAXLogo = "https://ucarecdn.com/9f740812-f9bd-4085-8b4f-3cb638d19f73/";
+const PNHLogo = "https://images.clothingloop.org/208x,jpg/pnh_logo.png";
+const MEAXLogo = "https://images.clothingloop.org/208x/meax_logo.png";
 
 interface Supporter {
   logo: string;
@@ -188,7 +187,7 @@ export default function Home() {
                   className="ring-[1rem] md:ring-0 hover:ring-[2rem] ring-secondary transition-[box-shadow] z-20 block"
                 >
                   <img
-                    src="https://images.clothingloop.org/600x,jpg/map_image.png"
+                    src="https://images.clothingloop.org/600x,jpg/map_image_3.png"
                     alt="map"
                   />
                   <span className="md:hidden z-10 absolute left-1/2 bottom-8 -translate-x-1/2 font-semibold rounded-full bg-white py-2 px-4 border border-secondary cursor-pointer">
@@ -258,13 +257,14 @@ export default function Home() {
                 playsInline
                 className="object-cover object-top w-full max-h-[600px]"
                 title="pages of the impact report"
+                poster="https://images.clothingloop.org/x768,jpg/impact_rapport_preview.png"
               >
                 <source
-                  src="/public/videos/impact-rapport.webm"
+                  src="https://images.clothingloop.org/original/impact_rapport.webm"
                   type="video/webm"
                 />
                 <source
-                  src="/public/videos/impact-rapport.mp4"
+                  src="https://images.clothingloop.org/original/impact_rapport.mp4"
                   type="video/mp4"
                 />
               </video>
