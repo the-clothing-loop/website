@@ -32,6 +32,7 @@
   "editUserDetails": "Benutzerdaten bearbeiten",
   "approveParticipant": "Genehmige die Anfrage von „{{ name }}“, dem Loop beizutreten?",
   "denyParticipant": "“{{ name }}' Anfrage zum Beitritt des Loops ablehnen?",
+  "route": "Route",
   "approve": "Genehmige",
   "pendingApproval": "Ausstehende Genehmigung",
   "deny": "Ablehnen",
