@@ -7,7 +7,8 @@ import (
 	"html/template"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
-	glog "github.com/airbrake/glog/v4"
+	"github.com/golang/glog"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -27,13 +28,13 @@ func init() {
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/headers.json", l))
 		if err != nil {
-			glog.Fatalf("Header not found: %+v", err)
+			glog.Fatalf("Header not found: %v", err)
 			return
 		}
 		var header map[string]string
 		err = json.Unmarshal(b, &header)
 		if err != nil {
-			glog.Fatalf("Header invalid json: %+v", err)
+			glog.Fatalf("Header invalid json: %v", err)
 			return
 		}
 		emailsHeaders[l] = header
@@ -55,6 +56,7 @@ func EmailAParticipantJoinedTheLoop(
 	db *gorm.DB,
 	adminEmail,
 	adminName,
+	chainName,
 	participantName,
 	participantEmail,
 	participantPhoneNumber,
@@ -65,9 +67,10 @@ func EmailAParticipantJoinedTheLoop(
 	i18n := "en"
 
 	to := adminEmail
-	subject := emailsHeaders[i18n]["a_participant_joined_the_loop"]
-	body, err := executeTemplate(c, emailsTemplates[i18n], "a_participant_joined_the_loop.gohtml", gin.H{
-		"Name": adminName,
+	subject := emailsHeaders[i18n]["someone_is_interested_in_joining_your_loop"]
+	body, err := executeTemplate(c, emailsTemplates[i18n], "someone_is_interested_in_joining_your_loop.gohtml", gin.H{
+		"Name":      adminName,
+		"ChainName": chainName,
 		"Participant": gin.H{
 			"Name":    participantName,
 			"Email":   participantEmail,

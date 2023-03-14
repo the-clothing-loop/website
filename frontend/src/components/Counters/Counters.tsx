@@ -68,6 +68,7 @@ export default function Counters() {
               target="_blank"
               rel="noreferrer"
               className="btn btn-primary btn-circle"
+              aria-label="our impact"
             >
               <span className="feather feather-arrow-right" />
             </a>

@@ -93,7 +93,7 @@ export default function FindChain({ location }: { location: Location }) {
 
   const { t } = useTranslation();
   const { authUser, authUserRefresh } = useContext(AuthContext);
-  const { addToastError } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
 
   const [chains, setChains] = useState<Chain[]>();
   const [map, setMap] = useState<mapboxgl.Map>();
@@ -141,9 +141,10 @@ export default function FindChain({ location }: { location: Location }) {
           type: "geojson",
           data: mapToGeoJSONChains(_chains, filterFunc),
           cluster: true,
-          clusterMaxZoom: 10,
-          clusterRadius: 30,
+          clusterMaxZoom: 9,
+          clusterRadius: 25,
         });
+
         _map.addLayer({
           id: "chain-cluster",
           type: "circle",
@@ -172,7 +173,7 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: ["!", ["has", "point_count"]],
           paint: {
-            "circle-color": ["rgba", 240, 196, 73, 0.8], // #f0c449
+            "circle-color": ["rgba", 240, 196, 73, 0.4], // #f0c449
             "circle-radius": [
               "interpolate",
               ["exponential", 2],
@@ -182,9 +183,8 @@ export default function FindChain({ location }: { location: Location }) {
               20,
               ["get", "radius"],
             ],
-            "circle-blur": 0.6,
-            "circle-stroke-width": 40,
-            "circle-stroke-color": ["rgba", 0, 0, 0, 0.0],
+            "circle-stroke-width": 2,
+            "circle-stroke-color": ["rgba", 240, 196, 73, 1],
           },
         });
         _map.addLayer({
@@ -193,11 +193,12 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: ["!", ["has", "point_count"]],
           paint: {
-            "circle-color": ["rgba", 240, 196, 73, 0.6], // #f0c449
+            "circle-color": ["rgba", 240, 196, 73, 0.0], // #f0c449
             "circle-radius": 5,
             "circle-stroke-width": 0,
           },
         });
+
         _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
           if (e.features) {
             let uids = e.features
@@ -273,22 +274,35 @@ export default function FindChain({ location }: { location: Location }) {
     setSelectedChains([]);
   }
 
-  function handleClickJoin(e: MouseEvent<HTMLButtonElement>, chainUID: UID) {
+  function handleClickJoin(e: MouseEvent<HTMLButtonElement>, chain: Chain) {
     e.preventDefault();
-    if (authUser && chainUID) {
-      chainAddUser(chainUID, authUser.uid, false)
-        .then(() => {
-          authUserRefresh();
-          history.push({ pathname: "/thankyou" });
-        })
-        .catch((err) => {
-          addToastError(GinParseErrors(t, err), err?.status);
-        });
+    if (authUser && chain.uid) {
+      addModal({
+        message: t("AreYouSureJoinLoop", {
+          chainName: chain.name,
+        }),
+        actions: [
+          {
+            text: t("join"),
+            type: "secondary",
+            fn: async () => {
+              chainAddUser(chain.uid, authUser.uid, false)
+                .then(() => {
+                  authUserRefresh();
+                  history.push({ pathname: "/thankyou" });
+                })
+                .catch((err) => {
+                  addToastError(GinParseErrors(t, err), err?.status);
+                });
+            },
+          },
+        ],
+      });
     } else {
       history.push({
-        pathname: `/loops/${chainUID}/users/signup`,
+        pathname: `/loops/${chain.uid}/users/signup`,
         state: {
-          chainId: chainUID,
+          chainId: chain.uid,
         },
       });
     }
@@ -322,11 +336,13 @@ export default function FindChain({ location }: { location: Location }) {
     switch (o) {
       case "+":
         if (z < maxZoom) {
+          console.log("z", z + 1);
           map?.setZoom(z + 1);
         }
         break;
       case "-":
         if (z > minZoom) {
+          console.log("z", z - 1);
           map?.setZoom(z - 1);
         }
         break;
@@ -509,7 +525,7 @@ export default function FindChain({ location }: { location: Location }) {
                       )
                     ) : chain.open_to_new_members ? (
                       <button
-                        onClick={(e) => handleClickJoin(e, chain.uid)}
+                        onClick={(e) => handleClickJoin(e, chain)}
                         type="button"
                         className="btn btn-sm btn-primary"
                       >

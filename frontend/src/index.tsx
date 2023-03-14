@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import "./i18n";
-import "./airbrake";
+import "./goscope";
 
 // stylesheets
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -25,7 +25,7 @@ function Fallback() {
             className="bg-center w-32 md:w-40 h-20 md:h-28 bg-no-repeat relative z-[60] bg-[auto_120px] md:bg-[auto_139px]"
             style={{
               backgroundImage:
-                "url('https://ucarecdn.com/886c01f0-c666-44dc-9d2a-cea4893ed134/-/resize/x139/-/format/auto/-/quality/smart/the_clothing_loop_logo.png')",
+                "url('https://images.clothingloop.org/x139/the_clothing_loop_logo.png')",
             }}
           ></div>
         </div>

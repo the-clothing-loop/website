@@ -8,30 +8,23 @@ import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Testimonials from "../components/Testimonials";
 import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
-import { useEffect, useState } from "react";
 
 //Media
 const ClothesImage =
-  "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
-const CirclesFrame =
-  "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
-const Selfies =
-  "https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/768x/-/format/auto/selfies.jpg";
+  "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
+const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
+const Selfies = "https://images.clothingloop.org/768x/selfies.jpg";
 //Logos
-const SfmLogo =
-  "https://ucarecdn.com/c439bd53-ac76-4ece-afce-727772d2f408/-/resize/160x/-/format/auto/-/quality/smart/sfm_logo.png";
+const SfmLogo = "https://images.clothingloop.org/160x/sfm_logo.png";
 const CollActionLogo =
-  "https://ucarecdn.com/f7ee756a-8be7-4fb2-ba0f-283ab0d43b4f/-/crop/5:1/-/resize/208x/-/format/auto/-/quality/smart/LogoCollAction.png";
+  "https://images.clothingloop.org/208x/logo_collaction.png";
 const ImpactHubLogo =
-  "https://ucarecdn.com/356b6da2-f0b2-41df-9960-0dcedfe31052/-/resize/600x/-/format/auto/-/quality/smart/logoimpacthub.svg";
-const EssenseLogo =
-  "https://ucarecdn.com/094bfc52-77b6-4810-99af-9e22c3b4e646/-/resize/208x/-/format/auto/-/quality/smart/essenselogo.svg";
+  "https://images.clothingloop.org/600x,jpg/logo_impacthub.svg";
+const EssenseLogo = "https://images.clothingloop.org/208x,jpg/essense_logo.svg";
 const WdcdLogo =
   "https://ucarecdn.com/a26cc9ab-5e8e-4305-b3c1-58a2f217b860/-/resize/160x/-/format/auto/-/quality/smart/logo_wdcd.png";
-const DoenLogo =
-  "https://ucarecdn.com/929c3a9f-d9a6-479a-8b8c-c319d45382d9/-/resize/160x/-/format/auto/-/quality/smart/doen.png";
-const PNHLogo =
-  "https://ucarecdn.com/40eb9c1f-27cd-4275-a449-a1a5d269eb5d/-/resize/208x/-/format/auto/-/quality/smart/pnh_logo.png";
+const DoenLogo = "https://images.clothingloop.org/160x,jpeg/doen.png";
+const PNHLogo = "https://images.clothingloop.org/208x/pnh_logo.png";
 const MEAXLogo = "https://ucarecdn.com/9f740812-f9bd-4085-8b4f-3cb638d19f73/";
 
 interface Supporter {
@@ -44,16 +37,6 @@ export default function Home() {
   const { t } = useTranslation();
 
   let history = useHistory();
-  const [showVideo, setShowVideo] = useState(false);
-  useEffect(() => {
-    const element = document.querySelector("#impact-report-image")!;
-    window.addEventListener("scroll", () => {
-      const position = element.getBoundingClientRect();
-      if (position.top < window.innerHeight && position.bottom >= 0) {
-        setShowVideo(true);
-      }
-    });
-  }, []);
 
   const supporters: Supporter[][] = [
     [
@@ -142,7 +125,7 @@ export default function Home() {
             <div className="md:pt-16 md:pr-20 lg:pr-40 md:w-1/2">
               <img
                 className="w-full lg:max-w-[600px] sm:h-96 md:h-auto object-cover object-top"
-                src="https://ucarecdn.com/4464c0ab-9b67-4e07-a0d3-cab38ea9b7c4/-/resize/900x/-/format/auto/-/quality/smart/kirsten_rosan.jpg"
+                src="https://images.clothingloop.org/900x/kirsten_en_rosan.jpg"
                 alt="Bringing a bag full clothes to another's doorstep"
               />
               <p className="text-sm my-1">
@@ -192,6 +175,7 @@ export default function Home() {
                 <Link
                   to="/loops/find"
                   className="hidden md:flex btn btn-outline btn-circle btn-secondary mt-6"
+                  aria-label="find loop"
                 >
                   <span className="feather feather-arrow-right"></span>
                 </Link>
@@ -204,7 +188,7 @@ export default function Home() {
                   className="ring-[1rem] md:ring-0 hover:ring-[2rem] ring-secondary transition-[box-shadow] z-20 block"
                 >
                   <img
-                    src="https://ucarecdn.com/428a0de6-3226-4e89-afd1-78f31e20f5d5/-/crop/4:3/-/resize/600x/-/format/auto/-/quality/smart/map_image.jpg"
+                    src="https://images.clothingloop.org/600x,jpg/map_image.png"
                     alt="map"
                   />
                   <span className="md:hidden z-10 absolute left-1/2 bottom-8 -translate-x-1/2 font-semibold rounded-full bg-white py-2 px-4 border border-secondary cursor-pointer">
@@ -230,7 +214,7 @@ export default function Home() {
           <div className="flex flex-col-reverse md:flex-row items-center mb-8 md:mb-40">
             <div className="relative w-full md:w-1/2 md:pr-20 flex justify-end">
               <img
-                src="https://ucarecdn.com/f54270d7-9258-43c8-bdc2-ffb3856e4ce1/-/resize/900x/-/format/auto/-/quality/smart/numberedbagoutdoors.jpg"
+                src="https://images.clothingloop.org/900x/numbered_bag_outdoors.jpg"
                 className="w-full md:max-w-[600px] object-cover object-bottom h-96"
                 alt="A numbered bag in front of a door and another in front of some letterboxes"
               />
@@ -265,35 +249,25 @@ export default function Home() {
                 <Counters />
               </div>
             </div>
-
-            <div className="md:w-1/2 sm:max-md:pb-8" id="impact-report-image">
-              <img
-                className={"object-cover object-top w-full max-h-[600px]".concat(
-                  showVideo ? " hidden" : ""
-                )}
-                src="https://ucarecdn.com/397b41f4-0934-4a14-8f3f-3a9566b392f0/-/resize/x400/-/format/auto/-/quality/best/impact-rapport-preview.jpg"
-                alt="page of the impact report"
-              />
-              {showVideo ? (
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  webkit-playsinline
-                  playsInline
-                  className="object-cover object-top w-full max-h-[600px]"
-                  title="pages of the impact report"
-                >
-                  <source
-                    src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/webm/-/quality/normal/impact-rapport.webm"
-                    type="video/webm"
-                  />
-                  <source
-                    src="https://ucarecdn.com/ce7cdeb7-0329-412e-89a6-a0d8a6e2ab90/gif2video/-/format/mp4/-/quality/normal/impact-rapport.mp4"
-                    type="video/mp4"
-                  />
-                </video>
-              ) : null}
+            <div className="md:w-1/2 sm:max-md:pb-8">
+              <video
+                autoPlay
+                loop
+                muted
+                webkit-playsinline
+                playsInline
+                className="object-cover object-top w-full max-h-[600px]"
+                title="pages of the impact report"
+              >
+                <source
+                  src="/public/videos/impact-rapport.webm"
+                  type="video/webm"
+                />
+                <source
+                  src="/public/videos/impact-rapport.mp4"
+                  type="video/mp4"
+                />
+              </video>
             </div>
           </section>
         </div>
@@ -327,7 +301,7 @@ export default function Home() {
         <section className="flex flex-col md:flex-row items-center md:items-end mb-8 md:mb-20">
           <div className="w-full md:w-1/2 flex justify-center md:justify-end">
             <img
-              src="https://ucarecdn.com/828843d6-717c-4307-bdd7-990d88497560/-/resize/900x/-/format/auto/-/quality/smart/selfies.jpg"
+              src="https://images.clothingloop.org/900x/selfies.jpg"
               alt="selfies of different people wearing clothes shared via their local Loop"
               className="w-full md:max-w-[500px] max-md:object-cover object-top h-60 md:h-auto"
             />

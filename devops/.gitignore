@@ -1,2 +1,4 @@
 /group_vars/all.yml
 /templates/maint/style.min.css
+/templates/imageproxy
+/images

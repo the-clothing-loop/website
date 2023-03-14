@@ -27,13 +27,14 @@ function Navbar() {
         className="bg-center w-32 md:w-40 h-20 md:h-28 bg-no-repeat relative z-[60] bg-[auto_120px] md:bg-[auto_139px]"
         style={{
           backgroundImage:
-            "url('https://ucarecdn.com/886c01f0-c666-44dc-9d2a-cea4893ed134/-/resize/x139/-/format/auto/-/quality/smart/the_clothing_loop_logo.png')",
+            "url('https://images.clothingloop.org/x139/the_clothing_loop_logo.png')",
         }}
       ></Link>
       <input type="checkbox" className="hidden peer" id="header-hamburger" />
       <label
         htmlFor="header-hamburger"
         className="mr-3 btn-lg btn-circle btn-ghost hover:bg-base-200 peer-checked:text-secondary peer-checked:animate-[spin-quarter_150ms_linear] flex justify-center items-center lg:hidden relative z-[60] checked:ring-2 checked:ring-offset-2 ring-teal peer-[:checked_>:nth-of-type(1)]:hidden peer-[:checked_>:nth-of-type(2)]:block cursor-pointer"
+        aria-label="Menu"
       >
         <span className="feather feather-menu text-2xl block"></span>
         <span className="feather feather-x text-2xl hidden"></span>

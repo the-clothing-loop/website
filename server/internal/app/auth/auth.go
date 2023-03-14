@@ -1,13 +1,11 @@
 package auth
 
 import (
-	"errors"
-	"fmt"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
-	glog "github.com/airbrake/glog/v4"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -34,13 +32,13 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	token, ok := TokenReadFromRequest(c)
 	if !ok {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Token not received"))
+		c.String(http.StatusUnauthorized, "Token not received")
 		return false, nil, nil
 	}
 
 	authUser, ok = TokenAuthenticate(db, token)
 	if !ok {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Invalid token"))
+		c.String(http.StatusUnauthorized, "Invalid token")
 		return false, nil, nil
 	}
 
@@ -50,22 +48,22 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	if chainUID == "" {
-		glog.Error("ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen")
-		gin_utils.GinAbortWithErrorBody(c, http.StatusTeapot, errors.New("ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen"))
+		goscope.Log.Errorf("ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen")
+		c.String(http.StatusNotImplemented, "ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen")
 		return false, nil, nil
 	}
 
 	chain = &models.Chain{}
 	err := db.Raw(`SELECT * FROM chains WHERE chains.uid = ? AND chains.deleted_at IS NULL LIMIT 1`, chainUID).Scan(chain).Error
 	if err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrChainNotFound)
+		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return false, nil, nil
 	}
 
 	err = authUser.AddUserChainsToObject(db)
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
+		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
+		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
 		return false, nil, nil
 	}
 
@@ -96,7 +94,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 		}
 	}
 
-	gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("User role not high enough"))
+	c.String(http.StatusUnauthorized, "User role not high enough")
 	return false, nil, nil
 }
 
@@ -108,7 +106,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 // 3. authUser is a root admin
 func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID string) (ok bool, user, authUser *models.User, chain *models.Chain) {
 	if chainUID != "" && userUID == "" {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("user UID must be set if chain UID is set"))
+		c.String(http.StatusBadRequest, "user UID must be set if chain UID is set")
 		return false, nil, nil, nil
 	}
 
@@ -131,11 +129,11 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 			err = user.AddUserChainsToObject(db)
 		}
 		if err != nil {
-			glog.Error(err)
+			goscope.Log.Errorf("%v", err)
 		}
 	}
 	if user.ID == 0 {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("user UID must be set if chain UID is set"))
+		c.String(http.StatusBadRequest, "user UID must be set if chain UID is set")
 		return false, nil, nil, nil
 	}
 
@@ -152,7 +150,7 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 		return true, user, authUser, chain
 	}
 
-	gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Must be a chain admin or higher to alter a different user"))
+	c.String(http.StatusUnauthorized, "Must be a chain admin or higher to alter a different user")
 	return false, nil, nil, nil
 }
 

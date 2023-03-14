@@ -7,6 +7,8 @@ smtp_cl_acceptance_user:
 smtp_cl_acceptance_password:
 stripe_cl_acceptance_secret_key:
 stripe_cl_acceptance_webhook:
+goscope2_acceptance_user:
+goscope2_acceptance_pass:
 
 mysql_cl_production_password:
 smtp_cl_production_host:
@@ -14,3 +16,5 @@ smtp_cl_production_user:
 smtp_cl_production_password:
 stripe_cl_production_secret_key:
 stripe_cl_production_webhook:
+goscope2_production_user:
+goscope2_production_pass:
