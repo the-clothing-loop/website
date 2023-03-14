@@ -104,7 +104,7 @@ export default function Footer() {
                     <a
                       href="mailto:hello@clothingloop.org"
                       aria-label="Our email address"
-                      className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0375b9] feather feather-at-sign text-lg"
+                      className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#b464a8] feather feather-at-sign text-lg"
                     ></a>
                     <span
                       tabIndex={1}
@@ -123,7 +123,7 @@ export default function Footer() {
                       hello@clothingloop.org
                     </span>
                   </li>
-                  <li className="inline-flex items-center">
+                  <li className="mb-3 inline-flex items-center">
                     <a
                       href="https://www.linkedin.com/groups/12746791/"
                       rel="noreferrer"
@@ -131,6 +131,15 @@ export default function Footer() {
                       className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0a66c2] feather feather-linkedin text-lg"
                     ></a>
                     <span className="text-sm">LinkedIn</span>
+                  </li>
+                  <li className="inline-flex items-center">
+                    <a
+                      href="https://www.facebook.com/clothingloop/"
+                      rel="noreferrer"
+                      aria-label="Our LinkedIn"
+                      className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-facebook feather feather-facebook text-lg"
+                    ></a>
+                    <span className="text-sm">Facebook</span>
                   </li>
                 </ul>
               </div>
