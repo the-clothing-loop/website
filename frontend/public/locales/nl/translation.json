@@ -32,6 +32,7 @@
   "editUserDetails": "Gebruikersgegevens bewerken",
   "approveParticipant": "Sta \"{{ name }}'\" verzoek toe om deel te nemen aan de Loop?",
   "denyParticipant": "Weiger \"{{ name }}'\" verzoek om deel te nemen aan de Loop?",
+  "route": "Route",
   "approve": "Keur goed",
   "pendingApproval": "Wacht op goedkeuring",
   "deny": "Weiger",
