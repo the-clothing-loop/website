@@ -8,9 +8,8 @@ import (
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
-	glog "github.com/airbrake/glog/v4"
 	ics "github.com/arran4/golang-ical"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -33,11 +32,11 @@ func EventCreate(c *gin.Context) {
 
 	var body EventCreateRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 	if ok := models.ValidateAllGenderEnum(body.Genders); !ok {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrGenderInvalid)
+		c.AbortWithError(http.StatusBadRequest, models.ErrGenderInvalid)
 		return
 	}
 
@@ -61,14 +60,14 @@ func EventCreate(c *gin.Context) {
 		Address:     body.Address,
 		Date:        body.Date,
 		Genders:     body.Genders,
-		UserEvents:  []models.UserEvent{{UserID: user.ID}},
+		UserID:      user.ID,
 	}
 	if body.ChainUID != "" && chain != nil {
 		event.ChainID = zero.NewInt(int64(chain.ID), true)
 	}
 
 	if err := db.Create(event).Error; err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create event"))
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to create event"))
 		return
 	}
 }
@@ -85,6 +84,7 @@ events.date           AS date,
 events.genders        AS genders,
 events.chain_id       AS chain_id,
 chains.uid            AS chain_uid,
+events.user_id        AS user_id,
 events.created_at     AS created_at,
 events.updated_at     AS updated_at
 FROM events
@@ -97,7 +97,7 @@ func EventGet(c *gin.Context) {
 		UID string `form:"uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -105,7 +105,7 @@ func EventGet(c *gin.Context) {
 	sql := fmt.Sprintf("%s WHERE events.uid = ?", sqlSelectEvent)
 	err := db.Raw(sql, query.UID).Scan(event).Error
 	if err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusNotFound, err)
+		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 
@@ -121,7 +121,7 @@ func EventGetAll(c *gin.Context) {
 		Radius    float32 `form:"radius" binding:"required,min=0.001"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -134,7 +134,7 @@ func EventGetAll(c *gin.Context) {
 	events := []models.Event{}
 	err := db.Raw(sql, args...).Scan(&events).Error
 	if err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -154,7 +154,7 @@ func EventDelete(c *gin.Context) {
 		UID string `form:"uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -163,23 +163,9 @@ func EventDelete(c *gin.Context) {
 		return
 	}
 
-	tx := db.Begin()
-	err := tx.Exec(`DELETE FROM user_events WHERE event_id = ?`, event.ID).Error
+	err := db.Exec(`DELETE FROM events WHERE id = ?`, event.ID).Error
 	if err != nil {
-		tx.Rollback()
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
-		return
-	}
-	err = tx.Exec(`DELETE FROM events WHERE id = ?`, event.ID).Error
-	if err != nil {
-		tx.Rollback()
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
-		return
-	}
-	err = tx.Commit().Error
-	if err != nil {
-		tx.Rollback()
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 }
@@ -199,12 +185,12 @@ func EventUpdate(c *gin.Context) {
 		ChainUID    *string    `json:"chain_uid,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 	if body.Genders != nil {
 		if ok := models.ValidateAllGenderEnum(*(body.Genders)); !ok {
-			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrGenderInvalid)
+			c.AbortWithError(http.StatusBadRequest, models.ErrGenderInvalid)
 			return
 		}
 	}
@@ -218,7 +204,7 @@ func EventUpdate(c *gin.Context) {
 	if body.ChainUID != nil {
 		err := user.AddUserChainsToObject(db)
 		if err != nil {
-			gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+			c.AbortWithError(http.StatusInternalServerError, err)
 			return
 		}
 
@@ -229,7 +215,7 @@ func EventUpdate(c *gin.Context) {
 			}
 		}
 		if !found {
-			gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Loop must be "))
+			c.AbortWithError(http.StatusUnauthorized, errors.New("Loop must be "))
 			return
 		}
 	}
@@ -262,8 +248,8 @@ func EventUpdate(c *gin.Context) {
 
 	err := db.Model(event).Updates(valuesToUpdate).Error
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to update loop values"))
+		goscope.Log.Errorf("Unable to update loop values: %v", err)
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to update loop values"))
 	}
 }
 
@@ -274,27 +260,27 @@ func EventICal(c *gin.Context) {
 		UID string `uri:"uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindUri(&uri); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
 	event := &models.Event{}
 	db.Raw("SELECT * FROM events WHERE uid = ? LIMIT 1", uri.UID).Scan(event)
 	if event.ID == 0 {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusNotFound, fmt.Errorf("Event not found"))
+		c.AbortWithError(http.StatusNotFound, fmt.Errorf("Event not found"))
 		return
 	}
 
-	users := []struct {
-		Name  string `gorm:"name"`
-		Email string `gorm:"email"`
+	user := struct {
+		Name  string      `gorm:"name"`
+		Email zero.String `gorm:"email"`
 	}{}
 	db.Raw(`
-SELECT u.name, u.email
-FROM users AS u
-JOIN user_events AS ue ON ue.user_id = u.id
-WHERE ue.event_id = ? AND u.email IS NOT NULL
-	`, event.ID).Scan(&users)
+SELECT name, email
+FROM users
+WHERE id = ?
+LIMIT 1
+	`, event.UserID).Scan(&user)
 
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodRequest)
@@ -307,8 +293,8 @@ WHERE ue.event_id = ? AND u.email IS NOT NULL
 	icalE.SetLocation(fmt.Sprintf("https://www.google.com/maps/@%v,%v,17z", event.Latitude, event.Longitude))
 	icalE.SetDescription(event.Description)
 	icalE.SetURL(fmt.Sprintf("%s/events/%s", app.Config.SITE_BASE_URL_FE, uri.UID))
-	for _, u := range users {
-		icalE.SetOrganizer(u.Email, ics.WithCN(u.Name))
+	if user.Email.Valid {
+		icalE.SetOrganizer(user.Email.String, ics.WithCN(user.Name))
 	}
 
 	c.String(http.StatusOK, cal.Serialize())

@@ -145,7 +145,7 @@ func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint, o MockEventOptio
 		Longitude:   faker.Address().Latitude(),
 		Date:        time.Now().Add(time.Duration(faker.IntBetween(-20, 20)) * time.Hour),
 		Genders:     MockGenders(false),
-		UserEvents:  []models.UserEvent{{UserID: userID}},
+		UserID:      userID,
 		ChainID:     zero.IntFrom(int64(chainID)),
 	}
 
@@ -156,7 +156,6 @@ func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint, o MockEventOptio
 	// Cleanup runs FiLo
 	// So Cleanup must happen before MockUser
 	t.Cleanup(func() {
-		db.Exec(`DELETE FROM user_events WHERE event_id = ? AND user_id = ?`, event.ID, userID)
 		db.Exec(`DELETE FROM events WHERE id = ?`, event.ID)
 	})
 
