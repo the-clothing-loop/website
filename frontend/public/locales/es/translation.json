@@ -32,6 +32,7 @@
   "editUserDetails": "Editar detalles de usuario",
   "approveParticipant": "Aprobar solicitud de “{{ name }}” para unirse al Loop",
   "denyParticipant": "¿Deseas rechazar la solicitud de “{{ name }}” para unirse al Loop?",
+  "route": "Route",
   "approve": "Aprobar",
   "pendingApproval": "Pendiente de aprobación",
   "deny": "Rechazar",
