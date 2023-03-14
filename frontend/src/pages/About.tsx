@@ -22,7 +22,7 @@ export default function About() {
           </h1>
           <div className="flex flex-col-reverse md:flex-row items-center mb-10 md:mb-8">
             <div className="prose mx-auto w-full md:w-1/2 px-6 md:mb-0">
-              <p className="">
+              <p>
                 <Trans
                   i18nKey="p1"
                   ns="about"
