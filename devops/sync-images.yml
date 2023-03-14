@@ -1,0 +1,28 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Create images directory
+      file:
+        path: "/home/admin/images/"
+        state: directory
+        mode: "0775"
+        owner: "1000"
+        group: "27"
+    - name: Sync images with admin
+      shell: |
+        rsync -av --no-o --chown=admin:sudo /var/caddy/images.clothingloop.org/ /home/admin/images/
+- hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: Get images from admin
+      shell: |
+        rsync -av vps1.clothingloop.org:/home/admin/images/ ./images/
+    - name: Send images to admin
+      shell: |
+        rsync -av --no-o --chown=1000:27 --chmod=775 -f'- .gitkeep' ./images/ vps1.clothingloop.org:/home/admin/images/
+- hosts: server
+  become: true
+  tasks:
+    - name: Sync images with caddy
+      shell: |
+        sudo rsync -av --no-o --chown=caddy:caddy --chmod=775 /home/admin/images/ /var/caddy/images.clothingloop.org/

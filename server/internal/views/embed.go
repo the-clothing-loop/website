@@ -2,14 +2,13 @@ package views
 
 import (
 	"bytes"
-	"errors"
 	"html/template"
 	"io/fs"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
-	glog "github.com/airbrake/glog/v4"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/gin-gonic/gin"
+	"github.com/golang/glog"
 )
 
 func mustParseFS(fs fs.FS, patterns ...string) *template.Template {
@@ -25,8 +24,8 @@ func executeTemplate(c *gin.Context, t *template.Template, name string, data any
 	buf := new(bytes.Buffer)
 	err := t.ExecuteTemplate(buf, name, data)
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to find template"))
+		goscope.Log.Errorf("Unable to find template: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to find template")
 		return "", err
 	}
 

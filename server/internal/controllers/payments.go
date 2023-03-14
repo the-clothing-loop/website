@@ -2,15 +2,14 @@ package controllers
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
-	glog "github.com/airbrake/glog/v4"
+
 	"github.com/gin-gonic/gin"
 	"github.com/stripe/stripe-go/v73"
 	stripe_session "github.com/stripe/stripe-go/v73/checkout/session"
@@ -27,7 +26,7 @@ func PaymentsInitiate(c *gin.Context) {
 		PriceID     string `json:"price_id"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Email required"))
+		c.String(http.StatusBadRequest, "Email required")
 		return
 	}
 
@@ -80,8 +79,8 @@ func PaymentsInitiate(c *gin.Context) {
 
 	session, err := stripe_session.New(checkout)
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnavailableForLegalReasons, errors.New("Something went wrong when processing your checkout request..."))
+		goscope.Log.Warningf("Something went wrong when processing your checkout request: %v", err)
+		c.String(http.StatusUnavailableForLegalReasons, "Something went wrong when processing your checkout request...")
 		return
 	}
 
@@ -92,8 +91,8 @@ func PaymentsInitiate(c *gin.Context) {
 		SessionStripeID: zero.StringFrom(session.ID),
 		Status:          string(session.Status),
 	}).Error; err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to add payment to database"))
+		goscope.Log.Warningf("Unable to add payment to database: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to add payment to database")
 		return
 	}
 
@@ -110,16 +109,18 @@ func PaymentsWebhook(c *gin.Context) {
 	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, MaxBodyBytes)
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		gin_utils.GinAbortWithErrorBody(c, 400, fmt.Errorf("Body does not exist"))
+		goscope.Log.Warningf("Body does not exist: %v", err)
+		c.String(400, "Body does not exist")
 		return
 	}
 	event, err := stripe_webhook.ConstructEvent(body, signature, app.Config.STRIPE_WEBHOOK)
 	if err != nil {
-		gin_utils.GinAbortWithErrorBody(c, 400, fmt.Errorf("Webhook Error: %s", err))
+		goscope.Log.Warningf("Webhook Error: %v", err)
+		c.String(400, fmt.Sprintf("Webhook Error: %s", err))
 		return
 	}
 
-	glog.Infof("event.Type: %+v", event.Type)
+	goscope.Log.Infof("event.Type: %+v", event.Type)
 
 	switch event.Type {
 	case "checkout.session.completed":
@@ -135,8 +136,8 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 	session := new(stripe.CheckoutSession)
 	err := json.Unmarshal(event.Data.Raw, session)
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Incorrect response from stripe"))
+		goscope.Log.Warningf("Incorrect response from stripe: %v", err)
+		c.String(http.StatusInternalServerError, "Incorrect response from stripe")
 		return
 	}
 
@@ -145,8 +146,8 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 		Email:  session.CustomerEmail,
 	}).Error
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to update payment in database"))
+		goscope.Log.Warningf("Unable to update payment in database: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to update payment in database")
 		return
 	}
 
