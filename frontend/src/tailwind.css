@@ -76,6 +76,15 @@
       ),
       linear-gradient(135deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
   }
+
+  input.input-reset[type="number"]::-webkit-outer-spin-button,
+  input.input-reset[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input.input-reset[type="number"] {
+    -moz-appearance: textfield;
+  }
 }
 
 :root {
