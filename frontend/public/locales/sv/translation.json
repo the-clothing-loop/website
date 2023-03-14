@@ -32,6 +32,7 @@
   "editUserDetails": "Redigera användarinformation",
   "approveParticipant": "Godkänna \"{{ name }} s\" begäran om att gå med i loopen?",
   "denyParticipant": "Deny “{{ name }}'s” request to join the loop?",
+  "route": "Route",
   "approve": "Godkänna",
   "pendingApproval": "Väntar på administratörsgodkännande",
   "deny": "Förnäka",
