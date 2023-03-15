@@ -161,6 +161,11 @@ export default function About() {
                     p: <p></p>,
                     aFind: <Link className="link" to="/loops/find"></Link>,
                   }}
+                  values={{
+                    volunteers:
+                      "Tim, Gilbert, Tom, Natalie, Justin, Mohamed, Trevor",
+                    andVolunteer: "Pim",
+                  }}
                 ></Trans>
               </p>
               <p>{t("thankYou", { ns: "translation" })}</p>
