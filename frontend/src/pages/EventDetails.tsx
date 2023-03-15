@@ -114,7 +114,7 @@ export default function EventDetails() {
                 </button>
               </a>
               <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-16 px-0">
-                {"Mission Dolores Swapping Party"}
+                {event.name}
               </h1>
               <div className="md:mx-0 px-0">
                 <div className="flex flex-col md:flex-row md:justify-between">
