@@ -86,7 +86,7 @@ module.exports = {
           css: {
             color: colors.black,
             "strong, b": {
-              fontWeight: 500,
+              fontWeight: 600,
             },
           },
         },
