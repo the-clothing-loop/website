@@ -789,7 +789,7 @@ function ParticipantsTable(props: {
           >
             <thead>
               <tr>
-                <th className="lg:hidden w-[0.1%]"></th>
+                <th className="w-[0.1%]"></th>
                 <th>
                   <span>{t("name")}</span>
                   <SortButton
@@ -819,23 +819,11 @@ function ParticipantsTable(props: {
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
-                <th className="hidden lg:table-cell w-[0.1%]"></th>
               </tr>
             </thead>
             <tbody>
               {sortOrder(sortBy).map((u: User) => {
                 const userChain = getUserChain(u);
-
-                const dropdownItems = [
-                  <button
-                    type="button"
-                    onClick={(e) => onRemove(e, u)}
-                    className="text-red"
-                  >
-                    {t("removeFromLoop")}
-                  </button>,
-                  <Link to={getEditLocation(u)}>{t("edit")}</Link>,
-                ];
 
                 return (
                   <tr
@@ -844,10 +832,19 @@ function ParticipantsTable(props: {
                     tabIndex={-1}
                     className="[&_td]:hover:bg-base-200/[0.6] [&_td]:focus:bg-primary/[0.3] group"
                   >
-                    <td className="lg:hidden !px-0">
+                    <td className="!px-0">
                       <DropdownMenu
                         direction="dropdown-right"
-                        items={dropdownItems}
+                        items={[
+                          <button
+                            type="button"
+                            onClick={(e) => onRemove(e, u)}
+                            className="text-red"
+                          >
+                            {t("removeFromLoop")}
+                          </button>,
+                          <Link to={getEditLocation(u)}>{t("edit")}</Link>,
+                        ]}
                       />
                     </td>
                     <td>{u.name}</td>
@@ -879,12 +876,6 @@ function ParticipantsTable(props: {
                       </span>
                     </td>
                     <td className="text-center">{simplifyDays(userChain)}</td>
-                    <td className="text-right hidden lg:table-cell">
-                      <DropdownMenu
-                        direction="dropdown-left"
-                        items={dropdownItems}
-                      />
-                    </td>
                   </tr>
                 );
               })}
