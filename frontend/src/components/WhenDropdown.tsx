@@ -6,6 +6,13 @@ import { useDropdownCheckBox } from "../util/dropdown.hooks";
 
 
 const when = {
+
+  [When.today]: [
+    When["today"],
+  ],
+  [When.tomorrow]: [
+    When["tomorrow"],
+  ],
   [When.thisweek]: [
     When["thisweek"],
   ],
@@ -14,9 +21,6 @@ const when = {
   ],
   [When.thismonth]: [
     When["thismonth"],
-  ],
-  [When.next3months]: [
-    When["next3months"],
   ],
 };
 

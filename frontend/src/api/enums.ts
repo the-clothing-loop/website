@@ -55,15 +55,17 @@ export const DistanceI18nKeys: Record<Distance | string, string> = {
 };
 
 export enum When {
-  thisweek = "1",
-  next2weeks = "2",
-  thismonth = "3",
-  next3months = "4",
+  today = "1",
+  tomorrow = "2",
+  thisweek = "3",
+  next2weeks = "4",
+  thismonth = "5",
 }
 
 export const WhenI18nKeys: Record<When | string, string> = {
-  "1": "This week",
-  "2": "Next two weeks",
-  "3": "This month",
-  "4": "Next three months",
+  "1": "Today",
+  "2": "Tomorrow",
+  "3": "This week",
+  "4": "Next two weeks",
+  "5": "This month",
 };
