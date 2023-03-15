@@ -124,6 +124,7 @@ export default function FindChain({ location }: { location: Location }) {
 
     setZoom(4);
 
+    const clusterMaxZoom = 9;
     chainGetAll({ filter_out_unpublished: true }).then((res) => {
       const _chains = res.data;
 
@@ -141,7 +142,8 @@ export default function FindChain({ location }: { location: Location }) {
           type: "geojson",
           data: mapToGeoJSONChains(_chains, filterFunc),
           cluster: true,
-          clusterMaxZoom: 9,
+          clusterMaxZoom: clusterMaxZoom,
+          clusterMinPoints: 1,
           clusterRadius: 25,
         });
 
@@ -149,7 +151,7 @@ export default function FindChain({ location }: { location: Location }) {
           id: "chain-cluster",
           type: "circle",
           source: "chains",
-          filter: ["has", "point_count"],
+          filter: ["<", ["zoom"], clusterMaxZoom],
           paint: {
             "circle-color": ["rgba", 239, 149, 61, 0.6], // #ef953d
             "circle-radius": 15,
@@ -160,9 +162,9 @@ export default function FindChain({ location }: { location: Location }) {
           id: "chain-cluster-count",
           type: "symbol",
           source: "chains",
-          filter: ["has", "point_count"],
+          filter: ["<", ["zoom"], clusterMaxZoom],
           layout: {
-            "text-field": ["get", "point_count_abbreviated"],
+            "text-field": ["coalesce", ["get", "point_count_abbreviated"], "1"],
             "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
             "text-size": 12,
           },
@@ -171,7 +173,7 @@ export default function FindChain({ location }: { location: Location }) {
           id: "chain-single",
           type: "circle",
           source: "chains",
-          filter: ["!", ["has", "point_count"]],
+          filter: [">=", ["zoom"], clusterMaxZoom],
           paint: {
             "circle-color": ["rgba", 240, 196, 73, 0.4], // #f0c449
             "circle-radius": [
@@ -191,7 +193,7 @@ export default function FindChain({ location }: { location: Location }) {
           id: "chain-single-minimum",
           type: "circle",
           source: "chains",
-          filter: ["!", ["has", "point_count"]],
+          filter: [">=", ["zoom"], clusterMaxZoom],
           paint: {
             "circle-color": ["rgba", 240, 196, 73, 0.0], // #f0c449
             "circle-radius": 5,
@@ -218,20 +220,46 @@ export default function FindChain({ location }: { location: Location }) {
         });
         // zoom during click on a cluster
         _map.on("click", "chain-cluster", (e) => {
+          console.log("cluster click event", e);
           const features = _map.queryRenderedFeatures(e.point, {
             layers: ["chain-cluster"],
           });
+          console.log("features", features);
           const clusterId = features[0].properties?.cluster_id;
-          (
-            _map.getSource("chains") as mapboxgl.GeoJSONSource
-          ).getClusterExpansionZoom(clusterId, (err, zoom) => {
-            if (err) return;
 
-            _map.easeTo({
-              center: (features[0].geometry as any).coordinates,
-              zoom: zoom,
+          try {
+            if (!clusterId) throw "no cluster id";
+            (
+              _map.getSource("chains") as mapboxgl.GeoJSONSource
+            ).getClusterExpansionZoom(clusterId, (err, zoom) => {
+              if (err) return;
+              _map.easeTo({
+                center: (features[0].geometry as any).coordinates,
+                zoom,
+              });
             });
-          });
+          } catch (err) {
+            try {
+              if (!features[0].properties?.uid) throw "no chain uid found";
+              const chain = _chains.find(
+                (c) => c.uid === features[0].properties!.uid
+              );
+              if (!chain) throw "no chain found";
+              _map.easeTo({
+                center: [chain.longitude, chain.latitude],
+                zoom: clusterMaxZoom + 1,
+              });
+
+              // auto select
+              setSelectedChains([chain]);
+            } catch (err) {
+              console.warn(err);
+              _map.easeTo({
+                center: e.lngLat,
+                zoom: clusterMaxZoom + 1,
+              });
+            }
+          }
         });
       });
       setChains(_chains);
