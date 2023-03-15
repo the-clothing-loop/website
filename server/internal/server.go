@@ -6,9 +6,10 @@ import (
 	"os"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/CollActionteam/clothing-loop/server/internal/controllers"
-	glog "github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
+	"github.com/golang/glog"
 )
 
 func Routes() *gin.Engine {
@@ -34,7 +35,10 @@ func Routes() *gin.Engine {
 	// router
 	r := gin.New()
 	r.Use(gin.Logger())
-	app.AirbrakeInit(r)
+	goscope.GoScope2Init(r, db,
+		app.Config.GOSCOPE2_USER,
+		app.Config.GOSCOPE2_PASS,
+	)
 	r.Use(controllers.MiddlewareSetDB(db))
 
 	// router groups

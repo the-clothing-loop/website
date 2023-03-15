@@ -141,9 +141,10 @@ export default function FindChain({ location }: { location: Location }) {
           type: "geojson",
           data: mapToGeoJSONChains(_chains, filterFunc),
           cluster: true,
-          clusterMaxZoom: 10,
-          clusterRadius: 30,
+          clusterMaxZoom: 9,
+          clusterRadius: 25,
         });
+
         _map.addLayer({
           id: "chain-cluster",
           type: "circle",
@@ -172,7 +173,7 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: ["!", ["has", "point_count"]],
           paint: {
-            "circle-color": ["rgba", 240, 196, 73, 0.8], // #f0c449
+            "circle-color": ["rgba", 240, 196, 73, 0.4], // #f0c449
             "circle-radius": [
               "interpolate",
               ["exponential", 2],
@@ -182,9 +183,8 @@ export default function FindChain({ location }: { location: Location }) {
               20,
               ["get", "radius"],
             ],
-            "circle-blur": 0.6,
-            "circle-stroke-width": 40,
-            "circle-stroke-color": ["rgba", 0, 0, 0, 0.0],
+            "circle-stroke-width": 2,
+            "circle-stroke-color": ["rgba", 240, 196, 73, 1],
           },
         });
         _map.addLayer({
@@ -193,11 +193,12 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: ["!", ["has", "point_count"]],
           paint: {
-            "circle-color": ["rgba", 240, 196, 73, 0.6], // #f0c449
+            "circle-color": ["rgba", 240, 196, 73, 0.0], // #f0c449
             "circle-radius": 5,
             "circle-stroke-width": 0,
           },
         });
+
         _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
           if (e.features) {
             let uids = e.features
@@ -335,11 +336,13 @@ export default function FindChain({ location }: { location: Location }) {
     switch (o) {
       case "+":
         if (z < maxZoom) {
+          console.log("z", z + 1);
           map?.setZoom(z + 1);
         }
         break;
       case "-":
         if (z > minZoom) {
+          console.log("z", z - 1);
           map?.setZoom(z - 1);
         }
         break;

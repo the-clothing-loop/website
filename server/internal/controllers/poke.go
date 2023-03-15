@@ -1,13 +1,11 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/CollActionteam/clothing-loop/server/internal/views"
-	"github.com/airbrake/glog/v4"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +16,7 @@ func Poke(c *gin.Context) {
 		ChainUID string `json:"chain_uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindJSON(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, fmt.Errorf("err: %v, uri: %v", err, query))
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -28,7 +26,7 @@ func Poke(c *gin.Context) {
 	}
 
 	if user.LastPokeTooRecent() {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusTooManyRequests, fmt.Errorf("Please wait a week before poking again"))
+		c.String(http.StatusTooManyRequests, "Please wait a week before poking again")
 		return
 	}
 
@@ -51,7 +49,7 @@ WHERE uc.is_chain_admin = TRUE AND u.email IS NOT NULL AND uc.chain_id IN (
 
 	`, query.ChainUID, user.ID).Scan(&userAdmins)
 	if len(userAdmins) < 1 {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, fmt.Errorf("Unable to poke this Loop"))
+		c.String(http.StatusUnauthorized, "Unable to poke this Loop")
 		return
 	}
 
@@ -67,8 +65,8 @@ WHERE uc.is_chain_admin = TRUE AND u.email IS NOT NULL AND uc.chain_id IN (
 	}
 
 	if err := user.SetLastPokeToNow(db); err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+		goscope.Log.Errorf("Unable to poke this Loop: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to poke this Loop")
 		return
 	}
 }

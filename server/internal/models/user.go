@@ -26,7 +26,7 @@ type User struct {
 	LastSignedInAt  zero.Time   `json:"-"`
 	LastPokeAt      zero.Time   `json:"-"`
 	UserToken       []UserToken `json:"-"`
-	UserEvent       []UserEvent `json:"-"`
+	Event           []Event     `json:"-"`
 	Chains          []UserChain `json:"chains"`
 	CreatedAt       time.Time   `json:"-"`
 	UpdatedAt       time.Time   `json:"-"`
@@ -94,17 +94,16 @@ func (u *User) SetLastPokeToNow(db *gorm.DB) error {
 	return db.Exec(`UPDATE users SET last_poke_at = NOW() WHERE id = ?`, u.ID).Error
 }
 
-func (u *User) FindLinkedEventByUID(db *gorm.DB, eventUID string) (cal *Event, err error) {
-	cal = &Event{}
+func (u *User) FindLinkedEventByUID(db *gorm.DB, eventUID string) (e *Event, err error) {
+	e = &Event{}
 	err = db.Raw(`
-SELECT cal.* FROM user_events AS ue
-LEFT JOIN events AS cal ON cal.id = ue.user_event_id
-WHERE cal.uid = ? AND ue.user_id = ?
+SELECT * FROM events
+WHERE uid = ? AND user_id = ?
 LIMIT 1
-	`, eventUID, u.ID).Scan(cal).Error
+	`, eventUID, u.ID).Scan(e).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return cal, nil
+	return e, nil
 }

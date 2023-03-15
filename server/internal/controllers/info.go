@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,7 +17,8 @@ FROM chains
 WHERE chains.published = TRUE AND chains.deleted_at IS NULL
 	`).Scan(&totalChains).Error
 	if err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+		goscope.Log.Errorf("Unable to retrieve information: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to retrieve information")
 		return
 	}
 
@@ -28,7 +29,8 @@ FROM users
 WHERE users.is_email_verified = TRUE
 	`).Scan(&totalUsers).Error
 	if err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, err)
+		goscope.Log.Errorf("Unable to retrieve information: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to retrieve information")
 		return
 	}
 

@@ -6,8 +6,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
-	glog "github.com/airbrake/glog/v4"
+	"github.com/golang/glog"
+
 	Faker "github.com/jaswdr/faker"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3/zero"
@@ -19,8 +21,9 @@ var faker = Faker.New()
 // some options are negatives of the used value
 // this is to keep the defaults to false when not specifically used
 type MockChainAndUserOptions struct {
-	IsEmailUnverified  bool
-	IsTokenUnverified  bool
+	IsNotEmailVerified bool
+	IsNotTokenVerified bool
+	IsNotApproved      bool
 	IsRootAdmin        bool
 	IsChainAdmin       bool
 	IsNotPublished     bool
@@ -36,7 +39,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain())),
-		IsEmailVerified: !o.IsEmailUnverified,
+		IsEmailVerified: !o.IsNotEmailVerified,
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Fake " + faker.Person().Name(),
 		PhoneNumber:     faker.Person().Contact().Phone,
@@ -45,13 +48,14 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		UserToken: []models.UserToken{
 			{
 				Token:    uuid.NewV4().String(),
-				Verified: !o.IsTokenUnverified,
+				Verified: !o.IsNotTokenVerified,
 			},
 		},
 		Chains: []models.UserChain{
 			{
 				ChainID:      chainID,
 				IsChainAdmin: o.IsChainAdmin,
+				IsApproved:   !o.IsNotApproved,
 				RouteOrder:   o.RouteOrderIndex,
 			},
 		},
@@ -87,7 +91,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 	}
 
 	if err := db.Create(&chain).Error; err != nil {
-		glog.Fatalf("Unable to create testChain: %v", err)
+		goscope.Log.Fatalf("Unable to create testChain: %v", err)
 	}
 
 	// Cleanup runs FiLo
@@ -141,7 +145,7 @@ func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint, o MockEventOptio
 		Longitude:   faker.Address().Latitude(),
 		Date:        time.Now().Add(time.Duration(faker.IntBetween(-20, 20)) * time.Hour),
 		Genders:     MockGenders(false),
-		UserEvents:  []models.UserEvent{{UserID: userID}},
+		UserID:      userID,
 		ChainID:     zero.IntFrom(int64(chainID)),
 	}
 
@@ -152,7 +156,6 @@ func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint, o MockEventOptio
 	// Cleanup runs FiLo
 	// So Cleanup must happen before MockUser
 	t.Cleanup(func() {
-		db.Exec(`DELETE FROM user_events WHERE event_id = ? AND user_id = ?`, event.ID, userID)
 		db.Exec(`DELETE FROM events WHERE id = ?`, event.ID)
 	})
 
