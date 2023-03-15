@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import "./i18n";
-import "./airbrake";
+import "./goscope";
 
 // stylesheets
 import "mapbox-gl/dist/mapbox-gl.css";

@@ -39,6 +39,8 @@
         api_config_smtp_sender: "{{ smtp_cl_acceptance_sender }}"
         api_config_smtp_user: "{{ smtp_cl_acceptance_user }}"
         api_config_smtp_pass: "{{ smtp_cl_acceptance_password }}"
+        api_config_goscope2_user: "{{ goscope2_acceptance_user }}"
+        api_config_goscope2_pass: "{{ goscope2_acceptance_pass }}"
       ansible.builtin.template:
         src: templates/config.yml.j2
         dest: /home/clothingloop/opt/config.acc.yml
@@ -60,6 +62,8 @@
         api_config_smtp_sender: "{{ smtp_cl_production_sender }}"
         api_config_smtp_user: "{{ smtp_cl_production_user }}"
         api_config_smtp_pass: "{{ smtp_cl_production_password }}"
+        api_config_goscope2_user: "{{ goscope2_production_user }}"
+        api_config_goscope2_pass: "{{ goscope2_production_pass }}"
       ansible.builtin.template:
         src: templates/config.yml.j2
         dest: /home/clothingloop/opt/config.prod.yml

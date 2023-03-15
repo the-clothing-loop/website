@@ -76,6 +76,25 @@
       ),
       linear-gradient(135deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
   }
+
+  .bg-facebook {
+    background: #1b74e4;
+    background: radial-gradient(
+      ellipse at 80% 20%,
+      #5fb9f4 0%,
+      #236ee0 90%,
+      #2165cd 100%
+    );
+  }
+
+  input.input-reset[type="number"]::-webkit-outer-spin-button,
+  input.input-reset[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input.input-reset[type="number"] {
+    -moz-appearance: textfield;
+  }
 }
 
 :root {

@@ -31,8 +31,8 @@ func TestReadFromRequest(t *testing.T) {
 func TestLoginFlowToken(t *testing.T) {
 	// mocks
 	_, user, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
-		IsEmailUnverified: true,
-		IsTokenUnverified: true,
+		IsNotEmailVerified: true,
+		IsNotTokenVerified: true,
 	})
 
 	// create unverified token

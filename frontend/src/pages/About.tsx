@@ -97,7 +97,7 @@ export default function About() {
 
           <div>
             <img
-              src="https://ucarecdn.com/a1229917-0a48-4401-9e16-d8939509c0b8/-/resize/x600/-/format/auto/-/quality/smart/pressclippingssite.jpg"
+              src="https://images.clothingloop.org/618x/press_clippings_site.jpg"
               alt="Press clippings related to Clothing Loop"
               className="my-10 mx-auto w-full lg:w-5/6 object-contain object-center px-6"
             />
@@ -135,7 +135,7 @@ export default function About() {
                     p: <p></p>,
                     imgTeam: (
                       <img
-                        src="https://ucarecdn.com/11253a80-a1d5-4639-a3ca-166dddcae210/PaloekaNichonlandscape.jpg"
+                        src="https://images.clothingloop.org/x240/paloeka_nichon_landscape.jpg"
                         alt="Paloeka and Nichon"
                         className="-2/3 mx-auto object-contain object-center mb-6 md:mb-0"
                       />

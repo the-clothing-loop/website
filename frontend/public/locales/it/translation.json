@@ -32,6 +32,7 @@
   "editUserDetails": "Modifica dettagli utente",
   "approveParticipant": "Approve “{{ name }}'s” request to join the loop?",
   "denyParticipant": "Deny “{{ name }}'s” request to join the loop?",
+  "route": "Route",
   "approve": "Approve",
   "pendingApproval": "Pending Host Approval",
   "deny": "Deny",

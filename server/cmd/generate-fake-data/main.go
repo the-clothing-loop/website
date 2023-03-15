@@ -1,7 +1,9 @@
 package main
 
 import (
+	"flag"
 	"log"
+	"strconv"
 	"testing"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
@@ -12,7 +14,17 @@ import (
 
 var faker = Faker.New()
 
+// run the following to generate more
+// `go run cmd/generate-fake-data/main.go 100`
 func main() {
+	repeat := 5
+	flag.Parse()
+	if a := flag.Arg(0); a != "" {
+		n, _ := strconv.Atoi(a)
+		if n > 1 {
+			repeat = n
+		}
+	}
 	app.ConfigInit(".")
 
 	db := app.DatabaseInit()
@@ -23,7 +35,7 @@ func main() {
 	userChainAdmins := []*models.User{}
 	// userBasics := []*models.User{}
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < repeat; i++ {
 		chain, user, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
 			IsChainAdmin: true,
 		})
@@ -34,7 +46,7 @@ func main() {
 		log.Printf("Generated -> Chain\t(ID: %d)", chain.ID)
 		log.Printf("Generated -> User\t(ID: %d)", user.ID)
 	}
-	for i := 0; i < 5; i++ {
+	for i := 0; i < repeat; i++ {
 		chainIndex := faker.IntBetween(0, len(chains)-1)
 		chain := chains[chainIndex]
 

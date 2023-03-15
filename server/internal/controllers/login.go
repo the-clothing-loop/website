@@ -1,14 +1,13 @@
 package controllers
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/gin_utils"
+	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/CollActionteam/clothing-loop/server/internal/views"
-	glog "github.com/airbrake/glog/v4"
+
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3/zero"
@@ -21,7 +20,7 @@ func LoginEmail(c *gin.Context) {
 		Email string `binding:"required,email" json:"email"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Email required"))
+		c.String(http.StatusBadRequest, "Email required")
 		return
 	}
 
@@ -34,14 +33,14 @@ WHERE email = ?
 LIMIT 1
 	`, body.Email).Scan(&user)
 	if res.Error != nil || user.ID == 0 {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Email is not yet registered"))
+		goscope.Log.Warningf("Email is not yet registered: %v", res.Error)
+		c.String(http.StatusUnauthorized, "Email is not yet registered")
 		return
 	}
 
 	token, err := auth.TokenCreateUnverified(db, user.ID)
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
+		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
 	views.EmailLoginVerification(c, db, user.Name, user.Email.String, token)
@@ -54,21 +53,21 @@ func LoginValidate(c *gin.Context) {
 		Key string `form:"apiKey,required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Malformed url: apiKey required"))
+		c.String(http.StatusBadRequest, "Malformed url: apiKey required")
 		return
 	}
 	token := query.Key
 
 	ok, user := auth.TokenVerify(db, token)
 	if !ok {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusUnauthorized, errors.New("Invalid token"))
+		c.String(http.StatusUnauthorized, "Invalid token")
 		return
 	}
 
 	err := user.AddUserChainsToObject(db)
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, models.ErrAddUserChainsToObject)
+		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
+		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
 		return
 	}
 
@@ -97,8 +96,8 @@ WHERE user_chains.chain_id IN ?
 	AND user_chains.is_chain_admin = TRUE
 	`, chainIDs).Scan(&results).Error
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to find associated loop admins"))
+		goscope.Log.Errorf("Unable to find associated loop admins: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to find associated loop admins")
 		return
 	}
 	if user.Email.Valid && !user.IsEmailVerified {
@@ -135,26 +134,26 @@ func RegisterChainAdmin(c *gin.Context) {
 		User  UserCreateRequestBody  `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
 	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrSizeInvalid)
+		c.String(http.StatusBadRequest, models.ErrSizeInvalid.Error())
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.Chain.Sizes); !ok {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrSizeInvalid)
+		c.String(http.StatusBadRequest, models.ErrSizeInvalid.Error())
 		return
 	}
 
 	if ok := models.ValidateAllGenderEnum(body.Chain.Genders); !ok {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrGenderInvalid)
+		c.String(http.StatusBadRequest, models.ErrGenderInvalid.Error())
 		return
 	}
 
 	if !body.User.Newsletter {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Newsletter-Box must be checked to create a new loop admin."))
+		c.String(http.StatusBadRequest, "Newsletter-Box must be checked to create a new loop admin.")
 		return
 	}
 
@@ -182,7 +181,8 @@ func RegisterChainAdmin(c *gin.Context) {
 		Address:         body.User.Address,
 	}
 	if err := db.Create(user).Error; err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("User already exists"))
+		goscope.Log.Warningf("User already exists: %v", err)
+		c.String(http.StatusConflict, "User already exists")
 		return
 	}
 	chain.UserChains = []models.UserChain{{
@@ -200,8 +200,8 @@ func RegisterChainAdmin(c *gin.Context) {
 
 	token, err := auth.TokenCreateUnverified(db, user.ID)
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
+		goscope.Log.Errorf("Unable to create token: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
 
@@ -216,11 +216,11 @@ func RegisterBasicUser(c *gin.Context) {
 		User     UserCreateRequestBody `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, models.ErrSizeInvalid)
+		c.String(http.StatusBadRequest, models.ErrSizeInvalid.Error())
 		return
 	}
 
@@ -229,10 +229,11 @@ func RegisterBasicUser(c *gin.Context) {
 		var row struct {
 			ID uint `gorm:"id"`
 		}
-		db.Raw("SELECT id FROM chains WHERE uid = ? AND deleted_at IS NULL AND open_to_new_members = TRUE LIMIT 1", body.ChainUID).Scan(&row)
+		err := db.Raw("SELECT id FROM chains WHERE uid = ? AND deleted_at IS NULL AND open_to_new_members = TRUE LIMIT 1", body.ChainUID).Scan(&row).Error
 		chainID = row.ID
 		if chainID == 0 {
-			gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("Chain does not exist"))
+			goscope.Log.Warningf("Chain does not exist: %v", err)
+			c.String(http.StatusBadRequest, "Chain does not exist")
 			return
 		}
 	}
@@ -248,7 +249,8 @@ func RegisterBasicUser(c *gin.Context) {
 		Address:         body.User.Address,
 	}
 	if res := db.Create(user); res.Error != nil {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusConflict, errors.New("User already exists"))
+		goscope.Log.Warningf("User already exists: %v", res.Error)
+		c.String(http.StatusConflict, "User already exists")
 		return
 	}
 	db.Create(&models.UserChain{
@@ -268,8 +270,8 @@ func RegisterBasicUser(c *gin.Context) {
 
 	token, err := auth.TokenCreateUnverified(db, user.ID)
 	if err != nil {
-		glog.Error(err)
-		gin_utils.GinAbortWithErrorBody(c, http.StatusInternalServerError, errors.New("Unable to create token"))
+		goscope.Log.Errorf("Unable to create token: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
 	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
@@ -280,7 +282,7 @@ func Logout(c *gin.Context) {
 
 	token, ok := auth.TokenReadFromRequest(c)
 	if !ok {
-		gin_utils.GinAbortWithErrorBody(c, http.StatusBadRequest, errors.New("No token received"))
+		c.String(http.StatusBadRequest, "No token received")
 		return
 	}
 

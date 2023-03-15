@@ -5,7 +5,8 @@ import (
 	"testing"
 
 	"github.com/CollActionteam/clothing-loop/server/internal/app"
-	glog "github.com/airbrake/glog/v4"
+	"github.com/golang/glog"
+
 	"gorm.io/gorm"
 )
 
