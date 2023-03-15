@@ -8,6 +8,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { Event } from "../api/types";
 import { GenderI18nKeys } from "../api/enums";
 import EventsFilterBar from "../components/EventsFilterBar";
+import { GenderBadges, SizeBadges } from "../components/Badges";
 
 import {
   eventGet,
@@ -173,16 +174,13 @@ export default function Events() {
                                 {"Mission Dolores"}
                               </span>
                               <div className="p-2">
-                                {genders?.map((g) => {
-                                  return (
-                                    <span
-                                      className="badge badge-outline bg-teal-light mr-4"
-                                      key={g}
-                                    >
-                                      {t(GenderI18nKeys[parseInt(g)])}
-                                    </span>
-                                  );
-                                })}
+                                {event.genders?.length ? (
+                                  <>
+                                    <div className="mb-2">
+                                      {GenderBadges(t, event.genders)}
+                                    </div>
+                                  </>
+                                ) : null}
                               </div>
                             </div>
                           </div>
