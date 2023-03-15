@@ -85,7 +85,7 @@ export default function App() {
                   <Route exact path={`${base}/events/`} component={Events} />
                   <Route
                     exact
-                    path={`${base}/eventdetails/`}
+                    path={`${base}/events/:eventUID/`}
                     component={EventDetails}
                   />
 

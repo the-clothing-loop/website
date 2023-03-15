@@ -77,7 +77,6 @@ export default function Events() {
         // add other parameters later
         setAllEvents(_events.filter(filterFunc));
         setEvents(_events.filter(filterFunc));
-
       });
     } catch (err: any) {
       console.error(err);
@@ -118,10 +117,11 @@ export default function Events() {
                 .map((event) => {
                   const date = new Date(event.date);
                   const genders = event.genders;
+                  var eventURL = window.location.pathname + "/" + event.uid;
 
                   return (
                     <div className="pb-10 px-0" key={event.uid}>
-                      <Link to="/eventdetails">
+                      <Link to={eventURL}>
                         <div
                           className="bg-teal-light mr-0 md:mr-6 mb-6 max-w-xl overflow-hidden"
                           //onMouseOver={() => setHover(true)}
