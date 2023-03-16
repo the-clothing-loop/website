@@ -77,29 +77,6 @@ export default function Footer() {
                   {t("findUs")}
                 </span>
                 <ul className="inline-grid lg:grid-cols-[min-content_1fr]">
-                  <li className="mb-3 inline-flex items-center lg:order-2">
-                    <a
-                      href="https://www.instagram.com/theclothingloop/"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="btn btn-circle btn-outline feather feather-instagram text-lg mr-3 hover:bg-instagram"
-                      aria-label="link to our instagram account"
-                    ></a>
-                    <span
-                      tabIndex={1}
-                      className={`tooltip tooltip-bottom text-sm ${
-                        copying === "@theclothingloop" ? "tooltip-open" : ""
-                      }`}
-                      onClick={copyToClipboard}
-                      data-tip={
-                        copying === "@theclothingloop"
-                          ? t("copiedToClipboard")
-                          : t("copy")
-                      }
-                    >
-                      @theclothingloop
-                    </span>
-                  </li>
                   <li className="mb-3 inline-flex items-center lg:order-4">
                     <a
                       href="mailto:hello@clothingloop.org"
@@ -123,26 +100,49 @@ export default function Footer() {
                       hello@clothingloop.org
                     </span>
                   </li>
-                  <li className="mb-3 inline-flex items-center lg:order-1">
+                  <li className="mb-3 inline-flex items-center lg:order-2">
                     <a
-                      href="https://www.linkedin.com/groups/12746791/"
+                      href="https://www.instagram.com/theclothingloop/"
+                      target="_blank"
                       rel="noreferrer"
-                      aria-label="Our LinkedIn page"
-                      className="flex flex-row items-center"
+                      className="btn btn-circle btn-outline feather feather-instagram text-lg mr-3 hover:bg-instagram"
+                      aria-label="link to our instagram account"
+                    ></a>
+                    <span
+                      tabIndex={1}
+                      className={`tooltip tooltip-bottom text-sm ${
+                        copying === "@theclothingloop" ? "tooltip-open" : ""
+                      }`}
+                      onClick={copyToClipboard}
+                      data-tip={
+                        copying === "@theclothingloop"
+                          ? t("copiedToClipboard")
+                          : t("copy")
+                      }
                     >
-                      <span className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0a66c2] feather feather-linkedin text-lg"></span>
-                      <span className="text-sm lg:hidden">LinkedIn</span>
-                    </a>
+                      @theclothingloop
+                    </span>
                   </li>
-                  <li className="mb-3 inline-flex items-center lg:order-3">
+                  <li className="mb-3 inline-flex items-center lg:order-1">
                     <a
                       href="https://www.facebook.com/clothingloop/"
                       rel="noreferrer"
                       aria-label="Our Facebook page"
-                      className="flex flex-row items-center"
+                      className="flex flex-row items-center group"
                     >
-                      <span className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-facebook feather feather-facebook text-lg"></span>
+                      <span className="btn btn-circle btn-outline mr-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-facebook feather feather-facebook text-lg"></span>
                       <span className="text-sm lg:hidden">Facebook</span>
+                    </a>
+                  </li>
+                  <li className="mb-3 inline-flex items-center lg:order-3">
+                    <a
+                      href="https://www.linkedin.com/groups/12746791/"
+                      rel="noreferrer"
+                      aria-label="Our LinkedIn page"
+                      className="flex flex-row items-center group"
+                    >
+                      <span className="btn btn-circle btn-outline mr-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#0a66c2] feather feather-linkedin text-lg"></span>
+                      <span className="text-sm lg:hidden">LinkedIn</span>
                     </a>
                   </li>
                 </ul>
