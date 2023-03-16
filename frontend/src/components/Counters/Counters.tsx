@@ -56,7 +56,7 @@ export default function Counters() {
 
         <div className="">
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
-            11
+            12
           </div>
           <div className="opacity-80">{t("countries")}</div>
         </div>
