@@ -27,6 +27,7 @@ interface Props {
   initialAddress?: string;
   className?: string;
   types: MapboxType[];
+  placeholder?: string;
 }
 
 export default function Geocoding(props: Props) {
@@ -37,6 +38,7 @@ export default function Geocoding(props: Props) {
     if (MAPBOX_TOKEN) {
       geocoder = new MapboxGeocoder({
         accessToken: MAPBOX_TOKEN,
+        placeholder: props.placeholder,
         types: props.types.join(","), //"country,region,place,postcode,locality,neighborhood",
       });
 
