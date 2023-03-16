@@ -1,14 +1,14 @@
 <p>Hi, {{ .Name }}</p>
 
-{{ if .Reason "sizes_genders" }}
+{{ if eq .Reason "sizes_genders" }}
 <p>Leider wurde Dein Antrag auf Beitritt zum {{ .ChainName }} -Loop abgelehnt, weil sich Deine Größe und/oder Geschlechterpräferenzen in Bezug auf Kleidung von dem Loop unterscheiden, von der Du versucht hast ein Teil zu werden.</p>
 
 <p>Vielleicht gibt es einen anderen Loop, wo Du wohnst, oder Du kannst einen selbst starten! Gehe zur Website: www.clothingloop.org und starte einen neuen Loop.</p>
-{{ else if .Reason "too_far_away" }}
+{{ else if eq .Reason "too_far_away" }}
 <p>Leider wurde Deine Anfrage The {{ .ChainName }} Loop abgelehnt, da Du außerhalb des Gebiets, in dem der Loop aktiv ist, lebst.</p>
 
 <p>Vielleicht gibt es einen anderen Loop, wo Du wohnst, oder Du kannst einen selbst starten! Gehe zur Website: www.clothingloop.org und starte einen neuen Loop.</p>
-{{ else if .Reason "too_far_away" }}
+{{ else if eq .Reason "too_far_away" }}
 <p>Leider wurde Deine Anfrage, The {{ .ChainName }} Loop beizutreten, abgelehnt.</p>
 
 Gehe zur Website: www.clothingloop.org und starte einen neuen Loop.</p>

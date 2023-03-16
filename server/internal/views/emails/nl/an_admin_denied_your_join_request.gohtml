@@ -1,14 +1,14 @@
 <p>Hoi {{ .Name }}</p>
 
-{{ if .Reason "sizes_genders" }}
+{{ if eq .Reason "sizes_genders" }}
 <p>Helaas, jouw verzoek om deel te nemen met {{ .ChainName }} Loop is geweigerd, omdat jouw opgegeven maat en/of gendervoorkeuren met betrekking tot kleding verschillen van de Loop waarvan u probeerde deel uit te maken.</p>
 
 <p>Misschien is er nog een andere Loop waar je woont, of je kunt er zelf een beginnen! Ga naar de website: www.clothingloop.org en start een nieuwe Loop.</p>
-{{ else if .Reason "too_far_away" }}
+{{ else if eq .Reason "too_far_away" }}
 <p>Helaas, uw verzoek om toe te treden tot de {{ .ChainName }} Loop is geweigerd, omdat je buiten het gebied woont waar de Loop actief is.</p>
 
 <p>Misschien is er nog een andere Loop waar je woont, of je kunt er zelf een beginnen! Ga naar de website: www.clothingloop.org en start een nieuwe Loop.</p>
-{{ else if .Reason "too_far_away" }}
+{{ else if eq .Reason "too_far_away" }}
 <p>Helaas, jouw verzoek om deel te nemen met {{ .ChainName }} Loop is geweigerd om een overige reden.</p>
 
 Ga naar de website: www.clothingloop.org en start een nieuwe Loop.</p>
