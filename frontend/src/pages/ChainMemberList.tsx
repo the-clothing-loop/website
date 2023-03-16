@@ -36,6 +36,7 @@ import { GenderBadges, SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { routeGetOrder, routeSetOrder } from "../api/route";
+import { i18n, TFunction } from "i18next";
 
 interface Params {
   chainUID: string;
@@ -138,6 +139,15 @@ export default function ChainMemberList() {
 
     return [host, notHost];
   }, [users, chain]);
+
+  const isAnyTooOld = useMemo<boolean>(() => {
+    if (!(unapprovedUsers && chain)) return false;
+
+    return !!unapprovedUsers.find((u) => {
+      let uc = getUserChain(u, chain.uid);
+      return unapprovedTooOld(uc.created_at);
+    });
+  }, [chain, unapprovedUsers]);
 
   async function refresh(firstPageLoad = false) {
     try {
@@ -352,7 +362,9 @@ export default function ChainMemberList() {
                   <span
                     className={`absolute -top-3 -right-3 block py-1 px-2 rounded-lg ${
                       unapprovedUsers.length
-                        ? "bg-primary text-black"
+                        ? isAnyTooOld
+                          ? "bg-error text-black"
+                          : "bg-primary text-black"
                         : "bg-base-200 text-base-300"
                     }`}
                   >
@@ -501,7 +513,7 @@ function ApproveTable(props: {
   chain: Chain;
   refresh: () => Promise<void>;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
 
   function onApprove(e: MouseEvent, user: User) {
@@ -604,7 +616,8 @@ function ApproveTable(props: {
                 <th>
                   <span>{t("interestedSizes")}</span>
                 </th>
-                <th className="hidden lg:table-cell w-[0.1%]"></th>
+                <th></th>
+                <th className="hidden lg:table-cell"></th>
               </tr>
             </thead>
             <tbody>
@@ -618,10 +631,16 @@ function ApproveTable(props: {
                     : 1;
                 })
                 .map((u) => {
+                  const uc = getUserChain(u, props.chain.uid);
+                  const tooOld = unapprovedTooOld(uc.created_at);
                   return (
                     <tr
                       key={u.uid}
-                      className="[&>td]:bg-yellow/[.6] [&_td]:hover:bg-yellow/[.4]"
+                      className={
+                        tooOld
+                          ? "[&>td]:bg-red/[.5] [&_td]:hover:bg-red/[.3]"
+                          : "[&>td]:bg-yellow/[.6] [&_td]:hover:bg-yellow/[.4]"
+                      }
                     >
                       <td className="lg:hidden !px-0">
                         <DropdownMenu
@@ -650,17 +669,20 @@ function ApproveTable(props: {
                         </span>
                       </td>
                       <td className="text-sm leading-relaxed">
-                        {u.email}
+                        <a href={"mailto:" + u.email}>{u.email}</a>
                         <br />
-                        {u.phone_number}
+                        <a href={"tel:" + u.phone_number}>{u.phone_number}</a>
                       </td>
-                      <td className={`align-middle`}>
+                      <td className="align-middle">
                         <span
                           className={`block min-w-[12rem] rounded-lg whitespace-normal [&_span]:mb-2 -mb-2 `}
                           tabIndex={0}
                         >
                           {SizeBadges(t, u.sizes)}
                         </span>
+                      </td>
+                      <td className="text-center">
+                        {simplifyDays(t, i18n, uc.created_at)}
                       </td>
                       <td className="text-right hidden lg:table-cell">
                         <button
@@ -737,21 +759,6 @@ function ParticipantsTable(props: {
         },
       ],
     });
-  }
-
-  function simplifyDays(uc: UserChain): string {
-    var numDays = dayjs().diff(dayjs(uc.created_at), "days");
-
-    if (numDays < 1) {
-      return t("new");
-    } else if (numDays < 7) {
-      return t("nDays", { n: numDays });
-    } else {
-      let locale = i18n.language;
-      if (locale === "en") locale = "default";
-
-      return new Date(uc.created_at).toLocaleDateString(locale);
-    }
   }
 
   function getUserChain(u: User): UserChain {
@@ -875,7 +882,9 @@ function ParticipantsTable(props: {
                         {SizeBadges(t, u.sizes)}
                       </span>
                     </td>
-                    <td className="text-center">{simplifyDays(userChain)}</td>
+                    <td className="text-center">
+                      {simplifyDays(t, i18n, userChain.created_at)}
+                    </td>
                   </tr>
                 );
               })}
@@ -1094,4 +1103,25 @@ function reOrder(arr: string[], fromIndex: number, toIndex: number): string[] {
   res.push(...arr.slice(toIndex));
 
   return res;
+}
+
+function simplifyDays(t: TFunction, i18n: i18n, date: string): string {
+  const numDays = dayjs().diff(dayjs(date), "days");
+
+  if (numDays < 1) {
+    return t("new");
+  } else if (numDays < 7) {
+    return t("nDays", { n: numDays });
+  } else {
+    let locale = i18n.language;
+    if (locale === "en") locale = "default";
+
+    return new Date(date).toLocaleDateString(locale);
+  }
+}
+
+function unapprovedTooOld(date: string): boolean {
+  const numDays = dayjs().diff(dayjs(date), "days");
+
+  return numDays > 30;
 }
