@@ -4,11 +4,11 @@ import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-import { TwoColumnLayout } from "../components/Layouts";
 import { AuthContext } from "../providers/AuthProvider";
 import { userPurge } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import ChainsList from "../components/ChainsList";
+import { useEscape } from "../util/escape.hooks";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
@@ -34,6 +34,15 @@ export default function AdminDashboard() {
 
   if (!authUser) return null;
 
+  useEscape(() => {
+    let el = document.getElementById(
+      "modal-circle-loop"
+    ) as HTMLInputElement | null;
+    if (el && el.checked) {
+      el.checked = false;
+    }
+  });
+
   const isChainAdmin = useMemo(
     () => !!authUser?.chains.find((uc) => uc.is_chain_admin),
     [authUser]
@@ -47,8 +56,8 @@ export default function AdminDashboard() {
       </Helmet>
       <main className="">
         <section className="bg-teal-light mb-6">
-          <div className="container mx-auto flex items-stretch justify-between px-5 md:px-20">
-            <div className="flex flex-col items-between py-8">
+          <div className="relative container mx-auto px-5 md:px-20">
+            <div className="z-10 flex flex-col items-between py-8">
               <div className="flex-grow max-w-screen-xs">
                 <h1 className="font-serif font-bold text-4xl text-secondary mb-3">
                   {t("helloN", { n: authUser.name })}
@@ -93,10 +102,33 @@ export default function AdminDashboard() {
                 </button>
               </div>
             </div>
-            <img
-              className="hidden lg:block h-64 w-64 my-6 rounded-full object-cover self-center"
-              src="https://images.clothingloop.org/256x256/denise.jpg"
-            />
+            <label
+              htmlFor="modal-circle-loop"
+              className="z-0 hidden lg:flex absolute top-0 right-0 bottom-0 h-full cursor-zoom-in overflow-hidden aspect-[4/3]"
+            >
+              <img
+                className="h-full hover:scale-105 transition-transform object-cover self-center cursor-zoom-in"
+                src="https://images.clothingloop.org/cx164,cy1925,cw4115,ch3086,x640/circle_loop.jpg"
+              />
+            </label>
+          </div>
+          <input
+            type="checkbox"
+            id="modal-circle-loop"
+            className="modal-toggle"
+          />
+          <div className="modal">
+            <div className="relative max-w-[100vw] max-h-[100vh] h-full justify-center items-center flex">
+              <label
+                htmlFor="modal-circle-loop"
+                aria-label="close"
+                className="btn btn-sm btn-square absolute right-2 top-2 feather feather-x"
+              ></label>
+              <img
+                className="max-h-full"
+                src="https://images.clothingloop.org/x1080/circle_loop.jpg"
+              />
+            </div>
           </div>
         </section>
         <ChainsList />
