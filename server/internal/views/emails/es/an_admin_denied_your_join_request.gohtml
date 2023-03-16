@@ -1,14 +1,14 @@
 <p>Hola {{ .Name }},</p>
 
-{{ if .Reason "sizes_genders" }}
+{{ if eq .Reason "sizes_genders" }}
 <p>Desafortunadamente, tu solicitud para unirte al Loop {{ .ChainName }} ha sido denegada, porque tus preferencias de tamaño y/o género con respecto a la ropa difieren del Loop del que intentaste formar parte.</p>
 
 <p>¡Tal vez haya otro Loop donde vivas, o puedes empezar uno tú mismo! Ir al sitio web: www.clothingloop.org e iniciar un Loop nuevo.</p>
-{{ else if .Reason "too_far_away" }}
+{{ else if eq .Reason "too_far_away" }}
 <p>Desafortunadamente, tu solicitud para unirte al Loop {{ .ChainName }} ha sido denegada, porque vives fuera del área donde el Loop está activo.</p>
 
 <p>¡Tal vez haya otro Loop donde vivas, o puedes empezar uno tú mismo! Ir al sitio web: www.clothingloop.org e iniciar un Loop nuevo.</p>
-{{ else if .Reason "other" }}
+{{ else if eq .Reason "other" }}
 <p>Desafortunadamente, tu solicitud para unirte al Loop {{ .ChainName }} ha sido denegada por otra razón.</p>
 
 <p>Ir al sitio web: www.clothingloop.org e iniciar un Loop nuevo.</p>
