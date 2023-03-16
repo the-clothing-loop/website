@@ -6,15 +6,19 @@ import { useDropdown } from "../util/dropdown.hooks";
 const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
 
-const testLanguages = [
-  { lng: "de", title: "German", flag: "/images/flags/de.svg" },
-  { lng: "es", title: "Spanish", flag: "/images/flags/es.svg" },
-];
+interface Language {
+  lng: string;
+  title: string;
+  flag: string;
+}
+const testLanguages: Language[] = [];
 
-let languages = [
+let languages: Language[] = [
   { lng: "en", title: "English", flag: "/images/flags/gb.svg" },
   { lng: "nl", title: "Dutch", flag: "/images/flags/nl.svg" },
+  { lng: "de", title: "German", flag: "/images/flags/de.svg" },
   { lng: "fr", title: "French", flag: "/images/flags/fr.svg" },
+  { lng: "es", title: "Spanish", flag: "/images/flags/es.svg" },
   { lng: "sv", title: "Swedish", flag: "/images/flags/se.svg" },
 ];
 

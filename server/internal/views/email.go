@@ -20,10 +20,14 @@ var emailsHeaders = map[string]map[string]string{}
 var emailsTemplates = map[string]*template.Template{
 	"en": mustParseFS(emailsFS, "emails/en/*.gohtml"),
 	"nl": mustParseFS(emailsFS, "emails/nl/*.gohtml"),
+	"de": mustParseFS(emailsFS, "emails/de/*.gohtml"),
+	"fr": mustParseFS(emailsFS, "emails/fr/*.gohtml"),
+	"es": mustParseFS(emailsFS, "emails/es/*.gohtml"),
+	"sv": mustParseFS(emailsFS, "emails/sv/*.gohtml"),
 }
 
 func init() {
-	lang := []string{"en", "nl", "fr", "sv"}
+	lang := []string{"en", "nl", "de", "fr", "es", "sv"}
 
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/headers.json", l))
@@ -44,7 +48,7 @@ func init() {
 func getI18n(c *gin.Context) string {
 	i18n, _ := c.Cookie("i18next")
 	switch i18n {
-	case "nl":
+	case "nl", "de", "fr", "es", "sv":
 	default:
 		i18n = "en"
 	}
