@@ -90,17 +90,9 @@ export default function Login() {
                 src={CirclesFrame}
                 alt=""
               />
-              <h1 className="font-serif font-bold text-5xl text-secondary mb-8">
+              <h1 className="font-serif font-bold text-5xl text-secondary mb-7">
                 {t("login")}
               </h1>
-              <p className="leading-7 mb-6">
-                <Trans
-                  i18nKey="areYouAlreadyHosting<a>JoinAnExistingLoop"
-                  components={{
-                    a: <Link className="link" to="../../loops/find"></Link>,
-                  }}
-                ></Trans>
-              </p>
 
               <form onSubmit={onSubmit} className="flex flex-col">
                 <input
