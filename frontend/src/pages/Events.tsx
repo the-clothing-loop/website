@@ -197,6 +197,65 @@ export default function Events() {
     </>
   );
 
+  function whenFilterHandler(e: Event, d: string) {
+    const todayDate = new Date();
+    const today = new Date(todayDate.getTime());
+    today.setHours(0, 0, 0, 0);
+
+    const eventDate = new Date(e.date);
+    eventDate.setHours(0, 0, 0, 0);
+
+    const tomorrow = new Date(todayDate.getTime() + 1 * 24 * 60 * 60 * 1000);
+    tomorrow.setHours(0, 0, 0, 0);
+
+    switch (d) {
+      case "1":
+
+        if (eventDate.getTime() < tomorrow.getTime()){
+
+
+          return true;
+
+        } 
+        break;
+      case "2":
+        if (eventDate.getTime() <= tomorrow.getTime()) return true;
+
+        break;
+      case "3":
+        console.log("case 3");
+        const thisWeek = new Date(
+          todayDate.getTime() + 7 * 24 * 60 * 60 * 1000
+        );
+        thisWeek.setHours(0, 0, 0, 0);
+
+        if (eventDate.getTime() <= thisWeek.getTime()) return true;
+
+        break;
+      case "4":
+        const nextTwoWeeks = new Date(
+          todayDate.getTime() + 14 * 24 * 60 * 60 * 1000
+        );
+        nextTwoWeeks.setHours(0, 0, 0, 0);
+
+        if (eventDate.getTime() <= nextTwoWeeks.getTime()) return true;
+
+        break;
+      case "5":
+        const thisMonth = new Date(
+          today.getFullYear(),
+          today.getMonth() + 1,
+          0
+        );
+        thisMonth.setHours(0, 0, 0, 0);
+
+        
+        if (eventDate.getTime() < thisMonth.getTime()) return true;
+
+        break;
+    }
+  }
+
   function createFilterFunc(
     genders: string[],
     date: string[]
@@ -212,56 +271,7 @@ export default function Events() {
     } else if (date?.length) {
       filterFunc = (e) => {
         for (let d of date) {
-          const todayDate = new Date();
-          const today = new Date(todayDate.getTime());
-          today.setHours(0, 0, 0, 0);
-
-          const eventDate = new Date(e.date);
-          eventDate.setHours(0, 0, 0, 0);
-
-          const tomorrow = new Date(
-            todayDate.getTime() + 1 * 24 * 60 * 60 * 1000
-          );
-          tomorrow.setHours(0, 0, 0, 0);
-
-          switch (d) {
-            case "1":
-              if (eventDate.getTime() < tomorrow.getTime()) return true;
-
-              break;
-            case "2":
-              if (eventDate.getTime() <= tomorrow.getTime()) return true;
-
-              break;
-            case "3":
-              const thisWeek = new Date(
-                todayDate.getTime() + 7 * 24 * 60 * 60 * 1000
-              );
-              thisWeek.setHours(0, 0, 0, 0);
-
-              if (eventDate.getTime() <= thisWeek.getTime()) return true;
-
-              break;
-            case "4":
-              const nextTwoWeeks = new Date(
-                todayDate.getTime() + 14 * 24 * 60 * 60 * 1000
-              );
-              nextTwoWeeks.setHours(0, 0, 0, 0);
-
-              if (eventDate.getTime() <= nextTwoWeeks.getTime()) return true;
-
-              break;
-            case "5":
-              const thisMonth = new Date(
-                today.getFullYear(),
-                today.getMonth() + 1,
-                0
-              );
-              thisMonth.setHours(0, 0, 0, 0);
-              if (eventDate.getTime() < thisMonth.getTime()) return true;
-
-              break;
-          }
+          if (whenFilterHandler(e, d)) return true;
         }
         return false;
       };
@@ -269,13 +279,15 @@ export default function Events() {
     } else if (date?.length == 0) {
       filterFunc = (e) => {
         const todayDate = new Date();
-        const eventDate = new Date(e.date);
         const today = new Date(todayDate.getTime());
+        today.setHours(0, 0, 0, 0);
 
-        if (todayDate.getTime() < eventDate.getTime()) {
+        const eventDate = new Date(e.date);
+        eventDate.setHours(0, 0, 0, 0);
+
+        if (today.getTime() <= eventDate.getTime()) {
           return true;
         }
-
         return false;
       };
     }
