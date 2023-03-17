@@ -69,6 +69,7 @@ export default function Events() {
         radius: 10000,
       }).then((res) => {
         const _events = res.data;
+        const todayDate = new Date();
 
         const filterFunc = createFilterFunc(
           urlParams.getAll("genders"),
@@ -201,7 +202,6 @@ export default function Events() {
     date: string[]
   ): (e: Event) => boolean {
     let filterFunc = (e: Event) => true;
-
     if (genders?.length) {
       filterFunc = (e) => {
         for (let g of genders) {
@@ -213,49 +213,69 @@ export default function Events() {
       filterFunc = (e) => {
         for (let d of date) {
           const todayDate = new Date();
-          const eventDate = new Date(e.date);
           const today = new Date(todayDate.getTime());
+          today.setHours(0, 0, 0, 0);
+
+          const eventDate = new Date(e.date);
+          eventDate.setHours(0, 0, 0, 0);
+
+          const tomorrow = new Date(
+            todayDate.getTime() + 1 * 24 * 60 * 60 * 1000
+          );
+          tomorrow.setHours(0, 0, 0, 0);
+
           switch (d) {
             case "1":
-              if (eventDate.toDateString() == today.toDateString()) return true;
+              if (eventDate.getTime() < tomorrow.getTime()) return true;
 
               break;
             case "2":
-              const tomorrow = new Date(
-                todayDate.getTime() + 1 * 24 * 60 * 60 * 1000
-              );
-
-              console.log("tomorrow: ", tomorrow);
-              if (eventDate.toDateString() <= tomorrow.toDateString())
-                return true;
+              if (eventDate.getTime() <= tomorrow.getTime()) return true;
 
               break;
             case "3":
               const thisWeek = new Date(
-                todayDate.getTime() + 1 * 24 * 60 * 60 * 1000
+                todayDate.getTime() + 7 * 24 * 60 * 60 * 1000
               );
-              if (eventDate.toDateString() <= thisWeek.toDateString())
-                return true;
+              thisWeek.setHours(0, 0, 0, 0);
+
+              if (eventDate.getTime() <= thisWeek.getTime()) return true;
 
               break;
             case "4":
               const nextTwoWeeks = new Date(
-                todayDate.getTime() + 1 * 24 * 60 * 60 * 1000
+                todayDate.getTime() + 14 * 24 * 60 * 60 * 1000
               );
-              if (eventDate.toDateString() <= nextTwoWeeks.toDateString())
-                return true;
+              nextTwoWeeks.setHours(0, 0, 0, 0);
+
+              if (eventDate.getTime() <= nextTwoWeeks.getTime()) return true;
 
               break;
             case "5":
               const thisMonth = new Date(
-                todayDate.getTime() + 1 * 24 * 60 * 60 * 1000
+                today.getFullYear(),
+                today.getMonth() + 1,
+                0
               );
-              if (eventDate.toDateString() < thisMonth.toDateString())
-                return true;
+              thisMonth.setHours(0, 0, 0, 0);
+              if (eventDate.getTime() < thisMonth.getTime()) return true;
 
               break;
           }
         }
+        return false;
+      };
+      // Don't display events that have already past
+    } else if (date?.length == 0) {
+      filterFunc = (e) => {
+        const todayDate = new Date();
+        const eventDate = new Date(e.date);
+        const today = new Date(todayDate.getTime());
+
+        if (todayDate.getTime() < eventDate.getTime()) {
+          return true;
+        }
+
         return false;
       };
     }
