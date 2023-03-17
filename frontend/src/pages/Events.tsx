@@ -210,13 +210,9 @@ export default function Events() {
 
     switch (d) {
       case "1":
-
-        if (eventDate.getTime() < tomorrow.getTime()){
-
-
+        if (eventDate.getTime() < tomorrow.getTime()) {
           return true;
-
-        } 
+        }
         break;
       case "2":
         if (eventDate.getTime() <= tomorrow.getTime()) return true;
@@ -249,7 +245,6 @@ export default function Events() {
         );
         thisMonth.setHours(0, 0, 0, 0);
 
-        
         if (eventDate.getTime() < thisMonth.getTime()) return true;
 
         break;
