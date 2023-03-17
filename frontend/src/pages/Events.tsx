@@ -38,6 +38,9 @@ export default function Events() {
   const [events, setEvents] = useState<Event[]>();
   const [hover, setHover] = useState(false);
   const [longLat, setLongLat] = useState<GeoJSON.Position>();
+  const [lat, setLat] = useState<number>();
+  const [long, setLong] = useState<number>();
+
   const urlParams = new URLSearchParams(location.search);
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const months = [
@@ -64,8 +67,8 @@ export default function Events() {
 
     try {
       await eventGetAll({
-        latitude: 69.880514,
-        longitude: 98.599997,
+        latitude: 50.662085,
+        longitude: 87.778691,
         radius: 10000,
       }).then((res) => {
         const _events = res.data;
@@ -73,12 +76,14 @@ export default function Events() {
 
         const filterFunc = createFilterFunc(
           urlParams.getAll("genders"),
-          urlParams.getAll("date")
-          // urlParams.getAll("address"),
+          urlParams.getAll("date"),
+          urlParams.getAll("distance")
         );
         // add other parameters later
         setAllEvents(_events.filter(filterFunc));
         setEvents(_events.filter(filterFunc));
+        setLat(11.802937);
+        setLong(82.702957);
       });
     } catch (err: any) {
       console.error(err);
@@ -197,6 +202,20 @@ export default function Events() {
     </>
   );
 
+  function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+    console.log(lat1);
+    console.log(lon1);
+    console.log(lat2);
+    console.log(lon2);
+    var p = 0.017453292519943295; // Math.PI / 180
+    var c = Math.cos;
+    var a =
+      0.5 -
+      c((lat2 - lat1) * p) / 2 +
+      (c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p))) / 2;
+
+    return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+  }
   function whenFilterHandler(e: Event, d: string) {
     const todayDate = new Date();
     const today = new Date(todayDate.getTime());
@@ -219,7 +238,6 @@ export default function Events() {
 
         break;
       case "3":
-        console.log("case 3");
         const thisWeek = new Date(
           todayDate.getTime() + 7 * 24 * 60 * 60 * 1000
         );
@@ -253,8 +271,10 @@ export default function Events() {
 
   function createFilterFunc(
     genders: string[],
-    date: string[]
+    date: string[],
+    distance: string[]
   ): (e: Event) => boolean {
+    console.log(distance.length);
     let filterFunc = (e: Event) => true;
     if (genders?.length) {
       filterFunc = (e) => {
@@ -271,7 +291,45 @@ export default function Events() {
         return false;
       };
       // Don't display events that have already past
-    } else if (date?.length == 0) {
+    } else if (distance?.length) {
+      console.log("insdie dist");
+      filterFunc = (e) => {
+        for (let d of distance) {
+          const latitude = lat;
+          const longitude = long;
+          const distance = getDistance(
+            e.latitude,
+            e.longitude,
+            latitude!,
+            longitude!
+          );
+          console.log("distance is: ", distance);
+          switch (d) {
+            case "1":
+              if (distance < 1) return true;
+
+              break;
+            case "2":
+              if (distance < 5) return true;
+
+              break;
+            case "3":
+              if (distance < 10) return true;
+
+              break;
+            case "4":
+              if (distance < 15) return true;
+
+              break;
+            case "5":
+              if (distance < 20) return true;
+
+              break;
+          }
+        }
+        return false;
+      };
+    } else if (!date?.length) {
       filterFunc = (e) => {
         const todayDate = new Date();
         const today = new Date(todayDate.getTime());
@@ -292,7 +350,11 @@ export default function Events() {
   function handleSearch(search: SearchValues) {
     if (!events) return;
 
-    const selectedEventsFilter = createFilterFunc(search.genders, search.date);
+    const selectedEventsFilter = createFilterFunc(
+      search.genders,
+      search.date,
+      search.distance
+    );
     const filteredEvents = allEvents.filter(selectedEventsFilter);
 
     setEvents(filteredEvents);
@@ -340,6 +402,9 @@ export default function Events() {
     setLocationLoading(true);
     window.navigator.geolocation.getCurrentPosition(
       (pos) => {
+        setLat(pos.coords.latitude);
+        setLong(pos.coords.longitude);
+
         console.log(`Latitude : ${pos.coords.latitude}`);
         console.log(`Longitude: ${pos.coords.longitude}`);
         setLocationLoading(false);
