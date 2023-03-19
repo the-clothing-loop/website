@@ -1,6 +1,5 @@
-import { FormEvent, useMemo, useRef, useState } from "react";
+import { FormEvent, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 
 import useForm from "../util/form.hooks";
 import CategoriesDropdown from "../components/CategoriesDropdown";
@@ -26,8 +25,6 @@ export default function EventsFilterBar(props: Props) {
     genders: [] as string[],
     distance: [] as string[],
     date: [] as string[],
-    //longitude: "",
-    // latitude: "",
     ...props.initialValues,
   });
   let refSubmit = useRef<any>();
