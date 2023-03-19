@@ -202,19 +202,22 @@ export default function Events() {
     </>
   );
 
+  // Haversine formula
+  // Distance between two points is d = =acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371
+  // where earth's radius is 6371 in km, and all lat and long values are in radians
   function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-    console.log(lat1);
-    console.log(lon1);
-    console.log(lat2);
-    console.log(lon2);
-    var p = 0.017453292519943295; // Math.PI / 180
-    var c = Math.cos;
-    var a =
-      0.5 -
-      c((lat2 - lat1) * p) / 2 +
-      (c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p))) / 2;
+    // Convert to raidans
+    var lat1 = lat1 / (180 / Math.PI);
+    var lat2 = lat2 / (180 / Math.PI);
+    var lon1 = lon1 / (180 / Math.PI);
+    var lon2 = lon2 / (180 / Math.PI);
 
-    return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+    var distance =
+      Math.acos(
+        Math.sin(lat1) * Math.sin(lat2) +
+          Math.cos(lat1) * (Math.cos(lat2) * Math.cos(lon2 - lon1))
+      ) * 6371;
+    return distance;
   }
   function whenFilterHandler(e: Event, d: string) {
     const todayDate = new Date();
@@ -292,7 +295,6 @@ export default function Events() {
       };
       // Don't display events that have already past
     } else if (distance?.length) {
-      console.log("insdie dist");
       filterFunc = (e) => {
         for (let d of distance) {
           const latitude = lat;
@@ -303,7 +305,6 @@ export default function Events() {
             latitude!,
             longitude!
           );
-          console.log("distance is: ", distance);
           switch (d) {
             case "1":
               if (distance < 1) return true;
