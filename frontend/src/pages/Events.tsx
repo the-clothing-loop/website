@@ -1,14 +1,13 @@
 import { Helmet } from "react-helmet";
 
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { Link, useLocation, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ToastContext } from "../providers/ToastProvider";
 
 import { Event } from "../api/types";
-import { GenderI18nKeys } from "../api/enums";
 import EventsFilterBar from "../components/EventsFilterBar";
-import { GenderBadges, SizeBadges } from "../components/Badges";
+import { GenderBadges } from "../components/Badges";
 
 import {
   eventGet,
@@ -33,11 +32,9 @@ const ClothesImage =
 export default function Events() {
   const { t } = useTranslation();
 
-  const [locationLoading, setLocationLoading] = useState(false); // I think this is primarily for styling
   const { addToastError, addModal, addToast } = useContext(ToastContext);
   const [events, setEvents] = useState<Event[]>();
   const [hover, setHover] = useState(false);
-  const [longLat, setLongLat] = useState<GeoJSON.Position>();
   const [lat, setLat] = useState<number>();
   const [long, setLong] = useState<number>();
 
@@ -131,8 +128,8 @@ export default function Events() {
                       <Link to={eventURL}>
                         <div
                           className="bg-teal-light mr-0 md:mr-6 mb-6 max-w-xl overflow-hidden"
-                          //onMouseOver={() => setHover(true)}
-                          //onMouseLeave={() => setHover(false)}
+                          onMouseOver={() => setHover(true)}
+                          onMouseLeave={() => setHover(false)}
                         >
                           <div className="container relative overflow-hidden">
                             <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
@@ -206,7 +203,7 @@ export default function Events() {
   // Distance between two points is d = =acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371
   // where earth's radius is 6371 in km, and all lat and long values are in radians
   function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-    // Convert to raidans
+    // Convert to radians
     var lat1 = lat1 / (180 / Math.PI);
     var lat2 = lat2 / (180 / Math.PI);
     var lon1 = lon1 / (180 / Math.PI);
@@ -400,7 +397,6 @@ export default function Events() {
   }
 
   function getLocationBrowser() {
-    setLocationLoading(true);
     window.navigator.geolocation.getCurrentPosition(
       (pos) => {
         setLat(pos.coords.latitude);
@@ -408,10 +404,8 @@ export default function Events() {
 
         console.log(`Latitude : ${pos.coords.latitude}`);
         console.log(`Longitude: ${pos.coords.longitude}`);
-        setLocationLoading(false);
       },
       (err) => {
-        setLocationLoading(false);
         console.error(`Couldn't receive location: ${err.message}`, 400);
       }
     );
