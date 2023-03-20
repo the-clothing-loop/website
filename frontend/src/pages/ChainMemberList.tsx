@@ -90,7 +90,7 @@ export default function ChainMemberList() {
         open_to_new_members: isChecked,
       });
     } catch (err: any) {
-      console.error(`Error updating chain: ${JSON.stringify(err)}`);
+      console.error("Error updating chain:", err);
       setError(err?.data || `Error: ${JSON.stringify(err)}`);
       setOpenToNewMembers(oldValue);
     }

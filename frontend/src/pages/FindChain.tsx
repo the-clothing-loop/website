@@ -354,7 +354,7 @@ export default function FindChain({ location }: { location: Location }) {
       },
       (err) => {
         setLocationLoading(false);
-        console.error(`Couldn't receive location: ${err.message}`, 400);
+        console.error("Couldn't receive location:", err.message);
       }
     );
   }

@@ -41,8 +41,15 @@ function injectConsole(
 
   let newFn = (...args: any[]) => {
     oldFn(...args);
-    const message =
-      typeof args[0] === "string" ? args[0] : JSON.stringify(args[0]);
+    let message = "";
+    if (typeof args[0] === "string") {
+      message = args[0];
+      if (args.length > 1) {
+        message += " " + JSON.stringify(args.slice(1));
+      }
+    } else {
+      message = JSON.stringify(args);
+    }
     window.goscope2.Log(severity, message);
   };
   window.console[consoleKey] = newFn as any;

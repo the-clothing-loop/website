@@ -26,7 +26,7 @@ export const Newsletter = () => {
       try {
         await contactNewsletterSet(values.name, values.email, true);
       } catch (err: any) {
-        console.error(err);
+        console.error("Unable to set newsletter", err, values.email);
         addToastError(GinParseErrors(t, err), err?.status);
 
         setIsError(true);

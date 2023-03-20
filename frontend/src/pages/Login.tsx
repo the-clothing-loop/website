@@ -51,7 +51,7 @@ export default function Login() {
           setActive(false);
         }, 1000 * 60 * 2 /* 2 min */);
       } catch (err: any) {
-        console.error(err);
+        console.log("Unable to send login email", err);
         setActive(false);
         setLoading(false);
         setError("email");
