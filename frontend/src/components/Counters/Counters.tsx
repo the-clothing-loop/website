@@ -35,7 +35,7 @@ export default function Counters() {
         <div className="">
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
             {isVisible ? (
-              <SingleCounter end={info?.total_chains || 0} step={2} />
+              <SingleCounter end={info?.total_chains || 0} step={15} />
             ) : (
               "0"
             )}
@@ -46,7 +46,7 @@ export default function Counters() {
         <div className="">
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
             {isVisible ? (
-              <SingleCounter end={info?.total_users || 0} step={20} />
+              <SingleCounter end={info?.total_users || 0} step={15} />
             ) : (
               "0"
             )}
@@ -56,7 +56,7 @@ export default function Counters() {
 
         <div className="">
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
-            11
+            12
           </div>
           <div className="opacity-80">{t("countries")}</div>
         </div>

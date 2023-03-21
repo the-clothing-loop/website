@@ -60,7 +60,7 @@ export default function About() {
           <div className="flex flex-col md:flex-row md:items-center md:mb-16">
             <div className="md:w-1/3 mb-6 md:mb-0 mx-auto items-center prose font-serif font-bold bg-teal-light p-12 md:p-8">
               <h2 className="font-serif font-bold text-lg md:text-lg mb-4 my-auto">
-                <span className="inline md:block mb-8 text-5xl text-stroke-accent">
+                <span className="inline md:block mb-8 text-5xl font-bold font-secondary">
                   {t("wantToJoin")}
                 </span>
               </h2>
@@ -97,7 +97,7 @@ export default function About() {
 
           <div>
             <img
-              src="https://ucarecdn.com/a1229917-0a48-4401-9e16-d8939509c0b8/-/resize/x600/-/format/auto/-/quality/smart/pressclippingssite.jpg"
+              src="https://images.clothingloop.org/1146x/press_clippings_site.jpg"
               alt="Press clippings related to Clothing Loop"
               className="my-10 mx-auto w-full lg:w-5/6 object-contain object-center px-6"
             />
@@ -135,10 +135,18 @@ export default function About() {
                     p: <p></p>,
                     imgTeam: (
                       <img
-                        src="https://images.clothingloop.org/88ce5a09-71f6-4b03-aa10-fc3a172f7f4e/-/resize/x240/-/format/auto/-/quality/smart/Teampics.jpg"
-                        alt="faces of Paloeka and Nichon"
-                        className="-2/3 mx-auto object-contain object-center mb-6 md:mb-0"
+                        src="https://images.clothingloop.org/426x/paloeka_nichon_landscape.jpg"
+                        alt="Paloeka and Nichon"
+                        className="w-2/3 mx-auto object-contain object-center mb-6 md:mb-0"
                       />
+                    ),
+                    aNichonInstagram: (
+                      <a
+                        href="https://www.instagram.com/up_for_swaps/"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="link"
+                      ></a>
                     ),
                   }}
                 ></Trans>
@@ -152,6 +160,11 @@ export default function About() {
                   components={{
                     p: <p></p>,
                     aFind: <Link className="link" to="/loops/find"></Link>,
+                  }}
+                  values={{
+                    volunteers:
+                      "Tim, Gilbert, Tom, Natalie, Justin, Mohamed, Trevor",
+                    andVolunteer: "Pim",
                   }}
                 ></Trans>
               </p>

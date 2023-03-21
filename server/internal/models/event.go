@@ -8,20 +8,23 @@ import (
 )
 
 type Event struct {
-	ID          uint      `json:"-"`
-	UID         string    `gorm:"uniqueIndex" json:"uid"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Latitude    float64   `json:"latitude"`
-	Longitude   float64   `json:"longitude"`
-	Address     string    `json:"address"`
-	Date        time.Time `json:"date"`
-	Genders     []string  `gorm:"serializer:json" json:"genders"`
-	ChainID     zero.Int  `json:"-"`
-	ChainUID    string    `json:"chain_uid" gorm:"-:migration;<-:false"`
-	UserID      uint      `json:"-"`
-	CreatedAt   time.Time `json:"-"`
-	UpdatedAt   time.Time `json:"-"`
+	ID          uint        `json:"-"`
+	UID         string      `gorm:"uniqueIndex" json:"uid"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
+	Latitude    float64     `json:"latitude"`
+	Longitude   float64     `json:"longitude"`
+	Address     string      `json:"address"`
+	Date        time.Time   `json:"date"`
+	Genders     []string    `gorm:"serializer:json" json:"genders"`
+	ChainID     zero.Int    `json:"-"`
+	ChainUID    zero.String `json:"chain_uid" gorm:"-:migration;<-:false"`
+	UserID      uint        `json:"-"`
+	CreatedAt   time.Time   `json:"-"`
+	UpdatedAt   time.Time   `json:"-"`
+	UserName    zero.String `json:"user_name" gorm:"-:migration;<-:false"`
+	UserEmail   zero.String `json:"user_email" gorm:"-:migration;<-:false"`
+	ChainName   zero.String `json:"chain_name" gorm:"-:migration;<-:false"`
 }
 
 func (event *Event) LinkChain(db *gorm.DB, userID uint, chainID uint) error {

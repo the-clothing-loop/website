@@ -33,7 +33,6 @@ WHERE email = ?
 LIMIT 1
 	`, body.Email).Scan(&user)
 	if res.Error != nil || user.ID == 0 {
-		goscope.Log.Warningf("Email is not yet registered: %v", res.Error)
 		c.String(http.StatusUnauthorized, "Email is not yet registered")
 		return
 	}

@@ -72,46 +72,6 @@ func EventCreate(c *gin.Context) {
 	}
 }
 
-const sqlSelectEvent = `SELECT
-events.id             AS id,
-events.uid            AS uid,
-events.name           AS name,
-events.description    AS description,
-events.latitude       AS latitude,
-events.longitude      AS longitude,
-events.address        AS address,
-events.date           AS date,
-events.genders        AS genders,
-events.chain_id       AS chain_id,
-chains.uid            AS chain_uid,
-events.user_id        AS user_id,
-events.created_at     AS created_at,
-events.updated_at     AS updated_at
-FROM events
-LEFT JOIN chains ON chains.id = events.chain_id`
-
-func EventGet(c *gin.Context) {
-	db := getDB(c)
-
-	var query struct {
-		UID string `form:"uid" binding:"required,uuid"`
-	}
-	if err := c.ShouldBindQuery(&query); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	event := &models.Event{}
-	sql := fmt.Sprintf("%s WHERE events.uid = ?", sqlSelectEvent)
-	err := db.Raw(sql, query.UID).Scan(event).Error
-	if err != nil {
-		c.AbortWithError(http.StatusNotFound, err)
-		return
-	}
-
-	c.JSON(http.StatusOK, event)
-}
-
 func EventGetAll(c *gin.Context) {
 	db := getDB(c)
 
@@ -125,7 +85,27 @@ func EventGetAll(c *gin.Context) {
 		return
 	}
 
-	sql := sqlSelectEvent
+	sql := `SELECT
+events.id             AS id,
+events.uid            AS uid,
+events.name           AS name,
+events.description    AS description,
+events.latitude       AS latitude,
+events.longitude      AS longitude,
+events.address        AS address,
+events.date           AS date,
+events.genders        AS genders,
+events.chain_id       AS chain_id,
+chains.uid            AS chain_uid,
+events.user_id        AS user_id,
+events.created_at     AS created_at,
+events.updated_at     AS updated_at,
+users.name            AS user_name,
+users.email           AS user_email,
+chains.name           AS chain_name
+FROM events
+LEFT JOIN chains ON chains.id = chain_id
+LEFT JOIN users ON users.id = user_id`
 	args := []any{}
 	if query.Latitude != 0 && query.Longitude != 0 && query.Radius != 0 {
 		sql = fmt.Sprintf("%s WHERE %s <= ? ", sql, sqlCalcDistance("events.latitude", "events.longitude", "?", "?"))
