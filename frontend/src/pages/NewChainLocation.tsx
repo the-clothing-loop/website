@@ -66,7 +66,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
           });
         history.replace("/loops/new/confirmation");
       } catch (err: any) {
-        console.error(`Error creating chain: ${JSON.stringify(err)}`);
+        console.error("Error creating chain:", err, newChain);
         addToastError(GinParseErrors(t, err), err?.status);
       }
     } else {

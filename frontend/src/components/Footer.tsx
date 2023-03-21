@@ -72,12 +72,35 @@ export default function Footer() {
                   </Link>
                 )}
               </div>
-              <div className="px-3 pb-6 pt-0">
+              <div className="lg:col-span-2 px-3 pb-6 pt-0">
                 <span className="block text-secondary font-bold text-2xl mb-3">
                   {t("findUs")}
                 </span>
-                <ul className="inline-flex flex-col">
-                  <li className="mb-3 inline-flex items-center">
+                <ul className="inline-grid lg:grid-cols-[min-content_1fr]">
+                  <li className="mb-3 inline-flex items-center lg:order-4">
+                    <a
+                      href="mailto:hello@clothingloop.org"
+                      aria-label="Our email address"
+                      className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#b464a8] feather feather-mail text-lg"
+                    ></a>
+                    <span
+                      tabIndex={1}
+                      className={`tooltip tooltip-bottom text-sm ${
+                        copying === "hello@clothingloop.org"
+                          ? "tooltip-open"
+                          : ""
+                      }`}
+                      onClick={copyToClipboard}
+                      data-tip={
+                        copying === "hello@clothingloop.org"
+                          ? t("copiedToClipboard")
+                          : t("copy")
+                      }
+                    >
+                      hello@clothingloop.org
+                    </span>
+                  </li>
+                  <li className="mb-3 inline-flex items-center lg:order-2">
                     <a
                       href="https://www.instagram.com/theclothingloop/"
                       target="_blank"
@@ -100,37 +123,27 @@ export default function Footer() {
                       @theclothingloop
                     </span>
                   </li>
-                  <li className="mb-3 inline-flex items-center">
+                  <li className="mb-3 inline-flex items-center lg:order-1">
                     <a
-                      href="mailto:hello@clothingloop.org"
-                      aria-label="Our email address"
-                      className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0375b9] feather feather-at-sign text-lg"
-                    ></a>
-                    <span
-                      tabIndex={1}
-                      className={`tooltip tooltip-bottom text-sm ${
-                        copying === "hello@clothingloop.org"
-                          ? "tooltip-open"
-                          : ""
-                      }`}
-                      onClick={copyToClipboard}
-                      data-tip={
-                        copying === "hello@clothingloop.org"
-                          ? t("copiedToClipboard")
-                          : t("copy")
-                      }
+                      href="https://www.facebook.com/clothingloop/"
+                      rel="noreferrer"
+                      aria-label="Our Facebook page"
+                      className="flex flex-row items-center group"
                     >
-                      hello@clothingloop.org
-                    </span>
+                      <span className="btn btn-circle btn-outline mr-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-facebook feather feather-facebook text-lg"></span>
+                      <span className="text-sm lg:hidden">Facebook</span>
+                    </a>
                   </li>
-                  <li className="inline-flex items-center">
+                  <li className="mb-3 inline-flex items-center lg:order-3">
                     <a
                       href="https://www.linkedin.com/groups/12746791/"
                       rel="noreferrer"
-                      aria-label="Our LinkedIn"
-                      className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#0a66c2] feather feather-linkedin text-lg"
-                    ></a>
-                    <span className="text-sm">LinkedIn</span>
+                      aria-label="Our LinkedIn page"
+                      className="flex flex-row items-center group"
+                    >
+                      <span className="btn btn-circle btn-outline mr-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#0a66c2] feather feather-linkedin text-lg"></span>
+                      <span className="text-sm lg:hidden">LinkedIn</span>
+                    </a>
                   </li>
                 </ul>
               </div>

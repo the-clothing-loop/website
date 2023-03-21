@@ -37,7 +37,7 @@ const Contacts = () => {
         await contactMailSend(values.name, values.email, values.message);
         setSubmitted(true);
       } catch (err: any) {
-        console.error(err);
+        console.error("Unable to send contact mail", err, values);
         setError("submit");
 
         addToastError(GinParseErrors(t, err), err?.status);

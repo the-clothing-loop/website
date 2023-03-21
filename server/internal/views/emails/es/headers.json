@@ -1,10 +1,10 @@
 {
-  "subscribed_to_newsletter": "Thank you for subscribing to the Clothing Loop",
-  "contact_confirmation": "Thank you for contacting the Clothing Loop",
-  "a_participant_joined_the_loop": "A participant just joined your Loop!",
-  "an_admin_approved_your_join_request": "A host has approved of your request to join a loop!",
-  "login_verification": "Verify e-mail for the Clothing Loop",
-  "an_admin_denied_your_join_request": "Your request to join a loop has been denied",
-  "register_verification": "Verify e-mail for the Clothing Loop",
-  "poke": "Reminder that %s would like to join your %s Loop"
+  "subscribed_to_newsletter": "Gracias por suscribirte al Clothing Loop",
+  "contact_confirmation": "Gracias por contactarte con The Clothing Loop",
+  "someone_is_interested_in_joining_your_loop": "¡Alguien está interesado en unirse a tu Loop!",
+  "an_admin_approved_your_join_request": "¡Un administrador ha aprobado tu solicitud para unirte a un Loop!",
+  "login_verification": "Verificar tu correo electrónico para The Clothing Loop",
+  "an_admin_denied_your_join_request": "Tu solicitud para unirte a un Loop ha sido denegada",
+  "register_verification": "Verificar tu correo electrónico para The Clothing Loop",
+  "poke": "Te recordamos de que a %s le gustaría unirse a tu Loop %s"
 }

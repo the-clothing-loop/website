@@ -90,6 +90,7 @@ export default function SearchBar(props: Props) {
           className="z-40 w-full"
           onResult={handleSearchChange}
           onSelectResult={handleSearchSelected}
+          placeholder={t("location")}
           types={[
             "country",
             "region",

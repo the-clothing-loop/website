@@ -143,7 +143,7 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
             },
           });
         } catch (err) {
-          reject(err);
+          reject(Error("Focus trap error:", { cause: err }));
         }
       } else reject(Error("trap not defined"));
     }).catch((err) => {
@@ -171,8 +171,8 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
     });
     try {
       trap.activate();
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(Error("Trap unable to active: ", { cause: err }));
     }
     setTrap(trap);
   }, []);

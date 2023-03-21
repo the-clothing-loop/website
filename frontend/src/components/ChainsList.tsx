@@ -41,7 +41,7 @@ export default function ChainsList() {
         }
         setChains(_chains.sort((a, b) => a.name.localeCompare(b.name)));
       } catch (err: any) {
-        console.error(err);
+        console.error("Unable to load chains", err);
         addToastError(GinParseErrors(t, err), err.status);
       }
 
@@ -83,7 +83,12 @@ export default function ChainsList() {
             try {
               await chainRemoveUser(chain.uid, authUser!.uid);
             } catch (err: any) {
-              console.error(err);
+              console.error(
+                "Unable to unsubscribe from Loop",
+                err,
+                chain.uid,
+                chain.name
+              );
               addToastError(GinParseErrors(t, err), err.status);
             }
 

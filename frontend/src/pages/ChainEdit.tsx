@@ -30,14 +30,14 @@ export default function ChainEdit() {
       uid: chainUID,
     };
 
-    console.log(`updating chain information: ${JSON.stringify(newChainData)}`);
+    console.log("updating chain information", newChainData);
     try {
       await chainUpdate(newChainData);
       setTimeout(() => {
         history.goBack();
       }, 1200);
     } catch (err: any) {
-      console.error(`Error updating chain: ${JSON.stringify(err)}`);
+      console.error("Error updating chain:", err);
       addToastError(GinParseErrors(t, err), err?.status);
     }
   };

@@ -1,12 +1,11 @@
-import * as React from "react";
-import { useEffect, useState } from "react";
+import { CSSProperties, FC, useEffect, useState } from "react";
 
 interface IProps {
   end: number;
   step: number;
 }
 
-const SingleCount: React.FC<IProps> = ({ end, step }: IProps) => {
+const SingleCount: FC<IProps> = ({ end, step }: IProps) => {
   const [state, setState] = useState(0);
 
   const counter = (
@@ -22,7 +21,7 @@ const SingleCount: React.FC<IProps> = ({ end, step }: IProps) => {
     setter(val);
     setTimeout(() => {
       counter(val + step, end, setter, step);
-    });
+    }, 40);
   };
 
   useEffect(() => {
