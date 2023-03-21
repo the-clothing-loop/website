@@ -90,27 +90,6 @@ events.updated_at     AS updated_at
 FROM events
 LEFT JOIN chains ON chains.id = events.chain_id`
 
-func EventGet(c *gin.Context) {
-	db := getDB(c)
-
-	var query struct {
-		UID string `form:"uid" binding:"required,uuid"`
-	}
-	if err := c.ShouldBindQuery(&query); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	event := &models.Event{}
-	sql := fmt.Sprintf("%s WHERE events.uid = ?", sqlSelectEvent)
-	err := db.Raw(sql, query.UID).Scan(event).Error
-	if err != nil {
-		c.AbortWithError(http.StatusNotFound, err)
-		return
-	}
-
-	c.JSON(http.StatusOK, event)
-}
 
 func EventGetAll(c *gin.Context) {
 	db := getDB(c)
