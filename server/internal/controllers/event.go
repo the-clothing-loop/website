@@ -106,10 +106,11 @@ users.phone_number    AS user_phone,
 chains.name           AS chain_name
 FROM events
 LEFT JOIN chains ON chains.id = chain_id
-LEFT JOIN users ON users.id = user_id`
+LEFT JOIN users ON users.id = user_id
+WHERE date > NOW()`
 	args := []any{}
 	if query.Latitude != 0 && query.Longitude != 0 && query.Radius != 0 {
-		sql = fmt.Sprintf("%s WHERE %s <= ? ", sql, sqlCalcDistance("events.latitude", "events.longitude", "?", "?"))
+		sql = fmt.Sprintf("%s AND %s <= ? ", sql, sqlCalcDistance("events.latitude", "events.longitude", "?", "?"))
 		args = append(args, query.Latitude, query.Longitude, query.Radius)
 	}
 	events := []models.Event{}
