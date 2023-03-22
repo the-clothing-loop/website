@@ -57,15 +57,18 @@ export default function EventDetails() {
   }, []);
 
   async function load() {
-    const urlParams = new URLSearchParams("/events");
-
     try {
       const eventUID = window.location.pathname.split("/").at(-1);
-      console.log(eventUID);
 
-      await eventGet(eventUID!).then((res) => {
+      await eventGetAll({
+        latitude: 50.662085,
+        longitude: 87.778691,
+        radius: 30000,
+      }).then((res) => {
         const _event = res.data;
-        setEvent(_event);
+        _event.forEach((e) => {
+          if (e.uid == eventUID) setEvent(e);
+        });
       });
     } catch (err: any) {
       console.error(err);
@@ -92,6 +95,10 @@ export default function EventDetails() {
   } else {
     const date = new Date(event.date);
     const genders = event.genders;
+    const host = event.chain_uid;
+    console.log(host);
+    const host_email = event.user_email;
+
     const icalURL = eventICalURL(event.uid);
     console.log(icalURL);
     return (
@@ -177,7 +184,7 @@ export default function EventDetails() {
                     <div className="px-8 lg:px-16">
                       <span className="pr-2 feather feather-mail"></span>
                       <span className="font-sans text-lg break-all">
-                        fakejohnsmith@gmail.com
+                        {host_email}
                       </span>
                     </div>
                   </div>
