@@ -124,7 +124,7 @@ export default function FindChain({ location }: { location: Location }) {
 
     setZoom(4);
 
-    const clusterMaxZoom = 9;
+    const clusterMaxZoom = 8;
     chainGetAll({ filter_out_unpublished: true }).then((res) => {
       const _chains = res.data;
 
@@ -151,7 +151,7 @@ export default function FindChain({ location }: { location: Location }) {
           id: "chain-cluster",
           type: "circle",
           source: "chains",
-          filter: ["<", ["zoom"], clusterMaxZoom],
+          filter: ["<=", ["zoom"], clusterMaxZoom],
           paint: {
             "circle-color": ["rgba", 239, 149, 61, 0.6], // #ef953d
             "circle-radius": 15,
@@ -162,7 +162,7 @@ export default function FindChain({ location }: { location: Location }) {
           id: "chain-cluster-count",
           type: "symbol",
           source: "chains",
-          filter: ["<", ["zoom"], clusterMaxZoom],
+          filter: ["<=", ["zoom"], clusterMaxZoom],
           layout: {
             "text-field": ["coalesce", ["get", "point_count_abbreviated"], "1"],
             "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
@@ -173,7 +173,7 @@ export default function FindChain({ location }: { location: Location }) {
           id: "chain-single",
           type: "circle",
           source: "chains",
-          filter: [">=", ["zoom"], clusterMaxZoom],
+          filter: [">", ["zoom"], clusterMaxZoom],
           paint: {
             "circle-color": ["rgba", 240, 196, 73, 0.4], // #f0c449
             "circle-radius": [
@@ -193,7 +193,7 @@ export default function FindChain({ location }: { location: Location }) {
           id: "chain-single-minimum",
           type: "circle",
           source: "chains",
-          filter: [">=", ["zoom"], clusterMaxZoom],
+          filter: [">", ["zoom"], clusterMaxZoom],
           paint: {
             "circle-color": ["rgba", 240, 196, 73, 0.0], // #f0c449
             "circle-radius": 5,
@@ -247,7 +247,7 @@ export default function FindChain({ location }: { location: Location }) {
               if (!chain) throw "no chain found";
               _map.easeTo({
                 center: [chain.longitude, chain.latitude],
-                zoom: clusterMaxZoom + 1,
+                zoom: 11,
               });
 
               // auto select
@@ -256,7 +256,7 @@ export default function FindChain({ location }: { location: Location }) {
               console.warn(err);
               _map.easeTo({
                 center: e.lngLat,
-                zoom: clusterMaxZoom + 1,
+                zoom: 11,
               });
             }
           }
