@@ -70,14 +70,23 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	return user, user.UserToken[0].Token
 }
 func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (chain *models.Chain, user *models.User, token string) {
+	var latitude, longitude float64
+	if faker.RandomNumber(5)+1 > 4 { // 4 / 6
+		// use the netherlands
+		latitude = float64(faker.Int64Between(5169917, 5237403)) / 100000
+		longitude = float64(faker.Int64Between(488969, 689583)) / 100000
+	} else {
+		latitude = faker.Address().Latitude()
+		longitude = faker.Address().Latitude()
+	}
 	chain = &models.Chain{
 		UID:              uuid.NewV4().String(),
 		Name:             "Fake " + faker.Company().Name(),
 		Description:      faker.Company().CatchPhrase(),
 		Address:          faker.Address().Address(),
-		Latitude:         faker.Address().Latitude(),
-		Longitude:        faker.Address().Latitude(),
-		Radius:           float32(faker.RandomFloat(3, 2, 30)),
+		Latitude:         latitude,
+		Longitude:        longitude,
+		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
 		Published:        !o.IsNotPublished,
 		OpenToNewMembers: o.IsOpenToNewMembers,
 		Sizes:            MockSizes(true),
