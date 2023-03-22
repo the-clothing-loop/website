@@ -17,6 +17,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { Link, useLocation, useHistory, Redirect } from "react-router-dom";
 import { GenderBadges, SizeBadges } from "../components/Badges";
+import { phoneRegExp } from "../util/phoneRegExp";
 
 // Media
 const ClothesImage =
@@ -179,12 +180,18 @@ export default function EventDetails() {
                       ) : null}
                     </div>
                     <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
-                      Contact:
+                      Contact Host:
                     </div>
                     <div className="px-8 lg:px-16">
                       <span className="pr-2 feather feather-mail"></span>
                       <span className="font-sans text-lg break-all">
-                        {host_email}
+                        {event.user_email}
+                      </span>
+                    </div>
+                    <div className="px-8 lg:px-16 pt-2">
+                      <span className="pr-2 feather feather-mail"></span>
+                      <span className="font-sans text-lg break-all">
+                        {event.user_phone}
                       </span>
                     </div>
                   </div>
