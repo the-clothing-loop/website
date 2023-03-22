@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 
 import useForm from "../util/form.hooks";
 import CategoriesDropdown from "../components/CategoriesDropdown";
-import DistanceDropdown from "../components/DistanceDropdown";
 import WhenDropdown from "../components/WhenDropdown";
 
 export interface SearchValues {
@@ -37,7 +36,7 @@ export default function EventsFilterBar(props: Props) {
 
   return (
     <form className="flex flex-col md:flex-row" onSubmit={handleSubmit}>
-      <div className="mb-8">
+      <div>
         <CategoriesDropdown
           className="w-[150px] md:w-[170px] mr-4 md:mr-8"
           selectedGenders={values.genders}
