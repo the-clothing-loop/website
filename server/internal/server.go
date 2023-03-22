@@ -5,11 +5,11 @@ import (
 	"io"
 	"os"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
-	"github.com/CollActionteam/clothing-loop/server/internal/controllers"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/glog"
+	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+	"github.com/the-clothing-loop/website/server/internal/controllers"
 )
 
 func Routes() *gin.Engine {

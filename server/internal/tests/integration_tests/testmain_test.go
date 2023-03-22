@@ -3,8 +3,8 @@ package integration_tests
 import (
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	Faker "github.com/jaswdr/faker"
+	"github.com/the-clothing-loop/website/server/internal/app"
 	"gorm.io/gorm"
 )
 

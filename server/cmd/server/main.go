@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	server "github.com/CollActionteam/clothing-loop/server/internal"
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/golang/glog"
+	server "github.com/the-clothing-loop/website/server/internal"
+	"github.com/the-clothing-loop/website/server/internal/app"
 )
 
 func main() {

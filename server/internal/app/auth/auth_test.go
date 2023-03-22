@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
-	"github.com/CollActionteam/clothing-loop/server/internal/tests/mocks"
 	"github.com/stretchr/testify/assert"
+	"github.com/the-clothing-loop/website/server/internal/app/auth"
+	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
 )
 
 func TestAuthenticate(t *testing.T) {

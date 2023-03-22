@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"html/template"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/golang/glog"
+	"github.com/the-clothing-loop/website/server/internal/app"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

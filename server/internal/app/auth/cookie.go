@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/gin-gonic/gin"
+	"github.com/the-clothing-loop/website/server/internal/app"
 )
 
 // seconds in one year

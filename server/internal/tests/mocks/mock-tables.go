@@ -5,9 +5,9 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/golang/glog"
+	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+	"github.com/the-clothing-loop/website/server/internal/models"
 
 	Faker "github.com/jaswdr/faker"
 	uuid "github.com/satori/go.uuid"

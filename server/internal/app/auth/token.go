@@ -4,9 +4,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
+	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/gorm"
 )
 

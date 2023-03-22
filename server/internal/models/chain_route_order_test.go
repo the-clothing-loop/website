@@ -3,8 +3,8 @@ package models_test
 import (
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/tests/mocks"
 	"github.com/stretchr/testify/assert"
+	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
 )
 
 func TestChainRouteOrder(t *testing.T) {

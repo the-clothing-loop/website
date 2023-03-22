@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/app/auth"
+	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+	"github.com/the-clothing-loop/website/server/internal/models"
 
 	"github.com/gin-gonic/gin"
 )
