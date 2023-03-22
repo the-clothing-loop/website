@@ -86,7 +86,6 @@ export default function Events(props: Props) {
           urlParams.getAll("genders"),
           urlParams.getAll("date")
         );
-        // add other parameters later
         setAllEvents(_events.filter(filterFunc));
         setEvents(_events.filter(filterFunc));
         setLat(11.802937);
@@ -110,22 +109,22 @@ export default function Events(props: Props) {
           <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
             Upcoming Events
           </h1>
-          <form className="flex" onSubmit={handleSubmit}>
+          <form className="flex flex-col md:flex-row pb-4 md:pb-8" onSubmit={handleSubmit}>
             <div
-              className="font-sans text-lg md:text-2xl mb-6 cursor-default inline-block hover:opacity-75 hover:underline"
+              className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-default inline-block hover:opacity-75 hover:underline"
               onClick={handleLocation}
             >
               Events Near {lat}, {long}
             </div>
             <div>
               <DistanceDropdown
-                className="w-[150px] md:w-[170px] ml-4 md:ml-8"
+                className="w-[150px] md:w-[170px] py-2 md:py-0 md:mr-8"
                 selectedDistance={distance!}
                 handleChange={(d) => setDistance(d)}
               />
               <button
                 type="submit"
-                className="btn btn-primary ml-8"
+                className="btn btn-primary"
                 ref={refSubmit}
               >
                 <span className="hidden sm:inline">{t("search")}</span>
@@ -142,7 +141,7 @@ export default function Events(props: Props) {
             onSearch={handleSearch}
           />
           {handleEmptyEvents()}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {events
               ?.sort((a, b) => a.date.localeCompare(b.date))
               .map((event) => {
@@ -150,10 +149,10 @@ export default function Events(props: Props) {
                 const genders = event.genders;
                 var eventURL = window.location.pathname + "/" + event.uid;
                 return (
-                  <div className="pt-10 px-0" key={event.uid}>
+                  <div className="h-full" key={event.uid}>
                     <Link to={eventURL}>
                       <div
-                        className="bg-teal-light mr-0 md:mr-6 mb-6 max-w-xl overflow-hidden"
+                        className="bg-teal-light h-full max-w-xl overflow-hidden"
                         //onMouseOver={() => setHover(true)}
                         //onMouseLeave={() => setHover(false)}
                       >
@@ -164,7 +163,6 @@ export default function Events(props: Props) {
                           </div>
                           <img
                             src={ClothesImage}
-                            alt=""
                             className={`w-full h-auto ${
                               hover
                                 ? "transition ease-in-out duration-300 scale-[1.03]"
