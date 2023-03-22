@@ -24,6 +24,7 @@ type Event struct {
 	UpdatedAt   time.Time   `json:"-"`
 	UserName    zero.String `json:"user_name" gorm:"-:migration;<-:false"`
 	UserEmail   zero.String `json:"user_email" gorm:"-:migration;<-:false"`
+	UserPhone   zero.String `json:"user_phone" gorm:"-:migration;<-:false"`
 	ChainName   zero.String `json:"chain_name" gorm:"-:migration;<-:false"`
 }
 

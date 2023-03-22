@@ -44,4 +44,8 @@ export interface Event {
   genders: string[] | null;
   date: string;
   chain_uid?: UID;
+  user_name: string;
+  user_email: string;
+  user_phone: string;
+  chain_name: string;
 }
