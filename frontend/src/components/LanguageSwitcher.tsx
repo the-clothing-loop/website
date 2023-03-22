@@ -60,7 +60,11 @@ const LanguageSwitcher = (props: { className?: string }) => {
       } ${props.className || ""}`}
       onBlur={() => dropdown.setOpen(false)}
     >
-      <label tabIndex={0} className="btn btn-outline" onClick={onToggle}>
+      <label
+        tabIndex={0}
+        className="btn btn-outline w-36 justify-between"
+        onClick={onToggle}
+      >
         {btnLabelLanguage.title}
         <img
           className="w-6 ml-2"
@@ -77,7 +81,7 @@ const LanguageSwitcher = (props: { className?: string }) => {
           return (
             <li key={el.lng} className={active ? "hidden" : ""}>
               <button
-                className="flex justify-between"
+                className="flex justify-between text-sm"
                 onClick={() => handleChange(el.lng)}
               >
                 {el.title}
