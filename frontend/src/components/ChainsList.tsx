@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
 
-import { DataExport } from "../components/DataExport";
 import { AuthContext } from "../providers/AuthProvider";
 import {
   chainGet,
@@ -101,17 +100,10 @@ export default function ChainsList() {
 
   return (
     <div className={`container mx-auto ${chains ? "" : "animate-pulse"}`}>
-      <div className="flex flex-row justify-between px-4 md:px-20 py-4">
+      <div className="flex flex-row px-4 md:px-20 py-4">
         <h2 className="text-2xl font-bold mb-3">{`${
           chains?.length || 0
         } Clothing Loops`}</h2>
-        {chains ? (
-          <DataExport chains={chains} />
-        ) : (
-          <button className="btn btn-outline btn-primary" disabled>
-            ...
-          </button>
-        )}
       </div>
 
       <div className="overflow-x-auto pb-10">
