@@ -3,21 +3,15 @@ import { Helmet } from "react-helmet";
 import { Trans, useTranslation } from "react-i18next";
 import { useState, useEffect, useContext } from "react";
 import {
-  eventGet,
   eventGetAll,
-  eventCreate,
-  eventUpdate,
-  eventDelete,
   eventICalURL,
 } from "../api/event";
-import { Event, User } from "../api/types";
-import { GenderI18nKeys } from "../api/enums";
+import { Event } from "../api/types";
 
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
-import { Link, useLocation, useHistory, Redirect } from "react-router-dom";
-import { GenderBadges, SizeBadges } from "../components/Badges";
-import { phoneRegExp } from "../util/phoneRegExp";
+import { Link } from "react-router-dom";
+import { GenderBadges } from "../components/Badges";
 
 // Media
 const ClothesImage =
@@ -28,7 +22,7 @@ const CirclesFrame =
 export default function EventDetails() {
   const { t } = useTranslation();
 
-  const { addToastError, addModal, addToast } = useContext(ToastContext);
+  const { addToastError } = useContext(ToastContext);
   const [event, setEvent] = useState<Event>();
   const months = [
     "Jan",
@@ -113,10 +107,7 @@ export default function EventDetails() {
           {event ? (
             <div className="max-w-screen-xl mx-auto pt-10 px-6 md:px-20">
               <a href={icalURL}>
-                <button
-                  className="btn btn-primary inline w-fit float-right mt-16"
-                  onClick={(e) => subscribeHandler()}
-                >
+                <button className="btn btn-primary inline w-fit float-right mt-16">
                   <span className="pr-2 feather feather-calendar" />
                   Add event to your calendar
                 </button>
@@ -210,6 +201,4 @@ export default function EventDetails() {
       </>
     );
   }
-
-  function subscribeHandler() {}
 }
