@@ -113,6 +113,7 @@ WHERE date > NOW()`
 		sql = fmt.Sprintf("%s AND %s <= ? ", sql, sqlCalcDistance("events.latitude", "events.longitude", "?", "?"))
 		args = append(args, query.Latitude, query.Longitude, query.Radius)
 	}
+	sql = fmt.Sprintf("%s ORDER BY date ASC", sql)
 	events := []models.Event{}
 	err := db.Raw(sql, args...).Scan(&events).Error
 	if err != nil {
