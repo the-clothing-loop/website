@@ -48,11 +48,6 @@ export default function EventsFilterBar(props: Props) {
           selectedDate={values.date}
           handleChange={(date) => setValue("date", date)}
         />
-        <DistanceDropdown
-          className="w-[150px] md:w-[170px] mr-4 md:mr-8"
-          selectedDistance={values.distance}
-          handleChange={(d) => setValue("distance", d)}
-        />
       </div>
       <button type="submit" className="btn btn-primary" ref={refSubmit}>
         <span className="hidden sm:inline">{t("search")}</span>

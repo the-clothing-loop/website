@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, FormEvent, useRef } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ToastContext } from "../providers/ToastProvider";
@@ -8,6 +8,8 @@ import { ToastContext } from "../providers/ToastProvider";
 import { Event } from "../api/types";
 import EventsFilterBar from "../components/EventsFilterBar";
 import { GenderBadges } from "../components/Badges";
+import DistanceDropdown from "../components/DistanceDropdown";
+import useForm from "../util/form.hooks";
 
 import {
   eventGet,
@@ -24,12 +26,20 @@ export interface SearchValues {
   date: string[];
   distance: string[];
 }
+export interface distanceValue {
+  distance: string[];
+}
+
+interface Props {
+  initialValues?: distanceValue;
+  onSearch: (search: distanceValue) => void;
+}
 
 // Media
 const ClothesImage =
   "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
 
-export default function Events() {
+export default function Events(props: Props) {
   const { t } = useTranslation();
 
   const { addToastError, addModal, addToast } = useContext(ToastContext);
@@ -54,6 +64,7 @@ export default function Events() {
     "November",
     "December",
   ];
+  const [distance, setDistance] = useState<string>();
 
   useEffect(() => {
     load();
@@ -87,6 +98,7 @@ export default function Events() {
       addToastError(GinParseErrors(t, err), err.status);
     }
   }
+  let refSubmit = useRef<any>();
 
   return (
     <>
@@ -95,18 +107,34 @@ export default function Events() {
         <meta name="description" content="Upcoming Events" />
       </Helmet>
       <main>
-        <div className="max-w-screen-xl mx-auto pt-10 px-6 md:px-20 overflow-hidden">
+        <div className="max-w-screen-xl mx-auto pt-10 px-6 md:px-20 overflow-hidden relative z-50">
           <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
             Upcoming Events
           </h1>
           <div>
-            <div
-              className="font-sans text-lg md:text-2xl mb-6 cursor-default inline-block hover:opacity-75 hover:underline"
-              onClick={handleLocation}
-            >
-              Events Near San Francisco
-            </div>
-
+            <form className="flex z-50" onSubmit={handleSubmit}>
+              <div
+                className="font-sans text-lg md:text-2xl mb-6 cursor-default inline-block hover:opacity-75 hover:underline"
+                onClick={handleLocation}
+              >
+                Events Near {lat}, {long}
+              </div>
+              <div>
+                <DistanceDropdown
+                  className="w-[150px] md:w-[170px] ml-4 md:ml-8 overflow-visible z-50"
+                  selectedDistance={distance!}
+                  handleChange={(d) => setDistance(d)}
+                />
+                <button
+                  type="submit"
+                  className="btn btn-primary ml-8"
+                  ref={refSubmit}
+                >
+                  <span className="hidden sm:inline">{t("search")}</span>
+                  <span className="sm:hidden inline feather feather-search"></span>
+                </button>
+              </div>
+            </form>
             <EventsFilterBar
               initialValues={{
                 genders: urlParams.getAll("genders") || [],
@@ -118,103 +146,139 @@ export default function Events() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {events
                 ?.sort((a, b) => a.date.localeCompare(b.date))
-                .map((event) => {
-                  const date = new Date(event.date);
-                  const genders = event.genders;
-                  var eventURL = window.location.pathname + "/" + event.uid;
-
-                  return (
-                    <div className="pb-10 px-0" key={event.uid}>
-                      <Link to={eventURL}>
-                        <div
-                          className="bg-teal-light mr-0 md:mr-6 mb-6 max-w-xl overflow-hidden"
-                          onMouseOver={() => setHover(true)}
-                          onMouseLeave={() => setHover(false)}
-                        >
-                          <div className="container relative overflow-hidden">
-                            <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
-                              <p>{months[date.getMonth()]}</p>{" "}
-                              <p className="font-light">{date.getDate()}</p>
-                            </div>
-                            <img
-                              src={ClothesImage}
-                              alt=""
-                              className={`w-full h-auto ${
-                                hover
-                                  ? "transition ease-in-out duration-300 scale-[1.03]"
-                                  : "transition ease-in-out duration-300 scale-1"
-                              }`}
-                            />
-                          </div>
-                          <div className="text-lg">
+                    .map((event) => {
+                      const date = new Date(event.date);
+                      const genders = event.genders;
+                      var eventURL = window.location.pathname + "/" + event.uid;
+                      return (
+                        <div className="pb-10 px-0" key={event.uid}>
+                          <Link to={eventURL}>
                             <div
-                              className={`mt-4 pb-2 pl-4 text-xl text-teal font-bold ${
-                                hover
-                                  ? "text-opacity-80 transition ease-in-out"
-                                  : ""
-                              }`}
+                              className="bg-teal-light mr-0 md:mr-6 mb-6 max-w-xl overflow-hidden"
+                              //onMouseOver={() => setHover(true)}
+                              //onMouseLeave={() => setHover(false)}
                             >
-                              {event.name}
-                            </div>
-                            <div className="px-4 mb-2 pb-2">
-                              <span
-                                className={`feather feather-map-pin ${
-                                  hover
-                                    ? "feather feather-map-pin opacity-60 transition ease-in-out"
-                                    : ""
-                                }`}
-                              ></span>
+                              <div className="container relative overflow-hidden">
+                                <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
+                                  <p>{months[date.getMonth()]}</p>
+                                  <p className="font-light">{date.getDate()}</p>
+                                </div>
+                                <img
+                                  src={ClothesImage}
+                                  alt=""
+                                  className={`w-full h-auto ${
+                                    hover
+                                      ? "transition ease-in-out duration-300 scale-[1.03]"
+                                      : "transition ease-in-out duration-300 scale-1"
+                                  }`}
+                                />
+                              </div>
+                              <div className="text-lg">
+                                <div
+                                  className={`mt-4 pb-2 pl-4 text-xl text-teal font-bold ${
+                                    hover
+                                      ? "text-opacity-80 transition ease-in-out"
+                                      : ""
+                                  }`}
+                                >
+                                  {event.name}
+                                </div>
+                                <div className="px-4 mb-2 pb-2">
+                                  <span
+                                    className={`feather feather-map-pin ${
+                                      hover
+                                        ? "feather feather-map-pin opacity-60 transition ease-in-out"
+                                        : ""
+                                    }`}
+                                  ></span>
 
-                              <span
-                                className={`text-md px-2 ${
-                                  hover
-                                    ? "opacity-60 transition ease-in-out"
-                                    : ""
-                                }`}
-                              >
-                                {/*Address is an emptry string in the fake data; name for now just for visible reasons*/}
-                                {event.address}
-                                {"Mission Dolores"}
-                              </span>
-                              <div className="p-2">
-                                {event.genders?.length ? (
-                                  <>
-                                    <div className="mb-2">
-                                      {GenderBadges(t, event.genders)}
-                                    </div>
-                                  </>
-                                ) : null}
+                                  <span
+                                    className={`text-md px-2 ${
+                                      hover
+                                        ? "opacity-60 transition ease-in-out"
+                                        : ""
+                                    }`}
+                                  >
+                                    {/*Address is an emptry string in the fake data; name for now just for visible reasons*/}
+                                    {event.address}
+                                    {"Mission Dolores"}
+                                  </span>
+                                  <div className="p-2">
+                                    {event.genders?.length ? (
+                                      <>
+                                        <div className="mb-2">
+                                          {GenderBadges(t, event.genders)}
+                                        </div>
+                                      </>
+                                    ) : null}
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          </Link>
                         </div>
-                      </Link>
-                    </div>
-                  );
-                })}
+                      );
+                    })}
+    
             </div>
           </div>
         </div>
       </main>
     </>
   );
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
-  // Haversine formula
-  // Distance between two points is d = =acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371
-  // where earth's radius is 6371 in km, and all lat and long values are in radians
-  function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-    // Convert to radians
-    var lat1 = lat1 / (180 / Math.PI);
-    var lat2 = lat2 / (180 / Math.PI);
-    var lon1 = lon1 / (180 / Math.PI);
-    var lon2 = lon2 / (180 / Math.PI);
+    // props.onSearch(distance);
+    console.log(distance);
 
-    var distance =
-      Math.acos(
-        Math.sin(lat1) * Math.sin(lat2) +
-          Math.cos(lat1) * (Math.cos(lat2) * Math.cos(lon2 - lon1))
-      ) * 6371;
-    return distance;
+    switch (distance) {
+      case "1":
+        handleDistance(lat!, long!, 1);
+        break;
+      case "2":
+        handleDistance(lat!, long!, 5);
+        break;
+      case "3":
+        handleDistance(lat!, long!, 10);
+        break;
+      case "4":
+        console.log("case4");
+
+        handleDistance(lat!, long!, 15);
+        break;
+      case "5":
+        console.log("case5");
+        handleDistance(lat!, long!, 6000);
+        break;
+    }
+  }
+  function handleDistance(lat: number, lon: number, rad: number) {
+    try {
+      eventGetAll({
+        latitude: lat,
+        longitude: lon,
+        radius: rad,
+      }).then((res) => {
+        const _events = res.data;
+
+        const filterFunc = createFilterFunc(
+          urlParams.getAll("genders"),
+          urlParams.getAll("date"),
+          urlParams.getAll("distance")
+        );
+
+        // if (events != _events) {
+        console.log(events);
+        setEvents(_events.filter(filterFunc));
+        setAllEvents(_events.filter(filterFunc));
+
+        console.log(events);
+      });
+    } catch (err: any) {
+      console.error(err);
+      addToastError(GinParseErrors(t, err), err.status);
+    }
   }
   function whenFilterHandler(e: Event, d: string) {
     const todayDate = new Date();
@@ -274,9 +338,9 @@ export default function Events() {
     date: string[],
     distance: string[]
   ): (e: Event) => boolean {
-    console.log(distance.length);
     let filterFunc = (e: Event) => true;
     if (genders?.length) {
+      console.log("events before", events);
       filterFunc = (e) => {
         for (let g of genders) {
           if (e.genders?.includes(g)) return true;
@@ -291,42 +355,6 @@ export default function Events() {
         return false;
       };
       // Don't display events that have already past
-    } else if (distance?.length) {
-      filterFunc = (e) => {
-        for (let d of distance) {
-          const latitude = lat;
-          const longitude = long;
-          const distance = getDistance(
-            e.latitude,
-            e.longitude,
-            latitude!,
-            longitude!
-          );
-          switch (d) {
-            case "1":
-              if (distance < 1) return true;
-
-              break;
-            case "2":
-              if (distance < 5) return true;
-
-              break;
-            case "3":
-              if (distance < 10) return true;
-
-              break;
-            case "4":
-              if (distance < 15) return true;
-
-              break;
-            case "5":
-              if (distance < 20) return true;
-
-              break;
-          }
-        }
-        return false;
-      };
     } else if (!date?.length) {
       filterFunc = (e) => {
         const todayDate = new Date();
