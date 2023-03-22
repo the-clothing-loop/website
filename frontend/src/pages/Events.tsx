@@ -24,7 +24,7 @@ import { GinParseErrors } from "../util/gin-errors";
 export interface SearchValues {
   genders: string[];
   date: string[];
-  distance: string[];
+
 }
 export interface distanceValue {
   distance: string[];
@@ -136,7 +136,6 @@ export default function Events(props: Props) {
             initialValues={{
               genders: urlParams.getAll("genders") || [],
               date: urlParams.getAll("date") || [],
-              distance: urlParams.getAll("distance") || [],
             }}
             onSearch={handleSearch}
           />
