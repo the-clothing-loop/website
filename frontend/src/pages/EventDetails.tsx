@@ -2,10 +2,7 @@ import { Helmet } from "react-helmet";
 
 import { Trans, useTranslation } from "react-i18next";
 import { useState, useEffect, useContext } from "react";
-import {
-  eventGetAll,
-  eventICalURL,
-} from "../api/event";
+import { eventGetAll, eventICalURL } from "../api/event";
 import { Event } from "../api/types";
 
 import { ToastContext } from "../providers/ToastProvider";
@@ -75,7 +72,7 @@ export default function EventDetails() {
     return (
       <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
         <h1 className="font-serif text-secondary text-4xl font-bold my-10">
-          Event not found
+          {t("eventNotFound")}
         </h1>
         <div className="flex">
           <Link to="/" className="btn btn-primary mx-4">
@@ -89,13 +86,8 @@ export default function EventDetails() {
     );
   } else {
     const date = new Date(event.date);
-    const genders = event.genders;
-    const host = event.chain_uid;
-    console.log(host);
-    const host_email = event.user_email;
-
     const icalURL = eventICalURL(event.uid);
-    console.log(icalURL);
+
     return (
       <>
         <Helmet>
@@ -109,7 +101,7 @@ export default function EventDetails() {
               <a href={icalURL}>
                 <button className="btn btn-primary inline w-fit float-right mt-16">
                   <span className="pr-2 feather feather-calendar" />
-                  Add event to your calendar
+                  {t("addToCalendar")}
                 </button>
               </a>
               <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-16 px-0">
@@ -138,7 +130,8 @@ export default function EventDetails() {
                   </div>
                   <div className="shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] w-full md:w-1/3 my-8 md:my-auto bg-white py-12 ml-0 md:ml-12 lg:ml-20">
                     <div className="px-10 py-2 font-bold font-sans text-xl text-teal">
-                      Time:
+                      {t("time")}
+                      {":"}
                     </div>
                     <div className="px-8 lg:px-16">
                       <span className="pr-2 feather feather-clock"></span>
@@ -149,7 +142,8 @@ export default function EventDetails() {
                       </span>
                     </div>
                     <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
-                      Location:
+                      {t("location")}
+                      {":"}
                     </div>
                     <div className="px-8 lg:px-16">
                       <span className="pr-2 feather feather-map-pin"></span>
@@ -158,7 +152,8 @@ export default function EventDetails() {
                       </span>
                     </div>
                     <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
-                      Categories:
+                      {t("categories")}
+                      {":"}
                     </div>
 
                     <div className="flex flex-col w-full text-sm px-8 lg:px-16">
@@ -171,7 +166,8 @@ export default function EventDetails() {
                       ) : null}
                     </div>
                     <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
-                      Contact Host:
+                      {t("contactHost")}
+                      {":"}
                     </div>
                     <div className="px-8 lg:px-16">
                       <span className="pr-2 feather feather-mail"></span>
@@ -190,7 +186,8 @@ export default function EventDetails() {
 
                 <div className="md:py-16 mb-4 w-full md:w-2/3">
                   <h2 className="font-serif font-bold text-secondary text-2xl mb-8 px-0">
-                    Event Details
+                    {t("eventDetails")}
+                    {":"}
                   </h2>
                   {event.description}
                 </div>

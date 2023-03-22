@@ -41,7 +41,6 @@ export default function Events() {
   const [lat, setLat] = useState<number>();
   const [long, setLong] = useState<number>();
 
-  const urlParams = new URLSearchParams(location.search);
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const months = [
     "Jan",
@@ -78,7 +77,6 @@ export default function Events() {
         radius: 10000,
       }).then((res) => {
         const _events = res.data;
-        const todayDate = new Date();
 
         const filterFunc = createFilterFunc(
           urlParams.getAll("genders"),
@@ -105,7 +103,7 @@ export default function Events() {
       <main>
         <div className="max-w-screen-xl min-h-screen mx-auto py-10 px-6 md:px-20">
           <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
-            Upcoming Events
+            {t("upcomingEvents")}
           </h1>
           <form
             className="flex flex-col md:flex-row pb-4 md:pb-8"
@@ -115,14 +113,14 @@ export default function Events() {
               className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
               onClick={handleLocation}
             >
-              {`Events Near ${lat}, ${long}`}
+              {t("eventsNear")} {lat} {long}
             </div>
             <DistanceDropdown
               className="w-[150px] md:w-[170px] py-2 md:py-0 md:mr-8"
               selectedDistance={distance!}
               handleChange={(d) => setDistance(d)}
             />
-            <button type="submit" className="btn btn-primary" ref={refSubmit}>
+            <button type="submit" className="btn btn-primary">
               <span className="hidden sm:inline">{t("search")}</span>
               <span className="sm:hidden inline feather feather-search"></span>
             </button>
@@ -143,12 +141,11 @@ export default function Events() {
                 handleChange={(date) => setValue("date", date)}
               />
             </div>
-            <button type="submit" className="btn btn-secondary" ref={refSubmit}>
+            <button type="submit" className="btn btn-secondary">
               <span className="hidden sm:inline">{t("search")}</span>
               <span className="sm:hidden inline feather feather-search"></span>
             </button>
-          </form >
-
+          </form>
 
           {handleEmptyEvents()}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -230,20 +227,19 @@ export default function Events() {
     </>
   );
 
-
   function handleEmptyEvents() {
     if (events?.length == 0) {
       return (
         <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
           <h1 className="font-serif text-secondary text-4xl font-bold my-10 text-center">
-            Sorry there are no events that match these filters.
+            {t("sorryNoEvents")}
           </h1>
           <div className="flex mx-auto">
             <Link to="/" className="btn btn-primary mx-4">
               {t("home")}
             </Link>
             <Link to="/events" className="btn btn-primary mx-4">
-              {t("All events")}
+              {t("allEvents")}
             </Link>
           </div>
         </div>
@@ -253,10 +249,6 @@ export default function Events() {
 
   function handleSubmitDistance(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    // props.onSearch(distance);
-    console.log(distance);
-
     switch (distance) {
       case "1":
         handleDistance(lat!, long!, 1);
@@ -275,6 +267,7 @@ export default function Events() {
         break;
     }
   }
+
   function handleDistance(lat: number, lon: number, rad: number) {
     try {
       eventGetAll({
@@ -291,6 +284,30 @@ export default function Events() {
       addToastError(GinParseErrors(t, err), err.status);
     }
   }
+
+  function createFilterFunc(
+    genders: string[],
+    date: string[]
+  ): (e: Event) => boolean {
+    let filterFunc = (e: Event) => true;
+    if (genders?.length) {
+      filterFunc = (e) => {
+        for (let g of genders) {
+          if (e.genders?.includes(g)) return true;
+        }
+        return false;
+      };
+    } else if (date?.length) {
+      filterFunc = (e) => {
+        for (let d of date) {
+          if (whenFilterHandler(e, d)) return true;
+        }
+        return false;
+      };
+    }
+    return filterFunc;
+  }
+
   function whenFilterHandler(e: Event, d: string) {
     const todayDate = new Date();
     const today = new Date(todayDate.getTime());
@@ -343,31 +360,6 @@ export default function Events() {
         break;
     }
   }
-
-  function createFilterFunc(
-    genders: string[],
-    date: string[]
-  ): (e: Event) => boolean {
-    let filterFunc = (e: Event) => true;
-    if (genders?.length) {
-      console.log("events before", events);
-      filterFunc = (e) => {
-        for (let g of genders) {
-          if (e.genders?.includes(g)) return true;
-        }
-        return false;
-      };
-    } else if (date?.length) {
-      filterFunc = (e) => {
-        for (let d of date) {
-          if (whenFilterHandler(e, d)) return true;
-        }
-        return false;
-      };
-    }
-    return filterFunc;
-  }
-
   function handleSubmitValues(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -402,10 +394,10 @@ export default function Events() {
 
   function handleLocation() {
     addModal({
-      message: "Enter your location or allow browser to see location",
+      message: t("allowLocation"),
       actions: [
         {
-          text: "Allow browser access",
+          text: t("allow"),
           type: "secondary",
           fn: () => {
             getLocationBrowser();

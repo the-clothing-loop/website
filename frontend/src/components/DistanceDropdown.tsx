@@ -45,13 +45,13 @@ export default function DistanceDropdown({
     if (selectedDistance) {
       return [...selectedDistance]
         .sort()
-        .map((g) => t(DistanceI18nKeys[g]))
+        .map((g) => DistanceI18nKeys[g])
         .join(", ");
     } else {
       // Add translation
-      return "Distance";
+      return t("distance");
     }
-  }, [t, selectedDistance]);
+  }, [selectedDistance]);
 
   return (
     <div
@@ -88,7 +88,7 @@ export default function DistanceDropdown({
                   className="checkbox"
                   onChange={() => dropdown.change(distance)}
                 />
-                {t(DistanceI18nKeys[distance])}
+                {DistanceI18nKeys[distance]}
               </label>
             </li>
           );
