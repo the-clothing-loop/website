@@ -6,10 +6,12 @@ import { Link } from "react-router-dom";
 import { ToastContext } from "../providers/ToastProvider";
 
 import { Event } from "../api/types";
-import EventsFilterBar from "../components/EventsFilterBar";
 import { GenderBadges } from "../components/Badges";
 import DistanceDropdown from "../components/DistanceDropdown";
 import useForm from "../util/form.hooks";
+
+import CategoriesDropdown from "../components/CategoriesDropdown";
+import WhenDropdown from "../components/WhenDropdown";
 
 import {
   eventGet,
@@ -21,25 +23,16 @@ import {
 } from "../api/event";
 import { GinParseErrors } from "../util/gin-errors";
 
-export interface SearchValues {
+interface SearchValues {
   genders: string[];
   date: string[];
-
-}
-export interface distanceValue {
-  distance: string[];
-}
-
-interface Props {
-  initialValues?: distanceValue;
-  onSearch: (search: distanceValue) => void;
 }
 
 // Media
 const ClothesImage =
   "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
 
-export default function Events(props: Props) {
+export default function Events() {
   const { t } = useTranslation();
 
   const { addToastError, addModal, addToast } = useContext(ToastContext);
@@ -64,6 +57,11 @@ export default function Events(props: Props) {
     "November",
     "December",
   ];
+  const [values, setValue] = useForm<SearchValues>({
+    genders: [] as string[],
+    date: [] as string[],
+  });
+
   const [distance, setDistance] = useState<string>();
 
   useEffect(() => {
@@ -109,36 +107,49 @@ export default function Events(props: Props) {
           <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
             Upcoming Events
           </h1>
-          <form className="flex flex-col md:flex-row pb-4 md:pb-8" onSubmit={handleSubmit}>
+          <form
+            className="flex flex-col md:flex-row pb-4 md:pb-8"
+            onSubmit={handleSubmitDistance}
+          >
             <div
-              className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-default inline-block hover:opacity-75 hover:underline"
+              className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
               onClick={handleLocation}
             >
-              Events Near {lat}, {long}
+              {`Events Near ${lat}, ${long}`}
             </div>
-            <div>
-              <DistanceDropdown
-                className="w-[150px] md:w-[170px] py-2 md:py-0 md:mr-8"
-                selectedDistance={distance!}
-                handleChange={(d) => setDistance(d)}
-              />
-              <button
-                type="submit"
-                className="btn btn-primary"
-                ref={refSubmit}
-              >
-                <span className="hidden sm:inline">{t("search")}</span>
-                <span className="sm:hidden inline feather feather-search"></span>
-              </button>
-            </div>
+            <DistanceDropdown
+              className="w-[150px] md:w-[170px] py-2 md:py-0 md:mr-8"
+              selectedDistance={distance!}
+              handleChange={(d) => setDistance(d)}
+            />
+            <button type="submit" className="btn btn-primary" ref={refSubmit}>
+              <span className="hidden sm:inline">{t("search")}</span>
+              <span className="sm:hidden inline feather feather-search"></span>
+            </button>
           </form>
-          <EventsFilterBar
-            initialValues={{
-              genders: urlParams.getAll("genders") || [],
-              date: urlParams.getAll("date") || [],
-            }}
-            onSearch={handleSearch}
-          />
+          <form
+            className="flex flex-col md:flex-row pb-8"
+            onSubmit={handleSubmitValues}
+          >
+            <div>
+              <CategoriesDropdown
+                className="w-[150px] md:w-[170px] mr-4 md:mr-8 py-4 pb-2 md:py-0"
+                selectedGenders={values.genders}
+                handleChange={(gs) => setValue("genders", gs)}
+              />
+              <WhenDropdown
+                className="w-[150px] md:w-[170px] mr-4 md:mr-8 pb-2 md:py-0"
+                selectedDate={values.date}
+                handleChange={(date) => setValue("date", date)}
+              />
+            </div>
+            <button type="submit" className="btn btn-secondary" ref={refSubmit}>
+              <span className="hidden sm:inline">{t("search")}</span>
+              <span className="sm:hidden inline feather feather-search"></span>
+            </button>
+          </form >
+
+
           {handleEmptyEvents()}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {events
@@ -219,6 +230,7 @@ export default function Events(props: Props) {
     </>
   );
 
+
   function handleEmptyEvents() {
     if (events?.length == 0) {
       return (
@@ -239,7 +251,7 @@ export default function Events(props: Props) {
     }
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmitDistance(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     // props.onSearch(distance);
@@ -256,8 +268,6 @@ export default function Events(props: Props) {
         handleDistance(lat!, long!, 10);
         break;
       case "4":
-        console.log("case4");
-
         handleDistance(lat!, long!, 15);
         break;
       case "5":
@@ -275,7 +285,6 @@ export default function Events(props: Props) {
         const _events = res.data;
         setEvents(_events);
         setAllEvents(_events);
-
       });
     } catch (err: any) {
       console.error(err);
@@ -359,9 +368,12 @@ export default function Events(props: Props) {
     return filterFunc;
   }
 
-  function handleSearch(search: SearchValues) {
+  function handleSubmitValues(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     if (!events) return;
 
+    const search = values;
     const selectedEventsFilter = createFilterFunc(search.genders, search.date);
     const filteredEvents = allEvents.filter(selectedEventsFilter);
 
