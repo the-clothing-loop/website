@@ -84,8 +84,7 @@ export default function Events(props: Props) {
 
         const filterFunc = createFilterFunc(
           urlParams.getAll("genders"),
-          urlParams.getAll("date"),
-          urlParams.getAll("distance")
+          urlParams.getAll("date")
         );
         // add other parameters later
         setAllEvents(_events.filter(filterFunc));
@@ -107,125 +106,142 @@ export default function Events(props: Props) {
         <meta name="description" content="Upcoming Events" />
       </Helmet>
       <main>
-        <div className="max-w-screen-xl mx-auto pt-10 px-6 md:px-20 overflow-hidden relative z-50">
+        <div className="max-w-screen-xl min-h-screen mx-auto py-10 px-6 md:px-20">
           <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
             Upcoming Events
           </h1>
-          <div>
-            <form className="flex z-50" onSubmit={handleSubmit}>
-              <div
-                className="font-sans text-lg md:text-2xl mb-6 cursor-default inline-block hover:opacity-75 hover:underline"
-                onClick={handleLocation}
-              >
-                Events Near {lat}, {long}
-              </div>
-              <div>
-                <DistanceDropdown
-                  className="w-[150px] md:w-[170px] ml-4 md:ml-8 overflow-visible z-50"
-                  selectedDistance={distance!}
-                  handleChange={(d) => setDistance(d)}
-                />
-                <button
-                  type="submit"
-                  className="btn btn-primary ml-8"
-                  ref={refSubmit}
-                >
-                  <span className="hidden sm:inline">{t("search")}</span>
-                  <span className="sm:hidden inline feather feather-search"></span>
-                </button>
-              </div>
-            </form>
-            <EventsFilterBar
-              initialValues={{
-                genders: urlParams.getAll("genders") || [],
-                date: urlParams.getAll("date") || [],
-                distance: urlParams.getAll("distance") || [],
-              }}
-              onSearch={handleSearch}
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {events
-                ?.sort((a, b) => a.date.localeCompare(b.date))
-                    .map((event) => {
-                      const date = new Date(event.date);
-                      const genders = event.genders;
-                      var eventURL = window.location.pathname + "/" + event.uid;
-                      return (
-                        <div className="pb-10 px-0" key={event.uid}>
-                          <Link to={eventURL}>
-                            <div
-                              className="bg-teal-light mr-0 md:mr-6 mb-6 max-w-xl overflow-hidden"
-                              //onMouseOver={() => setHover(true)}
-                              //onMouseLeave={() => setHover(false)}
-                            >
-                              <div className="container relative overflow-hidden">
-                                <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
-                                  <p>{months[date.getMonth()]}</p>
-                                  <p className="font-light">{date.getDate()}</p>
-                                </div>
-                                <img
-                                  src={ClothesImage}
-                                  alt=""
-                                  className={`w-full h-auto ${
-                                    hover
-                                      ? "transition ease-in-out duration-300 scale-[1.03]"
-                                      : "transition ease-in-out duration-300 scale-1"
-                                  }`}
-                                />
-                              </div>
-                              <div className="text-lg">
-                                <div
-                                  className={`mt-4 pb-2 pl-4 text-xl text-teal font-bold ${
-                                    hover
-                                      ? "text-opacity-80 transition ease-in-out"
-                                      : ""
-                                  }`}
-                                >
-                                  {event.name}
-                                </div>
-                                <div className="px-4 mb-2 pb-2">
-                                  <span
-                                    className={`feather feather-map-pin ${
-                                      hover
-                                        ? "feather feather-map-pin opacity-60 transition ease-in-out"
-                                        : ""
-                                    }`}
-                                  ></span>
-
-                                  <span
-                                    className={`text-md px-2 ${
-                                      hover
-                                        ? "opacity-60 transition ease-in-out"
-                                        : ""
-                                    }`}
-                                  >
-                                    {/*Address is an emptry string in the fake data; name for now just for visible reasons*/}
-                                    {event.address}
-                                    {"Mission Dolores"}
-                                  </span>
-                                  <div className="p-2">
-                                    {event.genders?.length ? (
-                                      <>
-                                        <div className="mb-2">
-                                          {GenderBadges(t, event.genders)}
-                                        </div>
-                                      </>
-                                    ) : null}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </Link>
-                        </div>
-                      );
-                    })}
-    
+          <form className="flex" onSubmit={handleSubmit}>
+            <div
+              className="font-sans text-lg md:text-2xl mb-6 cursor-default inline-block hover:opacity-75 hover:underline"
+              onClick={handleLocation}
+            >
+              Events Near {lat}, {long}
             </div>
+            <div>
+              <DistanceDropdown
+                className="w-[150px] md:w-[170px] ml-4 md:ml-8"
+                selectedDistance={distance!}
+                handleChange={(d) => setDistance(d)}
+              />
+              <button
+                type="submit"
+                className="btn btn-primary ml-8"
+                ref={refSubmit}
+              >
+                <span className="hidden sm:inline">{t("search")}</span>
+                <span className="sm:hidden inline feather feather-search"></span>
+              </button>
+            </div>
+          </form>
+          <EventsFilterBar
+            initialValues={{
+              genders: urlParams.getAll("genders") || [],
+              date: urlParams.getAll("date") || [],
+              distance: urlParams.getAll("distance") || [],
+            }}
+            onSearch={handleSearch}
+          />
+          {handleEmptyEvents()}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {events
+              ?.sort((a, b) => a.date.localeCompare(b.date))
+              .map((event) => {
+                const date = new Date(event.date);
+                const genders = event.genders;
+                var eventURL = window.location.pathname + "/" + event.uid;
+                return (
+                  <div className="pt-10 px-0" key={event.uid}>
+                    <Link to={eventURL}>
+                      <div
+                        className="bg-teal-light mr-0 md:mr-6 mb-6 max-w-xl overflow-hidden"
+                        //onMouseOver={() => setHover(true)}
+                        //onMouseLeave={() => setHover(false)}
+                      >
+                        <div className="container relative overflow-hidden">
+                          <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
+                            <p>{months[date.getMonth()]}</p>
+                            <p className="font-light">{date.getDate()}</p>
+                          </div>
+                          <img
+                            src={ClothesImage}
+                            alt=""
+                            className={`w-full h-auto ${
+                              hover
+                                ? "transition ease-in-out duration-300 scale-[1.03]"
+                                : "transition ease-in-out duration-300 scale-1"
+                            }`}
+                          />
+                        </div>
+                        <div className="text-lg">
+                          <div
+                            className={`mt-4 pb-2 pl-4 text-xl text-teal font-bold ${
+                              hover
+                                ? "text-opacity-80 transition ease-in-out"
+                                : ""
+                            }`}
+                          >
+                            {event.name}
+                          </div>
+                          <div className="px-4 mb-2 pb-2">
+                            <span
+                              className={`feather feather-map-pin ${
+                                hover
+                                  ? "feather feather-map-pin opacity-60 transition ease-in-out"
+                                  : ""
+                              }`}
+                            ></span>
+
+                            <span
+                              className={`text-md px-2 ${
+                                hover ? "opacity-60 transition ease-in-out" : ""
+                              }`}
+                            >
+                              {/*Address is an emptry string in the fake data; name for now just for visible reasons*/}
+                              {event.address}
+                              {"Mission Dolores"}
+                            </span>
+                            <div className="p-2">
+                              {event.genders?.length ? (
+                                <>
+                                  <div className="mb-2">
+                                    {GenderBadges(t, event.genders)}
+                                  </div>
+                                </>
+                              ) : null}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </main>
     </>
   );
+
+  function handleEmptyEvents() {
+    if (events?.length == 0) {
+      return (
+        <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
+          <h1 className="font-serif text-secondary text-4xl font-bold my-10 text-center">
+            Sorry there are no events that match these filters.
+          </h1>
+          <div className="flex mx-auto">
+            <Link to="/" className="btn btn-primary mx-4">
+              {t("home")}
+            </Link>
+            <Link to="/events" className="btn btn-primary mx-4">
+              {t("All events")}
+            </Link>
+          </div>
+        </div>
+      );
+    }
+  }
+
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -248,7 +264,6 @@ export default function Events(props: Props) {
         handleDistance(lat!, long!, 15);
         break;
       case "5":
-        console.log("case5");
         handleDistance(lat!, long!, 6000);
         break;
     }
@@ -261,19 +276,9 @@ export default function Events(props: Props) {
         radius: rad,
       }).then((res) => {
         const _events = res.data;
+        setEvents(_events);
+        setAllEvents(_events);
 
-        const filterFunc = createFilterFunc(
-          urlParams.getAll("genders"),
-          urlParams.getAll("date"),
-          urlParams.getAll("distance")
-        );
-
-        // if (events != _events) {
-        console.log(events);
-        setEvents(_events.filter(filterFunc));
-        setAllEvents(_events.filter(filterFunc));
-
-        console.log(events);
       });
     } catch (err: any) {
       console.error(err);
@@ -335,8 +340,7 @@ export default function Events(props: Props) {
 
   function createFilterFunc(
     genders: string[],
-    date: string[],
-    distance: string[]
+    date: string[]
   ): (e: Event) => boolean {
     let filterFunc = (e: Event) => true;
     if (genders?.length) {
@@ -354,21 +358,6 @@ export default function Events(props: Props) {
         }
         return false;
       };
-      // Don't display events that have already past
-    } else if (!date?.length) {
-      filterFunc = (e) => {
-        const todayDate = new Date();
-        const today = new Date(todayDate.getTime());
-        today.setHours(0, 0, 0, 0);
-
-        const eventDate = new Date(e.date);
-        eventDate.setHours(0, 0, 0, 0);
-
-        if (today.getTime() <= eventDate.getTime()) {
-          return true;
-        }
-        return false;
-      };
     }
     return filterFunc;
   }
@@ -376,11 +365,7 @@ export default function Events(props: Props) {
   function handleSearch(search: SearchValues) {
     if (!events) return;
 
-    const selectedEventsFilter = createFilterFunc(
-      search.genders,
-      search.date,
-      search.distance
-    );
+    const selectedEventsFilter = createFilterFunc(search.genders, search.date);
     const filteredEvents = allEvents.filter(selectedEventsFilter);
 
     setEvents(filteredEvents);
@@ -407,9 +392,6 @@ export default function Events(props: Props) {
   }
 
   function handleLocation() {
-    // pop up and asks to either type in the location or ask permission to use location from browser
-    // if user clicks use my location enter getLocationBrowser()
-    //e.preventDefault();
     addModal({
       message: "Enter your location or allow browser to see location",
       actions: [
