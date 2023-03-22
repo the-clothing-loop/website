@@ -69,3 +69,28 @@ export const WhenI18nKeys: Record<When | string, string> = {
   "4": "Next two weeks",
   "5": "This month",
 };
+
+export const MonthsI18nKeys: Record<When | string, string> = {
+  "0": "jan",
+  "1": "feb",
+  "2": "march",
+  "3": "april",
+  "4": "may",
+  "5": "june",
+  "6": "july",
+  "7": "aug",
+  "8": "sept",
+  "9": "oct",
+  "10": "nov",
+  "11": "dec",
+};
+
+export const DaysI18nKeys: Record<When | string, string> = {
+  "0": "Monday",
+  "1": "Tuesday",
+  "2": "Wednesday",
+  "3": "Thursday",
+  "4": "Friday",
+  "5": "Saturday",
+  "6": "Sunday",
+};

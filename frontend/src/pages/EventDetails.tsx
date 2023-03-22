@@ -9,6 +9,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { Link } from "react-router-dom";
 import { GenderBadges } from "../components/Badges";
+import { MonthsI18nKeys, DaysI18nKeys } from "../api/enums";
 
 // Media
 const ClothesImage =
@@ -21,29 +22,7 @@ export default function EventDetails() {
 
   const { addToastError } = useContext(ToastContext);
   const [event, setEvent] = useState<Event>();
-  const months = [
-    "Jan",
-    "Feb",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+
   useEffect(() => {
     load();
   }, []);
@@ -136,9 +115,10 @@ export default function EventDetails() {
                     <div className="px-8 lg:px-16">
                       <span className="pr-2 feather feather-clock"></span>
                       <span className="font-sans text-lg">
-                        {days[date.getDay()]}, {date.getDate()}{" "}
-                        {months[date.getMonth()]} {date.getFullYear()} at{" "}
-                        {date.getHours()}:{date.getMinutes()}
+                        {t(DaysI18nKeys[date.getDay()])}, {date.getDate()}{" "}
+                        {t(MonthsI18nKeys[date.getMonth()])}{" "}
+                        {date.getFullYear()} at {date.getHours()}:
+                        {date.getMinutes()}
                       </span>
                     </div>
                     <div className="px-10 py-4 font-bold font-sans text-xl text-teal">

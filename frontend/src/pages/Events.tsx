@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet";
 
 import { useState, useContext, useEffect, FormEvent, useRef } from "react";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ToastContext } from "../providers/ToastProvider";
 
@@ -13,14 +13,9 @@ import useForm from "../util/form.hooks";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import WhenDropdown from "../components/WhenDropdown";
 
-import {
-  eventGet,
-  eventGetAll,
-  eventCreate,
-  eventUpdate,
-  eventDelete,
-  eventICalURL,
-} from "../api/event";
+import { MonthsI18nKeys } from "../api/enums";
+
+import { eventGetAll } from "../api/event";
 import { GinParseErrors } from "../util/gin-errors";
 
 interface SearchValues {
@@ -42,20 +37,7 @@ export default function Events() {
   const [long, setLong] = useState<number>();
 
   const [allEvents, setAllEvents] = useState<Event[]>([]);
-  const months = [
-    "Jan",
-    "Feb",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+
   const [values, setValue] = useForm<SearchValues>({
     genders: [] as string[],
     date: [] as string[],
@@ -165,7 +147,7 @@ export default function Events() {
                       >
                         <div className="container relative overflow-hidden">
                           <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
-                            <p>{months[date.getMonth()]}</p>
+                            <p>{t(MonthsI18nKeys[date.getMonth()])}</p>
                             <p className="font-light">{date.getDate()}</p>
                           </div>
                           <img
