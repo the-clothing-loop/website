@@ -102,6 +102,7 @@ events.created_at     AS created_at,
 events.updated_at     AS updated_at,
 users.name            AS user_name,
 users.email           AS user_email,
+users.phone_number    AS user_phone,
 chains.name           AS chain_name
 FROM events
 LEFT JOIN chains ON chains.id = chain_id
