@@ -991,7 +991,7 @@ function RouteTable(props: {
                       <div
                         tabIndex={0}
                         aria-label="drag"
-                        className="hidden lg:inline-block p-1 ml-2 rounded-full hover:bg-white cursor-grab active:cursor-grabbing feather feather-move"
+                        className="hidden lg:inline-block p-1 ml-2 rounded-full hover:bg-white cursor-grab active:cursor-grabbing feather feather-maximize-2 -rotate-45"
                       ></div>
                     </td>
                     {/* <td
