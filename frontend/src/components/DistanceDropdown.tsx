@@ -2,26 +2,8 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 
 import { DistanceI18nKeys, Distance } from "../api/enums";
-import { useDropdownCheckBox, useDropdownRadio } from "../util/dropdown.hooks";
+import { useDropdownRadio } from "../util/dropdown.hooks";
 
-
-const distance = {
-  [Distance.km1]: [
-    Distance["km1"],
-  ],
-  [Distance.km5]: [
-    Distance["km5"],
-  ],
-  [Distance.km10]: [
-    Distance["km10"],
-  ],
-  [Distance.km15]: [
-    Distance["km15"],
-  ],
-  [Distance.km20]: [
-    Distance["km20"],
-  ],
-};
 
 interface IProps {
   selectedDistance: Distance | string;
@@ -43,12 +25,11 @@ export default function DistanceDropdown({
 
   let btnLabel = React.useMemo(() => {
     if (selectedDistance) {
-      return [...selectedDistance]
+      return [selectedDistance]
         .sort()
         .map((g) => DistanceI18nKeys[g])
         .join(", ");
     } else {
-      // Add translation
       return t("distance");
     }
   }, [selectedDistance]);
@@ -76,8 +57,8 @@ export default function DistanceDropdown({
         className="dropdown-content menu bg-white shadow w-44 sm:w-full"
         tabIndex={0}
       >
-        {Object.keys(distance).map((distance: string | Distance) => {
-          let checked = selectedDistance == (distance);
+        {Object.keys(DistanceI18nKeys).map((distance: string | Distance) => {
+          let checked = selectedDistance == distance;
           return (
             <li key={distance}>
               <label>
@@ -88,7 +69,7 @@ export default function DistanceDropdown({
                   className="checkbox"
                   onChange={() => dropdown.change(distance)}
                 />
-                {DistanceI18nKeys[distance]}
+                {t(DistanceI18nKeys[distance])}
               </label>
             </li>
           );

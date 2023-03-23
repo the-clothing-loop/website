@@ -2,32 +2,11 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 
 import { WhenI18nKeys, When } from "../api/enums";
-import { useDropdownCheckBox } from "../util/dropdown.hooks";
-
-
-const when = {
-
-  [When.today]: [
-    When["today"],
-  ],
-  [When.tomorrow]: [
-    When["tomorrow"],
-  ],
-  [When.thisweek]: [
-    When["thisweek"],
-  ],
-  [When.next2weeks]: [
-    When["next2weeks"],
-  ],
-  [When.thismonth]: [
-    When["thismonth"],
-  ],
-};
-
+import { useDropdownCheckBox, useDropdownRadio } from "../util/dropdown.hooks";
 
 interface IProps {
-  selectedDate: Array<When | string>;
-  handleChange: (when: Array<When | string>) => void;
+  selectedDate: When | string;
+  handleChange: (when: When | string) => void;
   className?: string;
 }
 
@@ -38,7 +17,7 @@ export default function WhenDropdown({
 }: IProps) {
   const { t } = useTranslation();
 
-  const dropdown = useDropdownCheckBox({
+  const dropdown = useDropdownRadio({
     selected: selectedDate,
     handleChange,
   });
@@ -50,8 +29,7 @@ export default function WhenDropdown({
         .map((g) => t(WhenI18nKeys[g]))
         .join(", ");
     } else {
-      // Add translation
-      return "When";
+      return t("when");
     }
   }, [t, selectedDate]);
 
@@ -78,7 +56,7 @@ export default function WhenDropdown({
         className="dropdown-content menu bg-white shadow w-44 sm:w-full"
         tabIndex={0}
       >
-        {Object.keys(when).map((when: string | When) => {
+        {Object.keys(WhenI18nKeys).map((when: string | When) => {
           let checked = selectedDate.includes(when);
           return (
             <li key={when}>
