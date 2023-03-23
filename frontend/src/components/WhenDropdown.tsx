@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 
 import { WhenI18nKeys, When } from "../api/enums";
-import { useDropdownCheckBox, useDropdownRadio } from "../util/dropdown.hooks";
+import { useDropdownRadio } from "../util/dropdown.hooks";
 
 interface IProps {
   selectedDate: When | string;

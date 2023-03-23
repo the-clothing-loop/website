@@ -24,7 +24,7 @@ import { ToastContext } from "../providers/ToastProvider";
 
 interface SearchValues {
   genders: string[];
-  date: string[];
+  date: string;
 }
 
 // Media
@@ -43,7 +43,7 @@ export default function Events() {
 
   const [values, setValue] = useForm<SearchValues>({
     genders: [] as string[],
-    date: [] as string[],
+    date: "" as string,
   });
 
   const [distance, setDistance] = useState<string>();
@@ -65,7 +65,7 @@ export default function Events() {
 
         const filterFunc = createFilterFunc(
           urlParams.getAll("genders"),
-          urlParams.getAll("date")
+          urlParams.get("date")
         );
         setAllEvents(_events.filter(filterFunc));
         setEvents(_events.filter(filterFunc));
@@ -101,7 +101,7 @@ export default function Events() {
               {t("eventsNear")} {lat} {long}
             </div>
             <DistanceDropdown
-              className="w-[150px] md:w-[170px] py-2 md:py-0 md:mr-8"
+              className="w-[150px] md:w-[190px] py-2 md:py-0 md:mr-8"
               selectedDistance={distance!}
               handleChange={(d) => setDistance(d)}
             />
@@ -141,32 +141,26 @@ export default function Events() {
                 return (
                   <div className="h-full" key={event.uid}>
                     <Link to={eventURL}>
-                      <div
-                        className="bg-teal-light h-full max-w-xl overflow-hidden">
+                      <div className="bg-teal-light h-full max-w-xl overflow-hidden">
                         <div className="container relative overflow-hidden">
                           <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
                             <p>{t(MonthsI18nKeys[date.getMonth()])}</p>
                             <p className="font-light">{date.getDate()}</p>
                           </div>
-                          <img
-                            src={ClothesImage}
-                            className={"w-full h-auto"}
-                          />
+                          <img src={ClothesImage} className={"w-full h-auto"} />
                         </div>
                         <div className="text-lg">
                           <div
-                            className={"mt-4 pb-2 pl-4 text-xl text-teal font-bold"}
+                            className={
+                              "mt-4 pb-2 pl-4 text-xl text-teal font-bold"
+                            }
                           >
                             {event.name}
                           </div>
                           <div className="px-4 mb-2 pb-2">
-                            <span
-                              className={"feather feather-map-pin"}
-                            ></span>
+                            <span className={"feather feather-map-pin"}></span>
 
-                            <span
-                              className={"text-md px-2"}
-                            >
+                            <span className={"text-md px-2"}>
                               {/*Address is an emptry string in the fake data; name for now just for visible reasons*/}
                               {event.address}
                               {"Mission Dolores"}
@@ -229,7 +223,10 @@ export default function Events() {
         handleDistance(lat!, long!, 15);
         break;
       case "5":
-        handleDistance(lat!, long!, 6000);
+        handleDistance(lat!, long!, 20);
+        break;
+      case "6":
+        handleDistance(lat!, long!, 30000);
         break;
     }
   }
@@ -253,7 +250,7 @@ export default function Events() {
 
   function createFilterFunc(
     genders: string[],
-    date: string[]
+    date: string | null
   ): (e: Event) => boolean {
     let filterFunc = (e: Event) => true;
     if (genders?.length) {
@@ -263,11 +260,10 @@ export default function Events() {
         }
         return false;
       };
-    } else if (date?.length) {
+    } else if (date) {
       filterFunc = (e) => {
-        for (let d of date) {
-          if (whenFilterHandler(e, d)) return true;
-        }
+        console.log(date);
+        if (whenFilterHandler(e, date)) return true;
         return false;
       };
     }
@@ -324,6 +320,9 @@ export default function Events() {
         if (eventDate.getTime() < thisMonth.getTime()) return true;
 
         break;
+
+      case "6":
+        return true;
     }
   }
   function handleSubmitValues(e: FormEvent<HTMLFormElement>) {
