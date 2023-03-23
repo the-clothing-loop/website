@@ -1,15 +1,15 @@
 import { Helmet } from "react-helmet";
 
-import { Trans, useTranslation } from "react-i18next";
 import { useState, useEffect, useContext } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+
 import { eventGetAll, eventICalURL } from "../api/event";
 import { Event } from "../api/types";
-
+import { MonthsI18nKeys, DaysI18nKeys } from "../api/enums";
+import { GenderBadges } from "../components/Badges";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
-import { Link } from "react-router-dom";
-import { GenderBadges } from "../components/Badges";
-import { MonthsI18nKeys, DaysI18nKeys } from "../api/enums";
 
 // Media
 const ClothesImage =
@@ -156,7 +156,7 @@ export default function EventDetails() {
                       </span>
                     </div>
                     <div className="px-8 lg:px-16 pt-2">
-                      <span className="pr-2 feather feather-mail"></span>
+                      <span className="pr-2 feather feather-phone"></span>
                       <span className="font-sans text-lg break-all">
                         {event.user_phone}
                       </span>
