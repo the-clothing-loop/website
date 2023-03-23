@@ -8,6 +8,8 @@ import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Testimonials from "../components/Testimonials";
 import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
+import useIntersectionObserver from "../components/Counters/hooks";
+import { useRef } from "react";
 
 //Media
 const ClothesImage =
@@ -34,6 +36,13 @@ interface Supporter {
 
 export default function Home() {
   const { t } = useTranslation();
+  const ref = useRef() as any;
+
+  const isVisible = useIntersectionObserver(ref, {
+    root: null,
+    rootMargin: "-70px",
+    threshold: 0.5,
+  });
 
   let history = useHistory();
 
@@ -161,7 +170,10 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center md:mb-20">
+          <div
+            className="flex flex-col md:flex-row items-center md:mb-20"
+            ref={ref}
+          >
             <div className="text-secondary w-full md:w-1/2 x-10 flex justify-end">
               <div className="md:max-w-[600px] p-6 pt-0">
                 <h2 className="font-serif font-bold text-4xl md:text-6xl mb-6">
@@ -184,15 +196,14 @@ export default function Home() {
               <div className="relative w-full md:max-w-[600px]">
                 <Link
                   to="/loops/find"
-                  className="ring-[1rem] md:ring-0 hover:ring-[2rem] ring-secondary transition-[box-shadow] z-20 block"
+                  className={`hover:ring-[2rem] ring-secondary transition-[box-shadow] z-20 block ${
+                    isVisible ? "ring-[1rem] md:ring-0" : "ring-0"
+                  }`}
                 >
                   <img
                     src="https://images.clothingloop.org/600x,jpg/map_image_3.png"
                     alt="map"
                   />
-                  <span className="md:hidden z-10 absolute left-1/2 bottom-8 -translate-x-1/2 font-semibold rounded-full bg-white py-2 px-4 border border-secondary cursor-pointer">
-                    {t("findLoops")}
-                  </span>
                 </Link>
                 <img
                   className="-z-10 absolute -right-20 -top-20"
