@@ -1030,7 +1030,7 @@ function RouteTable(props: {
                     <td className={`${classTdDragging} text-right`}>
                       <button
                         aria-label="go to edit"
-                        className="btn btn-circle btn-sm btn-ghost bg-base-200 feather feather-info"
+                        className="btn btn-circle btn-sm btn-ghost bg-base-100 feather feather-info"
                         onClick={() => props.onGoToEditTableItem(u.uid)}
                       ></button>
                     </td>
