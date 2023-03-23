@@ -11,19 +11,11 @@ export default function Counters() {
 
   const [info, setInfo] = useState<InfoBody>();
 
-  const [isVisible, setIsVisible] = useState(false);
-
   useEffect(() => {
     infoGet().then((res) => setInfo(res.data));
   }, []);
 
-  //check if div is visible on viewport
-  const callBack = (entries: any) => {
-    const [entry] = entries;
-    setIsVisible(entry.isIntersecting);
-  };
-
-  useIntersectionObserver(callBack, containerRef, {
+  const isVisible = useIntersectionObserver(containerRef, {
     root: null,
     rootMargin: "50px",
     threshold: 0.5,
