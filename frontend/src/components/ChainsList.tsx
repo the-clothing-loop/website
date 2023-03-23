@@ -196,16 +196,16 @@ export default function ChainsList() {
                             <ul
                               tabIndex={0}
                               className={`dropdown-content menu shadow bg-base-100 w-52 ${
-                                userChainPokeable ? "" : "h-full"
+                                isUserAdmin ? "h-full" : ""
                               }`}
                             >
                               <li
-                                className={userChainPokeable ? "" : "h-full"}
+                                className={isUserAdmin ? "h-full" : ""}
                                 key="leave"
                               >
                                 <a
                                   className={`text-red font-bold ${
-                                    userChainPokeable ? "" : "h-full"
+                                    isUserAdmin ? "h-full" : ""
                                   }`}
                                   href="#"
                                   onClick={(e) =>
@@ -217,7 +217,7 @@ export default function ChainsList() {
                                     : t("leaveWaitlist")}
                                 </a>
                               </li>
-                              {userChainPokeable ? (
+                              {isUserAdmin ? null : userChainPokeable ? (
                                 <li key="poke">
                                   <a
                                     className="font-bold"
@@ -229,7 +229,16 @@ export default function ChainsList() {
                                     {t("remindHost")}
                                   </a>
                                 </li>
-                              ) : null}
+                              ) : (
+                                <li
+                                  key="no-poke"
+                                  className="disabled whitespace-normal text-left bg-yellow/30"
+                                >
+                                  <span className="font-bold !text-black">
+                                    {t("waitToRemindHost")}
+                                  </span>
+                                </li>
+                              )}
                             </ul>
                           ) : null}
                         </div>

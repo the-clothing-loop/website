@@ -231,6 +231,7 @@
   "toolkitFolder": "Toolkit Folder",
   "editAccount": "Edit Account",
   "remindHost": "Remind Host",
+  "waitToRemindHost": "Please wait a week to send another reminder email",
   "reminderEmailSent": "Reminder email sent",
   "reasonForDenyingJoin": "Please give a reason to deny the request",
   "tooFarAway": "Too far away",
