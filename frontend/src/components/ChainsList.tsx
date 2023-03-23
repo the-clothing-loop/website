@@ -232,10 +232,15 @@ export default function ChainsList() {
                               ) : (
                                 <li
                                   key="no-poke"
-                                  className="disabled whitespace-normal text-left bg-yellow/30"
+                                  className="disabled whitespace-normal text-left bg-grey/10"
                                 >
-                                  <span className="font-bold !text-black">
-                                    {t("waitToRemindHost")}
+                                  <span className="font-bold block !text-black">
+                                    <span className="block pb-1">
+                                      {t("remindHost")}
+                                    </span>
+                                    <span className="text-xs opacity-80">
+                                      {t("waitToRemindHost")}
+                                    </span>
                                   </span>
                                 </li>
                               )}
