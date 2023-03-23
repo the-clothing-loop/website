@@ -77,7 +77,6 @@ export default function Events() {
       addToastError(GinParseErrors(t, err), err.status);
     }
   }
-  let refSubmit = useRef<any>();
 
   return (
     <>
