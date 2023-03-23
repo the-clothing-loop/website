@@ -1,22 +1,26 @@
 import { Helmet } from "react-helmet";
 
-import { useState, useContext, useEffect, FormEvent, useRef } from "react";
+import {
+  useState,
+  useContext,
+  useEffect,
+  FormEvent,
+  useRef,
+  MouseEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { ToastContext } from "../providers/ToastProvider";
 
 import { Event } from "../api/types";
+import { eventGetAll } from "../api/event";
+import { MonthsI18nKeys } from "../api/enums";
+import CategoriesDropdown from "../components/CategoriesDropdown";
+import WhenDropdown from "../components/WhenDropdown";
 import { GenderBadges } from "../components/Badges";
 import DistanceDropdown from "../components/DistanceDropdown";
 import useForm from "../util/form.hooks";
-
-import CategoriesDropdown from "../components/CategoriesDropdown";
-import WhenDropdown from "../components/WhenDropdown";
-
-import { MonthsI18nKeys } from "../api/enums";
-
-import { eventGetAll } from "../api/event";
 import { GinParseErrors } from "../util/gin-errors";
+import { ToastContext } from "../providers/ToastProvider";
 
 interface SearchValues {
   genders: string[];
@@ -32,7 +36,6 @@ export default function Events() {
 
   const { addToastError, addModal, addToast } = useContext(ToastContext);
   const [events, setEvents] = useState<Event[]>();
-  const [hover, setHover] = useState(false);
   const [lat, setLat] = useState<number>();
   const [long, setLong] = useState<number>();
 
@@ -128,23 +131,18 @@ export default function Events() {
               <span className="sm:hidden inline feather feather-search"></span>
             </button>
           </form>
-
           {handleEmptyEvents()}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {events
               ?.sort((a, b) => a.date.localeCompare(b.date))
               .map((event) => {
                 const date = new Date(event.date);
-                const genders = event.genders;
                 var eventURL = window.location.pathname + "/" + event.uid;
                 return (
                   <div className="h-full" key={event.uid}>
                     <Link to={eventURL}>
                       <div
-                        className="bg-teal-light h-full max-w-xl overflow-hidden"
-                        //onMouseOver={() => setHover(true)}
-                        //onMouseLeave={() => setHover(false)}
-                      >
+                        className="bg-teal-light h-full max-w-xl overflow-hidden">
                         <div className="container relative overflow-hidden">
                           <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
                             <p>{t(MonthsI18nKeys[date.getMonth()])}</p>
@@ -152,36 +150,22 @@ export default function Events() {
                           </div>
                           <img
                             src={ClothesImage}
-                            className={`w-full h-auto ${
-                              hover
-                                ? "transition ease-in-out duration-300 scale-[1.03]"
-                                : "transition ease-in-out duration-300 scale-1"
-                            }`}
+                            className={"w-full h-auto"}
                           />
                         </div>
                         <div className="text-lg">
                           <div
-                            className={`mt-4 pb-2 pl-4 text-xl text-teal font-bold ${
-                              hover
-                                ? "text-opacity-80 transition ease-in-out"
-                                : ""
-                            }`}
+                            className={"mt-4 pb-2 pl-4 text-xl text-teal font-bold"}
                           >
                             {event.name}
                           </div>
                           <div className="px-4 mb-2 pb-2">
                             <span
-                              className={`feather feather-map-pin ${
-                                hover
-                                  ? "feather feather-map-pin opacity-60 transition ease-in-out"
-                                  : ""
-                              }`}
+                              className={"feather feather-map-pin"}
                             ></span>
 
                             <span
-                              className={`text-md px-2 ${
-                                hover ? "opacity-60 transition ease-in-out" : ""
-                              }`}
+                              className={"text-md px-2"}
                             >
                               {/*Address is an emptry string in the fake data; name for now just for visible reasons*/}
                               {event.address}
