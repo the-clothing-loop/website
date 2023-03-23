@@ -962,8 +962,17 @@ function RouteTable(props: {
               {sortedUsers.map((u: User) => {
                 const routeOrderNumber = route.indexOf(u.uid) + 1;
 
-                const classTdDragging =
-                  dragging === u.uid ? "bg-grey/[.1]" : "";
+                let classTdDragging = dragging === u.uid ? "bg-grey/[.1]" : "";
+                if (dragTarget === u.uid) {
+                  const orderTarget = route.indexOf(dragTarget);
+                  const orderDrag = route.indexOf(dragging);
+
+                  if (orderTarget < orderDrag) {
+                    classTdDragging += " border-t-2 border-t-grey";
+                  } else {
+                    classTdDragging += " border-b-2 border-b-grey";
+                  }
+                }
                 return (
                   <tr
                     key={u.uid}
