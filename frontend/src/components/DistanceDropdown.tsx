@@ -26,9 +26,7 @@ export default function DistanceDropdown({
   let btnLabel = React.useMemo(() => {
     if (selectedDistance) {
       return [selectedDistance]
-        .sort()
         .map((g) => DistanceI18nKeys[g])
-        .join(", ");
     } else {
       return t("distance");
     }

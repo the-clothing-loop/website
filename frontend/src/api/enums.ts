@@ -44,6 +44,7 @@ export enum Distance {
   km10 = "3",
   km15 = "4",
   km20 = "5",
+  anyDistance = "6",
 }
 
 export const DistanceI18nKeys: Record<Distance | string, string> = {
@@ -52,6 +53,7 @@ export const DistanceI18nKeys: Record<Distance | string, string> = {
   "3": "10 km",
   "4": "15 km",
   "5": "20 km",
+  "6": "Any Distance",
 };
 
 export enum When {
@@ -60,6 +62,7 @@ export enum When {
   thisweek = "3",
   next2weeks = "4",
   thismonth = "5",
+  anytime = "6",
 }
 
 export const WhenI18nKeys: Record<When | string, string> = {
@@ -68,6 +71,7 @@ export const WhenI18nKeys: Record<When | string, string> = {
   "3": "This week",
   "4": "Next two weeks",
   "5": "This month",
+  "6": "Any day",
 };
 
 export const MonthsI18nKeys: Record<When | string, string> = {
