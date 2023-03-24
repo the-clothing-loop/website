@@ -37,3 +37,64 @@ export const GenderI18nKeys: Record<Genders | string, string> = {
   "2": "women",
   "3": "men",
 };
+
+export enum Distance {
+  km1 = "1",
+  km5 = "2",
+  km10 = "3",
+  km20 = "4",
+  km50 = "5",
+  anyDistance = "6",
+}
+
+export const DistanceI18nKeys: Record<Distance | string, string> = {
+  "1": "1 km",
+  "2": "5 km",
+  "3": "10 km",
+  "4": "20 km",
+  "5": "50 km",
+  "6": "Any Distance",
+};
+
+export enum When {
+  today = "1",
+  tomorrow = "2",
+  thisweek = "3",
+  next2weeks = "4",
+  thismonth = "5",
+  anytime = "6",
+}
+
+export const WhenI18nKeys: Record<When | string, string> = {
+  "1": "Today",
+  "2": "Tomorrow",
+  "3": "This week",
+  "4": "Next two weeks",
+  "5": "This month",
+  "6": "Any day",
+};
+
+export const MonthsI18nKeys: Record<When | string, string> = {
+  "0": "jan",
+  "1": "feb",
+  "2": "march",
+  "3": "april",
+  "4": "may",
+  "5": "june",
+  "6": "july",
+  "7": "aug",
+  "8": "sept",
+  "9": "oct",
+  "10": "nov",
+  "11": "dec",
+};
+
+export const DaysI18nKeys: Record<When | string, string> = {
+  "0": "Monday",
+  "1": "Tuesday",
+  "2": "Wednesday",
+  "3": "Thursday",
+  "4": "Friday",
+  "5": "Saturday",
+  "6": "Sunday",
+};
