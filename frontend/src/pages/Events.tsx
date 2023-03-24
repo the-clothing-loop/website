@@ -1,13 +1,6 @@
 import { Helmet } from "react-helmet";
 
-import {
-  useState,
-  useContext,
-  useEffect,
-  FormEvent,
-  useRef,
-  MouseEvent,
-} from "react";
+import { useState, useContext, useEffect, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -35,10 +28,11 @@ export default function Events() {
   const { t } = useTranslation();
 
   const { addToastError, addModal, addToast } = useContext(ToastContext);
-  const [events, setEvents] = useState<Event[]>();
   const [lat, setLat] = useState<number>();
   const [long, setLong] = useState<number>();
 
+  const [events, setEvents] = useState<Event[]>();
+  // all events don't get updated during filtering
   const [allEvents, setAllEvents] = useState<Event[]>([]);
 
   const [values, setValue] = useForm<SearchValues>({
@@ -69,6 +63,8 @@ export default function Events() {
         );
         setAllEvents(_events.filter(filterFunc));
         setEvents(_events.filter(filterFunc));
+
+        // set lat and long to temp arbitrary values for now
         setLat(11.802937);
         setLong(82.702957);
       });
@@ -91,7 +87,7 @@ export default function Events() {
           </h1>
           <form
             className="flex flex-col md:flex-row pb-4 md:pb-8"
-            onSubmit={handleSubmitDistance}
+            onSubmit={submitDistance}
           >
             <div
               className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
@@ -160,9 +156,7 @@ export default function Events() {
                             <span className={"feather feather-map-pin"}></span>
 
                             <span className={"text-md px-2"}>
-                              {/*Address is an emptry string in the fake data; name for now just for visible reasons*/}
                               {event.address}
-                              {"Mission Dolores"}
                             </span>
                             <div className="p-2">
                               {event.genders?.length ? (
@@ -206,7 +200,7 @@ export default function Events() {
     }
   }
 
-  function handleSubmitDistance(e: FormEvent<HTMLFormElement>) {
+  function submitDistance(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     switch (distance) {
       case "1":
