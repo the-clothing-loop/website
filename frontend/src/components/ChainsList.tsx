@@ -106,7 +106,7 @@ export default function ChainsList() {
         } Clothing Loops`}</h2>
       </div>
 
-      <div className="overflow-x-auto pb-10">
+      <div className="overflow-x-auto pb-16">
         <table className="table table-compact w-full">
           <thead>
             <tr>
@@ -195,7 +195,7 @@ export default function ChainsList() {
                           {userChain ? (
                             <ul
                               tabIndex={0}
-                              className={`dropdown-content menu shadow bg-base-100 w-52 ${
+                              className={`dropdown-content menu shadow bg-base-100 w-64 ${
                                 isUserAdmin ? "h-full" : ""
                               }`}
                             >
@@ -232,15 +232,21 @@ export default function ChainsList() {
                               ) : (
                                 <li
                                   key="no-poke"
-                                  className="disabled whitespace-normal text-left bg-grey/10"
+                                  className="disabled whitespace-normal text-left cursor-not-allowed"
                                 >
-                                  <span className="font-bold block !text-black">
-                                    <span className="block pb-1">
-                                      {t("remindHost")}
+                                  <span className="block !text-black">
+                                    <span className="block pb-1 font-bold">
+                                      <span className="opacity-60">
+                                        {t("remindHost")}
+                                      </span>
+                                      <i className="feather feather-slash ml-1"></i>
                                     </span>
-                                    <span className="text-xs opacity-80">
-                                      {t("waitToRemindHost")}
-                                    </span>
+                                    <span
+                                      className="text-xs"
+                                      dangerouslySetInnerHTML={{
+                                        __html: t("waitToRemindHost"),
+                                      }}
+                                    ></span>
                                   </span>
                                 </li>
                               )}
