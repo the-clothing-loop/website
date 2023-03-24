@@ -106,7 +106,7 @@ export default function ChainsList() {
         } Clothing Loops`}</h2>
       </div>
 
-      <div className="overflow-x-auto pb-10">
+      <div className="overflow-x-auto pb-16">
         <table className="table table-compact w-full">
           <thead>
             <tr>
@@ -195,17 +195,17 @@ export default function ChainsList() {
                           {userChain ? (
                             <ul
                               tabIndex={0}
-                              className={`dropdown-content menu shadow bg-base-100 w-52 ${
-                                userChainPokeable ? "" : "h-full"
+                              className={`dropdown-content menu shadow bg-base-100 w-64 ${
+                                isUserAdmin ? "h-full" : ""
                               }`}
                             >
                               <li
-                                className={userChainPokeable ? "" : "h-full"}
+                                className={isUserAdmin ? "h-full" : ""}
                                 key="leave"
                               >
                                 <a
                                   className={`text-red font-bold ${
-                                    userChainPokeable ? "" : "h-full"
+                                    isUserAdmin ? "h-full" : ""
                                   }`}
                                   href="#"
                                   onClick={(e) =>
@@ -217,7 +217,7 @@ export default function ChainsList() {
                                     : t("leaveWaitlist")}
                                 </a>
                               </li>
-                              {userChainPokeable ? (
+                              {isUserAdmin ? null : userChainPokeable ? (
                                 <li key="poke">
                                   <a
                                     className="font-bold"
@@ -229,7 +229,27 @@ export default function ChainsList() {
                                     {t("remindHost")}
                                   </a>
                                 </li>
-                              ) : null}
+                              ) : (
+                                <li
+                                  key="no-poke"
+                                  className="disabled whitespace-normal text-left cursor-not-allowed"
+                                >
+                                  <span className="block !text-black">
+                                    <span className="block pb-1 font-bold">
+                                      <span className="opacity-60">
+                                        {t("remindHost")}
+                                      </span>
+                                      <i className="feather feather-slash ml-1"></i>
+                                    </span>
+                                    <span
+                                      className="text-xs"
+                                      dangerouslySetInnerHTML={{
+                                        __html: t("waitToRemindHost"),
+                                      }}
+                                    ></span>
+                                  </span>
+                                </li>
+                              )}
                             </ul>
                           ) : null}
                         </div>
