@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { DistanceI18nKeys, Distance } from "../api/enums";
 import { useDropdownRadio } from "../util/dropdown.hooks";
 
-
 interface IProps {
   selectedDistance: Distance | string;
   handleChange: (distance: Distance | string) => void;
@@ -25,8 +24,7 @@ export default function DistanceDropdown({
 
   let btnLabel = React.useMemo(() => {
     if (selectedDistance) {
-      return [selectedDistance]
-        .map((g) => DistanceI18nKeys[g])
+      return [selectedDistance].map((g) => DistanceI18nKeys[g]);
     } else {
       return t("distance");
     }

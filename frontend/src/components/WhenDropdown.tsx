@@ -24,8 +24,7 @@ export default function WhenDropdown({
 
   let btnLabel = React.useMemo(() => {
     if (selectedDate.length) {
-      return [selectedDate]
-        .map((g) => t(WhenI18nKeys[g]))
+      return [selectedDate].map((g) => t(WhenI18nKeys[g]));
     } else {
       return t("when");
     }
