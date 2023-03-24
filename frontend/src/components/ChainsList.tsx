@@ -99,14 +99,18 @@ export default function ChainsList() {
   }
 
   return (
-    <div className={`container mx-auto ${chains ? "" : "animate-pulse"}`}>
+    <div
+      className={`container mx-auto -mb-8 lg:-mb-16 ${
+        chains ? "" : "animate-pulse"
+      }`}
+    >
       <div className="flex flex-row px-4 md:px-20 py-4">
         <h2 className="text-2xl font-bold mb-3">{`${
           chains?.length || 0
         } Clothing Loops`}</h2>
       </div>
 
-      <div className="overflow-x-auto pb-16">
+      <div className="overflow-x-auto pb-36">
         <table className="table table-compact w-full">
           <thead>
             <tr>
