@@ -32,7 +32,6 @@ export default function Events() {
   const [long, setLong] = useState<number>();
 
   const [events, setEvents] = useState<Event[]>();
-  // all events don't get updated during filtering
   const [allEvents, setAllEvents] = useState<Event[]>([]);
 
   const [values, setValue] = useForm<SearchValues>({
@@ -49,11 +48,12 @@ export default function Events() {
   async function load() {
     const urlParams = new URLSearchParams("/events");
 
+    // This radius is temporarily set very high because of how dispersed the fake data locations are
     try {
       await eventGetAll({
-        latitude: 50.662085,
-        longitude: 87.778691,
-        radius: 10000,
+        latitude: 52.377956,
+        longitude: 4.897070,
+        radius: 30000,
       }).then((res) => {
         const _events = res.data;
 
@@ -64,9 +64,8 @@ export default function Events() {
         setAllEvents(_events.filter(filterFunc));
         setEvents(_events.filter(filterFunc));
 
-        // set lat and long to temp arbitrary values for now
-        setLat(11.802937);
-        setLong(82.702957);
+        setLat(52.377956);
+        setLong(4.897070);
       });
     } catch (err: any) {
       console.error(err);
@@ -213,13 +212,13 @@ export default function Events() {
         handleDistance(lat!, long!, 10);
         break;
       case "4":
-        handleDistance(lat!, long!, 15);
-        break;
-      case "5":
         handleDistance(lat!, long!, 20);
         break;
+      case "5":
+        handleDistance(lat!, long!, 50);
+        break;
       case "6":
-        handleDistance(lat!, long!, 30000);
+        handleDistance(lat!, long!, 5000);
         break;
     }
   }

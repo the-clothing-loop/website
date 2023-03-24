@@ -42,8 +42,8 @@ export enum Distance {
   km1 = "1",
   km5 = "2",
   km10 = "3",
-  km15 = "4",
-  km20 = "5",
+  km20 = "4",
+  km50 = "5",
   anyDistance = "6",
 }
 
@@ -51,8 +51,8 @@ export const DistanceI18nKeys: Record<Distance | string, string> = {
   "1": "1 km",
   "2": "5 km",
   "3": "10 km",
-  "4": "15 km",
-  "5": "20 km",
+  "4": "20 km",
+  "5": "50 km",
   "6": "Any Distance",
 };
 
