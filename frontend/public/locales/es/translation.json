@@ -231,6 +231,7 @@
   "toolkitFolder": "Carpeta de herramientas",
   "editAccount": "Editar cuenta",
   "remindHost": "Recordar Anfitrión.a",
+  "waitToRemindHost": "You can remind hosts once per week. Most hosts will contact with you within 4 weeks.<br/>All hosts are volunteers, so it could take a little while.",
   "reminderEmailSent": "Correo de recordatorio enviado",
   "reasonForDenyingJoin": "Por favor da una razón para denegar la solicitud",
   "tooFarAway": "Demasiado lejos",
