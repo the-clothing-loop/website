@@ -52,7 +52,7 @@ export default function Events() {
     try {
       await eventGetAll({
         latitude: 52.377956,
-        longitude: 4.897070,
+        longitude: 4.89707,
         radius: 30000,
       }).then((res) => {
         const _events = res.data;
@@ -65,7 +65,7 @@ export default function Events() {
         setEvents(_events.filter(filterFunc));
 
         setLat(52.377956);
-        setLong(4.897070);
+        setLong(4.89707);
       });
     } catch (err: any) {
       console.error(err);
