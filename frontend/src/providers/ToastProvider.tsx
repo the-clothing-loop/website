@@ -12,13 +12,7 @@ export interface Modal {
 }
 interface ModalAction {
   fn: () => void;
-  type:
-    | "ghost"
-    | "default"
-    | "secondary"
-    | "success"
-    | "error"
-    | "enterLocation";
+  type: "ghost" | "default" | "secondary" | "success" | "error";
   text: string;
 }
 
@@ -220,12 +214,6 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
               case "secondary":
                 classes += " btn-ghost bg-teal-light text-teal";
                 break;
-              case "enterLocation":
-                return (
-                  <div key={a.text} className="">
-                    {a.fn()}
-                  </div>
-                );
             }
             return (
               <button
