@@ -231,6 +231,7 @@
   "toolkitFolder": "Toolkit map",
   "editAccount": "Bewerk account",
   "remindHost": "Herinner de host",
+  "waitToRemindHost": "You can remind hosts once per week. Most hosts will contact with you within 4 weeks.<br/>All hosts are volunteers, so it could take a little while.",
   "reminderEmailSent": "Herinnering e-mail verstuurd",
   "reasonForDenyingJoin": "Geef een reden om het verzoek te weigeren",
   "tooFarAway": "Te ver weg",
