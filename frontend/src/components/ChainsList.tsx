@@ -236,7 +236,7 @@ export default function ChainsList() {
                                 >
                                   <span className="block !text-black">
                                     <span className="block pb-1 font-bold">
-                                      <span className="opacity-60">
+                                      <span className="opacity-50">
                                         {t("remindHost")}
                                       </span>
                                       <i className="feather feather-slash ml-1"></i>
