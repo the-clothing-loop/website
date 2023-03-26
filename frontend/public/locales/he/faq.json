@@ -31,33 +31,33 @@
     },
     {
       "question": "קיבלתי הודעת שגיאה \"החשבון שלכם כבר קיים\".",
-      "answer": "You have previously created an account at the Clothing Loop already. To sign up for a new Loop, you will need to log in first:<ol><li>Click in the top right corner on login.</li><li>Enter the email address you used to register your Loop.</li><li>Check your email (and spam folder!) for our verification link. We use a link instead of a password!</li><li>Then you will be able to sign up for a new Loop.</li></ol>"
+      "answer": "יצרתם בעבר חשבון בלולאת הבגדים. על מנת להירשם ללולאה חדשה, ראשית אתם צריכים להתחבר:<ol><li> הקליקו בפינה הימנית העליונה על התחברות.</li><li>הזינו את כתובת המייל איתה נרשמתם ללולאה שלכם.</li><li>בדקו את תיבת המייל שלכם (גם את תיבת הספאם!) וחפשו את לינק האימות שלנו. אנו משתמשים בלינק ולא בסיסמה!</li><li>ואז תוכלו להירשם ללולאה חדשה.</li></ol>"
     }
   ],
-  "faqForHosts": "FAQ for Hosts",
+  "faqForHosts": "שאלות נפוצות למארחים",
   "arrHosts": [
     {
-      "question": "How do I start a Loop?",
-      "answer": "We got you covered! We wrote a simple manual with all the instructions that can be found in our <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Please benefit from the lessons we learned in the many years we have been doing this!"
+      "question": "איך אנו מתחילים לולאה?",
+      "answer": "אל דאגה! כתבנו מדריך פשוט עם כל ההנחיות, אפשר למצוא אותו ב <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'> ארגז הכלים</a>.מוזמנים ליהנות מכל הלקחים שהפקנו במהלך השנים הרבות שעשינו זאת!"
     },
     {
-      "question": "How to find people to join my Loop?",
-      "answer": "Start small! Ask friends and acquaintances in your direct environment like your sports club or dance school. When you have a small crowd gathered, you can ask everyone to invite at least one more person, then the group will grow organically. You can also send out a press release to your local media. We already drafted you a <a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'>template</a> to fill in!"
+      "question": "איך ניתן למצוא אנשים שיצטרפו ללולאה שלי?",
+      "answer": "התחילו בקטן! שאלו חברים ומכרים בסביבה שלכם, למשל בחדר הכושר שלכם, במסגרת שיעורי ריקוד ועוד. כשיצרתם קבוצה קטנה, אפשר לבקש מכל אחד להזמין לפחות אדם נוסף ואז הלולאה תגדל באופן אורגני. אתם יכולים גם להוציא הודעה לעיתונות לתקשורת המקומית שלכם. יצרנו לכם טיוטה<a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'>t תבנית </a> שתוכלו למלא!"
     },
     {
-      "question": "How much time will hosting a Loop cost me?",
-      "answer": "Our volunteers say they spend on average 1&#189; hours per month on hosting the Loop."
+      "question": "כמה זמן לוקח אירוח לולאה?",
+      "answer": "המתנדבים שלנו אומרים שהם משקיעים בממוצע 1&#189; שעות בחודש לטובת אירוח לולאה."
     },
     {
-      "question": "How do I sign up a new Loop?",
-      "answer": "We made you <a target='_blank' href='https://drive.google.com/drive/folders/1UiokapMTKu6nrX5sg6s8FFkS8jDTtu86'>a simple guide</a> with screenshots of every step. Still run into an issue? Send us an email!"
+      "question": "איך נרשמים ללולאה חדשה?",
+      "answer": "הכנו לכם <a target='_blank' href='https://drive.google.com/drive/folders/1UiokapMTKu6nrX5sg6s8FFkS8jDTtu86'> מדריך פשוט</a> עם צילומי מסך לכל שלב. עדיין נתקלים בבעיות? שלחו לנו מייל!"
     },
     {
-      "question": "How do I sign in on the website?",
-      "answer": "<ol><li>Click in the top right corner on login</li><li>Enter the email address you used to register your Loop.</li><li>Check your email (and spam folder!) for our verification link. We use a link instead of a password!</li><li>Now you are signed in and can view and edit your Loop(s) and see new participants.</li></ol>"
+      "question": "כיצד אנו מתחברים באתר הבית?",
+      "answer": "<ol><li>הקליקו בפינה הימנית העליונה על התחברות.</li><li>הזינו את כתובת המייל איתה נרשמתם ללולאה.</li><li>בדקו את תיבת המייל שלכם (גם את תיבת הספאם!) וחפשו את לינק האימות שלנו. אנו משתמשים בלינק ולא בסיסמה!</li><li>כעת אתם מחוברים ויכולים לצפות ולערוך את הלולאה (או הלולאות) שלכם ולראות משתתפים חדשים.</li></ol>"
     },
     {
-      "question": "How can I start using the Glide app?",
+      "question": "איך ניתן להתחיל ולהשתמש באפליקציית גלידה?",
       "answer": "Yes! We made an app that you can very easily set up for your own Loop.<br/><br/>You can copy the app and use it within your group. You only have to fill in the address list in our <a target='_blank' href='https://docs.google.com/document/d/12YcVwD4jzVKDcLxssnzqq7B2fzYC8kcewsnyFJ-A7cE/edit'>downloadable template</a>. It is super easy! Please get in touch via our email if you still run into trouble!"
     },
     {
