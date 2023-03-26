@@ -31,13 +31,13 @@
     },
     {
       "question": "קיבלתי הודעת שגיאה \"החשבון שלכם כבר קיים\".",
-      "answer": "You have previously created an account at the Clothing Loop already. To sign up for a new Loop, you will need to log in first:<ol><li>Click in the top right corner on login.</li><li>Enter the email address you used to register your Loop.</li><li>Check your email (and spam folder!) for our verification link. We use a link instead of a password!</li><li>Then you will be able to sign up for a new Loop.</li></ol>"
+      "answer": "יצרתם בעבר חשבון בלולאת הבגדים. על מנת להירשם ללולאה חדשה, ראשית אתם צריכים להתחבר:<ol><li> הקליקו בפינה הימנית על התחברות.</li><li>הזינו את כתובת המייל איתה נרשמתם ללולאה שלכם.</li><li>בדקו את תיבת המייל שלכם (גם את תיבת הספאם!) וחפשו את לינק האימות שלנו. אנו משתמשים בלינק ולא בסיסמה!</li><li>ואז תוכלו להירשם ללולאה חדשה.</li></ol>"
     }
   ],
-  "faqForHosts": "FAQ for Hosts",
+  "faqForHosts": "שאלות נפוצות למארחים",
   "arrHosts": [
     {
-      "question": "How do I start a Loop?",
+      "question": "איך אנו מתחילים לולאה?",
       "answer": "We got you covered! We wrote a simple manual with all the instructions that can be found in our <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Please benefit from the lessons we learned in the many years we have been doing this!"
     },
     {
