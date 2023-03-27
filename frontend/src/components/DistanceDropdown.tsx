@@ -1,12 +1,13 @@
+import { TFunction } from "i18next";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
-import { DistanceI18nKeys, Distance } from "../api/enums";
 import { useDropdownRadio } from "../util/dropdown.hooks";
 
 interface IProps {
-  selectedDistance: Distance | string;
-  handleChange: (distance: Distance | string) => void;
+  // -1 is any distance
+  selectedDistance: number;
+  handleChange: (distance: number) => void;
   className?: string;
 }
 
@@ -22,13 +23,9 @@ export default function DistanceDropdown({
     handleChange,
   });
 
-  let btnLabel = React.useMemo(() => {
-    if (selectedDistance) {
-      return [selectedDistance].map((g) => DistanceI18nKeys[g]);
-    } else {
-      return t("distance");
-    }
-  }, [selectedDistance]);
+  function label(t: TFunction, distance: number) {
+    return distance == -1 ? t("anyDistance") : distance + " km";
+  }
 
   return (
     <div
@@ -42,7 +39,7 @@ export default function DistanceDropdown({
         className="btn btn-outline no-animation btn-secondary w-full flex justify-between flex-nowrap"
         onClick={() => dropdown.toggle()}
       >
-        <span className="truncate">{btnLabel}</span>
+        <span className="truncate">{label(t, selectedDistance)}</span>
         <span
           className={`pl-2 feather ${
             dropdown.open ? "feather-arrow-up" : "feather-arrow-down"
@@ -53,7 +50,7 @@ export default function DistanceDropdown({
         className="dropdown-content menu bg-white shadow w-44 sm:w-full"
         tabIndex={0}
       >
-        {Object.keys(DistanceI18nKeys).map((distance: string | Distance) => {
+        {[1, 5, 10, 20, 50, -1].map((distance) => {
           let checked = selectedDistance == distance;
           return (
             <li key={distance}>
@@ -65,7 +62,7 @@ export default function DistanceDropdown({
                   className="checkbox"
                   onChange={() => dropdown.change(distance)}
                 />
-                {t(DistanceI18nKeys[distance])}
+                {label(t, distance)}
               </label>
             </li>
           );

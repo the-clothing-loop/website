@@ -1,3 +1,4 @@
+import dayjs from "../util/dayjs";
 import { useMemo, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
@@ -33,6 +34,7 @@ const LanguageSwitcher = (props: { className?: string }) => {
   const dropdown = useDropdown();
 
   const handleChange = (lng: string) => {
+    dayjs.locale(lng);
     i18n.changeLanguage(lng);
     history.replace(
       // from /en/about to /nl/about

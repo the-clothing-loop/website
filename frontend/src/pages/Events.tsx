@@ -6,71 +6,104 @@ import { Link } from "react-router-dom";
 
 import { Event } from "../api/types";
 import { eventGetAll } from "../api/event";
-import { MonthsI18nKeys } from "../api/enums";
 import CategoriesDropdown from "../components/CategoriesDropdown";
-import WhenDropdown from "../components/WhenDropdown";
 import { GenderBadges } from "../components/Badges";
 import DistanceDropdown from "../components/DistanceDropdown";
 import useForm from "../util/form.hooks";
 import { GinParseErrors } from "../util/gin-errors";
 import { ToastContext } from "../providers/ToastProvider";
+import dayjs from "../util/dayjs";
 
 interface SearchValues {
   genders: string[];
-  date: string;
+  latitude: number;
+  longitude: number;
+  distance: number;
 }
 
 // Media
 const ClothesImage =
   "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
 
+const MAX_DISTANCE = 5000;
+const DEFAULT_LATITUDE = 52.377956;
+const DEFAULT_LONGITUDE = 4.89707;
+
 export default function Events() {
   const { t } = useTranslation();
 
-  const { addToastError, addModal, addToast } = useContext(ToastContext);
-  const [lat, setLat] = useState<number>();
-  const [long, setLong] = useState<number>();
-
-  const [events, setEvents] = useState<Event[]>();
-  const [allEvents, setAllEvents] = useState<Event[]>([]);
-
+  const { addToastError, addModal } = useContext(ToastContext);
+  const [events, setEvents] = useState<Event[] | null>(null);
   const [values, setValue] = useForm<SearchValues>({
     genders: [] as string[],
-    date: "" as string,
+    latitude: DEFAULT_LATITUDE,
+    longitude: DEFAULT_LONGITUDE,
+    distance: -1,
   });
 
-  const [distance, setDistance] = useState<string>();
-
   useEffect(() => {
-    load();
-  }, []);
-
-  async function load() {
     const urlParams = new URLSearchParams("/events");
 
+    load(
+      urlParams.getAll("g"),
+      DEFAULT_LATITUDE,
+      DEFAULT_LONGITUDE,
+      MAX_DISTANCE
+    );
+  }, []);
+
+  async function load(
+    filterGenders: string[],
+    latitude: number,
+    longitude: number,
+    _distance: number
+  ) {
+    const radius = _distance === -1 ? MAX_DISTANCE : _distance;
     // This radius is temporarily set very high because of how dispersed the fake data locations are
     try {
-      await eventGetAll({
-        latitude: 52.377956,
-        longitude: 4.89707,
-        radius: 30000,
-      }).then((res) => {
-        const _events = res.data;
-
-        const filterFunc = createFilterFunc(
-          urlParams.getAll("genders"),
-          urlParams.get("date")
-        );
-        setAllEvents(_events.filter(filterFunc));
-        setEvents(_events.filter(filterFunc));
-
-        setLat(52.377956);
-        setLong(4.89707);
+      await eventGetAll({ latitude, longitude, radius }).then((res) => {
+        const filterFunc = createFilterFunc(filterGenders);
+        setEvents(res.data?.filter(filterFunc));
       });
     } catch (err: any) {
-      console.error(err);
       addToastError(GinParseErrors(t, err), err.status);
     }
+  }
+
+  function submitDistance(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    return load(
+      values.genders,
+      values.latitude,
+      values.longitude,
+      values.distance
+    );
+  }
+
+  function handleOpenModalGetLocation() {
+    addModal({
+      message: t("allowLocation"),
+      actions: [
+        {
+          text: t("allow"),
+          type: "secondary",
+          fn: () => {
+            window.navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                setValue("latitude", pos.coords.latitude);
+                setValue("longitude", pos.coords.longitude);
+
+                console.log(`Latitude : ${pos.coords.latitude}`);
+                console.log(`Longitude: ${pos.coords.longitude}`);
+              },
+              (err) => {
+                console.warn(`Couldn't receive location: ${err.message}`);
+              }
+            );
+          },
+        },
+      ],
+    });
   }
 
   return (
@@ -90,292 +123,131 @@ export default function Events() {
           >
             <div
               className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
-              onClick={handleLocation}
+              onClick={handleOpenModalGetLocation}
             >
-              {t("eventsNear")} {lat} {long}
+              {t("eventsNear")}
             </div>
             <DistanceDropdown
               className="w-[150px] md:w-[190px] py-2 md:py-0 md:mr-8"
-              selectedDistance={distance!}
-              handleChange={(d) => setDistance(d)}
+              selectedDistance={values.distance!}
+              handleChange={(d) => setValue("distance", d)}
             />
             <button type="submit" className="btn btn-primary">
               <span className="hidden sm:inline">{t("search")}</span>
               <span className="sm:hidden inline feather feather-search"></span>
             </button>
           </form>
-          <form
-            className="flex flex-col md:flex-row pb-8"
-            onSubmit={handleSubmitValues}
-          >
-            <div>
-              <CategoriesDropdown
-                className="w-[150px] md:w-[170px] mr-4 md:mr-8 py-4 pb-2 md:py-0"
-                selectedGenders={values.genders}
-                handleChange={(gs) => setValue("genders", gs)}
-              />
-              <WhenDropdown
-                className="w-[150px] md:w-[170px] mr-4 md:mr-8 pb-2 md:py-0"
-                selectedDate={values.date}
-                handleChange={(date) => setValue("date", date)}
-              />
-            </div>
-            <button type="submit" className="btn btn-secondary">
-              <span className="hidden sm:inline">{t("search")}</span>
-              <span className="sm:hidden inline feather feather-search"></span>
-            </button>
-          </form>
-          {handleEmptyEvents()}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events
-              ?.sort((a, b) => a.date.localeCompare(b.date))
-              .map((event) => {
-                const date = new Date(event.date);
-                var eventURL = window.location.pathname + "/" + event.uid;
-                return (
-                  <div className="h-full" key={event.uid}>
-                    <Link to={eventURL}>
-                      <div className="bg-teal-light h-full max-w-xl overflow-hidden">
-                        <div className="container relative overflow-hidden">
-                          <div className="bg-teal text-white font-extrabold text-md absolute mt-4 right-4 text-center p-2 z-10">
-                            <p>{t(MonthsI18nKeys[date.getMonth()])}</p>
-                            <p className="font-light">{date.getDate()}</p>
-                          </div>
-                          <img src={ClothesImage} className={"w-full h-auto"} />
-                        </div>
-                        <div className="text-lg">
-                          <div
-                            className={
-                              "mt-4 pb-2 pl-4 text-xl text-teal font-bold"
-                            }
-                          >
-                            {event.name}
-                          </div>
-                          <div className="px-4 mb-2 pb-2">
-                            <span className={"feather feather-map-pin"}></span>
+          <div className="flex flex-col md:flex-row pb-8">
+            <CategoriesDropdown
+              className="w-[150px] md:w-[170px] mr-4 md:mr-8 py-4 pb-2 md:py-0"
+              selectedGenders={values.genders}
+              handleChange={(gs) => {
+                setValue("genders", gs);
+                load(gs, values.latitude, values.longitude, values.distance);
+              }}
+            />
+          </div>
 
-                            <span className={"text-md px-2"}>
-                              {event.address}
-                            </span>
-                            <div className="p-2">
-                              {event.genders?.length ? (
-                                <>
-                                  <div className="mb-2">
-                                    {GenderBadges(t, event.genders)}
-                                  </div>
-                                </>
-                              ) : null}
+          {!events ? (
+            <div
+              className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center"
+              key="noevent"
+            >
+              <h1 className="font-serif text-secondary text-4xl font-bold my-10 text-center">
+                {t("sorryNoEvents")}
+              </h1>
+              <div className="flex mx-auto">
+                <Link to="/" className="btn btn-primary mx-4">
+                  {t("home")}
+                </Link>
+                <Link to="/events" className="btn btn-primary mx-4">
+                  {t("allEvents")}
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              key="event"
+            >
+              {events
+                .sort((a, b) => a.date.localeCompare(b.date))
+                .map((event) => {
+                  const date = dayjs(event.date);
+                  const eventURL = window.location.pathname + "/" + event.uid;
+                  return (
+                    <div className="h-full" key={event.uid}>
+                      <Link to={eventURL}>
+                        <div className="bg-teal-light h-full max-w-xl overflow-hidden">
+                          <div className="container relative overflow-hidden">
+                            <div className="bg-teal text-white text-md absolute mt-4 right-4 text-center py-2 px-3 z-10">
+                              <p>
+                                <span className="inline-block pr-1 font-extrabold">
+                                  {date.format("MMMM")}
+                                </span>
+                                <span>{" " + date.format("D")}</span>
+                              </p>
+                            </div>
+                            <img src={ClothesImage} className="w-full h-auto" />
+                          </div>
+                          <div className="text-lg">
+                            <div className="mt-4 pb-2 pl-4 text-xl text-teal font-bold">
+                              {event.name}
+                            </div>
+                            <div className="px-4 mb-2 pb-2">
+                              <span className="feather feather-map-pin"></span>
+
+                              <span className="text-md px-2">
+                                {event.address}
+                              </span>
+                              <div className="p-2">
+                                {event.genders?.length ? (
+                                  <>
+                                    <div className="mb-2">
+                                      {GenderBadges(t, event.genders)}
+                                    </div>
+                                  </>
+                                ) : null}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  </div>
-                );
-              })}
-          </div>
+                      </Link>
+                    </div>
+                  );
+                })}
+            </div>
+          )}
         </div>
       </main>
     </>
   );
+}
 
-  function handleEmptyEvents() {
-    if (events?.length == 0) {
-      return (
-        <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
-          <h1 className="font-serif text-secondary text-4xl font-bold my-10 text-center">
-            {t("sorryNoEvents")}
-          </h1>
-          <div className="flex mx-auto">
-            <Link to="/" className="btn btn-primary mx-4">
-              {t("home")}
-            </Link>
-            <Link to="/events" className="btn btn-primary mx-4">
-              {t("allEvents")}
-            </Link>
-          </div>
-        </div>
-      );
-    }
-  }
-
-  function submitDistance(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    switch (distance) {
-      case "1":
-        handleDistance(lat!, long!, 1);
-        break;
-      case "2":
-        handleDistance(lat!, long!, 5);
-        break;
-      case "3":
-        handleDistance(lat!, long!, 10);
-        break;
-      case "4":
-        handleDistance(lat!, long!, 20);
-        break;
-      case "5":
-        handleDistance(lat!, long!, 50);
-        break;
-      case "6":
-        handleDistance(lat!, long!, 5000);
-        break;
-    }
-  }
-
-  function handleDistance(lat: number, lon: number, rad: number) {
-    try {
-      eventGetAll({
-        latitude: lat,
-        longitude: lon,
-        radius: rad,
-      }).then((res) => {
-        const _events = res.data;
-        setEvents(_events);
-        setAllEvents(_events);
-      });
-    } catch (err: any) {
-      console.error(err);
-      addToastError(GinParseErrors(t, err), err.status);
-    }
-  }
-
-  function createFilterFunc(
-    genders: string[],
-    date: string | null
-  ): (e: Event) => boolean {
-    let filterFunc = (e: Event) => true;
-    if (genders?.length) {
-      filterFunc = (e) => {
-        for (let g of genders) {
-          if (e.genders?.includes(g)) return true;
-        }
-        return false;
-      };
-    } else if (date) {
-      filterFunc = (e) => {
-        console.log(date);
-        if (whenFilterHandler(e, date)) return true;
-        return false;
-      };
-    }
-    return filterFunc;
-  }
-
-  function whenFilterHandler(e: Event, d: string) {
-    const todayDate = new Date();
-    const today = new Date(todayDate.getTime());
-    today.setHours(0, 0, 0, 0);
-
-    const eventDate = new Date(e.date);
-    eventDate.setHours(0, 0, 0, 0);
-
-    const tomorrow = new Date(todayDate.getTime() + 1 * 24 * 60 * 60 * 1000);
-    tomorrow.setHours(0, 0, 0, 0);
-
-    switch (d) {
-      case "1":
-        if (eventDate.getTime() < tomorrow.getTime()) {
-          return true;
-        }
-        break;
-      case "2":
-        if (eventDate.getTime() <= tomorrow.getTime()) return true;
-
-        break;
-      case "3":
-        const thisWeek = new Date(
-          todayDate.getTime() + 7 * 24 * 60 * 60 * 1000
-        );
-        thisWeek.setHours(0, 0, 0, 0);
-
-        if (eventDate.getTime() <= thisWeek.getTime()) return true;
-
-        break;
-      case "4":
-        const nextTwoWeeks = new Date(
-          todayDate.getTime() + 14 * 24 * 60 * 60 * 1000
-        );
-        nextTwoWeeks.setHours(0, 0, 0, 0);
-
-        if (eventDate.getTime() <= nextTwoWeeks.getTime()) return true;
-
-        break;
-      case "5":
-        const thisMonth = new Date(
-          today.getFullYear(),
-          today.getMonth() + 1,
-          0
-        );
-        thisMonth.setHours(0, 0, 0, 0);
-
-        if (eventDate.getTime() < thisMonth.getTime()) return true;
-
-        break;
-
-      case "6":
-        return true;
-    }
-  }
-  function handleSubmitValues(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    if (!events) return;
-
-    const search = values;
-    const selectedEventsFilter = createFilterFunc(search.genders, search.date);
-    const filteredEvents = allEvents.filter(selectedEventsFilter);
-
-    setEvents(filteredEvents);
-
-    window.history.replaceState(
-      {},
-      "",
-      window.location.origin +
-        window.location.pathname +
-        toUrlSearchParams(search)
-    );
-  }
-
-  function toUrlSearchParams(search: SearchValues) {
-    const queryParams = new URLSearchParams();
-
-    for (const gender of search.genders) {
-      queryParams.append("g", gender);
-    }
-    for (const date of search.date) {
-      queryParams.append("d", date);
-    }
-    return "?" + queryParams.toString();
-  }
-
-  function handleLocation() {
-    addModal({
-      message: t("allowLocation"),
-      actions: [
-        {
-          text: t("allow"),
-          type: "secondary",
-          fn: () => {
-            getLocationBrowser();
-          },
-        },
-      ],
-    });
-  }
-
-  function getLocationBrowser() {
-    window.navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLat(pos.coords.latitude);
-        setLong(pos.coords.longitude);
-
-        console.log(`Latitude : ${pos.coords.latitude}`);
-        console.log(`Longitude: ${pos.coords.longitude}`);
-      },
-      (err) => {
-        console.error(`Couldn't receive location: ${err.message}`, 400);
+function createFilterFunc(genders: string[]): (e: Event) => boolean {
+  return (e: Event) => {
+    if (genders.length) {
+      let found = false;
+      for (let g of genders) {
+        if (e.genders?.includes(g)) found = true;
       }
-    );
+      if (!found) return false;
+    }
+    return true;
+  };
+}
+
+// write params to browser url location
+function writeUrlSearchParams(search: SearchValues) {
+  const queryParams = new URLSearchParams();
+  for (const gender of search.genders) {
+    queryParams.append("g", gender);
   }
+  const params = "?" + queryParams.toString();
+
+  window.history.replaceState(
+    {},
+    "",
+    window.location.origin + window.location.pathname + params
+  );
 }
