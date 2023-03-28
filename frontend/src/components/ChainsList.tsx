@@ -161,11 +161,11 @@ export default function ChainsList() {
                       (!userChain && authUser?.is_root_admin) ? (
                         chain.published ? (
                           <div className="tooltip" data-tip="published">
-                            <span className="feather feather-eye  text-lg text-green" />
+                            <span className="feather feather-eye text-lg text-green" />
                           </div>
                         ) : (
                           <div className="tooltip" data-tip="draft">
-                            <span className="feather feather-eye-off  text-lg text-red" />
+                            <span className="feather feather-eye-off text-lg text-red" />
                           </div>
                         )
                       ) : (
