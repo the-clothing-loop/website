@@ -142,7 +142,11 @@ export default function ChainsList() {
                   );
 
                 return (
-                  <tr key={chain.uid}>
+                  <tr
+                    key={chain.uid}
+                    className="[&_td]:hover:bg-base-200/[0.6] [&_td]:focus:bg-primary/[0.3]"
+                    tabIndex={-1}
+                  >
                     <td className="font-bold w-32 whitespace-normal">
                       {chain.name}
                     </td>
