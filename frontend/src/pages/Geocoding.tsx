@@ -1,6 +1,7 @@
-import react, { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import { useTranslation } from "react-i18next";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -32,18 +33,19 @@ interface Props {
 
 export default function Geocoding(props: Props) {
   const geoRef = useRef<any>();
+  const { i18n } = useTranslation();
+  const [geocoder, setGeocoder] = useState<MapboxGeocoder>();
 
   useEffect(() => {
-    let geocoder: MapboxGeocoder;
     if (MAPBOX_TOKEN) {
-      geocoder = new MapboxGeocoder({
+      const _geocoder = new MapboxGeocoder({
         accessToken: MAPBOX_TOKEN,
         placeholder: props.placeholder,
         types: props.types.join(","), //"country,region,place,postcode,locality,neighborhood",
       });
 
       if (geoRef) {
-        geocoder.addTo(geoRef.current);
+        _geocoder.addTo(geoRef.current);
       }
       if (props.initialAddress) {
         const input = (geoRef.current as HTMLElement)?.querySelector("input");
@@ -51,7 +53,7 @@ export default function Geocoding(props: Props) {
       }
 
       // Add geocoder result to container.
-      geocoder.on("result", (e: { result: MapboxGeocoder.Result }) => {
+      _geocoder.on("result", (e: { result: MapboxGeocoder.Result }) => {
         props.onResult({
           query: e.result.place_name,
           first: e.result.geometry.coordinates,
@@ -59,25 +61,31 @@ export default function Geocoding(props: Props) {
         props.onSelectResult();
       });
 
-      geocoder.on("results", (e: MapboxGeocoder.Results) => {
+      _geocoder.on("results", (e: MapboxGeocoder.Results) => {
         props.onResult({
           query: (e as any)?.config.query || "",
           first: e.features[0]?.geometry.coordinates,
         });
       });
 
-      geocoder.on("clear", () => {
+      _geocoder.on("clear", () => {
         props.onResult({
           query: "",
           first: undefined,
         });
       });
+      setGeocoder(_geocoder);
     }
 
     return () => {
       geocoder?.clear();
     };
   }, []);
+
+  useMemo(() => {
+    if (geocoder && props.placeholder)
+      geocoder.setPlaceholder(props.placeholder);
+  }, [i18n.language]);
 
   return <div className={props.className} ref={geoRef}></div>;
 }
