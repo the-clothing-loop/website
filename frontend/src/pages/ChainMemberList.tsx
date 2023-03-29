@@ -322,7 +322,7 @@ export default function ChainMemberList() {
                   onChange={(e) => setSelectedTable("route")}
                   className="hidden peer"
                 />
-                <div className="relative btn bg-transparent hover:bg-[#c9cece] text-black hover:text-white pr-2 mr-2 border-0 peer-checked:btn-secondary peer-checked:bg-secondary">
+                <div className="relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black pr-2 mr-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
                   {t("route")}
                   <span className="skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2"></span>
                 </div>
@@ -336,7 +336,7 @@ export default function ChainMemberList() {
                   onChange={(e) => setSelectedTable("participants")}
                   className="hidden peer"
                 />
-                <div className="relative btn bg-transparent hover:bg-[#c9cece] text-black hover:text-white px-2 mx-2 border-0 peer-checked:btn-secondary peer-checked:bg-secondary">
+                <div className="relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black px-2 mx-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
                   <span className="-skew-x-6 w-4 h-12 bg-[inherit] absolute -left-2"></span>
                   {t("edit")}
                   <span className="skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2"></span>
@@ -355,7 +355,7 @@ export default function ChainMemberList() {
                   className="hidden peer"
                 />
                 <div
-                  className={`relative btn bg-transparent hover:bg-[#c9cece] hover:text-white pl-2 ml-2 border-0 peer-checked:btn-secondary peer-checked:bg-secondary ${
+                  className={`relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none pl-2 ml-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
                     unapprovedUsers.length
                       ? "text-black"
                       : "text-base-300 cursor-not-allowed"
@@ -377,7 +377,7 @@ export default function ChainMemberList() {
                 </div>
               </label>
             </div>
-            <div className="order-2 sm:justify-self-end sm:self-end sm:order-3">
+            <div className="order-2 sm:justify-self-end sm:self sm:order-3">
               <UserDataExport chainName={chain.name} chainUsers={users} />
             </div>
           </div>
