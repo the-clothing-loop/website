@@ -240,8 +240,8 @@ export default function ChainDetailsForm({
             required
             label={t("radius")}
             name="radius"
-            value={values.radius}
-            onChange={(e) => setValue("radius", e.target.valueAsNumber)}
+            value={values.radius / 4}
+            onChange={(e) => setValue("radius", e.target.valueAsNumber * 4)}
             step="0.1"
             info={t("decideOnTheAreaYourLoopWillBeActiveIn")}
           />
