@@ -306,13 +306,13 @@ export default function ChainMemberList() {
 
         <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
           <div className="grid gap-4 sm:grid-cols-3 justify-items-center sm:justify-items-start">
-            <h2 className="order-1 sm:col-span-3 font-semibold text-secondary text-3xl">
+            <h2 className="order-1 sm:col-span-3 lg:col-span-1 font-semibold text-secondary self-center text-3xl">
               {t("loopParticipant", {
                 count: unapprovedUsers.length + users.length,
               })}
             </h2>
 
-            <div className="order-3 sm:col-span-2 sm:order-2 border border-secondary">
+            <div className="order-3 sm:col-span-2 sm:order-2 lg:col-span-1 lg:justify-self-center flex border border-secondary bg-teal-light">
               <label>
                 <input
                   type="radio"
@@ -322,8 +322,9 @@ export default function ChainMemberList() {
                   onChange={(e) => setSelectedTable("route")}
                   className="hidden peer"
                 />
-                <div className="btn btn-ghost bg-teal-light border-0 peer-checked:btn-secondary peer-checked:bg-secondary">
+                <div className="relative btn bg-transparent hover:bg-[#c9cece] text-black hover:text-white pr-2 mr-2 border-0 peer-checked:btn-secondary peer-checked:bg-secondary">
                   {t("route")}
+                  <span className="skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2"></span>
                 </div>
               </label>
               <label>
@@ -335,8 +336,10 @@ export default function ChainMemberList() {
                   onChange={(e) => setSelectedTable("participants")}
                   className="hidden peer"
                 />
-                <div className="btn btn-ghost bg-teal-light border-0 peer-checked:btn-secondary peer-checked:bg-secondary">
+                <div className="relative btn bg-transparent hover:bg-[#c9cece] text-black hover:text-white px-2 mx-2 border-0 peer-checked:btn-secondary peer-checked:bg-secondary">
+                  <span className="-skew-x-6 w-4 h-12 bg-[inherit] absolute -left-2"></span>
                   {t("edit")}
+                  <span className="skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2"></span>
                 </div>
               </label>
               <label>
@@ -352,12 +355,13 @@ export default function ChainMemberList() {
                   className="hidden peer"
                 />
                 <div
-                  className={`relative btn btn-ghost bg-teal-light border-0 peer-checked:btn-secondary peer-checked:bg-secondary ${
+                  className={`relative btn bg-transparent hover:bg-[#c9cece] hover:text-white pl-2 ml-2 border-0 peer-checked:btn-secondary peer-checked:bg-secondary ${
                     unapprovedUsers.length
-                      ? ""
+                      ? "text-black"
                       : "text-base-300 cursor-not-allowed"
                   }`}
                 >
+                  <span className="-skew-x-6 w-4 h-12 bg-[inherit] absolute -left-2"></span>
                   {t("new")}
                   <span
                     className={`absolute -top-3 -right-3 block py-1 px-2 rounded-lg ${
@@ -373,7 +377,7 @@ export default function ChainMemberList() {
                 </div>
               </label>
             </div>
-            <div className="order-2 sm:justify-self-end sm:order-3">
+            <div className="order-2 sm:justify-self-end sm:self-end sm:order-3">
               <UserDataExport chainName={chain.name} chainUsers={users} />
             </div>
           </div>
