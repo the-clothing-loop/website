@@ -49,15 +49,22 @@ const IS_PRODUCTION =
 
 let base = "/:locale(en|nl|de|fr|es|sv)";
 if (!IS_PRODUCTION) {
-  base = "/:locale(en|nl|de|fr|es|sv)";
+  base = "/:locale(en|nl|de|fr|es|he|sv)";
 }
 
 export default function App() {
   const { i18n } = useTranslation();
   useEffect(() => {
-    document
-      .getElementsByTagName("html")[0]
-      .setAttribute("lang", i18n.language);
+    const html = document.getElementsByTagName("html")[0];
+    html.setAttribute("lang", i18n.language);
+
+    switch (i18n.language) {
+      case "he":
+        html.setAttribute("dir", "rtl");
+        break;
+      default:
+        html.removeAttribute("dir");
+    }
   }, [i18n.language]);
 
   return (

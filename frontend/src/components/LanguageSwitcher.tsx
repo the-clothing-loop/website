@@ -11,7 +11,9 @@ interface Language {
   title: string;
   flag: string;
 }
-const testLanguages: Language[] = [];
+const testLanguages: Language[] = [
+  { lng: "he", title: "Hebrew", flag: "/images/flags/il.svg" },
+];
 
 let languages: Language[] = [
   { lng: "en", title: "English", flag: "/images/flags/gb.svg" },

@@ -8,7 +8,7 @@ const IS_PRODUCTION =
 
 let supportedLngs = ["en", "nl", "de", "fr", "es", "sv"];
 if (!IS_PRODUCTION) {
-  supportedLngs = ["en", "nl", "de", "fr", "es", "sv"];
+  supportedLngs = ["en", "nl", "de", "fr", "es", "he", "sv"];
 }
 
 i18n
