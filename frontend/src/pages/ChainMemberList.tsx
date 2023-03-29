@@ -602,7 +602,7 @@ function ApproveTable(props: {
 
   return (
     <>
-      <div className="mt-10 relative overflow-hidden">
+      <div className="mt-6 relative overflow-hidden">
         <div className="overflow-x-auto">
           <table className="table table-compact w-full mb-10">
             <thead>
@@ -792,7 +792,7 @@ function ParticipantsTable(props: {
 
   return (
     <>
-      <div className="mt-10 relative overflow-hidden">
+      <div className="mt-6 relative overflow-hidden">
         <div className="overflow-x-auto">
           <table
             className="table table-compact w-full mb-10"
@@ -942,7 +942,7 @@ function RouteTable(props: {
   );
   return (
     <>
-      <div className="mt-10 relative overflow-hidden">
+      <div className="mt-6 relative overflow-hidden">
         <div className="overflow-x-auto">
           <table className="table table-compact w-full mb-10">
             <thead>
