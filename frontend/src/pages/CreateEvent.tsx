@@ -11,17 +11,21 @@ import { eventCreate, EventCreateBody, eventGetAll } from "../api/event";
 import FormJup from "../util/form-jup";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
+import CategoriesDropdown from "../components/CategoriesDropdown";
+import { Genders } from "../api/enums";
 
 import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "../util/dayjs";
 
 interface FormJsValues {
   address: string;
+  description: string;
+  genders: string[];
 }
 
 interface FormHtmlValues {
   name: string;
-  description: string;
+  //description: string;
   date: Date;
   time: string;
 }
@@ -38,6 +42,8 @@ export default function CreateEvent() {
   const { addToastError } = useContext(ToastContext);
   const [jsValues, setJsValue, setJsValues] = useForm<FormJsValues>({
     address: "",
+    description: "",
+    genders: [],
   });
 
   async function onSubmit(e: FormEvent) {
@@ -52,11 +58,11 @@ export default function CreateEvent() {
 
     let newEvent: EventCreateBody = {
       name: values.name,
-      description: values.description,
+      description: jsValues.description,
       address: jsValues.address,
       latitude: 23.766492,
       longitude: 0.303334,
-      genders: ["1"],
+      genders: jsValues.genders,
       date: dayjs(values.date).format(),
       user_name: authUser!.name,
       user_email: authUser!.email,
@@ -111,15 +117,6 @@ export default function CreateEvent() {
                 name="name"
                 type="text"
               />
-
-              <TextForm
-                min={2}
-                required
-                label={t("description") + "*"}
-                name="description"
-                type="text"
-              />
-
               <label className="form-control w-full mb-4">
                 <div className="label">
                   <span className="label-text">{t("eventAddress") + "*"}</span>
@@ -143,7 +140,32 @@ export default function CreateEvent() {
                 name="time"
                 type="time"
               />
-
+              <div className="form-control relative w-full">
+                <label>
+                  <div className="label">
+                    <span className="label-text">{t("description")}</span>
+                  </div>
+                  <textarea
+                    className="textarea textarea-secondary w-full"
+                    name="description"
+                    cols={3}
+                    value={jsValues.description}
+                    onChange={(e) => setJsValue("description", e.target.value)}
+                  />
+                </label>
+              </div>
+              <div className="flex flex-col sm:flex-row items-end mb-6">
+                <div className="w-full sm:w-1/2 pb-4 sm:pb-0 sm:pr-4">
+                  <CategoriesDropdown
+                    className="w-[150px] md:w-[170px] mr-4 md:mr-8 py-4 pb-2 md:py-0"
+                    selectedGenders={jsValues.genders}
+                    handleChange={(gs) => {
+                      setJsValue("genders", gs);
+                    }}
+                  />
+                  {console.log(jsValues.genders)}
+                </div>
+              </div>
               <div className="mt-4">
                 <button type="submit" className="btn btn-primary">
                   {t("next")}
