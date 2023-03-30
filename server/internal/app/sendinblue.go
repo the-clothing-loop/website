@@ -1,4 +1,4 @@
-package sendinblue
+package app
 
 import (
 	"context"
@@ -8,19 +8,22 @@ import (
 	lib "github.com/sendinblue/APIv3-go-library/v2/lib"
 )
 
-type SendInBlue struct{ *lib.APIClient }
+var SendInBlue *sendInBlue
 
-func Init(apiKey string) *SendInBlue {
-	cfg := lib.NewConfiguration()
-	cfg.AddDefaultHeader("api-key", apiKey)
-	return &SendInBlue{lib.NewAPIClient(cfg)}
-
+type sendInBlue struct {
+	client *lib.APIClient
 }
 
-func (sib *SendInBlue) CreateContact(ctx context.Context, email string) error {
+func SendInBlueInit() {
+	cfg := lib.NewConfiguration()
+	cfg.AddDefaultHeader("api-key", Config.SENDINBLUE_API_KEY)
+	SendInBlue = &sendInBlue{lib.NewAPIClient(cfg)}
+}
+
+func (sib *sendInBlue) CreateContact(ctx context.Context, email string) error {
 	var params = lib.CreateContact{Email: email}
 
-	obj, resp, err := sib.ContactsApi.CreateContact(ctx, params)
+	obj, resp, err := sib.client.ContactsApi.CreateContact(ctx, params)
 	if err != nil {
 		fmt.Println("Error in ContactsApi->CreateContact", err.Error())
 		return err
@@ -29,8 +32,8 @@ func (sib *SendInBlue) CreateContact(ctx context.Context, email string) error {
 	return nil
 }
 
-func (sib *SendInBlue) DeleteContact(ctx context.Context, email string) error {
-	resp, err := sib.ContactsApi.DeleteContact(ctx, email)
+func (sib *sendInBlue) DeleteContact(ctx context.Context, email string) error {
+	resp, err := sib.client.ContactsApi.DeleteContact(ctx, email)
 	if err != nil {
 		fmt.Println("Error in ContactsApi->DeleteContact", err.Error())
 		return err
@@ -54,7 +57,7 @@ type webhookUnsubscribeResponse struct {
 	Tag          string `json:"tag"`                                     // internal tag of campaign
 }
 
-func (sib *SendInBlue) WebhookUnsubscribed(c *gin.Context) (email string, err error) {
+func (sib *sendInBlue) WebhookUnsubscribed(c *gin.Context) (email string, err error) {
 	var body *webhookUnsubscribeResponse
 	if err = c.BindJSON(body); err != nil {
 		return "", err
