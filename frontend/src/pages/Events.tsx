@@ -12,6 +12,7 @@ import DistanceDropdown from "../components/DistanceDropdown";
 import useForm from "../util/form.hooks";
 import { GinParseErrors } from "../util/gin-errors";
 import { ToastContext } from "../providers/ToastProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import dayjs from "../util/dayjs";
 
 interface SearchValues {
@@ -33,6 +34,7 @@ export default function Events() {
   const { t } = useTranslation();
 
   const { addToastError, addModal } = useContext(ToastContext);
+  const authUser = useContext(AuthContext).authUser;
   const [events, setEvents] = useState<Event[] | null>(null);
   const [values, setValue] = useForm<SearchValues>({
     genders: [] as string[],
@@ -116,7 +118,16 @@ export default function Events() {
         <div className="max-w-screen-xl min-h-screen mx-auto py-10 px-6 md:px-20">
           <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
             {t("upcomingEvents")}
-          </h1>
+          </h1>          
+          {authUser ? (
+            <Link to="/create-event" className="ml-right">
+              <button className="btn btn-primary inline w-fit float-right">
+                <span className="pr-2 feather feather-plus" />
+                Create Event
+              </button>
+            </Link>
+          ) : null}
+
           <form
             className="flex flex-col md:flex-row pb-4 md:pb-8"
             onSubmit={submitDistance}
