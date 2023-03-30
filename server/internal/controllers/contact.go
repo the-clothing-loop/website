@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
@@ -25,6 +26,9 @@ func ContactNewsletter(c *gin.Context) {
 
 	if !body.Subscribe {
 		db.Raw("DELETE FROM newsletters WHERE email = ?", body.Email)
+		if app.SendInBlue != nil {
+			app.SendInBlue.DeleteContact(c.Request.Context(), body.Email)
+		}
 
 		return
 	}
@@ -46,6 +50,9 @@ func ContactNewsletter(c *gin.Context) {
 		goscope.Log.Errorf(err.Error())
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		return
+	}
+	if app.SendInBlue != nil {
+		app.SendInBlue.CreateContact(c.Request.Context(), body.Email)
 	}
 
 	views.EmailSubscribeToNewsletter(c, db, name, body.Email)

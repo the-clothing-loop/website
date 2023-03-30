@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -254,6 +255,9 @@ func UserUpdate(c *gin.Context) {
 				c.String(http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
+			if app.SendInBlue != nil && user.Email.Valid {
+				app.SendInBlue.DeleteContact(c.Request.Context(), user.Email.String)
+			}
 		}
 	}
 }
@@ -364,6 +368,9 @@ HAVING COUNT(uc.id) = 1
 			goscope.Log.Errorf("UserPurge: Unable to remove newsletter: %v", err)
 			c.String(http.StatusInternalServerError, "Unable to remove newsletter")
 			return
+		}
+		if app.SendInBlue != nil {
+			app.SendInBlue.DeleteContact(c.Request.Context(), user.Email.String)
 		}
 	}
 
