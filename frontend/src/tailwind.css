@@ -120,7 +120,7 @@
   @apply top-3.5 ltr:left-3 rtl:right-3;
 }
 #root .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--pin-right > * {
-  @apply top-3.5 ltr:right-3 rtl:left-3;
+  @apply top-3.5 ltr:right-3 rtl:left-3 rtl:right-auto;
 }
 
 #root .mapboxgl-popup-content {
@@ -142,6 +142,10 @@
 
 summary.marker\:content-none::-webkit-details-marker {
   display: none;
+}
+
+[dir="rtl"] .steps .step::before {
+  margin-left: 100%;
 }
 
 /* CSS for other than iOS devices */
