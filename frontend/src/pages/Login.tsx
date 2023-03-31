@@ -108,15 +108,16 @@ export default function Login() {
                   <div className="text-white bg-green border-green w-full flex items-center justify-center font-semibold h-12 px-3 mt-6">
                     {t("submit")}
                     {loading ? (
-                      <span className="feather feather-loader animate-spin ml-4"></span>
+                      <span className="feather feather-loader animate-spin ml-4 rtl:ml-0 rtl:mr-4"></span>
                     ) : (
-                      <span className="feather feather-check ml-4"></span>
+                      <span className="feather feather-check ml-4 rtl:ml-0 rtl:mr-4"></span>
                     )}
                   </div>
                 ) : (
                   <button type="submit" className="btn btn-primary w-full mt-6">
                     {t("submit")}
-                    <span className="feather feather-arrow-right ml-4"></span>
+                    <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
+                    <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
                   </button>
                 )}
               </form>

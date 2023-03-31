@@ -283,7 +283,8 @@ function SubmitButton({
   return (
     <button type="submit" className="btn btn-primary">
       {t("join")}
-      <span className="feather feather-arrow-right ml-4"></span>
+      <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
+      <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
     </button>
   );
 }

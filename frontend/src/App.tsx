@@ -63,7 +63,7 @@ export default function App() {
         html.setAttribute("dir", "rtl");
         break;
       default:
-        html.removeAttribute("dir");
+        html.setAttribute("dir", "ltr");
     }
   }, [i18n.language]);
 

@@ -13,7 +13,7 @@ const featuredImages = [
 
 export default function Carousel() {
   return (
-    <div className="relative w-full h-60 md:h-80 overflow-hidden">
+    <div className="relative w-full h-60 md:h-80 overflow-hidden" dir="ltr">
       <div className="relative flex h-full animate-slide-small md:animate-slide">
         {featuredImages.map((img, i) => {
           return (

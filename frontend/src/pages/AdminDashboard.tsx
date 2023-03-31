@@ -70,7 +70,7 @@ export default function AdminDashboard() {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row flex-wrap">
+              <div className="flex flex-col sm:flex-row flex-wrap rtl:sm:-mr-4">
                 {authUser.is_root_admin || isChainAdmin ? (
                   <Link
                     className="btn btn-primary h-auto mb-4 sm:mr-4 text-black"
@@ -81,7 +81,7 @@ export default function AdminDashboard() {
                     }}
                   >
                     {t("toolkitFolder")}
-                    <span className="feather feather-external-link ml-2"></span>
+                    <span className="feather feather-external-link ml-2 rtl:ml-0 rtl:mr-2"></span>
                   </Link>
                 ) : null}
 
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
                   to="/users/me/edit"
                 >
                   {t("editAccount")}
-                  <span className="feather feather-edit ml-2"></span>
+                  <span className="feather feather-edit ml-2 rtl:ml-0 rtl:mr-2"></span>
                 </Link>
 
                 <button
@@ -98,13 +98,13 @@ export default function AdminDashboard() {
                   onClick={deleteClicked}
                 >
                   <span className="text-black">{t("deleteUserBtn")}</span>
-                  <span className="feather feather-alert-octagon ml-2"></span>
+                  <span className="feather feather-alert-octagon ml-2 rtl:ml-0 rtl:mr-2"></span>
                 </button>
               </div>
             </div>
             <label
               htmlFor="modal-circle-loop"
-              className="z-0 hidden lg:flex absolute top-0 right-0 bottom-0 h-full cursor-zoom-in overflow-hidden aspect-[4/3]"
+              className="z-0 hidden lg:flex absolute top-0 right-0 rtl:right-auto rtl:left-0 bottom-0 h-full cursor-zoom-in overflow-hidden aspect-[4/3]"
             >
               <img
                 className="h-full hover:scale-105 transition-transform object-cover self-center cursor-zoom-in"
