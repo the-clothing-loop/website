@@ -114,14 +114,18 @@ function Navbar() {
           -1 ? (
             <Link
               to="/loops/new/users/signup"
-              className="mr-4 btn btn-primary btn-outline"
+              className="ltr:mr-4 rtl:ml-4 btn btn-primary btn-outline"
             >
               {t("startNewLoop")}
             </Link>
           ) : authUser === null ? (
-            <Link to="/loops/find" className="mr-4 btn btn-primary btn-outline">
+            <Link
+              to="/loops/find"
+              className="ltr:mr-4 rtl:ml-4 btn btn-primary btn-outline"
+            >
               {t("findLoops")}
-              <span className="feather feather-arrow-right ml-4"></span>
+              <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
+              <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
             </Link>
           ) : null}
 
@@ -148,7 +152,7 @@ function Navbar() {
             </Link>
           )}
 
-          <LanguageSwitcher className="ml-4" />
+          <LanguageSwitcher className="ltr:ml-4 rtl:mr-4" />
         </nav>
       </div>
     </div>
