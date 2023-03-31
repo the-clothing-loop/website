@@ -565,7 +565,7 @@ export default function FindChain({ location }: { location: Location }) {
                     ) : (
                       <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
                         {t("closed")}
-                        <span className="feather feather-lock ml-3"></span>
+                        <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
                       </p>
                     )}
                   </div>
