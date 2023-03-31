@@ -187,8 +187,9 @@ export default function ChainsList() {
                             }`}
                             to={`/loops/${chain.uid}/members`}
                           >
+                            <span className="feather feather-arrow-right sm:ml-3 ltr:hidden"></span>
                             <span className="max-xs:hidden">{t("view")}</span>
-                            <span className="feather feather-arrow-right sm:ml-3"></span>
+                            <span className="feather feather-arrow-left sm:mr-3 rtl:hidden"></span>
                           </Link>
                         ) : null}
                         <div className="dropdown dropdown-left">
@@ -247,7 +248,7 @@ export default function ChainsList() {
                                       <span className="opacity-50">
                                         {t("remindHost")}
                                       </span>
-                                      <i className="feather feather-slash ml-1"></i>
+                                      <i className="feather feather-slash ml-1 rtl:ml-0 rtl:mr-1"></i>
                                     </span>
                                     <span
                                       className="text-xs"

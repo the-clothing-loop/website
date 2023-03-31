@@ -66,7 +66,8 @@ function Navbar() {
             className="mb-3 btn btn-primary btn-outline"
           >
             {t("findLoops")}
-            <span className="feather feather-arrow-right ml-3"></span>
+            <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
+            <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
           </Link>
 
           <Link

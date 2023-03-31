@@ -126,6 +126,15 @@
 #root .mapboxgl-popup-content {
   @apply p-0 rounded-lg shadow-lg;
 }
+.mapboxgl-ctrl-bottom-left {
+  @apply rtl:left-auto rtl:right-0;
+}
+.mapboxgl-ctrl-bottom-right {
+  @apply rtl:right-auto rtl:left-0;
+}
+.mapboxgl-ctrl-bottom-left .mapboxgl-ctrl {
+  @apply rtl:float-right rtl:ml-0 rtl:mr-2.5;
+}
 
 .btn-primary.btn-outline {
   @apply text-black border-yellow-darker;
