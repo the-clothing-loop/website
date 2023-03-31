@@ -448,7 +448,7 @@ export default function FindChain({ location }: { location: Location }) {
               key="close"
               type="button"
               onClick={() => setSelectedChains([])}
-              className="absolute top-2 right-2 btn btn-sm btn-circle btn-outline"
+              className="absolute top-2 right-2 rtl:right-auto rtl:left-2 btn btn-sm btn-circle btn-outline"
             >
               <span className="feather feather-arrow-left rtl:hidden"></span>
               <span className="feather feather-arrow-right ltr:hidden"></span>
@@ -459,11 +459,11 @@ export default function FindChain({ location }: { location: Location }) {
               );
               return (
                 <div
-                  className="p-4 w-full mb-4 rounded-lg bg-base-100"
+                  className="p-4 w-full mb-4 rounded-lg shadow-md bg-base-100"
                   key={chain.uid}
                 >
                   <div className="mb-2">
-                    <h1 className="font-semibold text-secondary mb-3 pr-10 break-words">
+                    <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
                       {chain.name}
                     </h1>
                     {chain.description ? (
