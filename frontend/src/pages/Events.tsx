@@ -118,36 +118,38 @@ export default function Events() {
         <div className="max-w-screen-xl min-h-screen mx-auto py-10 px-6 md:px-20">
           <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
             {t("upcomingEvents")}
-          </h1>          
-          {authUser ? (
-            <Link to="/create-event" className="ml-right">
-              <button className="btn btn-primary inline w-fit float-right">
-                <span className="pr-2 feather feather-plus" />
-                Create Event
-              </button>
-            </Link>
-          ) : null}
+          </h1>
 
-          <form
-            className="flex flex-col md:flex-row pb-4 md:pb-8"
-            onSubmit={submitDistance}
-          >
-            <div
-              className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
-              onClick={handleOpenModalGetLocation}
+          <div className="flex flex-col-reverse md:flex-row justify-start md:justify-between">
+            <form
+              className="flex flex-col md:flex-row pb-4 md:pb-8"
+              onSubmit={submitDistance}
             >
-              {t("eventsNear")}
-            </div>
-            <DistanceDropdown
-              className="w-[150px] md:w-[190px] py-2 md:py-0 md:mr-8"
-              selectedDistance={values.distance!}
-              handleChange={(d) => setValue("distance", d)}
-            />
-            <button type="submit" className="btn btn-primary">
-              <span className="hidden sm:inline">{t("search")}</span>
-              <span className="sm:hidden inline feather feather-search"></span>
-            </button>
-          </form>
+              <div
+                className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
+                onClick={handleOpenModalGetLocation}
+              >
+                {t("eventsNear")}
+              </div>
+              <DistanceDropdown
+                className="w-[150px] md:w-[190px] py-2 md:py-0 md:mr-8"
+                selectedDistance={values.distance!}
+                handleChange={(d) => setValue("distance", d)}
+              />
+              <button type="submit" className="btn btn-primary">
+                <span className="hidden sm:inline">{t("search")}</span>
+                <span className="sm:hidden inline feather feather-search"></span>
+              </button>
+            </form>
+            {authUser ? (
+              <Link to="/create-event">
+                <button className="btn btn-primary inline w-fit mb-4 md:mb-0 md:float-right">
+                  <span className="pr-2 feather feather-plus" />
+                  Create Event
+                </button>
+              </Link>
+            ) : null}
+          </div>
           <div className="flex flex-col md:flex-row pb-8">
             <CategoriesDropdown
               className="w-[150px] md:w-[170px] mr-4 md:mr-8 py-4 pb-2 md:py-0"
