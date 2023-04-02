@@ -1,4 +1,4 @@
-import { useState, useContext, ChangeEvent, FormEvent } from "react";
+import { useContext, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -6,8 +6,7 @@ import { Helmet } from "react-helmet";
 import { TextForm } from "../components/FormFields";
 import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../providers/AuthProvider";
-import { RequestRegisterUser } from "../api/login";
-import { eventCreate, EventCreateBody, eventGetAll } from "../api/event";
+import { eventCreate, EventCreateBody } from "../api/event";
 import FormJup from "../util/form-jup";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
@@ -27,11 +26,6 @@ interface FormHtmlValues {
   name: string;
   date: Date;
   time: string;
-}
-
-export interface State {
-  only_create_chain: boolean;
-  register_user?: RequestRegisterUser;
 }
 
 export default function CreateEvent() {
@@ -92,21 +86,21 @@ export default function CreateEvent() {
   }
 
   if (!authUser) {
-      return (
-        <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
-          <h1 className="font-serif text-secondary text-4xl font-bold my-10">
-            You must login in to view this page
-          </h1>
-          <div className="flex">
+    return (
+      <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
+        <h1 className="font-serif text-secondary text-4xl font-bold my-10">
+          You must login to view this page
+        </h1>
+        <div className="flex">
           <Link to="/users/login" className="btn btn-primary mx-4">
-              {t("login")}
-            </Link>
-            <Link to="/events" className="btn btn-primary mx-4">
-              {t("events")}
-            </Link>
-          </div>
+            {t("login")}
+          </Link>
+          <Link to="/events" className="btn btn-primary mx-4">
+            {t("events")}
+          </Link>
         </div>
-      );
+      </div>
+    );
   } else {
     return (
       <>
@@ -128,7 +122,7 @@ export default function CreateEvent() {
                   name="name"
                   type="text"
                 />
-                <label className="form-control w-full mb-4">
+                <label className="form-control w-full">
                   <div className="label">
                     <span className="label-text">
                       {t("eventAddress") + "*"}
