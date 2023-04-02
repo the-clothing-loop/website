@@ -124,7 +124,7 @@ export default function EventDetails() {
                   <div className="px-8 lg:px-16">
                     <span className="pr-2 feather feather-map-pin"></span>
                     <span className="font-sans text-lg">
-                      {event.address} Mission Dolores Park
+                      {event.address}
                     </span>
                   </div>
                   <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
