@@ -90,7 +90,7 @@ export default function EventDetails() {
                 download={icalFilename}
                 className="btn btn-primary w-fit md:mt-6"
               >
-                <span className="relative mr-4" aria-hidden>
+                <span className="relative mr-4 rtl:mr-1 rtl:ml-3" aria-hidden>
                   <span className="inline-block feather feather-calendar relative transform scale-125"></span>
                   <span className="absolute -bottom-2 -right-2.5 transform scale-90 feather feather-download"></span>
                 </span>
@@ -100,14 +100,14 @@ export default function EventDetails() {
           </div>
           <div className="max-w-screen-xl mx-auto pt-6 px-6 md:px-20">
             <div className="flex flex-col md:flex-row-reverse">
-              <div className="w-full md:w-3/5 md:-mt-20 mb-4 md:mb-0 ml-0 md:ml-12 lg:ml-20">
+              <div className="w-full md:w-3/5 md:-mt-20 mb-4 md:mb-0 ml-0 md:ml-12 lg:ml-20 rtl:ml-0 rtl:md:mr-12 rtl:lg:mr-20">
                 <div className="relative">
                   <dl className="z-10 relative bg-white md:shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] md:py-10 md:px-8">
                     <dt className="mb-2 font-bold font-sans text-xl text-teal">
                       {t("time") + ":"}
                     </dt>
                     <dd className="mb-1 ml-4">
-                      <span className="pr-2 feather feather-clock"></span>
+                      <span className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-clock"></span>
                       <span className="font-sans text-lg">{datetime}</span>
                     </dd>
                     {event.address ? (
@@ -147,7 +147,7 @@ export default function EventDetails() {
                     <dd className="mr-2 mb-1 ml-4">
                       <div>
                         <span
-                          className="mr-2 feather feather-mail"
+                          className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-mail"
                           aria-hidden
                         ></span>
                         <span
@@ -162,7 +162,7 @@ export default function EventDetails() {
                       </div>
                       <div>
                         <span
-                          className="mr-2 feather feather-phone"
+                          className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-phone"
                           aria-hidden
                         ></span>
                         <span
@@ -182,7 +182,7 @@ export default function EventDetails() {
                   <img
                     src={CirclesFrame}
                     aria-hidden
-                    className="absolute -bottom-10 -right-10 hidden md:block"
+                    className="absolute -bottom-10  ltr:-right-10 rtl:-left-10 hidden md:block"
                   />
                 </div>
               </div>
