@@ -1,25 +1,18 @@
 import { TFunction } from "i18next";
-import {
-  useState,
-  MouseEvent,
-  SetStateAction,
-  Dispatch,
-  Attributes,
-} from "react";
+import { useState, MouseEvent, Attributes } from "react";
 
-export default function useToClipboard(): [
-  string,
-  Dispatch<SetStateAction<string>>,
-  (e: MouseEvent) => void,
-  (t: TFunction, v: string, c?: string) => Attributes
-] {
+export default function useToClipboard(): (
+  t: TFunction,
+  v: string,
+  c?: string
+) => Attributes {
   const [copying, setCopying] = useState("");
-  function handleToClipboard(e: MouseEvent) {
+  function handleToClipboard(e: MouseEvent, id: string) {
     e.preventDefault();
 
     let text = (e.target as any).innerText;
 
-    setCopying(text);
+    setCopying(id);
     setTimeout(() => {
       setCopying("");
     }, 3000);
@@ -27,20 +20,17 @@ export default function useToClipboard(): [
     navigator.clipboard.writeText(text);
   }
 
-  function addCopyAttributes(
-    t: TFunction,
-    thisValue: string,
-    moreClasses = ""
-  ) {
+  function addCopyAttributes(t: TFunction, id: string, moreClasses = "") {
     return {
+      id: { id },
       tabIndex: 1,
       className: `tooltip tooltip-top ${
-        copying === thisValue ? "tooltip-open" : ""
+        copying === id ? "tooltip-open" : ""
       } ${moreClasses}`,
-      onClick: handleToClipboard,
-      "data-tip": copying === thisValue ? t("copiedToClipboard") : t("copy"),
+      onClick: (e: MouseEvent) => handleToClipboard(e, id),
+      "data-tip": copying === id ? t("copiedToClipboard") : t("copy"),
     } as Attributes;
   }
 
-  return [copying, setCopying, handleToClipboard, addCopyAttributes];
+  return addCopyAttributes;
 }

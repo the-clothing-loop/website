@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 
-import { useState, useEffect, useContext, useMemo } from "react";
+import { useState, useEffect, useContext, useMemo, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -21,7 +21,7 @@ export default function EventDetails() {
   const { t, i18n } = useTranslation();
   const { addToastError } = useContext(ToastContext);
   const [event, setEvent] = useState<Event>();
-  const [, , , addCopyAttributes] = useToClipboard();
+  const addCopyAttributes = useToClipboard();
 
   useEffect(() => {
     load();
@@ -111,7 +111,7 @@ export default function EventDetails() {
                       <span className="font-sans text-lg">{datetime}</span>
                     </dd>
                     {event.address ? (
-                      <>
+                      <Fragment key="address">
                         <dt className="mb-2 font-bold font-sans text-xl text-teal">
                           {t("location") + ":"}
                         </dt>
@@ -123,14 +123,14 @@ export default function EventDetails() {
                           <address
                             {...addCopyAttributes(
                               t,
-                              event.address,
+                              "event-detail-address-" + event.uid,
                               "text-lg inline"
                             )}
                           >
                             {event.address}
                           </address>
                         </dd>
-                      </>
+                      </Fragment>
                     ) : null}
                     <dt className="mb-2 font-bold font-sans text-xl text-teal">
                       {t("categories") + ":"}
@@ -153,7 +153,7 @@ export default function EventDetails() {
                         <span
                           {...addCopyAttributes(
                             t,
-                            event.user_email,
+                            "event-detail-email-" + event.uid,
                             "text-lg inline break-all"
                           )}
                         >
@@ -168,7 +168,7 @@ export default function EventDetails() {
                         <span
                           {...addCopyAttributes(
                             t,
-                            event.user_phone,
+                            "event-detail-phone-" + event.uid,
                             "text-lg inline break-all"
                           )}
                         >
@@ -190,30 +190,21 @@ export default function EventDetails() {
                 <h2 className="font-sans font-bold text-secondary text-2xl mb-4 px-0">
                   {t("eventDetails") + ":"}
                 </h2>
-                <div className="w-full sm:float-right sm:w-64 relative mb-4 sm:m-4 mr-0">
-                  <img
-                    src={ClothesImage}
-                    alt=""
-                    className="aspect-[4/3] object-cover object-center relative z-10"
-                  />
-                </div>
-                {event.description}
-                Aut inventore sed aut autem qui. Harum unde ipsam eius. Est id
-                rerum consequatur ab. Ea rerum ipsum voluptatibus sint adipisci.
-                Fugiat recusandae quae voluptate sequi animi vitae nulla
-                eveniet. Aut debitis temporibus minus iusto. Temporibus ipsam
-                sed dolorum dolor vel placeat deleniti molestiae. Blanditiis qui
-                id itaque tenetur enim enim earum et. Exercitationem sed quo aut
-                ea et officia nihil quo. Cupiditate consequatur placeat ut. Et
-                ut eaque qui aut qui voluptas. Cumque illum officiis autem.
-                Eveniet id nesciunt et assumenda. Quia et ut aut esse voluptatem
-                tempora unde. Quis aperiam doloremque ullam totam. Magni earum
-                quo quae quam sit et est. Et sit rerum non suscipit rem
-                recusandae eos. Illo animi nihil maiores maiores. Reiciendis quo
-                assumenda repellat deleniti necessitatibus quas vel laudantium.
-                Ut est amet voluptatem eum nihil et. Dignissimos reprehenderit
-                atque est libero soluta repudiandae. Libero nesciunt corrupti
-                aut atque illum.
+                <p>
+                  <div className="aspect-[4/3] sm:float-right rtl:sm:float-left sm:w-64 mb-4 sm:m-4 ltr:mr-0 rtl:ml-0">
+                    <img
+                      src={ClothesImage}
+                      alt=""
+                      className="object-cover h-full w-full"
+                    />
+                  </div>
+                  {event.description.split("\n").map((s) => (
+                    <>
+                      {s}
+                      <br />
+                    </>
+                  ))}
+                </p>
               </div>
             </div>
           </div>

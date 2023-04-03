@@ -10,7 +10,7 @@ import useToClipboard from "../util/to-clipboard.hooks";
 export default function Footer() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
-  const [, , , addCopyAttributes] = useToClipboard();
+  const addCopyAttributes = useToClipboard();
 
   return (
     <footer className="bg-white pt-8 lg:pt-16 w-full">
@@ -72,11 +72,7 @@ export default function Footer() {
                       className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center hover:bg-[#b464a8] feather feather-mail text-lg"
                     ></a>
                     <span
-                      {...addCopyAttributes(
-                        t,
-                        "hello@clothingloop.org",
-                        "text-sm"
-                      )}
+                      {...addCopyAttributes(t, "footer-copy-email", "text-sm")}
                     >
                       hello@clothingloop.org
                     </span>
@@ -90,7 +86,11 @@ export default function Footer() {
                       aria-label="link to our instagram account"
                     ></a>
                     <span
-                      {...addCopyAttributes(t, "@theclothingloop", "text-sm")}
+                      {...addCopyAttributes(
+                        t,
+                        "footer-copy-insta-handle",
+                        "text-sm"
+                      )}
                     >
                       @theclothingloop
                     </span>

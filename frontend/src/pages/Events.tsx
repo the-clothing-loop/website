@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet";
-
 import { useState, useContext, useEffect, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -186,50 +185,9 @@ export default function Events() {
             >
               {events
                 .sort((a, b) => a.date.localeCompare(b.date))
-                .map((event) => {
-                  const date = dayjs(event.date);
-                  const eventURL = window.location.pathname + "/" + event.uid;
-                  return (
-                    <div className="h-full" key={event.uid}>
-                      <Link to={eventURL}>
-                        <div className="bg-teal-light h-full max-w-xl overflow-hidden">
-                          <div className="container relative overflow-hidden">
-                            <div className="bg-teal text-white text-md absolute mt-4 right-4 text-center py-2 px-3 z-10">
-                              <p>
-                                <span className="inline-block pr-1 font-extrabold">
-                                  {date.format("MMMM")}
-                                </span>
-                                <span>{" " + date.format("D")}</span>
-                              </p>
-                            </div>
-                            <img src={ClothesImage} className="w-full h-auto" />
-                          </div>
-                          <div className="text-lg">
-                            <div className="mt-4 pb-2 pl-4 text-xl text-teal font-bold">
-                              {event.name}
-                            </div>
-                            <div className="px-4 mb-2 pb-2">
-                              <span className="feather feather-map-pin"></span>
-
-                              <span className="text-md px-2">
-                                {event.address}
-                              </span>
-                              <div className="p-2">
-                                {event.genders?.length ? (
-                                  <>
-                                    <div className="mb-2">
-                                      {GenderBadges(t, event.genders)}
-                                    </div>
-                                  </>
-                                ) : null}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
-                  );
-                })}
+                .map((event) => (
+                  <EventItem event={event} key={event.uid} />
+                ))}
             </div>
           )}
         </div>
@@ -268,5 +226,41 @@ function writeUrlSearchParams(search: SearchValues) {
     {},
     "",
     window.location.origin + window.location.pathname + params
+  );
+}
+
+function EventItem({ event }: { event: Event }) {
+  const { t, i18n } = useTranslation();
+
+  const date = dayjs(event.date);
+  const eventURL = window.location.pathname + "/" + event.uid;
+  return (
+    <article className="flex flex-col bg-teal-light">
+      <Link to={eventURL} className="relative aspect-[4/3]">
+        <div className="bg-teal text-white text-md absolute mt-4 right-4 text-center py-2 px-3 z-10">
+          <p>
+            <span className="inline-block pr-1 font-extrabold">
+              {date.format("MMMM")}
+            </span>
+            <span>{" " + date.format("D")}</span>
+          </p>
+        </div>
+        <img src={ClothesImage} className="w-full h-full object-cover" />
+      </Link>
+
+      <div className="flex-grow m-4">
+        <h2 className="text-xl text-teal font-bold">
+          <Link to={eventURL}>{event.name}</Link>
+        </h2>
+      </div>
+      <dl className="m-4 mt-0">
+        <dd className="mb-2" key={"address" + event.uid}>
+          <span className="feather feather-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+
+          <address className="inline">{event.address}</address>
+        </dd>
+        <dd>{event.genders?.length ? GenderBadges(t, event.genders) : null}</dd>
+      </dl>
+    </article>
   );
 }
