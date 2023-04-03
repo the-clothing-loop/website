@@ -4,7 +4,7 @@ export type SetValue<V> = <K extends keyof V>(key: K, value: V[K]) => void;
 export type SetValues<V> = Dispatch<SetStateAction<V>>;
 
 export default function useForm<V extends {}>(
-  initialValues: V
+  initialValues: V | (() => V)
 ): [V, SetValue<V>, SetValues<V>] {
   const [values, setValues] = useState(initialValues);
 

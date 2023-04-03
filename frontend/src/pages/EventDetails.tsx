@@ -17,9 +17,8 @@ dayjs.extend(dayjs_calendar_plugin);
 
 // Media
 const ClothesImage =
-  "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
-const CirclesFrame =
-  "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
+  "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
+const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
 export default function EventDetails() {
   const { t, i18n } = useTranslation();
@@ -68,6 +67,7 @@ export default function EventDetails() {
     );
   } else {
     const icalURL = eventICalURL(event.uid);
+    const icalFilename = `${event.name}.ics`;
 
     return (
       <>
@@ -78,7 +78,7 @@ export default function EventDetails() {
         <main>
           <div className="bg-teal-light h-1/3 w-full overflow-visible absolute -z-10" />
           <div className="max-w-screen-xl mx-auto pt-10 px-6 md:px-20">
-            <a href={icalURL}>
+            <a href={icalURL} download={icalFilename}>
               <button className="btn btn-primary inline w-fit float-right mt-16">
                 <span className="pr-2 feather feather-calendar" />
                 {t("addToCalendar")}
@@ -108,58 +108,63 @@ export default function EventDetails() {
                     src={CirclesFrame}
                   />
                 </div>
-                <div className="shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] w-full md:w-1/3 my-8 md:my-auto bg-white py-12 ml-0 md:ml-12 lg:ml-20">
-                  <div className="px-10 py-2 font-bold font-sans text-xl text-teal">
+                <dl className="shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] w-full md:w-1/3 my-8 md:my-auto bg-white py-10 px-8 ml-0 md:ml-12 lg:ml-20">
+                  <dt className="mb-2 font-bold font-sans text-xl text-teal">
                     {t("time") + ":"}
-                  </div>
-                  <div className="px-8 lg:px-16">
+                  </dt>
+                  <dd className="mb-1 ml-4">
                     <span className="pr-2 feather feather-clock"></span>
                     <span className="font-sans text-lg">
                       {simplifyDays(t, i18n, event.date)}
                     </span>
-                  </div>
-                  <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
+                  </dd>
+                  <dt className="mb-2 font-bold font-sans text-xl text-teal">
                     {t("location") + ":"}
-                  </div>
-                  <div className="px-8 lg:px-16">
-                    <span className="pr-2 feather feather-map-pin"></span>
-                    <span className="font-sans text-lg">
-                      {event.address} Mission Dolores Park
-                    </span>
-                  </div>
-                  <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
+                  </dt>
+                  <dd className="mb-1 ml-4">
+                    <span
+                      className="mr-2 feather feather-map-pin"
+                      aria-hidden
+                    ></span>
+                    <address className="font-sans text-lg inline">
+                      {event.address}
+                    </address>
+                  </dd>
+                  <dt className="mb-2 font-bold font-sans text-xl text-teal">
                     {t("categories") + ":"}
-                  </div>
+                  </dt>
 
-                  <div className="flex flex-col w-full text-sm px-8 lg:px-16">
-                    {event.genders?.length ? (
-                      <>
-                        <div className="mb-2">
-                          {GenderBadges(t, event.genders)}
-                        </div>
-                      </>
-                    ) : null}
-                  </div>
-                  <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
+                  <dd className="mb-1 ml-4 block">
+                    {event.genders?.length
+                      ? GenderBadges(t, event.genders)
+                      : null}
+                  </dd>
+                  <dt className="mb-2 font-bold font-sans text-xl text-teal">
                     {t("contactHost") + ":"}
-                  </div>
-                  <div className="px-8 lg:px-16">
-                    <span className="pr-2 feather feather-mail"></span>
+                  </dt>
+                  <dd className="mb-1 ml-4">
+                    <span
+                      className="mr-2 feather feather-mail"
+                      aria-hidden
+                    ></span>
                     <span className="font-sans text-lg break-all">
                       {event.user_email}
                     </span>
-                  </div>
-                  <div className="px-8 lg:px-16 pt-2">
-                    <span className="pr-2 feather feather-phone"></span>
+                  </dd>
+                  <dd className="mb-1 ml-4">
+                    <span
+                      className="mr-2 feather feather-phone"
+                      aria-hidden
+                    ></span>
                     <span className="font-sans text-lg break-all">
                       {event.user_phone}
                     </span>
-                  </div>
-                </div>
+                  </dd>
+                </dl>
               </div>
 
               <div className="md:py-16 mb-4 w-full md:w-2/3">
-                <h2 className="font-serif font-bold text-secondary text-2xl mb-8 px-0">
+                <h2 className="font-sans font-bold text-secondary text-2xl mb-8 px-0">
                   {t("eventDetails") + ":"}
                 </h2>
                 {event.description}

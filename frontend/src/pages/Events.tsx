@@ -25,7 +25,7 @@ interface SearchValues {
 const ClothesImage =
   "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
 
-const MAX_DISTANCE = 5000;
+const MAX_RADIUS = 5000;
 const DEFAULT_LATITUDE = 52.377956;
 const DEFAULT_LONGITUDE = 4.89707;
 
@@ -34,32 +34,46 @@ export default function Events() {
 
   const { addToastError, addModal } = useContext(ToastContext);
   const [events, setEvents] = useState<Event[] | null>(null);
-  const [values, setValue] = useForm<SearchValues>({
-    genders: [] as string[],
-    latitude: DEFAULT_LATITUDE,
-    longitude: DEFAULT_LONGITUDE,
-    distance: -1,
+  const [values, setValue] = useForm<SearchValues>(() => {
+    const urlParams = new URLSearchParams("/events");
+    let latitude =
+      Number.parseFloat(urlParams.get("lat") || "") || DEFAULT_LATITUDE;
+    let longitude =
+      Number.parseFloat(urlParams.get("long") || "") || DEFAULT_LONGITUDE;
+    let distance = Number.parseInt(urlParams.get("d") || "") || -1;
+
+    console.log({
+      genders: urlParams.getAll("g"),
+      latitude,
+      longitude,
+      distance,
+    });
+
+    return {
+      genders: urlParams.getAll("g"),
+      latitude,
+      longitude,
+      distance,
+    };
   });
 
   useEffect(() => {
-    const urlParams = new URLSearchParams("/events");
-
-    load(
-      urlParams.getAll("g"),
-      DEFAULT_LATITUDE,
-      DEFAULT_LONGITUDE,
-      MAX_DISTANCE
-    );
+    load(values.genders, values.latitude, values.longitude, values.distance);
   }, []);
 
   async function load(
     filterGenders: string[],
     latitude: number,
     longitude: number,
-    _distance: number
+    distance: number
   ) {
-    const radius = _distance === -1 ? MAX_DISTANCE : _distance;
-    // This radius is temporarily set very high because of how dispersed the fake data locations are
+    const radius = distance === -1 ? MAX_RADIUS : distance;
+    writeUrlSearchParams({
+      genders: filterGenders,
+      latitude,
+      longitude,
+      distance,
+    });
     try {
       await eventGetAll({ latitude, longitude, radius }).then((res) => {
         const filterFunc = createFilterFunc(filterGenders);
@@ -242,6 +256,11 @@ function writeUrlSearchParams(search: SearchValues) {
   const queryParams = new URLSearchParams();
   for (const gender of search.genders) {
     queryParams.append("g", gender);
+  }
+  if (search.distance && search.latitude && search.longitude) {
+    queryParams.append("d", search.distance + "");
+    queryParams.append("lat", search.latitude + "");
+    queryParams.append("long", search.longitude + "");
   }
   const params = "?" + queryParams.toString();
 
