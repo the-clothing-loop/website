@@ -7,4 +7,11 @@ dayjs.extend(dayjs_updateLocale_plugin);
 dayjs.extend(dayjs_calendar_plugin);
 dayjs.extend(dayjs_localizedFormat_plugin);
 
+import "dayjs/locale/nl";
+import "dayjs/locale/de";
+import "dayjs/locale/fr";
+import "dayjs/locale/es";
+import "dayjs/locale/sv";
+import "dayjs/locale/he";
+
 export default dayjs;

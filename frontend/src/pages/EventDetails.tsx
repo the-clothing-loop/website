@@ -1,20 +1,16 @@
 import { Helmet } from "react-helmet";
 
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { eventGetAll, eventICalURL } from "../api/event";
 import { Event } from "../api/types";
-import simplifyDays from "../util/simplify-days";
 import { GenderBadges } from "../components/Badges";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
-import dayjs from "dayjs";
-import dayjs_calendar_plugin from "dayjs/plugin/calendar";
+import dayjs from "../util/dayjs";
 import useToClipboard from "../util/to-clipboard.hooks";
-
-dayjs.extend(dayjs_calendar_plugin);
 
 // Media
 const ClothesImage =
@@ -30,6 +26,12 @@ export default function EventDetails() {
   useEffect(() => {
     load();
   }, []);
+
+  const datetime = useMemo(() => {
+    if (!event) return "";
+
+    return dayjs(event.date).format("LLL");
+  }, [event, i18n.language]);
 
   async function load() {
     try {
@@ -78,123 +80,140 @@ export default function EventDetails() {
           <meta name="description" content="Event Details" />
         </Helmet>
         <main>
-          <div className="bg-teal-light h-1/3 w-full overflow-visible absolute -z-10" />
-          <div className="max-w-screen-xl mx-auto pt-10 px-6 md:px-20">
-            <a href={icalURL} download={icalFilename}>
-              <button className="btn btn-primary inline w-fit float-right mt-16">
-                <span className="pr-2 feather feather-calendar" />
+          <div className="bg-teal-light">
+            <div className="max-w-screen-xl mx-auto py-6 px-6 md:px-20">
+              <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-6 px-0">
+                {event.name}
+              </h1>
+              <a
+                href={icalURL}
+                download={icalFilename}
+                className="btn btn-primary w-fit md:mt-6"
+              >
+                <span className="relative mr-4" aria-hidden>
+                  <span className="inline-block feather feather-calendar relative transform scale-125"></span>
+                  <span className="absolute -bottom-2 -right-2.5 transform scale-90 feather feather-download"></span>
+                </span>
                 {t("addToCalendar")}
-              </button>
-            </a>
-            <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-16 px-0">
-              {event.name}
-            </h1>
-            <div className="md:mx-0 px-0">
-              <div className="flex flex-col md:flex-row md:justify-between">
-                <div className="relative flex">
+              </a>
+            </div>
+          </div>
+          <div className="max-w-screen-xl mx-auto pt-6 px-6 md:px-20">
+            <div className="flex flex-col md:flex-row-reverse">
+              <div className="w-full md:w-3/5 md:-mt-20 mb-4 md:mb-0 ml-0 md:ml-12 lg:ml-20">
+                <div className="relative">
+                  <dl className="z-10 relative bg-white md:shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] md:py-10 md:px-8">
+                    <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                      {t("time") + ":"}
+                    </dt>
+                    <dd className="mb-1 ml-4">
+                      <span className="pr-2 feather feather-clock"></span>
+                      <span className="font-sans text-lg">{datetime}</span>
+                    </dd>
+                    {event.address ? (
+                      <>
+                        <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                          {t("location") + ":"}
+                        </dt>
+                        <dd className="mb-1 ml-4">
+                          <span
+                            className="mr-2 feather feather-map-pin"
+                            aria-hidden
+                          ></span>
+                          <address
+                            {...addCopyAttributes(
+                              t,
+                              event.address,
+                              "text-lg inline"
+                            )}
+                          >
+                            {event.address}
+                          </address>
+                        </dd>
+                      </>
+                    ) : null}
+                    <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                      {t("categories") + ":"}
+                    </dt>
+
+                    <dd className="mb-1 ml-4 block">
+                      {event.genders?.length
+                        ? GenderBadges(t, event.genders)
+                        : null}
+                    </dd>
+                    <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                      {t("contactHost") + ":"}
+                    </dt>
+                    <dd className="mr-2 mb-1 ml-4">
+                      <div>
+                        <span
+                          className="mr-2 feather feather-mail"
+                          aria-hidden
+                        ></span>
+                        <span
+                          {...addCopyAttributes(
+                            t,
+                            event.user_email,
+                            "text-lg inline break-all"
+                          )}
+                        >
+                          {event.user_email}
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          className="mr-2 feather feather-phone"
+                          aria-hidden
+                        ></span>
+                        <span
+                          {...addCopyAttributes(
+                            t,
+                            event.user_phone,
+                            "text-lg inline break-all"
+                          )}
+                        >
+                          {event.user_phone}
+                        </span>
+                      </div>
+                    </dd>
+                    <dd className="mb-1 ml-4"></dd>
+                  </dl>
+
+                  <img
+                    src={CirclesFrame}
+                    aria-hidden
+                    className="absolute -bottom-10 -right-10 hidden md:block"
+                  />
+                </div>
+              </div>
+              <div className="w-full">
+                <h2 className="font-sans font-bold text-secondary text-2xl mb-4 px-0">
+                  {t("eventDetails") + ":"}
+                </h2>
+                <div className="w-full sm:float-right sm:w-64 relative mb-4 sm:m-4 mr-0">
                   <img
                     src={ClothesImage}
                     alt=""
-                    className="max-w-full md:max-w-2/3 h-auto object-contain object-center my-auto md:col-span-2"
-                  />
-                  <img
-                    className="-z-10 absolute -right-4 md:-right-16 -top-10 overflow-hidden"
-                    src={CirclesFrame}
-                    aria-hidden
-                    alt=""
-                  />
-                  <img
-                    className="max-sm:hidden -z-10 absolute -left-16 -bottom-8"
-                    aria-hidden
-                    alt=""
-                    src={CirclesFrame}
+                    className="aspect-[4/3] object-cover object-center relative z-10"
                   />
                 </div>
-                <dl className="shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] w-full md:w-1/3 my-8 md:my-auto bg-white py-10 px-8 ml-0 md:ml-12 lg:ml-20">
-                  <dt className="mb-2 font-bold font-sans text-xl text-teal">
-                    {t("time") + ":"}
-                  </dt>
-                  <dd className="mb-1 ml-4">
-                    <span className="pr-2 feather feather-clock"></span>
-                    <span className="font-sans text-lg">
-                      {simplifyDays(t, i18n, event.date)}
-                    </span>
-                  </dd>
-                  {event.address ? (
-                    <>
-                      <dt className="mb-2 font-bold font-sans text-xl text-teal">
-                        {t("location") + ":"}
-                      </dt>
-                      <dd className="mb-1 ml-4">
-                        <span
-                          className="mr-2 feather feather-map-pin"
-                          aria-hidden
-                        ></span>
-                        <address
-                          {...addCopyAttributes(
-                            t,
-                            event.address,
-                            "text-lg inline"
-                          )}
-                        >
-                          {event.address}
-                        </address>
-                      </dd>
-                    </>
-                  ) : null}
-                  <dt className="mb-2 font-bold font-sans text-xl text-teal">
-                    {t("categories") + ":"}
-                  </dt>
-
-                  <dd className="mb-1 ml-4 block">
-                    {event.genders?.length
-                      ? GenderBadges(t, event.genders)
-                      : null}
-                  </dd>
-                  <dt className="mb-2 font-bold font-sans text-xl text-teal">
-                    {t("contactHost") + ":"}
-                  </dt>
-                  <dd className="mr-2 mb-1 ml-4">
-                    <div>
-                      <span
-                        className="mr-2 feather feather-mail"
-                        aria-hidden
-                      ></span>
-                      <span
-                        {...addCopyAttributes(
-                          t,
-                          event.user_email,
-                          "text-lg inline break-all"
-                        )}
-                      >
-                        {event.user_email}
-                      </span>
-                    </div>
-                    <div>
-                      <span
-                        className="mr-2 feather feather-phone"
-                        aria-hidden
-                      ></span>
-                      <span
-                        {...addCopyAttributes(
-                          t,
-                          event.user_phone,
-                          "text-lg inline break-all"
-                        )}
-                      >
-                        {event.user_phone}
-                      </span>
-                    </div>
-                  </dd>
-                  <dd className="mb-1 ml-4"></dd>
-                </dl>
-              </div>
-
-              <div className="md:py-16 mb-4 w-full md:w-2/3">
-                <h2 className="font-sans font-bold text-secondary text-2xl mb-8 px-0">
-                  {t("eventDetails") + ":"}
-                </h2>
                 {event.description}
+                Aut inventore sed aut autem qui. Harum unde ipsam eius. Est id
+                rerum consequatur ab. Ea rerum ipsum voluptatibus sint adipisci.
+                Fugiat recusandae quae voluptate sequi animi vitae nulla
+                eveniet. Aut debitis temporibus minus iusto. Temporibus ipsam
+                sed dolorum dolor vel placeat deleniti molestiae. Blanditiis qui
+                id itaque tenetur enim enim earum et. Exercitationem sed quo aut
+                ea et officia nihil quo. Cupiditate consequatur placeat ut. Et
+                ut eaque qui aut qui voluptas. Cumque illum officiis autem.
+                Eveniet id nesciunt et assumenda. Quia et ut aut esse voluptatem
+                tempora unde. Quis aperiam doloremque ullam totam. Magni earum
+                quo quae quam sit et est. Et sit rerum non suscipit rem
+                recusandae eos. Illo animi nihil maiores maiores. Reiciendis quo
+                assumenda repellat deleniti necessitatibus quas vel laudantium.
+                Ut est amet voluptatem eum nihil et. Dignissimos reprehenderit
+                atque est libero soluta repudiandae. Libero nesciunt corrupti
+                aut atque illum.
               </div>
             </div>
           </div>
