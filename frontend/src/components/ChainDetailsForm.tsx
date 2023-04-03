@@ -121,7 +121,7 @@ export default function ChainDetailsForm({
         type: "circle",
         source: "source",
         paint: {
-          "circle-color": ["rgba", 240, 196, 73, 0.9], // #f0c449
+          "circle-color": ["rgba", 240, 196, 73, 0.4], // #f0c449
           "circle-radius": [
             "interpolate",
             ["exponential", 2],
@@ -131,8 +131,8 @@ export default function ChainDetailsForm({
             20,
             ["get", "radius"],
           ],
-          "circle-stroke-width": 0,
-          "circle-blur": 0.6,
+          "circle-stroke-width": 2,
+          "circle-stroke-color": ["rgba", 240, 196, 73, 1],
         },
       });
 
@@ -217,10 +217,10 @@ export default function ChainDetailsForm({
   }
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="md:w-1/2 md:pr-4">
+      <div className="md:w-1/2 md:pr-4 rtl:md:pr-0 rtl:md:pl-4">
         <div className="aspect-square cursor-pointer" ref={mapRef} />
       </div>
-      <div className="md:w-1/2 md:pl-4">
+      <div className="md:w-1/2 md:pl-4 rtl:md:pl-0 rtl:md:pr-4">
         <form onSubmit={handleSubmit}>
           <p className="mb-2 text-sm">{t("clickToSetLoopLocation")}</p>
           <TextForm
@@ -240,8 +240,8 @@ export default function ChainDetailsForm({
             required
             label={t("radius")}
             name="radius"
-            value={values.radius}
-            onChange={(e) => setValue("radius", e.target.valueAsNumber)}
+            value={values.radius / 4}
+            onChange={(e) => setValue("radius", e.target.valueAsNumber * 4)}
             step="0.1"
             info={t("decideOnTheAreaYourLoopWillBeActiveIn")}
           />
@@ -249,7 +249,7 @@ export default function ChainDetailsForm({
           <div className="form-control relative w-full mb-4">
             <PopoverOnHover
               message={t("optionalFieldTypeAnything")}
-              className="absolute top-0 -right-2 tooltip-left"
+              className="absolute top-0 -right-2 rtl:right-auto rtl:-left-2 tooltip-left rtl:tooltip-right"
             />
             <label>
               <div className="label">
@@ -266,7 +266,7 @@ export default function ChainDetailsForm({
           </div>
 
           <div className="flex flex-col sm:flex-row items-end mb-6">
-            <div className="w-full sm:w-1/2 pb-4 sm:pb-0 sm:pr-4">
+            <div className="w-full sm:w-1/2 pb-4 sm:pb-0 sm:pr-4 rtl:sm:pr-0 rtl:sm:pl-4">
               <CategoriesDropdown
                 className="dropdown-top"
                 selectedGenders={values.genders || []}
@@ -277,7 +277,7 @@ export default function ChainDetailsForm({
               <div className="flex justify-end -mr-2 -mt-3">
                 <PopoverOnHover
                   message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
-                  className="tooltip-left"
+                  className="tooltip-left rtl:tooltip-right"
                 />
               </div>
               <SizesDropdown
@@ -297,7 +297,7 @@ export default function ChainDetailsForm({
             {showBack && (
               <button
                 type="button"
-                className="btn btn-secondary btn-outline mr-4"
+                className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
                 onClick={() => history.goBack()}
               >
                 {t("back")}
@@ -305,7 +305,8 @@ export default function ChainDetailsForm({
             )}
             <button type="submit" className="btn btn-primary">
               {t("submit")}
-              <span className="feather feather-arrow-right ml-4"></span>
+              <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
+              <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
             </button>
           </div>
         </form>

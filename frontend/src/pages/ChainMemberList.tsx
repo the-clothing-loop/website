@@ -307,13 +307,13 @@ export default function ChainMemberList() {
 
         <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
           <div className="grid gap-4 sm:grid-cols-3 justify-items-center sm:justify-items-start">
-            <h2 className="order-1 sm:col-span-3 font-semibold text-secondary text-3xl">
+            <h2 className="order-1 sm:col-span-3 lg:col-span-1 font-semibold text-secondary self-center text-3xl">
               {t("loopParticipant", {
                 count: unapprovedUsers.length + users.length,
               })}
             </h2>
 
-            <div className="order-3 sm:col-span-2 sm:order-2 border border-secondary">
+            <div className="order-3 sm:col-span-2 sm:order-2 lg:col-span-1 lg:justify-self-center flex border border-secondary bg-teal-light">
               <label>
                 <input
                   type="radio"
@@ -323,8 +323,9 @@ export default function ChainMemberList() {
                   onChange={(e) => setSelectedTable("route")}
                   className="hidden peer"
                 />
-                <div className="btn btn-ghost bg-teal-light border-0 peer-checked:btn-secondary peer-checked:bg-secondary">
+                <div className="relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black ltr:pr-2 rtl:pl-2 ltr:mr-2 rtl:ml-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
                   {t("route")}
+                  <span className="skew-x-6 rtl:-skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2 rtl:right-auto rtl:-left-2"></span>
                 </div>
               </label>
               <label>
@@ -336,8 +337,10 @@ export default function ChainMemberList() {
                   onChange={(e) => setSelectedTable("participants")}
                   className="hidden peer"
                 />
-                <div className="btn btn-ghost bg-teal-light border-0 peer-checked:btn-secondary peer-checked:bg-secondary">
+                <div className="relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black px-2 mx-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
+                  <span className="-skew-x-6 w-4 h-12 bg-[inherit] absolute -left-2"></span>
                   {t("edit")}
+                  <span className="skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2"></span>
                 </div>
               </label>
               <label>
@@ -353,15 +356,16 @@ export default function ChainMemberList() {
                   className="hidden peer"
                 />
                 <div
-                  className={`relative btn btn-ghost bg-teal-light border-0 peer-checked:btn-secondary peer-checked:bg-secondary ${
+                  className={`relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none ltr:pl-2 rtl:pr-2 ltr:ml-2 rtl:mr-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
                     unapprovedUsers.length
-                      ? ""
+                      ? "text-black"
                       : "text-base-300 cursor-not-allowed"
                   }`}
                 >
+                  <span className="-skew-x-6 rtl:skew-x-6 w-4 h-12 bg-[inherit] absolute -left-2 rtl:left-0 rtl:-right-2"></span>
                   {t("new")}
                   <span
-                    className={`absolute -top-3 -right-3 block py-1 px-2 rounded-lg ${
+                    className={`absolute -top-3 -right-3 rtl:right-auto rtl:-left-3 block py-1 px-2 rounded-lg ${
                       unapprovedUsers.length
                         ? isAnyTooOld
                           ? "bg-error text-black"
@@ -374,7 +378,7 @@ export default function ChainMemberList() {
                 </div>
               </label>
             </div>
-            <div className="order-2 sm:justify-self-end sm:order-3">
+            <div className="order-2 sm:justify-self-end sm:self sm:order-3">
               <UserDataExport chainName={chain.name} chainUsers={users} />
             </div>
           </div>
@@ -599,7 +603,7 @@ function ApproveTable(props: {
 
   return (
     <>
-      <div className="mt-10 relative overflow-hidden">
+      <div className="mt-6 relative overflow-hidden">
         <div className="overflow-x-auto">
           <table className="table table-compact w-full mb-10">
             <thead>
@@ -789,7 +793,7 @@ function ParticipantsTable(props: {
 
   return (
     <>
-      <div className="mt-10 relative overflow-hidden">
+      <div className="mt-6 relative overflow-hidden">
         <div className="overflow-x-auto">
           <table
             className="table table-compact w-full mb-10"
@@ -939,7 +943,7 @@ function RouteTable(props: {
   );
   return (
     <>
-      <div className="mt-10 relative overflow-hidden">
+      <div className="mt-6 relative overflow-hidden">
         <div className="overflow-x-auto">
           <table className="table table-compact w-full mb-10">
             <thead>
@@ -963,8 +967,17 @@ function RouteTable(props: {
               {sortedUsers.map((u: User) => {
                 const routeOrderNumber = route.indexOf(u.uid) + 1;
 
-                const classTdDragging =
-                  dragging === u.uid ? "bg-grey/[.1]" : "";
+                let classTdDragging = dragging === u.uid ? "bg-grey/[.1]" : "";
+                if (dragTarget === u.uid) {
+                  const orderTarget = route.indexOf(dragTarget);
+                  const orderDrag = route.indexOf(dragging);
+
+                  if (orderTarget < orderDrag) {
+                    classTdDragging += " border-t-2 border-t-grey";
+                  } else {
+                    classTdDragging += " border-b-2 border-b-grey";
+                  }
+                }
                 return (
                   <tr
                     key={u.uid}
@@ -992,7 +1005,7 @@ function RouteTable(props: {
                       <div
                         tabIndex={0}
                         aria-label="drag"
-                        className="hidden lg:inline-block p-1 ml-2 rounded-full hover:bg-white cursor-grab active:cursor-grabbing feather feather-move"
+                        className="hidden lg:inline-block p-1 ml-2 rounded-full hover:bg-white cursor-grab active:cursor-grabbing feather feather-maximize-2 -rotate-45"
                       ></div>
                     </td>
                     {/* <td
@@ -1022,7 +1035,7 @@ function RouteTable(props: {
                     <td className={`${classTdDragging} text-right`}>
                       <button
                         aria-label="go to edit"
-                        className="btn btn-circle btn-sm btn-ghost bg-base-200 feather feather-info"
+                        className="btn btn-circle btn-sm btn-ghost bg-base-100 feather feather-info"
                         onClick={() => props.onGoToEditTableItem(u.uid)}
                       ></button>
                     </td>

@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import { AuthProvider } from "./providers/AuthProvider";
 import ScrollToTop from "./util/scrollToTop";
+import getLanguages from "./languages";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -48,18 +49,23 @@ const EventDetails = React.lazy(() => import("./pages/EventDetails"));
 
 const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
+const languages = getLanguages(IS_PRODUCTION);
 
-let base = "/:locale(en|nl|de|fr|es|sv)";
-if (!IS_PRODUCTION) {
-  base = "/:locale(en|nl|de|fr|es|sv)";
-}
+const base = `/:locale(${languages.join("|")})`;
 
 export default function App() {
   const { i18n } = useTranslation();
   useEffect(() => {
-    document
-      .getElementsByTagName("html")[0]
-      .setAttribute("lang", i18n.language);
+    const html = document.getElementsByTagName("html")[0];
+    html.setAttribute("lang", i18n.language);
+
+    switch (i18n.language) {
+      case "he":
+        html.setAttribute("dir", "rtl");
+        break;
+      default:
+        html.setAttribute("dir", "ltr");
+    }
   }, [i18n.language]);
 
   return (

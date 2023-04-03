@@ -1,4 +1,4 @@
-module github.com/CollActionteam/clothing-loop/server
+module github.com/the-clothing-loop/website/server
 
 go 1.20
 

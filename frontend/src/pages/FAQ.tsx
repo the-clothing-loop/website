@@ -29,7 +29,7 @@ export default function FAQ() {
 
       <main className="container mx-auto px-3 md:px-20 pt-10">
         <div className="flex flex-col md:flex-row">
-          <div className="w-full md:w-1/2 md:pr-5">
+          <div className="w-full md:w-1/2 md:pr-5 rtl:md:pr-0 rtl:md:pl-5">
             <div className="mb-6">
               <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
                 {t("faqForParticipants")}
@@ -37,7 +37,7 @@ export default function FAQ() {
               <AccordionFaqs arr={arrParticipants} initialOpen={0} />
             </div>
           </div>
-          <div className="w-full md:w-1/2 md:pl-5">
+          <div className="w-full md:w-1/2 md:pl-5 rtl:md:pl-0 rtl:md:pr-5">
             <div className="mb-6">
               <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
                 {t("faqForHosts")}

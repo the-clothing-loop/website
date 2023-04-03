@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

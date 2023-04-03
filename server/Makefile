@@ -31,6 +31,9 @@ coverage:
 generate-fake-data:
 	go run cmd/generate-fake-data/main.go
 
+generate-fake-data-500:
+	go run cmd/generate-fake-data/main.go 500
+
 stripe-dev:
 	stripe listen --forward-to localhost:8084/v2/payment/webhook
 

@@ -1,30 +1,5 @@
-export type Severity = "INFO" | "WARNING" | "ERROR" | "FATAL";
-
-declare global {
-  interface Window {
-    goscope2: {
-      token: string;
-      baseUrl: string;
-      New(token: string, baseUrl: string): void;
-      Log(severity: Severity, message: string): void;
-    };
-  }
-}
-
-window.goscope2 = {
-  token: "",
-  baseUrl: "",
-  New(token, baseUrl = "") {
-    this.token = token;
-    this.baseUrl = baseUrl;
-  },
-  Log(severity, message) {
-    fetch(this.baseUrl + "/goscope2/js", {
-      method: "post",
-      body: JSON.stringify({ severity, message, token: this.token }),
-    }).catch((err) => console.log(err));
-  },
-};
+import "goscope2-sdk-js/sdk/js";
+import type { Severity } from "goscope2-sdk-js/sdk/js";
 
 const token = import.meta.env.VITE_GOSCOPE2_TOKEN;
 if (token && window) {

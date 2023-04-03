@@ -28,13 +28,13 @@ export default function Footer() {
     <footer className="bg-white pt-8 lg:pt-16 w-full">
       <div className="relative">
         <div
-          className="absolute hidden lg:block top-0 right-0 bottom-0 bg-teal-light w-1/2"
+          className="absolute hidden lg:block top-0 ltr:right-0 rtl:left-0 bottom-0 bg-teal-light w-1/2"
           aria-hidden
         ></div>
         <div className="lg:container lg:px-20 mx-auto flex flex-col lg:flex-row-reverse relative z-10">
           <Newsletter />
           <div className="container mx-auto lg:mx-0 lg:w-1/2 pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-center md:items-start sm:justify-end text-center md:text-left lg:mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-center ltr:md:items-start rtl:md:items-end sm:justify-end text-center md:text-left lg:mt-8">
               <div className="flex flex-col items-center md:items-start px-3 pb-6 pt-0">
                 <span className="text-secondary font-bold text-2xl mb-3">
                   {t("learnMore")}
@@ -72,7 +72,7 @@ export default function Footer() {
                   </Link>
                 )}
               </div>
-              <div className="lg:col-span-2 px-3 pb-6 pt-0">
+              <div className="lg:col-span-2 px-3 pb-6 pt-0 rtl:text-right">
                 <span className="block text-secondary font-bold text-2xl mb-3">
                   {t("findUs")}
                 </span>
@@ -81,7 +81,7 @@ export default function Footer() {
                     <a
                       href="mailto:hello@clothingloop.org"
                       aria-label="Our email address"
-                      className="btn btn-circle btn-outline mr-3 flex justify-center hover:bg-[#b464a8] feather feather-mail text-lg"
+                      className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center hover:bg-[#b464a8] feather feather-mail text-lg"
                     ></a>
                     <span
                       tabIndex={1}
@@ -105,7 +105,7 @@ export default function Footer() {
                       href="https://www.instagram.com/theclothingloop/"
                       target="_blank"
                       rel="noreferrer"
-                      className="btn btn-circle btn-outline feather feather-instagram text-lg mr-3 hover:bg-instagram"
+                      className="btn btn-circle btn-outline feather feather-instagram text-lg mr-3 rtl:mr-0 rtl:ml-3 hover:bg-instagram"
                       aria-label="link to our instagram account"
                     ></a>
                     <span
@@ -130,7 +130,7 @@ export default function Footer() {
                       aria-label="Our Facebook page"
                       className="flex flex-row items-center group"
                     >
-                      <span className="btn btn-circle btn-outline mr-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-facebook feather feather-facebook text-lg"></span>
+                      <span className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-facebook feather feather-facebook text-lg"></span>
                       <span className="text-sm lg:hidden">Facebook</span>
                     </a>
                   </li>
@@ -141,7 +141,7 @@ export default function Footer() {
                       aria-label="Our LinkedIn page"
                       className="flex flex-row items-center group"
                     >
-                      <span className="btn btn-circle btn-outline mr-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#0a66c2] feather feather-linkedin text-lg"></span>
+                      <span className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#0a66c2] feather feather-linkedin text-lg"></span>
                       <span className="text-sm lg:hidden">LinkedIn</span>
                     </a>
                   </li>

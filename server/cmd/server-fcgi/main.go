@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http/cgi"
 
-	server "github.com/CollActionteam/clothing-loop/server/internal"
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
+	server "github.com/the-clothing-loop/website/server/internal"
+	"github.com/the-clothing-loop/website/server/internal/app"
 )
 
 func main() {

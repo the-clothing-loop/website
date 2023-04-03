@@ -3,29 +3,12 @@ import { useMemo, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import { useDropdown } from "../util/dropdown.hooks";
+import { getLanguageFlags } from "../languages";
 
 const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
 
-interface Language {
-  lng: string;
-  title: string;
-  flag: string;
-}
-const testLanguages: Language[] = [];
-
-let languages: Language[] = [
-  { lng: "en", title: "English", flag: "/images/flags/gb.svg" },
-  { lng: "nl", title: "Dutch", flag: "/images/flags/nl.svg" },
-  { lng: "de", title: "German", flag: "/images/flags/de.svg" },
-  { lng: "fr", title: "French", flag: "/images/flags/fr.svg" },
-  { lng: "es", title: "Spanish", flag: "/images/flags/es.svg" },
-  { lng: "sv", title: "Swedish", flag: "/images/flags/se.svg" },
-];
-
-if (!IS_PRODUCTION) {
-  languages.push(...testLanguages);
-}
+const languageFlags = getLanguageFlags(IS_PRODUCTION);
 
 const LanguageSwitcher = (props: { className?: string }) => {
   const { i18n } = useTranslation();
@@ -45,7 +28,9 @@ const LanguageSwitcher = (props: { className?: string }) => {
   };
 
   const btnLabelLanguage = useMemo(() => {
-    return languages.find((l) => l.lng === i18n.language) || languages[0];
+    return (
+      languageFlags.find((l) => l.lng === i18n.language) || languageFlags[0]
+    );
   }, [i18n.language]);
 
   function onToggle(e: MouseEvent<HTMLLabelElement>) {
@@ -62,7 +47,11 @@ const LanguageSwitcher = (props: { className?: string }) => {
       } ${props.className || ""}`}
       onBlur={() => dropdown.setOpen(false)}
     >
-      <label tabIndex={0} className="btn btn-outline" onClick={onToggle}>
+      <label
+        tabIndex={0}
+        className="btn btn-outline w-36 justify-between"
+        onClick={onToggle}
+      >
         {btnLabelLanguage.title}
         <img
           className="w-6 ml-2"
@@ -74,12 +63,12 @@ const LanguageSwitcher = (props: { className?: string }) => {
         tabIndex={0}
         className="dropdown-content menu w-36 shadow bg-base-100"
       >
-        {languages.map((el) => {
+        {languageFlags.map((el) => {
           let active = btnLabelLanguage.lng === el.lng;
           return (
             <li key={el.lng} className={active ? "hidden" : ""}>
               <button
-                className="flex justify-between"
+                className="flex justify-between text-sm"
                 onClick={() => handleChange(el.lng)}
               >
                 {el.title}

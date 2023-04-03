@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
-	"github.com/CollActionteam/clothing-loop/server/internal/tests/mocks"
 	Faker "github.com/jaswdr/faker"
+	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
 )
 
 var faker = Faker.New()
