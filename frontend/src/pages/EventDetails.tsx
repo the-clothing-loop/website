@@ -12,6 +12,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "dayjs";
 import dayjs_calendar_plugin from "dayjs/plugin/calendar";
+import useToClipboard from "../util/to-clipboard.hooks";
 
 dayjs.extend(dayjs_calendar_plugin);
 
@@ -24,6 +25,7 @@ export default function EventDetails() {
   const { t, i18n } = useTranslation();
   const { addToastError } = useContext(ToastContext);
   const [event, setEvent] = useState<Event>();
+  const [, , , addCopyAttributes] = useToClipboard();
 
   useEffect(() => {
     load();
@@ -118,18 +120,28 @@ export default function EventDetails() {
                       {simplifyDays(t, i18n, event.date)}
                     </span>
                   </dd>
-                  <dt className="mb-2 font-bold font-sans text-xl text-teal">
-                    {t("location") + ":"}
-                  </dt>
-                  <dd className="mb-1 ml-4">
-                    <span
-                      className="mr-2 feather feather-map-pin"
-                      aria-hidden
-                    ></span>
-                    <address className="font-sans text-lg inline">
-                      {event.address}
-                    </address>
-                  </dd>
+                  {event.address ? (
+                    <>
+                      <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                        {t("location") + ":"}
+                      </dt>
+                      <dd className="mb-1 ml-4">
+                        <span
+                          className="mr-2 feather feather-map-pin"
+                          aria-hidden
+                        ></span>
+                        <address
+                          {...addCopyAttributes(
+                            t,
+                            event.address,
+                            "text-lg inline"
+                          )}
+                        >
+                          {event.address}
+                        </address>
+                      </dd>
+                    </>
+                  ) : null}
                   <dt className="mb-2 font-bold font-sans text-xl text-teal">
                     {t("categories") + ":"}
                   </dt>
@@ -142,24 +154,39 @@ export default function EventDetails() {
                   <dt className="mb-2 font-bold font-sans text-xl text-teal">
                     {t("contactHost") + ":"}
                   </dt>
-                  <dd className="mb-1 ml-4">
-                    <span
-                      className="mr-2 feather feather-mail"
-                      aria-hidden
-                    ></span>
-                    <span className="font-sans text-lg break-all">
-                      {event.user_email}
-                    </span>
+                  <dd className="mr-2 mb-1 ml-4">
+                    <div>
+                      <span
+                        className="mr-2 feather feather-mail"
+                        aria-hidden
+                      ></span>
+                      <span
+                        {...addCopyAttributes(
+                          t,
+                          event.user_email,
+                          "text-lg inline break-all"
+                        )}
+                      >
+                        {event.user_email}
+                      </span>
+                    </div>
+                    <div>
+                      <span
+                        className="mr-2 feather feather-phone"
+                        aria-hidden
+                      ></span>
+                      <span
+                        {...addCopyAttributes(
+                          t,
+                          event.user_phone,
+                          "text-lg inline break-all"
+                        )}
+                      >
+                        {event.user_phone}
+                      </span>
+                    </div>
                   </dd>
-                  <dd className="mb-1 ml-4">
-                    <span
-                      className="mr-2 feather feather-phone"
-                      aria-hidden
-                    ></span>
-                    <span className="font-sans text-lg break-all">
-                      {event.user_phone}
-                    </span>
-                  </dd>
+                  <dd className="mb-1 ml-4"></dd>
                 </dl>
               </div>
 
