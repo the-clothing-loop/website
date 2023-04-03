@@ -23,7 +23,7 @@ interface SearchValues {
 
 // Media
 const ClothesImage =
-  "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
+  "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
 
 const MAX_DISTANCE = 5000;
 const DEFAULT_LATITUDE = 52.377956;
