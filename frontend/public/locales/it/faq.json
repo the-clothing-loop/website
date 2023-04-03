@@ -7,14 +7,14 @@
     },
     {
       "question": "Tutte le taglie di abbigliamento possono essere nella stessa borsa?",
-      "answer": "Solitamente le borse miste funzionano perfettamente bene in quanto le dimensioni variano per marca e le proporzioni sono anche diverse. Si consiglia di avere un mix di articoli taglia 36 - 42 (S, M e L) e avviare un nuovo Clothing Loop per taglie più piccole o più grandi."
+      "answer": "No, non ci sono regole fisse qui, ma tieni a mente il sistema funziona meglio quando in equilibrio. <b>Ogni borsa è diversa.</b> Delle volte trova qualcosa d'interessante, a volte non si trova nulla. Ma ogni volta che un capo viene indossato di nuovo è una piccola gran vittoria!"
     },
     {
-      "question": "Come evitare \"Chi trova tiene, chi perde piange\"?",
-      "answer": "Non ci sono garanzie che troverai qualcosa che ti piace. A volte un paio di borse passeranno casa tua che potrebbe non avere un oggetto per te. Ma ricorda: trovare un oggetto da sogno vale più che avere 10 oggetti nel tuo guardaroba che non indossi. E rendere qualcun altro molto felice con qualcosa che stava raccogliendo la polvere nel tuo guardaroba è anche una significativa (e divertente!) parte della mentalità Clothing Loop!"
+      "question": "Dovo donare la stessa quantità di capi che ho preso dalla borsa?",
+      "answer": "Non necessariamente, ma tieni a mente che il sistema funziona meglio se c'è un buon equilibrio tra donare e prendere. Meglio evitare di donare vestiti usurati, macchiati o danneggiati in quanto non sono mai benvenuti."
     },
     {
-      "question": "Cosa fare con i vestiti ingombranti (come i cappotti invernali) che non entrano nella borsa?",
+      "question": "In una borsa ci possono essere capi di abbigliamento di tutte le taglie?",
       "answer": "Gli oggetti grandi possono essere fotografati e condivisi tramite il canale di comunicazione, o tramite l'app Glide. In un messaggio privato, le persone possono rispondere e organizzare il pick up."
     },
     {
@@ -70,7 +70,7 @@
     },
     {
       "question": "Come gestire un grande gruppo di persone nel canale di comunicazione?",
-      "answer": "Soprattutto quando i gruppi diventano più grandi, è importante assicurarsi che le persone non siano bombardate di messaggi (irrilevanti). È possibile impostare alcune regole per ciò che dovrebbe e non dovrebbe essere condiviso tramite l'app del gruppo. Per esempio:<br /><br /><span>Sì,</span> nell'app:<ul><li>Selfie con cose carine che hai trovato nella borsa o di cose carine che gli stai aggiungendo.</li><li>Complimenti ad altri</li><li>Logistica e aggiornamenti organizzativi rilevanti</li></ul><span>No,</span> non nell'app:<ul><li>Tutto ciò che non è correlato al Clothing Loop (richieste di sondaggi, inviti per nuovi gruppi, raccolta di fondi, meme, ecc). Se vuoi chiedere a tutti l'input su qualcosa, usa invece un'app di sondaggio come LouLou</li></ul>"
+      "answer": "<ul class='list-none'>Soprattutto quando i gruppi diventano più grandi, è importante assicurarsi che le persone non siano bombardate di messaggi (irrilevanti) . È possibile impostare alcune regole per ciò che dovrebbe e non dovrebbe essere condiviso tramite l'app del gruppo. Per esempio:<ul class='list-none'><li><b>Sì,</b> nell'app:<ul><li>Selfie con cose carine che hai trovato nella borsa o di cose carine che gli stai aggiungendo.</li><li>Complimenti ad altri</li><li>Logistica e aggiornamenti organizzativi rilevanti</li></ul></li><li><b>No,</b> non nell'app:<ul><li>Tutto ciò che non è correlato al Clothing Loop (richieste di sondaggi, inviti per nuovi gruppi, raccolta di fondi, meme, ecc). Se vuoi chiedere a tutti l'input su qualcosa, usa invece un'app di sondaggio come LouLou</li></ul></li></ul>"
     },
     {
       "question": "Cosa succede se non ho più tempo per gestire il Clothing Loop che ho iniziato?",
@@ -82,7 +82,7 @@
     },
     {
       "question": "Qual è la dimensione ideale di un gruppo?",
-      "answer": "Consigliamo di avere un minimo di 20 persone in un gruppo: dopo 20 indirizzi di solito non riconosci più nulla nella borsa, in modo da poter continuare a scambiare. Non c'è un vero massimo, sta a te decidere quello che ancora funziona! Nei Paesi Bassi un Loop è in media di 45 persone. Ma ci sono Loop che funzionano senza problemi con 180 persone!"
+      "answer": "Consigliamo di avere un minimo di 20 persone in un gruppo: dopo 20 indirizzi di solito non riconosci più nulla nella borsa, in modo da poter continuare a scambiare. <b> Non c'è un vero massimo,</b> sta a te decidere quello che ancora funziona! Nei Paesi Bassi un Loop è in media di 45 persone. Ma ci sono Loop che funzionano senza problemi con 180 persone!"
     },
     {
       "question": "Cosa succede se qualcuno si trasferisce di casa e vuole unirsi in un'altra zona?",
