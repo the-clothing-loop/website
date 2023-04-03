@@ -121,12 +121,14 @@ export default function Events() {
             className="flex flex-col md:flex-row pb-4 md:pb-8"
             onSubmit={submitDistance}
           >
-            <div
-              className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
-              onClick={handleOpenModalGetLocation}
-            >
-              {t("eventsNear")}
-            </div>
+            <Link to="location-modal">
+              <div
+                className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
+                //onClick={handleOpenModalGetLocation}
+              >
+                {t("eventsNear")}
+              </div>
+            </Link>
             <DistanceDropdown
               className="w-[150px] md:w-[190px] py-2 md:py-0 md:mr-8"
               selectedDistance={values.distance!}
