@@ -98,7 +98,7 @@ export default function CreateEvent() {
         <main className="container lg:max-w-screen-lg mx-auto md:px-20 pt-4">
           <div className="bg-teal-light p-8">
             <h1 className="text-center font-medium text-secondary text-5xl mb-6">
-              Create a Swapping Event
+              {t("createEvent")}
             </h1>
             <div className="w-full md:pl-4">
               <form onSubmit={onSubmit}>

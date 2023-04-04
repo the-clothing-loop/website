@@ -251,5 +251,6 @@
   "addToCalendar": "Add event to your calendar",
   "time": "Time",
   "contactHost": "Contact Host",
-  "eventDetails": "Event Details"
+  "eventDetails": "Event Details",
+  "createEvent" : "Create Event"
 }

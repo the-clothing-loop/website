@@ -160,7 +160,7 @@ export default function Events() {
                 className="btn btn-primary flex w-fit md:mb-0 md:float-right"
               >
                 <span className="pr-2 feather feather-plus" />
-                Create Event
+                {t("createEvent")}
               </Link>
             ) : null}
           </div>
