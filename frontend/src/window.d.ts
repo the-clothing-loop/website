@@ -1,4 +1,4 @@
-import type { Notifier } from "@airbrake/browser";
+import "goscope2-sdk-js/sdk/js";
 
 interface GoatCounter {
   path: string | ((p: string) => string | null);
@@ -37,7 +37,6 @@ interface GoatCounter {
 
 export declare global {
   interface Window {
-    airbrake?: Notifier;
     MapboxGeocoder: MapboxGeocoder;
     goatcounter: GoatCounter;
   }

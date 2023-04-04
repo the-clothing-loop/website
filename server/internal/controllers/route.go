@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/gin-gonic/gin"
+	"github.com/the-clothing-loop/website/server/internal/app/auth"
+	"github.com/the-clothing-loop/website/server/internal/models"
 )
 
 func RouteOrderGet(c *gin.Context) {

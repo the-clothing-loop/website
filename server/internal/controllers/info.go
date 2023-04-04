@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/gin-gonic/gin"
+	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 )
 
 func InfoGet(c *gin.Context) {

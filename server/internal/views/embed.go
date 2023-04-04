@@ -6,9 +6,9 @@ import (
 	"io/fs"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/glog"
+	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 )
 
 func mustParseFS(fs fs.FS, patterns ...string) *template.Template {

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
 
-import { DataExport } from "../components/DataExport";
 import { AuthContext } from "../providers/AuthProvider";
 import {
   chainGet,
@@ -100,21 +99,18 @@ export default function ChainsList() {
   }
 
   return (
-    <div className={`container mx-auto ${chains ? "" : "animate-pulse"}`}>
-      <div className="flex flex-row justify-between px-4 md:px-20 py-4">
+    <div
+      className={`container mx-auto -mb-8 lg:-mb-16 ${
+        chains ? "" : "animate-pulse"
+      }`}
+    >
+      <div className="flex flex-row px-4 md:px-20 py-4">
         <h2 className="text-2xl font-bold mb-3">{`${
           chains?.length || 0
         } Clothing Loops`}</h2>
-        {chains ? (
-          <DataExport chains={chains} />
-        ) : (
-          <button className="btn btn-outline btn-primary" disabled>
-            ...
-          </button>
-        )}
       </div>
 
-      <div className="overflow-x-auto pb-10">
+      <div className="overflow-x-auto pb-36">
         <table className="table table-compact w-full">
           <thead>
             <tr>
@@ -146,7 +142,11 @@ export default function ChainsList() {
                   );
 
                 return (
-                  <tr key={chain.uid}>
+                  <tr
+                    key={chain.uid}
+                    className="[&_td]:hover:bg-base-200/[0.6] [&_td]:focus:bg-primary/[0.3]"
+                    tabIndex={-1}
+                  >
                     <td className="font-bold w-32 whitespace-normal">
                       {chain.name}
                     </td>
@@ -161,11 +161,11 @@ export default function ChainsList() {
                       (!userChain && authUser?.is_root_admin) ? (
                         chain.published ? (
                           <div className="tooltip" data-tip="published">
-                            <span className="feather feather-eye  text-lg text-green" />
+                            <span className="feather feather-eye text-lg text-green" />
                           </div>
                         ) : (
                           <div className="tooltip" data-tip="draft">
-                            <span className="feather feather-eye-off  text-lg text-red" />
+                            <span className="feather feather-eye-off text-lg text-red" />
                           </div>
                         )
                       ) : (
@@ -187,8 +187,9 @@ export default function ChainsList() {
                             }`}
                             to={`/loops/${chain.uid}/members`}
                           >
+                            <span className="feather feather-arrow-right sm:ml-3 ltr:hidden"></span>
                             <span className="max-xs:hidden">{t("view")}</span>
-                            <span className="feather feather-arrow-right sm:ml-3"></span>
+                            <span className="feather feather-arrow-left sm:mr-3 rtl:hidden"></span>
                           </Link>
                         ) : null}
                         <div className="dropdown dropdown-left">
@@ -203,17 +204,17 @@ export default function ChainsList() {
                           {userChain ? (
                             <ul
                               tabIndex={0}
-                              className={`dropdown-content menu shadow bg-base-100 w-52 ${
-                                userChainPokeable ? "" : "h-full"
+                              className={`dropdown-content menu shadow bg-base-100 w-64 ${
+                                isUserAdmin ? "h-full" : ""
                               }`}
                             >
                               <li
-                                className={userChainPokeable ? "" : "h-full"}
+                                className={isUserAdmin ? "h-full" : ""}
                                 key="leave"
                               >
                                 <a
                                   className={`text-red font-bold ${
-                                    userChainPokeable ? "" : "h-full"
+                                    isUserAdmin ? "h-full" : ""
                                   }`}
                                   href="#"
                                   onClick={(e) =>
@@ -225,7 +226,7 @@ export default function ChainsList() {
                                     : t("leaveWaitlist")}
                                 </a>
                               </li>
-                              {userChainPokeable ? (
+                              {isUserAdmin ? null : userChainPokeable ? (
                                 <li key="poke">
                                   <a
                                     className="font-bold"
@@ -237,7 +238,27 @@ export default function ChainsList() {
                                     {t("remindHost")}
                                   </a>
                                 </li>
-                              ) : null}
+                              ) : (
+                                <li
+                                  key="no-poke"
+                                  className="disabled whitespace-normal text-left cursor-not-allowed"
+                                >
+                                  <span className="block !text-black">
+                                    <span className="block pb-1 font-bold">
+                                      <span className="opacity-50">
+                                        {t("remindHost")}
+                                      </span>
+                                      <i className="feather feather-slash ml-1 rtl:ml-0 rtl:mr-1"></i>
+                                    </span>
+                                    <span
+                                      className="text-xs"
+                                      dangerouslySetInnerHTML={{
+                                        __html: t("waitToRemindHost"),
+                                      }}
+                                    ></span>
+                                  </span>
+                                </li>
+                              )}
                             </ul>
                           ) : null}
                         </div>

@@ -5,7 +5,10 @@ export function GenderBadges(t: TFunction, arr: Array<string | Genders>) {
   return arr
     .sort((a, z) => a.localeCompare(z))
     .map((g) => (
-      <span className="badge badge-outline bg-white mr-2" key={g}>
+      <span
+        className="badge badge-outline bg-white mr-2 rtl:first:mr-0"
+        key={g}
+      >
         {t(GenderI18nKeys[g])}
       </span>
     ));
@@ -30,7 +33,7 @@ export function SizeBadges(t: TFunction, arr: Array<string | Sizes>) {
     .sort((a, z) => a.localeCompare(z))
     .map((s) => (
       <span
-        className="badge badge-outline text-xs tracking-widest bg-white px-1.5 mr-2 tooltip tooltip-top"
+        className="badge badge-outline text-xs tracking-widest bg-white px-1.5 mr-2 rtl:first:mr-0 tooltip tooltip-top"
         key={s}
         data-tip={t(SizeI18nKeys[s])}
       >

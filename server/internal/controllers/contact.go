@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
-	"github.com/CollActionteam/clothing-loop/server/internal/views"
+	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/views"
 
 	"github.com/gin-gonic/gin"
 )

@@ -231,6 +231,7 @@
   "toolkitFolder": "Toolkit Ordner",
   "editAccount": "Konto bearbeiten",
   "remindHost": "Host erinnern",
+  "waitToRemindHost": "Sie können Hosts einmal pro Woche erinnern. Die meisten Hosts werden sich innerhalb von 4 Wochen mit Ihnen in Verbindung setzen.<br/> Alle Hosts sind Freiwillige, sodass es eine Weile dauern könnte.",
   "reminderEmailSent": "Erinnerung per E-Mail gesendet",
   "reasonForDenyingJoin": "Bitte gib einen Grund zur Ablehnung der Anfrage an",
   "tooFarAway": "Zu weit weg",

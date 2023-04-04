@@ -3,12 +3,13 @@ package mocks
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"testing"
 	"time"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	"github.com/golang/glog"
+	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+	"github.com/the-clothing-loop/website/server/internal/models"
 
 	Faker "github.com/jaswdr/faker"
 	uuid "github.com/satori/go.uuid"
@@ -75,14 +76,23 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	return user, user.UserToken[0].Token
 }
 func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (chain *models.Chain, user *models.User, token string) {
+	var latitude, longitude float64
+	if faker.RandomNumber(5)+1 > 4 { // 4 / 6
+		// use the netherlands
+		latitude = float64(faker.Int64Between(5169917, 5237403)) / 100000
+		longitude = float64(faker.Int64Between(488969, 689583)) / 100000
+	} else {
+		latitude = faker.Address().Latitude()
+		longitude = faker.Address().Latitude()
+	}
 	chain = &models.Chain{
 		UID:              uuid.NewV4().String(),
 		Name:             "Fake " + faker.Company().Name(),
 		Description:      faker.Company().CatchPhrase(),
 		Address:          faker.Address().Address(),
-		Latitude:         faker.Address().Latitude(),
-		Longitude:        faker.Address().Latitude(),
-		Radius:           float32(faker.RandomFloat(3, 2, 30)),
+		Latitude:         latitude,
+		Longitude:        longitude,
+		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
 		Published:        !o.IsNotPublished,
 		OpenToNewMembers: o.IsOpenToNewMembers,
 		Sizes:            MockSizes(true),
@@ -138,15 +148,22 @@ func shuffleSlice[T any](arr []T) []T {
 
 func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint, o MockEventOptions) (event *models.Event) {
 	event = &models.Event{
-		UID:         uuid.NewV4().String(),
-		Name:        "Fake " + faker.Company().Name(),
-		Description: faker.Company().CatchPhrase(),
-		Latitude:    faker.Address().Latitude(),
-		Longitude:   faker.Address().Latitude(),
-		Date:        time.Now().Add(time.Duration(faker.IntBetween(-20, 20)) * time.Hour),
-		Genders:     MockGenders(false),
-		UserID:      userID,
-		ChainID:     zero.IntFrom(int64(chainID)),
+		UID:  uuid.NewV4().String(),
+		Name: "Fake " + faker.Company().Name(),
+		Description: strings.Join([]string{
+			faker.Lorem().Sentence(6),
+			"",
+			faker.Lorem().Sentence(12),
+			faker.Lorem().Sentence(20),
+			faker.Lorem().Sentence(2),
+		}, "\n"),
+		Latitude:  faker.Address().Latitude(),
+		Longitude: faker.Address().Latitude(),
+		Address:   faker.Address().Address(),
+		Date:      time.Now().Add(time.Duration(faker.IntBetween(1, 20)) * time.Hour),
+		Genders:   MockGenders(false),
+		UserID:    userID,
+		ChainID:   zero.IntFrom(int64(chainID)),
 	}
 
 	if err := db.Create(&event).Error; err != nil {

@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
 	ics "github.com/arran4/golang-ical"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
+	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/app/auth"
+	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+	"github.com/the-clothing-loop/website/server/internal/models"
 	"gopkg.in/guregu/null.v3/zero"
 )
 

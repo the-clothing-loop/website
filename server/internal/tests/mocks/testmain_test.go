@@ -4,8 +4,8 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/golang/glog"
+	"github.com/the-clothing-loop/website/server/internal/app"
 
 	"gorm.io/gorm"
 )

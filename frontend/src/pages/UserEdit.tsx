@@ -185,7 +185,8 @@ export default function UserEdit() {
 
               <button type="submit" className="btn btn-primary ml-3">
                 {t("submit")}
-                <span className="feather feather-arrow-right ml-4"></span>
+                <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
+                <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
               </button>
             </div>
           </form>
