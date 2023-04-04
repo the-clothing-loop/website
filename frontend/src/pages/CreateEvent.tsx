@@ -14,7 +14,7 @@ import CategoriesDropdown from "../components/CategoriesDropdown";
 
 import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "../util/dayjs";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 interface FormJsValues {
   address: string;
@@ -30,7 +30,6 @@ interface FormHtmlValues {
 
 export default function CreateEvent() {
   const { t } = useTranslation();
-  const history = useHistory();
   const authUser = useContext(AuthContext).authUser;
   const { addToastError } = useContext(ToastContext);
   const [jsValues, setJsValue, setJsValues] = useForm<FormJsValues>({
@@ -53,8 +52,8 @@ export default function CreateEvent() {
       name: values.name,
       description: jsValues.description,
       address: jsValues.address,
-      latitude: 23.766492,
-      longitude: 0.303334,
+      latitude: -1,
+      longitude: -1,
       genders: jsValues.genders,
       date: dayjs(values.date).format(),
       user_name: authUser!.name,
@@ -77,7 +76,6 @@ export default function CreateEvent() {
             title: "New Event",
             event: true,
           });
-        history.replace("/events");
       } catch (err: any) {
         console.error("Error creating event:", err, newEvent);
         addToastError(GinParseErrors(t, err), err?.status);
@@ -158,7 +156,6 @@ export default function CreateEvent() {
                         setJsValue("genders", gs);
                       }}
                     />
-                    {console.log(jsValues.genders)}
                   </div>
                 </div>
                 <div className="mt-4">
