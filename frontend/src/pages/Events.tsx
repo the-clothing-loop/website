@@ -142,11 +142,9 @@ export default function Events() {
               </button>
             </form>
             {authUser ? (
-              <Link to="/create-event">
-                <button className="btn btn-primary inline w-fit mb-4 md:mb-0 md:float-right">
-                  <span className="pr-2 feather feather-plus" />
+              <Link to="/create-event" className="btn btn-primary flex w-fit md:mb-0 md:float-right">
+                <span className="pr-2 feather feather-plus" />
                   Create Event
-                </button>
               </Link>
             ) : null}
           </div>
