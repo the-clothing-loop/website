@@ -14,7 +14,7 @@ import SearchBar, {
   SearchValues,
   toUrlSearchParams,
 } from "../components/FindChain/SearchBar";
-import { GenderBadges, SizeBadges } from "../components/Badges";
+import { SizeBadges } from "../components/Badges";
 import { circleRadiusKm } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
 
@@ -510,19 +510,11 @@ export default function FindChain({ location }: { location: Location }) {
                       )
                     ) : null}
                     <div className="flex flex-col w-full text-sm">
-                      {chain.genders?.length ? (
-                        <>
-                          <h2 className="mb-1">{t("categories")}:</h2>
-                          <div className="mb-2">
-                            {GenderBadges(t, chain.genders)}
-                          </div>
-                        </>
-                      ) : null}
                       {chain.sizes?.length ? (
                         <>
                           <h2 className="mb-1">{t("sizes")}:</h2>
                           <div className="mb-2">
-                            {SizeBadges(t, chain.sizes)}
+                            <SizeBadges s={chain.sizes} g={chain.genders} />
                           </div>
                         </>
                       ) : null}

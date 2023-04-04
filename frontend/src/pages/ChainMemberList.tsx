@@ -32,7 +32,7 @@ import {
 import { Chain, UID, User, UserChain } from "../api/types";
 import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
-import { GenderBadges, SizeBadges } from "../components/Badges";
+import { SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { routeGetOrder, routeSetOrder } from "../api/route";
@@ -206,13 +206,11 @@ export default function ChainMemberList() {
               <p className="text-lg mb-6 break-words">{chain.description}</p>
 
               <dl>
-                <dt className="font-bold mb-1">{t("categories")}</dt>
-                <dd className="mb-2">
-                  {chain?.genders && GenderBadges(t, chain.genders)}
-                </dd>
                 <dt className="font-bold mb-1">{t("sizes")}</dt>
                 <dd className="mb-2">
-                  {chain?.sizes && SizeBadges(t, chain.sizes)}
+                  {chain?.sizes ? (
+                    <SizeBadges s={chain.sizes} g={chain.genders} />
+                  ) : null}
                 </dd>
                 <dt className="font-bold mb-2">{t("participants")}</dt>
                 <dd className="text-sm mb-1">
@@ -682,7 +680,7 @@ function ApproveTable(props: {
                           className={`block min-w-[12rem] rounded-lg whitespace-normal [&_span]:mb-2 -mb-2 `}
                           tabIndex={0}
                         >
-                          {SizeBadges(t, u.sizes)}
+                          <SizeBadges s={u.sizes} />
                         </span>
                       </td>
                       <td className="text-center">
@@ -883,7 +881,7 @@ function ParticipantsTable(props: {
                         className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
                         tabIndex={0}
                       >
-                        {SizeBadges(t, u.sizes)}
+                        <SizeBadges s={u.sizes} />
                       </span>
                     </td>
                     <td className="text-center">
