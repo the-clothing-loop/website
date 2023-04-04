@@ -1,6 +1,5 @@
-import { useContext, FormEvent } from "react";
+import { useContext, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import { TextForm } from "../components/FormFields";
@@ -32,11 +31,12 @@ export default function CreateEvent() {
   const { t } = useTranslation();
   const authUser = useContext(AuthContext).authUser;
   const { addToastError } = useContext(ToastContext);
-  const [jsValues, setJsValue, setJsValues] = useForm<FormJsValues>({
+  const [jsValues, setJsValue] = useForm<FormJsValues>({
     address: "",
     description: "",
     genders: [],
   });
+  const [submitted, setSubmitted] = useState(false);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -52,8 +52,8 @@ export default function CreateEvent() {
       name: values.name,
       description: jsValues.description,
       address: jsValues.address,
-      latitude: -1,
-      longitude: -1,
+      latitude: 52.377956,
+      longitude: 4.89707,
       genders: jsValues.genders,
       date: dayjs(values.date).format(),
       user_name: authUser!.name,
@@ -76,6 +76,7 @@ export default function CreateEvent() {
             title: "New Event",
             event: true,
           });
+        setSubmitted(true);
       } catch (err: any) {
         console.error("Error creating event:", err, newEvent);
         addToastError(GinParseErrors(t, err), err?.status);
@@ -85,6 +86,8 @@ export default function CreateEvent() {
 
   if (!authUser) {
     return <Redirect to="/events/" />;
+  } else if (submitted) {
+    return <Redirect to={"/thankyou"} />;
   } else {
     return (
       <>
