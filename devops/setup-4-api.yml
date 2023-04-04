@@ -64,6 +64,7 @@
         api_config_smtp_pass: "{{ smtp_cl_production_password }}"
         api_config_goscope2_user: "{{ goscope2_production_user }}"
         api_config_goscope2_pass: "{{ goscope2_production_pass }}"
+        api_config_sendinblue_api_key: "{{ sendinblue_api_key }}"
       ansible.builtin.template:
         src: templates/config.yml.j2
         dest: /home/clothingloop/opt/config.prod.yml

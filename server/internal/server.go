@@ -17,6 +17,10 @@ func Routes() *gin.Engine {
 	db := app.DatabaseInit()
 	app.MailInit()
 
+	if app.Config.ENV == app.EnvEnumProduction || (app.Config.SENDINBLUE_API_KEY != "" && app.Config.ENV == app.EnvEnumDevelopment) {
+		app.SendInBlueInit()
+	}
+
 	// set gin mode
 	if app.Config.ENV == app.EnvEnumProduction || app.Config.ENV == app.EnvEnumAcceptance {
 		gin.SetMode(gin.ReleaseMode)
