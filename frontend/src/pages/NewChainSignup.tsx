@@ -135,7 +135,8 @@ export default function Signup() {
                 <div className="mt-4">
                   <button type="submit" className="btn btn-primary">
                     {t("next")}
-                    <span className="feather feather-arrow-right ml-4"></span>
+                    <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
+                    <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
                   </button>
                 </div>
               </form>

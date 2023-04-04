@@ -62,7 +62,8 @@ export default function Counters() {
               className="btn btn-primary btn-circle"
               aria-label="our impact"
             >
-              <span className="feather feather-arrow-right" />
+              <span className="feather feather-arrow-right rtl:hidden" />
+              <span className="feather feather-arrow-left ltr:hidden" />
             </a>
           </div>
           <div className="opacity-100 whitespace-normal">

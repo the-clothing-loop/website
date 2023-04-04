@@ -402,7 +402,7 @@ export default function FindChain({ location }: { location: Location }) {
         <div className="relative h-[80vh]">
           <div ref={mapRef} className="h-full"></div>
 
-          <div className="flex flex-col absolute z-30 bottom-[5%] right-2.5">
+          <div className="flex flex-col absolute z-30 bottom-[5%] right-2.5 rtl:right-auto rtl:left-2.5">
             <button
               className="btn btn-circle btn-outline glass bg-white/70 hover:bg-white/90 mb-4"
               onClick={() => handleLocation()}
@@ -440,7 +440,7 @@ export default function FindChain({ location }: { location: Location }) {
           </div>
 
           <div
-            className={`absolute z-30 top-4 left-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
+            className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
               selectedChains.length ? "" : "hidden"
             }`}
           >
@@ -448,9 +448,10 @@ export default function FindChain({ location }: { location: Location }) {
               key="close"
               type="button"
               onClick={() => setSelectedChains([])}
-              className="absolute top-2 right-2 btn btn-sm btn-circle btn-outline"
+              className="absolute top-2 right-2 rtl:right-auto rtl:left-2 btn btn-sm btn-circle btn-outline"
             >
-              <span className="feather feather-arrow-left"></span>
+              <span className="feather feather-arrow-left rtl:hidden"></span>
+              <span className="feather feather-arrow-right ltr:hidden"></span>
             </button>
             {selectedChains.map((chain) => {
               const userChain = authUser?.chains.find(
@@ -458,11 +459,11 @@ export default function FindChain({ location }: { location: Location }) {
               );
               return (
                 <div
-                  className="p-4 w-full mb-4 rounded-lg bg-base-100"
+                  className="p-4 w-full mb-4 rounded-lg shadow-md bg-base-100"
                   key={chain.uid}
                 >
                   <div className="mb-2">
-                    <h1 className="font-semibold text-secondary mb-3 pr-10 break-words">
+                    <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
                       {chain.name}
                     </h1>
                     {chain.description ? (
@@ -558,12 +559,13 @@ export default function FindChain({ location }: { location: Location }) {
                         className="btn btn-sm btn-primary"
                       >
                         {t("join")}
-                        <span className="feather feather-arrow-right ml-3"></span>
+                        <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
+                        <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
                       </button>
                     ) : (
                       <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
                         {t("closed")}
-                        <span className="feather feather-lock ml-3"></span>
+                        <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
                       </p>
                     )}
                   </div>

@@ -7,19 +7,31 @@
     },
     {
       "question": "Tutte le taglie di abbigliamento possono essere nella stessa borsa?",
-      "answer": "Solitamente le borse miste funzionano perfettamente bene in quanto le dimensioni variano per marca e le proporzioni sono anche diverse. Si consiglia di avere un mix di articoli taglia 36 - 42 (S, M e L) e avviare un nuovo Clothing Loop per taglie più piccole o più grandi."
+      "answer": "No, non ci sono regole fisse qui, ma tieni a mente il sistema funziona meglio quando in equilibrio. <b>Ogni borsa è diversa.</b> Delle volte trova qualcosa d'interessante, a volte non si trova nulla. Ma ogni volta che un capo viene indossato di nuovo è una piccola gran vittoria!"
     },
     {
-      "question": "Come evitare \"Chi trova tiene, chi perde piange\"?",
-      "answer": "Non ci sono garanzie che troverai qualcosa che ti piace. A volte un paio di borse passeranno casa tua che potrebbe non avere un oggetto per te. Ma ricorda: trovare un oggetto da sogno vale più che avere 10 oggetti nel tuo guardaroba che non indossi. E rendere qualcun altro molto felice con qualcosa che stava raccogliendo la polvere nel tuo guardaroba è anche una significativa (e divertente!) parte della mentalità Clothing Loop!"
+      "question": "Dovo donare la stessa quantità di capi che ho preso dalla borsa?",
+      "answer": "Non necessariamente, ma tieni a mente che il sistema funziona meglio se c'è un buon equilibrio tra donare e prendere. Meglio evitare di donare vestiti usurati, macchiati o danneggiati in quanto non sono mai benvenuti."
     },
     {
-      "question": "Cosa fare con i vestiti ingombranti (come i cappotti invernali) che non entrano nella borsa?",
+      "question": "In una borsa ci possono essere capi di abbigliamento di tutte le taglie?",
       "answer": "Gli oggetti grandi possono essere fotografati e condivisi tramite il canale di comunicazione, o tramite l'app Glide. In un messaggio privato, le persone possono rispondere e organizzare il pick up."
     },
     {
       "question": "Posso mettere anche le scarpe nella borsa?",
       "answer": "La risposta breve è sì, ma tieni a mente: le scarpe sono più difficili da passare dei vestiti. Ci sono molte più taglie, e mostrano segni di usura molto più velocemente degli indumenti. Quindi sii molto selettivo con le scarpe! Aggiungi solo paia “come nuove” e non più di 2 paia per borsa."
+    },
+    {
+      "question": "Cosa fare con i vestiti ingombranti (come i cappotti invernali) che non entrano nella borsa?",
+      "answer": "I vestiti ingombranti possono essere fotografati e condivisi tramite il tuo canale di comunicazione o tramite l'app <a target='_blank' href='https://template-clothing-loop.glideapp.io'>Glide</a>. In un messaggio privato, le persone possono rispondere e organizzare il ritiro."
+    },
+    {
+      "question": "Posso anche mettere delle scarpe nella borsa?",
+      "answer": "Spetta al tuo host locale decidere. Se il tuo Loop ti permette di aggiungere scarpe nella borsa, aggiungi solo coppie “buone come nuove”, e <b>non più di 2 paia per sacchetto</b>. E si prega di avvolgerli in una borsa separata per evitare che tocchino i vestiti. "
+    },
+    {
+      "question": "Ho l'errore: “il tuo account esiste già”.",
+      "answer": "Hai già creato un account al Loop Abbigliamento. Per iscriverti a un nuovo ciclo, dovrai prima effettuare il login:<ol><li>Clicca nell'angolo in alto a destra al momento dell'accesso.</li><li>Inserisci l'indirizzo email utilizzato per registrare il tuo Loop.</li><li>Controlla la tua email (e la cartella spam!) per il nostro link di verifica. Utilizziamo un link invece di una password!</li><li>Allora potrai iscriverti a un nuovo Loop.</li></ol>"
     }
   ],
   "faqForHosts": "FAQ per gli Hosts",
@@ -55,6 +67,30 @@
     {
       "question": "Cosa fare se il Clothing Loop non funziona bene?",
       "answer": "Se la qualità dell'abbigliamento non è abbastanza elevata, la gente potrebbe lasciare il Loop. Assicurati che tutti condividano la responsabilità di aggiungere solo oggetti di buona qualità.<br/><br/>Hai trovato qualcosa che non dovrebbe essere nel Loop? Toglilo e donalo a un contenitore di abbigliamento. In questo modo può ancora essere riciclato. In caso di dubbio, chiedi alla persona dopo te se è d'accordo e poi decidi.<br/><br/>Un rasoio per tessuto può prolungare enormemente la vita di un oggetto di abbigliamento! Puoi condividere questo consiglio all'interno della tua comunità.<br/><br/>E ultimo ma non meno importante, dai il buon esempio; condividi alcune belle foto e incoraggia gli altri a fare lo stesso!"
+    },
+    {
+      "question": "Come gestire un grande gruppo di persone nel canale di comunicazione?",
+      "answer": "<ul class='list-none'>Soprattutto quando i gruppi diventano più grandi, è importante assicurarsi che le persone non siano bombardate di messaggi (irrilevanti) . È possibile impostare alcune regole per ciò che dovrebbe e non dovrebbe essere condiviso tramite l'app del gruppo. Per esempio:<ul class='list-none'><li><b>Sì,</b> nell'app:<ul><li>Selfie con cose carine che hai trovato nella borsa o di cose carine che gli stai aggiungendo.</li><li>Complimenti ad altri</li><li>Logistica e aggiornamenti organizzativi rilevanti</li></ul></li><li><b>No,</b> non nell'app:<ul><li>Tutto ciò che non è correlato al Clothing Loop (richieste di sondaggi, inviti per nuovi gruppi, raccolta di fondi, meme, ecc). Se vuoi chiedere a tutti l'input su qualcosa, usa invece un'app di sondaggio come LouLou</li></ul></li></ul>"
+    },
+    {
+      "question": "Cosa succede se non ho più tempo per gestire il Clothing Loop che ho iniziato?",
+      "answer": "Usa il gruppo! Chiedi se qualcun altro vuole aiutare a gestire il Clothing Loop. Nel fratempo qualcuno potrebbe o vorrebbe voler aiutare ad assistere o gestire completamente."
+    },
+    {
+      "question": "E se qualcuno vuole unirsi ma vive troppo lontano?",
+      "answer": "Se qualcuno si è iscritto al tuo Loop ma vive troppo lontano dalla tua area Loop, spetta a te decidere se accettare l'adesionee. Una cosa che puoi fare per diminuire la distanza tra gli indirizzi, è quello di chiedere a quella persona di trovare altri partecipanti tra la loro zona e la posizione originale Loop."
+    },
+    {
+      "question": "Qual è la dimensione ideale di un gruppo?",
+      "answer": "Consigliamo di avere un minimo di 20 persone in un gruppo: dopo 20 indirizzi di solito non riconosci più nulla nella borsa, in modo da poter continuare a scambiare. <b> Non c'è un vero massimo,</b> sta a te decidere quello che ancora funziona! Nei Paesi Bassi un Loop è in media di 45 persone. Ma ci sono Loop che funzionano senza problemi con 180 persone!"
+    },
+    {
+      "question": "Cosa succede se qualcuno si trasferisce di casa e vuole unirsi in un'altra zona?",
+      "answer": "Tu come host Loop può rimuoverli dal tuo Loop quando hai effettuato l'accesso sul nostro sito web. Se vogliono unirsi di nuovo nel loro nuovo quartiere, chiedi loro d'iscriversi di nuovo semplicemente con il loro nuovo indirizzo."
+    },
+    {
+      "question": "Cosa fare se il Loop di vestiti non funziona bene?",
+      "answer": "Assicurarsi che tutti condividano la responsabilità di aggiungere solo oggetti di buona qualità.<br/><br/>Vedi qualcosa che non dovrebbe essere in una borsa? Prova a donarlo al tuo programma locale di riciclaggio dei tessili. In caso di dubbio, chieda alla persona accanto a te nella lista degli indirizzi se é d'accordo. E 'bene avere un paio di persone lungo il percorso che funzionano come ‘checkpoint’ , per assicurarsi che le borse rimangano in buone condizioni. Se la qualità dell'abbigliamento non è abbastanza alta, la gente potrebbe lasciare il Loop e questo sarebbe un peccato!<br/><br/>Un <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'> Un levapelucchi Elettrico o Rasoio Elettrico per Tessuti </a> può prolungare la vita di un capo di abbigliamento enormemente! Puoi condividere questo consiglio all'interno della tua comunità.<br/><br/>E come ultimo, ma non meno importante, fai un buon esempio: condividi alcune belle foto e incoraggia gli altri a fare lo stesso! Vedere dove finiscono i capi è una motivazione enorme per le persone a donare bei capi ed oggetti ."
     }
   ]
 }

@@ -104,16 +104,19 @@ export default function Home() {
 
       <div className="max-w-screen-xl mx-auto">
         <section className="mb-12 md:mb-24">
-          <div className="hidden md:block overflow-hidden w-full absolute left-0 bg-teal-light">
-            <div className="p-8 ml-[40%] pb-14 flex">
+          <div className="hidden md:block overflow-hidden w-full absolute bg-teal-light">
+            <div className="p-8 ml-[40%] rtl:ml-0 rtl:mr-[40%] pb-14 flex">
               <img src={CirclesFrame} alt="" />
               <img className="pl-2" src={CirclesFrame} alt="" />
             </div>
           </div>
           <div className="relative z-10 flex flex-col md:flex-row">
-            <div className="p-6 md:pt-20 md:pl-40 md:pr-20 md:w-1/2 flex justify-center md:justify-end">
+            <div className="p-6 md:pt-20 md:pl-40 rtl:md:pl-20 md:pr-20 rtl:md:pr-40 md:w-1/2 flex justify-center md:justify-end">
               <div className="max-w-screen-xs md:max-w-[500px]">
-                <h1 className="font-serif font-bold text-accent text-8xl md:text-9xl [&_span]:text-stroke-accent mb-8">
+                <h1
+                  className="font-serif font-bold text-accent text-8xl md:text-9xl [&_span]:text-stroke-accent mb-8 rtl:text-end"
+                  dir="ltr"
+                >
                   Swap, <br />
                   <span>
                     don't <br />
@@ -126,11 +129,12 @@ export default function Home() {
                   onClick={() => history.push("/loops/find")}
                 >
                   {t("findALoop")}
-                  <span className="feather feather-arrow-right ml-3" />
+                  <span className="feather feather-arrow-right ml-3 rtl:hidden" />
+                  <span className="feather feather-arrow-left mr-3 ltr:hidden" />
                 </button>
               </div>
             </div>
-            <div className="md:pt-16 md:pr-20 lg:pr-40 md:w-1/2">
+            <div className="md:pt-16 md:pr-20 lg:pr-40 rtl:pr-0 rtl:md:pl-20 rtl:lg:pl-40 md:w-1/2">
               <img
                 className="w-full lg:max-w-[600px] sm:h-96 md:h-auto object-cover object-top"
                 src="https://images.clothingloop.org/900x/kirsten_en_rosan.jpg"
@@ -188,7 +192,8 @@ export default function Home() {
                   className="hidden md:flex btn btn-outline btn-circle btn-secondary mt-6"
                   aria-label="find loop"
                 >
-                  <span className="feather feather-arrow-right"></span>
+                  <span className="feather feather-arrow-right rtl:hidden"></span>
+                  <span className="feather feather-arrow-left ltr:hidden"></span>
                 </Link>
               </div>
             </div>
@@ -320,7 +325,7 @@ export default function Home() {
 
           <div className="md:w-1/2 flex">
             <div className="relative p-10 md:max-w-[400px] bg-yellow/10 md:bg-transparent">
-              <div className="hidden md:block -z-10 absolute w-full h-[300px] bg-yellow/10 -left-5 bottom-0"></div>
+              <div className="hidden md:block -z-10 absolute w-full h-[300px] bg-yellow/10 ltr:-left-5 rtl:-right-5 bottom-0"></div>
               <h2
                 className="font-serif font-bold text-4xl text-primary-focus [&_span]:text-2xl mb-7"
                 dangerouslySetInnerHTML={{
@@ -342,7 +347,7 @@ export default function Home() {
 
         <section>
           <div className="relative container mx-auto font-serif font-bold text-secondary mb-6 px-6 md:px-0">
-            <div className="hidden md:block bg-teal-light absolute -left-10 top-10 -z-10 w-[600px] h-[200px]">
+            <div className="hidden md:block bg-teal-light absolute ltr:-left-10 rtl:-right-10 top-10 -z-10 w-[600px] h-[200px]">
               &nbsp;
             </div>
             <h2 className="text-6xl md:text-7xl mb-4">

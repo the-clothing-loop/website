@@ -322,9 +322,9 @@ export default function ChainMemberList() {
                   onChange={(e) => setSelectedTable("route")}
                   className="hidden peer"
                 />
-                <div className="relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black pr-2 mr-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
+                <div className="relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black ltr:pr-2 rtl:pl-2 ltr:mr-2 rtl:ml-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
                   {t("route")}
-                  <span className="skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2"></span>
+                  <span className="skew-x-6 rtl:-skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2 rtl:right-auto rtl:-left-2"></span>
                 </div>
               </label>
               <label>
@@ -355,16 +355,16 @@ export default function ChainMemberList() {
                   className="hidden peer"
                 />
                 <div
-                  className={`relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none pl-2 ml-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
+                  className={`relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none ltr:pl-2 rtl:pr-2 ltr:ml-2 rtl:mr-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
                     unapprovedUsers.length
                       ? "text-black"
                       : "text-base-300 cursor-not-allowed"
                   }`}
                 >
-                  <span className="-skew-x-6 w-4 h-12 bg-[inherit] absolute -left-2"></span>
+                  <span className="-skew-x-6 rtl:skew-x-6 w-4 h-12 bg-[inherit] absolute -left-2 rtl:left-0 rtl:-right-2"></span>
                   {t("new")}
                   <span
-                    className={`absolute -top-3 -right-3 block py-1 px-2 rounded-lg ${
+                    className={`absolute -top-3 -right-3 rtl:right-auto rtl:-left-3 block py-1 px-2 rounded-lg ${
                       unapprovedUsers.length
                         ? isAnyTooOld
                           ? "bg-error text-black"

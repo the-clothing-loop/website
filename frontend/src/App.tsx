@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import { AuthProvider } from "./providers/AuthProvider";
 import ScrollToTop from "./util/scrollToTop";
+import getLanguages from "./languages";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -46,11 +47,9 @@ const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 
 const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
+const languages = getLanguages(IS_PRODUCTION);
 
-let base = "/:locale(en|nl|de|fr|es|sv)";
-if (!IS_PRODUCTION) {
-  base = "/:locale(en|nl|de|fr|es|he|sv)";
-}
+const base = `/:locale(${languages.join("|")})`;
 
 export default function App() {
   const { i18n } = useTranslation();
@@ -63,7 +62,7 @@ export default function App() {
         html.setAttribute("dir", "rtl");
         break;
       default:
-        html.removeAttribute("dir");
+        html.setAttribute("dir", "ltr");
     }
   }, [i18n.language]);
 

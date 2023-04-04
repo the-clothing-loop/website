@@ -25,10 +25,11 @@ var emailsTemplates = map[string]*template.Template{
 	"es": mustParseFS(emailsFS, "emails/es/*.gohtml"),
 	"he": mustParseFS(emailsFS, "emails/he/*.gohtml"),
 	"sv": mustParseFS(emailsFS, "emails/sv/*.gohtml"),
+	"it": mustParseFS(emailsFS, "emails/it/*.gohtml"),
 }
 
 func init() {
-	lang := []string{"en", "nl", "de", "fr", "es", "he", "sv"}
+	lang := []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
 
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/headers.json", l))

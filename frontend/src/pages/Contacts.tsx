@@ -103,7 +103,8 @@ const Contacts = () => {
             }`}
           >
             {t("submit")}
-            <span className="feather feather-arrow-right ml-4"></span>
+            <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
+            <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
           </button>
         </form>
       </main>

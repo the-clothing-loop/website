@@ -8,6 +8,8 @@ interface Testimonial {
 enum CarouselOperation {
   PLUS,
   MINUS,
+  PLUS_RTL,
+  MINUS_RTL,
 }
 
 const slideSize = 400;
@@ -25,20 +27,29 @@ export default function Testimonials() {
     let maxScroll = e.scrollWidth - e.getBoundingClientRect().width;
     let scrollLeft = e.scrollLeft;
 
-    let scroll =
-      o === CarouselOperation.PLUS
-        ? scrollLeft + slideSize
-        : scrollLeft - slideSize;
+    console.log("scrollLeft", scrollLeft, slideSize, maxScroll);
+
+    let scroll = 0;
 
     switch (o) {
       case CarouselOperation.PLUS:
-        if (scroll > maxScroll + slideSize - 3) {
-          scroll = 0;
+        if (scrollLeft + slideSize <= maxScroll) {
+          scroll = scrollLeft + slideSize;
         }
         break;
       case CarouselOperation.MINUS:
-        if (scroll + slideSize - 3 < 0) {
-          scroll = maxScroll;
+        if (scrollLeft - slideSize >= 0) {
+          scroll = scrollLeft - slideSize;
+        }
+        break;
+      case CarouselOperation.PLUS_RTL:
+        if (scrollLeft - slideSize <= 0) {
+          scroll = scrollLeft - slideSize;
+        }
+        break;
+      case CarouselOperation.MINUS_RTL:
+        if (scrollLeft + slideSize >= -maxScroll) {
+          scroll = scrollLeft + slideSize;
         }
         break;
     }
@@ -60,18 +71,32 @@ export default function Testimonials() {
         </h2>
         <div className="hidden sm:flex items-center">
           <button
-            className="btn btn-circle btn-secondary opacity-70"
+            className="btn btn-circle btn-secondary opacity-70 rtl:hidden"
             onClick={() => click(CarouselOperation.MINUS)}
             aria-label="previous testimonial"
           >
             <span className="feather feather-arrow-left" />
           </button>
           <button
-            className="btn btn-circle btn-secondary opacity-70 ml-4"
+            className="btn btn-circle btn-secondary opacity-70 rtl:hidden ml-4"
             onClick={() => click(CarouselOperation.PLUS)}
             aria-label="next testimonial"
           >
             <span className="feather feather-arrow-right" />
+          </button>
+          <button
+            className="btn btn-circle btn-secondary opacity-70 ltr:hidden"
+            onClick={() => click(CarouselOperation.MINUS_RTL)}
+            aria-label="previous testimonial"
+          >
+            <span className="feather feather-arrow-right" />
+          </button>
+          <button
+            className="btn btn-circle btn-secondary opacity-70 ltr:hidden mr-4"
+            onClick={() => click(CarouselOperation.PLUS_RTL)}
+            aria-label="next testimonial"
+          >
+            <span className="feather feather-arrow-left" />
           </button>
         </div>
       </div>

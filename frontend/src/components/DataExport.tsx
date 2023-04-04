@@ -69,7 +69,7 @@ export function UserDataExport(props: {
       className="btn btn-secondary btn-outline"
     >
       {t("exportData")}
-      <span className="feather feather-download ml-3" />
+      <span className="feather feather-download ml-3 rtl:ml-0 rtl:mr-3" />
     </CSVLink>
   );
 }

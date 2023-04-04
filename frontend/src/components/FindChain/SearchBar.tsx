@@ -82,7 +82,7 @@ export default function SearchBar(props: Props) {
       className="container mx-auto flex p-4 md:px-20 bg-white flex-wrap sm:flex-nowrap flex-col md:flex-row group"
     >
       <label
-        className="flex lg:w-auto md:flex-grow h-12 md:mr-4 sm:mb-4 md:mb-0"
+        className="flex lg:w-auto md:flex-grow h-12 ltr:md:mr-4 sm:mb-4 md:mb-0"
         aria-label="search"
       >
         <Geocoding
@@ -117,7 +117,7 @@ export default function SearchBar(props: Props) {
             />
           </div>
 
-          <div className="w-36 sm:w-48 pr-0 sm:pr-4">
+          <div className="w-36 sm:w-48 pr-0 sm:pr-4 rtl:sm:pl-4">
             <SizesDropdown
               className="max-xs:dropdown-end"
               filteredGenders={
