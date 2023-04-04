@@ -14,6 +14,8 @@ import CategoriesDropdown from "../components/CategoriesDropdown";
 import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "../util/dayjs";
 import { Redirect } from "react-router-dom";
+import { chainGet } from "../api/chain";
+import { Chain } from "../api/types";
 
 interface FormJsValues {
   address: string;
@@ -37,6 +39,7 @@ export default function CreateEvent() {
     genders: [],
   });
   const [submitted, setSubmitted] = useState(false);
+  const [chain, setChain] = useState<Chain | null>(null);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -47,6 +50,17 @@ export default function CreateEvent() {
       addToastError(t("required") + ": " + t("address"), 400);
       return;
     }
+
+    // get chain for chain_name field
+    let chainUID = authUser!.chains[0].chain_uid;
+    try {
+      chainGet(chainUID).then((res) => {
+        setChain(res.data);
+      });
+    } catch (err: any) {
+      console.error(`chain ${chainUID} does not exist`);
+    }
+
 
     let newEvent: EventCreateBody = {
       name: values.name,
@@ -59,7 +73,7 @@ export default function CreateEvent() {
       user_name: authUser!.name,
       user_email: authUser!.email,
       user_phone: authUser!.phone_number,
-      chain_name: "",
+      chain_name: chain ? chain.name : "",
     };
 
     console.log(`creating event: ${JSON.stringify(newEvent)}`);
@@ -85,10 +99,11 @@ export default function CreateEvent() {
   }
 
   if (!authUser) {
-    return <Redirect to="/events/" />;
+    return <Redirect to={"/events/"} />;
   } else if (submitted) {
     return <Redirect to={"/thankyou"} />;
   } else {
+    {console.log(authUser!.chains)}
     return (
       <>
         <Helmet>
