@@ -24,3 +24,7 @@ smtp_pass: "{{ api_config_smtp_pass }}"
 
 goscope2_user: "{{ api_config_goscope2_user }}"
 goscope2_pass: "{{ api_config_goscope2_pass }}"
+
+{% if api_config_sendinblue_api_key is defined %}
+sendinblue_api_key: "{{ api_config_sendinblue_api_key }}"
+{% endif %}
