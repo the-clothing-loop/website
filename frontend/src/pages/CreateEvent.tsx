@@ -1,4 +1,4 @@
-import { useContext, FormEvent, useState } from "react";
+import { useContext, FormEvent, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
@@ -40,6 +40,23 @@ export default function CreateEvent() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [chain, setChain] = useState<Chain | null>(null);
+  useEffect(() => {
+    getChain();
+  }, []);
+
+  async function getChain() {
+    let chainUID = authUser!.chains[0].chain_uid;
+    let _chain: Chain;
+
+    try {
+      chainGet(chainUID).then((res) => {
+        _chain = res.data;
+        setChain(_chain);
+      });
+    } catch (err: any) {
+      console.error(`chain ${chainUID} does not exist`);
+    }
+  }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -49,16 +66,6 @@ export default function CreateEvent() {
     if (jsValues.address.length < 6) {
       addToastError(t("required") + ": " + t("address"), 400);
       return;
-    }
-
-    // get chain for chain_name field
-    let chainUID = authUser!.chains[0].chain_uid;
-    try {
-      chainGet(chainUID).then((res) => {
-        setChain(res.data);
-      });
-    } catch (err: any) {
-      console.error(`chain ${chainUID} does not exist`);
     }
 
     let newEvent: EventCreateBody = {
@@ -72,7 +79,8 @@ export default function CreateEvent() {
       user_name: authUser!.name,
       user_email: authUser!.email,
       user_phone: authUser!.phone_number,
-      chain_name: chain ? chain.name : "",
+      chain_uid: authUser!.chains[0].chain_uid,
+      chain_name: chain!.name,
     };
 
     console.log(`creating event: ${JSON.stringify(newEvent)}`);
