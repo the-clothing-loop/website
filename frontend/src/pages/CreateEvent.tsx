@@ -14,7 +14,7 @@ import CategoriesDropdown from "../components/CategoriesDropdown";
 
 import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "../util/dayjs";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 interface FormJsValues {
   address: string;
@@ -86,21 +86,7 @@ export default function CreateEvent() {
   }
 
   if (!authUser) {
-    return (
-      <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
-        <h1 className="font-serif text-secondary text-4xl font-bold my-10">
-          You must login to view this page
-        </h1>
-        <div className="flex">
-          <Link to="/users/login" className="btn btn-primary mx-4">
-            {t("login")}
-          </Link>
-          <Link to="/events" className="btn btn-primary mx-4">
-            {t("events")}
-          </Link>
-        </div>
-      </div>
-    );
+    return <Redirect to="/events/" />;
   } else {
     return (
       <>
@@ -153,7 +139,7 @@ export default function CreateEvent() {
                       <span className="label-text">{t("description")}</span>
                     </div>
                     <textarea
-                      className="textarea textarea-secondary w-full"
+                      className="textarea textarea-secondary w-full mb-4"
                       name="description"
                       cols={3}
                       value={jsValues.description}
