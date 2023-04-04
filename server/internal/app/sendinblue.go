@@ -32,6 +32,16 @@ func (sib *sendInBlue) CreateContact(ctx context.Context, email string) error {
 	return nil
 }
 
+func (sib *sendInBlue) ExistsContact(ctx context.Context, email string) error {
+	obj, resp, err := sib.client.ContactsApi.GetContactStats(ctx, email, nil)
+	if err != nil {
+		fmt.Println("Error in ContactsApi->GetContactStats", err.Error())
+		return err
+	}
+	fmt.Println("CreateContact Object:", obj, " CreateContact Response: ", resp)
+	return nil
+}
+
 func (sib *sendInBlue) DeleteContact(ctx context.Context, email string) error {
 	resp, err := sib.client.ContactsApi.DeleteContact(ctx, email)
 	if err != nil {
