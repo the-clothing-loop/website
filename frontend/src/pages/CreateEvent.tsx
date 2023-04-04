@@ -61,7 +61,6 @@ export default function CreateEvent() {
       console.error(`chain ${chainUID} does not exist`);
     }
 
-
     let newEvent: EventCreateBody = {
       name: values.name,
       description: jsValues.description,
@@ -103,7 +102,6 @@ export default function CreateEvent() {
   } else if (submitted) {
     return <Redirect to={"/thankyou"} />;
   } else {
-    {console.log(authUser!.chains)}
     return (
       <>
         <Helmet>
