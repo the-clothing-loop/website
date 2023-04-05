@@ -95,7 +95,7 @@ func Routes() *gin.Engine {
 	v2.POST("/contact/email", controllers.ContactMail)
 
 	// event
-	v2.GET("/event/ical/:uid", controllers.EventICal)
+	v2.GET("/event/:uid/ical", controllers.EventICal)
 	v2.GET("/event/all", controllers.EventGetAll)
 	v2.POST("/event", controllers.EventCreate)
 	v2.PATCH("/event", controllers.EventUpdate)

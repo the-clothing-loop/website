@@ -34,5 +34,5 @@ export function eventDelete(uid: UID) {
 }
 
 export function eventICalURL(uid: UID): string {
-  return axios.defaults.baseURL + "/v2/event/ical/" + uid;
+  return axios.defaults.baseURL + "/v2/event/" + uid + "/ical";
 }
