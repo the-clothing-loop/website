@@ -46,6 +46,7 @@ const FAQ = React.lazy(() => import("./pages/FAQ"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const Events = React.lazy(() => import("./pages/Events"));
 const EventDetails = React.lazy(() => import("./pages/EventDetails"));
+const CreateEvent = React.lazy(() => import("./pages/CreateEvent"));
 
 const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
@@ -94,7 +95,11 @@ export default function App() {
                     path={`${base}/events/:eventUID/`}
                     component={EventDetails}
                   />
-
+                  <Route
+                    exact
+                    path={`${base}/create-event/`}
+                    component={CreateEvent}
+                  />
                   <Route
                     exact
                     path={`${base}/message-submitted`}

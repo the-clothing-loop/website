@@ -1,5 +1,6 @@
 import axios from "./axios";
 import { Event, UID } from "./types";
+import { Sizes } from "./enums";
 
 export function eventGet(uid: UID) {
   return axios.get<Event>("/v2/event", {
@@ -12,7 +13,7 @@ interface EventGetAllParams {
   longitude: number;
   radius: number;
 }
-type EventCreateBody = Omit<Event, "uid">;
+export type EventCreateBody = Omit<Event, "uid">;
 
 export function eventGetAll(params?: EventGetAllParams) {
   return axios.get<Event[]>("/v2/event/all", { params });
