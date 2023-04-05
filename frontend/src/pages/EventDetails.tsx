@@ -77,7 +77,7 @@ export default function EventDetails() {
         load();
       });
   }
-  function handleRemoveImage(e: MouseEvent<HTMLInputElement>) {
+  function handleRemoveImage(e: MouseEvent) {
     e.preventDefault();
 
     console.log("removing image");

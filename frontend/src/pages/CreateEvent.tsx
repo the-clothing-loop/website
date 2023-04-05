@@ -76,9 +76,9 @@ export default function CreateEvent() {
       longitude: 4.89707,
       genders: jsValues.genders,
       date: dayjs(values.date).format(),
+      user_uid: authUser!.uid,
       user_name: authUser!.name,
       user_email: authUser!.email,
-      user_phone: authUser!.phone_number,
       chain_uid: authUser!.chains[0].chain_uid,
       chain_name: chain!.name,
     };
