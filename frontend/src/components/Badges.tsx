@@ -21,10 +21,8 @@ export function SizeBadges({
   g,
 }: {
   s: Array<string | Sizes>;
-  g?: Array<string | Genders>;
+  g?: Array<string | Genders> | null;
 }) {
-  const { t } = useTranslation();
-
   const children = s
     .filter((a) => categories[Genders.children].includes(a as Sizes))
     .sort((a, z) => a.localeCompare(z));
@@ -67,13 +65,6 @@ export function SizeBadges({
     </ul>
   );
 }
-// <span
-//   className="badge badge-outline text-xs tracking-widest bg-white px-1.5 mr-2 rtl:first:mr-0 tooltip tooltip-top"
-//   key={s}
-//   data-tip={t(SizeI18nKeys[s])}
-// >
-//   {SizeLetters[s]}
-// </span>
 
 function SizeCatBadges(props: {
   gender: Genders;
