@@ -876,13 +876,8 @@ function ParticipantsTable(props: {
                         </a>
                       ) : null}
                     </td>
-                    <td className="align-middle">
-                      <span
-                        className="block min-w-[12rem] bg-base-100 rounded-lg whitespace-normal [&_span]:mb-2 -mb-2"
-                        tabIndex={0}
-                      >
-                        <SizeBadges s={u.sizes} />
-                      </span>
+                    <td>
+                      <SizeBadges s={u.sizes} />
                     </td>
                     <td className="text-center">
                       {simplifyDays(t, i18n, userChain.created_at)}
