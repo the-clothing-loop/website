@@ -20,7 +20,7 @@ export function eventGetAll(params?: EventGetAllParams) {
 }
 
 export function eventCreate(event: EventCreateBody) {
-  return axios.post<never>("/v2/event", event);
+  return axios.post<{ uid: UID }>("/v2/event", event);
 }
 
 export type EventUpdateBody = Partial<Event> & { uid: UID };

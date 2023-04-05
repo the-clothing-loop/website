@@ -38,7 +38,7 @@ export default function CreateEvent() {
     description: "",
     genders: [],
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState("");
   const [chain, setChain] = useState<Chain | null>(null);
   useEffect(() => {
     getChain();
@@ -90,14 +90,14 @@ export default function CreateEvent() {
       return;
     } else {
       try {
-        await eventCreate(newEvent);
+        const res = await eventCreate(newEvent);
         if (window.goatcounter)
           window.goatcounter.count({
             path: "new-event",
             title: "New Event",
             event: true,
           });
-        setSubmitted(true);
+        setSubmitted(res.data.uid);
       } catch (err: any) {
         console.error("Error creating event:", err, newEvent);
         addToastError(GinParseErrors(t, err), err?.status);
@@ -108,7 +108,7 @@ export default function CreateEvent() {
   if (!authUser) {
     return <Redirect to={"/"} />;
   } else if (submitted) {
-    return <Redirect to={"/events"} />;
+    return <Redirect to={"/events/" + submitted} />;
   } else {
     return (
       <>

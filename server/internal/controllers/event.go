@@ -70,6 +70,10 @@ func EventCreate(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to create event"))
 		return
 	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"uid": event.UID,
+	})
 }
 
 func EventGetAll(c *gin.Context) {
