@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import { eventGetAll, eventICalURL } from "../api/event";
 import { Event } from "../api/types";
-import { GenderBadges } from "../components/Badges";
+import { SizeBadges } from "../components/Badges";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "../util/dayjs";
@@ -137,9 +137,9 @@ export default function EventDetails() {
                     </dt>
 
                     <dd className="mb-1 ml-4 block">
-                      {event.genders?.length
-                        ? GenderBadges(t, event.genders)
-                        : null}
+                      {event.genders?.length ? (
+                        <SizeBadges g={event.genders} />
+                      ) : null}
                     </dd>
                     <dt className="mb-2 font-bold font-sans text-xl text-teal">
                       {t("contactHost") + ":"}

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Event } from "../api/types";
 import { eventGetAll } from "../api/event";
 import CategoriesDropdown from "../components/CategoriesDropdown";
-import { GenderBadges } from "../components/Badges";
+import { SizeBadges } from "../components/Badges";
 import DistanceDropdown from "../components/DistanceDropdown";
 import useForm from "../util/form.hooks";
 import { GinParseErrors } from "../util/gin-errors";
@@ -273,7 +273,9 @@ function EventItem({ event }: { event: Event }) {
 
           <address className="inline">{event.address}</address>
         </dd>
-        <dd>{event.genders?.length ? GenderBadges(t, event.genders) : null}</dd>
+        <dd>
+          {event.genders?.length ? <SizeBadges g={event.genders} /> : null}
+        </dd>
       </dl>
     </article>
   );

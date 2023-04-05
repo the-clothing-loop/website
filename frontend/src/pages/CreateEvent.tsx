@@ -106,9 +106,9 @@ export default function CreateEvent() {
   }
 
   if (!authUser) {
-    return <Redirect to={"/events/"} />;
+    return <Redirect to={"/"} />;
   } else if (submitted) {
-    return <Redirect to={"/thankyou"} />;
+    return <Redirect to={"/events"} />;
   } else {
     return (
       <>
