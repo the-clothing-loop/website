@@ -1,16 +1,29 @@
 import { Helmet } from "react-helmet";
 
-import { useState, useEffect, useContext, useMemo, Fragment } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  Fragment,
+  MouseEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { eventGetAll, eventICalURL } from "../api/event";
+import {
+  eventGet,
+  eventICalURL,
+  eventRemoveImage,
+  eventUploadImage,
+} from "../api/event";
 import { Event } from "../api/types";
 import { SizeBadges } from "../components/Badges";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "../util/dayjs";
 import useToClipboard from "../util/to-clipboard.hooks";
+import { AuthContext } from "../providers/AuthProvider";
 
 // Media
 const ClothesImage =
@@ -20,6 +33,7 @@ const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 export default function EventDetails() {
   const { t, i18n } = useTranslation();
   const { addToastError } = useContext(ToastContext);
+  const { authUser } = useContext(AuthContext);
   const [event, setEvent] = useState<Event>();
   const addCopyAttributes = useToClipboard();
 
@@ -35,22 +49,47 @@ export default function EventDetails() {
 
   async function load() {
     try {
-      const eventUID = window.location.pathname.split("/").at(-1);
+      const eventUID = window.location.pathname.split("/").at(-1) || "";
 
-      await eventGetAll({
-        latitude: 50.662085,
-        longitude: 87.778691,
-        radius: 30000,
-      }).then((res) => {
-        const _event = res.data;
-        _event.forEach((e) => {
-          if (e.uid == eventUID) setEvent(e);
-        });
+      await eventGet(eventUID).then((res) => {
+        setEvent(res.data);
       });
     } catch (err: any) {
       console.error(err);
       addToastError(GinParseErrors(t, err), err.status);
     }
+  }
+
+  function handleUploadImage(e: MouseEvent<HTMLInputElement>) {
+    e.preventDefault();
+
+    console.log("uploading image");
+    //@ts-ignore
+    let file = (e.target.files as FileList)[0];
+    if (!file) return;
+
+    eventUploadImage(event!.uid, file)
+      .catch((err: any) => {
+        console.error(err);
+        addToastError(GinParseErrors(t, err), err.status);
+      })
+      .then(() => {
+        load();
+      });
+  }
+  function handleRemoveImage(e: MouseEvent<HTMLInputElement>) {
+    e.preventDefault();
+
+    console.log("removing image");
+
+    eventRemoveImage(event!.uid)
+      .catch((err: any) => {
+        console.error(err);
+        addToastError(GinParseErrors(t, err), err.status);
+      })
+      .then(() => {
+        load();
+      });
   }
 
   if (!event) {
@@ -72,6 +111,13 @@ export default function EventDetails() {
   } else {
     const icalURL = eventICalURL(event.uid);
     const icalFilename = `${event.name}.ics`;
+    const isOrganizer = authUser
+      ? authUser.uid === event.user_uid || authUser.is_root_admin
+      : false;
+    let image = ClothesImage;
+    if (event.image_base64) {
+      image = "data:image/jpg;base64," + event.image_base64;
+    }
 
     return (
       <>
@@ -142,7 +188,7 @@ export default function EventDetails() {
                       ) : null}
                     </dd>
                     <dt className="mb-2 font-bold font-sans text-xl text-teal">
-                      {t("contactHost") + ":"}
+                      {t("organizedBy") + ":"}
                     </dt>
                     <dd className="mr-2 mb-1 ml-4">
                       <div>
@@ -158,21 +204,6 @@ export default function EventDetails() {
                           )}
                         >
                           {event.user_email}
-                        </span>
-                      </div>
-                      <div>
-                        <span
-                          className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-phone"
-                          aria-hidden
-                        ></span>
-                        <span
-                          {...addCopyAttributes(
-                            t,
-                            "event-detail-phone-" + event.uid,
-                            "text-lg inline break-all"
-                          )}
-                        >
-                          {event.user_phone}
                         </span>
                       </div>
                     </dd>
@@ -191,9 +222,45 @@ export default function EventDetails() {
                   {t("eventDetails") + ":"}
                 </h2>
                 <p>
-                  <div className="aspect-[4/3] sm:float-right rtl:sm:float-left sm:w-64 mb-4 sm:m-4 ltr:mr-0 rtl:ml-0">
+                  <div className="aspect-[4/3] sm:float-right rtl:sm:float-left sm:w-64 mb-4 sm:m-4 ltr:mr-0 rtl:ml-0 relative">
+                    {isOrganizer ? (
+                      <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2 flex flex-row-reverse">
+                        <label
+                          key="upload-image"
+                          className="tooltip tooltip-bottom"
+                          data-tip={t("uploadImage")}
+                        >
+                          <input
+                            type="file"
+                            id="event-details-form-img-file"
+                            accept="image/png, image/jpeg"
+                            name="filename"
+                            className="hidden"
+                            onInput={handleUploadImage}
+                          />
+                          <div
+                            className="btn btn-ghost bg-white/90 hover:bg-white btn-sm btn-square feather feather-upload"
+                            aria-label="Upload image"
+                          ></div>
+                        </label>
+                        <label
+                          className={`tooltip tooltip-bottom ${
+                            event.image_base64 ? "" : "hidden"
+                          }`}
+                          data-tip={t("remove")}
+                        >
+                          <button
+                            type="button"
+                            className="btn btn-ghost bg-red/70 hover:bg-red/90 btn-sm btn-square feather feather-x"
+                            onClick={handleRemoveImage}
+                            aria-label="remove image"
+                            hidden={event.image_base64 === ""}
+                          ></button>
+                        </label>
+                      </div>
+                    ) : null}
                     <img
-                      src={ClothesImage}
+                      src={image}
                       alt=""
                       className="object-cover h-full w-full"
                     />

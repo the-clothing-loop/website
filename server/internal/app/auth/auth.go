@@ -154,22 +154,33 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 	return false, nil, nil, nil
 }
 
-func AuthenticateEvent(c *gin.Context, db *gorm.DB, eventUID string) (ok bool, user *models.User, event *models.Event) {
-	ok, user, _ = Authenticate(c, db, AuthState1AnyUser, "")
+func AuthenticateEvent(c *gin.Context, db *gorm.DB, eventUID string) (ok bool, authUser *models.User, event *models.Event) {
+	ok, authUser, _ = Authenticate(c, db, AuthState1AnyUser, "")
 	if !ok {
 		return false, nil, nil
 	}
 
 	event = &models.Event{}
-	err := db.Raw(`
+
+	if authUser.IsRootAdmin {
+		err := db.Raw(`SELECT * FROM events WHERE events.uid = ? LIMIT 1`, eventUID).Scan(event).Error
+		if err != nil {
+			c.String(http.StatusNotFound, "event not found")
+			return false, nil, nil
+		}
+
+		return true, authUser, event
+	} else {
+		err := db.Raw(`
 SELECT * events
 WHERE user_id = ? AND uid = ?
 LIMIT 1
-	`, user.ID, eventUID).Scan(event).Error
-	if err != nil || event.ID == 0 {
-		c.String(http.StatusUnauthorized, "user must be connected to event")
-		return false, nil, nil
-	}
+	`, authUser.ID, eventUID).Scan(event).Error
+		if err != nil || event.ID == 0 {
+			c.String(http.StatusUnauthorized, "user must be connected to event")
+			return false, nil, nil
+		}
 
-	return true, user, event
+		return true, authUser, event
+	}
 }
