@@ -1,5 +1,6 @@
+import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { Genders, Sizes } from "../api/enums";
+import { GenderI18nKeys, Genders, SizeI18nKeys, Sizes } from "../api/enums";
 import categories from "../util/categories";
 
 export const SizeLetters: Record<Sizes | string, string> = {
@@ -23,6 +24,8 @@ export function SizeBadges({
   s: Array<string | Sizes>;
   g?: Array<string | Genders> | null;
 }) {
+  const { t } = useTranslation();
+
   const children = s
     .filter((a) => categories[Genders.children].includes(a as Sizes))
     .sort((a, z) => a.localeCompare(z));
@@ -37,6 +40,7 @@ export function SizeBadges({
     <ul className="flex flex-col items-start">
       {women.length || g?.includes(Genders.women) ? (
         <SizeCatBadges
+          t={t}
           key="women"
           gender={Genders.women}
           sizes={women as Sizes[]}
@@ -46,6 +50,7 @@ export function SizeBadges({
       ) : null}
       {men.length || g?.includes(Genders.men) ? (
         <SizeCatBadges
+          t={t}
           key="men"
           gender={Genders.men}
           sizes={men as Sizes[]}
@@ -55,6 +60,7 @@ export function SizeBadges({
       ) : null}
       {children.length || g?.includes(Genders.children) ? (
         <SizeCatBadges
+          t={t}
           key="children"
           gender={Genders.children}
           sizes={children as Sizes[]}
@@ -66,7 +72,11 @@ export function SizeBadges({
   );
 }
 
-function SizeCatBadges(props: {
+function SizeCatBadges({
+  t,
+  ...props
+}: {
+  t: TFunction;
   gender: Genders;
   sizes: Sizes[];
   icon: string;
@@ -74,15 +84,22 @@ function SizeCatBadges(props: {
 }) {
   return (
     <li
-      className={
-        "inline-flex flex-row mb-1 rounded-full py-1 px-2 " + props.color
-      }
+      className={"inline-flex flex-row mb-1 rounded-full px-2 " + props.color}
     >
-      <img src={props.icon} className="h-5" />
-      <ul className="font-semibold flex flex-row text-sm">
+      <div
+        className="tooltip tooltip-top before:text-xs font-semibold"
+        data-tip={t(GenderI18nKeys[props.gender as string])}
+      >
+        <img src={props.icon} className="h-5 my-1" />
+      </div>
+      <ul className="font-semibold flex flex-row text-sm cursor-default">
         {props.sizes.map((s) => {
           return (
-            <li className="ml-1 last:mr-1" key={s}>
+            <li
+              className="ml-1 last:mr-1 tooltip tooltip-top before:text-xs py-1"
+              data-tip={t(SizeI18nKeys[s])}
+              key={s}
+            >
               {SizeLetters[s]}
             </li>
           );
