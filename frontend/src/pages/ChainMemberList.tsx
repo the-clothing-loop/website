@@ -376,7 +376,13 @@ export default function ChainMemberList() {
               </label>
             </div>
             <div className="order-2 sm:justify-self-end sm:self sm:order-3">
-              <UserDataExport chainName={chain.name} chainUsers={users} />
+              {selectedTable !== "unapproved" ? (
+                <UserDataExport
+                  chainName={chain.name}
+                  chainUsers={users}
+                  key="export"
+                />
+              ) : null}
             </div>
           </div>
 
