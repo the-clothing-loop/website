@@ -1,6 +1,8 @@
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import * as focusTrap from "focus-trap";
+//import { mapRef } from "../pages/Events";
+import LocationModal from "../components/LocationModal";
 
 export interface Toast {
   type: "info" | "success" | "warning" | "error";
@@ -12,7 +14,7 @@ export interface Modal {
 }
 interface ModalAction {
   fn: () => void;
-  type: "ghost" | "default" | "secondary" | "success" | "error";
+  type: "ghost" | "default" | "secondary" | "success" | "error" | "location";
   text: string;
 }
 
@@ -198,7 +200,8 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
               ? "flex justify-between"
               : "flex flex-col items-stretch gap-3"
           }
-        >
+         // ref={mapRef}
+          >
           {props.modal.actions.map((a) => {
             let classes = "btn btn-sm";
             switch (a.type) {
@@ -214,6 +217,11 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
               case "secondary":
                 classes += " btn-ghost bg-teal-light text-teal";
                 break;
+              case "location":
+                classes += " btn-ghost bg-teal-light text-teal";
+                return(
+                  LocationModal()
+                );
             }
             return (
               <button

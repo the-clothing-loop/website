@@ -5,7 +5,7 @@ import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import type * as GeoJSONTypes from "geojson";
 
-import { TextForm } from "../components/FormFields";
+import { TextForm } from "./FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
 import { circleRadiusKm } from "../util/maps";
@@ -17,7 +17,6 @@ interface Props {
   initialValues?: LocationValues;
   showBack?: boolean;
 }
-
 
 type GeoJSONPoint = GeoJSONTypes.FeatureCollection<
   GeoJSONTypes.Geometry,
@@ -37,6 +36,8 @@ interface LocationValues {
 }
 
 function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
+  console.log("inside locationmodals");
+
   return {
     type: "FeatureCollection",
     features: point
@@ -56,10 +57,11 @@ function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
   };
 }
 
-export default function ChainDetailsForm({
+/*export default function LocationModal({
   onSubmit,
   initialValues,
-}: Props) {
+}: Props) {*/
+export default function LocationModal() {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
   const history = useHistory();
@@ -71,9 +73,10 @@ export default function ChainDetailsForm({
     radius: 3,
     longitude: 0,
     latitude: 0,
-    ...initialValues,
+    //...initialValues,
   });
 
+  console.log("inside locationmodals");
   useEffect(() => {
     const hasCenter = !!(values.longitude && values.latitude);
     const _map = new mapboxgl.Map({
@@ -191,7 +194,7 @@ export default function ChainDetailsForm({
         return;
       }
 
-      onSubmit(values);
+      // onSubmit(values);
     })();
   }
 
@@ -201,9 +204,9 @@ export default function ChainDetailsForm({
         <div className="aspect-square cursor-pointer" ref={mapRef} />
       </div>
       <div className="md:w-1/2 md:pl-4">
-        <form onSubmit={handleSubmit}>
+        <form>
+          {/*onSubmit={handleSubmit}>*/}
           <p className="mb-2 text-sm">{t("clickToSetLoopLocation")}</p>
-
           <input
             name="range"
             type="range"

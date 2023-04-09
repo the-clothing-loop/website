@@ -45,7 +45,7 @@ const FAQ = React.lazy(() => import("./pages/FAQ"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const Events = React.lazy(() => import("./pages/Events"));
 const EventDetails = React.lazy(() => import("./pages/EventDetails"));
-const LocationModal = React.lazy(() => import("./pages/LocationModal"));
+const LocationModal = React.lazy(() => import("./components/LocationModal"));
 
 const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";

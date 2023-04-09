@@ -86,20 +86,9 @@ export default function Events() {
       actions: [
         {
           text: t("allow"),
-          type: "secondary",
+          type: "location",
           fn: () => {
-            window.navigator.geolocation.getCurrentPosition(
-              (pos) => {
-                setValue("latitude", pos.coords.latitude);
-                setValue("longitude", pos.coords.longitude);
-
-                console.log(`Latitude : ${pos.coords.latitude}`);
-                console.log(`Longitude: ${pos.coords.longitude}`);
-              },
-              (err) => {
-                console.warn(`Couldn't receive location: ${err.message}`);
-              }
-            );
+            console.log("display map");
           },
         },
       ],
@@ -121,14 +110,12 @@ export default function Events() {
             className="flex flex-col md:flex-row pb-4 md:pb-8"
             onSubmit={submitDistance}
           >
-            <Link to="location-modal">
-              <div
-                className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
-                //onClick={handleOpenModalGetLocation}
-              >
-                {t("eventsNear")}
-              </div>
-            </Link>
+            <div
+              className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
+              onClick={handleOpenModalGetLocation}
+            >
+              {t("eventsNear")}
+            </div>
             <DistanceDropdown
               className="w-[150px] md:w-[190px] py-2 md:py-0 md:mr-8"
               selectedDistance={values.distance!}
