@@ -36,9 +36,10 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import "./theme/utilities.css";
 import "./theme/overrides.css";
 import { StoreContext } from "./Store";
-import { Suspense, useContext, useEffect } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 
 import HelpList from "./pages/HelpList";
 import HelpItem from "./pages/HelpItem";
@@ -46,6 +47,7 @@ import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
+import Loading from "./pages/Loading";
 
 setupIonicReact({
   mode: "ios",
@@ -54,53 +56,62 @@ setupIonicReact({
 export default function App() {
   const { isAuthenticated, init, authenticate } = useContext(StoreContext);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    init().then(() => {
-      authenticate().catch((err) => console.warn(err));
-    });
+    init()
+      .then(() => authenticate().catch((err) => console.warn(err)))
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (
     <IonApp>
-      <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Redirect exact path="/" to="/help" />
-            <Route exact path="/help" component={HelpList}></Route>
-            <Route path="/help/:index" component={HelpItem}></Route>
-            <Route exact path="/address" component={AddressList}></Route>
-            <Route path="/address/:uid" component={AddressItem}></Route>
-            <Route exact path="/settings" component={Settings}></Route>
-          </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="help" href="/help">
-              <IonIcon aria-hidden="true" icon={bookOutline} />
-              <IonLabel>Info</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="address" href="/address">
-              <IonIcon aria-hidden="true" icon={homeOutline} />
-              <IonLabel>Addresses</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab3" href="/tab3">
-              <IonIcon aria-hidden="true" icon={bagHandleOutline} />
-              <IonLabel>Bags</IonLabel>
-            </IonTabButton>
+      {loading ? (
+        <Loading />
+      ) : (
+        <IonReactRouter>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Redirect exact path="/" to="/help" />
+              <Route exact path="/help" component={HelpList}></Route>
+              <Route path="/help/:index" component={HelpItem}></Route>
+              <Route exact path="/address" component={AddressList}></Route>
+              <Route path="/address/:uid" component={AddressItem}></Route>
+              <Route exact path="/settings" component={Settings}></Route>
+              <Route exact path="/loading" component={Loading}></Route>
+            </IonRouterOutlet>
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="help" href="/help">
+                <IonIcon aria-hidden="true" icon={bookOutline} />
+                <IonLabel>Info</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="address" href="/address">
+                <IonIcon aria-hidden="true" icon={homeOutline} />
+                <IonLabel>Addresses</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="loading" href="/loading">
+                <IonIcon aria-hidden="true" icon={bagHandleOutline} />
+                <IonLabel>Bags</IonLabel>
+              </IonTabButton>
 
-            <IonTabButton tab="tab4" href="/tab3">
-              <IonIcon aria-hidden="true" icon={cubeOutline} />
-              <IonLabel>Bulky Items</IonLabel>
-            </IonTabButton>
+              <IonTabButton tab="tab4" href="/tab3">
+                <IonIcon aria-hidden="true" icon={cubeOutline} />
+                <IonLabel>Bulky Items</IonLabel>
+              </IonTabButton>
 
-            <IonTabButton tab="settings" href="/settings">
-              <IonIcon aria-hidden="true" icon={cogOutline} />
-              <IonLabel>Settings</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
-        {isAuthenticated !== null ? (
-          <Login isLoggedIn={isAuthenticated} />
-        ) : null}
-      </IonReactRouter>
+              <IonTabButton tab="settings" href="/settings">
+                <IonIcon aria-hidden="true" icon={cogOutline} />
+                <IonLabel>Settings</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+          {isAuthenticated !== null ? (
+            <Login isLoggedIn={isAuthenticated} />
+          ) : null}
+        </IonReactRouter>
+      )}
     </IonApp>
   );
 }
