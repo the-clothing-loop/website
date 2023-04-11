@@ -28,7 +28,11 @@ export default function AddressList() {
         </IonHeader>
         <IonList>
           {chainUsers.map((user) => (
-            <IonItem routerLink={"/address/" + user.uid} key={user.uid}>
+            <IonItem
+              lines="full"
+              routerLink={"/address/" + user.uid}
+              key={user.uid}
+            >
               {user.name}
             </IonItem>
           ))}

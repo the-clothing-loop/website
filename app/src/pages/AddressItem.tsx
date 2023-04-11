@@ -28,11 +28,11 @@ export default function AddressItem({
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton>Back</IonBackButton>
+            <IonBackButton defaultHref="/address">Back</IonBackButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent>
         {user ? <UserCard user={user} isUserAdmin={false} /> : null}
       </IonContent>
     </IonPage>

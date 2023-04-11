@@ -25,7 +25,7 @@ export default function HelpList() {
         </IonHeader>
         <IonList>
           {data.map((item, index) => (
-            <IonItem routerLink={"/help/" + index} key={index}>
+            <IonItem routerLink={"/help/" + index} lines="full" key={index}>
               {item.Title}
             </IonItem>
           ))}

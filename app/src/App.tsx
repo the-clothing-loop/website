@@ -36,8 +36,9 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import "./theme/overrides.css";
 import { StoreContext } from "./Store";
-import { useContext, useEffect } from "react";
+import { Suspense, useContext, useEffect } from "react";
 
 import HelpList from "./pages/HelpList";
 import HelpItem from "./pages/HelpItem";
@@ -57,7 +58,7 @@ export default function App() {
     init().then(() => {
       authenticate().catch((err) => console.warn(err));
     });
-  });
+  }, []);
 
   return (
     <IonApp>
@@ -66,9 +67,9 @@ export default function App() {
           <IonRouterOutlet>
             <Redirect exact path="/" to="/help" />
             <Route exact path="/help" component={HelpList}></Route>
-            <Route exact path="/help/:index" component={HelpItem}></Route>
-            <Route exact path="/address/:uid" component={AddressItem}></Route>
+            <Route path="/help/:index" component={HelpItem}></Route>
             <Route exact path="/address" component={AddressList}></Route>
+            <Route path="/address/:uid" component={AddressItem}></Route>
             <Route exact path="/settings" component={Settings}></Route>
           </IonRouterOutlet>
           <IonTabBar slot="bottom">

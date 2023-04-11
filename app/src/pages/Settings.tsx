@@ -59,6 +59,8 @@ export default function Settings() {
     const chainUID = e.detail.value;
     const c = listOfChains.find((c) => c.uid === chainUID) || null;
 
+    console.log("set chain selected", c);
+
     setChain(c);
   }
 
@@ -70,29 +72,31 @@ export default function Settings() {
         </IonToolbar>
       </IonHeader>
       {isAuthenticated === true ? (
-        <IonContent className="ion-padding">
+        <IonContent>
           {authUser ? (
             <UserCard user={authUser} isUserAdmin={isUserAdmin} />
           ) : null}
-          <IonContent className="ion-padding">
-            <IonList style={{ marginBottom: "4em" }}>
-              <IonItem lines="none">
-                <IonSelect
-                  label="Selected Loop"
-                  value={chain?.uid || ""}
-                  onIonChange={handleChainSelect}
-                  interface="action-sheet"
-                >
-                  {listOfChains.map((c) => {
-                    return (
-                      <IonSelectOption value={c.uid} key={c.uid}>
-                        {c.name}
-                      </IonSelectOption>
-                    );
-                  })}
-                </IonSelect>
-              </IonItem>
-            </IonList>
+          <IonList style={{ marginBottom: "4em" }}>
+            <IonItem lines="none">
+              <IonSelect
+                label={chain ? "Selected Loop" : "Select a Loop"}
+                labelPlacement="stacked"
+                value={chain?.uid || ""}
+                onIonChange={handleChainSelect}
+                interface="action-sheet"
+              >
+                {listOfChains.map((c) => {
+                  return (
+                    <IonSelectOption value={c.uid} key={c.uid}>
+                      {c.name}
+                    </IonSelectOption>
+                  );
+                })}
+              </IonSelect>
+            </IonItem>
+          </IonList>
+
+          <div className="ion-padding">
             <IonButton id="settings-logout-btn" expand="block" color="danger">
               Logout
             </IonButton>
@@ -110,7 +114,7 @@ export default function Settings() {
                 },
               ]}
             ></IonAlert>
-          </IonContent>
+          </div>
         </IonContent>
       ) : null}
     </IonPage>

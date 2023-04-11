@@ -71,6 +71,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function _authenticate() {
+    console.log("run authenticate");
     const auth = (await storage.get("auth")) as StorageAuth | null;
 
     let _authUser: typeof authUser = null;
@@ -95,6 +96,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const chainUID: string | null = await storage.get("chain_uid");
       if (_isAuthenticated && chainUID) {
         _chain = (await chainGet(chainUID)).data;
+        await _setChain(_chain);
       } else if (chainUID) {
         throw new Error("Not authenticated but still has chain_uid");
       }
@@ -102,7 +104,6 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       await storage.set("chain_uid", null);
     }
 
-    setChain(_chain);
     setAuthUser(_authUser);
     setIsAuthenticated(_isAuthenticated);
   }

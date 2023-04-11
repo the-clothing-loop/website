@@ -28,16 +28,13 @@ export default function HelpItem({
           <IonButtons slot="start">
             <IonBackButton>Back</IonBackButton>
           </IonButtons>
-          <IonTitle>{item.Title}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonHeader collapse="condense">
-        <IonToolbar>
-          <IonTitle size="large">{item.Title}</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding ion-">
         <IonText>
+          <h1 style={{ marginTop: 0, fontSize: 30, fontWeight: "bold" }}>
+            {item.Title}
+          </h1>
           <h2>{item["Short explanation"]}</h2>
           <p>{item["Paragraph 1"]}</p>
           <p>{item["Paragraph 2"]}</p>
