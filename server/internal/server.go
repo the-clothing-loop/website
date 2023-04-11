@@ -86,6 +86,11 @@ func Routes() *gin.Engine {
 	v2.DELETE("/chain/unapproved-user", controllers.ChainDeleteUnapproved)
 	v2.POST("/chain/poke", controllers.Poke)
 
+	// bag
+	v2.GET("/bag/all", controllers.BagGetAll)
+	v2.PUT("/bag", controllers.BagPut)
+	v2.DELETE("/bag", controllers.BagRemove)
+
 	// route
 	v2.GET("/route/order", controllers.RouteOrderGet)
 	v2.POST("/route/order", controllers.RouteOrderSet)
