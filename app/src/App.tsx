@@ -39,7 +39,7 @@ import "./theme/variables.css";
 import "./theme/utilities.css";
 import "./theme/overrides.css";
 import { StoreContext } from "./Store";
-import { Suspense, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import HelpList from "./pages/HelpList";
 import HelpItem from "./pages/HelpItem";

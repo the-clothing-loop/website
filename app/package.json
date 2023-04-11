@@ -1,11 +1,13 @@
 {
-  "name": "app",
+  "name": "org.clothingloop.app",
+  "description": "My Clothing Loop App",
   "private": true,
   "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build:acceptance": "tsc && vite build --mode acceptance",
+    "build:production": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint"
   },
@@ -42,6 +44,5 @@
     "typescript": "^4.9.3",
     "vite": "^4.1.0",
     "vite-plugin-pwa": "^0.14.7"
-  },
-  "description": "An Ionic project"
+  }
 }
