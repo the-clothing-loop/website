@@ -1,0 +1,13 @@
+{
+  "name": "app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite",
+  "config": {
+    "mode": "ios",
+    "core": {
+"mode":"ios"
+    }
+  }
+}

@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import "./i18n";
+import "./axios";
 import "./goscope";
 
 // stylesheets
