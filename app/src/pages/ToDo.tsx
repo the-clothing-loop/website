@@ -16,6 +16,7 @@ export default function ToDo() {
         >
           <IonIcon
             size="large"
+            color="tertiary"
             className="ion-margin-top"
             icon={telescopeOutline}
           />
