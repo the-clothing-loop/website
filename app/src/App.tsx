@@ -48,6 +48,7 @@ import Settings from "./pages/Settings";
 import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
 import Loading from "./pages/Loading";
+import ToDo from "./pages/ToDo";
 
 setupIonicReact({
   mode: "ios",
@@ -80,7 +81,7 @@ export default function App() {
               <Route exact path="/address" component={AddressList}></Route>
               <Route path="/address/:uid" component={AddressItem}></Route>
               <Route exact path="/settings" component={Settings}></Route>
-              <Route exact path="/loading" component={Loading}></Route>
+              <Route exact path="/todo" component={ToDo}></Route>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="help" href="/help">
@@ -91,12 +92,12 @@ export default function App() {
                 <IonIcon aria-hidden="true" icon={homeOutline} />
                 <IonLabel>Addresses</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="loading" href="/loading">
+              <IonTabButton tab="bags" href="/todo">
                 <IonIcon aria-hidden="true" icon={bagHandleOutline} />
                 <IonLabel>Bags</IonLabel>
               </IonTabButton>
 
-              <IonTabButton tab="tab4" href="/tab3">
+              <IonTabButton tab="bulky-items" href="/todo">
                 <IonIcon aria-hidden="true" icon={cubeOutline} />
                 <IonLabel>Bulky Items</IonLabel>
               </IonTabButton>
