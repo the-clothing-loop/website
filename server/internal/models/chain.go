@@ -69,3 +69,43 @@ ORDER BY uc.route_order ASC
 
 	return userUIDs, nil
 }
+
+func (c *Chain) RemoveUserUnapproved(db *gorm.DB, userID uint) (err error) {
+	tx := db.Begin()
+
+	err = c.RemoveBags(tx, userID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	err = tx.Exec(`
+DELETE FROM user_chains
+WHERE user_id = ? AND chain_id = ? AND is_approved = FALSE
+	`, userID, c.ID).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
+func (c *Chain) RemoveUser(db *gorm.DB, userID uint) (err error) {
+	tx := db.Begin()
+
+	err = c.RemoveBags(tx, userID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	err = tx.Exec(`
+DELETE FROM user_chains
+WHERE user_id = ? AND chain_id = ?
+	`, userID, c.ID).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}

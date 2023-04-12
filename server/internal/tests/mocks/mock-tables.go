@@ -61,6 +61,9 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 
 	t.Cleanup(func() {
 		tx := db.Begin()
+		tx.Exec(`DELETE FROM bags WHERE user_chain_id IN (
+			SELECT id FROM user_chains WHERE chain_id = ? OR user_id = ?
+		)`, chainID, user.ID)
 		tx.Exec(`DELETE FROM user_chains WHERE user_id = ? OR chain_id = ?`, user.ID, chainID)
 		tx.Exec(`DELETE FROM user_tokens WHERE user_id = ?`, user.ID)
 		tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID)
