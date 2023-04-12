@@ -79,7 +79,7 @@ func BagPut(c *gin.Context) {
 	LEFT JOIN user_chains AS uc ON uc.id = bags.user_chain_id
 	WHERE bags.number = ? AND uc.chain_id = ?
 	LIMIT 1
-		`, body.Number, chain.ID)
+		`, body.Number, chain.ID).Scan(&bag)
 	}
 	if body.Number != nil {
 		bag.Number = *(body.Number)

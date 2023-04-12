@@ -1,25 +1,92 @@
 import {
+  AlertInput,
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
   IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
   IonList,
   IonPage,
+  IonText,
   IonTitle,
   IonToolbar,
+  useIonAlert,
 } from "@ionic/react";
 import { useContext, useEffect, useRef } from "react";
+import { bagPut, bagRemove, UID } from "../api";
 import CreateBag from "../components/CreateBag";
 import { StoreContext } from "../Store";
 
 export default function BagsList() {
-  const { chain, chainUsers, bags, setChain, authUser } =
+  const { chain, chainUsers, bags, setChain, authUser, route } =
     useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
+  const [presentAlert] = useIonAlert();
 
   function refreshBags() {
     setChain(chain, authUser!.uid);
+  }
+
+  function handleClickDelete(bagNo: number) {
+    const handler = async () => {
+      await bagRemove(chain!.uid, authUser!.uid, bagNo);
+      await setChain(chain, authUser!.uid);
+    };
+    presentAlert({
+      header: "Delete Bag",
+      message: "Are you sure you want to delete bag number " + bagNo + "?",
+      buttons: [
+        {
+          text: "Cancel",
+        },
+        {
+          text: "Delete",
+          handler,
+        },
+      ],
+    });
+  }
+
+  function handleClickItem(bagNo: number, currentHolder: UID) {
+    const handler = async (e: UID) => {
+      console.log(e);
+
+      if (typeof e !== "string" || !e) return;
+      await bagPut({
+        chain_uid: chain!.uid,
+        user_uid: authUser!.uid,
+        holder_uid: e,
+        number: bagNo,
+      });
+      await setChain(chain, authUser!.uid);
+    };
+    presentAlert({
+      header: "Change Bag Holder",
+      message: "Select the new bag holder",
+      inputs: route.map<AlertInput>((r) => {
+        const user = chainUsers.find((u) => u.uid === r)!;
+        const isChecked = user.uid === currentHolder;
+        return {
+          label: user.name,
+          type: "radio",
+          value: user.uid,
+          checked: isChecked,
+        };
+      }),
+      buttons: [
+        {
+          text: "Cancel",
+        },
+        {
+          text: "Change",
+          handler,
+        },
+      ],
+    });
   }
 
   function handleClickCreate() {
@@ -48,13 +115,45 @@ export default function BagsList() {
             const user = chainUsers.find((u) => u.uid === bag.user_uid);
             if (!user) return null;
             return (
-              <IonItem
-                lines="full"
-                routerLink={"/address/" + user.uid}
-                key={user.uid}
-              >
-                {user.name}
-              </IonItem>
+              <IonItemSliding key={user.uid}>
+                <IonItem lines="full">
+                  <div
+                    slot="start"
+                    style={{
+                      backgroundColor: bag.color,
+                      color: "white",
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      fontWeight: "bold",
+                      position: "relative",
+                    }}
+                  >
+                    {bag.number}
+                  </div>
+                  <IonText
+                    style={{
+                      marginTop: "6px",
+                      marginBottom: "6px",
+                    }}
+                    onClick={() => handleClickItem(bag.number, bag.user_uid)}
+                  >
+                    <h5 className="ion-no-margin">{user.name}</h5>
+                    <small>{user.address}</small>
+                  </IonText>
+                </IonItem>
+                <IonItemOptions slot="end">
+                  <IonItemOption
+                    color="danger"
+                    onClick={() => handleClickDelete(bag.number)}
+                  >
+                    Delete
+                  </IonItemOption>
+                </IonItemOptions>
+              </IonItemSliding>
             );
           })}
         </IonList>

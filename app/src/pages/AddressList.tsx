@@ -37,7 +37,15 @@ export default function AddressList() {
                 routerLink={"/address/" + user.uid}
                 key={user.uid}
               >
-                {user.name}
+                <IonText
+                  style={{
+                    marginTop: "6px",
+                    marginBottom: "6px",
+                  }}
+                >
+                  <h5 className="ion-no-margin">{user.name}</h5>
+                  <small>{user.address}</small>
+                </IonText>
                 <IonText slot="start" color="medium" className="ion-text-bold">
                   {i + 1}
                 </IonText>

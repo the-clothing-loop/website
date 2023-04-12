@@ -140,15 +140,15 @@ export function bagGetAllByChain(chainUID: UID, userUID: UID) {
 export function bagPut(body: {
   chain_uid: UID;
   user_uid: UID;
-  holder_uid: UID;
   number: number;
-  color: string;
+  holder_uid?: UID;
+  color?: string;
 }) {
   return window.axios.put("/v2/bag", body);
 }
 
 export function bagRemove(chainUID: UID, userUID: UID, number: number) {
   return window.axios.delete("/v2/bag", {
-    params: { chain_uid: chainUID, user_uid: userUID },
+    params: { chain_uid: chainUID, user_uid: userUID, number },
   });
 }
