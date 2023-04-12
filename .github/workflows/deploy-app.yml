@@ -1,0 +1,38 @@
+name: Deploy App
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: app/package-lock.json
+      - name: Install Dependencies App
+        run: npm ci
+        working-directory: ./app
+      - name: Build public files
+        run: npm run build:acceptance
+        working-directory: ./app
+      - name: Install SSH key
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
+        with:
+          private-key: ${{ secrets.VPS1_PRIVKEY }}
+          known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
+      - name: Send public files to vps
+        run: |
+          ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-app"
+          rsync -az --delete ./app/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-app/
+          ssh admin@vpsnode1.vps.webdock.cloud "\
+          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-app/ /var/caddy/app.clothingloop.org/; \
+          sudo systemctl reload caddy"
+          echo "done"
