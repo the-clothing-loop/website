@@ -4,6 +4,7 @@ import {
   IonItem,
   IonList,
   IonPage,
+  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -11,7 +12,7 @@ import { useContext } from "react";
 import { StoreContext } from "../Store";
 
 export default function AddressList() {
-  const { chainUsers } = useContext(StoreContext);
+  const { chainUsers, route } = useContext(StoreContext);
 
   return (
     <IonPage>
@@ -27,15 +28,22 @@ export default function AddressList() {
           </IonToolbar>
         </IonHeader>
         <IonList>
-          {chainUsers.map((user) => (
-            <IonItem
-              lines="full"
-              routerLink={"/address/" + user.uid}
-              key={user.uid}
-            >
-              {user.name}
-            </IonItem>
-          ))}
+          {route.map((userUID, i) => {
+            const user = chainUsers.find((u) => u.uid === userUID);
+            if (!user) return null;
+            return (
+              <IonItem
+                lines="full"
+                routerLink={"/address/" + user.uid}
+                key={user.uid}
+              >
+                {user.name}
+                <IonText slot="start" color="medium" className="ion-text-bold">
+                  {i + 1}
+                </IonText>
+              </IonItem>
+            );
+          })}
         </IonList>
       </IonContent>
     </IonPage>

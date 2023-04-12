@@ -101,8 +101,14 @@ export function chainGet(chainUID: UID) {
   });
 }
 
-export function userGetAllByChain(chainUID: string) {
+export function userGetAllByChain(chainUID: UID) {
   return window.axios.get<User[]>("/v2/user/all-chain", {
+    params: { chain_uid: chainUID },
+  });
+}
+
+export function routeGetOrder(chainUID: UID) {
+  return window.axios.get<UID[]>("/v2/route/order", {
     params: { chain_uid: chainUID },
   });
 }

@@ -8,6 +8,8 @@ import {
   logout,
   loginValidate,
   userGetAllByChain,
+  UID,
+  routeGetOrder,
 } from "./api";
 
 interface StorageAuth {
@@ -20,6 +22,7 @@ export const StoreContext = createContext({
   authUser: null as null | User,
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
+  route: [] as UID[],
   setChain: (c: Chain | null) => Promise.reject<void>(),
   authenticate: () => Promise.reject<void>(),
   login: (token: string) => Promise.reject<void>(),
@@ -33,6 +36,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chain, setChain] = useState<Chain | null>(null);
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
+  const [route, setRoute] = useState<UID[]>([]);
   const [storage, setStorage] = useState(new Storage({ name: "store_v1" }));
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
@@ -56,6 +60,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     await storage.set("chain_uid", null);
     setAuthUser(null);
     setChain(null);
+    setRoute([]);
     setIsAuthenticated(false);
   }
 
@@ -110,17 +115,27 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   async function _setChain(c: Chain | null) {
     let _chainUsers: typeof chainUsers = [];
-    if (c) _chainUsers = (await userGetAllByChain(c.uid)).data;
+    let _route: typeof route = [];
+    if (c) {
+      const res = await Promise.all([
+        userGetAllByChain(c.uid),
+        routeGetOrder(c.uid),
+      ]);
+      _chainUsers = res[0].data;
+      _route = res[1].data;
+    }
 
     await storage.set("chain_uid", c ? c.uid : null);
     setChain(c);
     setChainUsers(_chainUsers);
+    setRoute(_route);
   }
 
   return (
     <StoreContext.Provider
       value={{
         authUser,
+        route,
         chain,
         chainUsers,
         setChain: _setChain,
