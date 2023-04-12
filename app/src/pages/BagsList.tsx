@@ -16,6 +16,7 @@ import {
   IonToolbar,
   useIonAlert,
 } from "@ionic/react";
+import { bag as bagIcon } from "ionicons/icons";
 import { useContext, useEffect, useRef } from "react";
 import { bagPut, bagRemove, UID } from "../api";
 import CreateBag from "../components/CreateBag";
@@ -120,19 +121,34 @@ export default function BagsList() {
                   <div
                     slot="start"
                     style={{
-                      backgroundColor: bag.color,
-                      color: "white",
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      fontWeight: "bold",
+                      //   width: "30px",
+                      //   height: "30px",
+                      //   borderRadius: "100%",
                       position: "relative",
                     }}
                   >
-                    {bag.number}
+                    <IonIcon
+                      icon={bagIcon}
+                      style={{
+                        transform: "scale(2)",
+                        color: bag.color,
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "2px",
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        color: "white",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                      }}
+                    >
+                      {bag.number}
+                    </div>
                   </div>
                   <IonText
                     style={{
