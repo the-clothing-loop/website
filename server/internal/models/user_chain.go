@@ -17,6 +17,7 @@ type UserChain struct {
 	CreatedAt    time.Time `json:"created_at"`
 	IsApproved   bool      `json:"is_approved"`
 	RouteOrder   int       `json:"-"`
+	Bags         []Bag     `json:"-"`
 }
 
 var ErrRouteInvalid = errors.New("Invalid route")

@@ -8,7 +8,6 @@ import (
 
 type Bag struct {
 	ID          uint   `json:"-"`
-	UID         string `json:"uid"`
 	Number      int    `json:"number"`
 	Color       string `json:"color"`
 	UserChainID uint   `json:"-"`

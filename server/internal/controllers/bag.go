@@ -29,7 +29,6 @@ func BagGetAll(c *gin.Context) {
 	err := db.Raw(`
 SELECT (
 	bags.id AS id,
-	bags.uid AS uid,
 	bags.number AS number,
 	bags.color AS color,
 	bags.user_chain_id AS user_chain_id,
