@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -26,23 +27,23 @@ func BagGetAll(c *gin.Context) {
 	}
 
 	bags := []models.Bag{}
-	err := db.Raw(`
-SELECT (
-	bags.id AS id,
-	bags.number AS number,
-	bags.color AS color,
+	err := db.Raw(fmt.Sprintf(`
+	SELECT 
+	bags.id            AS id,
+	bags.%snumber%s    AS %snumber%s,
+	bags.color         AS color,
 	bags.user_chain_id AS user_chain_id,
-	c.uid AS chain_uid,
-	u.uid As user_uid,
-) FROM bags
-LEFT JOIN user_chains AS uc ON uc.id = user_chain_id
+	c.uid              AS chain_uid,
+	u.uid              AS user_uid
+ FROM bags
+LEFT JOIN user_chains AS uc ON uc.id = bags.user_chain_id
 LEFT JOIN chains AS c ON c.id = uc.chain_id
 LEFT JOIN users AS u ON u.id = uc.user_id
 WHERE user_chain_id IN (
 	SELECT uc2.id FROM user_chains AS uc2
 	WHERE uc2.chain_id = ?
 )
-	`, chain.ID).Scan(bags).Error
+	`, "`", "`", "`", "`"), chain.ID).Scan(&bags).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to find bags: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to find bags")
@@ -55,17 +56,18 @@ WHERE user_chain_id IN (
 func BagPut(c *gin.Context) {
 	db := getDB(c)
 	var body struct {
-		UserUID  string  `json:"user_uid" binding:"required,uuid"`
-		ChainUID string  `json:"chain_uid" binding:"required,uuid"`
-		Number   *int    `json:"number,omitempty"`
-		Color    *string `json:"color,omitempty"`
+		UserUID   string  `json:"user_uid" binding:"required,uuid"`
+		HolderUID string  `json:"holder_uid" binding:"required,uuid"`
+		ChainUID  string  `json:"chain_uid" binding:"required,uuid"`
+		Number    *int    `json:"number,omitempty"`
+		Color     *string `json:"color,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, body.ChainUID)
 	if !ok {
 		return
 	}
@@ -79,23 +81,37 @@ func BagPut(c *gin.Context) {
 	LIMIT 1
 		`, body.Number, chain.ID)
 	}
-
-	if bag.ID == 0 && body.Number != nil {
-		c.String(http.StatusConflict, "Not allowed to change an existing bag number")
-		return
-	}
 	if body.Number != nil {
 		bag.Number = *(body.Number)
 	}
 	if body.Color != nil {
 		bag.Color = *(body.Color)
 	}
-	for _, uc := range user.Chains {
-		if uc.UserID == user.ID {
-			bag.UserChainID = uc.ID
-		}
+
+	ucID := uint(0)
+	db.Raw(`
+SELECT uc.id FROM user_chains AS uc
+LEFT JOIN users AS u ON u.id = uc.user_id
+WHERE u.uid = ? AND uc.chain_id = ?
+LIMIT 1
+	`, body.HolderUID, chain.ID).Scan(&ucID)
+	if ucID == 0 {
+		c.String(http.StatusExpectationFailed, "Bag holder does not exist")
+		return
 	}
-	db.Save(bag)
+	bag.UserChainID = ucID
+
+	var err error
+	if bag.ID == 0 {
+		err = db.Create(&bag).Error
+	} else {
+		err = db.Save(&bag).Error
+	}
+	if err != nil {
+		goscope.Log.Errorf("Unable to create or update bag: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to create or update bag")
+		return
+	}
 }
 
 func BagRemove(c *gin.Context) {

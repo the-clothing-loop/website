@@ -61,7 +61,7 @@ export default function Settings() {
 
     console.log("set chain selected", c);
 
-    setChain(c);
+    setChain(c, authUser!.uid);
   }
 
   return (

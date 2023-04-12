@@ -10,6 +10,8 @@ import {
   userGetAllByChain,
   UID,
   routeGetOrder,
+  Bag,
+  bagGetAllByChain,
 } from "./api";
 
 interface StorageAuth {
@@ -23,7 +25,8 @@ export const StoreContext = createContext({
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
   route: [] as UID[],
-  setChain: (c: Chain | null) => Promise.reject<void>(),
+  bags: [] as Bag[],
+  setChain: (c: Chain | null, uid: UID) => Promise.reject<void>(),
   authenticate: () => Promise.reject<void>(),
   login: (token: string) => Promise.reject<void>(),
   logout: () => Promise.reject<void>(),
@@ -37,6 +40,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [chain, setChain] = useState<Chain | null>(null);
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
   const [route, setRoute] = useState<UID[]>([]);
+  const [bags, setBags] = useState<Bag[]>([]);
   const [storage, setStorage] = useState(new Storage({ name: "store_v1" }));
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
@@ -61,6 +65,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setAuthUser(null);
     setChain(null);
     setRoute([]);
+    setBags([]);
     setIsAuthenticated(false);
   }
 
@@ -101,7 +106,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const chainUID: string | null = await storage.get("chain_uid");
       if (_isAuthenticated && chainUID) {
         _chain = (await chainGet(chainUID)).data;
-        await _setChain(_chain);
+        await _setChain(_chain, _authUser!.uid);
       } else if (chainUID) {
         throw new Error("Not authenticated but still has chain_uid");
       }
@@ -113,22 +118,26 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated(_isAuthenticated);
   }
 
-  async function _setChain(c: Chain | null) {
+  async function _setChain(c: Chain | null, _authUserUID: UID | null) {
     let _chainUsers: typeof chainUsers = [];
     let _route: typeof route = [];
-    if (c) {
+    let _bags: typeof bags = [];
+    if (c && _authUserUID) {
       const res = await Promise.all([
         userGetAllByChain(c.uid),
         routeGetOrder(c.uid),
+        bagGetAllByChain(c.uid, _authUserUID),
       ]);
       _chainUsers = res[0].data;
       _route = res[1].data;
+      _bags = res[2].data;
     }
 
     await storage.set("chain_uid", c ? c.uid : null);
     setChain(c);
     setChainUsers(_chainUsers);
     setRoute(_route);
+    setBags(_bags);
   }
 
   return (
@@ -136,6 +145,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       value={{
         authUser,
         route,
+        bags,
         chain,
         chainUsers,
         setChain: _setChain,

@@ -64,6 +64,24 @@ export interface Chain {
   open_to_new_members: boolean;
 }
 
+export interface Bag {
+  number: number;
+  color: string;
+  chain_uid: UID;
+  user_uid: UID;
+}
+
+export const bagColors = [
+  "#f4b63f",
+  "#a6c665",
+  "#1467b3",
+  "#3c3c3b",
+  "#66926e",
+  "#c73643",
+  "#dc77a3",
+  "#513484",
+];
+
 window.axios = redaxios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "",
   withCredentials: false,
@@ -110,5 +128,27 @@ export function userGetAllByChain(chainUID: UID) {
 export function routeGetOrder(chainUID: UID) {
   return window.axios.get<UID[]>("/v2/route/order", {
     params: { chain_uid: chainUID },
+  });
+}
+
+export function bagGetAllByChain(chainUID: UID, userUID: UID) {
+  return window.axios.get("/v2/bag/all", {
+    params: { chain_uid: chainUID, user_uid: userUID },
+  });
+}
+
+export function bagPut(body: {
+  chain_uid: UID;
+  user_uid: UID;
+  holder_uid: UID;
+  number: number;
+  color: string;
+}) {
+  return window.axios.put("/v2/bag", body);
+}
+
+export function bagRemove(chainUID: UID, userUID: UID, number: number) {
+  return window.axios.delete("/v2/bag", {
+    params: { chain_uid: chainUID, user_uid: userUID },
   });
 }

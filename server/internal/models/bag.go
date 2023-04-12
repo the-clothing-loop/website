@@ -11,8 +11,8 @@ type Bag struct {
 	Number      int    `json:"number"`
 	Color       string `json:"color"`
 	UserChainID uint   `json:"-"`
-	ChainUID    string `json:"chain_uid" gorm:"-:migration;<-false"`
-	UserUID     string `json:"user_uid" gorm:"-:migration;<-false"`
+	ChainUID    string `json:"chain_uid" gorm:"-:migration;<-:false"`
+	UserUID     string `json:"user_uid" gorm:"-:migration;<-:false"`
 }
 
 // remove all bags related to this user from any loop
