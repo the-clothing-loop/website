@@ -2,6 +2,11 @@ import {
   AlertInput,
   IonButton,
   IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
   IonContent,
   IonHeader,
   IonIcon,
@@ -16,7 +21,7 @@ import {
   IonToolbar,
   useIonAlert,
 } from "@ionic/react";
-import { calendarClear } from "ionicons/icons";
+import { calendarClear, personCircleOutline } from "ionicons/icons";
 import { useContext, useRef, useState } from "react";
 import { bulkyItemRemove, BulkyItem } from "../api";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
@@ -73,6 +78,11 @@ export default function BulkyList() {
 
     modal.current?.present();
   }
+  function handleClickEdit(b: BulkyItem) {
+    setUpdateBulky(b);
+
+    modal.current?.present();
+  }
 
   return (
     <IonPage>
@@ -91,7 +101,7 @@ export default function BulkyList() {
             <IonTitle size="large">Bulky Items</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonList>
+        <div>
           {bulkyItems.map((bulkyItem) => {
             const user = chainUsers.find((u) => u.uid === bulkyItem.user_uid);
             if (!user) return null;
@@ -99,10 +109,17 @@ export default function BulkyList() {
             let createdAt = new Date(bulkyItem.created_at);
 
             return (
-              <IonItemSliding key={user.uid}>
-                <IonItem lines="full">
+              <IonCard key={bulkyItem.id}>
+                {bulkyItem.image_url ? (
+                  <img alt={bulkyItem.title} src={bulkyItem.image_url} />
+                ) : null}
+                <IonCardHeader>
+                  <IonCardTitle>{bulkyItem.title}</IonCardTitle>
+                  <IonCardSubtitle>
+                    {createdAt.toLocaleString()}
+                  </IonCardSubtitle>
                   <div
-                    slot="start"
+                    slot="end"
                     style={{
                       position: "relative",
                     }}
@@ -127,29 +144,60 @@ export default function BulkyList() {
                       {createdAt.getDate()}
                     </div>
                   </div>
+                </IonCardHeader>
+
+                <IonCardContent>
+                  <IonItem
+                    lines="none"
+                    routerLink={"/address/" + user.uid}
+                    style={{
+                      marginLeft: "-16px",
+                      marginRight: "-16px",
+                    }}
+                  >
+                    <IonIcon
+                      slot="start"
+                      className="ion-align-self-start"
+                      icon={personCircleOutline}
+                    />
+                    <IonText>
+                      <h5 className="ion-no-margin ion-text-bold">
+                        {user.name}
+                      </h5>
+                      <small className="ion-text-wrap">{user.address}</small>
+                    </IonText>
+                  </IonItem>
                   <IonText
                     style={{
                       marginTop: "6px",
                       marginBottom: "6px",
+                      color: "var(--ion-color-dark)",
                     }}
                     // onClick={() => handleClickItem(bulky.id)}
                   >
-                    <h5 className="ion-no-margin">{user.name}</h5>
-                    <small>{user.address}</small>
+                    <p className="ion-padding-top">{bulkyItem.message}</p>
                   </IonText>
-                </IonItem>
-                <IonItemOptions slot="end">
-                  <IonItemOption
+                </IonCardContent>
+
+                <IonButtons className="ion-margin-bottom ion-margin-horizontal">
+                  <IonButton
+                    fill="clear"
+                    onClick={() => handleClickEdit(bulkyItem)}
+                  >
+                    Edit
+                  </IonButton>
+                  <IonButton
+                    fill="clear"
                     color="danger"
                     onClick={() => handleClickDelete(bulkyItem.id)}
                   >
                     Delete
-                  </IonItemOption>
-                </IonItemOptions>
-              </IonItemSliding>
+                  </IonButton>
+                </IonButtons>
+              </IonCard>
             );
           })}
-        </IonList>
+        </div>
         <CreateUpdateBulky
           modal={modal}
           didDismiss={refresh}

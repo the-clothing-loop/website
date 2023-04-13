@@ -116,7 +116,7 @@ export default function BagsList() {
             const user = chainUsers.find((u) => u.uid === bag.user_uid);
             if (!user) return null;
             return (
-              <IonItemSliding key={user.uid}>
+              <IonItemSliding key={bag.number}>
                 <IonItem lines="full">
                   <div slot="start" style={{ position: "relative" }}>
                     <IonIcon
