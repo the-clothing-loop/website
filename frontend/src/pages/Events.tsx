@@ -13,7 +13,9 @@ import useForm from "../util/form.hooks";
 import { GinParseErrors } from "../util/gin-errors";
 import { ToastContext } from "../providers/ToastProvider";
 import dayjs from "../util/dayjs";
-
+//import LocationModal from "../components/LocationModal";
+import LocationValues from "../components/LocationModal";
+import LocationModal from "../components/LocationModal";
 interface SearchValues {
   genders: string[];
   latitude: number;
@@ -28,7 +30,7 @@ const ClothesImage =
 const MAX_DISTANCE = 5000;
 const DEFAULT_LATITUDE = 52.377956;
 const DEFAULT_LONGITUDE = 4.89707;
-
+//console.log(LocationValues)
 export default function Events() {
   const { t } = useTranslation();
 
@@ -82,19 +84,21 @@ export default function Events() {
 
   function handleOpenModalGetLocation() {
     addModal({
-      message: t("allowLocation"),
+      message: "Select your location",
       actions: [
         {
-          text: t("allow"),
+          text: "Submit-test",
           type: "location",
           fn: () => {
-            console.log("display map");
+            console.log("in fn");
+            return(
+              <LocationModal/>
+            );
           },
         },
       ],
     });
   }
-
   return (
     <>
       <Helmet>

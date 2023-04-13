@@ -9,7 +9,6 @@ import { TextForm } from "./FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
 import { circleRadiusKm } from "../util/maps";
-
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY || "";
 
 interface Props {
@@ -28,7 +27,7 @@ interface Point {
   latitude: number;
   radius: number;
 }
-interface LocationValues {
+export interface LocationValues {
   address: string;
   radius: number;
   longitude: number;
@@ -36,8 +35,6 @@ interface LocationValues {
 }
 
 function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
-  console.log("inside locationmodals");
-
   return {
     type: "FeatureCollection",
     features: point
@@ -57,10 +54,8 @@ function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
   };
 }
 
-/*export default function LocationModal({
-  onSubmit,
-  initialValues,
-}: Props) {*/
+//export default function LocationModal(props: { radius: number}) {
+
 export default function LocationModal() {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -76,14 +71,14 @@ export default function LocationModal() {
     //...initialValues,
   });
 
-  console.log("inside locationmodals");
+  //const radius = props.radius;
   useEffect(() => {
     const hasCenter = !!(values.longitude && values.latitude);
     const _map = new mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
       projection: { name: "mercator" },
-      zoom: hasCenter ? 10 : 4,
+      zoom: 10,
       minZoom: 1,
       maxZoom: 13,
       center: (hasCenter
@@ -193,20 +188,23 @@ export default function LocationModal() {
         addToastError(t("required") + ": " + t("loopLocation"), 500);
         return;
       }
-
+      
       // onSubmit(values);
     })();
   }
 
   return (
-    <div className="w-2/3 mx-auto">
+    <div className="w-full mx-auto">
       <div className="md:pr-4">
         <div className="aspect-square cursor-pointer" ref={mapRef} />
       </div>
-      <div className="md:w-1/2 md:pl-4">
-        <form>
-          {/*onSubmit={handleSubmit}>*/}
-          <p className="mb-2 text-sm">{t("clickToSetLoopLocation")}</p>
+      <div className="w-full px-4">
+        <form onSubmit={handleSubmit}>
+          <p className="mb-2 text-sm">
+            {
+              "Click on map to select your location and drag slider to set radius."
+            }
+          </p>
           <input
             name="range"
             type="range"

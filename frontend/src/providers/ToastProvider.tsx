@@ -1,7 +1,12 @@
-import { createContext, PropsWithChildren, useEffect, useState, useRef } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import { useTranslation } from "react-i18next";
 import * as focusTrap from "focus-trap";
-//import { mapRef } from "../pages/Events";
 import LocationModal from "../components/LocationModal";
 
 export interface Toast {
@@ -195,13 +200,13 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
       >
         <h5 className="text-lg mb-6 min-w-[300px]">{props.modal.message}</h5>
         <div
+          id="test"
           className={
             props.modal.actions.length === 1
               ? "flex justify-between"
               : "flex flex-col items-stretch gap-3"
           }
-         // ref={mapRef}
-          >
+        >
           {props.modal.actions.map((a) => {
             let classes = "btn btn-sm";
             switch (a.type) {
@@ -218,9 +223,29 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
                 classes += " btn-ghost bg-teal-light text-teal";
                 break;
               case "location":
-                classes += " btn-ghost bg-teal-light text-teal";
-                return(
-                  LocationModal()
+                classes += " btn-primary m-4";
+                document
+                  .getElementById("toast-modal-close")
+                  ?.classList.add("hidden");
+                return (
+                  <div className="mx-auto">
+                    <div>{a.fn()} </div>
+                    <button
+                      key={a.text}
+                      className={classes}
+                      onClick={() => handleActionClick(a.fn)}
+                    >
+                      {a.text}
+                    </button>
+                    <button
+                      key="close"
+                      //id="toast-modal-close"
+                      className="btn btn-sm btn-ghost"
+                      onClick={() => handleActionClick(() => {})}
+                    >
+                      {t("close")}
+                    </button>
+                  </div>
                 );
             }
             return (
