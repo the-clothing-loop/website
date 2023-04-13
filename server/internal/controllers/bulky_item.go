@@ -7,7 +7,6 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"gopkg.in/guregu/null.v3/zero"
 )
 
 func BulkyGetAll(c *gin.Context) {
@@ -26,33 +25,33 @@ func BulkyGetAll(c *gin.Context) {
 		return
 	}
 
-	bulky := []models.Bulky{}
-	err := db.Raw(`
+	bulkyItems := []models.BulkyItem{}
+	err := db.Debug().Raw(`
 	SELECT 
-	bulky.id            AS id,
-	bulky.title         AS title,
-	bulky.message       AS message,
-	bulky.image_url     AS image_url,
-	bulky.user_chain_id AS user_chain_id,
+	bulky_items.id            AS id,
+	bulky_items.title         AS title,
+	bulky_items.message       AS message,
+	bulky_items.image_url     AS image_url,
+	bulky_items.user_chain_id AS user_chain_id,
 	c.uid               AS chain_uid,
 	u.uid               AS user_uid,
-	bulky.created_at    AS created_at
- FROM bulky
-LEFT JOIN user_chains AS uc ON uc.id = bulky.user_chain_id
+	bulky_items.created_at    AS created_at
+ FROM bulky_items
+LEFT JOIN user_chains AS uc ON uc.id = bulky_items.user_chain_id
 LEFT JOIN chains AS c ON c.id = uc.chain_id
 LEFT JOIN users AS u ON u.id = uc.user_id
 WHERE user_chain_id IN (
 	SELECT uc2.id FROM user_chains AS uc2
 	WHERE uc2.chain_id = ?
 )
-	`, chain.ID).Scan(&bulky).Error
+	`, chain.ID).Scan(&bulkyItems).Error
 	if err != nil {
-		goscope.Log.Errorf("Unable to find bags: %v", err)
-		c.String(http.StatusInternalServerError, "Unable to find bags")
+		goscope.Log.Errorf("Unable to find bulky items: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to find bulky items")
 		return
 	}
 
-	c.JSON(http.StatusOK, bulky)
+	c.JSON(http.StatusOK, bulkyItems)
 }
 
 func BulkyPut(c *gin.Context) {
@@ -75,18 +74,18 @@ func BulkyPut(c *gin.Context) {
 		return
 	}
 
-	bulky := models.Bulky{}
+	bulkyItem := models.BulkyItem{}
 	if body.ID != nil {
-		db.Raw(`SELECT * FROM bulky WHERE id = ? LIMIT 1`, body.ID).Scan(&bulky)
+		db.Raw(`SELECT * FROM bulky_items WHERE id = ? LIMIT 1`, body.ID).Scan(&bulkyItem)
 	}
 	if body.Title != nil {
-		bulky.Title = *(body.Title)
+		bulkyItem.Title = *(body.Title)
 	}
 	if body.Message != nil {
-		bulky.Message = *(body.Message)
+		bulkyItem.Message = *(body.Message)
 	}
 	if body.ImageUrl != nil {
-		bulky.ImageUrl = zero.StringFrom(*(body.ImageUrl))
+		bulkyItem.ImageUrl = *(body.ImageUrl)
 	}
 
 	ucID := uint(0)
@@ -100,13 +99,13 @@ LIMIT 1
 		c.String(http.StatusExpectationFailed, "Author does not exist")
 		return
 	}
-	bulky.UserChainID = ucID
+	bulkyItem.UserChainID = ucID
 
 	var err error
-	if bulky.ID == 0 {
-		err = db.Create(&bulky).Error
+	if bulkyItem.ID == 0 {
+		err = db.Create(&bulkyItem).Error
 	} else {
-		err = db.Save(&bulky).Error
+		err = db.Save(&bulkyItem).Error
 	}
 	if err != nil {
 		goscope.Log.Errorf("Unable to create or update bulky item: %v", err)
@@ -133,7 +132,7 @@ func BulkyRemove(c *gin.Context) {
 	}
 
 	err := db.Exec(`
-DELETE FROM bulky
+DELETE FROM bulky_items
 WHERE id = ? AND user_chain_id IN (
 	SELECT id FROM user_chains
 	WHERE chain_id = ?

@@ -75,7 +75,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.UserToken{},
 		&models.UserChain{},
 		&models.Bag{},
-		&models.Bulky{},
+		&models.BulkyItem{},
 		&models.Payment{},
 	)
 
