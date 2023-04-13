@@ -16,30 +16,31 @@ import {
   IonToolbar,
   useIonAlert,
 } from "@ionic/react";
-import { bag as bagIcon } from "ionicons/icons";
-import { useContext, useEffect, useRef } from "react";
-import { bagPut, bagRemove, UID } from "../api";
-import CreateBag from "../components/CreateBag";
+import { calendarClear } from "ionicons/icons";
+import { useContext, useRef, useState } from "react";
+import { bulkyItemRemove, BulkyItem } from "../api";
+import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
 
-export default function BagsList() {
-  const { chain, chainUsers, bags, setChain, authUser, route } =
+export default function BulkyList() {
+  const { chain, chainUsers, bulkyItems, setChain, authUser } =
     useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
+  const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
 
-  function refreshBags() {
+  function refresh() {
     setChain(chain, authUser!.uid);
   }
 
-  function handleClickDelete(bagNo: number) {
+  function handleClickDelete(id: number) {
     const handler = async () => {
-      await bagRemove(chain!.uid, authUser!.uid, bagNo);
+      await bulkyItemRemove(chain!.uid, authUser!.uid, id);
       await setChain(chain, authUser!.uid);
     };
     presentAlert({
-      header: "Delete Bag",
-      message: "Are you sure you want to delete bag number " + bagNo + "?",
+      header: "Delete Bulky Item",
+      message: "Are you sure you want to delete this bulky item?",
       buttons: [
         {
           text: "Cancel",
@@ -52,45 +53,24 @@ export default function BagsList() {
     });
   }
 
-  function handleClickItem(bagNo: number, currentHolder: UID) {
-    const handler = async (e: UID) => {
-      console.log(e);
+  // function handleClickItem(id: number) {
+  //   const handler = async (e: UID) => {
+  //     console.log(e);
 
-      if (typeof e !== "string" || !e) return;
-      await bagPut({
-        chain_uid: chain!.uid,
-        user_uid: authUser!.uid,
-        holder_uid: e,
-        number: bagNo,
-      });
-      await setChain(chain, authUser!.uid);
-    };
-    presentAlert({
-      header: "Change Bag Holder",
-      message: "Select the new bag holder",
-      inputs: route.map<AlertInput>((r) => {
-        const user = chainUsers.find((u) => u.uid === r)!;
-        const isChecked = user.uid === currentHolder;
-        return {
-          label: user.name,
-          type: "radio",
-          value: user.uid,
-          checked: isChecked,
-        };
-      }),
-      buttons: [
-        {
-          text: "Cancel",
-        },
-        {
-          text: "Change",
-          handler,
-        },
-      ],
-    });
-  }
+  //     if (typeof e !== "string" || !e) return;
+  //     await bagPut({
+  //       chain_uid: chain!.uid,
+  //       user_uid: authUser!.uid,
+  //       holder_uid: e,
+  //       number: bagNo,
+  //     });
+  //     await setChain(chain, authUser!.uid);
+  //   };
+  // }
 
   function handleClickCreate() {
+    setUpdateBulky(null);
+
     modal.current?.present();
   }
 
@@ -98,7 +78,7 @@ export default function BagsList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>Bags</IonTitle>
+          <IonTitle>Bulky Items</IonTitle>
 
           <IonButtons slot="end">
             <IonButton onClick={handleClickCreate}>Create</IonButton>
@@ -108,23 +88,28 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Bags</IonTitle>
+            <IonTitle size="large">Bulky Items</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>
-          {bags.map((bag) => {
-            const user = chainUsers.find((u) => u.uid === bag.user_uid);
+          {bulkyItems.map((bulkyItem) => {
+            const user = chainUsers.find((u) => u.uid === bulkyItem.user_uid);
             if (!user) return null;
+
+            let createdAt = new Date(bulkyItem.created_at);
+
             return (
               <IonItemSliding key={user.uid}>
                 <IonItem lines="full">
-                  <div slot="start" style={{ position: "relative" }}>
+                  <div
+                    slot="start"
+                    style={{
+                      position: "relative",
+                    }}
+                  >
                     <IonIcon
-                      icon={bagIcon}
-                      style={{
-                        transform: "scale(2)",
-                        color: bag.color,
-                      }}
+                      icon={calendarClear}
+                      style={{ transform: "scale(2)" }}
                     />
                     <div
                       style={{
@@ -139,7 +124,7 @@ export default function BagsList() {
                         fontSize: "16px",
                       }}
                     >
-                      {bag.number}
+                      {createdAt.getDate()}
                     </div>
                   </div>
                   <IonText
@@ -147,7 +132,7 @@ export default function BagsList() {
                       marginTop: "6px",
                       marginBottom: "6px",
                     }}
-                    onClick={() => handleClickItem(bag.number, bag.user_uid)}
+                    // onClick={() => handleClickItem(bulky.id)}
                   >
                     <h5 className="ion-no-margin">{user.name}</h5>
                     <small>{user.address}</small>
@@ -156,7 +141,7 @@ export default function BagsList() {
                 <IonItemOptions slot="end">
                   <IonItemOption
                     color="danger"
-                    onClick={() => handleClickDelete(bag.number)}
+                    onClick={() => handleClickDelete(bulkyItem.id)}
                   >
                     Delete
                   </IonItemOption>
@@ -165,7 +150,11 @@ export default function BagsList() {
             );
           })}
         </IonList>
-        <CreateBag modal={modal} didDismiss={refreshBags} />
+        <CreateUpdateBulky
+          modal={modal}
+          didDismiss={refresh}
+          bulky={updateBulky}
+        />
       </IonContent>
     </IonPage>
   );

@@ -69,6 +69,16 @@ export interface Bag {
   color: string;
   chain_uid: UID;
   user_uid: UID;
+  updated_at: string;
+}
+export interface BulkyItem {
+  id: number;
+  title: string;
+  message: string;
+  image_url: string;
+  chain_uid: UID;
+  user_uid: UID;
+  created_at: string;
 }
 
 export const bagColors = [
@@ -132,7 +142,7 @@ export function routeGetOrder(chainUID: UID) {
 }
 
 export function bagGetAllByChain(chainUID: UID, userUID: UID) {
-  return window.axios.get("/v2/bag/all", {
+  return window.axios.get<Bag[]>("/v2/bag/all", {
     params: { chain_uid: chainUID, user_uid: userUID },
   });
 }
@@ -147,8 +157,31 @@ export function bagPut(body: {
   return window.axios.put("/v2/bag", body);
 }
 
-export function bagRemove(chainUID: UID, userUID: UID, number: number) {
+export function bagRemove(chainUID: UID, userUID: UID, id: number) {
   return window.axios.delete("/v2/bag", {
-    params: { chain_uid: chainUID, user_uid: userUID, number },
+    params: { chain_uid: chainUID, user_uid: userUID, id },
+  });
+}
+
+export function bulkyItemGetAllByChain(chainUID: UID, userUID: UID) {
+  return window.axios.get<BulkyItem[]>("/v2/bulky-item/all", {
+    params: { chain_uid: chainUID, user_uid: userUID },
+  });
+}
+
+export function bulkyItemPut(body: {
+  id?: number;
+  chain_uid: UID;
+  user_uid: UID;
+  title?: string;
+  message?: string;
+  image_url?: string;
+}) {
+  return window.axios.put("/v2/bulky-item", body);
+}
+
+export function bulkyItemRemove(chainUID: UID, userUID: UID, id: number) {
+  return window.axios.delete("/v2/bulky-item", {
+    params: { chain_uid: chainUID, user_uid: userUID, id },
   });
 }

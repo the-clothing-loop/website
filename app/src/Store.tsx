@@ -12,6 +12,8 @@ import {
   routeGetOrder,
   Bag,
   bagGetAllByChain,
+  BulkyItem,
+  bulkyItemGetAllByChain,
 } from "./api";
 
 interface StorageAuth {
@@ -26,6 +28,7 @@ export const StoreContext = createContext({
   chainUsers: [] as Array<User>,
   route: [] as UID[],
   bags: [] as Bag[],
+  bulkyItems: [] as BulkyItem[],
   setChain: (c: Chain | null, uid: UID) => Promise.reject<void>(),
   authenticate: () => Promise.reject<void>(),
   login: (token: string) => Promise.reject<void>(),
@@ -41,6 +44,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
   const [route, setRoute] = useState<UID[]>([]);
   const [bags, setBags] = useState<Bag[]>([]);
+  const [bulkyItems, setBulkyItems] = useState<BulkyItem[]>([]);
   const [storage, setStorage] = useState(new Storage({ name: "store_v1" }));
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
@@ -66,6 +70,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setChain(null);
     setRoute([]);
     setBags([]);
+    setBulkyItems([]);
     setIsAuthenticated(false);
   }
 
@@ -122,15 +127,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     let _chainUsers: typeof chainUsers = [];
     let _route: typeof route = [];
     let _bags: typeof bags = [];
+    let _bulkyItems: typeof bulkyItems = [];
     if (c && _authUserUID) {
       const res = await Promise.all([
         userGetAllByChain(c.uid),
         routeGetOrder(c.uid),
         bagGetAllByChain(c.uid, _authUserUID),
+        bulkyItemGetAllByChain(c.uid, _authUserUID),
       ]);
       _chainUsers = res[0].data;
       _route = res[1].data;
       _bags = res[2].data;
+      _bulkyItems = res[3].data;
     }
 
     await storage.set("chain_uid", c ? c.uid : null);
@@ -138,6 +146,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setChainUsers(_chainUsers);
     setRoute(_route);
     setBags(_bags);
+    setBulkyItems(_bulkyItems);
   }
 
   return (
@@ -146,6 +155,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         authUser,
         route,
         bags,
+        bulkyItems,
         chain,
         chainUsers,
         setChain: _setChain,
