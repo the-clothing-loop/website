@@ -411,7 +411,7 @@ func ChainRemoveUser(c *gin.Context) {
 		}
 	}
 
-	err := db.Exec(`DELETE FROM user_chains WHERE user_id = ? AND chain_id = ?`, user.ID, chain.ID).Error
+	err := chain.RemoveUser(db, user.ID)
 	if err != nil {
 		goscope.Log.Errorf("User could not be removed from chain: %v", err)
 		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
@@ -468,10 +468,12 @@ func ChainDeleteUnapproved(c *gin.Context) {
 		return
 	}
 
-	db.Exec(`
-DELETE FROM user_chains
-WHERE user_id = ? AND chain_id = ? AND is_approved = FALSE
-	`, user.ID, chain.ID)
+	err := chain.RemoveUserUnapproved(db, user.ID)
+	if err != nil {
+		goscope.Log.Errorf("User could not be removed from chain: %v", err)
+		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
+		return
+	}
 
 	if user.Email.Valid {
 		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,

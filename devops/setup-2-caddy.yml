@@ -49,6 +49,7 @@
         owner: "caddy"
       with_items:
         - "/var/caddy/acc.clothingloop.org"
+        - "/var/caddy/app.clothingloop.org"
         - "/var/caddy/clothingloop.org"
         - "/var/caddy/maint.clothingloop.org"
         - "/var/caddy/images.clothingloop.org"

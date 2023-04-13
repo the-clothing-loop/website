@@ -63,6 +63,9 @@ func TestRegisterChainAdmin(t *testing.T) {
 
 	// cleanup
 	tx := db.Begin()
+	tx.Exec(`DELETE FROM bags WHERE user_chain_id IN (
+		SELECT id FROM user_chains WHERE chain_id = ? OR user_id = ?
+	)`, testChain.ID, testUser.ID)
 	tx.Exec("DELETE FROM user_chains WHERE user_id = ? OR chain_id = ?", testUser.ID, testChain.ID)
 	tx.Exec("DELETE FROM user_tokens WHERE user_id = ?", testUser.ID)
 	tx.Exec("DELETE FROM users WHERE id = ?", testUser.ID)

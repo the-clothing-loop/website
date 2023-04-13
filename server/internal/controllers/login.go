@@ -121,7 +121,10 @@ WHERE user_chains.chain_id IN ?
 
 	// set token as cookie
 	auth.CookieSet(c, token)
-	c.JSON(200, user)
+	c.JSON(200, gin.H{
+		"user":  user,
+		"token": token,
+	})
 }
 
 // Sizes and Address is set to the user and the chain

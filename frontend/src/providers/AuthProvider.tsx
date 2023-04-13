@@ -45,7 +45,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     setLoading(true);
     return (async () => {
       try {
-        const user = (await apiLogin(apiKey)).data;
+        const user = (await apiLogin(apiKey)).data.user;
         setUser(user);
 
         Cookies.set(KEY_USER_UID, user.uid, cookieOptions);

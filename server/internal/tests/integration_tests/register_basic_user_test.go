@@ -52,6 +52,9 @@ func TestRegisterBasicUser(t *testing.T) {
 	assert.NotEmpty(t, testUserChains.ID, "chainUser of participant user_id: %d not found", testUser.ID)
 
 	tx := db.Begin()
+	tx.Exec(`DELETE FROM bags WHERE user_chain_id IN (
+		SELECT id FROM user_chains WHERE user_id = ?
+	)`, testUser.ID)
 	tx.Exec("DELETE FROM user_chains WHERE user_id = ?", testUser.ID)
 	tx.Exec("DELETE FROM user_tokens WHERE user_id = ?", testUser.ID)
 	tx.Exec("DELETE FROM users WHERE id = ?", testUser.ID)
