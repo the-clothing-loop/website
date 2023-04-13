@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build:development": "tsc && vite build --mode development",
     "build:acceptance": "tsc && vite build --mode acceptance",
-    "build:production": "tsc && vite build",
+    "build:production": "tsc && vite build --mode production",
     "preview": "vite preview",
     "lint": "eslint"
   },
