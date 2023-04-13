@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"gorm.io/gorm"
@@ -18,6 +19,7 @@ type UserChain struct {
 	IsApproved   bool      `json:"is_approved"`
 	RouteOrder   int       `json:"-"`
 	Bags         []Bag     `json:"-"`
+	Bulky        []Bulky   `json:"-"`
 }
 
 var ErrRouteInvalid = errors.New("Invalid route")
@@ -34,4 +36,52 @@ WHERE uc.chain_id = ? AND uc.user_id IN ?`, chainID, userUIDs).Scan(&lengthOut).
 	}
 
 	return lengthIn == lengthOut
+}
+
+func (u *User) DeleteUserChainDependencies(db *gorm.DB, chainID uint) (err error) {
+	tx := db.Begin()
+
+	err = tx.Exec(`
+DELETE FROM bags WHERE user_chain_id IN (
+	SELECT id FROM user_chains WHERE user_id = ? AND chain_id = ?
+)
+	`, u.ID, chainID).Error
+	if err != nil {
+		tx.Rollback()
+		return fmt.Errorf("Unable to delete bags from user in loop: %v", err)
+	}
+
+	err = tx.Exec(`
+DELETE FROM bulky WHERE user_chain_id IN (
+	SELECT id FROM user_chains WHERE user_id = ? AND chain_id = ?
+)
+	`, u.ID, chainID).Error
+	if err != nil {
+		tx.Rollback()
+		return fmt.Errorf("Unable to delete bags from user in loop: %v", err)
+	}
+
+	return tx.Commit().Error
+}
+
+func (u *User) DeleteUserChainDependenciesAllChains(db *gorm.DB) (err error) {
+	err = db.Exec(`
+DELETE FROM bags WHERE user_chain_id IN (
+	SELECT id FROM user_chains WHERE user_id = ?
+)
+	`, u.ID).Error
+	if err != nil {
+		return fmt.Errorf("Unable to delete bulky items from user: %v", err)
+	}
+
+	err = db.Exec(`
+DELETE FROM bulky WHERE user_chain_id IN (
+	SELECT id FROM user_chains WHERE user_id = ?
+)
+	`, u.ID).Error
+	if err != nil {
+		return fmt.Errorf("Unable to delete bulky items from user: %v", err)
+	}
+
+	return nil
 }

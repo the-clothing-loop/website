@@ -322,7 +322,7 @@ HAVING COUNT(uc.id) = 1
 
 	tx := db.Begin()
 
-	err := user.RemoveBagsAll(tx)
+	err := user.DeleteUserChainDependenciesAllChains(tx)
 	if err != nil {
 		tx.Rollback()
 		goscope.Log.Errorf("UserPurge: %v", err)

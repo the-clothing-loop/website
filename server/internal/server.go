@@ -91,6 +91,11 @@ func Routes() *gin.Engine {
 	v2.PUT("/bag", controllers.BagPut)
 	v2.DELETE("/bag", controllers.BagRemove)
 
+	// bulky
+	v2.GET("/bulky/all", controllers.BulkyGetAll)
+	v2.PUT("/bulky", controllers.BulkyPut)
+	v2.DELETE("/bulky", controllers.BulkyRemove)
+
 	// route
 	v2.GET("/route/order", controllers.RouteOrderGet)
 	v2.POST("/route/order", controllers.RouteOrderSet)

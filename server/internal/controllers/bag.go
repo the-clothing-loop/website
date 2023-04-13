@@ -34,7 +34,8 @@ func BagGetAll(c *gin.Context) {
 	bags.color         AS color,
 	bags.user_chain_id AS user_chain_id,
 	c.uid              AS chain_uid,
-	u.uid              AS user_uid
+	u.uid              AS user_uid,
+	bags.updated_at    AS updated_at
  FROM bags
 LEFT JOIN user_chains AS uc ON uc.id = bags.user_chain_id
 LEFT JOIN chains AS c ON c.id = uc.chain_id

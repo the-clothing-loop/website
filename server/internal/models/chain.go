@@ -73,7 +73,7 @@ ORDER BY uc.route_order ASC
 func (c *Chain) RemoveUserUnapproved(db *gorm.DB, userID uint) (err error) {
 	tx := db.Begin()
 
-	err = c.RemoveBags(tx, userID)
+	err = (&User{ID: userID}).DeleteUserChainDependencies(db, c.ID)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -93,7 +93,7 @@ WHERE user_id = ? AND chain_id = ? AND is_approved = FALSE
 func (c *Chain) RemoveUser(db *gorm.DB, userID uint) (err error) {
 	tx := db.Begin()
 
-	err = c.RemoveBags(tx, userID)
+	err = (&User{ID: userID}).DeleteUserChainDependencies(db, c.ID)
 	if err != nil {
 		tx.Rollback()
 		return err
