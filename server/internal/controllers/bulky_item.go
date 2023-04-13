@@ -26,7 +26,7 @@ func BulkyGetAll(c *gin.Context) {
 	}
 
 	bulkyItems := []models.BulkyItem{}
-	err := db.Debug().Raw(`
+	err := db.Raw(`
 	SELECT 
 	bulky_items.id            AS id,
 	bulky_items.title         AS title,

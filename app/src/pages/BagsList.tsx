@@ -65,19 +65,23 @@ export default function BagsList() {
       });
       await setChain(chain, authUser!.uid);
     };
+
+    let inputs: AlertInput[] = [];
+    route.forEach((r) => {
+      const user = chainUsers.find((u) => u.uid === r);
+      if (!user) return;
+      const isChecked = user.uid === currentHolder;
+      inputs.push({
+        label: user.name,
+        type: "radio",
+        value: user.uid,
+        checked: isChecked,
+      });
+    });
     presentAlert({
       header: "Change Bag Holder",
       message: "Select the new bag holder",
-      inputs: route.map<AlertInput>((r) => {
-        const user = chainUsers.find((u) => u.uid === r)!;
-        const isChecked = user.uid === currentHolder;
-        return {
-          label: user.name,
-          type: "radio",
-          value: user.uid,
-          checked: isChecked,
-        };
-      }),
+      inputs,
       buttons: [
         {
           text: "Cancel",
