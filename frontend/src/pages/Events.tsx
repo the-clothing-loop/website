@@ -13,16 +13,20 @@ import useForm from "../util/form.hooks";
 import { GinParseErrors } from "../util/gin-errors";
 import { ToastContext } from "../providers/ToastProvider";
 import dayjs from "../util/dayjs";
-//import LocationModal from "../components/LocationModal";
-import LocationValues from "../components/LocationModal";
 import LocationModal from "../components/LocationModal";
+
 interface SearchValues {
   genders: string[];
   latitude: number;
   longitude: number;
   distance: number;
 }
-
+interface LocationValues {
+  address: string;
+  radius: number;
+  longitude: number;
+  latitude: number;
+}
 // Media
 const ClothesImage =
   "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
@@ -30,7 +34,6 @@ const ClothesImage =
 const MAX_DISTANCE = 5000;
 const DEFAULT_LATITUDE = 52.377956;
 const DEFAULT_LONGITUDE = 4.89707;
-//console.log(LocationValues)
 export default function Events() {
   const { t } = useTranslation();
 
@@ -41,6 +44,13 @@ export default function Events() {
     latitude: DEFAULT_LATITUDE,
     longitude: DEFAULT_LONGITUDE,
     distance: -1,
+  });
+
+  const [distanceValues, setDistanceValues] = useForm<LocationValues>({
+    address: "",
+    radius: -1,
+    latitude: DEFAULT_LATITUDE,
+    longitude: DEFAULT_LONGITUDE,
   });
 
   useEffect(() => {
@@ -87,18 +97,28 @@ export default function Events() {
       message: "Select your location",
       actions: [
         {
-          text: "Submit-test",
+          text: t("submit"),
           type: "location",
           fn: () => {
-            console.log("in fn");
-            return(
-              <LocationModal/>
+            return (
+              <LocationModal
+                onSubmit={handleSubmit}
+              />
             );
           },
         },
       ],
     });
   }
+
+  function handleSubmit(distanceValues: LocationValues) {
+    setValue("latitude", distanceValues.latitude);
+    setValue("longitude", distanceValues.longitude);
+    setValue("distance", distanceValues.radius);
+
+    load(values.genders, values.latitude, values.longitude, values.distance);
+  }
+  
   return (
     <>
       <Helmet>

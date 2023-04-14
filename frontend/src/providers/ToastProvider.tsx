@@ -227,19 +227,18 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
                 document
                   .getElementById("toast-modal-close")
                   ?.classList.add("hidden");
+                document
+                  .getElementById("location-form")
+                  ?.addEventListener("submit", function (e) {
+                    // e.preventDefault();
+                    handleActionClick(() => {});
+                  });
+
                 return (
                   <div className="mx-auto">
                     <div>{a.fn()} </div>
                     <button
-                      key={a.text}
-                      className={classes}
-                      onClick={() => handleActionClick(a.fn)}
-                    >
-                      {a.text}
-                    </button>
-                    <button
                       key="close"
-                      //id="toast-modal-close"
                       className="btn btn-sm btn-ghost"
                       onClick={() => handleActionClick(() => {})}
                     >

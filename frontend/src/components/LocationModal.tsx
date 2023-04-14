@@ -13,8 +13,6 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY || "";
 
 interface Props {
   onSubmit: (values: LocationValues) => void;
-  initialValues?: LocationValues;
-  showBack?: boolean;
 }
 
 type GeoJSONPoint = GeoJSONTypes.FeatureCollection<
@@ -27,7 +25,7 @@ interface Point {
   latitude: number;
   radius: number;
 }
-export interface LocationValues {
+interface LocationValues {
   address: string;
   radius: number;
   longitude: number;
@@ -54,9 +52,7 @@ function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
   };
 }
 
-//export default function LocationModal(props: { radius: number}) {
-
-export default function LocationModal() {
+export default function LocationModal({ onSubmit }: Props) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
   const history = useHistory();
@@ -71,7 +67,6 @@ export default function LocationModal() {
     //...initialValues,
   });
 
-  //const radius = props.radius;
   useEffect(() => {
     const hasCenter = !!(values.longitude && values.latitude);
     const _map = new mapboxgl.Map({
@@ -176,7 +171,6 @@ export default function LocationModal() {
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     (async () => {
       if (!(values.longitude && values.latitude)) {
         addToastError(t("required") + ": " + t("loopLocation"), 400);
@@ -188,8 +182,7 @@ export default function LocationModal() {
         addToastError(t("required") + ": " + t("loopLocation"), 500);
         return;
       }
-      
-      // onSubmit(values);
+      onSubmit(values);
     })();
   }
 
@@ -199,7 +192,7 @@ export default function LocationModal() {
         <div className="aspect-square cursor-pointer" ref={mapRef} />
       </div>
       <div className="w-full px-4">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} id="location-form">
           <p className="mb-2 text-sm">
             {
               "Click on map to select your location and drag slider to set radius."
@@ -212,7 +205,6 @@ export default function LocationModal() {
             step={0.1}
             defaultValue={3}
             onChange={(e) => setValue("radius", e.target.valueAsNumber)}
-            //className="input input-secondary mb-4 "
             className="w-full h-2 bg-teal rounded-lg appearance-none cursor-pointer"
             required
           />
@@ -226,6 +218,9 @@ export default function LocationModal() {
             step="0.1"
             info={t("decideOnTheAreaYourLoopWillBeActiveIn")}
           />
+          <button className="btn btn-primary my-2" id="submit-location">
+            {t("submit")}
+          </button>
         </form>
       </div>
     </div>
