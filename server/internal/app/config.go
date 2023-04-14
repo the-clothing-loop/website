@@ -39,6 +39,7 @@ var Config struct {
 	GOSCOPE2_USER      string `yaml:"goscope2_user"`
 	GOSCOPE2_PASS      string `yaml:"goscope2_pass"`
 	SENDINBLUE_API_KEY string `yaml:"sendinblue_api_key"`
+	IMGBB_KEY          string `yaml:"imgbb_key"`
 }
 
 func ConfigInit(path string) {
