@@ -22,14 +22,16 @@ import {
 } from "@ionic/react";
 import type { IonSelectCustomEvent } from "@ionic/core";
 import { flag, shield, shieldOutline } from "ionicons/icons";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
+import { RouteComponentProps } from "react-router";
 
 export default function Settings() {
   const { authUser, chain, isAuthenticated, logout, setChain } =
     useContext(StoreContext);
+  const refChainSelect = useRef<HTMLIonSelectElement>(null);
 
   const isUserAdmin = useMemo(
     () =>
@@ -51,6 +53,7 @@ export default function Settings() {
         setListOfChains(chains.map((c) => c.data));
       }
     );
+    refChainSelect.current?.open();
   }, [authUser]);
 
   function handleChainSelect(
@@ -79,6 +82,7 @@ export default function Settings() {
           <IonList style={{ marginBottom: "4em" }}>
             <IonItem lines="none">
               <IonSelect
+                ref={refChainSelect}
                 label={chain ? "Selected Loop" : "Select a Loop"}
                 labelPlacement="stacked"
                 value={chain?.uid || ""}

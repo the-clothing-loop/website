@@ -9,11 +9,11 @@ require (
 	github.com/jaswdr/faker v1.15.0
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/lil5/goscope2 v1.4.1
-	github.com/mococa/go-imgbb v1.0.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/sendinblue/APIv3-go-library/v2 v2.1.2
 	github.com/stretchr/testify v1.8.2
 	github.com/stripe/stripe-go/v73 v73.16.0
+	github.com/the-clothing-loop/go-imgbb v0.0.0-20230414095012-499e90382638
 	gopkg.in/guregu/null.v3 v3.5.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.4.4

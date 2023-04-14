@@ -1,25 +1,24 @@
 import {
+  getPlatforms,
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
+  IonImg,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
   IonModal,
-  IonSelect,
-  IonSelectOption,
   IonTitle,
   IonToolbar,
-  SelectChangeEventDetail,
+  isPlatform,
 } from "@ionic/react";
-
-import type { IonSelectCustomEvent, IonModalCustomEvent } from "@ionic/core";
-import { add, checkmarkCircle, ellipse, remove } from "ionicons/icons";
-import { FormEvent, RefObject, useContext, useState } from "react";
-import { bagColors, bagPut, BulkyItem, bulkyItemPut, UID } from "../api";
+import type { IonModalCustomEvent } from "@ionic/core";
+import { cloudUploadOutline, downloadOutline } from "ionicons/icons";
+import { ChangeEvent, RefObject, useContext, useState } from "react";
+import { BulkyItem, bulkyItemImage, bulkyItemPut } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 
@@ -42,6 +41,8 @@ export default function CreateUpdateBulky({
   const [bulkyMessage, setBulkyMessage] = useState("");
   const [bulkyImageURL, setBulkyImageURL] = useState("");
   const [error, setError] = useState("");
+  const [isIos] = useState(() => isPlatform("ios"));
+  const [isAndroid] = useState(() => isPlatform("android"));
 
   function modalInit() {
     setBulkyTitle(bulky?.title || "");
@@ -91,6 +92,38 @@ export default function CreateUpdateBulky({
     } catch (err: any) {
       setError(err.status);
     }
+  }
+
+  function handleClickUpload() {
+    if (isIos) {
+    } else if (isAndroid) {
+    } else {
+      const el = document.getElementById(
+        "cu-bulky-web-image-upload"
+      ) as HTMLInputElement | null;
+      el?.click();
+    }
+  }
+
+  async function handleWebUpload(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    function getBase64(file: File) {
+      return new Promise<string>((resolve, reject) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+      });
+    }
+    // https://pqina.nl/blog/convert-a-file-to-a-base64-string-with-javascript/#encoding-the-file-as-a-base-string
+    const image64 = (await getBase64(file))
+      .replace("data:", "")
+      .replace(/^.+,/, "");
+
+    const res = await bulkyItemImage(chain!.uid, image64);
+    setBulkyImageURL(res.data.image);
   }
 
   return (
@@ -143,15 +176,71 @@ export default function CreateUpdateBulky({
             ></IonInput>
           </IonItem>
           <IonItem lines="none">
-            <IonLabel slot="start">Image</IonLabel>
+            <IonLabel
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
+              Image
+            </IonLabel>
+          </IonItem>
+          <IonItem lines="none">
+            <IonLabel slot="start">Image URL</IonLabel>
             <IonInput
               className="ion-text-right"
-              placeholder="https://..."
-              type="text"
+              placeholder="image.jpg"
+              type="url"
               value={bulkyImageURL}
               onIonChange={(e) => setBulkyImageURL(e.detail.value + "")}
               color={error === "image-url" ? "danger" : undefined}
             ></IonInput>
+            {isAndroid || isIos ? null : (
+              <input
+                type="file"
+                id="cu-bulky-web-image-upload"
+                name="filename"
+                className="ion-hide"
+                onChange={handleWebUpload}
+              />
+            )}
+          </IonItem>
+          <IonItem lines="none">
+            <IonButton
+              onClick={handleClickUpload}
+              size="default"
+              style={{
+                width: "100%",
+              }}
+              className="ion-margin-top ion-margin-bottom"
+              expand="block"
+            >
+              <IonIcon
+                icon={cloudUploadOutline}
+                style={{ marginRight: "8px" }}
+              />
+              Upload
+            </IonButton>
+          </IonItem>
+          <IonItem lines="none">
+            {!!bulkyImageURL ? (
+              <div
+                style={{
+                  paddingBottom: "16px",
+                  textAlign: "center",
+                }}
+              >
+                <IonImg
+                  src={bulkyImageURL}
+                  alt="the image to display"
+                  style={{
+                    maxWidth: "100%",
+                    height: "300px",
+                  }}
+                />
+              </div>
+            ) : null}
           </IonItem>
         </IonList>
       </IonContent>

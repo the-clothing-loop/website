@@ -17,6 +17,7 @@ import {
   sendOutline,
 } from "ionicons/icons";
 import { Fragment, useContext, useRef, useState } from "react";
+import { useHistory } from "react-router";
 import { loginEmail } from "../api";
 import { StoreContext } from "../Store";
 
@@ -28,6 +29,7 @@ enum State {
 
 export default function Login(props: { isLoggedIn: boolean }) {
   const { login } = useContext(StoreContext);
+  const history = useHistory();
 
   const modal = useRef<HTMLIonModalElement>(null);
   const inputEmail = useRef<HTMLIonInputElement>(null);
@@ -63,6 +65,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
       await login(token + "");
       setVerifyState(State.success);
       modal.current?.dismiss("success");
+      history.replace("/settings", "select-loop");
     } catch (e: any) {
       console.error(e);
       setVerifyState(State.error);

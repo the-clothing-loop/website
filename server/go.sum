@@ -156,8 +156,6 @@ github.com/lil5/goscope2 v1.4.1 h1:Kz+E+IjenUvjsRUPphxMLKEdZitaYkmjg7bDQGwVb24=
 github.com/lil5/goscope2 v1.4.1/go.mod h1:65hb73fKM11nc9Ip2gomhUZ5uFFp8HP6+nXiyTTAp4c=
 github.com/mattn/go-isatty v0.0.17 h1:BTarxUcIeDqL27Mc+vyvdWYSL28zpIhv3RoTdsLMPng=
 github.com/mattn/go-isatty v0.0.17/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
-github.com/mococa/go-imgbb v1.0.0 h1:z7XpeCjh+i7bWmYZicW25h31MbH5DG4jDhoZK6ySUtg=
-github.com/mococa/go-imgbb v1.0.0/go.mod h1:ooLpPrcm7bhEQmmurCE6gGfgW9FrEny+uMBuiBHTKhg=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
@@ -189,6 +187,8 @@ github.com/stretchr/testify v1.8.2 h1:+h33VjcLVPDHtOdpUCuF+7gSuG3yGIftsP1YvFihtJ
 github.com/stretchr/testify v1.8.2/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/stripe/stripe-go/v73 v73.16.0 h1:X3uTpl3zwY7tSPjcltQJ9t/7TYOgfqT6QQK7Qml995I=
 github.com/stripe/stripe-go/v73 v73.16.0/go.mod h1:Uk0oBh96JHdlxRsu0/t8XfuJ3xOUQTUgpKAFZuDcFnQ=
+github.com/the-clothing-loop/go-imgbb v0.0.0-20230414095012-499e90382638 h1:4QcpddEgB/o1jEvDK5aYbVMZHQu1Dl0Kq1349828fuM=
+github.com/the-clothing-loop/go-imgbb v0.0.0-20230414095012-499e90382638/go.mod h1:wXIGEZekH1cqcM11lVB15VIw0YW52cai7UWN3BHoRtI=
 github.com/twitchyliquid64/golang-asm v0.15.1 h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS4MhqMhdFk5YI=
 github.com/twitchyliquid64/golang-asm v0.15.1/go.mod h1:a1lVb/DtPvCB8fslRZhAngC2+aY1QWCk3Cedj/Gdt08=
 github.com/ugorji/go/codec v1.2.9 h1:rmenucSohSTiyL09Y+l2OCk+FrMxGMzho2+tjr5ticU=

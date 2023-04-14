@@ -185,3 +185,13 @@ export function bulkyItemRemove(chainUID: UID, userUID: UID, id: number) {
     params: { chain_uid: chainUID, user_uid: userUID, id },
   });
 }
+
+export function bulkyItemImage(chainUID: UID, image64: string) {
+  return window.axios.post<{
+    delete: string;
+    image: string;
+    thumb: string;
+  }>("/v2/bulky-item/image", image64, {
+    params: { chain_uid: chainUID },
+  });
+}

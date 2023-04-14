@@ -163,16 +163,19 @@ func BulkyUploadImage(c *gin.Context) {
 	res, err := app.ImgBBupload(c)
 	if err != nil {
 		goscope.Log.Warningf("Unable to upload image: %v", err)
+		c.String(http.StatusBadRequest, "Unable to upload image")
+		return
 	}
 
-	if (!res.Success) || err != nil {
+	if !res.Success {
+		goscope.Log.Warningf("Unable to upload image: %v", res)
 		c.String(http.StatusBadRequest, "Unable to upload image")
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"delete": res.Data.DeleteURL,
-		"medium": res.Data.Medium,
-		"thumb":  res.Data.Thumb,
+		"image":  res.Data.Image.Url,
+		"thumb":  res.Data.Thumb.Url,
 	})
 }
