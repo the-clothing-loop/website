@@ -165,7 +165,7 @@ function DonationFormContent() {
         <input
           type="radio"
           name="oneoff_radio"
-          className="radio radio-secondary mr-3"
+          className="radio radio-secondary mr-3 rtl:mr-0 rtl:ml-3"
           checked={values.oneoff_radio === item.id}
           onChange={() => setValue("oneoff_radio", item.id)}
         />
@@ -180,7 +180,7 @@ function DonationFormContent() {
         <input
           type="radio"
           name="recurring_radio"
-          className="radio radio-secondary mr-3"
+          className="radio radio-secondary mr-3 rtl:mr-0 rtl:ml-3"
           checked={values.recurring_radio === item.id}
           onChange={() => setValue("recurring_radio", item.id)}
         />
@@ -206,7 +206,7 @@ function DonationFormContent() {
         <p className="mb-3">{t("howDoYouWantToContributeToTheClothingLoop")}</p>
         <div className="flex flex-col items-stretch sm:flex-row mb-6">
           <button
-            className={`sm:mr-3 mb-3 sm:mb-0 btn btn-secondary ${
+            className={`sm:mr-3 rtl:sm:mr-0 rtl:sm:ml-3 mb-3 sm:mb-0 btn btn-secondary ${
               !isRecurring ? "" : "btn-outline"
             }`}
             type="button"
@@ -242,14 +242,14 @@ function DonationFormContent() {
               type="radio"
               checked={values.oneoff_radio === ""}
               aria-label="type a custom amount in the next text input"
-              className="invisible -z-10 mr-3 absolute"
+              className="invisible -z-10 absolute"
             />
 
-            <span className="absolute ml-3">&euro;</span>
+            <span className="absolute ml-3 rtl:ml-0 rtl:mr-3">&euro;</span>
 
             <input
               name="oneoff_custom"
-              className={`input invalid:input-error w-full pl-8 ${
+              className={`input invalid:input-error w-full ltr:pl-8 rtl:pr-8 ${
                 error === "oneoff_custom" ? "input-error" : "input-secondary"
               } ${
                 values.oneoff_radio === "custom"

@@ -3,9 +3,9 @@ package mocks_test
 import (
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
-	"github.com/CollActionteam/clothing-loop/server/internal/tests/mocks"
 	"github.com/stretchr/testify/assert"
+	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
 )
 
 func TestMockUserShouldSetChainAdminTrue(t *testing.T) {

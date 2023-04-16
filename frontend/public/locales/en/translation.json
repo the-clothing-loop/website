@@ -9,6 +9,7 @@
   "selectParticipant": "Select participant",
   "addCoHost": "Add co-host",
   "published": "Published",
+  "uploadImage": "Upload image",
   "draft": "Draft",
   "openToNewMembers": "Open to new members",
   "closed": "Closed",
@@ -231,6 +232,7 @@
   "toolkitFolder": "Toolkit Folder",
   "editAccount": "Edit Account",
   "remindHost": "Remind Host",
+  "waitToRemindHost": "You can remind hosts once per week. Most hosts will contact with you within 4 weeks.<br/>All hosts are volunteers, so it could take a little while.",
   "reminderEmailSent": "Reminder email sent",
   "reasonForDenyingJoin": "Please give a reason to deny the request",
   "tooFarAway": "Too far away",
@@ -250,5 +252,6 @@
   "addToCalendar": "Add event to your calendar",
   "time": "Time",
   "contactHost": "Contact Host",
-  "eventDetails": "Event Details"
+  "eventDetails": "Event Details",
+  "createEvent": "Create Event"
 }

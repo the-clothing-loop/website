@@ -11,19 +11,11 @@ export default function Counters() {
 
   const [info, setInfo] = useState<InfoBody>();
 
-  const [isVisible, setIsVisible] = useState(false);
-
   useEffect(() => {
     infoGet().then((res) => setInfo(res.data));
   }, []);
 
-  //check if div is visible on viewport
-  const callBack = (entries: any) => {
-    const [entry] = entries;
-    setIsVisible(entry.isIntersecting);
-  };
-
-  useIntersectionObserver(callBack, containerRef, {
+  const isVisible = useIntersectionObserver(containerRef, {
     root: null,
     rootMargin: "50px",
     threshold: 0.5,
@@ -35,7 +27,7 @@ export default function Counters() {
         <div className="">
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
             {isVisible ? (
-              <SingleCounter end={info?.total_chains || 0} step={15} />
+              <SingleCounter end={info?.total_chains || 0} step={193} />
             ) : (
               "0"
             )}
@@ -46,7 +38,7 @@ export default function Counters() {
         <div className="">
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
             {isVisible ? (
-              <SingleCounter end={info?.total_users || 0} step={15} />
+              <SingleCounter end={info?.total_users || 0} step={193} />
             ) : (
               "0"
             )}
@@ -70,7 +62,8 @@ export default function Counters() {
               className="btn btn-primary btn-circle"
               aria-label="our impact"
             >
-              <span className="feather feather-arrow-right" />
+              <span className="feather feather-arrow-right rtl:hidden" />
+              <span className="feather feather-arrow-left ltr:hidden" />
             </a>
           </div>
           <div className="opacity-100 whitespace-normal">

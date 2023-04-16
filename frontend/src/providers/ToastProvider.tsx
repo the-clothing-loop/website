@@ -54,7 +54,8 @@ export function ToastProvider({ children }: PropsWithChildren<{}>) {
       msg = JSON.stringify(msg);
     }
     msg = msg + "";
-    if (status >= 500) window.airbrake?.notify(msg);
+    if (status >= 500)
+      window.goscope2.Log(status < 600 ? "ERROR" : "FATAL", msg);
     addToast({
       type: "error",
       message: msg,

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -75,6 +75,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.Event{},
 		&models.UserToken{},
 		&models.UserChain{},
+		&models.EventImage{},
 		&models.Payment{},
 	)
 

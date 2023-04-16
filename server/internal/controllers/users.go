@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app/auth"
-	"github.com/CollActionteam/clothing-loop/server/internal/app/goscope"
-	"github.com/CollActionteam/clothing-loop/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/app/auth"
+	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+	"github.com/the-clothing-loop/website/server/internal/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -254,6 +255,9 @@ func UserUpdate(c *gin.Context) {
 				c.String(http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
+			if app.SendInBlue != nil && user.Email.Valid {
+				app.SendInBlue.DeleteContact(c.Request.Context(), user.Email.String)
+			}
 		}
 	}
 }
@@ -317,15 +321,58 @@ HAVING COUNT(uc.id) = 1
 	`, user.ID).Scan(&chainIDsToDelete)
 
 	tx := db.Begin()
-	tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID)
-	tx.Exec(`DELETE FROM user_tokens WHERE user_id = ?`, user.ID)
-	tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID)
+
+	err := tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID).Error
+	if err != nil {
+		tx.Rollback()
+		goscope.Log.Errorf("UserPurge: Unable to remove loop connections: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to remove loop connections")
+		return
+	}
+	err = tx.Exec(`DELETE FROM user_tokens WHERE user_id = ?`, user.ID).Error
+	if err != nil {
+		tx.Rollback()
+		goscope.Log.Errorf("UserPurge: Unable to remove token connections: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to remove token connections")
+		return
+	}
+	err = tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID).Error
+	if err != nil {
+		tx.Rollback()
+		goscope.Log.Errorf("UserPurge: Unable to user: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to user")
+		return
+	}
+
 	if len(chainIDsToDelete) > 0 {
-		tx.Exec(`DElETE FROM chains WHERE id IN ?`, chainIDsToDelete)
+		err := tx.Exec(`DELETE FROM user_chains WHERE chain_id IN ?`, chainIDsToDelete).Error
+		if err != nil {
+			tx.Rollback()
+			goscope.Log.Errorf("UserPurge: Unable to remove hosted loop connections: %v", err)
+			c.String(http.StatusInternalServerError, "Unable to remove hosted loop connections")
+			return
+		}
+		err = tx.Exec(`DELETE FROM chains WHERE id IN ?`, chainIDsToDelete).Error
+		if err != nil {
+			tx.Rollback()
+			goscope.Log.Errorf("UserPurge: Unable to remove hosted loop: %v", err)
+			c.String(http.StatusInternalServerError, "Unable to remove hosted loop")
+			return
+		}
 	}
 
 	if user.Email.Valid {
-		tx.Exec(`DELETE FROM newsletters WHERE email = ?`, user.Email.String)
+		err = tx.Exec(`DELETE FROM newsletters WHERE email = ?`, user.Email.String).Error
+		if err != nil {
+			tx.Rollback()
+			goscope.Log.Errorf("UserPurge: Unable to remove newsletter: %v", err)
+			c.String(http.StatusInternalServerError, "Unable to remove newsletter")
+			return
+		}
+		if app.SendInBlue != nil {
+			app.SendInBlue.DeleteContact(c.Request.Context(), user.Email.String)
+		}
 	}
+
 	tx.Commit()
 }

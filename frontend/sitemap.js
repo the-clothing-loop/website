@@ -1,11 +1,13 @@
 import { createWriteStream } from "fs";
 import { SitemapStream } from "sitemap";
+import getLanguages from "./src/languages.js";
 
 // Creates a sitemap object given the input configuration with URLs
 const sitemap = new SitemapStream({
   hostname: "https://www.clothingloop.org",
   readableObjectMode: true,
 });
+const languages = getLanguages(true);
 
 const writeStream = createWriteStream("./build/sitemap.xml");
 sitemap.pipe(writeStream);
@@ -13,7 +15,7 @@ sitemap.pipe(writeStream);
 function i18nUrl(url) {
   return {
     url: url,
-    links: ["en", "nl", "de", "fr", "es", "sv"].map((lng) => ({
+    links: languages.map((lng) => ({
       lang: lng,
       url: `/${lng}${url}`,
     })),

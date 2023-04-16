@@ -1,53 +1,95 @@
 import { Helmet } from "react-helmet";
 
-import { useState, useEffect, useContext } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  Fragment,
+  MouseEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { eventGetAll, eventICalURL } from "../api/event";
+import {
+  eventGet,
+  eventICalURL,
+  eventRemoveImage,
+  eventUploadImage,
+} from "../api/event";
 import { Event } from "../api/types";
-import simplifyDays from "../util/simplify-days";
-import { GenderBadges } from "../components/Badges";
+import { SizeBadges } from "../components/Badges";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
-import dayjs from "dayjs";
-import dayjs_calendar_plugin from "dayjs/plugin/calendar";
-
-dayjs.extend(dayjs_calendar_plugin);
+import dayjs from "../util/dayjs";
+import useToClipboard from "../util/to-clipboard.hooks";
+import { AuthContext } from "../providers/AuthProvider";
 
 // Media
 const ClothesImage =
-  "https://ucarecdn.com/90c93fe4-39da-481d-afbe-f8f67df521c3/-/resize/768x/-/format/auto/Nichon_zelfportret.jpg";
-const CirclesFrame =
-  "https://ucarecdn.com/200fe89c-4dc0-4a72-a9b2-c5d4437c91fa/-/format/auto/circles.png";
+  "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
+const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
 export default function EventDetails() {
   const { t, i18n } = useTranslation();
   const { addToastError } = useContext(ToastContext);
+  const { authUser } = useContext(AuthContext);
   const [event, setEvent] = useState<Event>();
+  const addCopyAttributes = useToClipboard();
 
   useEffect(() => {
     load();
   }, []);
 
+  const datetime = useMemo(() => {
+    if (!event) return "";
+
+    return dayjs(event.date).format("LLL");
+  }, [event, i18n.language]);
+
   async function load() {
     try {
-      const eventUID = window.location.pathname.split("/").at(-1);
+      const eventUID = window.location.pathname.split("/").at(-1) || "";
 
-      await eventGetAll({
-        latitude: 50.662085,
-        longitude: 87.778691,
-        radius: 30000,
-      }).then((res) => {
-        const _event = res.data;
-        _event.forEach((e) => {
-          if (e.uid == eventUID) setEvent(e);
-        });
+      await eventGet(eventUID).then((res) => {
+        setEvent(res.data);
       });
     } catch (err: any) {
       console.error(err);
       addToastError(GinParseErrors(t, err), err.status);
     }
+  }
+
+  function handleUploadImage(e: MouseEvent<HTMLInputElement>) {
+    e.preventDefault();
+
+    console.log("uploading image");
+    //@ts-ignore
+    let file = (e.target.files as FileList)[0];
+    if (!file) return;
+
+    eventUploadImage(event!.uid, file)
+      .catch((err: any) => {
+        console.error(err);
+        addToastError(GinParseErrors(t, err), err.status);
+      })
+      .then(() => {
+        load();
+      });
+  }
+  function handleRemoveImage(e: MouseEvent) {
+    e.preventDefault();
+
+    console.log("removing image");
+
+    eventRemoveImage(event!.uid)
+      .catch((err: any) => {
+        console.error(err);
+        addToastError(GinParseErrors(t, err), err.status);
+      })
+      .then(() => {
+        load();
+      });
   }
 
   if (!event) {
@@ -68,6 +110,14 @@ export default function EventDetails() {
     );
   } else {
     const icalURL = eventICalURL(event.uid);
+    const icalFilename = `${event.name}.ics`;
+    const isOrganizer = authUser
+      ? authUser.uid === event.user_uid || authUser.is_root_admin
+      : false;
+    let image = ClothesImage;
+    if (event.image_base64) {
+      image = "data:image/jpg;base64," + event.image_base64;
+    }
 
     return (
       <>
@@ -76,93 +126,152 @@ export default function EventDetails() {
           <meta name="description" content="Event Details" />
         </Helmet>
         <main>
-          <div className="bg-teal-light h-1/3 w-full overflow-visible absolute -z-10" />
-          <div className="max-w-screen-xl mx-auto pt-10 px-6 md:px-20">
-            <a href={icalURL}>
-              <button className="btn btn-primary inline w-fit float-right mt-16">
-                <span className="pr-2 feather feather-calendar" />
+          <div className="bg-teal-light">
+            <div className="max-w-screen-xl mx-auto py-6 px-6 md:px-20">
+              <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-6 px-0">
+                {event.name}
+              </h1>
+              <a
+                href={icalURL}
+                download={icalFilename}
+                className="btn btn-primary w-fit md:mt-6"
+              >
+                <span className="relative mr-4 rtl:mr-1 rtl:ml-3" aria-hidden>
+                  <span className="inline-block feather feather-calendar relative transform scale-125"></span>
+                  <span className="absolute -bottom-2 -right-2.5 transform scale-90 feather feather-download"></span>
+                </span>
                 {t("addToCalendar")}
-              </button>
-            </a>
-            <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-16 px-0">
-              {event.name}
-            </h1>
-            <div className="md:mx-0 px-0">
-              <div className="flex flex-col md:flex-row md:justify-between">
-                <div className="relative flex">
-                  <img
-                    src={ClothesImage}
-                    alt=""
-                    className="max-w-full md:max-w-2/3 h-auto object-contain object-center my-auto md:col-span-2"
-                  />
-                  <img
-                    className="-z-10 absolute -right-4 md:-right-16 -top-10 overflow-hidden"
-                    src={CirclesFrame}
-                    aria-hidden
-                    alt=""
-                  />
-                  <img
-                    className="max-sm:hidden -z-10 absolute -left-16 -bottom-8"
-                    aria-hidden
-                    alt=""
-                    src={CirclesFrame}
-                  />
-                </div>
-                <div className="shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] w-full md:w-1/3 my-8 md:my-auto bg-white py-12 ml-0 md:ml-12 lg:ml-20">
-                  <div className="px-10 py-2 font-bold font-sans text-xl text-teal">
-                    {t("time") + ":"}
-                  </div>
-                  <div className="px-8 lg:px-16">
-                    <span className="pr-2 feather feather-clock"></span>
-                    <span className="font-sans text-lg">
-                      {simplifyDays(t, i18n, event.date)}
-                    </span>
-                  </div>
-                  <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
-                    {t("location") + ":"}
-                  </div>
-                  <div className="px-8 lg:px-16">
-                    <span className="pr-2 feather feather-map-pin"></span>
-                    <span className="font-sans text-lg">
-                      {event.address} Mission Dolores Park
-                    </span>
-                  </div>
-                  <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
-                    {t("categories") + ":"}
-                  </div>
-
-                  <div className="flex flex-col w-full text-sm px-8 lg:px-16">
-                    {event.genders?.length ? (
-                      <>
-                        <div className="mb-2">
-                          {GenderBadges(t, event.genders)}
-                        </div>
-                      </>
+              </a>
+            </div>
+          </div>
+          <div className="max-w-screen-xl mx-auto pt-6 px-6 md:px-20">
+            <div className="flex flex-col md:flex-row-reverse">
+              <div className="w-full md:w-3/5 md:-mt-20 mb-4 md:mb-0 ml-0 md:ml-12 lg:ml-20 rtl:ml-0 rtl:md:mr-12 rtl:lg:mr-20">
+                <div className="relative">
+                  <dl className="z-10 relative bg-white md:shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] md:py-10 md:px-8">
+                    <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                      {t("time") + ":"}
+                    </dt>
+                    <dd className="mb-1 ml-4">
+                      <span className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-clock"></span>
+                      <span className="font-sans text-lg">{datetime}</span>
+                    </dd>
+                    {event.address ? (
+                      <Fragment key="address">
+                        <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                          {t("location") + ":"}
+                        </dt>
+                        <dd className="mb-1 ml-4">
+                          <span
+                            className="mr-2 feather feather-map-pin"
+                            aria-hidden
+                          ></span>
+                          <address
+                            {...addCopyAttributes(
+                              t,
+                              "event-detail-address-" + event.uid,
+                              "text-lg inline"
+                            )}
+                          >
+                            {event.address}
+                          </address>
+                        </dd>
+                      </Fragment>
                     ) : null}
-                  </div>
-                  <div className="px-10 py-4 font-bold font-sans text-xl text-teal">
-                    {t("contactHost") + ":"}
-                  </div>
-                  <div className="px-8 lg:px-16">
-                    <span className="pr-2 feather feather-mail"></span>
-                    <span className="font-sans text-lg break-all">
-                      {event.user_email}
-                    </span>
-                  </div>
-                  <div className="px-8 lg:px-16 pt-2">
-                    <span className="pr-2 feather feather-phone"></span>
-                    <span className="font-sans text-lg break-all">
-                      {event.user_phone}
-                    </span>
-                  </div>
+                    <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                      {t("categories") + ":"}
+                    </dt>
+
+                    <dd className="mb-1 ml-4 block">
+                      {event.genders?.length ? (
+                        <SizeBadges g={event.genders} />
+                      ) : null}
+                    </dd>
+                    <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                      {t("organizedBy") + ":"}
+                    </dt>
+                    <dd className="mr-2 mb-1 ml-4">
+                      <div>
+                        <span
+                          className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-mail"
+                          aria-hidden
+                        ></span>
+                        <span
+                          {...addCopyAttributes(
+                            t,
+                            "event-detail-email-" + event.uid,
+                            "text-lg inline break-all"
+                          )}
+                        >
+                          {event.user_email}
+                        </span>
+                      </div>
+                    </dd>
+                    <dd className="mb-1 ml-4"></dd>
+                  </dl>
+
+                  <img
+                    src={CirclesFrame}
+                    aria-hidden
+                    className="absolute -bottom-10  ltr:-right-10 rtl:-left-10 hidden md:block"
+                  />
                 </div>
               </div>
-
-              <div className="md:py-16 mb-4 w-full md:w-2/3">
-                <h2 className="font-serif font-bold text-secondary text-2xl mb-8 px-0">
+              <div className="w-full">
+                <h2 className="font-sans font-bold text-secondary text-2xl mb-4 px-0">
                   {t("eventDetails") + ":"}
                 </h2>
-                {event.description}
+                <p>
+                  <div className="aspect-[4/3] sm:float-right rtl:sm:float-left sm:w-64 mb-4 sm:m-4 ltr:mr-0 rtl:ml-0 relative">
+                    {isOrganizer ? (
+                      <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2 flex flex-row-reverse">
+                        <label
+                          key="upload-image"
+                          className="tooltip tooltip-bottom"
+                          data-tip={t("uploadImage")}
+                        >
+                          <input
+                            type="file"
+                            id="event-details-form-img-file"
+                            accept="image/png, image/jpeg"
+                            name="filename"
+                            className="hidden"
+                            onInput={handleUploadImage}
+                          />
+                          <div
+                            className="btn btn-ghost bg-white/90 hover:bg-white btn-sm btn-square feather feather-upload"
+                            aria-label="Upload image"
+                          ></div>
+                        </label>
+                        <label
+                          className={`tooltip tooltip-bottom ${
+                            event.image_base64 ? "" : "hidden"
+                          }`}
+                          data-tip={t("remove")}
+                        >
+                          <button
+                            type="button"
+                            className="btn btn-ghost bg-red/70 hover:bg-red/90 btn-sm btn-square feather feather-x"
+                            onClick={handleRemoveImage}
+                            aria-label="remove image"
+                            hidden={event.image_base64 === ""}
+                          ></button>
+                        </label>
+                      </div>
+                    ) : null}
+                    <img
+                      src={image}
+                      alt=""
+                      className="object-cover h-full w-full"
+                    />
+                  </div>
+                  {event.description.split("\n").map((s) => (
+                    <>
+                      {s}
+                      <br />
+                    </>
+                  ))}
+                </p>
               </div>
             </div>
           </div>

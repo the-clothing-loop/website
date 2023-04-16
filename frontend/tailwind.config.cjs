@@ -4,6 +4,11 @@ const colors = {
   transparent: "transparent",
   white: "#ffff",
   black: "#3c3c3b",
+
+  // aqua: "#d5ecdf",
+  lightBlue: "#98d9de",
+  turquoise: "#518d7e",
+
   teal: {
     light: "#ecf2f3",
     DEFAULT: "#48808b",
@@ -14,11 +19,43 @@ const colors = {
     darker: "#f1a40f",
     darkest: "#c58c41",
   },
-  // aqua: "#d5ecdf",
-  lightBlue: "#98d9de",
-  turquoise: "#518d7e",
-  green: "#4caf50",
-  red: "#ef5350",
+  skyBlue: {
+    light: "#bfe7ef",
+    DEFAULT: "#7ecfe0",
+  },
+  blue: {
+    light: "#89b3d9",
+    DEFAULT: "#1467b3",
+  },
+  pink: {
+    light: "#ecbbd0",
+    DEFAULT: "#dc77a3",
+  },
+  lilac: {
+    light: "#dab5d6",
+    DEFAULT: "#b76dac",
+  },
+  purple: {
+    lighter: "#EADEFF",
+    light: "#a899c2",
+    DEFAULT: "#513484",
+  },
+  orange: {
+    light: "#f6c99f",
+    DEFAULT: "#ef953d",
+  },
+  leafGreen: {
+    light: "#d2e2b3",
+    DEFAULT: "#a6c665",
+  },
+  green: {
+    light: "#b1c8b6",
+    DEFAULT: "#66926e",
+  },
+  red: {
+    light: "#e39aa1",
+    DEFAULT: "#c73643",
+  },
   grey: {
     light: "#e8e8e8",
     DEFAULT: "#a5a5a5",

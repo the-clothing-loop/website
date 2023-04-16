@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"html/template"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
 	"github.com/golang/glog"
+	"github.com/the-clothing-loop/website/server/internal/app"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -23,11 +23,13 @@ var emailsTemplates = map[string]*template.Template{
 	"de": mustParseFS(emailsFS, "emails/de/*.gohtml"),
 	"fr": mustParseFS(emailsFS, "emails/fr/*.gohtml"),
 	"es": mustParseFS(emailsFS, "emails/es/*.gohtml"),
+	"he": mustParseFS(emailsFS, "emails/he/*.gohtml"),
 	"sv": mustParseFS(emailsFS, "emails/sv/*.gohtml"),
+	"it": mustParseFS(emailsFS, "emails/it/*.gohtml"),
 }
 
 func init() {
-	lang := []string{"en", "nl", "de", "fr", "es", "sv"}
+	lang := []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
 
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/headers.json", l))

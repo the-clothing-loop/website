@@ -3,7 +3,7 @@ package auth_test
 import (
 	"testing"
 
-	"github.com/CollActionteam/clothing-loop/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/app"
 	"gorm.io/gorm"
 )
 
