@@ -9,6 +9,7 @@ import { TextForm } from "./FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
 import { circleRadiusKm } from "../util/maps";
+
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY || "";
 
 interface Props {
@@ -25,7 +26,7 @@ interface Point {
   latitude: number;
   radius: number;
 }
-interface LocationValues {
+export interface LocationValues {
   address: string;
   radius: number;
   longitude: number;
@@ -44,7 +45,7 @@ function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
               coordinates: [point.longitude, point.latitude],
             },
             properties: {
-              radius: circleRadiusKm((point.radius * 1000) / 6, point.latitude),
+              radius: circleRadiusKm(point.radius * 1000, point.latitude),
             },
           },
         ]
@@ -188,10 +189,8 @@ export default function LocationModal({ onSubmit }: Props) {
 
   return (
     <div className="w-full mx-auto">
-      <div className="md:pr-4">
-        <div className="aspect-square cursor-pointer" ref={mapRef} />
-      </div>
-      <div className="w-full px-4">
+      <div className="aspect-square cursor-pointer" ref={mapRef} />
+      <div className="w-full">
         <form onSubmit={handleSubmit} id="location-form">
           <p className="mb-2 text-sm">
             {
