@@ -29,7 +29,7 @@ enum State {
   success,
 }
 
-const BETA_TESTERS = ["hello@clothingloop.org", "host@example.com"];
+const BETA_TESTERS = (import.meta.env.VITE_APP_BETA_TESTERS || "").split(",");
 
 export default function Login(props: { isLoggedIn: boolean }) {
   const { login } = useContext(StoreContext);
