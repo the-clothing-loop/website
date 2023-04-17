@@ -8,6 +8,7 @@ import {
   IonPage,
   IonSelect,
   IonSelectOption,
+  IonText,
   IonTitle,
   IonToolbar,
   SelectChangeEventDetail,
@@ -19,6 +20,8 @@ import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import toastError from "../../toastError";
+
+const VERSION = import.meta.env.VITE_APP_VERSION;
 
 export default function Settings() {
   const { authUser, chain, isAuthenticated, logout, setChain } =
@@ -115,6 +118,16 @@ export default function Settings() {
               ]}
             ></IonAlert>
           </div>
+          <IonText
+            className="ion-text-center"
+            style={{
+              display: "block",
+              color: "var(--ion-color-medium)",
+              fontSize: "14px",
+            }}
+          >
+            {VERSION}
+          </IonText>
         </IonContent>
       ) : null}
     </IonPage>

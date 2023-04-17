@@ -5,10 +5,10 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build:development": "tsc && vite build --mode development",
-    "build:acceptance": "tsc && vite build --mode acceptance",
-    "build:production": "tsc && vite build --mode production",
+    "dev": "VITE_APP_VERSION=$(git describe --tags --always) vite",
+    "build:development": "tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode development",
+    "build:acceptance": "tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode acceptance",
+    "build:production": "tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode production",
     "preview": "vite preview",
     "lint": "eslint"
   },
