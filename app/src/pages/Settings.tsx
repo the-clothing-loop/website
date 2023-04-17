@@ -127,7 +127,7 @@ export default function Settings() {
               fontSize: "14px",
             }}
           >
-            {VERSION}
+            version: {VERSION}
           </IonText>
           <IonList className="ion-margin-top">
             <IonItem lines="full" routerLink="/privacy-policy">
