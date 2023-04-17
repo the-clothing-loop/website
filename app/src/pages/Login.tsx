@@ -134,7 +134,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             </IonItem>
             <IonItem lines="none">
               <IonInput
-                type="text"
+                type="number"
                 ref={inputToken}
                 autoCorrect="off"
                 placeholder="••••••"

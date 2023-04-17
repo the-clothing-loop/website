@@ -3,6 +3,7 @@ module github.com/the-clothing-loop/website/server
 go 1.20
 
 require (
+	github.com/GGP1/atoll v0.6.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/golang/glog v1.1.0
