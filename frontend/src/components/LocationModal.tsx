@@ -56,16 +56,14 @@ function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
 export default function LocationModal({ onSubmit }: Props) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
-  const history = useHistory();
 
   const mapRef = useRef<any>();
   const [map, setMap] = useState<mapboxgl.Map>();
-  const [values, setValue, setValues] = useForm<LocationValues>({
+  const [values, setValue] = useForm<LocationValues>({
     address: "",
     radius: 3,
     longitude: 0,
     latitude: 0,
-    //...initialValues,
   });
 
   useEffect(() => {
@@ -192,11 +190,7 @@ export default function LocationModal({ onSubmit }: Props) {
       <div className="aspect-square cursor-pointer" ref={mapRef} />
       <div className="w-full">
         <form onSubmit={handleSubmit} id="location-form">
-          <p className="mb-2 text-sm">
-            {
-              "Click on map to select your location and drag slider to set radius."
-            }
-          </p>
+          <p className="mb-2 text-sm">{t("clickMap")}</p>
           <input
             name="range"
             type="range"
@@ -215,7 +209,7 @@ export default function LocationModal({ onSubmit }: Props) {
             value={values.radius}
             onChange={(e) => setValue("radius", e.target.valueAsNumber)}
             step="0.1"
-            info={t("decideOnTheAreaYourLoopWillBeActiveIn")}
+            info={t("setLocationAndRadius")}
           />
           <button className="btn btn-primary my-2" id="submit-location">
             {t("submit")}
