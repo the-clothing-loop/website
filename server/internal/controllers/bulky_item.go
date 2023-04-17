@@ -58,7 +58,7 @@ WHERE user_chain_id IN (
 func BulkyPut(c *gin.Context) {
 	db := getDB(c)
 	var body struct {
-		ID       *uint   `json:"id,omitempty"`
+		ID       uint    `json:"id,omitempty"`
 		UserUID  string  `json:"user_uid" binding:"required,uuid"`
 		ChainUID string  `json:"chain_uid" binding:"required,uuid"`
 		Title    *string `json:"title,omitempty"`
@@ -75,9 +75,9 @@ func BulkyPut(c *gin.Context) {
 		return
 	}
 
-	bulkyItem := models.BulkyItem{}
-	if body.ID != nil {
-		db.Raw(`SELECT * FROM bulky_items WHERE id = ? LIMIT 1`, body.ID).Scan(&bulkyItem)
+	bulkyItem := &models.BulkyItem{}
+	if body.ID != 0 {
+		db.Raw(`SELECT * FROM bulky_items WHERE id = ? LIMIT 1`, body.ID).Scan(bulkyItem)
 	}
 	if body.Title != nil {
 		bulkyItem.Title = *(body.Title)
@@ -104,9 +104,9 @@ LIMIT 1
 
 	var err error
 	if bulkyItem.ID == 0 {
-		err = db.Create(&bulkyItem).Error
+		err = db.Create(bulkyItem).Error
 	} else {
-		err = db.Save(&bulkyItem).Error
+		err = db.Updates(*bulkyItem).Error
 	}
 	if err != nil {
 		goscope.Log.Errorf("Unable to create or update bulky item: %v", err)

@@ -11,17 +11,26 @@ import {
   IonModal,
   IonSelect,
   IonSelectOption,
+  IonText,
   IonTitle,
   IonToolbar,
   SelectChangeEventDetail,
+  useIonToast,
 } from "@ionic/react";
 
 import type { IonSelectCustomEvent, IonModalCustomEvent } from "@ionic/core";
 import { add, checkmarkCircle, ellipse, remove } from "ionicons/icons";
-import { FormEvent, RefObject, useContext, useState } from "react";
+import {
+  FormEvent,
+  RefObject,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 import { bagColors, bagPut, UID } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
+import toastError from "../../toastError";
 
 export default function CreateBag({
   didDismiss,
@@ -31,19 +40,36 @@ export default function CreateBag({
   didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
 }) {
   const { bags, chainUsers, route, chain, authUser } = useContext(StoreContext);
-  const [bagNumber, setBagNumber] = useState(0);
+  const [bagNumber, _setBagNumber] = useState(0);
   const [bagColor, setBagColor] = useState(bagColors[2]);
   const [bagHolder, setBagHolder] = useState<UID | null>(null);
   const [error, setError] = useState("");
+  const [present] = useIonToast();
 
   function modalInit() {
     let highestNumber = 0;
+    setError("");
     bags.forEach((bag) => {
       if (bag.number > highestNumber) {
         highestNumber = bagNumber;
       }
     });
-    setBagNumber(highestNumber + 1);
+    setBagNumber(1);
+  }
+
+  function setBagNumber(value: SetStateAction<number>) {
+    let fn: (prevState: number) => number =
+      typeof value !== "function" ? () => value : value;
+
+    _setBagNumber((prevState) => {
+      let n = fn(prevState);
+      bags.forEach((bag) => {
+        if (bag.number === n) {
+          n = bag.number + 1;
+        }
+      });
+      return n;
+    });
   }
 
   function cancel() {
@@ -76,6 +102,7 @@ export default function CreateBag({
       modal.current?.dismiss("", "confirm");
     } catch (err: any) {
       setError(err.status);
+      toastError(present, err);
     }
   }
   function handleInputBagNumber(e: FormEvent<HTMLIonInputElement>) {
@@ -118,15 +145,14 @@ export default function CreateBag({
               The next bag number is automatically selected
             </IonLabel>
           </IonItem>
-          <IonItem lines="none">
+          <IonItem
+            lines="none"
+            color={error === "number" ? "danger" : undefined}
+          >
             <IonLabel slot="start">Bag Number</IonLabel>
-            <IonInput
-              className="ion-text-right"
-              type="number"
-              value={bagNumber}
-              onChange={handleInputBagNumber}
-              color={error === "number" ? "danger" : undefined}
-            ></IonInput>
+            <IonText slot="end" className="ion-text-right">
+              {bagNumber}
+            </IonText>
 
             <IonButtons slot="end" className="ion-margin-start">
               <IonButton

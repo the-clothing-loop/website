@@ -8,6 +8,7 @@ import {
   IonTabButton,
   IonTabs,
   setupIonicReact,
+  useIonToast,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import {
@@ -58,7 +59,7 @@ setupIonicReact({
 
 export default function App() {
   const { isAuthenticated, init, authenticate } = useContext(StoreContext);
-
+  const [present] = useIonToast();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -67,6 +68,13 @@ export default function App() {
       .finally(() => {
         setLoading(false);
       });
+
+    const root = document.getElementById("#root");
+    root?.addEventListener("store-error", eventCatchStoreErr);
+
+    return () => {
+      root?.removeEventListener("store-error", eventCatchStoreErr);
+    };
   }, []);
 
   return (
@@ -119,4 +127,8 @@ export default function App() {
       )}
     </IonApp>
   );
+}
+
+function eventCatchStoreErr(e: any) {
+  console.log(e);
 }

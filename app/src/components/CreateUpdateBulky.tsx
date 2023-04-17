@@ -1,5 +1,4 @@
 import {
-  getPlatforms,
   IonButton,
   IonButtons,
   IonContent,
@@ -11,9 +10,11 @@ import {
   IonLabel,
   IonList,
   IonModal,
+  IonTextarea,
   IonTitle,
   IonToolbar,
   isPlatform,
+  useIonToast,
 } from "@ionic/react";
 import type { IonModalCustomEvent } from "@ionic/core";
 import { cloudUploadOutline, downloadOutline } from "ionicons/icons";
@@ -21,9 +22,7 @@ import { ChangeEvent, RefObject, useContext, useState } from "react";
 import { BulkyItem, bulkyItemImage, bulkyItemPut } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
-
-const LINK_DETECTION_REGEX =
-  /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
+import toastError from "../../toastError";
 
 export default function CreateUpdateBulky({
   bulky,
@@ -43,6 +42,7 @@ export default function CreateUpdateBulky({
   const [error, setError] = useState("");
   const [isIos] = useState(() => isPlatform("ios"));
   const [isAndroid] = useState(() => isPlatform("android"));
+  const [present] = useIonToast();
 
   function modalInit() {
     setBulkyTitle(bulky?.title || "");
@@ -57,21 +57,15 @@ export default function CreateUpdateBulky({
     setBulkyImageURL("");
   }
   async function createOrUpdate() {
-    if (bulky) {
-      if (!bulkyTitle) {
-        setError("title");
-        return;
-      }
-      if (!bulkyMessage) {
-        setError("message");
-        return;
-      }
-      if (!bulkyImageURL) {
-        setError("image-url");
-        return;
-      }
+    if (!bulkyTitle) {
+      setError("title");
+      return;
     }
-    if (bulkyImageURL && LINK_DETECTION_REGEX.test(bulkyImageURL)) {
+    if (!bulkyMessage) {
+      setError("message");
+      return;
+    }
+    if (!bulkyImageURL) {
       setError("image-url");
       return;
     }
@@ -91,6 +85,7 @@ export default function CreateUpdateBulky({
       modal.current?.dismiss("", "confirm");
     } catch (err: any) {
       setError(err.status);
+      toastError(present, err);
     }
   }
 
@@ -166,14 +161,23 @@ export default function CreateUpdateBulky({
             ></IonInput>
           </IonItem>
           <IonItem lines="none">
-            <IonLabel slot="start">Message</IonLabel>
-            <IonInput
-              className="ion-text-right"
-              type="text"
+            <IonLabel>Message</IonLabel>
+          </IonItem>
+          <IonItem lines="none">
+            <IonTextarea
+              style={{
+                backgroundColor: "var(--ion-color-light)",
+                borderRadius: "8px",
+                padding: "8px",
+              }}
+              spellCheck="true"
+              autoGrow
+              autoCapitalize="sentences"
+              autoCorrect="on"
               value={bulkyMessage}
               onIonChange={(e) => setBulkyMessage(e.detail.value + "")}
               color={error === "message" ? "danger" : undefined}
-            ></IonInput>
+            />
           </IonItem>
           <IonItem lines="none">
             <IonLabel
@@ -227,8 +231,9 @@ export default function CreateUpdateBulky({
             {!!bulkyImageURL ? (
               <div
                 style={{
-                  paddingBottom: "16px",
+                  marginBottom: "16px",
                   textAlign: "center",
+                  width: "100%",
                 }}
               >
                 <IonImg

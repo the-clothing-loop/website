@@ -1,36 +1,29 @@
 import {
   IonAlert,
-  IonBadge,
   IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
   IonContent,
   IonHeader,
-  IonIcon,
   IonItem,
-  IonLabel,
   IonList,
   IonPage,
   IonSelect,
   IonSelectOption,
-  IonText,
   IonTitle,
   IonToolbar,
   SelectChangeEventDetail,
+  useIonToast,
 } from "@ionic/react";
 import type { IonSelectCustomEvent } from "@ionic/core";
-import { flag, shield, shieldOutline } from "ionicons/icons";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
-import { RouteComponentProps } from "react-router";
+import toastError from "../../toastError";
 
 export default function Settings() {
   const { authUser, chain, isAuthenticated, logout, setChain } =
     useContext(StoreContext);
+  const [present] = useIonToast();
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
 
   const isUserAdmin = useMemo(
@@ -48,12 +41,17 @@ export default function Settings() {
       setListOfChains([]);
       return;
     }
-    Promise.all(authUser.chains.map((uc) => chainGet(uc.chain_uid))).then(
-      (chains) => {
+
+    Promise.all(authUser.chains.map((uc) => chainGet(uc.chain_uid)))
+      .then((chains) => {
         setListOfChains(chains.map((c) => c.data));
-      }
-    );
-    refChainSelect.current?.open();
+      })
+      .catch((err) => {
+        toastError(present, err);
+      });
+    if (!chain) {
+      refChainSelect.current?.open();
+    }
   }, [authUser]);
 
   function handleChainSelect(
@@ -61,8 +59,6 @@ export default function Settings() {
   ) {
     const chainUID = e.detail.value;
     const c = listOfChains.find((c) => c.uid === chainUID) || null;
-
-    console.log("set chain selected", c);
 
     setChain(c, authUser!.uid);
   }

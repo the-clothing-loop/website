@@ -36,8 +36,6 @@ export const StoreContext = createContext({
   init: () => Promise.reject<void>(),
 });
 
-const STORAGE_KEY = import.meta.env.VITE_STORAGE_KEY as string;
-
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chain, setChain] = useState<Chain | null>(null);
@@ -116,6 +114,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         throw new Error("Not authenticated but still has chain_uid");
       }
     } catch (err) {
+      throwError(err);
       await storage.set("chain_uid", null);
     }
 
@@ -129,16 +128,20 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     let _bags: typeof bags = [];
     let _bulkyItems: typeof bulkyItems = [];
     if (c && _authUserUID) {
-      const res = await Promise.all([
-        userGetAllByChain(c.uid),
-        routeGetOrder(c.uid),
-        bagGetAllByChain(c.uid, _authUserUID),
-        bulkyItemGetAllByChain(c.uid, _authUserUID),
-      ]);
-      _chainUsers = res[0].data;
-      _route = res[1].data;
-      _bags = res[2].data;
-      _bulkyItems = res[3].data;
+      try {
+        const res = await Promise.all([
+          userGetAllByChain(c.uid),
+          routeGetOrder(c.uid),
+          bagGetAllByChain(c.uid, _authUserUID),
+          bulkyItemGetAllByChain(c.uid, _authUserUID),
+        ]);
+        _chainUsers = res[0].data;
+        _route = res[1].data;
+        _bags = res[2].data;
+        _bulkyItems = res[3].data;
+      } catch (err) {
+        throwError(err);
+      }
     }
 
     await storage.set("chain_uid", c ? c.uid : null);
@@ -168,5 +171,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
     </StoreContext.Provider>
+  );
+}
+
+function throwError(err: any) {
+  document.getElementById("root")?.dispatchEvent(
+    new CustomEvent("store-error", {
+      detail: err,
+    })
   );
 }

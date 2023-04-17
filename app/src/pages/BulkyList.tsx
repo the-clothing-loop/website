@@ -1,5 +1,4 @@
 import {
-  AlertInput,
   IonButton,
   IonButtons,
   IonCard,
@@ -11,18 +10,16 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
-  IonItemOption,
-  IonItemOptions,
-  IonItemSliding,
-  IonList,
   IonPage,
   IonText,
   IonTitle,
   IonToolbar,
   useIonAlert,
+  useIonToast,
 } from "@ionic/react";
 import { calendarClear, personCircleOutline } from "ionicons/icons";
 import { useContext, useRef, useState } from "react";
+import toastError from "../../toastError";
 import { bulkyItemRemove, BulkyItem } from "../api";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
@@ -32,6 +29,7 @@ export default function BulkyList() {
     useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
+  const [present] = useIonToast();
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
 
   function refresh() {
@@ -40,7 +38,9 @@ export default function BulkyList() {
 
   function handleClickDelete(id: number) {
     const handler = async () => {
-      await bulkyItemRemove(chain!.uid, authUser!.uid, id);
+      await bulkyItemRemove(chain!.uid, authUser!.uid, id).catch((err) => {
+        toastError(present, err);
+      });
       await setChain(chain, authUser!.uid);
     };
     presentAlert({
@@ -169,13 +169,17 @@ export default function BulkyList() {
                   </IonItem>
                   <IonText
                     style={{
-                      marginTop: "6px",
-                      marginBottom: "6px",
                       color: "var(--ion-color-dark)",
                     }}
-                    // onClick={() => handleClickItem(bulky.id)}
                   >
-                    <p className="ion-padding-top">{bulkyItem.message}</p>
+                    <p
+                      style={{
+                        whiteSpace: "pre-wrap",
+                      }}
+                      className="ion-padding-top"
+                    >
+                      {bulkyItem.message}
+                    </p>
                   </IonText>
                 </IonCardContent>
 
