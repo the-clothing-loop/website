@@ -58,21 +58,6 @@ export default function BulkyList() {
     });
   }
 
-  // function handleClickItem(id: number) {
-  //   const handler = async (e: UID) => {
-  //     console.log(e);
-
-  //     if (typeof e !== "string" || !e) return;
-  //     await bagPut({
-  //       chain_uid: chain!.uid,
-  //       user_uid: authUser!.uid,
-  //       holder_uid: e,
-  //       number: bagNo,
-  //     });
-  //     await setChain(chain, authUser!.uid);
-  //   };
-  // }
-
   function handleClickCreate() {
     setUpdateBulky(null);
 
