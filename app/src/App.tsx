@@ -52,6 +52,7 @@ import Loading from "./pages/Loading";
 import ToDo from "./pages/ToDo";
 import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 setupIonicReact({
   mode: "ios",
@@ -93,6 +94,11 @@ export default function App() {
               <Route exact path="/bags" component={BagsList}></Route>
               <Route exact path="/bulky-items" component={BulkyList}></Route>
               <Route exact path="/settings" component={Settings}></Route>
+              <Route
+                exact
+                path="/privacy-policy"
+                component={PrivacyPolicy}
+              ></Route>
               <Route exact path="/todo" component={ToDo}></Route>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">

@@ -4,6 +4,7 @@ import {
   IonContent,
   IonHeader,
   IonItem,
+  IonLabel,
   IonList,
   IonPage,
   IonSelect,
@@ -128,6 +129,11 @@ export default function Settings() {
           >
             {VERSION}
           </IonText>
+          <IonList className="ion-margin-top">
+            <IonItem lines="full" routerLink="/privacy-policy">
+              <IonLabel color="medium">Privacy Policy</IonLabel>
+            </IonItem>
+          </IonList>
         </IonContent>
       ) : null}
     </IonPage>
