@@ -10,6 +10,7 @@ import {
   IonInput,
   IonIcon,
   IonText,
+  useIonToast,
 } from "@ionic/react";
 import {
   arrowForwardOutline,
@@ -18,6 +19,7 @@ import {
 } from "ionicons/icons";
 import { Fragment, useContext, useRef, useState } from "react";
 import { useHistory } from "react-router";
+import toastError from "../../toastError";
 import { loginEmail } from "../api";
 import { StoreContext } from "../Store";
 
@@ -27,9 +29,12 @@ enum State {
   success,
 }
 
+const BETA_TESTERS = ["hello@clothingloop.org", "host@example.com"];
+
 export default function Login(props: { isLoggedIn: boolean }) {
   const { login } = useContext(StoreContext);
   const history = useHistory();
+  const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
   const inputEmail = useRef<HTMLIonInputElement>(null);
@@ -44,6 +49,15 @@ export default function Login(props: { isLoggedIn: boolean }) {
     clearTimeout(sentTimeout);
     const email = inputEmail.current?.value || "";
     if (!email) return;
+
+    if (!BETA_TESTERS.includes(email + "")) {
+      setSentState(State.error);
+      toastError(
+        present,
+        "This app is currently being beta tested, only a select few can access it at this time"
+      );
+    }
+
     try {
       const res = await loginEmail(email + "");
       setShowToken(true);
@@ -51,9 +65,10 @@ export default function Login(props: { isLoggedIn: boolean }) {
       setSentTimeout(
         setTimeout(() => setSentState(State.idle), 1000 * 60 /* 1 min */) as any
       );
-    } catch (e) {
+    } catch (err) {
       setSentState(State.error);
-      console.error(e);
+      toastError(present, err);
+      console.error(err);
     }
   }
 
