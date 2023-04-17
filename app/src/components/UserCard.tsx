@@ -1,17 +1,13 @@
 import {
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
   IonIcon,
-  IonCardContent,
   IonList,
   IonItem,
   IonLabel,
   IonBadge,
   IonText,
-  IonTitle,
+  IonButton,
 } from "@ionic/react";
-import { shield } from "ionicons/icons";
+import { logoGoogle, shield } from "ionicons/icons";
 import { SizeI18nKeys, User } from "../api";
 
 export default function UserCard({
@@ -67,6 +63,21 @@ export default function UserCard({
             {/* https://www.google.com/maps/@${long},${lat},14z */}
             <p>{user?.address}</p>
           </IonLabel>
+          {user.address ? (
+            <IonButton
+              slot="end"
+              shape="round"
+              size="small"
+              rel="noreferrer"
+              target="_blank"
+              href={
+                `https://www.google.com/maps/search/` +
+                user.address.replaceAll(" ", "+")
+              }
+            >
+              <IonIcon icon={logoGoogle} />
+            </IonButton>
+          ) : null}
         </IonItem>
       </IonList>
     </div>
