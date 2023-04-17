@@ -150,23 +150,38 @@ export default function CreateUpdateBulky({
               The next bag number is automatically selected
             </IonLabel>
           </IonItem>
-          <IonItem lines="none">
+          <IonItem
+            lines="none"
+            color={error === "title" ? "danger" : undefined}
+          >
             <IonLabel slot="start">Title</IonLabel>
             <IonInput
               className="ion-text-right"
               type="text"
+              autoCorrect="on"
+              autoCapitalize="words"
+              enterkeyhint="next"
+              aria-label="Title"
               value={bulkyTitle}
               onIonChange={(e) => setBulkyTitle(e.detail.value + "")}
-              color={error === "title" ? "danger" : undefined}
             ></IonInput>
           </IonItem>
-          <IonItem lines="none">
+          <IonItem
+            lines="none"
+            color={error === "message" ? "danger" : undefined}
+          >
             <IonLabel>Message</IonLabel>
           </IonItem>
-          <IonItem lines="none">
+          <IonItem
+            lines="none"
+            className="ion-padding-bottom"
+            color={error === "message" ? "danger" : undefined}
+          >
             <IonTextarea
+              color="light"
               style={{
                 backgroundColor: "var(--ion-color-light)",
+                color: "var(--ion-color-light-contrast)",
                 borderRadius: "8px",
                 padding: "8px",
               }}
@@ -174,9 +189,10 @@ export default function CreateUpdateBulky({
               autoGrow
               autoCapitalize="sentences"
               autoCorrect="on"
+              enterkeyhint="next"
+              aria-label="Message"
               value={bulkyMessage}
               onIonChange={(e) => setBulkyMessage(e.detail.value + "")}
-              color={error === "message" ? "danger" : undefined}
             />
           </IonItem>
           <IonItem lines="none">
@@ -190,7 +206,10 @@ export default function CreateUpdateBulky({
               Image
             </IonLabel>
           </IonItem>
-          <IonItem lines="none">
+          <IonItem
+            lines="none"
+            color={error === "image-url" ? "danger" : undefined}
+          >
             <IonLabel slot="start">Image URL</IonLabel>
             <IonInput
               className="ion-text-right"
@@ -198,7 +217,6 @@ export default function CreateUpdateBulky({
               type="url"
               value={bulkyImageURL}
               onIonChange={(e) => setBulkyImageURL(e.detail.value + "")}
-              color={error === "image-url" ? "danger" : undefined}
             ></IonInput>
             {isAndroid || isIos ? null : (
               <input
@@ -210,7 +228,10 @@ export default function CreateUpdateBulky({
               />
             )}
           </IonItem>
-          <IonItem lines="none">
+          <IonItem
+            lines="none"
+            color={error === "image-url" ? "danger" : undefined}
+          >
             <IonButton
               onClick={handleClickUpload}
               size="default"
