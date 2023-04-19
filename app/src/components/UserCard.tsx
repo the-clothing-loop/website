@@ -21,10 +21,11 @@ export default function UserCard({
     <div>
       <div className="ion-padding">
         <IonText>
-          <h1 className="ion-no-margin">{user?.name}</h1>
+          <h1 className="ion-no-margin">{user?.name}
           {isUserAdmin ? (
             <IonIcon icon={shield} className="ion-margin-start" />
           ) : null}
+            </h1>
         </IonText>
       </div>
       <IonList>

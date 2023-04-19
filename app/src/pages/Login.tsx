@@ -134,11 +134,11 @@ export default function Login(props: { isLoggedIn: boolean }) {
             disabled={sentState === State.success}
             onClick={handleSendEmail}
           >
-            <IonLabel>Send</IonLabel>
+            Send
             {sentState === State.success ? (
               <IonIcon slot="end" icon={mailUnreadOutline} />
             ) : (
-              <IonIcon slot="end" icon={sendOutline} />
+              <IonIcon slot="end" icon={sendOutline}/>
             )}
           </IonButton>
         </IonItem>
