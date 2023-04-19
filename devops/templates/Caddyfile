@@ -121,3 +121,18 @@ images.clothingloop.org {
 		reverse_proxy 127.0.0.1:8083
 	}
 }
+
+app.clothingloop.org {
+	header X-Robots-Tag noindex
+
+	handle_path /api/* {
+		reverse_proxy 127.0.0.1:8082
+	}
+
+	handle {
+		root * /var/caddy/app.clothingloop.org
+		file_server
+		encode zstd gzip
+		try_files {path} /index.html
+	}
+}

@@ -321,7 +321,7 @@ export default function ChainMemberList() {
                   onChange={(e) => setSelectedTable("route")}
                   className="hidden peer"
                 />
-                <div className="relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black ltr:pr-2 rtl:pl-2 ltr:mr-2 rtl:ml-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
+                <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black ltr:pr-3 rtl:pl-3 ltr:mr-3 rtl:ml-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
                   {t("route")}
                   <span className="skew-x-6 rtl:-skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2 rtl:right-auto rtl:-left-2"></span>
                 </div>
@@ -335,10 +335,10 @@ export default function ChainMemberList() {
                   onChange={(e) => setSelectedTable("participants")}
                   className="hidden peer"
                 />
-                <div className="relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black px-2 mx-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
-                  <span className="-skew-x-6 w-4 h-12 bg-[inherit] absolute -left-2"></span>
+                <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black px-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
+                  <span className="-skew-x-6 w-4 h-12 bg-[inherit] absolute -left-3"></span>
                   {t("edit")}
-                  <span className="skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2"></span>
+                  <span className="skew-x-6 w-4 h-12 bg-[inherit] absolute -right-3"></span>
                 </div>
               </label>
               <label>
@@ -354,7 +354,7 @@ export default function ChainMemberList() {
                   className="hidden peer"
                 />
                 <div
-                  className={`relative btn bg-transparent hover:bg-black hover:text-secondary-content transition-none ltr:pl-2 rtl:pr-2 ltr:ml-2 rtl:mr-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
+                  className={`relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none ltr:pl-3 rtl:pr-3 ltr:ml-3 rtl:mr-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
                     unapprovedUsers.length
                       ? "text-black"
                       : "text-base-300 cursor-not-allowed"
@@ -377,7 +377,13 @@ export default function ChainMemberList() {
               </label>
             </div>
             <div className="order-2 sm:justify-self-end sm:self sm:order-3">
-              <UserDataExport chainName={chain.name} chainUsers={users} />
+              {selectedTable !== "unapproved" ? (
+                <UserDataExport
+                  chainName={chain.name}
+                  chainUsers={users}
+                  key="export"
+                />
+              ) : null}
             </div>
           </div>
 

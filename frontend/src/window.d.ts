@@ -1,4 +1,5 @@
 import "goscope2-sdk-js/sdk/js";
+import Axios from "redaxios";
 
 interface GoatCounter {
   path: string | ((p: string) => string | null);
@@ -15,10 +16,10 @@ interface GoatCounter {
     | false;
 
   // Get URL to send to GoatCounter.
-  url(vars?: GoatCounterVars): string | void;
+  url(vars?: any): string | void;
 
   // Count a hit.
-  count(vars?: GoatCounterVars): void;
+  count(vars?: any): void;
 
   // Get a query parameter.
   get_query(name: string): string;
@@ -35,9 +36,10 @@ interface GoatCounter {
   }): void;
 }
 
-export declare global {
+declare global {
   interface Window {
     MapboxGeocoder: MapboxGeocoder;
     goatcounter: GoatCounter;
+    axios: typeof Axios;
   }
 }

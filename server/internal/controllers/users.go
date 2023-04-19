@@ -322,7 +322,14 @@ HAVING COUNT(uc.id) = 1
 
 	tx := db.Begin()
 
-	err := tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID).Error
+	err := user.DeleteUserChainDependenciesAllChains(tx)
+	if err != nil {
+		tx.Rollback()
+		goscope.Log.Errorf("UserPurge: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to disconnect bag connections")
+		return
+	}
+	err = tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
 		goscope.Log.Errorf("UserPurge: Unable to remove loop connections: %v", err)
@@ -345,7 +352,16 @@ HAVING COUNT(uc.id) = 1
 	}
 
 	if len(chainIDsToDelete) > 0 {
-		err := tx.Exec(`DELETE FROM user_chains WHERE chain_id IN ?`, chainIDsToDelete).Error
+		err := tx.Exec(`DELETE FROM bags WHERE user_chain_id IN (
+			SELECT id FROM user_chains WHERE chain_id IN ?
+		)`, chainIDsToDelete).Error
+		if err != nil {
+			tx.Rollback()
+			goscope.Log.Errorf("UserPurge: %v", err)
+			c.String(http.StatusInternalServerError, "Unable to disconnect all loop bag connections")
+			return
+		}
+		err = tx.Exec(`DELETE FROM user_chains WHERE chain_id IN ?`, chainIDsToDelete).Error
 		if err != nil {
 			tx.Rollback()
 			goscope.Log.Errorf("UserPurge: Unable to remove hosted loop connections: %v", err)

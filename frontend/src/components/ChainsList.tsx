@@ -187,9 +187,9 @@ export default function ChainsList() {
                             }`}
                             to={`/loops/${chain.uid}/members`}
                           >
-                            <span className="feather feather-arrow-right sm:ml-3 ltr:hidden"></span>
                             <span className="max-xs:hidden">{t("view")}</span>
-                            <span className="feather feather-arrow-left sm:mr-3 rtl:hidden"></span>
+                            <span className="feather feather-arrow-left sm:mr-3 ltr:hidden"></span>
+                            <span className="feather feather-arrow-right sm:ml-3 rtl:hidden"></span>
                           </Link>
                         ) : null}
                         <div className="dropdown dropdown-left">

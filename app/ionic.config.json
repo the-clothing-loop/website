@@ -1,0 +1,13 @@
+{
+  "name": "My Clothing Loop",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite",
+  "config": {
+    "mode": "ios",
+    "core": {
+      "mode":"ios"
+    }
+  }
+}

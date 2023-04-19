@@ -28,3 +28,7 @@ goscope2_pass: "{{ api_config_goscope2_pass }}"
 {% if api_config_sendinblue_api_key is defined %}
 sendinblue_api_key: "{{ api_config_sendinblue_api_key }}"
 {% endif %}
+
+{% if api_config_imgbb_key is defined %}
+imgbb_key: "{{ api_config_imgbb_key }}"
+{% endif %}

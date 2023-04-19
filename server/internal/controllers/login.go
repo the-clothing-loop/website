@@ -57,7 +57,7 @@ func LoginValidate(c *gin.Context) {
 	}
 	token := query.Key
 
-	ok, user := auth.TokenVerify(db, token)
+	ok, user, newToken := auth.TokenVerify(db, token)
 	if !ok {
 		c.String(http.StatusUnauthorized, "Invalid token")
 		return
@@ -120,8 +120,11 @@ WHERE user_chains.chain_id IN ?
 	user.IsEmailVerified = true
 
 	// set token as cookie
-	auth.CookieSet(c, token)
-	c.JSON(200, user)
+	auth.CookieSet(c, newToken)
+	c.JSON(200, gin.H{
+		"user":  user,
+		"token": newToken,
+	})
 }
 
 // Sizes and Address is set to the user and the chain

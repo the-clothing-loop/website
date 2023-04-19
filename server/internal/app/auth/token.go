@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/GGP1/atoll"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -28,7 +29,11 @@ func TokenReadFromRequest(c *gin.Context) (string, bool) {
 
 func TokenCreateUnverified(db *gorm.DB, userID uint) (string, error) {
 	// create token
-	token := uuid.NewV4().String()
+	tokenB, err := atoll.NewPassword(8, []atoll.Level{atoll.Digit})
+	if err != nil {
+		return "", err
+	}
+	token := string(tokenB)
 
 	// set token in database
 	res := db.Create(&models.UserToken{
@@ -44,15 +49,17 @@ func TokenCreateUnverified(db *gorm.DB, userID uint) (string, error) {
 }
 
 // Returns the user before it was verified
-func TokenVerify(db *gorm.DB, token string) (bool, *models.User) {
+func TokenVerify(db *gorm.DB, token string) (bool, *models.User, string) {
+	newToken := uuid.NewV4().String()
 	if res := db.Exec(`
 UPDATE user_tokens
-SET user_tokens.verified = TRUE
+SET user_tokens.verified = TRUE,
+	user_tokens.token = ?
 WHERE user_tokens.token = ?
 	AND user_tokens.verified = FALSE
 	AND user_tokens.created_at > ADDDATE(NOW(), INTERVAL -24 HOUR)
-	`, token); res.Error != nil || res.RowsAffected == 0 {
-		return false, nil
+	`, newToken, token); res.Error != nil || res.RowsAffected == 0 {
+		return false, nil, ""
 	}
 
 	user := &models.User{}
@@ -62,9 +69,9 @@ FROM user_tokens
 LEFT JOIN users ON user_tokens.user_id = users.id
 WHERE user_tokens.token = ?
 LIMIT 1
-	`, token).Scan(user)
+	`, newToken).Scan(user)
 	if user.ID == 0 {
-		return false, nil
+		return false, nil, ""
 	}
 
 	if res := db.Exec(`
@@ -72,24 +79,20 @@ UPDATE users
 SET is_email_verified = TRUE
 WHERE id = ?
 	`, user.ID); res.Error != nil {
-		return false, nil
+		return false, nil, ""
 	}
 
-	if res := db.Exec(`
+	if user.Email.Valid {
+		if res := db.Exec(`
 UPDATE newsletters
 SET verified = TRUE
-WHERE email = (
-	SELECT users.email
-	FROM user_tokens
-	LEFT JOIN users ON user_tokens.user_id = users.id
-	WHERE user_tokens.token = ?
-	LIMIT 1
-)
-	`, token); res.Error != nil {
-		return false, nil
+WHERE email = ?
+	`, user.Email.String); res.Error != nil {
+			return false, nil, ""
+		}
 	}
 
-	return true, user
+	return true, user, newToken
 }
 
 func TokenAuthenticate(db *gorm.DB, token string) (user *models.User, ok bool) {

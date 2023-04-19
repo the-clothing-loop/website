@@ -41,6 +41,7 @@
         api_config_smtp_pass: "{{ smtp_cl_acceptance_password }}"
         api_config_goscope2_user: "{{ goscope2_acceptance_user }}"
         api_config_goscope2_pass: "{{ goscope2_acceptance_pass }}"
+        api_config_imgbb_key: "{{ imgbb_key }}"
       ansible.builtin.template:
         src: templates/config.yml.j2
         dest: /home/clothingloop/opt/config.acc.yml

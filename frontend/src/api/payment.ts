@@ -1,5 +1,3 @@
-import axios from "./axios";
-
 export const priceIDs = {
   // priceID not necessary for one off donations
   oneOff_any: "",
@@ -22,5 +20,8 @@ interface PaymentInitiateResponse {
 }
 
 export function paymentInitiate(body: PaymentInitiateBody) {
-  return axios.post<PaymentInitiateResponse>("/v2/payment/initiate", body);
+  return window.axios.post<PaymentInitiateResponse>(
+    "/v2/payment/initiate",
+    body
+  );
 }

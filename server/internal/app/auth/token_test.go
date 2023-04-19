@@ -56,11 +56,11 @@ LIMIT 1
 	assert.Falsef(t, ok, "Unverified token (%s) should not be useable", token)
 
 	// verify token
-	ok, _ = auth.TokenVerify(db, token)
+	ok, _, newToken := auth.TokenVerify(db, token)
 	assert.Truef(t, ok, "Token should pass verification (%s)", token)
 
 	// ensure verified token is usable for authenticate
-	_, ok = auth.TokenAuthenticate(db, token)
+	_, ok = auth.TokenAuthenticate(db, newToken)
 	assert.Truef(t, ok, "Verified token should be useable (%s)", token)
 
 	// ensure token is verified in database
@@ -69,11 +69,11 @@ LIMIT 1
 SELECT *
 FROM user_tokens
 WHERE user_id = ? AND token = ? AND verified = TRUE
-	`, user.ID, token).Scan(&userTokens)
+	`, user.ID, newToken).Scan(&userTokens)
 	assert.Equal(t, 1, len(userTokens), "token record should exist")
 
 	// remove token
-	auth.TokenDelete(db, token)
+	auth.TokenDelete(db, newToken)
 
 	// check that user token is removed
 	userTokens = []models.UserToken{}
@@ -81,6 +81,6 @@ WHERE user_id = ? AND token = ? AND verified = TRUE
 SELECT *
 FROM user_tokens
 WHERE token = ?
-	`, token).Scan(&userTokens)
+	`, newToken).Scan(&userTokens)
 	assert.Equal(t, 0, len(userTokens), "user token exists (%v)", userTokens)
 }

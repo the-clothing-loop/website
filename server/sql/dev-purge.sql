@@ -4,6 +4,8 @@
 
 -- ! Remove "clothingloop." to use elseware
 
+DELETE FROM clothingloop.bags;
+
 DELETE FROM clothingloop.user_chains;
 
 DELETE FROM clothingloop.user_tokens;
@@ -33,3 +35,5 @@ ALTER TABLE clothingloop.payments AUTO_INCREMENT=1;
 ALTER TABLE clothingloop.user_chains AUTO_INCREMENT=1;
 
 ALTER TABLE clothingloop.users AUTO_INCREMENT=1;
+
+ALTER TABLE clothingloop.bags AUTO_INCREMENT=1;
