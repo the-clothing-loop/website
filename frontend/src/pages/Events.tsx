@@ -13,6 +13,8 @@ import { GinParseErrors } from "../util/gin-errors";
 import { ToastContext } from "../providers/ToastProvider";
 import { AuthContext } from "../providers/AuthProvider";
 import dayjs from "../util/dayjs";
+import LocationModal from "../components/LocationModal";
+import { LocationValues } from "../components/LocationModal";
 
 interface SearchValues {
   genders: string[];
@@ -97,28 +99,25 @@ export default function Events() {
 
   function handleOpenModalGetLocation() {
     addModal({
-      message: t("allowLocation"),
+      message: "Select your location",
       actions: [
         {
-          text: t("allow"),
-          type: "secondary",
+          text: t("submit"),
+          type: "location",
           fn: () => {
-            window.navigator.geolocation.getCurrentPosition(
-              (pos) => {
-                setValue("latitude", pos.coords.latitude);
-                setValue("longitude", pos.coords.longitude);
-
-                console.log(`Latitude : ${pos.coords.latitude}`);
-                console.log(`Longitude: ${pos.coords.longitude}`);
-              },
-              (err) => {
-                console.warn(`Couldn't receive location: ${err.message}`);
-              }
-            );
+            return <LocationModal onSubmit={handleSubmit} />;
           },
         },
       ],
     });
+  }
+
+  function handleSubmit(distanceValues: LocationValues) {
+    setValue("latitude", distanceValues.latitude);
+    setValue("longitude", distanceValues.longitude);
+    setValue("distance", distanceValues.radius);
+
+    load(values.genders, values.latitude, values.longitude, values.distance);
   }
 
   return (

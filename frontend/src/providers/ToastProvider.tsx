@@ -1,4 +1,11 @@
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  ReactChildren,
+  ReactElement,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import * as focusTrap from "focus-trap";
 
@@ -8,6 +15,7 @@ export interface Toast {
 }
 export interface Modal {
   message: string;
+  content?: () => ReactElement;
   actions: ModalAction[];
 }
 interface ModalAction {
@@ -193,6 +201,7 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
         role="document"
       >
         <h5 className="text-lg mb-6 min-w-[300px]">{props.modal.message}</h5>
+        {props.modal.content ? <props.modal.content /> : null}
         <div
           className={
             props.modal.actions.length === 1
