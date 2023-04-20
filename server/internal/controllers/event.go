@@ -13,19 +13,9 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/pkg/imgbb"
 	"gopkg.in/guregu/null.v3/zero"
 )
-
-type EventCreateRequestBody struct {
-	Name        string    `json:"name" binding:"required"`
-	Description string    `json:"description"`
-	Latitude    float64   `json:"latitude" binding:"required,latitude"`
-	Longitude   float64   `json:"longitude" binding:"required,longitude"`
-	Address     string    `json:"address" binding:"required"`
-	Date        time.Time `json:"date" binding:"required"`
-	Genders     []string  `json:"genders" binding:"required"`
-	ChainUID    string    `json:"chain_uid,omitempty" binding:"omitempty"`
-}
 
 const eventGetSql = `SELECT
 events.id                    AS id,
@@ -45,18 +35,28 @@ events.updated_at            AS updated_at,
 users.uid                    AS user_uid,
 users.name                   AS user_name,
 users.email                  AS user_email,
-TO_BASE64(event_images.blob) AS event_image_base64,
+events.image_url             AS image_url,
 chains.name                  AS chain_name
 FROM events
 LEFT JOIN chains ON chains.id = chain_id
 LEFT JOIN users ON users.id = user_id
-LEFT JOIN event_images ON event_images.id = events.event_image_id
 `
 
 func EventCreate(c *gin.Context) {
 	db := getDB(c)
 
-	var body EventCreateRequestBody
+	var body struct {
+		Name           string    `json:"name" binding:"required"`
+		Description    string    `json:"description"`
+		Latitude       float64   `json:"latitude" binding:"required,latitude"`
+		Longitude      float64   `json:"longitude" binding:"required,longitude"`
+		Address        string    `json:"address" binding:"required"`
+		Date           time.Time `json:"date" binding:"required"`
+		Genders        []string  `json:"genders" binding:"required"`
+		ChainUID       string    `json:"chain_uid,omitempty" binding:"omitempty"`
+		ImageUrl       string    `json:"image_url" binding:"required,url"`
+		ImageDeleteUrl string    `json:"image_delete_url" binding:"omitempty,url"`
+	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -78,15 +78,17 @@ func EventCreate(c *gin.Context) {
 	}
 
 	event := &models.Event{
-		UID:         uuid.NewV4().String(),
-		Name:        body.Name,
-		Description: body.Description,
-		Latitude:    body.Latitude,
-		Longitude:   body.Longitude,
-		Address:     body.Address,
-		Date:        body.Date,
-		Genders:     body.Genders,
-		UserID:      user.ID,
+		UID:            uuid.NewV4().String(),
+		Name:           body.Name,
+		Description:    body.Description,
+		Latitude:       body.Latitude,
+		Longitude:      body.Longitude,
+		Address:        body.Address,
+		Date:           body.Date,
+		Genders:        body.Genders,
+		UserID:         user.ID,
+		ImageUrl:       body.ImageUrl,
+		ImageDeleteUrl: body.ImageDeleteUrl,
 	}
 	if body.ChainUID != "" && chain != nil {
 		event.ChainID = zero.NewInt(int64(chain.ID), true)
@@ -176,6 +178,11 @@ func EventDelete(c *gin.Context) {
 		return
 	}
 
+	// delete image from imgbb
+	if event.ImageDeleteUrl != "" {
+		imgbb.DeleteAll([]string{event.ImageDeleteUrl})
+	}
+
 	err := db.Exec(`DELETE FROM events WHERE id = ?`, event.ID).Error
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -187,15 +194,17 @@ func EventUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		UID         string     `json:"uid" binding:"required,uuid"`
-		Name        *string    `json:"name,omitempty"`
-		Description *string    `json:"description,omitempty"`
-		Address     *string    `json:"address,omitempty"`
-		Latitude    *float32   `json:"latitude,omitempty" binding:"omitempty,latitude"`
-		Longitude   *float32   `json:"longitude,omitempty" binding:"omitempty,longitude"`
-		Date        *time.Time `json:"date,omitempty"`
-		Genders     *[]string  `json:"genders,omitempty"`
-		ChainUID    *string    `json:"chain_uid,omitempty"`
+		UID            string     `json:"uid" binding:"required,uuid"`
+		Name           *string    `json:"name,omitempty"`
+		Description    *string    `json:"description,omitempty"`
+		Address        *string    `json:"address,omitempty"`
+		Latitude       *float32   `json:"latitude,omitempty" binding:"omitempty,latitude"`
+		Longitude      *float32   `json:"longitude,omitempty" binding:"omitempty,longitude"`
+		Date           *time.Time `json:"date,omitempty"`
+		Genders        *[]string  `json:"genders,omitempty"`
+		ImageUrl       *string    `json:"image_url,omitempty"`
+		ImageDeleteUrl *string    `json:"image_delete_url,omitempty"`
+		ChainUID       *string    `json:"chain_uid,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -258,58 +267,21 @@ func EventUpdate(c *gin.Context) {
 	if body.ChainUID != nil {
 		valuesToUpdate["chain_uid"] = *(body.ChainUID)
 	}
+	if body.ImageUrl != nil {
+		valuesToUpdate["image_url"] = *(body.ImageUrl)
+		if body.ImageDeleteUrl != nil {
+			valuesToUpdate["image_delete_url"] = *(body.ImageDeleteUrl)
+		}
+
+		if event.ImageDeleteUrl != "" {
+			imgbb.DeleteAll([]string{event.ImageDeleteUrl})
+		}
+	}
 
 	err := db.Model(event).Updates(valuesToUpdate).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to update loop values: %v", err)
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to update loop values"))
-	}
-}
-
-func EventImagePut(c *gin.Context) {
-	db := getDB(c)
-
-	var uri struct {
-		UID string `uri:"uid" binding:"required,uuid"`
-	}
-	if err := c.ShouldBindUri(&uri); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	ok, _, event := auth.AuthenticateEvent(c, db, uri.UID)
-	if !ok {
-		return
-	}
-
-	defer c.Request.Body.Close()
-	err := models.EventImageAdd(db, event, c.Request.Body)
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
-}
-
-func EventImageDelete(c *gin.Context) {
-	db := getDB(c)
-
-	var uri struct {
-		UID string `uri:"uid" binding:"required,uuid"`
-	}
-	if err := c.ShouldBindUri(&uri); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	ok, _, event := auth.AuthenticateEvent(c, db, uri.UID)
-	if !ok {
-		return
-	}
-
-	err := models.EventImageDelete(db, event)
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
 	}
 }
 

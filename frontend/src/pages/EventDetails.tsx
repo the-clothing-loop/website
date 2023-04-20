@@ -14,8 +14,8 @@ import { Link } from "react-router-dom";
 import {
   eventGet,
   eventICalURL,
-  eventRemoveImage,
-  eventUploadImage,
+  eventImageExpiration,
+  eventUpdate,
 } from "../api/event";
 import { Event } from "../api/types";
 import { SizeBadges } from "../components/Badges";
@@ -24,6 +24,7 @@ import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "../util/dayjs";
 import useToClipboard from "../util/to-clipboard.hooks";
 import { AuthContext } from "../providers/AuthProvider";
+import { uploadImage } from "../api/imgbb";
 
 // Media
 const ClothesImage =
@@ -66,30 +67,22 @@ export default function EventDetails() {
     console.log("uploading image");
     //@ts-ignore
     let file = (e.target.files as FileList)[0];
-    if (!file) return;
+    if (!file || !event) return;
 
-    eventUploadImage(event!.uid, file)
-      .catch((err: any) => {
+    (async () => {
+      try {
+        const res = await uploadImage(file, 800, eventImageExpiration);
+        await eventUpdate({
+          uid: event.uid,
+          image_url: res.data.image,
+          image_delete_url: res.data.delete,
+        });
+        await load();
+      } catch (err: any) {
         console.error(err);
         addToastError(GinParseErrors(t, err), err.status);
-      })
-      .then(() => {
-        load();
-      });
-  }
-  function handleRemoveImage(e: MouseEvent) {
-    e.preventDefault();
-
-    console.log("removing image");
-
-    eventRemoveImage(event!.uid)
-      .catch((err: any) => {
-        console.error(err);
-        addToastError(GinParseErrors(t, err), err.status);
-      })
-      .then(() => {
-        load();
-      });
+      }
+    })();
   }
 
   if (!event) {
@@ -115,9 +108,7 @@ export default function EventDetails() {
       ? authUser.uid === event.user_uid || authUser.is_root_admin
       : false;
     let image = ClothesImage;
-    if (event.image_base64) {
-      image = "data:image/jpg;base64," + event.image_base64;
-    }
+    if (event.image_url) image = event.image_url;
 
     return (
       <>
@@ -242,20 +233,6 @@ export default function EventDetails() {
                             className="btn btn-ghost bg-white/90 hover:bg-white btn-sm btn-square feather feather-upload"
                             aria-label="Upload image"
                           ></div>
-                        </label>
-                        <label
-                          className={`tooltip tooltip-bottom ${
-                            event.image_base64 ? "" : "hidden"
-                          }`}
-                          data-tip={t("remove")}
-                        >
-                          <button
-                            type="button"
-                            className="btn btn-ghost bg-red/70 hover:bg-red/90 btn-sm btn-square feather feather-x"
-                            onClick={handleRemoveImage}
-                            aria-label="remove image"
-                            hidden={event.image_base64 === ""}
-                          ></button>
                         </label>
                       </div>
                     ) : null}

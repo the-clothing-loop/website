@@ -240,6 +240,7 @@
   "other": "Other",
   "events": "Events",
   "allEvents": "All Events",
+  "eventName": "Event name",
   "sorryNoEvents": "Sorry, there are no events that match these filters.",
   "allowLocation": "Allow browser to see your location",
   "allow": "Allow browser access",
@@ -250,8 +251,11 @@
   "when": "When",
   "eventNotFound": "Event not found",
   "addToCalendar": "Add event to your calendar",
+  "date": "Date",
   "time": "Time",
   "contactHost": "Contact Host",
   "eventDetails": "Event Details",
+  "relatedLoop": "Related Loop",
+  "none": "None",
   "createEvent": "Create Event"
 }

@@ -19,7 +19,7 @@ import {
 import type { IonModalCustomEvent } from "@ionic/core";
 import { cloudUploadOutline, downloadOutline } from "ionicons/icons";
 import { ChangeEvent, RefObject, useContext, useState } from "react";
-import { BulkyItem, bulkyItemImage, bulkyItemPut } from "../api";
+import { BulkyItem, uploadImage, bulkyItemPut } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
@@ -117,7 +117,7 @@ export default function CreateUpdateBulky({
       .replace("data:", "")
       .replace(/^.+,/, "");
 
-    const res = await bulkyItemImage(chain!.uid, image64);
+    const res = await uploadImage(image64);
     setBulkyImageURL(res.data.image);
   }
 

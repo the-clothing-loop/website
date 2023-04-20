@@ -48,5 +48,5 @@ export interface Event {
   user_name: string;
   user_email: string;
   chain_name: string;
-  image_base64?: string;
+  image_url?: string;
 }
