@@ -142,7 +142,12 @@ export default function EventChangeForm(props: {
             <GeocoderSelector
               address={values.address}
               required
-              onResult={(g) => setValue("address", g.query)}
+              onResult={(g) => {
+                console.log(g);
+                setValue("address", g.query);
+                setValue("latitude", g.first?.[1] || 0);
+                setValue("longitude", g.first?.[0] || 0);
+              }}
             />
           </label>
         </div>

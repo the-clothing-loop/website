@@ -1,13 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import { EventCreateBody, eventGet, eventUpdate } from "../api/event";
 import EventChangeForm from "../components/EventChangeForm";
+import { ToastContext } from "../providers/ToastProvider";
+import { GinParseErrors } from "../util/gin-errors";
 
 export default function EventEdit() {
   const { t } = useTranslation();
   const { pathname } = useLocation();
+  const { addToastError } = useContext(ToastContext);
+  const history = useHistory();
   const [initialValues, setInitialValues] = useState<EventCreateBody>();
 
   const eventUID = pathname.split("/").at(-2) || "";
@@ -16,7 +20,14 @@ export default function EventEdit() {
     eventUpdate({
       uid: eventUID,
       ...values,
-    });
+    })
+      .then(() => {
+        history.replace("/events/" + eventUID);
+      })
+      .catch((err: any) => {
+        console.error("Error creating event:", err, values);
+        addToastError(GinParseErrors(t, err), err?.status);
+      });
   }
 
   useEffect(() => {

@@ -173,8 +173,8 @@ func EventUpdate(c *gin.Context) {
 		Name           *string    `json:"name,omitempty"`
 		Description    *string    `json:"description,omitempty"`
 		Address        *string    `json:"address,omitempty"`
-		Latitude       *float32   `json:"latitude,omitempty" binding:"omitempty,latitude"`
-		Longitude      *float32   `json:"longitude,omitempty" binding:"omitempty,longitude"`
+		Latitude       *float64   `json:"latitude,omitempty" binding:"omitempty,latitude"`
+		Longitude      *float64   `json:"longitude,omitempty" binding:"omitempty,longitude"`
 		Date           *time.Time `json:"date,omitempty"`
 		Genders        *[]string  `json:"genders,omitempty"`
 		ImageUrl       *string    `json:"image_url,omitempty"`
@@ -229,10 +229,10 @@ func EventUpdate(c *gin.Context) {
 		event.Address = *(body.Address)
 	}
 	if body.Latitude != nil {
-		event.Latitude = float64(*(body.Latitude))
+		event.Latitude = *(body.Latitude)
 	}
 	if body.Longitude != nil {
-		event.Longitude = float64(*(body.Longitude))
+		event.Longitude = *(body.Longitude)
 	}
 	if body.Date != nil {
 		event.Date = *(body.Date)

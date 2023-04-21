@@ -44,49 +44,25 @@ export default function EventCreate() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
   const { addToastError } = useContext(ToastContext);
-  const [image, setImage] = useState<UploadImageBody>();
-  const [jsValues, setJsValue] = useForm<FormJsValues>({
-    address: "",
-    description: "",
-    genders: [],
-  });
   const [submitted, setSubmitted] = useState("");
 
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    const values = FormJup<FormHtmlValues>(e);
-    console.info("submit", { ...values, ...jsValues });
-
-    if (jsValues.address.length < 6) {
+  async function onSubmit(values: EventCreateBody) {
+    if (values.address.length < 6) {
       addToastError(t("required") + ": " + t("address"), 400);
       return;
     }
-
-    if (!image) {
+    if (!values.image_url) {
       addToastError(t("required") + ": " + t("uploadImage"), 400);
       return;
     }
 
-    let newEvent: EventCreateBody = {
-      name: values.name,
-      description: jsValues.description,
-      address: jsValues.address,
-      latitude: 52.377956,
-      longitude: 4.89707,
-      genders: jsValues.genders,
-      date: dayjs(values.date).format(),
-      image_url: image.image,
-      image_delete_url: image.delete,
-    };
-    if (values.chain_uid) newEvent.chain_uid = values.chain_uid;
-    console.log("creating event:", newEvent);
-
+    console.log("creating event:", values);
     if (!authUser) {
       addToastError("User is not availible", 400);
       return;
     } else {
       try {
-        const res = await eventCreate(newEvent);
+        const res = await eventCreate(values);
         if (window.goatcounter)
           window.goatcounter.count({
             path: "new-event",
@@ -95,7 +71,7 @@ export default function EventCreate() {
           });
         setSubmitted(res.data.uid);
       } catch (err: any) {
-        console.error("Error creating event:", err, newEvent);
+        console.error("Error creating event:", err, values);
         addToastError(GinParseErrors(t, err), err?.status);
       }
     }
@@ -118,11 +94,7 @@ export default function EventCreate() {
               {t("createEvent")}
             </h1>
 
-            <EventChangeForm
-              onSubmit={(e) => {
-                console.log(e);
-              }}
-            />
+            <EventChangeForm onSubmit={onSubmit} />
 
             <div className="text-sm text-center mt-4 text-black/80">
               <p>{t("troublesWithTheSignupContactUs")}</p>
