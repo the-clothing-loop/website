@@ -15,12 +15,12 @@ export interface Toast {
 }
 export interface Modal {
   message: string;
-  content?: () => ReactElement;
+  content?: () => JSX.Element;
   actions: ModalAction[];
 }
 interface ModalAction {
   fn: () => void;
-  type: "ghost" | "default" | "secondary" | "success" | "error";
+  type: "ghost" | "default" | "primary" | "secondary" | "success" | "error";
   text: string;
 }
 
@@ -220,6 +220,9 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
                 break;
               case "success":
                 classes += " btn-success";
+                break;
+              case "primary":
+                classes += " btn-primary";
                 break;
               case "secondary":
                 classes += " btn-ghost bg-teal-light text-teal";

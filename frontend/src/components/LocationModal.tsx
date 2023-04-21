@@ -20,10 +20,9 @@ import { circleRadiusKm } from "../util/maps";
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY || "";
 
 interface Props {
-  longitude: number;
-  latitude: number;
+  longitude?: number;
+  latitude?: number;
   showRadius?: boolean;
-  btnText: string;
   onSubmit: (values: LocationValues) => void;
 }
 
@@ -66,9 +65,8 @@ function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
 
 export default function LocationModal({
   onSubmit,
-  longitude,
-  latitude,
-  btnText,
+  longitude = 4.8998197,
+  latitude = 52.3673008,
   showRadius = false,
 }: Props) {
   const { t } = useTranslation();
@@ -79,8 +77,8 @@ export default function LocationModal({
   const [values, setValue] = useForm<LocationValues>({
     address: "",
     radius: 3,
-    longitude: 0,
-    latitude: 0,
+    longitude,
+    latitude,
   });
 
   useEffect(() => {
@@ -203,39 +201,35 @@ export default function LocationModal({
   }
 
   return (
-    <>
-      <button className="btn btn-primary">{btnText}</button>
-      <div className="w-full mx-auto">
-        <div className="aspect-square cursor-pointer" ref={mapRef} />
-        <div className="w-full">
-          <form onSubmit={handleSubmit} id="location-form">
-            <p className="mb-2 text-sm">{t("clickMap")}</p>
-            <input
-              name="range"
-              type="range"
-              min={1}
-              step={0.1}
-              defaultValue={3}
-              onChange={(e) => setValue("radius", e.target.valueAsNumber)}
-              className="w-full h-2 bg-teal rounded-lg appearance-none cursor-pointer"
-              required
-            />
-            <TextForm
-              type="number"
-              required
-              label={t("radius")}
-              name="radius"
-              value={values.radius}
-              onChange={(e) => setValue("radius", e.target.valueAsNumber)}
-              step="0.1"
-              info={t("setLocationAndRadius")}
-            />
-            <button className="btn btn-primary my-2" id="submit-location">
-              {t("submit")}
-            </button>
-          </form>
-        </div>
+    <div className="w-full mx-auto mb-6">
+      <div className="aspect-square cursor-pointer" ref={mapRef} />
+      <div className="w-full">
+        <form onSubmit={handleSubmit} id="location-form">
+          <p className="mb-2 text-sm">{t("clickMap")}</p>
+          <input
+            name="range"
+            type="range"
+            min={-1}
+            max={40}
+            step={0.1}
+            defaultValue={3}
+            onChange={(e) => setValue("radius", e.target.valueAsNumber)}
+            className="w-full h-2 bg-teal rounded-lg appearance-none cursor-pointer"
+            required
+          />
+          <label></label>
+          <TextForm
+            type="number"
+            required
+            label={t("radius")}
+            name="radius"
+            value={values.radius}
+            onChange={(e) => setValue("radius", e.target.valueAsNumber)}
+            step="0.1"
+            info={t("setLocationAndRadius")}
+          />
+        </form>
       </div>
-    </>
+    </div>
   );
 }

@@ -258,6 +258,8 @@
   "relatedLoop": "Related Loop",
   "none": "None",
   "createEvent": "Create Event",
+  "selectLocation": "Select location",
   "clickMap": "Click on map to select your location and drag slider to set radius.",
-  "setLocationAndRadius": "Click on the map to set your general location and use the slider to set the maximum distance to filter by."
+  "setLocationAndRadius": "Click on the map to set your general location and use the slider to set the maximum distance to filter by.",
+  "organizedBy": "Organized by"
 }

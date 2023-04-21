@@ -197,6 +197,20 @@ export default function EventDetails() {
                           {event.user_email}
                         </span>
                       </div>
+                      {event.chain_uid ? (
+                        <a
+                          href={"/loops/" + event.chain_uid + "/users/signup"}
+                          key="loop"
+                        >
+                          <span
+                            className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-circle"
+                            aria-hidden
+                          ></span>
+                          <span className="group-hover:underline">
+                            {event.chain_name}
+                          </span>
+                        </a>
+                      ) : null}
                     </dd>
                     <dd className="mb-1 ml-4"></dd>
                   </dl>

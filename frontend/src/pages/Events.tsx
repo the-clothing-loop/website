@@ -7,14 +7,13 @@ import { Event } from "../api/types";
 import { eventGetAll } from "../api/event";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import { SizeBadges } from "../components/Badges";
-import DistanceDropdown from "../components/DistanceDropdown";
 import useForm from "../util/form.hooks";
 import { GinParseErrors } from "../util/gin-errors";
 import { ToastContext } from "../providers/ToastProvider";
 import { AuthContext } from "../providers/AuthProvider";
 import dayjs from "../util/dayjs";
 import LocationModal from "../components/LocationModal";
-import { LocationValues } from "../components/LocationModal";
+import type { LocationValues } from "../components/LocationModal";
 
 interface SearchValues {
   genders: string[];
@@ -100,13 +99,12 @@ export default function Events() {
   function handleOpenModalGetLocation() {
     addModal({
       message: "Select your location",
+      content: () => <LocationModal showRadius onSubmit={handleSubmit} />,
       actions: [
         {
-          text: t("submit"),
-          type: "location",
-          fn: () => {
-            return <LocationModal onSubmit={handleSubmit} />;
-          },
+          text: t("select"),
+          type: "default",
+          fn: () => {},
         },
       ],
     });
@@ -128,25 +126,31 @@ export default function Events() {
       </Helmet>
       <main>
         <div className="max-w-screen-xl min-h-screen mx-auto py-10 px-6 md:px-20">
-          <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
-            {t("upcomingEvents")}
-          </h1>
+          <div className="flex flex-row">
+            <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
+              {t("upcomingEvents")}
+            </h1>
+          </div>
 
-          <div className="flex flex-col-reverse md:flex-row justify-start md:justify-between">
+          <div className="flex flex-col-reverse md:flex-row justify-start md:justify-between pb-4 md:pb-8">
             <form
-              className="flex flex-col md:flex-row pb-4 md:pb-8"
+              className="flex flex-col md:flex-row"
               onSubmit={submitDistance}
             >
-              <div
-                className="font-sans text-lg md:text-2xl my-auto md:mr-6 cursor-pointer hover:opacity-75 hover:underline"
+              <button
+                type="button"
+                className="btn btn-secondary btn-outline mr-4"
                 onClick={handleOpenModalGetLocation}
               >
-                {t("eventsNear")}
-              </div>
-              <DistanceDropdown
-                className="w-[150px] md:w-[190px] py-2 md:py-0 md:mr-8"
-                selectedDistance={values.distance!}
-                handleChange={(d) => setValue("distance", d)}
+                {t("selectLocation")}
+              </button>
+              <CategoriesDropdown
+                className="w-[150px] md:w-[170px] mr-4 md:mr-8 py-4 pb-2 md:py-0"
+                selectedGenders={values.genders}
+                handleChange={(gs) => {
+                  setValue("genders", gs);
+                  load(gs, values.latitude, values.longitude, values.distance);
+                }}
               />
               <button type="submit" className="btn btn-primary">
                 <span className="hidden sm:inline">{t("search")}</span>
@@ -154,24 +158,11 @@ export default function Events() {
               </button>
             </form>
             {authUser ? (
-              <Link
-                to="/create-event"
-                className="btn btn-primary flex w-fit md:mb-0 md:float-right"
-              >
+              <Link to="/create-event" className="btn btn-primary flex">
                 <span className="pr-2 feather feather-plus" />
                 {t("createEvent")}
               </Link>
             ) : null}
-          </div>
-          <div className="flex flex-col md:flex-row pb-8">
-            <CategoriesDropdown
-              className="w-[150px] md:w-[170px] mr-4 md:mr-8 py-4 pb-2 md:py-0"
-              selectedGenders={values.genders}
-              handleChange={(gs) => {
-                setValue("genders", gs);
-                load(gs, values.latitude, values.longitude, values.distance);
-              }}
-            />
           </div>
 
           {!events ? (
