@@ -20,7 +20,7 @@ export interface EventCreateBody {
 export type EventUpdateBody = Partial<EventCreateBody> & { uid: UID };
 
 /** 5 months */
-export const eventImageExpiration = 60 * 60 * 24 * 30 * 5;
+export const EVENT_IMAGE_EXPIRATION = 60 * 60 * 24 * 30 * 5;
 
 export function eventGetAll(params?: EventGetAllParams) {
   return window.axios.get<Event[]>("/v2/event/all", { params });

@@ -9,13 +9,14 @@ import {
   MouseEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 
 import {
   eventGet,
   eventICalURL,
-  eventImageExpiration,
+  EVENT_IMAGE_EXPIRATION,
   eventUpdate,
+  eventDelete,
 } from "../api/event";
 import { Event } from "../api/types";
 import { SizeBadges } from "../components/Badges";
@@ -33,9 +34,11 @@ const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
 export default function EventDetails() {
   const { t, i18n } = useTranslation();
-  const { addToastError } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
   const { authUser } = useContext(AuthContext);
   const [event, setEvent] = useState<Event>();
+  const { pathname } = useLocation();
+  const history = useHistory();
   const addCopyAttributes = useToClipboard();
 
   useEffect(() => {
@@ -50,7 +53,7 @@ export default function EventDetails() {
 
   async function load() {
     try {
-      const eventUID = window.location.pathname.split("/").at(-1) || "";
+      const eventUID = pathname.split("/").at(-1) || "";
 
       await eventGet(eventUID).then((res) => {
         setEvent(res.data);
@@ -71,7 +74,7 @@ export default function EventDetails() {
 
     (async () => {
       try {
-        const res = await uploadImage(file, 800, eventImageExpiration);
+        const res = await uploadImage(file, 800, EVENT_IMAGE_EXPIRATION);
         await eventUpdate({
           uid: event.uid,
           image_url: res.data.image,
@@ -83,6 +86,30 @@ export default function EventDetails() {
         addToastError(GinParseErrors(t, err), err.status);
       }
     })();
+  }
+
+  async function handleDeleteEvent() {
+    if (!event) return;
+    const eventUID = event.uid;
+    addModal({
+      message: t("areYouSureRemoveEvent"),
+      actions: [
+        {
+          type: "error",
+          text: t("delete"),
+          fn() {
+            eventDelete(eventUID)
+              .then(() => {
+                history.goBack();
+              })
+              .catch((err: any) => {
+                console.error(err);
+                addToastError(GinParseErrors(t, err), err.status);
+              });
+          },
+        },
+      ],
+    });
   }
 
   if (!event) {
@@ -122,17 +149,37 @@ export default function EventDetails() {
               <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-6 px-0">
                 {event.name}
               </h1>
-              <a
-                href={icalURL}
-                download={icalFilename}
-                className="btn btn-primary w-fit md:mt-6"
-              >
-                <span className="relative mr-4 rtl:mr-1 rtl:ml-3" aria-hidden>
-                  <span className="inline-block feather feather-calendar relative transform scale-125"></span>
-                  <span className="absolute -bottom-2 -right-2.5 transform scale-90 feather feather-download"></span>
-                </span>
-                {t("addToCalendar")}
-              </a>
+              <div className="flex flex-row md:mt-6">
+                <a
+                  href={icalURL}
+                  download={icalFilename}
+                  className="btn btn-primary mr-4 rtl:mr-0 rtl:ml-4"
+                >
+                  <span className="relative mr-4 rtl:mr-1 rtl:ml-3" aria-hidden>
+                    <span className="inline-block feather feather-calendar relative transform scale-125"></span>
+                    <span className="absolute -bottom-2 -right-2.5 transform scale-90 feather feather-download"></span>
+                  </span>
+                  {t("addToCalendar")}
+                </a>
+                {isOrganizer ? (
+                  <>
+                    <a
+                      href={`/events/` + event.uid + `/edit`}
+                      className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                    >
+                      <span className="feather feather-edit mr-3 rtl:mr-0 rtl:ml-3"></span>
+                      {t("edit")}
+                    </a>
+                    <button
+                      className="btn btn-error"
+                      aria-label={t("delete")}
+                      onClick={handleDeleteEvent}
+                    >
+                      <span className="feather feather-trash"></span>
+                    </button>
+                  </>
+                ) : null}
+              </div>
             </div>
           </div>
           <div className="max-w-screen-xl mx-auto pt-6 px-6 md:px-20">
@@ -201,11 +248,18 @@ export default function EventDetails() {
                         <a
                           href={"/loops/" + event.chain_uid + "/users/signup"}
                           key="loop"
+                          className="group"
                         >
-                          <span
-                            className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-circle"
-                            aria-hidden
-                          ></span>
+                          <span className="mr-2 rtl:mr-0 rtl:ml-2 inline-block relative">
+                            <span
+                              className="block feather feather-circle"
+                              aria-hidden
+                            ></span>
+                            <span
+                              className="absolute top-1 left-0 block feather feather-circle"
+                              aria-hidden
+                            ></span>
+                          </span>
                           <span className="group-hover:underline">
                             {event.chain_name}
                           </span>

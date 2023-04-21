@@ -158,7 +158,7 @@ export default function Events() {
               </button>
             </form>
             {authUser ? (
-              <Link to="/create-event" className="btn btn-primary flex">
+              <Link to="/events/create" className="btn btn-primary flex">
                 <span className="pr-2 feather feather-plus" />
                 {t("createEvent")}
               </Link>

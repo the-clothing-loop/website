@@ -28,6 +28,7 @@
   "delete": "Delete",
   "cancel": "Cancel",
   "deleteAccount": "Are you sure you want to permanently delete your account?",
+  "areYouSureRemoveEvent":"Are you sure you want to permanently delete this event?",
   "deleteUserBtn": "Delete Account",
   "edit": "Edit",
   "editUserDetails": "Edit user details",
@@ -258,6 +259,8 @@
   "relatedLoop": "Related Loop",
   "none": "None",
   "createEvent": "Create Event",
+  "editEvent": "Edit Event",
+  
   "selectLocation": "Select location",
   "clickMap": "Click on map to select your location and drag slider to set radius.",
   "setLocationAndRadius": "Click on the map to set your general location and use the slider to set the maximum distance to filter by.",

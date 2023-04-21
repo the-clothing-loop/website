@@ -1,0 +1,141 @@
+import {
+  useContext,
+  FormEvent,
+  useState,
+  useEffect,
+  useRef,
+  ChangeEvent,
+} from "react";
+import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
+
+import { AuthContext } from "../providers/AuthProvider";
+import {
+  eventCreate,
+  EventCreateBody,
+  EVENT_IMAGE_EXPIRATION,
+} from "../api/event";
+import FormJup from "../util/form-jup";
+import useForm from "../util/form.hooks";
+import { ToastContext } from "../providers/ToastProvider";
+
+import { GinParseErrors } from "../util/gin-errors";
+import dayjs from "../util/dayjs";
+import { Redirect } from "react-router-dom";
+import { chainGet } from "../api/chain";
+import { Chain, UID } from "../api/types";
+import { deleteImage, uploadImage, UploadImageBody } from "../api/imgbb";
+import EventChangeForm from "../components/EventChangeForm";
+
+interface FormJsValues {
+  address: string;
+  description: string;
+  genders: string[];
+}
+
+interface FormHtmlValues {
+  name: string;
+  date: Date;
+  time: string;
+  chain_uid: UID;
+}
+
+export default function EventCreate() {
+  const { t } = useTranslation();
+  const { authUser } = useContext(AuthContext);
+  const { addToastError } = useContext(ToastContext);
+  const [image, setImage] = useState<UploadImageBody>();
+  const [jsValues, setJsValue] = useForm<FormJsValues>({
+    address: "",
+    description: "",
+    genders: [],
+  });
+  const [submitted, setSubmitted] = useState("");
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    const values = FormJup<FormHtmlValues>(e);
+    console.info("submit", { ...values, ...jsValues });
+
+    if (jsValues.address.length < 6) {
+      addToastError(t("required") + ": " + t("address"), 400);
+      return;
+    }
+
+    if (!image) {
+      addToastError(t("required") + ": " + t("uploadImage"), 400);
+      return;
+    }
+
+    let newEvent: EventCreateBody = {
+      name: values.name,
+      description: jsValues.description,
+      address: jsValues.address,
+      latitude: 52.377956,
+      longitude: 4.89707,
+      genders: jsValues.genders,
+      date: dayjs(values.date).format(),
+      image_url: image.image,
+      image_delete_url: image.delete,
+    };
+    if (values.chain_uid) newEvent.chain_uid = values.chain_uid;
+    console.log("creating event:", newEvent);
+
+    if (!authUser) {
+      addToastError("User is not availible", 400);
+      return;
+    } else {
+      try {
+        const res = await eventCreate(newEvent);
+        if (window.goatcounter)
+          window.goatcounter.count({
+            path: "new-event",
+            title: "New Event",
+            event: true,
+          });
+        setSubmitted(res.data.uid);
+      } catch (err: any) {
+        console.error("Error creating event:", err, newEvent);
+        addToastError(GinParseErrors(t, err), err?.status);
+      }
+    }
+  }
+
+  if (!authUser) {
+    return null;
+  } else if (submitted) {
+    return <Redirect to={"/events/" + submitted} />;
+  } else {
+    return (
+      <>
+        <Helmet>
+          <title>The Clothing Loop | Create New Event</title>
+          <meta name="description" content="Create user for new loop" />
+        </Helmet>
+        <main className="container lg:max-w-screen-lg mx-auto md:px-20 pt-4">
+          <div className="bg-teal-light p-8">
+            <h1 className="text-center font-medium text-secondary text-5xl mb-6">
+              {t("createEvent")}
+            </h1>
+
+            <EventChangeForm
+              onSubmit={(e) => {
+                console.log(e);
+              }}
+            />
+
+            <div className="text-sm text-center mt-4 text-black/80">
+              <p>{t("troublesWithTheSignupContactUs")}</p>
+              <a
+                className="link"
+                href="mailto:hello@clothingloop.org?subject=Troubles signing up to The Clothing Loop"
+              >
+                hello@clothingloop.org
+              </a>
+            </div>
+          </div>
+        </main>
+      </>
+    );
+  }
+}
