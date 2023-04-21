@@ -198,6 +198,7 @@ func EventUpdate(c *gin.Context) {
 	}
 
 	// authenticate chain uid
+	var chainID uint
 	if body.ChainUID != nil {
 		err := user.AddUserChainsToObject(db)
 		if err != nil {
@@ -208,6 +209,7 @@ func EventUpdate(c *gin.Context) {
 		found := false
 		for _, uc := range user.Chains {
 			if uc.IsChainAdmin && uc.ChainUID == *body.ChainUID {
+				chainID = uc.ChainID
 				found = true
 			}
 		}
@@ -217,35 +219,34 @@ func EventUpdate(c *gin.Context) {
 		}
 	}
 
-	valuesToUpdate := map[string]any{}
 	if body.Name != nil {
-		valuesToUpdate["name"] = *(body.Name)
+		event.Name = *(body.Name)
 	}
 	if body.Description != nil {
-		valuesToUpdate["description"] = *(body.Description)
+		event.Description = *(body.Description)
 	}
 	if body.Address != nil {
-		valuesToUpdate["address"] = *(body.Address)
+		event.Address = *(body.Address)
 	}
 	if body.Latitude != nil {
-		valuesToUpdate["latitude"] = *(body.Latitude)
+		event.Latitude = float64(*(body.Latitude))
 	}
 	if body.Longitude != nil {
-		valuesToUpdate["longitude"] = *(body.Longitude)
+		event.Longitude = float64(*(body.Longitude))
 	}
 	if body.Date != nil {
-		valuesToUpdate["date"] = *(body.Date)
+		event.Date = *(body.Date)
 	}
 	if body.Genders != nil {
-		valuesToUpdate["genders"] = *(body.Genders)
+		event.Genders = *(body.Genders)
 	}
-	if body.ChainUID != nil {
-		valuesToUpdate["chain_uid"] = *(body.ChainUID)
+	if chainID != 0 {
+		event.ChainID = zero.IntFrom(int64(chainID))
 	}
 	if body.ImageUrl != nil {
-		valuesToUpdate["image_url"] = *(body.ImageUrl)
+		event.ImageUrl = *(body.ImageUrl)
 		if body.ImageDeleteUrl != nil {
-			valuesToUpdate["image_delete_url"] = *(body.ImageDeleteUrl)
+			event.ImageDeleteUrl = *(body.ImageDeleteUrl)
 		}
 
 		if event.ImageDeleteUrl != "" {
@@ -253,7 +254,7 @@ func EventUpdate(c *gin.Context) {
 		}
 	}
 
-	err := db.Model(event).Updates(valuesToUpdate).Error
+	err := db.Updates(event).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to update loop values: %v", err)
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to update loop values"))
