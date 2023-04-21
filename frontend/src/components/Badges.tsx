@@ -21,24 +21,27 @@ export function SizeBadges({
   s,
   g,
 }: {
-  s: Array<string | Sizes>;
+  s?: Array<string | Sizes> | null;
   g?: Array<string | Genders> | null;
 }) {
   const { t } = useTranslation();
 
-  const children = s
-    .filter((a) => categories[Genders.children].includes(a as Sizes))
-    .sort((a, z) => a.localeCompare(z));
-  const women = s
-    .filter((a) => categories[Genders.women].includes(a as Sizes))
-    .sort((a, z) => a.localeCompare(z));
-  const men = s
-    .filter((a) => categories[Genders.men].includes(a as Sizes))
-    .sort((a, z) => a.localeCompare(z));
+  const children =
+    s
+      ?.filter((a) => categories[Genders.children].includes(a as Sizes))
+      .sort((a, z) => a.localeCompare(z)) || [];
+  const women =
+    s
+      ?.filter((a) => categories[Genders.women].includes(a as Sizes))
+      .sort((a, z) => a.localeCompare(z)) || [];
+  const men =
+    s
+      ?.filter((a) => categories[Genders.men].includes(a as Sizes))
+      .sort((a, z) => a.localeCompare(z)) || [];
 
   return (
-    <ul className="flex flex-col items-start">
-      {women.length || g?.includes(Genders.women) ? (
+    <ul className={`flex ${!!s ? "flex-col" : "flex-row"} items-start`}>
+      {women?.length || g?.includes(Genders.women) ? (
         <SizeCatBadges
           t={t}
           key="women"
@@ -48,7 +51,7 @@ export function SizeBadges({
           color="bg-orange-light"
         />
       ) : null}
-      {men.length || g?.includes(Genders.men) ? (
+      {men?.length || g?.includes(Genders.men) ? (
         <SizeCatBadges
           t={t}
           key="men"
@@ -58,7 +61,7 @@ export function SizeBadges({
           color="bg-purple-lighter"
         />
       ) : null}
-      {children.length || g?.includes(Genders.children) ? (
+      {children?.length || g?.includes(Genders.children) ? (
         <SizeCatBadges
           t={t}
           key="children"
@@ -84,7 +87,7 @@ function SizeCatBadges({
 }) {
   return (
     <li
-      className={"inline-flex flex-row mb-1 rounded-full px-2 " + props.color}
+      className={`inline-flex flex-row mb-1 mr-1 rtl:mr-0 rtl:ml-1 rounded-full px-2 ${props.color}`}
     >
       <div
         className="tooltip tooltip-top before:text-xs font-semibold"

@@ -33,3 +33,20 @@ export interface Chain {
   published: boolean;
   open_to_new_members: boolean;
 }
+
+export interface Event {
+  uid: UID;
+  name: string;
+  description: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  genders: string[] | null;
+  date: string;
+  chain_uid?: UID;
+  user_uid: string;
+  user_name: string;
+  user_email: string;
+  chain_name: string;
+  image_url?: string;
+}

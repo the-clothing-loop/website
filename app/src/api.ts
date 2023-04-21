@@ -186,12 +186,17 @@ export function bulkyItemRemove(chainUID: UID, userUID: UID, id: number) {
   });
 }
 
-export function bulkyItemImage(chainUID: UID, image64: string) {
+export function uploadImage(
+  image64: string,
+  size: number,
+  expiration?: number
+) {
+  let params: { size: number; expiration?: number } = { size };
+  if (expiration) params.expiration = expiration;
+
   return window.axios.post<{
     delete: string;
     image: string;
     thumb: string;
-  }>("/v2/bulky-item/image", image64, {
-    params: { chain_uid: chainUID },
-  });
+  }>("/v2/upload-image", image64, { params });
 }

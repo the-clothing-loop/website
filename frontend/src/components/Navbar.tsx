@@ -78,6 +78,14 @@ function Navbar() {
             {t("donate")}
           </Link>
 
+          <Link
+            onClick={onClickMobileNavLink}
+            to="/events"
+            className="mb-3 btn btn-ghost text-base"
+          >
+            {t("events")}
+          </Link>
+
           {authUser && (
             <Link
               onClick={onClickMobileNavLink}
@@ -129,6 +137,10 @@ function Navbar() {
               <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
             </Link>
           ) : null}
+
+          <Link to="/events" className="btn btn-ghost text-base">
+            {t("events")}
+          </Link>
 
           <Link to="/donate" className="btn btn-ghost text-base">
             {t("donate")}

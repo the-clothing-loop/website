@@ -16,7 +16,8 @@ import { useParams, Link, useHistory } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-import dayjs from "dayjs";
+import dayjs from "../util/dayjs";
+import simplifyDays from "../util/simplify-days";
 
 import { AuthContext } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
@@ -1115,21 +1116,6 @@ function reOrder(arr: string[], fromIndex: number, toIndex: number): string[] {
   res.push(...arr.slice(toIndex));
 
   return res;
-}
-
-function simplifyDays(t: TFunction, i18n: i18n, date: string): string {
-  const numDays = dayjs().diff(dayjs(date), "days");
-
-  if (numDays < 1) {
-    return t("new");
-  } else if (numDays < 7) {
-    return t("nDays", { n: numDays });
-  } else {
-    let locale = i18n.language;
-    if (locale === "en") locale = "default";
-
-    return new Date(date).toLocaleDateString(locale);
-  }
 }
 
 function unapprovedTooOld(date: string): boolean {

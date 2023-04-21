@@ -95,7 +95,10 @@ func Routes() *gin.Engine {
 	v2.GET("/bulky-item/all", controllers.BulkyGetAll)
 	v2.PUT("/bulky-item", controllers.BulkyPut)
 	v2.DELETE("/bulky-item", controllers.BulkyRemove)
-	v2.POST("/bulky-item/image", controllers.BulkyUploadImage)
+
+	// imgbb
+	v2.POST("/image", controllers.ImageUpload)
+	v2.DELETE("/image", controllers.ImageDelete)
 
 	// route
 	v2.GET("/route/order", controllers.RouteOrderGet)
@@ -104,6 +107,14 @@ func Routes() *gin.Engine {
 	// contact
 	v2.POST("/contact/newsletter", controllers.ContactNewsletter)
 	v2.POST("/contact/email", controllers.ContactMail)
+
+	// event
+	v2.GET("/event/:uid/ical", controllers.EventICal)
+	v2.GET("/event/:uid", controllers.EventGet)
+	v2.GET("/event/all", controllers.EventGetAll)
+	v2.POST("/event", controllers.EventCreate)
+	v2.PATCH("/event", controllers.EventUpdate)
+	v2.DELETE("/event/:uid", controllers.EventDelete)
 
 	return r
 }

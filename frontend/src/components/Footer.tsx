@@ -3,26 +3,14 @@ import { useTranslation } from "react-i18next";
 
 //Project resources
 import { Newsletter } from "./Newsletter";
-import { MouseEvent, useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../providers/AuthProvider";
+import useToClipboard from "../util/to-clipboard.hooks";
 
 export default function Footer() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
-  const [copying, setCopying] = useState("");
-
-  function copyToClipboard(e: MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault();
-
-    let text = (e.target as any).innerText;
-
-    setCopying(text);
-    setTimeout(() => {
-      setCopying("");
-    }, 3000);
-
-    navigator.clipboard.writeText(text);
-  }
+  const addCopyAttributes = useToClipboard();
 
   return (
     <footer className="bg-white pt-8 lg:pt-16 w-full">
@@ -84,18 +72,7 @@ export default function Footer() {
                       className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center hover:bg-[#b464a8] feather feather-mail text-lg"
                     ></a>
                     <span
-                      tabIndex={1}
-                      className={`tooltip tooltip-bottom text-sm ${
-                        copying === "hello@clothingloop.org"
-                          ? "tooltip-open"
-                          : ""
-                      }`}
-                      onClick={copyToClipboard}
-                      data-tip={
-                        copying === "hello@clothingloop.org"
-                          ? t("copiedToClipboard")
-                          : t("copy")
-                      }
+                      {...addCopyAttributes(t, "footer-copy-email", "text-sm")}
                     >
                       hello@clothingloop.org
                     </span>
@@ -109,16 +86,11 @@ export default function Footer() {
                       aria-label="link to our instagram account"
                     ></a>
                     <span
-                      tabIndex={1}
-                      className={`tooltip tooltip-bottom text-sm ${
-                        copying === "@theclothingloop" ? "tooltip-open" : ""
-                      }`}
-                      onClick={copyToClipboard}
-                      data-tip={
-                        copying === "@theclothingloop"
-                          ? t("copiedToClipboard")
-                          : t("copy")
-                      }
+                      {...addCopyAttributes(
+                        t,
+                        "footer-copy-insta-handle",
+                        "text-sm"
+                      )}
                     >
                       @theclothingloop
                     </span>

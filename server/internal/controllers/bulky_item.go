@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -144,38 +143,4 @@ WHERE id = ? AND user_chain_id IN (
 		c.String(http.StatusInternalServerError, "Bulky Item could not be removed")
 		return
 	}
-}
-
-func BulkyUploadImage(c *gin.Context) {
-	db := getDB(c)
-	var query struct {
-		ChainUID string `form:"chain_uid" binding:"required,uuid"`
-	}
-	if err := c.ShouldBindQuery(&query); err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		return
-	}
-	ok, _, _ := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
-	if !ok {
-		return
-	}
-
-	res, err := app.ImgBBupload(c)
-	if err != nil {
-		goscope.Log.Warningf("Unable to upload image: %v", err)
-		c.String(http.StatusBadRequest, "Unable to upload image")
-		return
-	}
-
-	if !res.Success {
-		goscope.Log.Warningf("Unable to upload image: %v", res)
-		c.String(http.StatusBadRequest, "Unable to upload image")
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"delete": res.Data.DeleteURL,
-		"image":  res.Data.Image.Url,
-		"thumb":  res.Data.Thumb.Url,
-	})
 }

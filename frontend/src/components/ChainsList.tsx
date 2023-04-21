@@ -13,7 +13,7 @@ import {
 import { Chain, UID } from "../api/types";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
-import dayjs from "dayjs";
+import dayjs from "../util/dayjs";
 
 export default function ChainsList() {
   const { t } = useTranslation();

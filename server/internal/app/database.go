@@ -72,6 +72,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.Mail{},
 		&models.Newsletter{},
 		&models.User{},
+		&models.Event{},
 		&models.UserToken{},
 		&models.UserChain{},
 		&models.Bag{},

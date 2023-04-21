@@ -20,9 +20,13 @@ DELETE FROM clothingloop.payments;
 
 DELETE FROM clothingloop.users;
 
+DELETE FROM clothingloop.events;
+
 ALTER TABLE clothingloop.chains AUTO_INCREMENT=1;
 
 ALTER TABLE clothingloop.mails AUTO_INCREMENT=1;
+
+ALTER TABLE clothingloop.events AUTO_INCREMENT=1;
 
 ALTER TABLE clothingloop.newsletters AUTO_INCREMENT=1;
 

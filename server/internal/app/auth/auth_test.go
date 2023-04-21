@@ -160,3 +160,109 @@ func TestAuthenticateUserOfChain(t *testing.T) {
 		}
 	}
 }
+
+func TestAuthenticateEvent(t *testing.T) {
+	type Sut struct {
+		MockAuthOptions mocks.MockChainAndUserOptions
+		IsSameUser      bool
+		IsSameChain     bool
+		HasEventChain   bool
+		ExpectedResult  bool
+	}
+
+	suts := []Sut{
+		/* 0 */ {
+			IsSameUser:     true,
+			HasEventChain:  false,
+			ExpectedResult: true,
+		}, /* 1 */ {
+			IsSameUser:     false,
+			HasEventChain:  false,
+			ExpectedResult: false,
+		}, /* 2 */ {
+			MockAuthOptions: mocks.MockChainAndUserOptions{
+				IsRootAdmin: true,
+			},
+			IsSameUser:     false,
+			HasEventChain:  false,
+			ExpectedResult: true,
+		}, /* 3 */ {
+			MockAuthOptions: mocks.MockChainAndUserOptions{
+				IsRootAdmin: true,
+			},
+			IsSameChain:    false,
+			HasEventChain:  true,
+			ExpectedResult: true,
+		}, /* 4 */ {
+			MockAuthOptions: mocks.MockChainAndUserOptions{
+				IsChainAdmin: true,
+			},
+			IsSameChain:    true,
+			HasEventChain:  true,
+			ExpectedResult: true,
+		}, /* 5 */ {
+			IsSameChain:    true,
+			HasEventChain:  true,
+			ExpectedResult: false,
+		}, /* 6 */ {
+			IsSameChain:    true,
+			IsSameUser:     true,
+			HasEventChain:  true,
+			ExpectedResult: true,
+		}, /* 7 */ {
+			IsSameChain:    true,
+			HasEventChain:  true,
+			ExpectedResult: false,
+		}, /* 8 */ {
+			HasEventChain:  true,
+			ExpectedResult: false,
+		}, /* 9 */ {
+			MockAuthOptions: mocks.MockChainAndUserOptions{
+				IsChainAdmin: true,
+			},
+			IsSameChain:    false,
+			HasEventChain:  true,
+			ExpectedResult: false,
+		},
+	}
+
+	for i, sut := range suts {
+		authChain, authUser, token := mocks.MockChainAndUser(t, db, sut.MockAuthOptions)
+		eventUser := authUser
+		eventChain := authChain
+		if !sut.IsSameUser {
+			if sut.IsSameChain {
+				eventUser, _ = mocks.MockUser(t, db, authChain.ID, mocks.MockChainAndUserOptions{})
+			} else {
+				eventChain, eventUser, _ = mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{})
+			}
+		}
+
+		eventChainID := uint(0)
+		if sut.HasEventChain {
+			eventChainID = eventChain.ID
+		}
+		event := mocks.MockEvent(t, db, eventUser.ID, eventChainID)
+
+		c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, token)
+		ok, resultAuthUser, resultEvent := auth.AuthenticateEvent(c, db, event.UID)
+
+		assert.Equalf(t, sut.ExpectedResult, ok, "sut index: %v\nsut: %++v\nevent: %++v", i, sut, []any{*event, eventChainID, *eventUser})
+
+		if sut.ExpectedResult {
+			assert.NotNilf(t, resultAuthUser, "sut index: %v", i)
+			assert.Equalf(t, authUser.ID, resultAuthUser.ID, "sut index: %v", i)
+			if sut.IsSameUser {
+				assert.Equalf(t, eventUser.ID, resultAuthUser.ID, "sut index: %v", i)
+			}
+			assert.Equalf(t, event.ID, resultEvent.ID, "sut index: %v", i)
+			if sut.IsSameChain {
+				assert.Equalf(t, event.ID, resultEvent.ID, "sut index: %v", i)
+			} else {
+				assert.NotEqualf(t, resultEvent.ChainID, eventChain.ID, "sut index: %v", i)
+			}
+		} else {
+			assert.Nilf(t, resultAuthUser, "sut index: %v", i)
+		}
+	}
+}

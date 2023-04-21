@@ -3,7 +3,9 @@ package mocks
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
@@ -28,6 +30,10 @@ type MockChainAndUserOptions struct {
 	IsNotPublished     bool
 	IsOpenToNewMembers bool
 	RouteOrderIndex    int
+}
+
+type MockEventOptions struct {
+	IsNotPublished bool
 }
 
 func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
@@ -141,6 +147,39 @@ func shuffleSlice[T any](arr []T) []T {
 	})
 
 	return arr
+}
+
+func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint) (event *models.Event) {
+	event = &models.Event{
+		UID:  uuid.NewV4().String(),
+		Name: "Fake " + faker.Company().Name(),
+		Description: strings.Join([]string{
+			faker.Lorem().Sentence(6),
+			"",
+			faker.Lorem().Sentence(12),
+			faker.Lorem().Sentence(20),
+			faker.Lorem().Sentence(2),
+		}, "\n"),
+		Latitude:  faker.Address().Latitude(),
+		Longitude: faker.Address().Latitude(),
+		Address:   faker.Address().Address(),
+		Date:      time.Now().Add(time.Duration(faker.IntBetween(1, 20)) * time.Hour),
+		Genders:   MockGenders(false),
+		UserID:    userID,
+		ChainID:   zero.IntFrom(int64(chainID)),
+	}
+
+	if err := db.Create(&event).Error; err != nil {
+		glog.Fatalf("Unable to create testEvent: %v", err)
+	}
+
+	// Cleanup runs FiLo
+	// So Cleanup must happen before MockUser
+	t.Cleanup(func() {
+		db.Exec(`DELETE FROM events WHERE id = ?`, event.ID)
+	})
+
+	return event
 }
 
 func randomEnums(enums []string, zeroOrMore bool) (result []string) {

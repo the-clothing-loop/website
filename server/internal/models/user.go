@@ -26,6 +26,7 @@ type User struct {
 	LastSignedInAt  zero.Time   `json:"-"`
 	LastPokeAt      zero.Time   `json:"-"`
 	UserToken       []UserToken `json:"-"`
+	Event           []Event     `json:"-"`
 	Chains          []UserChain `json:"chains"`
 	CreatedAt       time.Time   `json:"-"`
 	UpdatedAt       time.Time   `json:"-"`
@@ -91,4 +92,18 @@ func (u *User) LastPokeTooRecent() bool {
 
 func (u *User) SetLastPokeToNow(db *gorm.DB) error {
 	return db.Exec(`UPDATE users SET last_poke_at = NOW() WHERE id = ?`, u.ID).Error
+}
+
+func (u *User) FindLinkedEventByUID(db *gorm.DB, eventUID string) (e *Event, err error) {
+	e = &Event{}
+	err = db.Raw(`
+SELECT * FROM events
+WHERE uid = ? AND user_id = ?
+LIMIT 1
+	`, eventUID, u.ID).Scan(e).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return e, nil
 }
