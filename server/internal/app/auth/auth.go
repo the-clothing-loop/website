@@ -161,26 +161,28 @@ func AuthenticateEvent(c *gin.Context, db *gorm.DB, eventUID string) (ok bool, a
 	}
 
 	event = &models.Event{}
-
-	if authUser.IsRootAdmin {
-		err := db.Raw(`SELECT * FROM events WHERE events.uid = ? LIMIT 1`, eventUID).Scan(event).Error
-		if err != nil {
-			c.String(http.StatusNotFound, "event not found")
-			return false, nil, nil
-		}
-
-		return true, authUser, event
-	} else {
-		err := db.Raw(`
-SELECT * events
-WHERE user_id = ? AND uid = ?
-LIMIT 1
-	`, authUser.ID, eventUID).Scan(event).Error
-		if err != nil || event.ID == 0 {
-			c.String(http.StatusUnauthorized, "user must be connected to event")
-			return false, nil, nil
-		}
-
-		return true, authUser, event
+	err := db.Raw(models.EventGetSql+`WHERE events.uid = ? LIMIT 1`, eventUID).Scan(event).Error
+	if err != nil {
+		c.String(http.StatusNotFound, "event not found")
+		return false, nil, nil
 	}
+
+	if event.UserID == authUser.ID || authUser.IsRootAdmin {
+		return true, authUser, event
+	} else if event.ChainUID.Valid {
+		err = authUser.AddUserChainsToObject(db)
+		if err != nil {
+			goscope.Log.Errorf("%v", err)
+			c.String(http.StatusInternalServerError, "Unable to retrieve user related loops")
+			return false, nil, nil
+		}
+
+		_, isChainAdmin := authUser.IsPartOfChain(event.ChainUID.String)
+		if isChainAdmin {
+			return true, authUser, event
+		}
+	}
+
+	c.String(http.StatusUnauthorized, "user must be connected to event")
+	return false, nil, nil
 }

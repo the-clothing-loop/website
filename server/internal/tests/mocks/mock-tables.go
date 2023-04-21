@@ -149,7 +149,7 @@ func shuffleSlice[T any](arr []T) []T {
 	return arr
 }
 
-func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint, o MockEventOptions) (event *models.Event) {
+func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint) (event *models.Event) {
 	event = &models.Event{
 		UID:  uuid.NewV4().String(),
 		Name: "Fake " + faker.Company().Name(),

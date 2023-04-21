@@ -174,7 +174,7 @@ export default function EventChangeForm(props: {
               <span className="label-text">{t("description")}</span>
             </div>
             <textarea
-              className="textarea textarea-secondary w-full"
+              className="textarea textarea-secondary w-full h-[300px] max-xs:h-auto"
               name="description"
               cols={3}
               value={values.description}

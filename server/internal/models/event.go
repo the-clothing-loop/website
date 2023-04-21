@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"gopkg.in/guregu/null.v3/zero"
-	"gorm.io/gorm"
 )
 
 type Event struct {
@@ -30,18 +29,27 @@ type Event struct {
 	ChainName      zero.String `json:"chain_name" gorm:"-:migration;<-:false"`
 }
 
-func (event *Event) LinkChain(db *gorm.DB, userID uint, chainID uint) error {
-	return db.Exec(`
-UPDATE events
-SET chain_id = ?
-WHERE id = ?
-	`, chainID, event.ID, userID).Error
-}
-
-func (event *Event) UnlinkChain(db *gorm.DB, userID uint) error {
-	return db.Exec(`
-UPDATE events
-SET chain_id = NULL
-WHERE id = ?
-	`, event.ID, userID).Error
-}
+const EventGetSql = `SELECT
+events.id                    AS id,
+events.uid                   AS uid,
+events.name                  AS name,
+events.description           AS description,
+events.latitude              AS latitude,
+events.longitude             AS longitude,
+events.address               AS address,
+events.date                  AS date,
+events.genders               AS genders,
+events.chain_id              AS chain_id,
+chains.uid                   AS chain_uid,
+events.user_id               AS user_id,
+events.created_at            AS created_at,
+events.updated_at            AS updated_at,
+users.uid                    AS user_uid,
+users.name                   AS user_name,
+users.email                  AS user_email,
+events.image_url             AS image_url,
+chains.name                  AS chain_name
+FROM events
+LEFT JOIN chains ON chains.id = chain_id
+LEFT JOIN users ON users.id = user_id
+`

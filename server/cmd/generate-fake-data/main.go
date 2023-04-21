@@ -58,7 +58,7 @@ func main() {
 		if i > 3 {
 			eventChainID = chain.ID
 		}
-		event := mocks.MockEvent(t, db, user.ID, eventChainID, mocks.MockEventOptions{})
+		event := mocks.MockEvent(t, db, user.ID, eventChainID)
 		log.Printf("Generated -> Event\t(ID: %d)", event.ID)
 	}
 

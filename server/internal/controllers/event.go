@@ -17,31 +17,6 @@ import (
 	"gopkg.in/guregu/null.v3/zero"
 )
 
-const eventGetSql = `SELECT
-events.id                    AS id,
-events.uid                   AS uid,
-events.name                  AS name,
-events.description           AS description,
-events.latitude              AS latitude,
-events.longitude             AS longitude,
-events.address               AS address,
-events.date                  AS date,
-events.genders               AS genders,
-events.chain_id              AS chain_id,
-chains.uid                   AS chain_uid,
-events.user_id               AS user_id,
-events.created_at            AS created_at,
-events.updated_at            AS updated_at,
-users.uid                    AS user_uid,
-users.name                   AS user_name,
-users.email                  AS user_email,
-events.image_url             AS image_url,
-chains.name                  AS chain_name
-FROM events
-LEFT JOIN chains ON chains.id = chain_id
-LEFT JOIN users ON users.id = user_id
-`
-
 func EventCreate(c *gin.Context) {
 	db := getDB(c)
 
@@ -116,7 +91,7 @@ func EventGet(c *gin.Context) {
 	}
 
 	event := models.Event{}
-	sql := eventGetSql + `WHERE events.uid = ?`
+	sql := models.EventGetSql + `WHERE events.uid = ?`
 	err := db.Raw(sql, uri.UID).Scan(&event).Error
 	if err != nil {
 		c.AbortWithError(http.StatusNotFound, err)
@@ -139,7 +114,7 @@ func EventGetAll(c *gin.Context) {
 		return
 	}
 
-	sql := eventGetSql + `WHERE date > NOW()`
+	sql := models.EventGetSql + `WHERE date > NOW()`
 	args := []any{}
 	if query.Latitude != 0 && query.Longitude != 0 && query.Radius != 0 {
 		sql = fmt.Sprintf("%s AND %s <= ? ", sql, sqlCalcDistance("events.latitude", "events.longitude", "?", "?"))
