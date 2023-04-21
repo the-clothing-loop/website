@@ -1,12 +1,4 @@
-import {
-  FormEvent,
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-  Fragment,
-} from "react";
-import { useHistory } from "react-router";
+import { useEffect, useRef, useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
@@ -22,8 +14,7 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY || "";
 interface Props {
   longitude?: number;
   latitude?: number;
-  showRadius?: boolean;
-  onSubmit: (values: LocationValues) => void;
+  setValues: (values: LocationValues) => void;
 }
 
 type GeoJSONPoint = GeoJSONTypes.FeatureCollection<
@@ -37,7 +28,6 @@ interface Point {
   radius: number;
 }
 export interface LocationValues {
-  address: string;
   radius: number;
   longitude: number;
   latitude: number;
@@ -64,10 +54,9 @@ function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
 }
 
 export default function LocationModal({
-  onSubmit,
+  setValues,
   longitude = 4.8998197,
   latitude = 52.3673008,
-  showRadius = false,
 }: Props) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -75,7 +64,6 @@ export default function LocationModal({
   const mapRef = useRef<any>();
   const [map, setMap] = useState<mapboxgl.Map>();
   const [values, setValue] = useForm<LocationValues>({
-    address: "",
     radius: 3,
     longitude,
     latitude,
@@ -152,6 +140,11 @@ export default function LocationModal({
 
         setValue("longitude", e.lngLat.lng);
         setValue("latitude", e.lngLat.lat);
+        setValues({
+          radius: values.radius,
+          longitude: e.lngLat.lng,
+          latitude: e.lngLat.lat,
+        });
       });
     });
 
@@ -172,63 +165,32 @@ export default function LocationModal({
     );
   }, [values.longitude, values.latitude, values.radius]);
 
-  async function getPlaceName(
-    longitude: number,
-    latitude: number
-  ): Promise<string> {
-    const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${MAPBOX_TOKEN}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
-    );
-    const data = await response.json();
-    return data.features[0]?.place_name || "";
-  }
-
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    (async () => {
-      if (!(values.longitude && values.latitude)) {
-        addToastError(t("required") + ": " + t("loopLocation"), 400);
-        return;
-      }
-      values.address = await getPlaceName(values.longitude, values.latitude);
-      if (!(values.longitude && values.latitude)) {
-        console.error("getPlaceName", values.address);
-        addToastError(t("required") + ": " + t("loopLocation"), 500);
-        return;
-      }
-      onSubmit(values);
-    })();
-  }
-
   return (
     <div className="w-full mx-auto mb-6">
       <div className="aspect-square cursor-pointer" ref={mapRef} />
       <div className="w-full">
-        <form onSubmit={handleSubmit} id="location-form">
-          <p className="mb-2 text-sm">{t("clickMap")}</p>
-          <input
-            name="range"
-            type="range"
-            min={-1}
-            max={40}
-            step={0.1}
-            defaultValue={3}
-            onChange={(e) => setValue("radius", e.target.valueAsNumber)}
-            className="w-full h-2 bg-teal rounded-lg appearance-none cursor-pointer"
-            required
-          />
-          <label></label>
-          <TextForm
-            type="number"
-            required
-            label={t("radius")}
-            name="radius"
-            value={values.radius}
-            onChange={(e) => setValue("radius", e.target.valueAsNumber)}
-            step="0.1"
-            info={t("setLocationAndRadius")}
-          />
-        </form>
+        <p className="mb-2 text-sm">{t("clickMap")}</p>
+        <input
+          name="range"
+          type="range"
+          min={-1}
+          max={40}
+          step={0.1}
+          defaultValue={3}
+          onChange={(e) => setValue("radius", e.target.valueAsNumber)}
+          className="w-full h-2 bg-teal rounded-lg appearance-none cursor-pointer"
+          required
+        />
+        <TextForm
+          type="number"
+          required
+          label={t("radius")}
+          name="radius"
+          value={values.radius}
+          onChange={(e) => setValue("radius", e.target.valueAsNumber)}
+          step="0.1"
+          info={t("setLocationAndRadius")}
+        />
       </div>
     </div>
   );

@@ -99,22 +99,30 @@ export default function Events() {
   function handleOpenModalGetLocation() {
     addModal({
       message: "Select your location",
-      content: () => <LocationModal showRadius onSubmit={handleSubmit} />,
+      content: () => (
+        <LocationModal
+          setValues={setLocationValues}
+          latitude={values.latitude}
+          longitude={values.longitude}
+        />
+      ),
       actions: [
         {
           text: t("select"),
-          type: "default",
-          fn: () => {},
+          type: "primary",
+          fn: searchFilter,
         },
       ],
     });
   }
 
-  function handleSubmit(distanceValues: LocationValues) {
+  function setLocationValues(distanceValues: LocationValues) {
     setValue("latitude", distanceValues.latitude);
     setValue("longitude", distanceValues.longitude);
     setValue("distance", distanceValues.radius);
+  }
 
+  function searchFilter() {
     load(values.genders, values.latitude, values.longitude, values.distance);
   }
 
