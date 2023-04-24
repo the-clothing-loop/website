@@ -56,7 +56,7 @@ import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { useTranslation } from "react-i18next";
 
-await SplashScreen.show({
+SplashScreen.show({
   autoHide: false,
 });
 
