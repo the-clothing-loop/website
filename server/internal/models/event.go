@@ -6,6 +6,11 @@ import (
 	"gopkg.in/guregu/null.v3/zero"
 )
 
+type EventPrice struct {
+	Value    float64 `json:"value"`
+	Currency string  `json:"currency"`
+}
+
 type Event struct {
 	ID             uint        `json:"-"`
 	UID            string      `gorm:"uniqueIndex" json:"uid"`
@@ -14,6 +19,7 @@ type Event struct {
 	Latitude       float64     `json:"latitude"`
 	Longitude      float64     `json:"longitude"`
 	Address        string      `json:"address"`
+	Price          *EventPrice `gorm:"serializer:json" json:"price"`
 	Date           time.Time   `json:"date"`
 	Genders        []string    `gorm:"serializer:json" json:"genders"`
 	ChainID        zero.Int    `json:"-"`
@@ -37,6 +43,7 @@ events.description           AS description,
 events.latitude              AS latitude,
 events.longitude             AS longitude,
 events.address               AS address,
+events.price                 AS price,
 events.date                  AS date,
 events.genders               AS genders,
 events.chain_id              AS chain_id,

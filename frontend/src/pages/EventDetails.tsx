@@ -194,6 +194,21 @@ export default function EventDetails() {
                       <span className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-clock"></span>
                       <span className="font-sans text-lg">{datetime}</span>
                     </dd>
+                    <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                      {t("price") + ":"}
+                    </dt>
+                    <dd className="mb-1 ml-4">
+                      <span className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-tag"></span>
+                      {event.price ? (
+                        <span className="font-sans text-lg" key="price">
+                          {event.price.currency + " " + event.price.value}
+                        </span>
+                      ) : (
+                        <span className="font-sans text-lg" key="free">
+                          {t("priceFree")}
+                        </span>
+                      )}
+                    </dd>
                     {event.address ? (
                       <Fragment key="address">
                         <dt className="mb-2 font-bold font-sans text-xl text-teal">

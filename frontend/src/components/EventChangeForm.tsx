@@ -26,10 +26,57 @@ const defaultValues: EventCreateBody = {
   latitude: 0,
   longitude: 0,
   address: "",
+  price: null,
   date: new Date().toISOString(),
   genders: [],
   image_url: "",
 };
+
+const currencies = [
+  "€",
+  "$",
+  "£",
+  "¥",
+  "CHF",
+  "؋",
+  "ƒ",
+  "₼",
+  "Br",
+  "KM",
+  "P",
+  "лв",
+  "៛",
+  "₡",
+  "kn",
+  "₱",
+  "Kč",
+  "kr",
+  "¢",
+  "Q",
+  "L",
+  "Ft",
+  "Rp",
+  "﷼",
+  "₪",
+  "₩",
+  "₭",
+  "ден",
+  "RM",
+  "₨",
+  "₮",
+  "MT",
+  "₦",
+  "Gs",
+  "zł",
+  "lei",
+  "₽",
+  "Дин.",
+  "S",
+  "R",
+  "₴",
+  "Bs",
+  "₫",
+];
 
 export default function EventChangeForm(props: {
   initialValues?: EventCreateBody;
@@ -48,7 +95,25 @@ export default function EventChangeForm(props: {
     dayjs(values.date).format("HH:mm")
   );
   const [deleteImageUrl, setDeleteImageUrl] = useState("");
+  const [eventPriceValue, setEventPriceValue] = useState(
+    () => values.price?.value || 0
+  );
+  const [eventPriceCurrency, _setEventPriceCurrency] = useState(
+    () => values.price?.currency || ""
+  );
   const { t } = useTranslation();
+
+  function setEventPriceCurrency(e: ChangeEvent<HTMLSelectElement>) {
+    const v = e.target.value;
+
+    if (v === "") {
+      _setEventPriceCurrency("");
+      setEventPriceValue(0);
+      return;
+    }
+
+    _setEventPriceCurrency(v);
+  }
 
   function setValueDate(e: ChangeEvent<HTMLInputElement>) {
     const d = e.target.valueAsDate;
@@ -80,7 +145,7 @@ export default function EventChangeForm(props: {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const res = await uploadImage(file.slice(), 800, EVENT_IMAGE_EXPIRATION);
+    const res = await uploadImage(file, 800, EVENT_IMAGE_EXPIRATION);
     console.log(res.data);
     setValue("image_url", res.data.image);
     setDeleteImageUrl(res.data.delete);
@@ -95,6 +160,12 @@ export default function EventChangeForm(props: {
 
   function submit(e: FormEvent) {
     e.preventDefault();
+
+    if (eventPriceValue && eventPriceCurrency) {
+      values.price = { value: eventPriceValue, currency: eventPriceCurrency };
+    } else {
+      values.price = null;
+    }
 
     props.onSubmit(values);
   }
@@ -125,7 +196,7 @@ export default function EventChangeForm(props: {
   return (
     <div className="w-full">
       <form onSubmit={submit} className="grid gap-x-4 sm:grid-cols-2">
-        <div className="sm:col-span-2">
+        <div className="col-span-1 sm:col-span-2">
           <TextForm
             min={2}
             required
@@ -199,6 +270,39 @@ export default function EventChangeForm(props: {
                 handleChange={(gs) => setValue("genders", gs)}
               />
             </label>
+          </div>
+
+          <div className="mb-4">
+            <div className="label">
+              <span className="label-text">{t("price") + "*"}</span>
+            </div>
+            <div className="input-group">
+              <select
+                name="chain_uid"
+                defaultValue="EUR"
+                onChange={setEventPriceCurrency}
+                value={eventPriceCurrency}
+                className="select select-secondary select-outlined"
+              >
+                <option value="" key="none" defaultChecked>
+                  {t("none")}
+                </option>
+                {currencies.map((currency, i) => (
+                  <option key={i} value={currency}>
+                    {currency}
+                  </option>
+                ))}
+              </select>
+              <input
+                className="input input-secondary border-l-0 w-full flex-grow"
+                disabled={eventPriceCurrency === ""}
+                name="price"
+                onClick={(e) => (e.target as any).select()}
+                type="number"
+                value={eventPriceValue}
+                onChange={(e) => setEventPriceValue(e.target.valueAsNumber)}
+              />
+            </div>
           </div>
 
           <div className="mb-6">

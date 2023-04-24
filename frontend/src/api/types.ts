@@ -1,3 +1,5 @@
+import { EventPrice } from "./event";
+
 export type UID = string;
 
 export interface User {
@@ -38,6 +40,7 @@ export interface Event {
   uid: UID;
   name: string;
   description: string;
+  price: EventPrice | null;
   address: string;
   latitude: number;
   longitude: number;

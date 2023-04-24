@@ -260,7 +260,8 @@
   "none": "None",
   "createEvent": "Create Event",
   "editEvent": "Edit Event",
-
+  "price": "Price",
+  "priceFree": "Free",
   "selectLocation": "Select location",
   "clickMap": "Click on map to select your location and drag slider to set radius.",
   "setLocationAndRadius": "Click on the map to set your general location and use the slider to set the maximum distance to filter by.",

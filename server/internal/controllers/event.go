@@ -21,16 +21,17 @@ func EventCreate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		Name           string    `json:"name" binding:"required"`
-		Description    string    `json:"description"`
-		Latitude       float64   `json:"latitude" binding:"required,latitude"`
-		Longitude      float64   `json:"longitude" binding:"required,longitude"`
-		Address        string    `json:"address" binding:"required"`
-		Date           time.Time `json:"date" binding:"required"`
-		Genders        []string  `json:"genders" binding:"required"`
-		ChainUID       string    `json:"chain_uid,omitempty" binding:"omitempty"`
-		ImageUrl       string    `json:"image_url" binding:"required,url"`
-		ImageDeleteUrl string    `json:"image_delete_url" binding:"omitempty,url"`
+		Name           string             `json:"name" binding:"required"`
+		Description    string             `json:"description"`
+		Latitude       float64            `json:"latitude" binding:"required,latitude"`
+		Longitude      float64            `json:"longitude" binding:"required,longitude"`
+		Address        string             `json:"address" binding:"required"`
+		Price          *models.EventPrice `json:"price,omitempty"`
+		Date           time.Time          `json:"date" binding:"required"`
+		Genders        []string           `json:"genders" binding:"required"`
+		ChainUID       string             `json:"chain_uid,omitempty" binding:"omitempty"`
+		ImageUrl       string             `json:"image_url" binding:"required,url"`
+		ImageDeleteUrl string             `json:"image_delete_url" binding:"omitempty,url"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -67,6 +68,9 @@ func EventCreate(c *gin.Context) {
 	}
 	if body.ChainUID != "" && chain != nil {
 		event.ChainID = zero.NewInt(int64(chain.ID), true)
+	}
+	if body.Price != nil {
+		event.Price = body.Price
 	}
 
 	if err := db.Create(event).Error; err != nil {
@@ -169,17 +173,18 @@ func EventUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		UID            string     `json:"uid" binding:"required,uuid"`
-		Name           *string    `json:"name,omitempty"`
-		Description    *string    `json:"description,omitempty"`
-		Address        *string    `json:"address,omitempty"`
-		Latitude       *float64   `json:"latitude,omitempty" binding:"omitempty,latitude"`
-		Longitude      *float64   `json:"longitude,omitempty" binding:"omitempty,longitude"`
-		Date           *time.Time `json:"date,omitempty"`
-		Genders        *[]string  `json:"genders,omitempty"`
-		ImageUrl       *string    `json:"image_url,omitempty"`
-		ImageDeleteUrl *string    `json:"image_delete_url,omitempty"`
-		ChainUID       *string    `json:"chain_uid,omitempty"`
+		UID            string             `json:"uid" binding:"required,uuid"`
+		Name           *string            `json:"name,omitempty"`
+		Description    *string            `json:"description,omitempty"`
+		Address        *string            `json:"address,omitempty"`
+		Price          *models.EventPrice `json:"price,omitempty"`
+		Latitude       *float64           `json:"latitude,omitempty" binding:"omitempty,latitude"`
+		Longitude      *float64           `json:"longitude,omitempty" binding:"omitempty,longitude"`
+		Date           *time.Time         `json:"date,omitempty"`
+		Genders        *[]string          `json:"genders,omitempty"`
+		ImageUrl       *string            `json:"image_url,omitempty"`
+		ImageDeleteUrl *string            `json:"image_delete_url,omitempty"`
+		ChainUID       *string            `json:"chain_uid,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -227,6 +232,9 @@ func EventUpdate(c *gin.Context) {
 	}
 	if body.Address != nil {
 		event.Address = *(body.Address)
+	}
+	if body.Price != nil {
+		event.Price = body.Price
 	}
 	if body.Latitude != nil {
 		event.Latitude = *(body.Latitude)

@@ -5,12 +5,19 @@ interface EventGetAllParams {
   longitude: number;
   radius: number;
 }
+
+export interface EventPrice {
+  value: number;
+  currency: string;
+}
+
 export interface EventCreateBody {
   name: string;
   description?: string;
   latitude: number;
   longitude: number;
   address: string;
+  price: EventPrice | null;
   date: string;
   genders: string[];
   chain_uid?: string;

@@ -39,6 +39,7 @@ export default function EventEdit() {
         latitude: res.data.latitude,
         longitude: res.data.longitude,
         address: res.data.address,
+        price: res.data.price,
         date: res.data.date,
         genders: res.data.genders || [],
         chain_uid: res.data.chain_uid,

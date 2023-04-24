@@ -89,7 +89,7 @@ export default function EventCreate() {
           <meta name="description" content="Create user for new loop" />
         </Helmet>
         <main className="container lg:max-w-screen-lg mx-auto md:px-20 pt-4">
-          <div className="bg-teal-light p-8">
+          <div className="bg-teal-light p-4 sm:p-8">
             <h1 className="text-center font-medium text-secondary text-5xl mb-6">
               {t("createEvent")}
             </h1>

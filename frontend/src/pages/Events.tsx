@@ -259,6 +259,16 @@ function EventItem({ event }: { event: Event }) {
             </span>
             <span>{" " + date.format("D")}</span>
           </p>
+          {event.price ? (
+            <p>
+              <span className="inline-block pr-1 font-extrabold">
+                {event.price.currency}
+              </span>
+              <span className="inline-block pr-1 font-extrabold">
+                {event.price.value}
+              </span>
+            </p>
+          ) : null}
         </div>
         <img src={image} className="w-full h-full object-cover" />
       </Link>
