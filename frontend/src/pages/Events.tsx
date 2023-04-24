@@ -246,6 +246,9 @@ function EventItem({ event }: { event: Event }) {
 
   const date = dayjs(event.date);
   const eventURL = window.location.pathname + "/" + event.uid;
+
+  let image = ClothesImage;
+  if (event.image_url) image = event.image_url;
   return (
     <article className="flex flex-col bg-teal-light">
       <Link to={eventURL} className="relative aspect-[4/3]">
@@ -257,7 +260,7 @@ function EventItem({ event }: { event: Event }) {
             <span>{" " + date.format("D")}</span>
           </p>
         </div>
-        <img src={ClothesImage} className="w-full h-full object-cover" />
+        <img src={image} className="w-full h-full object-cover" />
       </Link>
 
       <div className="flex-grow m-4">
