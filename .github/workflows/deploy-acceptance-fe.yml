@@ -4,41 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "frontend/**"
 
 jobs:
-  deploy-api:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: "1.20"
-          check-latest: true
-          cache: true
-          cache-dependency-path: server/go.sum
-      - name: Build binary
-        run: make build-server
-        working-directory: ./server
-      - name: Rename binary
-        run: mv server cl-api-acceptance
-        working-directory: ./server
-      - name: Install SSH key
-        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
-        with:
-          private-key: ${{ secrets.VPS1_PRIVKEY }}
-          known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
-      - name: Send binary to vps and restart service
-        run: |
-          rsync -az --delete ./server/cl-api-acceptance admin@vpsnode1.vps.webdock.cloud:/home/admin/
-          ssh admin@vpsnode1.vps.webdock.cloud "\
-          sudo rm /home/clothingloop/opt/api-acceptance; \
-          sudo cp /home/admin/cl-api-acceptance /home/clothingloop/opt/api-acceptance; \
-          sudo chown root:root /home/clothingloop/opt/api-acceptance; \
-          sudo chmod 0775 /home/clothingloop/opt/api-acceptance; \
-          sudo systemctl restart cl-api-acceptance"
-          echo "done"
   deploy-frontend:
     runs-on: ubuntu-latest
     steps:
