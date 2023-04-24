@@ -198,5 +198,5 @@ export function uploadImage(
     delete: string;
     image: string;
     thumb: string;
-  }>("/v2/upload-image", image64, { params });
+  }>("/v2/image", image64, { params });
 }
