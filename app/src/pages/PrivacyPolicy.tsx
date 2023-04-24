@@ -7,18 +7,20 @@ import {
   IonBackButton,
   IonButtons,
 } from "@ionic/react";
+import { useTranslation } from "react-i18next";
 
 export default function PrivacyPolicy() {
+  const { t } = useTranslation();
   return (
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton>Back</IonBackButton>
+            <IonBackButton>{t("Back")}</IonBackButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding ion-">
+      <IonContent className="ion-padding">
         <IonText>
           <h1 style={{ marginTop: 0, fontSize: 30, fontWeight: "bold" }}>
             Privacy Policy

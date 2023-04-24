@@ -18,11 +18,13 @@ import {
 } from "@ionic/react";
 import { bag as bagIcon } from "ionicons/icons";
 import { useContext, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { bagPut, bagRemove, UID } from "../api";
 import CreateBag from "../components/CreateBag";
 import { StoreContext } from "../Store";
 
 export default function BagsList() {
+  const { t } = useTranslation();
   const { chain, chainUsers, bags, setChain, authUser, route } =
     useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
@@ -79,15 +81,15 @@ export default function BagsList() {
       });
     });
     presentAlert({
-      header: "Change Bag Holder",
-      message: "Select the new bag holder",
+      header: t("Change Bag Holder"),
+      message: t("Select the new bag holder"),
       inputs,
       buttons: [
         {
-          text: "Cancel",
+          text: t("Cancel"),
         },
         {
-          text: "Change",
+          text: t("Change"),
           handler,
         },
       ],
@@ -102,17 +104,17 @@ export default function BagsList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>Bags</IonTitle>
+          <IonTitle>{t("Bags")}</IonTitle>
 
           <IonButtons slot="end">
-            <IonButton onClick={handleClickCreate}>Create</IonButton>
+            <IonButton onClick={handleClickCreate}>{t("Create")}</IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Bags</IonTitle>
+            <IonTitle size="large">{t("Bags")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>
@@ -162,7 +164,7 @@ export default function BagsList() {
                     color="danger"
                     onClick={() => handleClickDelete(bag.number)}
                   >
-                    Delete
+                    {t("Delete")}
                   </IonItemOption>
                 </IonItemOptions>
               </IonItemSliding>
