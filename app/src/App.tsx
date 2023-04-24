@@ -10,6 +10,7 @@ import {
   setupIonicReact,
   useIonToast,
 } from "@ionic/react";
+import { SplashScreen } from "@capacitor/splash-screen";
 import { IonReactRouter } from "@ionic/react-router";
 import {
   bookOutline,
@@ -55,6 +56,10 @@ import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { useTranslation } from "react-i18next";
 
+await SplashScreen.show({
+  autoHide: false,
+});
+
 setupIonicReact({
   mode: "ios",
 });
@@ -70,6 +75,7 @@ export default function App() {
       .then(() => authenticate().catch((err) => console.warn(err)))
       .finally(() => {
         setLoading(false);
+        SplashScreen.hide();
       });
 
     const root = document.getElementById("#root");

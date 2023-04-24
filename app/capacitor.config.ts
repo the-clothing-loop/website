@@ -5,6 +5,15 @@ const config: CapacitorConfig = {
   appName: "My Clothing Loop",
   webDir: "build",
   bundledWebRuntime: false,
+  plugins: {
+    SplashScreen: {
+      launchAuthHide: false,
+      launchFadeOutDuration: 0,
+      androidScaleType: "CENTER_CROP",
+      showSpinner: false,
+      splashFullScreen: true,
+    },
+  },
 };
 
 export default config;
