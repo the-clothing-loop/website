@@ -10,11 +10,13 @@
     "build:acceptance": "tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode acceptance",
     "build:production": "tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode production",
     "preview": "vite preview",
+    "generate:icons": "npx capacitor-assets generate",
     "lint": "eslint"
   },
   "dependencies": {
     "@capacitor/android": "^4.7.3",
     "@capacitor/app": "4.1.1",
+    "@capacitor/assets": "^2.0.4",
     "@capacitor/camera": "^4.1.4",
     "@capacitor/core": "4.7.3",
     "@capacitor/haptics": "4.1.0",
