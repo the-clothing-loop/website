@@ -49,15 +49,16 @@ export default function Login(props: { isLoggedIn: boolean }) {
 
   async function handleSendEmail() {
     clearTimeout(sentTimeout);
-    const email = inputEmail.current?.value || "";
+    const email = inputEmail.current?.value + "";
     if (!email) return;
 
-    if (!BETA_TESTERS.includes(email + "")) {
+    if (!BETA_TESTERS.includes(email)) {
       setSentState(State.error);
       toastError(
         present,
         "This app is currently being beta tested, only a select few can access it at this time"
       );
+      return;
     }
 
     try {
