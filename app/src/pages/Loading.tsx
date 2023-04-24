@@ -6,8 +6,10 @@ import {
   IonText,
 } from "@ionic/react";
 import { syncOutline } from "ionicons/icons";
+import { useTranslation } from "react-i18next";
 
 export default function Loading() {
+  const { t } = useTranslation();
   return (
     <IonPage>
       <IonContent fullscreen>
@@ -32,7 +34,7 @@ export default function Loading() {
           >
             <IonIcon size="large" className="ion-margin" icon={syncOutline} />
           </CreateAnimation>
-          <IonText className="ion-text-bold">Loading...</IonText>
+          <IonText className="ion-text-bold">{t("Loading...")}</IonText>
         </div>
       </IonContent>
     </IonPage>

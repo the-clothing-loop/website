@@ -21,10 +21,12 @@ import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import toastError from "../../toastError";
+import { useTranslation } from "react-i18next";
 
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 export default function Settings() {
+  const { t } = useTranslation();
   const { authUser, chain, isAuthenticated, logout, setChain } =
     useContext(StoreContext);
   const [present] = useIonToast();
@@ -106,14 +108,14 @@ export default function Settings() {
             </IonButton>
             <IonAlert
               trigger="settings-logout-btn"
-              header="Logout"
-              message="Are you sure you want to logout?"
+              header={t("Logout")!}
+              message={t("Are you sure you want to logout?")!}
               buttons={[
                 {
-                  text: "Cancel",
+                  text: t("Cancel"),
                 },
                 {
-                  text: "Logout",
+                  text: t("Logout"),
                   handler: logout,
                 },
               ]}
@@ -131,7 +133,7 @@ export default function Settings() {
           </IonText>
           <IonList className="ion-margin-top">
             <IonItem lines="full" routerLink="/privacy-policy">
-              <IonLabel color="medium">Privacy Policy</IonLabel>
+              <IonLabel color="medium">{t("Privacy Policy")}</IonLabel>
             </IonItem>
           </IonList>
         </IonContent>

@@ -9,22 +9,24 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
 
 export default function AddressList() {
   const { chainUsers, route } = useContext(StoreContext);
+  const { t } = useTranslation();
 
   return (
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>Addresses</IonTitle>
+          <IonTitle>{t("Addresses")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Addresses</IonTitle>
+            <IonTitle size="large">{t("Addresses")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>

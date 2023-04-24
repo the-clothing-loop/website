@@ -8,12 +8,14 @@ import {
   IonButtons,
 } from "@ionic/react";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router";
 import data from "../data/faq.json";
 
 export default function HelpItem({
   match,
 }: RouteComponentProps<{ index: string }>) {
+  const { t } = useTranslation();
   const item = useMemo(() => {
     let index = parseInt(match.params.index, 10);
 
@@ -25,11 +27,11 @@ export default function HelpItem({
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton>Back</IonBackButton>
+            <IonBackButton>{t("Back")}</IonBackButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding ion-">
+      <IonContent className="ion-padding">
         <IonText>
           <h1 style={{ marginTop: 0, fontSize: 30, fontWeight: "bold" }}>
             {item.Title}

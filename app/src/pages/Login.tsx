@@ -18,6 +18,7 @@ import {
   sendOutline,
 } from "ionicons/icons";
 import { Fragment, useContext, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import toastError from "../../toastError";
 import { loginEmail } from "../api";
@@ -32,6 +33,7 @@ enum State {
 const BETA_TESTERS = (import.meta.env.VITE_APP_BETA_TESTERS || "").split(",");
 
 export default function Login(props: { isLoggedIn: boolean }) {
+  const { t } = useTranslation();
   const { login } = useContext(StoreContext);
   const history = useHistory();
   const [present] = useIonToast();
@@ -95,19 +97,16 @@ export default function Login(props: { isLoggedIn: boolean }) {
     >
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Login</IonTitle>
+          <IonTitle>{t("Login")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
         <IonItem lines="none">
-          <IonText>
-            Please enter your email address, a one time password will be sent to
-            you.
-          </IonText>
+          <IonText>{t("Please enter your email address")}</IonText>
         </IonItem>
         <IonItem lines="none">
           <IonInput
-            label="Email"
+            label={t("Email")!}
             labelPlacement="fixed"
             ref={inputEmail}
             type="email"
@@ -116,7 +115,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             autofocus
             aria-autocomplete="list"
             required
-            placeholder="Your email address"
+            placeholder={t("Your email address")!}
           />
         </IonItem>
         <IonItem lines="none">
@@ -138,14 +137,16 @@ export default function Login(props: { isLoggedIn: boolean }) {
             {sentState === State.success ? (
               <IonIcon slot="end" icon={mailUnreadOutline} />
             ) : (
-              <IonIcon slot="end" icon={sendOutline}/>
+              <IonIcon slot="end" icon={sendOutline} />
             )}
           </IonButton>
         </IonItem>
         {showToken ? (
           <Fragment key="token">
             <IonItem lines="none">
-              <IonText>Enter the Passcode you received in your email</IonText>
+              <IonText>
+                {t("Enter the Passcode you received in your email")}
+              </IonText>
             </IonItem>
             <IonItem lines="none">
               <IonInput
@@ -153,7 +154,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 ref={inputToken}
                 autoCorrect="off"
                 placeholder="••••••"
-                label="Passcode"
+                label={t("Passcode")!}
                 labelPlacement="fixed"
               />
             </IonItem>
@@ -172,7 +173,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 expand="block"
                 onClick={handleVerifyToken}
               >
-                <IonLabel>Login</IonLabel>
+                <IonLabel>{t("Login")}</IonLabel>
                 <IonIcon slot="end" icon={arrowForwardOutline} />
               </IonButton>
             </IonItem>

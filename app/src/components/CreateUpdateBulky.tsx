@@ -23,6 +23,7 @@ import { BulkyItem, uploadImage, bulkyItemPut } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
+import { useTranslation } from "react-i18next";
 
 export default function CreateUpdateBulky({
   bulky,
@@ -35,6 +36,7 @@ export default function CreateUpdateBulky({
     e: IonModalCustomEvent<OverlayEventDetail<BulkyItem | null>>
   ) => void;
 }) {
+  const { t } = useTranslation();
   const { chain, authUser } = useContext(StoreContext);
   const [bulkyTitle, setBulkyTitle] = useState("");
   const [bulkyMessage, setBulkyMessage] = useState("");
@@ -117,7 +119,7 @@ export default function CreateUpdateBulky({
       .replace("data:", "")
       .replace(/^.+,/, "");
 
-    const res = await uploadImage(image64);
+    const res = await uploadImage(image64, 800);
     setBulkyImageURL(res.data.image);
   }
 
@@ -130,15 +132,15 @@ export default function CreateUpdateBulky({
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton onClick={cancel}>Cancel</IonButton>
+            <IonButton onClick={cancel}>{t("Cancel")}</IonButton>
           </IonButtons>
-          <IonTitle>{bulky ? "Update bag" : "Create bag"}</IonTitle>
+          <IonTitle>{bulky ? t("Update bag") : t("Create bag")}</IonTitle>
           <IonButtons slot="end">
             <IonButton
               onClick={createOrUpdate}
               color={!error ? "primary" : "danger"}
             >
-              {bulky ? "Update" : "Create"}
+              {bulky ? t("Update") : t("Create")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -147,14 +149,14 @@ export default function CreateUpdateBulky({
         <IonList>
           <IonItem lines="none">
             <IonLabel className="ion-text-wrap">
-              The next bag number is automatically selected
+              {t("The next bag number is automatically selected")}
             </IonLabel>
           </IonItem>
           <IonItem
             lines="none"
             color={error === "title" ? "danger" : undefined}
           >
-            <IonLabel slot="start">Title</IonLabel>
+            <IonLabel slot="start">{t("Title")}</IonLabel>
             <IonInput
               className="ion-text-right"
               type="text"
@@ -170,7 +172,7 @@ export default function CreateUpdateBulky({
             lines="none"
             color={error === "message" ? "danger" : undefined}
           >
-            <IonLabel>Message</IonLabel>
+            <IonLabel>{t("Message")}</IonLabel>
           </IonItem>
           <IonItem
             lines="none"
@@ -203,14 +205,14 @@ export default function CreateUpdateBulky({
                 textAlign: "center",
               }}
             >
-              Image
+              {t("Image")}
             </IonLabel>
           </IonItem>
           <IonItem
             lines="none"
             color={error === "image-url" ? "danger" : undefined}
           >
-            <IonLabel slot="start">Image URL</IonLabel>
+            <IonLabel slot="start">{t("Image URL")}</IonLabel>
             <IonInput
               className="ion-text-right"
               placeholder="image.jpg"
@@ -245,7 +247,7 @@ export default function CreateUpdateBulky({
                 icon={cloudUploadOutline}
                 style={{ marginRight: "8px" }}
               />
-              Upload
+              {t("Upload")}
             </IonButton>
           </IonItem>
           <IonItem lines="none">

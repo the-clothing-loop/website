@@ -53,6 +53,7 @@ import ToDo from "./pages/ToDo";
 import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import { useTranslation } from "react-i18next";
 
 setupIonicReact({
   mode: "ios",
@@ -62,6 +63,7 @@ export default function App() {
   const { isAuthenticated, init, authenticate } = useContext(StoreContext);
   const [present] = useIonToast();
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     init()
@@ -104,25 +106,25 @@ export default function App() {
             <IonTabBar slot="bottom">
               <IonTabButton tab="help" href="/help">
                 <IonIcon aria-hidden="true" icon={bookOutline} />
-                <IonLabel>Info</IonLabel>
+                <IonLabel>{t("Info")}</IonLabel>
               </IonTabButton>
               <IonTabButton tab="address" href="/address">
                 <IonIcon aria-hidden="true" icon={homeOutline} />
-                <IonLabel>Addresses</IonLabel>
+                <IonLabel>{t("Addresses")}</IonLabel>
               </IonTabButton>
               <IonTabButton tab="bags" href="/bags">
                 <IonIcon aria-hidden="true" icon={bagHandleOutline} />
-                <IonLabel>Bags</IonLabel>
+                <IonLabel>{t("Bags")}</IonLabel>
               </IonTabButton>
 
               <IonTabButton tab="bulky-items" href="/bulky-items">
                 <IonIcon aria-hidden="true" icon={cubeOutline} />
-                <IonLabel>Bulky Items</IonLabel>
+                <IonLabel>{t("Bulky Items")}</IonLabel>
               </IonTabButton>
 
               <IonTabButton tab="settings" href="/settings">
                 <IonIcon aria-hidden="true" icon={cogOutline} />
-                <IonLabel>Settings</IonLabel>
+                <IonLabel>{t("Settings")}</IonLabel>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
