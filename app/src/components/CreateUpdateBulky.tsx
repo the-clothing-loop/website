@@ -1,4 +1,5 @@
 import {
+  CreateAnimation,
   IonButton,
   IonButtons,
   IonContent,
@@ -17,13 +18,14 @@ import {
   useIonToast,
 } from "@ionic/react";
 import type { IonModalCustomEvent } from "@ionic/core";
-import { cloudUploadOutline, downloadOutline } from "ionicons/icons";
+import { cloudUploadOutline, syncOutline } from "ionicons/icons";
 import { ChangeEvent, RefObject, useContext, useState } from "react";
 import { BulkyItem, uploadImage, bulkyItemPut } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
+import { Camera, CameraResultType } from "@capacitor/camera";
 
 export default function CreateUpdateBulky({
   bulky,
@@ -44,6 +46,7 @@ export default function CreateUpdateBulky({
   const [error, setError] = useState("");
   const [isIos] = useState(() => isPlatform("ios"));
   const [isAndroid] = useState(() => isPlatform("android"));
+  const [loadingUpload, setLoadingUpload] = useState(false);
   const [present] = useIonToast();
 
   function modalInit() {
@@ -92,8 +95,17 @@ export default function CreateUpdateBulky({
   }
 
   function handleClickUpload() {
-    if (isIos) {
-    } else if (isAndroid) {
+    console.log("upload clicked");
+
+    if (isIos || isAndroid) {
+      setLoadingUpload(true);
+      handleNativeUpload()
+        .catch((err) => {
+          toastError(present, err);
+        })
+        .finally(() => {
+          setLoadingUpload(false);
+        });
     } else {
       const el = document.getElementById(
         "cu-bulky-web-image-upload"
@@ -110,16 +122,27 @@ export default function CreateUpdateBulky({
       return new Promise<string>((resolve, reject) => {
         let reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
+        reader.onload = () =>
+          resolve(
+            (reader.result as string).replace("data:", "").replace(/^.+,/, "")
+          );
         reader.onerror = (error) => reject(error);
       });
     }
     // https://pqina.nl/blog/convert-a-file-to-a-base64-string-with-javascript/#encoding-the-file-as-a-base-string
-    const image64 = (await getBase64(file))
-      .replace("data:", "")
-      .replace(/^.+,/, "");
+    const image64 = await getBase64(file);
 
     const res = await uploadImage(image64, 800);
+    setBulkyImageURL(res.data.image);
+  }
+
+  async function handleNativeUpload() {
+    const photo = await Camera.getPhoto({
+      resultType: CameraResultType.Base64,
+    });
+    if (!photo.base64String) throw "Image not found";
+
+    const res = await uploadImage(photo.base64String, 800);
     setBulkyImageURL(res.data.image);
   }
 
@@ -248,6 +271,23 @@ export default function CreateUpdateBulky({
                 style={{ marginRight: "8px" }}
               />
               {t("Upload")}
+              <CreateAnimation
+                duration={1000}
+                iterations={Infinity}
+                play
+                fromTo={{
+                  property: "transform",
+                  fromValue: "rotate(0deg)",
+                  toValue: "rotate(360deg)",
+                }}
+              >
+                <IonIcon
+                  size="default"
+                  className={loadingUpload ? "" : "ion-hide"}
+                  style={{ marginLeft: "8px" }}
+                  icon={syncOutline}
+                />
+              </CreateAnimation>
             </IonButton>
           </IonItem>
           <IonItem lines="none">
