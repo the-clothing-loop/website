@@ -21,7 +21,8 @@ func imgBBupload(c *gin.Context, size int, expiration int) (imgRes *imgbb.ImgbbR
 		return nil, errors.New("Api key to found")
 	}
 
-	img, err := imaging.Decode(c.Request.Body)
+	reader := base64.NewDecoder(base64.StdEncoding, c.Request.Body)
+	img, err := imaging.Decode(reader)
 	if err != nil {
 		return nil, fmt.Errorf("Unable to decode image: %v", err)
 	}

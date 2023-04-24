@@ -95,11 +95,17 @@ export default function CreateUpdateBulky({
   }
 
   function handleClickUpload() {
+    console.log("upload clicked");
+
     if (isIos || isAndroid) {
       setLoadingUpload(true);
-      handleNativeUpload().finally(() => {
-        setLoadingUpload(false);
-      });
+      handleNativeUpload()
+        .catch((err) => {
+          toastError(present, err);
+        })
+        .finally(() => {
+          setLoadingUpload(false);
+        });
     } else {
       const el = document.getElementById(
         "cu-bulky-web-image-upload"
@@ -116,14 +122,15 @@ export default function CreateUpdateBulky({
       return new Promise<string>((resolve, reject) => {
         let reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
+        reader.onload = () =>
+          resolve(
+            (reader.result as string).replace("data:", "").replace(/^.+,/, "")
+          );
         reader.onerror = (error) => reject(error);
       });
     }
     // https://pqina.nl/blog/convert-a-file-to-a-base64-string-with-javascript/#encoding-the-file-as-a-base-string
-    const image64 = (await getBase64(file))
-      .replace("data:", "")
-      .replace(/^.+,/, "");
+    const image64 = await getBase64(file);
 
     const res = await uploadImage(image64, 800);
     setBulkyImageURL(res.data.image);
@@ -132,12 +139,10 @@ export default function CreateUpdateBulky({
   async function handleNativeUpload() {
     const photo = await Camera.getPhoto({
       resultType: CameraResultType.Base64,
-      width: 800,
-      height: 800,
     });
-    if (!photo.dataUrl) throw "Image not found";
+    if (!photo.base64String) throw "Image not found";
 
-    const res = await uploadImage(photo.dataUrl, 800);
+    const res = await uploadImage(photo.base64String, 800);
     setBulkyImageURL(res.data.image);
   }
 
