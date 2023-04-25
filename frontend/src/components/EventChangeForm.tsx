@@ -295,7 +295,7 @@ export default function EventChangeForm(props: {
                 ))}
               </select>
               <input
-                className="input input-secondary border-l-0 w-full flex-grow"
+                className="input input-secondary ltr:border-l-0 rtl:border-r-0  w-full flex-grow"
                 disabled={eventPriceCurrency === ""}
                 name="price"
                 onClick={(e) => (e.target as any).select()}
@@ -364,7 +364,7 @@ export default function EventChangeForm(props: {
                   onClick={() => refFileInput.current?.click()}
                 >
                   {t("uploadImage")}
-                  <span className="feather feather-upload ml-4"></span>
+                  <span className="feather feather-upload ltr:ml-4 rtl:mr-4"></span>
                 </button>
               </div>
               {values.image_url ? (
@@ -379,7 +379,7 @@ export default function EventChangeForm(props: {
           <div className="flex justify-end">
             <button type="submit" className="btn btn-primary">
               {t("submit")}
-              <span className="feather feather-arrow-right ml-4"></span>
+              <span className="feather feather-arrow-right ltr:ml-4 rtl:mr-4"></span>
             </button>
           </div>
         </div>

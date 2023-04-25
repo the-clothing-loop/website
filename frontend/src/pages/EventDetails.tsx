@@ -190,15 +190,15 @@ export default function EventDetails() {
                     <dt className="mb-2 font-bold font-sans text-xl text-teal">
                       {t("time") + ":"}
                     </dt>
-                    <dd className="mb-1 ml-4">
-                      <span className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-clock"></span>
+                    <dd className="mb-1 ltr:ml-4 rtl:mr-4">
+                      <span className="ltr:mr-2 rtl:ml-2 inline-block feather feather-clock"></span>
                       <span className="font-sans text-lg">{datetime}</span>
                     </dd>
                     <dt className="mb-2 font-bold font-sans text-xl text-teal">
                       {t("price") + ":"}
                     </dt>
-                    <dd className="mb-1 ml-4">
-                      <span className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-tag"></span>
+                    <dd className="mb-1 ltr:ml-4 rtl:mr-4">
+                      <span className="ltr:mr-2 rtl:ml-2 inline-block feather feather-tag"></span>
                       {event.price ? (
                         <span className="font-sans text-lg" key="price">
                           {event.price.currency + " " + event.price.value}
@@ -214,9 +214,9 @@ export default function EventDetails() {
                         <dt className="mb-2 font-bold font-sans text-xl text-teal">
                           {t("location") + ":"}
                         </dt>
-                        <dd className="mb-1 ml-4">
+                        <dd className="mb-1 ltr:ml-4 rtl:mr-4">
                           <span
-                            className="mr-2 feather feather-map-pin"
+                            className="ltr:mr-2 rtl:ml-2 feather feather-map-pin"
                             aria-hidden
                           ></span>
                           <address
@@ -235,7 +235,7 @@ export default function EventDetails() {
                       {t("categories") + ":"}
                     </dt>
 
-                    <dd className="mb-1 ml-4 block">
+                    <dd className="mb-1 ltr:ml-4 rtl:mr-4 block">
                       {event.genders?.length ? (
                         <SizeBadges g={event.genders} />
                       ) : null}
@@ -243,10 +243,10 @@ export default function EventDetails() {
                     <dt className="mb-2 font-bold font-sans text-xl text-teal">
                       {t("organizedBy") + ":"}
                     </dt>
-                    <dd className="mr-2 mb-1 ml-4">
+                    <dd className="mr-2 mb-1 ltr:ml-4 rtl:mr-4">
                       <div className="mb-1">
                         <span
-                          className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-mail"
+                          className="ltr:mr-2 rtl:ml-2 inline-block feather feather-mail"
                           aria-hidden
                         ></span>
                         <span
@@ -265,7 +265,7 @@ export default function EventDetails() {
                           key="loop"
                           className="group block mb-1"
                         >
-                          <span className="mr-2 rtl:mr-0 rtl:ml-2 inline-block relative">
+                          <span className="ltr:mr-2 rtl:ml-2 inline-block relative">
                             <span
                               className="block feather feather-circle"
                               aria-hidden
@@ -288,7 +288,7 @@ export default function EventDetails() {
                           target="_blank"
                         >
                           <span
-                            className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-external-link"
+                            className="ltr:mr-2 rtl:ml-2 inline-block feather feather-external-link"
                             aria-hidden
                           ></span>
                           <span className="group-hover:underline">
@@ -297,7 +297,7 @@ export default function EventDetails() {
                         </a>
                       ) : null}
                     </dd>
-                    <dd className="mb-1 ml-4"></dd>
+                    <dd className="mb-1 ltr:ml-4 rtl:mr-4"></dd>
                   </dl>
 
                   <img

@@ -134,13 +134,13 @@ export default function Events() {
             <div className="flex flex-col md:flex-row">
               <button
                 type="button"
-                className="btn btn-secondary btn-outline mr-4"
+                className="btn btn-secondary btn-outline ltr:mr-4 rtl:ml-4"
                 onClick={handleOpenModalGetLocation}
               >
                 {t("selectLocation")}
               </button>
               <CategoriesDropdown
-                className="w-[150px] md:w-[170px] mr-4 md:mr-8 py-4 pb-2 md:py-0"
+                className="w-[150px] md:w-[170px] py-4 pb-2 md:py-0"
                 selectedGenders={values.genders}
                 handleChange={(gs) => {
                   setValue("genders", gs);
@@ -149,8 +149,8 @@ export default function Events() {
               />
             </div>
             {authUser ? (
-              <Link to="/events/create" className="btn btn-primary flex">
-                <span className="pr-2 feather feather-plus" />
+              <Link to="/events/create" className="btn btn-primary">
+                <span className="pr-2 rtl:pr-0 rtl:pl-2 feather feather-plus" />
                 {t("createEvent")}
               </Link>
             ) : null}

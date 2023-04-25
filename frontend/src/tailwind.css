@@ -160,3 +160,8 @@ summary.marker\:content-none::-webkit-details-marker {
 .table td {
   @apply max-xs:p-2 max-xs:text-sm rounded-none;
 }
+
+[dir="rtl"] .select {
+  padding-right: 1rem;
+  padding-left: 2.5rem;
+}
