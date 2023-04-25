@@ -27,6 +27,7 @@ func EventCreate(c *gin.Context) {
 		Longitude      float64            `json:"longitude" binding:"required,longitude"`
 		Address        string             `json:"address" binding:"required"`
 		Price          *models.EventPrice `json:"price,omitempty"`
+		Link           string             `json:"link"`
 		Date           time.Time          `json:"date" binding:"required"`
 		Genders        []string           `json:"genders" binding:"required"`
 		ChainUID       string             `json:"chain_uid,omitempty" binding:"omitempty"`
@@ -60,6 +61,7 @@ func EventCreate(c *gin.Context) {
 		Latitude:       body.Latitude,
 		Longitude:      body.Longitude,
 		Address:        body.Address,
+		Link:           body.Link,
 		Date:           body.Date,
 		Genders:        body.Genders,
 		UserID:         user.ID,
@@ -177,6 +179,7 @@ func EventUpdate(c *gin.Context) {
 		Name           *string            `json:"name,omitempty"`
 		Description    *string            `json:"description,omitempty"`
 		Address        *string            `json:"address,omitempty"`
+		Link           *string            `json:"link,omitempty"`
 		Price          *models.EventPrice `json:"price,omitempty"`
 		Latitude       *float64           `json:"latitude,omitempty" binding:"omitempty,latitude"`
 		Longitude      *float64           `json:"longitude,omitempty" binding:"omitempty,longitude"`
@@ -229,6 +232,9 @@ func EventUpdate(c *gin.Context) {
 	}
 	if body.Description != nil {
 		event.Description = *(body.Description)
+	}
+	if body.Link != nil {
+		event.Link = *(body.Link)
 	}
 	if body.Address != nil {
 		event.Address = *(body.Address)

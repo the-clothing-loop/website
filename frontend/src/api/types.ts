@@ -41,6 +41,7 @@ export interface Event {
   name: string;
   description: string;
   price: EventPrice | null;
+  link: string;
   address: string;
   latitude: number;
   longitude: number;

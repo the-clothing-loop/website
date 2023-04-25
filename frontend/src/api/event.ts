@@ -18,6 +18,7 @@ export interface EventCreateBody {
   longitude: number;
   address: string;
   price: EventPrice | null;
+  link: string;
   date: string;
   genders: string[];
   chain_uid?: string;

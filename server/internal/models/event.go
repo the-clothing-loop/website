@@ -20,6 +20,7 @@ type Event struct {
 	Longitude      float64     `json:"longitude"`
 	Address        string      `json:"address"`
 	Price          *EventPrice `gorm:"serializer:json" json:"price"`
+	Link           string      `json:"link"`
 	Date           time.Time   `json:"date"`
 	Genders        []string    `gorm:"serializer:json" json:"genders"`
 	ChainID        zero.Int    `json:"-"`
@@ -44,6 +45,7 @@ events.latitude              AS latitude,
 events.longitude             AS longitude,
 events.address               AS address,
 events.price                 AS price,
+events.link                  AS link,
 events.date                  AS date,
 events.genders               AS genders,
 events.chain_id              AS chain_id,

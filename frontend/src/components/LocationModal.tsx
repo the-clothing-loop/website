@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useContext } from "react";
+import { useEffect, useRef, useState, useContext, ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
@@ -156,6 +156,9 @@ export default function LocationModal({
   }, []);
 
   useEffect(() => {
+    let radius = values.radius;
+    if (radius > 40 || radius <= 0) radius = 99999999;
+
     (map?.getSource("source") as mapboxgl.GeoJSONSource)?.setData(
       mapToGeoJSON({
         longitude: values.longitude,
@@ -165,6 +168,7 @@ export default function LocationModal({
     );
   }, [values.longitude, values.latitude, values.radius]);
 
+  let isAnyDistance = values.radius > 40 || values.radius <= 0;
   return (
     <div className="w-full mx-auto mb-6">
       <div className="aspect-square cursor-pointer" ref={mapRef} />
@@ -174,23 +178,28 @@ export default function LocationModal({
           name="range"
           type="range"
           min={-1}
-          max={40}
+          max={41}
           step={0.1}
           defaultValue={3}
           onChange={(e) => setValue("radius", e.target.valueAsNumber)}
           className="w-full h-2 bg-teal rounded-lg appearance-none cursor-pointer"
           required
         />
-        <TextForm
-          type="number"
-          required
-          label={t("radius")}
-          name="radius"
-          value={values.radius}
-          onChange={(e) => setValue("radius", e.target.valueAsNumber)}
-          step="0.1"
-          info={t("setLocationAndRadius")}
-        />
+        <div className="relative">
+          <TextForm
+            type="number"
+            required
+            label={t("radius")}
+            name="radius"
+            value={values.radius}
+            onChange={(e) => setValue("radius", e.target.valueAsNumber)}
+            step="0.1"
+            info={t("setLocationAndRadius")}
+          />
+          <div className={`${isAnyDistance ? "" : "hidden"}`}>
+            {t("anyDistance")}
+          </div>
+        </div>
       </div>
     </div>
   );

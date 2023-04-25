@@ -163,13 +163,13 @@ export default function EventDetails() {
                 </a>
                 {isOrganizer ? (
                   <>
-                    <a
-                      href={`/events/` + event.uid + `/edit`}
+                    <Link
+                      to={`/events/` + event.uid + `/edit`}
                       className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
                     >
                       <span className="feather feather-edit mr-3 rtl:mr-0 rtl:ml-3"></span>
                       {t("edit")}
-                    </a>
+                    </Link>
                     <button
                       className="btn btn-error"
                       aria-label={t("delete")}
@@ -244,7 +244,7 @@ export default function EventDetails() {
                       {t("organizedBy") + ":"}
                     </dt>
                     <dd className="mr-2 mb-1 ml-4">
-                      <div>
+                      <div className="mb-1">
                         <span
                           className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-mail"
                           aria-hidden
@@ -260,10 +260,10 @@ export default function EventDetails() {
                         </span>
                       </div>
                       {event.chain_uid ? (
-                        <a
-                          href={"/loops/" + event.chain_uid + "/users/signup"}
+                        <Link
+                          to={"/loops/" + event.chain_uid + "/users/signup"}
                           key="loop"
-                          className="group"
+                          className="group block mb-1"
                         >
                           <span className="mr-2 rtl:mr-0 rtl:ml-2 inline-block relative">
                             <span
@@ -277,6 +277,22 @@ export default function EventDetails() {
                           </span>
                           <span className="group-hover:underline">
                             {event.chain_name}
+                          </span>
+                        </Link>
+                      ) : null}
+                      {event.link ? (
+                        <a
+                          href={event.link}
+                          key="link"
+                          className="group block mb-1"
+                          target="_blank"
+                        >
+                          <span
+                            className="mr-2 rtl:mr-0 rtl:ml-2 inline-block feather feather-external-link"
+                            aria-hidden
+                          ></span>
+                          <span className="group-hover:underline">
+                            {t("eventLink")}
                           </span>
                         </a>
                       ) : null}

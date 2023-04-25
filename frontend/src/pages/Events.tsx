@@ -86,16 +86,6 @@ export default function Events() {
     }
   }
 
-  function submitDistance(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    return load(
-      values.genders,
-      values.latitude,
-      values.longitude,
-      values.distance
-    );
-  }
-
   function handleOpenModalGetLocation() {
     addModal({
       message: "Select your location",
@@ -141,10 +131,7 @@ export default function Events() {
           </div>
 
           <div className="flex flex-col-reverse md:flex-row justify-start md:justify-between pb-4 md:pb-8">
-            <form
-              className="flex flex-col md:flex-row"
-              onSubmit={submitDistance}
-            >
+            <div className="flex flex-col md:flex-row">
               <button
                 type="button"
                 className="btn btn-secondary btn-outline mr-4"
@@ -160,11 +147,7 @@ export default function Events() {
                   load(gs, values.latitude, values.longitude, values.distance);
                 }}
               />
-              <button type="submit" className="btn btn-primary">
-                <span className="hidden sm:inline">{t("search")}</span>
-                <span className="sm:hidden inline feather feather-search"></span>
-              </button>
-            </form>
+            </div>
             {authUser ? (
               <Link to="/events/create" className="btn btn-primary flex">
                 <span className="pr-2 feather feather-plus" />
@@ -252,19 +235,19 @@ function EventItem({ event }: { event: Event }) {
   return (
     <article className="flex flex-col bg-teal-light">
       <Link to={eventURL} className="relative aspect-[4/3]">
-        <div className="bg-teal text-white text-md absolute mt-4 right-4 text-center py-2 px-3 z-10">
-          <p>
+        <div className="bg-teal text-white text-md absolute mt-4 right-4 text-center z-10">
+          <p className="py-2 px-3">
             <span className="inline-block pr-1 font-extrabold">
               {date.format("MMMM")}
             </span>
             <span>{" " + date.format("D")}</span>
           </p>
           {event.price ? (
-            <p>
-              <span className="inline-block pr-1 font-extrabold">
+            <p className="py-1 px-3 bg-yellow-dark text-black">
+              <span className="inline-block pr-1 font-bold">
                 {event.price.currency}
               </span>
-              <span className="inline-block pr-1 font-extrabold">
+              <span className="inline-block pr-1 font-bold">
                 {event.price.value}
               </span>
             </p>

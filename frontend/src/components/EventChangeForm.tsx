@@ -27,6 +27,7 @@ const defaultValues: EventCreateBody = {
   longitude: 0,
   address: "",
   price: null,
+  link: "",
   date: new Date().toISOString(),
   genders: [],
   image_url: "",
@@ -303,6 +304,16 @@ export default function EventChangeForm(props: {
                 onChange={(e) => setEventPriceValue(e.target.valueAsNumber)}
               />
             </div>
+          </div>
+
+          <div className="mb-4">
+            <TextForm
+              label={t("eventLink") + "*"}
+              name="link"
+              type="url"
+              value={values.link}
+              onChange={(e) => setValue("link", e.target.value)}
+            />
           </div>
 
           <div className="mb-6">
