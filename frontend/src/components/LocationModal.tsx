@@ -59,7 +59,6 @@ export default function LocationModal({
   latitude = 52.3673008,
 }: Props) {
   const { t } = useTranslation();
-  const { addToastError } = useContext(ToastContext);
 
   const mapRef = useRef<any>();
   const [map, setMap] = useState<mapboxgl.Map>();
@@ -140,11 +139,6 @@ export default function LocationModal({
 
         setValue("longitude", e.lngLat.lng);
         setValue("latitude", e.lngLat.lat);
-        setValues({
-          radius: values.radius,
-          longitude: e.lngLat.lng,
-          latitude: e.lngLat.lat,
-        });
       });
     });
 
@@ -166,6 +160,12 @@ export default function LocationModal({
         radius: radius,
       })
     );
+
+    setValues({
+      radius: values.radius,
+      longitude: values.longitude,
+      latitude: values.latitude,
+    });
   }, [values.longitude, values.latitude, values.radius]);
 
   let isAnyDistance = values.radius > 40 || values.radius <= 0;

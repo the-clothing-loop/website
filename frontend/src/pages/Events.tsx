@@ -14,6 +14,7 @@ import { AuthContext } from "../providers/AuthProvider";
 import dayjs from "../util/dayjs";
 import LocationModal from "../components/LocationModal";
 import type { LocationValues } from "../components/LocationModal";
+import { useDebounce, useDebouncedCallback } from "use-debounce";
 
 interface SearchValues {
   genders: string[];
@@ -58,6 +59,9 @@ export default function Events() {
       distance,
     };
   });
+  const search = useDebouncedCallback((v: SearchValues) => {
+    load(v.genders, v.latitude, v.longitude, v.distance);
+  }, 700);
 
   useEffect(() => {
     load(values.genders, values.latitude, values.longitude, values.distance);
@@ -100,7 +104,14 @@ export default function Events() {
         {
           text: t("select"),
           type: "primary",
-          fn: searchFilter,
+          fn() {
+            search({
+              latitude: values.latitude,
+              longitude: values.longitude,
+              distance: values.distance,
+              genders: values.genders,
+            });
+          },
         },
       ],
     });
@@ -110,10 +121,6 @@ export default function Events() {
     setValue("latitude", distanceValues.latitude);
     setValue("longitude", distanceValues.longitude);
     setValue("distance", distanceValues.radius);
-  }
-
-  function searchFilter() {
-    load(values.genders, values.latitude, values.longitude, values.distance);
   }
 
   return (
@@ -144,7 +151,12 @@ export default function Events() {
                 selectedGenders={values.genders}
                 handleChange={(gs) => {
                   setValue("genders", gs);
-                  load(gs, values.latitude, values.longitude, values.distance);
+                  search({
+                    genders: gs,
+                    latitude: values.latitude,
+                    longitude: values.longitude,
+                    distance: values.distance,
+                  });
                 }}
               />
             </div>
@@ -225,8 +237,6 @@ function writeUrlSearchParams(search: SearchValues) {
 }
 
 function EventItem({ event }: { event: Event }) {
-  const { t, i18n } = useTranslation();
-
   const date = dayjs(event.date);
   const eventURL = window.location.pathname + "/" + event.uid;
 
