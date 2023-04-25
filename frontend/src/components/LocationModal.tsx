@@ -163,7 +163,7 @@ export default function LocationModal({
       mapToGeoJSON({
         longitude: values.longitude,
         latitude: values.latitude,
-        radius: values.radius,
+        radius: radius,
       })
     );
   }, [values.longitude, values.latitude, values.radius]);
@@ -196,7 +196,11 @@ export default function LocationModal({
             step="0.1"
             info={t("setLocationAndRadius")}
           />
-          <div className={`${isAnyDistance ? "" : "hidden"}`}>
+          <div
+            className={`absolute bg-white bottom-2 p-1 left-2 ${
+              isAnyDistance ? "" : "hidden"
+            }`}
+          >
             {t("anyDistance")}
           </div>
         </div>
