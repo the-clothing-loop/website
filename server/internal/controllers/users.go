@@ -8,6 +8,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"gopkg.in/guregu/null.v3/zero"
 
 	"github.com/gin-gonic/gin"
 )
@@ -90,10 +91,13 @@ func UserGetAllOfChain(c *gin.Context) {
 		return
 	}
 
-	ok, _, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
+	ok, authUser, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
 	if !ok {
 		return
 	}
+
+	_, isAuthUserChainAdmin := authUser.IsPartOfChain(chain.UID)
+	isAuthState3AdminChainUser := isAuthUserChainAdmin || authUser.IsRootAdmin
 
 	// retrieve user from query
 	users := &[]models.User{}
@@ -141,6 +145,10 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 
 	for i, user := range *users {
 		thisUserChains := []models.UserChain{}
+		if isAuthState3AdminChainUser {
+			(*users)[i].Email = zero.StringFrom("***")
+			(*users)[i].PhoneNumber = "***"
+		}
 		for ii := range *allUserChains {
 			userChain := (*allUserChains)[ii]
 			if userChain.UserID == user.ID {
