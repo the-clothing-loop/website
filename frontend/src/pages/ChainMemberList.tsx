@@ -38,10 +38,14 @@ import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { routeGetOrder, routeSetOrder } from "../api/route";
 import { i18n, TFunction } from "i18next";
+import useToClipboard from "../util/to-clipboard.hooks";
 
 interface Params {
   chainUID: string;
 }
+type SelectedTable = "route" | "participants" | "unapproved";
+
+const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function ChainMemberList() {
   const history = useHistory();
@@ -56,10 +60,9 @@ export default function ChainMemberList() {
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
-  const [selectedTable, setSelectedTable] = useState<
-    "route" | "participants" | "unapproved"
-  >("route");
+  const [selectedTable, setSelectedTable] = useState<SelectedTable>("route");
   const refSelect: any = useRef<HTMLSelectElement>();
+  const addCopyAttributes = useToClipboard();
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
@@ -183,6 +186,8 @@ export default function ChainMemberList() {
     console.log(chain, users, unapprovedUsers);
     return null;
   }
+
+  let shareLink = `${VITE_BASE_URL}/loops/${chainUID}/users/signup`;
   return (
     <>
       <Helmet>
@@ -194,12 +199,18 @@ export default function ChainMemberList() {
         <div className="flex flex-col lg:flex-row max-w-screen-xl mx-auto pt-4 lg:mb-6">
           <section className="lg:w-1/3">
             <div className="relative bg-teal-light p-8">
-              <Link
-                className="absolute top-4 right-4 btn btn-outline btn-circle"
-                to={`/loops/${chainUID}/edit`}
+              <a
+                {...addCopyAttributes(
+                  t,
+                  "loop-detail-share",
+                  "absolute top-4 right-4 btn btn-circle btn-secondary tooltip flex",
+                  shareLink
+                )}
+                href={shareLink}
+                aria-label={t("loopLink")}
               >
-                <span className="feather feather-edit-2" />
-              </Link>
+                <span className="feather feather-share text-xl" />
+              </a>
 
               <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl break-words">
                 {chain.name}
@@ -266,9 +277,9 @@ export default function ChainMemberList() {
               chain={chain}
               refresh={refresh}
             />
-            <div className="flex justify-end">
+            <div className="flex flex-col justify-end items-end">
               <form
-                className="w-full lg:w-1/2 flex flex-col sm:flex-row items-stretch md:pl-6"
+                className="mb-4 w-full lg:w-1/2 flex flex-col sm:flex-row items-stretch md:pl-6"
                 onSubmit={onAddCoHost}
               >
                 <div className="flex-grow">
@@ -299,6 +310,16 @@ export default function ChainMemberList() {
                   {t("addCoHost")}
                 </button>
               </form>
+              <Link
+                className="btn btn-sm btn-primary"
+                to={`/loops/${chainUID}/edit`}
+              >
+                {t("editLoop")}
+                <span
+                  className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
+                  aria-hidden
+                />
+              </Link>
             </div>
           </section>
         </div>
