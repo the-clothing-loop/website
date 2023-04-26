@@ -26,7 +26,8 @@ const defaultValues: EventCreateBody = {
   latitude: 0,
   longitude: 0,
   address: "",
-  price: null,
+  price_currency: null,
+  price_value: 0,
   link: "",
   date: new Date().toISOString(),
   genders: [],
@@ -97,10 +98,10 @@ export default function EventChangeForm(props: {
   );
   const [deleteImageUrl, setDeleteImageUrl] = useState("");
   const [eventPriceValue, setEventPriceValue] = useState(
-    () => values.price?.value || 0
+    () => values.price_value || 0
   );
   const [eventPriceCurrency, _setEventPriceCurrency] = useState(
-    () => values.price?.currency || ""
+    () => values.price_currency || ""
   );
   const { t } = useTranslation();
 
@@ -162,10 +163,12 @@ export default function EventChangeForm(props: {
   function submit(e: FormEvent) {
     e.preventDefault();
 
-    if (eventPriceValue && eventPriceCurrency) {
-      values.price = { value: eventPriceValue, currency: eventPriceCurrency };
+    if (eventPriceCurrency) {
+      values.price_value = eventPriceValue;
+      values.price_currency = eventPriceCurrency;
     } else {
-      values.price = null;
+      values.price_value = 0;
+      values.price_currency = "";
     }
 
     props.onSubmit(values);

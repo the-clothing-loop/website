@@ -199,9 +199,9 @@ export default function EventDetails() {
                     </dt>
                     <dd className="mb-1 ltr:ml-4 rtl:mr-4">
                       <span className="ltr:mr-2 rtl:ml-2 inline-block feather feather-tag"></span>
-                      {event.price ? (
+                      {event.price_currency ? (
                         <span className="font-sans text-lg" key="price">
-                          {event.price.currency + " " + event.price.value}
+                          {event.price_currency + " " + event.price_value}
                         </span>
                       ) : (
                         <span className="font-sans text-lg" key="free">

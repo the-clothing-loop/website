@@ -21,18 +21,19 @@ func EventCreate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		Name           string             `json:"name" binding:"required"`
-		Description    string             `json:"description"`
-		Latitude       float64            `json:"latitude" binding:"required,latitude"`
-		Longitude      float64            `json:"longitude" binding:"required,longitude"`
-		Address        string             `json:"address" binding:"required"`
-		Price          *models.EventPrice `json:"price,omitempty"`
-		Link           string             `json:"link"`
-		Date           time.Time          `json:"date" binding:"required"`
-		Genders        []string           `json:"genders" binding:"required"`
-		ChainUID       string             `json:"chain_uid,omitempty" binding:"omitempty"`
-		ImageUrl       string             `json:"image_url" binding:"required,url"`
-		ImageDeleteUrl string             `json:"image_delete_url" binding:"omitempty,url"`
+		Name           string    `json:"name" binding:"required"`
+		Description    string    `json:"description"`
+		Latitude       float64   `json:"latitude" binding:"required,latitude"`
+		Longitude      float64   `json:"longitude" binding:"required,longitude"`
+		Address        string    `json:"address" binding:"required"`
+		PriceValue     float64   `json:"price_value"`
+		PriceCurrency  string    `json:"price_currency"`
+		Link           string    `json:"link"`
+		Date           time.Time `json:"date" binding:"required"`
+		Genders        []string  `json:"genders" binding:"required"`
+		ChainUID       string    `json:"chain_uid,omitempty" binding:"omitempty"`
+		ImageUrl       string    `json:"image_url" binding:"required,url"`
+		ImageDeleteUrl string    `json:"image_delete_url" binding:"omitempty,url"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -71,8 +72,9 @@ func EventCreate(c *gin.Context) {
 	if body.ChainUID != "" && chain != nil {
 		event.ChainID = zero.NewInt(int64(chain.ID), true)
 	}
-	if body.Price != nil {
-		event.Price = body.Price
+	if body.PriceCurrency != "" {
+		event.PriceValue = body.PriceValue
+		event.PriceCurrency = zero.StringFrom(body.PriceCurrency)
 	}
 
 	if err := db.Create(event).Error; err != nil {
@@ -175,26 +177,27 @@ func EventUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		UID            string             `json:"uid" binding:"required,uuid"`
-		Name           *string            `json:"name,omitempty"`
-		Description    *string            `json:"description,omitempty"`
-		Address        *string            `json:"address,omitempty"`
-		Link           *string            `json:"link,omitempty"`
-		Price          *models.EventPrice `json:"price,omitempty"`
-		Latitude       *float64           `json:"latitude,omitempty" binding:"omitempty,latitude"`
-		Longitude      *float64           `json:"longitude,omitempty" binding:"omitempty,longitude"`
-		Date           *time.Time         `json:"date,omitempty"`
-		Genders        *[]string          `json:"genders,omitempty"`
-		ImageUrl       *string            `json:"image_url,omitempty"`
-		ImageDeleteUrl *string            `json:"image_delete_url,omitempty"`
-		ChainUID       *string            `json:"chain_uid,omitempty"`
+		UID            string     `json:"uid" binding:"required,uuid"`
+		Name           *string    `json:"name,omitempty"`
+		Description    *string    `json:"description,omitempty"`
+		Address        *string    `json:"address,omitempty"`
+		Link           *string    `json:"link,omitempty"`
+		PriceValue     *float64   `json:"price_value,omitempty"`
+		PriceCurrency  *string    `json:"price_currency,omitempty"`
+		Latitude       *float64   `json:"latitude,omitempty" binding:"omitempty,latitude"`
+		Longitude      *float64   `json:"longitude,omitempty" binding:"omitempty,longitude"`
+		Date           *time.Time `json:"date,omitempty"`
+		Genders        *[]string  `json:"genders,omitempty"`
+		ImageUrl       *string    `json:"image_url,omitempty"`
+		ImageDeleteUrl *string    `json:"image_delete_url,omitempty"`
+		ChainUID       *string    `json:"chain_uid,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 	if body.Genders != nil {
-		if ok := models.ValidateAllGenderEnum(*(body.Genders)); !ok {
+		if ok := models.ValidateAllGenderEnum(*body.Genders); !ok {
 			c.AbortWithError(http.StatusBadRequest, models.ErrGenderInvalid)
 			return
 		}
@@ -239,9 +242,6 @@ func EventUpdate(c *gin.Context) {
 	if body.Address != nil {
 		event.Address = *(body.Address)
 	}
-	if body.Price != nil {
-		event.Price = body.Price
-	}
 	if body.Latitude != nil {
 		event.Latitude = *(body.Latitude)
 	}
@@ -258,20 +258,29 @@ func EventUpdate(c *gin.Context) {
 		event.ChainID = zero.IntFrom(int64(chainID))
 	}
 	if body.ImageUrl != nil {
-		event.ImageUrl = *(body.ImageUrl)
+		event.ImageUrl = *body.ImageUrl
+		if event.ImageUrl != *body.ImageUrl && event.ImageDeleteUrl != "" {
+			imgbb.DeleteAll([]string{event.ImageDeleteUrl})
+		}
 		if body.ImageDeleteUrl != nil {
 			event.ImageDeleteUrl = *(body.ImageDeleteUrl)
 		}
-
-		if event.ImageDeleteUrl != "" {
-			imgbb.DeleteAll([]string{event.ImageDeleteUrl})
+	}
+	if body.PriceCurrency != nil && body.PriceValue != nil {
+		if *body.PriceCurrency == "" {
+			event.PriceCurrency = zero.String{}
+			event.PriceValue = 0
+		} else {
+			event.PriceCurrency = zero.StringFrom(*body.PriceCurrency)
+			event.PriceValue = *body.PriceValue
 		}
 	}
 
-	err := db.Updates(event).Error
+	err := db.Save(event).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to update loop values: %v", err)
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to update loop values"))
+		return
 	}
 }
 

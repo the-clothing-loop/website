@@ -252,13 +252,13 @@ function EventItem({ event }: { event: Event }) {
             </span>
             <span>{" " + date.format("D")}</span>
           </p>
-          {event.price ? (
+          {event.price_currency ? (
             <p className="py-1 px-3 bg-yellow-dark text-black">
               <span className="inline-block pr-1 font-bold">
-                {event.price.currency}
+                {event.price_currency}
               </span>
               <span className="inline-block pr-1 font-bold">
-                {event.price.value}
+                {event.price_value}
               </span>
             </p>
           ) : null}
