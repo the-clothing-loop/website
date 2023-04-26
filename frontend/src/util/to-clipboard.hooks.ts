@@ -25,7 +25,7 @@ export default function useToClipboard() {
     text?: string
   ) {
     return {
-      id: { id },
+      id: id,
       tabIndex: 1,
       className: `tooltip tooltip-top ${
         copying === id ? "tooltip-open" : ""

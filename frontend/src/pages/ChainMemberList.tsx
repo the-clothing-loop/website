@@ -37,7 +37,6 @@ import { SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { routeGetOrder, routeSetOrder } from "../api/route";
-import { i18n, TFunction } from "i18next";
 import useToClipboard from "../util/to-clipboard.hooks";
 
 interface Params {
@@ -199,18 +198,22 @@ export default function ChainMemberList() {
         <div className="flex flex-col lg:flex-row max-w-screen-xl mx-auto pt-4 lg:mb-6">
           <section className="lg:w-1/3">
             <div className="relative bg-teal-light p-8">
-              <a
-                {...addCopyAttributes(
-                  t,
-                  "loop-detail-share",
-                  "absolute top-4 right-4 btn btn-circle btn-secondary tooltip flex",
-                  shareLink
-                )}
-                href={shareLink}
-                aria-label={t("loopLink")}
-              >
-                <span className="feather feather-share text-xl" />
-              </a>
+              <label className="absolute top-4 right-4">
+                <a
+                  {...addCopyAttributes(
+                    t,
+                    "loop-detail-share",
+                    "relative btn btn-circle btn-secondary tooltip flex group",
+                    shareLink
+                  )}
+                  href={shareLink}
+                >
+                  <span className="feather feather-share text-lg" />
+                  <span className="absolute top-full -mt-1 group-hover:mt-1 text-xs bg-secondary shadow-lg rounded-sm py-1 px-2  whitespace-nowrap group-hover:bg-secondary-focus transition-all opacity-40 group-hover:opacity-100">
+                    {t("shareLink")}
+                  </span>
+                </a>
+              </label>
 
               <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl break-words">
                 {chain.name}
