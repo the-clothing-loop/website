@@ -27,11 +27,15 @@ interface Point {
   latitude: number;
   radius: number;
 }
+
 export interface LocationValues {
   radius: number;
   longitude: number;
   latitude: number;
 }
+
+const MAX_RADIUS = 100;
+const DEFAULT_RADIUS = 10;
 
 function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
   return {
@@ -63,7 +67,7 @@ export default function LocationModal({
   const mapRef = useRef<any>();
   const [map, setMap] = useState<mapboxgl.Map>();
   const [values, setValue] = useForm<LocationValues>({
-    radius: 3,
+    radius: DEFAULT_RADIUS,
     longitude,
     latitude,
   });
@@ -74,7 +78,7 @@ export default function LocationModal({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
       projection: { name: "mercator" },
-      zoom: 10,
+      zoom: 7,
       minZoom: 1,
       maxZoom: 13,
       center: (hasCenter
@@ -151,7 +155,7 @@ export default function LocationModal({
 
   useEffect(() => {
     let radius = values.radius;
-    if (radius > 40 || radius <= 0) radius = 99999999;
+    if (radius > MAX_RADIUS || radius <= 0) radius = 99999999;
 
     (map?.getSource("source") as mapboxgl.GeoJSONSource)?.setData(
       mapToGeoJSON({
@@ -168,7 +172,7 @@ export default function LocationModal({
     });
   }, [values.longitude, values.latitude, values.radius]);
 
-  let isAnyDistance = values.radius > 40 || values.radius <= 0;
+  let isAnyDistance = values.radius > MAX_RADIUS || values.radius <= 0;
   return (
     <div className="w-full mx-auto mb-6">
       <div className="aspect-square cursor-pointer" ref={mapRef} />
@@ -178,13 +182,29 @@ export default function LocationModal({
           name="range"
           type="range"
           min={-1}
-          max={41}
+          max={MAX_RADIUS + 1}
           step={0.1}
-          defaultValue={3}
+          value={values.radius}
           onChange={(e) => setValue("radius", e.target.valueAsNumber)}
-          className="w-full h-2 bg-teal rounded-lg appearance-none cursor-pointer"
+          className={`w-full range cursor-pointer ${
+            isAnyDistance ? "range-primary" : "range-secondary"
+          }`}
           required
+          list="location-markers"
         />
+        <datalist id="location-markers">
+          <option value="0"></option>
+          <option value="1"></option>
+          <option value="3"></option>
+          <option value="10"></option>
+          <option value="20"></option>
+          <option value="30"></option>
+          <option value="40"></option>
+          <option value="50"></option>
+          <option value="75"></option>
+          <option value="100"></option>
+          <option value="101"></option>
+        </datalist>
         <div className="relative">
           <TextForm
             type="number"
