@@ -250,7 +250,7 @@ function SubmitButton({
   chain: Chain | null;
   user?: User | null;
 }) {
-  if (chain?.open_to_new_members == false) {
+  if (chain?.open_to_new_members == false || chain?.published == false) {
     return (
       <p className="px-3 font-semibold text-sm border border-secondary h-12 inline-flex items-center text-secondary">
         {t("closed")}
