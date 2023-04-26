@@ -25,7 +25,7 @@ jobs:
       - name: Build public files
         env:
           VITE_APP_BETA_TESTERS: ${{ secrets.VITE_APP_BETA_TESTERS }}
-        run: npm run build:acceptance
+        run: npm run build:production
         working-directory: ./app
       - name: Install SSH key
         uses: benoitchantre/setup-ssh-authentication-action@1.0.1

@@ -6,9 +6,10 @@
   "type": "module",
   "scripts": {
     "dev": "VITE_APP_VERSION=$(git describe --tags --always) vite",
+    "dev:android": "ionic capacitor run android -l --external",
     "build:development": "tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode development",
-    "build:acceptance": "tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode acceptance",
     "build:production": "tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode production",
+    "build:android:production": "ionic capacitor run android --prod",
     "preview": "vite preview",
     "generate:icons": "npx capacitor-assets generate",
     "lint": "eslint"
