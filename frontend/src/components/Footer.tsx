@@ -11,6 +11,8 @@ export default function Footer() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
   const addCopyAttributes = useToClipboard();
+  const currentYear = Date().slice(11,15);
+
 
   return (
     <footer className="bg-white pt-8 lg:pt-16 w-full">
@@ -151,7 +153,7 @@ export default function Footer() {
 
           <p className="text-center sm:text-right" aria-label="copyright">
             <span className="font-bold">The Clothing Loop</span>
-            &nbsp;&copy;&nbsp;2022
+            &nbsp;&copy;&nbsp;{currentYear}
           </p>
         </div>
       </div>
