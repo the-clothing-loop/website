@@ -9,7 +9,6 @@ import {
 import { useContext, useMemo } from "react";
 import { RouteComponentProps } from "react-router";
 import UserCard from "../components/UserCard";
-import data from "../data/faq.json";
 import { StoreContext } from "../Store";
 
 export default function AddressItem({
