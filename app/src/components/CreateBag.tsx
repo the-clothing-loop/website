@@ -200,10 +200,10 @@ export default function CreateBag({
             color={error === "holder" ? "danger" : undefined}
           >
             <IonSelect
-              label={t("bagHolder")}
+              label={t("bagHolder") || ""}
               labelPlacement="stacked"
               className="ion-text-bold"
-              placeholder={t("selectTheNewBagHolder")}
+              placeholder={t("selectTheNewBagHolder") || ""}
               value={bagHolder}
               color={error === "holder" ? "danger" : undefined}
               onIonChange={handleSelectBagHolder}
