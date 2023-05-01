@@ -16,7 +16,6 @@ import {
   logoLinkedin,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import data from "../data/faq.json";
 
 interface MediaIcon {
   icon: string;
@@ -49,17 +48,19 @@ const mediaIcons: MediaIcon[] = [
 
 export default function HelpList() {
   const { t } = useTranslation();
+  const data = t("list", { ns: "faq", returnObjects: true }) as any[];
+
   return (
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("How does it work?")}</IonTitle>
+          <IonTitle>{t("howDoesItWork")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("How does it work?")}</IonTitle>
+            <IonTitle size="large">{t("howDoesItWork")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>

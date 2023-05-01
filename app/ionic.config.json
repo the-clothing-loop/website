@@ -7,7 +7,7 @@
   "config": {
     "mode": "ios",
     "core": {
-      "mode":"ios"
+      "mode": "ios"
     }
   }
 }

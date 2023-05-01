@@ -132,10 +132,10 @@ export default function CreateBag({
           <IonButtons slot="start">
             <IonButton onClick={cancel}>{t("Cancel")}</IonButton>
           </IonButtons>
-          <IonTitle>{t("Create bag")}</IonTitle>
+          <IonTitle>{t("createBag")}</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={create} color={!error ? "primary" : "danger"}>
-              {t("Create")}
+              {t("create")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -144,14 +144,14 @@ export default function CreateBag({
         <IonList>
           <IonItem lines="none">
             <IonLabel className="ion-text-wrap">
-              {t("The next bag number is automatically selected")}
+              {t("theNextBagNumberIsAutomaticallySelected")}
             </IonLabel>
           </IonItem>
           <IonItem
             lines="none"
             color={error === "number" ? "danger" : undefined}
           >
-            <IonLabel slot="start">{t("Bag Number")}</IonLabel>
+            <IonLabel slot="start">{t("bagNumber")}</IonLabel>
             <IonText slot="end" className="ion-text-right">
               {bagNumber}
             </IonText>
@@ -173,7 +173,7 @@ export default function CreateBag({
           </IonItem>
           <IonItem lines="none">
             <IonLabel>
-              {t("Bag Color")}
+              {t("bagColor")}
               <div className="ion-text-center ion-text-wrap">
                 {bagColors.map((c) => {
                   const selected = c === bagColor;
@@ -200,10 +200,10 @@ export default function CreateBag({
             color={error === "holder" ? "danger" : undefined}
           >
             <IonSelect
-              label="Bag Holder"
+              label={t("bagHolder")}
               labelPlacement="stacked"
               className="ion-text-bold"
-              placeholder="Who currently holds the bag"
+              placeholder={t("selectTheNewBagHolder")}
               value={bagHolder}
               color={error === "holder" ? "danger" : undefined}
               onIonChange={handleSelectBagHolder}

@@ -16,7 +16,7 @@ export default function PrivacyPolicy() {
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton>{t("Back")}</IonBackButton>
+            <IonBackButton>{t("back")}</IonBackButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>

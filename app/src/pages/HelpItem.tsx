@@ -10,12 +10,13 @@ import {
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router";
-import data from "../data/faq.json";
 
 export default function HelpItem({
   match,
 }: RouteComponentProps<{ index: string }>) {
   const { t } = useTranslation();
+  const data = t("list", { ns: "faq", returnObjects: true }) as any[];
+
   const item = useMemo(() => {
     let index = parseInt(match.params.index, 10);
 
@@ -27,7 +28,7 @@ export default function HelpItem({
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton>{t("Back")}</IonBackButton>
+            <IonBackButton>{t("back")}</IonBackButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>

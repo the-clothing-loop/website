@@ -20,13 +20,13 @@ export default function AddressList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("Addresses")}</IonTitle>
+          <IonTitle>{t("addresses")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("Addresses")}</IonTitle>
+            <IonTitle size="large">{t("addresses")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>

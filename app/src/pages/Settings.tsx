@@ -108,14 +108,14 @@ export default function Settings() {
             </IonButton>
             <IonAlert
               trigger="settings-logout-btn"
-              header={t("Logout")!}
-              message={t("Are you sure you want to logout?")!}
+              header={t("logout")!}
+              message={t("areYouSureYouWantToLogout?")!}
               buttons={[
                 {
-                  text: t("Cancel"),
+                  text: t("cancel"),
                 },
                 {
-                  text: t("Logout"),
+                  text: t("logout"),
                   handler: logout,
                 },
               ]}
@@ -133,7 +133,7 @@ export default function Settings() {
           </IonText>
           <IonList className="ion-margin-top">
             <IonItem lines="full" routerLink="/privacy-policy">
-              <IonLabel color="medium">{t("Privacy Policy")}</IonLabel>
+              <IonLabel color="medium">{t("privacyPolicy")}</IonLabel>
             </IonItem>
           </IonList>
         </IonContent>

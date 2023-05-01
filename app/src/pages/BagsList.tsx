@@ -81,15 +81,15 @@ export default function BagsList() {
       });
     });
     presentAlert({
-      header: t("Change Bag Holder"),
-      message: t("Select the new bag holder"),
+      header: t("changeBagHolder"),
+      message: t("selectTheNewBagHolder"),
       inputs,
       buttons: [
         {
-          text: t("Cancel"),
+          text: t("cancel"),
         },
         {
-          text: t("Change"),
+          text: t("change"),
           handler,
         },
       ],
@@ -104,17 +104,17 @@ export default function BagsList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("Bags")}</IonTitle>
+          <IonTitle>{t("bags")}</IonTitle>
 
           <IonButtons slot="end">
-            <IonButton onClick={handleClickCreate}>{t("Create")}</IonButton>
+            <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("Bags")}</IonTitle>
+            <IonTitle size="large">{t("bags")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>
@@ -164,7 +164,7 @@ export default function BagsList() {
                     color="danger"
                     onClick={() => handleClickDelete(bag.number)}
                   >
-                    {t("Delete")}
+                    {t("delete")}
                   </IonItemOption>
                 </IonItemOptions>
               </IonItemSliding>

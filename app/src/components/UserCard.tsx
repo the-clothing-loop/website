@@ -34,7 +34,7 @@ export default function UserCard({
       <IonList>
         <IonItem lines="none">
           <IonLabel>
-            <h3>{t("Interested Sizes")}</h3>
+            <h3>{t("interestedSizes")}</h3>
             <div className="ion-text-wrap">
               {user?.sizes.map((size) => (
                 <IonBadge className="ion-margin-end" key={size}>
@@ -46,7 +46,7 @@ export default function UserCard({
         </IonItem>
         <IonItem lines="none">
           <IonLabel>
-            <h3>{t("Email")}</h3>
+            <h3>{t("email")}</h3>
             {user?.email ? (
               <a href={"mailto:" + user.email}>{user.email}</a>
             ) : null}
@@ -55,7 +55,7 @@ export default function UserCard({
 
         <IonItem lines="none">
           <IonLabel>
-            <h3>{t("Phone number")}</h3>
+            <h3>{t("phoneNumber")}</h3>
             {user.phone_number ? (
               <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
             ) : null}
@@ -63,7 +63,7 @@ export default function UserCard({
         </IonItem>
         <IonItem lines="none">
           <IonLabel>
-            <h3>{t("Address")}</h3>
+            <h3>{t("address")}</h3>
             {/* https://www.google.com/maps/@${long},${lat},14z */}
             <p>{user?.address}</p>
           </IonLabel>

@@ -98,16 +98,16 @@ export default function Login(props: { isLoggedIn: boolean }) {
     >
       <IonHeader>
         <IonToolbar>
-          <IonTitle>{t("Login")}</IonTitle>
+          <IonTitle>{t("login")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
         <IonItem lines="none">
-          <IonText>{t("Please enter your email address")}</IonText>
+          <IonText>{t("pleaseEnterYourEmailAddress")}</IonText>
         </IonItem>
         <IonItem lines="none">
           <IonInput
-            label={t("Email")!}
+            label={t("email")!}
             labelPlacement="fixed"
             ref={inputEmail}
             type="email"
@@ -116,7 +116,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             autofocus
             aria-autocomplete="list"
             required
-            placeholder={t("Your email address")!}
+            placeholder={t("yourEmailAddress")!}
           />
         </IonItem>
         <IonItem lines="none">
@@ -145,9 +145,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         {showToken ? (
           <Fragment key="token">
             <IonItem lines="none">
-              <IonText>
-                {t("Enter the Passcode you received in your email")}
-              </IonText>
+              <IonText>{t("enterThePasscodeYouReceivedInYourEmail")}</IonText>
             </IonItem>
             <IonItem lines="none">
               <IonInput
@@ -155,7 +153,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 ref={inputToken}
                 autoCorrect="off"
                 placeholder="••••••"
-                label={t("Passcode")!}
+                label={t("passcode")!}
                 labelPlacement="fixed"
               />
             </IonItem>
@@ -174,7 +172,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 expand="block"
                 onClick={handleVerifyToken}
               >
-                <IonLabel>{t("Login")}</IonLabel>
+                <IonLabel>{t("login")}</IonLabel>
                 <IonIcon slot="end" icon={arrowForwardOutline} />
               </IonButton>
             </IonItem>

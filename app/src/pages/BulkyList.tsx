@@ -46,14 +46,14 @@ export default function BulkyList() {
       await setChain(chain, authUser!.uid);
     };
     presentAlert({
-      header: t("Delete Bulky Item"),
-      message: t("Are you sure you want to delete this bulky item?"),
+      header: t("deleteBulkyItem"),
+      message: t("areYouSureYouWantToDeleteThisBulkyItem?"),
       buttons: [
         {
-          text: t("Cancel"),
+          text: t("cancel"),
         },
         {
-          text: t("Delete"),
+          text: t("delete"),
           handler,
         },
       ],
@@ -75,7 +75,7 @@ export default function BulkyList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("Bulky Items")}</IonTitle>
+          <IonTitle>{t("bulkyItems")}</IonTitle>
 
           <IonButtons slot="end">
             <IonButton onClick={handleClickCreate}>Create</IonButton>
@@ -85,7 +85,7 @@ export default function BulkyList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("Bulky Items")}</IonTitle>
+            <IonTitle size="large">{t("bulkyItems")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <div>
@@ -175,14 +175,14 @@ export default function BulkyList() {
                     fill="clear"
                     onClick={() => handleClickEdit(bulkyItem)}
                   >
-                    {t("Edit")}
+                    {t("edit")}
                   </IonButton>
                   <IonButton
                     fill="clear"
                     color="danger"
                     onClick={() => handleClickDelete(bulkyItem.id)}
                   >
-                    {t("Delete")}
+                    {t("delete")}
                   </IonButton>
                 </IonButtons>
               </IonCard>

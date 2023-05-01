@@ -112,25 +112,25 @@ export default function App() {
             <IonTabBar slot="bottom">
               <IonTabButton tab="help" href="/help">
                 <IonIcon aria-hidden="true" icon={bookOutline} />
-                <IonLabel>{t("Info")}</IonLabel>
+                <IonLabel>{t("info")}</IonLabel>
               </IonTabButton>
               <IonTabButton tab="address" href="/address">
                 <IonIcon aria-hidden="true" icon={homeOutline} />
-                <IonLabel>{t("Addresses")}</IonLabel>
+                <IonLabel>{t("addresses")}</IonLabel>
               </IonTabButton>
               <IonTabButton tab="bags" href="/bags">
                 <IonIcon aria-hidden="true" icon={bagHandleOutline} />
-                <IonLabel>{t("Bags")}</IonLabel>
+                <IonLabel>{t("bags")}</IonLabel>
               </IonTabButton>
 
               <IonTabButton tab="bulky-items" href="/bulky-items">
                 <IonIcon aria-hidden="true" icon={cubeOutline} />
-                <IonLabel>{t("Bulky Items")}</IonLabel>
+                <IonLabel>{t("bulkyItems")}</IonLabel>
               </IonTabButton>
 
               <IonTabButton tab="settings" href="/settings">
                 <IonIcon aria-hidden="true" icon={cogOutline} />
-                <IonLabel>{t("Settings")}</IonLabel>
+                <IonLabel>{t("settings")}</IonLabel>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
