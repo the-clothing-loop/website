@@ -11,8 +11,7 @@ export default function Footer() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
   const addCopyAttributes = useToClipboard();
-  const currentYear = Date().slice(11,15);
-
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-white pt-8 lg:pt-16 w-full">
