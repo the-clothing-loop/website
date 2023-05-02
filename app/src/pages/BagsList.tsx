@@ -69,12 +69,12 @@ export default function BagsList() {
     };
 
     let inputs: AlertInput[] = [];
-    route.forEach((r) => {
+    route.forEach((r, i) => {
       const user = chainUsers.find((u) => u.uid === r);
       if (!user) return;
       const isChecked = user.uid === currentHolder;
       inputs.push({
-        label: user.name,
+        label: `#${i + 1} ${user.name}`,
         type: "radio",
         value: user.uid,
         checked: isChecked,
@@ -121,6 +121,10 @@ export default function BagsList() {
           {bags.map((bag) => {
             const user = chainUsers.find((u) => u.uid === bag.user_uid);
             if (!user) return null;
+            let routeNumber = route.indexOf(user.uid);
+            if (routeNumber === -1) return null;
+            routeNumber = +1;
+
             return (
               <IonItemSliding key={bag.number}>
                 <IonItem lines="full">
@@ -155,7 +159,18 @@ export default function BagsList() {
                     }}
                     onClick={() => handleClickItem(bag.number, bag.user_uid)}
                   >
-                    <h5 className="ion-no-margin">{user.name}</h5>
+                    <h5 className="ion-no-margin">
+                      {user.name}
+                      <small
+                        className="ion-text-bold"
+                        style={{
+                          marginLeft: "8px",
+                          color: "var(--ion-color-medium)",
+                        }}
+                      >
+                        #{routeNumber}
+                      </small>
+                    </h5>
                     <small>{user.address}</small>
                   </IonText>
                 </IonItem>

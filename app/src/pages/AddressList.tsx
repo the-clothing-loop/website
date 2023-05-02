@@ -49,7 +49,7 @@ export default function AddressList() {
                   <small>{user.address}</small>
                 </IonText>
                 <IonText slot="start" color="medium" className="ion-text-bold">
-                  {i + 1}
+                  #{i + 1}
                 </IonText>
               </IonItem>
             );
