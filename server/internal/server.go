@@ -21,6 +21,10 @@ func Routes() *gin.Engine {
 		app.SendInBlueInit()
 	}
 
+	if app.Config.ENV != app.EnvEnumTesting {
+		app.CronInit(db)
+	}
+
 	// set gin mode
 	if app.Config.ENV == app.EnvEnumProduction || app.Config.ENV == app.EnvEnumAcceptance {
 		gin.SetMode(gin.ReleaseMode)
