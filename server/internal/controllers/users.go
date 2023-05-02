@@ -3,11 +3,13 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"gopkg.in/guregu/null.v3/zero"
 
 	"github.com/gin-gonic/gin"
 )
@@ -186,6 +188,7 @@ func UserUpdate(c *gin.Context) {
 		Name        *string   `json:"name,omitempty"`
 		PhoneNumber *string   `json:"phone_number,omitempty"`
 		Newsletter  *bool     `json:"newsletter,omitempty"`
+		IsPaused    *bool     `json:"is_paused,omitempty"`
 		Sizes       *[]string `json:"sizes,omitempty"`
 		Address     *string   `json:"address,omitempty"`
 	}
@@ -217,6 +220,13 @@ func UserUpdate(c *gin.Context) {
 		}
 		if body.Address != nil {
 			userChanges["address"] = *body.Address
+		}
+		if body.IsPaused != nil {
+			if *body.IsPaused {
+				userChanges["is_paused"] = zero.TimeFrom(time.Now())
+			} else {
+				userChanges["is_paused"] = zero.Time{}
+			}
 		}
 		if body.Sizes != nil {
 			j, _ := json.Marshal(body.Sizes)
