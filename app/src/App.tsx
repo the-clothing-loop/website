@@ -41,7 +41,7 @@ import "./theme/variables.css";
 import "./theme/utilities.css";
 import "./theme/overrides.css";
 import { StoreContext } from "./Store";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import HelpList from "./pages/HelpList";
 import HelpItem from "./pages/HelpItem";
@@ -55,6 +55,7 @@ import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
 
 SplashScreen.show({
   autoHide: false,
@@ -65,7 +66,8 @@ setupIonicReact({
 });
 
 export default function App() {
-  const { isAuthenticated, init, authenticate } = useContext(StoreContext);
+  const { isAuthenticated, init, authenticate, bags } =
+    useContext(StoreContext);
   const [present] = useIonToast();
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
@@ -85,6 +87,16 @@ export default function App() {
       root?.removeEventListener("store-error", eventCatchStoreErr);
     };
   }, []);
+
+  const hasOldBag = useMemo(() => {
+    if (!bags.length) return false;
+
+    return bags.some((b) => {
+      const updatedAt = dayjs(b.updated_at);
+      const now = dayjs();
+      return updatedAt.isBefore(now.add(-7, "days"));
+    });
+  }, [bags]);
 
   return (
     <IonApp>
@@ -120,6 +132,19 @@ export default function App() {
               </IonTabButton>
               <IonTabButton tab="bags" href="/bags">
                 <IonIcon aria-hidden="true" icon={bagHandleOutline} />
+                {hasOldBag ? (
+                  <div
+                    style={{
+                      backgroundColor: "var(--ion-color-danger)",
+                      borderRadius: "100%",
+                      width: "10px",
+                      height: "10px",
+                      position: "absolute",
+                      top: "3px",
+                      left: "calc(50% + 10px)",
+                    }}
+                  ></div>
+                ) : null}
                 <IonLabel>{t("bags")}</IonLabel>
               </IonTabButton>
 

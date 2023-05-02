@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import { bagPut, bagRemove, UID } from "../api";
 import CreateBag from "../components/CreateBag";
 import { StoreContext } from "../Store";
+import dayjs from "dayjs";
 
 export default function BagsList() {
   const { t } = useTranslation();
@@ -121,9 +122,10 @@ export default function BagsList() {
           {bags.map((bag) => {
             const user = chainUsers.find((u) => u.uid === bag.user_uid);
             if (!user) return null;
-            let routeNumber = route.indexOf(user.uid);
-            if (routeNumber === -1) return null;
-            routeNumber = +1;
+            let routeIndex = route.indexOf(user.uid);
+            if (routeIndex === -1) return null;
+            const bagUpdatedAt = dayjs(bag.updated_at);
+            const isBagTooOld = bagUpdatedAt.isBefore(dayjs().add(-7, "days"));
 
             return (
               <IonItemSliding key={bag.number}>
@@ -136,6 +138,20 @@ export default function BagsList() {
                         color: bag.color,
                       }}
                     />
+                    {isBagTooOld ? (
+                      <div
+                        style={{
+                          backgroundColor: "var(--ion-color-danger)",
+                          borderRadius: "100%",
+                          width: "10px",
+                          height: "10px",
+                          display: "block",
+                          position: "absolute",
+                          top: "-12px",
+                          left: "calc(50% + 8px)",
+                        }}
+                      ></div>
+                    ) : null}
                     <div
                       style={{
                         position: "absolute",
@@ -168,7 +184,7 @@ export default function BagsList() {
                           color: "var(--ion-color-medium)",
                         }}
                       >
-                        #{routeNumber}
+                        #{routeIndex + 1}
                       </small>
                     </h5>
                     <small>{user.address}</small>
