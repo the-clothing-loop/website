@@ -311,7 +311,7 @@ export default function EventDetails() {
                 <h2 className="font-sans font-bold text-secondary text-2xl mb-4 px-0">
                   {t("eventDetails") + ":"}
                 </h2>
-                <p>
+                <div>
                   <div className="aspect-[4/3] sm:float-right rtl:sm:float-left sm:w-64 mb-4 sm:m-4 ltr:mr-0 rtl:ml-0 relative">
                     {isOrganizer ? (
                       <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2 flex flex-row-reverse">
@@ -341,13 +341,15 @@ export default function EventDetails() {
                       className="object-cover h-full w-full"
                     />
                   </div>
-                  {event.description.split("\n").map((s) => (
-                    <>
-                      {s}
-                      <br />
-                    </>
-                  ))}
-                </p>
+                  <p>
+                    {event.description.split("\n").map((s, i) => (
+                      <Fragment key={i}>
+                        {s}
+                        <br />
+                      </Fragment>
+                    ))}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
