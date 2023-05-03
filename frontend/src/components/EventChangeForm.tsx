@@ -123,9 +123,8 @@ export default function EventChangeForm(props: {
 
     if (d) {
       let _date = dayjs(values.date);
-      _date.set("day", d.getDate());
-      _date.set("month", d.getMonth());
-      _date.set("year", d.getFullYear());
+      let val = dayjs(d);
+      _date = _date.day(val.date()).month(val.month()).year(val.year());
       setValue("date", _date.toISOString());
     }
     _setValueDate(e.target.value);
@@ -136,8 +135,8 @@ export default function EventChangeForm(props: {
 
     if (d) {
       let _date = dayjs(values.date);
-      _date.set("hour", d.getHours());
-      _date.set("minute", d.getMinutes());
+      let val = dayjs(d);
+      _date = _date.hour(val.hour()).minute(val.minute());
       setValue("date", _date.toISOString());
     }
     _setValueTime(e.target.value);
