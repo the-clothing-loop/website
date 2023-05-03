@@ -217,16 +217,18 @@ func EventUpdate(c *gin.Context) {
 			return
 		}
 
-		found := false
-		for _, uc := range user.Chains {
-			if uc.IsChainAdmin && uc.ChainUID == *body.ChainUID {
-				chainID = uc.ChainID
-				found = true
+		if *body.ChainUID != "" {
+			found := false
+			for _, uc := range user.Chains {
+				if uc.ChainUID == *body.ChainUID {
+					chainID = uc.ChainID
+					found = true
+				}
 			}
-		}
-		if !found {
-			c.AbortWithError(http.StatusUnauthorized, errors.New("Loop must be "))
-			return
+			if !found {
+				c.AbortWithError(http.StatusUnauthorized, errors.New("User does not belong to this loop"))
+				return
+			}
 		}
 	}
 
