@@ -10,6 +10,7 @@ export interface User {
   address: string;
   sizes: string[];
   is_root_admin: boolean;
+  is_paused: Date | null;
 }
 
 export interface UserChain {
