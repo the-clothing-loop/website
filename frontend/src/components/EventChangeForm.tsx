@@ -14,7 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
-import dayjs from "dayjs";
+import dayjs from "../util/dayjs";
 import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { chainGet } from "../api/chain";
@@ -29,10 +29,12 @@ const defaultValues: EventCreateBody = {
   price_currency: null,
   price_value: 0,
   link: "",
-  date: new Date().toISOString(),
+  date: dayjs().format(),
   genders: [],
   image_url: "",
 };
+
+const INVALID_DATE_STRING = "Invalid Date";
 
 const currencies = [
   "€",
@@ -123,9 +125,12 @@ export default function EventChangeForm(props: {
 
     if (d) {
       let _date = dayjs(values.date);
-      let val = dayjs(d);
-      _date = _date.day(val.date()).month(val.month()).year(val.year());
-      setValue("date", _date.toISOString());
+      let val = dayjs(d).utc();
+      _date = _date.date(val.date()).month(val.month()).year(val.year());
+      let formattedDate = _date.format();
+      if (dayjs(formattedDate).isValid()) {
+        setValue("date", formattedDate);
+      }
     }
     _setValueDate(e.target.value);
   }
@@ -135,9 +140,12 @@ export default function EventChangeForm(props: {
 
     if (d) {
       let _date = dayjs(values.date);
-      let val = dayjs(d);
+      let val = dayjs(d).utc();
       _date = _date.hour(val.hour()).minute(val.minute());
-      setValue("date", _date.toISOString());
+      let formattedDate = _date.format();
+      if (dayjs(formattedDate).isValid()) {
+        setValue("date", formattedDate);
+      }
     }
     _setValueTime(e.target.value);
   }
