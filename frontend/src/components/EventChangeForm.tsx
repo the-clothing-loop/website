@@ -202,8 +202,6 @@ export default function EventChangeForm(props: {
     }
   }
 
-  const valuesDate = dayjs(values.date);
-
   return (
     <div className="w-full">
       <form onSubmit={submit} className="grid gap-x-4 sm:grid-cols-2">
@@ -225,7 +223,6 @@ export default function EventChangeForm(props: {
               address={values.address}
               required
               onResult={(g) => {
-                console.log(g);
                 setValue("address", g.query);
                 setValue("latitude", g.first?.[1] || 0);
                 setValue("longitude", g.first?.[0] || 0);

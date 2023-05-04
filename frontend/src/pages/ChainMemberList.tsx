@@ -55,6 +55,7 @@ export default function ChainMemberList() {
 
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
+  const [route, setRoute] = useState<UID[] | null>(null);
   const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
@@ -154,11 +155,13 @@ export default function ChainMemberList() {
 
   async function refresh(firstPageLoad = false) {
     try {
-      const [chainData, chainUsers] = await Promise.all([
+      const [chainData, chainUsers, routeData] = await Promise.all([
         chainGet(chainUID),
         userGetAllByChain(chainUID),
+        routeGetOrder(chainUID),
       ]);
       setChain(chainData.data);
+      setRoute(routeData.data || []);
       setUsers(
         chainUsers.data.filter(
           (u) => u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved
@@ -181,7 +184,7 @@ export default function ChainMemberList() {
     }
   }
 
-  if (!(chain && users && unapprovedUsers)) {
+  if (!(chain && users && unapprovedUsers && route)) {
     console.log(chain, users, unapprovedUsers);
     return null;
   }
@@ -405,6 +408,7 @@ export default function ChainMemberList() {
                 <UserDataExport
                   chainName={chain.name}
                   chainUsers={users}
+                  route={route}
                   key="export"
                 />
               ) : null}
@@ -434,6 +438,8 @@ export default function ChainMemberList() {
               authUser={authUser}
               users={users}
               chain={chain}
+              route={route}
+              setRoute={setRoute}
               refresh={refresh}
               onGoToEditTableItem={goToEditTableItem}
             />
@@ -928,41 +934,34 @@ function RouteTable(props: {
   authUser: User | null;
   users: User[];
   chain: Chain;
+  route: UID[];
+  setRoute: (route: UID[]) => void;
   refresh: () => Promise<void>;
   onGoToEditTableItem: (uid: UID) => void;
 }) {
   const { t } = useTranslation();
-  const [route, _setRoute] = useState<UID[]>([]);
   const [dragging, setDragging] = useState<string>("");
   const [dragTarget, setDragTarget] = useState<string>("");
 
-  useEffect(() => {
-    routeUpdate();
-  }, [props.chain]);
-
-  async function routeUpdate() {
-    const res = await routeGetOrder(props.chain.uid);
-    _setRoute(res.data || []);
-  }
-  function setRoute(r: typeof route) {
+  function setRoute(r: typeof props.route) {
     routeSetOrder(props.chain.uid, r);
-    _setRoute(r);
+    props.setRoute(r);
   }
   function draggingEnd(e: DragEvent<HTMLTableRowElement>) {
-    const fromIndex = route.indexOf(dragging);
-    const toIndex = route.indexOf(dragTarget);
+    const fromIndex = props.route.indexOf(dragging);
+    const toIndex = props.route.indexOf(dragTarget);
 
     setDragTarget("");
-    setRoute(reOrder(route, fromIndex, toIndex));
+    setRoute(reOrder(props.route, fromIndex, toIndex));
   }
   function handleInputChangeRoute(e: ChangeEvent<HTMLInputElement>, uid: UID) {
     const toIndex = e.target.valueAsNumber - 1;
-    const fromIndex = route.indexOf(uid);
-    setRoute(reOrder(route, fromIndex, toIndex));
+    const fromIndex = props.route.indexOf(uid);
+    setRoute(reOrder(props.route, fromIndex, toIndex));
   }
 
   const sortedUsers = props.users.sort((a, b) =>
-    route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1
+    props.route.indexOf(a.uid) < props.route.indexOf(b.uid) ? -1 : 1
   );
   return (
     <>
@@ -987,13 +986,13 @@ function RouteTable(props: {
               </tr>
             </thead>
             <tbody>
-              {sortedUsers.map((u: User) => {
-                const routeOrderNumber = route.indexOf(u.uid) + 1;
+              {sortedUsers.map((u: User, i) => {
+                const routeOrderNumber = i + 1;
 
                 let classTdDragging = dragging === u.uid ? "bg-grey/[.1]" : "";
                 if (dragTarget === u.uid) {
-                  const orderTarget = route.indexOf(dragTarget);
-                  const orderDrag = route.indexOf(dragging);
+                  const orderTarget = props.route.indexOf(dragTarget);
+                  const orderDrag = props.route.indexOf(dragging);
 
                   if (orderTarget < orderDrag) {
                     classTdDragging += " border-t-2 border-t-grey";
@@ -1018,7 +1017,7 @@ function RouteTable(props: {
                       <input
                         onClick={(e) => (e.target as any).select()}
                         onChange={(e) => handleInputChangeRoute(e, u.uid)}
-                        max={route.length + 1}
+                        max={props.route.length + 1}
                         min={1}
                         type="number"
                         className="inline-block lg:hidden input-reset w-14 py-1 px-2 bg-base-200 rounded-lg font-semibold text-center"
