@@ -187,6 +187,10 @@ export default function ChainMemberList() {
   }
 
   let shareLink = `${VITE_BASE_URL}/loops/${chainUID}/users/signup`;
+
+  let userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
+  let isUserAdmin = userChain?.is_chain_admin || false;
+
   return (
     <>
       <Helmet>
@@ -232,41 +236,6 @@ export default function ChainMemberList() {
                   {t("peopleWithCount", { count: users.length })}
                 </dd>
               </dl>
-
-              <div className="flex flex-col">
-                <div className="form-control w-full">
-                  <label className="cursor-pointer label px-0">
-                    <span className="label-text">
-                      {published ? t("published") : t("draft")}
-                    </span>
-                    <input
-                      type="checkbox"
-                      className={`toggle toggle-secondary ${
-                        error === "published" ? "border-error" : ""
-                      }`}
-                      name="published"
-                      checked={published}
-                      onChange={handleChangePublished}
-                    />
-                  </label>
-                </div>
-                <div className="form-control w-full">
-                  <label className="cursor-pointer label px-0 -mb-2">
-                    <span className="label-text">
-                      {openToNewMembers ? t("openToNewMembers") : t("closed")}
-                    </span>
-                    <input
-                      type="checkbox"
-                      className={`toggle toggle-secondary ${
-                        error === "openToNewMembers" ? "border-error" : ""
-                      }`}
-                      name="openToNewMembers"
-                      checked={openToNewMembers}
-                      onChange={handleChangeOpenToNewMembers}
-                    />
-                  </label>
-                </div>
-              </div>
             </div>
           </section>
 
@@ -280,50 +249,95 @@ export default function ChainMemberList() {
               chain={chain}
               refresh={refresh}
             />
-            <div className="flex flex-col justify-end items-end">
-              <form
-                className="mb-4 w-full lg:w-1/2 flex flex-col sm:flex-row items-stretch md:pl-6"
-                onSubmit={onAddCoHost}
-              >
-                <div className="flex-grow">
-                  <select
-                    className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
-                    name="participant"
-                    ref={refSelect}
-                    disabled={filteredUsersNotHost.length === 0}
-                  >
-                    <option disabled selected value="">
-                      {t("selectParticipant")}
-                    </option>
-                    {filteredUsersNotHost?.map((u) => (
-                      <option key={u.uid} value={u.uid}>
-                        {u.name} {u.email}
-                      </option>
-                    ))}
-                  </select>
+            {/*At some point this whole div will be hidden from non admin users*/}
+
+            {console.log(authUser)}
+            {console.log(authUser?.is_root_admin)}
+            {console.log(isUserAdmin)}
+
+            {isUserAdmin ? (
+              <div className="flex flex-col md:flex-row items-center bg-teal-light px-4 py-2 mt-4">
+                <div className="flex flex-col w-full md:w-1/6">
+                  <div className="form-control w-full">
+                    <label className="cursor-pointer label px-0">
+                      <span className="label-text">
+                        {published ? t("published") : t("draft")}
+                      </span>
+                      <input
+                        type="checkbox"
+                        className={`toggle toggle-secondary ${
+                          error === "published" ? "border-error" : ""
+                        }`}
+                        name="published"
+                        checked={published}
+                        onChange={handleChangePublished}
+                      />
+                    </label>
+                  </div>
+                  <div className="form-control w-full">
+                    <label className="cursor-pointer label px-0">
+                      <span className="label-text">
+                        {openToNewMembers ? t("openToNewMembers") : t("closed")}
+                      </span>
+                      <input
+                        type="checkbox"
+                        className={`toggle toggle-secondary ${
+                          error === "openToNewMembers" ? "border-error" : ""
+                        }`}
+                        name="openToNewMembers"
+                        checked={openToNewMembers}
+                        onChange={handleChangeOpenToNewMembers}
+                      />
+                    </label>
+                  </div>
                 </div>
-                <button
-                  className={`btn btn-sm rounded-none ${
-                    filteredUsersNotHost.length === 0
-                      ? "btn-disabled"
-                      : "btn-primary"
-                  }`}
-                  type="submit"
-                >
-                  {t("addCoHost")}
-                </button>
-              </form>
-              <Link
-                className="btn btn-sm btn-primary"
-                to={`/loops/${chainUID}/edit`}
-              >
-                {t("editLoop")}
-                <span
-                  className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
-                  aria-hidden
-                />
-              </Link>
-            </div>
+
+                <div className="flex flex-col w-full justify-right items-end py-4 md:py-0">
+                  <form
+                    className="mb-4 w-full md:w-1/2 flex flex-col sm:flex-row"
+                    onSubmit={onAddCoHost}
+                  >
+                    <div>
+                      <select
+                        className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+                        name="participant"
+                        ref={refSelect}
+                        disabled={filteredUsersNotHost.length === 0}
+                      >
+                        <option disabled selected value="">
+                          {t("selectParticipant")}
+                        </option>
+                        {filteredUsersNotHost?.map((u) => (
+                          <option key={u.uid} value={u.uid}>
+                            {u.name} {u.email}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <button
+                      className={`btn btn-sm rounded-none ${
+                        filteredUsersNotHost.length === 0
+                          ? "btn-disabled"
+                          : "btn-primary"
+                      }`}
+                      type="submit"
+                    >
+                      {t("addCoHost")}
+                    </button>
+                  </form>
+                  <Link
+                    className="btn btn-sm btn-primary"
+                    to={`/loops/${chainUID}/edit`}
+                  >
+                    {t("editLoop")}
+                    <span
+                      className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
+                      aria-hidden
+                    />
+                  </Link>
+                </div>
+              </div>
+            ) : null}
           </section>
         </div>
 
