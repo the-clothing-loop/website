@@ -234,7 +234,7 @@ export default function EventChangeForm(props: {
               <input
                 type="checkbox"
                 className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3"
-                value={hasEndDate ? "checked" : "unchecked"}
+                checked={hasEndDate}
                 onChange={(e) => {
                   const checked = e.target.checked;
                   if (checked) setValue("date_end", null);
