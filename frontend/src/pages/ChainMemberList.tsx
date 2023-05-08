@@ -256,7 +256,7 @@ export default function ChainMemberList() {
             {console.log(isUserAdmin)}
 
             {isUserAdmin ? (
-              <div className="flex flex-col md:flex-row items-center bg-teal-light px-4 py-2 mt-4">
+              <div className="flex flex-col md:flex-row bg-teal-light px-4 py-8 mt-4">
                 <div className="flex flex-col w-full md:w-1/6">
                   <div className="form-control w-full">
                     <label className="cursor-pointer label px-0">
@@ -292,12 +292,12 @@ export default function ChainMemberList() {
                   </div>
                 </div>
 
-                <div className="flex flex-col w-full justify-right items-end py-4 md:py-0">
+                <div className="flex flex-col w-full md:w-1/2 items-end ml-auto py-4 md:py-0">
                   <form
-                    className="mb-4 w-full md:w-1/2 flex flex-col sm:flex-row"
+                    className="mb-4 w-full flex flex-col sm:flex-row"
                     onSubmit={onAddCoHost}
                   >
-                    <div>
+                    <div className="ml-auto">
                       <select
                         className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
                         name="participant"
