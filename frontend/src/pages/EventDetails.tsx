@@ -137,6 +137,10 @@ export default function EventDetails() {
     let image = ClothesImage;
     if (event.image_url) image = event.image_url;
 
+    const eventPriceValue =
+      event.price_value % 1 === 0
+        ? event.price_value
+        : event.price_value.toFixed(2);
     return (
       <>
         <Helmet>
@@ -201,7 +205,7 @@ export default function EventDetails() {
                       <span className="ltr:mr-2 rtl:ml-2 inline-block feather feather-tag"></span>
                       {event.price_currency ? (
                         <span className="font-sans text-lg" key="price">
-                          {event.price_currency + " " + event.price_value}
+                          {event.price_currency + " " + eventPriceValue}
                         </span>
                       ) : (
                         <span className="font-sans text-lg" key="free">

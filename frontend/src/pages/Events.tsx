@@ -240,6 +240,11 @@ function EventItem({ event }: { event: Event }) {
   const date = dayjs(event.date);
   const eventURL = window.location.pathname + "/" + event.uid;
 
+  const eventPriceValue =
+    event.price_value % 1 === 0
+      ? event.price_value
+      : event.price_value.toFixed(2);
+
   let image = ClothesImage;
   if (event.image_url) image = event.image_url;
   return (
@@ -258,7 +263,7 @@ function EventItem({ event }: { event: Event }) {
                 {event.price_currency}
               </span>
               <span className="inline-block pr-1 font-bold">
-                {event.price_value}
+                {eventPriceValue}
               </span>
             </p>
           ) : null}
