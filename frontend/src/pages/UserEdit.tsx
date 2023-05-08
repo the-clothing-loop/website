@@ -2,11 +2,12 @@ import { useState, useEffect, useMemo, FormEvent, useContext } from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
+import Geocoding, { Estimate } from "./Geocoding";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 
 import SizesDropdown from "../components/SizesDropdown";
 import { TextForm } from "../components/FormFields";
 import categories from "../util/categories";
-import GeocoderSelector from "../components/GeocoderSelector";
 import { UID, User } from "../api/types";
 import {
   userGetByUID,
@@ -28,6 +29,8 @@ interface State {
   chainUID?: UID;
 }
 
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
+
 export default function UserEdit() {
   const { t } = useTranslation();
   const history = useHistory();
@@ -41,9 +44,16 @@ export default function UserEdit() {
     newsletter: false,
   });
 
+  const [address, setAddress] = useForm({
+    street: "",
+    zip: "",
+    cityState: "",
+    country: "",
+  });
   const [user, setUser] = useState<User>();
   const { authUser } = useContext(AuthContext);
   const params = useParams<Params>();
+  const [geocoder, setGeocoder] = useState<MapboxGeocoder>();
 
   const userUID: string =
     params.userUID == "me" ? authUser!.uid : params.userUID;
@@ -64,6 +74,31 @@ export default function UserEdit() {
 
     (async () => {
       try {
+        if (MAPBOX_TOKEN) {
+          const _geocoder = new MapboxGeocoder({
+            accessToken: MAPBOX_TOKEN,
+            types: "address",
+          });
+          const correctAddress =
+            address.street.replaceAll(" ", "%20") +
+            "%20" +
+            address.zip +
+            "%20" +
+            address.cityState.replaceAll(" ", "%20");
+
+          window.axios
+            .get(
+              `https://api.mapbox.com/geocoding/v5/mapbox.places/${correctAddress}.json?access_token=${MAPBOX_TOKEN}`
+            )
+            .then((response) => {
+              console.log(response.data);
+
+              //  var data = JSON(response.data);
+              var placeName = response.data.features[0].place_name;
+              console.log(placeName);
+              setValue("address", placeName);
+            });
+        }
         let userUpdateBody: UserUpdateBody = {
           user_uid: userUID,
           name: values.name,
@@ -123,6 +158,7 @@ export default function UserEdit() {
             <div className="mb-2">
               <TextForm
                 type="text"
+                autoComplete="name"
                 label={t("name")}
                 name="name"
                 required
@@ -136,14 +172,52 @@ export default function UserEdit() {
               value={values.phone}
               onChange={(e) => setValue("phone", e.target.value)}
             />
+            <div className="form-control mb-4">
+              <TextForm
+                type="text"
+                label={t("streetAddress")}
+                name="streetAddress"
+                autoComplete="street-address"
+                required
+                min={2}
+                value={address.street}
+                onChange={(e) => setAddress("street", e.target.value)}
+              />
+            </div>
 
             <div className="form-control mb-4">
-              <label className="label cursor-pointer">
-                <span className="label-text">{t("address")}</span>
-              </label>
-              <GeocoderSelector
-                address={values.address}
-                onResult={(e) => setValue("address", e.query)}
+              <TextForm
+                type="text"
+                label={t("zip")}
+                name="zip"
+                autoComplete="postal-code"
+                min={2}
+                value={address.zip}
+                onChange={(e) => setAddress("zip", e.target.value)}
+              />
+            </div>
+
+            <div className="form-control mb-4">
+              <TextForm
+                type="text"
+                label={t("city")}
+                name="city"
+                autoComplete="city"
+                min={2}
+                value={address.cityState}
+                onChange={(e) => setAddress("cityState", e.target.value)}
+              />
+            </div>
+
+            <div className="form-control mb-4">
+              <TextForm
+                type="text"
+                label={t("country")}
+                name="country"
+                autoComplete="country"
+                min={2}
+                value={address.country}
+                onChange={(e) => setAddress("country", e.target.value)}
               />
             </div>
 
