@@ -133,7 +133,7 @@ export default function Events() {
         <div className="max-w-screen-xl min-h-screen mx-auto py-10 px-6 md:px-20">
           <div className="flex flex-row">
             <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
-              {t("upcomingEvents")}
+              {t("upcomingSwapEvents")}
             </h1>
           </div>
 
