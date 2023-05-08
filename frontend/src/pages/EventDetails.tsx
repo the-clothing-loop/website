@@ -137,6 +137,10 @@ export default function EventDetails() {
     let image = ClothesImage;
     if (event.image_url) image = event.image_url;
 
+    const eventPriceValue =
+      event.price_value % 1 === 0
+        ? event.price_value
+        : event.price_value.toFixed(2);
     return (
       <>
         <Helmet>
@@ -201,7 +205,7 @@ export default function EventDetails() {
                       <span className="ltr:mr-2 rtl:ml-2 inline-block feather feather-tag"></span>
                       {event.price_currency ? (
                         <span className="font-sans text-lg" key="price">
-                          {event.price_currency + " " + event.price_value}
+                          {event.price_currency + " " + eventPriceValue}
                         </span>
                       ) : (
                         <span className="font-sans text-lg" key="free">
@@ -311,7 +315,7 @@ export default function EventDetails() {
                 <h2 className="font-sans font-bold text-secondary text-2xl mb-4 px-0">
                   {t("eventDetails") + ":"}
                 </h2>
-                <p>
+                <div>
                   <div className="aspect-[4/3] sm:float-right rtl:sm:float-left sm:w-64 mb-4 sm:m-4 ltr:mr-0 rtl:ml-0 relative">
                     {isOrganizer ? (
                       <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2 flex flex-row-reverse">
@@ -341,13 +345,15 @@ export default function EventDetails() {
                       className="object-cover h-full w-full"
                     />
                   </div>
-                  {event.description.split("\n").map((s) => (
-                    <>
-                      {s}
-                      <br />
-                    </>
-                  ))}
-                </p>
+                  <p>
+                    {event.description.split("\n").map((s, i) => (
+                      <Fragment key={i}>
+                        {s}
+                        <br />
+                      </Fragment>
+                    ))}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

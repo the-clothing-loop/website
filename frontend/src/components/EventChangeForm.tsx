@@ -14,7 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
-import dayjs from "dayjs";
+import dayjs from "../util/dayjs";
 import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { chainGet } from "../api/chain";
@@ -29,10 +29,12 @@ const defaultValues: EventCreateBody = {
   price_currency: null,
   price_value: 0,
   link: "",
-  date: new Date().toISOString(),
+  date: dayjs().format(),
   genders: [],
   image_url: "",
 };
+
+const INVALID_DATE_STRING = "Invalid Date";
 
 const currencies = [
   "€",
@@ -100,6 +102,16 @@ export default function EventChangeForm(props: {
   const [eventPriceValue, setEventPriceValue] = useState(
     () => values.price_value || 0
   );
+  const [eventPriceText, _setEventPriceText] = useState(() =>
+    eventPriceValue.toFixed(2)
+  );
+  const setEventPriceText = (text: string) => {
+    if (validatePrice(text)) {
+      const value = Number.parseFloat(text);
+      if (!Number.isNaN(value)) setEventPriceValue(value);
+    }
+    _setEventPriceText(text);
+  };
   const [eventPriceCurrency, _setEventPriceCurrency] = useState(
     () => values.price_currency || ""
   );
@@ -110,8 +122,10 @@ export default function EventChangeForm(props: {
 
     if (v === "") {
       _setEventPriceCurrency("");
-      setEventPriceValue(0);
+      setEventPriceText("0");
       return;
+    } else if (eventPriceValue === 0) {
+      setEventPriceText("1");
     }
 
     _setEventPriceCurrency(v);
@@ -123,10 +137,12 @@ export default function EventChangeForm(props: {
 
     if (d) {
       let _date = dayjs(values.date);
-      _date.set("day", d.getDate());
-      _date.set("month", d.getMonth());
-      _date.set("year", d.getFullYear());
-      setValue("date", _date.toISOString());
+      let val = dayjs(d).utc();
+      _date = _date.date(val.date()).month(val.month()).year(val.year());
+      let formattedDate = _date.format();
+      if (dayjs(formattedDate).isValid()) {
+        setValue("date", formattedDate);
+      }
     }
     _setValueDate(e.target.value);
   }
@@ -136,9 +152,12 @@ export default function EventChangeForm(props: {
 
     if (d) {
       let _date = dayjs(values.date);
-      _date.set("hour", d.getHours());
-      _date.set("minute", d.getMinutes());
-      setValue("date", _date.toISOString());
+      let val = dayjs(d).utc();
+      _date = _date.hour(val.hour()).minute(val.minute());
+      let formattedDate = _date.format();
+      if (dayjs(formattedDate).isValid()) {
+        setValue("date", formattedDate);
+      }
     }
     _setValueTime(e.target.value);
   }
@@ -196,6 +215,7 @@ export default function EventChangeForm(props: {
   }
 
   const valuesDate = dayjs(values.date);
+  const isValidPrice = validatePrice(eventPriceText);
 
   return (
     <div className="w-full">
@@ -298,13 +318,17 @@ export default function EventChangeForm(props: {
                 ))}
               </select>
               <input
-                className="input input-secondary ltr:border-l-0 rtl:border-r-0  w-full flex-grow"
+                className={`input ltr:border-l-0 rtl:border-r-0  w-full flex-grow ${
+                  isValidPrice ? "input-secondary" : "input-error"
+                }`}
                 disabled={eventPriceCurrency === ""}
                 name="price"
                 onClick={(e) => (e.target as any).select()}
                 type="number"
-                value={eventPriceValue}
-                onChange={(e) => setEventPriceValue(e.target.valueAsNumber)}
+                inputMode="decimal"
+                aria-invalid={isValidPrice}
+                value={eventPriceText}
+                onChange={(e) => setEventPriceText(e.target.value)}
               />
             </div>
           </div>
@@ -389,4 +413,8 @@ export default function EventChangeForm(props: {
       </form>
     </div>
   );
+}
+
+function validatePrice(value: string) {
+  return /^\d+([.,]\d{1,2})?$/.test(value);
 }

@@ -66,6 +66,7 @@
         api_config_goscope2_user: "{{ goscope2_production_user }}"
         api_config_goscope2_pass: "{{ goscope2_production_pass }}"
         api_config_sendinblue_api_key: "{{ sendinblue_api_key }}"
+        api_config_imgbb_key: "{{ imgbb_key }}"
       ansible.builtin.template:
         src: templates/config.yml.j2
         dest: /home/clothingloop/opt/config.prod.yml

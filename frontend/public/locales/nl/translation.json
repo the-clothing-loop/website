@@ -245,7 +245,6 @@
   "sorryNoEvents": "Sorry, er zijn geen gebeurtenissen die overeenkomen met deze filters.",
   "allowLocation": "Browser toestaan om uw locatie te bekijken",
   "allow": "Browser toegang geven",
-  "upcomingEvents": "Toekomstige gebeurtenissen",
   "eventsNear": "Nabijgelegen gebeurtenissen",
   "distance": "Afstand",
   "anyDistance": "Elke afstand",
@@ -264,8 +263,8 @@
   "priceFree": "Gratis",
   "selectLocation": "Selecteer locatie",
   "clickMap": "Click on map to select your location and drag slider to set radius.",
-  "setLocationAndRadius": "Click on the map to set your general location and use the slider to set the maximum distance to filter by.",
-  "eventLink": "Event Link",
+  "setLocationAndRadius": "Klik op de kaart om je algemene locatie in te stellen en gebruik de schuifregelaar om de maximale afstand in te stellen.",
+  "eventLink": "Evenement link",
   "shareLink": "Koppeling delen",
   "organizedBy": "Georganiseerd door"
 }
