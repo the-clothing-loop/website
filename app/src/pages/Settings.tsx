@@ -3,6 +3,7 @@ import {
   IonButton,
   IonContent,
   IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -11,6 +12,7 @@ import {
   IonSelectOption,
   IonText,
   IonTitle,
+  IonToggle,
   IonToolbar,
   SelectChangeEventDetail,
   useIonToast,
@@ -22,15 +24,19 @@ import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
+import { useDebouncedCallback } from "use-debounce";
+import { pause } from "ionicons/icons";
 
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 export default function Settings() {
   const { t } = useTranslation();
-  const { authUser, chain, isAuthenticated, logout, setChain } =
+  const { authUser, chain, isAuthenticated, setPause, logout, setChain } =
     useContext(StoreContext);
   const [present] = useIonToast();
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
+  const [userPause, setUserPause] = useState(() => !!authUser?.is_paused);
+  const runChangeUserPause = useDebouncedCallback(setPause, 700);
 
   const isUserAdmin = useMemo(
     () =>
@@ -47,6 +53,7 @@ export default function Settings() {
       setListOfChains([]);
       return;
     }
+    setUserPause(!!authUser.is_paused);
 
     Promise.all(authUser.chains.map((uc) => chainGet(uc.chain_uid)))
       .then((chains) => {
@@ -82,6 +89,15 @@ export default function Settings() {
             <UserCard user={authUser} isUserAdmin={isUserAdmin} />
           ) : null}
           <IonList style={{ marginBottom: "4em" }}>
+            <IonItem lines="none">
+              <IonLabel>{t("pauseUserActivity")}</IonLabel>
+              <IonToggle
+                slot="end"
+                color="medium"
+                checked={userPause}
+                onIonChange={(e) => runChangeUserPause(e.detail.checked)}
+              />
+            </IonItem>
             <IonItem lines="none">
               <IonSelect
                 ref={refChainSelect}

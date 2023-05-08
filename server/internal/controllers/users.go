@@ -211,7 +211,7 @@ func UserUpdate(c *gin.Context) {
 	}
 
 	userChanges := map[string]interface{}{}
-	if body.Name != nil || body.PhoneNumber != nil || body.Address != nil {
+	{
 		if body.Name != nil {
 			userChanges["name"] = *body.Name
 		}
@@ -232,10 +232,12 @@ func UserUpdate(c *gin.Context) {
 			j, _ := json.Marshal(body.Sizes)
 			userChanges["sizes"] = string(j)
 		}
-		if err := db.Model(user).Updates(userChanges).Error; err != nil {
-			goscope.Log.Errorf("Unable to update user: %v", err)
-			c.String(http.StatusInternalServerError, "Unable to update user")
-			return
+		if len(userChanges) > 0 {
+			if err := db.Debug().Model(user).Updates(userChanges).Error; err != nil {
+				goscope.Log.Errorf("Unable to update user: %v", err)
+				c.String(http.StatusInternalServerError, "Unable to update user")
+				return
+			}
 		}
 	}
 

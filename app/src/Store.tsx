@@ -14,6 +14,7 @@ import {
   bagGetAllByChain,
   BulkyItem,
   bulkyItemGetAllByChain,
+  userUpdate,
 } from "./api";
 
 interface StorageAuth {
@@ -24,6 +25,7 @@ interface StorageAuth {
 export const StoreContext = createContext({
   isAuthenticated: null as boolean | null,
   authUser: null as null | User,
+  setPause: (p: boolean) => {},
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
   route: [] as UID[],
@@ -152,10 +154,21 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setBulkyItems(_bulkyItems);
   }
 
+  async function _setPause(pause: boolean) {
+    if (!authUser) return;
+    await userUpdate({
+      user_uid: authUser.uid,
+      is_paused: pause,
+    });
+    const _authUser = (await userGetByUID(undefined, authUser.uid)).data;
+    setAuthUser(_authUser);
+  }
+
   return (
     <StoreContext.Provider
       value={{
         authUser,
+        setPause: _setPause,
         route,
         bags,
         bulkyItems,
