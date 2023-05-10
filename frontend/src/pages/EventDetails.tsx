@@ -45,10 +45,17 @@ export default function EventDetails() {
     load();
   }, []);
 
-  const datetime = useMemo(() => {
-    if (!event) return "";
+  const { date, dateEnd } = useMemo(() => {
+    if (!event)
+      return {
+        date: "",
+        dateEnd: null,
+      };
 
-    return dayjs(event.date).format("LLL");
+    return {
+      date: dayjs(event.date).format("LLL"),
+      dateEnd: event.date_end ? dayjs(event.date_end).format("LLL") : null,
+    };
   }, [event, i18n.language]);
 
   async function load() {
@@ -195,8 +202,25 @@ export default function EventDetails() {
                       {t("time") + ":"}
                     </dt>
                     <dd className="mb-1 ltr:ml-4 rtl:mr-4">
-                      <span className="ltr:mr-2 rtl:ml-2 inline-block feather feather-clock"></span>
-                      <span className="font-sans text-lg">{datetime}</span>
+                      <span
+                        className="ltr:mr-2 rtl:ml-2 inline-block feather feather-clock"
+                        aria-hidden
+                      ></span>
+                      <span className="font-sans text-lg">{date}</span>
+                      {dateEnd ? (
+                        <Fragment>
+                          <br />
+                          <span
+                            className="block feather feather-arrow-down"
+                            aria-hidden
+                          ></span>
+                          <span
+                            className="ltr:mr-2 rtl:ml-2 inline-block feather feather-clock rotate-90"
+                            aria-hidden
+                          ></span>
+                          <span className="font-sans text-lg">{dateEnd}</span>
+                        </Fragment>
+                      ) : null}
                     </dd>
                     <dt className="mb-2 font-bold font-sans text-xl text-teal">
                       {t("price") + ":"}

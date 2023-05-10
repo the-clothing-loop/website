@@ -19,6 +19,7 @@ import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { chainGet } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
+import { useSepDateTime } from "../util/sep-date-time.hooks";
 
 const defaultValues: EventCreateBody = {
   name: "",
@@ -30,6 +31,7 @@ const defaultValues: EventCreateBody = {
   price_value: 0,
   link: "",
   date: dayjs().format(),
+  date_end: null,
   genders: [],
   image_url: "",
 };
@@ -92,12 +94,12 @@ export default function EventChangeForm(props: {
   const [values, setValue, setValues] = useForm<EventCreateBody>(
     props.initialValues || defaultValues
   );
-  const [valueDate, _setValueDate] = useState(() =>
-    dayjs(values.date).format("YYYY-MM-DD")
+  const sepDate = useSepDateTime(values.date, (d) => setValue("date", d));
+  const [hasEndDate, setHasEndDate] = useState(values.date_end !== null);
+  const [dateEnd, setDateEnd] = useState(
+    values.date_end || dayjs().add(2, "hour").format()
   );
-  const [valueTime, _setValueTime] = useState(() =>
-    dayjs(values.date).format("HH:mm")
-  );
+  const sepDateEnd = useSepDateTime(dateEnd, setDateEnd);
   const [deleteImageUrl, setDeleteImageUrl] = useState("");
   const [eventPriceValue, setEventPriceValue] = useState(
     () => values.price_value || 0
@@ -131,37 +133,6 @@ export default function EventChangeForm(props: {
     _setEventPriceCurrency(v);
   }
 
-  function setValueDate(e: ChangeEvent<HTMLInputElement>) {
-    const d = e.target.valueAsDate;
-    console.log(d);
-
-    if (d) {
-      let _date = dayjs(values.date);
-      let val = dayjs(d).utc();
-      _date = _date.date(val.date()).month(val.month()).year(val.year());
-      let formattedDate = _date.format();
-      if (dayjs(formattedDate).isValid()) {
-        setValue("date", formattedDate);
-      }
-    }
-    _setValueDate(e.target.value);
-  }
-  function setValueTime(e: ChangeEvent<HTMLInputElement>) {
-    const d = e.target.valueAsDate;
-    console.log(d);
-
-    if (d) {
-      let _date = dayjs(values.date);
-      let val = dayjs(d).utc();
-      _date = _date.hour(val.hour()).minute(val.minute());
-      let formattedDate = _date.format();
-      if (dayjs(formattedDate).isValid()) {
-        setValue("date", formattedDate);
-      }
-    }
-    _setValueTime(e.target.value);
-  }
-
   async function onImageUpload(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -181,6 +152,8 @@ export default function EventChangeForm(props: {
 
   function submit(e: FormEvent) {
     e.preventDefault();
+
+    values.date_end = hasEndDate ? dateEnd : null;
 
     if (eventPriceCurrency) {
       values.price_value = eventPriceValue;
@@ -214,7 +187,6 @@ export default function EventChangeForm(props: {
     }
   }
 
-  const valuesDate = dayjs(values.date);
   const isValidPrice = validatePrice(eventPriceText);
 
   return (
@@ -246,27 +218,66 @@ export default function EventChangeForm(props: {
             />
           </label>
         </div>
-        <div className="">
+        <div>
           <TextForm
             required
             min={2}
             label={t("date") + "*"}
             type="date"
             name="date"
-            value={valueDate}
-            onChange={setValueDate}
+            value={sepDate.date.value}
+            onChange={sepDate.date.onChange}
           />
         </div>
-        <div className="">
+        <div>
           <TextForm
             required
             min={2}
             label={t("time") + "*"}
             name="time"
             type="time"
-            value={valueTime}
-            onChange={setValueTime}
+            value={sepDate.time.value}
+            onChange={sepDate.time.onChange}
           />
+        </div>
+        <div className="col-span-1 sm:col-span-2">
+          <div className={`mb-3 mt-5 ${hasEndDate ? "bg-base-100" : ""}`}>
+            <label className="inline-flex items-center cursor-pointer p-4 transition-colors bg-base-100 bg-opacity-0 hover:bg-opacity-70">
+              <input
+                type="checkbox"
+                className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3"
+                checked={hasEndDate}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  if (checked) setValue("date_end", null);
+                  setHasEndDate(checked);
+                }}
+              />
+              <span>End date</span>
+            </label>
+            {hasEndDate ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 pt-0 -mt-2">
+                <TextForm
+                  required
+                  min={2}
+                  label={t("date") + "*"}
+                  type="date"
+                  name="date_end"
+                  value={sepDateEnd.date.value}
+                  onChange={sepDateEnd.date.onChange}
+                />
+                <TextForm
+                  required
+                  min={2}
+                  label={t("time") + "*"}
+                  name="time"
+                  type="time"
+                  value={sepDateEnd.time.value}
+                  onChange={sepDateEnd.time.onChange}
+                />
+              </div>
+            ) : null}
+          </div>
         </div>
         <div className="form-control">
           <label>
