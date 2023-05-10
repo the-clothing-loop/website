@@ -272,21 +272,6 @@ export default function EventDetails() {
                       {t("organizedBy") + ":"}
                     </dt>
                     <dd className="mr-2 mb-1 ltr:ml-4 rtl:mr-4">
-                      <div className="mb-1">
-                        <span
-                          className="ltr:mr-2 rtl:ml-2 inline-block feather feather-mail"
-                          aria-hidden
-                        ></span>
-                        <span
-                          {...addCopyAttributes(
-                            t,
-                            "event-detail-email-" + event.uid,
-                            "text-lg inline break-all"
-                          )}
-                        >
-                          {event.user_email}
-                        </span>
-                      </div>
                       {event.chain_uid ? (
                         <Link
                           to={"/loops/" + event.chain_uid + "/users/signup"}
