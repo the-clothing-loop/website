@@ -268,7 +268,7 @@ function EventItem({ event }: { event: Event }) {
               </span>
             </p>
           ) : (
-            <p className="py-1 px-3 bg-white/80 text-green">
+            <p className="py-1 px-3 bg-white/90 text-black">
               <span className="inline-block pr-1 font-semibold">
                 {t("priceFree")}
               </span>
