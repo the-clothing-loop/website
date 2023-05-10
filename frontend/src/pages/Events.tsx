@@ -133,7 +133,7 @@ export default function Events() {
         <div className="max-w-screen-xl min-h-screen mx-auto py-10 px-6 md:px-20">
           <div className="flex flex-row">
             <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
-              {t("upcomingEvents")}
+              {t("upcomingSwapEvents")}
             </h1>
           </div>
 
@@ -237,16 +237,22 @@ function writeUrlSearchParams(search: SearchValues) {
 }
 
 function EventItem({ event }: { event: Event }) {
+  const { t } = useTranslation();
   const date = dayjs(event.date);
   const eventURL = window.location.pathname + "/" + event.uid;
+
+  const eventPriceValue =
+    event.price_value % 1 === 0
+      ? event.price_value
+      : event.price_value.toFixed(2);
 
   let image = ClothesImage;
   if (event.image_url) image = event.image_url;
   return (
     <article className="flex flex-col bg-teal-light">
       <Link to={eventURL} className="relative aspect-[4/3]">
-        <div className="bg-teal text-white text-md absolute mt-4 right-4 text-center z-10">
-          <p className="py-2 px-3">
+        <div className=" text-md absolute mt-4 right-4 text-center z-10">
+          <p className="bg-teal text-white py-2 px-3">
             <span className="inline-block pr-1 font-extrabold">
               {date.format("MMMM")}
             </span>
@@ -258,10 +264,16 @@ function EventItem({ event }: { event: Event }) {
                 {event.price_currency}
               </span>
               <span className="inline-block pr-1 font-bold">
-                {event.price_value}
+                {eventPriceValue}
               </span>
             </p>
-          ) : null}
+          ) : (
+            <p className="py-1 px-3 bg-white/80 text-green">
+              <span className="inline-block pr-1 font-semibold">
+                {t("priceFree")}
+              </span>
+            </p>
+          )}
         </div>
         <img src={image} className="w-full h-full object-cover" />
       </Link>

@@ -104,6 +104,16 @@ export default function EventChangeForm(props: {
   const [eventPriceValue, setEventPriceValue] = useState(
     () => values.price_value || 0
   );
+  const [eventPriceText, _setEventPriceText] = useState(() =>
+    eventPriceValue.toFixed(2)
+  );
+  const setEventPriceText = (text: string) => {
+    if (validatePrice(text)) {
+      const value = Number.parseFloat(text);
+      if (!Number.isNaN(value)) setEventPriceValue(value);
+    }
+    _setEventPriceText(text);
+  };
   const [eventPriceCurrency, _setEventPriceCurrency] = useState(
     () => values.price_currency || ""
   );
@@ -114,8 +124,10 @@ export default function EventChangeForm(props: {
 
     if (v === "") {
       _setEventPriceCurrency("");
-      setEventPriceValue(0);
+      setEventPriceText("0");
       return;
+    } else if (eventPriceValue === 0) {
+      setEventPriceText("1");
     }
 
     _setEventPriceCurrency(v);
@@ -175,7 +187,7 @@ export default function EventChangeForm(props: {
     }
   }
 
-  const valuesDate = dayjs(values.date);
+  const isValidPrice = validatePrice(eventPriceText);
 
   return (
     <div className="w-full">
@@ -317,13 +329,17 @@ export default function EventChangeForm(props: {
                 ))}
               </select>
               <input
-                className="input input-secondary ltr:border-l-0 rtl:border-r-0  w-full flex-grow"
+                className={`input ltr:border-l-0 rtl:border-r-0  w-full flex-grow ${
+                  isValidPrice ? "input-secondary" : "input-error"
+                }`}
                 disabled={eventPriceCurrency === ""}
                 name="price"
                 onClick={(e) => (e.target as any).select()}
                 type="number"
-                value={eventPriceValue}
-                onChange={(e) => setEventPriceValue(e.target.valueAsNumber)}
+                inputMode="decimal"
+                aria-invalid={isValidPrice}
+                value={eventPriceText}
+                onChange={(e) => setEventPriceText(e.target.value)}
               />
             </div>
           </div>
@@ -410,4 +426,6 @@ export default function EventChangeForm(props: {
   );
 }
 
-function ComponentDateTime(props: { date: Date; setDate: (d: Date) => void }) {}
+function validatePrice(value: string) {
+  return /^\d+([.,]\d{1,2})?$/.test(value);
+}

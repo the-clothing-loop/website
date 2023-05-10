@@ -27,7 +27,7 @@ func EventCreate(c *gin.Context) {
 		Latitude       float64   `json:"latitude" binding:"required,latitude"`
 		Longitude      float64   `json:"longitude" binding:"required,longitude"`
 		Address        string    `json:"address" binding:"required"`
-		PriceValue     float64   `json:"price_value"`
+		PriceValue     float64   `json:"price_value" binding:"required,gte=0"`
 		PriceCurrency  string    `json:"price_currency"`
 		Link           string    `json:"link"`
 		Date           time.Time `json:"date" binding:"required"`
