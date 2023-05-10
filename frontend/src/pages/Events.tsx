@@ -278,21 +278,18 @@ function EventItem({ event }: { event: Event }) {
         <img src={image} className="w-full h-full object-cover" />
       </Link>
 
-      <div className="flex-grow m-4">
+      <div className="m-4 mb-2">
         <h2 className="text-xl text-teal font-bold">
           <Link to={eventURL}>{event.name}</Link>
         </h2>
       </div>
-      <dl className="m-4 mt-0">
-        <dd className="mb-2" key={"address" + event.uid}>
-          <span className="feather feather-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
-
-          <address className="inline">{event.address}</address>
-        </dd>
-        <dd>
-          {event.genders?.length ? <SizeBadges g={event.genders} /> : null}
-        </dd>
-      </dl>
+      <div className="flex-grow mx-4 mb-2">
+        <span className="feather feather-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+        <address className="inline">{event.address}</address>
+      </div>
+      <div className="m-4 mt-0">
+        {event.genders?.length ? <SizeBadges g={event.genders} /> : null}
+      </div>
     </article>
   );
 }
