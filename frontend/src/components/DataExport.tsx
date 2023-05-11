@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { CSVLink } from "react-csv";
 import { useTranslation } from "react-i18next";
 
-import { User } from "../api/types";
+import { UID, User } from "../api/types";
 import { Sizes } from "../api/enums";
 
 interface ChainData {
@@ -46,12 +46,17 @@ interface UserData {
 
 export function UserDataExport(props: {
   chainName: string;
-  chainUsers?: User[];
+  chainUsers: User[];
+  route: UID[];
 }) {
   const { t } = useTranslation();
 
   const data = useMemo(() => {
-    return props.chainUsers?.map<UserData>((u) => ({
+    return (
+      props.route
+        .map((r) => props.chainUsers.find((u) => u.uid === r))
+        .filter((u) => !!u) as User[]
+    ).map<UserData>((u) => ({
       name: u.name,
       address: u.address,
       email: u.email,

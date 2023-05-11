@@ -245,6 +245,7 @@
   "sorryNoEvents": "Sorry, there are no events that match these filters.",
   "allowLocation": "Allow browser to see your location",
   "allow": "Allow browser access",
+  "upcomingSwapEvents": "Upcoming Swap Events",
   "eventsNear": "Events Near",
   "distance": "Distance",
   "anyDistance": "Any distance",

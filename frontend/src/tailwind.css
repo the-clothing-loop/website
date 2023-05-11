@@ -165,3 +165,29 @@ summary.marker\:content-none::-webkit-details-marker {
   padding-right: 1rem;
   padding-left: 2.5rem;
 }
+
+/* Tiny MCE */
+
+html[dir="rtl"] .tox .tox-toolbar__group,
+html[dir="rtl"] .tox .tox-toolbar__primary {
+  flex-direction: row-reverse;
+}
+.tox .tox-statusbar {
+  display: none !important;
+}
+
+.tox.tox-tinymce {
+  @apply !border-secondary border !rounded-none;
+}
+
+.tox .tox-dialog,
+.tox .tox-button,
+.tox .tox-textfield,
+.tox .tox-listboxfield .tox-listbox--select,
+.tox .tox-collection--list .tox-collection__item {
+  @apply !rounded-none;
+}
+
+.tox .tox-menu.tox-collection.tox-collection--list {
+  @apply !px-0 border-x-0 !rounded-none;
+}
