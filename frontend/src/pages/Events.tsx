@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import { useState, useContext, useEffect, FormEvent } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -14,7 +14,7 @@ import { AuthContext } from "../providers/AuthProvider";
 import dayjs from "../util/dayjs";
 import LocationModal from "../components/LocationModal";
 import type { LocationValues } from "../components/LocationModal";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 interface SearchValues {
   genders: string[];
@@ -37,7 +37,7 @@ export default function Events() {
   const { addToastError, addModal } = useContext(ToastContext);
   const authUser = useContext(AuthContext).authUser;
   const [events, setEvents] = useState<Event[] | null>(null);
-  const [values, setValue] = useForm<SearchValues>(() => {
+  const [values, setValue, setValues] = useForm<SearchValues>(() => {
     const urlParams = new URLSearchParams("/events");
     let latitude =
       Number.parseFloat(urlParams.get("lat") || "") || DEFAULT_LATITUDE;
@@ -59,8 +59,8 @@ export default function Events() {
       distance,
     };
   });
-  const search = useDebouncedCallback((v: SearchValues) => {
-    load(v.genders, v.latitude, v.longitude, v.distance);
+  const search = useDebouncedCallback(() => {
+    load(values.genders, values.latitude, values.longitude, values.distance);
   }, 700);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function Events() {
     longitude: number,
     distance: number
   ) {
-    const radius = distance === -1 ? MAX_RADIUS : distance;
+    const radius = distance <= 0 ? MAX_RADIUS : distance;
     writeUrlSearchParams({
       genders: filterGenders,
       latitude,
@@ -98,6 +98,7 @@ export default function Events() {
           setValues={setLocationValues}
           latitude={values.latitude}
           longitude={values.longitude}
+          radius={values.distance}
         />
       ),
       actions: [
@@ -105,12 +106,7 @@ export default function Events() {
           text: t("select"),
           type: "primary",
           fn() {
-            search({
-              latitude: values.latitude,
-              longitude: values.longitude,
-              distance: values.distance,
-              genders: values.genders,
-            });
+            search();
           },
         },
       ],
@@ -118,9 +114,12 @@ export default function Events() {
   }
 
   function setLocationValues(distanceValues: LocationValues) {
-    setValue("latitude", distanceValues.latitude);
-    setValue("longitude", distanceValues.longitude);
-    setValue("distance", distanceValues.radius);
+    setValues((v) => ({
+      genders: v.genders,
+      latitude: distanceValues.latitude,
+      longitude: distanceValues.longitude,
+      distance: distanceValues.radius,
+    }));
   }
 
   return (

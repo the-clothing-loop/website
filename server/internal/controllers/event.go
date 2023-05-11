@@ -117,14 +117,17 @@ func EventGetAll(c *gin.Context) {
 	var query struct {
 		Latitude  float32 `form:"latitude" binding:"required,latitude"`
 		Longitude float32 `form:"longitude" binding:"required,longitude"`
-		Radius    float32 `form:"radius" binding:"required,min=0.001"`
+		Radius    float32 `form:"radius"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
+	if query.Radius == 5000 {
+		query.Radius = 0
+	}
 
-	sql := models.EventGetSql + `WHERE date > NOW() OR (date_end IS NOT NULL AND date_end > NOW())`
+	sql := models.EventGetSql + `WHERE (date > NOW() OR (date_end IS NOT NULL AND date_end > NOW()))`
 	args := []any{}
 	if query.Latitude != 0 && query.Longitude != 0 && query.Radius != 0 {
 		sql = fmt.Sprintf("%s AND %s <= ? ", sql, sqlCalcDistance("events.latitude", "events.longitude", "?", "?"))
