@@ -52,12 +52,11 @@ import { useTranslation } from "react-i18next";
 
 type Props = Omit<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
-  "id" | "onChange" | "value"
+  "id" | "onChange"
 > & {
-  initialValue: string;
   onChange: (value: string) => void;
 };
-export function TinyMCE({ initialValue, onChange, ...props }: Props) {
+export function TinyMCE({ onChange, ...props }: Props) {
   const { i18n } = useTranslation();
   const [id] = useState(() => "mce-" + window.crypto.randomUUID());
   const [editor, setEditor] = useState<Editor | null>(null);
@@ -89,9 +88,6 @@ export function TinyMCE({ initialValue, onChange, ...props }: Props) {
     });
 
     let _editor = tinymce.get(id);
-    if (_editor) {
-      _editor.setContent(initialValue);
-    }
 
     _editor?.on("change", function (e) {
       const html = _editor?.getContent({ format: "html" }) as string;

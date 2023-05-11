@@ -289,14 +289,6 @@ export default function EventChangeForm(props: {
               value={values.description}
               onChange={(value) => setValue("description", value)}
             />
-            {/* <textarea
-              className="textarea textarea-secondary w-full h-[300px] max-xs:h-auto"
-              name="description"
-              cols={3}
-              value={values.description}
-              onChange={(e) => setValue("description", e.target.value)}
-            /> */}
-            {JSON.stringify(values.description)}
           </label>
         </div>
         <div>
