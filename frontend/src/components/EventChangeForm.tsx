@@ -20,6 +20,7 @@ import { GinParseErrors } from "../util/gin-errors";
 import { chainGet } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
 import { useSepDateTime } from "../util/sep-date-time.hooks";
+import { TinyMCE } from "./TinyMCE";
 
 const defaultValues: EventCreateBody = {
   name: "",
@@ -283,13 +284,19 @@ export default function EventChangeForm(props: {
             <div className="label">
               <span className="label-text">{t("description")}</span>
             </div>
-            <textarea
+            <TinyMCE
+              name="description"
+              value={values.description}
+              onChange={(value) => setValue("description", value)}
+            />
+            {/* <textarea
               className="textarea textarea-secondary w-full h-[300px] max-xs:h-auto"
               name="description"
               cols={3}
               value={values.description}
               onChange={(e) => setValue("description", e.target.value)}
-            />
+            /> */}
+            {JSON.stringify(values.description)}
           </label>
         </div>
         <div>

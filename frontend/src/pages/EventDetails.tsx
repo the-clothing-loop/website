@@ -398,14 +398,10 @@ export default function EventDetails() {
                       className="object-cover h-full w-full"
                     />
                   </div>
-                  <p>
-                    {event.description.split("\n").map((s, i) => (
-                      <Fragment key={i}>
-                        {s}
-                        <br />
-                      </Fragment>
-                    ))}
-                  </p>
+                  <div
+                    className="prose"
+                    dangerouslySetInnerHTML={{ __html: event.description }}
+                  ></div>
                 </div>
               </div>
             </div>
