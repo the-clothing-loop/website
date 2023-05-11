@@ -145,10 +145,6 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 
 	for i, user := range *users {
 		thisUserChains := []models.UserChain{}
-		if isAuthState3AdminChainUser {
-			(*users)[i].Email = zero.StringFrom("***")
-			(*users)[i].PhoneNumber = "***"
-		}
 		for ii := range *allUserChains {
 			userChain := (*allUserChains)[ii]
 			if userChain.UserID == user.ID {
@@ -157,6 +153,33 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 			}
 		}
 		(*users)[i].Chains = thisUserChains
+	}
+
+	// omit user data from participants
+	if isAuthState3AdminChainUser {
+		authUserRouteOrder := -10
+		{
+			uc := authUser.FindUserChainByUID(chain.UID)
+			if uc != nil {
+				authUserRouteOrder = uc.RouteOrder
+			}
+		}
+
+		for i, user := range *users {
+			// find users above and below this user in the route order
+			routeOrder := -20
+			{
+				uc := user.FindUserChainByUID(chain.UID)
+				if uc != nil {
+					routeOrder = uc.RouteOrder
+				}
+			}
+
+			if !(routeOrder == 1-authUserRouteOrder || routeOrder == 1+authUserRouteOrder || authUser.UID == user.UID) {
+				(*users)[i].Email = zero.StringFrom("***")
+				(*users)[i].PhoneNumber = "***"
+			}
+		}
 	}
 
 	c.JSON(200, users)
