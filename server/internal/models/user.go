@@ -107,13 +107,3 @@ LIMIT 1
 
 	return e, nil
 }
-
-func (u *User) FindUserChainByUID(chainUID string) (c *UserChain) {
-	for _, uc := range u.Chains {
-		if uc.ChainUID == chainUID {
-			c = &uc
-			break
-		}
-	}
-	return c
-}

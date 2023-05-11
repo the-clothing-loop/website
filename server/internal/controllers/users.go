@@ -157,27 +157,23 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 
 	// omit user data from participants
 	if isAuthState3AdminChainUser {
-		authUserRouteOrder := -10
-		{
-			uc := authUser.FindUserChainByUID(chain.UID)
-			if uc != nil {
-				authUserRouteOrder = uc.RouteOrder
-			}
+		route, err := chain.GetRouteOrderByUserUID(db)
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
 		}
 
+		authUserRouteOrder := routeIndex(route, authUser.UID)
 		for i, user := range *users {
 			// find users above and below this user in the route order
-			routeOrder := -20
-			{
-				uc := user.FindUserChainByUID(chain.UID)
-				if uc != nil {
-					routeOrder = uc.RouteOrder
-				}
-			}
+			routeOrder := routeIndex(route, user.UID)
+			_, isChainAdmin := user.IsPartOfChain(chain.UID)
 
-			if !(routeOrder == 1-authUserRouteOrder || routeOrder == 1+authUserRouteOrder || authUser.UID == user.UID) {
+			isDirectlyBeforeOrAfter := authUserRouteOrder-1 <= routeOrder && routeOrder >= 1+authUserRouteOrder
+			if !isDirectlyBeforeOrAfter && authUser.UID != user.UID && !isChainAdmin {
 				(*users)[i].Email = zero.StringFrom("***")
 				(*users)[i].PhoneNumber = "***"
+				(*users)[i].Address = "***"
 			}
 		}
 	}
@@ -422,4 +418,13 @@ HAVING COUNT(uc.id) = 1
 	}
 
 	tx.Commit()
+}
+
+func routeIndex(route []string, userUID string) int {
+	for i, uid := range route {
+		if uid == userUID {
+			return i
+		}
+	}
+	return -1
 }
