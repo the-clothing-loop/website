@@ -18,6 +18,7 @@ func LoginEmail(c *gin.Context) {
 
 	var body struct {
 		Email string `binding:"required,email" json:"email"`
+		IsApp bool   `json:"app"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, "Email required")
@@ -42,7 +43,7 @@ LIMIT 1
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	views.EmailLoginVerification(c, db, user.Name, user.Email.String, token)
+	views.EmailLoginVerification(c, db, user.Name, user.Email.String, token, body.IsApp)
 }
 
 func LoginValidate(c *gin.Context) {

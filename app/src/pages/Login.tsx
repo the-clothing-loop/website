@@ -17,7 +17,15 @@ import {
   mailUnreadOutline,
   sendOutline,
 } from "ionicons/icons";
-import { Fragment, useContext, useRef, useState } from "react";
+import { Keyboard } from "@capacitor/keyboard";
+import {
+  Fragment,
+  KeyboardEventHandler,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import toastError from "../../toastError";
@@ -29,6 +37,8 @@ enum State {
   error,
   success,
 }
+
+const KEYCODE_ENTER = 13;
 
 const BETA_TESTERS = (import.meta.env.VITE_APP_BETA_TESTERS || "").split(",");
 
@@ -48,6 +58,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
   const [sentTimeout, setSentTimeout] = useState<number>();
 
   async function handleSendEmail() {
+    if (sentState === State.success) return;
     clearTimeout(sentTimeout);
     const email = inputEmail.current?.value + "";
     if (!email) return;
@@ -68,10 +79,23 @@ export default function Login(props: { isLoggedIn: boolean }) {
       setSentTimeout(
         setTimeout(() => setSentState(State.idle), 1000 * 60 /* 1 min */) as any
       );
+      Keyboard.hide();
     } catch (err) {
       setSentState(State.error);
       toastError(present, err);
       console.error(err);
+    }
+  }
+
+  function handleInputEmailEnter(e: any) {
+    if (e?.keyCode === KEYCODE_ENTER) {
+      handleSendEmail();
+    }
+  }
+
+  function handleInputTokenEnter(e: any) {
+    if (e?.keyCode === KEYCODE_ENTER) {
+      handleVerifyToken();
     }
   }
 
@@ -98,25 +122,27 @@ export default function Login(props: { isLoggedIn: boolean }) {
     >
       <IonHeader>
         <IonToolbar>
-          <IonTitle>{t("Login")}</IonTitle>
+          <IonTitle>{t("login")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
         <IonItem lines="none">
-          <IonText>{t("Please enter your email address")}</IonText>
+          <IonText>{t("pleaseEnterYourEmailAddress")}</IonText>
         </IonItem>
         <IonItem lines="none">
           <IonInput
-            label={t("Email")!}
+            label={t("email")!}
             labelPlacement="fixed"
             ref={inputEmail}
             type="email"
             autocomplete="on"
             autoSave="on"
             autofocus
+            enterkeyhint="send"
+            onKeyUp={handleInputEmailEnter}
             aria-autocomplete="list"
             required
-            placeholder={t("Your email address")!}
+            placeholder={t("yourEmailAddress")!}
           />
         </IonItem>
         <IonItem lines="none">
@@ -145,9 +171,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         {showToken ? (
           <Fragment key="token">
             <IonItem lines="none">
-              <IonText>
-                {t("Enter the Passcode you received in your email")}
-              </IonText>
+              <IonText>{t("enterThePasscodeYouReceivedInYourEmail")}</IonText>
             </IonItem>
             <IonItem lines="none">
               <IonInput
@@ -155,7 +179,9 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 ref={inputToken}
                 autoCorrect="off"
                 placeholder="••••••"
-                label={t("Passcode")!}
+                label={t("passcode")!}
+                enterkeyhint="enter"
+                onKeyUp={handleInputTokenEnter}
                 labelPlacement="fixed"
               />
             </IonItem>
@@ -174,7 +200,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 expand="block"
                 onClick={handleVerifyToken}
               >
-                <IonLabel>{t("Login")}</IonLabel>
+                <IonLabel>{t("login")}</IonLabel>
                 <IonIcon slot="end" icon={arrowForwardOutline} />
               </IonButton>
             </IonItem>

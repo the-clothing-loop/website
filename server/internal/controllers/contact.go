@@ -62,12 +62,16 @@ func ContactMail(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		Name    string `json:"name" binding:"required"`
-		Email   string `json:"email" binding:"required,email"`
-		Message string `json:"message" binding:"required"`
+		Name     string `json:"name" binding:"required"`
+		Email    string `json:"email" binding:"required,email"`
+		Message  string `json:"message" binding:"required"`
+		Honeypot *bool  `json:"accept"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	if !(body.Honeypot != nil && !*body.Honeypot) {
 		return
 	}
 

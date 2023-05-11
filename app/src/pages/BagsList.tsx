@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import { bagPut, bagRemove, UID } from "../api";
 import CreateBag from "../components/CreateBag";
 import { StoreContext } from "../Store";
+import dayjs from "dayjs";
 
 export default function BagsList() {
   const { t } = useTranslation();
@@ -69,27 +70,27 @@ export default function BagsList() {
     };
 
     let inputs: AlertInput[] = [];
-    route.forEach((r) => {
+    route.forEach((r, i) => {
       const user = chainUsers.find((u) => u.uid === r);
       if (!user) return;
       const isChecked = user.uid === currentHolder;
       inputs.push({
-        label: user.name,
+        label: `#${i + 1} ${user.name}`,
         type: "radio",
         value: user.uid,
         checked: isChecked,
       });
     });
     presentAlert({
-      header: t("Change Bag Holder"),
-      message: t("Select the new bag holder"),
+      header: t("changeBagHolder"),
+      message: t("selectTheNewBagHolder"),
       inputs,
       buttons: [
         {
-          text: t("Cancel"),
+          text: t("cancel"),
         },
         {
-          text: t("Change"),
+          text: t("change"),
           handler,
         },
       ],
@@ -104,23 +105,28 @@ export default function BagsList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("Bags")}</IonTitle>
+          <IonTitle>{t("bags")}</IonTitle>
 
           <IonButtons slot="end">
-            <IonButton onClick={handleClickCreate}>{t("Create")}</IonButton>
+            <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("Bags")}</IonTitle>
+            <IonTitle size="large">{t("bags")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>
           {bags.map((bag) => {
             const user = chainUsers.find((u) => u.uid === bag.user_uid);
             if (!user) return null;
+            let routeIndex = route.indexOf(user.uid);
+            if (routeIndex === -1) return null;
+            const bagUpdatedAt = dayjs(bag.updated_at);
+            const isBagTooOld = bagUpdatedAt.isBefore(dayjs().add(-7, "days"));
+
             return (
               <IonItemSliding key={bag.number}>
                 <IonItem lines="full">
@@ -132,6 +138,20 @@ export default function BagsList() {
                         color: bag.color,
                       }}
                     />
+                    {isBagTooOld ? (
+                      <div
+                        style={{
+                          backgroundColor: "var(--ion-color-danger)",
+                          borderRadius: "100%",
+                          width: "10px",
+                          height: "10px",
+                          display: "block",
+                          position: "absolute",
+                          top: "-12px",
+                          left: "calc(50% + 8px)",
+                        }}
+                      ></div>
+                    ) : null}
                     <div
                       style={{
                         position: "absolute",
@@ -155,7 +175,18 @@ export default function BagsList() {
                     }}
                     onClick={() => handleClickItem(bag.number, bag.user_uid)}
                   >
-                    <h5 className="ion-no-margin">{user.name}</h5>
+                    <h5 className="ion-no-margin">
+                      {user.name}
+                      <small
+                        className="ion-text-bold"
+                        style={{
+                          marginLeft: "8px",
+                          color: "var(--ion-color-medium)",
+                        }}
+                      >
+                        #{routeIndex + 1}
+                      </small>
+                    </h5>
                     <small>{user.address}</small>
                   </IonText>
                 </IonItem>
@@ -164,7 +195,7 @@ export default function BagsList() {
                     color="danger"
                     onClick={() => handleClickDelete(bag.number)}
                   >
-                    {t("Delete")}
+                    {t("delete")}
                   </IonItemOption>
                 </IonItemOptions>
               </IonItemSliding>

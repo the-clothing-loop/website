@@ -41,7 +41,7 @@ import "./theme/variables.css";
 import "./theme/utilities.css";
 import "./theme/overrides.css";
 import { StoreContext } from "./Store";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import HelpList from "./pages/HelpList";
 import HelpItem from "./pages/HelpItem";
@@ -55,6 +55,7 @@ import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
 
 SplashScreen.show({
   autoHide: false,
@@ -65,7 +66,8 @@ setupIonicReact({
 });
 
 export default function App() {
-  const { isAuthenticated, init, authenticate } = useContext(StoreContext);
+  const { isAuthenticated, init, authenticate, bags } =
+    useContext(StoreContext);
   const [present] = useIonToast();
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
@@ -85,6 +87,16 @@ export default function App() {
       root?.removeEventListener("store-error", eventCatchStoreErr);
     };
   }, []);
+
+  const hasOldBag = useMemo(() => {
+    if (!bags.length) return false;
+
+    return bags.some((b) => {
+      const updatedAt = dayjs(b.updated_at);
+      const now = dayjs();
+      return updatedAt.isBefore(now.add(-7, "days"));
+    });
+  }, [bags]);
 
   return (
     <IonApp>
@@ -112,25 +124,38 @@ export default function App() {
             <IonTabBar slot="bottom">
               <IonTabButton tab="help" href="/help">
                 <IonIcon aria-hidden="true" icon={bookOutline} />
-                <IonLabel>{t("Info")}</IonLabel>
+                <IonLabel>{t("info")}</IonLabel>
               </IonTabButton>
               <IonTabButton tab="address" href="/address">
                 <IonIcon aria-hidden="true" icon={homeOutline} />
-                <IonLabel>{t("Addresses")}</IonLabel>
+                <IonLabel>{t("addresses")}</IonLabel>
               </IonTabButton>
               <IonTabButton tab="bags" href="/bags">
                 <IonIcon aria-hidden="true" icon={bagHandleOutline} />
-                <IonLabel>{t("Bags")}</IonLabel>
+                {hasOldBag ? (
+                  <div
+                    style={{
+                      backgroundColor: "var(--ion-color-danger)",
+                      borderRadius: "100%",
+                      width: "10px",
+                      height: "10px",
+                      position: "absolute",
+                      top: "3px",
+                      left: "calc(50% + 10px)",
+                    }}
+                  ></div>
+                ) : null}
+                <IonLabel>{t("bags")}</IonLabel>
               </IonTabButton>
 
               <IonTabButton tab="bulky-items" href="/bulky-items">
                 <IonIcon aria-hidden="true" icon={cubeOutline} />
-                <IonLabel>{t("Bulky Items")}</IonLabel>
+                <IonLabel>{t("bulkyItems")}</IonLabel>
               </IonTabButton>
 
               <IonTabButton tab="settings" href="/settings">
                 <IonIcon aria-hidden="true" icon={cogOutline} />
-                <IonLabel>{t("Settings")}</IonLabel>
+                <IonLabel>{t("settings")}</IonLabel>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>

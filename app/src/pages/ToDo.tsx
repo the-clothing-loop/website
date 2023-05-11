@@ -23,8 +23,8 @@ export default function ToDo() {
             icon={telescopeOutline}
           />
           <IonText className="ion-text-center">
-            <h3 className="ion-text-bold">{t("Stay tuned")}</h3>
-            <p>{t("We're working on it")}</p>
+            <h3 className="ion-text-bold">{t("stayTuned")}</h3>
+            <p>{t("wereWorkingOnIt")}</p>
           </IonText>
         </div>
       </IonContent>

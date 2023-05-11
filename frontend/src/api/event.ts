@@ -6,20 +6,17 @@ interface EventGetAllParams {
   radius: number;
 }
 
-export interface EventPrice {
-  value: number;
-  currency: string;
-}
-
 export interface EventCreateBody {
   name: string;
   description?: string;
   latitude: number;
   longitude: number;
   address: string;
-  price: EventPrice | null;
+  price_currency: string | null;
+  price_value: number;
   link: string;
   date: string;
+  date_end: string | null;
   genders: string[];
   chain_uid?: string;
   image_url: string;

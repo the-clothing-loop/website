@@ -23,6 +23,7 @@ const Contacts = () => {
     name: "",
     email: "",
     message: "",
+    accept: false,
   });
 
   const CHARACTER_LIMIT = 2000;
@@ -94,6 +95,18 @@ const Contacts = () => {
             maxLength={CHARACTER_LIMIT}
             className="textarea textarea-secondary mb-4"
             rows={10}
+          />
+
+          <input
+            name="accept"
+            type="checkbox"
+            className="invisible absolute -z-10"
+            value={values.accept ? "checked" : "unchecked"}
+            autoComplete="off"
+            tabIndex={-1}
+            onChange={(e) => {
+              setValue("accept", e.target.value == "checked");
+            }}
           />
 
           <button

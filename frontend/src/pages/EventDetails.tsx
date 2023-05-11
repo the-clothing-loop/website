@@ -45,10 +45,26 @@ export default function EventDetails() {
     load();
   }, []);
 
-  const datetime = useMemo(() => {
-    if (!event) return "";
+  const { date, dateEnd, sameDate } = useMemo(() => {
+    if (!event)
+      return {
+        date: null,
+        dateEnd: null,
+        sameDate: false,
+      };
 
-    return dayjs(event.date).format("LLL");
+    let sameDate = false;
+    const date = dayjs(event.date);
+    const dateEnd = event.date_end ? dayjs(event.date_end) : null;
+    if (dateEnd && date.isSame(dateEnd, "day")) {
+      sameDate = true;
+    }
+
+    return {
+      date: dayjs(event.date),
+      dateEnd: event.date_end ? dayjs(event.date_end) : null,
+      sameDate,
+    };
   }, [event, i18n.language]);
 
   async function load() {
@@ -137,6 +153,10 @@ export default function EventDetails() {
     let image = ClothesImage;
     if (event.image_url) image = event.image_url;
 
+    const eventPriceValue =
+      event.price_value % 1 === 0
+        ? event.price_value
+        : event.price_value.toFixed(2);
     return (
       <>
         <Helmet>
@@ -187,21 +207,73 @@ export default function EventDetails() {
               <div className="w-full md:w-3/5 md:-mt-20 mb-4 md:mb-0 ml-0 md:ml-12 lg:ml-20 rtl:ml-0 rtl:md:mr-12 rtl:lg:mr-20">
                 <div className="relative">
                   <dl className="z-10 relative bg-white md:shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] md:py-10 md:px-8">
-                    <dt className="mb-2 font-bold font-sans text-xl text-teal">
-                      {t("time") + ":"}
-                    </dt>
-                    <dd className="mb-1 ltr:ml-4 rtl:mr-4">
-                      <span className="ltr:mr-2 rtl:ml-2 inline-block feather feather-clock"></span>
-                      <span className="font-sans text-lg">{datetime}</span>
-                    </dd>
+                    {date ? (
+                      <>
+                        <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                          {t("time") + ":"}
+                        </dt>
+                        <dd className="mb-1 ltr:ml-4 rtl:mr-4">
+                          <span
+                            className="ltr:mr-2 rtl:ml-2 inline-block feather feather-clock"
+                            aria-hidden
+                          ></span>
+                          {dateEnd ? (
+                            sameDate ? (
+                              <Fragment>
+                                <span className="font-sans text-lg">
+                                  {date?.format("LL")}
+                                </span>
+                                <br />
+                                <span className="font-sans text-lg ltr:ml-6 rtl:mr-6">
+                                  {date?.format("LT")}
+                                </span>
+                                <span
+                                  className="inline-block feather feather-arrow-right mx-2 rtl:hidden"
+                                  aria-hidden
+                                ></span>{" "}
+                                <span
+                                  className="inline-block feather feather-arrow-left mx-2 ltr:hidden"
+                                  aria-hidden
+                                ></span>
+                                <span className="font-sans text-lg">
+                                  {dateEnd.format("LT")}
+                                </span>
+                              </Fragment>
+                            ) : (
+                              <Fragment>
+                                <span className="font-sans text-lg">
+                                  {date?.format("LLL")}
+                                </span>
+                                <br />
+                                <span
+                                  className="block feather feather-arrow-down"
+                                  aria-hidden
+                                ></span>
+                                <span
+                                  className="ltr:mr-2 rtl:ml-2 inline-block feather feather-clock rotate-90"
+                                  aria-hidden
+                                ></span>
+                                <span className="font-sans text-lg">
+                                  {dateEnd.format("LLL")}
+                                </span>
+                              </Fragment>
+                            )
+                          ) : (
+                            <span className="font-sans text-lg">
+                              {date?.format("LLL")}
+                            </span>
+                          )}
+                        </dd>
+                      </>
+                    ) : null}
                     <dt className="mb-2 font-bold font-sans text-xl text-teal">
                       {t("price") + ":"}
                     </dt>
                     <dd className="mb-1 ltr:ml-4 rtl:mr-4">
                       <span className="ltr:mr-2 rtl:ml-2 inline-block feather feather-tag"></span>
-                      {event.price ? (
+                      {event.price_currency ? (
                         <span className="font-sans text-lg" key="price">
-                          {event.price.currency + " " + event.price.value}
+                          {event.price_currency + " " + eventPriceValue}
                         </span>
                       ) : (
                         <span className="font-sans text-lg" key="free">
@@ -244,21 +316,6 @@ export default function EventDetails() {
                       {t("organizedBy") + ":"}
                     </dt>
                     <dd className="mr-2 mb-1 ltr:ml-4 rtl:mr-4">
-                      <div className="mb-1">
-                        <span
-                          className="ltr:mr-2 rtl:ml-2 inline-block feather feather-mail"
-                          aria-hidden
-                        ></span>
-                        <span
-                          {...addCopyAttributes(
-                            t,
-                            "event-detail-email-" + event.uid,
-                            "text-lg inline break-all"
-                          )}
-                        >
-                          {event.user_email}
-                        </span>
-                      </div>
                       {event.chain_uid ? (
                         <Link
                           to={"/loops/" + event.chain_uid + "/users/signup"}
@@ -311,7 +368,7 @@ export default function EventDetails() {
                 <h2 className="font-sans font-bold text-secondary text-2xl mb-4 px-0">
                   {t("eventDetails") + ":"}
                 </h2>
-                <p>
+                <div>
                   <div className="aspect-[4/3] sm:float-right rtl:sm:float-left sm:w-64 mb-4 sm:m-4 ltr:mr-0 rtl:ml-0 relative">
                     {isOrganizer ? (
                       <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2 flex flex-row-reverse">
@@ -341,13 +398,11 @@ export default function EventDetails() {
                       className="object-cover h-full w-full"
                     />
                   </div>
-                  {event.description.split("\n").map((s) => (
-                    <>
-                      {s}
-                      <br />
-                    </>
-                  ))}
-                </p>
+                  <div
+                    className="prose"
+                    dangerouslySetInnerHTML={{ __html: event.description }}
+                  ></div>
+                </div>
               </div>
             </div>
           </div>

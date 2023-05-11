@@ -155,15 +155,17 @@ export default function CreateUpdateBulky({
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton onClick={cancel}>{t("Cancel")}</IonButton>
+            <IonButton onClick={cancel}>{t("cancel")}</IonButton>
           </IonButtons>
-          <IonTitle>{bulky ? t("Update bag") : t("Create bag")}</IonTitle>
+          <IonTitle>
+            {bulky ? t("updateBulkyItem") : t("createBulkyItem")}
+          </IonTitle>
           <IonButtons slot="end">
             <IonButton
               onClick={createOrUpdate}
               color={!error ? "primary" : "danger"}
             >
-              {bulky ? t("Update") : t("Create")}
+              {bulky ? t("update") : t("create")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -172,14 +174,14 @@ export default function CreateUpdateBulky({
         <IonList>
           <IonItem lines="none">
             <IonLabel className="ion-text-wrap">
-              {t("The next bag number is automatically selected")}
+              {t("theNextBagNumberIsAutomaticallySelected")}
             </IonLabel>
           </IonItem>
           <IonItem
             lines="none"
             color={error === "title" ? "danger" : undefined}
           >
-            <IonLabel slot="start">{t("Title")}</IonLabel>
+            <IonLabel slot="start">{t("title")}</IonLabel>
             <IonInput
               className="ion-text-right"
               type="text"
@@ -195,7 +197,7 @@ export default function CreateUpdateBulky({
             lines="none"
             color={error === "message" ? "danger" : undefined}
           >
-            <IonLabel>{t("Message")}</IonLabel>
+            <IonLabel>{t("message")}</IonLabel>
           </IonItem>
           <IonItem
             lines="none"
@@ -228,14 +230,14 @@ export default function CreateUpdateBulky({
                 textAlign: "center",
               }}
             >
-              {t("Image")}
+              {t("image")}
             </IonLabel>
           </IonItem>
           <IonItem
             lines="none"
             color={error === "image-url" ? "danger" : undefined}
           >
-            <IonLabel slot="start">{t("Image URL")}</IonLabel>
+            <IonLabel slot="start">{t("imageURL")}</IonLabel>
             <IonInput
               className="ion-text-right"
               placeholder="image.jpg"
@@ -270,7 +272,7 @@ export default function CreateUpdateBulky({
                 icon={cloudUploadOutline}
                 style={{ marginRight: "8px" }}
               />
-              {t("Upload")}
+              {t("upload")}
               <CreateAnimation
                 duration={1000}
                 iterations={Infinity}

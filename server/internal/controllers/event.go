@@ -14,6 +14,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/pkg/imgbb"
+	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 )
 
@@ -21,18 +22,20 @@ func EventCreate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		Name           string             `json:"name" binding:"required"`
-		Description    string             `json:"description"`
-		Latitude       float64            `json:"latitude" binding:"required,latitude"`
-		Longitude      float64            `json:"longitude" binding:"required,longitude"`
-		Address        string             `json:"address" binding:"required"`
-		Price          *models.EventPrice `json:"price,omitempty"`
-		Link           string             `json:"link"`
-		Date           time.Time          `json:"date" binding:"required"`
-		Genders        []string           `json:"genders" binding:"required"`
-		ChainUID       string             `json:"chain_uid,omitempty" binding:"omitempty"`
-		ImageUrl       string             `json:"image_url" binding:"required,url"`
-		ImageDeleteUrl string             `json:"image_delete_url" binding:"omitempty,url"`
+		Name           string    `json:"name" binding:"required"`
+		Description    string    `json:"description"`
+		Latitude       float64   `json:"latitude" binding:"required,latitude"`
+		Longitude      float64   `json:"longitude" binding:"required,longitude"`
+		Address        string    `json:"address" binding:"required"`
+		PriceValue     float64   `json:"price_value" binding:"required_with=PriceCurrency"`
+		PriceCurrency  string    `json:"price_currency"`
+		Link           string    `json:"link"`
+		Date           time.Time `json:"date" binding:"required"`
+		DateEnd        null.Time `json:"date_end" binding:"omitempty"`
+		Genders        []string  `json:"genders" binding:"required"`
+		ChainUID       string    `json:"chain_uid,omitempty" binding:"omitempty"`
+		ImageUrl       string    `json:"image_url" binding:"required,url"`
+		ImageDeleteUrl string    `json:"image_delete_url" binding:"omitempty,url"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -71,8 +74,9 @@ func EventCreate(c *gin.Context) {
 	if body.ChainUID != "" && chain != nil {
 		event.ChainID = zero.NewInt(int64(chain.ID), true)
 	}
-	if body.Price != nil {
-		event.Price = body.Price
+	if body.PriceCurrency != "" {
+		event.PriceValue = body.PriceValue
+		event.PriceCurrency = zero.StringFrom(body.PriceCurrency)
 	}
 
 	if err := db.Create(event).Error; err != nil {
@@ -113,14 +117,17 @@ func EventGetAll(c *gin.Context) {
 	var query struct {
 		Latitude  float32 `form:"latitude" binding:"required,latitude"`
 		Longitude float32 `form:"longitude" binding:"required,longitude"`
-		Radius    float32 `form:"radius" binding:"required,min=0.001"`
+		Radius    float32 `form:"radius"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
+	if query.Radius == 5000 {
+		query.Radius = 0
+	}
 
-	sql := models.EventGetSql + `WHERE date > NOW()`
+	sql := models.EventGetSql + `WHERE (date > NOW() OR (date_end IS NOT NULL AND date_end > NOW()))`
 	args := []any{}
 	if query.Latitude != 0 && query.Longitude != 0 && query.Radius != 0 {
 		sql = fmt.Sprintf("%s AND %s <= ? ", sql, sqlCalcDistance("events.latitude", "events.longitude", "?", "?"))
@@ -175,26 +182,28 @@ func EventUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		UID            string             `json:"uid" binding:"required,uuid"`
-		Name           *string            `json:"name,omitempty"`
-		Description    *string            `json:"description,omitempty"`
-		Address        *string            `json:"address,omitempty"`
-		Link           *string            `json:"link,omitempty"`
-		Price          *models.EventPrice `json:"price,omitempty"`
-		Latitude       *float64           `json:"latitude,omitempty" binding:"omitempty,latitude"`
-		Longitude      *float64           `json:"longitude,omitempty" binding:"omitempty,longitude"`
-		Date           *time.Time         `json:"date,omitempty"`
-		Genders        *[]string          `json:"genders,omitempty"`
-		ImageUrl       *string            `json:"image_url,omitempty"`
-		ImageDeleteUrl *string            `json:"image_delete_url,omitempty"`
-		ChainUID       *string            `json:"chain_uid,omitempty"`
+		UID            string     `json:"uid" binding:"required,uuid"`
+		Name           *string    `json:"name,omitempty"`
+		Description    *string    `json:"description,omitempty"`
+		Address        *string    `json:"address,omitempty"`
+		Link           *string    `json:"link,omitempty"`
+		PriceValue     *float64   `json:"price_value,omitempty"`
+		PriceCurrency  *string    `json:"price_currency,omitempty"`
+		Latitude       *float64   `json:"latitude,omitempty" binding:"omitempty,latitude"`
+		Longitude      *float64   `json:"longitude,omitempty" binding:"omitempty,longitude"`
+		Date           *time.Time `json:"date,omitempty"`
+		DateEnd        *null.Time `json:"date_end,omitempty"`
+		Genders        *[]string  `json:"genders,omitempty"`
+		ImageUrl       *string    `json:"image_url,omitempty"`
+		ImageDeleteUrl *string    `json:"image_delete_url,omitempty"`
+		ChainUID       *string    `json:"chain_uid,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 	if body.Genders != nil {
-		if ok := models.ValidateAllGenderEnum(*(body.Genders)); !ok {
+		if ok := models.ValidateAllGenderEnum(*body.Genders); !ok {
 			c.AbortWithError(http.StatusBadRequest, models.ErrGenderInvalid)
 			return
 		}
@@ -214,16 +223,18 @@ func EventUpdate(c *gin.Context) {
 			return
 		}
 
-		found := false
-		for _, uc := range user.Chains {
-			if uc.IsChainAdmin && uc.ChainUID == *body.ChainUID {
-				chainID = uc.ChainID
-				found = true
+		if *body.ChainUID != "" {
+			found := false
+			for _, uc := range user.Chains {
+				if uc.ChainUID == *body.ChainUID {
+					chainID = uc.ChainID
+					found = true
+				}
 			}
-		}
-		if !found {
-			c.AbortWithError(http.StatusUnauthorized, errors.New("Loop must be "))
-			return
+			if !found {
+				c.AbortWithError(http.StatusUnauthorized, errors.New("User does not belong to this loop"))
+				return
+			}
 		}
 	}
 
@@ -239,9 +250,6 @@ func EventUpdate(c *gin.Context) {
 	if body.Address != nil {
 		event.Address = *(body.Address)
 	}
-	if body.Price != nil {
-		event.Price = body.Price
-	}
 	if body.Latitude != nil {
 		event.Latitude = *(body.Latitude)
 	}
@@ -251,6 +259,9 @@ func EventUpdate(c *gin.Context) {
 	if body.Date != nil {
 		event.Date = *(body.Date)
 	}
+	if body.DateEnd != nil {
+		event.DateEnd = *(body.DateEnd)
+	}
 	if body.Genders != nil {
 		event.Genders = *(body.Genders)
 	}
@@ -258,20 +269,29 @@ func EventUpdate(c *gin.Context) {
 		event.ChainID = zero.IntFrom(int64(chainID))
 	}
 	if body.ImageUrl != nil {
-		event.ImageUrl = *(body.ImageUrl)
+		event.ImageUrl = *body.ImageUrl
+		if event.ImageUrl != *body.ImageUrl && event.ImageDeleteUrl != "" {
+			imgbb.DeleteAll([]string{event.ImageDeleteUrl})
+		}
 		if body.ImageDeleteUrl != nil {
 			event.ImageDeleteUrl = *(body.ImageDeleteUrl)
 		}
-
-		if event.ImageDeleteUrl != "" {
-			imgbb.DeleteAll([]string{event.ImageDeleteUrl})
+	}
+	if body.PriceCurrency != nil && body.PriceValue != nil {
+		if *body.PriceCurrency == "" {
+			event.PriceCurrency = zero.String{}
+			event.PriceValue = 0
+		} else {
+			event.PriceCurrency = zero.StringFrom(*body.PriceCurrency)
+			event.PriceValue = *body.PriceValue
 		}
 	}
 
-	err := db.Updates(event).Error
+	err := db.Save(event).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to update loop values: %v", err)
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to update loop values"))
+		return
 	}
 }
 
@@ -310,7 +330,11 @@ LIMIT 1
 	icalE.SetCreatedTime(event.CreatedAt)
 	icalE.SetModifiedAt(event.UpdatedAt)
 	icalE.SetStartAt(event.Date)
-	icalE.SetEndAt(event.Date.Add(time.Duration(2) * time.Hour))
+	if event.DateEnd.Valid {
+		icalE.SetEndAt(event.DateEnd.Time)
+	} else {
+		icalE.SetEndAt(event.Date.Add(time.Duration(2) * time.Hour))
+	}
 	icalE.SetSummary(event.Name)
 	icalE.SetLocation(fmt.Sprintf("https://www.google.com/maps/@%v,%v,17z", event.Latitude, event.Longitude))
 	icalE.SetDescription(event.Description)

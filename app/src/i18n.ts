@@ -9,10 +9,12 @@ const i18n = i18next
   .use(LanguageDetector)
   .init({
     load: "languageOnly",
+    ns: ["translation", "faq"],
     supportedLngs: ["en", "nl"],
+    lng: "nl",
     fallbackLng: "en",
     backend: {
-      loadPath: "/locales/{{lng}}.json",
+      loadPath: "/locales/{{lng}}/{{ns}}.json",
     },
   });
 

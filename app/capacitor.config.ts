@@ -14,6 +14,11 @@ const config: CapacitorConfig = {
       splashFullScreen: true,
     },
   },
+  server: {
+    url: "http://localhost:8100",
+    cleartext: true,
+    allowNavigation: ["localhost:8100/*"],
+  },
 };
 
 export default config;
