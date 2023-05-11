@@ -1,9 +1,11 @@
 <p>Hi {{ .Name }},</p>
 
+{{ if .IsApp }}
+<p>App password: <code>{{ .Token}}</code></p>
+{{ else}}
 <p>Click <a href="{{ .BaseURL }}/users/login/validate?apiKey={{ .Token }}">here</a> to login to your Clothing Loop account.<br>
 This link is only valid once.</p>
-
-<p>App password: <code>{{ .Token}}</code></p>
+{{ end }}
 
 <p>Regards,</p>
 
