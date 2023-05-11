@@ -150,12 +150,7 @@ export default function Events() {
                 selectedGenders={values.genders}
                 handleChange={(gs) => {
                   setValue("genders", gs);
-                  search({
-                    genders: gs,
-                    latitude: values.latitude,
-                    longitude: values.longitude,
-                    distance: values.distance,
-                  });
+                  search();
                 }}
               />
             </div>
