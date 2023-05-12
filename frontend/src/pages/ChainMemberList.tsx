@@ -1196,7 +1196,8 @@ function BagsColumn(props: { bags: Bag[] }) {
     }
     bagsJSX = props.bags.slice(1).map((bag, i) => (
       <div
-        className="absolute w-8 h-8 -translate-y-1 rounded-full"
+        key={i + 1}
+        className={`absolute w-8 h-8 rounded-full ${bagLocation[i]}`}
         style={{
           backgroundColor: bag.color,
         }}
@@ -1207,6 +1208,7 @@ function BagsColumn(props: { bags: Bag[] }) {
     let firstBag = props.bags[0];
     bagsJSX.push(
       <div
+        key={0}
         className="relative w-8 h-8 flex items-center justify-center feather feather-shopping-bag scale-[0.9] text-xl text-white rounded-full cursor-pointer"
         style={{
           backgroundColor: firstBag.color,
