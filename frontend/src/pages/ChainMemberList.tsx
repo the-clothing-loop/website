@@ -30,7 +30,7 @@ import {
   chainUserApprove,
   UnapprovedReason,
 } from "../api/chain";
-import { Chain, UID, User, UserChain } from "../api/types";
+import { Bag, Chain, UID, User, UserChain } from "../api/types";
 import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { SizeBadges } from "../components/Badges";
@@ -38,6 +38,7 @@ import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { routeGetOrder, routeSetOrder } from "../api/route";
 import useToClipboard from "../util/to-clipboard.hooks";
+import { bagGetAllByChain } from "../api/bag";
 
 interface Params {
   chainUID: string;
@@ -55,6 +56,7 @@ export default function ChainMemberList() {
 
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
+  const [bags, setBags] = useState<Bag[] | null>(null);
   const [route, setRoute] = useState<UID[] | null>(null);
   const [participantsSortBy, setParticipantsSortBy] =
     useState<ParticipantsSortBy>("date");
@@ -186,11 +188,16 @@ export default function ChainMemberList() {
   }, [chain, unapprovedUsers]);
 
   async function refresh(firstPageLoad = false) {
+    const bagGetAll = authUser
+      ? bagGetAllByChain(chainUID, authUser.uid)
+      : Promise.reject("authUser not set");
+
     try {
-      const [chainData, chainUsers, routeData] = await Promise.all([
+      const [chainData, chainUsers, routeData, bagData] = await Promise.all([
         chainGet(chainUID),
         userGetAllByChain(chainUID),
         routeGetOrder(chainUID),
+        bagGetAll,
       ]);
       setChain(chainData.data);
       setRoute(routeData.data || []);
@@ -199,6 +206,7 @@ export default function ChainMemberList() {
           (u) => u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved
         )
       );
+      setBags(bagData.data || []);
       let _unapprovedUsers = chainUsers.data.filter(
         (u) =>
           u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved == false
@@ -216,8 +224,8 @@ export default function ChainMemberList() {
     }
   }
 
-  if (!(chain && users && unapprovedUsers && route)) {
-    console.log(chain, users, unapprovedUsers);
+  if (!(chain && users && unapprovedUsers && route && bags)) {
+    console.log(chain, users, unapprovedUsers, route, bags);
     return null;
   }
 
@@ -476,6 +484,7 @@ export default function ChainMemberList() {
               users={routeSortUsers}
               chain={chain}
               route={route}
+              bags={bags}
               setRoute={setRoute}
               refresh={refresh}
               onGoToEditTableItem={goToEditTableItem}
@@ -956,6 +965,7 @@ function RouteTable(props: {
   users: User[];
   chain: Chain;
   route: UID[];
+  bags: Bag[];
   setRoute: (route: UID[]) => void;
   refresh: () => Promise<void>;
   onGoToEditTableItem: (uid: UID) => void;
@@ -988,7 +998,7 @@ function RouteTable(props: {
           <table className="table table-compact w-full mb-10">
             <thead>
               <tr>
-                <th className="w-[0.1%]" colSpan={1}>
+                <th className="w-[0.1%]" colSpan={2}>
                   <span>{t("route")}</span>
                 </th>
                 <th>
@@ -1018,6 +1028,9 @@ function RouteTable(props: {
                     classTdDragging += " border-b-2 border-b-grey";
                   }
                 }
+
+                let userBags = props.bags.filter((b) => b.user_uid === u.uid);
+
                 return (
                   <tr
                     key={u.uid}
@@ -1048,17 +1061,11 @@ function RouteTable(props: {
                         className="hidden lg:inline-block p-1 ml-2 rounded-full hover:bg-white cursor-grab active:cursor-grabbing feather feather-maximize-2 -rotate-45"
                       ></div>
                     </td>
-                    {/* <td
+                    <td
                       className={`${classTdDragging} !p-0 relative min-h-[1px]`}
                     >
-                      <div aria-label="bag" className="h-full">
-                        <div className="z-0 absolute inset-0 flex flex-col">
-                          <span className="h-1/2 w-0 mx-auto border-x-4 border-teal group-first-of-type:invisible"></span>
-                          <span className="h-1/2 w-0 mx-auto border-x-4 border-teal group-last-of-type:invisible"></span>
-                        </div>
-                        <div className="z-10 relative w-8 h-8 flex items-center justify-center feather feather-shopping-bag text-white bg-teal rounded-full"></div>
-                      </div>
-                    </td> */}
+                      <BagsColumn bags={userBags} />
+                    </td>
                     <td className={classTdDragging}>{u.name}</td>
                     <td className={classTdDragging}>
                       <span className="block w-48 text-sm whitespace-normal">
@@ -1163,4 +1170,59 @@ function unapprovedTooOld(date: string): boolean {
   const numDays = dayjs().diff(dayjs(date), "days");
 
   return numDays > 30;
+}
+
+function BagsColumn(props: { bags: Bag[] }) {
+  let bagsJSX: JSX.Element[] = [];
+  if (props.bags.length > 1) {
+    let bagLocation: string[] = [];
+    switch (props.bags.length) {
+      case 2:
+      case 3:
+      case 4:
+        bagLocation = [
+          "translate-x-1 translate-y-1",
+          "-translate-x-1 translate-y-1",
+          "-translate-y-1",
+        ];
+        break;
+      case 5:
+        bagLocation = [
+          "translate-x-1 translate-y-1",
+          "-translate-x-1 translate-y-1",
+          "-translate-x-1 -translate-y-1",
+          "translate-x-1 -translate-y-1",
+        ];
+    }
+    bagsJSX = props.bags.slice(1).map((bag, i) => (
+      <div
+        className="absolute w-8 h-8 -translate-y-1 rounded-full"
+        style={{
+          backgroundColor: bag.color,
+        }}
+      ></div>
+    ));
+  }
+  if (props.bags.length > 0) {
+    let firstBag = props.bags[0];
+    bagsJSX.push(
+      <div
+        className="relative w-8 h-8 flex items-center justify-center feather feather-shopping-bag scale-[0.9] text-xl text-white rounded-full cursor-pointer"
+        style={{
+          backgroundColor: firstBag.color,
+        }}
+        tabIndex={0}
+      ></div>
+    );
+  }
+
+  /* <div className="z-0 absolute inset-0 flex flex-col">
+    <span className="h-1/2 w-0 mx-auto border-x-4 border-grey-light group-first-of-type:invisible"></span>
+    <span className="h-1/2 w-0 mx-auto border-x-4 border-grey-light group-last-of-type:invisible"></span>
+  </div> */
+  return (
+    <div aria-label="bag" className="h-full">
+      {bagsJSX}
+    </div>
+  );
 }
