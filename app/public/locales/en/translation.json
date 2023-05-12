@@ -43,5 +43,11 @@
   "areYouSureYouWantToLogout": "Are you sure you want to logout?",
   "privacyPolicy": "Privacy Policy",
   "stayTuned": "Stay tuned",
-  "wereWorkingOnIt": "We're working on it"
+  "wereWorkingOnIt": "We're working on it",
+  "pauseUserActivity": "Pause user activity",
+  "pauseUntil": "Pause until",
+  "unPause": "Un-pause",
+  "week_one": "Week",
+  "week_other": "{{count}} weeks",
+  "setTimerForACoupleOfWeeks": "Set timer for a couple of weeks"
 }

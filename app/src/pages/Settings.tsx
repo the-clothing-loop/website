@@ -86,15 +86,15 @@ export default function Settings() {
         header: t("pauseUntil"),
         buttons: [
           {
-            text: t("week"),
+            text: t("week", { count: 1 }),
             handler: () => setPause("week"),
           },
           {
-            text: t("2weeks"),
+            text: t("week", { count: 2 }),
             handler: () => setPause("2weeks"),
           },
           {
-            text: t("3weeks"),
+            text: t("week", { count: 3 }),
             handler: () => setPause("3weeks"),
           },
           {
