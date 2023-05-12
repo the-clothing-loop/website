@@ -20,7 +20,7 @@ type User struct {
 	Email           zero.String `json:"email" gorm:"unique"`
 	IsEmailVerified bool        `json:"is_email_verified"`
 	IsRootAdmin     bool        `json:"is_root_admin"`
-	IsPaused        null.Time   `json:"is_paused"`
+	PausedUntil     null.Time   `json:"paused_until"`
 	Name            string      `json:"name"`
 	PhoneNumber     string      `json:"phone_number"`
 	Address         string      `json:"address"`

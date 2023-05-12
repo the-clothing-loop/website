@@ -22,7 +22,7 @@ import { useTranslation } from "react-i18next";
 import { bagPut, bagRemove, UID } from "../api";
 import CreateBag from "../components/CreateBag";
 import { StoreContext } from "../Store";
-import dayjs from "dayjs";
+import dayjs from "../dayjs";
 
 export default function BagsList() {
   const { t } = useTranslation();

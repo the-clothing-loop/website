@@ -40,7 +40,7 @@ export interface User {
   address: string;
   sizes: string[];
   is_root_admin: boolean;
-  is_paused: null | string;
+  paused_until: null | string;
 }
 
 export interface UserUpdateBody {
@@ -51,7 +51,7 @@ export interface UserUpdateBody {
   newsletter?: boolean;
   sizes?: string[];
   address?: string;
-  is_paused?: boolean;
+  paused_until?: string;
 }
 
 export interface UserChain {

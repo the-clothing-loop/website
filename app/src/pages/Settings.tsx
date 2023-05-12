@@ -1,4 +1,5 @@
 import {
+  IonActionSheet,
   IonAlert,
   IonButton,
   IonContent,
@@ -15,6 +16,7 @@ import {
   IonToggle,
   IonToolbar,
   SelectChangeEventDetail,
+  useIonActionSheet,
   useIonToast,
 } from "@ionic/react";
 import type { IonSelectCustomEvent } from "@ionic/core";
@@ -25,7 +27,9 @@ import UserCard from "../components/UserCard";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { useDebouncedCallback } from "use-debounce";
-import { pause } from "ionicons/icons";
+import { pause, pauseCircle, stopCircle } from "ionicons/icons";
+import dayjs from "../dayjs";
+import isPaused from "../utils/is_paused";
 
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
@@ -34,9 +38,8 @@ export default function Settings() {
   const { authUser, chain, isAuthenticated, setPause, logout, setChain } =
     useContext(StoreContext);
   const [present] = useIonToast();
+  const [presentActionSheet] = useIonActionSheet();
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
-  const [userPause, setUserPause] = useState(() => !!authUser?.is_paused);
-  const runChangeUserPause = useDebouncedCallback(setPause, 700);
 
   const isUserAdmin = useMemo(
     () =>
@@ -53,7 +56,6 @@ export default function Settings() {
       setListOfChains([]);
       return;
     }
-    setUserPause(!!authUser.is_paused);
 
     Promise.all(authUser.chains.map((uc) => chainGet(uc.chain_uid)))
       .then((chains) => {
@@ -76,6 +78,38 @@ export default function Settings() {
     setChain(c, authUser!.uid);
   }
 
+  function handlePauseButton(isUserPaused: boolean) {
+    if (isUserPaused) {
+      setPause("none");
+    } else {
+      presentActionSheet({
+        header: t("pauseUntil"),
+        buttons: [
+          {
+            text: t("week"),
+            handler: () => setPause("week"),
+          },
+          {
+            text: t("2weeks"),
+            handler: () => setPause("2weeks"),
+          },
+          {
+            text: t("3weeks"),
+            handler: () => setPause("3weeks"),
+          },
+          {
+            text: t("cancel"),
+            role: "cancel",
+          },
+        ],
+      });
+    }
+  }
+
+  let isUserPaused = isPaused(authUser?.paused_until || null);
+
+  let pausedDayjs = isUserPaused && dayjs(authUser!.paused_until);
+
   return (
     <IonPage>
       <IonHeader>
@@ -86,17 +120,39 @@ export default function Settings() {
       {isAuthenticated === true ? (
         <IonContent>
           {authUser ? (
-            <UserCard user={authUser} isUserAdmin={isUserAdmin} />
+            <UserCard
+              user={authUser}
+              isUserPaused={isUserPaused}
+              isUserAdmin={isUserAdmin}
+            />
           ) : null}
           <IonList style={{ marginBottom: "4em" }}>
             <IonItem lines="none">
-              <IonLabel>{t("pauseUserActivity")}</IonLabel>
-              <IonToggle
+              <IonLabel>
+                <h3>{t("pauseUserActivity")}</h3>
+                <p>
+                  {pausedDayjs
+                    ? pausedDayjs.fromNow()
+                    : t("setTimerForACoupleOfWeeks")}
+                </p>
+              </IonLabel>
+              <IonButton
                 slot="end"
-                color="medium"
-                checked={userPause}
-                onIonChange={(e) => runChangeUserPause(e.detail.checked)}
-              />
+                color="primary"
+                onClick={() => handlePauseButton(isUserPaused)}
+              >
+                {isUserPaused ? (
+                  <>
+                    <span>{t("unPause")}</span>
+                    <IonIcon icon={stopCircle} style={{ marginLeft: 8 }} />
+                  </>
+                ) : (
+                  <>
+                    <span>{t("pauseUntil")}</span>
+                    <IonIcon icon={pauseCircle} style={{ marginLeft: 8 }} />
+                  </>
+                )}
+              </IonButton>
             </IonItem>
             <IonItem lines="none">
               <IonSelect

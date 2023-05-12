@@ -9,7 +9,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"gopkg.in/guregu/null.v3/zero"
+	"gopkg.in/guregu/null.v3"
 
 	"github.com/gin-gonic/gin"
 )
@@ -183,14 +183,14 @@ func UserUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		ChainUID    string    `json:"chain_uid,omitempty" binding:"omitempty,uuid"`
-		UserUID     string    `json:"user_uid,omitempty" binding:"uuid"`
-		Name        *string   `json:"name,omitempty"`
-		PhoneNumber *string   `json:"phone_number,omitempty"`
-		Newsletter  *bool     `json:"newsletter,omitempty"`
-		IsPaused    *bool     `json:"is_paused,omitempty"`
-		Sizes       *[]string `json:"sizes,omitempty"`
-		Address     *string   `json:"address,omitempty"`
+		ChainUID    string     `json:"chain_uid,omitempty" binding:"omitempty,uuid"`
+		UserUID     string     `json:"user_uid,omitempty" binding:"uuid"`
+		Name        *string    `json:"name,omitempty"`
+		PhoneNumber *string    `json:"phone_number,omitempty"`
+		Newsletter  *bool      `json:"newsletter,omitempty"`
+		PausedUntil *time.Time `json:"paused_until,omitempty"`
+		Sizes       *[]string  `json:"sizes,omitempty"`
+		Address     *string    `json:"address,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -221,11 +221,11 @@ func UserUpdate(c *gin.Context) {
 		if body.Address != nil {
 			userChanges["address"] = *body.Address
 		}
-		if body.IsPaused != nil {
-			if *body.IsPaused {
-				userChanges["is_paused"] = zero.TimeFrom(time.Now())
+		if body.PausedUntil != nil {
+			if body.PausedUntil.After(time.Now()) {
+				userChanges["paused_until"] = body.PausedUntil
 			} else {
-				userChanges["is_paused"] = zero.Time{}
+				userChanges["paused_until"] = null.Time{}
 			}
 		}
 		if body.Sizes != nil {

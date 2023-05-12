@@ -21,7 +21,7 @@ export interface UserUpdateBody {
   newsletter?: boolean;
   sizes?: string[];
   address?: string;
-  is_paused?: boolean;
+  pause_until?: string;
 }
 export function userUpdate(user: UserUpdateBody) {
   return window.axios.patch<never>("/v2/user", user);
