@@ -1,27 +1,47 @@
-import { useEffect, FormEvent, useContext } from "react";
+import { useState, useEffect, FormEvent, useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams, useHistory, useLocation } from "react-router-dom";
+
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { GinParseErrors } from "../util/gin-errors";
 
 import SizesDropdown from "./SizesDropdown";
 import { TextForm } from "./FormFields";
 import categories from "../util/categories";
-import { UID } from "../api/types";
+import { UID, User } from "../api/types";
 
 import { PhoneFormField } from "./FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
 
+import {
+  userGetByUID,
+  userHasNewsletter,
+  userUpdate,
+  UserUpdateBody,
+} from "../api/user";
+
+import { AuthContext } from "../providers/AuthProvider";
+
 interface Props {
   onSubmit: (e: FormEvent<HTMLFormElement>, address: string) => void;
   classes: string;
 }
+interface State {
+  chainUID?: UID;
+}
+interface Params {
+  userUID: UID;
+}
+
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
 export default function AddressForm(props: Props) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
-
+  const { chainUID } = useLocation<State>().state || {};
+  const [user, setUser] = useState<User>();
+  const { authUser } = useContext(AuthContext);
   const [values, setValue, setValues] = useForm({
     name: "",
     phone: "",
@@ -30,10 +50,14 @@ export default function AddressForm(props: Props) {
     address: "",
     newsletter: false,
   });
+  const params = useParams<Params>();
+
+  const userUID: string =
+    params.userUID == "me" ? authUser!.uid : params.userUID;
 
   const [address, setAddress] = useForm({
     street: "",
-    zip: "",
+    postal: "",
     cityState: "",
     country: "",
   });
@@ -44,7 +68,7 @@ export default function AddressForm(props: Props) {
         const correctAddress =
           address.street.replaceAll(" ", "%20") +
           "%20" +
-          address.zip +
+          address.postal +
           "%20" +
           address.cityState.replaceAll(" ", "%20");
 
@@ -54,6 +78,7 @@ export default function AddressForm(props: Props) {
           )
           .then((response) => {
             if (response.data.features[0]) {
+              console.log(response);
               var placeName = response.data.features[0].place_name;
               setValue("address", placeName);
             }
@@ -65,6 +90,31 @@ export default function AddressForm(props: Props) {
       }
     })();
   }, [address]);
+
+  // If the user is logged in, we want to to prefill fields with their information
+  if (authUser) {
+    useEffect(() => {
+      (async () => {
+        try {
+          const user = (await userGetByUID(chainUID, userUID)).data;
+          const hasNewsletter = (await userHasNewsletter(chainUID, userUID))
+            .data;
+
+          setUser(user);
+          setValues({
+            name: user.name,
+            phone: user.phone_number,
+            email: user.email,
+            sizes: user.sizes,
+            address: user.address,
+            newsletter: hasNewsletter,
+          });
+        } catch (error) {
+          console.warn(error);
+        }
+      })();
+    }, [history]);
+  }
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -80,8 +130,9 @@ export default function AddressForm(props: Props) {
             <TextForm
               type="text"
               autoComplete="name"
-              label={t("name")}
+              label={t("name") + "*"}
               name="name"
+              enterKeyHint="next"
               required
               min={2}
               value={values.name}
@@ -93,18 +144,23 @@ export default function AddressForm(props: Props) {
             value={values.phone}
             onChange={(e) => setValue("phone", e.target.value)}
           />
-          <TextForm
-            label={t("email") + "*"}
-            name="email"
-            type="email"
-            required
-          />
+          {/* Don't show email if user is logged in */}
+          {!authUser ? (
+            <TextForm
+              label={t("email") + "*"}
+              name="email"
+              type="email"
+              required
+            />
+          ) : null}
+
           <div className="form-control mb-4">
             <TextForm
               type="text"
               label={t("streetAddress")}
               name="streetAddress"
               autoComplete="street-address"
+              enterKeyHint="next"
               required
               min={2}
               value={address.street}
@@ -115,12 +171,13 @@ export default function AddressForm(props: Props) {
           <div className="form-control mb-4">
             <TextForm
               type="text"
-              label={t("zip")}
-              name="zip"
+              label={t("postal")}
+              name="postal"
               autoComplete="postal-code"
+              enterKeyHint="next"
               min={2}
-              value={address.zip}
-              onChange={(e) => setAddress("zip", e.target.value)}
+              value={address.postal}
+              onChange={(e) => setAddress("postal", e.target.value)}
             />
           </div>
 
@@ -130,6 +187,7 @@ export default function AddressForm(props: Props) {
               label={t("city")}
               name="city"
               autoComplete="city"
+              enterKeyHint="next"
               min={2}
               value={address.cityState}
               onChange={(e) => setAddress("cityState", e.target.value)}
@@ -141,7 +199,8 @@ export default function AddressForm(props: Props) {
               type="text"
               label={t("country")}
               name="country"
-              autoComplete="country"
+              autoComplete="country-name"
+              enterKeyHint="done"
               min={2}
               value={address.country}
               onChange={(e) => setAddress("country", e.target.value)}
