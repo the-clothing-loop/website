@@ -4,19 +4,14 @@ import { useTranslation } from "react-i18next";
 import { Redirect, useParams, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
-import GeocoderSelector from "../components/GeocoderSelector";
-import SizesDropdown from "../components/SizesDropdown";
 import PopoverOnHover from "../components/Popover";
 import { TwoColumnLayout } from "../components/Layouts";
-import { PhoneFormField, TextForm } from "../components/FormFields";
-import FormActions from "../components/formActions";
 import { Chain, User } from "../api/types";
 import { chainAddUser, chainGet } from "../api/chain";
 import { registerBasicUser } from "../api/login";
 import FormJup from "../util/form-jup";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
-import useForm from "../util/form.hooks";
 import { AuthContext } from "../providers/AuthProvider";
 import { TFunction } from "i18next";
 import AddressForm from "../components/AddressForm";
@@ -89,10 +84,6 @@ export default function Signup() {
       return;
     }
 
-    let newsletter = document.getElementsByName(
-      "newsletter"
-    )[0] as HTMLInputElement;
-console.log(values);
     (async () => {
       try {
         await registerBasicUser(
@@ -100,8 +91,8 @@ console.log(values);
             name: values.name,
             email: values.email,
             phone_number: values.phone,
+            newsletter: values.newsletter === "on",
             address: validatedAddress,
-            newsletter: newsletter.checked,
             sizes: sizes,
           },
           chainUID
@@ -184,7 +175,6 @@ console.log(values);
                     className="tooltip-right"
                     message={t("weWouldLikeToKnowThisEquallyRepresented")}
                   />
-                  <FormActions isNewsletterRequired={false} />
 
                   <div className="mb-4">
                     <button

@@ -2,24 +2,19 @@ import { useState, useEffect, FormEvent, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { GinParseErrors } from "../util/gin-errors";
 
 import SizesDropdown from "./SizesDropdown";
 import { TextForm } from "./FormFields";
 import categories from "../util/categories";
 import { UID, User } from "../api/types";
+import FormActions from "../components/formActions";
 
 import { PhoneFormField } from "./FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
 
-import {
-  userGetByUID,
-  userHasNewsletter,
-  userUpdate,
-  UserUpdateBody,
-} from "../api/user";
+import { userGetByUID, userHasNewsletter } from "../api/user";
 
 import { AuthContext } from "../providers/AuthProvider";
 
@@ -59,17 +54,13 @@ export default function AddressForm(props: Props) {
   const userUID: string =
     params.userUID == "me" ? authUser!.uid : params.userUID;
 
-  
   const [address, setAddress] = useForm({
     street: "",
     postal: "",
     cityState: "",
     country: "",
   });
-  const userIsAnyChainAdmin = useMemo(
-    () => !!user?.chains.find((uc) => uc.is_chain_admin),
-    [user]
-  );
+
   useEffect(() => {
     (async () => {
       if (MAPBOX_TOKEN) {
@@ -99,7 +90,7 @@ export default function AddressForm(props: Props) {
     })();
   }, [address]);
 
-  // If the user is logged in, we want to to prefill fields with their information
+  // If the user is logged in, we want to set values to their information
   if (authUser) {
     useEffect(() => {
       (async () => {
@@ -223,6 +214,7 @@ export default function AddressForm(props: Props) {
               handleChange={(v) => setValue("sizes", v)}
             />
           </div>
+          {!authUser ? <FormActions isNewsletterRequired={false} /> : null}
         </form>
       </div>
     </>

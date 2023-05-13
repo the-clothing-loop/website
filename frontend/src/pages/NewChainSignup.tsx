@@ -5,7 +5,6 @@ import { Helmet } from "react-helmet";
 
 import ProgressBar from "../components/ProgressBar";
 import { AuthContext } from "../providers/AuthProvider";
-import FormActions from "../components/formActions";
 import { State as LoopsNewState } from "./NewChainLocation";
 import { RequestRegisterUser } from "../api/login";
 import FormJup from "../util/form-jup";
@@ -43,16 +42,12 @@ export default function Signup() {
       return;
     }
 
-    let newsletter = document.getElementsByName(
-      "newsletter"
-    )[0] as HTMLInputElement;
-
     let registerUser: RequestRegisterUser = {
       name: values.name,
       email: values.email,
       phone_number: values.phone,
+      newsletter: values.newsletter === "on",
       address: address,
-      newsletter: newsletter.checked,
       sizes: sizes,
     };
     console.log("submit", registerUser);
@@ -99,7 +94,6 @@ export default function Signup() {
             </div>
             <div className="w-full md:w-1/2 md:pl-4">
               <AddressForm onSubmit={onSubmit} classes="" />
-              <FormActions isNewsletterRequired={true} />
               <div className="mt-4">
                 <button
                   type="submit"
