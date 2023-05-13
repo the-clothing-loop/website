@@ -43,10 +43,6 @@ export default function Signup() {
   const { chainUID } = useParams<Params>();
   const [chain, setChain] = useState<Chain | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [jsValues, setJsValue] = useForm({
-    address: "",
-    sizes: [] as string[],
-  });
 
   // Get chain id from the URL and save to state
   useEffect(() => {
@@ -78,7 +74,8 @@ export default function Signup() {
   // Gather data from form, validate and send to firebase
   function onSubmitNewUser(
     e: FormEvent<HTMLFormElement>,
-    validatedAddress: string
+    validatedAddress: string,
+    sizes: string[]
   ) {
     e.preventDefault();
     const values = FormJup<RegisterUserForm>(e);
@@ -95,7 +92,7 @@ export default function Signup() {
     let newsletter = document.getElementsByName(
       "newsletter"
     )[0] as HTMLInputElement;
-
+console.log(values);
     (async () => {
       try {
         await registerBasicUser(
@@ -105,7 +102,7 @@ export default function Signup() {
             phone_number: values.phone,
             address: validatedAddress,
             newsletter: newsletter.checked,
-            sizes: jsValues.sizes,
+            sizes: sizes,
           },
           chainUID
         );
