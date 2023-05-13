@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent, useContext } from "react";
+import { useState, useEffect, FormEvent, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 
@@ -24,7 +24,11 @@ import {
 import { AuthContext } from "../providers/AuthProvider";
 
 interface Props {
-  onSubmit: (e: FormEvent<HTMLFormElement>, address: string) => void;
+  onSubmit: (
+    e: FormEvent<HTMLFormElement>,
+    address: string,
+    sizes: string[]
+  ) => void;
   classes: string;
 }
 interface State {
@@ -55,13 +59,17 @@ export default function AddressForm(props: Props) {
   const userUID: string =
     params.userUID == "me" ? authUser!.uid : params.userUID;
 
+  
   const [address, setAddress] = useForm({
     street: "",
     postal: "",
     cityState: "",
     country: "",
   });
-
+  const userIsAnyChainAdmin = useMemo(
+    () => !!user?.chains.find((uc) => uc.is_chain_admin),
+    [user]
+  );
   useEffect(() => {
     (async () => {
       if (MAPBOX_TOKEN) {
@@ -119,7 +127,7 @@ export default function AddressForm(props: Props) {
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const address = values.address;
-    props.onSubmit(e, address);
+    props.onSubmit(e, address, values.sizes);
   }
 
   return (
@@ -141,6 +149,7 @@ export default function AddressForm(props: Props) {
           </div>
 
           <PhoneFormField
+            required
             value={values.phone}
             onChange={(e) => setValue("phone", e.target.value)}
           />
@@ -206,7 +215,6 @@ export default function AddressForm(props: Props) {
               onChange={(e) => setAddress("country", e.target.value)}
             />
           </div>
-
           <div className="mb-4 pt-3">
             <SizesDropdown
               filteredGenders={Object.keys(categories)}

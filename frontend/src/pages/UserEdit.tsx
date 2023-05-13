@@ -14,6 +14,9 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { AuthContext } from "../providers/AuthProvider";
 import AddressForm from "../components/AddressForm";
+import SizesDropdown from "../components/SizesDropdown";
+import categories from "../util/categories";
+import FormJup from "../util/form-jup";
 
 interface Params {
   userUID: UID;
@@ -22,26 +25,23 @@ interface Params {
 interface State {
   chainUID?: UID;
 }
+interface RegisterUserForm {
+  name: string;
+  email: string;
+  phone: string;
+  sizes: string[];
+  privacyPolicy: boolean;
+  newsletter: boolean;
+}
 
 export default function UserEdit() {
   const { t } = useTranslation();
   const history = useHistory();
   const { addToastError } = useContext(ToastContext);
   const { chainUID } = useLocation<State>().state || {};
-  const [values, setValue, setValues] = useForm({
-    name: "",
-    phone: "",
-    sizes: [] as string[],
-    address: "",
-    newsletter: false,
-  });
 
-  const [address, setAddress] = useForm({
-    street: "",
-    zip: "",
-    cityState: "",
-    country: "",
-  });
+  const [hasNewsletter, setHasNewsletter] = useState<boolean>();
+
   const [user, setUser] = useState<User>();
   const { authUser } = useContext(AuthContext);
   const params = useParams<Params>();
@@ -60,8 +60,10 @@ export default function UserEdit() {
     [user]
   );
 
-  function onSubmit(e: FormEvent, address: string) {
+  function onSubmit(e: FormEvent, address: string, sizes: string[]) {
     e.preventDefault();
+
+    const values = FormJup<RegisterUserForm>(e);
 
     (async () => {
       try {
@@ -69,11 +71,12 @@ export default function UserEdit() {
           user_uid: userUID,
           name: values.name,
           phone_number: values.phone,
-          newsletter: values.newsletter,
+          newsletter: hasNewsletter,
           address: address,
-          sizes: values.sizes,
+          sizes: sizes,
         };
         if (chainUID) userUpdateBody.chain_uid = chainUID;
+        console.log(userUpdateBody);
         await userUpdate(userUpdateBody);
         setTimeout(() => {
           history.goBack();
@@ -89,8 +92,10 @@ export default function UserEdit() {
     (async () => {
       try {
         const user = (await userGetByUID(chainUID, userUID)).data;
-        const hasNewsletter = (await userHasNewsletter(chainUID, userUID)).data;
+        const _hasNewsletter = (await userHasNewsletter(chainUID, userUID))
+          .data;
         setUser(user);
+        setHasNewsletter(_hasNewsletter);
       } catch (error) {
         console.warn(error);
       }
@@ -114,6 +119,25 @@ export default function UserEdit() {
               : t("editAccount")}
           </h1>
           <AddressForm onSubmit={onSubmit} classes="" />
+
+          <div className="form-control mb-4">
+            <label className="label cursor-pointer">
+              <span className="label-text">{t("newsletterSubscription")}</span>
+              <input
+                form="address-form"
+                type="checkbox"
+                checked={hasNewsletter}
+                onChange={() => setHasNewsletter(!hasNewsletter)}
+                required={
+                  (user && user.is_root_admin) || userIsAnyChainAdmin
+                    ? true
+                    : false
+                }
+                className="checkbox"
+                name="newsletter"
+              />
+            </label>
+          </div>
           <div className="flex">
             <button
               type="button"
