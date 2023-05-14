@@ -107,7 +107,7 @@ export default function UserEdit() {
         <meta name="description" content="Edit user" />
       </Helmet>
       <main>
-        <div className="bg-teal-light w-full container sm:max-w-screen-xs mx-auto p-6">
+        <div className="bg-teal-light w-full container sm:max-w-screen-sm mx-auto p-6">
           <h1 className="font-sans font-semibold text-3xl text-secondary mb-4">
             {chainUID
               ? user.is_root_admin || userIsChainAdmin
