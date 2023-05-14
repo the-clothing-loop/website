@@ -249,14 +249,8 @@ export default function ChainMemberList() {
               chain={chain}
               refresh={refresh}
             />
-            {/*At some point this whole div will be hidden from non admin users*/}
-
-            {console.log(authUser)}
-            {console.log(authUser?.is_root_admin)}
-            {console.log(isUserAdmin)}
-
             {isUserAdmin ? (
-              <div className="flex flex-col md:flex-row bg-teal-light p-2">
+              <div className="flex flex-col md:flex-row bg-teal-light p-2 mt-4">
                 <div className="flex flex-col w-full md:w-1/3 pr-2">
                   <div className="form-control w-full">
                     <label className="cursor-pointer label">
