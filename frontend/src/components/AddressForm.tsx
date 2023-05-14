@@ -56,7 +56,8 @@ export default function AddressForm(props: {
   const [address, setAddress] = useForm({
     street: "",
     postal: "",
-    cityState: "",
+    city: "",
+    province: "",
     country: "",
   });
 
@@ -68,7 +69,7 @@ export default function AddressForm(props: {
           "%20" +
           address.postal.replaceAll(" ", "%20") +
           "%20" +
-          address.cityState.replaceAll(" ", "%20") +
+          address.city.replaceAll(" ", "%20") +
           "%20" +
           address.country.replaceAll(" ", "%20");
 
@@ -132,7 +133,6 @@ export default function AddressForm(props: {
               autoComplete="name"
               label={t("name") + "*"}
               name="name"
-              enterKeyHint="next"
               required
               min={2}
               value={values.name}
@@ -145,6 +145,7 @@ export default function AddressForm(props: {
             value={values.phone}
             onChange={(e) => setValue("phone", e.target.value)}
           />
+          <div className="pt-4">{t("address")}</div>
           {!authUser ? (
             <TextForm
               label={t("email") + "*"}
@@ -157,10 +158,9 @@ export default function AddressForm(props: {
           <div className="form-control mb-4">
             <TextForm
               type="text"
-              label={t("streetAddress")}
-              name="streetAddress"
+              label={t("streetAddress") + "*"}
+              name="street-address"
               autoComplete="street-address"
-              enterKeyHint="next"
               required
               min={2}
               value={address.street}
@@ -172,35 +172,42 @@ export default function AddressForm(props: {
             <TextForm
               type="text"
               label={t("postal")}
-              name="postal"
+              name="postal-code"
               autoComplete="postal-code"
-              enterKeyHint="next"
               min={2}
               value={address.postal}
               onChange={(e) => setAddress("postal", e.target.value)}
             />
           </div>
-
           <div className="form-control mb-4">
             <TextForm
               type="text"
-              label={t("city")}
+              label={t("city") + "*"}
               name="city"
-              autoComplete="city"
-              enterKeyHint="next"
+              autoComplete="address-level2"
               min={2}
-              value={address.cityState}
-              onChange={(e) => setAddress("cityState", e.target.value)}
+              value={address.city}
+              onChange={(e) => setAddress("city", e.target.value)}
+            />
+          </div>
+          <div className="form-control mb-4">
+            <TextForm
+              type="text"
+              label={t("stateOrProvince") + "*"}
+              name="province"
+              autoComplete="address-level1"
+              min={2}
+              value={address.province}
+              onChange={(e) => setAddress("province", e.target.value)}
             />
           </div>
 
           <div className="form-control mb-4">
             <TextForm
               type="text"
-              label={t("country")}
-              name="country"
+              label={t("country") + "*"}
+              name="country-name"
               autoComplete="country-name"
-              enterKeyHint="done"
               min={2}
               value={address.country}
               onChange={(e) => setAddress("country", e.target.value)}
