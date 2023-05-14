@@ -315,7 +315,7 @@ export default function ChainMemberList() {
                       </select>
                     </div>
                     <button
-                      className={`btn btn-sm rounded-none ${
+                      className={`btn btn-sm rounded-none w-[120px] ${
                         filteredUsersNotHost.length === 0
                           ? "btn-disabled"
                           : "btn-primary"
@@ -326,7 +326,7 @@ export default function ChainMemberList() {
                     </button>
                   </form>
                   <Link
-                    className="btn btn-sm btn-primary mt-2"
+                    className="btn btn-sm btn-primary mt-2 w-[120px]"
                     to={`/loops/${chainUID}/edit`}
                   >
                     {t("editLoop")}
