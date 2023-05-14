@@ -256,10 +256,10 @@ export default function ChainMemberList() {
             {console.log(isUserAdmin)}
 
             {isUserAdmin ? (
-              <div className="flex flex-col md:flex-row bg-teal-light px-4 py-8 mt-4">
-                <div className="flex flex-col w-full md:w-1/6">
+              <div className="flex flex-col md:flex-row bg-teal-light p-2">
+                <div className="flex flex-col w-full md:w-1/3 pr-2">
                   <div className="form-control w-full">
-                    <label className="cursor-pointer label px-0">
+                    <label className="cursor-pointer label">
                       <span className="label-text">
                         {published ? t("published") : t("draft")}
                       </span>
@@ -275,7 +275,7 @@ export default function ChainMemberList() {
                     </label>
                   </div>
                   <div className="form-control w-full">
-                    <label className="cursor-pointer label px-0">
+                    <label className="cursor-pointer label">
                       <span className="label-text">
                         {openToNewMembers ? t("openToNewMembers") : t("closed")}
                       </span>
@@ -292,9 +292,9 @@ export default function ChainMemberList() {
                   </div>
                 </div>
 
-                <div className="flex flex-col w-full md:w-1/2 items-end ml-auto py-4 md:py-0">
+                <div className="flex flex-col w-full md:w-2/3 items-end ml-auto pt-1">
                   <form
-                    className="mb-4 w-full flex flex-col sm:flex-row"
+                    className="w-full flex flex-col sm:flex-row"
                     onSubmit={onAddCoHost}
                   >
                     <div className="ml-auto">
@@ -326,7 +326,7 @@ export default function ChainMemberList() {
                     </button>
                   </form>
                   <Link
-                    className="btn btn-sm btn-primary"
+                    className="btn btn-sm btn-primary mt-2"
                     to={`/loops/${chainUID}/edit`}
                   >
                     {t("editLoop")}
