@@ -18,14 +18,6 @@ import { userGetByUID, userHasNewsletter } from "../api/user";
 
 import { AuthContext } from "../providers/AuthProvider";
 
-interface Props {
-  onSubmit: (
-    e: FormEvent<HTMLFormElement>,
-    address: string,
-    sizes: string[]
-  ) => void;
-  classes: string;
-}
 interface State {
   chainUID?: UID;
 }
@@ -35,7 +27,14 @@ interface Params {
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
-export default function AddressForm(props: Props) {
+export default function AddressForm(props: {
+  onSubmit: (
+    e: FormEvent<HTMLFormElement>,
+    address: string,
+    sizes: string[]
+  ) => void;
+  classes: string;
+}) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
   const { chainUID } = useLocation<State>().state || {};
@@ -67,9 +66,11 @@ export default function AddressForm(props: Props) {
         const correctAddress =
           address.street.replaceAll(" ", "%20") +
           "%20" +
-          address.postal +
+          address.postal.replaceAll(" ", "%20") +
           "%20" +
-          address.cityState.replaceAll(" ", "%20");
+          address.cityState.replaceAll(" ", "%20") +
+          "%20" +
+          address.country.replaceAll(" ", "%20");
 
         window.axios
           .get(
@@ -83,7 +84,7 @@ export default function AddressForm(props: Props) {
             }
           })
           .catch((err: any) => {
-            console.error("Error getting address from MapBox:", err, values);
+            console.error("Error getting address from MapBox:", err);
             addToastError(GinParseErrors(t, err), err?.status);
           });
       }
@@ -144,7 +145,6 @@ export default function AddressForm(props: Props) {
             value={values.phone}
             onChange={(e) => setValue("phone", e.target.value)}
           />
-          {/* Don't show email if user is logged in */}
           {!authUser ? (
             <TextForm
               label={t("email") + "*"}

@@ -9,13 +9,10 @@ import {
   userUpdate,
   UserUpdateBody,
 } from "../api/user";
-import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { AuthContext } from "../providers/AuthProvider";
 import AddressForm from "../components/AddressForm";
-import SizesDropdown from "../components/SizesDropdown";
-import categories from "../util/categories";
 import FormJup from "../util/form-jup";
 
 interface Params {
