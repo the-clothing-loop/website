@@ -291,7 +291,7 @@ export default function ChainMemberList() {
                     className="w-full flex flex-col sm:flex-row"
                     onSubmit={onAddCoHost}
                   >
-                    <div className="ml-auto">
+                    <div className="w-full ml-auto">
                       <select
                         className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
                         name="participant"
