@@ -322,10 +322,7 @@ export default function ChainMemberList() {
                 </div>
 
                 <div className="flex flex-col w-full md:w-2/3 items-end ml-auto pt-1">
-                  <form
-                    className="w-full flex flex-row"
-                    onSubmit={onAddCoHost}
-                  >
+                  <form className="w-full flex flex-row" onSubmit={onAddCoHost}>
                     <div className="w-full ml-auto">
                       <select
                         className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
