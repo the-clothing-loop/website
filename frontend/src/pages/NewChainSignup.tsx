@@ -7,16 +7,8 @@ import ProgressBar from "../components/ProgressBar";
 import { AuthContext } from "../providers/AuthProvider";
 import { State as LoopsNewState } from "./NewChainLocation";
 import { RequestRegisterUser } from "../api/login";
-import FormJup from "../util/form-jup";
 import { ToastContext } from "../providers/ToastProvider";
-import AddressForm from "../components/AddressForm";
-
-interface FormHtmlValues {
-  name: string;
-  email: string;
-  phone: string;
-  newsletter: string;
-}
+import AddressForm, { ValuesForm } from "../components/AddressForm";
 
 export default function Signup() {
   const { t } = useTranslation();
@@ -31,13 +23,10 @@ export default function Signup() {
     });
   }
 
-  function onSubmit(e: FormEvent, address: string, sizes: string[]) {
-    e.preventDefault();
+  function onSubmit(values: ValuesForm) {
+    console.info("submit", { ...values });
 
-    const values = FormJup<FormHtmlValues>(e);
-    console.info("submit", { ...values, address });
-
-    if (address.length < 6) {
+    if (values.address.length < 6) {
       addToastError(t("required") + ": " + t("address"), 400);
       return;
     }
@@ -46,9 +35,9 @@ export default function Signup() {
       name: values.name,
       email: values.email,
       phone_number: values.phone,
-      newsletter: values.newsletter === "on",
-      address: address,
-      sizes: sizes,
+      newsletter: values.newsletter,
+      address: values.address,
+      sizes: values.sizes,
     };
     console.log("submit", registerUser);
 

@@ -12,8 +12,7 @@ import {
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { AuthContext } from "../providers/AuthProvider";
-import AddressForm from "../components/AddressForm";
-import FormJup from "../util/form-jup";
+import AddressForm, { ValuesForm } from "../components/AddressForm";
 
 interface Params {
   userUID: UID;
@@ -21,14 +20,6 @@ interface Params {
 
 interface State {
   chainUID?: UID;
-}
-interface RegisterUserForm {
-  name: string;
-  email: string;
-  phone: string;
-  sizes: string[];
-  privacyPolicy: boolean;
-  newsletter: boolean;
 }
 
 export default function UserEdit() {
@@ -57,11 +48,8 @@ export default function UserEdit() {
     [user]
   );
 
-  function onSubmit(e: FormEvent, address: string, sizes: string[]) {
-    e.preventDefault();
-
-    const values = FormJup<RegisterUserForm>(e);
-
+  function onSubmit(values: ValuesForm) {
+    console.info("submit", { ...values });
     (async () => {
       try {
         let userUpdateBody: UserUpdateBody = {
@@ -69,8 +57,8 @@ export default function UserEdit() {
           name: values.name,
           phone_number: values.phone,
           newsletter: hasNewsletter,
-          address: address,
-          sizes: sizes,
+          address: values.address,
+          sizes: values.sizes,
         };
         if (chainUID) userUpdateBody.chain_uid = chainUID;
         console.log(userUpdateBody);
@@ -79,7 +67,7 @@ export default function UserEdit() {
           history.goBack();
         }, 1200);
       } catch (err: any) {
-        console.error(`Error updating user: ${JSON.stringify(e)}`);
+        console.error(`Error updating user: ${JSON.stringify(values)}`);
         addToastError(GinParseErrors(t, err), err?.status);
       }
     })();

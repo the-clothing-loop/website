@@ -24,15 +24,19 @@ interface State {
 interface Params {
   userUID: UID;
 }
-
+export interface ValuesForm {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  sizes: string[];
+  newsletter: boolean;
+}
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
 export default function AddressForm(props: {
-  onSubmit: (
-    e: FormEvent<HTMLFormElement>,
-    address: string,
-    sizes: string[]
-  ) => void;
+  onSubmit: (values: ValuesForm) => void;
+  //   e: FormEvent<HTMLFormElement>,
   classes: string;
 }) {
   const { t } = useTranslation();
@@ -40,7 +44,7 @@ export default function AddressForm(props: {
   const { chainUID } = useLocation<State>().state || {};
   const [user, setUser] = useState<User>();
   const { authUser } = useContext(AuthContext);
-  const [values, setValue, setValues] = useForm({
+  const [values, setValue, setValues] = useForm<ValuesForm>({
     name: "",
     phone: "",
     email: "",
@@ -61,36 +65,33 @@ export default function AddressForm(props: {
     country: "",
   });
 
-  useEffect(() => {
-    (async () => {
-      if (MAPBOX_TOKEN) {
-        const correctAddress =
-          address.street.replaceAll(" ", "%20") +
-          "%20" +
-          address.postal.replaceAll(" ", "%20") +
-          "%20" +
-          address.city.replaceAll(" ", "%20") +
-          "%20" +
-          address.country.replaceAll(" ", "%20");
+  async function getPlaceName(
+    street: string,
+    postal: string,
+    city: string,
+    province: string,
+    country: string
+  ): Promise<string> {
+    const correctAddress =
+      street.replaceAll(" ", "%20") +
+      "%20" +
+      postal.replaceAll(" ", "%20") +
+      "%20" +
+      city.replaceAll(" ", "%20") +
+      "%20" +
+      province.replaceAll(" ", "%20") +
+      "%20" +
+      country.replaceAll(" ", "%20");
 
-        window.axios
-          .get(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${correctAddress}.json?access_token=${MAPBOX_TOKEN}`
-          )
-          .then((response) => {
-            if (response.data.features[0]) {
-              console.log(response);
-              var placeName = response.data.features[0].place_name;
-              setValue("address", placeName);
-            }
-          })
-          .catch((err: any) => {
-            console.error("Error getting address from MapBox:", err);
-            addToastError(GinParseErrors(t, err), err?.status);
-          });
-      }
-    })();
-  }, [address]);
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${correctAddress}.json?access_token=${MAPBOX_TOKEN}`
+    );
+    const data = await response.json();
+    console.log(data);
+    console.log(data.features[0]?.place_name);
+
+    return data.features[0]?.place_name || "";
+  }
 
   // If the user is logged in, we want to set values to their information
   if (authUser) {
@@ -100,7 +101,6 @@ export default function AddressForm(props: {
           const user = (await userGetByUID(chainUID, userUID)).data;
           const hasNewsletter = (await userHasNewsletter(chainUID, userUID))
             .data;
-
           setUser(user);
           setValues({
             name: user.name,
@@ -119,8 +119,31 @@ export default function AddressForm(props: {
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const address = values.address;
-    props.onSubmit(e, address, values.sizes);
+
+    (async () => {
+      if (
+        !(address.street && address.city && address.province && address.country)
+      ) {
+        addToastError(t("required") + ": " + t("loopLocation"), 400);
+        return;
+      }
+      values.address = await getPlaceName(
+        address.street,
+        address.postal,
+        address.city,
+        address.province,
+        address.country
+      );
+
+      if (
+        !(address.street && address.city && address.province && address.country)
+      ) {
+        console.error("getPlaceName", values.address);
+        addToastError(t("required") + ": " + t("loopLocation"), 500);
+        return;
+      }
+      props.onSubmit(values);
+    })();
   }
 
   return (
@@ -152,6 +175,9 @@ export default function AddressForm(props: {
               name="email"
               type="email"
               required
+              min={2}
+              value={values.email}
+              onChange={(e) => setValue("email", e.target.value)}
             />
           ) : null}
 
@@ -185,6 +211,7 @@ export default function AddressForm(props: {
               label={t("city") + "*"}
               name="city"
               autoComplete="address-level2"
+              required
               min={2}
               value={address.city}
               onChange={(e) => setAddress("city", e.target.value)}
@@ -196,6 +223,7 @@ export default function AddressForm(props: {
               label={t("stateOrProvince") + "*"}
               name="province"
               autoComplete="address-level1"
+              required
               min={2}
               value={address.province}
               onChange={(e) => setAddress("province", e.target.value)}
@@ -208,6 +236,7 @@ export default function AddressForm(props: {
               label={t("country") + "*"}
               name="country-name"
               autoComplete="country-name"
+              required
               min={2}
               value={address.country}
               onChange={(e) => setAddress("country", e.target.value)}

@@ -9,24 +9,14 @@ import { TwoColumnLayout } from "../components/Layouts";
 import { Chain, User } from "../api/types";
 import { chainAddUser, chainGet } from "../api/chain";
 import { registerBasicUser } from "../api/login";
-import FormJup from "../util/form-jup";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { AuthContext } from "../providers/AuthProvider";
 import { TFunction } from "i18next";
-import AddressForm from "../components/AddressForm";
+import AddressForm, { ValuesForm } from "../components/AddressForm";
 
 interface Params {
   chainUID: string;
-}
-
-interface RegisterUserForm {
-  name: string;
-  email: string;
-  phone: string;
-  sizes: string[];
-  privacyPolicy: boolean;
-  newsletter: boolean;
 }
 
 export default function Signup() {
@@ -53,8 +43,8 @@ export default function Signup() {
     })();
   }, [chainUID]);
 
-  function onSubmitCurrentUser(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  function onSubmitCurrentUser(values: ValuesForm) {
+    console.info("submit", { ...values });
     if (authUser && chainUID) {
       chainAddUser(chainUID, authUser.uid, false)
         .then(() => {
@@ -67,14 +57,7 @@ export default function Signup() {
   }
 
   // Gather data from form, validate and send to firebase
-  function onSubmitNewUser(
-    e: FormEvent<HTMLFormElement>,
-    validatedAddress: string,
-    sizes: string[]
-  ) {
-    e.preventDefault();
-    const values = FormJup<RegisterUserForm>(e);
-
+  function onSubmitNewUser(values: ValuesForm) {
     let privacyPolicy = document.getElementsByName(
       "privacyPolicy"
     )[0] as HTMLInputElement;
@@ -83,7 +66,6 @@ export default function Signup() {
       addToastError(t("required") + " " + t("privacyPolicy"), 400);
       return;
     }
-
     (async () => {
       try {
         await registerBasicUser(
@@ -91,9 +73,9 @@ export default function Signup() {
             name: values.name,
             email: values.email,
             phone_number: values.phone,
-            newsletter: values.newsletter === "on",
-            address: validatedAddress,
-            sizes: sizes,
+            newsletter: values.newsletter,
+            address: values.address,
+            sizes: values.sizes,
           },
           chainUID
         );
