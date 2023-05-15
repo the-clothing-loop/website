@@ -250,8 +250,8 @@ export default function ChainMemberList() {
               refresh={refresh}
             />
             {isUserAdmin ? (
-              <div className="flex flex-col md:flex-row bg-teal-light p-2 mt-4">
-                <div className="flex flex-col w-full md:w-1/3 pr-2">
+              <div className="flex flex-col md:flex-row bg-teal-light py-3 px-4 mt-4">
+                <div className="flex flex-col w-full md:w-1/3 pr-6">
                   <div className="form-control w-full">
                     <label className="cursor-pointer label">
                       <span className="label-text">
@@ -288,7 +288,7 @@ export default function ChainMemberList() {
 
                 <div className="flex flex-col w-full md:w-2/3 items-end ml-auto pt-1">
                   <form
-                    className="w-full flex flex-col sm:flex-row"
+                    className="w-full flex flex-row"
                     onSubmit={onAddCoHost}
                   >
                     <div className="w-full ml-auto">
