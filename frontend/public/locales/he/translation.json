@@ -267,5 +267,10 @@
   "setLocationAndRadius": "Click on the map to set your general location and use the slider to set the maximum distance to filter by.",
   "eventLink": "Event Link",
   "shareLink": "Share Link",
-  "organizedBy": "Organized by"
+  "organizedBy": "Organized by",
+  "streetAddress": "כתובת רחוב",
+  "postal": "דואר או מיקוד (אופציונלי)",
+  "city": "עִיר",
+  "province": "מחוז או מדינה",
+  "country": "מדינה או איזור"
 }

@@ -267,5 +267,10 @@
   "setLocationAndRadius": "Click on the map to set your general location and use the slider to set the maximum distance to filter by.",
   "eventLink": "Event Link",
   "shareLink": "Share Link",
-  "organizedBy": "Organized by"
+  "organizedBy": "Organized by",
+  "streetAddress": "Indirizzo",
+  "postal": "Postale o CAP (facoltativo)",
+  "city": "Città",
+  "province": "Provincia o stato",
+  "country": "Paese o regione"
 }

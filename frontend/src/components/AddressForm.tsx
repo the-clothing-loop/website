@@ -1,8 +1,6 @@
 import { useState, useEffect, FormEvent, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams, useHistory, useLocation } from "react-router-dom";
-
-import { GinParseErrors } from "../util/gin-errors";
+import { useParams, useLocation } from "react-router-dom";
 
 import SizesDropdown from "./SizesDropdown";
 import { TextForm } from "./FormFields";
@@ -20,10 +18,9 @@ import { AuthContext } from "../providers/AuthProvider";
 
 interface State {
   chainUID?: UID;
-}
-interface Params {
   userUID: UID;
 }
+
 export interface ValuesForm {
   name: string;
   email: string;
@@ -36,7 +33,6 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
 export default function AddressForm(props: {
   onSubmit: (values: ValuesForm) => void;
-  //   e: FormEvent<HTMLFormElement>,
   classes: string;
 }) {
   const { t } = useTranslation();
@@ -52,11 +48,6 @@ export default function AddressForm(props: {
     address: "",
     newsletter: false,
   });
-  const params = useParams<Params>();
-
-  const userUID: string =
-    params.userUID == "me" ? authUser!.uid : params.userUID;
-
   const [address, setAddress] = useForm({
     street: "",
     postal: "",
@@ -64,12 +55,17 @@ export default function AddressForm(props: {
     province: "",
     country: "",
   });
+  const params = useParams<State>();
+
+  const userUID: string =
+    params.userUID == "me" ? authUser!.uid : params.userUID;
 
   async function getPlaceName(address: string): Promise<string> {
     const response = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}`
     );
     const data = await response.json();
+    console.log(data.features[0]?.place_name || "");
     return data.features[0]?.place_name || "";
   }
 
@@ -107,7 +103,8 @@ export default function AddressForm(props: {
         addToastError(t("required") + ": " + t("address"), 400);
         return;
       }
-      const correctAddress =
+
+      const formattedAddress =
         address.street.replaceAll(" ", "%20") +
         "%20" +
         address.postal.replaceAll(" ", "%20") +
@@ -117,7 +114,8 @@ export default function AddressForm(props: {
         address.province.replaceAll(" ", "%20") +
         "%20" +
         address.country.replaceAll(" ", "%20");
-      values.address = await getPlaceName(correctAddress);
+
+      values.address = await getPlaceName(formattedAddress);
 
       if (
         !(address.street && address.city && address.province && address.country)
@@ -204,7 +202,7 @@ export default function AddressForm(props: {
           <div className="form-control mb-4">
             <TextForm
               type="text"
-              label={t("stateOrProvince") + "*"}
+              label={t("province") + "*"}
               name="province"
               autoComplete="address-level1"
               required
