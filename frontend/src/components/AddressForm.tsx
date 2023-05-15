@@ -65,31 +65,11 @@ export default function AddressForm(props: {
     country: "",
   });
 
-  async function getPlaceName(
-    street: string,
-    postal: string,
-    city: string,
-    province: string,
-    country: string
-  ): Promise<string> {
-    const correctAddress =
-      street.replaceAll(" ", "%20") +
-      "%20" +
-      postal.replaceAll(" ", "%20") +
-      "%20" +
-      city.replaceAll(" ", "%20") +
-      "%20" +
-      province.replaceAll(" ", "%20") +
-      "%20" +
-      country.replaceAll(" ", "%20");
-
+  async function getPlaceName(address: string): Promise<string> {
     const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${correctAddress}.json?access_token=${MAPBOX_TOKEN}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}`
     );
     const data = await response.json();
-    console.log(data);
-    console.log(data.features[0]?.place_name);
-
     return data.features[0]?.place_name || "";
   }
 
@@ -124,22 +104,26 @@ export default function AddressForm(props: {
       if (
         !(address.street && address.city && address.province && address.country)
       ) {
-        addToastError(t("required") + ": " + t("loopLocation"), 400);
+        addToastError(t("required") + ": " + t("address"), 400);
         return;
       }
-      values.address = await getPlaceName(
-        address.street,
-        address.postal,
-        address.city,
-        address.province,
-        address.country
-      );
+      const correctAddress =
+        address.street.replaceAll(" ", "%20") +
+        "%20" +
+        address.postal.replaceAll(" ", "%20") +
+        "%20" +
+        address.city.replaceAll(" ", "%20") +
+        "%20" +
+        address.province.replaceAll(" ", "%20") +
+        "%20" +
+        address.country.replaceAll(" ", "%20");
+      values.address = await getPlaceName(correctAddress);
 
       if (
         !(address.street && address.city && address.province && address.country)
       ) {
         console.error("getPlaceName", values.address);
-        addToastError(t("required") + ": " + t("loopLocation"), 500);
+        addToastError(t("required") + ": " + t("address"), 500);
         return;
       }
       props.onSubmit(values);
