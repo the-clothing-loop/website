@@ -46,6 +46,7 @@ export interface Event {
   longitude: number;
   genders: string[] | null;
   date: string;
+  date_end: string | null;
   chain_uid?: UID;
   user_uid: string;
   user_name: string;

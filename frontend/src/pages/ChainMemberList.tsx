@@ -55,6 +55,9 @@ export default function ChainMemberList() {
 
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
+  const [route, setRoute] = useState<UID[] | null>(null);
+  const [participantsSortBy, setParticipantsSortBy] =
+    useState<ParticipantsSortBy>("date");
   const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
@@ -62,6 +65,36 @@ export default function ChainMemberList() {
   const [selectedTable, setSelectedTable] = useState<SelectedTable>("route");
   const refSelect: any = useRef<HTMLSelectElement>();
   const addCopyAttributes = useToClipboard();
+
+  const participantsSortUsers = useMemo(() => {
+    if (!users) return [];
+    const sortBy = participantsSortBy;
+    let res = [...users];
+    switch (sortBy) {
+      case "email":
+      case "name":
+        res = res.sort((a, b) =>
+          a[sortBy].localeCompare(b[sortBy]) == 1 ? 1 : -1
+        );
+        break;
+      case "date":
+        res = res.sort((a, b) => {
+          const ucA = getUserChain(a, chainUID);
+          const ucB = getUserChain(b, chainUID);
+
+          return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
+        });
+    }
+    return res;
+  }, [users, participantsSortBy]);
+
+  const routeSortUsers = useMemo(() => {
+    if (!users || !route) return [];
+    let res = [...users];
+    return res.sort((a, b) =>
+      route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1
+    );
+  }, [users, route]);
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
@@ -154,11 +187,13 @@ export default function ChainMemberList() {
 
   async function refresh(firstPageLoad = false) {
     try {
-      const [chainData, chainUsers] = await Promise.all([
+      const [chainData, chainUsers, routeData] = await Promise.all([
         chainGet(chainUID),
         userGetAllByChain(chainUID),
+        routeGetOrder(chainUID),
       ]);
       setChain(chainData.data);
+      setRoute(routeData.data || []);
       setUsers(
         chainUsers.data.filter(
           (u) => u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved
@@ -181,7 +216,7 @@ export default function ChainMemberList() {
     }
   }
 
-  if (!(chain && users && unapprovedUsers)) {
+  if (!(chain && users && unapprovedUsers && route)) {
     console.log(chain, users, unapprovedUsers);
     return null;
   }
@@ -412,7 +447,12 @@ export default function ChainMemberList() {
               {selectedTable !== "unapproved" ? (
                 <UserDataExport
                   chainName={chain.name}
-                  chainUsers={users}
+                  chainUsers={
+                    selectedTable === "participants"
+                      ? participantsSortUsers
+                      : routeSortUsers
+                  }
+                  route={route}
                   key="export"
                 />
               ) : null}
@@ -431,8 +471,9 @@ export default function ChainMemberList() {
             <ParticipantsTable
               key="participants"
               authUser={authUser}
-              users={users}
-              unapprovedUsers={unapprovedUsers}
+              users={participantsSortUsers}
+              sortBy={participantsSortBy}
+              setSortBy={setParticipantsSortBy}
               chain={chain}
               refresh={refresh}
             />
@@ -440,8 +481,10 @@ export default function ChainMemberList() {
             <RouteTable
               key="route"
               authUser={authUser}
-              users={users}
+              users={routeSortUsers}
               chain={chain}
+              route={route}
+              setRoute={setRoute}
               refresh={refresh}
               onGoToEditTableItem={goToEditTableItem}
             />
@@ -752,16 +795,17 @@ function ApproveTable(props: {
   );
 }
 
+type ParticipantsSortBy = "name" | "email" | "date";
 function ParticipantsTable(props: {
   authUser: User | null;
   users: User[];
-  unapprovedUsers: User[];
+  sortBy: ParticipantsSortBy;
+  setSortBy: (sortBy: ParticipantsSortBy) => void;
   chain: Chain;
   refresh: () => Promise<void>;
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
-  const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
 
   function getEditLocation(user: User): LocationDescriptor {
     if (!user.uid) {
@@ -806,25 +850,8 @@ function ParticipantsTable(props: {
     return u.chains.find((uc) => uc.chain_uid === props.chain.uid)!;
   }
 
-  function sortOrder(_sortBy: typeof sortBy): User[] {
-    switch (_sortBy) {
-      case "email":
-      case "name":
-        return props.users.sort((a, b) =>
-          a[_sortBy].localeCompare(b[_sortBy]) == 1 ? 1 : -1
-        );
-      case "date":
-        return props.users.sort((a, b) => {
-          const ucA = getUserChain(a);
-          const ucB = getUserChain(b);
-
-          return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
-        });
-    }
-  }
-
-  function toggleSortBy(_sortBy: typeof sortBy) {
-    setSortBy(sortBy !== _sortBy ? _sortBy : "date");
+  function toggleSortBy(_sortBy: ParticipantsSortBy) {
+    props.setSortBy(props.sortBy !== _sortBy ? _sortBy : "date");
   }
 
   return (
@@ -841,7 +868,7 @@ function ParticipantsTable(props: {
                 <th>
                   <span>{t("name")}</span>
                   <SortButton
-                    isSelected={sortBy === "name"}
+                    isSelected={props.sortBy === "name"}
                     className="ml-1"
                     onClick={() => toggleSortBy("name")}
                   />
@@ -852,7 +879,7 @@ function ParticipantsTable(props: {
                 <th>
                   <span>{t("email")}</span>
                   <SortButton
-                    isSelected={sortBy === "email"}
+                    isSelected={props.sortBy === "email"}
                     className="ml-1"
                     onClick={() => toggleSortBy("email")}
                   />
@@ -862,7 +889,7 @@ function ParticipantsTable(props: {
                 <th>
                   <span>{t("signedUpOn")}</span>
                   <SortButton
-                    isSelected={sortBy === "date"}
+                    isSelected={props.sortBy === "date"}
                     className="ml-1"
                     onClick={() => toggleSortBy("date")}
                   />
@@ -870,7 +897,7 @@ function ParticipantsTable(props: {
               </tr>
             </thead>
             <tbody>
-              {sortOrder(sortBy).map((u: User) => {
+              {props.users.map((u: User) => {
                 const userChain = getUserChain(u);
 
                 return (
@@ -936,42 +963,32 @@ function RouteTable(props: {
   authUser: User | null;
   users: User[];
   chain: Chain;
+  route: UID[];
+  setRoute: (route: UID[]) => void;
   refresh: () => Promise<void>;
   onGoToEditTableItem: (uid: UID) => void;
 }) {
   const { t } = useTranslation();
-  const [route, _setRoute] = useState<UID[]>([]);
   const [dragging, setDragging] = useState<string>("");
   const [dragTarget, setDragTarget] = useState<string>("");
 
-  useEffect(() => {
-    routeUpdate();
-  }, [props.chain]);
-
-  async function routeUpdate() {
-    const res = await routeGetOrder(props.chain.uid);
-    _setRoute(res.data || []);
-  }
-  function setRoute(r: typeof route) {
+  function setRoute(r: typeof props.route) {
     routeSetOrder(props.chain.uid, r);
-    _setRoute(r);
+    props.setRoute(r);
   }
   function draggingEnd(e: DragEvent<HTMLTableRowElement>) {
-    const fromIndex = route.indexOf(dragging);
-    const toIndex = route.indexOf(dragTarget);
+    const fromIndex = props.route.indexOf(dragging);
+    const toIndex = props.route.indexOf(dragTarget);
 
     setDragTarget("");
-    setRoute(reOrder(route, fromIndex, toIndex));
+    setRoute(reOrder(props.route, fromIndex, toIndex));
   }
   function handleInputChangeRoute(e: ChangeEvent<HTMLInputElement>, uid: UID) {
     const toIndex = e.target.valueAsNumber - 1;
-    const fromIndex = route.indexOf(uid);
-    setRoute(reOrder(route, fromIndex, toIndex));
+    const fromIndex = props.route.indexOf(uid);
+    setRoute(reOrder(props.route, fromIndex, toIndex));
   }
 
-  const sortedUsers = props.users.sort((a, b) =>
-    route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1
-  );
   return (
     <>
       <div className="mt-6 relative overflow-hidden">
@@ -995,13 +1012,13 @@ function RouteTable(props: {
               </tr>
             </thead>
             <tbody>
-              {sortedUsers.map((u: User) => {
-                const routeOrderNumber = route.indexOf(u.uid) + 1;
+              {props.users.map((u: User, i) => {
+                const routeOrderNumber = i + 1;
 
                 let classTdDragging = dragging === u.uid ? "bg-grey/[.1]" : "";
                 if (dragTarget === u.uid) {
-                  const orderTarget = route.indexOf(dragTarget);
-                  const orderDrag = route.indexOf(dragging);
+                  const orderTarget = props.route.indexOf(dragTarget);
+                  const orderDrag = props.route.indexOf(dragging);
 
                   if (orderTarget < orderDrag) {
                     classTdDragging += " border-t-2 border-t-grey";
@@ -1026,7 +1043,7 @@ function RouteTable(props: {
                       <input
                         onClick={(e) => (e.target as any).select()}
                         onChange={(e) => handleInputChangeRoute(e, u.uid)}
-                        max={route.length + 1}
+                        max={props.route.length + 1}
                         min={1}
                         type="number"
                         className="inline-block lg:hidden input-reset w-14 py-1 px-2 bg-base-200 rounded-lg font-semibold text-center"
