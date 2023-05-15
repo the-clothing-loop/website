@@ -138,7 +138,7 @@ export default function Signup() {
 
               {authUser ? (
                 <div>
-                  <AddressForm onSubmit={onSubmitCurrentUser} classes="" />
+                  <AddressForm onSubmit={onSubmitCurrentUser} />
                   <div className="mb-4">
                     <button
                       type="button"
@@ -152,7 +152,10 @@ export default function Signup() {
                 </div>
               ) : (
                 <div>
-                  <AddressForm onSubmit={onSubmitNewUser} classes="" />
+                  <AddressForm
+                    onSubmit={onSubmitNewUser}
+                    requireNewsletter={false}
+                  />
                   <PopoverOnHover
                     className="tooltip-right"
                     message={t("weWouldLikeToKnowThisEquallyRepresented")}

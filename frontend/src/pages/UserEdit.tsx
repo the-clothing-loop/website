@@ -103,7 +103,7 @@ export default function UserEdit() {
                 : t("editParticipantContacts")
               : t("editAccount")}
           </h1>
-          <AddressForm onSubmit={onSubmit} classes="" />
+          <AddressForm onSubmit={onSubmit} />
 
           <div className="form-control mb-4">
             <label className="label cursor-pointer">

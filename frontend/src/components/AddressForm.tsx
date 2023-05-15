@@ -33,7 +33,8 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
 export default function AddressForm(props: {
   onSubmit: (values: ValuesForm) => void;
-  classes: string;
+  classes?: string;
+  requireNewsletter?: boolean;
 }) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -65,6 +66,7 @@ export default function AddressForm(props: {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}`
     );
     const data = await response.json();
+    //delete this
     console.log(data.features[0]?.place_name || "");
     return data.features[0]?.place_name || "";
   }
@@ -232,7 +234,11 @@ export default function AddressForm(props: {
               handleChange={(v) => setValue("sizes", v)}
             />
           </div>
-          {!authUser ? <FormActions isNewsletterRequired={false} /> : null}
+          {!authUser ? (
+            <FormActions
+              isNewsletterRequired={props.requireNewsletter || false}
+            />
+          ) : null}
         </form>
       </div>
     </>
