@@ -27,8 +27,8 @@ export default function Signup() {
     console.info("submit", { ...values });
 
     if (values.address.length < 6) {
-        addToastError(t("required") + ": " + t("address"), 400);
-        return;
+      addToastError(t("required") + ": " + t("address"), 400);
+      return;
     }
 
     let registerUser: RequestRegisterUser = {

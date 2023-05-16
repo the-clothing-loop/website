@@ -140,17 +140,21 @@ export default function AddressForm(props: {
   return (
     <>
       <div className={props.classes}>
-        <form onSubmit={onSubmit} className="relative space-y-4" id="address-form">
-            <TextForm
-              type="text"
-              autoComplete="name"
-              label={t("name") + "*"}
-              name="name"
-              required
-              min={2}
-              value={values.name}
-              onChange={(e) => setValue("name", e.target.value)}
-            />
+        <form
+          onSubmit={onSubmit}
+          className="relative space-y-4"
+          id="address-form"
+        >
+          <TextForm
+            type="text"
+            autoComplete="name"
+            label={t("name") + "*"}
+            name="name"
+            required
+            min={2}
+            value={values.name}
+            onChange={(e) => setValue("name", e.target.value)}
+          />
 
           <PhoneFormField
             required
@@ -159,68 +163,68 @@ export default function AddressForm(props: {
           />
           <div>{t("address")}</div>
           {!authUser ? (
-              <TextForm
-                label={t("email") + "*"}
-                name="email"
-                type="email"
-                required
-                min={2}
-                value={values.email}
-                onChange={(e) => setValue("email", e.target.value)}
-              />
+            <TextForm
+              label={t("email") + "*"}
+              name="email"
+              type="email"
+              required
+              min={2}
+              value={values.email}
+              onChange={(e) => setValue("email", e.target.value)}
+            />
           ) : null}
 
-            <TextForm
-              type="text"
-              label={t("streetAddress") + "*"}
-              name="street-address"
-              autoComplete="street-address"
-              required
-              min={2}
-              value={address.street}
-              onChange={(e) => setAddress("street", e.target.value)}
-            />
+          <TextForm
+            type="text"
+            label={t("streetAddress") + "*"}
+            name="street-address"
+            autoComplete="street-address"
+            required
+            min={2}
+            value={address.street}
+            onChange={(e) => setAddress("street", e.target.value)}
+          />
 
-            <TextForm
-              type="text"
-              label={t("postal")}
-              name="postal-code"
-              autoComplete="postal-code"
-              min={2}
-              value={address.postal}
-              onChange={(e) => setAddress("postal", e.target.value)}
-            />
-            <TextForm
-              type="text"
-              label={t("city") + "*"}
-              name="city"
-              autoComplete="address-level2"
-              required
-              min={2}
-              value={address.city}
-              onChange={(e) => setAddress("city", e.target.value)}
-            />
-            <TextForm
-              type="text"
-              label={t("province") + "*"}
-              name="province"
-              autoComplete="address-level1"
-              required
-              min={2}
-              value={address.province}
-              onChange={(e) => setAddress("province", e.target.value)}
-            />
+          <TextForm
+            type="text"
+            label={t("postal")}
+            name="postal-code"
+            autoComplete="postal-code"
+            min={2}
+            value={address.postal}
+            onChange={(e) => setAddress("postal", e.target.value)}
+          />
+          <TextForm
+            type="text"
+            label={t("city") + "*"}
+            name="city"
+            autoComplete="address-level2"
+            required
+            min={2}
+            value={address.city}
+            onChange={(e) => setAddress("city", e.target.value)}
+          />
+          <TextForm
+            type="text"
+            label={t("province") + "*"}
+            name="province"
+            autoComplete="address-level1"
+            required
+            min={2}
+            value={address.province}
+            onChange={(e) => setAddress("province", e.target.value)}
+          />
 
-            <TextForm
-              type="text"
-              label={t("country") + "*"}
-              name="country-name"
-              autoComplete="country-name"
-              required
-              min={2}
-              value={address.country}
-              onChange={(e) => setAddress("country", e.target.value)}
-            />
+          <TextForm
+            type="text"
+            label={t("country") + "*"}
+            name="country-name"
+            autoComplete="country-name"
+            required
+            min={2}
+            value={address.country}
+            onChange={(e) => setAddress("country", e.target.value)}
+          />
           <div className="mb-4 pt-3">
             <SizesDropdown
               filteredGenders={Object.keys(categories)}
