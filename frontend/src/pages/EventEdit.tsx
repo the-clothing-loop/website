@@ -43,6 +43,7 @@ export default function EventEdit() {
         price_value: res.data.price_value,
         link: res.data.link,
         date: res.data.date,
+        date_end: res.data.date_end,
         genders: res.data.genders || [],
         chain_uid: res.data.chain_uid,
         image_url: res.data.image_url || "",

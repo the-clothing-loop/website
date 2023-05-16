@@ -244,7 +244,7 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
             className="btn btn-sm btn-ghost"
             onClick={() => handleActionClick(() => {})}
           >
-            {t("close")}
+            {props.modal.actions.length ? t("cancel") : t("close")}
           </button>
         </div>
       </div>

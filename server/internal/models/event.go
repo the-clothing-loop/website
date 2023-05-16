@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 )
 
@@ -23,6 +24,7 @@ type Event struct {
 	PriceCurrency  zero.String `json:"price_currency"`
 	Link           string      `json:"link"`
 	Date           time.Time   `json:"date"`
+	DateEnd        null.Time   `json:"date_end"`
 	Genders        []string    `gorm:"serializer:json" json:"genders"`
 	ChainID        zero.Int    `json:"-"`
 	ChainUID       zero.String `json:"chain_uid" gorm:"-:migration;<-:false"`
@@ -49,6 +51,7 @@ events.price_value           AS price_value,
 events.price_currency        AS price_currency,
 events.link                  AS link,
 events.date                  AS date,
+events.date_end              AS date_end,
 events.genders               AS genders,
 events.chain_id              AS chain_id,
 chains.uid                   AS chain_uid,

@@ -1,44 +1,14 @@
-import {
-  useContext,
-  FormEvent,
-  useState,
-  useEffect,
-  useRef,
-  ChangeEvent,
-} from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
 import { AuthContext } from "../providers/AuthProvider";
-import {
-  eventCreate,
-  EventCreateBody,
-  EVENT_IMAGE_EXPIRATION,
-} from "../api/event";
-import FormJup from "../util/form-jup";
-import useForm from "../util/form.hooks";
+import { eventCreate, EventCreateBody } from "../api/event";
 import { ToastContext } from "../providers/ToastProvider";
 
 import { GinParseErrors } from "../util/gin-errors";
-import dayjs from "../util/dayjs";
 import { Redirect } from "react-router-dom";
-import { chainGet } from "../api/chain";
-import { Chain, UID } from "../api/types";
-import { deleteImage, uploadImage, UploadImageBody } from "../api/imgbb";
 import EventChangeForm from "../components/EventChangeForm";
-
-interface FormJsValues {
-  address: string;
-  description: string;
-  genders: string[];
-}
-
-interface FormHtmlValues {
-  name: string;
-  date: Date;
-  time: string;
-  chain_uid: UID;
-}
 
 export default function EventCreate() {
   const { t } = useTranslation();
