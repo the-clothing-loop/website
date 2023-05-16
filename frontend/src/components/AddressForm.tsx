@@ -5,7 +5,7 @@ import { useParams, useLocation } from "react-router-dom";
 import SizesDropdown from "./SizesDropdown";
 import { TextForm } from "./FormFields";
 import categories from "../util/categories";
-import { UID, User } from "../api/types";
+import { UID } from "../api/types";
 import FormActions from "../components/formActions";
 
 import { PhoneFormField } from "./FormFields";
@@ -39,7 +39,6 @@ export default function AddressForm(props: {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
   const { chainUID } = useLocation<State>().state || {};
-  const [user, setUser] = useState<User>();
   const { authUser } = useContext(AuthContext);
   const [values, setValue, setValues] = useForm<ValuesForm>({
     name: "",
@@ -69,7 +68,6 @@ export default function AddressForm(props: {
           const user = (await userGetByUID(chainUID, userUID)).data;
           const hasNewsletter = (await userHasNewsletter(chainUID, userUID))
             .data;
-          setUser(user);
           setValues({
             name: user.name,
             phone: user.phone_number,
