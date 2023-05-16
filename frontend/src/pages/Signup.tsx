@@ -4,16 +4,15 @@ import { useTranslation } from "react-i18next";
 import { Redirect, useParams, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
-import PopoverOnHover from "../components/Popover";
 import { TwoColumnLayout } from "../components/Layouts";
+import AddressForm, { ValuesForm } from "../components/AddressForm";
 import { Chain, User } from "../api/types";
 import { chainAddUser, chainGet } from "../api/chain";
 import { registerBasicUser } from "../api/login";
 import { ToastContext } from "../providers/ToastProvider";
-import { GinParseErrors } from "../util/gin-errors";
 import { AuthContext } from "../providers/AuthProvider";
+import { GinParseErrors } from "../util/gin-errors";
 import { TFunction } from "i18next";
-import AddressForm, { ValuesForm } from "../components/AddressForm";
 
 interface Params {
   chainUID: string;
@@ -67,10 +66,6 @@ export default function Signup() {
       return;
     }
 
-    let newsletter = document.getElementsByName(
-      "newsletter"
-    )[0] as HTMLInputElement;
-
     (async () => {
       try {
         await registerBasicUser(
@@ -78,7 +73,7 @@ export default function Signup() {
             name: values.name,
             email: values.email,
             phone_number: values.phone,
-            newsletter: newsletter.checked,
+            newsletter: values.newsletter,
             address: values.address,
             sizes: values.sizes,
           },
@@ -159,13 +154,9 @@ export default function Signup() {
                 <div>
                   <AddressForm
                     onSubmit={onSubmitNewUser}
-                    requireNewsletter={false}
+                    isNewsletterRequired={false}
+                    classes="mb-4"
                   />
-                  <PopoverOnHover
-                    className="tooltip-right"
-                    message={t("weWouldLikeToKnowThisEquallyRepresented")}
-                  />
-
                   <div className="mb-4">
                     <button
                       type="button"

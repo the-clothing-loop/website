@@ -11,7 +11,7 @@ import FormActions from "../components/formActions";
 import { PhoneFormField } from "./FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
-
+import PopoverOnHover from "./Popover";
 import { userGetByUID, userHasNewsletter } from "../api/user";
 
 import { AuthContext } from "../providers/AuthProvider";
@@ -34,7 +34,7 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 export default function AddressForm(props: {
   onSubmit: (values: ValuesForm) => void;
   classes?: string;
-  requireNewsletter?: boolean;
+  isNewsletterRequired?: boolean;
 }) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -61,16 +61,6 @@ export default function AddressForm(props: {
   const userUID: string =
     params.userUID == "me" ? authUser!.uid : params.userUID;
 
-  async function getPlaceName(address: string): Promise<string> {
-    const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}`
-    );
-    const data = await response.json();
-    //delete this
-    console.log(data.features[0]?.place_name || "");
-    return data.features[0]?.place_name || "";
-  }
-
   // If the user is logged in, we want to set values to their information
   if (authUser) {
     useEffect(() => {
@@ -93,6 +83,23 @@ export default function AddressForm(props: {
         }
       })();
     }, [history]);
+  }
+
+  function checkNewsletter() {
+    let newsletter = document.getElementsByName(
+      "newsletter"
+    )[0] as HTMLInputElement;
+    if (newsletter) {
+      setValue("newsletter", newsletter.checked);
+    }
+  }
+
+  async function getPlaceName(address: string): Promise<string> {
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}`
+    );
+    const data = await response.json();
+    return data.features[0]?.place_name || "";
   }
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -133,8 +140,7 @@ export default function AddressForm(props: {
   return (
     <>
       <div className={props.classes}>
-        <form onSubmit={onSubmit} className="relative" id="address-form">
-          <div className="mb-2">
+        <form onSubmit={onSubmit} className="relative space-y-4" id="address-form">
             <TextForm
               type="text"
               autoComplete="name"
@@ -145,27 +151,25 @@ export default function AddressForm(props: {
               value={values.name}
               onChange={(e) => setValue("name", e.target.value)}
             />
-          </div>
 
           <PhoneFormField
             required
             value={values.phone}
             onChange={(e) => setValue("phone", e.target.value)}
           />
-          <div className="pt-4">{t("address")}</div>
+          <div>{t("address")}</div>
           {!authUser ? (
-            <TextForm
-              label={t("email") + "*"}
-              name="email"
-              type="email"
-              required
-              min={2}
-              value={values.email}
-              onChange={(e) => setValue("email", e.target.value)}
-            />
+              <TextForm
+                label={t("email") + "*"}
+                name="email"
+                type="email"
+                required
+                min={2}
+                value={values.email}
+                onChange={(e) => setValue("email", e.target.value)}
+              />
           ) : null}
 
-          <div className="form-control mb-4">
             <TextForm
               type="text"
               label={t("streetAddress") + "*"}
@@ -176,9 +180,7 @@ export default function AddressForm(props: {
               value={address.street}
               onChange={(e) => setAddress("street", e.target.value)}
             />
-          </div>
 
-          <div className="form-control mb-4">
             <TextForm
               type="text"
               label={t("postal")}
@@ -188,8 +190,6 @@ export default function AddressForm(props: {
               value={address.postal}
               onChange={(e) => setAddress("postal", e.target.value)}
             />
-          </div>
-          <div className="form-control mb-4">
             <TextForm
               type="text"
               label={t("city") + "*"}
@@ -200,8 +200,6 @@ export default function AddressForm(props: {
               value={address.city}
               onChange={(e) => setAddress("city", e.target.value)}
             />
-          </div>
-          <div className="form-control mb-4">
             <TextForm
               type="text"
               label={t("province") + "*"}
@@ -212,9 +210,7 @@ export default function AddressForm(props: {
               value={address.province}
               onChange={(e) => setAddress("province", e.target.value)}
             />
-          </div>
 
-          <div className="form-control mb-4">
             <TextForm
               type="text"
               label={t("country") + "*"}
@@ -225,7 +221,6 @@ export default function AddressForm(props: {
               value={address.country}
               onChange={(e) => setAddress("country", e.target.value)}
             />
-          </div>
           <div className="mb-4 pt-3">
             <SizesDropdown
               filteredGenders={Object.keys(categories)}
@@ -235,9 +230,17 @@ export default function AddressForm(props: {
             />
           </div>
           {!authUser ? (
-            <FormActions
-              isNewsletterRequired={props.requireNewsletter || false}
-            />
+            <div>
+              <PopoverOnHover
+                className="tooltip-right"
+                message={t("weWouldLikeToKnowThisEquallyRepresented")}
+              />
+              <div onClick={checkNewsletter}>
+                <FormActions
+                  isNewsletterRequired={props.isNewsletterRequired || false}
+                />
+              </div>
+            </div>
           ) : null}
         </form>
       </div>

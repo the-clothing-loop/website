@@ -56,7 +56,7 @@ export default function UserEdit() {
           user_uid: userUID,
           name: values.name,
           phone_number: values.phone,
-          newsletter: hasNewsletter,
+          newsletter: values.newsletter,
           address: values.address,
           sizes: values.sizes,
         };
@@ -103,7 +103,7 @@ export default function UserEdit() {
                 : t("editParticipantContacts")
               : t("editAccount")}
           </h1>
-          <AddressForm onSubmit={onSubmit} />
+          <AddressForm onSubmit={onSubmit} classes="mb-6"/>
 
           <div className="form-control mb-4">
             <label className="label cursor-pointer">

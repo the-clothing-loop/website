@@ -26,33 +26,16 @@ export default function Signup() {
   function onSubmit(values: ValuesForm) {
     console.info("submit", { ...values });
 
-    let newsletter = document.getElementsByName(
-      "newsletter"
-    )[0] as HTMLInputElement;
-
-    if (!newsletter.checked) {
-      addToastError(t("required") + " " + t("newsletter"), 400);
-      return;
-    }
-    let privacyPolicy = document.getElementsByName(
-      "privacyPolicy"
-    )[0] as HTMLInputElement;
-
-    if (!privacyPolicy.checked) {
-      addToastError(t("required") + " " + t("privacyPolicy"), 400);
-      return;
-    }
-
     if (values.address.length < 6) {
-      addToastError(t("required") + ": " + t("address"), 400);
-      return;
+        addToastError(t("required") + ": " + t("address"), 400);
+        return;
     }
 
     let registerUser: RequestRegisterUser = {
       name: values.name,
       email: values.email,
       phone_number: values.phone,
-      newsletter: newsletter.checked,
+      newsletter: values.newsletter,
       address: values.address,
       sizes: values.sizes,
     };
@@ -99,7 +82,7 @@ export default function Signup() {
               </div>
             </div>
             <div className="w-full md:w-1/2 md:pl-4">
-              <AddressForm onSubmit={onSubmit} requireNewsletter={true} />
+              <AddressForm onSubmit={onSubmit} isNewsletterRequired={true} />
               <div className="mt-4">
                 <button
                   type="submit"
