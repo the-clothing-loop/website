@@ -301,9 +301,17 @@ func UserPurge(c *gin.Context) {
 		return
 	}
 
-	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, "", query.UserUID)
+	ok, user, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
 	if !ok {
 		return
+	}
+	if user.UID != query.UserUID {
+		if user.IsRootAdmin {
+			db.Raw(`SELECT * FROM users WHERE uid = ?`, query.UserUID).Scan(user)
+		} else {
+			c.String(http.StatusUnauthorized, "Only you can delete your account")
+			return
+		}
 	}
 
 	// find chains where user is the last chain admin
