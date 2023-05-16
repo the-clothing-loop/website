@@ -9,7 +9,6 @@ import { State as LoopsNewState } from "./NewChainLocation";
 import { RequestRegisterUser } from "../api/login";
 import { ToastContext } from "../providers/ToastProvider";
 import AddressForm, { ValuesForm } from "../components/AddressForm";
-import FormActions from "../components/formActions";
 
 export default function Signup() {
   const { t } = useTranslation();
@@ -27,6 +26,14 @@ export default function Signup() {
   function onSubmit(values: ValuesForm) {
     console.info("submit", { ...values });
 
+    let newsletter = document.getElementsByName(
+      "newsletter"
+    )[0] as HTMLInputElement;
+
+    if (!newsletter.checked) {
+      addToastError(t("required") + " " + t("newsletter"), 400);
+      return;
+    }
     let privacyPolicy = document.getElementsByName(
       "privacyPolicy"
     )[0] as HTMLInputElement;
@@ -45,7 +52,7 @@ export default function Signup() {
       name: values.name,
       email: values.email,
       phone_number: values.phone,
-      newsletter: values.newsletter,
+      newsletter: newsletter.checked,
       address: values.address,
       sizes: values.sizes,
     };
@@ -92,7 +99,7 @@ export default function Signup() {
               </div>
             </div>
             <div className="w-full md:w-1/2 md:pl-4">
-              <AddressForm onSubmit={onSubmit} requireNewsletter={true}/>
+              <AddressForm onSubmit={onSubmit} requireNewsletter={true} />
               <div className="mt-4">
                 <button
                   type="submit"

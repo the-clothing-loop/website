@@ -66,6 +66,11 @@ export default function Signup() {
       addToastError(t("required") + " " + t("privacyPolicy"), 400);
       return;
     }
+
+    let newsletter = document.getElementsByName(
+      "newsletter"
+    )[0] as HTMLInputElement;
+
     (async () => {
       try {
         await registerBasicUser(
@@ -73,7 +78,7 @@ export default function Signup() {
             name: values.name,
             email: values.email,
             phone_number: values.phone,
-            newsletter: values.newsletter,
+            newsletter: newsletter.checked,
             address: values.address,
             sizes: values.sizes,
           },
