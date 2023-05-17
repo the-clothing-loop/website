@@ -8,6 +8,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"gopkg.in/guregu/null.v3/zero"
 
 	"github.com/gin-gonic/gin"
 )
@@ -90,10 +91,13 @@ func UserGetAllOfChain(c *gin.Context) {
 		return
 	}
 
-	ok, _, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
+	ok, authUser, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
 	if !ok {
 		return
 	}
+
+	_, isAuthUserChainAdmin := authUser.IsPartOfChain(chain.UID)
+	isAuthState3AdminChainUser := isAuthUserChainAdmin || authUser.IsRootAdmin
 
 	// retrieve user from query
 	users := &[]models.User{}
@@ -149,6 +153,32 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 			}
 		}
 		(*users)[i].Chains = thisUserChains
+	}
+
+	// omit user data from participants
+	if !isAuthState3AdminChainUser {
+		route, err := chain.GetRouteOrderByUserUID(db)
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		authUserRouteOrder := routeIndex(route, authUser.UID)
+
+		for i, user := range *users {
+			// find users above and below this user in the route order
+			routeOrder := routeIndex(route, user.UID)
+			_, isChainAdmin := user.IsPartOfChain(chain.UID)
+
+			isDirectlyBeforeOrAfter := authUserRouteOrder == 1-routeOrder || authUserRouteOrder == routeOrder || authUserRouteOrder == 1+routeOrder
+			if !isDirectlyBeforeOrAfter && authUser.UID != user.UID {
+				if !isChainAdmin {
+					(*users)[i].Email = zero.StringFrom("***")
+					(*users)[i].PhoneNumber = "***"
+				}
+				(*users)[i].Address = "***"
+			}
+		}
 	}
 
 	c.JSON(200, users)
@@ -391,4 +421,13 @@ HAVING COUNT(uc.id) = 1
 	}
 
 	tx.Commit()
+}
+
+func routeIndex(route []string, userUID string) int {
+	for i, uid := range route {
+		if uid == userUID {
+			return i
+		}
+	}
+	return -1
 }
