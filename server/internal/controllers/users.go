@@ -156,7 +156,7 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 	}
 
 	// omit user data from participants
-	if isAuthState3AdminChainUser {
+	if !isAuthState3AdminChainUser {
 		route, err := chain.GetRouteOrderByUserUID(db)
 		if err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
@@ -164,12 +164,13 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 		}
 
 		authUserRouteOrder := routeIndex(route, authUser.UID)
+
 		for i, user := range *users {
 			// find users above and below this user in the route order
 			routeOrder := routeIndex(route, user.UID)
 			_, isChainAdmin := user.IsPartOfChain(chain.UID)
 
-			isDirectlyBeforeOrAfter := authUserRouteOrder-1 <= routeOrder && routeOrder >= 1+authUserRouteOrder
+			isDirectlyBeforeOrAfter := authUserRouteOrder == 1-routeOrder || authUserRouteOrder == routeOrder || authUserRouteOrder == 1+routeOrder
 			if !isDirectlyBeforeOrAfter && authUser.UID != user.UID {
 				if !isChainAdmin {
 					(*users)[i].Email = zero.StringFrom("***")
