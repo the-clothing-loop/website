@@ -274,17 +274,19 @@ export default function ChainMemberList() {
             </div>
           </section>
 
-          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 lg:pt-0 bg-secondary-light">
-            <h2 className="font-semibold text-secondary mb-6 text-3xl">
-              {t("loopHost", { count: filteredUsersHost.length })}
-            </h2>
-            <HostTable
-              authUser={authUser}
-              filteredUsersHost={filteredUsersHost}
-              chain={chain}
-              refresh={refresh}
-            />
-            {isUserAdmin ? (
+          <section className="lg:w-2/3 relative py-8 sm:p-8 lg:pt-0 bg-secondary-light">
+            <div className="px-2 lg:px-0">
+              <h2 className="font-semibold text-secondary mb-6 text-3xl">
+                {t("loopHost", { count: filteredUsersHost.length })}
+              </h2>
+              <HostTable
+                authUser={authUser}
+                filteredUsersHost={filteredUsersHost}
+                chain={chain}
+                refresh={refresh}
+              />
+            </div>
+            {isUserAdmin || authUser?.is_root_admin ? (
               <div className="flex flex-col md:flex-row bg-teal-light py-3 px-4 mt-4">
                 <div className="flex flex-col w-full md:w-1/3 pr-6">
                   <div className="form-control w-full">
@@ -352,7 +354,7 @@ export default function ChainMemberList() {
                     </button>
                   </form>
                   <Link
-                    className="btn btn-sm btn-primary mt-2 w-[120px]"
+                    className="btn btn-sm btn-primary mt-4 w-[120px]"
                     to={`/loops/${chainUID}/edit`}
                   >
                     {t("editLoop")}
