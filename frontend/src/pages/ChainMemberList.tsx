@@ -222,6 +222,10 @@ export default function ChainMemberList() {
   }
 
   let shareLink = `${VITE_BASE_URL}/loops/${chainUID}/users/signup`;
+
+  let userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
+  let isUserAdmin = userChain?.is_chain_admin || false;
+
   return (
     <>
       <Helmet>
@@ -267,98 +271,101 @@ export default function ChainMemberList() {
                   {t("peopleWithCount", { count: users.length })}
                 </dd>
               </dl>
-
-              <div className="flex flex-col">
-                <div className="form-control w-full">
-                  <label className="cursor-pointer label px-0">
-                    <span className="label-text">
-                      {published ? t("published") : t("draft")}
-                    </span>
-                    <input
-                      type="checkbox"
-                      className={`toggle toggle-secondary ${
-                        error === "published" ? "border-error" : ""
-                      }`}
-                      name="published"
-                      checked={published}
-                      onChange={handleChangePublished}
-                    />
-                  </label>
-                </div>
-                <div className="form-control w-full">
-                  <label className="cursor-pointer label px-0 -mb-2">
-                    <span className="label-text">
-                      {openToNewMembers ? t("openToNewMembers") : t("closed")}
-                    </span>
-                    <input
-                      type="checkbox"
-                      className={`toggle toggle-secondary ${
-                        error === "openToNewMembers" ? "border-error" : ""
-                      }`}
-                      name="openToNewMembers"
-                      checked={openToNewMembers}
-                      onChange={handleChangeOpenToNewMembers}
-                    />
-                  </label>
-                </div>
-              </div>
             </div>
           </section>
 
-          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 lg:pt-0 bg-secondary-light">
-            <h2 className="font-semibold text-secondary mb-6 text-3xl">
-              {t("loopHost", { count: filteredUsersHost.length })}
-            </h2>
-            <HostTable
-              authUser={authUser}
-              filteredUsersHost={filteredUsersHost}
-              chain={chain}
-              refresh={refresh}
-            />
-            <div className="flex flex-col justify-end items-end">
-              <form
-                className="mb-4 w-full lg:w-1/2 flex flex-col sm:flex-row items-stretch md:pl-6"
-                onSubmit={onAddCoHost}
-              >
-                <div className="flex-grow">
-                  <select
-                    className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
-                    name="participant"
-                    ref={refSelect}
-                    disabled={filteredUsersNotHost.length === 0}
-                  >
-                    <option disabled selected value="">
-                      {t("selectParticipant")}
-                    </option>
-                    {filteredUsersNotHost?.map((u) => (
-                      <option key={u.uid} value={u.uid}>
-                        {u.name} {u.email}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <button
-                  className={`btn btn-sm rounded-none ${
-                    filteredUsersNotHost.length === 0
-                      ? "btn-disabled"
-                      : "btn-primary"
-                  }`}
-                  type="submit"
-                >
-                  {t("addCoHost")}
-                </button>
-              </form>
-              <Link
-                className="btn btn-sm btn-primary"
-                to={`/loops/${chainUID}/edit`}
-              >
-                {t("editLoop")}
-                <span
-                  className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
-                  aria-hidden
-                />
-              </Link>
+          <section className="lg:w-2/3 relative py-8 sm:p-8 lg:pt-0 bg-secondary-light">
+            <div className="px-2 lg:px-0">
+              <h2 className="font-semibold text-secondary mb-6 text-3xl">
+                {t("loopHost", { count: filteredUsersHost.length })}
+              </h2>
+              <HostTable
+                authUser={authUser}
+                filteredUsersHost={filteredUsersHost}
+                chain={chain}
+                refresh={refresh}
+              />
             </div>
+            {isUserAdmin || authUser?.is_root_admin ? (
+              <div className="flex flex-col md:flex-row bg-teal-light py-3 px-4 mt-4">
+                <div className="flex flex-col w-full md:w-1/3 pr-6">
+                  <div className="form-control w-full">
+                    <label className="cursor-pointer label">
+                      <span className="label-text">
+                        {published ? t("published") : t("draft")}
+                      </span>
+                      <input
+                        type="checkbox"
+                        className={`toggle toggle-secondary ${
+                          error === "published" ? "border-error" : ""
+                        }`}
+                        name="published"
+                        checked={published}
+                        onChange={handleChangePublished}
+                      />
+                    </label>
+                  </div>
+                  <div className="form-control w-full">
+                    <label className="cursor-pointer label">
+                      <span className="label-text">
+                        {openToNewMembers ? t("openToNewMembers") : t("closed")}
+                      </span>
+                      <input
+                        type="checkbox"
+                        className={`toggle toggle-secondary ${
+                          error === "openToNewMembers" ? "border-error" : ""
+                        }`}
+                        name="openToNewMembers"
+                        checked={openToNewMembers}
+                        onChange={handleChangeOpenToNewMembers}
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col w-full md:w-2/3 items-end ml-auto pt-1">
+                  <form className="w-full flex flex-row" onSubmit={onAddCoHost}>
+                    <div className="w-full ml-auto">
+                      <select
+                        className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+                        name="participant"
+                        ref={refSelect}
+                        disabled={filteredUsersNotHost.length === 0}
+                      >
+                        <option disabled selected value="">
+                          {t("selectParticipant")}
+                        </option>
+                        {filteredUsersNotHost?.map((u) => (
+                          <option key={u.uid} value={u.uid}>
+                            {u.name} {u.email}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <button
+                      className={`btn btn-sm rounded-none w-[120px] ${
+                        filteredUsersNotHost.length === 0
+                          ? "btn-disabled"
+                          : "btn-primary"
+                      }`}
+                      type="submit"
+                    >
+                      {t("addCoHost")}
+                    </button>
+                  </form>
+                  <Link
+                    className="btn btn-sm btn-primary mt-4 w-[120px]"
+                    to={`/loops/${chainUID}/edit`}
+                  >
+                    {t("editLoop")}
+                    <span
+                      className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
+                      aria-hidden
+                    />
+                  </Link>
+                </div>
+              </div>
+            ) : null}
           </section>
         </div>
 
