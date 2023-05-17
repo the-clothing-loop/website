@@ -57,7 +57,11 @@ export default function Settings() {
       return;
     }
 
-    Promise.all(authUser.chains.map((uc) => chainGet(uc.chain_uid)))
+    Promise.all(
+      authUser.chains
+        .filter((uc) => uc.is_approved)
+        .map((uc) => chainGet(uc.chain_uid))
+    )
       .then((chains) => {
         setListOfChains(chains.map((c) => c.data));
       })
