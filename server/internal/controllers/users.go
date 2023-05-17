@@ -170,9 +170,11 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 			_, isChainAdmin := user.IsPartOfChain(chain.UID)
 
 			isDirectlyBeforeOrAfter := authUserRouteOrder-1 <= routeOrder && routeOrder >= 1+authUserRouteOrder
-			if !isDirectlyBeforeOrAfter && authUser.UID != user.UID && !isChainAdmin {
-				(*users)[i].Email = zero.StringFrom("***")
-				(*users)[i].PhoneNumber = "***"
+			if !isDirectlyBeforeOrAfter && authUser.UID != user.UID {
+				if !isChainAdmin {
+					(*users)[i].Email = zero.StringFrom("***")
+					(*users)[i].PhoneNumber = "***"
+				}
 				(*users)[i].Address = "***"
 			}
 		}
