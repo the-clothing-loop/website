@@ -32,8 +32,6 @@ export default function AdminDashboard() {
     });
   }
 
-  if (!authUser) return null;
-
   useEscape(() => {
     let el = document.getElementById(
       "modal-circle-loop"
@@ -48,6 +46,7 @@ export default function AdminDashboard() {
     [authUser]
   );
 
+  if (!authUser) return null;
   return (
     <>
       <Helmet>
