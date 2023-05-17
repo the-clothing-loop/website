@@ -94,7 +94,7 @@ export default function AddressForm(props: {
 
   async function getPlaceName(address: string): Promise<string> {
     const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}&types=address`
     );
     const data = await response.json();
     return data.features[0]?.place_name || "";
@@ -104,9 +104,7 @@ export default function AddressForm(props: {
     e.preventDefault();
 
     (async () => {
-      if (
-        !(address.street && address.city && address.province && address.country)
-      ) {
+      if (!(address.street && address.city && address.country)) {
         addToastError(t("required") + ": " + t("address"), 400);
         return;
       }
@@ -124,9 +122,7 @@ export default function AddressForm(props: {
 
       values.address = await getPlaceName(formattedAddress);
 
-      if (
-        !(address.street && address.city && address.province && address.country)
-      ) {
+      if (!(address.street && address.city && address.country)) {
         console.error("getPlaceName", values.address);
         addToastError(t("required") + ": " + t("address"), 500);
         return;
@@ -204,10 +200,9 @@ export default function AddressForm(props: {
           />
           <TextForm
             type="text"
-            label={t("province") + "*"}
+            label={t("province")}
             name="province"
             autoComplete="address-level1"
-            required
             min={2}
             value={address.province}
             onChange={(e) => setAddress("province", e.target.value)}
@@ -240,6 +235,8 @@ export default function AddressForm(props: {
               <div onClick={checkNewsletter}>
                 <FormActions
                   isNewsletterRequired={props.isNewsletterRequired || false}
+                  newsletter={values.newsletter}
+                  setNewsletter={(b) => setValue("newsletter", b)}
                 />
               </div>
             </div>
