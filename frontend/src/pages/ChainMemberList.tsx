@@ -575,7 +575,7 @@ function HostTable(props: {
           {props.filteredUsersHost
             ?.sort((a, b) => a.name.localeCompare(b.name))
             .map((u) => (
-              <tr key={u.uid} className="[&_td]:hover:bg-base-200/[0.6]">
+              <tr key={u.uid} className="[&>td]:hover:bg-base-200/[0.6]">
                 <td className="md:hidden !px-0">
                   <DropdownMenu
                     direction="dropdown-right"
@@ -730,8 +730,8 @@ function ApproveTable(props: {
                       key={u.uid}
                       className={
                         tooOld
-                          ? "[&>td]:bg-red/[.5] [&_td]:hover:bg-red/[.3]"
-                          : "[&>td]:bg-yellow/[.6] [&_td]:hover:bg-yellow/[.4]"
+                          ? "[&>td]:bg-red/[.5] [&>td]:hover:bg-red/[.3]"
+                          : "[&>td]:bg-yellow/[.6] [&>td]:hover:bg-yellow/[.4]"
                       }
                     >
                       <td className="lg:hidden !px-0">
@@ -913,7 +913,7 @@ function ParticipantsTable(props: {
                     key={u.uid}
                     data-uid={u.uid}
                     tabIndex={-1}
-                    className="[&_td]:hover:bg-base-200/[0.6] [&_td]:focus:bg-primary/[0.3] group"
+                    className="[&>td]:hover:bg-base-200/[0.6] [&>td]:focus:bg-primary/[0.3] group"
                   >
                     <td className="!px-0">
                       <DropdownMenu
@@ -1036,7 +1036,14 @@ function RouteTable(props: {
                   }
                 }
 
-                let userBags = props.bags.filter((b) => b.user_uid === u.uid);
+                let userBags = props.bags
+                  .filter((b) => b.user_uid === u.uid)
+                  .sort((a, b) => {
+                    let aDate = new Date(a.updated_at);
+                    let bDate = new Date(b.updated_at);
+
+                    return aDate > bDate ? -1 : 1;
+                  });
 
                 return (
                   <tr
@@ -1046,7 +1053,7 @@ function RouteTable(props: {
                     onDragEnd={draggingEnd}
                     onDragOver={() => setDragTarget(u.uid)}
                     draggable
-                    className="[&_td]:hover:bg-base-200/[0.6] group"
+                    className="[&>td]:hover:bg-base-200/[0.6] group"
                   >
                     <td className={`${classTdDragging} text-center`}>
                       <span className="hidden lg:inline-block py-1 px-2 bg-base-200 rounded-lg font-semibold">
@@ -1188,23 +1195,23 @@ function BagsColumn(props: { bags: Bag[] }) {
       case 3:
       case 4:
         bagLocation = [
-          "translate-x-1 translate-y-1",
-          "-translate-x-1 translate-y-1",
-          "-translate-y-1",
+          "brightness-90 translate-x-1 translate-y-1",
+          "brightness-110 -translate-x-1 translate-y-1",
+          "brightness-75 -translate-y-1",
         ];
         break;
       case 5:
         bagLocation = [
-          "translate-x-1 translate-y-1",
-          "-translate-x-1 translate-y-1",
-          "-translate-x-1 -translate-y-1",
+          "brightness-90 translate-x-1 translate-y-1",
+          "brightness-110 -translate-x-1 translate-y-1",
+          "brightness-75 -translate-x-1 -translate-y-1",
           "translate-x-1 -translate-y-1",
         ];
     }
     bagsJSX = props.bags.slice(1).map((bag, i) => (
       <div
         key={i + 1}
-        className={`absolute w-8 h-8 rounded-full ${bagLocation[i]}`}
+        className={`absolute w-8 h-8 rounded-full transition-transform group-hover/bag:translate-x-0 group-hover/bag:translate-y-0 ${bagLocation[i]}`}
         style={{
           backgroundColor: bag.color,
         }}
@@ -1216,11 +1223,10 @@ function BagsColumn(props: { bags: Bag[] }) {
     bagsJSX.push(
       <div
         key={0}
-        className="relative w-8 h-8 flex items-center justify-center feather feather-shopping-bag scale-[0.9] text-xl text-white rounded-full cursor-pointer"
+        className="relative w-8 h-8 flex items-center justify-center feather feather-shopping-bag scale-[0.9] text-xl text-white rounded-full cursor-pointer transition-transform group-active/bag:scale-[0.7]"
         style={{
           backgroundColor: firstBag.color,
         }}
-        tabIndex={0}
       ></div>
     );
   }
@@ -1230,8 +1236,31 @@ function BagsColumn(props: { bags: Bag[] }) {
     <span className="h-1/2 w-0 mx-auto border-x-4 border-grey-light group-last-of-type:invisible"></span>
   </div> */
   return (
-    <div aria-label="bag" className="h-full">
-      {bagsJSX}
+    <div className="dropdown ltr:dropdown-right rtl:dropdown-left">
+      <div aria-label="bag" className="h-full group/bag" tabIndex={0}>
+        {bagsJSX}
+      </div>
+      <table className="dropdown-content bg-white p-3 border-grey-light border shadow-lg space-y-3 table-fixed">
+        <tbody>
+          {props.bags.map((bag) => {
+            let d = dayjs(bag.updated_at);
+            return (
+              <tr key={bag.number} className="">
+                <td>
+                  <span
+                    className="block rounded-full h-4 w-4"
+                    style={{
+                      backgroundColor: bag.color,
+                    }}
+                  ></span>
+                </td>
+                <td className="font-bold">{bag.number}</td>
+                <td className="ltr:text-right">{d.format("LL")}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
