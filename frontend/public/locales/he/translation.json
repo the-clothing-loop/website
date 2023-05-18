@@ -267,5 +267,10 @@
   "setLocationAndRadius": "הקליקו על המפה לבחירת המיקום הכללי שלכם והשתמשו בסמן כדי להגדיר את המרחק המקסימלי לסינון.",
   "eventLink": "קישור לאירוע",
   "shareLink": "שתפו קישור",
-  "organizedBy": "מאורגן על-ידי"
+  "organizedBy": "מאורגן על-ידי",
+  "streetAddress": "Street address",
+  "postal": "Postal or zip (optional)",
+  "city": "City",
+  "province": "Province or state",
+  "country": "Country or region"
 }
