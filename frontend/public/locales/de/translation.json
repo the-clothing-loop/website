@@ -268,9 +268,9 @@
   "eventLink": "Event Link",
   "shareLink": "Share Link",
   "organizedBy": "Organized by",
-  "streetAddress": "Adresse",
-  "postal": "Postleitzahl (optional)",
-  "city": "Stadt",
-  "province": "Provinz oder staat",
-  "country": "Land oder Region"
+  "streetAddress": "Street address",
+  "postal": "Postal or zip (optional)",
+  "city": "City",
+  "province": "Province or state",
+  "country": "Country or region"
 }
