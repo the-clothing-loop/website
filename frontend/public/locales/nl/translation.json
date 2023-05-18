@@ -268,9 +268,9 @@
   "eventLink": "Evenement link",
   "shareLink": "Koppeling delen",
   "organizedBy": "Georganiseerd door",
-  "streetAddress": "Adres",
-  "postal": "Post of postcode (optioneel)",
-  "city": "Stad",
-  "province": "Provincie of staat",
-  "country": "Land of regio"
+  "streetAddress": "Street address",
+  "postal": "Postal or zip (optional)",
+  "city": "City",
+  "province": "Province or state",
+  "country": "Country or region"
 }
