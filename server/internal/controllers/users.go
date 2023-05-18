@@ -307,7 +307,11 @@ func UserPurge(c *gin.Context) {
 	}
 	if user.UID != query.UserUID {
 		if user.IsRootAdmin {
-			db.Raw(`SELECT * FROM users WHERE uid = ?`, query.UserUID).Scan(user)
+			err := db.Raw(`SELECT * FROM users WHERE uid = ? LIMIT 1`, query.UserUID).Scan(user).Error
+			if err != nil {
+				c.String(http.StatusNotFound, "User not found")
+				return
+			}
 		} else {
 			c.String(http.StatusUnauthorized, "Only you can delete your account")
 			return
