@@ -13,6 +13,14 @@ export interface User {
   pause_until: string | null;
 }
 
+export interface Bag {
+  number: number;
+  color: string;
+  chain_uid: UID;
+  user_uid: UID;
+  updated_at: string;
+}
+
 export interface UserChain {
   user_uid: UID;
   chain_uid: UID;

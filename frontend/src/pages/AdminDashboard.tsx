@@ -53,7 +53,7 @@ export default function AdminDashboard() {
         <title>The Clothing Loop | Account</title>
         <meta name="description" content="Account" />z
       </Helmet>
-      <main className="">
+      <main>
         <section className="bg-teal-light mb-6">
           <div className="relative container mx-auto px-5 md:px-20">
             <div className="z-10 flex flex-col items-between py-8">

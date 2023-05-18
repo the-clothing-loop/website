@@ -267,5 +267,10 @@
   "setLocationAndRadius": "Klik op de kaart om je algemene locatie in te stellen en gebruik de schuifregelaar om de maximale afstand in te stellen.",
   "eventLink": "Evenement link",
   "shareLink": "Koppeling delen",
-  "organizedBy": "Georganiseerd door"
+  "organizedBy": "Georganiseerd door",
+  "streetAddress": "Adres",
+  "postal": "Post of postcode (optioneel)",
+  "city": "Stad",
+  "province": "Provincie of staat",
+  "country": "Land of regio"
 }
