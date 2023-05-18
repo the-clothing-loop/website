@@ -1,14 +1,9 @@
-import { useState, useEffect, useMemo, FormEvent, useContext } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import { UID, User } from "../api/types";
-import {
-  userGetByUID,
-  userHasNewsletter,
-  userUpdate,
-  UserUpdateBody,
-} from "../api/user";
+import { userGetByUID, userUpdate, UserUpdateBody } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { AuthContext } from "../providers/AuthProvider";
@@ -27,9 +22,6 @@ export default function UserEdit() {
   const history = useHistory();
   const { addToastError } = useContext(ToastContext);
   const { chainUID } = useLocation<State>().state || {};
-
-  const [hasNewsletter, setHasNewsletter] = useState<boolean>();
-
   const [user, setUser] = useState<User>();
   const { authUser } = useContext(AuthContext);
   const params = useParams<Params>();
@@ -67,7 +59,6 @@ export default function UserEdit() {
           history.goBack();
         }, 1200);
       } catch (err: any) {
-        console.error(`Error updating user: ${JSON.stringify(values)}`);
         addToastError(GinParseErrors(t, err), err?.status);
       }
     })();
@@ -76,11 +67,8 @@ export default function UserEdit() {
   useEffect(() => {
     (async () => {
       try {
-        const user = (await userGetByUID(chainUID, userUID)).data;
-        const _hasNewsletter = (await userHasNewsletter(chainUID, userUID))
-          .data;
-        setUser(user);
-        setHasNewsletter(_hasNewsletter);
+        const _user = (await userGetByUID(chainUID, userUID)).data;
+        setUser(_user);
       } catch (error) {
         console.warn(error);
       }
@@ -103,26 +91,15 @@ export default function UserEdit() {
                 : t("editParticipantContacts")
               : t("editAccount")}
           </h1>
-          <AddressForm onSubmit={onSubmit} classes="mb-6" />
 
-          <div className="form-control mb-4">
-            <label className="label cursor-pointer">
-              <span className="label-text">{t("newsletterSubscription")}</span>
-              <input
-                form="address-form"
-                type="checkbox"
-                checked={hasNewsletter}
-                onChange={() => setHasNewsletter(!hasNewsletter)}
-                required={
-                  (user && user.is_root_admin) || userIsAnyChainAdmin
-                    ? true
-                    : false
-                }
-                className="checkbox"
-                name="newsletter"
-              />
-            </label>
-          </div>
+          <AddressForm
+            onSubmit={onSubmit}
+            userUID={userUID}
+            chainUID={chainUID}
+            classes="mb-6"
+            showNewsletter
+          />
+
           <div className="flex">
             <button
               type="button"
@@ -134,7 +111,7 @@ export default function UserEdit() {
 
             <button
               type="submit"
-              className="btn btn-primary ml-3"
+              className="btn btn-primary ml-4"
               form="address-form"
             >
               {t("submit")}

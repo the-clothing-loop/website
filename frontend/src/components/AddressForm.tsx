@@ -1,12 +1,9 @@
-import { useState, useEffect, FormEvent, useContext, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { useParams, useLocation } from "react-router-dom";
+import { useEffect, FormEvent, useContext, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
 
 import SizesDropdown from "./SizesDropdown";
 import { TextForm } from "./FormFields";
 import categories from "../util/categories";
-import { UID } from "../api/types";
-import FormActions from "../components/formActions";
 
 import { PhoneFormField } from "./FormFields";
 import useForm from "../util/form.hooks";
@@ -15,11 +12,6 @@ import PopoverOnHover from "./Popover";
 import { userGetByUID, userHasNewsletter } from "../api/user";
 
 import { AuthContext } from "../providers/AuthProvider";
-
-interface State {
-  chainUID?: UID;
-  userUID: UID;
-}
 
 export interface ValuesForm {
   name: string;
@@ -33,12 +25,16 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
 export default function AddressForm(props: {
   onSubmit: (values: ValuesForm) => void;
+  userUID: string | undefined;
+  chainUID?: string;
   classes?: string;
   isNewsletterRequired?: boolean;
+  showTosPrivacyPolicy?: boolean;
+  showNewsletter?: boolean;
+  onlyShowEditableAddress?: boolean;
 }) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
-  const { chainUID } = useLocation<State>().state || {};
   const { authUser } = useContext(AuthContext);
   const [values, setValue, setValues] = useForm<ValuesForm>({
     name: "",
@@ -55,42 +51,34 @@ export default function AddressForm(props: {
     province: "",
     country: "",
   });
-  const params = useParams<State>();
-
-  const userUID: string =
-    params.userUID == "me" ? authUser!.uid : params.userUID;
+  const [openAddress, setOpenAddress] = useState(
+    () => !!props.onlyShowEditableAddress
+  );
 
   // If the user is logged in, we want to set values to their information
-  if (authUser) {
-    useEffect(() => {
+  useEffect(() => {
+    if (authUser && props.userUID) {
       (async () => {
         try {
-          const user = (await userGetByUID(chainUID, userUID)).data;
-          const hasNewsletter = (await userHasNewsletter(chainUID, userUID))
-            .data;
+          const [userReq, hasNewsletterReq] = await Promise.all([
+            userGetByUID(props.chainUID, props!.userUID!),
+            userHasNewsletter(props.chainUID, props.userUID!),
+          ]);
+          const user = userReq.data;
           setValues({
             name: user.name,
             phone: user.phone_number,
             email: user.email,
             sizes: user.sizes,
             address: user.address,
-            newsletter: hasNewsletter,
+            newsletter: hasNewsletterReq.data,
           });
         } catch (error) {
           console.warn(error);
         }
       })();
-    }, [history]);
-  }
-
-  function checkNewsletter() {
-    let newsletter = document.getElementsByName(
-      "newsletter"
-    )[0] as HTMLInputElement;
-    if (newsletter) {
-      setValue("newsletter", newsletter.checked);
     }
-  }
+  }, [history]);
 
   async function getPlaceName(address: string): Promise<string> {
     const response = await fetch(
@@ -104,145 +92,208 @@ export default function AddressForm(props: {
     e.preventDefault();
 
     (async () => {
-      if (!(address.street && address.city && address.country)) {
-        addToastError(t("required") + ": " + t("address"), 400);
-        return;
-      }
+      if (openAddress) {
+        if (!(address.street && address.city && address.country)) {
+          addToastError(t("required") + ": " + t("address"), 400);
+          return;
+        }
 
-      const formattedAddress =
-        address.street.replaceAll(" ", "%20") +
-        "%20" +
-        address.postal.replaceAll(" ", "%20") +
-        "%20" +
-        address.city.replaceAll(" ", "%20") +
-        "%20" +
-        address.province.replaceAll(" ", "%20") +
-        "%20" +
-        address.country.replaceAll(" ", "%20");
+        const formattedAddress =
+          address.street.replaceAll(" ", "%20") +
+          "%20" +
+          address.postal.replaceAll(" ", "%20") +
+          "%20" +
+          address.city.replaceAll(" ", "%20") +
+          "%20" +
+          address.province.replaceAll(" ", "%20") +
+          "%20" +
+          address.country.replaceAll(" ", "%20");
 
-      values.address = await getPlaceName(formattedAddress);
+        values.address = await getPlaceName(formattedAddress);
 
-      if (!(address.street && address.city && address.country)) {
-        console.error("getPlaceName", values.address);
-        addToastError(t("required") + ": " + t("address"), 500);
-        return;
+        if (!(address.street && address.city && address.country)) {
+          console.error("getPlaceName", values.address);
+          addToastError(t("required") + ": " + t("address"), 500);
+          return;
+        }
       }
       props.onSubmit(values);
     })();
   }
 
   return (
-    <>
-      <div className={props.classes}>
-        <form
-          onSubmit={onSubmit}
-          className="relative space-y-4"
-          id="address-form"
-        >
+    <div className={props.classes}>
+      <form
+        onSubmit={onSubmit}
+        className="relative space-y-4"
+        id="address-form"
+      >
+        <TextForm
+          type="text"
+          autoComplete="name"
+          label={t("name") + "*"}
+          name="name"
+          required
+          min={2}
+          value={values.name}
+          onChange={(e) => setValue("name", e.target.value)}
+        />
+
+        <PhoneFormField
+          required
+          value={values.phone}
+          onChange={(e) => setValue("phone", e.target.value)}
+        />
+        {!authUser ? (
           <TextForm
-            type="text"
-            autoComplete="name"
-            label={t("name") + "*"}
-            name="name"
+            label={t("email") + "*"}
+            name="email"
+            type="email"
             required
             min={2}
-            value={values.name}
-            onChange={(e) => setValue("name", e.target.value)}
+            value={values.email}
+            onChange={(e) => setValue("email", e.target.value)}
           />
+        ) : null}
+        <div>{t("address")}</div>
+        {props.onlyShowEditableAddress ? null : (
+          <div className="">
+            <address>{values.address}</address>
+            <label className="btn btn-ghost">
+              <span className="">{t("edit")}</span>
 
-          <PhoneFormField
-            required
-            value={values.phone}
-            onChange={(e) => setValue("phone", e.target.value)}
-          />
-          <div>{t("address")}</div>
-          {!authUser ? (
+              <input
+                type="checkbox"
+                className="checkbox checkbox-sm checkbox-secondary ltr:ml-3 rtl:mr-3"
+                checked={openAddress}
+                onChange={(e) => setOpenAddress(e.target.checked)}
+              />
+            </label>
+          </div>
+        )}
+
+        {openAddress ? (
+          <div
+            className={props.onlyShowEditableAddress ? "" : "bg-white p-5 pt-2"}
+          >
             <TextForm
-              label={t("email") + "*"}
-              name="email"
-              type="email"
+              type="text"
+              label={t("streetAddress") + "*"}
+              name="street-address"
+              autoComplete="street-address"
               required
               min={2}
-              value={values.email}
-              onChange={(e) => setValue("email", e.target.value)}
+              value={address.street}
+              onChange={(e) => setAddress("street", e.target.value)}
             />
-          ) : null}
 
-          <TextForm
-            type="text"
-            label={t("streetAddress") + "*"}
-            name="street-address"
-            autoComplete="street-address"
-            required
-            min={2}
-            value={address.street}
-            onChange={(e) => setAddress("street", e.target.value)}
-          />
+            <TextForm
+              type="text"
+              label={t("postal")}
+              name="postal-code"
+              autoComplete="postal-code"
+              min={2}
+              value={address.postal}
+              onChange={(e) => setAddress("postal", e.target.value)}
+            />
+            <TextForm
+              type="text"
+              label={t("city") + "*"}
+              name="city"
+              autoComplete="address-level2"
+              required
+              min={2}
+              value={address.city}
+              onChange={(e) => setAddress("city", e.target.value)}
+            />
+            <TextForm
+              type="text"
+              label={t("province")}
+              name="province"
+              autoComplete="address-level1"
+              min={2}
+              value={address.province}
+              onChange={(e) => setAddress("province", e.target.value)}
+            />
 
-          <TextForm
-            type="text"
-            label={t("postal")}
-            name="postal-code"
-            autoComplete="postal-code"
-            min={2}
-            value={address.postal}
-            onChange={(e) => setAddress("postal", e.target.value)}
-          />
-          <TextForm
-            type="text"
-            label={t("city") + "*"}
-            name="city"
-            autoComplete="address-level2"
-            required
-            min={2}
-            value={address.city}
-            onChange={(e) => setAddress("city", e.target.value)}
-          />
-          <TextForm
-            type="text"
-            label={t("province")}
-            name="province"
-            autoComplete="address-level1"
-            min={2}
-            value={address.province}
-            onChange={(e) => setAddress("province", e.target.value)}
-          />
-
-          <TextForm
-            type="text"
-            label={t("country") + "*"}
-            name="country-name"
-            autoComplete="country-name"
-            required
-            min={2}
-            value={address.country}
-            onChange={(e) => setAddress("country", e.target.value)}
-          />
-          <div className="mb-4 pt-3">
-            <SizesDropdown
-              filteredGenders={Object.keys(categories)}
-              selectedSizes={values.sizes || []}
-              className="w-full"
-              handleChange={(v) => setValue("sizes", v)}
+            <TextForm
+              type="text"
+              label={t("country") + "*"}
+              name="country-name"
+              autoComplete="country-name"
+              required
+              min={2}
+              value={address.country}
+              onChange={(e) => setAddress("country", e.target.value)}
             />
           </div>
-          {!authUser ? (
-            <div>
-              <PopoverOnHover
-                className="tooltip-right"
-                message={t("weWouldLikeToKnowThisEquallyRepresented")}
+        ) : null}
+        <div className="mb-4">
+          <PopoverOnHover
+            className="tooltip-left float-right"
+            message={t("weWouldLikeToKnowThisEquallyRepresented")}
+          />
+          <SizesDropdown
+            filteredGenders={Object.keys(categories)}
+            selectedSizes={values.sizes || []}
+            className="w-full"
+            handleChange={(v) => setValue("sizes", v)}
+          />
+        </div>
+        {props.showNewsletter ? (
+          <div className="form-control">
+            <label className="label cursor-pointer">
+              <span className="label-text">
+                {authUser
+                  ? t("newsletterSubscription")
+                  : t("subscribeToTheClothingLoopNewsletter")}
+                {props.isNewsletterRequired ? "*" : ""}
+              </span>
+              <input
+                type="checkbox"
+                required={props.isNewsletterRequired}
+                className="checkbox border-black"
+                checked={values.newsletter}
+                onChange={(e) => setValue("newsletter", e.target.checked)}
+                name="newsletter"
               />
-              <div onClick={checkNewsletter}>
-                <FormActions
-                  isNewsletterRequired={props.isNewsletterRequired || false}
-                  newsletter={values.newsletter}
-                  setNewsletter={(b) => setValue("newsletter", b)}
-                />
-              </div>
-            </div>
-          ) : null}
-        </form>
-      </div>
-    </>
+            </label>
+          </div>
+        ) : null}
+        {props.showTosPrivacyPolicy ? (
+          <div className="form-control">
+            <label className="label cursor-pointer">
+              <span className="label-text">
+                <Trans
+                  i18nKey="iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star"
+                  components={{
+                    "1": (
+                      <a
+                        href="/terms-of-use"
+                        target="_blank"
+                        className="link"
+                      ></a>
+                    ),
+                    "2": (
+                      <a
+                        href="/privacy-policy"
+                        target="_blank"
+                        className="link"
+                      ></a>
+                    ),
+                  }}
+                ></Trans>
+              </span>
+              <input
+                type="checkbox"
+                required
+                className="checkbox border-black"
+                name="privacyPolicy"
+              />
+            </label>
+          </div>
+        ) : null}
+      </form>
+    </div>
   );
 }

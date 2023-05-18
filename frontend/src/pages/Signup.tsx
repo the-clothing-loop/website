@@ -138,7 +138,11 @@ export default function Signup() {
 
               {authUser ? (
                 <div>
-                  <AddressForm onSubmit={onSubmitCurrentUser} />
+                  <AddressForm
+                    onSubmit={onSubmitCurrentUser}
+                    userUID={authUser.uid}
+                    chainUID={chainUID}
+                  />
                   <div className="mb-4">
                     <button
                       type="button"
@@ -153,8 +157,11 @@ export default function Signup() {
               ) : (
                 <div>
                   <AddressForm
+                    userUID={undefined}
                     onSubmit={onSubmitNewUser}
                     isNewsletterRequired={false}
+                    showNewsletter
+                    showTosPrivacyPolicy
                     classes="mb-4"
                   />
                   <div className="mb-4">

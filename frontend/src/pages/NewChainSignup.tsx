@@ -1,4 +1,4 @@
-import { useContext, ChangeEvent, FormEvent } from "react";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -82,7 +82,14 @@ export default function Signup() {
               </div>
             </div>
             <div className="w-full md:w-1/2 md:pl-4">
-              <AddressForm onSubmit={onSubmit} isNewsletterRequired={true} />
+              <AddressForm
+                userUID={authUser?.uid || undefined}
+                onSubmit={onSubmit}
+                isNewsletterRequired={true}
+                showNewsletter
+                showTosPrivacyPolicy
+                onlyShowEditableAddress={!authUser}
+              />
               <div className="mt-4">
                 <button
                   type="submit"
