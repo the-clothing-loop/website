@@ -4,33 +4,18 @@ import { useTranslation } from "react-i18next";
 import { Redirect, useParams, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
-import GeocoderSelector from "../components/GeocoderSelector";
-import SizesDropdown from "../components/SizesDropdown";
-import PopoverOnHover from "../components/Popover";
 import { TwoColumnLayout } from "../components/Layouts";
-import { PhoneFormField, TextForm } from "../components/FormFields";
-import FormActions from "../components/formActions";
+import AddressForm, { ValuesForm } from "../components/AddressForm";
 import { Chain, User } from "../api/types";
 import { chainAddUser, chainGet } from "../api/chain";
 import { registerBasicUser } from "../api/login";
-import FormJup from "../util/form-jup";
 import { ToastContext } from "../providers/ToastProvider";
-import { GinParseErrors } from "../util/gin-errors";
-import useForm from "../util/form.hooks";
 import { AuthContext } from "../providers/AuthProvider";
+import { GinParseErrors } from "../util/gin-errors";
 import { TFunction } from "i18next";
 
 interface Params {
   chainUID: string;
-}
-
-interface RegisterUserForm {
-  name: string;
-  email: string;
-  phone: string;
-  sizes: string[];
-  privacyPolicy: boolean;
-  newsletter: boolean;
 }
 
 export default function Signup() {
@@ -42,10 +27,6 @@ export default function Signup() {
   const { chainUID } = useParams<Params>();
   const [chain, setChain] = useState<Chain | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [jsValues, setJsValue] = useForm({
-    address: "",
-    sizes: [] as string[],
-  });
 
   // Get chain id from the URL and save to state
   useEffect(() => {
@@ -61,8 +42,8 @@ export default function Signup() {
     })();
   }, [chainUID]);
 
-  function onSubmitCurrentUser(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  function onSubmitCurrentUser(values: ValuesForm) {
+    console.info("submit", { ...values });
     if (authUser && chainUID) {
       chainAddUser(chainUID, authUser.uid, false)
         .then(() => {
@@ -75,11 +56,12 @@ export default function Signup() {
   }
 
   // Gather data from form, validate and send to firebase
-  function onSubmitNewUser(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const values = FormJup<RegisterUserForm>(e);
+  function onSubmitNewUser(values: ValuesForm) {
+    let privacyPolicy = document.getElementsByName(
+      "privacyPolicy"
+    )[0] as HTMLInputElement;
 
-    if (values.privacyPolicy !== "on") {
+    if (!privacyPolicy.checked) {
       addToastError(t("required") + " " + t("privacyPolicy"), 400);
       return;
     }
@@ -91,9 +73,9 @@ export default function Signup() {
             name: values.name,
             email: values.email,
             phone_number: values.phone,
-            address: jsValues.address,
-            newsletter: values.newsletter === "on",
-            sizes: jsValues.sizes,
+            newsletter: values.newsletter,
+            address: values.address,
+            sizes: values.sizes,
           },
           chainUID
         );
@@ -155,13 +137,12 @@ export default function Signup() {
               </h1>
 
               {authUser ? (
-                <form onSubmit={onSubmitCurrentUser} className="max-w-xs">
-                  <dl>
-                    <dt className="font-bold mb-1">{t("name")}</dt>
-                    <dd className="mb-2">{authUser.name}</dd>
-                    <dt className="font-bold mb-1">{t("email")}</dt>
-                    <dd className="mb-2">{authUser.email}</dd>
-                  </dl>
+                <div>
+                  <AddressForm
+                    onSubmit={onSubmitCurrentUser}
+                    userUID={authUser.uid}
+                    chainUID={chainUID}
+                  />
                   <div className="mb-4">
                     <button
                       type="button"
@@ -172,46 +153,17 @@ export default function Signup() {
                     </button>
                     <SubmitButton t={t} chain={chain} user={authUser} />
                   </div>
-                </form>
+                </div>
               ) : (
-                <form onSubmit={onSubmitNewUser} className="max-w-xs">
-                  <TextForm
-                    label={t("name") + "*"}
-                    name="name"
-                    type="text"
-                    required
+                <div>
+                  <AddressForm
+                    userUID={undefined}
+                    onSubmit={onSubmitNewUser}
+                    isNewsletterRequired={false}
+                    showNewsletter
+                    showTosPrivacyPolicy
+                    classes="mb-4"
                   />
-                  <TextForm
-                    label={t("email") + "*"}
-                    name="email"
-                    type="email"
-                    required
-                  />
-
-                  <PhoneFormField required />
-
-                  <div className="mb-6">
-                    <div className="form-control w-full mb-4">
-                      <label className="label">
-                        <span className="label-text">{t("address") + "*"}</span>
-                      </label>
-                      <GeocoderSelector
-                        onResult={(e) => setJsValue("address", e.query)}
-                      />
-                    </div>
-                    <SizesDropdown
-                      className="md:dropdown-left md:[&_.dropdown-content]:-top-80"
-                      filteredGenders={chain?.genders || []}
-                      selectedSizes={jsValues.sizes}
-                      handleChange={(s) => setJsValue("sizes", s)}
-                    />
-                    <PopoverOnHover
-                      className="tooltip-right"
-                      message={t("weWouldLikeToKnowThisEquallyRepresented")}
-                    />
-                    <FormActions isNewsletterRequired={false} />
-                  </div>
-
                   <div className="mb-4">
                     <button
                       type="button"
@@ -222,7 +174,7 @@ export default function Signup() {
                     </button>
                     <SubmitButton t={t} chain={chain} />
                   </div>
-                </form>
+                </div>
               )}
               <div className="text-sm">
                 <p className="text">{t("troublesWithTheSignupContactUs")}</p>
@@ -281,7 +233,7 @@ function SubmitButton({
   }
 
   return (
-    <button type="submit" className="btn btn-primary">
+    <button type="submit" className="btn btn-primary" form="address-form">
       {t("join")}
       <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
       <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>

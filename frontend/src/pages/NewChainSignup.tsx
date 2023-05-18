@@ -1,37 +1,20 @@
-import { useState, useContext, ChangeEvent, FormEvent } from "react";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import ProgressBar from "../components/ProgressBar";
-import { PhoneFormField, TextForm } from "../components/FormFields";
-import GeocoderSelector from "../components/GeocoderSelector";
 import { AuthContext } from "../providers/AuthProvider";
-import FormActions from "../components/formActions";
 import { State as LoopsNewState } from "./NewChainLocation";
 import { RequestRegisterUser } from "../api/login";
-import FormJup from "../util/form-jup";
-import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
-
-interface FormHtmlValues {
-  name: string;
-  email: string;
-  phone: string;
-  newsletter: string;
-}
-interface FormJsValues {
-  address: string;
-}
+import AddressForm, { ValuesForm } from "../components/AddressForm";
 
 export default function Signup() {
   const { t } = useTranslation();
   const history = useHistory();
   const authUser = useContext(AuthContext).authUser;
   const { addToastError } = useContext(ToastContext);
-  const [jsValues, setJsValue, setJsValues] = useForm<FormJsValues>({
-    address: "",
-  });
 
   if (authUser) {
     history.replace({
@@ -40,13 +23,10 @@ export default function Signup() {
     });
   }
 
-  function onSubmit(e: FormEvent) {
-    e.preventDefault();
+  function onSubmit(values: ValuesForm) {
+    console.info("submit", { ...values });
 
-    const values = FormJup<FormHtmlValues>(e);
-    console.info("submit", { ...values, ...jsValues });
-
-    if (jsValues.address.length < 6) {
+    if (values.address.length < 6) {
       addToastError(t("required") + ": " + t("address"), 400);
       return;
     }
@@ -55,9 +35,9 @@ export default function Signup() {
       name: values.name,
       email: values.email,
       phone_number: values.phone,
-      address: jsValues.address,
-      newsletter: values.newsletter === "on",
-      sizes: [],
+      newsletter: values.newsletter,
+      address: values.address,
+      sizes: values.sizes,
     };
     console.log("submit", registerUser);
 
@@ -83,7 +63,6 @@ export default function Signup() {
           <h1 className="text-center font-medium text-secondary text-5xl mb-6">
             {t("startNewLoop")}
           </h1>
-
           <div className="text-center mb-6">
             <ProgressBar activeStep={0} />
           </div>
@@ -103,43 +82,25 @@ export default function Signup() {
               </div>
             </div>
             <div className="w-full md:w-1/2 md:pl-4">
-              <form onSubmit={onSubmit}>
-                <TextForm
-                  min={2}
-                  required
-                  label={t("name") + "*"}
-                  name="name"
-                  type="text"
-                />
-
-                <TextForm
-                  required
-                  min={2}
-                  label={t("email") + "*"}
-                  name="email"
-                  type="email"
-                />
-                <PhoneFormField required />
-
-                <label className="form-control w-full mb-4">
-                  <div className="label">
-                    <span className="label-text">{t("address") + "*"}</span>
-                  </div>
-                  <GeocoderSelector
-                    required
-                    onResult={(g) => setJsValue("address", g.query)}
-                  />
-                </label>
-                <FormActions isNewsletterRequired={true} />
-
-                <div className="mt-4">
-                  <button type="submit" className="btn btn-primary">
-                    {t("next")}
-                    <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
-                    <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
-                  </button>
-                </div>
-              </form>
+              <AddressForm
+                userUID={authUser?.uid || undefined}
+                onSubmit={onSubmit}
+                isNewsletterRequired={true}
+                showNewsletter
+                showTosPrivacyPolicy
+                onlyShowEditableAddress={!authUser}
+              />
+              <div className="mt-4">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  form="address-form"
+                >
+                  {t("next")}
+                  <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
+                  <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
+                </button>
+              </div>
             </div>
           </div>
           <div className="text-sm text-center mt-4 text-black/80">
