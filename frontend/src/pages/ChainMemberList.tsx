@@ -354,7 +354,7 @@ export default function ChainMemberList() {
                     </button>
                   </form>
                   <Link
-                    className="btn btn-sm btn-primary mt-4 w-[120px]"
+                    className="btn btn-sm btn-primary mt-4 w-full md:w-[120px]"
                     to={`/loops/${chainUID}/edit`}
                   >
                     {t("editLoop")}
