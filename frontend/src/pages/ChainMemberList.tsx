@@ -339,8 +339,9 @@ export default function ChainMemberList() {
                         name="participant"
                         ref={refSelect}
                         disabled={filteredUsersNotHost.length === 0}
+                        defaultValue=""
                       >
-                        <option disabled selected value="">
+                        <option disabled value="">
                           {t("selectParticipant")}
                         </option>
                         {filteredUsersNotHost?.map((u) => (
