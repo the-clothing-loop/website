@@ -268,9 +268,9 @@
   "eventLink": "Event Link",
   "shareLink": "Share Link",
   "organizedBy": "Organized by",
-  "streetAddress": "Gatuadress",
-  "postal": "Post eller zip (valfritt)",
-  "city": "Stad",
-  "province": "Provins eller stat",
-  "country": "Land eller region"
+  "streetAddress": "Street address",
+  "postal": "Postal or zip (optional)",
+  "city": "City",
+  "province": "Province or state",
+  "country": "Country or region"
 }
