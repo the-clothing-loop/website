@@ -1187,6 +1187,7 @@ function unapprovedTooOld(date: string): boolean {
 }
 
 function BagsColumn(props: { bags: Bag[] }) {
+  const { t } = useTranslation();
   let bagsJSX: JSX.Element[] = [];
   if (props.bags.length > 1) {
     let bagLocation: string[] = [];
@@ -1237,10 +1238,17 @@ function BagsColumn(props: { bags: Bag[] }) {
   </div> */
   return (
     <div className="dropdown ltr:dropdown-right rtl:dropdown-left">
-      <div aria-label="bag" className="h-full group/bag" tabIndex={0}>
+      <div aria-label={t("bag")} className="h-full group/bag" tabIndex={0}>
         {bagsJSX}
       </div>
       <table className="dropdown-content bg-white p-3 border-grey-light border shadow-lg space-y-3 table-fixed">
+        <thead>
+          <tr>
+            <th colSpan={3} className="text-center">
+              {t("bags")}
+            </th>
+          </tr>
+        </thead>
         <tbody>
           {props.bags.map((bag) => {
             let d = dayjs(bag.updated_at);
