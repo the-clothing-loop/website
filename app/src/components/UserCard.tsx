@@ -10,6 +10,7 @@ import {
 import { logoGoogle, pauseCircleSharp, shield } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { SizeI18nKeys, User } from "../api";
+import IsPrivate from "../utils/is_private";
 
 export default function UserCard({
   user,
@@ -21,6 +22,8 @@ export default function UserCard({
   isUserPaused: boolean;
 }) {
   const { t } = useTranslation();
+  const isAddressPrivate = IsPrivate(user.address);
+  const isEmailPrivate = IsPrivate(user.email);
   return (
     <div>
       <div className="ion-padding">
@@ -70,45 +73,53 @@ export default function UserCard({
             </div>
           </IonLabel>
         </IonItem>
-        <IonItem lines="none">
-          <IonLabel>
-            <h3>{t("email")}</h3>
-            {user?.email ? (
-              <a href={"mailto:" + user.email}>{user.email}</a>
-            ) : null}
-          </IonLabel>
-        </IonItem>
+        {isEmailPrivate ? null : (
+          <>
+            <IonItem lines="none">
+              <IonLabel>
+                <h3>{t("email")}</h3>
+                {user?.email ? (
+                  <a className="ion-text-wrap" href={"mailto:" + user.email}>
+                    {user.email}
+                  </a>
+                ) : null}
+              </IonLabel>
+            </IonItem>
 
-        <IonItem lines="none">
-          <IonLabel>
-            <h3>{t("phoneNumber")}</h3>
-            {user.phone_number ? (
-              <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
+            <IonItem lines="none">
+              <IonLabel>
+                <h3>{t("phoneNumber")}</h3>
+                {user.phone_number ? (
+                  <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
+                ) : null}
+              </IonLabel>
+            </IonItem>
+          </>
+        )}
+        {isAddressPrivate ? null : (
+          <IonItem lines="none">
+            <IonLabel>
+              <h3>{t("address")}</h3>
+              {/* https://www.google.com/maps/@${long},${lat},14z */}
+              <p className="ion-text-wrap">{user?.address}</p>
+            </IonLabel>
+            {user.address ? (
+              <IonButton
+                slot="end"
+                shape="round"
+                size="small"
+                rel="noreferrer"
+                target="_blank"
+                href={
+                  `https://www.google.com/maps/search/` +
+                  user.address.replaceAll(" ", "+")
+                }
+              >
+                <IonIcon icon={logoGoogle} />
+              </IonButton>
             ) : null}
-          </IonLabel>
-        </IonItem>
-        <IonItem lines="none">
-          <IonLabel>
-            <h3>{t("address")}</h3>
-            {/* https://www.google.com/maps/@${long},${lat},14z */}
-            <p>{user?.address}</p>
-          </IonLabel>
-          {user.address ? (
-            <IonButton
-              slot="end"
-              shape="round"
-              size="small"
-              rel="noreferrer"
-              target="_blank"
-              href={
-                `https://www.google.com/maps/search/` +
-                user.address.replaceAll(" ", "+")
-              }
-            >
-              <IonIcon icon={logoGoogle} />
-            </IonButton>
-          ) : null}
-        </IonItem>
+          </IonItem>
+        )}
       </IonList>
     </div>
   );
