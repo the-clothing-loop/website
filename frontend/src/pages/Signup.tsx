@@ -162,6 +162,7 @@ export default function Signup() {
                     isNewsletterRequired={false}
                     showNewsletter
                     showTosPrivacyPolicy
+                    onlyShowEditableAddress
                     classes="mb-4"
                   />
                   <div className="mb-4">
