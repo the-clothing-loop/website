@@ -263,7 +263,7 @@ func UserUpdate(c *gin.Context) {
 			userChanges["sizes"] = string(j)
 		}
 		if len(userChanges) > 0 {
-			if err := db.Debug().Model(user).Updates(userChanges).Error; err != nil {
+			if err := db.Model(user).Updates(userChanges).Error; err != nil {
 				goscope.Log.Errorf("Unable to update user: %v", err)
 				c.String(http.StatusInternalServerError, "Unable to update user")
 				return
