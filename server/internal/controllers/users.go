@@ -165,15 +165,50 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 			return
 		}
 
-		authUserRouteOrder := routeIndex(route, authUser.UID)
+		usersWithBulkyItems := []uint{}
+		db.Raw(`
+SELECT u.id
+FROM users AS u
+LEFT JOIN user_chains AS uc on uc.user_id = u.id
+LEFT JOIN bulky_items AS bi ON uc.id = bi.user_chain_id
+WHERE uc.chain_id = ? AND bi.id IS NOT NULL
+		`, chain.ID).Scan(&usersWithBulkyItems)
 
+		authUserRouteOrder := routeIndex(route, authUser.UID)
+		prevOrderIndex := authUserRouteOrder - 1
+		nextOrderIndex := authUserRouteOrder + 1
+		if prevOrderIndex < 0 {
+			prevOrderIndex = len(route) - 1
+		}
+		if nextOrderIndex >= len(route) {
+			nextOrderIndex = 0
+		}
+		// fmt.Printf("order len: %d\tprev: %d\tnext: %d\n", len(route), prevOrderIndex, nextOrderIndex)
+
+		// fmt.Printf("auth order: %v\n", authUserRouteOrder)
 		for i, user := range *users {
 			// find users above and below this user in the route order
 			routeOrder := routeIndex(route, user.UID)
 			_, isChainAdmin := user.IsPartOfChain(chain.UID)
 
-			isDirectlyBeforeOrAfter := authUserRouteOrder == 1-routeOrder || authUserRouteOrder == routeOrder || authUserRouteOrder == 1+routeOrder
-			if !isDirectlyBeforeOrAfter && authUser.UID != user.UID {
+			isPrivate := true
+			{
+				isDirectlyBeforeOrAfter := (prevOrderIndex == routeOrder) ||
+					(authUserRouteOrder == routeOrder) ||
+					(nextOrderIndex == routeOrder)
+				isSameUser := authUser.UID == user.UID
+				hasBulkyItem := false
+				for _, id := range usersWithBulkyItems {
+					if id == user.ID {
+						hasBulkyItem = true
+					}
+				}
+				// fmt.Printf("(%v) directly: %v\tbulky: %v\tsame: %v\n", routeOrder, isDirectlyBeforeOrAfter, hasBulkyItem, isSameUser)
+				if isDirectlyBeforeOrAfter || hasBulkyItem || isSameUser {
+					isPrivate = false
+				}
+			}
+			if isPrivate {
 				if !isChainAdmin {
 					(*users)[i].Email = zero.StringFrom("***")
 					(*users)[i].PhoneNumber = "***"
