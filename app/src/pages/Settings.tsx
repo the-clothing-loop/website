@@ -132,9 +132,9 @@ export default function Settings() {
           ) : null}
           <IonList style={{ marginBottom: "4em" }}>
             <IonItem lines="none">
-              <IonLabel>
-                <h3>{t("pauseUserActivity")}</h3>
-                <p>
+              <IonLabel className="ion-text-wrap">
+                <h3>{t("pauseParticipation")}</h3>
+                <p className="ion-no-wrap">
                   {pausedDayjs
                     ? pausedDayjs.fromNow()
                     : t("setTimerForACoupleOfWeeks")}

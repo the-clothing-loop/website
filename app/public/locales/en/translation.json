@@ -44,10 +44,10 @@
   "privacyPolicy": "Privacy Policy",
   "stayTuned": "Stay tuned",
   "wereWorkingOnIt": "We're working on it",
-  "pauseUserActivity": "Pause user activity",
+  "pauseParticipation": "Pause participation",
   "pauseUntil": "Pause until",
   "unPause": "Un-pause",
   "week_one": "Week",
   "week_other": "{{count}} weeks",
-  "setTimerForACoupleOfWeeks": "Set timer for a couple of weeks"
+  "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation"
 }
