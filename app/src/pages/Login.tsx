@@ -17,7 +17,15 @@ import {
   mailUnreadOutline,
   sendOutline,
 } from "ionicons/icons";
-import { Fragment, useContext, useRef, useState } from "react";
+import { Keyboard } from "@capacitor/keyboard";
+import {
+  Fragment,
+  KeyboardEventHandler,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import toastError from "../../toastError";
@@ -30,7 +38,10 @@ enum State {
   success,
 }
 
+const KEYCODE_ENTER = 13;
+
 const BETA_TESTERS = (import.meta.env.VITE_APP_BETA_TESTERS || "").split(",");
+const IS_DEVELOPMENT = import.meta.env.DEV;
 
 export default function Login(props: { isLoggedIn: boolean }) {
   const { t } = useTranslation();
@@ -48,11 +59,12 @@ export default function Login(props: { isLoggedIn: boolean }) {
   const [sentTimeout, setSentTimeout] = useState<number>();
 
   async function handleSendEmail() {
+    if (sentState === State.success) return;
     clearTimeout(sentTimeout);
     const email = inputEmail.current?.value + "";
     if (!email) return;
 
-    if (!BETA_TESTERS.includes(email)) {
+    if (!IS_DEVELOPMENT && !BETA_TESTERS.includes(email)) {
       setSentState(State.error);
       toastError(
         present,
@@ -68,10 +80,23 @@ export default function Login(props: { isLoggedIn: boolean }) {
       setSentTimeout(
         setTimeout(() => setSentState(State.idle), 1000 * 60 /* 1 min */) as any
       );
+      Keyboard.hide();
     } catch (err) {
       setSentState(State.error);
       toastError(present, err);
       console.error(err);
+    }
+  }
+
+  function handleInputEmailEnter(e: any) {
+    if (e?.keyCode === KEYCODE_ENTER) {
+      handleSendEmail();
+    }
+  }
+
+  function handleInputTokenEnter(e: any) {
+    if (e?.keyCode === KEYCODE_ENTER) {
+      handleVerifyToken();
     }
   }
 
@@ -114,6 +139,8 @@ export default function Login(props: { isLoggedIn: boolean }) {
             autocomplete="on"
             autoSave="on"
             autofocus
+            enterkeyhint="send"
+            onKeyUp={handleInputEmailEnter}
             aria-autocomplete="list"
             required
             placeholder={t("yourEmailAddress")!}
@@ -154,6 +181,8 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 autoCorrect="off"
                 placeholder="••••••"
                 label={t("passcode")!}
+                enterkeyhint="enter"
+                onKeyUp={handleInputTokenEnter}
                 labelPlacement="fixed"
               />
             </IonItem>

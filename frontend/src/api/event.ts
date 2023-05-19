@@ -16,6 +16,7 @@ export interface EventCreateBody {
   price_value: number;
   link: string;
   date: string;
+  date_end: string | null;
   genders: string[];
   chain_uid?: string;
   image_url: string;

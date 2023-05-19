@@ -30,7 +30,7 @@ import {
   chainUserApprove,
   UnapprovedReason,
 } from "../api/chain";
-import { Chain, UID, User, UserChain } from "../api/types";
+import { Bag, Chain, UID, User, UserChain } from "../api/types";
 import { userGetAllByChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { SizeBadges } from "../components/Badges";
@@ -38,6 +38,7 @@ import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { routeGetOrder, routeSetOrder } from "../api/route";
 import useToClipboard from "../util/to-clipboard.hooks";
+import { bagGetAllByChain } from "../api/bag";
 
 interface Params {
   chainUID: string;
@@ -55,6 +56,10 @@ export default function ChainMemberList() {
 
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
+  const [bags, setBags] = useState<Bag[] | null>(null);
+  const [route, setRoute] = useState<UID[] | null>(null);
+  const [participantsSortBy, setParticipantsSortBy] =
+    useState<ParticipantsSortBy>("date");
   const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
@@ -62,6 +67,36 @@ export default function ChainMemberList() {
   const [selectedTable, setSelectedTable] = useState<SelectedTable>("route");
   const refSelect: any = useRef<HTMLSelectElement>();
   const addCopyAttributes = useToClipboard();
+
+  const participantsSortUsers = useMemo(() => {
+    if (!users) return [];
+    const sortBy = participantsSortBy;
+    let res = [...users];
+    switch (sortBy) {
+      case "email":
+      case "name":
+        res = res.sort((a, b) =>
+          a[sortBy].localeCompare(b[sortBy]) == 1 ? 1 : -1
+        );
+        break;
+      case "date":
+        res = res.sort((a, b) => {
+          const ucA = getUserChain(a, chainUID);
+          const ucB = getUserChain(b, chainUID);
+
+          return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
+        });
+    }
+    return res;
+  }, [users, participantsSortBy]);
+
+  const routeSortUsers = useMemo(() => {
+    if (!users || !route) return [];
+    let res = [...users];
+    return res.sort((a, b) =>
+      route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1
+    );
+  }, [users, route]);
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
@@ -153,17 +188,25 @@ export default function ChainMemberList() {
   }, [chain, unapprovedUsers]);
 
   async function refresh(firstPageLoad = false) {
+    const bagGetAll = authUser
+      ? bagGetAllByChain(chainUID, authUser.uid)
+      : Promise.reject("authUser not set");
+
     try {
-      const [chainData, chainUsers] = await Promise.all([
+      const [chainData, chainUsers, routeData, bagData] = await Promise.all([
         chainGet(chainUID),
         userGetAllByChain(chainUID),
+        routeGetOrder(chainUID),
+        bagGetAll,
       ]);
       setChain(chainData.data);
+      setRoute(routeData.data || []);
       setUsers(
         chainUsers.data.filter(
           (u) => u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved
         )
       );
+      setBags(bagData.data || []);
       let _unapprovedUsers = chainUsers.data.filter(
         (u) =>
           u.chains.find((uc) => uc.chain_uid == chainUID)?.is_approved == false
@@ -181,12 +224,16 @@ export default function ChainMemberList() {
     }
   }
 
-  if (!(chain && users && unapprovedUsers)) {
-    console.log(chain, users, unapprovedUsers);
+  if (!(chain && users && unapprovedUsers && route && bags)) {
+    console.log(chain, users, unapprovedUsers, route, bags);
     return null;
   }
 
   let shareLink = `${VITE_BASE_URL}/loops/${chainUID}/users/signup`;
+
+  let userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
+  let isUserAdmin = userChain?.is_chain_admin || false;
+
   return (
     <>
       <Helmet>
@@ -232,98 +279,102 @@ export default function ChainMemberList() {
                   {t("peopleWithCount", { count: users.length })}
                 </dd>
               </dl>
-
-              <div className="flex flex-col">
-                <div className="form-control w-full">
-                  <label className="cursor-pointer label px-0">
-                    <span className="label-text">
-                      {published ? t("published") : t("draft")}
-                    </span>
-                    <input
-                      type="checkbox"
-                      className={`toggle toggle-secondary ${
-                        error === "published" ? "border-error" : ""
-                      }`}
-                      name="published"
-                      checked={published}
-                      onChange={handleChangePublished}
-                    />
-                  </label>
-                </div>
-                <div className="form-control w-full">
-                  <label className="cursor-pointer label px-0 -mb-2">
-                    <span className="label-text">
-                      {openToNewMembers ? t("openToNewMembers") : t("closed")}
-                    </span>
-                    <input
-                      type="checkbox"
-                      className={`toggle toggle-secondary ${
-                        error === "openToNewMembers" ? "border-error" : ""
-                      }`}
-                      name="openToNewMembers"
-                      checked={openToNewMembers}
-                      onChange={handleChangeOpenToNewMembers}
-                    />
-                  </label>
-                </div>
-              </div>
             </div>
           </section>
 
-          <section className="lg:w-2/3 relative py-8 px-2 sm:p-8 lg:pt-0 bg-secondary-light">
-            <h2 className="font-semibold text-secondary mb-6 text-3xl">
-              {t("loopHost", { count: filteredUsersHost.length })}
-            </h2>
-            <HostTable
-              authUser={authUser}
-              filteredUsersHost={filteredUsersHost}
-              chain={chain}
-              refresh={refresh}
-            />
-            <div className="flex flex-col justify-end items-end">
-              <form
-                className="mb-4 w-full lg:w-1/2 flex flex-col sm:flex-row items-stretch md:pl-6"
-                onSubmit={onAddCoHost}
-              >
-                <div className="flex-grow">
-                  <select
-                    className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
-                    name="participant"
-                    ref={refSelect}
-                    disabled={filteredUsersNotHost.length === 0}
-                  >
-                    <option disabled selected value="">
-                      {t("selectParticipant")}
-                    </option>
-                    {filteredUsersNotHost?.map((u) => (
-                      <option key={u.uid} value={u.uid}>
-                        {u.name} {u.email}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <button
-                  className={`btn btn-sm rounded-none ${
-                    filteredUsersNotHost.length === 0
-                      ? "btn-disabled"
-                      : "btn-primary"
-                  }`}
-                  type="submit"
-                >
-                  {t("addCoHost")}
-                </button>
-              </form>
-              <Link
-                className="btn btn-sm btn-primary"
-                to={`/loops/${chainUID}/edit`}
-              >
-                {t("editLoop")}
-                <span
-                  className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
-                  aria-hidden
-                />
-              </Link>
+          <section className="lg:w-2/3 relative py-8 sm:p-8 lg:pt-0 bg-secondary-light">
+            <div className="px-2 lg:px-0">
+              <h2 className="font-semibold text-secondary mb-6 text-3xl">
+                {t("loopHost", { count: filteredUsersHost.length })}
+              </h2>
+              <HostTable
+                authUser={authUser}
+                filteredUsersHost={filteredUsersHost}
+                chain={chain}
+                refresh={refresh}
+              />
             </div>
+            {isUserAdmin || authUser?.is_root_admin ? (
+              <div className="flex flex-col md:flex-row bg-teal-light py-3 px-4 mt-4">
+                <div className="flex flex-col w-full md:w-1/3 pr-6">
+                  <div className="form-control w-full">
+                    <label className="cursor-pointer label">
+                      <span className="label-text">
+                        {published ? t("published") : t("draft")}
+                      </span>
+                      <input
+                        type="checkbox"
+                        className={`toggle toggle-secondary ${
+                          error === "published" ? "border-error" : ""
+                        }`}
+                        name="published"
+                        checked={published}
+                        onChange={handleChangePublished}
+                      />
+                    </label>
+                  </div>
+                  <div className="form-control w-full">
+                    <label className="cursor-pointer label">
+                      <span className="label-text">
+                        {openToNewMembers ? t("openToNewMembers") : t("closed")}
+                      </span>
+                      <input
+                        type="checkbox"
+                        className={`toggle toggle-secondary ${
+                          error === "openToNewMembers" ? "border-error" : ""
+                        }`}
+                        name="openToNewMembers"
+                        checked={openToNewMembers}
+                        onChange={handleChangeOpenToNewMembers}
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col w-full md:w-2/3 items-end ml-auto pt-1">
+                  <form className="w-full flex flex-row" onSubmit={onAddCoHost}>
+                    <div className="w-full ml-auto">
+                      <select
+                        className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+                        name="participant"
+                        ref={refSelect}
+                        disabled={filteredUsersNotHost.length === 0}
+                        defaultValue=""
+                      >
+                        <option disabled value="">
+                          {t("selectParticipant")}
+                        </option>
+                        {filteredUsersNotHost?.map((u) => (
+                          <option key={u.uid} value={u.uid}>
+                            {u.name} {u.email}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <button
+                      className={`btn btn-sm rounded-none w-[120px] ${
+                        filteredUsersNotHost.length === 0
+                          ? "btn-disabled"
+                          : "btn-primary"
+                      }`}
+                      type="submit"
+                    >
+                      {t("addCoHost")}
+                    </button>
+                  </form>
+                  <Link
+                    className="btn btn-sm btn-primary mt-4 w-full md:w-[120px]"
+                    to={`/loops/${chainUID}/edit`}
+                  >
+                    {t("editLoop")}
+                    <span
+                      className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
+                      aria-hidden
+                    />
+                  </Link>
+                </div>
+              </div>
+            ) : null}
           </section>
         </div>
 
@@ -404,7 +455,12 @@ export default function ChainMemberList() {
               {selectedTable !== "unapproved" ? (
                 <UserDataExport
                   chainName={chain.name}
-                  chainUsers={users}
+                  chainUsers={
+                    selectedTable === "participants"
+                      ? participantsSortUsers
+                      : routeSortUsers
+                  }
+                  route={route}
                   key="export"
                 />
               ) : null}
@@ -423,8 +479,9 @@ export default function ChainMemberList() {
             <ParticipantsTable
               key="participants"
               authUser={authUser}
-              users={users}
-              unapprovedUsers={unapprovedUsers}
+              users={participantsSortUsers}
+              sortBy={participantsSortBy}
+              setSortBy={setParticipantsSortBy}
               chain={chain}
               refresh={refresh}
             />
@@ -432,8 +489,11 @@ export default function ChainMemberList() {
             <RouteTable
               key="route"
               authUser={authUser}
-              users={users}
+              users={routeSortUsers}
               chain={chain}
+              route={route}
+              bags={bags}
+              setRoute={setRoute}
               refresh={refresh}
               onGoToEditTableItem={goToEditTableItem}
             />
@@ -516,7 +576,7 @@ function HostTable(props: {
           {props.filteredUsersHost
             ?.sort((a, b) => a.name.localeCompare(b.name))
             .map((u) => (
-              <tr key={u.uid} className="[&_td]:hover:bg-base-200/[0.6]">
+              <tr key={u.uid} className="[&>td]:hover:bg-base-200/[0.6]">
                 <td className="md:hidden !px-0">
                   <DropdownMenu
                     direction="dropdown-right"
@@ -671,8 +731,8 @@ function ApproveTable(props: {
                       key={u.uid}
                       className={
                         tooOld
-                          ? "[&>td]:bg-red/[.5] [&_td]:hover:bg-red/[.3]"
-                          : "[&>td]:bg-yellow/[.6] [&_td]:hover:bg-yellow/[.4]"
+                          ? "[&>td]:bg-red/[.5] [&>td]:hover:bg-red/[.3]"
+                          : "[&>td]:bg-yellow/[.6] [&>td]:hover:bg-yellow/[.4]"
                       }
                     >
                       <td className="lg:hidden !px-0">
@@ -744,16 +804,17 @@ function ApproveTable(props: {
   );
 }
 
+type ParticipantsSortBy = "name" | "email" | "date";
 function ParticipantsTable(props: {
   authUser: User | null;
   users: User[];
-  unapprovedUsers: User[];
+  sortBy: ParticipantsSortBy;
+  setSortBy: (sortBy: ParticipantsSortBy) => void;
   chain: Chain;
   refresh: () => Promise<void>;
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
-  const [sortBy, setSortBy] = useState<"name" | "email" | "date">("date");
 
   function getEditLocation(user: User): LocationDescriptor {
     if (!user.uid) {
@@ -798,25 +859,8 @@ function ParticipantsTable(props: {
     return u.chains.find((uc) => uc.chain_uid === props.chain.uid)!;
   }
 
-  function sortOrder(_sortBy: typeof sortBy): User[] {
-    switch (_sortBy) {
-      case "email":
-      case "name":
-        return props.users.sort((a, b) =>
-          a[_sortBy].localeCompare(b[_sortBy]) == 1 ? 1 : -1
-        );
-      case "date":
-        return props.users.sort((a, b) => {
-          const ucA = getUserChain(a);
-          const ucB = getUserChain(b);
-
-          return new Date(ucA.created_at) > new Date(ucB.created_at) ? -1 : 1;
-        });
-    }
-  }
-
-  function toggleSortBy(_sortBy: typeof sortBy) {
-    setSortBy(sortBy !== _sortBy ? _sortBy : "date");
+  function toggleSortBy(_sortBy: ParticipantsSortBy) {
+    props.setSortBy(props.sortBy !== _sortBy ? _sortBy : "date");
   }
 
   return (
@@ -833,7 +877,7 @@ function ParticipantsTable(props: {
                 <th>
                   <span>{t("name")}</span>
                   <SortButton
-                    isSelected={sortBy === "name"}
+                    isSelected={props.sortBy === "name"}
                     className="ml-1"
                     onClick={() => toggleSortBy("name")}
                   />
@@ -844,7 +888,7 @@ function ParticipantsTable(props: {
                 <th>
                   <span>{t("email")}</span>
                   <SortButton
-                    isSelected={sortBy === "email"}
+                    isSelected={props.sortBy === "email"}
                     className="ml-1"
                     onClick={() => toggleSortBy("email")}
                   />
@@ -854,7 +898,7 @@ function ParticipantsTable(props: {
                 <th>
                   <span>{t("signedUpOn")}</span>
                   <SortButton
-                    isSelected={sortBy === "date"}
+                    isSelected={props.sortBy === "date"}
                     className="ml-1"
                     onClick={() => toggleSortBy("date")}
                   />
@@ -862,7 +906,7 @@ function ParticipantsTable(props: {
               </tr>
             </thead>
             <tbody>
-              {sortOrder(sortBy).map((u: User) => {
+              {props.users.map((u: User) => {
                 const userChain = getUserChain(u);
 
                 return (
@@ -870,7 +914,7 @@ function ParticipantsTable(props: {
                     key={u.uid}
                     data-uid={u.uid}
                     tabIndex={-1}
-                    className="[&_td]:hover:bg-base-200/[0.6] [&_td]:focus:bg-primary/[0.3] group"
+                    className="[&>td]:hover:bg-base-200/[0.6] [&>td]:focus:bg-primary/[0.3] group"
                   >
                     <td className="!px-0">
                       <DropdownMenu
@@ -928,42 +972,33 @@ function RouteTable(props: {
   authUser: User | null;
   users: User[];
   chain: Chain;
+  route: UID[];
+  bags: Bag[];
+  setRoute: (route: UID[]) => void;
   refresh: () => Promise<void>;
   onGoToEditTableItem: (uid: UID) => void;
 }) {
   const { t } = useTranslation();
-  const [route, _setRoute] = useState<UID[]>([]);
   const [dragging, setDragging] = useState<string>("");
   const [dragTarget, setDragTarget] = useState<string>("");
 
-  useEffect(() => {
-    routeUpdate();
-  }, [props.chain]);
-
-  async function routeUpdate() {
-    const res = await routeGetOrder(props.chain.uid);
-    _setRoute(res.data || []);
-  }
-  function setRoute(r: typeof route) {
+  function setRoute(r: typeof props.route) {
     routeSetOrder(props.chain.uid, r);
-    _setRoute(r);
+    props.setRoute(r);
   }
   function draggingEnd(e: DragEvent<HTMLTableRowElement>) {
-    const fromIndex = route.indexOf(dragging);
-    const toIndex = route.indexOf(dragTarget);
+    const fromIndex = props.route.indexOf(dragging);
+    const toIndex = props.route.indexOf(dragTarget);
 
     setDragTarget("");
-    setRoute(reOrder(route, fromIndex, toIndex));
+    setRoute(reOrder(props.route, fromIndex, toIndex));
   }
   function handleInputChangeRoute(e: ChangeEvent<HTMLInputElement>, uid: UID) {
     const toIndex = e.target.valueAsNumber - 1;
-    const fromIndex = route.indexOf(uid);
-    setRoute(reOrder(route, fromIndex, toIndex));
+    const fromIndex = props.route.indexOf(uid);
+    setRoute(reOrder(props.route, fromIndex, toIndex));
   }
 
-  const sortedUsers = props.users.sort((a, b) =>
-    route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1
-  );
   return (
     <>
       <div className="mt-6 relative overflow-hidden">
@@ -971,7 +1006,7 @@ function RouteTable(props: {
           <table className="table table-compact w-full mb-10">
             <thead>
               <tr>
-                <th className="w-[0.1%]" colSpan={1}>
+                <th className="w-[0.1%]" colSpan={2}>
                   <span>{t("route")}</span>
                 </th>
                 <th>
@@ -987,13 +1022,13 @@ function RouteTable(props: {
               </tr>
             </thead>
             <tbody>
-              {sortedUsers.map((u: User) => {
-                const routeOrderNumber = route.indexOf(u.uid) + 1;
+              {props.users.map((u: User, i) => {
+                const routeOrderNumber = i + 1;
 
                 let classTdDragging = dragging === u.uid ? "bg-grey/[.1]" : "";
                 if (dragTarget === u.uid) {
-                  const orderTarget = route.indexOf(dragTarget);
-                  const orderDrag = route.indexOf(dragging);
+                  const orderTarget = props.route.indexOf(dragTarget);
+                  const orderDrag = props.route.indexOf(dragging);
 
                   if (orderTarget < orderDrag) {
                     classTdDragging += " border-t-2 border-t-grey";
@@ -1001,6 +1036,16 @@ function RouteTable(props: {
                     classTdDragging += " border-b-2 border-b-grey";
                   }
                 }
+
+                let userBags = props.bags
+                  .filter((b) => b.user_uid === u.uid)
+                  .sort((a, b) => {
+                    let aDate = new Date(a.updated_at);
+                    let bDate = new Date(b.updated_at);
+
+                    return aDate > bDate ? -1 : 1;
+                  });
+
                 return (
                   <tr
                     key={u.uid}
@@ -1009,7 +1054,7 @@ function RouteTable(props: {
                     onDragEnd={draggingEnd}
                     onDragOver={() => setDragTarget(u.uid)}
                     draggable
-                    className="[&_td]:hover:bg-base-200/[0.6] group"
+                    className="[&>td]:hover:bg-base-200/[0.6] group"
                   >
                     <td className={`${classTdDragging} text-center`}>
                       <span className="hidden lg:inline-block py-1 px-2 bg-base-200 rounded-lg font-semibold">
@@ -1018,7 +1063,7 @@ function RouteTable(props: {
                       <input
                         onClick={(e) => (e.target as any).select()}
                         onChange={(e) => handleInputChangeRoute(e, u.uid)}
-                        max={route.length + 1}
+                        max={props.route.length + 1}
                         min={1}
                         type="number"
                         className="inline-block lg:hidden input-reset w-14 py-1 px-2 bg-base-200 rounded-lg font-semibold text-center"
@@ -1031,17 +1076,11 @@ function RouteTable(props: {
                         className="hidden lg:inline-block p-1 ml-2 rounded-full hover:bg-white cursor-grab active:cursor-grabbing feather feather-maximize-2 -rotate-45"
                       ></div>
                     </td>
-                    {/* <td
+                    <td
                       className={`${classTdDragging} !p-0 relative min-h-[1px]`}
                     >
-                      <div aria-label="bag" className="h-full">
-                        <div className="z-0 absolute inset-0 flex flex-col">
-                          <span className="h-1/2 w-0 mx-auto border-x-4 border-teal group-first-of-type:invisible"></span>
-                          <span className="h-1/2 w-0 mx-auto border-x-4 border-teal group-last-of-type:invisible"></span>
-                        </div>
-                        <div className="z-10 relative w-8 h-8 flex items-center justify-center feather feather-shopping-bag text-white bg-teal rounded-full"></div>
-                      </div>
-                    </td> */}
+                      <BagsColumn bags={userBags} />
+                    </td>
                     <td className={classTdDragging}>{u.name}</td>
                     <td className={classTdDragging}>
                       <span className="block w-48 text-sm whitespace-normal">
@@ -1146,4 +1185,91 @@ function unapprovedTooOld(date: string): boolean {
   const numDays = dayjs().diff(dayjs(date), "days");
 
   return numDays > 30;
+}
+
+function BagsColumn(props: { bags: Bag[] }) {
+  const { t } = useTranslation();
+  let bagsJSX: JSX.Element[] = [];
+  if (props.bags.length > 1) {
+    let bagLocation: string[] = [];
+    switch (props.bags.length) {
+      case 2:
+      case 3:
+      case 4:
+        bagLocation = [
+          "brightness-90 translate-x-1 translate-y-1",
+          "brightness-110 -translate-x-1 translate-y-1",
+          "brightness-75 -translate-y-1",
+        ];
+        break;
+      case 5:
+        bagLocation = [
+          "brightness-90 translate-x-1 translate-y-1",
+          "brightness-110 -translate-x-1 translate-y-1",
+          "brightness-75 -translate-x-1 -translate-y-1",
+          "translate-x-1 -translate-y-1",
+        ];
+    }
+    bagsJSX = props.bags.slice(1).map((bag, i) => (
+      <div
+        key={i + 1}
+        className={`absolute w-8 h-8 rounded-full transition-transform group-hover/bag:translate-x-0 group-hover/bag:translate-y-0 ${bagLocation[i]}`}
+        style={{
+          backgroundColor: bag.color,
+        }}
+      ></div>
+    ));
+  }
+  if (props.bags.length > 0) {
+    let firstBag = props.bags[0];
+    bagsJSX.push(
+      <div
+        key={0}
+        className="relative w-8 h-8 flex items-center justify-center feather feather-shopping-bag scale-[0.9] text-xl text-white rounded-full cursor-pointer transition-transform group-active/bag:scale-[0.7]"
+        style={{
+          backgroundColor: firstBag.color,
+        }}
+      ></div>
+    );
+  }
+
+  /* <div className="z-0 absolute inset-0 flex flex-col">
+    <span className="h-1/2 w-0 mx-auto border-x-4 border-grey-light group-first-of-type:invisible"></span>
+    <span className="h-1/2 w-0 mx-auto border-x-4 border-grey-light group-last-of-type:invisible"></span>
+  </div> */
+  return (
+    <div className="dropdown ltr:dropdown-right rtl:dropdown-left">
+      <div aria-label={t("bag")} className="h-full group/bag" tabIndex={0}>
+        {bagsJSX}
+      </div>
+      <table className="dropdown-content bg-white p-3 border-grey-light border shadow-lg space-y-3 table-fixed">
+        <thead>
+          <tr>
+            <th colSpan={3} className="text-center">
+              {t("bags")}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.bags.map((bag) => {
+            let d = dayjs(bag.updated_at);
+            return (
+              <tr key={bag.number} className="">
+                <td>
+                  <span
+                    className="block rounded-full h-4 w-4"
+                    style={{
+                      backgroundColor: bag.color,
+                    }}
+                  ></span>
+                </td>
+                <td className="font-bold">{bag.number}</td>
+                <td className="ltr:text-right">{d.format("LL")}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
 }

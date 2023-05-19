@@ -43,5 +43,11 @@
   "areYouSureYouWantToLogout": "Weet je zeker dat je wilt uitloggen?",
   "privacyPolicy": "Privacybeleid",
   "stayTuned": "Blijf kijken.",
-  "wereWorkingOnIt": "We werken eraan."
+  "wereWorkingOnIt": "We werken eraan.",
+  "pauseParticipation": "Pause participation",
+  "pauseUntil": "Pause until",
+  "unPause": "Un-pause",
+  "week_one": "Week",
+  "week_other": "{{count}} weeks",
+  "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation"
 }

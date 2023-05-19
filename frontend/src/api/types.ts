@@ -10,6 +10,15 @@ export interface User {
   address: string;
   sizes: string[];
   is_root_admin: boolean;
+  pause_until: string | null;
+}
+
+export interface Bag {
+  number: number;
+  color: string;
+  chain_uid: UID;
+  user_uid: UID;
+  updated_at: string;
 }
 
 export interface UserChain {
@@ -46,6 +55,7 @@ export interface Event {
   longitude: number;
   genders: string[] | null;
   date: string;
+  date_end: string | null;
   chain_uid?: UID;
   user_uid: string;
   user_name: string;

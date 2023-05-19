@@ -1,7 +1,8 @@
 [![Crowdin](https://badges.crowdin.net/the-clothing-loop/localized.svg)](https://crowdin.com/project/the-clothing-loop)
 [![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m793037901-9bb551d345526a0d92a9dfa1)](https://uptimerobot.com/)
 [![GitHub](https://img.shields.io/github/license/the-clothing-loop/website)](https://github.com/the-clothing-loop/website#license)
-[![Deploy Acceptance](https://github.com/the-clothing-loop/website/actions/workflows/deploy-acceptance.yml/badge.svg)](https://github.com/the-clothing-loop/website/actions/workflows/deploy-acceptance.yml)
+[![Deploy Acceptance](https://github.com/the-clothing-loop/website/actions/workflows/deploy-acceptance-api.yml/badge.svg)](https://github.com/the-clothing-loop/website/actions/workflows/deploy-acceptance-api.yml)
+[![Deploy Production](https://github.com/the-clothing-loop/website/actions/workflows/deploy-production.yml/badge.svg)](https://github.com/the-clothing-loop/website/actions/workflows/deploy-production.yml)
 
 # The Clothing Loop
 

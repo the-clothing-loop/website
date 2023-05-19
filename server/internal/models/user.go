@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 
 	"gorm.io/gorm"
@@ -19,6 +20,7 @@ type User struct {
 	Email           zero.String `json:"email" gorm:"unique"`
 	IsEmailVerified bool        `json:"is_email_verified"`
 	IsRootAdmin     bool        `json:"is_root_admin"`
+	PausedUntil     null.Time   `json:"paused_until"`
 	Name            string      `json:"name"`
 	PhoneNumber     string      `json:"phone_number"`
 	Address         string      `json:"address"`

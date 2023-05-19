@@ -14,6 +14,7 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY || "";
 interface Props {
   longitude?: number;
   latitude?: number;
+  radius?: number;
   setValues: (values: LocationValues) => void;
 }
 
@@ -61,13 +62,14 @@ export default function LocationModal({
   setValues,
   longitude = 4.8998197,
   latitude = 52.3673008,
+  radius = DEFAULT_RADIUS,
 }: Props) {
   const { t } = useTranslation();
 
   const mapRef = useRef<any>();
   const [map, setMap] = useState<mapboxgl.Map>();
   const [values, setValue] = useForm<LocationValues>({
-    radius: DEFAULT_RADIUS,
+    radius,
     longitude,
     latitude,
   });

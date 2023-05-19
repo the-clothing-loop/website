@@ -40,6 +40,18 @@ export interface User {
   address: string;
   sizes: string[];
   is_root_admin: boolean;
+  paused_until: null | string;
+}
+
+export interface UserUpdateBody {
+  user_uid: UID;
+  chain_uid?: UID;
+  name?: string;
+  phone_number?: string;
+  newsletter?: boolean;
+  sizes?: string[];
+  address?: string;
+  paused_until?: string;
 }
 
 export interface UserChain {
@@ -100,7 +112,7 @@ window.axios = redaxios.create({
 export function loginEmail(email: string) {
   return window.axios.post<never>(
     "/v2/login/email",
-    { email },
+    { email, app: true },
     { auth: undefined, withCredentials: false }
   );
 }
@@ -133,6 +145,10 @@ export function userGetAllByChain(chainUID: UID) {
   return window.axios.get<User[]>("/v2/user/all-chain", {
     params: { chain_uid: chainUID },
   });
+}
+
+export function userUpdate(user: UserUpdateBody) {
+  return window.axios.patch<never>("/v2/user", user);
 }
 
 export function routeGetOrder(chainUID: UID) {

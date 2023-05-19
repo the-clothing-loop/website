@@ -147,7 +147,7 @@ func EmailRegisterVerification(c *gin.Context, db *gorm.DB, name, email, token s
 	return app.MailSend(c, db, to, subject, body)
 }
 
-func EmailLoginVerification(c *gin.Context, db *gorm.DB, name, email, token string) bool {
+func EmailLoginVerification(c *gin.Context, db *gorm.DB, name, email, token string, isApp bool) bool {
 	i18n := getI18n(c)
 	to := email
 	subject := emailsHeaders[i18n]["login_verification"]
@@ -155,6 +155,7 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB, name, email, token stri
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
 		"Token":   token,
+		"IsApp":   isApp,
 	})
 	if err != nil {
 		return false

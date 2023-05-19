@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import { useState, useContext, useEffect, FormEvent } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -14,7 +14,7 @@ import { AuthContext } from "../providers/AuthProvider";
 import dayjs from "../util/dayjs";
 import LocationModal from "../components/LocationModal";
 import type { LocationValues } from "../components/LocationModal";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 interface SearchValues {
   genders: string[];
@@ -37,7 +37,7 @@ export default function Events() {
   const { addToastError, addModal } = useContext(ToastContext);
   const authUser = useContext(AuthContext).authUser;
   const [events, setEvents] = useState<Event[] | null>(null);
-  const [values, setValue] = useForm<SearchValues>(() => {
+  const [values, setValue, setValues] = useForm<SearchValues>(() => {
     const urlParams = new URLSearchParams("/events");
     let latitude =
       Number.parseFloat(urlParams.get("lat") || "") || DEFAULT_LATITUDE;
@@ -59,8 +59,8 @@ export default function Events() {
       distance,
     };
   });
-  const search = useDebouncedCallback((v: SearchValues) => {
-    load(v.genders, v.latitude, v.longitude, v.distance);
+  const search = useDebouncedCallback(() => {
+    load(values.genders, values.latitude, values.longitude, values.distance);
   }, 700);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function Events() {
     longitude: number,
     distance: number
   ) {
-    const radius = distance === -1 ? MAX_RADIUS : distance;
+    const radius = distance <= 0 ? MAX_RADIUS : distance;
     writeUrlSearchParams({
       genders: filterGenders,
       latitude,
@@ -98,6 +98,7 @@ export default function Events() {
           setValues={setLocationValues}
           latitude={values.latitude}
           longitude={values.longitude}
+          radius={values.distance}
         />
       ),
       actions: [
@@ -105,12 +106,7 @@ export default function Events() {
           text: t("select"),
           type: "primary",
           fn() {
-            search({
-              latitude: values.latitude,
-              longitude: values.longitude,
-              distance: values.distance,
-              genders: values.genders,
-            });
+            search();
           },
         },
       ],
@@ -118,9 +114,12 @@ export default function Events() {
   }
 
   function setLocationValues(distanceValues: LocationValues) {
-    setValue("latitude", distanceValues.latitude);
-    setValue("longitude", distanceValues.longitude);
-    setValue("distance", distanceValues.radius);
+    setValues((v) => ({
+      genders: v.genders,
+      latitude: distanceValues.latitude,
+      longitude: distanceValues.longitude,
+      distance: distanceValues.radius,
+    }));
   }
 
   return (
@@ -133,35 +132,33 @@ export default function Events() {
         <div className="max-w-screen-xl min-h-screen mx-auto py-10 px-6 md:px-20">
           <div className="flex flex-row">
             <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
-              {t("upcomingEvents")}
+              {t("upcomingSwapEvents")}
             </h1>
           </div>
 
           <div className="flex flex-col-reverse md:flex-row justify-start md:justify-between pb-4 md:pb-8">
-            <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
               <button
                 type="button"
-                className="btn btn-secondary btn-outline ltr:mr-4 rtl:ml-4"
+                className="btn btn-secondary btn-outline"
                 onClick={handleOpenModalGetLocation}
               >
                 {t("selectLocation")}
               </button>
               <CategoriesDropdown
-                className="w-[150px] md:w-[170px] py-4 pb-2 md:py-0"
+                className="w-[150px] md:w-[170px]"
                 selectedGenders={values.genders}
                 handleChange={(gs) => {
                   setValue("genders", gs);
-                  search({
-                    genders: gs,
-                    latitude: values.latitude,
-                    longitude: values.longitude,
-                    distance: values.distance,
-                  });
+                  search();
                 }}
               />
             </div>
             {authUser ? (
-              <Link to="/events/create" className="btn btn-primary">
+              <Link
+                to="/events/create"
+                className="btn btn-primary mb-4 md:mb-0 "
+              >
                 <span className="pr-2 rtl:pr-0 rtl:pl-2 feather feather-plus" />
                 {t("createEvent")}
               </Link>
@@ -237,16 +234,22 @@ function writeUrlSearchParams(search: SearchValues) {
 }
 
 function EventItem({ event }: { event: Event }) {
+  const { t } = useTranslation();
   const date = dayjs(event.date);
   const eventURL = window.location.pathname + "/" + event.uid;
+
+  const eventPriceValue =
+    event.price_value % 1 === 0
+      ? event.price_value
+      : event.price_value.toFixed(2);
 
   let image = ClothesImage;
   if (event.image_url) image = event.image_url;
   return (
     <article className="flex flex-col bg-teal-light">
       <Link to={eventURL} className="relative aspect-[4/3]">
-        <div className="bg-teal text-white text-md absolute mt-4 right-4 text-center z-10">
-          <p className="py-2 px-3">
+        <div className=" text-md absolute mt-4 right-4 text-center z-10">
+          <p className="bg-teal text-white py-2 px-3">
             <span className="inline-block pr-1 font-extrabold">
               {date.format("MMMM")}
             </span>
@@ -258,29 +261,32 @@ function EventItem({ event }: { event: Event }) {
                 {event.price_currency}
               </span>
               <span className="inline-block pr-1 font-bold">
-                {event.price_value}
+                {eventPriceValue}
               </span>
             </p>
-          ) : null}
+          ) : (
+            <p className="py-1 px-3 bg-white/90 text-black">
+              <span className="inline-block pr-1 font-semibold">
+                {t("priceFree")}
+              </span>
+            </p>
+          )}
         </div>
         <img src={image} className="w-full h-full object-cover" />
       </Link>
 
-      <div className="flex-grow m-4">
+      <div className="m-4 mb-2">
         <h2 className="text-xl text-teal font-bold">
           <Link to={eventURL}>{event.name}</Link>
         </h2>
       </div>
-      <dl className="m-4 mt-0">
-        <dd className="mb-2" key={"address" + event.uid}>
-          <span className="feather feather-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
-
-          <address className="inline">{event.address}</address>
-        </dd>
-        <dd>
-          {event.genders?.length ? <SizeBadges g={event.genders} /> : null}
-        </dd>
-      </dl>
+      <div className="flex-grow mx-4 mb-2">
+        <span className="feather feather-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+        <address className="inline">{event.address}</address>
+      </div>
+      <div className="m-4 mt-0">
+        {event.genders?.length ? <SizeBadges g={event.genders} /> : null}
+      </div>
     </article>
   );
 }

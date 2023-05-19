@@ -52,7 +52,7 @@ DELETE FROM bags WHERE user_chain_id IN (
 	}
 
 	err = tx.Exec(`
-DELETE FROM bulky WHERE user_chain_id IN (
+DELETE FROM bulky_items WHERE user_chain_id IN (
 	SELECT id FROM user_chains WHERE user_id = ? AND chain_id = ?
 )
 	`, u.ID, chainID).Error
@@ -75,7 +75,7 @@ DELETE FROM bags WHERE user_chain_id IN (
 	}
 
 	err = db.Exec(`
-DELETE FROM bulky WHERE user_chain_id IN (
+DELETE FROM bulky_items WHERE user_chain_id IN (
 	SELECT id FROM user_chains WHERE user_id = ?
 )
 	`, u.ID).Error

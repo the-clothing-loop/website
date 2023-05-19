@@ -14,11 +14,13 @@ import {
   useRef,
   useState,
 } from "react";
-import dayjs from "dayjs";
+import dayjs from "../util/dayjs";
 import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { chainGet } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
+import { useSepDateTime } from "../util/sep-date-time.hooks";
+import { TinyMCE } from "./TinyMCE";
 
 const defaultValues: EventCreateBody = {
   name: "",
@@ -29,10 +31,13 @@ const defaultValues: EventCreateBody = {
   price_currency: null,
   price_value: 0,
   link: "",
-  date: new Date().toISOString(),
+  date: dayjs().format(),
+  date_end: null,
   genders: [],
   image_url: "",
 };
+
+const INVALID_DATE_STRING = "Invalid Date";
 
 const currencies = [
   "€",
@@ -90,16 +95,26 @@ export default function EventChangeForm(props: {
   const [values, setValue, setValues] = useForm<EventCreateBody>(
     props.initialValues || defaultValues
   );
-  const [valueDate, _setValueDate] = useState(() =>
-    dayjs(values.date).format("YYYY-MM-DD")
+  const sepDate = useSepDateTime(values.date, (d) => setValue("date", d));
+  const [hasEndDate, setHasEndDate] = useState(values.date_end !== null);
+  const [dateEnd, setDateEnd] = useState(
+    values.date_end || dayjs().add(2, "hour").format()
   );
-  const [valueTime, _setValueTime] = useState(() =>
-    dayjs(values.date).format("HH:mm")
-  );
+  const sepDateEnd = useSepDateTime(dateEnd, setDateEnd);
   const [deleteImageUrl, setDeleteImageUrl] = useState("");
   const [eventPriceValue, setEventPriceValue] = useState(
     () => values.price_value || 0
   );
+  const [eventPriceText, _setEventPriceText] = useState(() =>
+    eventPriceValue.toFixed(2)
+  );
+  const setEventPriceText = (text: string) => {
+    if (validatePrice(text)) {
+      const value = Number.parseFloat(text);
+      if (!Number.isNaN(value)) setEventPriceValue(value);
+    }
+    _setEventPriceText(text);
+  };
   const [eventPriceCurrency, _setEventPriceCurrency] = useState(
     () => values.price_currency || ""
   );
@@ -110,37 +125,13 @@ export default function EventChangeForm(props: {
 
     if (v === "") {
       _setEventPriceCurrency("");
-      setEventPriceValue(0);
+      setEventPriceText("0");
       return;
+    } else if (eventPriceValue === 0) {
+      setEventPriceText("1");
     }
 
     _setEventPriceCurrency(v);
-  }
-
-  function setValueDate(e: ChangeEvent<HTMLInputElement>) {
-    const d = e.target.valueAsDate;
-    console.log(d);
-
-    if (d) {
-      let _date = dayjs(values.date);
-      _date.set("day", d.getDate());
-      _date.set("month", d.getMonth());
-      _date.set("year", d.getFullYear());
-      setValue("date", _date.toISOString());
-    }
-    _setValueDate(e.target.value);
-  }
-  function setValueTime(e: ChangeEvent<HTMLInputElement>) {
-    const d = e.target.valueAsDate;
-    console.log(d);
-
-    if (d) {
-      let _date = dayjs(values.date);
-      _date.set("hour", d.getHours());
-      _date.set("minute", d.getMinutes());
-      setValue("date", _date.toISOString());
-    }
-    _setValueTime(e.target.value);
   }
 
   async function onImageUpload(e: ChangeEvent<HTMLInputElement>) {
@@ -162,6 +153,8 @@ export default function EventChangeForm(props: {
 
   function submit(e: FormEvent) {
     e.preventDefault();
+
+    values.date_end = hasEndDate ? dateEnd : null;
 
     if (eventPriceCurrency) {
       values.price_value = eventPriceValue;
@@ -195,7 +188,7 @@ export default function EventChangeForm(props: {
     }
   }
 
-  const valuesDate = dayjs(values.date);
+  const isValidPrice = validatePrice(eventPriceText);
 
   return (
     <div className="w-full">
@@ -218,7 +211,6 @@ export default function EventChangeForm(props: {
               address={values.address}
               required
               onResult={(g) => {
-                console.log(g);
                 setValue("address", g.query);
                 setValue("latitude", g.first?.[1] || 0);
                 setValue("longitude", g.first?.[0] || 0);
@@ -226,39 +218,76 @@ export default function EventChangeForm(props: {
             />
           </label>
         </div>
-        <div className="">
+        <div>
           <TextForm
             required
             min={2}
             label={t("date") + "*"}
             type="date"
             name="date"
-            value={valueDate}
-            onChange={setValueDate}
+            value={sepDate.date.value}
+            onChange={sepDate.date.onChange}
           />
         </div>
-        <div className="">
+        <div>
           <TextForm
             required
             min={2}
             label={t("time") + "*"}
             name="time"
             type="time"
-            value={valueTime}
-            onChange={setValueTime}
+            value={sepDate.time.value}
+            onChange={sepDate.time.onChange}
           />
+        </div>
+        <div className="col-span-1 sm:col-span-2">
+          <div className={`mb-3 mt-5 ${hasEndDate ? "bg-base-100" : ""}`}>
+            <label className="inline-flex items-center cursor-pointer p-4 transition-colors bg-base-100 bg-opacity-0 hover:bg-opacity-70">
+              <input
+                type="checkbox"
+                className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3"
+                checked={hasEndDate}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  if (checked) setValue("date_end", null);
+                  setHasEndDate(checked);
+                }}
+              />
+              <span>End date</span>
+            </label>
+            {hasEndDate ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 pt-0 -mt-2">
+                <TextForm
+                  required
+                  min={2}
+                  label={t("date") + "*"}
+                  type="date"
+                  name="date_end"
+                  value={sepDateEnd.date.value}
+                  onChange={sepDateEnd.date.onChange}
+                />
+                <TextForm
+                  required
+                  min={2}
+                  label={t("time") + "*"}
+                  name="time"
+                  type="time"
+                  value={sepDateEnd.time.value}
+                  onChange={sepDateEnd.time.onChange}
+                />
+              </div>
+            ) : null}
+          </div>
         </div>
         <div className="form-control">
           <label>
             <div className="label">
               <span className="label-text">{t("description")}</span>
             </div>
-            <textarea
-              className="textarea textarea-secondary w-full h-[300px] max-xs:h-auto"
+            <TinyMCE
               name="description"
-              cols={3}
               value={values.description}
-              onChange={(e) => setValue("description", e.target.value)}
+              onChange={(value) => setValue("description", value)}
             />
           </label>
         </div>
@@ -298,13 +327,17 @@ export default function EventChangeForm(props: {
                 ))}
               </select>
               <input
-                className="input input-secondary ltr:border-l-0 rtl:border-r-0  w-full flex-grow"
+                className={`input ltr:border-l-0 rtl:border-r-0  w-full flex-grow ${
+                  isValidPrice ? "input-secondary" : "input-error"
+                }`}
                 disabled={eventPriceCurrency === ""}
                 name="price"
                 onClick={(e) => (e.target as any).select()}
                 type="number"
-                value={eventPriceValue}
-                onChange={(e) => setEventPriceValue(e.target.valueAsNumber)}
+                inputMode="decimal"
+                aria-invalid={isValidPrice}
+                value={eventPriceText}
+                onChange={(e) => setEventPriceText(e.target.value)}
               />
             </div>
           </div>
@@ -389,4 +422,8 @@ export default function EventChangeForm(props: {
       </form>
     </div>
   );
+}
+
+function validatePrice(value: string) {
+  return /^\d+([.,]\d{1,2})?$/.test(value);
 }
