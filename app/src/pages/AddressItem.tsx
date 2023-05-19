@@ -10,6 +10,7 @@ import { useContext, useMemo } from "react";
 import { RouteComponentProps } from "react-router";
 import UserCard from "../components/UserCard";
 import { StoreContext } from "../Store";
+import isPaused from "../utils/is_paused";
 
 export default function AddressItem({
   match,
@@ -19,6 +20,8 @@ export default function AddressItem({
     let userUID = match.params.uid;
     return chainUsers.find((u) => u.uid === userUID) || null;
   }, [match.params.uid, chainUsers]);
+
+  const isUserPaused = isPaused(user?.paused_until || null);
 
   return (
     <IonPage>
@@ -30,7 +33,13 @@ export default function AddressItem({
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {user ? <UserCard user={user} isUserAdmin={false} /> : null}
+        {user ? (
+          <UserCard
+            user={user}
+            isUserAdmin={false}
+            isUserPaused={isUserPaused}
+          />
+        ) : null}
       </IonContent>
     </IonPage>
   );

@@ -1,3 +1,6 @@
+.sc-ion-label-ios-s > h3 {
+  font-size: 16px;
+}
 .sc-ion-label-ios-s > p {
   color: var(--ion-text-color-rgb);
 }

@@ -41,6 +41,7 @@ enum State {
 const KEYCODE_ENTER = 13;
 
 const BETA_TESTERS = (import.meta.env.VITE_APP_BETA_TESTERS || "").split(",");
+const IS_DEVELOPMENT = import.meta.env.DEV;
 
 export default function Login(props: { isLoggedIn: boolean }) {
   const { t } = useTranslation();
@@ -63,7 +64,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
     const email = inputEmail.current?.value + "";
     if (!email) return;
 
-    if (!BETA_TESTERS.includes(email)) {
+    if (!IS_DEVELOPMENT && !BETA_TESTERS.includes(email)) {
       setSentState(State.error);
       toastError(
         present,

@@ -3,11 +3,13 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 
 	"github.com/gin-gonic/gin"
@@ -163,15 +165,50 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 			return
 		}
 
-		authUserRouteOrder := routeIndex(route, authUser.UID)
+		usersWithBulkyItems := []uint{}
+		db.Raw(`
+SELECT u.id
+FROM users AS u
+LEFT JOIN user_chains AS uc on uc.user_id = u.id
+LEFT JOIN bulky_items AS bi ON uc.id = bi.user_chain_id
+WHERE uc.chain_id = ? AND bi.id IS NOT NULL
+		`, chain.ID).Scan(&usersWithBulkyItems)
 
+		authUserRouteOrder := routeIndex(route, authUser.UID)
+		prevOrderIndex := authUserRouteOrder - 1
+		nextOrderIndex := authUserRouteOrder + 1
+		if prevOrderIndex < 0 {
+			prevOrderIndex = len(route) - 1
+		}
+		if nextOrderIndex >= len(route) {
+			nextOrderIndex = 0
+		}
+		// fmt.Printf("order len: %d\tprev: %d\tnext: %d\n", len(route), prevOrderIndex, nextOrderIndex)
+
+		// fmt.Printf("auth order: %v\n", authUserRouteOrder)
 		for i, user := range *users {
 			// find users above and below this user in the route order
 			routeOrder := routeIndex(route, user.UID)
 			_, isChainAdmin := user.IsPartOfChain(chain.UID)
 
-			isDirectlyBeforeOrAfter := authUserRouteOrder == 1-routeOrder || authUserRouteOrder == routeOrder || authUserRouteOrder == 1+routeOrder
-			if !isDirectlyBeforeOrAfter && authUser.UID != user.UID {
+			isPrivate := true
+			{
+				isDirectlyBeforeOrAfter := (prevOrderIndex == routeOrder) ||
+					(authUserRouteOrder == routeOrder) ||
+					(nextOrderIndex == routeOrder)
+				isSameUser := authUser.UID == user.UID
+				hasBulkyItem := false
+				for _, id := range usersWithBulkyItems {
+					if id == user.ID {
+						hasBulkyItem = true
+					}
+				}
+				// fmt.Printf("(%v) directly: %v\tbulky: %v\tsame: %v\n", routeOrder, isDirectlyBeforeOrAfter, hasBulkyItem, isSameUser)
+				if isDirectlyBeforeOrAfter || hasBulkyItem || isSameUser {
+					isPrivate = false
+				}
+			}
+			if isPrivate {
 				if !isChainAdmin {
 					(*users)[i].Email = zero.StringFrom("***")
 					(*users)[i].PhoneNumber = "***"
@@ -211,13 +248,14 @@ func UserUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		ChainUID    string    `json:"chain_uid,omitempty" binding:"omitempty,uuid"`
-		UserUID     string    `json:"user_uid,omitempty" binding:"uuid"`
-		Name        *string   `json:"name,omitempty"`
-		PhoneNumber *string   `json:"phone_number,omitempty"`
-		Newsletter  *bool     `json:"newsletter,omitempty"`
-		Sizes       *[]string `json:"sizes,omitempty"`
-		Address     *string   `json:"address,omitempty"`
+		ChainUID    string     `json:"chain_uid,omitempty" binding:"omitempty,uuid"`
+		UserUID     string     `json:"user_uid,omitempty" binding:"uuid"`
+		Name        *string    `json:"name,omitempty"`
+		PhoneNumber *string    `json:"phone_number,omitempty"`
+		Newsletter  *bool      `json:"newsletter,omitempty"`
+		PausedUntil *time.Time `json:"paused_until,omitempty"`
+		Sizes       *[]string  `json:"sizes,omitempty"`
+		Address     *string    `json:"address,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -238,7 +276,7 @@ func UserUpdate(c *gin.Context) {
 	}
 
 	userChanges := map[string]interface{}{}
-	if body.Name != nil || body.PhoneNumber != nil || body.Address != nil {
+	{
 		if body.Name != nil {
 			userChanges["name"] = *body.Name
 		}
@@ -248,14 +286,23 @@ func UserUpdate(c *gin.Context) {
 		if body.Address != nil {
 			userChanges["address"] = *body.Address
 		}
+		if body.PausedUntil != nil {
+			if body.PausedUntil.After(time.Now()) {
+				userChanges["paused_until"] = body.PausedUntil
+			} else {
+				userChanges["paused_until"] = null.Time{}
+			}
+		}
 		if body.Sizes != nil {
 			j, _ := json.Marshal(body.Sizes)
 			userChanges["sizes"] = string(j)
 		}
-		if err := db.Model(user).Updates(userChanges).Error; err != nil {
-			goscope.Log.Errorf("Unable to update user: %v", err)
-			c.String(http.StatusInternalServerError, "Unable to update user")
-			return
+		if len(userChanges) > 0 {
+			if err := db.Model(user).Updates(userChanges).Error; err != nil {
+				goscope.Log.Errorf("Unable to update user: %v", err)
+				c.String(http.StatusInternalServerError, "Unable to update user")
+				return
+			}
 		}
 	}
 
