@@ -272,5 +272,6 @@
   "postal": "Postale o CAP (facoltativo)",
   "city": "Città",
   "province": "Provincia o stato",
-  "country": "Paese o regione"
+  "country": "Paese o regione",
+  "bags": "Bags"
 }

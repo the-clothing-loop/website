@@ -272,5 +272,6 @@
   "postal": "Post eller zip (valfritt)",
   "city": "Stad",
   "province": "Provins eller stat",
-  "country": "Land eller region"
+  "country": "Land eller region",
+  "bags": "Bags"
 }

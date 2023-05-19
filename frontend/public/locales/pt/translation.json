@@ -267,5 +267,11 @@
   "setLocationAndRadius": "Click on the map to set your general location and use the slider to set the maximum distance to filter by.",
   "eventLink": "Event Link",
   "shareLink": "Share Link",
-  "organizedBy": "Organized by"
+  "organizedBy": "Organized by",
+  "streetAddress": "Street address",
+  "postal": "Postal or zip (optional)",
+  "city": "City",
+  "province": "Province or state",
+  "country": "Country or region",
+  "bags": "Bags"
 }

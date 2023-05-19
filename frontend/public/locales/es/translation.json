@@ -272,5 +272,6 @@
   "postal": "Postal o zip (opcional)",
   "city": "Ciudad",
   "province": "Provincia o estado",
-  "country": "País o región"
+  "country": "País o región",
+  "bags": "Bags"
 }

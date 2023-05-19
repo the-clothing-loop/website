@@ -272,5 +272,6 @@
   "postal": "Postleitzahl (optional)",
   "city": "Stadt",
   "province": "Provinz oder staat",
-  "country": "Land oder Region"
+  "country": "Land oder Region",
+  "bags": "Bags"
 }
