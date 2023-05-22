@@ -164,7 +164,7 @@ export default function ChainMemberList() {
 
   useEffect(() => {
     refresh(true);
-  }, [history]);
+  }, [history, authUser]);
 
   const [filteredUsersHost, filteredUsersNotHost] = useMemo(() => {
     let host: User[] = [];
