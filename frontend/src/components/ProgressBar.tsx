@@ -29,6 +29,7 @@ export default function ProgressBar({ activeStep, disabledStep }: Props) {
       {steps.map((step, i) => {
         return (
           <li
+            key={step}
             className={`step ${stepClass(
               i,
               activeStep,
