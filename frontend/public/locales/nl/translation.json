@@ -240,6 +240,7 @@
   "differentSizes": "Andere maten",
   "other": "Overig",
   "events": "Agenda",
+  "previousEvents": "Previous Events",
   "allEvents": "Alle gebeurtenissen",
   "eventName": "Titel",
   "sorryNoEvents": "Sorry, er zijn geen gebeurtenissen die overeenkomen met deze filters.",
@@ -268,10 +269,10 @@
   "eventLink": "Evenement link",
   "shareLink": "Koppeling delen",
   "organizedBy": "Georganiseerd door",
-  "streetAddress": "Adres",
-  "postal": "Post of postcode (optioneel)",
-  "city": "Stad",
-  "province": "Provincie of staat",
-  "country": "Land of regio",
+  "streetAddress": "Street address",
+  "postal": "Postal or zip (optional)",
+  "city": "City",
+  "province": "Province or state",
+  "country": "Country or region",
   "bags": "Bags"
 }
