@@ -2,19 +2,11 @@
   "faqForParticipants": "FAQ voor Deelnemers",
   "arrParticipants": [
     {
-      "question": "Ik heb mij aangemeld, wanneer word ik toegevoegd aan de Loop",
-      "answer": "Als je onze bevestigingsmail hebt ontvangen, is je inschrijving geslaagd! De host van de Loop is op de hoogte gebracht en zal contact met je opnemen om je aan de route toe te voegen. Dit kan soms even duren omdat alle hosts de Loop in hun vrije tijd organiseren. De meeste hosts voegen elke 2 tot 4 weken nieuwe leden toe."
-    },
-    {
       "question": "Zijn er regels over hoeveel je eruit kunt halen, en moet je dezelfde hoeveelheid kleding doneren als je eruit haalt?",
       "answer": "Nee, er zijn hier geen regels. Soms neem je een beetje meer, soms breng je meer bij. Voeg alsjeblieft geen kleren toe aan de tassen die niet van goede kwaliteit zijn, gewoon om iets toe te voegen! Het is beter om een half vol zak schatten te hebben dan om een volle tas te hebben van minder kwaliteit."
     },
     {
-      "question": "Moet je evenveel kleding doneren als je eruit haalt?",
-      "answer": "Niet per se, maar bedenk wel dat het systeem het beste werkt als er een mooi evenwicht is tussen schenken en nemen. Kleding die versleten, bevlekt of beschadigd is, is nooit welkom."
-    },
-    {
-      "question": "Kunnen verschillende maten van kleding in dezelfde tas zitten?",
+      "question": "Kunnen verschillende maten van kleding in dezelfde zak zitten?",
       "answer": "Gemengde tassen werken heel normaal, omdat de formaten per merk verschillen en verhoudingen. Maar dit werkt alleen binnen een bepaalde breedte. We raden aan om een mix van items van grootte 36 - 42 (S, M and L) en een nieuwe Loop beginnen voor kleinere of grotere formaten."
     },
     {
@@ -28,6 +20,14 @@
     {
       "question": "Mag ik ook schoenen in de tas doen?",
       "answer": "Het korte antwoord is ja, maar vergeet niet: schoenen zijn moeilijker te door te geven dan kleding. Er zijn veel meer formaten en ze laten zien dat ze veel sneller dan kledingstukken slijten. Wees dus zeer selectief met schoenen! Voeg alleen \"zo goed als nieuw\" paren toe en heb niet meer dan 2 paren per tas."
+    },
+    {
+      "question": "Wat te doen met grote kleren (zoals winterjas) die niet in de tas passen?",
+      "answer": "Grote items kunnen worden gefotografeerd en gedeeld via jouw communicatiekanaal, of via de <a target='_blank' href='https://template-clothing-loop.glideapp.io'>Glide app</a>. In een privébericht kunnen mensen reageren en het ophalen regelen."
+    },
+    {
+      "question": "Mag ik ook schoenen in de tas doen?",
+      "answer": "Dat is aan de lokale host om te beslissen. Als de Loop toestaat om schoenen aan de tas toe te voegen, stop dan alleen \"zo goed als nieuw\" schoenen toe, en <b>niet meer dan 2 paren per tas</b>. En stop de schoenen in een aparte tas om te voorkomen dat ze gescheiden blijven van de rest de kleding. "
     },
     {
       "question": "Ik krijg de fout: “je account bestaat al”.",
