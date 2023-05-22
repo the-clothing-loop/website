@@ -26,14 +26,13 @@ export default function UserEdit() {
   const { authUser } = useContext(AuthContext);
   const params = useParams<Params>();
 
-  const userUID: string =
-    params.userUID == "me" ? authUser!.uid : params.userUID;
+  const userUID = params.userUID == "me" ? authUser?.uid : params.userUID;
 
   const userIsChainAdmin = useMemo(
     () =>
       user?.chains.find((uc) => uc.chain_uid === chainUID)?.is_chain_admin ||
       false,
-    [user]
+    [user, chainUID]
   );
   const userIsAnyChainAdmin = useMemo(
     () => !!user?.chains.find((uc) => uc.is_chain_admin),
@@ -42,6 +41,7 @@ export default function UserEdit() {
 
   function onSubmit(values: ValuesForm) {
     console.info("submit", { ...values });
+    if (!userUID) return;
     (async () => {
       try {
         let userUpdateBody: UserUpdateBody = {
@@ -65,6 +65,7 @@ export default function UserEdit() {
   }
 
   useEffect(() => {
+    if (!userUID) return;
     (async () => {
       try {
         const _user = (await userGetByUID(chainUID, userUID)).data;
@@ -73,7 +74,7 @@ export default function UserEdit() {
         console.warn(error);
       }
     })();
-  }, [history]);
+  }, [history, userUID]);
 
   if (!user) return null;
   return (
