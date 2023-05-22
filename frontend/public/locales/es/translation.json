@@ -240,6 +240,7 @@
   "differentSizes": "Tallas diferentas",
   "other": "Otro",
   "events": "Events",
+  "previousEvents": "Previous Events",
   "allEvents": "All Events",
   "eventName": "Event name",
   "sorryNoEvents": "Sorry, there are no events that match these filters.",
@@ -268,10 +269,10 @@
   "eventLink": "Event Link",
   "shareLink": "Share Link",
   "organizedBy": "Organized by",
-  "streetAddress": "Dirección",
-  "postal": "Postal o zip (opcional)",
-  "city": "Ciudad",
-  "province": "Provincia o estado",
-  "country": "País o región",
+  "streetAddress": "Street address",
+  "postal": "Postal or zip (optional)",
+  "city": "City",
+  "province": "Province or state",
+  "country": "Country or region",
   "bags": "Bags"
 }
