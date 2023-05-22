@@ -269,10 +269,10 @@
   "eventLink": "Event Link",
   "shareLink": "Share Link",
   "organizedBy": "Organized by",
-  "streetAddress": "Street address",
-  "postal": "Postal or zip (optional)",
-  "city": "City",
-  "province": "Province or state",
-  "country": "Country or region",
+  "streetAddress": "Indirizzo",
+  "postal": "Postale o CAP (facoltativo)",
+  "city": "Città",
+  "province": "Provincia o stato",
+  "country": "Paese o regione",
   "bags": "Bags"
 }
