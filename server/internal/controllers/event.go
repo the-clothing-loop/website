@@ -144,6 +144,39 @@ func EventGetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, events)
 }
 
+func EventGetPrevious(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		Latitude  float32 `form:"latitude" binding:"required,latitude"`
+		Longitude float32 `form:"longitude" binding:"required,longitude"`
+		Radius    float32 `form:"radius"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+	if query.Radius == 5000 {
+		query.Radius = 0
+	}
+
+	sql := models.EventGetSql + `WHERE date < NOW()`
+	args := []any{}
+	if query.Latitude != 0 && query.Longitude != 0 && query.Radius != 0 {
+		sql = fmt.Sprintf("%s AND %s <= ? ", sql, sqlCalcDistance("events.latitude", "events.longitude", "?", "?"))
+		args = append(args, query.Latitude, query.Longitude, query.Radius)
+	}
+	sql = fmt.Sprintf("%s ORDER BY date ASC LIMIT 6", sql)
+	events := []models.Event{}
+	err := db.Raw(sql, args...).Scan(&events).Error
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, events)
+}
+
 // The distance between two longlat points calculated in km.
 // Remember to use "?" instead of the actual value in building queries.
 func sqlCalcDistance(latA, longA, latB, longB string) string {

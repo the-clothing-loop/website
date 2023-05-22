@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { Event } from "../api/types";
-import { eventGetAll } from "../api/event";
+import { eventGetAll, eventGetPrevious } from "../api/event";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import { SizeBadges } from "../components/Badges";
 import useForm from "../util/form.hooks";
@@ -37,6 +37,7 @@ export default function Events() {
   const { addToastError, addModal } = useContext(ToastContext);
   const authUser = useContext(AuthContext).authUser;
   const [events, setEvents] = useState<Event[] | null>(null);
+  const [prevEvents, setPrevEvents] = useState<Event[] | null>(null);
   const [values, setValue, setValues] = useForm<SearchValues>(() => {
     const urlParams = new URLSearchParams("/events");
     let latitude =
@@ -81,10 +82,14 @@ export default function Events() {
       distance,
     });
     try {
-      await eventGetAll({ latitude, longitude, radius }).then((res) => {
-        const filterFunc = createFilterFunc(filterGenders);
-        setEvents(res.data?.filter(filterFunc));
-      });
+      const [allData, prevData] = await Promise.all([
+        eventGetAll({ latitude, longitude, radius }),
+        eventGetPrevious({ latitude, longitude, radius }),
+      ]);
+
+      const filterFunc = createFilterFunc(filterGenders);
+      setEvents(allData.data?.filter(filterFunc));
+      setPrevEvents(prevData.data);
     } catch (err: any) {
       addToastError(GinParseErrors(t, err), err.status);
     }
@@ -188,12 +193,40 @@ export default function Events() {
               key="event"
             >
               {events
-                .sort((a, b) => a.date.localeCompare(b.date))
+                .sort((a, b) => (new Date(a.date) > new Date(b.date) ? 1 : -1))
                 .map((event) => (
                   <EventItem event={event} key={event.uid} />
                 ))}
             </div>
           )}
+          {prevEvents ? (
+            <div className="" key="event-prev">
+              <div className="flex justify-center opacity-70">
+                <h4
+                  className="font-semibold px-3 my-4 relative
+               before:border-b-2 before:w-6 before:block before:absolute before:left-full before:top-3
+               after:border-b-2 after:w-6 after:block after:absolute after:right-full after:top-3
+               "
+                >
+                  {t("previousEvents")}
+                </h4>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {prevEvents
+                  .sort((a, b) =>
+                    new Date(a.date) < new Date(b.date) ? 1 : -1
+                  )
+                  .map((event) => (
+                    <div
+                      className="transition-opacity hover:opacity-80 opacity-60"
+                      key={event.uid}
+                    >
+                      <EventItem event={event} />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       </main>
     </>
