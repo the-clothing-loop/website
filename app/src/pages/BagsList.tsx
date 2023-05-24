@@ -24,7 +24,7 @@ import { trashBin, closeCircleOutline } from "ionicons/icons";
 import { useContext, useRef, useState, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID } from "../api";
-import CreateBag from "../components/CreateBag";
+import CreateBag from "../components/CreateUpdateBag";
 import { StoreContext } from "../Store";
 import dayjs from "../dayjs";
 import { Sleep } from "../utils/sleep";
@@ -40,12 +40,14 @@ export default function BagsList() {
   //  0: everything is shown
   //  n: that bag id is shown
   const [openCard, setOpenCard] = useState(-1);
+  const [updateBag, setUpdateBag] = useState<Bag | null>(null);
 
   function refreshBags() {
     setChain(chain, authUser!.uid);
   }
 
   function handleClickDelete(bagID: number, bagNo: string) {
+    setOpenCard(-1);
     const handler = async () => {
       await bagRemove(chain!.uid, authUser!.uid, bagID);
       await setChain(chain, authUser!.uid);
@@ -64,7 +66,11 @@ export default function BagsList() {
       ],
     });
   }
-  function handleClickEdit(bag: Bag) {}
+  function handleClickEdit(bag: Bag) {
+    setUpdateBag(bag);
+    setOpenCard(-1);
+    modal.current?.present();
+  }
 
   function handleRefresh(e: CustomEvent<RefresherEventDetail>) {
     const refreshPromise = setChain(chain, authUser!.uid);
@@ -117,6 +123,7 @@ export default function BagsList() {
   }
 
   function handleClickCreate() {
+    setUpdateBag(null);
     modal.current?.present();
   }
   function handleClickEditAll() {
@@ -175,7 +182,7 @@ export default function BagsList() {
                       onClickDelete={() =>
                         handleClickDelete(bag.id, bag.number)
                       }
-                      onClickEdit={() => {}}
+                      onClickEdit={() => handleClickEdit(bag)}
                       className="ion-no-margin"
                       style={{ position: "relative", overflow: "visible" }}
                     >
@@ -255,7 +262,7 @@ export default function BagsList() {
                         <IonCardSubtitle
                           style={{ fontSize: 12, textTransform: "none" }}
                         >
-                          {t("route") + ": #" + routeIndex}
+                          {t("route") + ": #" + (routeIndex + 1)}
                         </IonCardSubtitle>
                       </IonCardHeader>
                     </Card>
@@ -265,93 +272,7 @@ export default function BagsList() {
             </IonRow>
           </IonGrid>
         </div>
-        {/*
-        <IonList>
-          
-            return (
-              <IonItemSliding key={bag.number}>
-                <IonItem lines="full">
-                  <div slot="start" style={{ position: "relative" }}>
-                    <IonIcon
-                      icon={bagIcon}
-                      style={{
-                        transform: "scale(2)",
-                        color: bag.color,
-                      }}
-                    />
-                    {isBagTooOld ? (
-                      <div
-                        key="old"
-                        style={{
-                          backgroundColor: "var(--ion-color-danger)",
-                          borderRadius: "100%",
-                          width: "10px",
-                          height: "10px",
-                          display: "block",
-                          position: "absolute",
-                          top: "-12px",
-                          left: "calc(50% + 8px)",
-                        }}
-                      ></div>
-                    ) : null}
-                    {bag.number.length === 1 ? (
-                      <div
-                        key="bag-number"
-                        style={{
-                          position: "absolute",
-                          top: "2px",
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          color: "white",
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          fontSize: "16px",
-                        }}
-                      >
-                        {bag.number}
-                      </div>
-                    ) : null}
-                  </div>
-                  <IonText
-                    style={{
-                      marginTop: "6px",
-                      marginBottom: "6px",
-                    }}
-                    onClick={() => handleClickItem(bag.id, bag.user_uid)}
-                  >
-                    <h5 className="ion-no-margin">
-                      {user.name}
-                      <small
-                        className="ion-text-bold"
-                        style={{
-                          marginLeft: "8px",
-                          color: "var(--ion-color-medium)",
-                        }}
-                      >
-                        #{routeIndex + 1}
-                      </small>
-                    </h5>
-                    <span style={{ position: "absolute", right: 6, top: 6 }}>
-                      {bag.number}
-                    </span>
-                    <small>{user.address}</small>
-                  </IonText>
-                </IonItem>
-                <IonItemOptions slot="end">
-                  <IonItemOption
-                    color="danger"
-                    onClick={() => handleClickDelete(bag.id, bag.number)}
-                  >
-                    {t("delete")}
-                  </IonItemOption>
-                </IonItemOptions>
-              </IonItemSliding>
-            );
-          })}
-        </IonList>
-        */}
-        <CreateBag modal={modal} didDismiss={refreshBags} />
+        <CreateBag bag={updateBag} modal={modal} didDismiss={refreshBags} />
       </IonContent>
     </IonPage>
   );

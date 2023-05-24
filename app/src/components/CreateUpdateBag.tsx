@@ -11,7 +11,6 @@ import {
   IonModal,
   IonSelect,
   IonSelectOption,
-  IonText,
   IonTitle,
   IonToolbar,
   SelectChangeEventDetail,
@@ -19,24 +18,20 @@ import {
 } from "@ionic/react";
 
 import type { IonSelectCustomEvent, IonModalCustomEvent } from "@ionic/core";
-import { add, checkmarkCircle, ellipse, remove } from "ionicons/icons";
-import {
-  FormEvent,
-  RefObject,
-  SetStateAction,
-  useContext,
-  useState,
-} from "react";
-import { bagColors, bagPut, UID } from "../api";
+import { checkmarkCircle, ellipse } from "ionicons/icons";
+import { FormEvent, RefObject, useContext, useState } from "react";
+import { Bag, bagColors, bagPut, UID } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 
-export default function CreateBag({
+export default function CreateUpdateBag({
+  bag,
   didDismiss,
   modal,
 }: {
+  bag: Bag | null;
   modal: RefObject<HTMLIonModalElement>;
   didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
 }) {
@@ -49,44 +44,59 @@ export default function CreateBag({
   const [present] = useIonToast();
 
   function modalInit() {
-    let highestNumber = 0;
     setError("");
-    bags.forEach((bag) => {
-      let bagNumber = parseInt(bag.number);
-      if (!isNaN(bagNumber)) {
-        if (bagNumber > highestNumber) {
-          highestNumber = bagNumber;
-        }
+    setBagColor(bag?.color || bagColors[2]);
+    setBagHolder(bag?.user_uid || null);
+
+    if (bag === null) {
+      let highestNumber = 0;
+      {
+        bags.forEach((bag) => {
+          let bagNumber = parseInt(bag.number);
+          if (!isNaN(bagNumber)) {
+            if (bagNumber > highestNumber) {
+              highestNumber = bagNumber;
+            }
+          }
+        });
+        highestNumber++;
       }
-    });
-    highestNumber++;
-    setBagNumber(highestNumber + "");
+
+      setBagNumber(highestNumber + "");
+    } else {
+      setBagNumber(bag.number);
+    }
   }
 
   function cancel() {
     modal.current?.dismiss();
   }
-  async function create() {
+  async function createOrUpdate() {
     if (!bagHolder) {
       setError("holder");
       return;
     }
 
     // validate that bag number does not already exist
-    if (bags.find((b) => b.number === bagNumber)) {
+    if (bags.find((b) => b.id !== bag?.id && b.number === bagNumber)) {
       setError("number");
       console.warn("bag number already exists");
       return;
     }
 
+    let body: Parameters<typeof bagPut>[0] = {
+      chain_uid: chain!.uid,
+      user_uid: authUser!.uid,
+      holder_uid: bagHolder,
+      number: bagNumber,
+      color: bagColor,
+    };
+    if (bag) {
+      body.bag_id = bag.id;
+    }
+
     try {
-      await bagPut({
-        chain_uid: chain!.uid,
-        user_uid: authUser!.uid,
-        holder_uid: bagHolder,
-        number: bagNumber,
-        color: bagColor,
-      });
+      await bagPut(body);
 
       setError("");
 
@@ -123,8 +133,11 @@ export default function CreateBag({
           </IonButtons>
           <IonTitle>{t("createBag")}</IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={create} color={!error ? "primary" : "danger"}>
-              {t("create")}
+            <IonButton
+              onClick={createOrUpdate}
+              color={!error ? "primary" : "danger"}
+            >
+              {bag ? t("update") : t("create")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
