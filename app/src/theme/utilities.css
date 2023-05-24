@@ -7,3 +7,18 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+.bag-color-select-icon {
+  border: 2px solid transparent;
+  border-radius: 100%;
+}
+.bag-color-select-button:hover .bag-color-select-icon {
+  border-color: var(--ion-color-medium);
+}
+
+.bag-color-select-button:active .bag-color-select-icon {
+  border-color: var(--ion-color-primary);
+}
+.bag-color-select-button:hover {
+  opacity: 100 !important;
+}

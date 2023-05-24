@@ -42,7 +42,7 @@ export default function CreateBag({
 }) {
   const { t } = useTranslation();
   const { bags, chainUsers, route, chain, authUser } = useContext(StoreContext);
-  const [bagNumber, _setBagNumber] = useState(0);
+  const [bagNumber, setBagNumber] = useState("");
   const [bagColor, setBagColor] = useState(bagColors[2]);
   const [bagHolder, setBagHolder] = useState<UID | null>(null);
   const [error, setError] = useState("");
@@ -52,26 +52,15 @@ export default function CreateBag({
     let highestNumber = 0;
     setError("");
     bags.forEach((bag) => {
-      if (bag.number > highestNumber) {
-        highestNumber = bagNumber;
+      let bagNumber = parseInt(bag.number);
+      if (!isNaN(bagNumber)) {
+        if (bagNumber > highestNumber) {
+          highestNumber = bagNumber;
+        }
       }
     });
-    setBagNumber(1);
-  }
-
-  function setBagNumber(value: SetStateAction<number>) {
-    let fn: (prevState: number) => number =
-      typeof value !== "function" ? () => value : value;
-
-    _setBagNumber((prevState) => {
-      let n = fn(prevState);
-      bags.forEach((bag) => {
-        if (bag.number === n) {
-          n = bag.number + 1;
-        }
-      });
-      return n;
-    });
+    highestNumber++;
+    setBagNumber(highestNumber + "");
   }
 
   function cancel() {
@@ -84,9 +73,9 @@ export default function CreateBag({
     }
 
     // validate that bag number does not already exist
-    if (bags.find((b) => b.number === bagNumber) || bagNumber < 1) {
+    if (bags.find((b) => b.number === bagNumber)) {
       setError("number");
-      console.warn("bag number already exists or is below zero");
+      console.warn("bag number already exists");
       return;
     }
 
@@ -107,9 +96,9 @@ export default function CreateBag({
       toastError(present, err);
     }
   }
-  function handleInputBagNumber(e: FormEvent<HTMLIonInputElement>) {
-    let value = (e.target as any).value;
-    setBagNumber(parseInt(value, 10));
+  function handleChangeBagNumber(e: FormEvent<HTMLIonInputElement>) {
+    const value = (e.target as any).value;
+    setBagNumber(value);
   }
   function handleSelectBagHolder(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>
@@ -152,24 +141,13 @@ export default function CreateBag({
             color={error === "number" ? "danger" : undefined}
           >
             <IonLabel slot="start">{t("bagNumber")}</IonLabel>
-            <IonText slot="end" className="ion-text-right">
-              {bagNumber}
-            </IonText>
-
-            <IonButtons slot="end" className="ion-margin-start">
-              <IonButton
-                shape="round"
-                onClick={() => setBagNumber((n) => n + 1)}
-              >
-                <IonIcon icon={add}></IonIcon>
-              </IonButton>
-              <IonButton
-                shape="round"
-                onClick={() => setBagNumber((n) => (n > 1 ? n - 1 : 0))}
-              >
-                <IonIcon icon={remove}></IonIcon>
-              </IonButton>
-            </IonButtons>
+            <IonInput
+              type="text"
+              slot="end"
+              className="ion-text-right"
+              value={bagNumber}
+              onChange={handleChangeBagNumber}
+            />
           </IonItem>
           <IonItem lines="none">
             <IonLabel>
@@ -183,11 +161,13 @@ export default function CreateBag({
                       size="default"
                       key={c}
                       onClick={() => setBagColor(c)}
+                      className="bag-color-select-button"
                     >
                       <IonIcon
                         icon={selected ? checkmarkCircle : ellipse}
                         style={{ color: c }}
                         size="large"
+                        className="bag-color-select-icon"
                       />
                     </IonButton>
                   );

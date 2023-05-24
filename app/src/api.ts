@@ -77,7 +77,8 @@ export interface Chain {
 }
 
 export interface Bag {
-  number: number;
+  id: number;
+  number: string;
   color: string;
   chain_uid: UID;
   user_uid: UID;
@@ -166,16 +167,17 @@ export function bagGetAllByChain(chainUID: UID, userUID: UID) {
 export function bagPut(body: {
   chain_uid: UID;
   user_uid: UID;
-  number: number;
+  bag_id?: number;
+  number?: string;
   holder_uid?: UID;
   color?: string;
 }) {
   return window.axios.put("/v2/bag", body);
 }
 
-export function bagRemove(chainUID: UID, userUID: UID, id: number) {
+export function bagRemove(chainUID: UID, userUID: UID, bagID: number) {
   return window.axios.delete("/v2/bag", {
-    params: { chain_uid: chainUID, user_uid: userUID, id },
+    params: { chain_uid: chainUID, user_uid: userUID, bag_id: bagID },
   });
 }
 

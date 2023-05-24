@@ -14,7 +14,8 @@ export interface User {
 }
 
 export interface Bag {
-  number: number;
+  id: number;
+  number: string;
   color: string;
   chain_uid: UID;
   user_uid: UID;

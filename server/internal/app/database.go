@@ -66,6 +66,20 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 			}
 		}
 	}
+	if db.Migrator().HasTable("bags") {
+		columnTypes, err := db.Migrator().ColumnTypes("bags")
+		if err == nil {
+			for _, ct := range columnTypes {
+				if ct.Name() == "number" {
+					t, _ := ct.ColumnType()
+					if t == "bigint(20)" {
+						fmt.Printf("column number found in bags")
+						db.Exec(`ALTER TABLE bags MODIFY number longtext`)
+					}
+				}
+			}
+		}
+	}
 
 	db.AutoMigrate(
 		&models.Chain{},

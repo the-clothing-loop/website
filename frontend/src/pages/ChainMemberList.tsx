@@ -1254,7 +1254,7 @@ function BagsColumn(props: { bags: Bag[] }) {
           {props.bags.map((bag) => {
             let d = dayjs(bag.updated_at);
             return (
-              <tr key={bag.number} className="">
+              <tr key={bag.id} className="">
                 <td>
                   <span
                     className="block rounded-full h-4 w-4"
