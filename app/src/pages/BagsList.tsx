@@ -36,6 +36,7 @@ export default function BagsList() {
     useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
+
   // -1: nothing is shown
   //  0: everything is shown
   //  n: that bag id is shown
@@ -186,7 +187,7 @@ export default function BagsList() {
                       className="ion-no-margin"
                       style={{ position: "relative", overflow: "visible" }}
                     >
-                      {!isBagTooOld ? (
+                      {isBagTooOld ? (
                         <div
                           key="old"
                           style={{

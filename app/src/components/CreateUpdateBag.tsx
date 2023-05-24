@@ -106,10 +106,6 @@ export default function CreateUpdateBag({
       toastError(present, err);
     }
   }
-  function handleChangeBagNumber(e: FormEvent<HTMLIonInputElement>) {
-    const value = (e.target as any).value;
-    setBagNumber(value);
-  }
   function handleSelectBagHolder(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>
   ) {
@@ -159,7 +155,9 @@ export default function CreateUpdateBag({
               slot="end"
               className="ion-text-right"
               value={bagNumber}
-              onChange={handleChangeBagNumber}
+              onIonChange={(e) =>
+                setBagNumber(e.detail.value?.toString() || "")
+              }
             />
           </IonItem>
           <IonItem lines="none">
