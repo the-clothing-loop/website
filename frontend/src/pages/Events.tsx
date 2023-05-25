@@ -203,7 +203,7 @@ export default function Events() {
             <div className="" key="event-prev">
               <div className="flex justify-center opacity-70">
                 <h4
-                  className="font-semibold px-3 my-4 relative
+                  className="font-semibold px-3 my-6 relative
                before:border-b-2 before:w-6 before:block before:absolute before:left-full before:top-3
                after:border-b-2 after:w-6 after:block after:absolute after:right-full after:top-3
                "
@@ -217,12 +217,7 @@ export default function Events() {
                     new Date(a.date) < new Date(b.date) ? 1 : -1
                   )
                   .map((event) => (
-                    <div
-                      className="transition-opacity hover:opacity-80 opacity-60"
-                      key={event.uid}
-                    >
-                      <EventItem event={event} />
-                    </div>
+                    <EventItem event={event} key={event.uid} />
                   ))}
               </div>
             </div>
