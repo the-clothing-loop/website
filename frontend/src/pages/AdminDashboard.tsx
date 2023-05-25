@@ -32,6 +32,21 @@ export default function AdminDashboard() {
     });
   }
 
+  function logoutClicked() {
+    addModal({
+      message: t("logout"),
+      actions: [
+        {
+          text: t("logout"),
+          type: "error",
+          fn: () => {
+            history.push("/users/logout");
+          },
+        },
+      ],
+    });
+  }
+
   useEscape(() => {
     let el = document.getElementById(
       "modal-circle-loop"
@@ -69,8 +84,8 @@ export default function AdminDashboard() {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row flex-wrap rtl:sm:-mr-4">
-                {authUser.is_root_admin || isChainAdmin ? (
+              {authUser.is_root_admin || isChainAdmin ? (
+                <div className="flex flex-col sm:flex-row flex-wrap rtl:sm:-mr-4">
                   <Link
                     className="btn btn-primary h-auto mb-4 sm:mr-4 text-black"
                     target="_blank"
@@ -82,21 +97,29 @@ export default function AdminDashboard() {
                     {t("toolkitFolder")}
                     <span className="feather feather-external-link ml-2 rtl:ml-0 rtl:mr-2"></span>
                   </Link>
-                ) : null}
-
+                </div>
+              ) : null}
+              <div className="flex flex-col sm:flex-row flex-wrap rtl:sm:-mr-4">
                 <Link
-                  className="btn btn-secondary btn-outline bg-white mb-4 sm:mr-4"
+                  className="btn btn-sm btn-secondary btn-outline bg-white mb-4 sm:mr-4"
                   to="/users/me/edit"
                 >
                   {t("editAccount")}
                   <span className="feather feather-edit ml-2 rtl:ml-0 rtl:mr-2"></span>
                 </Link>
+                <button
+                  className="btn btn-sm btn-secondary btn-outline bg-white h-auto mb-4 sm:mr-4 text-black group"
+                  onClick={logoutClicked}
+                >
+                  {t("logout")}
+                  <span className="feather feather-log-out text-red group-hover:text-white ml-2 rtl:ml-0 rtl:mr-2"></span>
+                </button>
 
                 <button
-                  className="btn btn-error btn-outline bg-white mb-4 sm:mr-4"
+                  className="btn btn-sm btn-error btn-outline bg-white/60 mb-4 sm:mr-4"
                   onClick={deleteClicked}
                 >
-                  <span className="text-black">{t("deleteUserBtn")}</span>
+                  <span className="text-danger">{t("deleteUserBtn")}</span>
                   <span className="feather feather-alert-octagon ml-2 rtl:ml-0 rtl:mr-2"></span>
                 </button>
               </div>
