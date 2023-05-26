@@ -34,7 +34,7 @@ export default function AdminDashboard() {
 
   function logoutClicked() {
     addModal({
-      message: t("logout"),
+      message: t("areYouSureLogout"),
       actions: [
         {
           text: t("logout"),
