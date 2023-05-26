@@ -116,6 +116,7 @@ func ChainGet(c *gin.Context) {
 		"genders":             chain.Genders,
 		"published":           chain.Published,
 		"open_to_new_members": chain.OpenToNewMembers,
+		"rules_override":      chain.RulesOverride,
 	})
 }
 
@@ -213,6 +214,7 @@ func ChainUpdate(c *gin.Context) {
 		Sizes            *[]string `json:"sizes,omitempty"`
 		Genders          *[]string `json:"genders,omitempty"`
 		Route            *[]string `json:"route,omitempty"`
+		RulesOverride    *string   `json:"rules_override,omitempty"`
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 	}

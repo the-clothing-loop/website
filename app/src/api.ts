@@ -74,6 +74,7 @@ export interface Chain {
   sizes: string[] | null;
   published: boolean;
   open_to_new_members: boolean;
+  rules_override?: string;
 }
 
 export interface Bag {
@@ -140,6 +141,12 @@ export function chainGet(chainUID: UID) {
   return window.axios.get<Chain>("/v2/chain", {
     params: { chain_uid: chainUID },
   });
+}
+
+export type ChainUpdateBody = Partial<Chain> & { uid: UID };
+
+export function chainUpdate(chain: ChainUpdateBody) {
+  return window.axios.patch<never>("/v2/chain", chain);
 }
 
 export function userGetAllByChain(chainUID: UID) {

@@ -42,6 +42,7 @@ export interface Chain {
   sizes: string[] | null;
   published: boolean;
   open_to_new_members: boolean;
+  rules_override?: string;
 }
 
 export interface Event {
