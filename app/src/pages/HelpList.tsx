@@ -1,4 +1,6 @@
 import {
+  IonButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
@@ -16,6 +18,10 @@ import {
   logoLinkedin,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
+import { StoreContext } from "../Store";
+import { useContext, useMemo, useRef } from "react";
+import CreateUpdateRules from "../components/CreateUpdateRules";
+import { FaqListItem } from "./HelpItem";
 
 interface MediaIcon {
   icon: string;
@@ -48,13 +54,38 @@ const mediaIcons: MediaIcon[] = [
 
 export default function HelpList() {
   const { t } = useTranslation();
-  const data = t("list", { ns: "faq", returnObjects: true }) as any[];
+  const { authUser, chain, setChain } = useContext(StoreContext);
+  const modal = useRef<HTMLIonModalElement>(null);
 
+  const isUserAdmin = useMemo(
+    () =>
+      authUser && chain
+        ? authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
+            ?.is_chain_admin || false
+        : false,
+    [authUser, chain]
+  );
+
+  function handleClickChange() {
+    modal.current?.present();
+  }
+
+  function refreshChain() {
+    setChain(chain, authUser!.uid);
+  }
+
+  const data = t("list", { ns: "faq", returnObjects: true }) as FaqListItem[];
   return (
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("howDoesItWork")}</IonTitle>
+
+          {isUserAdmin ? (
+            <IonButtons slot="end">
+              <IonButton onClick={handleClickChange}>{t("change")}</IonButton>
+            </IonButtons>
+          ) : null}
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -106,6 +137,12 @@ export default function HelpList() {
         >
           hello@clothingloop.org
         </IonRouterLink>
+
+        <CreateUpdateRules
+          rules={chain?.rules_override || null}
+          modal={modal}
+          didDismiss={refreshChain}
+        />
       </IonContent>
     </IonPage>
   );

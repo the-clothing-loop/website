@@ -11,6 +11,15 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router";
 
+export interface FaqListItem {
+  Title: string;
+  "Title 2": string;
+  "Short explanation": string;
+  "Paragraph 1": string;
+  "Paragraph 2": string;
+  "Paragraph 3": string;
+}
+
 export default function HelpItem({
   match,
 }: RouteComponentProps<{ index: string }>) {
@@ -20,7 +29,7 @@ export default function HelpItem({
   const item = useMemo(() => {
     let index = parseInt(match.params.index, 10);
 
-    return data[index];
+    return data[index] as FaqListItem;
   }, [match.params.index]);
 
   return (
