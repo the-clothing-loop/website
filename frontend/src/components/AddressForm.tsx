@@ -1,4 +1,4 @@
-import { useEffect, FormEvent, useContext, useState } from "react";
+import { useEffect, FormEvent, useContext, useState, MouseEvent } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import SizesDropdown from "./SizesDropdown";
@@ -55,6 +55,10 @@ export default function AddressForm(props: {
     () => !!props.onlyShowEditableAddress
   );
 
+  const [isAddressChecked, setIsAddressChecked] = useState<boolean>(false);
+  const [useUserInput, setUseUserInput] = useState<boolean>(false);
+  const [checkAddressOpen, setheckAddressOpen] = useState<boolean>(false);
+
   // If the user is logged in, we want to set values to their information
   useEffect(() => {
     if (authUser && props.userUID) {
@@ -85,6 +89,8 @@ export default function AddressForm(props: {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}&types=address`
     );
     const data = await response.json();
+    // console.log(data.features[0]?.center);
+    console.log(data);
     return data.features[0]?.place_name || "";
   }
 
@@ -98,6 +104,54 @@ export default function AddressForm(props: {
           return;
         }
 
+        if (useUserInput) {
+          console.log("inside useUserInput if");
+          values.address =
+            address.street +
+            " " +
+            address.postal +
+            " " +
+            address.city +
+            " " +
+            address.province +
+            " " +
+            address.country;
+        } else {
+          const formattedAddress =
+            address.street.replaceAll(" ", "%20") +
+            "%20" +
+            address.postal.replaceAll(" ", "%20") +
+            "%20" +
+            address.city.replaceAll(" ", "%20") +
+            "%20" +
+            address.province.replaceAll(" ", "%20") +
+            "%20" +
+            address.country.replaceAll(" ", "%20");
+
+          values.address = await getPlaceName(formattedAddress);
+        }
+        console.log(values.address);
+
+        if (!(address.street && address.city && address.country)) {
+          console.error("getPlaceName", values.address);
+          addToastError(t("required") + ": " + t("address"), 500);
+          return;
+        }
+      }
+      props.onSubmit(values);
+    })();
+  }
+
+  function checkAddress(e: MouseEvent) {
+    e.preventDefault();
+    console.log("inside checkAddresss");
+    setIsAddressChecked(true);
+    (async () => {
+      if (openAddress) {
+        if (!(address.street && address.city && address.country)) {
+          addToastError(t("required") + ": " + t("address"), 400);
+          return;
+        }
         const formattedAddress =
           address.street.replaceAll(" ", "%20") +
           "%20" +
@@ -109,15 +163,16 @@ export default function AddressForm(props: {
           "%20" +
           address.country.replaceAll(" ", "%20");
 
-        values.address = await getPlaceName(formattedAddress);
+        var validatedAddress = await getPlaceName(formattedAddress);
 
+        setValue("address", validatedAddress);
+        console.log(values.address);
         if (!(address.street && address.city && address.country)) {
           console.error("getPlaceName", values.address);
           addToastError(t("required") + ": " + t("address"), 500);
           return;
         }
       }
-      props.onSubmit(values);
     })();
   }
 
@@ -226,6 +281,51 @@ export default function AddressForm(props: {
               value={address.country}
               onChange={(e) => setAddress("country", e.target.value)}
             />
+            <div>
+              <button
+                className="btn btn-primary mt-4"
+                type="button"
+                onClick={(e) => checkAddress(e)}
+              >
+                {"Check address"}
+              </button>
+              {isAddressChecked ? (
+                <div className="flex flex-row mt-2">
+                  <div className="w-1/2 flex flex-row mt-2">
+                    <input
+                      type="checkbox"
+                      className="checkbox checkbox-sm checkbox-secondary my-auto ltr:mr-3 rtl:ml-3"
+                      checked={useUserInput}
+                      onChange={() => setUseUserInput(true)}
+                    />
+                    <div>
+                      {"You entered: "} <br />
+                      <div className="mt-2">
+                        {address.street}
+                        <br /> {address.postal} {address.city}{" "}
+                        {address.province} <br />
+                        {address.country}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-1/2 flex flex-row mt-2">
+                    <input
+                      type="checkbox"
+                      className="checkbox checkbox-sm checkbox-secondary my-auto ltr:mr-3 rtl:ml-3"
+                      checked={!useUserInput}
+                      onChange={() => setUseUserInput(false)}
+                    />
+                    <div>
+                      {"We found (recommended): "}
+                      <br />
+                      <div className="whitespace-pre mt-2">
+                        {values.address.replaceAll(", ", "\n")}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
           </div>
         ) : null}
         <div className="mb-4">
