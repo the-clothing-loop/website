@@ -10,6 +10,7 @@ import {
   MouseEventHandler,
   ReactElement,
   DragEvent,
+  LegacyRef,
 } from "react";
 
 import { useParams, Link, useHistory } from "react-router-dom";
@@ -66,7 +67,7 @@ export default function ChainMemberList() {
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
   const [selectedTable, setSelectedTable] = useState<SelectedTable>("route");
-  const refSelect: any = useRef<HTMLSelectElement>();
+  const refSelectAddCoHost: any = useRef<HTMLSelectElement>();
   const addCopyAttributes = useToClipboard();
 
   const participantsSortUsers = useMemo(() => {
@@ -164,7 +165,7 @@ export default function ChainMemberList() {
         addToastError(GinParseErrors(t, err), err.status);
       })
       .finally(() => {
-        (refSelect.current as HTMLSelectElement).value = "";
+        (refSelectAddCoHost.current as HTMLSelectElement).value = "";
         return refresh();
       });
   }
@@ -314,7 +315,7 @@ export default function ChainMemberList() {
               />
             </div>
             {isUserAdmin || authUser?.is_root_admin ? (
-              <div className="flex flex-col md:flex-row bg-teal-light py-3 px-4 mt-4">
+              <div className="flex flex-col md:flex-row flex-wrap bg-teal-light p-4 mt-4">
                 <div className="flex flex-col w-full md:w-1/3 pr-6">
                   <div className="form-control w-full">
                     <label className="cursor-pointer label">
@@ -351,22 +352,10 @@ export default function ChainMemberList() {
                 <div className="flex flex-col w-full md:w-2/3 items-end ml-auto pt-1">
                   <form className="w-full flex flex-row" onSubmit={onAddCoHost}>
                     <div className="w-full ml-auto">
-                      <select
-                        className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
-                        name="participant"
-                        ref={refSelect}
-                        disabled={filteredUsersNotHost.length === 0}
-                        defaultValue=""
-                      >
-                        <option disabled value="">
-                          {t("selectParticipant")}
-                        </option>
-                        {filteredUsersNotHost?.map((u) => (
-                          <option key={u.uid} value={u.uid}>
-                            {u.name} {u.email}
-                          </option>
-                        ))}
-                      </select>
+                      <SelectParticipant
+                        participants={filteredUsersNotHost}
+                        refSelect={refSelectAddCoHost}
+                      />
                     </div>
                     <button
                       className={`btn btn-sm rounded-none w-[120px] ${
@@ -389,6 +378,73 @@ export default function ChainMemberList() {
                       aria-hidden
                     />
                   </Link>
+                </div>
+
+                <div className="w-full mt-4">
+                  <form>
+                    <div className="flex flex-wrap bg-white p-2 space-y-2">
+                      <div className="w-full">
+                        <h3 className="font-semibold text-secondary">
+                          {t("transferParticipantToLoop")}
+                        </h3>
+                      </div>
+                      <div className="w-3/4">
+                        <SelectParticipant
+                          participants={filteredUsersNotHost}
+                          refSelect={refSelectAddCoHost}
+                        />
+                      </div>
+                      <div className="sm:w-1/4">
+                        <span className="feather feather-corner-right-down px-3 align-bottom rtl:hidden" />
+                        <span className="feather feather-corner-left-down px-3 align-bottom ltr:hidden" />
+                      </div>
+                      <div className="sm:w-1/4"></div>
+                      <div className="sm:w-3/4">
+                        <select
+                          className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+                          name="loop"
+                          defaultValue=""
+                        >
+                          <option disabled value="">
+                            {t("selectLoop")}
+                          </option>
+                          {([] as Chain[])?.map((u) => (
+                            <option key={u.uid} value={u.uid}>
+                              {u.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="w-full flex justify-end">
+                        <button
+                          className="btn btn-sm btn-primary"
+                          type="submit"
+                        >
+                          {t("move")}
+                          <span className="rtl:hidden ml-2">
+                            <span
+                              className="feather feather-arrow-right"
+                              aria-hidden
+                            />
+                            <span
+                              className="-ml-1 feather feather-circle"
+                              aria-hidden
+                            />
+                          </span>
+                          <span className="ltr:hidden mr-2">
+                            <span
+                              className="feather feather-circle"
+                              aria-hidden
+                            />
+                            <span
+                              className="-ml-1 feather feather-arrow-left"
+                              aria-hidden
+                            />
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             ) : null}
@@ -1288,5 +1344,30 @@ function BagsColumn(props: { bags: Bag[] }) {
         </tbody>
       </table>
     </div>
+  );
+}
+
+function SelectParticipant(props: {
+  participants: User[];
+  refSelect: LegacyRef<HTMLSelectElement>;
+}) {
+  const { t } = useTranslation();
+  return (
+    <select
+      className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+      name="participant"
+      ref={props.refSelect}
+      disabled={props.participants.length === 0}
+      defaultValue=""
+    >
+      <option disabled value="">
+        {t("selectParticipant")}
+      </option>
+      {props.participants?.map((u) => (
+        <option key={u.uid} value={u.uid}>
+          {u.name} {u.email}
+        </option>
+      ))}
+    </select>
   );
 }
