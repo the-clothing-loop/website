@@ -318,9 +318,7 @@ export default function ChainMemberList() {
                 <div className="flex flex-col w-full md:w-1/3 pr-6">
                   <div className="form-control w-full">
                     <label className="cursor-pointer label">
-                      <span className="label-text">
-                        {published ? t("published") : t("draft")}
-                      </span>
+                      <span className="label-text">{t("published")}</span>
                       <input
                         type="checkbox"
                         className={`checkbox checkbox-secondary ${
@@ -335,7 +333,7 @@ export default function ChainMemberList() {
                   <div className="form-control w-full">
                     <label className="cursor-pointer label">
                       <span className="label-text">
-                        {openToNewMembers ? t("openToNewMembers") : t("closed")}
+                        {t("openToNewMembers")}
                       </span>
                       <input
                         type="checkbox"
