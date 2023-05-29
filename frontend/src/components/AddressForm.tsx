@@ -55,9 +55,8 @@ export default function AddressForm(props: {
     () => !!props.onlyShowEditableAddress
   );
 
-  const [isAddressChecked, setIsAddressChecked] = useState<boolean>(false);
+  const [openCheckAddress, setOpenCheckAddress] = useState<boolean>(false);
   const [useUserInput, setUseUserInput] = useState<boolean>(false);
-  const [checkAddressOpen, setheckAddressOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
 
   // If the user is logged in, we want to set values to their information
@@ -90,8 +89,7 @@ export default function AddressForm(props: {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}&types=address`
     );
     const data = await response.json();
-    // console.log(data.features[0]?.center);
-    console.log(data);
+    // var longLat = (data.features[0]?.center);
     return data.features[0]?.place_name || "";
   }
 
@@ -104,9 +102,7 @@ export default function AddressForm(props: {
           addToastError(t("required") + ": " + t("address"), 400);
           return;
         }
-
         if (useUserInput) {
-          console.log("inside useUserInput if");
           values.address =
             address.street +
             " " +
@@ -145,14 +141,14 @@ export default function AddressForm(props: {
 
   function checkAddress(e: MouseEvent) {
     e.preventDefault();
-    console.log("inside checkAddresss");
-    setIsAddressChecked(true);
+    setOpenCheckAddress(true);
     setLoading(true);
-
     (async () => {
       if (openAddress) {
         if (!(address.street && address.city && address.country)) {
           addToastError(t("required") + ": " + t("address"), 400);
+          setLoading(false);
+          setOpenCheckAddress(false);
           return;
         }
         const formattedAddress =
@@ -169,12 +165,12 @@ export default function AddressForm(props: {
         var validatedAddress = await getPlaceName(formattedAddress);
 
         setValue("address", validatedAddress);
-        console.log(values.address);
         setLoading(false);
-
         if (!(address.street && address.city && address.country)) {
           console.error("getPlaceName", values.address);
           addToastError(t("required") + ": " + t("address"), 500);
+          setLoading(false);
+          setOpenCheckAddress(false);
           return;
         }
       }
@@ -292,22 +288,22 @@ export default function AddressForm(props: {
                 type="button"
                 onClick={(e) => checkAddress(e)}
               >
-                {"Check address"}
+                {t("checkAddress")}
               </button>
-              {isAddressChecked ? (
+              {openCheckAddress ? (
                 loading ? (
                   <div className="flex items-center justify-center h-36">
-                    <div className="feather feather-loader animate-spin text-2xl py-12 mx-auto" />
+                    <div className="feather feather-loader animate-spin text-2xl py-12" />
                   </div>
                 ) : (
                   <div className="flex flex-col sm:flex-row mt-2">
-                    <div className="w-full md:w-1/2 flex flex-row mt-2 ">
+                    <div className="w-full md:w-1/2 mt-2">
                       <div>
                         <div className="mt-4 sm:mt-0 md:ml-0 mb-2">
-                          {"You entered: "}
+                          {t("youEntered")}
                         </div>
 
-                        <div className="flex flex-row">
+                        <div className="flex flex-row justify-center md:justify-start">
                           <input
                             type="checkbox"
                             className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
@@ -315,21 +311,21 @@ export default function AddressForm(props: {
                             onChange={() => setUseUserInput(true)}
                           />
                           <div>
-                            {address.street}
-                            <br /> {address.postal} {address.city}{" "}
-                            {address.province} <br />
+                            {address.street} <br />
+                            {address.postal} {address.city} {address.province}{" "}
+                            <br />
                             {address.country}
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="w-full md:w-1/2 flex flex-row mt-2">
+                    <div className="w-full md:w-1/2 mt-2">
                       <div>
                         <div className="mt-4 sm:mt-0 md:ml-0 mb-2">
-                          {"We found (recommended): "}
+                          {t("weFound")}
                         </div>
 
-                        <div className="flex flex-row">
+                        <div className="flex flex-row justify-center md:justify-start">
                           <input
                             type="checkbox"
                             className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
