@@ -213,7 +213,6 @@ func ChainUpdate(c *gin.Context) {
 		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=70.0"`
 		Sizes            *[]string `json:"sizes,omitempty"`
 		Genders          *[]string `json:"genders,omitempty"`
-		Route            *[]string `json:"route,omitempty"`
 		RulesOverride    *string   `json:"rules_override,omitempty"`
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
@@ -267,6 +266,9 @@ func ChainUpdate(c *gin.Context) {
 	if body.Genders != nil {
 		j, _ := json.Marshal(body.Genders)
 		valuesToUpdate["genders"] = string(j)
+	}
+	if body.RulesOverride != nil {
+		valuesToUpdate["rules_override"] = *(body.RulesOverride)
 	}
 	if body.Published != nil {
 		valuesToUpdate["published"] = *(body.Published)

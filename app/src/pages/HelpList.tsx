@@ -66,6 +66,14 @@ export default function HelpList() {
     [authUser, chain]
   );
 
+  const data = t("list", { ns: "faq", returnObjects: true }) as FaqListItem[];
+  const rules = useMemo(() => {
+    if (chain?.rules_override) {
+      return JSON.parse(chain.rules_override) as FaqListItem[];
+    }
+    return data;
+  }, [chain]);
+
   function handleClickChange() {
     modal.current?.present();
   }
@@ -74,7 +82,6 @@ export default function HelpList() {
     setChain(chain, authUser!.uid);
   }
 
-  const data = t("list", { ns: "faq", returnObjects: true }) as FaqListItem[];
   return (
     <IonPage>
       <IonHeader translucent>
@@ -95,7 +102,7 @@ export default function HelpList() {
           </IonToolbar>
         </IonHeader>
         <IonList>
-          {data.map((item, index) => (
+          {rules.map((item, index) => (
             <IonItem routerLink={"/help/" + index} lines="full" key={index}>
               {item.Title}
             </IonItem>

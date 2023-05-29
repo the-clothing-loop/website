@@ -128,6 +128,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function _setChain(c: Chain | null, _authUserUID: UID | null) {
+    let _chain = c;
     let _chainUsers: typeof chainUsers = [];
     let _route: typeof route = [];
     let _bags: typeof bags = [];
@@ -135,22 +136,24 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (c && _authUserUID) {
       try {
         const res = await Promise.all([
+          chainGet(c.uid),
           userGetAllByChain(c.uid),
           routeGetOrder(c.uid),
           bagGetAllByChain(c.uid, _authUserUID),
           bulkyItemGetAllByChain(c.uid, _authUserUID),
         ]);
-        _chainUsers = res[0].data;
-        _route = res[1].data;
-        _bags = res[2].data;
-        _bulkyItems = res[3].data;
+        _chain = res[0].data;
+        _chainUsers = res[1].data;
+        _route = res[2].data;
+        _bags = res[3].data;
+        _bulkyItems = res[4].data;
       } catch (err) {
         throwError(err);
       }
     }
 
     await storage.set("chain_uid", c ? c.uid : null);
-    setChain(c);
+    setChain(_chain);
     setChainUsers(_chainUsers);
     setRoute(_route);
     setBags(_bags);
