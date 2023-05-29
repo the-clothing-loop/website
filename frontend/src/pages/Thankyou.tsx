@@ -34,9 +34,9 @@ function Content({ heading, subheading, confirmationEmail }: IProps) {
         </button>
         <button
           className="btn btn-secondary btn-outline"
-          onClick={() => history.push("/about")}
+          onClick={() => history.push("/faq")}
         >
-          {t("About")}
+          {t("FAQ")}
         </button>
       </div>
     </div>
