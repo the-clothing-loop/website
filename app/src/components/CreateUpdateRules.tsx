@@ -12,15 +12,12 @@ import {
   IonModal,
   IonReorder,
   IonReorderGroup,
-  IonSelect,
-  IonSelectOption,
-  IonText,
   IonTextarea,
   IonTitle,
   IonToolbar,
   ItemReorderEventDetail,
-  SelectChangeEventDetail,
   TextareaChangeEventDetail,
+  useIonAlert,
   useIonToast,
 } from "@ionic/react";
 
@@ -30,13 +27,8 @@ import type {
   IonTextareaCustomEvent,
   IonInputCustomEvent,
 } from "@ionic/core/components";
-import {
-  arrowDown,
-  arrowUp,
-  chevronDownOutline,
-  chevronUpOutline,
-} from "ionicons/icons";
-import { ChangeEvent, RefObject, useContext, useState } from "react";
+import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
+import { RefObject, useContext, useState } from "react";
 import { chainUpdate } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
@@ -56,7 +48,12 @@ export default function CreateUpdateRules(props: {
     setRules((rr) => {
       let rrr = [...rr];
       rrr[i] = r;
-
+      return rrr;
+    });
+  const deleteRule = (i: number) =>
+    setRules((rr) => {
+      let rrr = [...rr];
+      rrr.splice(i, 1);
       return rrr;
     });
   const [error, setError] = useState("");
@@ -64,6 +61,7 @@ export default function CreateUpdateRules(props: {
   // n  means that index is open
   const [open, setOpen] = useState(-1);
   const [present] = useIonToast();
+  const [presentAlert] = useIonAlert();
 
   function modalInit() {
     setError("");
@@ -110,6 +108,41 @@ export default function CreateUpdateRules(props: {
     })();
   }
 
+  function handleClickCreateRule() {
+    const newRuleIndex = rules.length;
+    setRule(newRuleIndex, {
+      Title: "",
+      "Title 2": "",
+      "Short explanation": "",
+      "Paragraph 1": "",
+      "Paragraph 2": "",
+      "Paragraph 3": "",
+    });
+    setOpen(newRuleIndex);
+  }
+
+  function handleClickDeleteRule(index: number) {
+    const handler = () => {
+      deleteRule(index);
+      setOpen(-1);
+    };
+    presentAlert({
+      header: t("removeRule"),
+      subHeader: rules[index].Title,
+      message: rules[index]["Short explanation"],
+      buttons: [
+        {
+          text: t("cancel"),
+        },
+        {
+          role: "destructive",
+          text: t("delete"),
+          handler,
+        },
+      ],
+    });
+  }
+
   return (
     <IonModal
       ref={props.modal}
@@ -121,13 +154,13 @@ export default function CreateUpdateRules(props: {
           <IonButtons slot="start">
             <IonButton onClick={cancel}>{t("Cancel")}</IonButton>
           </IonButtons>
-          <IonTitle>{t("createBag")}</IonTitle>
+          <IonTitle>{t("customLoopRules")}</IonTitle>
           <IonButtons slot="end">
             <IonButton
               onClick={createOrUpdate}
               color={!error ? "primary" : "danger"}
             >
-              {t("update")}
+              {props.rules ? t("update") : t("create")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -145,9 +178,17 @@ export default function CreateUpdateRules(props: {
                 setRule={(r) => setRule(i, r)}
                 open={open === i}
                 setOpen={() => setOpen((v) => (v === i ? -1 : i))}
+                onClickDeleteRule={() => handleClickDeleteRule(i)}
               />
             ))}
           </IonReorderGroup>
+          <IonItem lines="none">
+            <IonLabel className="ion-text-center">
+              <IonButton onClick={handleClickCreateRule}>
+                {t("createNewRule")}
+              </IonButton>
+            </IonLabel>
+          </IonItem>
         </IonList>
       </IonContent>
     </IonModal>
@@ -159,6 +200,7 @@ function RuleItem(props: {
   setRule: (r: FaqListItem) => void;
   open: boolean;
   setOpen: (a: (b: boolean) => boolean) => void;
+  onClickDeleteRule: () => void;
 }) {
   let paragraphs = [
     props.rule["Paragraph 1"],
@@ -166,6 +208,7 @@ function RuleItem(props: {
     props.rule["Paragraph 3"],
   ].join("\n");
   const toggleOpen = () => props.setOpen((v) => !v);
+  const { t } = useTranslation();
 
   function setParagraphs(e: IonTextareaCustomEvent<TextareaChangeEventDetail>) {
     let values = (e.target.value || "").split("\n");
@@ -206,7 +249,16 @@ function RuleItem(props: {
           </IonButton>
         </IonButtons>
         <IonLabel onClick={toggleOpen}>{props.rule.Title}</IonLabel>
-        <IonReorder slot="end"></IonReorder>
+
+        <div slot="end">
+          {props.open ? (
+            <IonButton color="danger" onClick={props.onClickDeleteRule}>
+              {t("delete")}
+            </IonButton>
+          ) : (
+            <IonReorder slot="end" />
+          )}
+        </div>
       </IonItem>
       <div className={props.open ? "" : "ion-hide"}>
         <IonItem lines="none" color="light">
