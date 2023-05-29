@@ -58,6 +58,7 @@ export default function AddressForm(props: {
   const [isAddressChecked, setIsAddressChecked] = useState<boolean>(false);
   const [useUserInput, setUseUserInput] = useState<boolean>(false);
   const [checkAddressOpen, setheckAddressOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   // If the user is logged in, we want to set values to their information
   useEffect(() => {
@@ -146,6 +147,8 @@ export default function AddressForm(props: {
     e.preventDefault();
     console.log("inside checkAddresss");
     setIsAddressChecked(true);
+    setLoading(true);
+
     (async () => {
       if (openAddress) {
         if (!(address.street && address.city && address.country)) {
@@ -167,6 +170,8 @@ export default function AddressForm(props: {
 
         setValue("address", validatedAddress);
         console.log(values.address);
+        setLoading(false);
+
         if (!(address.street && address.city && address.country)) {
           console.error("getPlaceName", values.address);
           addToastError(t("required") + ": " + t("address"), 500);
@@ -290,40 +295,55 @@ export default function AddressForm(props: {
                 {"Check address"}
               </button>
               {isAddressChecked ? (
-                <div className="flex flex-row mt-2">
-                  <div className="w-1/2 flex flex-row mt-2">
-                    <input
-                      type="checkbox"
-                      className="checkbox checkbox-sm checkbox-secondary my-auto ltr:mr-3 rtl:ml-3"
-                      checked={useUserInput}
-                      onChange={() => setUseUserInput(true)}
-                    />
-                    <div>
-                      {"You entered: "} <br />
-                      <div className="mt-2">
-                        {address.street}
-                        <br /> {address.postal} {address.city}{" "}
-                        {address.province} <br />
-                        {address.country}
+                loading ? (
+                  <div className="flex items-center justify-center h-36">
+                    <div className="feather feather-loader animate-spin text-2xl py-12 mx-auto" />
+                  </div>
+                ) : (
+                  <div className="flex flex-col sm:flex-row mt-2">
+                    <div className="w-full md:w-1/2 flex flex-row mt-2 ">
+                      <div>
+                        <div className="mt-4 sm:mt-0 md:ml-0 mb-2">
+                          {"You entered: "}
+                        </div>
+
+                        <div className="flex flex-row">
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
+                            checked={useUserInput}
+                            onChange={() => setUseUserInput(true)}
+                          />
+                          <div>
+                            {address.street}
+                            <br /> {address.postal} {address.city}{" "}
+                            {address.province} <br />
+                            {address.country}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="w-full md:w-1/2 flex flex-row mt-2">
+                      <div>
+                        <div className="mt-4 sm:mt-0 md:ml-0 mb-2">
+                          {"We found (recommended): "}
+                        </div>
+
+                        <div className="flex flex-row">
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
+                            checked={!useUserInput}
+                            onChange={() => setUseUserInput(false)}
+                          />
+                          <div className="whitespace-pre">
+                            {values.address.replaceAll(", ", "\n")}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="w-1/2 flex flex-row mt-2">
-                    <input
-                      type="checkbox"
-                      className="checkbox checkbox-sm checkbox-secondary my-auto ltr:mr-3 rtl:ml-3"
-                      checked={!useUserInput}
-                      onChange={() => setUseUserInput(false)}
-                    />
-                    <div>
-                      {"We found (recommended): "}
-                      <br />
-                      <div className="whitespace-pre mt-2">
-                        {values.address.replaceAll(", ", "\n")}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                )
               ) : null}
             </div>
           </div>
