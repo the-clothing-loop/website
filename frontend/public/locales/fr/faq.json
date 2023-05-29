@@ -24,6 +24,14 @@
     {
       "question": "Je reçois le message d'erreur : \"votre compte existe déjà\".",
       "answer": "Vous avez déjà créé un compte dans le Clothing Loop. Pour vous inscrire à un nouveau Loop, vous devez d'abord vous connecter :<ol><li>Cliquez en haut à droite sur login.</li><li>Entrez l'adresse e-mail que vous avez utilisée pour enregistrer votre Loop.</li><li>Vérifiez votre e-mail (et votre fichier spam !) pour notre lien de vérification. Nous utilisons un lien au lieu d'un mot de passe !</li><li>Vous pourrez alors vous inscrire pour un nouveau Loop.</li></ol>"
+    },
+    {
+      "question": "Peut-on également mettre des chaussures dans le sac ?",
+      "answer": "C'est à votre hôte local de décider. Si votre Loop vous permet d'ajouter des chaussures au sac, n'ajoutez que des chaussures comme neuves, et <b>pas plus de 2 paires par sac</b>. Veuillez emballer les chaussures dans un sac pour éviter qu'elles ne touchent les vêtements. "
+    },
+    {
+      "question": "Je reçois le message d'erreur : \"votre compte existe déjà\".",
+      "answer": "Vous avez déjà créé un compte dans le Clothing Loop. Pour vous inscrire à un nouveau Loop, vous devez d'abord vous connecter :<ol><li>Cliquez en haut à droite sur login.</li><li>Entrez l'adresse e-mail que vous avez utilisée pour enregistrer votre Loop.</li><li>Vérifiez votre e-mail (et votre fichier spam !) pour notre lien de vérification. Nous utilisons un lien au lieu d'un mot de passe !</li><li>Vous pourrez alors vous inscrire pour un nouveau Loop.</li></ol>"
     }
   ],
   "faqForHosts": "Question-réponse pour les organisateurs",
@@ -63,6 +71,26 @@
     {
       "question": "Que faire si notre Loop ne fonctionne pas bien ?",
       "answer": "Si la qualité des vêtements n'est pas satisfaisante, les participants risquent de quitter le Loop. Veillez à ce que chacun partage la responsabilité de n'ajouter que des vêtements de bonne qualité.<br/><br/>Vous remarquez un vêtement qui ne devrait pas être dans le sac ? Enlevez-le du sac et apportez-le à un conteneur de recyclage de vêtements. Ainsi, le vêtement sera recyclé. En cas de doute, demandez à la personne avant ou âpres vous dans le Loop si elle est d'accord d'enlever le vêtement en question, et décidez par la suite.<br/><br/>Un rasoir anti bouloche/anti-peluche peut énormément prolonger la durée de vie d'un vêtement ! Vous pouvez partager ce conseil au sein de votre communauté.<br/><br/>Et pour conclure, montrez le bon exemple vous-même ; partagez de belles photos et encouragez les autres à faire de même !"
+    },
+    {
+      "question": "Que faire si je n'ai plus le temps de gérer le Loop que j'ai mis en place ?",
+      "answer": "Recourez au groupe ! Demandez si quelqu'un d'autre veut prendre le relais et gérer le Loop."
+    },
+    {
+      "question": "Que faire si quelqu'un veut rejoindre le Loop mais cette personne habite à une trop grande distance ?",
+      "answer": "Si quelqu'un s'est inscrit à votre Loop mais cette personne habite trop loin de la zone de votre Loop, c'est à vous de décider si elle/il peut joindre. Si vous décidez de ne pas le faire, envoyez-leur un courriel pour les en informer. En cas de doute : pour réduire la distance entre deux adresses, vous pouvez demander à cette personne de trouver d'autres participants entre son adresse et le lieu initial du Loop."
+    },
+    {
+      "question": "Combien de personnes peuvent se joindre à un Loop ?",
+      "answer": "Nous conseillons un minimum de 20 personnes dans un Loop : à partir de 20 participants, vous ne reconnaissez généralement plus rien dans le sac ! Cela veut dire que tous vos vêtements ont été choisis. <b>Il n'y a pas vraiment de maximum</b>, c'est à vous de voir ce qui fonctionne correctement ! Aux Pays-Bas, un Loop compte en moyenne 45 personnes. Mais il y a des Loops qui fonctionnent sans problème avec 180 participants !"
+    },
+    {
+      "question": "Que faire si quelqu'un déménage et veut s'inscrire dans une autre région ?",
+      "answer": "En tant qu'hôte du Loop vous pouvez les désinscrire de votre Loop lorsque vous êtes identifié sur notre site web. S'ils souhaitent rejoindre un Loop dans leur nouveau quartier, demandez-leur de s'inscrire à nouveau avec leur nouvelle adresse."
+    },
+    {
+      "question": "Que faire si notre Loop ne fonctionne pas bien ?",
+      "answer": "Make sure that everyone shares the responsibility for only adding good quality items.<br/><br/>Do you see something that shouldn’t be in a bag? Try to donate it to your local textile recycling program. If in doubt, ask the person next to you on the address list  if they agree. It is good to have a few people function as ‘checkpoints’ along the route, to make sure the bags stay in good condition. Because if the quality of the clothing isn’t high enough, people might leave the Loop and that would be a shame!<br/><br/>A <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>fabric shaver</a> can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, set a good example yourself: share some nice photos and encourage others to do the same! Seeing where items end up is a huge motivation for people to donate nice items."
     }
   ]
 }
