@@ -240,6 +240,7 @@
   "differentSizes": "Different sizes",
   "other": "Other",
   "events": "Events",
+  "previousEvents": "Previous Events",
   "allEvents": "All Events",
   "eventName": "Event name",
   "sorryNoEvents": "Sorry, there are no events that match these filters.",

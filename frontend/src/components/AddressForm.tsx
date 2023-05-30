@@ -134,14 +134,13 @@ export default function AddressForm(props: {
           return;
         }
       }
+      console.log(values);
       props.onSubmit(values);
     })();
   }
 
   function checkAddress(e: MouseEvent) {
     e.preventDefault();
-    setOpenCheckAddress(true);
-    setLoading(true);
     (async () => {
       if (openAddress) {
         if (!(address.street && address.city && address.country)) {
@@ -150,6 +149,8 @@ export default function AddressForm(props: {
           setOpenCheckAddress(false);
           return;
         }
+        setOpenCheckAddress(true);
+        setLoading(true);
         const formattedAddress =
           address.street.replaceAll(" ", "%20") +
           "%20" +

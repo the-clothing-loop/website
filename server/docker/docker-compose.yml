@@ -2,10 +2,13 @@ version: "3"
 
 services:
   cl_mail:
-    image: mailhog/mailhog
+    image: axllent/mailpit
     ports:
       - 8025:8025
       - 1025:1025
+    environment:
+      - "MP_SMTP_AUTH_ACCEPT_ANY=true"
+      - "MP_SMTP_AUTH_ALLOW_INSECURE=true"
   cl_pma:
     image: phpmyadmin:apache
     ports: 

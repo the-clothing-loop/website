@@ -11,7 +11,6 @@ import {
   IonModal,
   IonSelect,
   IonSelectOption,
-  IonText,
   IonTitle,
   IonToolbar,
   SelectChangeEventDetail,
@@ -19,85 +18,85 @@ import {
 } from "@ionic/react";
 
 import type { IonSelectCustomEvent, IonModalCustomEvent } from "@ionic/core";
-import { add, checkmarkCircle, ellipse, remove } from "ionicons/icons";
-import {
-  FormEvent,
-  RefObject,
-  SetStateAction,
-  useContext,
-  useState,
-} from "react";
-import { bagColors, bagPut, UID } from "../api";
+import { checkmarkCircle, ellipse } from "ionicons/icons";
+import { FormEvent, RefObject, useContext, useState } from "react";
+import { Bag, bagColors, bagPut, UID } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 
-export default function CreateBag({
+export default function CreateUpdateBag({
+  bag,
   didDismiss,
   modal,
 }: {
+  bag: Bag | null;
   modal: RefObject<HTMLIonModalElement>;
   didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
 }) {
   const { t } = useTranslation();
   const { bags, chainUsers, route, chain, authUser } = useContext(StoreContext);
-  const [bagNumber, _setBagNumber] = useState(0);
+  const [bagNumber, setBagNumber] = useState("");
   const [bagColor, setBagColor] = useState(bagColors[2]);
   const [bagHolder, setBagHolder] = useState<UID | null>(null);
   const [error, setError] = useState("");
   const [present] = useIonToast();
 
   function modalInit() {
-    let highestNumber = 0;
     setError("");
-    bags.forEach((bag) => {
-      if (bag.number > highestNumber) {
-        highestNumber = bagNumber;
+    setBagColor(bag?.color || bagColors[2]);
+    setBagHolder(bag?.user_uid || null);
+
+    if (bag === null) {
+      let highestNumber = 0;
+      {
+        bags.forEach((bag) => {
+          let bagNumber = parseInt(bag.number);
+          if (!isNaN(bagNumber)) {
+            if (bagNumber > highestNumber) {
+              highestNumber = bagNumber;
+            }
+          }
+        });
+        highestNumber++;
       }
-    });
-    setBagNumber(1);
-  }
 
-  function setBagNumber(value: SetStateAction<number>) {
-    let fn: (prevState: number) => number =
-      typeof value !== "function" ? () => value : value;
-
-    _setBagNumber((prevState) => {
-      let n = fn(prevState);
-      bags.forEach((bag) => {
-        if (bag.number === n) {
-          n = bag.number + 1;
-        }
-      });
-      return n;
-    });
+      setBagNumber(highestNumber + "");
+    } else {
+      setBagNumber(bag.number);
+    }
   }
 
   function cancel() {
     modal.current?.dismiss();
   }
-  async function create() {
+  async function createOrUpdate() {
     if (!bagHolder) {
       setError("holder");
       return;
     }
 
     // validate that bag number does not already exist
-    if (bags.find((b) => b.number === bagNumber) || bagNumber < 1) {
+    if (bags.find((b) => b.id !== bag?.id && b.number === bagNumber)) {
       setError("number");
-      console.warn("bag number already exists or is below zero");
+      console.warn("bag number already exists");
       return;
     }
 
+    let body: Parameters<typeof bagPut>[0] = {
+      chain_uid: chain!.uid,
+      user_uid: authUser!.uid,
+      holder_uid: bagHolder,
+      number: bagNumber,
+      color: bagColor,
+    };
+    if (bag) {
+      body.bag_id = bag.id;
+    }
+
     try {
-      await bagPut({
-        chain_uid: chain!.uid,
-        user_uid: authUser!.uid,
-        holder_uid: bagHolder,
-        number: bagNumber,
-        color: bagColor,
-      });
+      await bagPut(body);
 
       setError("");
 
@@ -106,10 +105,6 @@ export default function CreateBag({
       setError(err.status);
       toastError(present, err);
     }
-  }
-  function handleInputBagNumber(e: FormEvent<HTMLIonInputElement>) {
-    let value = (e.target as any).value;
-    setBagNumber(parseInt(value, 10));
   }
   function handleSelectBagHolder(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>
@@ -134,8 +129,11 @@ export default function CreateBag({
           </IonButtons>
           <IonTitle>{t("createBag")}</IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={create} color={!error ? "primary" : "danger"}>
-              {t("create")}
+            <IonButton
+              onClick={createOrUpdate}
+              color={!error ? "primary" : "danger"}
+            >
+              {bag ? t("update") : t("create")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -152,24 +150,15 @@ export default function CreateBag({
             color={error === "number" ? "danger" : undefined}
           >
             <IonLabel slot="start">{t("bagNumber")}</IonLabel>
-            <IonText slot="end" className="ion-text-right">
-              {bagNumber}
-            </IonText>
-
-            <IonButtons slot="end" className="ion-margin-start">
-              <IonButton
-                shape="round"
-                onClick={() => setBagNumber((n) => n + 1)}
-              >
-                <IonIcon icon={add}></IonIcon>
-              </IonButton>
-              <IonButton
-                shape="round"
-                onClick={() => setBagNumber((n) => (n > 1 ? n - 1 : 0))}
-              >
-                <IonIcon icon={remove}></IonIcon>
-              </IonButton>
-            </IonButtons>
+            <IonInput
+              type="text"
+              slot="end"
+              className="ion-text-right"
+              value={bagNumber}
+              onIonChange={(e) =>
+                setBagNumber(e.detail.value?.toString() || "")
+              }
+            />
           </IonItem>
           <IonItem lines="none">
             <IonLabel>
@@ -183,11 +172,13 @@ export default function CreateBag({
                       size="default"
                       key={c}
                       onClick={() => setBagColor(c)}
+                      className="bag-color-select-button"
                     >
                       <IonIcon
                         icon={selected ? checkmarkCircle : ellipse}
                         style={{ color: c }}
                         size="large"
+                        className="bag-color-select-icon"
                       />
                     </IonButton>
                   );

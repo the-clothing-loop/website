@@ -1,9 +1,8 @@
 name: Deploy App
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  release:
+    types: [created]
     paths:
       - "app/**"
 

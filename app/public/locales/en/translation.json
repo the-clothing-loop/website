@@ -31,6 +31,8 @@
   "deleteBulkyItem": "Delete Bulky Item",
   "areYouSureYouWantToDeleteThisBulkyItem": "Are you sure you want to delete this bulky item?",
   "edit": "Edit",
+  "old": "Old",
+  "route": "Route",
   "back": "Back",
   "howDoesItWork": "How does it work?",
   "loading": "Loading...",

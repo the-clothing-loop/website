@@ -5,8 +5,8 @@ import (
 )
 
 type Bag struct {
-	ID          uint      `json:"-"`
-	Number      int       `json:"number"`
+	ID          uint      `json:"id"`
+	Number      string    `json:"number"`
 	Color       string    `json:"color"`
 	UserChainID uint      `json:"-"`
 	ChainUID    string    `json:"chain_uid" gorm:"-:migration;<-:false"`

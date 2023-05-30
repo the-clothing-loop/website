@@ -27,6 +27,7 @@ import {
   chainGet,
   chainRemoveUser,
   chainUpdate,
+  ChainUpdateBody,
   chainUserApprove,
   UnapprovedReason,
 } from "../api/chain";
@@ -101,17 +102,26 @@ export default function ChainMemberList() {
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
     let oldValue = published;
+    let oldValueOpenToNewMembers = openToNewMembers;
     setPublished(isChecked);
+    if (!isChecked) {
+      setOpenToNewMembers(isChecked);
+    }
 
     try {
-      await chainUpdate({
+      let chainUpdateBody: ChainUpdateBody = {
         uid: chainUID,
         published: isChecked,
-      });
+      };
+      if (!isChecked) {
+        chainUpdateBody.open_to_new_members = false;
+      }
+      await chainUpdate(chainUpdateBody);
     } catch (err: any) {
       console.error("Error updating chain: ", err);
       setError(err?.data || `Error: ${JSON.stringify(err)}`);
       setPublished(oldValue);
+      setOpenToNewMembers(oldValueOpenToNewMembers);
     }
   }
 
@@ -120,17 +130,26 @@ export default function ChainMemberList() {
   ) {
     let isChecked = e.target.checked;
     let oldValue = openToNewMembers;
+    let oldValuePublished = published;
     setOpenToNewMembers(isChecked);
+    if (!oldValuePublished && isChecked) {
+      setPublished(true);
+    }
 
     try {
-      await chainUpdate({
+      let chainUpdateBody: ChainUpdateBody = {
         uid: chainUID,
         open_to_new_members: isChecked,
-      });
+      };
+      if (!oldValuePublished && isChecked) {
+        chainUpdateBody.published = true;
+      }
+      await chainUpdate(chainUpdateBody);
     } catch (err: any) {
       console.error("Error updating chain:", err);
       setError(err?.data || `Error: ${JSON.stringify(err)}`);
       setOpenToNewMembers(oldValue);
+      setPublished(oldValuePublished);
     }
   }
 
@@ -164,7 +183,7 @@ export default function ChainMemberList() {
 
   useEffect(() => {
     refresh(true);
-  }, [history]);
+  }, [history, authUser]);
 
   const [filteredUsersHost, filteredUsersNotHost] = useMemo(() => {
     let host: User[] = [];
@@ -299,12 +318,10 @@ export default function ChainMemberList() {
                 <div className="flex flex-col w-full md:w-1/3 pr-6">
                   <div className="form-control w-full">
                     <label className="cursor-pointer label">
-                      <span className="label-text">
-                        {published ? t("published") : t("draft")}
-                      </span>
+                      <span className="label-text">{t("published")}</span>
                       <input
                         type="checkbox"
-                        className={`toggle toggle-secondary ${
+                        className={`checkbox checkbox-secondary ${
                           error === "published" ? "border-error" : ""
                         }`}
                         name="published"
@@ -316,11 +333,11 @@ export default function ChainMemberList() {
                   <div className="form-control w-full">
                     <label className="cursor-pointer label">
                       <span className="label-text">
-                        {openToNewMembers ? t("openToNewMembers") : t("closed")}
+                        {t("openToNewMembers")}
                       </span>
                       <input
                         type="checkbox"
-                        className={`toggle toggle-secondary ${
+                        className={`checkbox checkbox-secondary ${
                           error === "openToNewMembers" ? "border-error" : ""
                         }`}
                         name="openToNewMembers"
@@ -1254,7 +1271,7 @@ function BagsColumn(props: { bags: Bag[] }) {
           {props.bags.map((bag) => {
             let d = dayjs(bag.updated_at);
             return (
-              <tr key={bag.number} className="">
+              <tr key={bag.id} className="">
                 <td>
                   <span
                     className="block rounded-full h-4 w-4"
