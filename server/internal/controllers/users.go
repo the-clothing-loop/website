@@ -551,7 +551,7 @@ LIMIT 1
 		return
 	}
 
-	var uc *models.UserChain
+	uc := &models.UserChain{}
 	tx.
 		Where("user_id = ?", result.UserID).
 		Where("chain_id = ?", result.FromChainID).

@@ -54,3 +54,15 @@ export function userHasNewsletter(
   if (chainUID) params.chain_uid = chainUID;
   return window.axios.get<boolean>("v2/user/newsletter", { params });
 }
+
+export function userTransferChain(
+  fromChainUID: UID,
+  toChainUID: UID,
+  transferUserUID: UID
+) {
+  return window.axios.post<never>("v2/user/transfer-chain", {
+    from_chain_uid: fromChainUID,
+    to_chain_uid: toChainUID,
+    transfer_user_uid: transferUserUID,
+  });
+}

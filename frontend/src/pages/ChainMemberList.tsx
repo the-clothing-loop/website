@@ -11,6 +11,7 @@ import {
   ReactElement,
   DragEvent,
   LegacyRef,
+  SelectHTMLAttributes,
 } from "react";
 
 import { useParams, Link, useHistory } from "react-router-dom";
@@ -33,7 +34,7 @@ import {
   UnapprovedReason,
 } from "../api/chain";
 import { Bag, Chain, UID, User, UserChain } from "../api/types";
-import { userGetAllByChain } from "../api/user";
+import { userGetAllByChain, userTransferChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
@@ -41,6 +42,15 @@ import { GinParseErrors } from "../util/gin-errors";
 import { routeGetOrder, routeSetOrder } from "../api/route";
 import useToClipboard from "../util/to-clipboard.hooks";
 import { bagGetAllByChain } from "../api/bag";
+import { Sleep } from "../util/sleep";
+import PopoverOnHover from "../components/Popover";
+
+enum LoadingState {
+  idle,
+  loading,
+  error,
+  success,
+}
 
 interface Params {
   chainUID: string;
@@ -56,6 +66,8 @@ export default function ChainMemberList() {
   const { authUser } = useContext(AuthContext);
   const { addToastError } = useContext(ToastContext);
 
+  const [hostChains, setHostChains] = useState<Chain[]>([]);
+  const [loadingTransfer, setLoadingTransfer] = useState(LoadingState.idle);
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
   const [bags, setBags] = useState<Bag[] | null>(null);
@@ -68,6 +80,8 @@ export default function ChainMemberList() {
   const [error, setError] = useState("");
   const [selectedTable, setSelectedTable] = useState<SelectedTable>("route");
   const refSelectAddCoHost: any = useRef<HTMLSelectElement>();
+  const refSelectTransferParticipant: any = useRef<HTMLSelectElement>();
+  const refSelectTransferChain: any = useRef<HTMLSelectElement>();
   const addCopyAttributes = useToClipboard();
 
   const participantsSortUsers = useMemo(() => {
@@ -182,6 +196,38 @@ export default function ChainMemberList() {
     }, 100);
   }
 
+  function submitTransfer(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (loadingTransfer !== LoadingState.idle) return;
+
+    const transferUserUID = refSelectTransferParticipant.current.value;
+    const transferFromChainUID = chainUID;
+    const transferToChainUID = refSelectTransferChain.current.value;
+
+    setLoadingTransfer(LoadingState.loading);
+
+    userTransferChain(transferFromChainUID, transferToChainUID, transferUserUID)
+      .then(async () => {
+        setLoadingTransfer(LoadingState.success);
+        refSelectTransferParticipant.current.value = "";
+        refSelectTransferChain.current.value = "";
+        await Sleep(1500);
+        setLoadingTransfer(LoadingState.idle);
+      })
+      .catch(async (err) => {
+        setLoadingTransfer(LoadingState.error);
+        addToastError(
+          `Unable to transfer participant to another loop`,
+          err?.status
+        );
+        await Sleep(1500);
+        setLoadingTransfer(LoadingState.idle);
+      })
+      .finally(() => {
+        refresh(false);
+      });
+  }
+
   useEffect(() => {
     refresh(true);
   }, [history, authUser]);
@@ -213,6 +259,13 @@ export default function ChainMemberList() {
       : Promise.reject("authUser not set");
 
     try {
+      const hostChainsData = await Promise.all(
+        authUser?.chains
+          .filter((uc) => uc.is_chain_admin && uc.chain_uid !== chainUID)
+          .map((uc) => chainGet(uc.chain_uid)) || []
+      );
+      setHostChains(hostChainsData.map((c) => c.data));
+
       const [chainData, chainUsers, routeData, bagData] = await Promise.all([
         chainGet(chainUID),
         userGetAllByChain(chainUID),
@@ -253,6 +306,17 @@ export default function ChainMemberList() {
 
   let userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
   let isUserAdmin = userChain?.is_chain_admin || false;
+  let classSubmitTransfer = "btn btn-sm";
+  switch (loadingTransfer) {
+    case LoadingState.error:
+      classSubmitTransfer += " btn-error";
+      break;
+    case LoadingState.success:
+      classSubmitTransfer += " btn-success";
+      break;
+    default:
+      classSubmitTransfer += " btn-primary";
+  }
 
   return (
     <>
@@ -381,68 +445,73 @@ export default function ChainMemberList() {
                 </div>
 
                 <div className="w-full mt-4">
-                  <form>
-                    <div className="flex flex-wrap bg-white p-2 space-y-2">
-                      <div className="w-full">
-                        <h3 className="font-semibold text-secondary">
-                          {t("transferParticipantToLoop")}
-                        </h3>
-                      </div>
-                      <div className="w-3/4">
-                        <SelectParticipant
-                          participants={filteredUsersNotHost}
-                          refSelect={refSelectAddCoHost}
-                        />
-                      </div>
-                      <div className="sm:w-1/4">
-                        <span className="feather feather-corner-right-down px-3 align-bottom rtl:hidden" />
-                        <span className="feather feather-corner-left-down px-3 align-bottom ltr:hidden" />
-                      </div>
-                      <div className="sm:w-1/4"></div>
-                      <div className="sm:w-3/4">
-                        <select
-                          className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
-                          name="loop"
-                          defaultValue=""
-                        >
-                          <option disabled value="">
-                            {t("selectLoop")}
+                  <form
+                    onSubmit={submitTransfer}
+                    className="flex flex-wrap bg-white p-2 space-y-3 sm:space-y-2 relative"
+                  >
+                    <PopoverOnHover
+                      message={t("transferParticipantInfo")}
+                      className="absolute top-0 ltr:right-0 rtl:left-0 tooltip-left rtl:tooltip-right"
+                    />
+                    <div className="w-full">
+                      <h3 className="font-semibold text-secondary">
+                        {t("transferParticipantToLoop")}
+                      </h3>
+                    </div>
+                    <div className="w-5/6 sm:w-3/4">
+                      <SelectParticipant
+                        participants={filteredUsersNotHost}
+                        refSelect={refSelectTransferParticipant}
+                        required
+                      />
+                    </div>
+                    <div className="w-1/6 sm:w-1/4">
+                      <span className="feather feather-corner-right-down px-3 align-bottom rtl:hidden" />
+                      <span className="feather feather-corner-left-down px-3 align-bottom ltr:hidden" />
+                    </div>
+                    <div className="w-1/6 sm:w-1/4"></div>
+                    <div className="w-5/6 sm:w-3/4">
+                      <select
+                        className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+                        name="loop"
+                        defaultValue=""
+                        required
+                        ref={refSelectTransferChain}
+                      >
+                        <option disabled value="">
+                          {t("selectLoop")}
+                        </option>
+                        {hostChains?.map((u) => (
+                          <option key={u.uid} value={u.uid}>
+                            {u.name}
                           </option>
-                          {([] as Chain[])?.map((u) => (
-                            <option key={u.uid} value={u.uid}>
-                              {u.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="w-full flex justify-end">
-                        <button
-                          className="btn btn-sm btn-primary"
-                          type="submit"
-                        >
-                          {t("move")}
-                          <span className="rtl:hidden ml-2">
-                            <span
-                              className="feather feather-arrow-right"
-                              aria-hidden
-                            />
-                            <span
-                              className="-ml-1 feather feather-circle"
-                              aria-hidden
-                            />
-                          </span>
-                          <span className="ltr:hidden mr-2">
-                            <span
-                              className="feather feather-circle"
-                              aria-hidden
-                            />
-                            <span
-                              className="-ml-1 feather feather-arrow-left"
-                              aria-hidden
-                            />
-                          </span>
-                        </button>
-                      </div>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="w-full flex justify-end">
+                      <button className={classSubmitTransfer} type="submit">
+                        {t("transfer")}
+                        <span className="rtl:hidden ml-2">
+                          <span
+                            className="feather feather-arrow-right"
+                            aria-hidden
+                          />
+                          <span
+                            className="-ml-1 feather feather-circle"
+                            aria-hidden
+                          />
+                        </span>
+                        <span className="ltr:hidden mr-2">
+                          <span
+                            className="feather feather-circle"
+                            aria-hidden
+                          />
+                          <span
+                            className="-ml-1 feather feather-arrow-left"
+                            aria-hidden
+                          />
+                        </span>
+                      </button>
                     </div>
                   </form>
                 </div>
@@ -1347,23 +1416,28 @@ function BagsColumn(props: { bags: Bag[] }) {
   );
 }
 
-function SelectParticipant(props: {
+function SelectParticipant({
+  participants,
+  refSelect,
+  ...props
+}: {
   participants: User[];
   refSelect: LegacyRef<HTMLSelectElement>;
-}) {
+} & SelectHTMLAttributes<HTMLSelectElement>) {
   const { t } = useTranslation();
   return (
     <select
       className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
       name="participant"
-      ref={props.refSelect}
-      disabled={props.participants.length === 0}
+      disabled={participants.length === 0}
       defaultValue=""
+      ref={refSelect}
+      {...props}
     >
       <option disabled value="">
         {t("selectParticipant")}
       </option>
-      {props.participants?.map((u) => (
+      {participants?.map((u) => (
         <option key={u.uid} value={u.uid}>
           {u.name} {u.email}
         </option>
