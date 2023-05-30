@@ -295,11 +295,11 @@ export default function AddressForm(props: {
                     <div className="feather feather-loader animate-spin text-2xl py-12" />
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2 mt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
                     <div className="order-1">{t("youEntered")}</div>
-                    <div className="order-3 md:order-2">{t("weFound")}</div>
+                    <div className="order-3 sm:order-2">{t("weFound")}</div>
 
-                    <div className="flex flex-row justify-center md:justify-start order-2 md:order-3">
+                    <div className="flex flex-row justify-center sm:justify-start order-2 sm:order-3">
                       <input
                         type="checkbox"
                         className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
@@ -307,18 +307,10 @@ export default function AddressForm(props: {
                         onChange={() => setUseUserInput(true)}
                       />
                       <div className="whitespace-pre-wrap">
-                        {address.street +
-                          "\n" +
-                          address.postal +
-                          " " +
-                          address.city +
-                          " " +
-                          address.province +
-                          "\n" +
-                          address.country}
+                        {`${address.street}\n${address.postal} ${address.city} ${address.province}\n${address.country}`}
                       </div>
                     </div>
-                    <div className="flex flex-row justify-center md:justify-start order-4">
+                    <div className="flex flex-row justify-center sm:justify-start order-4">
                       <input
                         type="checkbox"
                         className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
