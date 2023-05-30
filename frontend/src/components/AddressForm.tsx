@@ -127,7 +127,6 @@ export default function AddressForm(props: {
 
           values.address = await getPlaceName(formattedAddress);
         }
-        console.log(values.address);
 
         if (!(address.street && address.city && address.country)) {
           console.error("getPlaceName", values.address);
@@ -296,9 +295,9 @@ export default function AddressForm(props: {
                     <div className="feather feather-loader animate-spin text-2xl py-12" />
                   </div>
                 ) : (
-                  <div className="flex flex-col sm:flex-row mt-2">
-                    <div className="w-full md:w-1/2 mt-2">
-                      <div>
+                  <div className="flex flex-col sm:flex-row mt-2 ">
+                    <div className="w-full md:w-1/2 mt-2 object-scale-down pr-2">
+                      <div className="">
                         <div className="mt-4 sm:mt-0 md:ml-0 mb-2">
                           {t("youEntered")}
                         </div>
@@ -310,16 +309,21 @@ export default function AddressForm(props: {
                             checked={useUserInput}
                             onChange={() => setUseUserInput(true)}
                           />
-                          <div>
-                            {address.street} <br />
-                            {address.postal} {address.city} {address.province}{" "}
-                            <br />
-                            {address.country}
+                          <div className="whitespace-pre-wrap pr-2">
+                            {address.street +
+                              "\n" +
+                              address.postal +
+                              " " +
+                              address.city +
+                              " " +
+                              address.province +
+                              "\n" +
+                              address.country}
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="w-full md:w-1/2 mt-2">
+                    <div className="w-full md:w-1/2 mt-2 object-scale-down pr-2">
                       <div>
                         <div className="mt-4 sm:mt-0 md:ml-0 mb-2">
                           {t("weFound")}
@@ -332,7 +336,7 @@ export default function AddressForm(props: {
                             checked={!useUserInput}
                             onChange={() => setUseUserInput(false)}
                           />
-                          <div className="whitespace-pre">
+                          <div className="whitespace-pre-wrap">
                             {values.address.replaceAll(", ", "\n")}
                           </div>
                         </div>
