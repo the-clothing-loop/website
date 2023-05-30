@@ -91,6 +91,7 @@ func ChainGet(c *gin.Context) {
 
 	var query struct {
 		ChainUID string `form:"chain_uid" binding:"required"`
+		AddRules bool   `form:"add_rules" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -104,7 +105,7 @@ func ChainGet(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{
+	body := gin.H{
 		"uid":                 chain.UID,
 		"name":                chain.Name,
 		"description":         chain.Description,
@@ -116,8 +117,12 @@ func ChainGet(c *gin.Context) {
 		"genders":             chain.Genders,
 		"published":           chain.Published,
 		"open_to_new_members": chain.OpenToNewMembers,
-		"rules_override":      chain.RulesOverride,
-	})
+	}
+
+	if query.AddRules {
+		body["rules_override"] = chain.RulesOverride
+	}
+	c.JSON(200, body)
 }
 
 func ChainGetAll(c *gin.Context) {

@@ -136,7 +136,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (c && _authUserUID) {
       try {
         const res = await Promise.all([
-          chainGet(c.uid),
+          chainGet(c.uid, true),
           userGetAllByChain(c.uid),
           routeGetOrder(c.uid),
           bagGetAllByChain(c.uid, _authUserUID),

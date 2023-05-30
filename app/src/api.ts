@@ -137,9 +137,9 @@ export function userGetByUID(chainUID: string | undefined, userUID: string) {
   return window.axios.get<User>("/v2/user", { params });
 }
 
-export function chainGet(chainUID: UID) {
+export function chainGet(chainUID: UID, addRules: boolean = false) {
   return window.axios.get<Chain>("/v2/chain", {
-    params: { chain_uid: chainUID },
+    params: { chain_uid: chainUID, add_rules: addRules },
   });
 }
 
