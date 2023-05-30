@@ -295,51 +295,38 @@ export default function AddressForm(props: {
                     <div className="feather feather-loader animate-spin text-2xl py-12" />
                   </div>
                 ) : (
-                  <div className="flex flex-col sm:flex-row mt-2 ">
-                    <div className="w-full md:w-1/2 mt-2 object-scale-down pr-2">
-                      <div className="">
-                        <div className="mt-4 sm:mt-0 md:ml-0 mb-2">
-                          {t("youEntered")}
-                        </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2 mt-4">
+                    <div className="order-1">{t("youEntered")}</div>
+                    <div className="order-3 md:order-2">{t("weFound")}</div>
 
-                        <div className="flex flex-row justify-center md:justify-start">
-                          <input
-                            type="checkbox"
-                            className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
-                            checked={useUserInput}
-                            onChange={() => setUseUserInput(true)}
-                          />
-                          <div className="whitespace-pre-wrap pr-2">
-                            {address.street +
-                              "\n" +
-                              address.postal +
-                              " " +
-                              address.city +
-                              " " +
-                              address.province +
-                              "\n" +
-                              address.country}
-                          </div>
-                        </div>
+                    <div className="flex flex-row justify-center md:justify-start order-2 md:order-3">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
+                        checked={useUserInput}
+                        onChange={() => setUseUserInput(true)}
+                      />
+                      <div className="whitespace-pre-wrap">
+                        {address.street +
+                          "\n" +
+                          address.postal +
+                          " " +
+                          address.city +
+                          " " +
+                          address.province +
+                          "\n" +
+                          address.country}
                       </div>
                     </div>
-                    <div className="w-full md:w-1/2 mt-2 object-scale-down pr-2">
-                      <div>
-                        <div className="mt-4 sm:mt-0 md:ml-0 mb-2">
-                          {t("weFound")}
-                        </div>
-
-                        <div className="flex flex-row justify-center md:justify-start">
-                          <input
-                            type="checkbox"
-                            className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
-                            checked={!useUserInput}
-                            onChange={() => setUseUserInput(false)}
-                          />
-                          <div className="whitespace-pre-wrap">
-                            {values.address.replaceAll(", ", "\n")}
-                          </div>
-                        </div>
+                    <div className="flex flex-row justify-center md:justify-start order-4">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
+                        checked={!useUserInput}
+                        onChange={() => setUseUserInput(false)}
+                      />
+                      <div className="whitespace-pre-wrap">
+                        {values.address.replaceAll(", ", "\n")}
                       </div>
                     </div>
                   </div>
