@@ -101,6 +101,8 @@ WHERE user_chains.chain_id IN ?
 		return
 	}
 	if user.Email.Valid && !user.IsEmailVerified {
+		db.Exec(`UPDATE user_chains SET created_at = NOW() WHERE user_id = ?`, user.ID)
+
 		for _, result := range results {
 			if result.Email.Valid {
 				go views.EmailAParticipantJoinedTheLoop(
