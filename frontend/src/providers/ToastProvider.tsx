@@ -1,13 +1,11 @@
 import {
   createContext,
   PropsWithChildren,
-  ReactChildren,
-  ReactElement,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import * as focusTrap from "focus-trap";
 
 export interface Toast {
   type: "info" | "success" | "warning" | "error";
@@ -140,56 +138,30 @@ function ToastComponent(props: {
 
 function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
   const { t } = useTranslation();
-  const [trap, setTrap] = useState<focusTrap.FocusTrap>();
+  const refDisplay = useRef<HTMLDialogElement>(null);
+  const refButtonClose = useRef<HTMLButtonElement>(null);
 
-  function asyncDeactivate() {
-    return new Promise((resolve, reject) => {
-      if (trap) {
-        try {
-          trap.deactivate({
-            onPostDeactivate: () => {
-              resolve(undefined);
-            },
-          });
-        } catch (err) {
-          reject(Error("Focus trap error:", { cause: err }));
-        }
-      } else reject(Error("trap not defined"));
-    }).catch((err) => {
-      console.error(err);
+  useEffect(() => {
+    refDisplay.current?.showModal();
+    setTimeout(() => {
+      refButtonClose.current?.focus();
     });
-  }
+  }, []);
 
   function handleActionClick(fn: () => void) {
-    asyncDeactivate().finally(() => {
-      props.closeFunc();
-      fn();
-    });
+    props.closeFunc();
+    fn();
   }
   function handleBackgroundClick() {
     if (window.innerWidth > 900) {
-      asyncDeactivate().finally(() => {
-        props.closeFunc();
-      });
+      props.closeFunc();
     }
   }
-
-  useEffect(() => {
-    const trap = focusTrap.createFocusTrap("#toast-modal", {
-      initialFocus: "#toast-modal-close",
-    });
-    try {
-      trap.activate();
-    } catch (err) {
-      console.error(Error("Trap unable to active: ", { cause: err }));
-    }
-    setTrap(trap);
-  }, []);
 
   return (
     <dialog
       className="fixed inset-0 z-50 flex justify-center items-center p-0"
-      id="toast-modal"
+      ref={refDisplay}
       tabIndex={-1}
     >
       <div
@@ -240,7 +212,7 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
           })}
           <button
             key="close"
-            id="toast-modal-close"
+            ref={refButtonClose}
             className="btn btn-sm btn-ghost"
             onClick={() => handleActionClick(() => {})}
           >
