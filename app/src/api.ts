@@ -74,10 +74,12 @@ export interface Chain {
   sizes: string[] | null;
   published: boolean;
   open_to_new_members: boolean;
+  rules_override?: string;
 }
 
 export interface Bag {
-  number: number;
+  id: number;
+  number: string;
   color: string;
   chain_uid: UID;
   user_uid: UID;
@@ -135,10 +137,16 @@ export function userGetByUID(chainUID: string | undefined, userUID: string) {
   return window.axios.get<User>("/v2/user", { params });
 }
 
-export function chainGet(chainUID: UID) {
+export function chainGet(chainUID: UID, addRules: boolean = false) {
   return window.axios.get<Chain>("/v2/chain", {
-    params: { chain_uid: chainUID },
+    params: { chain_uid: chainUID, add_rules: addRules },
   });
+}
+
+export type ChainUpdateBody = Partial<Chain> & { uid: UID };
+
+export function chainUpdate(chain: ChainUpdateBody) {
+  return window.axios.patch<never>("/v2/chain", chain);
 }
 
 export function userGetAllByChain(chainUID: UID) {
@@ -166,16 +174,17 @@ export function bagGetAllByChain(chainUID: UID, userUID: UID) {
 export function bagPut(body: {
   chain_uid: UID;
   user_uid: UID;
-  number: number;
+  bag_id?: number;
+  number?: string;
   holder_uid?: UID;
   color?: string;
 }) {
   return window.axios.put("/v2/bag", body);
 }
 
-export function bagRemove(chainUID: UID, userUID: UID, id: number) {
+export function bagRemove(chainUID: UID, userUID: UID, bagID: number) {
   return window.axios.delete("/v2/bag", {
-    params: { chain_uid: chainUID, user_uid: userUID, id },
+    params: { chain_uid: chainUID, user_uid: userUID, bag_id: bagID },
   });
 }
 

@@ -14,12 +14,16 @@
       "answer": "Il n'y a aucune garantie que vous trouverez quelque chose qui vous plaît. Il est possible que quelques sacs passent par chez vous et qu'ils ne contiennent rien d'intéressant pour vous. Mais n'oubliez pas : trouver un article de rêve a plus de valeur que 10 articles que vous ne portez pas. Et le fait de rendre quelqu'un d'autre très heureux avec un vêtement qui prend la poussière dans votre garde-robe est aussi un aspect important (et fun !) de la philosophie du Clothing Loop !"
     },
     {
-      "question": "Que faire des vêtements volumineux (comme les manteaux d'hiver) qui ne rentrent pas dans le sac ?",
-      "answer": "Les vêtements volumineux peuvent être photographiés et partagés via le canal de communication de votre Loop, ou via l'application Glide. Ceux que l'article intéresse peuvent répondre par un message privé et organiser le ramassage de l'article."
-    },
-    {
       "question": "Peut-on également mettre des chaussures dans le sac ?",
       "answer": "La réponse courte est oui. Gardez cependant à l'esprit que les chaussures sont plus difficiles à transmettre que les vêtements. Il y a beaucoup plus de tailles, et elles s'usent beaucoup plus vite que les vêtements. Soyez donc très sélectif avec les chaussures ! N'ajoutez que des paires \"comme neuves\" et ne mettez pas plus de deux paires par sac."
+    },
+    {
+      "question": "Que faire des vêtements volumineux (comme les manteaux d'hiver) qui ne rentrent pas dans le sac ?",
+      "answer": "Les vêtements volumineux peuvent être photographiés et partagés via votre canal de communication ou via <a target='_blank' href='https://template-clothing-loop.glideapp.io'> l'application Glide</a>. Ceux que l'article intéresse peuvent répondre par un message privé et organiser le ramassage."
+    },
+    {
+      "question": "Je reçois le message d'erreur : \"votre compte existe déjà\".",
+      "answer": "Vous avez déjà créé un compte dans le Clothing Loop. Pour vous inscrire à un nouveau Loop, vous devez d'abord vous connecter :<ol><li>Cliquez en haut à droite sur login.</li><li>Entrez l'adresse e-mail que vous avez utilisée pour enregistrer votre Loop.</li><li>Vérifiez votre e-mail (et votre fichier spam !) pour notre lien de vérification. Nous utilisons un lien au lieu d'un mot de passe !</li><li>Vous pourrez alors vous inscrire pour un nouveau Loop.</li></ol>"
     }
   ],
   "faqForHosts": "Question-réponse pour les organisateurs",
@@ -38,7 +42,7 @@
     },
     {
       "question": "Comment gérer un grand nombre de personnes dans le canal de communication ?",
-      "answer": "Lorsque les groupes grandissent, il est important de s'assurer que les participants ne sont pas bombardés de messages (non pertinents). Nous vous conseillons d'établir des règles concernant ce qui peut ou ne peut pas être partagé via l'application de groupe. Par exemple :<br /><br /><span>Oui,</span>à partager dans l'application :<ul><li>Des selfies de jolies choses que vous avez prises dans le sac ou de jolies choses que vous mettez dans le sac</li><li>Des compliments à d'autres participants</li><li>Des mises à jour pertinentes en matière de logistique et d'organisation</li></ul><span>Non,</span>à ne pas partager dans l'application :<ul><li>Tout ce qui n'est pas lié au Loop tels que demandes de sondages, invitations pour de nouveaux groupes, collecte de fonds, mèmes, et cetera. Si vous voulez demander l'avis de tous sur un sujet, utilisez plutôt une application de sondage telle que LouLou</li></ul>"
+      "answer": "Lorsque les groupes grandissent, il est important de s'assurer que les participants ne sont pas bombardés de messages (non pertinents). Nous vous conseillons d'établir des règles concernant ce qui peut ou ne peut pas être partagé via l'application de groupe. Par exemple :<ul class='list-none'><li><b>Oui,</b> à partager dans l'application:<ul><li>Des selfies de jolies choses que vous avez prises du sac ou de jolies choses que vous mettez dans le sac</li><li>Des compliments à d'autres participants</li><li>Des mises à jour pertinentes en matière de logistique et d'organisation</li></ul></li><li><b>Non,</b> à ne pas partager dans l'application:<ul><li>Tout ce qui n'est pas lié au Loop (tels que demandes de sondages, invitations pour de nouveaux groupes, collecte de fonds, mèmes, etcetera). Si vous voulez demander l'avis de tous sur un sujet, utilisez plutôt une application de sondage.</li><li>Utilisez la fonction de message privé lorsque votre propos ne concerne qu'une seule personne.</li></ul></li></ul>"
     },
     {
       "question": "Que faire si je n'ai plus le temps de gérer le Loop que j'ai mis en place ?",
@@ -46,11 +50,15 @@
     },
     {
       "question": "Que faire si quelqu'un veut rejoindre le Loop mais cette personne habite à une trop grande distance ?",
-      "answer": "Si quelqu'un s'est inscrit à votre Loop mais cette personne habite trop loin de la zone de votre Loop, c'est à vous de décider si elle/il peut joindre. Pour réduire la distance entre les adresses, vous pouvez demander à cette personne de trouver d'autres participants entre son adresse et le lieu initial du Loop."
+      "answer": "Si quelqu'un s'est inscrit à votre Loop mais cette personne habite trop loin de la zone de votre Loop, c'est à vous de décider si elle/il peut joindre. Si vous décidez de ne pas le faire, envoyez-leur un courriel pour les en informer. En cas de doute : pour réduire la distance entre deux adresses, vous pouvez demander à cette personne de trouver d'autres participants entre son adresse et le lieu initial du Loop."
     },
     {
       "question": "Combien de personnes peuvent se joindre à un Loop ?",
-      "answer": "Nous conseillons un minimum de 20 personnes dans un Loop : à partir de 20 participants, vous ne reconnaissez généralement plus rien dans le sac ! Cela veut dire que tous vos vêtements ont été choisis. Il n'y a pas vraiment de maximum, c'est à vous de voir ce qui fonctionne correctement ! Aux Pays-Bas, un Loop compte en moyenne 45 personnes. Mais il y a des Loops qui fonctionnent sans problème avec 130 personnes !"
+      "answer": "Nous conseillons un minimum de 20 personnes dans un Loop : à partir de 20 participants, vous ne reconnaissez généralement plus rien dans le sac ! Cela veut dire que tous vos vêtements ont été choisis. <b>Il n'y a pas vraiment de maximum</b>, c'est à vous de voir ce qui fonctionne correctement ! Aux Pays-Bas, un Loop compte en moyenne 45 personnes. Mais il y a des Loops qui fonctionnent sans problème avec 180 participants !"
+    },
+    {
+      "question": "Que faire si quelqu'un déménage et veut s'inscrire dans une autre région ?",
+      "answer": "En tant qu'hôte du Loop vous pouvez les désinscrire de votre Loop lorsque vous êtes identifié sur notre site web. S'ils souhaitent rejoindre un Loop dans leur nouveau quartier, demandez-leur de s'inscrire à nouveau avec leur nouvelle adresse."
     },
     {
       "question": "Que faire si notre Loop ne fonctionne pas bien ?",

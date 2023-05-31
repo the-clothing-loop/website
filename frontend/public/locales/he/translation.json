@@ -240,6 +240,7 @@
   "differentSizes": "מידות שונות",
   "other": "אחר",
   "events": "אירועים",
+  "previousEvents": "Previous Events",
   "allEvents": "כל האירועים",
   "eventName": "שם האירוע",
   "sorryNoEvents": "מצטערים אך אין אירועים שתואמים את הסינון שנבחר.",
@@ -267,5 +268,11 @@
   "setLocationAndRadius": "הקליקו על המפה לבחירת המיקום הכללי שלכם והשתמשו בסמן כדי להגדיר את המרחק המקסימלי לסינון.",
   "eventLink": "קישור לאירוע",
   "shareLink": "שתפו קישור",
-  "organizedBy": "מאורגן על-ידי"
+  "organizedBy": "מאורגן על-ידי",
+  "streetAddress": "Street address",
+  "postal": "Postal or zip (optional)",
+  "city": "City",
+  "province": "Province or state",
+  "country": "Country or region",
+  "bags": "Bags"
 }

@@ -86,7 +86,7 @@ function Navbar() {
             {t("events")}
           </Link>
 
-          {authUser && (
+          {authUser ? (
             <Link
               onClick={onClickMobileNavLink}
               to="/admin/dashboard"
@@ -94,15 +94,15 @@ function Navbar() {
             >
               {t("account")}
             </Link>
+          ) : (
+            <Link
+              onClick={onClickMobileNavLink}
+              to="/users/login"
+              className="mb-3 btn btn-ghost text-base"
+            >
+              {t("login")}
+            </Link>
           )}
-
-          <Link
-            onClick={onClickMobileNavLink}
-            to={authUser ? "/users/logout" : "/users/login"}
-            className="mb-3 btn btn-ghost text-base"
-          >
-            {authUser ? t("logout") : t("login")}
-          </Link>
 
           <Link
             onClick={onClickMobileNavLink}
@@ -127,7 +127,7 @@ function Navbar() {
             >
               {t("startNewLoop")}
             </Link>
-          ) : authUser === null ? (
+          ) : (
             <Link
               to="/loops/find"
               className="ltr:mr-4 rtl:ml-4 btn btn-primary btn-outline"
@@ -136,7 +136,7 @@ function Navbar() {
               <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
               <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
             </Link>
-          ) : null}
+          )}
 
           <Link to="/events" className="btn btn-ghost text-base">
             {t("events")}
@@ -146,24 +146,19 @@ function Navbar() {
             {t("donate")}
           </Link>
 
-          {authUser && (
+          {authUser ? (
             <Link to="/admin/dashboard" className="btn btn-ghost text-base">
               {t("account")}
             </Link>
-          )}
-
-          <Link
-            to={authUser ? "/users/logout" : "/users/login"}
-            className="btn btn-ghost text-base"
-          >
-            {authUser ? t("logout") : t("login")}
-          </Link>
-
-          {authUser === null && (
-            <Link to="/about" className="btn btn-ghost text-base">
-              {t("about")}
+          ) : (
+            <Link to="/users/login" className="btn btn-ghost text-base">
+              {t("login")}
             </Link>
           )}
+
+          <Link to="/about" className="btn btn-ghost text-base">
+            {t("about")}
+          </Link>
 
           <LanguageSwitcher className="ltr:ml-4 rtl:mr-4" />
         </nav>

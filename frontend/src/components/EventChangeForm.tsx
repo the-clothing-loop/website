@@ -31,7 +31,7 @@ const defaultValues: EventCreateBody = {
   price_currency: null,
   price_value: 0,
   link: "",
-  date: dayjs().format(),
+  date: dayjs().minute(0).second(0).format(),
   date_end: null,
   genders: [],
   image_url: "",
@@ -97,8 +97,9 @@ export default function EventChangeForm(props: {
   );
   const sepDate = useSepDateTime(values.date, (d) => setValue("date", d));
   const [hasEndDate, setHasEndDate] = useState(values.date_end !== null);
+  const [firstSetDefaultEndDate, setFirstSetDefaultEndDate] = useState(false);
   const [dateEnd, setDateEnd] = useState(
-    values.date_end || dayjs().add(2, "hour").format()
+    values.date_end || dayjs().add(2, "hour").minute(0).second(0).format()
   );
   const sepDateEnd = useSepDateTime(dateEnd, setDateEnd);
   const [deleteImageUrl, setDeleteImageUrl] = useState("");
@@ -249,7 +250,21 @@ export default function EventChangeForm(props: {
                 checked={hasEndDate}
                 onChange={(e) => {
                   const checked = e.target.checked;
-                  if (checked) setValue("date_end", null);
+                  if (!checked) setValue("date_end", null);
+                  if (
+                    checked &&
+                    !props.initialValues &&
+                    !firstSetDefaultEndDate
+                  ) {
+                    setFirstSetDefaultEndDate(true);
+                    let d = dayjs(values.date);
+                    sepDateEnd.date.onChange({
+                      target: {
+                        valueAsDate: d.toDate(),
+                        value: d.format("YYYY-MM-DD"),
+                      },
+                    } as any);
+                  }
                   setHasEndDate(checked);
                 }}
               />

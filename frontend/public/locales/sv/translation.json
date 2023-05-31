@@ -240,6 +240,7 @@
   "differentSizes": "Different sizes",
   "other": "Other",
   "events": "Events",
+  "previousEvents": "Previous Events",
   "allEvents": "All Events",
   "eventName": "Event name",
   "sorryNoEvents": "Sorry, there are no events that match these filters.",
@@ -272,5 +273,6 @@
   "postal": "Post eller zip (valfritt)",
   "city": "Stad",
   "province": "Provins eller stat",
-  "country": "Land eller region"
+  "country": "Land eller region",
+  "bags": "Bags"
 }

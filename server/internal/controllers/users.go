@@ -164,6 +164,7 @@ WHERE chains.id = ? AND users.is_email_verified = TRUE
 			c.String(http.StatusInternalServerError, err.Error())
 			return
 		}
+		routeLength := len(route)
 
 		usersWithBulkyItems := []uint{}
 		db.Raw(`
@@ -175,15 +176,22 @@ WHERE uc.chain_id = ? AND bi.id IS NOT NULL
 		`, chain.ID).Scan(&usersWithBulkyItems)
 
 		authUserRouteOrder := routeIndex(route, authUser.UID)
-		prevOrderIndex := authUserRouteOrder - 1
-		nextOrderIndex := authUserRouteOrder + 1
-		if prevOrderIndex < 0 {
-			prevOrderIndex = len(route) - 1
+		indexAllowed := [5]int{
+			authUserRouteOrder - 2,
+			authUserRouteOrder - 1,
+			authUserRouteOrder,
+			authUserRouteOrder + 1,
+			authUserRouteOrder + 2,
 		}
-		if nextOrderIndex >= len(route) {
-			nextOrderIndex = 0
+		// ensure that the index overflows to the end or beginning
+		for i, index := range indexAllowed {
+			if index < 0 {
+				indexAllowed[i] = (index % routeLength) + routeLength
+			} else if index >= routeLength {
+				indexAllowed[i] = index % routeLength
+			}
 		}
-		// fmt.Printf("order len: %d\tprev: %d\tnext: %d\n", len(route), prevOrderIndex, nextOrderIndex)
+		// fmt.Printf("order len: %d\tallowed indexes: %+v\n", len(route), indexAllowed)
 
 		// fmt.Printf("auth order: %v\n", authUserRouteOrder)
 		for i, user := range *users {
@@ -193,9 +201,13 @@ WHERE uc.chain_id = ? AND bi.id IS NOT NULL
 
 			isPrivate := true
 			{
-				isDirectlyBeforeOrAfter := (prevOrderIndex == routeOrder) ||
-					(authUserRouteOrder == routeOrder) ||
-					(nextOrderIndex == routeOrder)
+				isDirectlyBeforeOrAfter := false
+				for _, index := range indexAllowed {
+					if routeOrder == index {
+						isDirectlyBeforeOrAfter = true
+						break
+					}
+				}
 				isSameUser := authUser.UID == user.UID
 				hasBulkyItem := false
 				for _, id := range usersWithBulkyItems {

@@ -58,9 +58,10 @@ func BagPut(c *gin.Context) {
 	db := getDB(c)
 	var body struct {
 		UserUID   string  `json:"user_uid" binding:"required,uuid"`
-		HolderUID string  `json:"holder_uid" binding:"required,uuid"`
 		ChainUID  string  `json:"chain_uid" binding:"required,uuid"`
-		Number    *int    `json:"number,omitempty"`
+		BagID     int     `json:"bag_id,omitempty"`
+		HolderUID string  `json:"holder_uid" binding:"required,uuid"`
+		Number    *string `json:"number,omitempty"`
 		Color     *string `json:"color,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -74,13 +75,13 @@ func BagPut(c *gin.Context) {
 	}
 
 	bag := models.Bag{}
-	if body.Number != nil {
+	if body.BagID != 0 {
 		db.Raw(`
 	SELECT bags.* FROM bags
 	LEFT JOIN user_chains AS uc ON uc.id = bags.user_chain_id
-	WHERE bags.number = ? AND uc.chain_id = ?
+	WHERE bags.id = ? AND uc.chain_id = ?
 	LIMIT 1
-		`, body.Number, chain.ID).Scan(&bag)
+		`, body.BagID, chain.ID).Scan(&bag)
 	}
 	if body.Number != nil {
 		bag.Number = *(body.Number)
@@ -120,7 +121,7 @@ func BagRemove(c *gin.Context) {
 	var query struct {
 		UserUID  string `form:"user_uid" binding:"required,uuid"`
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
-		Number   int    `form:"number" binding:"required"`
+		BagID    int    `form:"bag_id" binding:"required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -134,11 +135,11 @@ func BagRemove(c *gin.Context) {
 
 	err := db.Exec(`
 DELETE FROM bags
-WHERE number = ? AND user_chain_id IN (
+WHERE id = ? AND user_chain_id IN (
 	SELECT id FROM user_chains
 	WHERE chain_id = ?
 )
-	`, query.Number, chain.ID).Error
+	`, query.BagID, chain.ID).Error
 	if err != nil {
 		goscope.Log.Errorf("Bag could not be removed: %v", err)
 		c.String(http.StatusInternalServerError, "Bag could not be removed")

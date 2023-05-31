@@ -116,6 +116,7 @@ func Routes() *gin.Engine {
 	v2.GET("/event/:uid/ical", controllers.EventICal)
 	v2.GET("/event/:uid", controllers.EventGet)
 	v2.GET("/event/all", controllers.EventGetAll)
+	v2.GET("/event/previous", controllers.EventGetPrevious)
 	v2.POST("/event", controllers.EventCreate)
 	v2.PATCH("/event", controllers.EventUpdate)
 	v2.DELETE("/event/:uid", controllers.EventDelete)

@@ -14,7 +14,8 @@ export interface User {
 }
 
 export interface Bag {
-  number: number;
+  id: number;
+  number: string;
   color: string;
   chain_uid: UID;
   user_uid: UID;
@@ -41,6 +42,7 @@ export interface Chain {
   sizes: string[] | null;
   published: boolean;
   open_to_new_members: boolean;
+  rules_override?: string;
 }
 
 export interface Event {

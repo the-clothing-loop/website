@@ -240,6 +240,7 @@
   "differentSizes": "Tallas diferentas",
   "other": "Otro",
   "events": "Events",
+  "previousEvents": "Previous Events",
   "allEvents": "All Events",
   "eventName": "Event name",
   "sorryNoEvents": "Sorry, there are no events that match these filters.",
@@ -272,5 +273,6 @@
   "postal": "Postal o zip (opcional)",
   "city": "Ciudad",
   "province": "Provincia o estado",
-  "country": "País o región"
+  "country": "País o región",
+  "bags": "Bags"
 }

@@ -7,21 +7,36 @@ import {
   IonBackButton,
   IonButtons,
 } from "@ionic/react";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router";
+import { StoreContext } from "../Store";
+
+export interface FaqListItem {
+  Title: string;
+  "Title 2": string;
+  "Short explanation": string;
+  "Paragraph 1": string;
+  "Paragraph 2": string;
+  "Paragraph 3": string;
+}
 
 export default function HelpItem({
   match,
 }: RouteComponentProps<{ index: string }>) {
   const { t } = useTranslation();
+  const { chain } = useContext(StoreContext);
   const data = t("list", { ns: "faq", returnObjects: true }) as any[];
 
   const item = useMemo(() => {
     let index = parseInt(match.params.index, 10);
 
-    return data[index];
-  }, [match.params.index]);
+    if (chain && chain.rules_override) {
+      const json = JSON.parse(chain.rules_override);
+      return json[index];
+    }
+    return data[index] as FaqListItem;
+  }, [match.params.index, chain]);
 
   return (
     <IonPage>
