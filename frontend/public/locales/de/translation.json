@@ -255,7 +255,7 @@
   "addToCalendar": "Add event to your calendar",
   "date": "Datum",
   "time": "Zeit",
-  "contactHost": "Contact Host",
+  "contactHost": "Host kontaktieren",
   "eventDetails": "Event Details",
   "relatedLoop": "Related Loop",
   "none": "None",
@@ -274,5 +274,5 @@
   "city": "Stadt",
   "province": "Provinz oder staat",
   "country": "Land oder Region",
-  "bags": "Bags"
+  "bags": "Taschen"
 }
