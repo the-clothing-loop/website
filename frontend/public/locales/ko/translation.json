@@ -29,6 +29,7 @@
   "cancel": "Cancel",
   "deleteAccount": "Are you sure you want to permanently delete your account?",
   "areYouSureRemoveEvent": "Are you sure you want to permanently delete this event?",
+  "areYouSureLogout": "Are you sure you want to logout?",
   "deleteUserBtn": "Delete Account",
   "edit": "Edit",
   "editUserDetails": "Edit user details",
@@ -274,5 +275,8 @@
   "city": "City",
   "province": "Province or state",
   "country": "Country or region",
-  "bags": "Bags"
+  "bags": "Bags",
+  "checkAddress": "Check address",
+  "youEntered": "You entered:",
+  "weFound": "We found (recommended):"
 }
