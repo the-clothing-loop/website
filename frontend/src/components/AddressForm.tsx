@@ -102,35 +102,26 @@ export default function AddressForm(props: {
           addToastError(t("required") + ": " + t("address"), 400);
           return;
         }
+        const addressConcatenated =
+          address.street +
+          " " +
+          address.postal +
+          " " +
+          address.city +
+          " " +
+          address.province +
+          " " +
+          address.country;
         if (useUserInput) {
-          values.address =
-            address.street +
-            " " +
-            address.postal +
-            " " +
-            address.city +
-            " " +
-            address.province +
-            " " +
-            address.country;
+          values.address = addressConcatenated;
         } else {
-          const formattedAddress =
-            address.street.replaceAll(" ", "%20") +
-            "%20" +
-            address.postal.replaceAll(" ", "%20") +
-            "%20" +
-            address.city.replaceAll(" ", "%20") +
-            "%20" +
-            address.province.replaceAll(" ", "%20") +
-            "%20" +
-            address.country.replaceAll(" ", "%20");
-
+          const formattedAddress = addressConcatenated.replaceAll(" ", "%20");
           values.address = await getPlaceName(formattedAddress);
         }
 
         if (!(address.street && address.city && address.country)) {
           console.error("getPlaceName", values.address);
-          addToastError(t("required") + ": " + t("address"), 500);
+          addToastError(t("required") + ": " + t("address"), 400);
           return;
         }
       }
@@ -151,16 +142,17 @@ export default function AddressForm(props: {
         }
         setOpenCheckAddress(true);
         setLoading(true);
-        const formattedAddress =
-          address.street.replaceAll(" ", "%20") +
-          "%20" +
-          address.postal.replaceAll(" ", "%20") +
-          "%20" +
-          address.city.replaceAll(" ", "%20") +
-          "%20" +
-          address.province.replaceAll(" ", "%20") +
-          "%20" +
-          address.country.replaceAll(" ", "%20");
+        const formattedAddress = (
+          address.street +
+          " " +
+          address.postal +
+          " " +
+          address.city +
+          " " +
+          address.province +
+          " " +
+          address.country
+        ).replaceAll(" ", "%20");
 
         var validatedAddress = await getPlaceName(formattedAddress);
 
