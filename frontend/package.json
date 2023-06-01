@@ -36,7 +36,6 @@
     "dayjs": "^1.11.7",
     "deck.gl": "^8.8.20",
     "events": "^3.3.0",
-    "focus-trap": "^7.3.1",
     "goscope2-sdk-js": "github:lil5/goscope2#v1.4.2",
     "i18next": "^22.4.6",
     "i18next-browser-languagedetector": "^6.1.0",
