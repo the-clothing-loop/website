@@ -200,8 +200,8 @@ export default function Events() {
             </div>
           )}
           {prevEvents ? (
-            <div className="" key="event-prev">
-              <div className="flex justify-center opacity-70">
+            <div className="opacity-70" key="event-prev">
+              <div className="flex justify-center">
                 <h4
                   className="font-semibold px-3 my-6 relative
                before:border-b-2 before:w-6 before:block before:absolute before:left-full before:top-3
