@@ -363,6 +363,50 @@ export default function ChainMemberList() {
                   {t("peopleWithCount", { count: users.length })}
                 </dd>
               </dl>
+
+              <div className="mt-4">
+                <div className="form-control w-full">
+                  <label className="cursor-pointer label">
+                    <span className="label-text">{t("published")}</span>
+                    <input
+                      type="checkbox"
+                      className={`checkbox checkbox-secondary ${
+                        error === "published" ? "border-error" : ""
+                      }`}
+                      name="published"
+                      checked={published}
+                      onChange={handleChangePublished}
+                    />
+                  </label>
+                </div>
+                <div className="form-control w-full">
+                  <label className="cursor-pointer label">
+                    <span className="label-text">{t("openToNewMembers")}</span>
+                    <input
+                      type="checkbox"
+                      className={`checkbox checkbox-secondary ${
+                        error === "openToNewMembers" ? "border-error" : ""
+                      }`}
+                      name="openToNewMembers"
+                      checked={openToNewMembers}
+                      onChange={handleChangeOpenToNewMembers}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <Link
+                  className="btn btn-sm btn-secondary mt-4 w-full md:w-[120px]"
+                  to={`/loops/${chainUID}/edit`}
+                >
+                  {t("editLoop")}
+                  <span
+                    className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
+                    aria-hidden
+                  />
+                </Link>
+              </div>
             </div>
           </section>
 
@@ -380,38 +424,7 @@ export default function ChainMemberList() {
             </div>
             {isUserAdmin || authUser?.is_root_admin ? (
               <div className="flex flex-col md:flex-row flex-wrap bg-teal-light p-4 mt-4">
-                <div className="flex flex-col w-full md:w-1/3 pr-6">
-                  <div className="form-control w-full">
-                    <label className="cursor-pointer label">
-                      <span className="label-text">{t("published")}</span>
-                      <input
-                        type="checkbox"
-                        className={`checkbox checkbox-secondary ${
-                          error === "published" ? "border-error" : ""
-                        }`}
-                        name="published"
-                        checked={published}
-                        onChange={handleChangePublished}
-                      />
-                    </label>
-                  </div>
-                  <div className="form-control w-full">
-                    <label className="cursor-pointer label">
-                      <span className="label-text">
-                        {t("openToNewMembers")}
-                      </span>
-                      <input
-                        type="checkbox"
-                        className={`checkbox checkbox-secondary ${
-                          error === "openToNewMembers" ? "border-error" : ""
-                        }`}
-                        name="openToNewMembers"
-                        checked={openToNewMembers}
-                        onChange={handleChangeOpenToNewMembers}
-                      />
-                    </label>
-                  </div>
-                </div>
+                <div className="flex flex-col w-full md:w-1/3 pr-6"></div>
 
                 <div className="flex flex-col w-full md:w-2/3 items-end ml-auto pt-1">
                   <form className="w-full flex flex-row" onSubmit={onAddCoHost}>
@@ -432,16 +445,6 @@ export default function ChainMemberList() {
                       {t("addCoHost")}
                     </button>
                   </form>
-                  <Link
-                    className="btn btn-sm btn-primary mt-4 w-full md:w-[120px]"
-                    to={`/loops/${chainUID}/edit`}
-                  >
-                    {t("editLoop")}
-                    <span
-                      className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
-                      aria-hidden
-                    />
-                  </Link>
                 </div>
 
                 <div className="w-full mt-4">
