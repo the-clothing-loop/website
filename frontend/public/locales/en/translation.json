@@ -275,5 +275,8 @@
   "city": "City",
   "province": "Province or state",
   "country": "Country or region",
-  "bags": "Bags"
+  "bags": "Bags",
+  "checkAddress": "Check address",
+  "youEntered": "You entered:",
+  "weFound": "We found (recommended):"
 }

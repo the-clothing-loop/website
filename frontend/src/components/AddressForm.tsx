@@ -1,4 +1,4 @@
-import { useEffect, FormEvent, useContext, useState } from "react";
+import { useEffect, FormEvent, useContext, useState, MouseEvent } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import SizesDropdown from "./SizesDropdown";
@@ -55,6 +55,10 @@ export default function AddressForm(props: {
     () => !!props.onlyShowEditableAddress
   );
 
+  const [openCheckAddress, setOpenCheckAddress] = useState<boolean>(false);
+  const [useUserInput, setUseUserInput] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
+
   // If the user is logged in, we want to set values to their information
   useEffect(() => {
     if (authUser && props.userUID) {
@@ -85,6 +89,7 @@ export default function AddressForm(props: {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}&types=address`
     );
     const data = await response.json();
+    // var longLat = (data.features[0]?.center);
     return data.features[0]?.place_name || "";
   }
 
@@ -97,27 +102,70 @@ export default function AddressForm(props: {
           addToastError(t("required") + ": " + t("address"), 400);
           return;
         }
-
-        const formattedAddress =
-          address.street.replaceAll(" ", "%20") +
-          "%20" +
-          address.postal.replaceAll(" ", "%20") +
-          "%20" +
-          address.city.replaceAll(" ", "%20") +
-          "%20" +
-          address.province.replaceAll(" ", "%20") +
-          "%20" +
-          address.country.replaceAll(" ", "%20");
-
-        values.address = await getPlaceName(formattedAddress);
+        const addressConcatenated =
+          address.street +
+          " " +
+          address.postal +
+          " " +
+          address.city +
+          " " +
+          address.province +
+          " " +
+          address.country;
+        if (useUserInput) {
+          values.address = addressConcatenated;
+        } else {
+          const formattedAddress = addressConcatenated.replaceAll(" ", "%20");
+          values.address = await getPlaceName(formattedAddress);
+        }
 
         if (!(address.street && address.city && address.country)) {
           console.error("getPlaceName", values.address);
-          addToastError(t("required") + ": " + t("address"), 500);
+          addToastError(t("required") + ": " + t("address"), 400);
           return;
         }
       }
+      console.log(values);
       props.onSubmit(values);
+    })();
+  }
+
+  function checkAddress(e: MouseEvent) {
+    e.preventDefault();
+    (async () => {
+      if (openAddress) {
+        if (!(address.street && address.city && address.country)) {
+          addToastError(t("required") + ": " + t("address"), 400);
+          setLoading(false);
+          setOpenCheckAddress(false);
+          return;
+        }
+        setOpenCheckAddress(true);
+        setLoading(true);
+        const formattedAddress = (
+          address.street +
+          " " +
+          address.postal +
+          " " +
+          address.city +
+          " " +
+          address.province +
+          " " +
+          address.country
+        ).replaceAll(" ", "%20");
+
+        var validatedAddress = await getPlaceName(formattedAddress);
+
+        setValue("address", validatedAddress);
+        setLoading(false);
+        if (!(address.street && address.city && address.country)) {
+          console.error("getPlaceName", values.address);
+          addToastError(t("required") + ": " + t("address"), 500);
+          setLoading(false);
+          setOpenCheckAddress(false);
+          return;
+        }
+      }
     })();
   }
 
@@ -226,6 +274,50 @@ export default function AddressForm(props: {
               value={address.country}
               onChange={(e) => setAddress("country", e.target.value)}
             />
+            <div>
+              <button
+                className="btn btn-primary mt-4"
+                type="button"
+                onClick={(e) => checkAddress(e)}
+              >
+                {t("checkAddress")}
+              </button>
+              {openCheckAddress ? (
+                loading ? (
+                  <div className="flex items-center justify-center h-36">
+                    <div className="feather feather-loader animate-spin text-2xl py-12" />
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
+                    <div className="order-1">{t("youEntered")}</div>
+                    <div className="order-3 sm:order-2">{t("weFound")}</div>
+
+                    <div className="flex flex-row justify-center sm:justify-start order-2 sm:order-3">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
+                        checked={useUserInput}
+                        onChange={() => setUseUserInput(true)}
+                      />
+                      <div className="whitespace-pre-wrap">
+                        {`${address.street}\n${address.postal} ${address.city} ${address.province}\n${address.country}`}
+                      </div>
+                    </div>
+                    <div className="flex flex-row justify-center sm:justify-start order-4">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
+                        checked={!useUserInput}
+                        onChange={() => setUseUserInput(false)}
+                      />
+                      <div className="whitespace-pre-wrap">
+                        {values.address.replaceAll(", ", "\n")}
+                      </div>
+                    </div>
+                  </div>
+                )
+              ) : null}
+            </div>
           </div>
         ) : null}
         <div className="mb-4">
