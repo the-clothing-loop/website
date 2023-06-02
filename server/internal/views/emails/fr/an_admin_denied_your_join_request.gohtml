@@ -1,17 +1,17 @@
-<p>Hi, {{ .Name }}</p>
+<p>Bonjour, {{ .Name }}</p>
 
 {{ if eq .Reason "sizes_genders" }}
-<p>Unfortunately, your request to join The {{ .ChainName }} Loop has been denied, because your size and/or gender preferences regarding clothing differ from the Loop you tried to become a part of.</p>
+<p>Malheureusement, votre demande pour joindre le Loop {{ .ChainName }} a été refusée, car vos préférences en matière de taille et/ou de genre des vêtements ne correspondent pas à celles du Loop que vous souhaitez rejoindre.</p>
 
-<p>Maybe there is another Loop where you live, or you can start one yourself! Go to the website: www.clothingloop.org and start a new Loop.</p>
+<p>Il existe peut-être un autre Loop là où vous vivez, ou vous pouvez en lancer un vous-même ! Allez sur le site web www.clothingloop.org et lancez un nouveau Loop.</p>
 {{ else if eq .Reason "too_far_away" }}
-<p>Unfortunately, your request to join The {{ .ChainName }} Loop has been denied, because you live outside the area where that Loop is active.</p>
+<p>Malheureusement, votre demande pour joindre le Loop {{ .ChainName }} a été refusée, car vous vivez en dehors de la zone où ce Loop est actif.</p>
 
-<p>Maybe there is another Loop where you live, or you can start one yourself! Go to the website: www.clothingloop.org and start a new Loop.</p>
+<p>Il existe peut-être un autre Loop là où vous vivez, ou vous pouvez en lancer un vous-même ! Allez sur le site web www.clothingloop.org et lancez un nouveau Loop.</p>
 {{ else if eq .Reason "other" }}
-<p>Unfortunately, your request to join The {{ .ChainName }} Loop has been denied for another reason.</p>
+<p>Malheureusement, votre demande pour joindre le Loop {{ .ChainName }} a été refusée pour une autre raison.</p>
 
-<p>Go to the website: www.clothingloop.org and start a new Loop.</p>
+Allez sur le site web www.clothingloop.org et lancez un nouveau Loop.</p>
 {{ end }}
 
-<p>Nichon, on behalf of the Clothing Loop team</p>
+<p>Nichon, de la part de l'équipe de The Clothing Loop</p>
