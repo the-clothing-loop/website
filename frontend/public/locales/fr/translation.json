@@ -268,15 +268,15 @@
   "clickMap": "Cliquez sur la carte pour sélectionner votre localité et faites glisser le curseur pour définir le rayon.",
   "setLocationAndRadius": "Cliquez sur la carte pour déterminer votre localité et utilisez la barre de défilement pour définir la distance de filtrage maximale.",
   "eventLink": "Lien vers l'événement",
-  "shareLink": "Share Link",
-  "organizedBy": "Organized by",
+  "shareLink": "Partager le lien",
+  "organizedBy": "Organisé par",
   "streetAddress": "Adresse de la rue",
   "postal": "Postal ou zip (facultatif)",
   "city": "Ville",
   "province": "Province ou état",
   "country": "Pays ou région",
-  "bags": "Bags",
-  "checkAddress": "Check address",
-  "youEntered": "You entered:",
-  "weFound": "We found (recommended):"
+  "bags": "Sacs",
+  "checkAddress": "Vérifier l'adresse",
+  "youEntered": "Vous avez entré :",
+  "weFound": "Nous avons trouvé (recommandé) :"
 }
