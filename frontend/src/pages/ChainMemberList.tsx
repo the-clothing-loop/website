@@ -10,6 +10,8 @@ import {
   MouseEventHandler,
   ReactElement,
   DragEvent,
+  LegacyRef,
+  SelectHTMLAttributes,
 } from "react";
 
 import { useParams, Link, useHistory } from "react-router-dom";
@@ -32,7 +34,7 @@ import {
   UnapprovedReason,
 } from "../api/chain";
 import { Bag, Chain, UID, User, UserChain } from "../api/types";
-import { userGetAllByChain } from "../api/user";
+import { userGetAllByChain, userTransferChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
@@ -40,6 +42,15 @@ import { GinParseErrors } from "../util/gin-errors";
 import { routeGetOrder, routeSetOrder } from "../api/route";
 import useToClipboard from "../util/to-clipboard.hooks";
 import { bagGetAllByChain } from "../api/bag";
+import { Sleep } from "../util/sleep";
+import PopoverOnHover from "../components/Popover";
+
+enum LoadingState {
+  idle,
+  loading,
+  error,
+  success,
+}
 
 interface Params {
   chainUID: string;
@@ -53,8 +64,10 @@ export default function ChainMemberList() {
   const { t } = useTranslation();
   const { chainUID } = useParams<Params>();
   const { authUser } = useContext(AuthContext);
-  const { addToastError } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
 
+  const [hostChains, setHostChains] = useState<Chain[]>([]);
+  const [loadingTransfer, setLoadingTransfer] = useState(LoadingState.idle);
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
   const [bags, setBags] = useState<Bag[] | null>(null);
@@ -66,7 +79,9 @@ export default function ChainMemberList() {
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
   const [error, setError] = useState("");
   const [selectedTable, setSelectedTable] = useState<SelectedTable>("route");
-  const refSelect: any = useRef<HTMLSelectElement>();
+  const refSelectAddCoHost: any = useRef<HTMLSelectElement>();
+  const refSelectTransferParticipant: any = useRef<HTMLSelectElement>();
+  const refSelectTransferChain: any = useRef<HTMLSelectElement>();
   const addCopyAttributes = useToClipboard();
 
   const participantsSortUsers = useMemo(() => {
@@ -164,7 +179,7 @@ export default function ChainMemberList() {
         addToastError(GinParseErrors(t, err), err.status);
       })
       .finally(() => {
-        (refSelect.current as HTMLSelectElement).value = "";
+        (refSelectAddCoHost.current as HTMLSelectElement).value = "";
         return refresh();
       });
   }
@@ -179,6 +194,60 @@ export default function ChainMemberList() {
         el.focus();
       } else console.warn("element not found for:", selector);
     }, 100);
+  }
+
+  function handleAddCoHost(user: User) {
+    addModal({
+      message: "",
+      content: () => (
+        <div>
+          <p>{chain?.name + " / " + user.name}</p>
+        </div>
+      ),
+      actions: [],
+    });
+  }
+  function handleTransfer(user: User) {
+    addModal({
+      message: "",
+      content: () => (
+        <div>
+          <p>{chain?.name + " / " + user.name}</p>
+        </div>
+      ),
+      actions: [],
+    });
+  }
+  function submitTransfer(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (loadingTransfer !== LoadingState.idle) return;
+
+    const transferUserUID = refSelectTransferParticipant.current.value;
+    const transferFromChainUID = chainUID;
+    const transferToChainUID = refSelectTransferChain.current.value;
+
+    setLoadingTransfer(LoadingState.loading);
+
+    userTransferChain(transferFromChainUID, transferToChainUID, transferUserUID)
+      .then(async () => {
+        setLoadingTransfer(LoadingState.success);
+        refSelectTransferParticipant.current.value = "";
+        refSelectTransferChain.current.value = "";
+        await Sleep(1500);
+        setLoadingTransfer(LoadingState.idle);
+      })
+      .catch(async (err) => {
+        setLoadingTransfer(LoadingState.error);
+        addToastError(
+          `Unable to transfer participant to another loop`,
+          err?.status
+        );
+        await Sleep(1500);
+        setLoadingTransfer(LoadingState.idle);
+      })
+      .finally(() => {
+        refresh(false);
+      });
   }
 
   useEffect(() => {
@@ -212,6 +281,13 @@ export default function ChainMemberList() {
       : Promise.reject("authUser not set");
 
     try {
+      const hostChainsData = await Promise.all(
+        authUser?.chains
+          .filter((uc) => uc.is_chain_admin && uc.chain_uid !== chainUID)
+          .map((uc) => chainGet(uc.chain_uid)) || []
+      );
+      setHostChains(hostChainsData.map((c) => c.data));
+
       const [chainData, chainUsers, routeData, bagData] = await Promise.all([
         chainGet(chainUID),
         userGetAllByChain(chainUID),
@@ -252,6 +328,17 @@ export default function ChainMemberList() {
 
   let userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
   let isUserAdmin = userChain?.is_chain_admin || false;
+  let classSubmitTransfer = "btn btn-sm";
+  switch (loadingTransfer) {
+    case LoadingState.error:
+      classSubmitTransfer += " btn-error";
+      break;
+    case LoadingState.success:
+      classSubmitTransfer += " btn-success";
+      break;
+    default:
+      classSubmitTransfer += " btn-primary";
+  }
 
   return (
     <>
@@ -298,6 +385,56 @@ export default function ChainMemberList() {
                   {t("peopleWithCount", { count: users.length })}
                 </dd>
               </dl>
+
+              {isUserAdmin || authUser?.is_root_admin ? (
+                <>
+                  <div className="mt-4">
+                    <div className="form-control w-full">
+                      <label className="cursor-pointer label">
+                        <span className="label-text">{t("published")}</span>
+                        <input
+                          type="checkbox"
+                          className={`checkbox checkbox-secondary ${
+                            error === "published" ? "border-error" : ""
+                          }`}
+                          name="published"
+                          checked={published}
+                          onChange={handleChangePublished}
+                        />
+                      </label>
+                    </div>
+                    <div className="form-control w-full">
+                      <label className="cursor-pointer label">
+                        <span className="label-text">
+                          {t("openToNewMembers")}
+                        </span>
+                        <input
+                          type="checkbox"
+                          className={`checkbox checkbox-secondary ${
+                            error === "openToNewMembers" ? "border-error" : ""
+                          }`}
+                          name="openToNewMembers"
+                          checked={openToNewMembers}
+                          onChange={handleChangeOpenToNewMembers}
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="text-center">
+                    <Link
+                      className="btn btn-sm btn-secondary mt-4 w-full md:w-[120px]"
+                      to={`/loops/${chainUID}/edit`}
+                    >
+                      {t("editLoop")}
+                      <span
+                        className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
+                        aria-hidden
+                      />
+                    </Link>
+                  </div>
+                </>
+              ) : null}
             </div>
           </section>
 
@@ -313,85 +450,6 @@ export default function ChainMemberList() {
                 refresh={refresh}
               />
             </div>
-            {isUserAdmin || authUser?.is_root_admin ? (
-              <div className="flex flex-col md:flex-row bg-teal-light py-3 px-4 mt-4">
-                <div className="flex flex-col w-full md:w-1/3 pr-6">
-                  <div className="form-control w-full">
-                    <label className="cursor-pointer label">
-                      <span className="label-text">{t("published")}</span>
-                      <input
-                        type="checkbox"
-                        className={`checkbox checkbox-secondary ${
-                          error === "published" ? "border-error" : ""
-                        }`}
-                        name="published"
-                        checked={published}
-                        onChange={handleChangePublished}
-                      />
-                    </label>
-                  </div>
-                  <div className="form-control w-full">
-                    <label className="cursor-pointer label">
-                      <span className="label-text">
-                        {t("openToNewMembers")}
-                      </span>
-                      <input
-                        type="checkbox"
-                        className={`checkbox checkbox-secondary ${
-                          error === "openToNewMembers" ? "border-error" : ""
-                        }`}
-                        name="openToNewMembers"
-                        checked={openToNewMembers}
-                        onChange={handleChangeOpenToNewMembers}
-                      />
-                    </label>
-                  </div>
-                </div>
-
-                <div className="flex flex-col w-full md:w-2/3 items-end ml-auto pt-1">
-                  <form className="w-full flex flex-row" onSubmit={onAddCoHost}>
-                    <div className="w-full ml-auto">
-                      <select
-                        className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
-                        name="participant"
-                        ref={refSelect}
-                        disabled={filteredUsersNotHost.length === 0}
-                        defaultValue=""
-                      >
-                        <option disabled value="">
-                          {t("selectParticipant")}
-                        </option>
-                        {filteredUsersNotHost?.map((u) => (
-                          <option key={u.uid} value={u.uid}>
-                            {u.name} {u.email}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <button
-                      className={`btn btn-sm rounded-none w-[120px] ${
-                        filteredUsersNotHost.length === 0
-                          ? "btn-disabled"
-                          : "btn-primary"
-                      }`}
-                      type="submit"
-                    >
-                      {t("addCoHost")}
-                    </button>
-                  </form>
-                  <Link
-                    className="btn btn-sm btn-primary mt-4 w-full md:w-[120px]"
-                    to={`/loops/${chainUID}/edit`}
-                  >
-                    {t("editLoop")}
-                    <span
-                      className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
-                      aria-hidden
-                    />
-                  </Link>
-                </div>
-              </div>
-            ) : null}
           </section>
         </div>
 
@@ -500,6 +558,7 @@ export default function ChainMemberList() {
               sortBy={participantsSortBy}
               setSortBy={setParticipantsSortBy}
               chain={chain}
+              hostChains={hostChains}
               refresh={refresh}
             />
           ) : (
@@ -596,7 +655,7 @@ function HostTable(props: {
               <tr key={u.uid} className="[&>td]:hover:bg-base-200/[0.6]">
                 <td className="md:hidden !px-0">
                   <DropdownMenu
-                    direction="dropdown-right"
+                    classes="dropdown-right"
                     items={dropdownItems(u)}
                   />
                 </td>
@@ -605,7 +664,7 @@ function HostTable(props: {
                 <td>{u.phone_number}</td>
                 <td className="text-right hidden md:table-cell">
                   <DropdownMenu
-                    direction="dropdown-left"
+                    classes="dropdown-left"
                     items={dropdownItems(u)}
                   />
                 </td>
@@ -754,7 +813,7 @@ function ApproveTable(props: {
                     >
                       <td className="lg:hidden !px-0">
                         <DropdownMenu
-                          direction="dropdown-right"
+                          classes="dropdown-right"
                           items={[
                             <button
                               type="button"
@@ -829,6 +888,7 @@ function ParticipantsTable(props: {
   setSortBy: (sortBy: ParticipantsSortBy) => void;
   chain: Chain;
   refresh: () => Promise<void>;
+  hostChains: Chain[];
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
@@ -847,9 +907,7 @@ function ParticipantsTable(props: {
     };
   }
 
-  function onRemove(e: MouseEvent, user: User) {
-    e.preventDefault();
-
+  function onRemove(user: User) {
     const chainUID = props.chain.uid;
 
     addModal({
@@ -860,6 +918,89 @@ function ParticipantsTable(props: {
           type: "error",
           fn: () => {
             chainRemoveUser(chainUID, user.uid)
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => {
+                props.refresh();
+              });
+          },
+        },
+      ],
+    });
+  }
+  function onAddCoHost(user: User) {
+    addModal({
+      message: t("addCoHost"),
+      content: () => (
+        <p className="text-center">
+          <span className="feather feather-user inline-block mr-1" />
+          {user.name}
+        </p>
+      ),
+      actions: [
+        {
+          text: t("addCoHost"),
+          type: "success",
+          submit: true,
+          fn: () => {
+            chainAddUser(props.chain.uid, user.uid, true)
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => {
+                props.refresh();
+              });
+          },
+        },
+      ],
+    });
+  }
+  function onTransfer(user: User) {
+    addModal({
+      message: t("transferParticipantToLoop"),
+      content: () => (
+        <div>
+          <div className="flex flex-col items-center">
+            <PopoverOnHover
+              message={t("transferParticipantInfo")}
+              className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left rtl:tooltip-right"
+            />
+            <p className="mb-4">
+              <span className="feather feather-user inline-block mr-1" />
+              {user.name}
+            </p>
+            <p className="mb-1 font-semibold text-sm">{props.chain.name}</p>
+            <span className="feather feather-arrow-down inline-block mb-1" />
+          </div>
+          <select
+            className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+            name="loop"
+            defaultValue=""
+            required
+          >
+            <option disabled value="">
+              {t("selectLoop")}
+            </option>
+            {props.hostChains.map((u) => (
+              <option key={u.uid} value={u.uid}>
+                {u.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      ),
+      actions: [
+        {
+          text: t("transfer"),
+          type: "success",
+          submit: true,
+          fn(formValues) {
+            let toChainUID = formValues?.loop || "";
+
+            if (!toChainUID) return Error("Invalid loop");
+
+            userTransferChain(props.chain.uid, toChainUID, user.uid)
               .catch((err) => {
                 addToastError(GinParseErrors(t, err), err.status);
               })
@@ -923,9 +1064,43 @@ function ParticipantsTable(props: {
               </tr>
             </thead>
             <tbody>
-              {props.users.map((u: User) => {
+              {props.users.map((u, i) => {
                 const userChain = getUserChain(u);
 
+                let dropdownItems = [
+                  <button
+                    type="button"
+                    onClick={() => onRemove(u)}
+                    className="text-red"
+                  >
+                    {t("removeFromLoop")}
+                  </button>,
+                  <Link to={getEditLocation(u)}>{t("edit")}</Link>,
+                ];
+                if (
+                  props.hostChains.length &&
+                  !userChain.is_chain_admin &&
+                  props.authUser?.uid !== u.uid
+                ) {
+                  dropdownItems = [
+                    <button type="button" onClick={() => onAddCoHost(u)}>
+                      {t("addCoHost")}
+                    </button>,
+                    <button
+                      type="button"
+                      onClick={() => onTransfer(u)}
+                      className="text-red"
+                    >
+                      {t("transfer")}
+                    </button>,
+                    ...dropdownItems,
+                  ];
+                }
+
+                let dropdownClasses = "dropdown-right";
+                if (i > 1) {
+                  dropdownClasses += " dropdown-end";
+                }
                 return (
                   <tr
                     key={u.uid}
@@ -935,17 +1110,8 @@ function ParticipantsTable(props: {
                   >
                     <td className="!px-0">
                       <DropdownMenu
-                        direction="dropdown-right"
-                        items={[
-                          <button
-                            type="button"
-                            onClick={(e) => onRemove(e, u)}
-                            className="text-red"
-                          >
-                            {t("removeFromLoop")}
-                          </button>,
-                          <Link to={getEditLocation(u)}>{t("edit")}</Link>,
-                        ]}
+                        classes={dropdownClasses}
+                        items={dropdownItems}
                       />
                     </td>
                     <td>{u.name}</td>
@@ -1154,12 +1320,9 @@ function SortButton(props: {
   );
 }
 
-function DropdownMenu(props: {
-  items: ReactElement[];
-  direction: "dropdown-left" | "dropdown-right";
-}) {
+function DropdownMenu(props: { items: ReactElement[]; classes: string }) {
   return (
-    <div className={"dropdown ".concat(props.direction)}>
+    <div className={"dropdown ".concat(props.classes)}>
       <label tabIndex={0} className="btn btn-ghost">
         <span className="text-xl feather feather-more-vertical" />
       </label>
@@ -1288,5 +1451,35 @@ function BagsColumn(props: { bags: Bag[] }) {
         </tbody>
       </table>
     </div>
+  );
+}
+
+function SelectParticipant({
+  participants,
+  refSelect,
+  ...props
+}: {
+  participants: User[];
+  refSelect: LegacyRef<HTMLSelectElement>;
+} & SelectHTMLAttributes<HTMLSelectElement>) {
+  const { t } = useTranslation();
+  return (
+    <select
+      className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+      name="participant"
+      disabled={participants.length === 0}
+      defaultValue=""
+      ref={refSelect}
+      {...props}
+    >
+      <option disabled value="">
+        {t("selectParticipant")}
+      </option>
+      {participants?.map((u) => (
+        <option key={u.uid} value={u.uid}>
+          {u.name} {u.email}
+        </option>
+      ))}
+    </select>
   );
 }
