@@ -166,6 +166,10 @@ summary.marker\:content-none::-webkit-details-marker {
   padding-left: 2.5rem;
 }
 
+.dropdown-end .dropdown-content {
+  right: unset;
+}
+
 /* Tiny MCE */
 
 html[dir="rtl"] .tox .tox-toolbar__group,
