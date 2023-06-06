@@ -56,6 +56,9 @@ import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { useTranslation } from "react-i18next";
 import dayjs from "./dayjs";
+import OneSignalInit from "./onesignal";
+
+OneSignalInit();
 
 SplashScreen.show({
   autoHide: false,
