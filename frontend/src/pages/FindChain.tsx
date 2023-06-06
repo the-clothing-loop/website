@@ -313,7 +313,7 @@ export default function FindChain({ location }: { location: Location }) {
           {
             text: t("join"),
             type: "secondary",
-            fn: async () => {
+            fn: () => {
               chainAddUser(chain.uid, authUser.uid, false)
                 .then(() => {
                   authUserRefresh();
