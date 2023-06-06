@@ -40,9 +40,6 @@ enum State {
 
 const KEYCODE_ENTER = 13;
 
-const BETA_TESTERS = (import.meta.env.VITE_APP_BETA_TESTERS || "").split(",");
-const IS_DEVELOPMENT = import.meta.env.DEV;
-
 export default function Login(props: { isLoggedIn: boolean }) {
   const { t } = useTranslation();
   const { login } = useContext(StoreContext);
@@ -63,15 +60,6 @@ export default function Login(props: { isLoggedIn: boolean }) {
     clearTimeout(sentTimeout);
     const email = inputEmail.current?.value + "";
     if (!email) return;
-
-    if (!IS_DEVELOPMENT && !BETA_TESTERS.includes(email)) {
-      setSentState(State.error);
-      toastError(
-        present,
-        "This app is currently being beta tested, only a select few can access it at this time"
-      );
-      return;
-    }
 
     try {
       const res = await loginEmail(email + "");
