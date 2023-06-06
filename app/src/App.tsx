@@ -7,6 +7,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
+  getPlatforms,
   setupIonicReact,
   useIonToast,
 } from "@ionic/react";
@@ -56,9 +57,7 @@ import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { useTranslation } from "react-i18next";
 import dayjs from "./dayjs";
-import OneSignalInit from "./onesignal";
-
-OneSignalInit();
+import { OneSignalInitCap, OneSignalInitReact } from "./onesignal";
 
 SplashScreen.show({
   autoHide: false,
@@ -76,6 +75,15 @@ export default function App() {
   const { t } = useTranslation();
 
   useEffect(() => {
+    {
+      const platforms = getPlatforms();
+      if (platforms.includes("capacitor")) {
+        OneSignalInitCap();
+      } else if (platforms.includes("pwa")) {
+        OneSignalInitReact();
+      }
+    }
+
     init()
       .then(() => authenticate().catch((err) => console.warn(err)))
       .finally(() => {

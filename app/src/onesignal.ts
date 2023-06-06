@@ -1,9 +1,10 @@
 import OneSignal from "onesignal-cordova-plugin";
+import OneSignalReact from "react-onesignal";
 
 const ONE_SIGNAL_ID = import.meta.env.VITE_ONE_SIGNAL_ID;
 
 // Call this function when your app starts
-export default function OneSignalInit(): void {
+export function OneSignalInitCap(): void {
   // Uncomment to set OneSignal device logging to VERBOSE
   // OneSignal.setLogLevel(6, 0);
   if (!ONE_SIGNAL_ID) return;
@@ -19,4 +20,13 @@ export default function OneSignalInit(): void {
   OneSignal.promptForPushNotificationsWithUserResponse(function (accepted) {
     console.log("User accepted notifications: " + accepted);
   });
+}
+
+export async function OneSignalInitReact(): Promise<void> {
+  if (!ONE_SIGNAL_ID) return;
+  await OneSignalReact.init({
+    appId: ONE_SIGNAL_ID,
+    allowLocalhostAsSecureOrigin: true,
+  });
+  OneSignalReact.showSlidedownPrompt();
 }
