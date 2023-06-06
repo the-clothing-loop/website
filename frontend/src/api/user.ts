@@ -1,3 +1,4 @@
+import { LargeNumberLike } from "crypto";
 import { UID, User } from "./types";
 
 export function userGetByUID(chainUID: string | undefined, userUID: string) {
@@ -22,6 +23,8 @@ export interface UserUpdateBody {
   sizes?: string[];
   address?: string;
   pause_until?: string;
+  longitude: number;
+  latitude: number;
 }
 export function userUpdate(user: UserUpdateBody) {
   return window.axios.patch<never>("/v2/user", user);

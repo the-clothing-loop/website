@@ -22,6 +22,8 @@ type UserCreateRequestBody struct {
 	PhoneNumber string   `json:"phone_number" binding:"required,min=3"`
 	Newsletter  bool     `json:"newsletter"`
 	Sizes       []string `json:"sizes"`
+	Latitude    float64  `json:"latitude"`
+	Longitude   float64  `json:"longitude"`
 }
 
 func UserGet(c *gin.Context) {

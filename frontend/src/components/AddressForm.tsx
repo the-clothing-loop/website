@@ -20,6 +20,8 @@ export interface ValuesForm {
   address: string;
   sizes: string[];
   newsletter: boolean;
+  latitude: number;
+  longitude: number;
 }
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -43,6 +45,8 @@ export default function AddressForm(props: {
     sizes: [] as string[],
     address: "",
     newsletter: false,
+    latitude: 0,
+    longitude: 0,
   });
   const [address, setAddress] = useForm({
     street: "",
@@ -76,6 +80,8 @@ export default function AddressForm(props: {
             sizes: user.sizes,
             address: user.address,
             newsletter: hasNewsletterReq.data,
+            latitude: user.latitude,
+            longitude: user.longitude,
           });
         } catch (error) {
           console.warn(error);
@@ -89,14 +95,22 @@ export default function AddressForm(props: {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}&types=address`
     );
     const data = await response.json();
-    // var longLat = (data.features[0]?.center);
     return data.features[0]?.place_name || "";
   }
+  async function getCoordinates(address: string): Promise<Array<any>> {
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}&types=address`
+    );
+    const data = await response.json();
+    return data.features[0]?.geometry.coordinates;
+  }
+
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     (async () => {
+      let coordinates = []
       if (openAddress) {
         if (!(address.street && address.city && address.country)) {
           addToastError(t("required") + ": " + t("address"), 400);
@@ -112,6 +126,12 @@ export default function AddressForm(props: {
           address.province +
           " " +
           address.country;
+
+          coordinates = await getCoordinates(
+            addressConcatenated.replaceAll(" ", "%20")
+          );
+         setValue("latitude", coordinates[0])
+         setValue("longitude", coordinates[1])
         if (useUserInput) {
           values.address = addressConcatenated;
         } else {
