@@ -1,0 +1,11 @@
+{
+   "name": "clothing-loop-docker-scripts",
+   "description": "Docker Scripts for the Clothing Loop",
+   "scripts": {
+      "dev:docker:start": "docker compose up -d",
+      "dev:docker:stop": "docker compose down",
+      "dev:frontend:start": "docker compose exec frontend sh -c 'npm i; npm run start:lan'",
+      "dev:app:start": "docker compose exec app sh -c 'npm i; npm run dev'",
+      "dev:server:start": "docker compose exec server sh -c 'go run cmd/server/main.go'"
+   }
+}
