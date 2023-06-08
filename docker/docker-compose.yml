@@ -1,0 +1,63 @@
+version: "3"
+
+name: cl-dev
+
+services:
+  app:
+    image: node:20-alpine
+    ports: 
+      - 5173:5173
+    volumes:
+      - ../app:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
+  frontend:
+    image: node:20-alpine
+    ports: 
+      - 3000:3000
+    volumes:
+      - ../frontend:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
+  server:
+    image: golang:1.20-alpine
+    ports:
+      - 8084:8084
+    volumes:
+      - ../server:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
+  mail:
+    image: axllent/mailpit
+    ports:
+      - 127.0.0.1:8025:8025
+      # - 1025:1025
+    environment:
+      - "MP_SMTP_AUTH_ACCEPT_ANY=true"
+      - "MP_SMTP_AUTH_ALLOW_INSECURE=true"
+  pma:
+    image: phpmyadmin:apache
+    ports:
+      - 127.0.0.1:8085:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=fb4aeaa6d860dbabe785675e
+  db:
+    image: mariadb
+    ports:
+      - 127.0.0.1:3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=fb4aeaa6d860dbabe785675e
+      - MYSQL_DATABASE=clothingloop
+      - MYSQL_USER=clothingloop
+      - MYSQL_PASSWORD=72bd3937e91363a747f810e7
+    volumes:
+      - mysql:/var/lib/mysql
+
+volumes:
+  mysql:
