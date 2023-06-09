@@ -105,8 +105,6 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
         }
       }
     });
-
-    runGoatCounter(history);
   }, []);
   const contextValue: AuthProps = {
     authUser: user,
@@ -118,20 +116,6 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-}
-
-function runGoatCounter(history: History) {
-  if (window.location.host !== "www.clothingloop.org") return;
-  if (!window.goatcounter) return;
-
-  window.goatcounter.count({
-    path: location.pathname.substring(3),
-  });
-  history.listen((location) => {
-    window.goatcounter.count({
-      path: location.pathname.substring(3),
-    });
-  });
 }
 
 function getOldStorageUserUID(): string | null | undefined {

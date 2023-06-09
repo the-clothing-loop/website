@@ -79,12 +79,7 @@ export default function Signup() {
           chainUID
         );
         setSubmitted(true);
-        if (window.goatcounter)
-          window.goatcounter.count({
-            path: "new-user",
-            title: "New user",
-            event: true,
-          });
+        window.plausible("New user");
       } catch (err: any) {
         console.error("Error creating user:", err);
 

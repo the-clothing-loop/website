@@ -107,7 +107,7 @@ function Navbar() {
           <Link
             onClick={onClickMobileNavLink}
             to="/about"
-            className="mb-3 btn btn-ghost text-base"
+            className="mb-3 btn btn-ghost text-base plausible-event-name=Navbar+About"
           >
             {t("about")}
           </Link>
@@ -156,7 +156,10 @@ function Navbar() {
             </Link>
           )}
 
-          <Link to="/about" className="btn btn-ghost text-base">
+          <Link
+            to="/about"
+            className="btn btn-ghost text-base plausible-event-name=Navbar+About"
+          >
             {t("about")}
           </Link>
 

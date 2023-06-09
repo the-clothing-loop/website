@@ -72,33 +72,6 @@ export default function PrivacyPolicy() {
             </ul>
           </p>
 
-          <h3>GoatCounter</h3>
-          <p>
-            This website uses GoatCounter to measure the number of visitors to
-            this website, what pages were visited, and the number of successful
-            "screens."
-            <br />
-            <br />
-            The following attributes are collected by GoatCounter:
-            <ul>
-              <li>Page URL (and parameters)</li>
-              <li>Referer header</li>
-              <li>User-Agent header</li>
-              <li>Screen size</li>
-              <li>Country name based on IP address</li>
-              <li>A hash of the IP address, User-Agent, and random number</li>
-            </ul>
-            Please see the GoatCounter{" "}
-            <a
-              href="https://www.goatcounter.com/help/privacy"
-              target="_blank"
-              rel="noreferrer"
-            >
-              privacy policy
-            </a>{" "}
-            for more details
-          </p>
-
           <h2>How do we collect your data?</h2>
 
           <p>

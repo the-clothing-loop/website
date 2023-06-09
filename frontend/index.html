@@ -17,13 +17,18 @@
     <link rel="stylesheet" href="/fonts/playfair-display/style.css" />
     <link rel="stylesheet" href="/src/tailwind.css" />
 
+    <script
+      defer
+      data-domain="localhost"
+      src="http://localhost:8088/js/script.outbound-links.tagged-events.local.js"
+    ></script>
     <script>
-      window.goatcounter = {
-        no_onload: true,
-        endpoint: "https://clothingloop.goatcounter.com/count",
-      };
+      window.plausible =
+        window.plausible ||
+        function () {
+          (window.plausible.q = window.plausible.q || []).push(arguments);
+        };
     </script>
-    <script async type="module" src="/src/util/goatcounter.js"></script>
 
     <title>The Clothing Loop</title>
   </head>

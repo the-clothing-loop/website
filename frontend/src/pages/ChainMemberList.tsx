@@ -699,12 +699,7 @@ function ApproveTable(props: {
           fn: () => {
             chainUserApprove(chainUID, user.uid)
               .then(() => {
-                if (window.goatcounter)
-                  window.goatcounter.count({
-                    path: "approve-user",
-                    title: "Approve user",
-                    event: true,
-                  });
+                window.plausible("Approve user")
               })
               .catch((err) => {
                 addToastError(GinParseErrors(t, err), err.status);
@@ -724,12 +719,7 @@ function ApproveTable(props: {
     const chainDeleteUnapprovedReason = (reason: UnapprovedReason) =>
       chainDeleteUnapproved(chainUID, userUID, reason)
         .then((res) => {
-          if (window.goatcounter)
-            window.goatcounter.count({
-              path: "deny-user",
-              title: "Deny user",
-              event: true,
-            });
+          window.plausible("Deny user")
           return res;
         })
         .catch((err) => {

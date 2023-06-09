@@ -33,7 +33,7 @@ function Content({ heading, subheading, confirmationEmail }: IProps) {
           {t("home")}
         </button>
         <button
-          className="btn btn-secondary btn-outline"
+          className="btn btn-secondary btn-outline plausible-event-name=ThankYou+FAQ"
           onClick={() => history.push("/faq")}
         >
           {t("FAQ")}
