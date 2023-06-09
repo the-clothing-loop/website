@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import type * as GeoJSONTypes from "geojson";
-import mapboxgl from "mapbox-gl";
+import mapboxgl, { GeoJSONSource } from "mapbox-gl";
 
 // Project resources
 import { AuthContext } from "../providers/AuthProvider";
@@ -17,6 +17,7 @@ import SearchBar, {
 import { SizeBadges } from "../components/Badges";
 import { circleRadiusKm } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
+import { features } from "process";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -100,6 +101,7 @@ export default function FindChain({ location }: { location: Location }) {
   const [zoom, setZoom] = useState(4);
   const [locationLoading, setLocationLoading] = useState(false);
   const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
+  const [chainsInView, setChainsInView] = useState<Chain[]>([]);
 
   const mapRef = useRef<any>();
 
@@ -153,7 +155,7 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: ["<=", ["zoom"], clusterMaxZoom],
           paint: {
-            "circle-color": ["rgba", 239, 149, 61, 0.6], // #ef953d
+            "circle-color": ["rgba", 239, 0, 180, 0.6], // #ef953d
             "circle-radius": 15,
             "circle-stroke-width": 0,
           },
@@ -195,12 +197,53 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: [">", ["zoom"], clusterMaxZoom],
           paint: {
-            "circle-color": ["rgba", 240, 196, 73, 0.0], // #f0c449
+            "circle-color": ["rgba", 216, 110, 245, 0.0], // #f0c449
             "circle-radius": 5,
             "circle-stroke-width": 0,
           },
         });
 
+        // the ["chain-single", "chain-single-minimum"] is setting the event listener for those two speicific layers
+
+        _map.on("zoomend", (e) => {
+          console.log("in zoom");
+          console.log(e);
+          const features = _map.queryRenderedFeatures(undefined, {
+            layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
+          });
+          if (features.length) {
+            console.log(features);
+
+            // For each feature, if it is a cluster go and get each UID of its leaves
+            features.forEach((f) => {
+              var clusterID = f.properties!.cluster_id;
+              var pointCount = f.properties!.point_count;
+              var clusterSource = _map.getSource("chains") as GeoJSONSource;
+              console.log(clusterSource);
+
+              // Gets all leaves of cluster
+              clusterSource.getClusterLeaves(
+                clusterID,
+                pointCount,
+                0,
+                function (err, aFeatures) {
+                  if (err) {
+                    //console.log("getClusterLeaves", err, aFeatures);
+                  } else {
+                    let uids = aFeatures
+                      .map((f) => f.properties?.uid)
+                      .filter((f) => f) as UID[];
+
+                      console.log(uids);
+
+                  }
+                }
+              );
+            });
+          }
+        });
+
+        console.log(chainsInView);
         _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
           if (e.features) {
             let uids = e.features
@@ -453,6 +496,53 @@ export default function FindChain({ location }: { location: Location }) {
               <span className="feather feather-arrow-left rtl:hidden"></span>
               <span className="feather feather-arrow-right ltr:hidden"></span>
             </button>
+
+            {chainsInView.map((chain) => {
+              const userChain = authUser?.chains.find(
+                (uc) => uc.chain_uid === chain.uid
+              );
+              return (
+                <div
+                  className="p-4 w-full mb-4 rounded-lg shadow-md bg-base-100"
+                  key={chain.uid}
+                >
+                  <div className="mb-2">
+                    <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
+                      {chain.name}
+                    </h1>
+                    {userChain ? (
+                      userChain.is_approved ? (
+                        <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
+                          {t("joined")}
+                          <span className="feather feather-check ml-3"></span>
+                        </p>
+                      ) : (
+                        <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
+                          {t("pendingApproval")}
+                          <span className="feather feather-user-check ml-3"></span>
+                        </p>
+                      )
+                    ) : chain.open_to_new_members ? (
+                      <button
+                        onClick={(e) => handleClickJoin(e, chain)}
+                        type="button"
+                        className="btn btn-sm btn-primary"
+                      >
+                        {t("join")}
+                        <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
+                        <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
+                      </button>
+                    ) : (
+                      <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
+                        {t("closed")}
+                        <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+
             {selectedChains.map((chain) => {
               const userChain = authUser?.chains.find(
                 (uc) => uc.chain_uid === chain.uid
