@@ -5,19 +5,19 @@ name: cl-dev
 services:
   app:
     image: node:20-alpine
-    ports: 
+    ports:
       - 5173:5173
     volumes:
-      - ../app:/app
+      - ../../app:/app
     working_dir: /app
     stdin_open: true
     tty: true
   frontend:
     image: node:20-alpine
-    ports: 
+    ports:
       - 3000:3000
     volumes:
-      - ../frontend:/app
+      - ../../frontend:/app
     working_dir: /app
     stdin_open: true
     tty: true
@@ -26,7 +26,7 @@ services:
     ports:
       - 8084:8084
     volumes:
-      - ../server:/app
+      - ../../server:/app
     working_dir: /app
     stdin_open: true
     tty: true
