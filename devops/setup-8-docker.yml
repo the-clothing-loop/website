@@ -1,0 +1,16 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Check what is installed
+      package_facts:
+        manager: "auto"
+    - name: Install curl if not already installed
+      ansible.builtin.apt:
+        pkg:
+          - curl
+      when: "ansible_facts.packages['curl'] is undefined"
+    - name: Install docker
+      ansible.builtin.shell: |
+        curl -fsSL https://get.docker.com -o get-docker.sh
+        sudo sh ./get-docker.sh
+      when: "ansible_facts.packages['docker-ce'] is undefined"
