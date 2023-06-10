@@ -206,7 +206,7 @@ export default function FindChain({ location }: { location: Location }) {
         // Initalize chainsInView
         setTimeout(() => getChainsInView(_map, _chains), 1000);
 
-        _map.on("zoomend", () => {
+        _map.on("moveend", () => {
           getChainsInView(_map, _chains);
         });
 
