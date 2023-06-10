@@ -204,7 +204,7 @@ export default function FindChain({ location }: { location: Location }) {
         });
 
         // Initalize chainsInView
-        setTimeout(() => getChainsInView(_map, _chains), 1000);
+        setTimeout(() => getChainsInView(_map, _chains), 500);
 
         _map.on("moveend", () => {
           getChainsInView(_map, _chains);
@@ -448,6 +448,21 @@ export default function FindChain({ location }: { location: Location }) {
     }
   }
 
+  function getDistanceFromCenter(chain: Chain) {
+    const center = map!.getCenter();
+
+    // Convert to raidans
+    var aLat = chain.latitude / (180 / Math.PI);
+    var aLong = chain.longitude / (180 / Math.PI);
+    var centerLat = center.lat / (180 / Math.PI);
+    var centerLong = center.lng / (180 / Math.PI);
+
+    return Math.acos(
+        Math.sin(aLat) * Math.sin(centerLat) +
+          Math.cos(aLat) * (Math.cos(centerLat) * Math.cos(centerLong - aLong))
+      ) * 6371;
+  }
+
   if (!MAPBOX_TOKEN) {
     addToastError("Access tokens not configured", 500);
     return <div></div>;
@@ -509,57 +524,63 @@ export default function FindChain({ location }: { location: Location }) {
               </button>
             </div>
           </div>
-          {console.log(chainsInView)}
           <div
             className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
               chainsInView.length ? "" : "hidden"
             }`}
           >
-            {chainsInView.map((chain) => {
-              const userChain = authUser?.chains.find(
-                (uc) => uc.chain_uid === chain.uid
-              );
-              return (
-                <div
-                  className="p-4 w-full mb-4 rounded-lg shadow-md bg-base-100"
-                  key={chain.uid}
-                >
-                  <div className="mb-2">
-                    <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
-                      {chain.name}
-                    </h1>
-                    {userChain ? (
-                      userChain.is_approved ? (
-                        <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
-                          {t("joined")}
-                          <span className="feather feather-check ml-3"></span>
-                        </p>
+            {chainsInView
+              .sort((a, b) => {
+                return Math.min(
+                  getDistanceFromCenter(a),
+                  getDistanceFromCenter(b)
+                );
+              })
+              .map((chain) => {
+                const userChain = authUser?.chains.find(
+                  (uc) => uc.chain_uid === chain.uid
+                );
+                return (
+                  <div
+                    className="p-4 w-full mb-4 rounded-lg shadow-md bg-base-100"
+                    key={chain.uid}
+                  >
+                    <div className="mb-2">
+                      <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
+                        {chain.name}
+                      </h1>
+                      {userChain ? (
+                        userChain.is_approved ? (
+                          <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
+                            {t("joined")}
+                            <span className="feather feather-check ml-3"></span>
+                          </p>
+                        ) : (
+                          <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
+                            {t("pendingApproval")}
+                            <span className="feather feather-user-check ml-3"></span>
+                          </p>
+                        )
+                      ) : chain.open_to_new_members ? (
+                        <button
+                          onClick={(e) => handleClickJoin(e, chain)}
+                          type="button"
+                          className="btn btn-sm btn-primary"
+                        >
+                          {t("join")}
+                          <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
+                          <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
+                        </button>
                       ) : (
                         <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
-                          {t("pendingApproval")}
-                          <span className="feather feather-user-check ml-3"></span>
+                          {t("closed")}
+                          <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
                         </p>
-                      )
-                    ) : chain.open_to_new_members ? (
-                      <button
-                        onClick={(e) => handleClickJoin(e, chain)}
-                        type="button"
-                        className="btn btn-sm btn-primary"
-                      >
-                        {t("join")}
-                        <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
-                        <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
-                      </button>
-                    ) : (
-                      <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
-                        {t("closed")}
-                        <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
-                      </p>
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
 
           <div
