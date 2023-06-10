@@ -11,6 +11,6 @@
       when: "ansible_facts.packages['curl'] is undefined"
     - name: Install docker
       ansible.builtin.shell: |
-        curl -fsSL https://get.docker.com -o get-docker.sh
-        sudo sh ./get-docker.sh
+        curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
+        sudo sh /tmp/get-docker.sh
       when: "ansible_facts.packages['docker-ce'] is undefined"
