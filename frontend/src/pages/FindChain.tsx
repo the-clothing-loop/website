@@ -203,64 +203,11 @@ export default function FindChain({ location }: { location: Location }) {
           },
         });
 
-        _map.on("zoomend", (e) => {
-          const features = _map.queryRenderedFeatures(undefined, {
-            layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
-          });
-          if (features.length) {
-            console.log(features);
-            var uidsArray: string[] = [];
+        // Initalize chainsInView
+        setTimeout(() => getChainsInView(_map, _chains), 1000);
 
-            // Get UID of each chain in view
-            features.forEach((f) => {
-              var clusterID = f.properties!.cluster_id;
-              var pointCount = f.properties!.point_count;
-              var clusterSource = _map.getSource("chains") as GeoJSONSource;
-
-              if (f.properties!.cluster) {
-                // Gets all leaves of cluster
-                clusterSource.getClusterLeaves(
-                  clusterID,
-                  pointCount,
-                  0,
-                  function (err, aFeatures) {
-                    if (err) {
-                      console.log("getClusterLeaves", err, aFeatures);
-                    } else {
-                      let uids = aFeatures
-                        .map((f) => f.properties?.uid)
-                        .filter((f) => f) as UID[];
-                      uids = [...new Set(uids)];
-
-                      uidsArray = [...uidsArray, ...uids];
-                      uidsArray = [...new Set(uidsArray)];
-
-                      let _chainsInView = uidsArray.map((uidsArray) =>
-                        _chains.find((c) => c.uid === uidsArray)
-                      ) as Chain[];
-
-                      if (_chainsInView.length) {
-                        setChainsInView(_chainsInView);
-                      }
-                    }
-                  }
-                );
-                // When the feature is not a cluster
-              } else {
-                const curr = f.properties!.uid;
-                uidsArray = [...uidsArray, curr];
-                uidsArray = [...new Set(uidsArray)];
-
-                let _chainsInView = uidsArray.map((uidsArray) =>
-                  _chains.find((c) => c.uid === uidsArray)
-                ) as Chain[];
-
-                if (_chainsInView.length) {
-                  setChainsInView(_chainsInView);
-                }
-              }
-            });
-          }
+        _map.on("zoomend", () => {
+          getChainsInView(_map, _chains);
         });
 
         _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
@@ -334,6 +281,68 @@ export default function FindChain({ location }: { location: Location }) {
       setMap(undefined);
     };
   }, []);
+
+  function getChainsInView(map: mapboxgl.Map, chains: Chain[]) {
+    console.log("inside the fun");
+    const features = map!.queryRenderedFeatures(undefined, {
+      layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
+    });
+    console.log(features);
+    if (features.length) {
+      console.log(features);
+      var uidsArray: string[] = [];
+
+      // Get UID of each chain in view
+      features.forEach((f) => {
+        var clusterID = f.properties!.cluster_id;
+        var pointCount = f.properties!.point_count;
+        var clusterSource = map!.getSource("chains") as GeoJSONSource;
+
+        if (f.properties!.cluster) {
+          // Gets all leaves of cluster
+          clusterSource.getClusterLeaves(
+            clusterID,
+            pointCount,
+            0,
+            function (err, aFeatures) {
+              if (err) {
+                console.log("getClusterLeaves", err, aFeatures);
+              } else {
+                let uids = aFeatures
+                  .map((f) => f.properties?.uid)
+                  .filter((f) => f) as UID[];
+                uids = [...new Set(uids)];
+
+                uidsArray = [...uidsArray, ...uids];
+                uidsArray = [...new Set(uidsArray)];
+
+                let _chainsInView = uidsArray.map((uidsArray) =>
+                  chains.find((c) => c.uid === uidsArray)
+                ) as Chain[];
+
+                if (_chainsInView.length) {
+                  setChainsInView(_chainsInView);
+                }
+              }
+            }
+          );
+          // When the feature is not a cluster
+        } else {
+          const curr = f.properties!.uid;
+          uidsArray = [...uidsArray, curr];
+          uidsArray = [...new Set(uidsArray)];
+
+          let _chainsInView = uidsArray.map((uidsArray) =>
+            chains.find((c) => c.uid === uidsArray)
+          ) as Chain[];
+
+          if (_chainsInView.length) {
+            setChainsInView(_chainsInView);
+          }
+        }
+      });
+    }
+  }
 
   // https://docs.mapbox.com/mapbox-gl-js/style-spec/other/#set-membership-filters
   function handleSearch(
@@ -500,23 +509,12 @@ export default function FindChain({ location }: { location: Location }) {
               </button>
             </div>
           </div>
-
+          {console.log(chainsInView)}
           <div
             className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
-              selectedChains.length ? "" : "hidden"
+              chainsInView.length ? "" : "hidden"
             }`}
           >
-            <button
-              key="close"
-              type="button"
-              onClick={() => setSelectedChains([])}
-              className="absolute top-2 right-2 rtl:right-auto rtl:left-2 btn btn-sm btn-circle btn-outline"
-            >
-              <span className="feather feather-arrow-left rtl:hidden"></span>
-              <span className="feather feather-arrow-right ltr:hidden"></span>
-            </button>
-
-            {console.log(chainsInView)}
             {chainsInView.map((chain) => {
               const userChain = authUser?.chains.find(
                 (uc) => uc.chain_uid === chain.uid
@@ -562,6 +560,22 @@ export default function FindChain({ location }: { location: Location }) {
                 </div>
               );
             })}
+          </div>
+
+          <div
+            className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
+              selectedChains.length ? "" : "hidden"
+            }`}
+          >
+            <button
+              key="close"
+              type="button"
+              onClick={() => setSelectedChains([])}
+              className="absolute top-2 right-2 rtl:right-auto rtl:left-2 btn btn-sm btn-circle btn-outline"
+            >
+              <span className="feather feather-arrow-left rtl:hidden"></span>
+              <span className="feather feather-arrow-right ltr:hidden"></span>
+            </button>
 
             {selectedChains.map((chain) => {
               const userChain = authUser?.chains.find(
