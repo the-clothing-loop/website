@@ -58,6 +58,7 @@ services:
       - MYSQL_PASSWORD=72bd3937e91363a747f810e7
     volumes:
       - mysql:/var/lib/mysql
+      - ../../server/sql:/scripts
 
 volumes:
   mysql:
