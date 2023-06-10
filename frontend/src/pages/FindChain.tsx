@@ -155,7 +155,7 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: ["<=", ["zoom"], clusterMaxZoom],
           paint: {
-            "circle-color": ["rgba", 239, 0, 180, 0.6], // #ef953d
+            "circle-color": ["rgba", 239, 149, 61, 0.6], // #ef953d
             "circle-radius": 15,
             "circle-stroke-width": 0,
           },
@@ -197,53 +197,72 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: [">", ["zoom"], clusterMaxZoom],
           paint: {
-            "circle-color": ["rgba", 216, 110, 245, 0.0], // #f0c449
+            "circle-color": ["rgba", 240, 196, 73, 0.0], // #f0c449
             "circle-radius": 5,
             "circle-stroke-width": 0,
           },
         });
 
-        // the ["chain-single", "chain-single-minimum"] is setting the event listener for those two speicific layers
-
         _map.on("zoomend", (e) => {
-          console.log("in zoom");
-          console.log(e);
           const features = _map.queryRenderedFeatures(undefined, {
             layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
           });
           if (features.length) {
             console.log(features);
+            var uidsArray: string[] = [];
 
-            // For each feature, if it is a cluster go and get each UID of its leaves
+            // Get UID of each chain in view
             features.forEach((f) => {
               var clusterID = f.properties!.cluster_id;
               var pointCount = f.properties!.point_count;
               var clusterSource = _map.getSource("chains") as GeoJSONSource;
-              console.log(clusterSource);
 
-              // Gets all leaves of cluster
-              clusterSource.getClusterLeaves(
-                clusterID,
-                pointCount,
-                0,
-                function (err, aFeatures) {
-                  if (err) {
-                    //console.log("getClusterLeaves", err, aFeatures);
-                  } else {
-                    let uids = aFeatures
-                      .map((f) => f.properties?.uid)
-                      .filter((f) => f) as UID[];
+              if (f.properties!.cluster) {
+                // Gets all leaves of cluster
+                clusterSource.getClusterLeaves(
+                  clusterID,
+                  pointCount,
+                  0,
+                  function (err, aFeatures) {
+                    if (err) {
+                      console.log("getClusterLeaves", err, aFeatures);
+                    } else {
+                      let uids = aFeatures
+                        .map((f) => f.properties?.uid)
+                        .filter((f) => f) as UID[];
+                      uids = [...new Set(uids)];
 
-                      console.log(uids);
+                      uidsArray = [...uidsArray, ...uids];
+                      uidsArray = [...new Set(uidsArray)];
 
+                      let _chainsInView = uidsArray.map((uidsArray) =>
+                        _chains.find((c) => c.uid === uidsArray)
+                      ) as Chain[];
+
+                      if (_chainsInView.length) {
+                        setChainsInView(_chainsInView);
+                      }
+                    }
                   }
+                );
+                // When the feature is not a cluster
+              } else {
+                const curr = f.properties!.uid;
+                uidsArray = [...uidsArray, curr];
+                uidsArray = [...new Set(uidsArray)];
+
+                let _chainsInView = uidsArray.map((uidsArray) =>
+                  _chains.find((c) => c.uid === uidsArray)
+                ) as Chain[];
+
+                if (_chainsInView.length) {
+                  setChainsInView(_chainsInView);
                 }
-              );
+              }
             });
           }
         });
 
-        console.log(chainsInView);
         _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
           if (e.features) {
             let uids = e.features
@@ -497,6 +516,7 @@ export default function FindChain({ location }: { location: Location }) {
               <span className="feather feather-arrow-right ltr:hidden"></span>
             </button>
 
+            {console.log(chainsInView)}
             {chainsInView.map((chain) => {
               const userChain = authUser?.chains.find(
                 (uc) => uc.chain_uid === chain.uid
