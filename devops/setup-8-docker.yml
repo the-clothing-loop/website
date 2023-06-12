@@ -14,3 +14,16 @@
         curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
         sudo sh /tmp/get-docker.sh
       when: "ansible_facts.packages['docker-ce'] is undefined"
+- hosts: server
+  tasks:
+    - name: Does repository exist on server
+      stat:
+        path: ~/clothingloop.org
+      register: is_repo
+    - name: Git clone repository
+      command: git clone --depth 10 https://github.com/the-clothing-loop/website.git clothingloop.org
+      when: not is_repo.stat.exists
+    - name: Git pull repository
+      shell: |
+        cd ~/clothingloop.org
+        git pull origin main
