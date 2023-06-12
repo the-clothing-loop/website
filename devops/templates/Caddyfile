@@ -117,9 +117,18 @@ images.clothingloop.org {
 		root * /var/caddy/images.clothingloop.org
 		file_server
 	}
+
+	handle_path /admin/* {
+		reverse_proxy 127.0.0.1:8084
+	}
+
 	handle {
 		reverse_proxy 127.0.0.1:8083
 	}
+}
+
+plausible.clothingloop.org {
+	reverse_proxy 127.0.0.1:8085
 }
 
 app.clothingloop.org {

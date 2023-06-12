@@ -1,0 +1,10 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Starts docker compose file
+      community.docker.docker_compose:
+        pull: true
+        state: present
+        project_src: /home/admin/clothingloop.org/docker/
+        files:
+          - docker-compose.plausible.yml

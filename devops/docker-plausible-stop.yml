@@ -1,0 +1,9 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Stops docker compose file
+      community.docker.docker_compose:
+        state: absent
+        project_src: /home/admin/clothingloop.org/docker/
+        files:
+          - docker-compose.plausible.yml
