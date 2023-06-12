@@ -211,6 +211,7 @@ export default function FindChain({ location }: { location: Location }) {
         });
 
         _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
+         // console.log("where r u");
           if (e.features) {
             let uids = e.features
               .map((f) => f.properties?.uid)
@@ -283,11 +284,9 @@ export default function FindChain({ location }: { location: Location }) {
   }, []);
 
   function getChainsInView(map: mapboxgl.Map, chains: Chain[]) {
-    console.log("inside the fun");
     const features = map!.queryRenderedFeatures(undefined, {
       layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
     });
-    console.log(features);
     if (features.length) {
       console.log(features);
       var uidsArray: string[] = [];
@@ -452,15 +451,17 @@ export default function FindChain({ location }: { location: Location }) {
     const center = map!.getCenter();
 
     // Convert to raidans
-    var aLat = chain.latitude / (180 / Math.PI);
-    var aLong = chain.longitude / (180 / Math.PI);
+    var lat = chain.latitude / (180 / Math.PI);
+    var long = chain.longitude / (180 / Math.PI);
     var centerLat = center.lat / (180 / Math.PI);
     var centerLong = center.lng / (180 / Math.PI);
 
-    return Math.acos(
-        Math.sin(aLat) * Math.sin(centerLat) +
-          Math.cos(aLat) * (Math.cos(centerLat) * Math.cos(centerLong - aLong))
+    var distance =
+      Math.acos(
+        Math.sin(lat) * Math.sin(centerLat) +
+          Math.cos(lat) * (Math.cos(centerLat) * Math.cos(centerLong - long))
       ) * 6371;
+    return distance;
   }
 
   if (!MAPBOX_TOKEN) {
@@ -540,15 +541,100 @@ export default function FindChain({ location }: { location: Location }) {
                 const userChain = authUser?.chains.find(
                   (uc) => uc.chain_uid === chain.uid
                 );
+
+                const selected = selectedChains.find(
+                  (u) => chain.uid === u.uid
+                );
+
                 return (
                   <div
-                    className="p-4 w-full mb-4 rounded-lg shadow-md bg-base-100"
+                    className={`p-4 w-full mb-4 rounded-lg shadow-md bg-base-100 
+                   //   selected ? "animate-[200ms_linear_0ms_max-h]" : "animate-[200ms_linear_0ms_max-h]"
+                    `}
                     key={chain.uid}
                   >
                     <div className="mb-2">
                       <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
                         {chain.name}
                       </h1>
+
+                      {selected && chain.description ? (
+                        chain.description.length > 200 ? (
+                          <div className="mb-3">
+                            <input
+                              type="checkbox"
+                              className="hidden peer"
+                              id={"checkbox-desc-more-" + chain.uid}
+                            />
+                            <p
+                              className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12 relative before:block before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-white/90 before:to-transparent before:bottom-0 peer-checked:before:hidden"
+                              tabIndex={0}
+                              onClick={(e) => {
+                                let input = (
+                                  e.target as HTMLParagraphElement
+                                ).parentElement?.querySelector("input");
+                                console.log("input", input);
+
+                                if (input) input.checked = true;
+                              }}
+                            >
+                              {chain.description.split("\n").map((s, i) => {
+                                if (i === 0) return s;
+
+                                return (
+                                  <>
+                                    <br />
+                                    {s}
+                                  </>
+                                );
+                              })}
+                            </p>
+                            <label
+                              htmlFor={"checkbox-desc-more-" + chain.uid}
+                              aria-label="expand"
+                              className="btn btn-xs btn-ghost bg-teal-light feather feather-more-horizontal"
+                            ></label>
+                          </div>
+                        ) : (
+                          <p className="mb-3 text-sm break-words">
+                            {chain.description}
+                          </p>
+                        )
+                      ) : null}
+
+                      {selected ? (
+                        <div>
+                          <div className="flex flex-col w-full text-sm">
+                            {chain.sizes?.length ? (
+                              <>
+                                <h2 className="mb-1">{t("sizes")}:</h2>
+                                <div className="mb-2">
+                                  <SizeBadges
+                                    s={chain.sizes}
+                                    g={chain.genders}
+                                  />
+                                </div>
+                              </>
+                            ) : null}
+                          </div>
+                          <div className="flex flex-col items-start">
+                            {authUser?.is_root_admin ||
+                            userChain?.is_chain_admin ? (
+                              <button
+                                key={"btn-view"}
+                                className="btn btn-sm btn-secondary btn-outline mb-3"
+                                onClick={(e) =>
+                                  handleClickViewChain(e, chain.uid)
+                                }
+                              >
+                                {t("viewLoop")}
+                                <span className="feather feather-shield ml-3"></span>
+                              </button>
+                            ) : null}
+                          </div>
+                        </div>
+                      ) : null}
+
                       {userChain ? (
                         userChain.is_approved ? (
                           <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
@@ -597,118 +683,6 @@ export default function FindChain({ location }: { location: Location }) {
               <span className="feather feather-arrow-left rtl:hidden"></span>
               <span className="feather feather-arrow-right ltr:hidden"></span>
             </button>
-
-            {selectedChains.map((chain) => {
-              const userChain = authUser?.chains.find(
-                (uc) => uc.chain_uid === chain.uid
-              );
-              return (
-                <div
-                  className="p-4 w-full mb-4 rounded-lg shadow-md bg-base-100"
-                  key={chain.uid}
-                >
-                  <div className="mb-2">
-                    <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
-                      {chain.name}
-                    </h1>
-                    {chain.description ? (
-                      chain.description.length > 200 ? (
-                        <div className="mb-3">
-                          <input
-                            type="checkbox"
-                            className="hidden peer"
-                            id={"checkbox-desc-more-" + chain.uid}
-                          />
-                          <p
-                            className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12 relative before:block before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-white/90 before:to-transparent before:bottom-0 peer-checked:before:hidden"
-                            tabIndex={0}
-                            onClick={(e) => {
-                              let input = (
-                                e.target as HTMLParagraphElement
-                              ).parentElement?.querySelector("input");
-                              console.log("input", input);
-
-                              if (input) input.checked = true;
-                            }}
-                          >
-                            {chain.description.split("\n").map((s, i) => {
-                              if (i === 0) return s;
-
-                              return (
-                                <>
-                                  <br />
-                                  {s}
-                                </>
-                              );
-                            })}
-                          </p>
-                          <label
-                            htmlFor={"checkbox-desc-more-" + chain.uid}
-                            aria-label="expand"
-                            className="btn btn-xs btn-ghost bg-teal-light feather feather-more-horizontal"
-                          ></label>
-                        </div>
-                      ) : (
-                        <p className="mb-3 text-sm break-words">
-                          {chain.description}
-                        </p>
-                      )
-                    ) : null}
-                    <div className="flex flex-col w-full text-sm">
-                      {chain.sizes?.length ? (
-                        <>
-                          <h2 className="mb-1">{t("sizes")}:</h2>
-                          <div className="mb-2">
-                            <SizeBadges s={chain.sizes} g={chain.genders} />
-                          </div>
-                        </>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-start">
-                    {authUser?.is_root_admin || userChain?.is_chain_admin ? (
-                      <button
-                        key={"btn-view"}
-                        className="btn btn-sm btn-secondary btn-outline mb-3"
-                        onClick={(e) => handleClickViewChain(e, chain.uid)}
-                      >
-                        {t("viewLoop")}
-                        <span className="feather feather-shield ml-3"></span>
-                      </button>
-                    ) : null}
-
-                    {userChain ? (
-                      userChain.is_approved ? (
-                        <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
-                          {t("joined")}
-                          <span className="feather feather-check ml-3"></span>
-                        </p>
-                      ) : (
-                        <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
-                          {t("pendingApproval")}
-                          <span className="feather feather-user-check ml-3"></span>
-                        </p>
-                      )
-                    ) : chain.open_to_new_members ? (
-                      <button
-                        onClick={(e) => handleClickJoin(e, chain)}
-                        type="button"
-                        className="btn btn-sm btn-primary"
-                      >
-                        {t("join")}
-                        <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
-                        <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
-                      </button>
-                    ) : (
-                      <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
-                        {t("closed")}
-                        <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
-                      </p>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </div>
       </main>
