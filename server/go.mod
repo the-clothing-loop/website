@@ -10,6 +10,7 @@ require (
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/golang/glog v1.1.1
 	github.com/jaswdr/faker v1.18.0
+	github.com/jinzhu/configor v1.2.1
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/lil5/goscope2 v1.4.2
 	github.com/satori/go.uuid v1.2.0
@@ -17,12 +18,12 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/stripe/stripe-go/v73 v73.16.0
 	gopkg.in/guregu/null.v3 v3.5.0
-	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.1
 )
 
 require (
+	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/antihax/optional v1.0.0 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
@@ -56,4 +57,6 @@ require (
 	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
+	gopkg.in/yaml.v2 v2.2.2 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

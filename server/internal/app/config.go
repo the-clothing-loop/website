@@ -3,10 +3,9 @@ package app
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
+	"github.com/jinzhu/configor"
 	"github.com/stripe/stripe-go/v73"
-	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -18,28 +17,28 @@ const (
 
 var Config struct {
 	ENV                string `yaml:"-"`
-	HOST               string `yaml:"host"`
-	PORT               int    `yaml:"port"`
-	SITE_BASE_URL_API  string `yaml:"site_base_url_api"`
-	SITE_BASE_URL_FE   string `yaml:"site_base_url_fe"`
-	COOKIE_DOMAIN      string `yaml:"cookie_domain"`
-	COOKIE_HTTPS_ONLY  bool   `yaml:"cookie_https_only"`
-	STRIPE_SECRET_KEY  string `yaml:"stripe_secret_key"`
-	STRIPE_WEBHOOK     string `yaml:"stripe_webhook"`
-	DB_HOST            string `yaml:"db_host"`
-	DB_PORT            int    `yaml:"db_port"`
-	DB_NAME            string `yaml:"db_name"`
-	DB_USER            string `yaml:"db_user"`
-	DB_PASS            string `yaml:"db_pass"`
-	SMTP_HOST          string `yaml:"smtp_host"`
-	SMTP_PORT          int    `yaml:"smtp_port"`
-	SMTP_SENDER        string `yaml:"smtp_sender"`
-	SMTP_USER          string `yaml:"smtp_user"`
-	SMTP_PASS          string `yaml:"smtp_pass"`
-	GOSCOPE2_USER      string `yaml:"goscope2_user"`
-	GOSCOPE2_PASS      string `yaml:"goscope2_pass"`
-	SENDINBLUE_API_KEY string `yaml:"sendinblue_api_key"`
-	IMGBB_KEY          string `yaml:"imgbb_key"`
+	HOST               string `yaml:"host" env:"HOST"`
+	PORT               int    `yaml:"port" env:"PORT"`
+	SITE_BASE_URL_API  string `yaml:"site_base_url_api" env:"SITE_BASE_URL_API"`
+	SITE_BASE_URL_FE   string `yaml:"site_base_url_fe" env:"SITE_BASE_URL_FE"`
+	COOKIE_DOMAIN      string `yaml:"cookie_domain" env:"COOKIE_DOMAIN"`
+	COOKIE_HTTPS_ONLY  bool   `yaml:"cookie_https_only" env:"COOKIE_HTTPS_ONLY"`
+	STRIPE_SECRET_KEY  string `yaml:"stripe_secret_key" env:"STRIPE_SECRET_KEY"`
+	STRIPE_WEBHOOK     string `yaml:"stripe_webhook" env:"STRIPE_WEBHOOK"`
+	DB_HOST            string `yaml:"db_host" env:"DB_HOST"`
+	DB_PORT            int    `yaml:"db_port" env:"DB_PORT"`
+	DB_NAME            string `yaml:"db_name" env:"DB_NAME"`
+	DB_USER            string `yaml:"db_user" env:"DB_USER"`
+	DB_PASS            string `yaml:"db_pass" env:"DB_PASS"`
+	SMTP_HOST          string `yaml:"smtp_host" env:"SMTP_HOST"`
+	SMTP_PORT          int    `yaml:"smtp_port" env:"SMTP_PORT"`
+	SMTP_SENDER        string `yaml:"smtp_sender" env:"SMTP_SENDER"`
+	SMTP_USER          string `yaml:"smtp_user" env:"SMTP_USER"`
+	SMTP_PASS          string `yaml:"smtp_pass" env:"SMTP_PASS"`
+	GOSCOPE2_USER      string `yaml:"goscope2_user" env:"GOSCOPE2_USER"`
+	GOSCOPE2_PASS      string `yaml:"goscope2_pass" env:"GOSCOPE2_PASS"`
+	SENDINBLUE_API_KEY string `yaml:"sendinblue_api_key" env:"SENDINBLUE_API_KEY"`
+	IMGBB_KEY          string `yaml:"imgbb_key" env:"IMGBB_KEY"`
 }
 
 func ConfigInit(path string) {
@@ -60,14 +59,7 @@ func ConfigInit(path string) {
 		fname = "config.prod.yml"
 	}
 
-	fpath := filepath.Join(path, fname)
-
-	fdata, err := os.ReadFile(fpath)
-	if err != nil {
-		panic(fmt.Errorf("error reading config: %s", err))
-	}
-
-	err = yaml.Unmarshal(fdata, &Config)
+	err := configor.Load(&Config, fname)
 	if err != nil {
 		panic(fmt.Errorf("error reading config: %s", err))
 	}
