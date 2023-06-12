@@ -1,7 +1,7 @@
-<p>Allô {{ .Name }},</p>
+<p>Bonjour {{ .Name }},</p>
 
 {{ if .IsApp }}
-<p>App password: <code>{{ .Token}}</code></p>
+<p>Mot de passe de l'application : <code>{{ .Token}}</code></p>
 {{ else}}
 <p>Cliquez <a href="{{ .BaseURL }}/users/login/validate?apiKey={{ .Token }}">ici</a>pour vous connecter à votre compte de The Clothing Loop.
 Ce lien n'est valide qu'une seule fois.</p>
