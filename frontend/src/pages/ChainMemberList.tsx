@@ -699,7 +699,7 @@ function ApproveTable(props: {
           fn: () => {
             chainUserApprove(chainUID, user.uid)
               .then(() => {
-                window.plausible("Approve user")
+                window.plausible("Approve user");
               })
               .catch((err) => {
                 addToastError(GinParseErrors(t, err), err.status);
@@ -719,7 +719,7 @@ function ApproveTable(props: {
     const chainDeleteUnapprovedReason = (reason: UnapprovedReason) =>
       chainDeleteUnapproved(chainUID, userUID, reason)
         .then((res) => {
-          window.plausible("Deny user")
+          window.plausible("Deny user");
           return res;
         })
         .catch((err) => {
