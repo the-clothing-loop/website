@@ -1,6 +1,6 @@
 //Resources
 import { Link, useHistory } from "react-router-dom";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
@@ -9,16 +9,26 @@ import { userPurge } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import ChainsList from "../components/ChainsList";
 import { useEscape } from "../util/escape.hooks";
+import { Chain } from "../api/types";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
   const { addModal } = useContext(ToastContext);
+  const [chains, setChains] = useState<Chain[]>([]);
   const history = useHistory();
 
   function deleteClicked() {
+    const chainNames = authUser?.chains
+      .filter((uc) => uc.is_chain_admin)
+      .map((uc) => chains.find((c) => c.uid === uc.chain_uid)?.name)
+      .filter((c) => c) as string[];
+
     addModal({
       message: t("deleteAccount"),
+      content: () => (
+        <p>{t("deleteAccountWithLoops", { chains: chainNames.join(", ") })}</p>
+      ),
       actions: [
         {
           text: t("delete"),
@@ -153,7 +163,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </section>
-        <ChainsList />
+        <ChainsList chains={chains} setChains={setChains} />
       </main>
     </>
   );

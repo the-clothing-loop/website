@@ -1,4 +1,11 @@
-import { useState, useContext, useEffect, MouseEvent } from "react";
+import {
+  useState,
+  useContext,
+  useEffect,
+  MouseEvent,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
@@ -15,11 +22,15 @@ import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "../util/dayjs";
 
-export default function ChainsList() {
+interface Props {
+  chains: Chain[];
+  setChains: Dispatch<SetStateAction<Chain[]>>;
+}
+
+export default function ChainsList({ chains, setChains }: Props) {
   const { t } = useTranslation();
   const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addToastError, addModal, addToast } = useContext(ToastContext);
-  const [chains, setChains] = useState<Chain[]>();
   const [isPokeable, setIsPokeable] = useState(false);
 
   useEffect(() => {

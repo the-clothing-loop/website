@@ -32,6 +32,7 @@
   "delete": "Delete",
   "cancel": "Cancel",
   "deleteAccount": "Are you sure you want to permanently delete your account?",
+  "deleteAccountWithLoops": "As you are the only host of {{ chains }}, the Loop will also be deleted?",
   "areYouSureRemoveEvent": "Are you sure you want to permanently delete this event?",
   "areYouSureLogout": "Are you sure you want to logout?",
   "deleteUserBtn": "Delete Account",
