@@ -204,7 +204,9 @@ export default function FindChain({ location }: { location: Location }) {
         });
 
         // Initalize chainsInView
-        setTimeout(() => getChainsInView(_map, _chains), 100);
+        _map.on("idle", () => {
+          getChainsInView(_map, _chains);
+        });
 
         _map.on("moveend", () => {
           getChainsInView(_map, _chains);
@@ -282,7 +284,7 @@ export default function FindChain({ location }: { location: Location }) {
     };
   }, []);
 
-  function getChainsInView(map: mapboxgl.Map, chains: Chain[]) {
+  async function getChainsInView(map: mapboxgl.Map, chains: Chain[]) {
     const features = map!.queryRenderedFeatures(undefined, {
       layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
     });
