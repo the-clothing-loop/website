@@ -1,6 +1,7 @@
 export type UID = string;
 
 export interface User {
+  I18n: string;
   uid: UID;
   email: string;
   name: string;

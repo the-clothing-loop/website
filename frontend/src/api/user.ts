@@ -22,6 +22,7 @@ export interface UserUpdateBody {
   sizes?: string[];
   address?: string;
   pause_until?: string;
+  I18n?: string;
 }
 export function userUpdate(user: UserUpdateBody) {
   return window.axios.patch<never>("/v2/user", user);

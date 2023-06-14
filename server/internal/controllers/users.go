@@ -270,6 +270,7 @@ func UserUpdate(c *gin.Context) {
 		PausedUntil *time.Time `json:"paused_until,omitempty"`
 		Sizes       *[]string  `json:"sizes,omitempty"`
 		Address     *string    `json:"address,omitempty"`
+		I18n        *string    `json:"i18n,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -313,6 +314,13 @@ func UserUpdate(c *gin.Context) {
 		}
 		if len(userChanges) > 0 {
 			if err := db.Model(user).Updates(userChanges).Error; err != nil {
+				goscope.Log.Errorf("Unable to update user: %v", err)
+				c.String(http.StatusInternalServerError, "Unable to update user")
+				return
+			}
+		}
+		if body.I18n != nil {
+			if err := db.Model(user).Update("i18n", *body.I18n).Error; err != nil {
 				goscope.Log.Errorf("Unable to update user: %v", err)
 				c.String(http.StatusInternalServerError, "Unable to update user")
 				return

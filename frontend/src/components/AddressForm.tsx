@@ -20,6 +20,7 @@ export interface ValuesForm {
   address: string;
   sizes: string[];
   newsletter: boolean;
+  i18n: string;
 }
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -43,6 +44,7 @@ export default function AddressForm(props: {
     sizes: [] as string[],
     address: "",
     newsletter: false,
+    i18n: "",
   });
   const [address, setAddress] = useForm({
     street: "",
@@ -76,6 +78,7 @@ export default function AddressForm(props: {
             sizes: user.sizes,
             address: user.address,
             newsletter: hasNewsletterReq.data,
+            i18n: user.I18n,
           });
         } catch (error) {
           console.warn(error);

@@ -41,6 +41,7 @@ export interface User {
   sizes: string[];
   is_root_admin: boolean;
   paused_until: null | string;
+  I18n: string;
 }
 
 export interface UserUpdateBody {
@@ -52,6 +53,7 @@ export interface UserUpdateBody {
   sizes?: string[];
   address?: string;
   paused_until?: string;
+  I18n: string;
 }
 
 export interface UserChain {

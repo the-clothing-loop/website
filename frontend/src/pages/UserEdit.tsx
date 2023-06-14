@@ -51,6 +51,7 @@ export default function UserEdit() {
           newsletter: values.newsletter,
           address: values.address,
           sizes: values.sizes,
+          I18n: values.i18n,
         };
         if (chainUID) userUpdateBody.chain_uid = chainUID;
         console.log(userUpdateBody);
