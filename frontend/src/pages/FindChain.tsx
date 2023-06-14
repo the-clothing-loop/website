@@ -101,7 +101,8 @@ export default function FindChain({ location }: { location: Location }) {
   const [zoom, setZoom] = useState(4);
   const [locationLoading, setLocationLoading] = useState(false);
   const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
-  const [chainsInView, setChainsInView] = useState<Chain[]>([]);
+  const [visibleChains, setVisibleChains] = useState<Chain[]>([]);
+  const [visibleChainUIDs, setVisibleChainUIDs] = useState<string[]>([]);
 
   const mapRef = useRef<any>();
 
@@ -205,11 +206,12 @@ export default function FindChain({ location }: { location: Location }) {
 
         // Initalize chainsInView
         _map.on("idle", () => {
-          getChainsInView(_map, _chains);
+          console.log("im here");
+          getVisibleChains(_map, _chains);
         });
 
         _map.on("moveend", () => {
-          getChainsInView(_map, _chains);
+          getVisibleChains(_map, _chains);
         });
 
         _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
@@ -284,12 +286,12 @@ export default function FindChain({ location }: { location: Location }) {
     };
   }, []);
 
-  async function getChainsInView(map: mapboxgl.Map, chains: Chain[]) {
+  function getVisibleChains(map: mapboxgl.Map, chains: Chain[]) {
     const features = map!.queryRenderedFeatures(undefined, {
       layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
     });
     if (features.length) {
-      var uidsArray: string[] = [];
+      let visibleUIDs: string[] = [];
 
       // Get UID of each chain in view
       features.forEach((f) => {
@@ -304,37 +306,37 @@ export default function FindChain({ location }: { location: Location }) {
             pointCount,
             0,
             function (err, aFeatures) {
-              if (err) {
-                console.log("getClusterLeaves", err, aFeatures);
-              } else {
+              try {
                 let uids = aFeatures
                   .map((f) => f.properties?.uid)
                   .filter((f) => f) as UID[];
                 uids = [...new Set(uids)];
 
-                uidsArray = [...uidsArray, ...uids];
-                uidsArray = [...new Set(uidsArray)];
-                let _chainsInView = uidsArray.map((uidsArray) =>
-                  chains.find((c) => c.uid === uidsArray)
+                visibleUIDs = [...visibleUIDs, ...uids];
+                visibleUIDs = [...new Set(visibleUIDs)];
+
+                let _visibleChains = visibleUIDs.map((visibleUIDs) =>
+                  chains.find((c) => c.uid === visibleUIDs)
                 ) as Chain[];
 
-                if (_chainsInView.length) {
-                  setChainsInView(_chainsInView);
+                if (_visibleChains.length) {
+                  setVisibleChains(_visibleChains);
                 }
+              } catch (e) {
+                console.log("getClusterLeaves", err, aFeatures);
               }
             }
           );
         } else {
           const curr = f.properties!.uid;
-          uidsArray = [...uidsArray, curr];
-          uidsArray = [...new Set(uidsArray)];
-
-          let _chainsInView = uidsArray.map((uidsArray) =>
-            chains.find((c) => c.uid === uidsArray)
+          visibleUIDs = [...visibleUIDs, curr];
+          visibleUIDs = [...new Set(visibleUIDs)];
+          let _visibleChains = visibleUIDs.map((visibleUIDs) =>
+            chains.find((c) => c.uid === visibleUIDs)
           ) as Chain[];
 
-          if (_chainsInView.length) {
-            setChainsInView(_chainsInView);
+          if (_visibleChains.length) {
+            setVisibleChains(_visibleChains);
           }
         }
       });
@@ -514,10 +516,11 @@ export default function FindChain({ location }: { location: Location }) {
           </div>
           <div
             className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
-              chainsInView.length ? "" : "hidden"
+              visibleChains.length ? "" : "hidden"
             }`}
           >
-            {chainsInView
+            {console.log(visibleChains.length)}
+            {visibleChains
               .sort((a, b) => {
                 return Math.min(
                   getDistanceFromCenter(a),
