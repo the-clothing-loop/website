@@ -204,14 +204,13 @@ export default function FindChain({ location }: { location: Location }) {
         });
 
         // Initalize chainsInView
-        setTimeout(() => getChainsInView(_map, _chains), 500);
+        setTimeout(() => getChainsInView(_map, _chains), 100);
 
         _map.on("moveend", () => {
           getChainsInView(_map, _chains);
         });
 
         _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
-         // console.log("where r u");
           if (e.features) {
             let uids = e.features
               .map((f) => f.properties?.uid)
@@ -288,16 +287,15 @@ export default function FindChain({ location }: { location: Location }) {
       layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
     });
     if (features.length) {
-      console.log(features);
       var uidsArray: string[] = [];
 
       // Get UID of each chain in view
       features.forEach((f) => {
-        var clusterID = f.properties!.cluster_id;
-        var pointCount = f.properties!.point_count;
-        var clusterSource = map!.getSource("chains") as GeoJSONSource;
-
         if (f.properties!.cluster) {
+          var clusterID = f.properties!.cluster_id;
+          var pointCount = f.properties!.point_count;
+          var clusterSource = map!.getSource("chains") as GeoJSONSource;
+
           // Gets all leaves of cluster
           clusterSource.getClusterLeaves(
             clusterID,
@@ -314,7 +312,6 @@ export default function FindChain({ location }: { location: Location }) {
 
                 uidsArray = [...uidsArray, ...uids];
                 uidsArray = [...new Set(uidsArray)];
-
                 let _chainsInView = uidsArray.map((uidsArray) =>
                   chains.find((c) => c.uid === uidsArray)
                 ) as Chain[];
@@ -325,7 +322,6 @@ export default function FindChain({ location }: { location: Location }) {
               }
             }
           );
-          // When the feature is not a cluster
         } else {
           const curr = f.properties!.uid;
           uidsArray = [...uidsArray, curr];
@@ -449,19 +445,8 @@ export default function FindChain({ location }: { location: Location }) {
 
   function getDistanceFromCenter(chain: Chain) {
     const center = map!.getCenter();
-
-    // Convert to raidans
-    var lat = chain.latitude / (180 / Math.PI);
-    var long = chain.longitude / (180 / Math.PI);
-    var centerLat = center.lat / (180 / Math.PI);
-    var centerLong = center.lng / (180 / Math.PI);
-
-    var distance =
-      Math.acos(
-        Math.sin(lat) * Math.sin(centerLat) +
-          Math.cos(lat) * (Math.cos(centerLat) * Math.cos(centerLong - long))
-      ) * 6371;
-    return distance;
+    const chainLongLat = new mapboxgl.LngLat(chain.latitude, chain.longitude);
+    return center.distanceTo(chainLongLat);
   }
 
   if (!MAPBOX_TOKEN) {
@@ -548,9 +533,7 @@ export default function FindChain({ location }: { location: Location }) {
 
                 return (
                   <div
-                    className={`p-4 w-full mb-4 rounded-lg shadow-md bg-base-100 
-                   //   selected ? "animate-[200ms_linear_0ms_max-h]" : "animate-[200ms_linear_0ms_max-h]"
-                    `}
+                    className="p-4 w-full mb-4 rounded-lg shadow-md bg-base-100"
                     key={chain.uid}
                   >
                     <div className="mb-2">
