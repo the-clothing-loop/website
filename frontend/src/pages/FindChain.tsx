@@ -206,7 +206,6 @@ export default function FindChain({ location }: { location: Location }) {
 
         // Initalize chainsInView
         _map.on("idle", () => {
-          console.log("im here");
           getVisibleChains(_map, _chains);
         });
 
@@ -328,7 +327,7 @@ export default function FindChain({ location }: { location: Location }) {
             }
           );
         } else {
-          const curr = f.properties!.uid;
+          let curr = f.properties!.uid;
           visibleUIDs = [...visibleUIDs, curr];
           visibleUIDs = [...new Set(visibleUIDs)];
           let _visibleChains = visibleUIDs.map((visibleUIDs) =>
@@ -519,7 +518,6 @@ export default function FindChain({ location }: { location: Location }) {
               visibleChains.length ? "" : "hidden"
             }`}
           >
-            {console.log(visibleChains.length)}
             {visibleChains
               .sort((a, b) => {
                 return Math.min(
