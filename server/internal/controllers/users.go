@@ -514,10 +514,12 @@ func UserTransferChain(c *gin.Context) {
 		return
 	}
 
-	_, isChainAdmin := authUser.IsPartOfChain(body.ToChainUID)
-	if !isChainAdmin {
-		c.String(http.StatusUnauthorized, "you must be a host of both loops")
-		return
+	if !authUser.IsRootAdmin {
+		_, isChainAdmin := authUser.IsPartOfChain(body.ToChainUID)
+		if !isChainAdmin {
+			c.String(http.StatusUnauthorized, "you must be a host of both loops")
+			return
+		}
 	}
 
 	// finished authentication
