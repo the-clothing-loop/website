@@ -17,7 +17,6 @@ import SearchBar, {
 import { SizeBadges } from "../components/Badges";
 import { circleRadiusKm } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
-import { features } from "process";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
