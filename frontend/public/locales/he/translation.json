@@ -9,6 +9,10 @@
   "selectParticipant": "בחר משתתף",
   "addCoHost": "הוסף מארח-שותף",
   "published": "פורסם",
+  "transferParticipantToLoop": "Transfer Participant to Loop",
+  "transferParticipantInfo": "As a host of multiple Loops, you can move participants between Loops. Select a participant and the Loop you want them to transfer to.",
+  "selectLoop": "Select Loop",
+  "transfer": "Transfer",
   "uploadImage": "העלאת תמונות",
   "draft": "טיוטה",
   "openToNewMembers": "פתוח למשתתפים",
@@ -29,6 +33,7 @@
   "cancel": "בטל",
   "deleteAccount": "האם אתם בטוחים שברצונכם למחוק את החשבון לצמיתות?",
   "areYouSureRemoveEvent": "האם הינכם בטוחים שברצונכם למחוק את האירוע הזה לצמיתות?",
+  "areYouSureLogout": "Are you sure you want to logout?",
   "deleteUserBtn": "מחק חשבון",
   "edit": "ערוך",
   "editUserDetails": "ערוך פרטי משתתף",
@@ -274,5 +279,8 @@
   "city": "City",
   "province": "Province or state",
   "country": "Country or region",
-  "bags": "Bags"
+  "bags": "Bags",
+  "checkAddress": "Check address",
+  "youEntered": "You entered:",
+  "weFound": "We found (recommended):"
 }
