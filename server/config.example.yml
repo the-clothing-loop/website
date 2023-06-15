@@ -20,7 +20,7 @@ smtp_host: "db"
 smtp_port: 1025
 smtp_sender: "dev@example.com"
 smtp_user: "dev@example.com"
-smtp_pass: "secret"
+smtp_pass: ""
 
 goscope2_user: "admin"
 goscope2_pass: "admin"
