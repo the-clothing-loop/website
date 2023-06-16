@@ -1,5 +1,5 @@
 {
-  "faqForParticipants": "FAQ for Participants",
+  "faqForParticipants": "FAQ para os participantes",
   "arrParticipants": [
     {
       "question": "Are there rules on how much you can take out, and do you have to donate the same amount of clothes as you take out?",
@@ -22,11 +22,11 @@
       "answer": "The short answer is yes, but keep in mind: shoes are more difficult to pass along than clothes. There are many more sizes, and they show wear a lot quicker than garments. So please be very selective with shoes! Only add “as good as new” pairs, and have no more than 2 pairs per bag."
     },
     {
-      "question": "What to do with bulky clothes (like winter coats) that don’t fit in the bag?",
+      "question": "O que fazer com roupas volumosas (como casacos de inverno) que não cabem na bolsa?",
       "answer": "Big items can be photographed and shared via your communication channel, or through the <a target='_blank' href='https://template-clothing-loop.glideapp.io'>Glide app</a>. In a private message, people can respond and organize pick up."
     },
     {
-      "question": "Can I put shoes in the bag as well?",
+      "question": "Posso colocar sapatos na sacola também?",
       "answer": "That is up to your local host to decide. If your Loop allows you to add shoes to the bag, only add “as good as new” pairs, and <b>no more than 2 pairs per bag</b>. And please wrap them in a separate bag to avoid them touching the clothes. "
     },
     {
@@ -81,7 +81,7 @@
       "answer": "If someone signed up for your Loop but lives too far outside of your Loop area, it is up to you to decide if they may join. If they cannot, please send them an email to let them know. When in doubt: one thing you can do to decrease the distance between addresses, is to ask that person to find other participants between their area and the original Loop location."
     },
     {
-      "question": "What is an ideal group size?",
+      "question": "O que é o tamanho de grupo ideal?",
       "answer": "We’d recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognise anything in the bag anymore, so you can continue swapping. <b>There is no real maximum</b>, it is up to you what still works! In the Netherlands an average Loop is 45 people. But there are Loops running smoothly with over 180 people!"
     },
     {

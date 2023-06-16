@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 )
@@ -502,6 +504,87 @@ HAVING COUNT(uc.id) = 1
 	}
 
 	tx.Commit()
+}
+
+func UserTransferChain(c *gin.Context) {
+	db := getDB(c)
+
+	var body struct {
+		TransferUserUID string `json:"transfer_user_uid" binding:"required,uuid"`
+		FromChainUID    string `json:"from_chain_uid" binding:"required,uuid"`
+		ToChainUID      string `json:"to_chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, authUser, authChain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.FromChainUID)
+	if !ok {
+		return
+	}
+
+	if !authUser.IsRootAdmin {
+		_, isChainAdmin := authUser.IsPartOfChain(body.ToChainUID)
+		if !isChainAdmin {
+			c.String(http.StatusUnauthorized, "you must be a host of both loops")
+			return
+		}
+	}
+
+	// finished authentication
+
+	handleError := func(tx *gorm.DB, err error) {
+		tx.Rollback()
+		goscope.Log.Errorf("UserTransferChain: %v", err)
+		c.String(http.StatusInternalServerError, "Unable transfer user from loop to loop")
+	}
+	var err error
+	tx := db.Begin()
+
+	var result struct {
+		UserID      uint `gorm:"user_id"`
+		FromChainID uint `gorm:"from_chain_id"`
+		ToChainID   uint `gorm:"to_chain_id"`
+	}
+	err = tx.Raw(`
+SELECT u.id as user_id, uc.chain_id as from_chain_id, c2.id as to_chain_id
+FROM users AS u
+JOIN user_chains AS uc ON uc.user_id = u.id AND uc.chain_id = ?
+JOIN chains AS c2 ON c2.uid = ?
+WHERE u.uid = ?
+LIMIT 1
+	`, authChain.ID, body.ToChainUID, body.TransferUserUID).Scan(&result).Error
+	if result.UserID == 0 && err == nil {
+		err = fmt.Errorf("User %s not found", body.TransferUserUID)
+	}
+	if err != nil {
+		handleError(tx, err)
+		return
+	}
+
+	uc := &models.UserChain{}
+	tx.
+		Where("user_id = ?", result.UserID).
+		Where("chain_id = ?", result.FromChainID).
+		Find(uc)
+
+	if uc.ID == 0 {
+		handleError(tx, fmt.Errorf("User %s not found", body.TransferUserUID))
+		return
+	}
+	uc.ChainID = result.ToChainID
+	err = tx.Save(uc).Error
+	if err != nil {
+		handleError(tx, err)
+		return
+	}
+
+	err = tx.Commit().Error
+	if err != nil {
+		handleError(tx, err)
+		return
+	}
 }
 
 func routeIndex(route []string, userUID string) int {

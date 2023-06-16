@@ -78,20 +78,20 @@ export default function ChainsList() {
         {
           text: t("leave"),
           type: "error",
-          fn: async () => {
-            try {
-              await chainRemoveUser(chain.uid, authUser!.uid);
-            } catch (err: any) {
-              console.error(
-                "Unable to unsubscribe from Loop",
-                err,
-                chain.uid,
-                chain.name
-              );
-              addToastError(GinParseErrors(t, err), err.status);
-            }
-
-            authUserRefresh();
+          fn: () => {
+            chainRemoveUser(chain.uid, authUser!.uid)
+              .catch((err: any) => {
+                console.error(
+                  "Unable to unsubscribe from Loop",
+                  err,
+                  chain.uid,
+                  chain.name
+                );
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => {
+                authUserRefresh();
+              });
           },
         },
       ],

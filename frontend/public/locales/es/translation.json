@@ -9,6 +9,10 @@
   "selectParticipant": "Seleccionar participante",
   "addCoHost": "Añadir una anfitriona o un anfitrión",
   "published": "Publicado",
+  "transferParticipantToLoop": "Transfer Participant to Loop",
+  "transferParticipantInfo": "As a host of multiple Loops, you can move participants between Loops. Select a participant and the Loop you want them to transfer to.",
+  "selectLoop": "Select Loop",
+  "transfer": "Transfer",
   "uploadImage": "Upload image",
   "draft": "Borrador",
   "openToNewMembers": "Abrir a nuevos participantes",
@@ -29,6 +33,7 @@
   "cancel": "Cancelar",
   "deleteAccount": "Por favor, confirma que deseas eliminar esta cuenta de forma permanente.",
   "areYouSureRemoveEvent": "Are you sure you want to permanently delete this event?",
+  "areYouSureLogout": "Are you sure you want to logout?",
   "deleteUserBtn": "Eliminar cuenta",
   "edit": "Editar",
   "editUserDetails": "Editar detalles de usuario",
@@ -274,5 +279,8 @@
   "city": "Ciudad",
   "province": "Provincia o estado",
   "country": "País o región",
-  "bags": "Bags"
+  "bags": "Bags",
+  "checkAddress": "Check address",
+  "youEntered": "You entered:",
+  "weFound": "We found (recommended):"
 }

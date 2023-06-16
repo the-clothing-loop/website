@@ -1,13 +1,13 @@
 import {
   createContext,
+  FormEvent,
+  MouseEvent,
   PropsWithChildren,
-  ReactChildren,
-  ReactElement,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import * as focusTrap from "focus-trap";
 
 export interface Toast {
   type: "info" | "success" | "warning" | "error";
@@ -18,11 +18,14 @@ export interface Modal {
   content?: () => JSX.Element;
   actions: ModalAction[];
 }
-interface ModalAction {
-  fn: () => void;
+export interface ModalAction {
   type: "ghost" | "default" | "primary" | "secondary" | "success" | "error";
   text: string;
+  fn: (e: FormDataEntries<any> | undefined) => void | Error;
+  submit?: boolean;
 }
+
+export type FormDataEntries<E> = ReturnType<typeof Object.fromEntries<E>>;
 
 type ToastWithID = Toast & { id: number };
 interface ContextValue {
@@ -140,73 +143,59 @@ function ToastComponent(props: {
 
 function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
   const { t } = useTranslation();
-  const [trap, setTrap] = useState<focusTrap.FocusTrap>();
-
-  function asyncDeactivate() {
-    return new Promise((resolve, reject) => {
-      if (trap) {
-        try {
-          trap.deactivate({
-            onPostDeactivate: () => {
-              resolve(undefined);
-            },
-          });
-        } catch (err) {
-          reject(Error("Focus trap error:", { cause: err }));
-        }
-      } else reject(Error("trap not defined"));
-    }).catch((err) => {
-      console.error(err);
-    });
-  }
-
-  function handleActionClick(fn: () => void) {
-    asyncDeactivate().finally(() => {
-      props.closeFunc();
-      fn();
-    });
-  }
-  function handleBackgroundClick() {
-    if (window.innerWidth > 900) {
-      asyncDeactivate().finally(() => {
-        props.closeFunc();
-      });
-    }
-  }
+  const refDisplay = useRef<HTMLDialogElement>(null);
+  const refButtonClose = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const trap = focusTrap.createFocusTrap("#toast-modal", {
-      initialFocus: "#toast-modal-close",
+    refDisplay.current?.showModal();
+    setTimeout(() => {
+      refButtonClose.current?.focus();
     });
-    try {
-      trap.activate();
-    } catch (err) {
-      console.error(Error("Trap unable to active: ", { cause: err }));
+  }, [props.modal]);
+
+  function handleActionClick(e: FormEvent, a: ModalAction) {
+    e.preventDefault();
+
+    let elForm = (e.target as any).form as HTMLFormElement | undefined;
+    let formProps: FormDataEntries<any> | undefined;
+    if (elForm) {
+      formProps = Object.fromEntries(new FormData(elForm));
     }
-    setTrap(trap);
-  }, []);
+    let err = a.fn(formProps);
+    if (err) {
+      console.warn(err);
+    } else {
+      props.closeFunc();
+    }
+  }
+
+  function handleBackgroundClick(e: MouseEvent) {
+    e.preventDefault();
+    if (window.innerWidth > 900) {
+      if (e.target === e.currentTarget) {
+        props.closeFunc();
+      }
+    }
+  }
 
   return (
     <dialog
-      className="fixed inset-0 z-50 flex justify-center items-center p-0"
-      id="toast-modal"
+      className="fixed overflow-visible inset-0 z-50 open:flex justify-center items-center p-0 shadow-lg backdrop:bg-white/30"
+      ref={refDisplay}
       tabIndex={-1}
+      onClick={handleBackgroundClick}
     >
-      <div
-        className={"fixed inset-0 bg-white/30"}
-        onClick={handleBackgroundClick}
-      />
-      <div
-        className="bg-white max-w-screen-sm container p-6 shadow-lg z-10"
-        role="document"
+      <form
+        className="bg-white max-w-screen-sm p-6 z-10"
+        style={{ "--tw-shadow": "#333" } as any}
       >
         <h5 className="text-lg mb-6 min-w-[300px]">{props.modal.message}</h5>
         {props.modal.content ? <props.modal.content /> : null}
         <div
           className={
             props.modal.actions.length === 1
-              ? "flex justify-between"
-              : "flex flex-col items-stretch gap-3"
+              ? "mt-4 flex justify-between"
+              : "mt-4 flex flex-col items-stretch gap-3"
           }
         >
           {props.modal.actions.map((a) => {
@@ -231,8 +220,9 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
             return (
               <button
                 key={a.text}
+                type={a.submit ? "submit" : "button"}
                 className={classes}
-                onClick={() => handleActionClick(a.fn)}
+                onClick={(e) => handleActionClick(e, a)}
               >
                 {a.text}
               </button>
@@ -240,14 +230,15 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
           })}
           <button
             key="close"
-            id="toast-modal-close"
+            type="reset"
+            ref={refButtonClose}
             className="btn btn-sm btn-ghost"
-            onClick={() => handleActionClick(() => {})}
+            onClick={() => props.closeFunc()}
           >
             {props.modal.actions.length ? t("cancel") : t("close")}
           </button>
         </div>
-      </div>
+      </form>
     </dialog>
   );
 }

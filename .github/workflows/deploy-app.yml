@@ -22,8 +22,6 @@ jobs:
         run: npm ci
         working-directory: ./app
       - name: Build public files
-        env:
-          VITE_APP_BETA_TESTERS: ${{ secrets.VITE_APP_BETA_TESTERS }}
         run: npm run build:production
         working-directory: ./app
       - name: Install SSH key

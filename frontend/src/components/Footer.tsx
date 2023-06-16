@@ -109,7 +109,7 @@ export default function Footer() {
                   </li>
                   <li className="mb-3 inline-flex items-center lg:order-3">
                     <a
-                      href="https://www.linkedin.com/groups/12746791/"
+                      href="https://www.linkedin.com/company/the-clothing-loop/"
                       rel="noreferrer"
                       aria-label="Our LinkedIn page"
                       className="flex flex-row items-center group"

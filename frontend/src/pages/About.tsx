@@ -163,7 +163,7 @@ export default function About() {
                   }}
                   values={{
                     volunteers:
-                      "Tim, Gilbert, Tom, Natalie, Justin, Mohamed, Trevor",
+                      "Johanna, Natalie, Justin, Mohamed, Trevor, Tim, Gilbert, Tom",
                     andVolunteer: "Pim",
                   }}
                 ></Trans>
