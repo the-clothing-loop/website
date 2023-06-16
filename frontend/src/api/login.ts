@@ -8,6 +8,8 @@ export interface RequestRegisterUser {
   phone_number: string;
   newsletter: boolean;
   sizes: Array<Sizes | string>;
+  longitude: number;
+  latitude: number;
 }
 
 export interface RequestRegisterChain {
