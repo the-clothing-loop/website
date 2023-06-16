@@ -105,12 +105,11 @@ export default function AddressForm(props: {
     return data.features[0]?.geometry.coordinates;
   }
 
-
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     (async () => {
-      let coordinates = []
+      let coordinates = [];
       if (openAddress) {
         if (!(address.street && address.city && address.country)) {
           addToastError(t("required") + ": " + t("address"), 400);
@@ -139,11 +138,9 @@ export default function AddressForm(props: {
           return;
         }
       }
-        coordinates = await getCoordinates(
-          values.address 
-        )
-        values.latitude = coordinates[0]
-        values.longitude = coordinates[1]
+      coordinates = await getCoordinates(values.address);
+      values.latitude = coordinates[0];
+      values.longitude = coordinates[1];
 
       console.log(values);
       props.onSubmit(values);

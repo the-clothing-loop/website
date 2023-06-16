@@ -45,7 +45,6 @@ export default function UserEdit() {
     console.info("submit", { ...values });
     if (!userUID) return;
     (async () => {
-
       try {
         let userUpdateBody: UserUpdateBody = {
           user_uid: userUID,
@@ -59,7 +58,7 @@ export default function UserEdit() {
         };
         if (chainUID) userUpdateBody.chain_uid = chainUID;
         console.log(userUpdateBody);
-        
+
         await userUpdate(userUpdateBody);
         setTimeout(() => {
           history.goBack();
@@ -131,5 +130,3 @@ export default function UserEdit() {
     </>
   );
 }
-
-
