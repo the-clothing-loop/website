@@ -52,8 +52,13 @@ export default function UserEdit() {
           address: values.address,
           sizes: values.sizes,
         };
+        if (values.latitude && values.longitude) {
+          userUpdateBody.latitude = values.latitude;
+          userUpdateBody.longitude = values.longitude;
+        }
         if (chainUID) userUpdateBody.chain_uid = chainUID;
         console.log(userUpdateBody);
+
         await userUpdate(userUpdateBody);
         setTimeout(() => {
           history.goBack();

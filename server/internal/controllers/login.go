@@ -184,6 +184,8 @@ func RegisterChainAdmin(c *gin.Context) {
 		PhoneNumber:     body.User.PhoneNumber,
 		Sizes:           body.User.Sizes,
 		Address:         body.User.Address,
+		Latitude:        body.User.Latitude,
+		Longitude:       body.User.Longitude,
 	}
 	if err := db.Create(user).Error; err != nil {
 		goscope.Log.Warningf("User already exists: %v", err)
@@ -252,6 +254,8 @@ func RegisterBasicUser(c *gin.Context) {
 		PhoneNumber:     body.User.PhoneNumber,
 		Sizes:           body.User.Sizes,
 		Address:         body.User.Address,
+		Latitude:        body.User.Latitude,
+		Longitude:       body.User.Longitude,
 	}
 	if res := db.Create(user); res.Error != nil {
 		goscope.Log.Warningf("User already exists: %v", res.Error)
