@@ -17,8 +17,6 @@ interface State {
   chainUID?: UID;
 }
 
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
-
 export default function UserEdit() {
   const { t } = useTranslation();
   const history = useHistory();

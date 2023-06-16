@@ -1,4 +1,3 @@
-import { LargeNumberLike } from "crypto";
 import { UID, User } from "./types";
 
 export function userGetByUID(chainUID: string | undefined, userUID: string) {
