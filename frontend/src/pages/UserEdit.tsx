@@ -51,9 +51,11 @@ export default function UserEdit() {
           newsletter: values.newsletter,
           address: values.address,
           sizes: values.sizes,
-          latitude: values.latitude,
-          longitude: values.longitude,
         };
+        if (values.latitude && values.longitude) {
+          userUpdateBody.latitude = values.latitude;
+          userUpdateBody.longitude = values.longitude;
+        }
         if (chainUID) userUpdateBody.chain_uid = chainUID;
         console.log(userUpdateBody);
 

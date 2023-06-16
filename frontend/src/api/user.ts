@@ -22,8 +22,8 @@ export interface UserUpdateBody {
   sizes?: string[];
   address?: string;
   pause_until?: string;
-  longitude: number;
-  latitude: number;
+  longitude?: number;
+  latitude?: number;
 }
 export function userUpdate(user: UserUpdateBody) {
   return window.axios.patch<never>("/v2/user", user);

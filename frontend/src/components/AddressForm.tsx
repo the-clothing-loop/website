@@ -21,8 +21,8 @@ export interface ValuesForm {
   address: string;
   sizes: string[];
   newsletter: boolean;
-  latitude: number;
-  longitude: number;
+  latitude: number | undefined;
+  longitude: number | undefined;
 }
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -46,8 +46,8 @@ export default function AddressForm(props: {
     sizes: [] as string[],
     address: "",
     newsletter: false,
-    latitude: 0,
-    longitude: 0,
+    latitude: undefined,
+    longitude: undefined,
   });
   const [address, setAddress] = useForm({
     street: "",
@@ -120,18 +120,19 @@ export default function AddressForm(props: {
           address.province +
           " " +
           address.country;
+
+        const formattedAddress = addressConcatenated.replaceAll(" ", "%20");
+        const mapboxResult = await firstMapboxAddressDetails(formattedAddress);
         if (useUserInput) {
           values.address = addressConcatenated;
         } else {
-          const formattedAddress = addressConcatenated.replaceAll(" ", "%20");
-          const mapboxResult = await firstMapboxAddressDetails(
-            formattedAddress
-          );
           if (mapboxResult) {
             values.address = mapboxResult.place_name;
-            values.latitude = mapboxResult.geometry.coordinates[0];
-            values.longitude = mapboxResult.geometry.coordinates[1];
           }
+        }
+        if (mapboxResult) {
+          values.latitude = mapboxResult.geometry.coordinates[0];
+          values.longitude = mapboxResult.geometry.coordinates[1];
         }
 
         if (!(address.street && address.city && address.country)) {
