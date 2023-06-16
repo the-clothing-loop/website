@@ -126,12 +126,6 @@ export default function AddressForm(props: {
           address.province +
           " " +
           address.country;
-
-          coordinates = await getCoordinates(
-            addressConcatenated.replaceAll(" ", "%20")
-          );
-         setValue("latitude", coordinates[0])
-         setValue("longitude", coordinates[1])
         if (useUserInput) {
           values.address = addressConcatenated;
         } else {
@@ -145,6 +139,12 @@ export default function AddressForm(props: {
           return;
         }
       }
+        coordinates = await getCoordinates(
+          values.address 
+        )
+        values.latitude = coordinates[0]
+        values.longitude = coordinates[1]
+
       console.log(values);
       props.onSubmit(values);
     })();

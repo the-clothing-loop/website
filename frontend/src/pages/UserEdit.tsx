@@ -17,6 +17,8 @@ interface State {
   chainUID?: UID;
 }
 
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
+
 export default function UserEdit() {
   const { t } = useTranslation();
   const history = useHistory();
@@ -43,6 +45,7 @@ export default function UserEdit() {
     console.info("submit", { ...values });
     if (!userUID) return;
     (async () => {
+
       try {
         let userUpdateBody: UserUpdateBody = {
           user_uid: userUID,
@@ -56,6 +59,7 @@ export default function UserEdit() {
         };
         if (chainUID) userUpdateBody.chain_uid = chainUID;
         console.log(userUpdateBody);
+        
         await userUpdate(userUpdateBody);
         setTimeout(() => {
           history.goBack();
@@ -127,3 +131,5 @@ export default function UserEdit() {
     </>
   );
 }
+
+
