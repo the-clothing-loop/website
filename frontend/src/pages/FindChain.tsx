@@ -101,7 +101,6 @@ export default function FindChain({ location }: { location: Location }) {
   const [locationLoading, setLocationLoading] = useState(false);
   const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
   const [visibleChains, setVisibleChains] = useState<Chain[]>([]);
-  const [visibleChainUIDs, setVisibleChainUIDs] = useState<string[]>([]);
 
   const mapRef = useRef<any>();
 
@@ -288,57 +287,84 @@ export default function FindChain({ location }: { location: Location }) {
     const features = map!.queryRenderedFeatures(undefined, {
       layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
     });
+    let visibleUIDs: string[] = [];
     if (features.length) {
-      let visibleUIDs: string[] = [];
-
-      // Get UID of each chain in view
-      features.forEach((f) => {
-        if (f.properties!.cluster) {
+      // Get chains that are part of a cluster
+      const clustersChains = features
+        .filter((f) => f.properties!.cluster)
+        .map(async (f) => {
           var clusterID = f.properties!.cluster_id;
           var pointCount = f.properties!.point_count;
           var clusterSource = map!.getSource("chains") as GeoJSONSource;
 
-          // Gets all leaves of cluster
-          clusterSource.getClusterLeaves(
+          const clusterLeavesUIDs = await getClusterLeaves(
+            clusterSource,
             clusterID,
             pointCount,
-            0,
-            function (err, aFeatures) {
-              try {
-                let uids = aFeatures
-                  .map((f) => f.properties?.uid)
-                  .filter((f) => f) as UID[];
-                uids = [...new Set(uids)];
+            0
+          )
+            .then((features2) => {
+              let uids = features2
+                .map((f) => f.properties?.uid)
+                .filter((f) => f) as UID[];
+              uids = [...new Set(uids)];
 
-                visibleUIDs = [...visibleUIDs, ...uids];
-                visibleUIDs = [...new Set(visibleUIDs)];
+              visibleUIDs = [...visibleUIDs, ...uids];
+              visibleUIDs = [...new Set(visibleUIDs)];
+              return visibleUIDs;
+            })
+            .catch((error) => {
+              console.log("getClusterLeaves", error);
+            });
 
-                let _visibleChains = visibleUIDs.map((visibleUIDs) =>
-                  chains.find((c) => c.uid === visibleUIDs)
-                ) as Chain[];
+          return clusterLeavesUIDs;
+        });
 
-                if (_visibleChains.length) {
-                  setVisibleChains(_visibleChains);
-                }
-              } catch (e) {
-                console.log("getClusterLeaves", err, aFeatures);
-              }
-            }
-          );
-        } else {
+      // Get single chains
+      const singleChains = features
+        .filter((f) => f.properties!.uid)
+        .map((f) => {
           let curr = f.properties!.uid;
-          visibleUIDs = [...visibleUIDs, curr];
-          visibleUIDs = [...new Set(visibleUIDs)];
-          let _visibleChains = visibleUIDs.map((visibleUIDs) =>
-            chains.find((c) => c.uid === visibleUIDs)
-          ) as Chain[];
+          return curr;
+        });
 
-          if (_visibleChains.length) {
-            setVisibleChains(_visibleChains);
-          }
+      Promise.all(clustersChains).then(() => {
+        visibleUIDs = [...visibleUIDs, ...singleChains];
+        visibleUIDs = [...new Set(visibleUIDs)];
+
+        let _visibleChains = visibleUIDs.map((visibleUIDs) =>
+          chains.find((c) => c.uid === visibleUIDs)
+        ) as Chain[];
+
+        if (_visibleChains.length) {
+          setVisibleChains(_visibleChains);
         }
       });
     }
+  }
+
+  async function getClusterLeaves(
+    clusterSource: mapboxgl.GeoJSONSource,
+    clusterID: number,
+    limit: number,
+    offset: number
+  ): Promise<
+    GeoJSONTypes.Feature<
+      GeoJSONTypes.Geometry,
+      GeoJSONTypes.GeoJsonProperties
+    >[]
+  > {
+    return new Promise((resolve, reject) => {
+      clusterSource.getClusterLeaves(
+        clusterID,
+        limit,
+        offset,
+        (err: any, features: any) => {
+          if (err) reject(err);
+          else resolve(features);
+        }
+      );
+    });
   }
 
   // https://docs.mapbox.com/mapbox-gl-js/style-spec/other/#set-membership-filters
@@ -446,9 +472,14 @@ export default function FindChain({ location }: { location: Location }) {
   }
 
   function getDistanceFromCenter(chain: Chain) {
-    const center = map!.getCenter();
-    const chainLongLat = new mapboxgl.LngLat(chain.latitude, chain.longitude);
-    return center.distanceTo(chainLongLat);
+    try {
+      const center = map!.getCenter();
+      const chainLongLat = new mapboxgl.LngLat(chain.latitude, chain.longitude);
+      return center.distanceTo(chainLongLat);
+    } catch {
+      console.error("getDistanceFromCenter");
+      return -1;
+    }
   }
 
   if (!MAPBOX_TOKEN) {
@@ -517,6 +548,7 @@ export default function FindChain({ location }: { location: Location }) {
               visibleChains.length ? "" : "hidden"
             }`}
           >
+            {console.log(visibleChains.length)}
             {visibleChains
               .sort((a, b) => {
                 return Math.min(
