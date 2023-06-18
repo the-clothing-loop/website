@@ -80,6 +80,8 @@ const NewChainLocation = ({ location }: { location: any }) => {
             phone_number: user.phone_number,
             newsletter: state!.register_user?.newsletter || false,
             sizes: values.sizes || [],
+            latitude: user.latitude || 0,
+            longitude: user.longitude || 0,
           },
           newChain
         );

@@ -43,7 +43,7 @@ const mediaIcons: MediaIcon[] = [
   {
     icon: logoLinkedin,
     label: "LinkedIn",
-    url: "https://www.linkedin.com/groups/12746791/",
+    url: "https://www.linkedin.com/company/the-clothing-loop/",
   },
   {
     icon: logoFacebook,

@@ -1,4 +1,4 @@
-host: "127.0.0.1"
+host: "0.0.0.0"
 port: 8084
 
 site_base_url_api: "http://localhost:3000/api"
@@ -10,17 +10,17 @@ cookie_https_only: false
 stripe_secret_key: "secret"
 stripe_webhook: "secret"
 
-db_host: "localhost"
+db_host: "db"
 db_port: 3306
 db_name: "clothingloop"
 db_user: "clothingloop"
 db_pass: "72bd3937e91363a747f810e7"
 
-smtp_host: "localhost"
+smtp_host: "mail"
 smtp_port: 1025
 smtp_sender: "dev@example.com"
 smtp_user: "dev@example.com"
-smtp_pass: "secret"
+smtp_pass: ""
 
 goscope2_user: "admin"
 goscope2_pass: "admin"
