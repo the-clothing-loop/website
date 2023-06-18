@@ -303,8 +303,8 @@ export default function FindChain({ location }: { location: Location }) {
             pointCount,
             0
           )
-            .then((features2) => {
-              let uids = features2
+            .then((features) => {
+              let uids = features
                 .map((f) => f.properties?.uid)
                 .filter((f) => f) as UID[];
               uids = [...new Set(uids)];
