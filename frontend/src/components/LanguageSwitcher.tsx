@@ -36,7 +36,7 @@ const LanguageSwitcher = (props: {
     let userUpdateBody: UserUpdateBody = {
       user_uid: props.userUID,
       chain_uid: props.chainUID,
-      I18n: lng,
+      i18n: lng,
     };
     userUpdate(userUpdateBody);
   };

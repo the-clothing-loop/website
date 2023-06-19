@@ -1,7 +1,6 @@
 export type UID = string;
 
 export interface User {
-  I18n: string;
   uid: UID;
   email: string;
   name: string;
@@ -12,6 +11,7 @@ export interface User {
   sizes: string[];
   is_root_admin: boolean;
   pause_until: string | null;
+  i18n: string;
   longitude?: number;
   latitude?: number;
 }

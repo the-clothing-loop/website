@@ -83,7 +83,7 @@ export default function AddressForm(props: {
             sizes: user.sizes,
             address: user.address,
             newsletter: hasNewsletterReq.data,
-            i18n: user.I18n,
+            i18n: user.i18n,
             latitude: user.latitude,
             longitude: user.longitude,
           });

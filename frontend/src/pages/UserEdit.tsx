@@ -51,7 +51,7 @@ export default function UserEdit() {
           newsletter: values.newsletter,
           address: values.address,
           sizes: values.sizes,
-          I18n: values.i18n,
+          i18n: values.i18n,
         };
         if (values.latitude && values.longitude) {
           userUpdateBody.latitude = values.latitude;

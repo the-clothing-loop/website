@@ -22,7 +22,7 @@ export interface UserUpdateBody {
   sizes?: string[];
   address?: string;
   pause_until?: string;
-  I18n?: string;
+  i18n?: string;
   longitude?: number;
   latitude?: number;
 }
