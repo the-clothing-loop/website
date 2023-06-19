@@ -12,6 +12,7 @@ import PopoverOnHover from "./Popover";
 import { userGetByUID, userHasNewsletter } from "../api/user";
 
 import { AuthContext } from "../providers/AuthProvider";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 
 export interface ValuesForm {
   name: string;
@@ -21,6 +22,8 @@ export interface ValuesForm {
   sizes: string[];
   newsletter: boolean;
   i18n: string;
+  latitude: number | undefined;
+  longitude: number | undefined;
 }
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -45,6 +48,8 @@ export default function AddressForm(props: {
     address: "",
     newsletter: false,
     i18n: "",
+    latitude: undefined,
+    longitude: undefined,
   });
   const [address, setAddress] = useForm({
     street: "",
@@ -79,6 +84,8 @@ export default function AddressForm(props: {
             address: user.address,
             newsletter: hasNewsletterReq.data,
             i18n: user.I18n,
+            latitude: user.latitude,
+            longitude: user.longitude,
           });
         } catch (error) {
           console.warn(error);
@@ -87,13 +94,14 @@ export default function AddressForm(props: {
     }
   }, [history]);
 
-  async function getPlaceName(address: string): Promise<string> {
+  async function firstMapboxAddressDetails(
+    address: string
+  ): Promise<MapboxGeocoder.Result | undefined> {
     const response = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_TOKEN}&types=address`
     );
     const data = await response.json();
-    // var longLat = (data.features[0]?.center);
-    return data.features[0]?.place_name || "";
+    return data.features[0];
   }
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -115,11 +123,19 @@ export default function AddressForm(props: {
           address.province +
           " " +
           address.country;
+
+        const formattedAddress = addressConcatenated.replaceAll(" ", "%20");
+        const mapboxResult = await firstMapboxAddressDetails(formattedAddress);
         if (useUserInput) {
           values.address = addressConcatenated;
         } else {
-          const formattedAddress = addressConcatenated.replaceAll(" ", "%20");
-          values.address = await getPlaceName(formattedAddress);
+          if (mapboxResult) {
+            values.address = mapboxResult.place_name;
+          }
+        }
+        if (mapboxResult) {
+          values.latitude = mapboxResult.geometry.coordinates[0];
+          values.longitude = mapboxResult.geometry.coordinates[1];
         }
 
         if (!(address.street && address.city && address.country)) {
@@ -128,6 +144,7 @@ export default function AddressForm(props: {
           return;
         }
       }
+
       console.log(values);
       props.onSubmit(values);
     })();
@@ -157,9 +174,9 @@ export default function AddressForm(props: {
           address.country
         ).replaceAll(" ", "%20");
 
-        var validatedAddress = await getPlaceName(formattedAddress);
+        var mapboxResult = await firstMapboxAddressDetails(formattedAddress);
 
-        setValue("address", validatedAddress);
+        setValue("address", mapboxResult?.place_name || "");
         setLoading(false);
         if (!(address.street && address.city && address.country)) {
           console.error("getPlaceName", values.address);

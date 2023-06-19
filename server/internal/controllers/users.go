@@ -24,6 +24,8 @@ type UserCreateRequestBody struct {
 	PhoneNumber string   `json:"phone_number" binding:"required,min=3"`
 	Newsletter  bool     `json:"newsletter"`
 	Sizes       []string `json:"sizes"`
+	Latitude    float64  `json:"latitude"`
+	Longitude   float64  `json:"longitude"`
 }
 
 func UserGet(c *gin.Context) {
@@ -271,6 +273,8 @@ func UserUpdate(c *gin.Context) {
 		Sizes       *[]string  `json:"sizes,omitempty"`
 		Address     *string    `json:"address,omitempty"`
 		I18n        *string    `json:"i18n,omitempty"`
+		Latitude    *float64   `json:"latitude,omitempty"`
+		Longitude   *float64   `json:"longitude,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -300,6 +304,12 @@ func UserUpdate(c *gin.Context) {
 		}
 		if body.Address != nil {
 			userChanges["address"] = *body.Address
+		}
+		if body.Latitude != nil {
+			userChanges["latitude"] = *body.Latitude
+		}
+		if body.Longitude != nil {
+			userChanges["longitude"] = *body.Longitude
 		}
 		if body.PausedUntil != nil {
 			if body.PausedUntil.After(time.Now()) {
@@ -522,10 +532,12 @@ func UserTransferChain(c *gin.Context) {
 		return
 	}
 
-	_, isChainAdmin := authUser.IsPartOfChain(body.ToChainUID)
-	if !isChainAdmin {
-		c.String(http.StatusUnauthorized, "you must be a host of both loops")
-		return
+	if !authUser.IsRootAdmin {
+		_, isChainAdmin := authUser.IsPartOfChain(body.ToChainUID)
+		if !isChainAdmin {
+			c.String(http.StatusUnauthorized, "you must be a host of both loops")
+			return
+		}
 	}
 
 	// finished authentication

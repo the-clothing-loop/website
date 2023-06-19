@@ -14,6 +14,12 @@
 - hosts: 127.0.0.1
   connection: local
   tasks:
+    - name: Install newer rsync on MacOS
+      # https://dev.to/al5ina5/updating-rsync-on-macos-so-you-re-not-stuck-with-14-year-old-software-1b5i
+      community.general.homebrew:
+        name: rsync
+        state: present
+      when: ansible_facts['os_family'] == 'Darwin'
     - name: Get images from admin
       shell: |
         rsync -av vps1.clothingloop.org:/home/admin/images/ ./images/

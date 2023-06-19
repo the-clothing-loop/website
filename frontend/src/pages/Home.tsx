@@ -24,7 +24,8 @@ const ImpactHubLogo =
   "https://images.clothingloop.org/600x,jpg/logo_impacthub.svg";
 const EssenseLogo = "https://images.clothingloop.org/208x,jpg/essense_logo.svg";
 const WdcdLogo = "https://images.clothingloop.org/160x,jpg/logo_wdcd.png";
-const DoenLogo = "https://images.clothingloop.org/160x,jpeg/doen.png";
+const DoenLogo =
+  "https://images.clothingloop.org/160x/npl_buurtfonds_logo_2023.png";
 const PNHLogo = "https://images.clothingloop.org/208x,jpg/pnh_logo.png";
 const MEAXLogo = "https://images.clothingloop.org/208x/meax_logo.png";
 
