@@ -1,9 +1,13 @@
 # Setup instructions
 
-Ensure that you have the follow programs installed:
+This application needs to be installed before continuing.
 
 1. [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-2. [NodeJS](https://nodejs.org/en)
+
+Ensure that you have the follow programs installed _after_ following the page instructions:
+
+1. [NodeJS](https://nodejs.org/en)
+2. [GoLang](https://go.dev/dl/)
 
 ## 1.a. Install make on windows
 
