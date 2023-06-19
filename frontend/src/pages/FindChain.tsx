@@ -552,7 +552,7 @@ export default function FindChain({ location }: { location: Location }) {
                 .map(({ chain, selected }) => {
                   return (
                     <button
-                      className={`p-1.5 block w-full ${
+                      className={`p-1.5 block w-full border-b border-grey/10 last:border-none ${
                         selected ? "bg-white" : ""
                       }`}
                       key={chain.uid}
