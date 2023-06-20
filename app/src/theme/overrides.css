@@ -27,6 +27,10 @@
   }
 }
 
+.ion-ce:not.plt-hybrid.plt-android body #root ion-tab-bar {
+  padding-bottom: 12px;
+}
+
 .ion-icon[slot="end"] {
   margin-inline-start: 0.5em;
 }
