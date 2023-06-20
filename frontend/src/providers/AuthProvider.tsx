@@ -3,8 +3,9 @@ import { useHistory } from "react-router-dom";
 import { History } from "history";
 import { loginValidate as apiLogin, logout as apiLogout } from "../api/login";
 import { User } from "../api/types";
-import { userGetByUID } from "../api/user";
+import { userGetByUID, userUpdate } from "../api/user";
 import Cookies from "js-cookie";
+import i18n from "../i18n";
 
 const IS_DEV_MODE = import.meta.env.DEV;
 
@@ -80,6 +81,14 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
 
           Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
           setLoading(false);
+          if (user.i18n && user.i18n !== i18n.language) {
+            i18n.changeLanguage(user.i18n);
+          } else {
+            userUpdate({
+              user_uid: user.uid,
+              i18n: i18n.language,
+            });
+          }
         } catch (err) {
           await authLogout().catch((err) => {
             console.error("force logout failed:", err);
