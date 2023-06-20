@@ -18,7 +18,7 @@ export type AuthProps = {
   authUser: User | null;
   // ? Should loading only be used for authentication or also for login & logout?
   loading: boolean;
-  authLoginValidate: (apiKey: string) => Promise<void>;
+  authLoginValidate: (apiKey: string) => Promise<undefined | User>;
   authLogout: () => Promise<void>;
   authUserRefresh: () => Promise<UserRefreshState>;
 };
@@ -44,8 +44,9 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
   function authLoginValidate(apiKey: string) {
     setLoading(true);
     return (async () => {
+      let user: User | undefined;
       try {
-        const user = (await apiLogin(apiKey)).data.user;
+        user = (await apiLogin(apiKey)).data.user;
         setUser(user);
 
         Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
@@ -54,6 +55,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
         throw err;
       }
       setLoading(false);
+      return user;
     })();
   }
   function authLogout() {

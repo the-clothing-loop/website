@@ -21,7 +21,6 @@ export interface ValuesForm {
   address: string;
   sizes: string[];
   newsletter: boolean;
-  i18n: string;
   latitude: number | undefined;
   longitude: number | undefined;
 }
@@ -47,7 +46,6 @@ export default function AddressForm(props: {
     sizes: [] as string[],
     address: "",
     newsletter: false,
-    i18n: "",
     latitude: undefined,
     longitude: undefined,
   });
@@ -83,7 +81,6 @@ export default function AddressForm(props: {
             sizes: user.sizes,
             address: user.address,
             newsletter: hasNewsletterReq.data,
-            i18n: user.i18n,
             latitude: user.latitude,
             longitude: user.longitude,
           });

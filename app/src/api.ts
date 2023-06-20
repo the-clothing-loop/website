@@ -53,7 +53,7 @@ export interface UserUpdateBody {
   sizes?: string[];
   address?: string;
   paused_until?: string;
-  i18n: string;
+  i18n?: string;
 }
 
 export interface UserChain {
