@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import { useDropdown } from "../util/dropdown.hooks";
 import { getLanguageFlags } from "../languages";
-import { userUpdate, UserUpdateBody } from "../api/user";
+import { userUpdate } from "../api/user";
 import { AuthContext } from "../providers/AuthProvider";
 
 const IS_PRODUCTION =
