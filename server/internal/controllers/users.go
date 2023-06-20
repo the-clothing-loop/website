@@ -272,6 +272,7 @@ func UserUpdate(c *gin.Context) {
 		PausedUntil *time.Time `json:"paused_until,omitempty"`
 		Sizes       *[]string  `json:"sizes,omitempty"`
 		Address     *string    `json:"address,omitempty"`
+		I18n        *string    `json:"i18n,omitempty"`
 		Latitude    *float64   `json:"latitude,omitempty"`
 		Longitude   *float64   `json:"longitude,omitempty"`
 	}
@@ -320,6 +321,9 @@ func UserUpdate(c *gin.Context) {
 		if body.Sizes != nil {
 			j, _ := json.Marshal(body.Sizes)
 			userChanges["sizes"] = string(j)
+		}
+		if body.I18n != nil {
+			userChanges["i18n"] = *body.I18n
 		}
 		if len(userChanges) > 0 {
 			if err := db.Model(user).Updates(userChanges).Error; err != nil {

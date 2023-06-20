@@ -6,6 +6,8 @@ import { Helmet } from "react-helmet";
 
 import { AuthContext } from "../providers/AuthProvider";
 import { ToastContext } from "../providers/ToastProvider";
+import { User } from "../api/types";
+import i18n from "../i18n";
 
 export default function LoginEmailFinished() {
   const { t } = useTranslation();
@@ -18,15 +20,20 @@ export default function LoginEmailFinished() {
 
   useEffect(() => {
     (async () => {
+      let user: User | undefined;
       try {
         if (!apiKey) {
           throw "apiKey does not exist";
         }
-        await authLoginValidate(apiKey!);
+        user = await authLoginValidate(apiKey!);
         addToast({
           message: t("userIsLoggedIn"),
           type: "success",
         });
+
+        if (user?.i18n) {
+          i18n.changeLanguage(user.i18n);
+        }
         history.replace("/admin/dashboard");
       } catch (err: any) {
         addToastError(t("errorLoggingIn"), 401);
