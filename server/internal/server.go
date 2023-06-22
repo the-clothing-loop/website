@@ -122,5 +122,9 @@ func Routes() *gin.Engine {
 	v2.PATCH("/event", controllers.EventUpdate)
 	v2.DELETE("/event/:uid", controllers.EventDelete)
 
+	// onesignal
+	v2.PUT("/onesignal/player", controllers.OneSignalPlayerPut)
+	v2.DELETE("onesignal/player/:player_id", controllers.OneSignalPlayerDelete)
+
 	return r
 }

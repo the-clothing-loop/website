@@ -7,6 +7,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/views"
 )
 
 func BulkyGetAll(c *gin.Context) {
@@ -74,6 +75,22 @@ func BulkyPut(c *gin.Context) {
 		return
 	}
 
+	// Create a notification
+	if isNew := body.ID == 0; isNew {
+		playerIDs := []string{}
+		db.Raw(`
+			SELECT uo.player_id
+			FROM user_onesignal AS uo
+			JOIN user_chains AS uc ON uc.user_id = uo.user_id
+			JOIN chains AS c ON c.id = uc.chain_id
+			WHERE c.uid = ?`, body.ChainUID).Scan(&playerIDs)
+
+		if len(playerIDs) > 0 {
+			oneSignalCreateNotification(c, db, playerIDs, views.Notifications["newBulkyItemHasBeenCreatedTitle"], nil)
+		}
+	}
+
+	// Set the bulkyItem object
 	bulkyItem := &models.BulkyItem{}
 	if body.ID != 0 {
 		db.Raw(`SELECT * FROM bulky_items WHERE id = ? LIMIT 1`, body.ID).Scan(bulkyItem)
