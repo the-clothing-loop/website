@@ -3,7 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/OneSignal/onesignal-go-api"
 	"github.com/gin-gonic/gin"
+	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -86,7 +88,16 @@ func BulkyPut(c *gin.Context) {
 			WHERE c.uid = ? AND u.uid != ?`, body.ChainUID, body.UserUID).Scan(&userUIDs)
 
 		if len(userUIDs) > 0 {
-			oneSignalCreateNotification(c, db, userUIDs, views.Notifications["newBulkyItemHasBeenCreatedTitle"], nil)
+			err := oneSignalCreateNotification(c, db,
+				userUIDs,
+				*views.Notifications["newBulkyItemHasBeenCreatedTitle"],
+				onesignal.StringMap{
+					En: body.Title,
+				},
+			)
+			if err != nil {
+				glog.Error(err)
+			}
 		}
 	}
 

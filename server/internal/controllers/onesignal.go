@@ -2,38 +2,35 @@ package controllers
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/OneSignal/onesignal-go-api"
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"gorm.io/gorm"
 )
 
-func oneSignalCreateNotification(c *gin.Context, db *gorm.DB, userUIDs []string, notificationTitle, notificationSubtitle *onesignal.StringMap) bool {
+func oneSignalCreateNotification(c *gin.Context, db *gorm.DB, userUIDs []string, notificationTitle, notificationContent onesignal.StringMap) error {
 	if len(userUIDs) == 0 {
-		c.AbortWithError(http.StatusNoContent, fmt.Errorf("No users to send a notification to"))
-		return false
+		return fmt.Errorf("No users to send a notification to")
 	}
 
-	headings := onesignal.NullableStringMap{}
-	subtle := onesignal.NullableStringMap{}
-	if notificationTitle != nil {
-		headings.Set(notificationTitle)
-		if notificationSubtitle != nil {
-			subtle.Set(notificationSubtitle)
-		}
-	}
+	notification := onesignal.NewNotification(app.Config.ONESIGNAL_APP_ID)
+	notification.SetId(uuid.NewV4().String())
+	notification.SetIncludeExternalUserIds(userUIDs)
+	notification.SetIsAndroid(true)
+	// TODO: Change when enabling notifications on IOS
+	notification.SetIsIos(false)
+	notification.SetIsAnyWeb(true)
+	// notification.SetIncludedSegments([]string{"Subscribed Users"})
+	notification.SetHeadings(notificationTitle)
+	notification.SetContents(notificationContent)
 
 	auth := app.OneSignalGetAuth()
-	_, _, err := app.OneSignalClient.DefaultApi.CreateNotification(auth).Notification(onesignal.Notification{
-		Headings:               headings,
-		Subtitle:               subtle,
-		IncludeExternalUserIds: userUIDs,
-	}).Execute()
+	_, resp, err := app.OneSignalClient.DefaultApi.CreateNotification(auth).Notification(*notification).Execute()
 	if err != nil {
-		c.AbortWithError(http.StatusServiceUnavailable, err)
-		return false
+		fmt.Printf("response error: %++v\n", resp)
+		return err
 	}
-	return true
+	return nil
 }

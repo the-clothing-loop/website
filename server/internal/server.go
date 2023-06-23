@@ -25,6 +25,10 @@ func Routes() *gin.Engine {
 		app.CronInit(db)
 	}
 
+	if app.Config.ONESIGNAL_APP_ID != "" && app.Config.ONESIGNAL_REST_API_KEY != "" {
+		app.OneSignalInit()
+	}
+
 	// set gin mode
 	if app.Config.ENV == app.EnvEnumProduction || app.Config.ENV == app.EnvEnumAcceptance {
 		gin.SetMode(gin.ReleaseMode)
