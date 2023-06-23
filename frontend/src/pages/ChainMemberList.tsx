@@ -734,8 +734,7 @@ function ApproveTable(props: {
     const chainDeleteUnapprovedReason = (reason: UnapprovedReason) =>
       chainDeleteUnapproved(chainUID, userUID, reason)
         .then((res) => {
-          if (window.goatcounter)
-            window.goatcounter.count({
+            window.goatcounter?.count({
               path: "deny-user",
               title: "Deny user",
               event: true,
