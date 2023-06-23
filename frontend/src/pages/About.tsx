@@ -11,8 +11,8 @@ export default function About() {
 
   if (window.goatcounter)
     window.goatcounter.count({
-      path: "about",
-      title: "About",
+      path: "accessed-page-about",
+      title: "Accessed Page:About",
       event: true,
     });
 

@@ -22,8 +22,8 @@ export default function FAQ() {
 
   if (window.goatcounter)
     window.goatcounter.count({
-      path: "faq",
-      title: "FAQ",
+      path: "accessed-page-faq",
+      title: "Accessed Page:FAQ",
       event: true,
     });
 
