@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
 import { Trans, useTranslation } from "react-i18next";
@@ -8,6 +9,14 @@ const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
 export default function About() {
   const { t } = useTranslation("about");
+
+  useEffect(() => {
+    window.goatcounter?.count({
+      path: "accessed-page-about",
+      title: "Accessed Page:About",
+      event: true,
+    });
+  }, []);
 
   return (
     <>

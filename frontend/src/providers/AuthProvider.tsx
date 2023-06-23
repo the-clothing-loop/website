@@ -139,7 +139,7 @@ function runGoatCounter(history: History) {
     path: location.pathname.substring(3),
   });
   history.listen((location) => {
-    window.goatcounter.count({
+    window.goatcounter?.count({
       path: location.pathname.substring(3),
     });
   });
