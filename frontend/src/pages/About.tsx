@@ -9,6 +9,13 @@ const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 export default function About() {
   const { t } = useTranslation("about");
 
+  if (window.goatcounter)
+    window.goatcounter.count({
+      path: "accessed-page-about",
+      title: "Accessed Page:About",
+      event: true,
+    });
+
   return (
     <>
       <Helmet>

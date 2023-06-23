@@ -20,6 +20,13 @@ export default function FAQ() {
     defaultValue: [],
   }) as AccordionFaqTranslation[];
 
+  if (window.goatcounter)
+    window.goatcounter.count({
+      path: "accessed-page-faq",
+      title: "Accessed Page:FAQ",
+      event: true,
+    });
+
   return (
     <>
       <Helmet>
