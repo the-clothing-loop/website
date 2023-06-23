@@ -32,3 +32,10 @@ sendinblue_api_key: "{{ api_config_sendinblue_api_key }}"
 {% if api_config_imgbb_key is defined %}
 imgbb_key: "{{ api_config_imgbb_key }}"
 {% endif %}
+
+{% if api_onesignal_app_id is defined %}
+onesignal_app_id: "{{ api_onesignal_app_id }}"
+{% endif %}
+{% if api_onesignal_rest_api_key is defined %}
+onesignal_rest_api_key: "{{ api_onesignal_rest_api_key }}"
+{% endif %}
