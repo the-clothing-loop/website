@@ -1,5 +1,4 @@
-import { createContext, useEffect, useState } from "react";
-import OneSignalReact from "react-onesignal";
+import { createContext, useState } from "react";
 import { Storage } from "@ionic/storage";
 import {
   chainGet,
@@ -63,6 +62,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function _logout() {
+    window.plugins?.OneSignal?.removeExternalUserId();
     logout().catch((err) => {
       console.warn(err);
     });
@@ -111,12 +111,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       _isAuthenticated = false;
     }
 
-    if (_isAuthenticated && _authUser) {
-      if (window.plugins?.OneSignal)
-        window.plugins.OneSignal.setExternalUserId(_authUser.uid);
-      else if (window.OneSignal)
-        OneSignalReact.setExternalUserId(_authUser.uid);
-    }
+    if (_isAuthenticated && _authUser)
+      window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
 
     try {
       const chainUID: string | null = await storage.get("chain_uid");

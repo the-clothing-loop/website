@@ -30,5 +30,9 @@ export async function OneSignalInitReact(): Promise<void> {
     appId: ONE_SIGNAL_ID,
     allowLocalhostAsSecureOrigin: true,
   });
+
+  if (!window.plugins) window.plugins = {};
+  window.plugins.OneSignal = OneSignalReact;
+
   OneSignalReact.showSlidedownPrompt();
 }
