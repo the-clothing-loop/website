@@ -77,16 +77,16 @@ func BulkyPut(c *gin.Context) {
 
 	// Create a notification
 	if isNew := body.ID == 0; isNew {
-		playerIDs := []string{}
+		userUIDs := []string{}
 		db.Raw(`
-			SELECT uo.player_id
-			FROM user_onesignal AS uo
-			JOIN user_chains AS uc ON uc.user_id = uo.user_id
+			SELECT u.uid
+			FROM users AS u
+			JOIN user_chains AS uc ON uc.user_id = u.id
 			JOIN chains AS c ON c.id = uc.chain_id
-			WHERE c.uid = ?`, body.ChainUID).Scan(&playerIDs)
+			WHERE c.uid = ? AND u.uid != ?`, body.ChainUID, body.UserUID).Scan(&userUIDs)
 
-		if len(playerIDs) > 0 {
-			oneSignalCreateNotification(c, db, playerIDs, views.Notifications["newBulkyItemHasBeenCreatedTitle"], nil)
+		if len(userUIDs) > 0 {
+			oneSignalCreateNotification(c, db, userUIDs, views.Notifications["newBulkyItemHasBeenCreatedTitle"], nil)
 		}
 	}
 
