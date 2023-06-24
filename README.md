@@ -18,9 +18,11 @@ https://crowdin.com/project/the-clothing-loop
 
 ## Developers getting started
 
-Go here to setup your computer to run this website locally and create contributions: [ONBOARDING_DEVS.md](/ONBOARDING_DEVS.md)
+Go here to setup your computer to run this website locally and create contributions: [docker/dev/README.md](/docker/dev/README.md)
 
-Checkout these readmes for more indepth documentation:
+If you want to setup this website on a linux development machine you can use the following documentation: [INSTALL_LINUX.md](/INSTALL_LINUX.md)
+
+Checkout these readmes for more in-depth documentation:
 
 - Golang Server: [README.md](/server/README.md)
 - React Frontend: [README.md](/frontend/README.md)

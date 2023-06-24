@@ -11,6 +11,7 @@ export interface User {
   sizes: string[];
   is_root_admin: boolean;
   pause_until: string | null;
+  i18n: string;
   longitude?: number;
   latitude?: number;
 }
