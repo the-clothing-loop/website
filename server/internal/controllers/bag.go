@@ -8,6 +8,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"gopkg.in/guregu/null.v3/zero"
 )
 
 func BagGetAll(c *gin.Context) {
@@ -89,6 +90,7 @@ func BagPut(c *gin.Context) {
 	if body.Color != nil {
 		bag.Color = *(body.Color)
 	}
+	bag.LastNotifiedAt = zero.Time{}
 
 	ucID := uint(0)
 	db.Raw(`
