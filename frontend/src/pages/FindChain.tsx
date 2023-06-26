@@ -258,6 +258,14 @@ export default function FindChain({ location }: { location: Location }) {
               _selectedChains.forEach((c) => console.info(c.name, c.uid));
               setSelectedChains(_selectedChains);
             }
+            let _focusedChain = _selectedChains.sort((a, b) => {
+              let aLngLat = new mapboxgl.LngLat(a.longitude, a.latitude);
+              let bLngLat = new mapboxgl.LngLat(b.longitude, b.latitude);
+              let aDistance = aLngLat.distanceTo(e.lngLat);
+              let bDistance = bLngLat.distanceTo(e.lngLat);
+              return Math.min(aDistance, bDistance);
+            });
+            setFocusedChain(_focusedChain[0]);
           }
         });
         // zoom during click on a cluster
