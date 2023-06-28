@@ -1,0 +1,22 @@
+<p>Hi, {{ .Name }}</p>
+
+<p>These the following people have asks to join your Loop(s)</p>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Loop</th>
+</tr>
+</thead>
+<tbody>
+{{ range $pending := .Unapproved }}
+<tr>
+<td>{{ $pending.Name }}</td>
+<td>{{ $pending.ChainName }}</td>
+</tr>
+{{ end}}
+</tbody>
+</table>
+
+<p>Nichon, on behalf of the Clothing Loop team</p>

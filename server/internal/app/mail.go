@@ -48,7 +48,9 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 
 	if err != nil {
 		goscope.Log.Errorf("Unable to send email: %v", err)
-		c.String(http.StatusInternalServerError, "Unable to send email")
+		if c != nil {
+			c.String(http.StatusInternalServerError, "Unable to send email")
+		}
 		return false
 	}
 

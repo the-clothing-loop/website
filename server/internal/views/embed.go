@@ -25,7 +25,9 @@ func executeTemplate(c *gin.Context, t *template.Template, name string, data any
 	err := t.ExecuteTemplate(buf, name, data)
 	if err != nil {
 		goscope.Log.Errorf("Unable to find template: %v", err)
-		c.String(http.StatusInternalServerError, "Unable to find template")
+		if c != nil {
+			c.String(http.StatusInternalServerError, "Unable to find template")
+		}
 		return "", err
 	}
 

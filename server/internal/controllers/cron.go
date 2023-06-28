@@ -24,24 +24,95 @@ func closeOldPendingParticipants(db *gorm.DB) {
 		return
 	}
 
-	values := []struct {
-		Name    string `gorm:"name"`
-		Email   string `gorm:"email"`
-		ChainID uint   `gorm:"chain_id"`
-	}{}
+	// Get all pending participants
+	pendingValues := []*views.EmailApproveReminderItem{}
 	err := db.Raw(`
-SELECT u.name, u.email, uc.chain_id
+SELECT u.name, u.email, uc.chain_id, uc.id
 FROM user_chains AS uc
 JOIN users AS u ON u.id = uc.user_id
+JOIN chains AS c ON c.id = uc.chain_id
 WHERE uc.is_approved = FALSE
 	AND uc.created_at < (NOW() - INTERVAL 60 DAY)
-	`).Scan(&values).Error
+	AND uc.last_notified_is_unapproved_at IS NULL
+	`).Scan(&pendingValues).Error
 	if err != nil {
 		glog.Errorf("Failed to find old pending participants: %v", err)
 		return
 	}
 
-	// TODO: Send email to all loop hosts.
+	// List all chain ids of pending participants
+	chainIDs := []uint{}
+	{
+		userChainIDs := []uint{}
+		for _, v := range pendingValues {
+			chainIDs = append(chainIDs, v.ChainID)
+			userChainIDs = append(userChainIDs, v.UserChainID)
+		}
+		// set all pending as notified to prevent sending the same notification twice
+		db.Exec(`UPDATE user_chains SET last_notified_is_unapproved_at = NOW() WHERE id IN ?`, userChainIDs)
+	}
+
+	// Get all hosts to send an email to
+	type HostByChainValue struct {
+		Name    string `gorm:"u.name"`
+		Email   string `gorm:"u.email"`
+		ChainID uint   `gorm:"c.id"`
+	}
+	hostsByChain := []*HostByChainValue{}
+	db.Raw(`
+SELECT u.name, u.email, uc.chain_id
+FROM users AS u
+JOIN user_chains AS uc ON uc.user_id = u.id
+WHERE uc.chain_id IN ? AND uc.is_chain_admin IS TRUE
+ORDER BY u.email
+	`, chainIDs).Scan(&hostsByChain)
+
+	// Merge above lists into a structure to send an email to
+	type EmailValue struct {
+		Name      string
+		Email     string
+		Approvals []*views.EmailApproveReminderItem
+	}
+	emailValues := []*EmailValue{}
+	oldEmail := ""
+	for _, h := range hostsByChain {
+		if h.Email == "" {
+			continue
+		}
+		isNewEmailValue := true
+		indexEmailValues := len(emailValues) - 1
+		emailValue := EmailValue{}
+		if indexEmailValues != 0 {
+			emailValue = *emailValues[indexEmailValues]
+			if emailValue.Email != oldEmail {
+				emailValue = EmailValue{}
+			} else {
+				isNewEmailValue = false
+			}
+		}
+		if isNewEmailValue {
+			emailValue.Name = h.Name
+			emailValue.Email = h.Email
+			emailValue.Approvals = []*views.EmailApproveReminderItem{}
+		}
+
+		for i, pending := range pendingValues {
+			if pending.ChainID == h.ChainID {
+				emailValue.Approvals = append(emailValue.Approvals, pendingValues[i])
+			}
+		}
+
+		if isNewEmailValue {
+			oldEmail = emailValue.Email
+			emailValues = append(emailValues, &emailValue)
+		}
+	}
+
+	for i := range emailValues {
+		email := emailValues[i]
+		glog.Infof("Sending email approve reminder to %s", email.Email)
+		go views.EmailApproveReminder(db, email.Name, email.Email, email.Approvals)
+	}
 }
 
 func notifyIfIsHoldingABagForTooLong(db *gorm.DB) {
