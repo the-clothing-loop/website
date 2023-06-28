@@ -119,6 +119,8 @@
   "weWillReplySoon": "Alguien de nuestro equipo se pondrá en contacto contigo pronto.",
   "selectLoopLocation": "Selecciona la ubicación del Loop",
   "confirmation": "Confirmación",
+  "contactUs": "Contact Us",
+  "contactUsSubheading": "Questions? Funny stories? Tips? Press enquiries? We’d love to hear from you! (Please do check our FAQ first!)",
   "clickToSetLoopLocation": "Haz clic en el mapa para establecer la ubicación aproximada de tu Loop. Tu Loop aparecerá identificado por un punto. Puedes cambiar manualmente el radio en el campo siguiente.",
   "clickToChangeLoopLocation": "Haz clic en el mapa para cambiar la ubicación del Loop.",
   "loopName": "Nombre del Loop (debe incluir el nombre de la ciudad/pueblo).",
