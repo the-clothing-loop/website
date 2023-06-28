@@ -58,12 +58,9 @@ const Contacts = () => {
       </Helmet>
       <main className="max-w-screen-sm mx-auto pt-10 px-4">
         <h1 className="font-serif font-bold text-secondary text-6xl mb-8">
-          Contact us
+          {t("contactUs")}
         </h1>
-        <p className="mb-6">
-          Questions? Funny stories? Tips? Press enquiries? We’d love to hear
-          from you! (Please do check our FAQ first!)
-        </p>
+        <p className="mb-6">{t("contactUsSubheading")}</p>
 
         <form className="flex flex-col" onSubmit={onSubmit}>
           <input
