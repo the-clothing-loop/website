@@ -9,6 +9,7 @@ import (
 )
 
 func CronMonthly(db *gorm.DB) {
+	closeChainsWithOldPendingParticipants(db)
 	emailHostsOldPendingParticipants(db)
 }
 
@@ -16,7 +17,7 @@ func CronHourly(db *gorm.DB) {
 	notifyIfIsHoldingABagForTooLong(db)
 }
 
-// Automaticly close pending participants after 60 days.
+// Email hosts about pending participants after 60 days.
 func emailHostsOldPendingParticipants(db *gorm.DB) {
 	glog.Info("Running emailHostsOldPendingParticipants")
 	if db == nil {
@@ -116,6 +117,21 @@ ORDER BY u.email
 		glog.Infof("Sending email approve reminder to %s", email.Email)
 		go views.EmailApproveReminder(db, email.Name, email.Email, email.Approvals)
 	}
+}
+
+// Close chains if pending participants are still pending 30 days after reminder email is sent
+func closeChainsWithOldPendingParticipants(db *gorm.DB) {
+	glog.Info("Running closeChainsWithOldPendingParticipants")
+	db.Exec(`
+UPDATE chains SET published = FALSE WHERE id IN (
+	SELECT uc.chain_id
+	FROM user_chains AS uc
+	JOIN chains AS c ON c.id = uc.chain_id
+	WHERE uc.is_approved = FALSE
+		AND uc.last_notified_is_unapproved_at < (NOW() - INTERVAL 30 DAY)
+		AND c.published = TRUE
+)
+	`)
 }
 
 func notifyIfIsHoldingABagForTooLong(db *gorm.DB) {
