@@ -152,7 +152,7 @@
   "donate": "תרומה",
   "editLoop": "ערוך לולאה",
   "viewLoop": "הצג לולאה",
-  "thankYouForStartingThisLoop": "תודה שהתחלתם את הלולאה הזו!",
+  "thankYouForStartingThisLoop": "תודה שהתחלתם את {{ name }}!",
   "youAreUnlockingTheClothesSwapPotential": "אתם פותחים את פוטנציאל החלפת הבגדים לכל כך הרבה אנשים בשכונה שלכם, אנחנו מקווים שאתם מתרגשים מזה בדיוק כמונו!",
   "hostConfirmationEmailIsOnItsWay": "אישור המייל שלנו בדרך, אנא וודאו לפני ההתחברות.",
   "confirmationEmailIsOnItsWay": "אישור המייל שלנו בדרך.",

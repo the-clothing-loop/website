@@ -152,7 +152,7 @@
   "donate": "Unterstützen",
   "editLoop": "Schleife bearbeiten",
   "viewLoop": "Schleife ansehen",
-  "thankYouForStartingThisLoop": "Vielen Dank für die Unterstützung dieses Projekts!",
+  "thankYouForStartingThisLoop": "Vielen Dank für die Unterstützung {{ name }}!",
   "youAreUnlockingTheClothesSwapPotential": "Du entsperrst die Kleidung für so viele Menschen in deiner Nachbarschaft, wir hoffen, du bist so begeistert wie wir!",
   "hostConfirmationEmailIsOnItsWay": "Unsere Bestätigungs-E-Mail ist unterwegs. Bitte verifizieren, bevor du dich anmeldest.",
   "confirmationEmailIsOnItsWay": "Unsere Bestätigungs-E-Mail ist unterwegs.",

@@ -152,7 +152,7 @@
   "donate": "Faire un don",
   "editLoop": "Modifier le Loop",
   "viewLoop": "Voir le Loop",
-  "thankYouForStartingThisLoop": "Merci d'avoir lancé ce Loop !",
+  "thankYouForStartingThisLoop": "Merci d'avoir lancé {{ name }} !",
   "youAreUnlockingTheClothesSwapPotential": "Vous libérez le potentiel du troc de vêtements pour tant de personnes dans votre voisinage ; nous espérons que vous êtes aussi enthousiastes que nous !",
   "hostConfirmationEmailIsOnItsWay": "Notre message de confirmation est en route. Veuillez le vérifier avant de vous connecter.",
   "confirmationEmailIsOnItsWay": "Notre message de confirmation est en route.",
