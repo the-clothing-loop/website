@@ -234,6 +234,7 @@ func EmailApproveReminder(
 	to := email
 	subject := emailsHeaders[i18n]["approve_reminder"]
 	body, err := executeTemplate(nil, emailsTemplates[i18n], "approve_reminder.gohtml", gin.H{
+		"BaseURL":   app.Config.SITE_BASE_URL_FE,
 		"Name":      name,
 		"Email":     email,
 		"Approvals": approvals,
