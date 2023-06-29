@@ -150,17 +150,17 @@ export default function AdminDashboard() {
             className="modal-toggle"
           />
           <div className="modal">
-            <div className="relative max-w-[100vw] max-h-[100vh] h-full justify-center items-center flex">
               <label
+              className="relative max-w-[100vw] max-h-[100vh] h-full justify-center items-center flex cursor-zoom-out"
+              aria-label="close"
                 htmlFor="modal-circle-loop"
-                aria-label="close"
-                className="btn btn-sm btn-square absolute right-2 top-2 feather feather-x"
-              ></label>
+            >
+              <div className="btn btn-sm btn-square absolute right-2 top-2 feather feather-x"></div>
               <img
                 className="max-h-full"
                 src="https://images.clothingloop.org/x1080/circle_loop.jpg"
               />
-            </div>
+            </label>
           </div>
         </section>
         <ChainsList chains={chains} setChains={setChains} />
