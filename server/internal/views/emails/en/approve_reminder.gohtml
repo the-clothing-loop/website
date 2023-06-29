@@ -11,12 +11,16 @@ If you are too busy or the Loop is full, please Deny the participant’s request
 </tr>
 </thead>
 <tbody>
-{{ range $pending := .Unapproved }}
+{{ range .Approvals }}
 <tr>
-<td>{{ $pending.Name }}</td>
-<td>{{ $pending.ChainName }}</td>
+<td>{{ .Name }}</td>
+<td>{{ .ChainName }}</td>
 </tr>
-{{ end}}
+{{ else }}
+<tr>
+<td colspan=2>Error {{ .Approvals }}</td>
+</tr>
+{{ end }}
 </tbody>
 </table>
 

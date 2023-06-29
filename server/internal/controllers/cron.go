@@ -9,7 +9,7 @@ import (
 )
 
 func CronMonthly(db *gorm.DB) {
-	closeOldPendingParticipants(db)
+	emailHostsOldPendingParticipants(db)
 }
 
 func CronHourly(db *gorm.DB) {
@@ -17,8 +17,8 @@ func CronHourly(db *gorm.DB) {
 }
 
 // Automaticly close pending participants after 60 days.
-func closeOldPendingParticipants(db *gorm.DB) {
-	glog.Info("Running closeOldPendingParticipants")
+func emailHostsOldPendingParticipants(db *gorm.DB) {
+	glog.Info("Running emailHostsOldPendingParticipants")
 	if db == nil {
 		glog.Error("database is nil, trying to close old pending participants")
 		return
@@ -27,7 +27,7 @@ func closeOldPendingParticipants(db *gorm.DB) {
 	// Get all pending participants
 	pendingValues := []*views.EmailApproveReminderItem{}
 	err := db.Raw(`
-SELECT u.name, u.email, uc.chain_id, uc.id
+SELECT u.name, u.email, uc.chain_id, uc.id AS user_chain_id, c.name AS chain_name
 FROM user_chains AS uc
 JOIN users AS u ON u.id = uc.user_id
 JOIN chains AS c ON c.id = uc.chain_id
@@ -38,6 +38,9 @@ WHERE uc.is_approved = FALSE
 	if err != nil {
 		glog.Errorf("Failed to find old pending participants: %v", err)
 		return
+	}
+	if len(pendingValues) > 0 {
+		glog.Infof("Pending participants: %v", pendingValues)
 	}
 
 	// List all chain ids of pending participants
@@ -74,18 +77,17 @@ ORDER BY u.email
 		Approvals []*views.EmailApproveReminderItem
 	}
 	emailValues := []*EmailValue{}
-	oldEmail := ""
 	for _, h := range hostsByChain {
 		if h.Email == "" {
 			continue
 		}
 		isNewEmailValue := true
 		indexEmailValues := len(emailValues) - 1
-		emailValue := EmailValue{}
-		if indexEmailValues != 0 {
-			emailValue = *emailValues[indexEmailValues]
-			if emailValue.Email != oldEmail {
-				emailValue = EmailValue{}
+		emailValue := &EmailValue{}
+		if indexEmailValues > -1 {
+			emailValue = emailValues[indexEmailValues]
+			if emailValue.Email != h.Email {
+				emailValue = &EmailValue{}
 			} else {
 				isNewEmailValue = false
 			}
@@ -96,15 +98,16 @@ ORDER BY u.email
 			emailValue.Approvals = []*views.EmailApproveReminderItem{}
 		}
 
-		for i, pending := range pendingValues {
+		for i := range pendingValues {
+			pending := pendingValues[i]
 			if pending.ChainID == h.ChainID {
-				emailValue.Approvals = append(emailValue.Approvals, pendingValues[i])
+				// fmt.Printf("pending values: %++v\n", pending)
+				emailValue.Approvals = append(emailValue.Approvals, pending)
 			}
 		}
 
 		if isNewEmailValue {
-			oldEmail = emailValue.Email
-			emailValues = append(emailValues, &emailValue)
+			emailValues = append(emailValues, emailValue)
 		}
 	}
 

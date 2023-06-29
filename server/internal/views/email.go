@@ -219,7 +219,8 @@ type EmailApproveReminderItem struct {
 	Name        string `gorm:"name"`
 	Email       string `gorm:"email"`
 	ChainID     uint   `gorm:"chain_id"`
-	UserChainID uint   `gorm:"uc.id"`
+	UserChainID uint   `gorm:"user_chain_id"`
+	ChainName   string `gorm:"chain_name"`
 }
 
 func EmailApproveReminder(
