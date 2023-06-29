@@ -1,9 +1,10 @@
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
 //Project resources
 import { TwoColumnLayout } from "../components/Layouts";
+import { useQueryParam } from "use-query-params";
 
 export interface IProps {
   heading: string;
@@ -45,6 +46,7 @@ function Content({ heading, subheading, confirmationEmail }: IProps) {
 
 export function NewLoopConfirmation(props: any) {
   const { t } = useTranslation();
+  const [name] = useQueryParam("name");
 
   return (
     <>
@@ -59,7 +61,7 @@ export function NewLoopConfirmation(props: any) {
           alt="A pink bag with the number nine duck-taped to the side, surrounded by balloons, flags, lint and candles"
         >
           <Content
-            heading={t("thankYouForStartingThisLoop")}
+            heading={t("thankYouForStartingThisLoop", { name })}
             subheading={t("youAreUnlockingTheClothesSwapPotential")}
             confirmationEmail={t("hostConfirmationEmailIsOnItsWay")}
           />

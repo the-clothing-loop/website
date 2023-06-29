@@ -30,6 +30,7 @@ type GeoJSONChains = GeoJSONTypes.FeatureCollection<
     radius: number;
     gender: string;
     size: string;
+    open_to_new_members: boolean;
   }
 >;
 
@@ -55,6 +56,7 @@ function mapToGeoJSONChains(
           radius: circleRadiusKm((chain.radius * 1000) / 6, chain.latitude),
           gender: chain.genders?.join("") || "",
           size: chain.sizes?.join("") || "",
+          open_to_new_members: chain.open_to_new_members,
         },
       };
     }),

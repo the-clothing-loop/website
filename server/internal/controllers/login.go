@@ -100,7 +100,16 @@ WHERE user_chains.chain_id IN ?
 		c.String(http.StatusInternalServerError, "Unable to find associated loop admins")
 		return
 	}
+
+	// Is the first time verifying the user account
 	if user.Email.Valid && !user.IsEmailVerified {
+		db.Exec(`
+UPDATE chains SET published = TRUE WHERE id IN (
+	SELECT chain_id FROM user_chains WHERE user_id = ? AND is_chain_admin = TRUE
+)
+		`, user.ID)
+
+		// Reset joined-at time
 		db.Exec(`UPDATE user_chains SET created_at = NOW() WHERE user_id = ?`, user.ID)
 
 		for _, result := range results {
@@ -170,7 +179,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Latitude:         body.Chain.Latitude,
 		Longitude:        body.Chain.Longitude,
 		Radius:           body.Chain.Radius,
-		Published:        true,
+		Published:        false,
 		OpenToNewMembers: body.Chain.OpenToNewMembers,
 		Sizes:            body.Chain.Sizes,
 		Genders:          body.Chain.Genders,
