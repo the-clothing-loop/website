@@ -1,9 +1,9 @@
 import { Chain, UID } from "./types";
 import { RequestRegisterChain } from "./login";
 
-export function chainGet(chainUID: UID) {
+export function chainGet(chainUID: UID, addTotals: boolean = false) {
   return window.axios.get<Chain>("/v2/chain", {
-    params: { chain_uid: chainUID },
+    params: { chain_uid: chainUID, add_totals: addTotals },
   });
 }
 

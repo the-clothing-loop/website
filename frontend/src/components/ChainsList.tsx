@@ -45,7 +45,7 @@ export default function ChainsList({ chains, setChains }: Props) {
           _chains = (await chainGetAll({ filter_out_unpublished: false })).data;
         } else {
           let data = await Promise.all(
-            authUser.chains.map((uc) => chainGet(uc.chain_uid))
+            authUser.chains.map((uc) => chainGet(uc.chain_uid, true))
           );
           _chains = data.map((d) => d.data);
         }

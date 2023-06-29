@@ -19,23 +19,35 @@ export default function AdminDashboard() {
   const history = useHistory();
 
   function deleteClicked() {
-    const chainNames = authUser?.chains
-      .filter((uc) => uc.is_chain_admin)
-      .map((uc) => chains.find((c) => c.uid === uc.chain_uid)?.name)
-      .filter((c) => c) as string[];
+    const chainNames = authUser?.is_root_admin
+      ? undefined
+      : (authUser?.chains
+          .filter((uc) => uc.is_chain_admin)
+          .map((uc) => chains.find((c) => c.uid === uc.chain_uid))
+          .filter((c) => c && c.total_hosts && c.total_hosts === 1)
+          .map((c) => c!.name) as string[]);
 
     addModal({
       message: t("deleteAccount"),
-      content: () => (
-        <p>{t("deleteAccountWithLoops", { chains: chainNames.join(", ") })}</p>
-      ),
+      content:
+        chainNames && chainNames.length
+          ? () => (
+              <>
+                <p className="mb-2">{t("deleteAccountWithLoops")}</p>
+                <ul className="list-disc text-sm font-semibold mx-8">
+                  {chainNames.map((name) => (
+                    <li key={name}>{name}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          : undefined,
       actions: [
         {
           text: t("delete"),
           type: "error",
           fn: () => {
-            userPurge(authUser!.uid);
-            history.push("/users/logout");
+            userPurge(authUser!.uid).then(() => history.push("/users/logout"));
           },
         },
       ],
@@ -150,10 +162,10 @@ export default function AdminDashboard() {
             className="modal-toggle"
           />
           <div className="modal">
-              <label
+            <label
               className="relative max-w-[100vw] max-h-[100vh] h-full justify-center items-center flex cursor-zoom-out"
               aria-label="close"
-                htmlFor="modal-circle-loop"
+              htmlFor="modal-circle-loop"
             >
               <div className="btn btn-sm btn-square absolute right-2 top-2 feather feather-x"></div>
               <img
