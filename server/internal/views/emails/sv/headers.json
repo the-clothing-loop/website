@@ -6,5 +6,6 @@
   "login_verification": "Verifiera e-post för Clothing Loop",
   "an_admin_denied_your_join_request": "Din begäran om att gå med i en loop har nekats",
   "register_verification": "Verifiera e-post för Clothing Loop",
-  "poke": "Reminder that %s would like to join your %s Loop"
+  "poke": "Reminder that %s would like to join your %s Loop",
+  "approve_reminder": "Reminder to approve loop join requests"
 }
