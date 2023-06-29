@@ -63,7 +63,7 @@ export function NewLoopConfirmation(props: any) {
           <Content
             heading={t("thankYouForStartingThisLoop", { name })}
             subheading={t("youAreUnlockingTheClothesSwapPotential")}
-            confirmationEmail={t("hostConfirmationEmailIsOnItsWay")}
+            confirmationEmail={t("confirmationEmailIsOnItsWay")}
           />
         </TwoColumnLayout>
       </main>
