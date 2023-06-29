@@ -30,6 +30,7 @@ type GeoJSONChains = GeoJSONTypes.FeatureCollection<
     radius: number;
     gender: string;
     size: string;
+    open_to_new_members: boolean;
   }
 >;
 
@@ -55,6 +56,7 @@ function mapToGeoJSONChains(
           radius: circleRadiusKm((chain.radius * 1000) / 6, chain.latitude),
           gender: chain.genders?.join("") || "",
           size: chain.sizes?.join("") || "",
+          open_to_new_members: chain.open_to_new_members,
         },
       };
     }),
@@ -175,7 +177,12 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: [">", ["zoom"], clusterMaxZoom],
           paint: {
-            "circle-color": ["rgba", 240, 196, 73, 0.4], // #f0c449
+            "circle-color": [
+              "case",
+              ["get", "open_to_new_members"],
+              ["rgba", 240, 196, 73, 0.4], // #f0c449
+              ["rgba", 0, 0, 0, 0.1],
+            ],
             "circle-radius": [
               "interpolate",
               ["exponential", 2],
@@ -186,7 +193,12 @@ export default function FindChain({ location }: { location: Location }) {
               ["get", "radius"],
             ],
             "circle-stroke-width": 2,
-            "circle-stroke-color": ["rgba", 240, 196, 73, 1],
+            "circle-stroke-color": [
+              "case",
+              ["get", "open_to_new_members"],
+              ["rgba", 240, 196, 73, 1], // #F0C449
+              ["rgba", 0, 0, 0, 0.1],
+            ],
           },
         });
         _map.addLayer({
@@ -195,7 +207,12 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: [">", ["zoom"], clusterMaxZoom],
           paint: {
-            "circle-color": ["rgba", 240, 196, 73, 0.0], // #f0c449
+            "circle-color": [
+              "case",
+              ["get", "open_to_new_members"],
+              ["rgba", 240, 196, 73, 0.4], // #f0c449
+              ["rgba", 0, 0, 0, 0.0],
+            ],
             "circle-radius": 5,
             "circle-stroke-width": 0,
           },

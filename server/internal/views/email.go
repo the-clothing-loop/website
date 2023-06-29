@@ -214,3 +214,35 @@ func EmailPoke(
 
 	return app.MailSend(c, db, to, subject, body)
 }
+
+type EmailApproveReminderItem struct {
+	Name        string `gorm:"name"`
+	Email       string `gorm:"email"`
+	ChainID     uint   `gorm:"chain_id"`
+	UserChainID uint   `gorm:"user_chain_id"`
+	ChainName   string `gorm:"chain_name"`
+}
+
+func EmailApproveReminder(
+	db *gorm.DB,
+	name string, email string,
+	approvals []*EmailApproveReminderItem,
+) bool {
+	// ? language hardcoded to english until language preference can be determined in the database
+	// i18n := getI18n(c)
+	i18n := "en"
+
+	to := email
+	subject := emailsHeaders[i18n]["approve_reminder"]
+	body, err := executeTemplate(nil, emailsTemplates[i18n], "approve_reminder.gohtml", gin.H{
+		"BaseURL":   app.Config.SITE_BASE_URL_FE,
+		"Name":      name,
+		"Email":     email,
+		"Approvals": approvals,
+	})
+	if err != nil {
+		return false
+	}
+
+	return app.MailSend(nil, db, to, subject, body)
+}

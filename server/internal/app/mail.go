@@ -25,10 +25,6 @@ func MailInit() {
 }
 
 func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body string) bool {
-	if Config.ENV != EnvEnumProduction {
-		to = "test@clothingloop.org"
-	}
-
 	e := email.NewEmail()
 	e.From = fmt.Sprintf("The Clothing Loop <%s>", Config.SMTP_SENDER)
 	e.To = []string{to}
@@ -48,7 +44,9 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 
 	if err != nil {
 		goscope.Log.Errorf("Unable to send email: %v", err)
-		c.String(http.StatusInternalServerError, "Unable to send email")
+		if c != nil {
+			c.String(http.StatusInternalServerError, "Unable to send email")
+		}
 		return false
 	}
 

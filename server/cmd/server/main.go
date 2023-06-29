@@ -29,6 +29,9 @@ func main() {
 	router := server.Routes()
 
 	err := http.ListenAndServe(fmt.Sprintf("%s:%d", app.Config.HOST, app.Config.PORT), router)
+	if server.Scheduler != nil {
+		server.Scheduler.Stop()
+	}
 	if err != http.ErrServerClosed {
 		glog.Fatalf("error listen and serve: %s", err)
 	}

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState, MouseEvent } from "react";
+import { useState, MouseEvent, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +9,14 @@ interface AccordionFaqTranslation {
 
 export default function FAQ() {
   const { t } = useTranslation("faq");
+
+  useEffect(() => {
+    window.goatcounter?.count({
+      path: "accessed-page-faq",
+      title: "Accessed Page:FAQ",
+      event: true,
+    });
+  }, []);
 
   const arrHosts = t("arrHosts", {
     returnObjects: true,

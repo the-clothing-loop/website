@@ -33,12 +33,11 @@ export default function EventCreate() {
     } else {
       try {
         const res = await eventCreate(values);
-        if (window.goatcounter)
-          window.goatcounter.count({
-            path: "new-event",
-            title: "New Event",
-            event: true,
-          });
+        window.goatcounter?.count({
+          path: "new-event",
+          title: "New Event",
+          event: true,
+        });
         setSubmitted(res.data.uid);
       } catch (err: any) {
         console.error("Error creating event:", err, values);

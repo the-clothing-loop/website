@@ -27,6 +27,7 @@ import {
   chainAddUser,
   chainDeleteUnapproved,
   chainGet,
+  chainGetAll,
   chainRemoveUser,
   chainUpdate,
   ChainUpdateBody,
@@ -281,12 +282,21 @@ export default function ChainMemberList() {
       : Promise.reject("authUser not set");
 
     try {
-      const hostChainsData = await Promise.all(
-        authUser?.chains
-          .filter((uc) => uc.is_chain_admin && uc.chain_uid !== chainUID)
-          .map((uc) => chainGet(uc.chain_uid)) || []
-      );
-      setHostChains(hostChainsData.map((c) => c.data));
+      let _hostChains: Chain[];
+      if (authUser?.is_root_admin) {
+        _hostChains = (
+          await chainGetAll({ filter_out_unpublished: false })
+        ).data.filter((c) => c.uid !== chainUID);
+      } else {
+        _hostChains = (
+          await Promise.all(
+            authUser?.chains
+              .filter((uc) => uc.is_chain_admin && uc.chain_uid !== chainUID)
+              .map((uc) => chainGet(uc.chain_uid)) || []
+          )
+        ).map((c) => c.data);
+      }
+      setHostChains(_hostChains.sort((a, b) => a.name.localeCompare(b.name)));
 
       const [chainData, chainUsers, routeData, bagData] = await Promise.all([
         chainGet(chainUID),
@@ -724,12 +734,11 @@ function ApproveTable(props: {
     const chainDeleteUnapprovedReason = (reason: UnapprovedReason) =>
       chainDeleteUnapproved(chainUID, userUID, reason)
         .then((res) => {
-          if (window.goatcounter)
-            window.goatcounter.count({
-              path: "deny-user",
-              title: "Deny user",
-              event: true,
-            });
+          window.goatcounter?.count({
+            path: "deny-user",
+            title: "Deny user",
+            event: true,
+          });
           return res;
         })
         .catch((err) => {
@@ -1078,9 +1087,10 @@ function ParticipantsTable(props: {
                   <Link to={getEditLocation(u)}>{t("edit")}</Link>,
                 ];
                 if (
-                  props.hostChains.length &&
-                  !userChain.is_chain_admin &&
-                  props.authUser?.uid !== u.uid
+                  (props.hostChains.length &&
+                    !userChain.is_chain_admin &&
+                    props.authUser?.uid !== u.uid) ||
+                  props.authUser?.is_root_admin
                 ) {
                   dropdownItems = [
                     <button type="button" onClick={() => onAddCoHost(u)}>

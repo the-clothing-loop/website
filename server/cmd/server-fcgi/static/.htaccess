@@ -1,5 +1,0 @@
-RewriteEngine on
-RewriteCond %{REQUEST\_FILENAME} !-f
-RewriteCond %{REQUEST\_FILENAME} !-d \[OR\]
-RewriteCond %{REQUEST\_URI} ^/$
-RewriteRule ^(.\*)$ app.fcgi/$1 \[QSA,L\]

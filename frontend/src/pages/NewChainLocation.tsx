@@ -58,13 +58,12 @@ const NewChainLocation = ({ location }: { location: any }) => {
         await chainCreate(newChain);
         await authUserRefresh();
 
-        if (window.goatcounter)
-          window.goatcounter.count({
-            path: "new-chain",
-            title: "New chain",
-            event: true,
-          });
-        history.replace("/loops/new/confirmation");
+        window.goatcounter?.count({
+          path: "new-chain",
+          title: "New chain",
+          event: true,
+        });
+        history.replace("/loops/new/confirmation?name=" + newChain.name);
       } catch (err: any) {
         console.error("Error creating chain:", err, newChain);
         addToastError(GinParseErrors(t, err), err?.status);
@@ -80,6 +79,8 @@ const NewChainLocation = ({ location }: { location: any }) => {
             phone_number: user.phone_number,
             newsletter: state!.register_user?.newsletter || false,
             sizes: values.sizes || [],
+            latitude: user.latitude || 0,
+            longitude: user.longitude || 0,
           },
           newChain
         );
@@ -95,7 +96,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
             event: true,
           });
         }
-        history.replace("/loops/new/confirmation");
+        history.replace("/loops/new/confirmation?name=" + newChain.name);
       } catch (err: any) {
         console.error(`Error creating user and chain: ${JSON.stringify(err)}`);
         addToastError(GinParseErrors(t, err), err?.status);

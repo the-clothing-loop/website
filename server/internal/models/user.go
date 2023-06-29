@@ -14,24 +14,28 @@ var ErrUserNotFound = errors.New("User not found")
 var ErrAddUserChainsToObject = errors.New("Unable to add associated loops to user")
 
 type User struct {
-	ID              uint        `json:"-"`
-	UID             string      `json:"uid" gorm:"uniqueIndex"`
-	FID             zero.String `json:"-" gorm:"column:fid"`
-	Email           zero.String `json:"email" gorm:"unique"`
-	IsEmailVerified bool        `json:"is_email_verified"`
-	IsRootAdmin     bool        `json:"is_root_admin"`
-	PausedUntil     null.Time   `json:"paused_until"`
-	Name            string      `json:"name"`
-	PhoneNumber     string      `json:"phone_number"`
-	Address         string      `json:"address"`
-	Sizes           []string    `json:"sizes" gorm:"serializer:json"`
-	LastSignedInAt  zero.Time   `json:"-"`
-	LastPokeAt      zero.Time   `json:"-"`
-	UserToken       []UserToken `json:"-"`
-	Event           []Event     `json:"-"`
-	Chains          []UserChain `json:"chains"`
-	CreatedAt       time.Time   `json:"-"`
-	UpdatedAt       time.Time   `json:"-"`
+	ID              uint            `json:"-"`
+	UID             string          `json:"uid" gorm:"uniqueIndex"`
+	FID             zero.String     `json:"-" gorm:"column:fid"`
+	Email           zero.String     `json:"email" gorm:"unique"`
+	IsEmailVerified bool            `json:"is_email_verified"`
+	IsRootAdmin     bool            `json:"is_root_admin"`
+	PausedUntil     null.Time       `json:"paused_until"`
+	Name            string          `json:"name"`
+	PhoneNumber     string          `json:"phone_number"`
+	Address         string          `json:"address"`
+	Sizes           []string        `json:"sizes" gorm:"serializer:json"`
+	LastSignedInAt  zero.Time       `json:"-"`
+	LastPokeAt      zero.Time       `json:"-"`
+	UserToken       []UserToken     `json:"-"`
+	Event           []Event         `json:"-"`
+	Chains          []UserChain     `json:"chains"`
+	UserOnesignal   []UserOnesignal `json:"-"`
+	CreatedAt       time.Time       `json:"-"`
+	UpdatedAt       time.Time       `json:"-"`
+	I18n            string          `json:"i18n"`
+	Latitude        float64         `json:"-"`
+	Longitude       float64         `json:"-"`
 }
 
 func (u *User) AddUserChainsToObject(db *gorm.DB) error {

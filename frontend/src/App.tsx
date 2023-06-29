@@ -7,6 +7,8 @@ import {
   Switch,
   useLocation,
 } from "react-router-dom";
+import { QueryParamProvider } from "use-query-params";
+import { ReactRouter5Adapter } from "use-query-params/adapters/react-router-5";
 import { AuthProvider } from "./providers/AuthProvider";
 import ScrollToTop from "./util/scrollToTop";
 import getLanguages from "./languages";
@@ -72,137 +74,143 @@ export default function App() {
 
   return (
     <Router>
-      <AuthProvider>
-        <ChainsProvider>
-          <div className="min-h-screen">
-            <ToastProvider>
-              <ScrollToTop>
-                <Navbar />
-                <Switch>
-                  <Route exact path={`${base}/`} component={Home} />
-                  <Route
-                    exact
-                    path={`${base}/thankyou`}
-                    component={JoinLoopConfirmation}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/donate/:status?`}
-                    component={Donate}
-                  />
-                  <Route exact path={`${base}/events/`} component={Events} />
-                  <Route
-                    exact
-                    path={`${base}/events/create`}
-                    component={EventCreate}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/events/:eventUID/`}
-                    component={EventDetails}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/events/:eventUID/edit`}
-                    component={EventEdit}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/message-submitted`}
-                    component={MessageSubmitted}
-                  />
+      <QueryParamProvider adapter={ReactRouter5Adapter}>
+        <AuthProvider>
+          <ChainsProvider>
+            <div className="min-h-screen">
+              <ToastProvider>
+                <ScrollToTop>
+                  <Navbar />
+                  <Switch>
+                    <Route exact path={`${base}/`} component={Home} />
+                    <Route
+                      exact
+                      path={`${base}/thankyou`}
+                      component={JoinLoopConfirmation}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/donate/:status?`}
+                      component={Donate}
+                    />
+                    <Route exact path={`${base}/events/`} component={Events} />
+                    <Route
+                      exact
+                      path={`${base}/events/create`}
+                      component={EventCreate}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/events/:eventUID/`}
+                      component={EventDetails}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/events/:eventUID/edit`}
+                      component={EventEdit}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/message-submitted`}
+                      component={MessageSubmitted}
+                    />
 
-                  <Route
-                    exact
-                    path={`${base}/users/login/validate`}
-                    component={LoginEmailFinished}
-                  />
-                  <Route exact path={`${base}/users/login`} component={Login} />
-                  <Route
-                    exact
-                    path={`${base}/users/logout`}
-                    component={Logout}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/users/:userUID/edit`}
-                    component={UserEdit}
-                  />
+                    <Route
+                      exact
+                      path={`${base}/users/login/validate`}
+                      component={LoginEmailFinished}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/users/login`}
+                      component={Login}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/users/logout`}
+                      component={Logout}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/users/:userUID/edit`}
+                      component={UserEdit}
+                    />
 
-                  <Route
-                    exact
-                    path={`${base}/loops`}
-                    component={() => <Redirect to="/admin/dashboard" />}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/loops/find`}
-                    component={FindChain}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/loops/:chainUID/edit`}
-                    component={ChainEdit}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/loops/:chainUID/members`}
-                    component={ChainMemberList}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/loops/new/users/signup`}
-                    component={NewChainSignup}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/loops/new`}
-                    component={NewChainLocation}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/loops/new/confirmation`}
-                    component={NewLoopConfirmation}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/loops/:chainUID/users/signup`}
-                    component={Signup}
-                  />
+                    <Route
+                      exact
+                      path={`${base}/loops`}
+                      component={() => <Redirect to="/admin/dashboard" />}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/loops/find`}
+                      component={FindChain}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/loops/:chainUID/edit`}
+                      component={ChainEdit}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/loops/:chainUID/members`}
+                      component={ChainMemberList}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/loops/new/users/signup`}
+                      component={NewChainSignup}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/loops/new`}
+                      component={NewChainLocation}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/loops/new/confirmation`}
+                      component={NewLoopConfirmation}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/loops/:chainUID/users/signup`}
+                      component={Signup}
+                    />
 
-                  <Route exact path={`${base}/faq`} component={FAQ} />
-                  <Route
-                    exact
-                    path={`${base}/contact-us`}
-                    component={Contacts}
-                  />
-                  <Route exact path={`${base}/about`} component={About} />
+                    <Route exact path={`${base}/faq`} component={FAQ} />
+                    <Route
+                      exact
+                      path={`${base}/contact-us`}
+                      component={Contacts}
+                    />
+                    <Route exact path={`${base}/about`} component={About} />
 
-                  <Route
-                    exact
-                    path={`${base}/terms-of-use`}
-                    component={TermsOfUse}
-                  />
-                  <Route
-                    exact
-                    path={`${base}/privacy-policy`}
-                    component={PrivacyPolicy}
-                  />
+                    <Route
+                      exact
+                      path={`${base}/terms-of-use`}
+                      component={TermsOfUse}
+                    />
+                    <Route
+                      exact
+                      path={`${base}/privacy-policy`}
+                      component={PrivacyPolicy}
+                    />
 
-                  <Route
-                    exact
-                    path={`${base}/admin/dashboard`}
-                    component={AdminDashboard}
-                  />
-                  <Route path={`${base}/*`} component={FileNotFound} />
-                  <Route path="*" component={I18nRedirect} />
-                </Switch>
-                <Footer />
-              </ScrollToTop>
-            </ToastProvider>
-          </div>
-        </ChainsProvider>
-      </AuthProvider>
+                    <Route
+                      exact
+                      path={`${base}/admin/dashboard`}
+                      component={AdminDashboard}
+                    />
+                    <Route path={`${base}/*`} component={FileNotFound} />
+                    <Route path="*" component={I18nRedirect} />
+                  </Switch>
+                  <Footer />
+                </ScrollToTop>
+              </ToastProvider>
+            </div>
+          </ChainsProvider>
+        </AuthProvider>
+      </QueryParamProvider>
     </Router>
   );
 }

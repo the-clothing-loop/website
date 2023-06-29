@@ -32,6 +32,10 @@
     {
       "question": "Je reçois le message d'erreur : \"votre compte existe déjà\".",
       "answer": "Vous avez déjà créé un compte dans le Clothing Loop. Pour vous inscrire à un nouveau Loop, vous devez d'abord vous connecter :<ol><li>Cliquez en haut à droite sur login.</li><li>Entrez l'adresse e-mail que vous avez utilisée pour enregistrer votre Loop.</li><li>Vérifiez votre e-mail (et votre fichier spam !) pour notre lien de vérification. Nous utilisons un lien au lieu d'un mot de passe !</li><li>Vous pourrez alors vous inscrire pour un nouveau Loop.</li></ol>"
+    },
+    {
+      "question": "Do I need to pay to join the Clothing Loop?",
+      "answer": "No, you do not have to pay to participate in the Clothing Loop. The Clothing Loop is an initiative that wants to make clothes swapping easy and accessible. As a participant, you “pay” with your clothes. Make sure that if you add clothes to your local Loop, they are gems that can be worn again. If you have saved money by participating in the Clothing Loop and/or want to support the Clothing Loop movement and our mission, you can of course always <a href='/donate'>donate here</a>."
     }
   ],
   "faqForHosts": "Question-réponse pour les organisateurs",

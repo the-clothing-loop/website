@@ -75,16 +75,17 @@ export default function Signup() {
             newsletter: values.newsletter,
             address: values.address,
             sizes: values.sizes,
+            latitude: values.latitude || 0,
+            longitude: values.longitude || 0,
           },
           chainUID
         );
         setSubmitted(true);
-        if (window.goatcounter)
-          window.goatcounter.count({
-            path: "new-user",
-            title: "New user",
-            event: true,
-          });
+        window.goatcounter?.count({
+          path: "new-user",
+          title: "New user",
+          event: true,
+        });
       } catch (err: any) {
         console.error("Error creating user:", err);
 
