@@ -32,6 +32,7 @@
   "delete": "Supprimer",
   "cancel": "Annuler",
   "deleteAccount": "Êtes-vous sûr de vouloir supprimer définitivement votre compte ?",
+  "deleteAccountWithLoops": "As you are the only host of the following Loops, those will also be deleted!",
   "areYouSureRemoveEvent": "Êtes-vous sûr de vouloir supprimer définitivement cet événement ?",
   "areYouSureLogout": "Êtes-vous sûr de vouloir vous déconnecter ?",
   "deleteUserBtn": "Supprimer le compte",
