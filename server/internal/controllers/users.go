@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
@@ -426,14 +427,14 @@ func UserPurge(c *gin.Context) {
 	// find chains where user is the last chain admin
 	chainIDsToDelete := []uint{}
 	db.Raw(`
-SELECT uc.chain_id 
+SELECT uc.chain_id
 FROM  user_chains AS uc
 WHERE uc.chain_id IN (
 	SELECT uc2.chain_id
 	FROM user_chains AS uc2
 	WHERE uc2.is_chain_admin = TRUE AND uc2.user_id = ?
-)
-GROUP BY uc.chain_id 
+) AND uc.is_chain_admin = TRUE
+GROUP BY uc.chain_id
 HAVING COUNT(uc.id) = 1
 	`, user.ID).Scan(&chainIDsToDelete)
 
@@ -444,6 +445,15 @@ HAVING COUNT(uc.id) = 1
 		tx.Rollback()
 		goscope.Log.Errorf("UserPurge: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to disconnect bag connections")
+		return
+	}
+	err = tx.Exec(`DELETE FROM bags WHERE user_chain_id IN (
+		SELECT id FROM user_chains WHERE user_id = ?
+	)`, user.ID).Error
+	if err != nil {
+		tx.Rollback()
+		goscope.Log.Errorf("UserPurge: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to disconnect user bag connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID).Error
@@ -468,6 +478,7 @@ HAVING COUNT(uc.id) = 1
 		return
 	}
 
+	glog.Infof("Purging chains %v", chainIDsToDelete)
 	if len(chainIDsToDelete) > 0 {
 		err := tx.Exec(`DELETE FROM bags WHERE user_chain_id IN (
 			SELECT id FROM user_chains WHERE chain_id IN ?

@@ -46,6 +46,8 @@ export interface Chain {
   published: boolean;
   open_to_new_members: boolean;
   rules_override?: string;
+  total_members?: number;
+  total_hosts?: number;
 }
 
 export interface Event {

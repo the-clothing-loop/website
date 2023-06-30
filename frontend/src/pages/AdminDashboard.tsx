@@ -1,6 +1,6 @@
 //Resources
 import { Link, useHistory } from "react-router-dom";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
@@ -9,23 +9,45 @@ import { userPurge } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import ChainsList from "../components/ChainsList";
 import { useEscape } from "../util/escape.hooks";
+import { Chain } from "../api/types";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
   const { addModal } = useContext(ToastContext);
+  const [chains, setChains] = useState<Chain[]>([]);
   const history = useHistory();
 
   function deleteClicked() {
+    const chainNames = authUser?.is_root_admin
+      ? undefined
+      : (authUser?.chains
+          .filter((uc) => uc.is_chain_admin)
+          .map((uc) => chains.find((c) => c.uid === uc.chain_uid))
+          .filter((c) => c && c.total_hosts && c.total_hosts === 1)
+          .map((c) => c!.name) as string[]);
+
     addModal({
       message: t("deleteAccount"),
+      content:
+        chainNames && chainNames.length
+          ? () => (
+              <>
+                <p className="mb-2">{t("deleteAccountWithLoops")}</p>
+                <ul className="list-disc text-sm font-semibold mx-8">
+                  {chainNames.map((name) => (
+                    <li key={name}>{name}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          : undefined,
       actions: [
         {
           text: t("delete"),
           type: "error",
           fn: () => {
-            userPurge(authUser!.uid);
-            history.push("/users/logout");
+            userPurge(authUser!.uid).then(() => history.push("/users/logout"));
           },
         },
       ],
@@ -140,20 +162,20 @@ export default function AdminDashboard() {
             className="modal-toggle"
           />
           <div className="modal">
-            <div className="relative max-w-[100vw] max-h-[100vh] h-full justify-center items-center flex">
-              <label
-                htmlFor="modal-circle-loop"
-                aria-label="close"
-                className="btn btn-sm btn-square absolute right-2 top-2 feather feather-x"
-              ></label>
+            <label
+              className="relative max-w-[100vw] max-h-[100vh] h-full justify-center items-center flex cursor-zoom-out"
+              aria-label="close"
+              htmlFor="modal-circle-loop"
+            >
+              <div className="btn btn-sm btn-square absolute right-2 top-2 feather feather-x"></div>
               <img
                 className="max-h-full"
                 src="https://images.clothingloop.org/x1080/circle_loop.jpg"
               />
-            </div>
+            </label>
           </div>
         </section>
-        <ChainsList />
+        <ChainsList chains={chains} setChains={setChains} />
       </main>
     </>
   );
