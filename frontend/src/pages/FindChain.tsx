@@ -26,6 +26,7 @@ import { SizeBadges } from "../components/Badges";
 import { circleRadiusKm } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
 import { TFunction, i18n } from "i18next";
+import { features } from "process";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -162,6 +163,7 @@ export default function FindChain({ location }: { location: Location }) {
           clusterMaxZoom: clusterMaxZoom,
           clusterMinPoints: 1,
           clusterRadius: 25,
+          generateId: true,
         });
 
         _map.addLayer({
@@ -195,9 +197,14 @@ export default function FindChain({ location }: { location: Location }) {
           paint: {
             "circle-color": [
               "case",
-              ["get", "open_to_new_members"],
-              ["rgba", 240, 196, 73, 0.4], // #f0c449
-              ["rgba", 0, 0, 0, 0.1],
+              ["==", ["feature-state", "clicked"], true],
+              ["rgba", 72, 128, 139, 0.4],
+              [
+                "case",
+                ["get", "open_to_new_members"],
+                ["rgba", 240, 196, 73, 0.4], // #f0c449
+                ["rgba", 0, 0, 0, 0.1],
+              ],
             ],
             "circle-radius": [
               "interpolate",
@@ -211,9 +218,14 @@ export default function FindChain({ location }: { location: Location }) {
             "circle-stroke-width": 2,
             "circle-stroke-color": [
               "case",
-              ["get", "open_to_new_members"],
-              ["rgba", 240, 196, 73, 1], // #F0C449
-              ["rgba", 0, 0, 0, 0.1],
+              ["==", ["feature-state", "clicked"], true],
+              ["rgba", 72, 128, 139, 0.4],
+              [
+                "case",
+                ["get", "open_to_new_members"],
+                ["rgba", 240, 196, 73, 0.4], // #f0c449
+                ["rgba", 0, 0, 0, 0.1],
+              ],
             ],
           },
         });
@@ -225,9 +237,14 @@ export default function FindChain({ location }: { location: Location }) {
           paint: {
             "circle-color": [
               "case",
-              ["get", "open_to_new_members"],
-              ["rgba", 240, 196, 73, 0.4], // #f0c449
-              ["rgba", 0, 0, 0, 0.0],
+              ["==", ["feature-state", "clicked"], true],
+              ["rgba", 72, 128, 139, 0.4],
+              [
+                "case",
+                ["get", "open_to_new_members"],
+                ["rgba", 240, 196, 73, 0.4], // #f0c449
+                ["rgba", 0, 0, 0, 0.1],
+              ],
             ],
             "circle-radius": 5,
             "circle-stroke-width": 0,
@@ -265,7 +282,7 @@ export default function FindChain({ location }: { location: Location }) {
               let bDistance = bLngLat.distanceTo(e.lngLat);
               return Math.min(aDistance, bDistance);
             });
-            setFocusedChain(_focusedChain[0]);
+            handleSetFocusedChain(_map, _focusedChain[0]);
           }
         });
         // zoom during click on a cluster
@@ -322,6 +339,37 @@ export default function FindChain({ location }: { location: Location }) {
       setMap(undefined);
     };
   }, []);
+
+  function handleSetFocusedChain(map: mapboxgl.Map, _focusedChain: Chain) {
+    setFocusedChain(_focusedChain);
+    const visibleFeatures = map.queryRenderedFeatures(undefined, {
+      layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
+    }) as any as GeoJSONChains["features"];
+    for (let i = 0; i < visibleFeatures.length; i++) {
+      let featUID = visibleFeatures[i]?.id;
+      if (visibleFeatures[i].properties!.uid === _focusedChain!.uid) {
+        map.setFeatureState(
+          {
+            source: "chains",
+            id: featUID,
+          },
+          {
+            clicked: true,
+          }
+        );
+      } else {
+        map.setFeatureState(
+          {
+            source: "chains",
+            id: featUID,
+          },
+          {
+            clicked: false,
+          }
+        );
+      }
+    }
+  }
 
   function getVisibleChains(map: mapboxgl.Map, chains: Chain[]) {
     const center = map.getCenter();
