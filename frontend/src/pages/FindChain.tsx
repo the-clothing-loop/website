@@ -11,7 +11,7 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import type * as GeoJSONTypes from "geojson";
-import mapboxgl, { GeoJSONSource } from "mapbox-gl";
+import mapboxgl, { GeoJSONSource, Point } from "mapbox-gl";
 
 // Project resources
 import { AuthContext } from "../providers/AuthProvider";
@@ -237,14 +237,9 @@ export default function FindChain({ location }: { location: Location }) {
           paint: {
             "circle-color": [
               "case",
-              ["==", ["feature-state", "clicked"], true],
-              ["rgba", 72, 128, 139, 0.4],
-              [
-                "case",
-                ["get", "open_to_new_members"],
-                ["rgba", 240, 196, 73, 0.4], // #f0c449
-                ["rgba", 0, 0, 0, 0.1],
-              ],
+              ["get", "open_to_new_members"],
+              ["rgba", 240, 196, 73, 0.4], // #f0c449
+              ["rgba", 0, 0, 0, 0.0],
             ],
             "circle-radius": 5,
             "circle-stroke-width": 0,
@@ -275,14 +270,7 @@ export default function FindChain({ location }: { location: Location }) {
               _selectedChains.forEach((c) => console.info(c.name, c.uid));
               setSelectedChains(_selectedChains);
             }
-            let _focusedChain = _selectedChains.sort((a, b) => {
-              let aLngLat = new mapboxgl.LngLat(a.longitude, a.latitude);
-              let bLngLat = new mapboxgl.LngLat(b.longitude, b.latitude);
-              let aDistance = aLngLat.distanceTo(e.lngLat);
-              let bDistance = bLngLat.distanceTo(e.lngLat);
-              return Math.min(aDistance, bDistance);
-            });
-            handleSetFocusedChain(_map, _focusedChain[0]);
+            handleSetFocusedChain(_map, _selectedChains, e);
           }
         });
         // zoom during click on a cluster
@@ -340,7 +328,15 @@ export default function FindChain({ location }: { location: Location }) {
     };
   }, []);
 
-  function handleSetFocusedChain(map: mapboxgl.Map, _focusedChain: Chain) {
+  function handleSetFocusedChain(map: mapboxgl.Map, _selectedChains: Chain[], e: mapboxgl.MapMouseEvent) {
+    let _sortedChains = _selectedChains.sort((a, b) => {
+      let aLngLat = new mapboxgl.LngLat(a.longitude, a.latitude);
+      let bLngLat = new mapboxgl.LngLat(b.longitude, b.latitude);
+      let aDistance = aLngLat.distanceTo(e.lngLat);
+      let bDistance = bLngLat.distanceTo(e.lngLat);
+      return Math.min(aDistance, bDistance);
+    });
+    let _focusedChain = _sortedChains[0];
     setFocusedChain(_focusedChain);
     const visibleFeatures = map.queryRenderedFeatures(undefined, {
       layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
@@ -369,6 +365,10 @@ export default function FindChain({ location }: { location: Location }) {
         );
       }
     }
+    
+    map.easeTo({
+      center: [_focusedChain.longitude, _focusedChain.latitude],
+    });
   }
 
   function getVisibleChains(map: mapboxgl.Map, chains: Chain[]) {
@@ -768,3 +768,4 @@ function FocusedChain({
     </div>
   );
 }
+
