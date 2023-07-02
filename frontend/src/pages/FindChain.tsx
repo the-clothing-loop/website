@@ -27,6 +27,7 @@ import { circleRadiusKm } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
 import { TFunction, i18n } from "i18next";
 import { features } from "process";
+import { DiffieHellman } from "crypto";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -270,7 +271,15 @@ export default function FindChain({ location }: { location: Location }) {
               _selectedChains.forEach((c) => console.info(c.name, c.uid));
               setSelectedChains(_selectedChains);
             }
-            handleSetFocusedChain(_map, _selectedChains, e);
+            let _sortedChains = _selectedChains.sort((a, b) => {
+              let aLngLat = new mapboxgl.LngLat(a.longitude, a.latitude);
+              let bLngLat = new mapboxgl.LngLat(b.longitude, b.latitude);
+              let aDistance = aLngLat.distanceTo(e.lngLat);
+              let bDistance = bLngLat.distanceTo(e.lngLat);
+              return Math.min(aDistance, bDistance);
+            });
+            let _focusedChain = _sortedChains[0];
+            handleSetFocusedChain(_focusedChain, _map);
           }
         });
         // zoom during click on a cluster
@@ -328,27 +337,16 @@ export default function FindChain({ location }: { location: Location }) {
     };
   }, []);
 
-  function handleSetFocusedChain(
-    map: mapboxgl.Map,
-    _selectedChains: Chain[],
-    e: mapboxgl.MapMouseEvent
-  ) {
-    let _sortedChains = _selectedChains.sort((a, b) => {
-      let aLngLat = new mapboxgl.LngLat(a.longitude, a.latitude);
-      let bLngLat = new mapboxgl.LngLat(b.longitude, b.latitude);
-      let aDistance = aLngLat.distanceTo(e.lngLat);
-      let bDistance = bLngLat.distanceTo(e.lngLat);
-      return Math.min(aDistance, bDistance);
-    });
-    let _focusedChain = _sortedChains[0];
+  function handleSetFocusedChain(_focusedChain: Chain, _map?: mapboxgl.Map) {
+    _map = _map ? _map : map;
     setFocusedChain(_focusedChain);
-    const visibleFeatures = map.queryRenderedFeatures(undefined, {
+    const features = _map!.queryRenderedFeatures(undefined, {
       layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
     }) as any as GeoJSONChains["features"];
-    for (let i = 0; i < visibleFeatures.length; i++) {
-      let featUID = visibleFeatures[i]?.id;
-      if (visibleFeatures[i].properties!.uid === _focusedChain!.uid) {
-        map.setFeatureState(
+    for (let i = 0; i < features.length; i++) {
+      let featUID = features[i]?.id;
+      if (features[i].properties!.uid === _focusedChain!.uid) {
+        _map!.setFeatureState(
           {
             source: "chains",
             id: featUID,
@@ -358,7 +356,7 @@ export default function FindChain({ location }: { location: Location }) {
           }
         );
       } else {
-        map.setFeatureState(
+        _map!.setFeatureState(
           {
             source: "chains",
             id: featUID,
@@ -369,42 +367,8 @@ export default function FindChain({ location }: { location: Location }) {
         );
       }
     }
-    map.easeTo({
+    _map!.easeTo({
       center: [_focusedChain.longitude, _focusedChain.latitude],
-    });
-  }
-
-  function handleClickChain(chain: Chain) {
-    setFocusedChain(chain);
-    const visibleFeatures = map!.queryRenderedFeatures(undefined, {
-      layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
-    }) as any as GeoJSONChains["features"];
-    for (let i = 0; i < visibleFeatures.length; i++) {
-      let featUID = visibleFeatures[i]?.id;
-      if (visibleFeatures[i].properties!.uid === chain!.uid) {
-        map!.setFeatureState(
-          {
-            source: "chains",
-            id: featUID,
-          },
-          {
-            clicked: true,
-          }
-        );
-      } else {
-        map!.setFeatureState(
-          {
-            source: "chains",
-            id: featUID,
-          },
-          {
-            clicked: false,
-          }
-        );
-      }
-    }
-    map!.easeTo({
-      center: [chain.longitude, chain.latitude],
     });
   }
 
@@ -649,7 +613,7 @@ export default function FindChain({ location }: { location: Location }) {
                         selected ? "bg-white" : ""
                       }`}
                       key={chain.uid}
-                      onClick={() => handleClickChain(chain)}
+                      onClick={() => handleSetFocusedChain(chain)}
                     >
                       <h1
                         className={`text-secondary text-ellipsis overflow-hidden w-full whitespace-nowrap ${
