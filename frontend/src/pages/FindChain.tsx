@@ -328,7 +328,11 @@ export default function FindChain({ location }: { location: Location }) {
     };
   }, []);
 
-  function handleSetFocusedChain(map: mapboxgl.Map, _selectedChains: Chain[], e: mapboxgl.MapMouseEvent) {
+  function handleSetFocusedChain(
+    map: mapboxgl.Map,
+    _selectedChains: Chain[],
+    e: mapboxgl.MapMouseEvent
+  ) {
     let _sortedChains = _selectedChains.sort((a, b) => {
       let aLngLat = new mapboxgl.LngLat(a.longitude, a.latitude);
       let bLngLat = new mapboxgl.LngLat(b.longitude, b.latitude);
@@ -365,9 +369,42 @@ export default function FindChain({ location }: { location: Location }) {
         );
       }
     }
-    
     map.easeTo({
       center: [_focusedChain.longitude, _focusedChain.latitude],
+    });
+  }
+
+  function handleClickChain(chain: Chain) {
+    setFocusedChain(chain);
+    const visibleFeatures = map!.queryRenderedFeatures(undefined, {
+      layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
+    }) as any as GeoJSONChains["features"];
+    for (let i = 0; i < visibleFeatures.length; i++) {
+      let featUID = visibleFeatures[i]?.id;
+      if (visibleFeatures[i].properties!.uid === chain!.uid) {
+        map!.setFeatureState(
+          {
+            source: "chains",
+            id: featUID,
+          },
+          {
+            clicked: true,
+          }
+        );
+      } else {
+        map!.setFeatureState(
+          {
+            source: "chains",
+            id: featUID,
+          },
+          {
+            clicked: false,
+          }
+        );
+      }
+    }
+    map!.easeTo({
+      center: [chain.longitude, chain.latitude],
     });
   }
 
@@ -612,7 +649,7 @@ export default function FindChain({ location }: { location: Location }) {
                         selected ? "bg-white" : ""
                       }`}
                       key={chain.uid}
-                      onClick={() => setFocusedChain(chain)}
+                      onClick={() => handleClickChain(chain)}
                     >
                       <h1
                         className={`text-secondary text-ellipsis overflow-hidden w-full whitespace-nowrap ${
@@ -768,4 +805,3 @@ function FocusedChain({
     </div>
   );
 }
-
