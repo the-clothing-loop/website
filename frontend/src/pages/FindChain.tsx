@@ -43,9 +43,6 @@ type GeoJSONChains = GeoJSONTypes.FeatureCollection<
     size: string;
     open_to_new_members: boolean;
     cluster?: boolean;
-    cluster_id?: number;
-    point_count?: number;
-    point_count_abbreviated?: number;
   }
 >;
 

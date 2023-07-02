@@ -138,12 +138,12 @@ function Navbar() {
             </Link>
           )}
 
-          <Link to="/events" className="btn btn-ghost text-base">
-            {t("events")}
-          </Link>
-
           <Link to="/donate" className="btn btn-ghost text-base">
             {t("donate")}
+          </Link>
+
+          <Link to="/events" className="btn btn-ghost text-base">
+            {t("events")}
           </Link>
 
           {authUser ? (

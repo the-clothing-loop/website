@@ -4,13 +4,17 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	cron "github.com/go-co-op/gocron"
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/controllers"
 )
+
+var Scheduler *cron.Scheduler
 
 func Routes() *gin.Engine {
 	// initialization
@@ -19,10 +23,6 @@ func Routes() *gin.Engine {
 
 	if app.Config.ENV == app.EnvEnumProduction || (app.Config.SENDINBLUE_API_KEY != "" && app.Config.ENV == app.EnvEnumDevelopment) {
 		app.SendInBlueInit()
-	}
-
-	if app.Config.ENV != app.EnvEnumTesting {
-		app.CronInit(db)
 	}
 
 	if app.Config.ONESIGNAL_APP_ID != "" && app.Config.ONESIGNAL_REST_API_KEY != "" {
@@ -42,6 +42,23 @@ func Routes() *gin.Engine {
 		gin.DefaultWriter = io.MultiWriter(f)
 	} else {
 		gin.SetMode(gin.DebugMode)
+	}
+
+	if app.Config.ENV != app.EnvEnumTesting {
+		Scheduler = cron.NewScheduler(time.UTC)
+
+		// At 03:03 on day-of-month 1.
+		// https://crontab.guru/#3_3_1_*_*
+		Scheduler.Cron("3 3 1 * *").Do(controllers.CronMonthly, db)
+
+		// At minute 31.
+		// https://crontab.guru/#31_*_*_*_*
+		Scheduler.Cron("3 3 1 * *").Do(controllers.CronHourly, db)
+
+		Scheduler.StartAsync()
+
+		// testing
+		Scheduler.RunAll()
 	}
 
 	// router

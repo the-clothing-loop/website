@@ -4,10 +4,11 @@ go 1.20
 
 require (
 	github.com/GGP1/atoll v0.6.0
+	github.com/OneSignal/onesignal-go-api v1.0.4
 	github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c
 	github.com/disintegration/imaging v1.6.2
 	github.com/gin-gonic/gin v1.9.1
-	github.com/go-co-op/gocron v1.23.0
+	github.com/go-co-op/gocron v1.29.0
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/golang/glog v1.1.1
 	github.com/jaswdr/faker v1.18.0
@@ -24,7 +25,6 @@ require (
 )
 
 require (
-	github.com/OneSignal/onesignal-go-api v1.0.4
 	github.com/antihax/optional v1.0.0 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
@@ -48,15 +48,17 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
+	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
+	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.9.0 // indirect
-	golang.org/x/image v0.7.0 // indirect
-	golang.org/x/net v0.10.0 // indirect
-	golang.org/x/oauth2 v0.8.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/crypto v0.10.0 // indirect
+	golang.org/x/image v0.8.0 // indirect
+	golang.org/x/net v0.11.0 // indirect
+	golang.org/x/oauth2 v0.9.0 // indirect
+	golang.org/x/sys v0.9.0 // indirect
+	golang.org/x/text v0.10.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 )
