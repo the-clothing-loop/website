@@ -472,7 +472,7 @@ WHERE user_id = ? AND chain_id = ?
 	if user.Email.Valid {
 		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
 			"",
-			"an_admin_approved_your_join_request",
+			"header_an_admin_approved_your_join_request",
 			"an_admin_approved_your_join_request.gohtml",
 		)
 	}
@@ -505,7 +505,7 @@ func ChainDeleteUnapproved(c *gin.Context) {
 	if user.Email.Valid {
 		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
 			query.Reason,
-			"an_admin_denied_your_join_request",
+			"header_an_admin_denied_your_join_request",
 			"an_admin_denied_your_join_request.gohtml",
 		)
 	}

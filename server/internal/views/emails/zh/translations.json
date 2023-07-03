@@ -1,0 +1,10 @@
+{
+  "header_subscribed_to_newsletter": "Thank you for subscribing to the Clothing Loop",
+  "header_contact_confirmation": "Thank you for contacting the Clothing Loop",
+  "header_a_participant_joined_the_loop": "A participant just joined your Loop!",
+  "header_an_admin_approved_your_join_request": "A host has approved of your request to join a loop!",
+  "header_login_verification": "Verify e-mail for the Clothing Loop",
+  "header_an_admin_denied_your_join_request": "Your request to join a loop has been denied",
+  "header_register_verification": "Verify e-mail for the Clothing Loop",
+  "header_poke": "Reminder that %s would like to join your %s Loop"
+}

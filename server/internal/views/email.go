@@ -16,7 +16,7 @@ import (
 //go:embed emails
 var emailsFS embed.FS
 
-var emailsHeaders = map[string]map[string]string{}
+var emailsTranslations = map[string]map[string]string{}
 var emailsTemplates = map[string]*template.Template{
 	"en": mustParseFS(emailsFS, "emails/en/*.gohtml"),
 	"nl": mustParseFS(emailsFS, "emails/nl/*.gohtml"),
@@ -27,6 +27,7 @@ var emailsTemplates = map[string]*template.Template{
 	"sv": mustParseFS(emailsFS, "emails/sv/*.gohtml"),
 	"it": mustParseFS(emailsFS, "emails/it/*.gohtml"),
 }
+var emailLayoutTemplate = mustParseFS(emailsFS, "emails/layout.gohtml")
 
 func init() {
 	lang := []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
@@ -43,7 +44,7 @@ func init() {
 			glog.Fatalf("Header invalid json: %v", err)
 			return
 		}
-		emailsHeaders[l] = header
+		emailsTranslations[l] = header
 	}
 }
 
@@ -73,7 +74,7 @@ func EmailAParticipantJoinedTheLoop(
 	i18n := "en"
 
 	to := adminEmail
-	subject := emailsHeaders[i18n]["someone_is_interested_in_joining_your_loop"]
+	subject := emailsTranslations[i18n]["header_someone_is_interested_in_joining_your_loop"]
 	body, err := executeTemplate(c, emailsTemplates[i18n], "someone_is_interested_in_joining_your_loop.gohtml", gin.H{
 		"Name":      adminName,
 		"ChainName": chainName,
@@ -107,7 +108,7 @@ func EmailContactUserMessage(c *gin.Context, db *gorm.DB, name, email, message s
 func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name, email, message string) bool {
 	i18n := getI18n(c)
 	to := email
-	subject := emailsHeaders[i18n]["contact_confirmation"]
+	subject := emailsTranslations[i18n]["header_contact_confirmation"]
 	body, err := executeTemplate(c, emailsTemplates[i18n], "contact_confirmation.gohtml", gin.H{
 		"Name":    name,
 		"Message": message,
@@ -122,7 +123,7 @@ func EmailContactConfirmation(c *gin.Context, db *gorm.DB, name, email, message 
 func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB, name, email string) bool {
 	i18n := getI18n(c)
 	to := email
-	subject := emailsHeaders[i18n]["subscribed_to_newsletter"]
+	subject := emailsTranslations[i18n]["header_subscribed_to_newsletter"]
 	body, err := executeTemplate(c, emailsTemplates[i18n], "subscribed_to_newsletter.gohtml", gin.H{"Name": name})
 	if err != nil {
 		return false
@@ -134,7 +135,7 @@ func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB, name, email string)
 func EmailRegisterVerification(c *gin.Context, db *gorm.DB, name, email, token string) bool {
 	i18n := getI18n(c)
 	to := email
-	subject := emailsHeaders[i18n]["register_verification"]
+	subject := emailsTranslations[i18n]["header_register_verification"]
 	body, err := executeTemplate(c, emailsTemplates[i18n], "register_verification.gohtml", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
@@ -150,7 +151,7 @@ func EmailRegisterVerification(c *gin.Context, db *gorm.DB, name, email, token s
 func EmailLoginVerification(c *gin.Context, db *gorm.DB, name, email, token string, isApp bool) bool {
 	i18n := getI18n(c)
 	to := email
-	subject := emailsHeaders[i18n]["login_verification"]
+	subject := emailsTranslations[i18n]["header_login_verification"]
 	body, err := executeTemplate(c, emailsTemplates[i18n], "login_verification.gohtml", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
@@ -179,7 +180,7 @@ func EmailToLoopParticipant(
 	i18n := "en"
 
 	to := participantEmail
-	subject := emailsHeaders[i18n][headerName]
+	subject := emailsTranslations[i18n][headerName]
 	body, err := executeTemplate(c, emailsTemplates[i18n], templateName, gin.H{
 		"Name":      participantName,
 		"ChainName": chainName,
@@ -202,7 +203,7 @@ func EmailPoke(
 ) bool {
 	i18n := "en"
 	to := email
-	subject := fmt.Sprintf(emailsHeaders[i18n]["poke"], participantName, chainName)
+	subject := fmt.Sprintf(emailsTranslations[i18n]["header_poke"], participantName, chainName)
 	body, err := executeTemplate(c, emailsTemplates[i18n], "poke.gohtml", gin.H{
 		"Name":            hostName,
 		"ParticipantName": participantName,
@@ -233,7 +234,7 @@ func EmailApproveReminder(
 	i18n := "en"
 
 	to := email
-	subject := emailsHeaders[i18n]["approve_reminder"]
+	subject := emailsTranslations[i18n]["header_approve_reminder"]
 	body, err := executeTemplate(nil, emailsTemplates[i18n], "approve_reminder.gohtml", gin.H{
 		"BaseURL":   app.Config.SITE_BASE_URL_FE,
 		"Name":      name,
