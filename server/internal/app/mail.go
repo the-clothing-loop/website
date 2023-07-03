@@ -35,13 +35,6 @@ func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body strin
 	e.HTML = []byte(body)
 	err := e.Send(smtpAddr, smtpAuth)
 
-	db.Create(&models.Mail{
-		To:      to,
-		Subject: subject,
-		Body:    body,
-		Error:   zero.StringFrom(fmt.Sprint(err)),
-	})
-
 	if err != nil {
 		goscope.Log.Errorf("Unable to send email: %v", err)
 		if c != nil {
