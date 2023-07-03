@@ -4,14 +4,13 @@ import {
   useContext,
   useRef,
   MouseEvent,
-  useMemo,
   MouseEventHandler,
 } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import type * as GeoJSONTypes from "geojson";
-import mapboxgl, { GeoJSONSource, Point } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 
 // Project resources
 import { AuthContext } from "../providers/AuthProvider";
@@ -25,9 +24,6 @@ import SearchBar, {
 import { SizeBadges } from "../components/Badges";
 import { circleRadiusKm } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
-import { TFunction, i18n } from "i18next";
-import { features } from "process";
-import { DiffieHellman } from "crypto";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
