@@ -27,6 +27,7 @@ type ChainCreateRequestBody struct {
 	Name             string   `json:"name" binding:"required"`
 	Description      string   `json:"description"`
 	Address          string   `json:"address" binding:"required"`
+	CountryCode      string   `json:"country_code" binding:"required"`
 	Latitude         float64  `json:"latitude" binding:"required"`
 	Longitude        float64  `json:"longitude" binding:"required"`
 	Radius           float32  `json:"radius" binding:"required,gte=1.0,lte=70.0"`
@@ -61,6 +62,7 @@ func ChainCreate(c *gin.Context) {
 		Name:             body.Name,
 		Description:      body.Description,
 		Address:          body.Address,
+		CountryCode:      body.CountryCode,
 		Latitude:         body.Latitude,
 		Longitude:        body.Longitude,
 		Radius:           body.Radius,
@@ -111,6 +113,7 @@ func ChainGet(c *gin.Context) {
 		"name":                chain.Name,
 		"description":         chain.Description,
 		"address":             chain.Address,
+		"country_code":        chain.CountryCode,
 		"latitude":            chain.Latitude,
 		"longitude":           chain.Longitude,
 		"radius":              chain.Radius,
@@ -210,6 +213,7 @@ func ChainGetAll(c *gin.Context) {
 			"name":                chain.Name,
 			"description":         chain.Description,
 			"address":             chain.Address,
+			"country_code":        chain.CountryCode,
 			"latitude":            chain.Latitude,
 			"longitude":           chain.Longitude,
 			"radius":              chain.Radius,
@@ -231,6 +235,7 @@ func ChainUpdate(c *gin.Context) {
 		Name             *string   `json:"name,omitempty"`
 		Description      *string   `json:"description,omitempty"`
 		Address          *string   `json:"address,omitempty"`
+		CountryCode      *string   `json:"country_code,omitempty"`
 		Latitude         *float32  `json:"latitude,omitempty"`
 		Longitude        *float32  `json:"longitude,omitempty"`
 		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=70.0"`
@@ -272,6 +277,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Address != nil {
 		valuesToUpdate["address"] = *(body.Address)
+	}
+	if body.CountryCode != nil {
+		valuesToUpdate["country_code"] = *(body.CountryCode)
 	}
 	if body.Latitude != nil {
 		valuesToUpdate["latitude"] = *(body.Latitude)

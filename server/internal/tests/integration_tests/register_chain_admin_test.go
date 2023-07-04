@@ -20,6 +20,7 @@ func TestRegisterChainAdmin(t *testing.T) {
 		"chain": gin.H{
 			"name":                "Test " + faker.Company().Name(),
 			"address":             faker.Address().Address(),
+			"country_code":        faker.Address().CountryCode(),
 			"description":         faker.Company().CatchPhrase(),
 			"latitude":            faker.Address().Latitude(),
 			"longitude":           faker.Address().Latitude(),
