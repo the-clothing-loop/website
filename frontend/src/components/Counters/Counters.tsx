@@ -49,7 +49,7 @@ export default function Counters() {
         <div className="">
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
             {isVisible ? (
-              <SingleCounter end={info?.total_countries || 0} step={193} />
+              <SingleCounter end={info?.total_countries || 0} step={1} />
             ) : (
               "0"
             )}
