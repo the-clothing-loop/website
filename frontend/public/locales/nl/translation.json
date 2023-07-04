@@ -32,6 +32,7 @@
   "delete": "Verwijder",
   "cancel": "Annuleren",
   "deleteAccount": "Weet je zeker dat je je account definitief wil verwijderen?",
+  "deleteAccountWithLoops": "As you are the only host of the following Loops, those will also be deleted!",
   "areYouSureRemoveEvent": "Weet je zeker dat je deze gebeurtenis permanent wilt verwijderen?",
   "areYouSureLogout": "Are you sure you want to logout?",
   "deleteUserBtn": "Account verwijderen",
