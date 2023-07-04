@@ -40,6 +40,11 @@ interface Point {
   radius: number;
 }
 
+interface PlaceInfo {
+  address: string;
+  countryCode: string;
+}
+
 function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
   return {
     type: "FeatureCollection",
@@ -75,6 +80,7 @@ export default function ChainDetailsForm({
     name: "",
     description: "",
     address: "",
+    country_code: "",
     radius: 3,
     genders: [],
     sizes: [],
@@ -165,15 +171,17 @@ export default function ChainDetailsForm({
     );
   }, [values.longitude, values.latitude, values.radius]);
 
-  async function getPlaceName(
+  async function getPlaceInfo(
     longitude: number,
     latitude: number
-  ): Promise<string> {
+  ): Promise<PlaceInfo>{
     const response = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${MAPBOX_TOKEN}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
     );
     const data = await response.json();
-    return data.features[0]?.place_name || "";
+    const address = data.features[0]?.place_name;
+    const countryCode = data.features[0]?.context.pop().short_code.toUpperCase();
+    return {address: address, countryCode: countryCode};
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -193,9 +201,11 @@ export default function ChainDetailsForm({
         addToastError(t("required") + ": " + t("loopLocation"), 400);
         return;
       }
-      values.address = await getPlaceName(values.longitude, values.latitude);
+      const placeInfo = await getPlaceInfo(values.longitude, values.latitude);
+      values.address = placeInfo.address;
+      values.country_code = placeInfo.countryCode;
       if (!(values.longitude && values.latitude)) {
-        console.error("getPlaceName", values.address);
+        console.error("getPlaceInfo", values.address, values.country_code);
         addToastError(t("required") + ": " + t("loopLocation"), 500);
         return;
       }
