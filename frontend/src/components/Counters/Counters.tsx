@@ -48,7 +48,11 @@ export default function Counters() {
 
         <div className="">
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
-            12
+            {isVisible ? (
+              <SingleCounter end={info?.total_countries || 0} step={193} />
+            ) : (
+              "0"
+            )}
           </div>
           <div className="opacity-80">{t("countries")}</div>
         </div>
