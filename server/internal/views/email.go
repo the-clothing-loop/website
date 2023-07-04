@@ -132,8 +132,7 @@ func emailGenerateMessage(m *mail.Msg, lng, templateName string, data any, subje
 	return nil
 }
 
-func EmailAParticipantJoinedTheLoop(
-	c *gin.Context,
+func EmailAParticipantJoinedTheLoop(c *gin.Context,
 	adminEmail,
 	adminName,
 	chainName,
@@ -165,7 +164,11 @@ func EmailAParticipantJoinedTheLoop(
 	return app.MailSend(m)
 }
 
-func EmailContactUserMessage(c *gin.Context, name, email, message string) error {
+func EmailContactUserMessage(c *gin.Context,
+	name,
+	email,
+	message string,
+) error {
 	m := app.MailCreate()
 	m.AddToFormat("The Clothing Loop", app.Config.SMTP_SENDER)
 	err := emailGenerateMessage(m, "en", "contact_confirmation", gin.H{
@@ -179,7 +182,11 @@ func EmailContactUserMessage(c *gin.Context, name, email, message string) error 
 
 	return app.MailSend(m)
 }
-func EmailContactConfirmation(c *gin.Context, name, email, message string) error {
+func EmailContactConfirmation(c *gin.Context,
+	name,
+	email,
+	message string,
+) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
 	m.AddToFormat(name, email)
@@ -194,7 +201,10 @@ func EmailContactConfirmation(c *gin.Context, name, email, message string) error
 	return app.MailSend(m)
 }
 
-func EmailSubscribeToNewsletter(c *gin.Context, name, email string) error {
+func EmailSubscribeToNewsletter(c *gin.Context,
+	name,
+	email string,
+) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
 	m.AddToFormat(name, email)
@@ -206,7 +216,11 @@ func EmailSubscribeToNewsletter(c *gin.Context, name, email string) error {
 	return app.MailSend(m)
 }
 
-func EmailRegisterVerification(c *gin.Context, name, email, token string) error {
+func EmailRegisterVerification(c *gin.Context,
+	name,
+	email,
+	token string,
+) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
 	m.AddToFormat(name, email)
@@ -221,7 +235,12 @@ func EmailRegisterVerification(c *gin.Context, name, email, token string) error 
 	return app.MailSend(m)
 }
 
-func EmailLoginVerification(c *gin.Context, name, email, token string, isApp bool) error {
+func EmailLoginVerification(c *gin.Context,
+	name,
+	email,
+	token string,
+	isApp bool,
+) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
 	m.AddToFormat(name, email)
@@ -238,7 +257,11 @@ func EmailLoginVerification(c *gin.Context, name, email, token string, isApp boo
 	return app.MailSend(m)
 }
 
-func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, name, email, chainName string) error {
+func EmailAnAdminApprovedYourJoinRequest(c *gin.Context,
+	name,
+	email,
+	chainName string,
+) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
 	m.AddToFormat(name, email)
@@ -253,8 +276,7 @@ func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, name, email, chainName 
 	return app.MailSend(m)
 }
 
-func EmailAnAdminDeniedYourJoinRequest(
-	c *gin.Context,
+func EmailAnAdminDeniedYourJoinRequest(c *gin.Context,
 	name,
 	email,
 	chainName,
@@ -277,8 +299,7 @@ func EmailAnAdminDeniedYourJoinRequest(
 	return app.MailSend(m)
 }
 
-func EmailPoke(
-	c *gin.Context,
+func EmailPoke(c *gin.Context,
 	name,
 	email,
 	participantName,
