@@ -1,47 +1,41 @@
 package app
 
 import (
-	"fmt"
-	"net/http"
-	"net/smtp"
-
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
-	"github.com/the-clothing-loop/website/server/internal/models"
 
-	"github.com/gin-gonic/gin"
-	"github.com/jordan-wright/email"
-	"gopkg.in/guregu/null.v3/zero"
-	"gorm.io/gorm"
+	"github.com/wneessen/go-mail"
 )
 
-var smtpAddr string
-var smtpAuth smtp.Auth
+var mailClient *mail.Client
 
 func MailInit() {
-	smtpAddr = fmt.Sprintf("%s:%d", Config.SMTP_HOST, Config.SMTP_PORT)
-	if Config.SMTP_PASS != "" {
-		smtpAuth = smtp.PlainAuth("", Config.SMTP_USER, Config.SMTP_PASS, Config.SMTP_HOST)
+	var err error
+	mailClient, err = mail.NewClient(Config.SMTP_HOST, mail.WithPort(Config.SMTP_PORT))
+	if err != nil {
+		panic(err)
+	}
+
+	if Config.SMTP_PASS == "" {
+		mailClient.SetTLSPolicy(mail.NoTLS)
+	} else {
+		mailClient.SetSMTPAuth(mail.SMTPAuthPlain)
+		mailClient.SetUsername(Config.SMTP_USER)
+		mailClient.SetPassword(Config.SMTP_PASS)
 	}
 }
 
-func MailSend(c *gin.Context, db *gorm.DB, to string, subject string, body string) bool {
-	e := email.NewEmail()
-	e.From = fmt.Sprintf("The Clothing Loop <%s>", Config.SMTP_SENDER)
-	e.To = []string{to}
-	e.Bcc = []string{}
-	e.Cc = []string{}
-	e.Subject = subject
-	e.Text = []byte("")
-	e.HTML = []byte(body)
-	err := e.Send(smtpAddr, smtpAuth)
+func MailCreate() *mail.Msg {
+	m := mail.NewMsg()
+	m.FromFormat("The Clothing Loop", Config.SMTP_SENDER)
+	return m
+}
 
+func MailSend(m *mail.Msg) error {
+	err := mailClient.DialAndSend(m)
 	if err != nil {
 		goscope.Log.Errorf("Unable to send email: %v", err)
-		if c != nil {
-			c.String(http.StatusInternalServerError, "Unable to send email")
-		}
-		return false
+		return err
 	}
 
-	return true
+	return err
 }

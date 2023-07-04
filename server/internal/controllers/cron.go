@@ -115,7 +115,7 @@ ORDER BY u.email
 	for i := range emailValues {
 		email := emailValues[i]
 		glog.Infof("Sending email approve reminder to %s", email.Email)
-		go views.EmailApproveReminder(db, email.Name, email.Email, email.Approvals)
+		go views.EmailApproveReminder(email.Name, email.Email, email.Approvals)
 	}
 }
 

@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -43,7 +44,11 @@ LIMIT 1
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	views.EmailLoginVerification(c, db, user.Name, user.Email.String, token, body.IsApp)
+	err = views.EmailLoginVerification(c, user.Name, user.Email.String, token, body.IsApp)
+	if err != nil {
+		glog.Errorf("Unable to send email: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to send email")
+	}
 }
 
 func LoginValidate(c *gin.Context) {
@@ -116,7 +121,6 @@ UPDATE chains SET published = TRUE WHERE id IN (
 			if result.Email.Valid {
 				go views.EmailAParticipantJoinedTheLoop(
 					c,
-					db,
 					result.Email.String,
 					result.Name,
 					result.Chain,
@@ -221,7 +225,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		return
 	}
 
-	go views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
+	go views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
 }
 
 func RegisterBasicUser(c *gin.Context) {
@@ -292,7 +296,7 @@ func RegisterBasicUser(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
+	views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
 }
 
 func Logout(c *gin.Context) {
