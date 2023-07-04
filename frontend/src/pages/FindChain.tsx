@@ -361,6 +361,9 @@ export default function FindChain({ location }: { location: Location }) {
       }
     }
     _map!.easeTo({
+      duration: 700,
+      animate: true,
+      essential: true,
       center: [_focusedChain.longitude, _focusedChain.latitude],
     });
   }
