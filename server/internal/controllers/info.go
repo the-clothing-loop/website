@@ -38,6 +38,7 @@ WHERE users.is_email_verified = TRUE
 	err = db.Raw(`
 SELECT COUNT(DISTINCT country_code)
 FROM chains
+WHERE country_code IS NOT NULL
 	`).Scan(&totalCountries).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to retrieve information: %v", err)
