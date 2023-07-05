@@ -181,6 +181,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Radius:           body.Chain.Radius,
 		Published:        false,
 		OpenToNewMembers: body.Chain.OpenToNewMembers,
+		CountryCode:      body.Chain.CountryCode,
 		Sizes:            body.Chain.Sizes,
 		Genders:          body.Chain.Genders,
 	}
