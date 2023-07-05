@@ -1,6 +1,8 @@
 package app
 
 import (
+	"strings"
+
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 
 	"github.com/wneessen/go-mail"
@@ -31,6 +33,9 @@ func MailCreate() *mail.Msg {
 }
 
 func MailSend(m *mail.Msg) error {
+	if to := m.GetTo(); Config.ENV == EnvEnumAcceptance && strings.HasSuffix(to[0].Address, "@example.com") {
+		return nil
+	}
 	err := mailClient.DialAndSend(m)
 	if err != nil {
 		goscope.Log.Errorf("Unable to send email: %v", err)
