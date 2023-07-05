@@ -7,5 +7,12 @@
   "header_an_admin_denied_your_join_request": "Deine Anfrage, dem Loop beizutreten, wurde abgelehnt",
   "header_register_verification": "Bestätigungs E-Mail für den Clothing Loop",
   "header_poke": "Erinnerung daran, dass %s Deinem %s Loop beitreten möchte",
-  "header_approve_reminder": "Reminder to approve loop join requests"
+  "header_approve_reminder": "Reminder to approve loop join requests",
+  "header_contact_received": "Clothing Loop Contact Form - %s",
+  "layout_much_love_comma": "Much love,",
+  "layout_the_clothing_loop_team": "The Clothing Loop Team",
+  "layout_events": "Events",
+  "layout_donate": "Donate",
+  "layout_about_us": "About us",
+  "layout_faq": "FAQ"
 }
