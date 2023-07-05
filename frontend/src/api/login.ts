@@ -16,7 +16,7 @@ export interface RequestRegisterChain {
   name: string;
   description: string;
   address: string;
-  country_code: string;
+  country_code?: string;
   latitude: number;
   longitude: number;
   radius: number;
