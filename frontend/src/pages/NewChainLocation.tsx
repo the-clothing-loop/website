@@ -39,6 +39,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
       name: values.name,
       description: values.description,
       address: values.address,
+      country_code: values.country_code,
       latitude: values.latitude,
       longitude: values.longitude,
       radius: values.radius,

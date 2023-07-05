@@ -20,6 +20,7 @@ type Chain struct {
 	Name             string
 	Description      string
 	Address          string
+	CountryCode      string
 	Latitude         float64
 	Longitude        float64
 	Radius           float32

@@ -93,6 +93,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		Name:             "Fake " + faker.Company().Name(),
 		Description:      faker.Company().CatchPhrase(),
 		Address:          faker.Address().Address(),
+		CountryCode:      faker.Address().CountryCode(),
 		Latitude:         latitude,
 		Longitude:        longitude,
 		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
