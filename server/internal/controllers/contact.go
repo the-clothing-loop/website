@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 
+	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -55,11 +57,11 @@ func ContactNewsletter(c *gin.Context) {
 		app.SendInBlue.CreateContact(c.Request.Context(), body.Email)
 	}
 
-	views.EmailSubscribeToNewsletter(c, db, name, body.Email)
+	views.EmailSubscribeToNewsletter(c, name, body.Email)
 }
 
 func ContactMail(c *gin.Context) {
-	db := getDB(c)
+	// db := getDB(c)
 
 	var body struct {
 		Name     string `json:"name" binding:"required"`
@@ -75,6 +77,17 @@ func ContactMail(c *gin.Context) {
 		return
 	}
 
-	views.EmailContactUserMessage(c, db, body.Name, body.Email, body.Message)
-	views.EmailContactConfirmation(c, db, body.Name, body.Email, body.Message)
+	err2 := views.EmailContactUserMessage(c, body.Name, body.Email, body.Message)
+	if err2 != nil {
+		glog.Errorf("Unable to send email: %v", err2)
+	}
+
+	err := views.EmailContactConfirmation(c, body.Name, body.Email, body.Message)
+	if err != nil {
+		glog.Errorf("Unable to send email: %v", err)
+	}
+
+	if err2 != nil || err == nil {
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to send email"))
+	}
 }

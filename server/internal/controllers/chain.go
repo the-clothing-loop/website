@@ -394,7 +394,6 @@ WHERE uc.chain_id = ?
 			if result.Email.Valid {
 				go views.EmailAParticipantJoinedTheLoop(
 					c,
-					db,
 					result.Email.String,
 					result.Name,
 					result.Chain,
@@ -470,11 +469,7 @@ WHERE user_id = ? AND chain_id = ?
 	`, user.ID, chain.ID)
 
 	if user.Email.Valid {
-		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
-			"",
-			"an_admin_approved_your_join_request",
-			"an_admin_approved_your_join_request.gohtml",
-		)
+		views.EmailAnAdminApprovedYourJoinRequest(c, user.Name, user.Email.String, chain.Name)
 	}
 }
 
@@ -503,11 +498,8 @@ func ChainDeleteUnapproved(c *gin.Context) {
 	}
 
 	if user.Email.Valid {
-		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
-			query.Reason,
-			"an_admin_denied_your_join_request",
-			"an_admin_denied_your_join_request.gohtml",
-		)
+		views.EmailAnAdminDeniedYourJoinRequest(c, user.Name, user.Email.String, chain.Name,
+			query.Reason)
 	}
 
 }

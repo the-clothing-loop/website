@@ -1,0 +1,11 @@
+{
+  "header_subscribed_to_newsletter": "תודה על ההרשמה ל Clothing Loop",
+  "header_contact_confirmation": "תודה שיצרתם קשר עם ה Clothing Loop",
+  "header_someone_is_interested_in_joining_your_loop": "מישהו מעונין להצטרף ללולאה שלכם!",
+  "header_an_admin_approved_your_join_request": "המארח אישר את בקשתכם להצטרף ללולאה!",
+  "header_login_verification": "ודאו דואר אלקטרוני עבור ה Clothing Loop",
+  "header_an_admin_denied_your_join_request": "הבקשה שלכם להצטרף ללולאה נדחתה",
+  "header_register_verification": "ודאו דואר אלקטרוני עבור ה Clothing Loop",
+  "header_poke": "תזכורת ש%sרוצים להצטרף ללולאה %sשלכם",
+  "header_approve_reminder": "Reminder to approve loop join requests"
+}

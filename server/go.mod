@@ -12,12 +12,12 @@ require (
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/golang/glog v1.1.1
 	github.com/jaswdr/faker v1.18.0
-	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/lil5/goscope2 v1.4.2
 	github.com/satori/go.uuid v1.2.0
 	github.com/sendinblue/APIv3-go-library/v2 v2.1.2
 	github.com/stretchr/testify v1.8.4
 	github.com/stripe/stripe-go/v73 v73.16.0
+	github.com/wneessen/go-mail v0.3.9
 	gopkg.in/guregu/null.v3 v3.5.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.1
@@ -48,7 +48,6 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
