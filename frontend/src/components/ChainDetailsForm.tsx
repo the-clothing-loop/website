@@ -174,14 +174,15 @@ export default function ChainDetailsForm({
   async function getPlaceInfo(
     longitude: number,
     latitude: number
-  ): Promise<PlaceInfo>{
+  ): Promise<PlaceInfo> {
     const response = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${MAPBOX_TOKEN}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
     );
     const data = await response.json();
     const address = data.features[0]?.place_name;
-    const countryCode = data.features[0]?.context.pop().short_code.toUpperCase();
-    return {address: address, countryCode: countryCode};
+    console.log("data.feat[0]", data.features[0]);
+    const countryCode = data.features[0]?.context.pop().short_code;
+    return { address: address, countryCode: countryCode };
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
