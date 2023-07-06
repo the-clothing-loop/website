@@ -15,16 +15,11 @@ import isPaused from "../utils/is_paused";
 export default function AddressItem({
   match,
 }: RouteComponentProps<{ uid: string }>) {
-  const { chainUsers, chain } = useContext(StoreContext);
+  const { chainUsers, isChainAdmin } = useContext(StoreContext);
   const user = useMemo(() => {
     let userUID = match.params.uid;
     return chainUsers.find((u) => u.uid === userUID) || null;
   }, [match.params.uid, chainUsers]);
-  const isChainAdmin = useMemo(() => {
-    const userChain = user?.chains.find((uc) => uc.chain_uid === chain?.uid);
-    return userChain?.is_chain_admin || false;
-  }, [match.params.uid, user, chain]);
-
   const isUserPaused = isPaused(user?.paused_until || null);
 
   return (
