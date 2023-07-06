@@ -6,6 +6,16 @@ files:
   - source: /server/internal/views/emails/en/*.*
     translation: /server/internal/views/emails/%two_letters_code%/%original_file_name%
     ignore:
-      - "/server/internal/views/emails/en/contact_received.gohtml"
+      - /server/internal/views/emails/en/contact_received.gohtml
   - source: /app/public/locales/en/*.json
     translation: /app/public/locales/%two_letters_code%/%original_file_name%
+    excluded_target_languages:
+      - ar
+      - da
+      - es
+      - ja
+      - ko
+      - pl
+      - pt
+      - sv
+      - zh
