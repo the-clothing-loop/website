@@ -7,7 +7,7 @@ import {
   IonText,
   IonButton,
 } from "@ionic/react";
-import { logoGoogle, pauseCircleSharp, shield } from "ionicons/icons";
+import { mapOutline, pauseCircleSharp, shield } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { SizeI18nKeys, User } from "../api";
 import IsPrivate from "../utils/is_private";
@@ -115,7 +115,7 @@ export default function UserCard({
                   user.address.replaceAll(" ", "+")
                 }
               >
-                <IonIcon icon={logoGoogle} />
+                <IonIcon icon={mapOutline} />
               </IonButton>
             ) : null}
           </IonItem>
