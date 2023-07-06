@@ -34,7 +34,7 @@
   "deleteAccount": "Weet je zeker dat je je account definitief wil verwijderen?",
   "deleteAccountWithLoops": "As you are the only host of the following Loops, those will also be deleted!",
   "areYouSureRemoveEvent": "Weet je zeker dat je deze gebeurtenis permanent wilt verwijderen?",
-  "areYouSureLogout": "Are you sure you want to logout?",
+  "areYouSureLogout": "Weet je zeker dat je wilt uitloggen?",
   "deleteUserBtn": "Account verwijderen",
   "edit": "Aanpassen",
   "editUserDetails": "Gebruikersgegevens bewerken",
@@ -282,7 +282,7 @@
   "province": "Provincie of staat",
   "country": "Land of regio",
   "bags": "Tassen",
-  "checkAddress": "Check address",
-  "youEntered": "You entered:",
-  "weFound": "We found (recommended):"
+  "checkAddress": "Controleer adres",
+  "youEntered": "Jij hebt ingevoerd:",
+  "weFound": "We vonden (aanbevolen):"
 }
