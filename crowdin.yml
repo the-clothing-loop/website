@@ -7,3 +7,5 @@ files:
     translation: /server/internal/views/emails/%two_letters_code%/%original_file_name%
     ignore:
       - "/server/internal/views/emails/en/contact_received.gohtml"
+  - source: /public/locales/en/*.json
+    translation: /public/locales/%two_letters_code%/%original_file_name%
