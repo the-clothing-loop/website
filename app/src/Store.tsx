@@ -27,6 +27,7 @@ export type PauseAmount = "none" | "week" | "2weeks" | "3weeks";
 
 export const StoreContext = createContext({
   isAuthenticated: null as boolean | null,
+  isChainAdmin: false,
   authUser: null as null | User,
   setPause: (p: PauseAmount) => {},
   chain: null as Chain | null,
@@ -50,6 +51,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [bulkyItems, setBulkyItems] = useState<BulkyItem[]>([]);
   const [storage, setStorage] = useState(new Storage({ name: "store_v1" }));
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isChainAdmin, setIsChainAdmin] = useState(false);
 
   async function _init() {
     const _storage = await storage.create();
@@ -76,6 +78,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setBags([]);
     setBulkyItems([]);
     setIsAuthenticated(false);
+    setIsChainAdmin(false);
   }
 
   async function _login(token: string) {
@@ -96,6 +99,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     let _authUser: typeof authUser = null;
     let _chain: typeof chain = null;
     let _isAuthenticated: typeof isAuthenticated = null;
+    let _isChainAdmin: typeof isChainAdmin = false;
     try {
       if (auth && auth.user_uid && auth.token) {
         window.axios.defaults.auth = "Bearer " + auth.token;
@@ -119,6 +123,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       if (_isAuthenticated && chainUID) {
         _chain = (await chainGet(chainUID)).data;
         await _setChain(_chain, _authUser!.uid);
+        _isChainAdmin = IsChainAdmin(_authUser, _chain);
       } else if (chainUID) {
         throw new Error("Not authenticated but still has chain_uid");
       }
@@ -128,6 +133,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
 
     setAuthUser(_authUser);
+    setIsChainAdmin(_isChainAdmin);
     setIsAuthenticated(_isAuthenticated);
   }
 
@@ -162,6 +168,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setRoute(_route);
     setBags(_bags);
     setBulkyItems(_bulkyItems);
+    setIsChainAdmin(IsChainAdmin(authUser, _chain));
   }
 
   async function _setPause(pause: PauseAmount) {
@@ -206,6 +213,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         chainUsers,
         setChain: _setChain,
         isAuthenticated,
+        isChainAdmin,
         logout: _logout,
         authenticate: _authenticate,
         login: _login,
@@ -223,4 +231,9 @@ function throwError(err: any) {
       detail: err,
     })
   );
+}
+
+function IsChainAdmin(user: User | null, chain: Chain | null) {
+  const userChain = user?.chains.find((uc) => uc.chain_uid === chain?.uid);
+  return userChain?.is_chain_admin || false;
 }

@@ -32,7 +32,7 @@ import { useLongPress } from "use-long-press";
 
 export default function BagsList() {
   const { t } = useTranslation();
-  const { chain, chainUsers, bags, setChain, authUser, route } =
+  const { isChainAdmin, chain, chainUsers, bags, setChain, authUser, route } =
     useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
@@ -135,15 +135,19 @@ export default function BagsList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonButtons slot="start">
-            <IonButton onClick={handleClickEditAll}>{t("edit")}</IonButton>
-          </IonButtons>
+          {isChainAdmin ? (
+            <IonButtons slot="start">
+              <IonButton onClick={handleClickEditAll}>{t("edit")}</IonButton>
+            </IonButtons>
+          ) : null}
 
           <IonTitle>{t("bags")}</IonTitle>
 
-          <IonButtons slot="end">
-            <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
-          </IonButtons>
+          {isChainAdmin ? (
+            <IonButtons slot="end">
+              <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
+            </IonButtons>
+          ) : null}
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -177,7 +181,7 @@ export default function BagsList() {
                     <Card
                       open={openCard === bag.id || openCard === 0}
                       setOpen={(v) => {
-                        setOpenCard(v ? bag.id : -1);
+                        if (isChainAdmin) setOpenCard(v ? bag.id : -1);
                       }}
                       onClickShort={() => handleClickItem(bag.id, bag.user_uid)}
                       onClickDelete={() =>
