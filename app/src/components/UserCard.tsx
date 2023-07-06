@@ -6,8 +6,9 @@ import {
   IonBadge,
   IonText,
   IonButton,
+  IonImg,
 } from "@ionic/react";
-import { mapOutline, pauseCircleSharp, shield } from "ionicons/icons";
+import { pauseCircleSharp, shield } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { SizeI18nKeys, User } from "../api";
 import IsPrivate from "../utils/is_private";
@@ -106,7 +107,7 @@ export default function UserCard({
             {user.address ? (
               <IonButton
                 slot="end"
-                shape="round"
+                fill="clear"
                 size="small"
                 rel="noreferrer"
                 target="_blank"
@@ -115,7 +116,11 @@ export default function UserCard({
                   user.address.replaceAll(" ", "+")
                 }
               >
-                <IonIcon icon={mapOutline} />
+                <IonImg
+                  slot="icon-only"
+                  style={{ width: 24, height: 24 }}
+                  src="/google_maps_logo.svg"
+                />
               </IonButton>
             ) : null}
           </IonItem>
