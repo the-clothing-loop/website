@@ -15,7 +15,7 @@ import isPaused from "../utils/is_paused";
 export default function AddressItem({
   match,
 }: RouteComponentProps<{ uid: string }>) {
-  const { chainUsers, isChainAdmin } = useContext(StoreContext);
+  const { chainUsers, chain } = useContext(StoreContext);
   const user = useMemo(() => {
     let userUID = match.params.uid;
     return chainUsers.find((u) => u.uid === userUID) || null;
@@ -33,11 +33,7 @@ export default function AddressItem({
       </IonHeader>
       <IonContent>
         {user ? (
-          <UserCard
-            user={user}
-            isUserAdmin={isChainAdmin}
-            isUserPaused={isUserPaused}
-          />
+          <UserCard user={user} chain={chain} isUserPaused={isUserPaused} />
         ) : null}
       </IonContent>
     </IonPage>

@@ -10,21 +10,24 @@ import {
 } from "@ionic/react";
 import { pauseCircleSharp, shield } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { SizeI18nKeys, User } from "../api";
+import { Chain, SizeI18nKeys, User } from "../api";
 import IsPrivate from "../utils/is_private";
+import { IsChainAdmin } from "../Store";
+import { useMemo } from "react";
 
 export default function UserCard({
   user,
-  isUserAdmin,
+  chain,
   isUserPaused,
 }: {
   user: User;
-  isUserAdmin: boolean;
+  chain: Chain | null;
   isUserPaused: boolean;
 }) {
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
   const isEmailPrivate = IsPrivate(user.email);
+  const isUserAdmin = useMemo(() => IsChainAdmin(user, chain), [user, chain]);
   return (
     <div>
       <div className="ion-padding">

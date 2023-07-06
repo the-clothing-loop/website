@@ -126,8 +126,8 @@ export default function Settings() {
           {authUser ? (
             <UserCard
               user={authUser}
+              chain={chain}
               isUserPaused={isUserPaused}
-              isUserAdmin={isUserAdmin}
             />
           ) : null}
           <IonList style={{ marginBottom: "4em" }}>

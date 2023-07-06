@@ -20,7 +20,7 @@ import {
   RefresherEventDetail,
   useIonAlert,
 } from "@ionic/react";
-import { trashBin, closeCircleOutline } from "ionicons/icons";
+import { closeCircleOutline } from "ionicons/icons";
 import { useContext, useRef, useState, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID } from "../api";

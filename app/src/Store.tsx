@@ -233,7 +233,7 @@ function throwError(err: any) {
   );
 }
 
-function IsChainAdmin(user: User | null, chain: Chain | null) {
+export function IsChainAdmin(user: User | null, chain: Chain | null) {
   const userChain = user?.chains.find((uc) => uc.chain_uid === chain?.uid);
   return userChain?.is_chain_admin || false;
 }

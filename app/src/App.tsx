@@ -9,7 +9,6 @@ import {
   IonTabs,
   getPlatforms,
   setupIonicReact,
-  useIonToast,
 } from "@ionic/react";
 import { SplashScreen } from "@capacitor/splash-screen";
 import { IonReactRouter } from "@ionic/react-router";
@@ -70,7 +69,6 @@ setupIonicReact({
 export default function App() {
   const { isAuthenticated, init, authenticate, bags } =
     useContext(StoreContext);
-  const [present] = useIonToast();
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
 

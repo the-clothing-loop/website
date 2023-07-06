@@ -41,8 +41,8 @@ export default function CreateUpdateRules(props: {
   modal: RefObject<HTMLIonModalElement>;
   didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
 }) {
-  const { t, i18n } = useTranslation();
-  const { bags, chainUsers, route, chain, authUser } = useContext(StoreContext);
+  const { t } = useTranslation();
+  const { chain } = useContext(StoreContext);
   const [rules, setRules] = useState<FaqListItem[]>([]);
   const setRule = (i: number, r: FaqListItem) =>
     setRules((rr) => {
