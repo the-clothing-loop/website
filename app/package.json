@@ -9,7 +9,7 @@
     "dev:android": "ionic capacitor copy android && ionic capacitor run android -l --external",
     "build:development": "tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode development",
     "build:production": "tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode production",
-    "build:android:production": "ionic capacitor copy android; echo 'open android studio and build a bundle\nBuild -> Generate Signed Bundle/APK -> Android App Bundle -> '",
+    "build:android:production": "npm run build:production && ionic capacitor copy --no-build android; echo 'open android studio and build a bundle\nBuild -> Generate Signed Bundle/APK -> Android App Bundle -> '",
     "preview": "vite preview",
     "generate:icons": "npx capacitor-assets generate",
     "lint": "prettier -w ."
