@@ -48,6 +48,7 @@
       .body {
         width: 100%;
         min-height: 100%;
+        background-color: #ecf2f3;
       }
 
       /* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also shrink down on a phone or something */
@@ -91,26 +92,27 @@
 
       .footer-social {
         padding: 20px 20px 10px;
-        display: flex;
-        flex-direction: column;
       }
       .footer-social-item {
         display: inline-flex;
-        justify-content: start;
-        align-items: center;
         margin-bottom: 10px;
-        color: #000;
+        color: #000 !important;
         text-decoration: none;
+      }
+      .footer-social-item span {
+        margin-top: 7px;
       }
       .footer-social-circle {
         border: 1px solid #000;
         border-radius: 50%;
         width: 30px;
         height: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        padding: 6px; // = (30 - 18) / 2
         margin-right: 10px;
+      }
+      .footer-social-circle {
+        width: 18px;
+        height: 18px;
       }
       html[dir="rtl"] .footer-social-circle {
         margin-right: 0px;
