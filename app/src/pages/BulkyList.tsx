@@ -103,7 +103,7 @@ export default function BulkyList() {
                 <IonCardHeader>
                   <IonCardTitle>{bulkyItem.title}</IonCardTitle>
                   <IonCardSubtitle>
-                    {createdAt.toLocaleString()}
+                    {createdAt.toLocaleDateString()}
                   </IonCardSubtitle>
                   <div
                     slot="end"
