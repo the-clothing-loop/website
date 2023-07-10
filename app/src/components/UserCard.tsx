@@ -78,27 +78,14 @@ export default function UserCard({
           </IonLabel>
         </IonItem>
         {isEmailPrivate ? null : (
-          <>
-            <IonItem lines="none">
-              <IonLabel>
-                <h3>{t("email")}</h3>
-                {user?.email ? (
-                  <a className="ion-text-wrap" href={"mailto:" + user.email}>
-                    {user.email}
-                  </a>
-                ) : null}
-              </IonLabel>
-            </IonItem>
-
-            <IonItem lines="none">
-              <IonLabel>
-                <h3>{t("phoneNumber")}</h3>
-                {user.phone_number ? (
-                  <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
-                ) : null}
-              </IonLabel>
-            </IonItem>
-          </>
+          <IonItem lines="none">
+            <IonLabel>
+              <h3>{t("phoneNumber")}</h3>
+              {user.phone_number ? (
+                <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
+              ) : null}
+            </IonLabel>
+          </IonItem>
         )}
         {isAddressPrivate ? null : (
           <IonItem lines="none">
