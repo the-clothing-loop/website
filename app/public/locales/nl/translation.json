@@ -1,7 +1,7 @@
 {
   "info": "Info",
   "addresses": "Adressen",
-  "bag": "Bag",
+  "bag": "Tas",
   "bags": "Tassen",
   "bulkyItems": "Grote voorwerpen",
   "settings": "Instellingen",
@@ -21,7 +21,7 @@
   "image": "Afbeelding",
   "imageURL": "Afbeelding URL",
   "upload": "Verstuur",
-  "send": "Send",
+  "send": "Verzenden",
   "interestedSizes": "Geïnteresseerde maten",
   "email": "E-mail",
   "phoneNumber": "Telefoonnummer",
