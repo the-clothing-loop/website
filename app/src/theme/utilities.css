@@ -22,3 +22,10 @@
 .bag-color-select-button:hover {
   opacity: 100 !important;
 }
+
+.bagslist-bag-icon {
+  transition: 50ms linear transform;
+}
+.bagslist-bag-icon:active {
+  transform: scale(105%);
+}
