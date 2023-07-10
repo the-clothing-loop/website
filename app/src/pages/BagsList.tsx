@@ -23,8 +23,8 @@ import {
 } from "@ionic/react";
 import {
   chevronForwardOutline,
-  closeCircleOutline,
-  ellipsisHorizontalOutline,
+  closeOutline,
+  ellipsisHorizontal,
 } from "ionicons/icons";
 import { useContext, useRef, useState, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
@@ -139,7 +139,7 @@ export default function BagsList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("bags")}</IonTitle>
+          <IonTitle>{t("whereIsTheBag")}</IonTitle>
 
           {isChainAdmin ? (
             <IonButtons slot="end">
@@ -151,7 +151,7 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("bags")}</IonTitle>
+            <IonTitle size="large">{t("whereIsTheBag")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <div>
@@ -197,10 +197,11 @@ export default function BagsList() {
                           position: "absolute",
                           top: 0,
                           right: 3,
+                          zIndex: 2,
                         }}
                         onClick={() => handleClickOptions(bag.id)}
                       >
-                        <IonIcon icon={ellipsisHorizontalOutline} />
+                        <IonIcon icon={ellipsisHorizontal} />
                       </IonButton>
                       {isBagTooOld ? (
                         <div
@@ -223,14 +224,14 @@ export default function BagsList() {
                           paddingBottom: 10,
                         }}
                       >
-                        <div className="bagslist-bag-icon">
+                        <div
+                          className="bagslist-bag-icon"
+                          onClick={() => handleClickItem(bag.id, bag.user_uid)}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 47.5 47.5"
                             id="bag"
-                            onClick={() =>
-                              handleClickItem(bag.id, bag.user_uid)
-                            }
                           >
                             <defs>
                               <clipPath id="a">
@@ -362,6 +363,7 @@ function Card({
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
+            zIndex: 2,
           }}
         >
           <IonButton
@@ -376,7 +378,7 @@ function Card({
             }}
             onClick={handleClose}
           >
-            <IonIcon icon={closeCircleOutline} />
+            <IonIcon icon={closeOutline} />
           </IonButton>
           <IonButton size="small" onClick={handleEdit}>
             {t("edit")}
