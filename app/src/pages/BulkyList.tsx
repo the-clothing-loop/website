@@ -17,11 +17,15 @@ import {
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
-import { calendarClear, personCircleOutline } from "ionicons/icons";
+import {
+  calendarClear,
+  chatbubbleOutline,
+  personCircleOutline,
+} from "ionicons/icons";
 import { useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
-import { bulkyItemRemove, BulkyItem } from "../api";
+import { bulkyItemRemove, BulkyItem, User } from "../api";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
 
@@ -51,9 +55,11 @@ export default function BulkyList() {
       buttons: [
         {
           text: t("cancel"),
+          role: "cancel",
         },
         {
           text: t("delete"),
+          role: "destructive",
           handler,
         },
       ],
@@ -70,6 +76,47 @@ export default function BulkyList() {
 
     modal.current?.present();
   }
+  function handleClickReserve(user: User, bulkyItemName: string) {
+    const handler = (type: "sms" | "whatsapp") => {
+      let phone = user.phone_number.replaceAll(/[^\d]/g, "");
+      let message = window.encodeURI(
+        t("imInterestedInThisBulkyItem", { name: bulkyItemName })
+      );
+      console.log("phone", phone, "message", message);
+
+      switch (type) {
+        case "sms":
+          window.open(`sms:${phone}?&body=${message}`, "_blank");
+          break;
+        case "whatsapp":
+          window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+      }
+    };
+    presentAlert({
+      header: t("ifYouAreInterestedPleaseSendAMessage", {
+        name: user.name,
+      }),
+      buttons: [
+        {
+          text: "SMS",
+          role: "submit",
+          cssClass: "ion-text-bold",
+          handler: () => handler("sms"),
+        },
+        {
+          text: "WhatsApp",
+          role: "submit",
+          cssClass: "ion-text-bold",
+          handler: () => handler("whatsapp"),
+        },
+        {
+          text: t("close"),
+          role: "cancel",
+          cssClass: "ion-text-normal",
+        },
+      ],
+    });
+  }
 
   return (
     <IonPage>
@@ -78,7 +125,7 @@ export default function BulkyList() {
           <IonTitle>{t("bulkyItems")}</IonTitle>
 
           <IonButtons slot="end">
-            <IonButton onClick={handleClickCreate}>Create</IonButton>
+            <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -170,21 +217,41 @@ export default function BulkyList() {
                   </IonText>
                 </IonCardContent>
 
-                <IonButtons className="ion-margin-bottom ion-margin-horizontal">
-                  <IonButton
-                    fill="clear"
-                    onClick={() => handleClickEdit(bulkyItem)}
-                  >
-                    {t("edit")}
-                  </IonButton>
-                  <IonButton
-                    fill="clear"
-                    color="danger"
-                    onClick={() => handleClickDelete(bulkyItem.id)}
-                  >
-                    {t("delete")}
-                  </IonButton>
-                </IonButtons>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <IonButtons className="ion-margin-bottom ion-margin-horizontal">
+                    <IonButton
+                      fill="clear"
+                      onClick={() => handleClickEdit(bulkyItem)}
+                    >
+                      {t("edit")}
+                    </IonButton>
+                    <IonButton
+                      fill="clear"
+                      color="danger"
+                      onClick={() => handleClickDelete(bulkyItem.id)}
+                    >
+                      {t("delete")}
+                    </IonButton>
+                  </IonButtons>
+                  <IonButtons className="ion-margin-bottom ion-margin-horizontal">
+                    <IonButton
+                      slot="end"
+                      fill="clear"
+                      color="warning"
+                      style={{ fontWeight: "bold" }}
+                      onClick={() => handleClickReserve(user, bulkyItem.title)}
+                    >
+                      {t("reserve")}
+                      <IonIcon
+                        slot="end"
+                        icon={chatbubbleOutline}
+                        className="ion-icon"
+                      />
+                    </IonButton>
+                  </IonButtons>
+                </div>
               </IonCard>
             );
           })}
