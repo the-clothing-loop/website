@@ -1,5 +1,4 @@
 import {
-  AlertInput,
   IonButton,
   IonButtons,
   IonCard,
@@ -11,11 +10,18 @@ import {
   IonGrid,
   IonHeader,
   IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
   IonPage,
+  IonRadio,
+  IonRadioGroup,
   IonRefresher,
   IonRefresherContent,
   IonRouterLink,
   IonRow,
+  IonText,
   IonTitle,
   IonToolbar,
   RefresherEventDetail,
@@ -25,8 +31,18 @@ import {
   chevronForwardOutline,
   closeOutline,
   ellipsisHorizontal,
+  personCircleOutline,
 } from "ionicons/icons";
-import { useContext, useRef, useState, MouseEvent } from "react";
+import type { IonModalCustomEvent } from "@ionic/core/components";
+import {
+  useContext,
+  useRef,
+  useState,
+  MouseEvent,
+  RefObject,
+  useMemo,
+  useEffect,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID } from "../api";
 import CreateBag from "../components/CreateUpdateBag";
@@ -34,18 +50,23 @@ import { StoreContext } from "../Store";
 import dayjs from "../dayjs";
 import { Sleep } from "../utils/sleep";
 import { useLongPress } from "use-long-press";
+import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
+import IsPrivate from "../utils/is_private";
 
 export default function BagsList() {
   const { t } = useTranslation();
   const { isChainAdmin, chain, chainUsers, bags, setChain, authUser, route } =
     useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
+  const sheetModal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
 
   // -1: nothing is shown
   //  n: that bag id is shown
   const [openCard, setOpenCard] = useState(-1);
   const [updateBag, setUpdateBag] = useState<Bag | null>(null);
+  const [sheetModalUserUID, setSheetModalUserUID] = useState("");
+  const [sheetModalBagID, setSheetModalBagID] = useState(0);
 
   function refreshBags() {
     setChain(chain, authUser!.uid);
@@ -86,45 +107,14 @@ export default function BagsList() {
   }
 
   function handleClickItem(bagID: number, currentHolder: UID) {
-    const handler = async (e: UID) => {
-      console.log(e);
-
-      if (typeof e !== "string" || !e) return;
-      await bagPut({
-        chain_uid: chain!.uid,
-        user_uid: authUser!.uid,
-        holder_uid: e,
-        bag_id: bagID,
-      });
-      await setChain(chain, authUser!.uid);
-    };
-
-    let inputs: AlertInput[] = [];
-    route.forEach((r, i) => {
-      const user = chainUsers.find((u) => u.uid === r);
-      if (!user) return;
-      const isChecked = user.uid === currentHolder;
-      inputs.push({
-        label: `#${i + 1} ${user.name}`,
-        type: "radio",
-        value: user.uid,
-        checked: isChecked,
-      });
-    });
-    presentAlert({
-      header: t("changeBagHolder"),
-      message: t("selectTheNewBagHolder"),
-      inputs,
-      buttons: [
-        {
-          text: t("cancel"),
-        },
-        {
-          text: t("change"),
-          handler,
-        },
-      ],
-    });
+    setSheetModalUserUID(currentHolder);
+    setSheetModalBagID(bagID);
+    sheetModal.current?.present();
+  }
+  function handleDidDismissSheetModal(
+    e: IonModalCustomEvent<OverlayEventDetail<any>>
+  ) {
+    e.detail.data;
   }
 
   function handleClickCreate() {
@@ -203,21 +193,25 @@ export default function BagsList() {
                       >
                         <IonIcon icon={ellipsisHorizontal} />
                       </IonButton>
-                      {isBagTooOld ? (
-                        <div
-                          key="old"
-                          style={{
-                            color: "var(--ion-color-danger)",
-                            fontSize: 11,
-                            display: "block",
-                            position: "absolute",
-                            top: "5px",
-                            left: "10px",
-                          }}
-                        >
-                          {t("old")}
-                        </div>
-                      ) : null}
+                      <div
+                        key="old"
+                        style={{
+                          fontSize: 11,
+                          display: "block",
+                          position: "absolute",
+                          top: "5px",
+                          left: "10px",
+                          ...(isBagTooOld
+                            ? {
+                                color: "var(--ion-color-danger)",
+                              }
+                            : {}),
+                        }}
+                      >
+                        {isBagTooOld
+                          ? t("old")
+                          : bagUpdatedAt.toDate().toLocaleDateString()}
+                      </div>
                       <div
                         style={{
                           padding: 20,
@@ -282,10 +276,7 @@ export default function BagsList() {
                             {t("route") + ": #" + (routeIndex + 1)}
                             <IonIcon
                               icon={chevronForwardOutline}
-                              style={{
-                                transform: "translateY(2px)",
-                                padding: "0 2px",
-                              }}
+                              className="ion-icon-text"
                             ></IonIcon>
                           </IonCardSubtitle>
                         </IonCardHeader>
@@ -298,6 +289,12 @@ export default function BagsList() {
           </IonGrid>
         </div>
         <CreateBag bag={updateBag} modal={modal} didDismiss={refreshBags} />
+        <SelectUserModal
+          modal={sheetModal}
+          selectedUserUID={sheetModalUserUID}
+          bagID={sheetModalBagID}
+          didDismiss={handleDidDismissSheetModal}
+        />
       </IonContent>
     </IonPage>
   );
@@ -389,5 +386,128 @@ function Card({
         </div>
       ) : null}
     </IonCard>
+  );
+}
+
+function SelectUserModal({
+  didDismiss,
+  selectedUserUID,
+  bagID,
+  modal,
+}: {
+  selectedUserUID: UID;
+  bagID: number | null;
+  modal: RefObject<HTMLIonModalElement>;
+  didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
+}) {
+  const { chain, chainUsers, route, authUser, setChain } =
+    useContext(StoreContext);
+  const { t } = useTranslation();
+
+  const [selected, setSelected] = useState(selectedUserUID);
+  const sortedRoute = useMemo(() => {
+    const indexSelected = route.indexOf(selectedUserUID);
+    const routeWithIndex = route.map<[string, number]>((r, i) => [r, i]);
+    let arr = [...routeWithIndex];
+    arr.splice(0, indexSelected);
+    let arrTop = [...routeWithIndex];
+    arrTop.splice(indexSelected);
+    arr.push(...arrTop);
+    // console.log("arr", [...arr], "indexSelected", indexSelected);
+
+    if (arr.length > 4) {
+      let arrBot = [arr.pop()!, arr.pop()!];
+      arrBot.reverse();
+      arr.unshift(...arrBot);
+      // console.log("arrBot", [...arrBot]);
+    }
+    return arr;
+  }, [selectedUserUID, route, authUser, chainUsers]);
+  useEffect(() => {
+    setSelected(selectedUserUID);
+  }, [selectedUserUID]);
+
+  async function submit(userUID: string) {
+    console.log("user:", userUID, " bag:", bagID);
+
+    if ((typeof userUID !== "string" || !userUID) && !bagID) return;
+    modal.current?.dismiss(userUID, "success");
+    await bagPut({
+      chain_uid: chain!.uid,
+      user_uid: authUser!.uid,
+      holder_uid: userUID,
+      bag_id: bagID!,
+    });
+    await setChain(chain, authUser!.uid);
+  }
+
+  return (
+    <IonModal
+      ref={modal}
+      initialBreakpoint={0.5}
+      breakpoints={[0, 0.5, 0.75, 1]}
+      onIonModalDidDismiss={didDismiss}
+    >
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonButton onClick={() => modal.current?.dismiss(null, "dismiss")}>
+              {t("close")}
+            </IonButton>
+          </IonButtons>
+          <IonTitle>{t("changeBagHolder")}</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={() => submit(selected)}>
+              {t("change")}
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
+        <IonList>
+          <IonRadioGroup
+            value={selected}
+            onIonChange={(e) => setSelected(e.detail.value)}
+          >
+            {sortedRoute.map(([r, i]) => {
+              const user = chainUsers?.find((u) => u.uid === r);
+              if (!user) return null;
+              const isAddressPrivate = IsPrivate(user.address);
+              const isSelected = selected === user.uid;
+              //   let uc = user.chains.find((u) => u.chain_uid === chain.uid);
+              return (
+                <IonItem
+                  lines="full"
+                  key={user.uid}
+                  // color={isSelected ? "primary" : undefined}
+                  // onClick={() => submit(user.uid)}
+                >
+                  <span slot="start" className="ion-text-bold">{`#${
+                    i + 1
+                  }`}</span>
+                  <IonLabel>
+                    <h2>
+                      {user.name}
+                      {user.uid === authUser?.uid ? (
+                        <IonIcon
+                          icon={personCircleOutline}
+                          className="ion-icon-text"
+                        />
+                      ) : null}
+                    </h2>
+                    {isAddressPrivate ? null : (
+                      <IonText color={isSelected ? undefined : "medium"}>
+                        <p style={{ fontSize: 14 }}>{user.address}</p>
+                      </IonText>
+                    )}
+                  </IonLabel>
+                  <IonRadio slot="end" value={user.uid} />
+                </IonItem>
+              );
+            })}
+          </IonRadioGroup>
+        </IonList>
+      </IonContent>
+    </IonModal>
   );
 }
