@@ -1085,27 +1085,28 @@ function ParticipantsTable(props: {
                     {t("removeFromLoop")}
                   </button>,
                   <Link to={getEditLocation(u)}>{t("edit")}</Link>,
-                ];
-                if (
-                  (props.hostChains.length &&
+                  ...(!userChain.is_chain_admin || props.authUser?.is_root_admin
+                    ? [
+                        <button type="button" onClick={() => onAddCoHost(u)}>
+                          {t("addCoHost")}
+                        </button>,
+                      ]
+                    : []),
+                  ...((props.hostChains.length &&
                     !userChain.is_chain_admin &&
                     props.authUser?.uid !== u.uid) ||
                   props.authUser?.is_root_admin
-                ) {
-                  dropdownItems = [
-                    <button type="button" onClick={() => onAddCoHost(u)}>
-                      {t("addCoHost")}
-                    </button>,
-                    <button
-                      type="button"
-                      onClick={() => onTransfer(u)}
-                      className="text-red"
-                    >
-                      {t("transfer")}
-                    </button>,
-                    ...dropdownItems,
-                  ];
-                }
+                    ? [
+                        <button
+                          type="button"
+                          onClick={() => onTransfer(u)}
+                          className="text-red"
+                        >
+                          {t("transfer")}
+                        </button>,
+                      ]
+                    : []),
+                ];
 
                 let dropdownClasses = "dropdown-right";
                 if (i > 1) {
