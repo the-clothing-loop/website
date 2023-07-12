@@ -28,6 +28,8 @@ import toastError from "../../toastError";
 import { bulkyItemRemove, BulkyItem, User } from "../api";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
+import { isPlatform } from "@ionic/core";
+import { Share } from "@capacitor/share";
 
 export default function BulkyList() {
   const { t } = useTranslation();
@@ -37,6 +39,7 @@ export default function BulkyList() {
   const [presentAlert] = useIonAlert();
   const [present] = useIonToast();
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
+  const [isCapacitor] = useState(isPlatform("capacitor"));
 
   function refresh() {
     setChain(chain, authUser!.uid);
@@ -77,7 +80,16 @@ export default function BulkyList() {
     modal.current?.present();
   }
   function handleClickReserve(user: User, bulkyItemName: string) {
-    const handler = (type: "sms" | "whatsapp") => {
+    if (isCapacitor) {
+      Share.share({
+        url: "tel:" + user.phone_number,
+        title: t("imInterestedInThisBulkyItem", { name: bulkyItemName }),
+      });
+      return;
+    }
+    const handler = (
+      type: "sms" | "whatsapp" | "telegram" | "signal" | "share"
+    ) => {
       let phone = user.phone_number.replaceAll(/[^\d]/g, "");
       let message = window.encodeURI(
         t("imInterestedInThisBulkyItem", { name: bulkyItemName })
@@ -90,31 +102,49 @@ export default function BulkyList() {
           break;
         case "whatsapp":
           window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+        case "telegram":
+          window.open(`https://t.me/+${phone}?text=${message}`, "_blank");
+        case "signal":
+          window.open(`https://signal.me/+${phone}`, "_blank");
       }
     };
+    let buttons = [
+      {
+        text: "SMS",
+        role: "submit",
+        cssClass: "ion-text-bold",
+        handler: () => handler("sms"),
+      },
+      {
+        text: "Telegram",
+        role: "submit",
+        cssClass: "ion-text-bold",
+        handler: () => handler("telegram"),
+      },
+      {
+        text: "Signal",
+        role: "submit",
+        cssClass: "ion-text-bold",
+        handler: () => handler("signal"),
+      },
+      {
+        text: "WhatsApp",
+        role: "submit",
+        cssClass: "ion-text-bold",
+        handler: () => handler("whatsapp"),
+      },
+      {
+        text: t("close"),
+        role: "cancel",
+        cssClass: "ion-text-normal",
+      },
+    ];
+
     presentAlert({
       header: t("ifYouAreInterestedPleaseSendAMessage", {
         name: user.name,
       }),
-      buttons: [
-        {
-          text: "SMS",
-          role: "submit",
-          cssClass: "ion-text-bold",
-          handler: () => handler("sms"),
-        },
-        {
-          text: "WhatsApp",
-          role: "submit",
-          cssClass: "ion-text-bold",
-          handler: () => handler("whatsapp"),
-        },
-        {
-          text: t("close"),
-          role: "cancel",
-          cssClass: "ion-text-normal",
-        },
-      ],
+      buttons,
     });
   }
 
