@@ -20,14 +20,12 @@ const Selfies = "https://images.clothingloop.org/768x/selfies.jpg";
 const SfmLogo = "https://images.clothingloop.org/160x/sfm_logo.png";
 const CollActionLogo =
   "https://images.clothingloop.org/208x/logo_collaction.png";
-const ImpactHubLogo =
-  "https://images.clothingloop.org/600x,jpeg/logo_impacthub.svg";
-const EssenseLogo =
-  "https://images.clothingloop.org/208x,jpeg/essense_logo.svg";
+const ImpactHubLogo = "https://images.clothingloop.org/600x/logo_impacthub.svg";
+const EssenseLogo = "https://images.clothingloop.org/208x/essense_logo.svg";
 const WdcdLogo = "https://images.clothingloop.org/160x,jpeg/logo_wdcd.png";
 const DoenLogo =
   "https://images.clothingloop.org/160x/npl_buurtfonds_logo_2023.png";
-const PNHLogo = "https://images.clothingloop.org/208x,jpeg/pnh_logo.png";
+const PNHLogo = "https://images.clothingloop.org/208x/pnh_logo.png";
 const MEAXLogo = "https://images.clothingloop.org/208x/meax_logo.png";
 
 interface Supporter {
