@@ -463,7 +463,7 @@ function SelectUserModal({
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent>
         <IonList>
           <IonRadioGroup
             value={selected}
