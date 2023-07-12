@@ -178,21 +178,23 @@ export default function BagsList() {
                       className="ion-no-margin"
                       style={{ position: "relative", overflow: "visible" }}
                     >
-                      <IonButton
-                        size="small"
-                        color="light"
-                        style={{
-                          "--padding-start": "5px",
-                          "--padding-end": "5px",
-                          position: "absolute",
-                          top: 0,
-                          right: 3,
-                          zIndex: 2,
-                        }}
-                        onClick={() => handleClickOptions(bag.id)}
-                      >
-                        <IonIcon icon={ellipsisHorizontal} />
-                      </IonButton>
+                      {isChainAdmin ? (
+                        <IonButton
+                          size="small"
+                          color="light"
+                          style={{
+                            "--padding-start": "5px",
+                            "--padding-end": "5px",
+                            position: "absolute",
+                            top: 0,
+                            right: 3,
+                            zIndex: 2,
+                          }}
+                          onClick={() => handleClickOptions(bag.id)}
+                        >
+                          <IonIcon icon={ellipsisHorizontal} />
+                        </IonButton>
+                      ) : null}
                       <div
                         key="old"
                         style={{
