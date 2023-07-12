@@ -210,9 +210,20 @@ export default function BagsList() {
                             : {}),
                         }}
                       >
-                        {isBagTooOld
-                          ? t("old")
-                          : bagUpdatedAt.toDate().toLocaleDateString()}
+                        {bagUpdatedAt.toDate().toLocaleDateString()}
+                        {isBagTooOld ? (
+                          <span
+                            style={{
+                              backgroundColor: "var(--ion-color-danger)",
+                              height: 6,
+                              width: 6,
+                              borderRadius: "100%",
+                              display: "inline-block",
+                              marginInlineStart: 3,
+                              marginBottom: 1,
+                            }}
+                          ></span>
+                        ) : null}
                       </div>
                       <div
                         style={{
