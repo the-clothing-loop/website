@@ -112,6 +112,7 @@ export default function FindChain({ location }: { location: Location }) {
   const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
   const [focusedChain, setFocusedChain] = useState<Chain | null>(null);
   const [visibleChains, setVisibleChains] = useState<Chain[]>([]);
+  const [chainDetailsOpen, setChainDetailsOpen] = useState(false);
 
   const mapRef = useRef<any>();
 
@@ -332,6 +333,7 @@ export default function FindChain({ location }: { location: Location }) {
 
   function handleSetFocusedChain(_focusedChain: Chain, _map?: mapboxgl.Map) {
     _map = _map ? _map : map;
+    setChainDetailsOpen(true);
     setFocusedChain(_focusedChain);
     const features = _map!.queryRenderedFeatures(undefined, {
       layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
@@ -574,12 +576,41 @@ export default function FindChain({ location }: { location: Location }) {
               </button>
             </div>
           </div>
+          {window.innerWidth < 600 ? (
+            <dialog
+              open={chainDetailsOpen}
+              className="fixed mx-auto w-80 overflow-visible inset-0 z-50 open:flex justify-center items-center p-0 backdrop:bg-white/30"
+              tabIndex={-1}
+              onClick={() => setChainDetailsOpen(false)}
+            >
+              <form className="bg-white max-w-screen-sm p-2 z-10">
+                {focusedChain ? (
+                  <FocusedChain
+                    chain={focusedChain}
+                    authUser={authUser}
+                    onClickJoin={(e) => handleClickJoin(e, focusedChain)}
+                    onClickViewChain={(e) =>
+                      handleClickViewChain(e, focusedChain.uid)
+                    }
+                  />
+                ) : null}
+                <button
+                  key="close"
+                  type="reset"
+                  className="btn btn-sm btn-ghost pb-2"
+                  onClick={() => setChainDetailsOpen(false)}
+                >
+                  {t("close")}
+                </button>
+              </form>
+            </dialog>
+          ) : null}
           <div
             className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
               visibleChains.length ? "" : "hidden"
             }`}
           >
-            {focusedChain ? (
+            {focusedChain && window.innerWidth > 600 ? (
               <FocusedChain
                 chain={focusedChain}
                 authUser={authUser}
