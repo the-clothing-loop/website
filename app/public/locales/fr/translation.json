@@ -14,6 +14,8 @@
   "createBag": "Create bag",
   "createBulkyItem": "Create bulky item",
   "create": "Create",
+  "share": "Share",
+  "copy": "Copy",
   "update": "Update",
   "theNextBagNumberIsAutomaticallySelected": "The next bag number is automatically selected",
   "bagNumber": "Bag Number",
