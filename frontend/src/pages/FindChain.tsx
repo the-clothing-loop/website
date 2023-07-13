@@ -579,11 +579,11 @@ export default function FindChain({ location }: { location: Location }) {
           {window.innerWidth < 600 ? (
             <dialog
               open={chainDetailsOpen}
-              className="fixed mx-auto w-80 overflow-visible inset-0 z-50 open:flex justify-center items-center p-0 backdrop:bg-white/30"
+              className="fixed w-72 overflow-y-auto overflow-x-visible inset-0 z-50 p-0 open:flex backdrop:bg-white/30"
               tabIndex={-1}
               onClick={() => setChainDetailsOpen(false)}
             >
-              <form className="bg-white max-w-screen-sm p-2 z-10">
+              <form className="bg-white w-full z-10">
                 {focusedChain ? (
                   <FocusedChain
                     chain={focusedChain}
@@ -597,7 +597,7 @@ export default function FindChain({ location }: { location: Location }) {
                 <button
                   key="close"
                   type="reset"
-                  className="btn btn-sm btn-ghost pb-2"
+                  className="btn btn-sm btn-ghost float-right mr-4 mb-4"
                   onClick={() => setChainDetailsOpen(false)}
                 >
                   {t("close")}
@@ -610,7 +610,7 @@ export default function FindChain({ location }: { location: Location }) {
               visibleChains.length ? "" : "hidden"
             }`}
           >
-            {focusedChain && window.innerWidth > 600 ? (
+            {focusedChain && window.innerWidth >= 600 ? (
               <FocusedChain
                 chain={focusedChain}
                 authUser={authUser}
@@ -691,8 +691,8 @@ function FocusedChain({
   const userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
 
   return (
-    <div className="p-4 w-full mb-1 bg-white shadow-md" key={chain.uid}>
-      <div className="mb-2">
+    <div className="p-4 w-full mb-1 bg-white sm:shadow-md" key={chain.uid}>
+      <div className="sm:mb-2">
         <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
           {chain.name}
         </h1>
