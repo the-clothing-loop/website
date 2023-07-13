@@ -1,8 +1,8 @@
 import {
-  AlertInput,
   IonButton,
   IonButtons,
   IonCard,
+  IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
@@ -11,17 +11,42 @@ import {
   IonGrid,
   IonHeader,
   IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
   IonPage,
+  IonPopover,
+  IonRadio,
+  IonRadioGroup,
   IonRefresher,
   IonRefresherContent,
+  IonRouterLink,
   IonRow,
+  IonText,
   IonTitle,
   IonToolbar,
   RefresherEventDetail,
   useIonAlert,
 } from "@ionic/react";
-import { closeCircleOutline } from "ionicons/icons";
-import { useContext, useRef, useState, MouseEvent } from "react";
+import {
+  chevronForwardOutline,
+  closeOutline,
+  ellipsisHorizontal,
+  person,
+  personCircleOutline,
+  trashBinOutline,
+} from "ionicons/icons";
+import type { IonModalCustomEvent } from "@ionic/core/components";
+import {
+  useContext,
+  useRef,
+  useState,
+  MouseEvent,
+  RefObject,
+  useMemo,
+  useEffect,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID } from "../api";
 import CreateBag from "../components/CreateUpdateBag";
@@ -29,19 +54,73 @@ import { StoreContext } from "../Store";
 import dayjs from "../dayjs";
 import { Sleep } from "../utils/sleep";
 import { useLongPress } from "use-long-press";
+import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
+import IsPrivate from "../utils/is_private";
+
+const MIN_BAG_LIST = 9;
 
 export default function BagsList() {
   const { t } = useTranslation();
   const { isChainAdmin, chain, chainUsers, bags, setChain, authUser, route } =
     useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
+  const sheetModal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
 
   // -1: nothing is shown
-  //  0: everything is shown
   //  n: that bag id is shown
   const [openCard, setOpenCard] = useState(-1);
   const [updateBag, setUpdateBag] = useState<Bag | null>(null);
+  const [sheetModalUserUID, setSheetModalUserUID] = useState("");
+  const [sheetModalBagID, setSheetModalBagID] = useState(0);
+
+  const [bagsCard, bagsList] = useMemo(() => {
+    if (!authUser) return [[], []];
+    let authRouteIndex = authUser ? route.indexOf(authUser.uid) : -1;
+
+    let indexAllowed: number[] = [];
+    const routeLength = route.length;
+    if (authRouteIndex !== -1) {
+      indexAllowed = [
+        authRouteIndex - 2,
+        authRouteIndex - 1,
+        authRouteIndex,
+        authRouteIndex + 1,
+        authRouteIndex + 2,
+      ];
+
+      // ensure that the index overflows to the end or beginning
+      indexAllowed.forEach((i, index) => {
+        if (index < 0) {
+          indexAllowed[i] = (index % routeLength) + routeLength;
+        } else if (index >= routeLength) {
+          indexAllowed[i] = index % routeLength;
+        }
+      });
+    }
+
+    let _bagsCard: Bag[] = [];
+    let _bagsList: Bag[] = [];
+    if (bags.length < MIN_BAG_LIST) {
+      _bagsCard = bags;
+    } else {
+      bags.forEach((bag) => {
+        if (authUser?.uid === bag.user_uid) {
+          _bagsCard.push(bag);
+          return;
+        }
+
+        let routeIndex = route.indexOf(bag.user_uid);
+        if (indexAllowed.indexOf(routeIndex) !== -1) {
+          _bagsCard.push(bag);
+          return;
+        }
+
+        _bagsList.push(bag);
+      });
+    }
+    return [_bagsCard, _bagsList];
+  }, [bags, route]);
 
   function refreshBags() {
     setChain(chain, authUser!.uid);
@@ -62,6 +141,7 @@ export default function BagsList() {
         },
         {
           text: "Delete",
+          role: "destructive",
           handler,
         },
       ],
@@ -82,66 +162,29 @@ export default function BagsList() {
   }
 
   function handleClickItem(bagID: number, currentHolder: UID) {
-    const handler = async (e: UID) => {
-      console.log(e);
-
-      if (typeof e !== "string" || !e) return;
-      await bagPut({
-        chain_uid: chain!.uid,
-        user_uid: authUser!.uid,
-        holder_uid: e,
-        bag_id: bagID,
-      });
-      await setChain(chain, authUser!.uid);
-    };
-
-    let inputs: AlertInput[] = [];
-    route.forEach((r, i) => {
-      const user = chainUsers.find((u) => u.uid === r);
-      if (!user) return;
-      const isChecked = user.uid === currentHolder;
-      inputs.push({
-        label: `#${i + 1} ${user.name}`,
-        type: "radio",
-        value: user.uid,
-        checked: isChecked,
-      });
-    });
-    presentAlert({
-      header: t("changeBagHolder"),
-      message: t("selectTheNewBagHolder"),
-      inputs,
-      buttons: [
-        {
-          text: t("cancel"),
-        },
-        {
-          text: t("change"),
-          handler,
-        },
-      ],
-    });
+    setSheetModalUserUID(currentHolder);
+    setSheetModalBagID(bagID);
+    sheetModal.current?.present();
+  }
+  function handleDidDismissSheetModal(
+    e: IonModalCustomEvent<OverlayEventDetail<any>>
+  ) {
+    e.detail.data;
   }
 
   function handleClickCreate() {
     setUpdateBag(null);
     modal.current?.present();
   }
-  function handleClickEditAll() {
-    setOpenCard(openCard === 0 ? -1 : 0);
+  function handleClickOptions(bagID: number) {
+    if (isChainAdmin) setOpenCard(bagID);
   }
 
   return (
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          {isChainAdmin ? (
-            <IonButtons slot="start">
-              <IonButton onClick={handleClickEditAll}>{t("edit")}</IonButton>
-            </IonButtons>
-          ) : null}
-
-          <IonTitle>{t("bags")}</IonTitle>
+          <IonTitle>{t("whereIsTheBag")}</IonTitle>
 
           {isChainAdmin ? (
             <IonButtons slot="end">
@@ -153,7 +196,7 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("bags")}</IonTitle>
+            <IonTitle size="large">{t("whereIsTheBag")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <div>
@@ -166,7 +209,7 @@ export default function BagsList() {
           </IonRefresher>
           <IonGrid>
             <IonRow>
-              {bags.map((bag) => {
+              {bagsCard.map((bag) => {
                 const user = chainUsers.find((u) => u.uid === bag.user_uid);
                 if (!user) return null;
                 let routeIndex = route.indexOf(user.uid);
@@ -177,13 +220,12 @@ export default function BagsList() {
                 );
 
                 return (
-                  <IonCol size="6" key={bag.id}>
+                  <IonCol size="6" key={"inRoute" + bag.id}>
                     <Card
-                      open={openCard === bag.id || openCard === 0}
+                      open={openCard === bag.id}
                       setOpen={(v) => {
                         if (isChainAdmin) setOpenCard(v ? bag.id : -1);
                       }}
-                      onClickShort={() => handleClickItem(bag.id, bag.user_uid)}
                       onClickDelete={() =>
                         handleClickDelete(bag.id, bag.number)
                       }
@@ -191,86 +233,228 @@ export default function BagsList() {
                       className="ion-no-margin"
                       style={{ position: "relative", overflow: "visible" }}
                     >
-                      {isBagTooOld ? (
-                        <div
-                          key="old"
+                      {isChainAdmin ? (
+                        <IonButton
+                          size="small"
+                          color="light"
                           style={{
-                            color: "var(--ion-color-danger)",
-                            fontSize: 11,
-                            display: "block",
+                            "--padding-start": "5px",
+                            "--padding-end": "5px",
                             position: "absolute",
-                            top: "5px",
-                            left: "10px",
+                            top: 0,
+                            right: 3,
+                            zIndex: 2,
                           }}
+                          onClick={() => handleClickOptions(bag.id)}
                         >
-                          {t("old")}
-                        </div>
+                          <IonIcon icon={ellipsisHorizontal} />
+                        </IonButton>
                       ) : null}
+                      <div
+                        key="old"
+                        style={{
+                          fontSize: 11,
+                          display: "block",
+                          position: "absolute",
+                          top: "5px",
+                          left: "10px",
+                          ...(isBagTooOld
+                            ? {
+                                color: "var(--ion-color-danger)",
+                              }
+                            : {}),
+                        }}
+                      >
+                        {bagUpdatedAt.toDate().toLocaleDateString()}
+                        {isBagTooOld ? (
+                          <span
+                            style={{
+                              backgroundColor: "var(--ion-color-danger)",
+                              height: 6,
+                              width: 6,
+                              borderRadius: "100%",
+                              display: "inline-block",
+                              marginInlineStart: 3,
+                              marginBottom: 1,
+                            }}
+                          ></span>
+                        ) : null}
+                      </div>
                       <div
                         style={{
                           padding: 20,
-                          paddingBottom: 0,
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 47.5 47.5"
-                          id="bag"
-                        >
-                          <defs>
-                            <clipPath id="a">
-                              <path d="M0 38h38V0H0v38Z"></path>
-                            </clipPath>
-                          </defs>
-                          <g
-                            clip-path="url(#a)"
-                            transform="matrix(1.25 0 0 -1.25 0 47.5)"
-                          >
-                            <path
-                              fill="#ffac33"
-                              d="M29 15a1 1 0 0 0-1 1v6c0 6.065-4.037 11-9 11-4.962 0-9-4.935-9-11v-6a1 1 0 1 0-2 0v6c0 7.168 4.935 13 11 13s11-5.832 11-13v-6a1 1 0 0 0-1-1"
-                            ></path>
-                            <path
-                              fill={bag.color || "#9266cc"}
-                              d="M34.386 24.028C34.126 26.213 32.115 28 29.914 28H8.086c-2.2 0-4.212-1.787-4.471-3.972L1.472 5.972C1.212 3.787 2.8 2 5 2h28c2.2 0 3.788 1.787 3.529 3.972l-2.143 18.056Z"
-                            ></path>
-                            <path
-                              fill="#ffd983"
-                              d="M29 17a1 1 0 0 0-1 1v6c0 6.065-4.037 11-9 11-4.962 0-9-4.935-9-11v-6a1 1 0 1 0-2 0v6c0 7.168 4.935 13 11 13s11-5.832 11-13v-6a1 1 0 0 0-1-1"
-                            ></path>
-                          </g>
-                        </svg>
-                      </div>
-                      <div
-                        style={{
-                          paddingLeft: 10,
-                          paddingRight: 10,
-                          textAlign: "center",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {bag.number}
-                      </div>
-                      <IonCardHeader
-                        style={{
-                          paddingLeft: 10,
-                          paddingRight: 10,
                           paddingBottom: 10,
                         }}
                       >
-                        <IonCardTitle
-                          className="ion-text-ellipsis"
-                          style={{ fontSize: 14 }}
+                        <div
+                          className="bagslist-bag-icon"
+                          onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
-                          {user.name}
-                        </IonCardTitle>
-                        <IonCardSubtitle
-                          style={{ fontSize: 12, textTransform: "none" }}
+                          <BagSVG color={bag.color} />
+                        </div>
+                        <div
+                          style={{
+                            paddingLeft: 10,
+                            paddingRight: 10,
+                            textAlign: "center",
+                            fontWeight: "bold",
+                          }}
                         >
-                          {t("route") + ": #" + (routeIndex + 1)}
-                        </IonCardSubtitle>
-                      </IonCardHeader>
+                          {t("bag") + " " + bag.number}
+                        </div>
+                      </div>
+                      <IonRouterLink routerLink={"/address/" + user.uid}>
+                        <IonCardHeader style={{ padding: 10 }}>
+                          <IonCardTitle
+                            className="ion-text-ellipsis"
+                            style={{ fontSize: 14 }}
+                          >
+                            {user.name}
+                          </IonCardTitle>
+                          <IonCardSubtitle
+                            style={{ fontSize: 12, textTransform: "none" }}
+                          >
+                            {t("route") + ": #" + (routeIndex + 1)}
+                            <IonIcon
+                              icon={chevronForwardOutline}
+                              className="ion-icon-text"
+                            ></IonIcon>
+                          </IonCardSubtitle>
+                        </IonCardHeader>
+                      </IonRouterLink>
                     </Card>
+                  </IonCol>
+                );
+              })}
+              {bagsList.map((bag) => {
+                const user = chainUsers.find((u) => u.uid === bag.user_uid);
+                if (!user) return null;
+                let routeIndex = route.indexOf(user.uid);
+                if (routeIndex === -1) return null;
+                const bagUpdatedAt = dayjs(bag.updated_at);
+                const isBagTooOld = !bagUpdatedAt.isBefore(
+                  dayjs().add(-7, "days")
+                );
+                let isOpen = openCard == bag.id;
+                return (
+                  <IonCol size="12" key={bag.id}>
+                    <IonCard className="ion-no-margin">
+                      <IonItem lines="none">
+                        <div
+                          slot="start"
+                          style={{ width: 24, height: 24 }}
+                          className="bagslist-bag-icon"
+                          onClick={() => handleClickItem(bag.id, bag.user_uid)}
+                        >
+                          <BagSVG color={bag.color} />
+                        </div>
+                        <div
+                          onClick={() => handleClickItem(bag.id, bag.user_uid)}
+                        >
+                          {t("bag") + " " + bag.number}
+                          <span
+                            style={{
+                              display: "block",
+                              fontSize: 10,
+                              marginTop: 3,
+                              ...(isBagTooOld
+                                ? {
+                                    color: "var(--ion-color-danger)",
+                                  }
+                                : {}),
+                            }}
+                          >
+                            {bagUpdatedAt.toDate().toLocaleDateString()}
+                            {isBagTooOld ? (
+                              <span
+                                style={{
+                                  backgroundColor: "var(--ion-color-danger)",
+                                  height: 6,
+                                  width: 6,
+                                  borderRadius: "100%",
+                                  display: "inline-block",
+                                  marginInlineStart: 3,
+                                  marginBottom: 1,
+                                }}
+                              ></span>
+                            ) : null}
+                          </span>
+                        </div>
+
+                        {isOpen ? (
+                          <>
+                            <IonButton
+                              slot="end"
+                              color="primary"
+                              onClick={() => handleClickEdit(bag)}
+                            >
+                              {t("edit")}
+                            </IonButton>
+                            <IonButton
+                              slot="end"
+                              color="danger"
+                              onClick={() =>
+                                handleClickDelete(bag.id, bag.number)
+                              }
+                            >
+                              {t("delete")}
+                            </IonButton>
+                          </>
+                        ) : (
+                          <IonButton
+                            color="light"
+                            slot="end"
+                            routerLink={"/address/" + user.uid}
+                          >
+                            <span
+                              style={{
+                                display: "flex",
+                                width: 115,
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <span
+                                style={{ fontSize: 14 }}
+                                className="ion-text-ellipsis"
+                              >
+                                <IonIcon
+                                  icon={person}
+                                  style={{
+                                    width: 12,
+                                    height: 12,
+                                    marginInlineEnd: 4,
+                                  }}
+                                  className="ion-icon-text"
+                                />
+                                {user.name.split(" ")[0]}
+                              </span>
+                              <span
+                                style={{ fontSize: 14 }}
+                                className="ion-text-right"
+                              >
+                                {"#" + (routeIndex + 1)}
+                              </span>
+                            </span>
+                          </IonButton>
+                        )}
+                        {isChainAdmin ? (
+                          <IonButton
+                            slot="end"
+                            fill="clear"
+                            color="dark"
+                            onClick={() =>
+                              setOpenCard((s) => (s == bag.id ? -1 : bag.id))
+                            }
+                          >
+                            {isOpen ? (
+                              <IonIcon icon={closeOutline} />
+                            ) : (
+                              <IonIcon icon={ellipsisHorizontal} />
+                            )}
+                          </IonButton>
+                        ) : null}
+                      </IonItem>
+                    </IonCard>
                   </IonCol>
                 );
               })}
@@ -278,6 +462,12 @@ export default function BagsList() {
           </IonGrid>
         </div>
         <CreateBag bag={updateBag} modal={modal} didDismiss={refreshBags} />
+        <SelectUserModal
+          modal={sheetModal}
+          selectedUserUID={sheetModalUserUID}
+          bagID={sheetModalBagID}
+          didDismiss={handleDidDismissSheetModal}
+        />
       </IonContent>
     </IonPage>
   );
@@ -286,7 +476,6 @@ export default function BagsList() {
 function Card({
   open,
   setOpen,
-  onClickShort,
   onClickEdit,
   onClickDelete,
   children,
@@ -294,12 +483,10 @@ function Card({
 }: React.ComponentProps<typeof IonCard> & {
   open: boolean;
   setOpen: (v: boolean) => void;
-  onClickShort: () => void;
   onClickEdit: () => void;
   onClickDelete: () => void;
 }) {
   const { t } = useTranslation();
-  // const [open, setOpen] = useState(false);
   const bind = useLongPress(
     () => {
       if (!open) {
@@ -310,8 +497,6 @@ function Card({
       onCancel: () => {
         if (open) {
           setOpen(false);
-        } else {
-          onClickShort();
         }
       },
     }
@@ -348,6 +533,7 @@ function Card({
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
+            zIndex: 2,
           }}
         >
           <IonButton
@@ -362,7 +548,7 @@ function Card({
             }}
             onClick={handleClose}
           >
-            <IonIcon icon={closeCircleOutline} />
+            <IonIcon icon={closeOutline} />
           </IonButton>
           <IonButton size="small" onClick={handleEdit}>
             {t("edit")}
@@ -373,5 +559,154 @@ function Card({
         </div>
       ) : null}
     </IonCard>
+  );
+}
+
+function SelectUserModal({
+  didDismiss,
+  selectedUserUID,
+  bagID,
+  modal,
+}: {
+  selectedUserUID: UID;
+  bagID: number | null;
+  modal: RefObject<HTMLIonModalElement>;
+  didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
+}) {
+  const { chain, chainUsers, route, authUser, setChain } =
+    useContext(StoreContext);
+  const { t } = useTranslation();
+
+  const [selected, setSelected] = useState(selectedUserUID);
+  const sortedRoute = useMemo(() => {
+    const indexSelected = route.indexOf(selectedUserUID);
+    const routeWithIndex = route.map<[string, number]>((r, i) => [r, i]);
+    let arr = [...routeWithIndex];
+    arr.splice(0, indexSelected);
+    let arrTop = [...routeWithIndex];
+    arrTop.splice(indexSelected);
+    arr.push(...arrTop);
+    // console.log("arr", [...arr], "indexSelected", indexSelected);
+
+    if (arr.length > 4) {
+      let arrBot = [arr.pop()!, arr.pop()!];
+      arrBot.reverse();
+      arr.unshift(...arrBot);
+      // console.log("arrBot", [...arrBot]);
+    }
+    return arr;
+  }, [selectedUserUID, route, authUser, chainUsers]);
+  useEffect(() => {
+    setSelected(selectedUserUID);
+  }, [selectedUserUID]);
+
+  async function submit(userUID: string) {
+    console.log("user:", userUID, " bag:", bagID);
+
+    if ((typeof userUID !== "string" || !userUID) && !bagID) return;
+    modal.current?.dismiss(userUID, "success");
+    await bagPut({
+      chain_uid: chain!.uid,
+      user_uid: authUser!.uid,
+      holder_uid: userUID,
+      bag_id: bagID!,
+    });
+    await setChain(chain, authUser!.uid);
+  }
+
+  return (
+    <IonModal
+      ref={modal}
+      initialBreakpoint={0.5}
+      breakpoints={[0, 0.5, 0.75, 1]}
+      onIonModalDidDismiss={didDismiss}
+    >
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonButton onClick={() => modal.current?.dismiss(null, "dismiss")}>
+              {t("close")}
+            </IonButton>
+          </IonButtons>
+          <IonTitle>{t("changeBagHolder")}</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={() => submit(selected)}>
+              {t("change")}
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        <IonList>
+          <IonRadioGroup
+            value={selected}
+            onIonChange={(e) => setSelected(e.detail.value)}
+          >
+            {sortedRoute.map(([r, i]) => {
+              const user = chainUsers?.find((u) => u.uid === r);
+              if (!user) return null;
+              const isAddressPrivate = IsPrivate(user.address);
+              const isSelected = selected === user.uid;
+              //   let uc = user.chains.find((u) => u.chain_uid === chain.uid);
+              return (
+                <IonItem
+                  lines="full"
+                  key={user.uid}
+                  // color={isSelected ? "primary" : undefined}
+                  // onClick={() => submit(user.uid)}
+                >
+                  <span slot="start" className="ion-text-bold">{`#${
+                    i + 1
+                  }`}</span>
+                  <IonLabel>
+                    <h2>
+                      {user.name}
+                      {user.uid === authUser?.uid ? (
+                        <IonIcon
+                          icon={personCircleOutline}
+                          className="ion-icon-text"
+                        />
+                      ) : null}
+                    </h2>
+                    {isAddressPrivate ? null : (
+                      <IonText color={isSelected ? undefined : "medium"}>
+                        <p style={{ fontSize: 14 }}>{user.address}</p>
+                      </IonText>
+                    )}
+                  </IonLabel>
+                  <IonRadio slot="end" value={user.uid} />
+                </IonItem>
+              );
+            })}
+          </IonRadioGroup>
+        </IonList>
+      </IonContent>
+    </IonModal>
+  );
+}
+
+function BagSVG({ color }: { color: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.5 47.5" id="bag">
+      <defs>
+        <clipPath id="a">
+          <path d="M0 38h38V0H0v38Z"></path>
+        </clipPath>
+      </defs>
+      <g clip-path="url(#a)" transform="matrix(1.25 0 0 -1.25 0 47.5)">
+        <path
+          fill="#ffac33"
+          d="M29 15a1 1 0 0 0-1 1v6c0 6.065-4.037 11-9 11-4.962 0-9-4.935-9-11v-6a1 1 0 1 0-2 0v6c0 7.168 4.935 13 11 13s11-5.832 11-13v-6a1 1 0 0 0-1-1"
+        ></path>
+        <path
+          fill={color || "#9266cc"}
+          d="M34.386 24.028C34.126 26.213 32.115 28 29.914 28H8.086c-2.2 0-4.212-1.787-4.471-3.972L1.472 5.972C1.212 3.787 2.8 2 5 2h28c2.2 0 3.788 1.787 3.529 3.972l-2.143 18.056Z"
+        ></path>
+        <path
+          fill="#ffd983"
+          d="M29 17a1 1 0 0 0-1 1v6c0 6.065-4.037 11-9 11-4.962 0-9-4.935-9-11v-6a1 1 0 1 0-2 0v6c0 7.168 4.935 13 11 13s11-5.832 11-13v-6a1 1 0 0 0-1-1"
+        ></path>
+      </g>
+    </svg>
   );
 }

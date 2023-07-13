@@ -608,6 +608,18 @@ export default function FindChain({ location }: { location: Location }) {
               visibleChains.length ? "" : "hidden"
             }`}
           >
+            <button
+              key="close"
+              type="button"
+              onClick={() => {
+                setSelectedChains([]);
+                setVisibleChains([]);
+                setFocusedChain(null);
+              }}
+              className="absolute md:hidden top-2 right-2 rtl:right-auto rtl:left-2 btn btn-sm btn-circle btn-outline"
+            >
+              <span className="feather feather-x"></span>
+            </button>
             {focusedChain ? (
               <FocusedChain
                 chain={focusedChain}
@@ -635,7 +647,7 @@ export default function FindChain({ location }: { location: Location }) {
                   return (
                     <button
                       className={`p-1.5 block w-full border-b border-grey/10 last:border-none ${
-                        selected ? "bg-white" : ""
+                        selected ? "bg-white" : "hidden md:block"
                       }`}
                       key={chain.uid}
                       onClick={() => handleSetFocusedChain(chain)}

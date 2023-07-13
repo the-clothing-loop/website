@@ -32,9 +32,9 @@
 }
 
 .ion-icon[slot="end"] {
-  margin-inline-start: 0.5em;
+  margin-inline-start: 0.3em !important;
 }
 
 .ion-icon[slot="start"] {
-  margin-inline-end: 0.5em;
+  margin-inline-end: 0.3em !important;
 }

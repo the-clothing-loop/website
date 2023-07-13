@@ -1,11 +1,19 @@
 .ion-text-bold {
   font-weight: bold;
 }
+.ion-text-normal {
+  font-weight: normal !important;
+}
 
 .ion-text-ellipsis {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+.ion-icon-text {
+  transform: translateY(2px);
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 .bag-color-select-icon {
@@ -21,4 +29,14 @@
 }
 .bag-color-select-button:hover {
   opacity: 100 !important;
+}
+
+.bagslist-bag-icon {
+  transition: 50ms linear transform;
+}
+.bagslist-bag-icon:active {
+  transform: scale(110%);
+}
+.bagslist-bag-icon:hover {
+  transform: scale(103%);
 }
