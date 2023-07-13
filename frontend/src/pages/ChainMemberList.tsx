@@ -1085,27 +1085,28 @@ function ParticipantsTable(props: {
                     {t("removeFromLoop")}
                   </button>,
                   <Link to={getEditLocation(u)}>{t("edit")}</Link>,
-                ];
-                if (
-                  (props.hostChains.length &&
+                  ...(!userChain.is_chain_admin || props.authUser?.is_root_admin
+                    ? [
+                        <button type="button" onClick={() => onAddCoHost(u)}>
+                          {t("addCoHost")}
+                        </button>,
+                      ]
+                    : []),
+                  ...((props.hostChains.length &&
                     !userChain.is_chain_admin &&
                     props.authUser?.uid !== u.uid) ||
                   props.authUser?.is_root_admin
-                ) {
-                  dropdownItems = [
-                    <button type="button" onClick={() => onAddCoHost(u)}>
-                      {t("addCoHost")}
-                    </button>,
-                    <button
-                      type="button"
-                      onClick={() => onTransfer(u)}
-                      className="text-red"
-                    >
-                      {t("transfer")}
-                    </button>,
-                    ...dropdownItems,
-                  ];
-                }
+                    ? [
+                        <button
+                          type="button"
+                          onClick={() => onTransfer(u)}
+                          className="text-red"
+                        >
+                          {t("transfer")}
+                        </button>,
+                      ]
+                    : []),
+                ];
 
                 let dropdownClasses = "dropdown-right";
                 if (i > 1) {
@@ -1423,10 +1424,6 @@ function BagsColumn(props: { bags: Bag[] }) {
     );
   }
 
-  /* <div className="z-0 absolute inset-0 flex flex-col">
-    <span className="h-1/2 w-0 mx-auto border-x-4 border-grey-light group-first-of-type:invisible"></span>
-    <span className="h-1/2 w-0 mx-auto border-x-4 border-grey-light group-last-of-type:invisible"></span>
-  </div> */
   return (
     <div className="dropdown ltr:dropdown-right rtl:dropdown-left">
       <div aria-label={t("bag")} className="h-full group/bag" tabIndex={0}>
@@ -1461,35 +1458,5 @@ function BagsColumn(props: { bags: Bag[] }) {
         </tbody>
       </table>
     </div>
-  );
-}
-
-function SelectParticipant({
-  participants,
-  refSelect,
-  ...props
-}: {
-  participants: User[];
-  refSelect: LegacyRef<HTMLSelectElement>;
-} & SelectHTMLAttributes<HTMLSelectElement>) {
-  const { t } = useTranslation();
-  return (
-    <select
-      className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
-      name="participant"
-      disabled={participants.length === 0}
-      defaultValue=""
-      ref={refSelect}
-      {...props}
-    >
-      <option disabled value="">
-        {t("selectParticipant")}
-      </option>
-      {participants?.map((u) => (
-        <option key={u.uid} value={u.uid}>
-          {u.name} {u.email}
-        </option>
-      ))}
-    </select>
   );
 }

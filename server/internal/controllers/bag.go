@@ -29,7 +29,7 @@ func BagGetAll(c *gin.Context) {
 
 	bags := []models.Bag{}
 	err := db.Raw(fmt.Sprintf(`
-	SELECT 
+SELECT
 	bags.id            AS id,
 	bags.%snumber%s    AS %snumber%s,
 	bags.color         AS color,
@@ -37,7 +37,7 @@ func BagGetAll(c *gin.Context) {
 	c.uid              AS chain_uid,
 	u.uid              AS user_uid,
 	bags.updated_at    AS updated_at
- FROM bags
+FROM bags
 LEFT JOIN user_chains AS uc ON uc.id = bags.user_chain_id
 LEFT JOIN chains AS c ON c.id = uc.chain_id
 LEFT JOIN users AS u ON u.id = uc.user_id
@@ -45,6 +45,7 @@ WHERE user_chain_id IN (
 	SELECT uc2.id FROM user_chains AS uc2
 	WHERE uc2.chain_id = ?
 )
+ORDER BY id ASC
 	`, "`", "`", "`", "`"), chain.ID).Scan(&bags).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to find bags: %v", err)

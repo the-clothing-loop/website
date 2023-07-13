@@ -25,6 +25,7 @@
   }
 
   .bg-instagram {
+    background: rgb(224, 13, 171);
     background: -webkit-radial-gradient(
         32% 106%,
         circle cover,
