@@ -192,6 +192,7 @@ export default function Settings() {
                 },
                 {
                   text: t("logout"),
+                  role: "destructive",
                   handler: logout,
                 },
               ]}

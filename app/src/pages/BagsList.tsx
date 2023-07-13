@@ -141,6 +141,7 @@ export default function BagsList() {
         },
         {
           text: "Delete",
+          role: "destructive",
           handler,
         },
       ],
