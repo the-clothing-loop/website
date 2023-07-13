@@ -576,14 +576,13 @@ export default function FindChain({ location }: { location: Location }) {
               </button>
             </div>
           </div>
-          {window.innerWidth < 600 ? (
             <dialog
               open={chainDetailsOpen}
-              className="fixed w-72 overflow-y-auto overflow-x-visible inset-0 z-50 p-0 open:flex backdrop:bg-white/30"
+              className="sm:invisible fixed w-72 align-center overflow-y-auto overflow-x-visible inset-0 z-50 justify-center items-center p-0 open:flex bg-white/80"
               tabIndex={-1}
               onClick={() => setChainDetailsOpen(false)}
             >
-              <form className="bg-white w-full z-10">
+              <form className="w-full z-10">
                 {focusedChain ? (
                   <FocusedChain
                     chain={focusedChain}
@@ -604,13 +603,12 @@ export default function FindChain({ location }: { location: Location }) {
                 </button>
               </form>
             </dialog>
-          ) : null}
           <div
-            className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
+            className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible invisible sm:visible ${
               visibleChains.length ? "" : "hidden"
             }`}
           >
-            {focusedChain && window.innerWidth >= 600 ? (
+            {focusedChain ? (
               <FocusedChain
                 chain={focusedChain}
                 authUser={authUser}
@@ -691,7 +689,7 @@ function FocusedChain({
   const userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
 
   return (
-    <div className="p-4 w-full mb-1 bg-white sm:shadow-md" key={chain.uid}>
+    <div className="p-4 w-full mb-1  sm:bg-white sm:shadow-md" key={chain.uid}>
       <div className="sm:mb-2">
         <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
           {chain.name}
