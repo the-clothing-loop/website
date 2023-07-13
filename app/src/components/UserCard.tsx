@@ -92,18 +92,6 @@ export default function UserCard({
         </IonText>
       </div>
       <IonList>
-        <IonItem lines="none">
-          <IonLabel>
-            <h3>{t("interestedSizes")}</h3>
-            <div className="ion-text-wrap">
-              {user?.sizes.map((size) => (
-                <IonBadge className="ion-margin-end" key={size}>
-                  {SizeI18nKeys[size]}
-                </IonBadge>
-              ))}
-            </div>
-          </IonLabel>
-        </IonItem>
         {isEmailPrivate ? null : (
           <>
             <IonItem lines="none" id="item-phone-number">
