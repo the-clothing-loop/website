@@ -185,7 +185,7 @@ export default function Settings() {
             <IonAlert
               trigger="settings-logout-btn"
               header={t("logout")!}
-              message={t("areYouSureYouWantToLogout?")!}
+              message={t("areYouSureYouWantToLogout")!}
               buttons={[
                 {
                   text: t("cancel"),
