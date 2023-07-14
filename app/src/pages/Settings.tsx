@@ -303,7 +303,7 @@ export default function Settings() {
             </IonCard>
           </IonList>
 
-          <div className="ion-padding" style={{ marginTop: "4em" }}>
+          <div className="ion-padding" style={{ marginTop: "1em" }}>
             <IonButton id="settings-logout-btn" expand="block" color="danger">
               Logout
             </IonButton>
