@@ -65,6 +65,7 @@ function BadgeItem({ sizes, icon }: { sizes: string[]; icon: string }) {
           width: 16,
           height: 16,
         }}
+        className="badge-item-img"
       />
       {sizes.map((s) => (
         <span style={{ margin: 2 }} key={s}>

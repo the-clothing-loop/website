@@ -40,3 +40,8 @@
 .bagslist-bag-icon:hover {
   transform: scale(103%);
 }
+@media (prefers-color-scheme: dark) {
+  .badge-item-img {
+    filter: invert(1);
+  }
+}

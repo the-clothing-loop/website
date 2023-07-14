@@ -1,15 +1,11 @@
 import {
-  IonActionSheet,
   IonAlert,
-  IonBadge,
   IonButton,
   IonCard,
   IonContent,
   IonHeader,
   IonIcon,
-  IonImg,
   IonItem,
-  IonItemDivider,
   IonLabel,
   IonList,
   IonPage,
@@ -17,7 +13,6 @@ import {
   IonSelectOption,
   IonText,
   IonTitle,
-  IonToggle,
   IonToolbar,
   SelectChangeEventDetail,
   useIonActionSheet,
@@ -31,18 +26,15 @@ import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
-import { useDebouncedCallback } from "use-debounce";
 import {
   compassOutline,
   copyOutline,
   eyeOffOutline,
   eyeOutline,
   lockClosedOutline,
-  pause,
   pauseCircle,
   shareOutline,
   stopCircle,
-  warning,
 } from "ionicons/icons";
 import dayjs from "../dayjs";
 import isPaused from "../utils/is_paused";
@@ -107,13 +99,13 @@ export default function Settings() {
     if (isUserPaused) {
       presentAlert(t("areYouSureUnPause"), [
         {
+          text: t("cancel"),
+          role: "cancel",
+        },
+        {
           text: t("unPause"),
           handler: () => setPause("none"),
           role: "destructive",
-        },
-        {
-          text: t("cancel"),
-          role: "cancel",
         },
       ]);
     } else {
@@ -162,9 +154,9 @@ export default function Settings() {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader collapse="fade">
         <IonToolbar>
-          <IonTitle>Settings</IonTitle>
+          <IonTitle>{t("settings")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       {isAuthenticated === true ? (
