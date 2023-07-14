@@ -3,7 +3,6 @@ import {
   IonList,
   IonItem,
   IonLabel,
-  IonBadge,
   IonText,
   IonButton,
   IonImg,
@@ -12,13 +11,14 @@ import {
 } from "@ionic/react";
 import { Clipboard } from "@capacitor/clipboard";
 import {
+  compassOutline,
   copyOutline,
   pauseCircleSharp,
   shareOutline,
   shield,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { Chain, SizeI18nKeys, User } from "../api";
+import { Chain, User } from "../api";
 import IsPrivate from "../utils/is_private";
 import { IsChainAdmin } from "../Store";
 import { useMemo, useRef, useState } from "react";
@@ -51,6 +51,22 @@ export default function UserCard({
   function handleSharePhoneNumber() {
     Share.share({
       url: "tel:" + user.phone_number,
+    });
+    refCopy.current?.dismiss();
+  }
+
+  function handleCopyAddress() {
+    Clipboard.write({
+      string: user.address,
+    });
+    refCopy.current?.dismiss();
+  }
+
+  function handleShareAddress() {
+    Share.share({
+      url:
+        `https://www.google.com/maps/search/` +
+        user.address.replaceAll(" ", "+"),
     });
     refCopy.current?.dismiss();
   }
@@ -137,32 +153,79 @@ export default function UserCard({
           </>
         )}
         {isAddressPrivate ? null : (
-          <IonItem lines="none">
-            <IonLabel>
-              <h3>{t("address")}</h3>
-              {/* https://www.google.com/maps/@${long},${lat},14z */}
-              <p className="ion-text-wrap">{user?.address}</p>
-            </IonLabel>
-            {user.address ? (
-              <IonButton
-                slot="end"
-                fill="clear"
-                size="small"
-                rel="noreferrer"
-                target="_blank"
-                href={
-                  `https://www.google.com/maps/search/` +
-                  user.address.replaceAll(" ", "+")
-                }
-              >
+          <>
+            <IonItem
+              id="item-address"
+              lines="none"
+              button
+              rel="noreferrer"
+              detail={false}
+              target="_blank"
+              href={
+                `https://www.google.com/maps/search/` +
+                user.address.replaceAll(" ", "+")
+              }
+            >
+              <IonLabel>
+                <h3>{t("address")}</h3>
+                {/* https://www.google.com/maps/@${long},${lat},14z */}
+                <p className="ion-text-wrap">{user?.address}</p>
+              </IonLabel>
+              {user.address ? (
                 <IonImg
-                  slot="icon-only"
+                  slot="end"
                   style={{ width: 24, height: 24 }}
                   src="/google_maps_logo.svg"
                 />
-              </IonButton>
-            ) : null}
-          </IonItem>
+              ) : null}
+            </IonItem>
+            <IonPopover
+              ref={refCopy}
+              trigger="item-address"
+              triggerAction="context-menu"
+            >
+              <IonContent>
+                <IonList>
+                  <IonItem
+                    lines="none"
+                    className="ion-text-center"
+                    button
+                    detail={false}
+                    target="_blank"
+                    href={
+                      `https://www.google.com/maps/search/` +
+                      user.address.replaceAll(" ", "+")
+                    }
+                  >
+                    {t("open")}
+                    <IonIcon slot="end" size="small" icon={compassOutline} />
+                  </IonItem>
+                  <IonItem
+                    lines="none"
+                    className="ion-text-center"
+                    button
+                    detail={false}
+                    onClick={handleCopyAddress}
+                  >
+                    {t("copy")}
+                    <IonIcon slot="end" size="small" icon={copyOutline} />
+                  </IonItem>
+                  {isCapacitor ? (
+                    <IonItem
+                      lines="none"
+                      className="ion-text-center"
+                      button
+                      detail={false}
+                      onClick={handleShareAddress}
+                    >
+                      {t("share")}
+                      <IonIcon slot="end" size="small" icon={shareOutline} />
+                    </IonItem>
+                  ) : null}
+                </IonList>
+              </IonContent>
+            </IonPopover>
+          </>
         )}
       </IonList>
     </div>
