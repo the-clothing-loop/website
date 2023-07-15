@@ -576,33 +576,32 @@ export default function FindChain({ location }: { location: Location }) {
               </button>
             </div>
           </div>
-            <dialog
-              open={chainDetailsOpen}
-              className="sm:invisible fixed w-72 align-center overflow-y-auto overflow-x-visible inset-0 z-50 justify-center items-center p-0 open:flex bg-white/80"
-              tabIndex={-1}
-              onClick={() => setChainDetailsOpen(false)}
-            >
-              <form className="w-full z-10">
-                {focusedChain ? (
-                  <FocusedChain
-                    chain={focusedChain}
-                    authUser={authUser}
-                    onClickJoin={(e) => handleClickJoin(e, focusedChain)}
-                    onClickViewChain={(e) =>
-                      handleClickViewChain(e, focusedChain.uid)
-                    }
-                  />
-                ) : null}
-                <button
-                  key="close"
-                  type="reset"
-                  className="btn btn-sm btn-ghost float-right mr-4 mb-4"
-                  onClick={() => setChainDetailsOpen(false)}
-                >
-                  {t("close")}
-                </button>
-              </form>
-            </dialog>
+          <dialog
+            open={chainDetailsOpen}
+            className="sm:invisible fixed w-72 align-center overflow-y-auto overflow-x-visible inset-0 z-50 justify-center items-center p-0 open:flex bg-white/80"
+            tabIndex={-1}
+          >
+            <form className="w-full z-10">
+              {focusedChain ? (
+                <FocusedChain
+                  chain={focusedChain}
+                  authUser={authUser}
+                  onClickJoin={(e) => handleClickJoin(e, focusedChain)}
+                  onClickViewChain={(e) =>
+                    handleClickViewChain(e, focusedChain.uid)
+                  }
+                />
+              ) : null}
+              <button
+                key="close"
+                type="reset"
+                className="btn btn-sm btn-ghost float-right mr-4 mb-4"
+                onClick={() => setChainDetailsOpen(false)}
+              >
+                {t("close")}
+              </button>
+            </form>
+          </dialog>
           <div
             className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible invisible sm:visible ${
               visibleChains.length ? "" : "hidden"
