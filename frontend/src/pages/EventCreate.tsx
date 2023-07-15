@@ -10,6 +10,8 @@ import { GinParseErrors } from "../util/gin-errors";
 import { Redirect } from "react-router-dom";
 import EventChangeForm from "../components/EventChangeForm";
 
+import dayjs from "../util/dayjs";
+
 export default function EventCreate() {
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
@@ -23,6 +25,14 @@ export default function EventCreate() {
     }
     if (!values.image_url) {
       addToastError(t("required") + ": " + t("uploadImage"), 400);
+      return;
+    }
+    if (dayjs().startOf('day').isAfter(values.date)) {
+      addToastError(t("invalid") + ": " + t("date"), 400);
+      return;
+    }
+    if (dayjs().isAfter(values.date) && !(dayjs().startOf('day').isAfter(values.date))) {
+      addToastError(t("invalid") + ": " + t("time"), 400)
       return;
     }
 
