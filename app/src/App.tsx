@@ -17,7 +17,7 @@ import {
   homeOutline,
   bagHandleOutline,
   cubeOutline,
-  cogOutline,
+  peopleCircleOutline,
 } from "ionicons/icons";
 
 /* Core CSS required for Ionic components to work properly */
@@ -163,7 +163,7 @@ export default function App() {
               </IonTabButton>
 
               <IonTabButton tab="settings" href="/settings">
-                <IonIcon aria-hidden="true" icon={cogOutline} />
+                <IonIcon aria-hidden="true" icon={peopleCircleOutline} />
                 <IonLabel>{t("settings")}</IonLabel>
               </IonTabButton>
             </IonTabBar>

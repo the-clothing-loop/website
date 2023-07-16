@@ -1,7 +1,7 @@
 import {
-  IonActionSheet,
   IonAlert,
   IonButton,
+  IonCard,
   IonContent,
   IonHeader,
   IonIcon,
@@ -13,23 +13,34 @@ import {
   IonSelectOption,
   IonText,
   IonTitle,
-  IonToggle,
   IonToolbar,
   SelectChangeEventDetail,
   useIonActionSheet,
+  useIonAlert,
   useIonToast,
 } from "@ionic/react";
-import type { IonSelectCustomEvent } from "@ionic/core";
+import { isPlatform, type IonSelectCustomEvent } from "@ionic/core";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
-import { useDebouncedCallback } from "use-debounce";
-import { pause, pauseCircle, stopCircle } from "ionicons/icons";
+import {
+  compassOutline,
+  copyOutline,
+  eyeOffOutline,
+  eyeOutline,
+  lockClosedOutline,
+  pauseCircle,
+  shareOutline,
+  stopCircle,
+} from "ionicons/icons";
 import dayjs from "../dayjs";
 import isPaused from "../utils/is_paused";
+import Badges from "../components/SizeBadge";
+import { Share } from "@capacitor/share";
+import { Clipboard } from "@capacitor/clipboard";
 
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
@@ -39,7 +50,9 @@ export default function Settings() {
     useContext(StoreContext);
   const [present] = useIonToast();
   const [presentActionSheet] = useIonActionSheet();
+  const [presentAlert] = useIonAlert();
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
+  const [isCapacitor] = useState(isPlatform("capacitor"));
 
   const isUserAdmin = useMemo(
     () =>
@@ -84,7 +97,17 @@ export default function Settings() {
 
   function handlePauseButton(isUserPaused: boolean) {
     if (isUserPaused) {
-      setPause("none");
+      presentAlert(t("areYouSureUnPause"), [
+        {
+          text: t("cancel"),
+          role: "cancel",
+        },
+        {
+          text: t("unPause"),
+          handler: () => setPause("none"),
+          role: "destructive",
+        },
+      ]);
     } else {
       presentActionSheet({
         header: t("pauseUntil"),
@@ -110,15 +133,30 @@ export default function Settings() {
     }
   }
 
+  function handleShareLoop() {
+    if (!chain) return;
+    let url = `https://www.clothingloop.org/loops/${chain.uid}/users/signup`;
+    if (!isCapacitor) {
+      Clipboard.write({ url });
+      present({
+        message: t("copiedToClipboard"),
+        color: "primary",
+        duration: 1300,
+      });
+      return;
+    }
+    Share.share({ url });
+  }
+
   let isUserPaused = isPaused(authUser?.paused_until || null);
 
   let pausedDayjs = isUserPaused && dayjs(authUser!.paused_until);
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader collapse="fade">
         <IonToolbar>
-          <IonTitle>Settings</IonTitle>
+          <IonTitle>{t("settings")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       {isAuthenticated === true ? (
@@ -130,8 +168,13 @@ export default function Settings() {
               isUserPaused={isUserPaused}
             />
           ) : null}
-          <IonList style={{ marginBottom: "4em" }}>
-            <IonItem lines="none">
+          <IonList>
+            <IonItem
+              lines="none"
+              button
+              onClick={() => handlePauseButton(isUserPaused)}
+              detail={false}
+            >
               <IonLabel className="ion-text-wrap">
                 <h3>{t("pauseParticipation")}</h3>
                 <p className="ion-no-wrap">
@@ -140,11 +183,7 @@ export default function Settings() {
                     : t("setTimerForACoupleOfWeeks")}
                 </p>
               </IonLabel>
-              <IonButton
-                slot="end"
-                color="primary"
-                onClick={() => handlePauseButton(isUserPaused)}
-              >
+              <IonButton slot="end" color="primary">
                 {isUserPaused ? (
                   <>
                     <span>{t("unPause")}</span>
@@ -158,27 +197,105 @@ export default function Settings() {
                 )}
               </IonButton>
             </IonItem>
-            <IonItem lines="none">
-              <IonSelect
-                ref={refChainSelect}
-                label={chain ? "Selected Loop" : "Select a Loop"}
-                labelPlacement="stacked"
-                value={chain?.uid || ""}
-                onIonChange={handleChainSelect}
-                interface="action-sheet"
-              >
-                {listOfChains.map((c) => {
-                  return (
-                    <IonSelectOption value={c.uid} key={c.uid}>
-                      {c.name}
-                    </IonSelectOption>
-                  );
-                })}
-              </IonSelect>
-            </IonItem>
+            <IonCard color="secondary">
+              <IonList>
+                <IonItem lines="none">
+                  <IonSelect
+                    ref={refChainSelect}
+                    aria-label={t("selectALoop")}
+                    style={{ fontSize: 26 }}
+                    labelPlacement="floating"
+                    justify="space-between"
+                    value={chain?.uid || ""}
+                    onIonChange={handleChainSelect}
+                    interface="action-sheet"
+                  >
+                    {listOfChains.map((c) => {
+                      return (
+                        <IonSelectOption value={c.uid} key={c.uid}>
+                          {c.name}
+                        </IonSelectOption>
+                      );
+                    })}
+                  </IonSelect>
+                </IonItem>
+                {chain && (!chain.open_to_new_members || !chain.published) ? (
+                  <IonItem
+                    lines="none"
+                    color={chain.published ? "warning" : "danger"}
+                  >
+                    {!chain.open_to_new_members ? (
+                      <>
+                        <IonIcon size="small" icon={lockClosedOutline} />
+                        <span
+                          key="closed"
+                          className="ion-margin-end"
+                          style={{ marginInlineStart: 6 }}
+                        >
+                          {t("closed")}
+                        </span>
+                      </>
+                    ) : null}
+                    {!chain.published ? (
+                      <>
+                        <IonIcon size="small" icon={eyeOffOutline} />
+                        <span key="closed" style={{ marginInlineStart: 6 }}>
+                          {t("draft")}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <IonIcon size="small" icon={eyeOutline} />
+                        <span key="visible" style={{ marginInlineStart: 6 }}>
+                          {t("visible")}
+                        </span>
+                      </>
+                    )}
+                  </IonItem>
+                ) : null}
+                {isUserAdmin && chain ? (
+                  <IonItem
+                    lines="none"
+                    button
+                    detail={false}
+                    target="_blank"
+                    href={`https://www.clothingloop.org/loops/${chain.uid}/members`}
+                  >
+                    <IonLabel>{t("goToAdminPortal")}</IonLabel>
+                    <IonIcon icon={compassOutline} />
+                  </IonItem>
+                ) : null}
+                {chain ? (
+                  <IonItem
+                    lines="none"
+                    button
+                    detail={false}
+                    onClick={handleShareLoop}
+                  >
+                    <IonLabel>{t("shareLoop")}</IonLabel>
+                    <IonIcon
+                      slot="end"
+                      icon={isCapacitor ? shareOutline : copyOutline}
+                    />
+                  </IonItem>
+                ) : null}
+                <IonItem lines="none" className="ion-align-items-start">
+                  <IonLabel>{t("interestedSizes")}</IonLabel>
+                  <div className="ion-margin-top ion-margin-bottom" slot="end">
+                    {chain ? <Badges chain={chain} /> : null}
+                  </div>
+                </IonItem>
+                <IonItem lines="none">
+                  <IonLabel>
+                    <h3>{t("description")}</h3>
+                    <p>{chain?.description}</p>
+                  </IonLabel>
+                </IonItem>
+              </IonList>
+            </IonCard>
           </IonList>
 
-          <div className="ion-padding">
+          <div className="ion-padding" style={{ marginTop: "1em" }}>
             <IonButton id="settings-logout-btn" expand="block" color="danger">
               Logout
             </IonButton>
