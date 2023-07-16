@@ -273,9 +273,20 @@ export default function FindChain({ location }: { location: Location }) {
               return Math.min(aDistance, bDistance);
             });
             let _focusedChain = _sortedChains[0];
+
+            e.clickOnLayer = true;
+            setChainDetailsOpen(true);
+
             handleSetFocusedChain(_focusedChain, _map);
           }
         });
+
+        _map.on("click", (e) => {
+          if (!e.clickOnLayer) {
+            setChainDetailsOpen(false);
+          }
+        });
+
         // zoom during click on a cluster
         _map.on("click", "chain-cluster", (e) => {
           console.log("cluster click event", e);
@@ -333,7 +344,6 @@ export default function FindChain({ location }: { location: Location }) {
 
   function handleSetFocusedChain(_focusedChain: Chain, _map?: mapboxgl.Map) {
     _map = _map ? _map : map;
-    setChainDetailsOpen(true);
     setFocusedChain(_focusedChain);
     const features = _map!.queryRenderedFeatures(undefined, {
       layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
