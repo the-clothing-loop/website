@@ -69,7 +69,7 @@ export default function About() {
                     className=" btn btn-accent btn-outline bg-white text-lg"
                     to="/faq"
                   >
-                    {t("faqs", { ns: "translation" })}
+                    {t("faq", { ns: "translation" })}
                     <span className="feather feather-help-circle ms-2"></span>
                   </Link>
                 </div>
