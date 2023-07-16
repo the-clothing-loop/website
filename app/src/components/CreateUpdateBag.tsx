@@ -149,7 +149,7 @@ export default function CreateUpdateBag({
             lines="none"
             color={error === "number" ? "danger" : undefined}
           >
-            <IonLabel slot="start">{t("bagNumber")}</IonLabel>
+            <IonLabel slot="start">{t("bagName")}</IonLabel>
             <IonInput
               type="text"
               slot="end"
