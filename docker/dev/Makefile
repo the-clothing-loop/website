@@ -13,10 +13,3 @@ server-start:
 db-setup:
 	docker compose exec server sh -c 'go run cmd/generate-fake-data/main.go 200'
 	docker compose exec db sh -c 'mariadb -u root -pfb4aeaa6d860dbabe785675e --database clothingloop < /scripts/dev-setup-users.sql'
-
-docker-plausible-start:
-	docker compose -f docker-compose.plausible.yml up -d
-docker-plausible-stop:
-	docker compose -f docker-compose.plausible.yml stop
-docker-plausible-remove:
-	docker compose -f docker-compose.plausible.yml down

@@ -11,6 +11,7 @@ export interface User {
   sizes: string[];
   is_root_admin: boolean;
   pause_until: string | null;
+  i18n: string;
   longitude?: number;
   latitude?: number;
 }
@@ -45,6 +46,8 @@ export interface Chain {
   published: boolean;
   open_to_new_members: boolean;
   rules_override?: string;
+  total_members?: number;
+  total_hosts?: number;
 }
 
 export interface Event {

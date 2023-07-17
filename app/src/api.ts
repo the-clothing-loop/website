@@ -41,6 +41,7 @@ export interface User {
   sizes: string[];
   is_root_admin: boolean;
   paused_until: null | string;
+  i18n: string;
 }
 
 export interface UserUpdateBody {
@@ -52,6 +53,7 @@ export interface UserUpdateBody {
   sizes?: string[];
   address?: string;
   paused_until?: string;
+  i18n?: string;
 }
 
 export interface UserChain {
@@ -178,6 +180,7 @@ export function bagPut(body: {
   number?: string;
   holder_uid?: UID;
   color?: string;
+  updated_at?: string;
 }) {
   return window.axios.put("/v2/bag", body);
 }

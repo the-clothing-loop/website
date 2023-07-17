@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
 import { Trans, useTranslation } from "react-i18next";
@@ -8,6 +9,14 @@ const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
 export default function About() {
   const { t } = useTranslation("about");
+
+  useEffect(() => {
+    window.goatcounter?.count({
+      path: "accessed-page-about",
+      title: "Accessed Page:About",
+      event: true,
+    });
+  }, []);
 
   return (
     <>
@@ -33,26 +42,37 @@ export default function About() {
                 ></Trans>
               </p>
             </div>
-            <div className="flex md:w-1/2 justify-center px-0 md:px-6">
+            <div className="flex w-4/5 lg:w-1/2 justify-center px-0 md:px-6">
               <div className="relative w-full md:max-w-[600px] mb-6 md:mb-16">
-                <iframe
-                  title="what is the Clothing Loop"
-                  src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  className="w-full aspect-video"
-                ></iframe>
-                <img
-                  className="max-sm:hidden -z-10 absolute -right-10 -top-10"
-                  src={CirclesFrame}
-                  aria-hidden
-                  alt=""
-                />
-                <img
-                  className="max-sm:hidden -z-10 absolute -left-10 -bottom-10"
-                  aria-hidden
-                  alt=""
-                  src={CirclesFrame}
-                />
+                <div className="relative">
+                  <iframe
+                    title="what is the Clothing Loop"
+                    src="https://player.vimeo.com/video/673700502?h=90c8532936&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&portrait=0&title=0&byline=0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    className="w-full aspect-video"
+                  ></iframe>
+                  <img
+                    className="hidden md:block -z-10 absolute -right-10 -top-10"
+                    src={CirclesFrame}
+                    aria-hidden
+                    alt=""
+                  />
+                  <img
+                    className="hidden sm:block -z-10 absolute -left-10 -bottom-10"
+                    aria-hidden
+                    alt=""
+                    src={CirclesFrame}
+                  />
+                </div>
+                <div className="relative -bottom-4 md:-bottom-8 flex justify-center">
+                  <Link
+                    className=" btn btn-accent btn-outline bg-white text-lg"
+                    to="/faq"
+                  >
+                    {t("faq", { ns: "translation" })}
+                    <span className="feather feather-help-circle ms-2"></span>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

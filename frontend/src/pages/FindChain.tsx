@@ -1,4 +1,11 @@
-import { useEffect, useState, useContext, useRef, MouseEvent } from "react";
+import {
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  MouseEvent,
+  MouseEventHandler,
+} from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -7,7 +14,7 @@ import mapboxgl from "mapbox-gl";
 
 // Project resources
 import { AuthContext } from "../providers/AuthProvider";
-import { Chain, UID } from "../api/types";
+import { Chain, UID, User } from "../api/types";
 import { chainAddUser, chainGetAll } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
 import SearchBar, {
@@ -23,13 +30,15 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 export type ChainPredicate = (chain: Chain) => boolean;
 
 type GeoJSONChains = GeoJSONTypes.FeatureCollection<
-  GeoJSONTypes.Geometry,
+  GeoJSONTypes.Point,
   {
     uid: UID;
     chainIndex: number;
     radius: number;
     gender: string;
     size: string;
+    open_to_new_members: boolean;
+    cluster?: boolean;
   }
 >;
 
@@ -55,6 +64,7 @@ function mapToGeoJSONChains(
           radius: circleRadiusKm((chain.radius * 1000) / 6, chain.latitude),
           gender: chain.genders?.join("") || "",
           size: chain.sizes?.join("") || "",
+          open_to_new_members: chain.open_to_new_members,
         },
       };
     }),
@@ -100,6 +110,8 @@ export default function FindChain({ location }: { location: Location }) {
   const [zoom, setZoom] = useState(4);
   const [locationLoading, setLocationLoading] = useState(false);
   const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
+  const [focusedChain, setFocusedChain] = useState<Chain | null>(null);
+  const [visibleChains, setVisibleChains] = useState<Chain[]>([]);
 
   const mapRef = useRef<any>();
 
@@ -145,6 +157,7 @@ export default function FindChain({ location }: { location: Location }) {
           clusterMaxZoom: clusterMaxZoom,
           clusterMinPoints: 1,
           clusterRadius: 25,
+          generateId: true,
         });
 
         _map.addLayer({
@@ -158,6 +171,7 @@ export default function FindChain({ location }: { location: Location }) {
             "circle-stroke-width": 0,
           },
         });
+
         _map.addLayer({
           id: "chain-cluster-count",
           type: "symbol",
@@ -177,9 +191,14 @@ export default function FindChain({ location }: { location: Location }) {
           paint: {
             "circle-color": [
               "case",
-              ["get", "open_to_new_members"],
-              ["rgba", 240, 196, 73, 0.4], // #f0c449
-              ["rgba", 0, 0, 0, 0.1],
+              ["==", ["feature-state", "clicked"], true],
+              ["rgba", 72, 128, 139, 0.4],
+              [
+                "case",
+                ["get", "open_to_new_members"],
+                ["rgba", 240, 196, 73, 0.4], // #f0c449
+                ["rgba", 0, 0, 0, 0.1],
+              ],
             ],
             "circle-radius": [
               "interpolate",
@@ -193,9 +212,14 @@ export default function FindChain({ location }: { location: Location }) {
             "circle-stroke-width": 2,
             "circle-stroke-color": [
               "case",
-              ["get", "open_to_new_members"],
-              ["rgba", 240, 196, 73, 1], // #F0C449
-              ["rgba", 0, 0, 0, 0.1],
+              ["==", ["feature-state", "clicked"], true],
+              ["rgba", 72, 128, 139, 0.4],
+              [
+                "case",
+                ["get", "open_to_new_members"],
+                ["rgba", 240, 196, 73, 0.4], // #f0c449
+                ["rgba", 0, 0, 0, 0.1],
+              ],
             ],
           },
         });
@@ -216,6 +240,15 @@ export default function FindChain({ location }: { location: Location }) {
           },
         });
 
+        // Initalize chainsInView
+        _map.on("idle", () => {
+          getVisibleChains(_map, _chains);
+        });
+
+        _map.on("moveend", () => {
+          getVisibleChains(_map, _chains);
+        });
+
         _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
           if (e.features) {
             let uids = e.features
@@ -231,6 +264,15 @@ export default function FindChain({ location }: { location: Location }) {
               _selectedChains.forEach((c) => console.info(c.name, c.uid));
               setSelectedChains(_selectedChains);
             }
+            let _sortedChains = _selectedChains.sort((a, b) => {
+              let aLngLat = new mapboxgl.LngLat(a.longitude, a.latitude);
+              let bLngLat = new mapboxgl.LngLat(b.longitude, b.latitude);
+              let aDistance = aLngLat.distanceTo(e.lngLat);
+              let bDistance = bLngLat.distanceTo(e.lngLat);
+              return Math.min(aDistance, bDistance);
+            });
+            let _focusedChain = _sortedChains[0];
+            handleSetFocusedChain(_focusedChain, _map);
           }
         });
         // zoom during click on a cluster
@@ -287,6 +329,85 @@ export default function FindChain({ location }: { location: Location }) {
       setMap(undefined);
     };
   }, []);
+
+  function handleSetFocusedChain(_focusedChain: Chain, _map?: mapboxgl.Map) {
+    _map = _map ? _map : map;
+    setFocusedChain(_focusedChain);
+    const features = _map!.queryRenderedFeatures(undefined, {
+      layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
+    }) as any as GeoJSONChains["features"];
+    for (let i = 0; i < features.length; i++) {
+      let featUID = features[i]?.id;
+      if (features[i].properties!.uid === _focusedChain!.uid) {
+        _map!.setFeatureState(
+          {
+            source: "chains",
+            id: featUID,
+          },
+          {
+            clicked: true,
+          }
+        );
+      } else {
+        _map!.setFeatureState(
+          {
+            source: "chains",
+            id: featUID,
+          },
+          {
+            clicked: false,
+          }
+        );
+      }
+    }
+    _map!.easeTo({
+      duration: 700,
+      animate: true,
+      essential: true,
+      center: [_focusedChain.longitude, _focusedChain.latitude],
+    });
+  }
+
+  function getVisibleChains(map: mapboxgl.Map, chains: Chain[]) {
+    const center = map.getCenter();
+    const features = map!.queryRenderedFeatures(undefined, {
+      layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
+    }) as any as GeoJSONChains["features"];
+    let visibleFeatures: GeoJSONChains["features"] = [];
+    if (features.length) {
+      // Get UID of each chain in view
+      for (let i = 0; i < features.length; i++) {
+        let f = features[i];
+        if (!f.properties?.cluster) {
+          if (f.geometry.type !== "Point") continue;
+          let fLngLat = new mapboxgl.LngLat(
+            f.geometry.coordinates[0],
+            f.geometry.coordinates[1]
+          );
+          if (center.distanceTo(fLngLat) > 8000) continue;
+          visibleFeatures.push(f as any);
+        }
+      }
+    }
+    let ans = visibleFeatures
+      .sort((a, b) => {
+        let aLngLat = new mapboxgl.LngLat(
+          a.geometry.coordinates[0],
+          a.geometry.coordinates[1]
+        );
+        let bLngLat = new mapboxgl.LngLat(
+          b.geometry.coordinates[0],
+          b.geometry.coordinates[1]
+        );
+        return aLngLat.distanceTo(bLngLat);
+      })
+      .map((f) => f.properties.chainIndex)
+      .filter((value, index, arr) => arr.indexOf(value) === index)
+      .map((chainIndex) => chains[chainIndex])
+      .filter((c) => c) as Chain[];
+
+    setVisibleChains(ans);
+  }
 
   // https://docs.mapbox.com/mapbox-gl-js/style-spec/other/#set-membership-filters
   function handleSearch(
@@ -453,6 +574,67 @@ export default function FindChain({ location }: { location: Location }) {
               </button>
             </div>
           </div>
+          <div
+            className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
+              visibleChains.length ? "" : "hidden"
+            }`}
+          >
+            <button
+              key="close"
+              type="button"
+              onClick={() => {
+                setSelectedChains([]);
+                setVisibleChains([]);
+                setFocusedChain(null);
+              }}
+              className="absolute md:hidden top-2 right-2 rtl:right-auto rtl:left-2 btn btn-sm btn-circle btn-outline"
+            >
+              <span className="feather feather-x"></span>
+            </button>
+            {focusedChain ? (
+              <FocusedChain
+                chain={focusedChain}
+                authUser={authUser}
+                onClickJoin={(e) => handleClickJoin(e, focusedChain)}
+                onClickViewChain={(e) =>
+                  handleClickViewChain(e, focusedChain.uid)
+                }
+              />
+            ) : null}
+
+            <div className="glass shadow-md">
+              {visibleChains
+                .filter((c) => c.uid !== focusedChain?.uid)
+                .map((chain) => {
+                  const selected = !!selectedChains.find(
+                    (c) => chain.uid === c.uid
+                  );
+                  return { selected, chain };
+                })
+                .sort((a, b) =>
+                  a.selected === b.selected ? 0 : b.selected ? 1 : -1
+                )
+                .map(({ chain, selected }) => {
+                  return (
+                    <button
+                      className={`p-1.5 block w-full border-b border-grey/10 last:border-none ${
+                        selected ? "bg-white" : "hidden md:block"
+                      }`}
+                      key={chain.uid}
+                      onClick={() => handleSetFocusedChain(chain)}
+                    >
+                      <h1
+                        className={`text-secondary text-ellipsis overflow-hidden w-full whitespace-nowrap ${
+                          selected ? "font-semibold" : ""
+                        }`}
+                      >
+                        {chain.name}
+                      </h1>
+                    </button>
+                  );
+                })}
+            </div>
+          </div>
 
           <div
             className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
@@ -468,120 +650,130 @@ export default function FindChain({ location }: { location: Location }) {
               <span className="feather feather-arrow-left rtl:hidden"></span>
               <span className="feather feather-arrow-right ltr:hidden"></span>
             </button>
-            {selectedChains.map((chain) => {
-              const userChain = authUser?.chains.find(
-                (uc) => uc.chain_uid === chain.uid
-              );
-              return (
-                <div
-                  className="p-4 w-full mb-4 rounded-lg shadow-md bg-base-100"
-                  key={chain.uid}
-                >
-                  <div className="mb-2">
-                    <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
-                      {chain.name}
-                    </h1>
-                    {chain.description ? (
-                      chain.description.length > 200 ? (
-                        <div className="mb-3">
-                          <input
-                            type="checkbox"
-                            className="hidden peer"
-                            id={"checkbox-desc-more-" + chain.uid}
-                          />
-                          <p
-                            className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12 relative before:block before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-white/90 before:to-transparent before:bottom-0 peer-checked:before:hidden"
-                            tabIndex={0}
-                            onClick={(e) => {
-                              let input = (
-                                e.target as HTMLParagraphElement
-                              ).parentElement?.querySelector("input");
-                              console.log("input", input);
-
-                              if (input) input.checked = true;
-                            }}
-                          >
-                            {chain.description.split("\n").map((s, i) => {
-                              if (i === 0) return s;
-
-                              return (
-                                <>
-                                  <br />
-                                  {s}
-                                </>
-                              );
-                            })}
-                          </p>
-                          <label
-                            htmlFor={"checkbox-desc-more-" + chain.uid}
-                            aria-label="expand"
-                            className="btn btn-xs btn-ghost bg-teal-light feather feather-more-horizontal"
-                          ></label>
-                        </div>
-                      ) : (
-                        <p className="mb-3 text-sm break-words">
-                          {chain.description}
-                        </p>
-                      )
-                    ) : null}
-                    <div className="flex flex-col w-full text-sm">
-                      {chain.sizes?.length ? (
-                        <>
-                          <h2 className="mb-1">{t("sizes")}:</h2>
-                          <div className="mb-2">
-                            <SizeBadges s={chain.sizes} g={chain.genders} />
-                          </div>
-                        </>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-start">
-                    {authUser?.is_root_admin || userChain?.is_chain_admin ? (
-                      <button
-                        key={"btn-view"}
-                        className="btn btn-sm btn-secondary btn-outline mb-3"
-                        onClick={(e) => handleClickViewChain(e, chain.uid)}
-                      >
-                        {t("viewLoop")}
-                        <span className="feather feather-shield ml-3"></span>
-                      </button>
-                    ) : null}
-
-                    {userChain ? (
-                      userChain.is_approved ? (
-                        <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
-                          {t("joined")}
-                          <span className="feather feather-check ml-3"></span>
-                        </p>
-                      ) : (
-                        <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
-                          {t("pendingApproval")}
-                          <span className="feather feather-user-check ml-3"></span>
-                        </p>
-                      )
-                    ) : chain.open_to_new_members ? (
-                      <button
-                        onClick={(e) => handleClickJoin(e, chain)}
-                        type="button"
-                        className="btn btn-sm btn-primary"
-                      >
-                        {t("join")}
-                        <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
-                        <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
-                      </button>
-                    ) : (
-                      <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
-                        {t("closed")}
-                        <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
-                      </p>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </div>
       </main>
     </>
+  );
+}
+
+function FocusedChain({
+  chain,
+  authUser,
+  onClickJoin,
+  onClickViewChain,
+}: {
+  chain: Chain;
+  authUser: User | null;
+  onClickJoin: MouseEventHandler<HTMLButtonElement>;
+  onClickViewChain: MouseEventHandler<HTMLButtonElement>;
+}) {
+  const { t } = useTranslation();
+  const userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
+
+  return (
+    <div className="p-4 w-full mb-1 bg-white shadow-md" key={chain.uid}>
+      <div className="mb-2">
+        <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
+          {chain.name}
+        </h1>
+
+        {chain.description ? (
+          chain.description.length > 200 ? (
+            <div className="mb-3">
+              <input
+                type="checkbox"
+                className="hidden peer"
+                id={"checkbox-desc-more-" + chain.uid}
+              />
+              <p
+                className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12 relative before:block before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-white/90 before:to-transparent before:bottom-0 peer-checked:before:hidden"
+                tabIndex={0}
+                onClick={(e) => {
+                  let input = (
+                    e.target as HTMLParagraphElement
+                  ).parentElement?.querySelector("input");
+                  console.log("input", input);
+
+                  if (input) input.checked = true;
+                }}
+              >
+                {chain.description.split("\n").map((s, i) => {
+                  if (i === 0) return s;
+
+                  return (
+                    <>
+                      <br />
+                      {s}
+                    </>
+                  );
+                })}
+              </p>
+              <label
+                htmlFor={"checkbox-desc-more-" + chain.uid}
+                aria-label="expand"
+                className="btn btn-xs btn-ghost bg-teal-light feather feather-more-horizontal"
+              ></label>
+            </div>
+          ) : (
+            <p className="mb-3 text-sm break-words">{chain.description}</p>
+          )
+        ) : null}
+
+        <div>
+          <div className="flex flex-col w-full text-sm">
+            {chain.sizes?.length ? (
+              <>
+                <h2 className="mb-1">{t("sizes")}:</h2>
+                <div className="mb-2">
+                  <SizeBadges s={chain.sizes} g={chain.genders} />
+                </div>
+              </>
+            ) : null}
+          </div>
+          <div className="flex flex-col items-start">
+            {authUser?.is_root_admin || userChain?.is_chain_admin ? (
+              <button
+                key={"btn-view"}
+                className="btn btn-sm btn-secondary btn-outline mb-3"
+                onClick={onClickViewChain}
+              >
+                {t("viewLoop")}
+                <span className="feather feather-shield ml-3"></span>
+              </button>
+            ) : null}
+          </div>
+        </div>
+
+        {userChain ? (
+          userChain.is_approved ? (
+            <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
+              {t("joined")}
+              <span className="feather feather-check ml-3"></span>
+            </p>
+          ) : (
+            <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
+              {t("pendingApproval")}
+              <span className="feather feather-user-check ml-3"></span>
+            </p>
+          )
+        ) : chain.open_to_new_members ? (
+          <button
+            onClick={onClickJoin}
+            type="button"
+            className="btn btn-sm btn-primary"
+          >
+            {t("join")}
+            <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
+            <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
+          </button>
+        ) : (
+          <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
+            {t("closed")}
+            <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
+          </p>
+        )}
+      </div>
+    </div>
   );
 }

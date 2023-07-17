@@ -20,11 +20,6 @@ export default function AddressItem({
     let userUID = match.params.uid;
     return chainUsers.find((u) => u.uid === userUID) || null;
   }, [match.params.uid, chainUsers]);
-  const isChainAdmin = useMemo(() => {
-    const userChain = user?.chains.find((uc) => uc.chain_uid === chain?.uid);
-    return userChain?.is_chain_admin || false;
-  }, [match.params.uid, user, chain]);
-
   const isUserPaused = isPaused(user?.paused_until || null);
 
   return (
@@ -38,11 +33,7 @@ export default function AddressItem({
       </IonHeader>
       <IonContent>
         {user ? (
-          <UserCard
-            user={user}
-            isUserAdmin={isChainAdmin}
-            isUserPaused={isUserPaused}
-          />
+          <UserCard user={user} chain={chain} isUserPaused={isUserPaused} />
         ) : null}
       </IonContent>
     </IonPage>

@@ -80,15 +80,18 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 			}
 		}
 	}
+	if db.Migrator().HasTable("mails") {
+		db.Exec(`DROP TABLE mails`)
+	}
 
 	db.AutoMigrate(
 		&models.Chain{},
-		&models.Mail{},
 		&models.Newsletter{},
 		&models.User{},
 		&models.Event{},
 		&models.UserToken{},
 		&models.UserChain{},
+		&models.UserOnesignal{},
 		&models.Bag{},
 		&models.BulkyItem{},
 		&models.Payment{},

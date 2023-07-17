@@ -3,11 +3,13 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"gopkg.in/guregu/null.v3/zero"
 )
 
 func BagGetAll(c *gin.Context) {
@@ -28,7 +30,7 @@ func BagGetAll(c *gin.Context) {
 
 	bags := []models.Bag{}
 	err := db.Raw(fmt.Sprintf(`
-	SELECT 
+SELECT
 	bags.id            AS id,
 	bags.%snumber%s    AS %snumber%s,
 	bags.color         AS color,
@@ -36,7 +38,7 @@ func BagGetAll(c *gin.Context) {
 	c.uid              AS chain_uid,
 	u.uid              AS user_uid,
 	bags.updated_at    AS updated_at
- FROM bags
+FROM bags
 LEFT JOIN user_chains AS uc ON uc.id = bags.user_chain_id
 LEFT JOIN chains AS c ON c.id = uc.chain_id
 LEFT JOIN users AS u ON u.id = uc.user_id
@@ -44,6 +46,7 @@ WHERE user_chain_id IN (
 	SELECT uc2.id FROM user_chains AS uc2
 	WHERE uc2.chain_id = ?
 )
+ORDER BY id ASC
 	`, "`", "`", "`", "`"), chain.ID).Scan(&bags).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to find bags: %v", err)
@@ -57,12 +60,13 @@ WHERE user_chain_id IN (
 func BagPut(c *gin.Context) {
 	db := getDB(c)
 	var body struct {
-		UserUID   string  `json:"user_uid" binding:"required,uuid"`
-		ChainUID  string  `json:"chain_uid" binding:"required,uuid"`
-		BagID     int     `json:"bag_id,omitempty"`
-		HolderUID string  `json:"holder_uid" binding:"required,uuid"`
-		Number    *string `json:"number,omitempty"`
-		Color     *string `json:"color,omitempty"`
+		UserUID   string     `json:"user_uid" binding:"required,uuid"`
+		ChainUID  string     `json:"chain_uid" binding:"required,uuid"`
+		BagID     int        `json:"bag_id,omitempty"`
+		HolderUID string     `json:"holder_uid" binding:"required,uuid"`
+		Number    *string    `json:"number,omitempty"`
+		Color     *string    `json:"color,omitempty"`
+		UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -89,6 +93,10 @@ func BagPut(c *gin.Context) {
 	if body.Color != nil {
 		bag.Color = *(body.Color)
 	}
+	if body.UpdatedAt != nil {
+		bag.UpdatedAt = *(body.UpdatedAt)
+	}
+	bag.LastNotifiedAt = zero.Time{}
 
 	ucID := uint(0)
 	db.Raw(`
@@ -107,7 +115,11 @@ LIMIT 1
 	if bag.ID == 0 {
 		err = db.Create(&bag).Error
 	} else {
-		err = db.Save(&bag).Error
+		if body.UpdatedAt != nil {
+			err = db.Model(&bag).UpdateColumns(&bag).Error
+		} else {
+			err = db.Save(&bag).Error
+		}
 	}
 	if err != nil {
 		goscope.Log.Errorf("Unable to create or update bag: %v", err)

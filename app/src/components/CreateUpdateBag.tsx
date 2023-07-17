@@ -125,7 +125,7 @@ export default function CreateUpdateBag({
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton onClick={cancel}>{t("Cancel")}</IonButton>
+            <IonButton onClick={cancel}>{t("cancel")}</IonButton>
           </IonButtons>
           <IonTitle>{t("createBag")}</IonTitle>
           <IonButtons slot="end">
@@ -149,7 +149,7 @@ export default function CreateUpdateBag({
             lines="none"
             color={error === "number" ? "danger" : undefined}
           >
-            <IonLabel slot="start">{t("bagNumber")}</IonLabel>
+            <IonLabel slot="start">{t("bagName")}</IonLabel>
             <IonInput
               type="text"
               slot="end"

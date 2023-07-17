@@ -1,9 +1,11 @@
 import dayjs from "../util/dayjs";
-import { useMemo, MouseEvent } from "react";
+import { useMemo, MouseEvent, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import { useDropdown } from "../util/dropdown.hooks";
 import { getLanguageFlags } from "../languages";
+import { userUpdate } from "../api/user";
+import { AuthContext } from "../providers/AuthProvider";
 
 const IS_PRODUCTION =
   import.meta.env.VITE_BASE_URL === "https://www.clothingloop.org";
@@ -13,6 +15,7 @@ const languageFlags = getLanguageFlags(IS_PRODUCTION);
 const LanguageSwitcher = (props: { className?: string }) => {
   const { i18n } = useTranslation();
   const history = useHistory();
+  const { authUser } = useContext(AuthContext);
 
   const dropdown = useDropdown();
 
@@ -25,6 +28,14 @@ const LanguageSwitcher = (props: { className?: string }) => {
       history.location.state
     );
     dropdown.setOpen(false);
+
+    if (authUser) {
+      // Update the value of i18n in the database
+      userUpdate({
+        user_uid: authUser.uid,
+        i18n: lng,
+      });
+    }
   };
 
   const btnLabelLanguage = useMemo(() => {

@@ -27,6 +27,7 @@ type ChainCreateRequestBody struct {
 	Name             string   `json:"name" binding:"required"`
 	Description      string   `json:"description"`
 	Address          string   `json:"address" binding:"required"`
+	CountryCode      string   `json:"country_code" binding:"required"`
 	Latitude         float64  `json:"latitude" binding:"required"`
 	Longitude        float64  `json:"longitude" binding:"required"`
 	Radius           float32  `json:"radius" binding:"required,gte=1.0,lte=70.0"`
@@ -62,6 +63,7 @@ func ChainCreate(c *gin.Context) {
 		Name:             body.Name,
 		Description:      body.Description,
 		Address:          body.Address,
+		CountryCode:      body.CountryCode,
 		Latitude:         body.Latitude,
 		Longitude:        body.Longitude,
 		Radius:           body.Radius,
@@ -92,9 +94,10 @@ func ChainGet(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		ChainUID string `form:"chain_uid" binding:"required"`
-		AddRules bool   `form:"add_rules" binding:"omitempty"`
-		AddTheme bool   `form:"add_theme" binding:"omitempty"`
+		ChainUID  string `form:"chain_uid" binding:"required"`
+		AddRules  bool   `form:"add_rules" binding:"omitempty"`
+		AddTotals bool   `form:"add_totals" binding:"omitempty"`
+		AddTheme  bool   `form:"add_theme" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -127,6 +130,23 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddTheme {
 		body["theme"] = chain.Theme
+	}
+	if query.AddTotals {
+		result := struct {
+			TotalMembers int `gorm:"total_members"`
+			TotalHosts   int `gorm:"total_hosts"`
+		}{}
+		db.Raw(`
+SELECT COUNT(uc1.id) AS total_members, (
+	SELECT COUNT(uc2.id)
+	FROM user_chains AS uc2
+	WHERE uc2.chain_id = ? AND uc2.is_chain_admin = TRUE
+	) AS total_hosts
+FROM user_chains AS uc1
+WHERE uc1.chain_id = ?
+		`, chain.ID, chain.ID).Scan(&result)
+		body["total_members"] = result.TotalMembers
+		body["total_hosts"] = result.TotalHosts
 	}
 	c.JSON(200, body)
 }
@@ -219,6 +239,7 @@ func ChainUpdate(c *gin.Context) {
 		Name             *string   `json:"name,omitempty"`
 		Description      *string   `json:"description,omitempty"`
 		Address          *string   `json:"address,omitempty"`
+		CountryCode      *string   `json:"country_code,omitempty"`
 		Latitude         *float32  `json:"latitude,omitempty"`
 		Longitude        *float32  `json:"longitude,omitempty"`
 		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=70.0"`
@@ -261,6 +282,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Address != nil {
 		valuesToUpdate["address"] = *(body.Address)
+	}
+	if body.CountryCode != nil {
+		valuesToUpdate["country_code"] = *(body.CountryCode)
 	}
 	if body.Latitude != nil {
 		valuesToUpdate["latitude"] = *(body.Latitude)
@@ -385,7 +409,6 @@ WHERE uc.chain_id = ?
 			if result.Email.Valid {
 				go views.EmailAParticipantJoinedTheLoop(
 					c,
-					db,
 					result.Email.String,
 					result.Name,
 					result.Chain,
@@ -461,11 +484,7 @@ WHERE user_id = ? AND chain_id = ?
 	`, user.ID, chain.ID)
 
 	if user.Email.Valid {
-		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
-			"",
-			"an_admin_approved_your_join_request",
-			"an_admin_approved_your_join_request.gohtml",
-		)
+		views.EmailAnAdminApprovedYourJoinRequest(c, user.Name, user.Email.String, chain.Name)
 	}
 }
 
@@ -494,11 +513,8 @@ func ChainDeleteUnapproved(c *gin.Context) {
 	}
 
 	if user.Email.Valid {
-		views.EmailToLoopParticipant(c, db, user.Name, user.Email.String, chain.Name,
-			query.Reason,
-			"an_admin_denied_your_join_request",
-			"an_admin_denied_your_join_request.gohtml",
-		)
+		views.EmailAnAdminDeniedYourJoinRequest(c, user.Name, user.Email.String, chain.Name,
+			query.Reason)
 	}
 
 }

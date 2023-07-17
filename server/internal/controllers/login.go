@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -43,7 +44,11 @@ LIMIT 1
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	views.EmailLoginVerification(c, db, user.Name, user.Email.String, token, body.IsApp)
+	err = views.EmailLoginVerification(c, user.Name, user.Email.String, token, body.IsApp)
+	if err != nil {
+		glog.Errorf("Unable to send email: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to send email")
+	}
 }
 
 func LoginValidate(c *gin.Context) {
@@ -100,14 +105,22 @@ WHERE user_chains.chain_id IN ?
 		c.String(http.StatusInternalServerError, "Unable to find associated loop admins")
 		return
 	}
+
+	// Is the first time verifying the user account
 	if user.Email.Valid && !user.IsEmailVerified {
+		db.Exec(`
+UPDATE chains SET published = TRUE WHERE id IN (
+	SELECT chain_id FROM user_chains WHERE user_id = ? AND is_chain_admin = TRUE
+)
+		`, user.ID)
+
+		// Reset joined-at time
 		db.Exec(`UPDATE user_chains SET created_at = NOW() WHERE user_id = ?`, user.ID)
 
 		for _, result := range results {
 			if result.Email.Valid {
 				go views.EmailAParticipantJoinedTheLoop(
 					c,
-					db,
 					result.Email.String,
 					result.Name,
 					result.Chain,
@@ -170,8 +183,9 @@ func RegisterChainAdmin(c *gin.Context) {
 		Latitude:         body.Chain.Latitude,
 		Longitude:        body.Chain.Longitude,
 		Radius:           body.Chain.Radius,
-		Published:        true,
+		Published:        false,
 		OpenToNewMembers: body.Chain.OpenToNewMembers,
+		CountryCode:      body.Chain.CountryCode,
 		Sizes:            body.Chain.Sizes,
 		Genders:          body.Chain.Genders,
 	}
@@ -212,7 +226,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		return
 	}
 
-	go views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
+	go views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
 }
 
 func RegisterBasicUser(c *gin.Context) {
@@ -283,7 +297,7 @@ func RegisterBasicUser(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
+	views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
 }
 
 func Logout(c *gin.Context) {

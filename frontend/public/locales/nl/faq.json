@@ -32,6 +32,10 @@
     {
       "question": "Ik krijg de fout: “je account bestaat al”.",
       "answer": "Je hebt eerder al een account aangemaakt bij de Clothing Loop. Om je bij een nieuwe Loop aan te melden, moet je eerst inloggen:<ol><li>Klik in de rechterbovenhoek om in te loggen.</li><li>Voer jouw e-mailadres in dat je hebt gebruikt om uw Loop te registreren.</li><li>Controleer jouw e-mail (en spamfolder!) voor onze verificatielink. We gebruiken een link in plaats van een wachtwoord!</li><li>Daarna kan jij je aanmelden bij de desbetreffende nieuwe Loop.</li></ol>"
+    },
+    {
+      "question": "Moet ik betalen om mee te doen aan de Clothing Loop?",
+      "answer": "No, you do not have to pay to participate in the Clothing Loop. The Clothing Loop is an initiative that wants to make clothes swapping easy and accessible. As a participant, you “pay” with your clothes. Make sure that if you add clothes to your local Loop, they are gems that can be worn again. If you have saved money by participating in the Clothing Loop and/or want to support the Clothing Loop movement and our mission, you can of course always <a href='/donate'>donate here</a>."
     }
   ],
   "faqForHosts": "FAQ voor Beheerders",

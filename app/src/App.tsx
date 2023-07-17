@@ -1,4 +1,10 @@
-import { Redirect, Route } from "react-router-dom";
+import {
+  Redirect,
+  Route,
+  RouteProps,
+  Switch,
+  useHistory,
+} from "react-router-dom";
 import {
   IonApp,
   IonIcon,
@@ -7,8 +13,8 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
+  getPlatforms,
   setupIonicReact,
-  useIonToast,
 } from "@ionic/react";
 import { SplashScreen } from "@capacitor/splash-screen";
 import { IonReactRouter } from "@ionic/react-router";
@@ -17,7 +23,7 @@ import {
   homeOutline,
   bagHandleOutline,
   cubeOutline,
-  cogOutline,
+  peopleCircleOutline,
 } from "ionicons/icons";
 
 /* Core CSS required for Ionic components to work properly */
@@ -41,7 +47,13 @@ import "./theme/variables.css";
 import "./theme/utilities.css";
 import "./theme/overrides.css";
 import { StoreContext } from "./Store";
-import { useContext, useEffect, useMemo, useState } from "react";
+import {
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import HelpList from "./pages/HelpList";
 import HelpItem from "./pages/HelpItem";
@@ -54,8 +66,11 @@ import ToDo from "./pages/ToDo";
 import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import { OnboardingPageOne, OnboardingPageTwo } from "./pages/Onboarding";
+
 import { useTranslation } from "react-i18next";
 import dayjs from "./dayjs";
+import { OneSignalInitCap, OneSignalInitReact } from "./onesignal";
 
 SplashScreen.show({
   autoHide: false,
@@ -68,17 +83,19 @@ setupIonicReact({
 export default function App() {
   const { isAuthenticated, init, authenticate, bags } =
     useContext(StoreContext);
-  const [present] = useIonToast();
-  const [loading, setLoading] = useState(true);
-  const { t } = useTranslation();
+  const history = useHistory();
 
   useEffect(() => {
-    init()
-      .then(() => authenticate().catch((err) => console.warn(err)))
-      .finally(() => {
-        setLoading(false);
-        SplashScreen.hide();
-      });
+    {
+      const platforms = getPlatforms();
+      if (platforms.includes("capacitor")) {
+        OneSignalInitCap();
+      } else if (platforms.includes("pwa")) {
+        OneSignalInitReact();
+      }
+    }
+
+    auth();
 
     const root = document.getElementById("#root");
     root?.addEventListener("store-error", eventCatchStoreErr);
@@ -87,6 +104,21 @@ export default function App() {
       root?.removeEventListener("store-error", eventCatchStoreErr);
     };
   }, []);
+
+  async function auth() {
+    let success = false;
+    try {
+      await init();
+      await authenticate();
+      success = true;
+    } catch (err) {
+      console.warn(err);
+    }
+    SplashScreen.hide();
+
+    if (success) history.replace("/help");
+    else history.replace("/onboarding");
+  }
 
   const hasOldBag = useMemo(() => {
     if (!bags.length) return false;
@@ -100,74 +132,102 @@ export default function App() {
 
   return (
     <IonApp>
-      {loading ? (
-        <Loading />
-      ) : (
-        <IonReactRouter>
-          <IonTabs>
-            <IonRouterOutlet>
-              <Redirect exact path="/" to="/help" />
-              <Route exact path="/help" component={HelpList}></Route>
-              <Route path="/help/:index" component={HelpItem}></Route>
-              <Route exact path="/address" component={AddressList}></Route>
-              <Route path="/address/:uid" component={AddressItem}></Route>
-              <Route exact path="/bags" component={BagsList}></Route>
-              <Route exact path="/bulky-items" component={BulkyList}></Route>
-              <Route exact path="/settings" component={Settings}></Route>
-              <Route
-                exact
-                path="/privacy-policy"
-                component={PrivacyPolicy}
-              ></Route>
-              <Route exact path="/todo" component={ToDo}></Route>
-            </IonRouterOutlet>
-            <IonTabBar slot="bottom">
-              <IonTabButton tab="help" href="/help">
-                <IonIcon aria-hidden="true" icon={bookOutline} />
-                <IonLabel>{t("info")}</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="address" href="/address">
-                <IonIcon aria-hidden="true" icon={homeOutline} />
-                <IonLabel>{t("addresses")}</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="bags" href="/bags">
-                <IonIcon aria-hidden="true" icon={bagHandleOutline} />
-                {hasOldBag ? (
-                  <div
-                    style={{
-                      backgroundColor: "var(--ion-color-danger)",
-                      borderRadius: "100%",
-                      width: "10px",
-                      height: "10px",
-                      position: "absolute",
-                      top: "3px",
-                      left: "calc(50% + 10px)",
-                    }}
-                  ></div>
-                ) : null}
-                <IonLabel>{t("bags")}</IonLabel>
-              </IonTabButton>
-
-              <IonTabButton tab="bulky-items" href="/bulky-items">
-                <IonIcon aria-hidden="true" icon={cubeOutline} />
-                <IonLabel>{t("bulkyItems")}</IonLabel>
-              </IonTabButton>
-
-              <IonTabButton tab="settings" href="/settings">
-                <IonIcon aria-hidden="true" icon={cogOutline} />
-                <IonLabel>{t("settings")}</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
-          {isAuthenticated !== null ? (
-            <Login isLoggedIn={isAuthenticated} />
-          ) : null}
-        </IonReactRouter>
-      )}
+      <Switch>
+        <Redirect exact from="/onboarding" to="/onboarding/1" />
+        <Route exact path="/onboarding/1" component={OnboardingPageOne} />
+        <Route exact path="/onboarding/2" component={OnboardingPageTwo} />
+        <Route exact path="/onboarding/3" component={Login} />
+        <PrivateRoute isAuthenticated={isAuthenticated}>
+          <AppRoute hasOldBag={hasOldBag} />
+        </PrivateRoute>
+      </Switch>
     </IonApp>
   );
 }
 
 function eventCatchStoreErr(e: any) {
   console.log(e);
+}
+
+function PrivateRoute({
+  children,
+  isAuthenticated,
+  ...rest
+}: PropsWithChildren<{ isAuthenticated: boolean | null }>) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        isAuthenticated === null ? (
+          <Loading />
+        ) : isAuthenticated ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/onboarding",
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
+  const { t } = useTranslation();
+  return (
+    <IonTabs>
+      <IonRouterOutlet>
+        <Redirect exact path="/" to="/help" />
+        <Route exact path="/help" component={HelpList}></Route>
+        <Route path="/help/:index" component={HelpItem}></Route>
+        <Route exact path="/address" component={AddressList}></Route>
+        <Route path="/address/:uid" component={AddressItem}></Route>
+        <Route exact path="/bags" component={BagsList}></Route>
+        <Route exact path="/bulky-items" component={BulkyList}></Route>
+        <Route exact path="/settings" component={Settings}></Route>
+        <Route exact path="/privacy-policy" component={PrivacyPolicy}></Route>
+        <Route exact path="/todo" component={ToDo}></Route>
+      </IonRouterOutlet>
+      <IonTabBar slot="bottom">
+        <IonTabButton tab="help" href="/help">
+          <IonIcon aria-hidden="true" icon={bookOutline} />
+          <IonLabel>{t("info")}</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="address" href="/address">
+          <IonIcon aria-hidden="true" icon={homeOutline} />
+          <IonLabel>{t("addresses")}</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="bags" href="/bags">
+          <IonIcon aria-hidden="true" icon={bagHandleOutline} />
+          {hasOldBag ? (
+            <div
+              style={{
+                backgroundColor: "var(--ion-color-danger)",
+                borderRadius: "100%",
+                width: "10px",
+                height: "10px",
+                position: "absolute",
+                top: "3px",
+                left: "calc(50% + 10px)",
+              }}
+            ></div>
+          ) : null}
+          <IonLabel>{t("bags")}</IonLabel>
+        </IonTabButton>
+
+        <IonTabButton tab="bulky-items" href="/bulky-items">
+          <IonIcon aria-hidden="true" icon={cubeOutline} />
+          <IonLabel>{t("bulkyItems")}</IonLabel>
+        </IonTabButton>
+
+        <IonTabButton tab="settings" href="/settings">
+          <IonIcon aria-hidden="true" icon={peopleCircleOutline} />
+          <IonLabel>{t("settings")}</IonLabel>
+        </IonTabButton>
+      </IonTabBar>
+    </IonTabs>
+  );
 }

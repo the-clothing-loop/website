@@ -44,15 +44,17 @@ www.clothingloop.org {
 		header User-Agent telegrambot
 		not path_regexp .*?(\.js|\.css|\.xml|\.less|\.png|\.jpg|\.jpeg|\.gif|\.pdf|\.doc|\.txt|\.ico|\.rss|\.zip|\.mp3|\.rar|\.exe|\.wmv|\.doc|\.avi|\.ppt|\.mpg|\.mpeg|\.tif|\.wav|\.mov|\.psd|\.ai|\.xls|\.mp4|\.m4a|\.swf|\.dat|\.dmg|\.iso|\.flv|\.m4v|\.torrent|\.ttf|\.woff|\.svg)
 	}
-
-	route {
-		header Cache-Control max-age=3600
-		header /assets/* Cache-Control max-age=31536000
-		header /api/* Cache-Control no-cache
+	@assets {
+		path /fonts/* /icons/* /images/*
 	}
+
+	header @assets Cache-Control "max-age=31536000 must-revalidate"
+	header /api/* Cache-Control no-cache
+	header ?Cache-Control max-age=3600
 
 	handle_path /api/* {
 		reverse_proxy 127.0.0.1:8081
+		encode zstd gzip
 	}
 
 	handle @searchbot {
@@ -113,6 +115,8 @@ acc.clothingloop.org {
 }
 
 images.clothingloop.org {
+	header Cache-Control max-age=1209600
+
 	handle_path /original/* {
 		root * /var/caddy/images.clothingloop.org
 		file_server

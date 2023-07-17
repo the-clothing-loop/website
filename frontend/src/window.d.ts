@@ -39,7 +39,7 @@ interface GoatCounter {
 declare global {
   interface Window {
     MapboxGeocoder: MapboxGeocoder;
-    goatcounter: GoatCounter;
+    goatcounter?: GoatCounter;
     axios: typeof Axios;
   }
 }

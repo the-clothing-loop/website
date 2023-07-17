@@ -3,10 +3,14 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/OneSignal/onesignal-go-api"
 	"github.com/gin-gonic/gin"
+	"github.com/golang/glog"
+	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/views"
 )
 
 func BulkyGetAll(c *gin.Context) {
@@ -74,6 +78,29 @@ func BulkyPut(c *gin.Context) {
 		return
 	}
 
+	// Create a notification
+	if isNew := body.ID == 0; isNew {
+		userUIDs := []string{}
+		db.Raw(`
+			SELECT u.uid
+			FROM users AS u
+			JOIN user_chains AS uc ON uc.user_id = u.id
+			JOIN chains AS c ON c.id = uc.chain_id
+			WHERE c.uid = ? AND u.uid != ?`, body.ChainUID, body.UserUID).Scan(&userUIDs)
+
+		if len(userUIDs) > 0 {
+			err := app.OneSignalCreateNotification(db, userUIDs,
+				*views.Notifications["newBulkyItemHasBeenCreatedTitle"],
+				onesignal.StringMap{
+					En: body.Title,
+				})
+			if err != nil {
+				glog.Error(err)
+			}
+		}
+	}
+
+	// Set the bulkyItem object
 	bulkyItem := &models.BulkyItem{}
 	if body.ID != 0 {
 		db.Raw(`SELECT * FROM bulky_items WHERE id = ? LIMIT 1`, body.ID).Scan(bulkyItem)

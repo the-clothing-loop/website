@@ -29,7 +29,7 @@ export default function Footer() {
                   {t("learnMore")}
                 </span>
                 <Link className="link link-hover mb-1" to="/faq">
-                  {t("faqs")}
+                  {t("faq")}
                 </Link>
                 <Link className="link link-hover mb-1" to="/contact-us">
                   {t("help")}

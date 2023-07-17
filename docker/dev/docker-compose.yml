@@ -34,7 +34,7 @@ services:
     image: axllent/mailpit
     ports:
       - 127.0.0.1:8025:8025
-      # - 1025:1025
+      - 127.0.0.1:8125:1025
     environment:
       - "MP_SMTP_AUTH_ACCEPT_ANY=true"
       - "MP_SMTP_AUTH_ALLOW_INSECURE=true"

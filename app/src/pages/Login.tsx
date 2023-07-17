@@ -11,8 +11,12 @@ import {
   IonIcon,
   IonText,
   useIonToast,
+  IonPage,
+  IonFab,
+  IonFabButton,
 } from "@ionic/react";
 import {
+  arrowBack,
   arrowForwardOutline,
   mailUnreadOutline,
   sendOutline,
@@ -36,6 +40,7 @@ enum State {
   idle,
   error,
   success,
+  loading,
 }
 
 const KEYCODE_ENTER = 13;
@@ -55,25 +60,31 @@ export default function Login(props: { isLoggedIn: boolean }) {
   const [verifyState, setVerifyState] = useState(State.idle);
   const [sentTimeout, setSentTimeout] = useState<number>();
 
-  async function handleSendEmail() {
-    if (sentState === State.success) return;
+  function handleSendEmail() {
+    if (sentState === State.success || sentState === State.loading) return;
     clearTimeout(sentTimeout);
     const email = inputEmail.current?.value + "";
     if (!email) return;
+    setSentState(State.loading);
 
-    try {
-      const res = await loginEmail(email + "");
-      setShowToken(true);
-      setSentState(State.success);
-      setSentTimeout(
-        setTimeout(() => setSentState(State.idle), 1000 * 60 /* 1 min */) as any
-      );
-      Keyboard.hide();
-    } catch (err) {
-      setSentState(State.error);
-      toastError(present, err);
-      console.error(err);
-    }
+    (async () => {
+      try {
+        const res = await loginEmail(email + "");
+        setShowToken(true);
+        setSentState(State.success);
+        setSentTimeout(
+          setTimeout(
+            () => setSentState(State.idle),
+            1000 * 60 /* 1 min */
+          ) as any
+        );
+        Keyboard.hide();
+      } catch (err) {
+        setSentState(State.error);
+        toastError(present, err);
+        console.error(err);
+      }
+    })();
   }
 
   function handleInputEmailEnter(e: any) {
@@ -88,33 +99,38 @@ export default function Login(props: { isLoggedIn: boolean }) {
     }
   }
 
-  async function handleVerifyToken() {
+  function handleVerifyToken() {
+    if (verifyState === State.loading) return;
     const token = inputToken.current?.value || "";
     if (!token) return;
+    setVerifyState(State.loading);
 
-    try {
-      await login(token + "");
-      setVerifyState(State.success);
-      modal.current?.dismiss("success");
-      history.replace("/settings", "select-loop");
-    } catch (e: any) {
-      console.error(e);
-      setVerifyState(State.error);
-    }
+    (async () => {
+      try {
+        await login(token + "");
+        setVerifyState(State.success);
+        modal.current?.dismiss("success");
+        history.replace("/settings", "select-loop");
+      } catch (e: any) {
+        console.error(e);
+        setVerifyState(State.error);
+      }
+    })();
   }
 
   return (
-    <IonModal
-      ref={modal}
-      isOpen={!props.isLoggedIn}
-      canDismiss={async (d) => d === "success"}
-    >
-      <IonHeader>
+    <IonPage>
+      <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("login")}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding" fullscreen>
+        <IonHeader collapse="condense" className="ion-margin-bottom">
+          <IonToolbar>
+            <IonTitle size="large">{t("login")}</IonTitle>
+          </IonToolbar>
+        </IonHeader>
         <IonItem lines="none">
           <IonText>{t("pleaseEnterYourEmailAddress")}</IonText>
         </IonItem>
@@ -140,19 +156,21 @@ export default function Login(props: { isLoggedIn: boolean }) {
             slot="end"
             expand="block"
             color={
-              sentState === State.error
-                ? "danger"
+              sentState === State.idle
+                ? "primary"
                 : sentState === State.success
                 ? "success"
-                : "primary"
+                : sentState === State.loading
+                ? "medium"
+                : "danger"
             }
             disabled={sentState === State.success}
             onClick={handleSendEmail}
           >
-            Send
+            {sentState === State.loading ? t("loading") : t("send")}
             {sentState === State.success ? (
               <IonIcon slot="end" icon={mailUnreadOutline} />
-            ) : (
+            ) : sentState === State.loading ? null : (
               <IonIcon slot="end" icon={sendOutline} />
             )}
           </IonButton>
@@ -177,11 +195,13 @@ export default function Login(props: { isLoggedIn: boolean }) {
             <IonItem lines="none">
               <IonButton
                 color={
-                  verifyState === State.error
-                    ? "danger"
+                  verifyState === State.idle
+                    ? "primary"
                     : verifyState === State.success
                     ? "success"
-                    : "primary"
+                    : verifyState === State.loading
+                    ? "medium"
+                    : "danger"
                 }
                 size="default"
                 disabled={verifyState === State.success}
@@ -189,13 +209,28 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 expand="block"
                 onClick={handleVerifyToken}
               >
-                <IonLabel>{t("login")}</IonLabel>
-                <IonIcon slot="end" icon={arrowForwardOutline} />
+                {verifyState === State.loading ? (
+                  <IonLabel>{t("loading")}</IonLabel>
+                ) : (
+                  <IonLabel>{t("login")}</IonLabel>
+                )}
+                {verifyState === State.loading ? null : (
+                  <IonIcon slot="end" icon={arrowForwardOutline} />
+                )}
               </IonButton>
             </IonItem>
           </Fragment>
         ) : null}
+        <IonFab vertical="bottom" horizontal="start">
+          <IonFabButton
+            color="clear"
+            onClick={() => history.goBack()}
+            size="small"
+          >
+            <IonIcon icon={arrowBack}></IonIcon>
+          </IonFabButton>
+        </IonFab>
       </IonContent>
-    </IonModal>
+    </IonPage>
   );
 }

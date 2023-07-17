@@ -5,13 +5,13 @@
   color: var(--ion-text-color-rgb);
 }
 
-.plt-desktop body #root > .ion-page {
+.ion-ce:not(.plt-hybrid) body #root > .ion-page {
   display: flex;
   background-color: var(--ion-color-light);
   justify-content: center;
   align-items: center;
 }
-.plt-desktop body #root > .ion-page > .ion-page {
+.ion-ce:not(.plt-hybrid) body #root > .ion-page > .ion-page {
   position: relative;
   width: 375px;
   height: 812px;
@@ -19,18 +19,22 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .plt-desktop body #root > .ion-page {
+  .ion-ce:not(.plt-hybrid) body #root > .ion-page {
     background-color: var(--ion-color-light);
   }
-  .plt-desktop body #root > .ion-page > .ion-page {
+  .ion-ce:not(.plt-hybrid) body #root > .ion-page > .ion-page {
     box-shadow: 0px 0px 5px 3px rgba(255, 255, 255, 0.13);
   }
 }
 
+.ion-ce:not.plt-hybrid.plt-android body #root ion-tab-bar {
+  padding-bottom: 12px;
+}
+
 .ion-icon[slot="end"] {
-  margin-inline-start: 0.5em;
+  margin-inline-start: 0.3em !important;
 }
 
 .ion-icon[slot="start"] {
-  margin-inline-end: 0.5em;
+  margin-inline-end: 0.3em !important;
 }

@@ -5,21 +5,23 @@ import (
 	"fmt"
 	"time"
 
+	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 )
 
 type UserChain struct {
-	ID           uint        `json:"-"`
-	UserID       uint        `json:"-" gorm:"index"`
-	UserUID      string      `json:"user_uid" gorm:"-:migration;<-:false"`
-	ChainID      uint        `json:"-"`
-	ChainUID     string      `json:"chain_uid" gorm:"-:migration;<-:false"`
-	IsChainAdmin bool        `json:"is_chain_admin"`
-	CreatedAt    time.Time   `json:"created_at"`
-	IsApproved   bool        `json:"is_approved"`
-	RouteOrder   int         `json:"-"`
-	Bags         []Bag       `json:"-"`
-	Bulky        []BulkyItem `json:"-"`
+	ID                         uint        `json:"-"`
+	UserID                     uint        `json:"-" gorm:"index"`
+	UserUID                    string      `json:"user_uid" gorm:"-:migration;<-:false"`
+	ChainID                    uint        `json:"-"`
+	ChainUID                   string      `json:"chain_uid" gorm:"-:migration;<-:false"`
+	IsChainAdmin               bool        `json:"is_chain_admin"`
+	CreatedAt                  time.Time   `json:"created_at"`
+	IsApproved                 bool        `json:"is_approved"`
+	LastNotifiedIsUnapprovedAt zero.Time   `json:"-"`
+	RouteOrder                 int         `json:"-"`
+	Bags                       []Bag       `json:"-"`
+	Bulky                      []BulkyItem `json:"-"`
 }
 
 var ErrRouteInvalid = errors.New("Invalid route")

@@ -1,0 +1,18 @@
+{
+  "header_subscribed_to_newsletter": "Bedankt voor het aanmelden op de Clothing Loop nieuwsbrief",
+  "header_contact_confirmation": "Bedankt dat je contact opneemt met de Clothing Loop",
+  "header_someone_is_interested_in_joining_your_loop": "Iemand wil graag meedoen met jouw Loop!",
+  "header_an_admin_approved_your_join_request": "Een host heeft je verzoek om deel te nemen met een Loop goedgekeurd!",
+  "header_login_verification": "Controleer e-mail voor de Clothing Loop",
+  "header_an_admin_denied_your_join_request": "Jouw verzoek om deel te nemen met {0} Loop is afgewezen.",
+  "header_register_verification": "Controleer e-mail voor de Clothing Loop",
+  "header_poke": "Een herinnering dat %s zich wil aansluiten bij jouw %s Loop",
+  "header_approve_reminder": "Reminder to approve loop join requests",
+  "header_contact_received": "Clothing Loop Contact Form - %s",
+  "layout_much_love_comma": "Veel liefs,",
+  "layout_the_clothing_loop_team": "De Clothing Loop Team",
+  "layout_events": "Evenementen",
+  "layout_donate": "Doneren",
+  "layout_about_us": "Over ons",
+  "layout_faq": "FAQ"
+}

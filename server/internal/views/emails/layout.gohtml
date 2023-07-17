@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html {{if .RTL}}dir="rtl"{{end}}>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>{{.Subject}}</title>
+    <style>
+      /* -------------------------------------
+          GLOBAL RESETS
+      ------------------------------------- */
+
+      /*All the styling goes here*/
+
+      img {
+        border: none;
+        -ms-interpolation-mode: bicubic;
+        max-width: 100%;
+      }
+
+      body {
+        background-color: #ecf2f3;
+        font-family: sans-serif;
+        -webkit-font-smoothing: antialiased;
+        font-size: 14px;
+        line-height: 1.4;
+        margin: 0;
+        padding: 0;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      table {
+        border-collapse: separate;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+        width: 100%;
+      }
+      table td {
+        font-family: sans-serif;
+        font-size: 14px;
+        vertical-align: top;
+      }
+
+      /* -------------------------------------
+          BODY & CONTAINER
+      ------------------------------------- */
+
+      .body {
+        width: 100%;
+        min-height: 100%;
+        background-color: #ecf2f3;
+      }
+
+      /* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also shrink down on a phone or something */
+      .container {
+        display: block;
+        margin: 0 auto !important;
+        /* makes it centered */
+        max-width: 580px;
+        width: 580px;
+        background-color: #fff;
+      }
+
+      /* -------------------------------------
+          HEADER, FOOTER, MAIN
+      ------------------------------------- */
+      .main {
+        width: 100%;
+        padding: 20px 20px 0;
+      }
+
+      .footer {
+        clear: both;
+        width: 100%;
+        color: #4b5563;
+      }
+      .footer td,
+      .footer p,
+      .footer span,
+      .footer a {
+        font-size: 12px;
+      }
+
+      .footer-nav {
+        padding: 0 20px;
+      }
+      .footer-nav a {
+        color: #4b5563;
+        font-weight: bold;
+        text-decoration: none !important;
+      }
+
+      .footer-social {
+        padding: 20px 20px 10px;
+      }
+      .footer-social-item {
+        display: inline-flex;
+        margin-bottom: 10px;
+        color: #000 !important;
+        text-decoration: none;
+      }
+      .footer-social-item-facebook:hover .footer-social-circle {
+        background: #c6dcf8; // #1b74e4;
+        background: radial-gradient( ellipse at 80% 20%, #d7edfc 0%, #c8dbf7 90%, #c4d8f6 100% );
+        //background: radial-gradient( ellipse at 80% 20%, #5fb9f4 0%, #236ee0 90%, #2165cd 100% );
+      }
+      .footer-social-item-instagram:hover .footer-social-circle {
+        background: #fbbeec; // rgb(224, 13, 171);
+        background: radial-gradient( circle farthest-corner at 32% 106%, rgb(255, 247, 222) 0%, rgb(255, 242, 217) 10%, rgb(254, 227, 205) 28%, rgb(250, 207, 207) 42%, transparent 82% ), linear-gradient(135deg, rgb(199, 209, 246) 12%, rgb(240, 206, 239) 58%);
+      }
+      .footer-social-item-linkedin:hover .footer-social-circle {
+        background-color: #b6d9fb; // #0a66c2;
+      }
+      .footer-social-item-email:hover .footer-social-circle {
+        background-color: #ecd8e9; // #b464a8;
+      }
+      .footer-social-item span {
+        margin-top: 7px;
+      }
+      .footer-social-circle {
+        border: 1px solid #000;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        padding: 6px; // = (30 - 18) / 2
+        margin-right: 10px;
+      }
+      .footer-social-circle {
+        width: 18px;
+        height: 18px;
+      }
+      html[dir="rtl"] .footer-social-circle {
+        margin-right: 0px;
+        margin-left: 10px;
+      }
+      .footer-image {
+        padding: 0 20px 15px;
+      }
+
+      /* -------------------------------------
+          TYPOGRAPHY
+      ------------------------------------- */
+      h1,
+      h2,
+      h3,
+      h4 {
+        color: #000000;
+        font-family: sans-serif;
+        font-weight: 400;
+        line-height: 1.4;
+        margin: 0;
+        margin-bottom: 30px;
+      }
+
+      h1 {
+        font-size: 35px;
+        font-weight: 300;
+        text-align: center;
+        text-transform: capitalize;
+      }
+
+      p,
+      ul,
+      ol {
+        font-family: sans-serif;
+        font-size: 14px;
+        font-weight: normal;
+        margin: 0;
+        margin-bottom: 15px;
+      }
+      p li,
+      ul li,
+      ol li {
+        list-style-position: inside;
+        margin-left: 5px;
+      }
+
+      a {
+        color: #3498db;
+        text-decoration: underline;
+      }
+
+      /* -------------------------------------
+          COMPONENTS
+      ------------------------------------- */
+
+      .table {
+        margin-bottom: 10px;
+      }
+      .table > thead > tr > th {
+        background-color: #f3f4f6;
+      }
+
+      /* -------------------------------------
+          OTHER STYLES THAT MIGHT BE USEFUL
+      ------------------------------------- */
+
+      hr {
+        border: 0;
+        border-bottom: 3px solid #d1d5db;
+        margin: 20px 0;
+      }
+
+      /* -------------------------------------
+          RESPONSIVE AND MOBILE FRIENDLY STYLES
+      ------------------------------------- */
+      @media only screen and (max-width: 620px) {
+        table.body h1 {
+          font-size: 28px !important;
+          margin-bottom: 10px !important;
+        }
+        table.body p,
+        table.body ul,
+        table.body ol,
+        table.body td,
+        table.body span,
+        table.body a {
+          font-size: 16px !important;
+        }
+        table.body .wrapper,
+        table.body .article {
+          padding: 10px !important;
+        }
+        table.body .content {
+          padding: 0 !important;
+        }
+        table.body .container {
+          padding: 0 !important;
+          width: 100% !important;
+        }
+        table.body .main {
+          border-left-width: 0 !important;
+          border-radius: 0 !important;
+          border-right-width: 0 !important;
+        }
+        table.body .btn table {
+          width: 100% !important;
+        }
+        table.body .btn a {
+          width: 100% !important;
+        }
+        table.body .img-responsive {
+          height: auto !important;
+          max-width: 100% !important;
+          width: auto !important;
+        }
+      }
+
+      /* -------------------------------------
+          PRESERVE THESE STYLES IN THE HEAD
+      ------------------------------------- */
+      @media all {
+        .ExternalClass {
+          width: 100%;
+        }
+        .ExternalClass,
+        .ExternalClass p,
+        .ExternalClass span,
+        .ExternalClass font,
+        .ExternalClass td,
+        .ExternalClass div {
+          line-height: 100%;
+        }
+        .apple-link a {
+          color: inherit !important;
+          font-family: inherit !important;
+          font-size: inherit !important;
+          font-weight: inherit !important;
+          line-height: inherit !important;
+          text-decoration: none !important;
+        }
+        #MessageViewBody a {
+          color: inherit;
+          text-decoration: none;
+          font-size: inherit;
+          font-family: inherit;
+          font-weight: inherit;
+          line-height: inherit;
+        }
+        .btn-primary table td:hover {
+          background-color: #34495e !important;
+        }
+        .btn-primary a:hover {
+          background-color: #34495e !important;
+          border-color: #34495e !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <table
+      role="presentation"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      class="body"
+    >
+      <tr>
+        <td>&nbsp;</td>
+        <td class="container">
+          <!-- START CENTERED WHITE CONTAINER -->
+          <table role="presentation" class="main">
+            <!-- START MAIN CONTENT AREA -->
+            <tr>
+              <td>
+                {{.Body}}
+
+                <p><br />{{.I18nMuchLoveComma}}</p>
+                <p>{{.I18nTheClothingLoopTeam}}</p>
+              </td>
+            </tr>
+
+            <!-- END MAIN CONTENT AREA -->
+          </table>
+          <!-- END CENTERED WHITE CONTAINER -->
+
+          <!-- START FOOTER -->
+          <div class="footer">
+            <table
+              role="presentation"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              class=""
+            >
+              <tr>
+                <td class="footer-nav">
+                  <hr />
+                  <a href="{{.BaseURL}}/events">{{.I18nEvents}}</a> |
+                  <a href="{{.BaseURL}}/donate">{{.I18nDonate}}</a> |
+                  <a href="{{.BaseURL}}/about">{{.I18nAboutUs}}</a> |
+                  <a href="{{.BaseURL}}/faq">{{.I18nFAQ}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="footer-social">
+                  <div>
+                    <a
+                      class="footer-social-item footer-social-item-facebook"
+                      href="https://www.facebook.com/clothingloop/"
+                      alt="facebook"
+                    >
+                      <div class="footer-social-circle">
+                        <img
+                          src="https://images.clothingloop.org/0x0/email_icon_facebook.png"
+                          alt="facebook"
+                          width="18"
+                          height="18"
+                        />
+                      </div>
+                    </a>
+                    <a
+                      class="footer-social-item footer-social-item-instagram"
+                      href="https://www.instagram.com/theclothingloop/"
+                      alt="instagram"
+                    >
+                      <div class="footer-social-circle">
+                        <img
+                          src="https://images.clothingloop.org/0x0/email_icon_instagram.png"
+                          alt="instagram"
+                          width="18"
+                          height="18"
+                        />
+                      </div>
+                      <span>@clothingloop</span>
+                    </a>
+                  </div>
+                  <div>
+                  <a
+                      class="footer-social-item footer-social-item-linkedin"
+                      href="https://www.linkedin.com/company/the-clothing-loop/"
+                      alt="linkedin"
+                    >
+                      <div class="footer-social-circle">
+                        <img
+                          src="https://images.clothingloop.org/0x0/email_icon_linkedin.png"
+                          alt="linkedin"
+                          width="18"
+                          height="18"
+                        />
+                      </div>
+                    </a>
+                    <a
+                      class="footer-social-item footer-social-item-email"
+                      href="mailto:hello@clothingloop.org"
+                      alt="email"
+                    >
+                      <div class="footer-social-circle">
+                        <img
+                          src="https://images.clothingloop.org/0x0/email_icon_mail.png"
+                          alt="instagram"
+                          width="18"
+                          height="18"
+                        />
+                      </div>
+                      <span>hello@clothingloop.org</span>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="footer-image">
+                  <img
+                    src="https://images.clothingloop.org/540x/circle_loop.jpg"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- END FOOTER -->
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </body>
+</html>

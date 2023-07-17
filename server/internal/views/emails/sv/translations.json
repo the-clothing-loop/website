@@ -1,0 +1,18 @@
+{
+  "header_subscribed_to_newsletter": "Tack för att du prenumererar på Clothing Loop",
+  "header_contact_confirmation": "Tack för att du prenumererar på Clothing Loop",
+  "header_someone_is_interested_in_joining_your_loop": "Someone is interested in joining your loop!",
+  "header_an_admin_approved_your_join_request": "En administratör har godkänt din begäran om att gå med i en loop!",
+  "header_login_verification": "Verifiera e-post för Clothing Loop",
+  "header_an_admin_denied_your_join_request": "Din begäran om att gå med i en loop har nekats",
+  "header_register_verification": "Verifiera e-post för Clothing Loop",
+  "header_poke": "Reminder that %s would like to join your %s Loop",
+  "header_approve_reminder": "Reminder to approve loop join requests",
+  "header_contact_received": "Clothing Loop Contact Form - %s",
+  "layout_much_love_comma": "Much love,",
+  "layout_the_clothing_loop_team": "The Clothing Loop Team",
+  "layout_events": "Events",
+  "layout_donate": "Donate",
+  "layout_about_us": "About us",
+  "layout_faq": "FAQ"
+}

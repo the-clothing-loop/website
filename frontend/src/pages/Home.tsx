@@ -20,13 +20,12 @@ const Selfies = "https://images.clothingloop.org/768x/selfies.jpg";
 const SfmLogo = "https://images.clothingloop.org/160x/sfm_logo.png";
 const CollActionLogo =
   "https://images.clothingloop.org/208x/logo_collaction.png";
-const ImpactHubLogo =
-  "https://images.clothingloop.org/600x,jpg/logo_impacthub.svg";
-const EssenseLogo = "https://images.clothingloop.org/208x,jpg/essense_logo.svg";
-const WdcdLogo = "https://images.clothingloop.org/160x,jpg/logo_wdcd.png";
+const ImpactHubLogo = "https://images.clothingloop.org/600x/logo_impacthub.svg";
+const EssenseLogo = "https://images.clothingloop.org/208x/essense_logo.svg";
+const WdcdLogo = "https://images.clothingloop.org/160x,jpeg/logo_wdcd.png";
 const DoenLogo =
   "https://images.clothingloop.org/160x/npl_buurtfonds_logo_2023.png";
-const PNHLogo = "https://images.clothingloop.org/208x,jpg/pnh_logo.png";
+const PNHLogo = "https://images.clothingloop.org/208x/pnh_logo.png";
 const MEAXLogo = "https://images.clothingloop.org/208x/meax_logo.png";
 
 interface Supporter {
@@ -105,7 +104,7 @@ export default function Home() {
 
       <div className="max-w-screen-xl mx-auto">
         <section className="mb-12 md:mb-24">
-          <div className="hidden md:block overflow-hidden w-full absolute bg-teal-light">
+          <div className="hidden md:block overflow-hidden w-full absolute bg-teal-light left-0">
             <div className="p-8 ml-[40%] rtl:ml-0 rtl:mr-[40%] pb-14 flex">
               <img src={CirclesFrame} alt="" />
               <img className="pl-2" src={CirclesFrame} alt="" />
@@ -207,7 +206,7 @@ export default function Home() {
                   }`}
                 >
                   <img
-                    src="https://images.clothingloop.org/600x,jpg/map_image_3.png"
+                    src="https://images.clothingloop.org/600x,jpeg/map_image_3.png"
                     alt="map"
                   />
                 </Link>
@@ -274,7 +273,7 @@ export default function Home() {
                 playsInline
                 className="object-cover object-top w-full max-h-[600px]"
                 title="pages of the impact report"
-                poster="https://images.clothingloop.org/x768,jpg/impact_rapport_preview.png"
+                poster="https://images.clothingloop.org/x768,jpeg/impact_rapport_preview.png"
               >
                 <source
                   src="https://images.clothingloop.org/original/impact_rapport.webm"

@@ -190,7 +190,7 @@ export default function AddressForm(props: {
     <div className={props.classes}>
       <form
         onSubmit={onSubmit}
-        className="relative space-y-4"
+        className="relative space-y-2"
         id="address-form"
       >
         <TextForm
@@ -220,7 +220,7 @@ export default function AddressForm(props: {
             onChange={(e) => setValue("email", e.target.value)}
           />
         ) : null}
-        <div>{t("address")}</div>
+
         {props.onlyShowEditableAddress ? null : (
           <div className="">
             <address>{values.address}</address>
@@ -239,7 +239,9 @@ export default function AddressForm(props: {
 
         {openAddress ? (
           <div
-            className={props.onlyShowEditableAddress ? "" : "bg-white p-5 pt-2"}
+            className={
+              props.onlyShowEditableAddress ? "space-y-2" : "bg-white p-5 pt-2"
+            }
           >
             <TextForm
               type="text"
