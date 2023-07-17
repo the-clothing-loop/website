@@ -70,3 +70,8 @@ export interface Event {
   chain_name: string;
   image_url?: string;
 }
+
+export interface OptimalPath {
+  minimal_cost: number
+  optimal_path: UID[]
+}

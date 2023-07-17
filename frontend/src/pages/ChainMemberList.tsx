@@ -40,7 +40,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
-import { routeGetOrder, routeSetOrder } from "../api/route";
+import { routeGetOrder, routeOptimizeOrder, routeSetOrder } from "../api/route";
 import useToClipboard from "../util/to-clipboard.hooks";
 import { bagGetAllByChain } from "../api/bag";
 import { Sleep } from "../util/sleep";
@@ -73,6 +73,9 @@ export default function ChainMemberList() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [bags, setBags] = useState<Bag[] | null>(null);
   const [route, setRoute] = useState<UID[] | null>(null);
+  const [routeWasOptimized, setRouteWasOptimized] = useState<boolean>(false);
+  const [previousRoute, setPreviousRoute] = useState<UID[] | null>(null);
+
   const [participantsSortBy, setParticipantsSortBy] =
     useState<ParticipantsSortBy>("date");
   const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
@@ -249,6 +252,29 @@ export default function ChainMemberList() {
       .finally(() => {
         refresh(false);
       });
+  }
+
+  function optimizeRoute(chainUID: UID) {
+    routeOptimizeOrder(chainUID)
+      .then((res) => {
+        const optimal_path = res.data.optimal_path;
+
+        // saving current rooute before changing in the database
+        setPreviousRoute(route);
+        setRouteWasOptimized(true);
+        // set new order
+        routeSetOrder(chainUID, optimal_path);
+        setRoute(optimal_path);
+      })
+      .catch((err) => {
+        addToastError(GinParseErrors(t, err), err.status);
+      });
+  }
+
+  function returnToPreviousRoute(chainUID: UID) {
+    setRoute(previousRoute);
+    setRouteWasOptimized(false);
+    routeSetOrder(chainUID, previousRoute!);
   }
 
   useEffect(() => {
@@ -537,6 +563,24 @@ export default function ChainMemberList() {
               </label>
             </div>
             <div className="order-2 sm:justify-self-end sm:self sm:order-3">
+              {!routeWasOptimized ? (
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                  onClick={() => optimizeRoute(chain.uid)}
+                >
+                  {t("routeOptimize")}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                  onClick={() => returnToPreviousRoute(chain.uid)}
+                >
+                  {t("routeUndoOptimize")}
+                </button>
+              )}
+
               {selectedTable !== "unapproved" ? (
                 <UserDataExport
                   chainName={chain.name}
