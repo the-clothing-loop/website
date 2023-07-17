@@ -276,7 +276,7 @@
   "eventLink": "Evenement link",
   "shareLink": "Koppeling delen",
   "organizedBy": "Georganiseerd door",
-  "streetAddress": "Adres",
+  "streetAddress": "Street address + House number",
   "postal": "Post of postcode (optioneel)",
   "city": "Stad",
   "province": "Provincie of staat",
