@@ -95,6 +95,7 @@ func ChainGet(c *gin.Context) {
 		ChainUID  string `form:"chain_uid" binding:"required"`
 		AddRules  bool   `form:"add_rules" binding:"omitempty"`
 		AddTotals bool   `form:"add_totals" binding:"omitempty"`
+		AddTheme  bool   `form:"add_theme" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -124,6 +125,9 @@ func ChainGet(c *gin.Context) {
 
 	if query.AddRules {
 		body["rules_override"] = chain.RulesOverride
+	}
+	if query.AddTheme {
+		body["theme"] = chain.Theme
 	}
 	if query.AddTotals {
 		result := struct {
@@ -242,6 +246,7 @@ func ChainUpdate(c *gin.Context) {
 		RulesOverride    *string   `json:"rules_override,omitempty"`
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
+		Theme            *string   `json:"theme,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -305,7 +310,9 @@ func ChainUpdate(c *gin.Context) {
 	if body.OpenToNewMembers != nil {
 		valuesToUpdate["open_to_new_members"] = *(body.OpenToNewMembers)
 	}
-
+	if body.Theme != nil {
+		valuesToUpdate["theme"] = *(body.Theme)
+	}
 	err := db.Model(chain).Updates(valuesToUpdate).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to update loop values: %v", err)
