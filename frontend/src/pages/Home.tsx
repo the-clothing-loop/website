@@ -104,7 +104,7 @@ export default function Home() {
 
       <div className="max-w-screen-xl mx-auto">
         <section className="mb-12 md:mb-24">
-          <div className="hidden md:block overflow-hidden w-full absolute bg-teal-light">
+          <div className="hidden md:block overflow-hidden w-full absolute bg-teal-light left-0">
             <div className="p-8 ml-[40%] rtl:ml-0 rtl:mr-[40%] pb-14 flex">
               <img src={CirclesFrame} alt="" />
               <img className="pl-2" src={CirclesFrame} alt="" />
