@@ -25,7 +25,7 @@ export default function SizesDropdown(props: {
         .map((s) => t(SizeI18nKeys[s]))
         .join(", ");
     } else {
-      return t("sizes");
+      return t("interestedSizes");
     }
   }, [t, props.selectedSizes]);
 
