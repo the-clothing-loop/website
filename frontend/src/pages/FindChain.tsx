@@ -602,6 +602,38 @@ export default function FindChain({ location }: { location: Location }) {
                   }
                 />
               ) : null}
+              <div>
+                {visibleChains
+                  .filter((c) => c.uid !== focusedChain?.uid)
+                  .map((chain) => {
+                    const selected = !!selectedChains.find(
+                      (c) => chain.uid === c.uid
+                    );
+                    return { selected, chain };
+                  })
+                  .sort((a, b) =>
+                    a.selected === b.selected ? 0 : b.selected ? 1 : -1
+                  )
+                  .map(({ chain, selected }) => {
+                    return (
+                      <button
+                        className={`p-1.5 block w-full border-t border-b border-grey/10 last:border-none  ${
+                          selected ? "" : "hidden md:block"
+                        }`}
+                        key={chain.uid}
+                        onClick={() => handleSetFocusedChain(chain)}
+                      >
+                        <h1
+                          className={`text-secondary text-ellipsis overflow-hidden w-full whitespace-nowrap ${
+                            selected ? "font-semibold" : ""
+                          }`}
+                        >
+                          {chain.name}
+                        </h1>
+                      </button>
+                    );
+                  })}
+              </div>
               <button
                 key="close"
                 type="reset"
@@ -710,7 +742,7 @@ function FocusedChain({
   const userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
 
   return (
-    <div className="p-4 w-full mb-1  sm:bg-white sm:shadow-md" key={chain.uid}>
+    <div className="p-4 w-full mb-1 sm:bg-white sm:shadow-md" key={chain.uid}>
       <div className="sm:mb-2">
         <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
           {chain.name}
