@@ -33,6 +33,7 @@ type ChainCreateRequestBody struct {
 	OpenToNewMembers bool     `json:"open_to_new_members" binding:"required"`
 	Sizes            []string `json:"sizes" binding:"required"`
 	Genders          []string `json:"genders" binding:"required"`
+	Theme            string   `json:"theme" binding:"required"`
 }
 
 func ChainCreate(c *gin.Context) {
@@ -68,6 +69,7 @@ func ChainCreate(c *gin.Context) {
 		OpenToNewMembers: true,
 		Sizes:            body.Sizes,
 		Genders:          body.Genders,
+		Theme:            body.Theme,
 		UserChains: []models.UserChain{
 			{
 				UserID:       user.ID,
@@ -92,6 +94,7 @@ func ChainGet(c *gin.Context) {
 	var query struct {
 		ChainUID string `form:"chain_uid" binding:"required"`
 		AddRules bool   `form:"add_rules" binding:"omitempty"`
+		AddTheme bool   `form:"add_theme" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -121,6 +124,9 @@ func ChainGet(c *gin.Context) {
 
 	if query.AddRules {
 		body["rules_override"] = chain.RulesOverride
+	}
+	if query.AddTheme {
+		body["theme"] = chain.Theme
 	}
 	c.JSON(200, body)
 }
@@ -221,6 +227,7 @@ func ChainUpdate(c *gin.Context) {
 		RulesOverride    *string   `json:"rules_override,omitempty"`
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
+		Theme            *string   `json:"theme,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -281,7 +288,9 @@ func ChainUpdate(c *gin.Context) {
 	if body.OpenToNewMembers != nil {
 		valuesToUpdate["open_to_new_members"] = *(body.OpenToNewMembers)
 	}
-
+	if body.Theme != nil {
+		valuesToUpdate["theme"] = *(body.Theme)
+	}
 	err := db.Model(chain).Updates(valuesToUpdate).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to update loop values: %v", err)
