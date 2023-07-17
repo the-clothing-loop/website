@@ -2,12 +2,13 @@ import {
   IonButton,
   IonButtons,
   IonCard,
-  IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonCol,
   IonContent,
+  IonDatetime,
+  IonDatetimeButton,
   IonGrid,
   IonHeader,
   IonIcon,
@@ -16,13 +17,13 @@ import {
   IonList,
   IonModal,
   IonPage,
-  IonPopover,
   IonRadio,
   IonRadioGroup,
   IonRefresher,
   IonRefresherContent,
   IonRouterLink,
   IonRow,
+  IonSearchbar,
   IonText,
   IonTitle,
   IonToolbar,
@@ -35,9 +36,12 @@ import {
   ellipsisHorizontal,
   person,
   personCircleOutline,
-  trashBinOutline,
 } from "ionicons/icons";
-import type { IonModalCustomEvent } from "@ionic/core/components";
+import type {
+  DatetimeChangeEventDetail,
+  IonDatetimeCustomEvent,
+  IonModalCustomEvent,
+} from "@ionic/core/components";
 import {
   useContext,
   useRef,
@@ -58,6 +62,7 @@ import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-com
 import IsPrivate from "../utils/is_private";
 
 const MIN_BAG_LIST = 9;
+const MIN_USERS_FOR_SEARCH = 15;
 
 export default function BagsList() {
   const { t } = useTranslation();
@@ -578,6 +583,8 @@ function SelectUserModal({
   const { t } = useTranslation();
 
   const [selected, setSelected] = useState(selectedUserUID);
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const [search, setSearch] = useState("");
   const sortedRoute = useMemo(() => {
     const indexSelected = route.indexOf(selectedUserUID);
     const routeWithIndex = route.map<[string, number]>((r, i) => [r, i]);
@@ -610,8 +617,24 @@ function SelectUserModal({
       user_uid: authUser!.uid,
       holder_uid: userUID,
       bag_id: bagID!,
+      ...(updatedAt === null
+        ? {}
+        : {
+            updated_at: updatedAt.toISOString(),
+          }),
     });
     await setChain(chain, authUser!.uid);
+  }
+
+  function handleChangeDatetime(
+    e: IonDatetimeCustomEvent<DatetimeChangeEventDetail>
+  ) {
+    let datetime = new Date(e.detail.value + "");
+    setUpdatedAt(datetime);
+  }
+
+  function willPresent() {
+    setUpdatedAt(null);
   }
 
   return (
@@ -620,6 +643,7 @@ function SelectUserModal({
       initialBreakpoint={0.5}
       breakpoints={[0, 0.5, 0.75, 1]}
       onIonModalDidDismiss={didDismiss}
+      onIonModalWillPresent={() => willPresent()}
     >
       <IonHeader>
         <IonToolbar>
@@ -638,6 +662,29 @@ function SelectUserModal({
       </IonHeader>
       <IonContent>
         <IonList>
+          <IonItem lines="full">
+            <IonLabel>{t("dateOfDelivery")}</IonLabel>
+            <div slot="end">
+              <IonDatetimeButton datetime="datetime"></IonDatetimeButton>
+              <IonModal keepContentsMounted={true}>
+                <IonDatetime
+                  id="datetime"
+                  onIonChange={handleChangeDatetime}
+                ></IonDatetime>
+              </IonModal>
+            </div>
+          </IonItem>
+          {sortedRoute.length > MIN_USERS_FOR_SEARCH ? (
+            <IonItem lines="full" color="light">
+              <IonSearchbar
+                placeholder={t("search")}
+                onIonChange={(e) => setSearch(e.detail.value as string)}
+                onIonClear={() => setSearch("")}
+              />
+            </IonItem>
+          ) : null}
+        </IonList>
+        <IonList>
           <IonRadioGroup
             value={selected}
             onIonChange={(e) => setSelected(e.detail.value)}
@@ -645,6 +692,11 @@ function SelectUserModal({
             {sortedRoute.map(([r, i]) => {
               const user = chainUsers?.find((u) => u.uid === r);
               if (!user) return null;
+              // search
+              let found =
+                search !== "" ? RegExp(search, "i").test(user.name) : true;
+              if (!found) return null;
+
               const isAddressPrivate = IsPrivate(user.address);
               const isSelected = selected === user.uid;
               //   let uc = user.chains.find((u) => u.chain_uid === chain.uid);
@@ -659,7 +711,15 @@ function SelectUserModal({
                     i + 1
                   }`}</span>
                   <IonLabel>
-                    <h2>
+                    <h2
+                      style={
+                        isSelected
+                          ? {
+                              fontWeight: 500,
+                            }
+                          : {}
+                      }
+                    >
                       {user.name}
                       {user.uid === authUser?.uid ? (
                         <IonIcon

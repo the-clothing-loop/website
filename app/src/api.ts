@@ -180,6 +180,7 @@ export function bagPut(body: {
   number?: string;
   holder_uid?: UID;
   color?: string;
+  updated_at?: string;
 }) {
   return window.axios.put("/v2/bag", body);
 }
