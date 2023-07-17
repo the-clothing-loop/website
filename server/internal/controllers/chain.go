@@ -34,7 +34,6 @@ type ChainCreateRequestBody struct {
 	OpenToNewMembers bool     `json:"open_to_new_members" binding:"required"`
 	Sizes            []string `json:"sizes" binding:"required"`
 	Genders          []string `json:"genders" binding:"required"`
-	Theme            string   `json:"theme" binding:"required"`
 }
 
 func ChainCreate(c *gin.Context) {
@@ -71,7 +70,6 @@ func ChainCreate(c *gin.Context) {
 		OpenToNewMembers: true,
 		Sizes:            body.Sizes,
 		Genders:          body.Genders,
-		Theme:            body.Theme,
 		UserChains: []models.UserChain{
 			{
 				UserID:       user.ID,
