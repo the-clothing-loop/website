@@ -11,8 +11,12 @@ import {
   IonIcon,
   IonText,
   useIonToast,
+  IonPage,
+  IonFab,
+  IonFabButton,
 } from "@ionic/react";
 import {
+  arrowBack,
   arrowForwardOutline,
   mailUnreadOutline,
   sendOutline,
@@ -115,17 +119,18 @@ export default function Login(props: { isLoggedIn: boolean }) {
   }
 
   return (
-    <IonModal
-      ref={modal}
-      isOpen={!props.isLoggedIn}
-      canDismiss={async (d) => d === "success"}
-    >
-      <IonHeader>
+    <IonPage>
+      <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("login")}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding" fullscreen>
+        <IonHeader collapse="condense" className="ion-margin-bottom">
+          <IonToolbar>
+            <IonTitle size="large">{t("login")}</IonTitle>
+          </IonToolbar>
+        </IonHeader>
         <IonItem lines="none">
           <IonText>{t("pleaseEnterYourEmailAddress")}</IonText>
         </IonItem>
@@ -216,7 +221,16 @@ export default function Login(props: { isLoggedIn: boolean }) {
             </IonItem>
           </Fragment>
         ) : null}
+        <IonFab vertical="bottom" horizontal="start">
+          <IonFabButton
+            color="clear"
+            onClick={() => history.goBack()}
+            size="small"
+          >
+            <IonIcon icon={arrowBack}></IonIcon>
+          </IonFabButton>
+        </IonFab>
       </IonContent>
-    </IonModal>
+    </IonPage>
   );
 }
