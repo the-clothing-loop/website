@@ -276,7 +276,7 @@
   "eventLink": "Event Link",
   "shareLink": "Share Link",
   "organizedBy": "Organized by",
-  "streetAddress": "Street address",
+  "streetAddress": "Street address + House number",
   "postal": "Postal or zip (optional)",
   "city": "City",
   "province": "Province or state",
