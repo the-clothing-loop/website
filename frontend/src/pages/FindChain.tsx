@@ -588,7 +588,7 @@ export default function FindChain({ location }: { location: Location }) {
           </div>
           <dialog
             open={chainDetailsOpen}
-            className="sm:invisible fixed w-72 align-center overflow-y-auto overflow-x-visible inset-0 z-50 justify-center items-center p-0 open:flex bg-white/80"
+            className="sm:invisible absoluete w-72 align-center overflow-y-auto overflow-x-visible inset-0 z-50 justify-center items-center p-0 open:flex bg-white/80"
             tabIndex={-1}
           >
             <form className="w-full z-10">
