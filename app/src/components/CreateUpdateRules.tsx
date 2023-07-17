@@ -152,7 +152,7 @@ export default function CreateUpdateRules(props: {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton onClick={cancel}>{t("Cancel")}</IonButton>
+            <IonButton onClick={cancel}>{t("cancel")}</IonButton>
           </IonButtons>
           <IonTitle>{t("customLoopRules")}</IonTitle>
           <IonButtons slot="end">
@@ -263,7 +263,7 @@ function RuleItem(props: {
       <div className={props.open ? "" : "ion-hide"}>
         <IonItem lines="none" color="light">
           <IonInput
-            label="Title"
+            label={t("title")}
             labelPlacement="stacked"
             type="text"
             value={props.rule.Title}
@@ -272,7 +272,7 @@ function RuleItem(props: {
         </IonItem>
         <IonItem lines="none" color="light">
           <IonInput
-            label="Short explanation"
+            label={t("shortExplanation")}
             labelPlacement="stacked"
             type="text"
             value={props.rule["Short explanation"]}
@@ -281,7 +281,7 @@ function RuleItem(props: {
         </IonItem>
         <IonItem lines="none" color="light">
           <IonTextarea
-            label="paragraphs"
+            label={t("paragraphs")}
             labelPlacement="stacked"
             rows={6}
             style={{ lineHeight: "1.4em" }}

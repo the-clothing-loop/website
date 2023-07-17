@@ -133,14 +133,14 @@ export default function BagsList() {
       await setChain(chain, authUser!.uid);
     };
     presentAlert({
-      header: "Delete Bag",
-      message: "Are you sure you want to delete bag number " + bagNo + "?",
+      header: t("deleteBag"),
+      message: t("areYouSureYouWantToDeleteBag", { name: bagNo }),
       buttons: [
         {
-          text: "Cancel",
+          text: t("cancel"),
         },
         {
-          text: "Delete",
+          text: t("delete"),
           role: "destructive",
           handler,
         },
