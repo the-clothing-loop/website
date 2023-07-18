@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  App
+
+  Created by Lucian I. Last on 18/07/2023.
+  
+*/
+NSCameraUsageDescription = "This app requires access to your phone’s camera.";
+NSPhotoLibraryAddUsageDescription = "Add a photo from your photo library.";
+NSPhotoLibraryUsageDescription = "This app requires access to the photo library.";
