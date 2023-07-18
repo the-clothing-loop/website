@@ -580,7 +580,7 @@ function SelectUserModal({
 }) {
   const { chain, chainUsers, route, authUser, setChain } =
     useContext(StoreContext);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [selected, setSelected] = useState(selectedUserUID);
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
@@ -669,6 +669,8 @@ function SelectUserModal({
               <IonModal keepContentsMounted={true}>
                 <IonDatetime
                   id="datetime"
+                  presentation="date"
+                  locale={i18n.language}
                   onIonChange={handleChangeDatetime}
                 ></IonDatetime>
               </IonModal>
