@@ -140,7 +140,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             labelPlacement="fixed"
             ref={inputEmail}
             type="email"
-            autocomplete="on"
+            autocomplete="email"
             autoSave="on"
             autofocus
             enterkeyhint="send"
@@ -154,6 +154,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
           <IonButton
             size="default"
             slot="end"
+            shape="round"
             expand="block"
             color={
               sentState === State.idle
@@ -177,7 +178,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         </IonItem>
         {showToken ? (
           <Fragment key="token">
-            <IonItem lines="none">
+            <IonItem lines="none" className="ion-margin-top">
               <IonText>{t("enterThePasscodeYouReceivedInYourEmail")}</IonText>
             </IonItem>
             <IonItem lines="none">
@@ -194,6 +195,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             </IonItem>
             <IonItem lines="none">
               <IonButton
+                shape="round"
                 color={
                   verifyState === State.idle
                     ? "primary"
@@ -226,6 +228,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             color="clear"
             onClick={() => history.goBack()}
             size="small"
+            className="ion-margin-bottom"
           >
             <IonIcon icon={arrowBack}></IonIcon>
           </IonFabButton>

@@ -49,6 +49,7 @@ export function OnboardingPageOne() {
           <IonImg
             style={{
               width: "70%",
+              maxWidth: 400,
             }}
             src="https://images.clothingloop.org/426x/paloeka_nichon_landscape.jpg"
           />
@@ -78,6 +79,7 @@ export function OnboardingPageOne() {
 
         <IonFab vertical="bottom" horizontal="end">
           <IonFabButton
+            className="ion-margin-bottom"
             color="light"
             size="small"
             onClick={() => {
@@ -121,6 +123,7 @@ export function OnboardingPageTwo() {
           <IonImg
             style={{
               width: "70%",
+              maxWidth: 400,
             }}
             src="https://images.clothingloop.org/600x,jpeg/map_image_3.png"
           />
@@ -152,6 +155,7 @@ export function OnboardingPageTwo() {
             color="clear"
             onClick={() => history.goBack()}
             size="small"
+            className="ion-margin-bottom"
           >
             <IonIcon icon={arrowBack}></IonIcon>
           </IonFabButton>
@@ -161,6 +165,7 @@ export function OnboardingPageTwo() {
             size="small"
             color="light"
             onClick={() => history.push("/onboarding/3")}
+            className="ion-margin-bottom"
           >
             <IonIcon icon={arrowForwardOutline}></IonIcon>
           </IonFabButton>
