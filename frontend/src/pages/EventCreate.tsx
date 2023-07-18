@@ -27,12 +27,14 @@ export default function EventCreate() {
       addToastError(t("required") + ": " + t("uploadImage"), 400);
       return;
     }
-    if (dayjs().startOf('day').isAfter(values.date)) {
+    const today = dayjs().startOf("day");
+    const now = dayjs();
+    if (today.isAfter(values.date)) {
       addToastError(t("invalid") + ": " + t("date"), 400);
       return;
     }
-    if (dayjs().isAfter(values.date) && !(dayjs().startOf('day').isAfter(values.date))) {
-      addToastError(t("invalid") + ": " + t("time"), 400)
+    if (now.isAfter(values.date) /* && !(today.isAfter(values.date))*/) {
+      addToastError(t("invalid") + ": " + t("time"), 400);
       return;
     }
 
