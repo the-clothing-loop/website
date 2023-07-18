@@ -86,16 +86,17 @@ export default function App() {
   const history = useHistory();
 
   useEffect(() => {
-    {
+    (async () => {
       const platforms = getPlatforms();
       if (platforms.includes("capacitor")) {
-        OneSignalInitCap();
+        await OneSignalInitCap().catch((err) => {
+          console.error(err);
+        });
       } else if (platforms.includes("pwa")) {
-        OneSignalInitReact();
+        await OneSignalInitReact();
       }
-    }
-
-    auth();
+      await auth();
+    })();
 
     const root = document.getElementById("#root");
     root?.addEventListener("store-error", eventCatchStoreErr);
