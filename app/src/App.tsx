@@ -1,9 +1,9 @@
 import {
   Redirect,
   Route,
-  RouteProps,
   Switch,
   useHistory,
+  useLocation,
 } from "react-router-dom";
 import {
   IonApp,
@@ -17,7 +17,6 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { SplashScreen } from "@capacitor/splash-screen";
-import { IonReactRouter } from "@ionic/react-router";
 import {
   bookOutline,
   homeOutline,
@@ -71,6 +70,7 @@ import { OnboardingPageOne, OnboardingPageTwo } from "./pages/Onboarding";
 import { useTranslation } from "react-i18next";
 import dayjs from "./dayjs";
 import { OneSignalInitCap, OneSignalInitReact } from "./onesignal";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 SplashScreen.show({
   autoHide: false,
@@ -84,6 +84,7 @@ export default function App() {
   const { isAuthenticated, init, authenticate, bags } =
     useContext(StoreContext);
   const history = useHistory();
+  let location = useLocation();
 
   useEffect(() => {
     (async () => {
@@ -133,11 +134,8 @@ export default function App() {
 
   return (
     <IonApp>
-      <Switch>
-        <Redirect exact from="/onboarding" to="/onboarding/1" />
-        <Route exact path="/onboarding/1" component={OnboardingPageOne} />
-        <Route exact path="/onboarding/2" component={OnboardingPageTwo} />
-        <Route exact path="/onboarding/3" component={Login} />
+      <Switch location={location}>
+        <Route path="/onboarding" component={OnboardingRoute} />
         <PrivateRoute isAuthenticated={isAuthenticated}>
           <AppRoute hasOldBag={hasOldBag} />
         </PrivateRoute>
@@ -173,6 +171,22 @@ function PrivateRoute({
         )
       }
     />
+  );
+}
+
+function OnboardingRoute() {
+  const location = useLocation();
+  return (
+    <TransitionGroup>
+      <CSSTransition classNames="fade" timeout={400} key={location.key}>
+        <Switch location={location}>
+          <Redirect exact from="/onboarding" to="/onboarding/1" />
+          <Route exact path="/onboarding/1" component={OnboardingPageOne} />
+          <Route exact path="/onboarding/2" component={OnboardingPageTwo} />
+          <Route exact path="/onboarding/3" component={Login} />
+        </Switch>
+      </CSSTransition>
+    </TransitionGroup>
   );
 }
 

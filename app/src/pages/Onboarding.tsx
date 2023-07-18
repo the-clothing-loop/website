@@ -49,6 +49,7 @@ export function OnboardingPageOne() {
           <IonImg
             style={{
               width: "70%",
+              maxWidth: 400,
             }}
             src="https://images.clothingloop.org/426x/paloeka_nichon_landscape.jpg"
           />
@@ -121,6 +122,7 @@ export function OnboardingPageTwo() {
           <IonImg
             style={{
               width: "70%",
+              maxWidth: 400,
             }}
             src="https://images.clothingloop.org/600x,jpeg/map_image_3.png"
           />
