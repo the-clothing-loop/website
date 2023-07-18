@@ -88,11 +88,11 @@ export default function BulkyList() {
       return;
     }
     const handler = (
-      type: "sms" | "whatsapp" | "telegram" | "signal" | "share"
+      type: "sms" | "whatsapp" | "telegram" | "signal" | "share",
     ) => {
       let phone = user.phone_number.replaceAll(/[^\d]/g, "");
       let message = window.encodeURI(
-        t("imInterestedInThisBulkyItem", { name: bulkyItemName })
+        t("imInterestedInThisBulkyItem", { name: bulkyItemName }),
       );
       console.log("phone", phone, "message", message);
 

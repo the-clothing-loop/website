@@ -107,7 +107,7 @@ export default function CreateUpdateBag({
     }
   }
   function handleSelectBagHolder(
-    e: IonSelectCustomEvent<SelectChangeEventDetail<any>>
+    e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
   ) {
     let userUID = e.detail.value;
 

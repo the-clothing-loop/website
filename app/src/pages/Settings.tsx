@@ -60,7 +60,7 @@ export default function Settings() {
         ? authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
             ?.is_chain_admin || false
         : false,
-    [authUser, chain]
+    [authUser, chain],
   );
 
   const [listOfChains, setListOfChains] = useState<Chain[]>([]);
@@ -73,7 +73,7 @@ export default function Settings() {
     Promise.all(
       authUser.chains
         .filter((uc) => uc.is_approved)
-        .map((uc) => chainGet(uc.chain_uid))
+        .map((uc) => chainGet(uc.chain_uid)),
     )
       .then((chains) => {
         setListOfChains(chains.map((c) => c.data));
@@ -87,7 +87,7 @@ export default function Settings() {
   }, [authUser]);
 
   function handleChainSelect(
-    e: IonSelectCustomEvent<SelectChangeEventDetail<any>>
+    e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
   ) {
     const chainUID = e.detail.value;
     const c = listOfChains.find((c) => c.uid === chainUID) || null;

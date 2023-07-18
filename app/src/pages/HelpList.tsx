@@ -63,7 +63,7 @@ export default function HelpList() {
         ? authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
             ?.is_chain_admin || false
         : false,
-    [authUser, chain]
+    [authUser, chain],
   );
 
   const data = t("list", { ns: "faq", returnObjects: true }) as FaqListItem[];

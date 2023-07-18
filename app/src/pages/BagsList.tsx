@@ -172,7 +172,7 @@ export default function BagsList() {
     sheetModal.current?.present();
   }
   function handleDidDismissSheetModal(
-    e: IonModalCustomEvent<OverlayEventDetail<any>>
+    e: IonModalCustomEvent<OverlayEventDetail<any>>,
   ) {
     e.detail.data;
   }
@@ -221,7 +221,7 @@ export default function BagsList() {
                 if (routeIndex === -1) return null;
                 const bagUpdatedAt = dayjs(bag.updated_at);
                 const isBagTooOld = bagUpdatedAt.isBefore(
-                  dayjs().add(-7, "days")
+                  dayjs().add(-7, "days"),
                 );
 
                 return (
@@ -338,7 +338,7 @@ export default function BagsList() {
                 if (routeIndex === -1) return null;
                 const bagUpdatedAt = dayjs(bag.updated_at);
                 const isBagTooOld = !bagUpdatedAt.isBefore(
-                  dayjs().add(-7, "days")
+                  dayjs().add(-7, "days"),
                 );
                 let isOpen = openCard == bag.id;
                 return (
@@ -504,7 +504,7 @@ function Card({
           setOpen(false);
         }
       },
-    }
+    },
   );
 
   function handleEdit<E>(e: MouseEvent<E>) {
@@ -627,7 +627,7 @@ function SelectUserModal({
   }
 
   function handleChangeDatetime(
-    e: IonDatetimeCustomEvent<DatetimeChangeEventDetail>
+    e: IonDatetimeCustomEvent<DatetimeChangeEventDetail>,
   ) {
     let datetime = new Date(e.detail.value + "");
     setUpdatedAt(datetime);

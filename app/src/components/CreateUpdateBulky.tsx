@@ -35,7 +35,7 @@ export default function CreateUpdateBulky({
   bulky: BulkyItem | null;
   modal: RefObject<HTMLIonModalElement>;
   didDismiss?: (
-    e: IonModalCustomEvent<OverlayEventDetail<BulkyItem | null>>
+    e: IonModalCustomEvent<OverlayEventDetail<BulkyItem | null>>,
   ) => void;
 }) {
   const { t } = useTranslation();
@@ -108,7 +108,7 @@ export default function CreateUpdateBulky({
         });
     } else {
       const el = document.getElementById(
-        "cu-bulky-web-image-upload"
+        "cu-bulky-web-image-upload",
       ) as HTMLInputElement | null;
       el?.click();
     }
@@ -124,7 +124,7 @@ export default function CreateUpdateBulky({
         reader.readAsDataURL(file);
         reader.onload = () =>
           resolve(
-            (reader.result as string).replace("data:", "").replace(/^.+,/, "")
+            (reader.result as string).replace("data:", "").replace(/^.+,/, ""),
           );
         reader.onerror = (error) => reject(error);
       });

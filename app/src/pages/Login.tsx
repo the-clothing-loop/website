@@ -75,8 +75,8 @@ export default function Login(props: { isLoggedIn: boolean }) {
         setSentTimeout(
           setTimeout(
             () => setSentState(State.idle),
-            1000 * 60 /* 1 min */
-          ) as any
+            1000 * 60 /* 1 min */,
+          ) as any,
         );
         Keyboard.hide();
       } catch (err) {

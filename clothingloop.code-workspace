@@ -22,7 +22,8 @@
   "settings": {
     "yaml.schemas": {
       "https://json.schemastore.org/prometheus.rules.test.json": "file:///Users/lil5/Projects/clothingloop/clothing-loop/server/config.test.yml"
-    }
+    },
+    "prettier.documentSelectors": [".prettierrc.yml"]
   },
   "extensions": {
     "recommendations": [

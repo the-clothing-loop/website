@@ -100,7 +100,7 @@ export default function CreateUpdateRules(props: {
   }
 
   function handleReorder(
-    e: IonReorderGroupCustomEvent<ItemReorderEventDetail>
+    e: IonReorderGroupCustomEvent<ItemReorderEventDetail>,
   ) {
     setOpen(-1);
     (async () => {
@@ -226,7 +226,7 @@ function RuleItem(props: {
 
   function setRuleItem(
     e: IonInputCustomEvent<InputChangeEventDetail>,
-    key: keyof FaqListItem
+    key: keyof FaqListItem,
   ) {
     props.setRule({
       ...props.rule,

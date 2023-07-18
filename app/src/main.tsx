@@ -15,5 +15,5 @@ root.render(
         <App />
       </IonReactRouter>
     </StoreProvider>
-  </StrictMode>
+  </StrictMode>,
 );

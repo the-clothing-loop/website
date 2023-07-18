@@ -117,14 +117,14 @@ export function loginEmail(email: string) {
   return window.axios.post<never>(
     "/v2/login/email",
     { email, app: true },
-    { auth: undefined, withCredentials: false }
+    { auth: undefined, withCredentials: false },
   );
 }
 
 export function loginValidate(key: string) {
   return window.axios.get<{ user: User; token: string }>(
     `/v2/login/validate?apiKey=${key}`,
-    { auth: undefined, withCredentials: false }
+    { auth: undefined, withCredentials: false },
   );
 }
 
@@ -217,7 +217,7 @@ export function bulkyItemRemove(chainUID: UID, userUID: UID, id: number) {
 export function uploadImage(
   image64: string,
   size: number,
-  expiration?: number
+  expiration?: number,
 ) {
   let params: { size: number; expiration?: number } = { size };
   if (expiration) params.expiration = expiration;

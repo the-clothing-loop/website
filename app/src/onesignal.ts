@@ -27,7 +27,7 @@ export function OneSignalInitCap(): Promise<string | boolean> {
         } else {
           reject(false);
         }
-      }
+      },
     );
   });
 }

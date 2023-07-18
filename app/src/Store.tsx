@@ -229,7 +229,7 @@ function throwError(err: any) {
   document.getElementById("root")?.dispatchEvent(
     new CustomEvent("store-error", {
       detail: err,
-    })
+    }),
   );
 }
 
