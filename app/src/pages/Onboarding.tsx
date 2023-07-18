@@ -79,6 +79,7 @@ export function OnboardingPageOne() {
 
         <IonFab vertical="bottom" horizontal="end">
           <IonFabButton
+            className="ion-margin-bottom"
             color="light"
             size="small"
             onClick={() => {
@@ -154,6 +155,7 @@ export function OnboardingPageTwo() {
             color="clear"
             onClick={() => history.goBack()}
             size="small"
+            className="ion-margin-bottom"
           >
             <IonIcon icon={arrowBack}></IonIcon>
           </IonFabButton>
@@ -163,6 +165,7 @@ export function OnboardingPageTwo() {
             size="small"
             color="light"
             onClick={() => history.push("/onboarding/3")}
+            className="ion-margin-bottom"
           >
             <IonIcon icon={arrowForwardOutline}></IonIcon>
           </IonFabButton>
