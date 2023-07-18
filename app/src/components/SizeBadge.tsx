@@ -100,10 +100,10 @@ export default function Badges({ chain }: { chain: Chain }) {
       }}
     >
       {women?.length || chain.genders?.includes(Genders.women) ? (
-        <BadgeItem sizes={women} icon="man" key="women" />
+        <BadgeItem sizes={women} icon="woman" key="women" />
       ) : null}
       {men?.length || chain.genders?.includes(Genders.men) ? (
-        <BadgeItem sizes={men} icon="woman" key="men" />
+        <BadgeItem sizes={men} icon="man" key="men" />
       ) : null}
       {children?.length || chain.genders?.includes(Genders.children) ? (
         <BadgeItem sizes={children} icon="baby" key="children" />
