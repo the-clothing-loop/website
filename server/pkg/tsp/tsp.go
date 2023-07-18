@@ -1,7 +1,6 @@
 package tsp
 
 import (
-	"fmt"
 	"math"
 	"time"
 
@@ -28,7 +27,6 @@ var optimizer TSPAlgorithm = MST{}
 *
 Given a ChainUID return an optimized route for all the approved participant of the loop
 with latitude and longitude.
-The start of the loop will be in the creator host?
 *
 */
 func OptimizeRoute(ChainID uint, db *gorm.DB) (float64, []string) {
@@ -63,7 +61,6 @@ func retrieveChainUsers(ChainID uint, db *gorm.DB) []UserChain {
 		goscope.Log.Errorf("Unable to retrieve associations between a loop and its users: %v", err)
 		return nil
 	}
-	fmt.Println(allUserChains)
 	return *allUserChains
 }
 
@@ -82,7 +79,6 @@ func createDistanceMatrix(users []UserChain) [][]float64 {
 			matrix[j][i] = distance
 		}
 	}
-	fmt.Println(matrix)
 	return matrix
 }
 
