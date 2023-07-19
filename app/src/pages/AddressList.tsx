@@ -1,4 +1,6 @@
 import {
+  IonButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
@@ -12,12 +14,17 @@ import {
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
-import { pauseCircleSharp, personCircleOutline } from "ionicons/icons";
+import {
+  bagHandle,
+  pauseCircleSharp,
+  personCircleOutline,
+} from "ionicons/icons";
 import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
 
 export default function AddressList() {
-  const { chainUsers, route, authUser } = useContext(StoreContext);
+  const { chain, chainUsers, route, authUser, bags, isChainAdmin } =
+    useContext(StoreContext);
   const { t } = useTranslation();
 
   return (
@@ -25,6 +32,16 @@ export default function AddressList() {
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("addresses")}</IonTitle>
+          {isChainAdmin ? (
+            <IonButtons slot="end">
+              <IonButton
+                target="_blank"
+                href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}
+              >
+                {t("routeOrder")}
+              </IonButton>
+            </IonButtons>
+          ) : null}
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -41,11 +58,13 @@ export default function AddressList() {
             const isUserPaused = isPaused(user.paused_until);
             const isPrivate = IsPrivate(user.email);
             const isAddressPrivate = IsPrivate(user.address);
+            const userBags = bags.filter((b) => b.user_uid === user.uid);
             return (
               <IonItem
                 lines="full"
                 routerLink={isPrivate ? undefined : "/address/" + user.uid}
                 key={user.uid}
+                color={isUserPaused ? "light" : undefined}
               >
                 <IonText
                   className="ion-text-ellipsis"
@@ -65,19 +84,7 @@ export default function AddressList() {
                     }
                   >
                     {user.name}
-                    {isUserPaused ? (
-                      <IonIcon
-                        icon={pauseCircleSharp}
-                        color="medium"
-                        style={{
-                          width: "18px",
-                          height: "18px",
-                          margin: 0,
-                          marginLeft: "5px",
-                          verticalAlign: "text-top",
-                        }}
-                      />
-                    ) : null}
+
                     {isMe ? (
                       <IonIcon
                         icon={personCircleOutline}
@@ -86,20 +93,57 @@ export default function AddressList() {
                           width: "18px",
                           height: "18px",
                           margin: 0,
-                          marginLeft: "5px",
+                          marginLeft: 5,
                           verticalAlign: "text-top",
                         }}
                       />
                     ) : null}
+                    {userBags.map((b) => (
+                      <IonIcon
+                        icon={bagHandle}
+                        style={{ color: b.color, marginLeft: 5 }}
+                        key={b.id}
+                      />
+                    ))}
                   </h5>
-                  {isAddressPrivate ? (
+                  {isUserPaused ? (
+                    <small
+                      style={{
+                        color: "var(--ion-color-medium)",
+                      }}
+                    >
+                      {t("paused")}
+                    </small>
+                  ) : isAddressPrivate ? (
                     <small>&nbsp;</small>
                   ) : (
                     <small>{user.address}</small>
                   )}
                 </IonText>
-                <IonText slot="start" color="medium" className="ion-text-bold">
-                  #{i + 1}
+                <IonText
+                  slot="start"
+                  color="medium"
+                  className="ion-text-bold"
+                  style={{
+                    width: 30,
+                    textWrap: "nowrap",
+                  }}
+                >
+                  {isUserPaused ? (
+                    <IonIcon
+                      icon={pauseCircleSharp}
+                      color="medium"
+                      // size="large"
+                      style={{
+                        width: 24,
+                        height: 24,
+                        margin: 0,
+                        verticalAlign: "text-top",
+                      }}
+                    />
+                  ) : (
+                    <span>{"#" + (i + 1)}</span>
+                  )}
                 </IonText>
               </IonItem>
             );
