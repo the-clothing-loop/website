@@ -209,11 +209,11 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
       <IonTabBar slot="bottom">
         <IonTabButton tab="help" href="/help">
           <IonIcon aria-hidden="true" icon={bookOutline} />
-          <IonLabel>{t("info")}</IonLabel>
+          <IonLabel>{t("rules")}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="address" href="/address">
           <IonIcon aria-hidden="true" icon={homeOutline} />
-          <IonLabel>{t("addresses")}</IonLabel>
+          <IonLabel>{t("route")}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="bags" href="/bags">
           <IonIcon aria-hidden="true" icon={bagHandleOutline} />
@@ -240,7 +240,7 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
 
         <IonTabButton tab="settings" href="/settings">
           <IonIcon aria-hidden="true" icon={peopleCircleOutline} />
-          <IonLabel>{t("settings")}</IonLabel>
+          <IonLabel>{t("info")}</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>

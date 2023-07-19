@@ -156,7 +156,7 @@ export default function Settings() {
     <IonPage>
       <IonHeader collapse="fade">
         <IonToolbar>
-          <IonTitle>{t("settings")}</IonTitle>
+          <IonTitle>{t("info")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       {isAuthenticated === true ? (

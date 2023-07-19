@@ -1,10 +1,11 @@
 {
   "info": "Info",
+  "rules": "Regels",
   "addresses": "Adressen",
   "bag": "Tas",
   "bags": "Tassen",
   "whereIsTheBag": "Waar is de tas?",
-  "bulkyItems": "Grote voorwerpen",
+  "bulkyItems": "Overige aanbod",
   "reserve": "Reserveren",
   "settings": "Instellingen",
   "cancel": "Annuleren",
