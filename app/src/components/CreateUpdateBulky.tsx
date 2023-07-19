@@ -172,11 +172,6 @@ export default function CreateUpdateBulky({
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
-          <IonItem lines="none">
-            <IonLabel className="ion-text-wrap">
-              {t("theNextBagNumberIsAutomaticallySelected")}
-            </IonLabel>
-          </IonItem>
           <IonItem
             lines="none"
             color={error === "title" ? "danger" : undefined}

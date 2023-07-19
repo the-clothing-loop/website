@@ -19,7 +19,7 @@ import {
 
 import type { IonSelectCustomEvent, IonModalCustomEvent } from "@ionic/core";
 import { checkmarkCircle, ellipse } from "ionicons/icons";
-import { FormEvent, RefObject, useContext, useState } from "react";
+import { FormEvent, RefObject, useContext, useState, HTMLInput } from "react";
 import { Bag, bagColors, bagPut, UID } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
@@ -46,7 +46,7 @@ export default function CreateUpdateBag({
   function modalInit() {
     setError("");
     setBagColor(bag?.color || bagColors[2]);
-    setBagHolder(bag?.user_uid || null);
+    setBagHolder(bag?.user_uid || authUser?.uid || null);
 
     if (bag === null) {
       let highestNumber = 0;
@@ -140,21 +140,15 @@ export default function CreateUpdateBag({
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
-          <IonItem lines="none">
-            <IonLabel className="ion-text-wrap">
-              {t("theNextBagNumberIsAutomaticallySelected")}
-            </IonLabel>
-          </IonItem>
-          <IonItem
-            lines="none"
-            color={error === "number" ? "danger" : undefined}
-          >
-            <IonLabel slot="start">{t("bagName")}</IonLabel>
+          <IonItem color={error === "number" ? "danger" : undefined}>
             <IonInput
               type="text"
-              slot="end"
+              label={t("bagName")}
+              labelPlacement="start"
+              placeholder=""
               className="ion-text-right"
               value={bagNumber}
+              onFocus={(e) => (e.target as HTMLInput).select()}
               onIonChange={(e) =>
                 setBagNumber(e.detail.value?.toString() || "")
               }
