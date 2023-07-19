@@ -176,7 +176,7 @@ export default function Settings() {
               detail={false}
             >
               <IonLabel className="ion-text-wrap">
-                <h3>{t("pauseParticipation")}</h3>
+                <h3 className="ion-text-semibold">{t("pauseParticipation")}</h3>
                 <p className="ion-no-wrap">
                   {pausedDayjs
                     ? pausedDayjs.fromNow()

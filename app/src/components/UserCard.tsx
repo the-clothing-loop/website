@@ -112,7 +112,7 @@ export default function UserCard({
           <>
             <IonItem lines="none" id="item-phone-number">
               <IonLabel>
-                <h3>{t("phoneNumber")}</h3>
+                <h3 className="ion-text-semibold">{t("phoneNumber")}</h3>
                 {user.phone_number ? (
                   <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
                 ) : null}
@@ -167,7 +167,7 @@ export default function UserCard({
               }
             >
               <IonLabel>
-                <h3>{t("address")}</h3>
+                <h3 className="ion-text-semibold">{t("address")}</h3>
                 {/* https://www.google.com/maps/@${long},${lat},14z */}
                 <p className="ion-text-wrap">{user?.address}</p>
               </IonLabel>
