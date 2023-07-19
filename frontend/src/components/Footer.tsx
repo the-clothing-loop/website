@@ -3,15 +3,18 @@ import { useTranslation } from "react-i18next";
 
 //Project resources
 import { Newsletter } from "./Newsletter";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 import useToClipboard from "../util/to-clipboard.hooks";
 
 export default function Footer() {
+  const AppStore  = "https://images.clothingloop.org/150x/app_store_badge.png";
+  const GooglePlay = "https://images.clothingloop.org/150x/google_play_badge.png"
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
   const addCopyAttributes = useToClipboard();
   const currentYear = new Date().getFullYear();
+
 
   return (
     <footer className="bg-white pt-8 lg:pt-16 w-full">
@@ -124,7 +127,18 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
+      <div className="flex bg-white justify-center items-center space-x-4 py-4">
+        <img
+          src={AppStore}
+          alt="App Store Logo"
+          width={130}
+        />
+        <img
+          src={GooglePlay}
+          alt="Google Play Logo"
+          width={144}
+        />
+      </div>
       <div className="bg-teal text-white">
         <div className="container mx-auto px-1 md:px-20 py-4 flex flex-col md:flex-row justify-between items-center">
           <div className="flex flex-col sm:flex-row sm:flex-wrap mb-2 md:mb-0">
@@ -149,7 +163,7 @@ export default function Footer() {
               {t("contribute")}
             </a>
           </div>
-
+            
           <p className="text-center sm:text-right" aria-label="copyright">
             <span className="font-bold">The Clothing Loop</span>
             &nbsp;&copy;&nbsp;{currentYear}
