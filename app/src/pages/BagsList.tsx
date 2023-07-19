@@ -52,7 +52,7 @@ import {
   useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Bag, bagPut, bagRemove, UID } from "../api";
+import { Bag, bagPut, bagRemove, UID, User } from "../api";
 import CreateBag from "../components/CreateUpdateBag";
 import { StoreContext } from "../Store";
 import dayjs from "../dayjs";
@@ -223,6 +223,9 @@ export default function BagsList() {
                 const isBagTooOld = bagUpdatedAt.isBefore(
                   dayjs().add(-7, "days"),
                 );
+                const isBagNameNumeric = Number.isSafeInteger(
+                  Number.parseInt(bag.number),
+                );
 
                 return (
                   <IonCol size="6" key={"inRoute" + bag.id}>
@@ -308,24 +311,17 @@ export default function BagsList() {
                           {t("bag") + " " + bag.number}
                         </div>
                       </div>
-                      <IonRouterLink routerLink={"/address/" + user.uid}>
-                        <IonCardHeader style={{ padding: 10 }}>
-                          <IonCardTitle
-                            className="ion-text-ellipsis"
-                            style={{ fontSize: 14 }}
-                          >
-                            {user.name}
-                          </IonCardTitle>
-                          <IonCardSubtitle
-                            style={{ fontSize: 12, textTransform: "none" }}
-                          >
-                            {t("route") + ": #" + (routeIndex + 1)}
-                            <IonIcon
-                              icon={chevronForwardOutline}
-                              className="ion-icon-text"
-                            ></IonIcon>
-                          </IonCardSubtitle>
-                        </IonCardHeader>
+
+                      <IonRouterLink
+                        routerLink={"/address/" + user.uid}
+                        style={{
+                          padding: 10,
+                          paddingTop: 9,
+                          display: "block",
+                          backgroundColor: "var(--ion-color-light)",
+                        }}
+                      >
+                        <UserLink user={user} routeIndex={routeIndex} />
                       </IonRouterLink>
                     </Card>
                   </IonCol>
@@ -410,36 +406,9 @@ export default function BagsList() {
                             color="light"
                             slot="end"
                             routerLink={"/address/" + user.uid}
+                            style={{ width: 115 }}
                           >
-                            <span
-                              style={{
-                                display: "flex",
-                                width: 115,
-                                justifyContent: "space-between",
-                              }}
-                            >
-                              <span
-                                style={{ fontSize: 14 }}
-                                className="ion-text-ellipsis"
-                              >
-                                <IonIcon
-                                  icon={person}
-                                  style={{
-                                    width: 12,
-                                    height: 12,
-                                    marginInlineEnd: 4,
-                                  }}
-                                  className="ion-icon-text"
-                                />
-                                {user.name.split(" ")[0]}
-                              </span>
-                              <span
-                                style={{ fontSize: 14 }}
-                                className="ion-text-right"
-                              >
-                                {"#" + (routeIndex + 1)}
-                              </span>
-                            </span>
+                            <UserLink user={user} routeIndex={routeIndex} />
                           </IonButton>
                         )}
                         {isChainAdmin ? (
@@ -770,5 +739,41 @@ function BagSVG({ color }: { color: string }) {
         ></path>
       </g>
     </svg>
+  );
+}
+
+function UserLink({ user, routeIndex }: { user: User; routeIndex: number }) {
+  const { t } = useTranslation();
+  return (
+    <div
+      className="ion-text-bold"
+      style={{
+        color: "var(--ion-color-medium)",
+        backgroundColor: "var(--ion-color-light)",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "baseline",
+        fontSize: 12,
+        width: "100%",
+      }}
+    >
+      <span style={{ marginInlineEnd: 3 }}>{"#" + (routeIndex + 1)}</span>
+      <span
+        className="ion-text-ellipsis"
+        style={{
+          fontSize: 14,
+          flexGrow: 1,
+          display: "block",
+          color: "var(--ion-color-dark)",
+        }}
+      >
+        {user.name}
+      </span>
+      <IonIcon
+        icon={chevronForwardOutline}
+        className="ion-icon-text"
+        style={{ minWidth: 12, width: 12 }}
+      ></IonIcon>
+    </div>
   );
 }
