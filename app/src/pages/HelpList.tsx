@@ -16,6 +16,7 @@ import {
   logoFacebook,
   logoInstagram,
   logoLinkedin,
+  // mail,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
@@ -40,6 +41,11 @@ const mediaIcons: MediaIcon[] = [
     label: "Website",
     url: "https://www.clothingloop.org",
   },
+  // {
+  //   icon: mail,
+  //   label: "Email",
+  //   url: "mailto:hello@clothingloop.org",
+  // },
   {
     icon: logoLinkedin,
     label: "LinkedIn",
@@ -132,18 +138,6 @@ export default function HelpList() {
             </IonRouterLink>
           ))}
         </div>
-        <IonRouterLink
-          className="ion-text-center"
-          aria-label="Email"
-          href="mailto:hello@clothingloop.org"
-          style={{
-            display: "block",
-            color: "var(--ion-color-primary)",
-            fontSize: "14px",
-          }}
-        >
-          hello@clothingloop.org
-        </IonRouterLink>
 
         <CreateUpdateRules
           rules={chain?.rules_override || null}
