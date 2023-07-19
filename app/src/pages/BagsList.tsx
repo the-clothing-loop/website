@@ -34,6 +34,7 @@ import {
   chevronForwardOutline,
   closeOutline,
   ellipsisHorizontal,
+  pauseCircle,
   person,
   personCircleOutline,
 } from "ionicons/icons";
@@ -757,14 +758,29 @@ function UserLink({ user, routeIndex }: { user: User; routeIndex: number }) {
         width: "100%",
       }}
     >
-      <span style={{ marginInlineEnd: 3 }}>{"#" + (routeIndex + 1)}</span>
+      {user.paused_until ? (
+        <IonIcon
+          style={{
+            transform: "translateY(1px)",
+            width: 16,
+            height: 16,
+            minWidth: 16,
+            marginInlineEnd: 3,
+          }}
+          icon={pauseCircle}
+        />
+      ) : (
+        <span style={{ marginInlineEnd: 3 }}>{"#" + (routeIndex + 1)}</span>
+      )}
       <span
         className="ion-text-ellipsis"
         style={{
           fontSize: 14,
           flexGrow: 1,
           display: "block",
-          color: "var(--ion-color-dark)",
+          color: user.paused_until
+            ? "var(--ion-color-medium)"
+            : "var(--ion-color-dark)",
         }}
       >
         {user.name}
