@@ -3,19 +3,36 @@ import { useTranslation } from "react-i18next";
 
 //Project resources
 import { Newsletter } from "./Newsletter";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 import useToClipboard from "../util/to-clipboard.hooks";
 
 export default function Footer() {
-  const AppStore  = "https://images.clothingloop.org/150x/app_store_badge.png";
-  const GooglePlay = "https://images.clothingloop.org/150x/google_play_badge.png"
+  const AppStore  = "https://images.clothingloop.org/x50/app_store_badge.png";
+  const GooglePlay = "https://images.clothingloop.org/x50/google_play_badge.png"
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
   const addCopyAttributes = useToClipboard();
   const currentYear = new Date().getFullYear();
+  const [mobileOS, setMobileOS] = useState("unknown");
+    useEffect(() => {
+    const detectMobileOS = () => {
+      const userAgent = navigator.userAgent || navigator.vendor;
 
+      if (/android/i.test(userAgent)) {
+        return "android";
+      }
 
+      if (/iPad|iPhone|iPod/i.test(userAgent)) {
+        return "ios";
+      }
+
+      return "unknown";
+    };
+
+    const os = detectMobileOS();
+    setMobileOS(os);
+  }, []);
   return (
     <footer className="bg-white pt-8 lg:pt-16 w-full">
       <div className="relative">
@@ -128,16 +145,29 @@ export default function Footer() {
         </div>
       </div>
       <div className="flex bg-white justify-center items-center space-x-4 py-4">
-        <img
-          src={AppStore}
-          alt="App Store Logo"
-          width={130}
-        />
-        <img
-          src={GooglePlay}
-          alt="Google Play Logo"
-          width={144}
-        />
+        {mobileOS === "ios" || mobileOS === "unknown" ? (
+          <a
+            href="#"
+            target="_blank"
+          >
+            <img
+              src={AppStore}
+              alt="App Store Logo"
+            />
+          </a>
+        ) : null}
+
+        {mobileOS === "android" || mobileOS === "unknown" ? (
+          <a
+            href="#"
+            target="_blank"
+          >
+            <img
+              src={GooglePlay}
+              alt="Google Play Logo"
+            />
+          </a>
+        ) : null}
       </div>
       <div className="bg-teal text-white">
         <div className="container mx-auto px-1 md:px-20 py-4 flex flex-col md:flex-row justify-between items-center">
