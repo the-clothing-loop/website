@@ -18,6 +18,7 @@ import {
   bagHandle,
   pauseCircleSharp,
   personCircleOutline,
+  shield,
 } from "ionicons/icons";
 import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
@@ -59,6 +60,10 @@ export default function AddressList() {
             const isPrivate = IsPrivate(user.email);
             const isAddressPrivate = IsPrivate(user.address);
             const userBags = bags.filter((b) => b.user_uid === user.uid);
+            //@ts-ignore
+            const isUserHost =
+              user.chains.find((uc) => uc.user_uid === user.uid)?.chain_uid ||
+              false;
             return (
               <IonItem
                 lines="full"
@@ -90,8 +95,20 @@ export default function AddressList() {
                         icon={personCircleOutline}
                         color="medium"
                         style={{
-                          width: "18px",
-                          height: "18px",
+                          width: 18,
+                          height: 18,
+                          margin: 0,
+                          marginLeft: 5,
+                          verticalAlign: "text-top",
+                        }}
+                      />
+                    ) : isUserHost ? (
+                      <IonIcon
+                        icon={shield}
+                        color="medium"
+                        style={{
+                          width: 16,
+                          height: 16,
                           margin: 0,
                           marginLeft: 5,
                           verticalAlign: "text-top",
