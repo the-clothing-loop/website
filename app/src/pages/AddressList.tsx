@@ -123,19 +123,19 @@ export default function AddressList() {
                       />
                     ))}
                   </h5>
-                  {isUserPaused ? (
-                    <small
-                      style={{
-                        color: "var(--ion-color-medium)",
-                      }}
-                    >
-                      {t("paused")}
-                    </small>
-                  ) : isAddressPrivate ? (
-                    <small>&nbsp;</small>
-                  ) : (
-                    <small>{user.address}</small>
-                  )}
+                  <span
+                    style={{
+                      opacity: 0.6,
+                    }}
+                  >
+                    {isUserPaused ? (
+                      <small>{t("paused")}</small>
+                    ) : isAddressPrivate ? (
+                      <small>&nbsp;</small>
+                    ) : (
+                      <small>{user.address}</small>
+                    )}
+                  </span>
                 </IonText>
                 <IonText
                   slot="start"
