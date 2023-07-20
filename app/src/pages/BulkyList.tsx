@@ -98,10 +98,13 @@ export default function BulkyList() {
           break;
         case "whatsapp":
           window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+          break;
         case "telegram":
           window.open(`https://t.me/+${phone}?text=${message}`, "_blank");
+          break;
         case "signal":
           window.open(`https://signal.me/+${phone}`, "_blank");
+          break;
       }
     };
     let buttons = [
