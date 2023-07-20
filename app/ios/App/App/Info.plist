@@ -23,11 +23,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>NSCameraUsageDescription</string>
+	<string>This app requires access to your phone’s camera.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>NSPhotoLibraryAddUsageDescription</string>
+	<string>Add a photo from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>NSPhotoLibraryUsageDescription</string>
+	<string>This app requires access to the photo library.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
