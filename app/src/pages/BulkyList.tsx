@@ -25,7 +25,7 @@ import {
   ellipsisHorizontal,
   personCircleOutline,
 } from "ionicons/icons";
-import { useContext, useRef, useState } from "react";
+import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
 import { bulkyItemRemove, BulkyItem, User } from "../api";
@@ -239,6 +239,8 @@ export default function BulkyList() {
                     </IonText>
                   </IonItem>
                   <IonItem
+                    button={shouldExpandText}
+                    detail={false}
                     lines="none"
                     onClick={
                       shouldExpandText
@@ -253,6 +255,8 @@ export default function BulkyList() {
                     <IonText
                       style={{
                         color: "var(--ion-color-dark)",
+                        paddingTop: 3,
+                        paddingBottom: 3,
                       }}
                     >
                       <p
@@ -266,14 +270,13 @@ export default function BulkyList() {
                               }
                             : {}),
                         }}
-                        className="ion-padding-top"
                       >
                         {bulkyItem.message}
                       </p>
                       {shouldExpandText ? (
                         <small
                           style={{
-                            marginTop: -6,
+                            marginTop: -3,
                             display: "block",
                             color: "var(--ion-color-medium)",
                           }}
@@ -333,7 +336,14 @@ export default function BulkyList() {
             initialBreakpoint={0.4}
             breakpoints={[0, 0.4, 1]}
           >
-            <div className="ion-padding ion-margin-top">{modalDescBody}</div>
+            <div className="ion-padding ion-margin-top">
+              {modalDescBody.split("\n").map((s, i) => (
+                <Fragment key={i}>
+                  {s}
+                  <br />
+                </Fragment>
+              ))}
+            </div>
           </IonModal>
         </div>
         <CreateUpdateBulky
