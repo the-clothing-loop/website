@@ -15,16 +15,10 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
-  useIonActionSheet,
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
-import {
-  calendarClear,
-  chatbubbleOutline,
-  ellipsisHorizontal,
-  personCircleOutline,
-} from "ionicons/icons";
+import { calendarClear, chatbubbleOutline } from "ionicons/icons";
 import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
@@ -32,7 +26,6 @@ import { bulkyItemRemove, BulkyItem, User } from "../api";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
 import { isPlatform } from "@ionic/core";
-import { Share } from "@capacitor/share";
 
 export default function BulkyList() {
   const { t } = useTranslation();
@@ -41,7 +34,6 @@ export default function BulkyList() {
   const modal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
   const [present] = useIonToast();
-  const [presentActionSheet] = useIonActionSheet();
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
   const [modalDescBody, setModalDescBody] = useState("");
@@ -91,13 +83,6 @@ export default function BulkyList() {
     modal.current?.present();
   }
   function handleClickReserve(user: User, bulkyItemName: string) {
-    if (isCapacitor) {
-      Share.share({
-        url: "tel:" + user.phone_number,
-        title: t("imInterestedInThisBulkyItem", { name: bulkyItemName }),
-      });
-      return;
-    }
     const handler = (
       type: "sms" | "whatsapp" | "telegram" | "signal" | "share",
     ) => {
