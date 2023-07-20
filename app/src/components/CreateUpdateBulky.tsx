@@ -174,7 +174,6 @@ export default function CreateUpdateBulky({
         <IonList>
           <IonItem color={error === "title" ? "danger" : undefined}>
             <IonInput
-              className="ion-text-right"
               type="text"
               autoCorrect="on"
               autoCapitalize="words"
@@ -220,16 +219,16 @@ export default function CreateUpdateBulky({
               {t("image")}
             </IonLabel>
           </IonItem>
-          <IonItem
-            lines="none"
-            color={error === "image-url" ? "danger" : undefined}
-          >
-            <IonLabel slot="start">{t("imageURL")}</IonLabel>
+          <IonItem color={error === "image-url" ? "danger" : undefined}>
+            {/* <IonLabel slot="start"></IonLabel> */}
             <IonInput
+              label={t("imageURL")}
+              labelPlacement="start"
               className="ion-text-right"
               placeholder="image.jpg"
               type="url"
               value={bulkyImageURL}
+              onFocus={(e) => (e.target as any).select()}
               onIonChange={(e) => setBulkyImageURL(e.detail.value + "")}
             ></IonInput>
             {isAndroid || isIos ? null : (
@@ -290,7 +289,7 @@ export default function CreateUpdateBulky({
               >
                 <IonImg
                   src={bulkyImageURL}
-                  alt="the image to display"
+                  alt={t("loading")}
                   style={{
                     maxWidth: "100%",
                     height: "300px",
