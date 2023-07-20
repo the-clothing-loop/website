@@ -41,6 +41,8 @@
   "approveParticipant": "Sta \"{{ name }}'\" verzoek toe om deel te nemen aan de Loop?",
   "denyParticipant": "Weiger \"{{ name }}'\" verzoek om deel te nemen aan de Loop?",
   "route": "Route",
+  "routeOptimize": "Optimize Route",
+  "routeUndoOptimize": "Undo Optimize Route",
   "approve": "Keur goed",
   "pendingApproval": "Wacht op goedkeuring",
   "deny": "Weiger",
