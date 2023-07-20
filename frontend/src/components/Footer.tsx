@@ -7,27 +7,34 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 import useToClipboard from "../util/to-clipboard.hooks";
 
+enum MobileOS {
+  ANDROID = "android",
+  IOS = "ios",
+  OTHER = "",
+}
+
 export default function Footer() {
-  const AppStore  = "https://images.clothingloop.org/x50/app_store_badge.png";
-  const GooglePlay = "https://images.clothingloop.org/x50/google_play_badge.png"
+  const AppStore = "https://images.clothingloop.org/x100/app_store_badge.png";
+  const GooglePlay =
+    "https://images.clothingloop.org/x100/google_play_badge.png";
   const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
   const addCopyAttributes = useToClipboard();
   const currentYear = new Date().getFullYear();
-  const [mobileOS, setMobileOS] = useState("unknown");
-    useEffect(() => {
+  const [mobileOS, setMobileOS] = useState<MobileOS>(MobileOS.OTHER);
+  useEffect(() => {
     const detectMobileOS = () => {
       const userAgent = navigator.userAgent || navigator.vendor;
 
       if (/android/i.test(userAgent)) {
-        return "android";
+        return MobileOS.ANDROID;
       }
 
       if (/iPad|iPhone|iPod/i.test(userAgent)) {
-        return "ios";
+        return MobileOS.IOS;
       }
 
-      return "unknown";
+      return MobileOS.OTHER;
     };
 
     const os = detectMobileOS();
@@ -42,6 +49,7 @@ export default function Footer() {
         ></div>
         <div className="lg:container lg:px-20 mx-auto flex flex-col lg:flex-row-reverse relative z-10">
           <Newsletter />
+
           <div className="container mx-auto lg:mx-0 lg:w-1/2 pt-6">
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-center ltr:md:items-start rtl:md:items-end sm:justify-end text-center md:text-left lg:mt-8">
               <div className="flex flex-col items-center md:items-start px-3 pb-6 pt-0">
@@ -81,7 +89,7 @@ export default function Footer() {
                   </Link>
                 )}
               </div>
-              <div className="lg:col-span-2 px-3 pb-6 pt-0 rtl:text-right">
+              <div className="md:row-span-2 lg:col-span-2  px-3 rtl:text-right md:mb-3 lg:mb-0">
                 <span className="block text-secondary font-bold text-2xl mb-3">
                   {t("findUs")}
                 </span>
@@ -140,35 +148,33 @@ export default function Footer() {
                   </li>
                 </ul>
               </div>
+              <div className="md:col-span-2 md:row-start-2 lg:row-start-auto lg:col-span-2 self-end flex justify-center md:justify-start space-x-4 mt-3 mb-6 px-3">
+                {mobileOS === MobileOS.IOS || mobileOS === MobileOS.OTHER ? (
+                  <a href="#" target="_blank">
+                    <img
+                      src={AppStore}
+                      alt="App Store Logo"
+                      style={{ height: 50 }}
+                    />
+                  </a>
+                ) : null}
+
+                {mobileOS === MobileOS.ANDROID ||
+                mobileOS === MobileOS.OTHER ? (
+                  <a href="#" target="_blank">
+                    <img
+                      src={GooglePlay}
+                      alt="Google Play Logo"
+                      style={{ height: 50 }}
+                    />
+                  </a>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex bg-white justify-center items-center space-x-4 py-4">
-        {mobileOS === "ios" || mobileOS === "unknown" ? (
-          <a
-            href="#"
-            target="_blank"
-          >
-            <img
-              src={AppStore}
-              alt="App Store Logo"
-            />
-          </a>
-        ) : null}
 
-        {mobileOS === "android" || mobileOS === "unknown" ? (
-          <a
-            href="#"
-            target="_blank"
-          >
-            <img
-              src={GooglePlay}
-              alt="Google Play Logo"
-            />
-          </a>
-        ) : null}
-      </div>
       <div className="bg-teal text-white">
         <div className="container mx-auto px-1 md:px-20 py-4 flex flex-col md:flex-row justify-between items-center">
           <div className="flex flex-col sm:flex-row sm:flex-wrap mb-2 md:mb-0">
@@ -193,7 +199,7 @@ export default function Footer() {
               {t("contribute")}
             </a>
           </div>
-            
+
           <p className="text-center sm:text-right" aria-label="copyright">
             <span className="font-bold">The Clothing Loop</span>
             &nbsp;&copy;&nbsp;{currentYear}
