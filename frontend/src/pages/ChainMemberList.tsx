@@ -490,14 +490,14 @@ export default function ChainMemberList() {
         </div>
 
         <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
-          <div className="grid gap-4 sm:grid-cols-3 justify-items-center sm:justify-items-start">
-            <h2 className="order-1 sm:col-span-3 lg:col-span-1 font-semibold text-secondary self-center text-3xl">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 justify-items-center md:justify-items-start">
+            <h2 className="order-1 md:col-span-full lg:col-span-1 font-semibold text-secondary self-center text-3xl">
               {t("loopParticipant", {
                 count: unapprovedUsers.length + users.length,
               })}
             </h2>
 
-            <div className="order-3 sm:col-span-2 sm:order-2 lg:col-span-1 lg:justify-self-center flex border border-secondary bg-teal-light">
+            <div className="order-3 sm:order-2 lg:col-span-1 lg:justify-self-center flex border border-secondary bg-teal-light">
               <label>
                 <input
                   type="radio"
@@ -562,24 +562,29 @@ export default function ChainMemberList() {
                 </div>
               </label>
             </div>
-            <div className="order-2 sm:justify-self-end sm:self sm:order-3">
-              {!routeWasOptimized ? (
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
-                  onClick={() => optimizeRoute(chain.uid)}
-                >
-                  {t("routeOptimize")}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
-                  onClick={() => returnToPreviousRoute(chain.uid)}
-                >
-                  {t("routeUndoOptimize")}
-                </button>
-              )}
+            <div className="order-2 md:justify-self-end md:self md:order-3">
+              {selectedTable === "route" ? (
+                !routeWasOptimized ? (
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                    onClick={() => optimizeRoute(chain.uid)}
+                  >
+                    {t("routeOptimize")}
+                    <span className="feather feather-zap ms-3 text-primary" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                    onClick={() => returnToPreviousRoute(chain.uid)}
+                  >
+                    {t("routeUndoOptimize")}
+
+                    <span className="feather feather-corner-left-up ms-3" />
+                  </button>
+                )
+              ) : null}
 
               {selectedTable !== "unapproved" ? (
                 <UserDataExport
