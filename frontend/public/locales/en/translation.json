@@ -42,7 +42,7 @@
   "denyParticipant": "Deny “{{ name }}'s” request to join the loop?",
   "route": "Route",
   "routeOptimize": "Optimize Route",
-  "routeUndoOptimize": "Return to Previous Route",
+  "routeUndoOptimize": "Undo Optimize Route",
   "approve": "Approve",
   "pendingApproval": "Pending Host Approval",
   "deny": "Deny",
