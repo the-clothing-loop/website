@@ -129,6 +129,7 @@ func Routes() *gin.Engine {
 	// route
 	v2.GET("/route/order", controllers.RouteOrderGet)
 	v2.POST("/route/order", controllers.RouteOrderSet)
+	v2.GET("/route/optimize", controllers.RouteOptimize)
 
 	// contact
 	v2.POST("/contact/newsletter", controllers.ContactNewsletter)

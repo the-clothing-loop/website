@@ -40,7 +40,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
-import { routeGetOrder, routeSetOrder } from "../api/route";
+import { routeGetOrder, routeOptimizeOrder, routeSetOrder } from "../api/route";
 import useToClipboard from "../util/to-clipboard.hooks";
 import { bagGetAllByChain } from "../api/bag";
 import { Sleep } from "../util/sleep";
@@ -73,6 +73,9 @@ export default function ChainMemberList() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [bags, setBags] = useState<Bag[] | null>(null);
   const [route, setRoute] = useState<UID[] | null>(null);
+  const [routeWasOptimized, setRouteWasOptimized] = useState<boolean>(false);
+  const [previousRoute, setPreviousRoute] = useState<UID[] | null>(null);
+
   const [participantsSortBy, setParticipantsSortBy] =
     useState<ParticipantsSortBy>("date");
   const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
@@ -249,6 +252,29 @@ export default function ChainMemberList() {
       .finally(() => {
         refresh(false);
       });
+  }
+
+  function optimizeRoute(chainUID: UID) {
+    routeOptimizeOrder(chainUID)
+      .then((res) => {
+        const optimal_path = res.data.optimal_path;
+
+        // saving current rooute before changing in the database
+        setPreviousRoute(route);
+        setRouteWasOptimized(true);
+        // set new order
+        routeSetOrder(chainUID, optimal_path);
+        setRoute(optimal_path);
+      })
+      .catch((err) => {
+        addToastError(GinParseErrors(t, err), err.status);
+      });
+  }
+
+  function returnToPreviousRoute(chainUID: UID) {
+    setRoute(previousRoute);
+    setRouteWasOptimized(false);
+    routeSetOrder(chainUID, previousRoute!);
   }
 
   useEffect(() => {
@@ -464,14 +490,14 @@ export default function ChainMemberList() {
         </div>
 
         <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
-          <div className="grid gap-4 sm:grid-cols-3 justify-items-center sm:justify-items-start">
-            <h2 className="order-1 sm:col-span-3 lg:col-span-1 font-semibold text-secondary self-center text-3xl">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 justify-items-center md:justify-items-start">
+            <h2 className="order-1 md:col-span-full lg:col-span-1 font-semibold text-secondary self-center text-3xl">
               {t("loopParticipant", {
                 count: unapprovedUsers.length + users.length,
               })}
             </h2>
 
-            <div className="order-3 sm:col-span-2 sm:order-2 lg:col-span-1 lg:justify-self-center flex border border-secondary bg-teal-light">
+            <div className="order-3 sm:order-2 lg:col-span-1 lg:justify-self-center flex border border-secondary bg-teal-light">
               <label>
                 <input
                   type="radio"
@@ -536,7 +562,30 @@ export default function ChainMemberList() {
                 </div>
               </label>
             </div>
-            <div className="order-2 sm:justify-self-end sm:self sm:order-3">
+            <div className="order-2 md:justify-self-end md:self md:order-3">
+              {selectedTable === "route" ? (
+                !routeWasOptimized ? (
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                    onClick={() => optimizeRoute(chain.uid)}
+                  >
+                    {t("routeOptimize")}
+                    <span className="feather feather-zap ms-3 text-primary" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                    onClick={() => returnToPreviousRoute(chain.uid)}
+                  >
+                    {t("routeUndoOptimize")}
+
+                    <span className="feather feather-corner-left-up ms-3" />
+                  </button>
+                )
+              ) : null}
+
               {selectedTable !== "unapproved" ? (
                 <UserDataExport
                   chainName={chain.name}
