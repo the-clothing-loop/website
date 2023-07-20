@@ -39,3 +39,7 @@ onesignal_app_id: "{{ api_onesignal_app_id }}"
 {% if api_onesignal_rest_api_key is defined %}
 onesignal_rest_api_key: "{{ api_onesignal_rest_api_key }}"
 {% endif %}
+
+{% if appstore_reviewer_email is defined %}
+appstore_reviewer_email: "{{ appstore_reviewer_email }}"
+{% endif %}

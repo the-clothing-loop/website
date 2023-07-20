@@ -4,7 +4,6 @@ import {
   IonTitle,
   IonContent,
   IonButton,
-  IonModal,
   IonItem,
   IonLabel,
   IonInput,
@@ -22,14 +21,7 @@ import {
   sendOutline,
 } from "ionicons/icons";
 import { Keyboard } from "@capacitor/keyboard";
-import {
-  Fragment,
-  KeyboardEventHandler,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import toastError from "../../toastError";
@@ -69,7 +61,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
 
     (async () => {
       try {
-        const res = await loginEmail(email + "");
+        await loginEmail(email + "");
         setShowToken(true);
         setSentState(State.success);
         setSentTimeout(

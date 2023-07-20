@@ -1,5 +1,6 @@
 ansible_become_pass:
 mysql_root_password:
+appstore_reviewer_email:
 
 mysql_cl_acceptance_password:
 smtp_cl_acceptance_host:
