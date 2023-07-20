@@ -19,7 +19,7 @@ import {
 
 import type { IonSelectCustomEvent, IonModalCustomEvent } from "@ionic/core";
 import { checkmarkCircle, ellipse } from "ionicons/icons";
-import { FormEvent, RefObject, useContext, useState, HTMLInput } from "react";
+import { RefObject, useContext, useState } from "react";
 import { Bag, bagColors, bagPut, UID } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
@@ -148,7 +148,7 @@ export default function CreateUpdateBag({
               placeholder=""
               className="ion-text-right"
               value={bagNumber}
-              onFocus={(e) => (e.target as HTMLInput).select()}
+              onFocus={(e) => (e.target as any as HTMLInputElement).select()}
               onIonChange={(e) =>
                 setBagNumber(e.detail.value?.toString() || "")
               }

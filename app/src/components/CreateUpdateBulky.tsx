@@ -172,18 +172,14 @@ export default function CreateUpdateBulky({
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
-          <IonItem
-            lines="none"
-            color={error === "title" ? "danger" : undefined}
-          >
-            <IonLabel slot="start">{t("title")}</IonLabel>
+          <IonItem color={error === "title" ? "danger" : undefined}>
             <IonInput
               className="ion-text-right"
               type="text"
               autoCorrect="on"
               autoCapitalize="words"
               enterkeyhint="next"
-              aria-label="Title"
+              label={t("title")}
               value={bulkyTitle}
               onIonChange={(e) => setBulkyTitle(e.detail.value + "")}
             ></IonInput>
@@ -192,27 +188,23 @@ export default function CreateUpdateBulky({
             lines="none"
             color={error === "message" ? "danger" : undefined}
           >
-            <IonLabel>{t("message")}</IonLabel>
-          </IonItem>
-          <IonItem
-            lines="none"
-            className="ion-padding-bottom"
-            color={error === "message" ? "danger" : undefined}
-          >
             <IonTextarea
+              className="ion-margin-bottom ion-margin-top"
+              label={t("message")}
+              labelPlacement="stacked"
               color="light"
               style={{
                 backgroundColor: "var(--ion-color-light)",
                 color: "var(--ion-color-light-contrast)",
                 borderRadius: "8px",
-                padding: "8px",
+                padding: 8,
+                paddingTop: 0,
               }}
               spellCheck="true"
               autoGrow
               autoCapitalize="sentences"
               autoCorrect="on"
               enterkeyhint="next"
-              aria-label="Message"
               value={bulkyMessage}
               onIonChange={(e) => setBulkyMessage(e.detail.value + "")}
             />
