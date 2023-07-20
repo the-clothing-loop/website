@@ -334,7 +334,7 @@ export default function BagsList() {
                 let routeIndex = route.indexOf(user.uid);
                 if (routeIndex === -1) return null;
                 const bagUpdatedAt = dayjs(bag.updated_at);
-                const isBagTooOld = !bagUpdatedAt.isBefore(
+                const isBagTooOld = bagUpdatedAt.isBefore(
                   dayjs().add(-7, "days"),
                 );
                 let isOpen = openCard == bag.id;
