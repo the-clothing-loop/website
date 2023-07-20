@@ -6,6 +6,7 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
+  IonItemDivider,
   IonLabel,
   IonList,
   IonPage,
@@ -29,6 +30,7 @@ import { useTranslation } from "react-i18next";
 import {
   compassOutline,
   copyOutline,
+  ellipsisHorizontal,
   eyeOffOutline,
   eyeOutline,
   lockClosedOutline,
@@ -53,6 +55,7 @@ export default function Settings() {
   const [presentAlert] = useIonAlert();
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
+  const [expandedDescription, setExpandedDescription] = useState(false);
 
   const isUserAdmin = useMemo(
     () =>
@@ -104,7 +107,7 @@ export default function Settings() {
         },
         {
           text: t("unPause"),
-          handler: () => setPause("none"),
+          handler: () => setPause(0),
           role: "destructive",
         },
       ]);
@@ -113,16 +116,32 @@ export default function Settings() {
         header: t("pauseUntil"),
         buttons: [
           {
-            text: t("week", { count: 1 }),
-            handler: () => setPause("week"),
+            text: t("week", { count: 10 }),
+            handler: () => setPause(10),
           },
           {
-            text: t("week", { count: 2 }),
-            handler: () => setPause("2weeks"),
+            text: t("week", { count: 8 }),
+            handler: () => setPause(8),
+          },
+          {
+            text: t("week", { count: 6 }),
+            handler: () => setPause(6),
+          },
+          {
+            text: t("week", { count: 4 }),
+            handler: () => setPause(4),
           },
           {
             text: t("week", { count: 3 }),
-            handler: () => setPause("3weeks"),
+            handler: () => setPause(3),
+          },
+          {
+            text: t("week", { count: 2 }),
+            handler: () => setPause(2),
+          },
+          {
+            text: t("week", { count: 1 }),
+            handler: () => setPause(1),
           },
           {
             text: t("cancel"),
@@ -151,6 +170,7 @@ export default function Settings() {
   let isUserPaused = isPaused(authUser?.paused_until || null);
 
   let pausedDayjs = isUserPaused && dayjs(authUser!.paused_until);
+  let showExpandButton = (chain?.description.length || 0) > 200;
 
   return (
     <IonPage>
@@ -199,6 +219,13 @@ export default function Settings() {
             </IonItem>
             <IonCard color="secondary">
               <IonList>
+                <IonItemDivider
+                  style={{
+                    background: "var(--ion-color-secondary-shade)",
+                  }}
+                >
+                  {t("loopInformation")}
+                </IonItemDivider>
                 <IonItem lines="none">
                   <IonSelect
                     ref={refChainSelect}
@@ -288,7 +315,35 @@ export default function Settings() {
                 <IonItem lines="none">
                   <IonLabel>
                     <h3>{t("description")}</h3>
-                    <p>{chain?.description}</p>
+                    <p
+                      style={{
+                        whiteSpace: "pre-wrap",
+                        overflow: "hidden",
+                        display: "block",
+                        ...(!expandedDescription && showExpandButton
+                          ? {
+                              maxHeight: 60,
+                            }
+                          : {}),
+                      }}
+                    >
+                      {chain?.description}
+                    </p>
+                    {!expandedDescription && showExpandButton ? (
+                      <IonButton
+                        onClick={() => setExpandedDescription((s) => !s)}
+                        size="small"
+                        color="clear"
+                        expand="block"
+                        style={{
+                          marginTop: -6,
+                          "--padding-start": "0px",
+                          // "--padding-end": "5px",
+                        }}
+                      >
+                        <IonIcon icon={ellipsisHorizontal} color="primary" />
+                      </IonButton>
+                    ) : null}
                   </IonLabel>
                 </IonItem>
               </IonList>

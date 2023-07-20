@@ -23,13 +23,11 @@ interface StorageAuth {
   token: string;
 }
 
-export type PauseAmount = "none" | "week" | "2weeks" | "3weeks";
-
 export const StoreContext = createContext({
   isAuthenticated: null as boolean | null,
   isChainAdmin: false,
   authUser: null as null | User,
-  setPause: (p: PauseAmount) => {},
+  setPause: (p: number) => {},
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
   route: [] as UID[],
@@ -171,22 +169,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setIsChainAdmin(IsChainAdmin(authUser, _chain));
   }
 
-  async function _setPause(pause: PauseAmount) {
+  async function _setPause(pause: number) {
     if (!authUser) return;
 
     let pauseUntil = dayjs();
-    switch (pause) {
-      case "week":
-        pauseUntil = pauseUntil.add(1, "week");
-        break;
-      case "2weeks":
-        pauseUntil = pauseUntil.add(2, "week");
-        break;
-      case "3weeks":
-        pauseUntil = pauseUntil.add(3, "week");
-        break;
-      default:
-        pauseUntil = pauseUntil.add(-1, "week");
+    if (pause <= 0) {
+      pauseUntil = pauseUntil.add(-1, "week");
+    } else {
+      pauseUntil = pauseUntil.add(pause, "week");
     }
     await userUpdate({
       user_uid: authUser.uid,

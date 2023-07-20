@@ -10,16 +10,19 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
+  IonModal,
   IonPage,
   IonText,
   IonTitle,
   IonToolbar,
+  useIonActionSheet,
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
 import {
   calendarClear,
   chatbubbleOutline,
+  ellipsisHorizontal,
   personCircleOutline,
 } from "ionicons/icons";
 import { useContext, useRef, useState } from "react";
@@ -33,13 +36,16 @@ import { Share } from "@capacitor/share";
 
 export default function BulkyList() {
   const { t } = useTranslation();
-  const { chain, chainUsers, bulkyItems, setChain, authUser } =
+  const { chain, chainUsers, bulkyItems, setChain, authUser, isChainAdmin } =
     useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
   const [present] = useIonToast();
+  const [presentActionSheet] = useIonActionSheet();
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
+  const [modalDescBody, setModalDescBody] = useState("");
+  const refModalDesc = useRef<HTMLIonModalElement>(null);
 
   function refresh() {
     setChain(chain, authUser!.uid);
@@ -67,6 +73,11 @@ export default function BulkyList() {
         },
       ],
     });
+  }
+
+  function handleClickReadMore(text: string) {
+    setModalDescBody(text);
+    refModalDesc.current?.present();
   }
 
   function handleClickCreate() {
@@ -169,8 +180,9 @@ export default function BulkyList() {
           {bulkyItems.map((bulkyItem) => {
             const user = chainUsers.find((u) => u.uid === bulkyItem.user_uid);
             if (!user) return null;
-
+            const isMe = authUser?.uid === user.uid;
             let createdAt = new Date(bulkyItem.created_at);
+            let shouldExpandText = bulkyItem.message.length > 100;
 
             return (
               <IonCard key={bulkyItem.id}>
@@ -219,11 +231,6 @@ export default function BulkyList() {
                       marginRight: "-16px",
                     }}
                   >
-                    <IonIcon
-                      slot="start"
-                      className="ion-align-self-start"
-                      icon={personCircleOutline}
-                    />
                     <IonText>
                       <h5 className="ion-no-margin ion-text-bold">
                         {user.name}
@@ -231,39 +238,74 @@ export default function BulkyList() {
                       <small className="ion-text-wrap">{user.address}</small>
                     </IonText>
                   </IonItem>
-                  <IonText
+                  <IonItem
+                    lines="none"
+                    onClick={
+                      shouldExpandText
+                        ? () => handleClickReadMore(bulkyItem.message)
+                        : undefined
+                    }
                     style={{
-                      color: "var(--ion-color-dark)",
+                      marginLeft: -16,
+                      marginRight: -16,
                     }}
                   >
-                    <p
+                    <IonText
                       style={{
-                        whiteSpace: "pre-wrap",
+                        color: "var(--ion-color-dark)",
                       }}
-                      className="ion-padding-top"
                     >
-                      {bulkyItem.message}
-                    </p>
-                  </IonText>
+                      <p
+                        style={{
+                          whiteSpace: "pre-wrap",
+                          overflow: "hidden",
+                          display: "block",
+                          ...(shouldExpandText
+                            ? {
+                                maxHeight: 60,
+                              }
+                            : {}),
+                        }}
+                        className="ion-padding-top"
+                      >
+                        {bulkyItem.message}
+                      </p>
+                      {shouldExpandText ? (
+                        <small
+                          style={{
+                            marginTop: -6,
+                            display: "block",
+                            color: "var(--ion-color-medium)",
+                          }}
+                        >
+                          {t("readMore")}
+                        </small>
+                      ) : null}
+                    </IonText>
+                  </IonItem>
                 </IonCardContent>
 
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <IonButtons className="ion-margin-bottom ion-margin-horizontal">
-                    <IonButton
-                      fill="clear"
-                      onClick={() => handleClickEdit(bulkyItem)}
-                    >
-                      {t("edit")}
-                    </IonButton>
-                    <IonButton
-                      fill="clear"
-                      color="danger"
-                      onClick={() => handleClickDelete(bulkyItem.id)}
-                    >
-                      {t("delete")}
-                    </IonButton>
+                    {isMe || isChainAdmin ? (
+                      <>
+                        <IonButton
+                          fill="clear"
+                          onClick={() => handleClickEdit(bulkyItem)}
+                        >
+                          {t("edit")}
+                        </IonButton>
+                        <IonButton
+                          fill="clear"
+                          color="danger"
+                          onClick={() => handleClickDelete(bulkyItem.id)}
+                        >
+                          {t("delete")}
+                        </IonButton>
+                      </>
+                    ) : null}
                   </IonButtons>
                   <IonButtons className="ion-margin-bottom ion-margin-horizontal">
                     <IonButton
@@ -285,6 +327,14 @@ export default function BulkyList() {
               </IonCard>
             );
           })}
+
+          <IonModal
+            ref={refModalDesc}
+            initialBreakpoint={0.4}
+            breakpoints={[0, 0.4, 1]}
+          >
+            <div className="ion-padding ion-margin-top">{modalDescBody}</div>
+          </IonModal>
         </div>
         <CreateUpdateBulky
           modal={modal}

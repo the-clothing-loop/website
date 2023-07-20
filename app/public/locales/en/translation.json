@@ -1,5 +1,6 @@
 {
   "info": "Info",
+  "loopInformation": "Loop Information",
   "rules": "Rules",
   "addresses": "Addresses",
   "bag": "Bag",
@@ -10,6 +11,7 @@
   "settings": "Settings",
   "cancel": "Cancel",
   "close": "Close",
+  "readMore": "Read More",
   "ifYouAreInterestedPleaseSendAMessage": "If you are interested please send {{name}} a message",
   "imInterestedInThisBulkyItem": "I'm interested in your {{name}}, is it still available? When could I pick it up?",
   "selectALoop": "Select a Loop",
@@ -78,7 +80,7 @@
   "paused": "Paused",
   "unPause": "Un-pause",
   "areYouSureUnPause": "Are you sure you want to Un-pause?",
-  "week_one": "Week",
-  "week_other": "{{count}} weeks",
+  "week_one": "{{count}} Week",
+  "week_other": "{{count}} Weeks",
   "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation"
 }
