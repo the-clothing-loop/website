@@ -13,7 +13,7 @@ import type * as GeoJSONTypes from "geojson";
 import mapboxgl from "mapbox-gl";
 
 // Project resources
-import { AuthContext } from "../providers/AuthProvider";
+import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { Chain, UID, User } from "../api/types";
 import { chainAddUser, chainGetAll } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
@@ -713,7 +713,7 @@ function FocusedChain({
   onClickViewChain,
 }: {
   chain: Chain;
-  authUser: User | null;
+  authUser: AuthProps["authUser"];
   onClickJoin: MouseEventHandler<HTMLButtonElement>;
   onClickViewChain: MouseEventHandler<HTMLButtonElement>;
 }) {

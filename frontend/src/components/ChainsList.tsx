@@ -61,18 +61,19 @@ export default function ChainsList({ chains, setChains }: Props) {
 
   function handleClickPoke(e: MouseEvent, chainUID: UID) {
     e.preventDefault();
+    if (!authUser) return;
 
     chainPoke(chainUID)
       .then((res) => {
         addToast({ type: "success", message: t("reminderEmailSent") });
-        Cookies.set("poke", authUser!.uid, { expires: 7 });
+        Cookies.set("poke", authUser.uid, { expires: 7 });
         setIsPokeable(false);
       })
       .catch((err) => {
         addToastError(GinParseErrors(t, err), err.status);
         if (err.status === 429) {
           // hide for a day
-          Cookies.set("poke", authUser!.uid, { expires: 1 });
+          Cookies.set("poke", authUser.uid, { expires: 1 });
           setIsPokeable(false);
         }
       });
@@ -80,9 +81,10 @@ export default function ChainsList({ chains, setChains }: Props) {
 
   function handleClickUnsubscribe(e: MouseEvent, chain: Chain) {
     e.preventDefault();
+    if (!authUser) return;
     addModal({
       message: t("areYouSureLeaveLoop", {
-        name: authUser?.name,
+        name: authUser.name,
         chain: chain.name,
       }),
       actions: [
@@ -141,7 +143,8 @@ export default function ChainsList({ chains, setChains }: Props) {
             {chains
               ?.sort((a, b) => a.name.localeCompare(b.name))
               .map((chain) => {
-                let userChain = authUser?.chains.find(
+                if (!authUser) return null;
+                let userChain = authUser.chains.find(
                   (uc) => uc.chain_uid === chain.uid
                 );
                 let isUserAdmin = userChain?.is_chain_admin || false;

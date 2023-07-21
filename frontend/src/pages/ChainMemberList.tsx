@@ -14,14 +14,14 @@ import {
   SelectHTMLAttributes,
 } from "react";
 
-import { useParams, Link, useHistory } from "react-router-dom";
+import { useParams, Link, useHistory, Redirect } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import dayjs from "../util/dayjs";
 import simplifyDays from "../util/simplify-days";
 
-import { AuthContext } from "../providers/AuthProvider";
+import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
@@ -303,13 +303,14 @@ export default function ChainMemberList() {
   }, [chain, unapprovedUsers]);
 
   async function refresh(firstPageLoad = false) {
+    if (!authUser) return;
     const bagGetAll = authUser
       ? bagGetAllByChain(chainUID, authUser.uid)
       : Promise.reject("authUser not set");
 
     try {
       let _hostChains: Chain[];
-      if (authUser?.is_root_admin) {
+      if (authUser.is_root_admin) {
         _hostChains = (
           await chainGetAll({ filter_out_unpublished: false })
         ).data.filter((c) => c.uid !== chainUID);
@@ -353,6 +354,11 @@ export default function ChainMemberList() {
         history.replace("/loops");
       }
     }
+  }
+
+  console.log("Please redirect to /users/login", authUser);
+  if (authUser === null) {
+    return <Redirect to="/users/login" />;
   }
 
   if (!(chain && users && unapprovedUsers && route && bags)) {
@@ -640,7 +646,7 @@ export default function ChainMemberList() {
 }
 
 function HostTable(props: {
-  authUser: User | null;
+  authUser: AuthProps["authUser"];
   chain: Chain;
   filteredUsersHost: User[];
   refresh: () => Promise<void>;
@@ -736,7 +742,7 @@ function HostTable(props: {
 }
 
 function ApproveTable(props: {
-  authUser: User | null;
+  authUser: AuthProps["authUser"];
   unapprovedUsers: User[];
   chain: Chain;
   refresh: () => Promise<void>;
@@ -940,7 +946,7 @@ function ApproveTable(props: {
 
 type ParticipantsSortBy = "name" | "email" | "date";
 function ParticipantsTable(props: {
-  authUser: User | null;
+  authUser: AuthProps["authUser"];
   users: User[];
   sortBy: ParticipantsSortBy;
   setSortBy: (sortBy: ParticipantsSortBy) => void;
@@ -1212,7 +1218,7 @@ function ParticipantsTable(props: {
 }
 
 function RouteTable(props: {
-  authUser: User | null;
+  authUser: AuthProps["authUser"];
   users: User[];
   chain: Chain;
   route: UID[];

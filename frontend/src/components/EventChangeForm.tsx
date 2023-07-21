@@ -174,7 +174,8 @@ export default function EventChangeForm(props: {
   }, []);
 
   async function getChains() {
-    let chainUIDs = authUser!.chains
+    if (!authUser) return;
+    let chainUIDs = authUser.chains
       .filter((uc) => uc.is_chain_admin)
       .map((uc) => uc.chain_uid);
 
