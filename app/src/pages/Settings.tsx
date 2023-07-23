@@ -384,6 +384,9 @@ export default function Settings() {
             <IonItem lines="full" routerLink="/privacy-policy">
               <IonLabel color="medium">{t("privacyPolicy")}</IonLabel>
             </IonItem>
+            <IonItem lines="full" routerLink="/open-source">
+              <IonLabel color="medium">{t("openSource")}</IonLabel>
+            </IonItem>
           </IonList>
         </IonContent>
       ) : null}
