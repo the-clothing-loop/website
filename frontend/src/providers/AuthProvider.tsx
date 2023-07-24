@@ -76,7 +76,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
   }
   function authUserRefresh() {
     setLoading(true);
-    console.log("trying to login");
+    console.info("trying to login");
     return (async () => {
       let oldUserUID = getOldStorageUserUID();
       if (oldUserUID) {
@@ -99,7 +99,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
           await authLogout().catch((err) => {
             console.error("force logout failed:", err);
           });
-          console.log("force logout");
+          console.info("force logout");
           return UserRefreshState.ForceLoggedOut;
         }
         console.log("logged in");

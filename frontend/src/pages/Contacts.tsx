@@ -31,7 +31,7 @@ const Contacts = () => {
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
-    console.log(`sending mail: ${values.email}`);
+    console.info("sending mail: ", values.email);
 
     (async () => {
       try {

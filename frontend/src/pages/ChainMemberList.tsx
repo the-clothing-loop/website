@@ -356,8 +356,8 @@ export default function ChainMemberList() {
     }
   }
 
-  console.log("Please redirect to /users/login", authUser);
   if (authUser === null) {
+    console.info("Please redirect to /users/login", authUser);
     return <Redirect to="/users/login" />;
   }
 

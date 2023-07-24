@@ -83,7 +83,6 @@ export default function EventDetails() {
   function handleUploadImage(e: MouseEvent<HTMLInputElement>) {
     e.preventDefault();
 
-    console.log("uploading image");
     //@ts-ignore
     let file = (e.target.files as FileList)[0];
     if (!file || !event) return;

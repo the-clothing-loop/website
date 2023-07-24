@@ -30,7 +30,7 @@ export default function ChainEdit() {
       uid: chainUID,
     };
 
-    console.log("updating chain information", newChainData);
+    console.info("updating chain information", newChainData);
     try {
       await chainUpdate(newChainData);
       setTimeout(() => {

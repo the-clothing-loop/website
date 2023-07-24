@@ -142,7 +142,7 @@ export default function AddressForm(props: {
         }
       }
 
-      console.log(values);
+      console.info(values);
       props.onSubmit(values);
     })();
   }
