@@ -17,6 +17,7 @@
   "selectALoop": "Select a Loop",
   "search": "Search",
   "dateOfDelivery": "Date of delivery",
+  "clickOnBagToChangeHolder": "Click on the bag to change bag holder",
   "shareLoop": "Share Loop",
   "closed": "Fermé",
   "visible": "Visible",
@@ -81,7 +82,7 @@
   "paused": "Paused",
   "unPause": "Un-pause",
   "areYouSureUnPause": "Are you sure you want to Un-pause?",
-  "week_one": "{{count}} Semaine",
-  "week_other": "{{count}} Semaines",
+  "week_one": "{{count}} Week",
+  "week_other": "{{count}} Weeks",
   "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation"
 }
