@@ -265,7 +265,7 @@ export default function BagsList() {
                       <div
                         key="old"
                         style={{
-                          fontSize: 11,
+                          fontSize: 14,
                           display: "block",
                           position: "absolute",
                           top: "5px",
@@ -300,16 +300,20 @@ export default function BagsList() {
                       >
                         <div
                           className="bagslist-bag-icon"
+                          style={{
+                            padding: 10,
+                            paddingBottom: 2,
+                          }}
                           onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
                           <BagSVG color={bag.color} />
                         </div>
                         <div
                           style={{
-                            paddingLeft: 10,
-                            paddingRight: 10,
                             textAlign: "center",
                             fontWeight: "bold",
+                            fontSize: 16,
+                            color: "var(--ion-color-dark)",
                           }}
                         >
                           {t("bag") + " " + bag.number}
@@ -319,8 +323,7 @@ export default function BagsList() {
                       <IonRouterLink
                         routerLink={"/address/" + user.uid}
                         style={{
-                          padding: 10,
-                          paddingTop: 9,
+                          padding: "12px 8px",
                           display: "block",
                           backgroundColor: "var(--ion-color-light)",
                         }}
@@ -342,9 +345,20 @@ export default function BagsList() {
                 );
                 let isOpen = openCard == bag.id;
                 return (
-                  <IonCol size="12" key={bag.id}>
+                  <IonCol
+                    size="12"
+                    key={bag.id}
+                    style={{
+                      padding: "2px 5px",
+                    }}
+                  >
                     <IonCard className="ion-no-margin">
-                      <IonItem lines="none">
+                      <IonItem
+                        lines="none"
+                        style={{
+                          padding: "3px 0",
+                        }}
+                      >
                         <div
                           slot="start"
                           style={{ width: 24, height: 24 }}
@@ -356,17 +370,21 @@ export default function BagsList() {
                         <div
                           onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
-                          {t("bag") + " " + bag.number}
+                          <span className="ion-text-bold">
+                            {t("bag") + " " + bag.number}
+                          </span>
                           <span
                             style={{
                               display: "block",
-                              fontSize: 10,
+                              fontSize: 14,
                               marginTop: 3,
                               ...(isBagTooOld
                                 ? {
                                     color: "var(--ion-color-danger)",
                                   }
-                                : {}),
+                                : {
+                                    color: "var(--ion-color-medium)",
+                                  }),
                             }}
                           >
                             {bagUpdatedAt.toDate().toLocaleDateString()}
@@ -410,7 +428,7 @@ export default function BagsList() {
                             color="light"
                             slot="end"
                             routerLink={"/address/" + user.uid}
-                            style={{ width: 115 }}
+                            style={{ width: 115, height: 35 }}
                           >
                             <UserLink user={user} routeIndex={routeIndex} />
                           </IonButton>
@@ -753,7 +771,6 @@ function UserLink({ user, routeIndex }: { user: User; routeIndex: number }) {
       className="ion-text-bold"
       style={{
         color: "var(--ion-color-medium)",
-        backgroundColor: "var(--ion-color-light)",
         display: "flex",
         flexDirection: "row",
         alignItems: "baseline",
