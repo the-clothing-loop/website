@@ -1,5 +1,7 @@
 {
   "info": "Information",
+  "loopInformation": "Loop Information",
+  "rules": "Rules",
   "addresses": "Adresses",
   "bag": "Sac",
   "bags": "Sacs",
@@ -9,6 +11,7 @@
   "settings": "Settings",
   "cancel": "Annuler",
   "close": "Fermer",
+  "readMore": "Read More",
   "ifYouAreInterestedPleaseSendAMessage": "If you are interested please send {{name}} a message",
   "imInterestedInThisBulkyItem": "I'm interested in your {{name}}, is it still available? When could I pick it up?",
   "selectALoop": "Select a Loop",
@@ -18,6 +21,7 @@
   "closed": "Fermé",
   "visible": "Visible",
   "open": "Open",
+  "routeOrder": "Route Order",
   "draft": "Draft",
   "description": "Description",
   "goToAdminPortal": "Go to Admin Portal",
@@ -74,9 +78,10 @@
   "wereWorkingOnIt": "We're working on it",
   "pauseParticipation": "Pause participation",
   "pauseUntil": "Pause until",
+  "paused": "Paused",
   "unPause": "Un-pause",
   "areYouSureUnPause": "Are you sure you want to Un-pause?",
-  "week_one": "Semaine",
-  "week_other": "{{count}} semaines",
+  "week_one": "{{count}} Week",
+  "week_other": "{{count}} Weeks",
   "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation"
 }
