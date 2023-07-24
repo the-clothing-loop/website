@@ -143,7 +143,7 @@ export default function HelpList() {
           style={{
             display: "block",
             color: "var(--ion-color-primary)",
-            fontSize: "14px",
+            fontSize: "16px",
           }}
         >
           www.clothingloop.org
