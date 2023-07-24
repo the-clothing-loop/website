@@ -669,7 +669,7 @@ function SelectUserModal({
             <IonItem lines="full" color="light">
               <IonSearchbar
                 placeholder={t("search")}
-                onIonChange={(e) => setSearch(e.detail.value as string)}
+                onIonInput={(e) => setSearch(e.detail.value as string)}
                 onIonClear={() => setSearch("")}
               />
             </IonItem>
@@ -692,24 +692,20 @@ function SelectUserModal({
               const isSelected = selected === user.uid;
               //   let uc = user.chains.find((u) => u.chain_uid === chain.uid);
               return (
-                <IonItem
-                  lines="full"
-                  key={user.uid}
-                  // color={isSelected ? "primary" : undefined}
-                  // onClick={() => submit(user.uid)}
-                >
+                <IonItem lines="full" key={user.uid}>
                   <span slot="start" className="ion-text-bold">{`#${
                     i + 1
                   }`}</span>
                   <IonLabel>
                     <h2
-                      style={
-                        isSelected
+                      style={{
+                        fontSize: 18,
+                        ...(isSelected
                           ? {
                               fontWeight: 500,
                             }
-                          : {}
-                      }
+                          : {}),
+                      }}
                     >
                       {user.name}
                       {user.uid === authUser?.uid ? (
