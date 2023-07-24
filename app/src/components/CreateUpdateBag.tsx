@@ -2,6 +2,7 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonFabButton,
   IonHeader,
   IonIcon,
   IonInput,
@@ -140,19 +141,43 @@ export default function CreateUpdateBag({
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
-          <IonItem color={error === "number" ? "danger" : undefined}>
+          <IonItem
+            lines="none"
+            color={error === "number" ? "danger" : undefined}
+          >
             <IonInput
               type="text"
               label={t("bagName")}
               labelPlacement="start"
+              max={18}
+              spellCheck
+              autoCapitalize="words"
+              maxlength={18}
+              counter
               placeholder=""
-              className="ion-text-right"
               value={bagNumber}
               onFocus={(e) => (e.target as any as HTMLInputElement).select()}
               onIonChange={(e) =>
                 setBagNumber(e.detail.value?.toString() || "")
               }
             />
+          </IonItem>
+          <IonItem
+            lines="none"
+            style={{
+              marginTop: -20,
+            }}
+          >
+            {["👻", "🐰"].map((emoji, i) => (
+              <IonFabButton
+                key={i}
+                size="small"
+                color="light"
+                onClick={() => setBagNumber((s) => s + " " + emoji)}
+              >
+                {emoji}
+              </IonFabButton>
+            ))}
           </IonItem>
           <IonItem lines="none">
             <IonLabel>

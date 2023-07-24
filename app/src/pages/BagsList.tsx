@@ -2,9 +2,6 @@ import {
   IonButton,
   IonButtons,
   IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
   IonCol,
   IonContent,
   IonDatetime,
@@ -35,7 +32,6 @@ import {
   closeOutline,
   ellipsisHorizontal,
   pauseCircle,
-  person,
   personCircleOutline,
 } from "ionicons/icons";
 import type {
@@ -294,17 +290,15 @@ export default function BagsList() {
                       </div>
                       <div
                         style={{
-                          padding: 20,
-                          paddingBottom: 10,
+                          padding: "20px 10px 10px",
                         }}
+                        onClick={() => handleClickItem(bag.id, bag.user_uid)}
                       >
                         <div
                           className="bagslist-bag-icon"
                           style={{
-                            padding: 10,
-                            paddingBottom: 2,
+                            padding: "10px 20px 2px",
                           }}
-                          onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
                           <BagSVG color={bag.color} />
                         </div>
@@ -315,8 +309,10 @@ export default function BagsList() {
                             fontSize: 16,
                             color: "var(--ion-color-dark)",
                           }}
+                          className="ion-text-ellipsis"
                         >
-                          {t("bag") + " " + bag.number}
+                          {(bag.number.length > 7 ? "" : t("bag") + " ") +
+                            bag.number}
                         </div>
                       </div>
 
@@ -368,10 +364,12 @@ export default function BagsList() {
                           <BagSVG color={bag.color} />
                         </div>
                         <div
+                          className="ion-text-ellipsis"
                           onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
                           <span className="ion-text-bold">
-                            {t("bag") + " " + bag.number}
+                            {(bag.number.length > 7 ? "" : t("bag") + " ") +
+                              bag.number}
                           </span>
                           <span
                             style={{
