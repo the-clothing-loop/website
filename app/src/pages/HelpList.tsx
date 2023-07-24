@@ -12,11 +12,10 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import {
-  earth,
   logoFacebook,
   logoInstagram,
   logoLinkedin,
-  // mail,
+  mail,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
@@ -28,6 +27,7 @@ interface MediaIcon {
   icon: string;
   label: string;
   url: string;
+  color: string;
 }
 
 const mediaIcons: MediaIcon[] = [
@@ -35,26 +35,25 @@ const mediaIcons: MediaIcon[] = [
     icon: logoInstagram,
     label: "Instagram",
     url: "https://www.instagram.com/theclothingloop/",
+    color: "#EB4141",
   },
   {
-    icon: earth,
-    label: "Website",
-    url: "https://www.clothingloop.org",
+    icon: mail,
+    label: "Email",
+    url: "mailto:hello@clothingloop.org",
+    color: "#b464a8",
   },
-  // {
-  //   icon: mail,
-  //   label: "Email",
-  //   url: "mailto:hello@clothingloop.org",
-  // },
   {
     icon: logoLinkedin,
     label: "LinkedIn",
     url: "https://www.linkedin.com/company/the-clothing-loop/",
+    color: "#0a66c2",
   },
   {
     icon: logoFacebook,
     label: "Facebook",
     url: "https://www.facebook.com/clothingloop/",
+    color: "#1b74e4",
   },
 ];
 
@@ -130,14 +129,25 @@ export default function HelpList() {
               className="ion-margin"
             >
               <IonIcon
-                color="dark"
                 size="large"
                 icon={mi.icon}
+                style={{ color: mi.color }}
                 aria-label={mi.label}
               />
             </IonRouterLink>
           ))}
         </div>
+        <IonRouterLink
+          className="ion-text-center"
+          href="https://www.clothingloop.org/"
+          style={{
+            display: "block",
+            color: "var(--ion-color-primary)",
+            fontSize: "14px",
+          }}
+        >
+          www.clothingloop.org
+        </IonRouterLink>
 
         <CreateUpdateRules
           rules={chain?.rules_override || null}
