@@ -205,6 +205,9 @@ export default function BagsList() {
             <IonTitle size="large">{t("whereIsTheBag")}</IonTitle>
           </IonToolbar>
         </IonHeader>
+        <IonText color="medium" className="ion-margin">
+          {t("clickOnBagToChangeHolder")}
+        </IonText>
         <div>
           <IonRefresher
             slot="fixed"
