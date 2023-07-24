@@ -381,10 +381,14 @@ export default function Settings() {
             version: {VERSION}
           </IonText>
           <IonList className="ion-margin-top">
-            <IonItem lines="full" routerLink="/privacy-policy">
+            <IonItem
+              lines="full"
+              routerLink="/privacy-policy"
+              style={{ "--border-width": "0.55px 0px 0.55px 0px" }}
+            >
               <IonLabel color="medium">{t("privacyPolicy")}</IonLabel>
             </IonItem>
-            <IonItem lines="full" routerLink="/open-source">
+            <IonItem lines="none" routerLink="/open-source">
               <IonLabel color="medium">{t("openSource")}</IonLabel>
             </IonItem>
           </IonList>
