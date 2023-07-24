@@ -60,10 +60,9 @@ export default function AddressList() {
             const isPrivate = IsPrivate(user.email);
             const isAddressPrivate = IsPrivate(user.address);
             const userBags = bags.filter((b) => b.user_uid === user.uid);
-            //@ts-ignore
             const isUserHost =
-              user.chains.find((uc) => uc.user_uid === user.uid)?.chain_uid ||
-              false;
+              user.chains.find((uc) => uc.chain_uid === chain?.uid)
+                ?.is_chain_admin || false;
             return (
               <IonItem
                 lines="full"
@@ -115,13 +114,6 @@ export default function AddressList() {
                         }}
                       />
                     ) : null}
-                    {userBags.map((b) => (
-                      <IonIcon
-                        icon={bagHandle}
-                        style={{ color: b.color, marginLeft: 5 }}
-                        key={b.id}
-                      />
-                    ))}
                   </h5>
                   <span
                     style={{
@@ -150,7 +142,6 @@ export default function AddressList() {
                     <IonIcon
                       icon={pauseCircleSharp}
                       color="medium"
-                      // size="large"
                       style={{
                         width: 24,
                         height: 24,
@@ -162,6 +153,29 @@ export default function AddressList() {
                     <span>{"#" + (i + 1)}</span>
                   )}
                 </IonText>
+                <div
+                  slot="end"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: 40,
+                    paddingBottom: userBags.length < 4 ? 20 : 0,
+                    width:
+                      userBags.length < 4
+                        ? 0
+                        : 20 * Math.floor(userBags.length / 2),
+                    flexWrap: "wrap-reverse",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  {userBags.map((b) => (
+                    <IonIcon
+                      icon={bagHandle}
+                      style={{ color: b.color, margin: 2 }}
+                      key={b.id}
+                    />
+                  ))}
+                </div>
               </IonItem>
             );
           })}
