@@ -27,3 +27,6 @@ yarn-error.log*
 
 # Optional eslint cache
 .eslintcache
+
+# generated files
+/public/open_source_licenses.json

@@ -71,6 +71,7 @@ import { useTranslation } from "react-i18next";
 import dayjs from "./dayjs";
 import { OneSignalInitCap, OneSignalInitReact } from "./onesignal";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import OpenSource from "./pages/OpenSource";
 
 SplashScreen.show({
   autoHide: false,
@@ -204,6 +205,7 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
         <Route exact path="/bulky-items" component={BulkyList}></Route>
         <Route exact path="/settings" component={Settings}></Route>
         <Route exact path="/privacy-policy" component={PrivacyPolicy}></Route>
+        <Route exact path="/open-source" component={OpenSource}></Route>
         <Route exact path="/todo" component={ToDo}></Route>
       </IonRouterOutlet>
       <IonTabBar slot="bottom">
