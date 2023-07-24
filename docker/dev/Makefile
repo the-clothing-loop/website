@@ -7,7 +7,7 @@ docker-remove:
 frontend-start:
 	docker compose exec frontend sh -c 'npm i; npm run start:lan'
 app-start:
-	docker compose exec app sh -c 'npm i; npm run dev'
+	docker compose exec app sh -c 'npm i; npm run dev:docker'
 server-start:
 	docker compose exec server sh -c 'go run cmd/server/main.go'
 db-setup:
