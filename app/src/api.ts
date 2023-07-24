@@ -228,3 +228,14 @@ export function uploadImage(
     thumb: string;
   }>("/v2/image", image64, { params });
 }
+
+export interface OpenSourceLicense {
+  name: string;
+  modules: Array<string>;
+}
+
+export function getOpenSouceLicenses() {
+  return window.axios.get<OpenSourceLicense[]>("/open_source_licenses.json", {
+    baseURL: "",
+  });
+}
