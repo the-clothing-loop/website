@@ -24,3 +24,7 @@ smtp_pass: ""
 
 goscope2_user: "admin"
 goscope2_pass: "admin"
+
+mapbox_access_token: "secret"
+mapbox_api_limit: 5000
+mapbox_req_relevance: 0.75
