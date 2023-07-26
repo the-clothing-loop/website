@@ -45,6 +45,7 @@
   "image": "Image",
   "imageURL": "Image URL",
   "upload": "Upload",
+  "uploaded": "Uploaded",
   "send": "Envoyer",
   "interestedSizes": "Interested Sizes",
   "email": "Email",
@@ -53,6 +54,9 @@
   "changeBagHolder": "Change Bag Holder",
   "selectTheNewBagHolder": "Select the new bag holder",
   "change": "Change",
+  "reset": "Reset",
+  "resetRules": "Reset Rules",
+  "areYouSureYouWantToResetRules": "Are you sure you want to reset the Loop Rules to the current defaults?",
   "delete": "Delete",
   "deleteBag": "Delete Bag",
   "areYouSureYouWantToDeleteBag": "Are you sure you want to delete bag {{name}}?",
@@ -82,7 +86,7 @@
   "paused": "Paused",
   "unPause": "Un-pause",
   "areYouSureUnPause": "Are you sure you want to Un-pause?",
-  "week_one": "{{count}} Semaine",
-  "week_other": "{{count}} Semaines",
+  "week_one": "{{count}} Week",
+  "week_other": "{{count}} Weeks",
   "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation"
 }
