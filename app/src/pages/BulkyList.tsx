@@ -17,7 +17,7 @@ import {
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
-import { chatbubbleOutline } from "ionicons/icons";
+import { chatbubbleEllipsesSharp } from "ionicons/icons";
 import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
@@ -331,7 +331,7 @@ export default function BulkyList() {
                       {t("reserve")}
                       <IonIcon
                         slot="end"
-                        icon={chatbubbleOutline}
+                        icon={chatbubbleEllipsesSharp}
                         className="ion-icon"
                       />
                     </IonButton>
