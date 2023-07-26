@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
 import { useContext, useMemo, useRef } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
-import { FaqListItem } from "./HelpItem";
+import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
 
 interface MediaIcon {
   icon: string;
@@ -71,12 +71,12 @@ export default function HelpList() {
     [authUser, chain],
   );
 
-  const data = t("list", { ns: "faq", returnObjects: true }) as FaqListItem[];
-  const rules = useMemo(() => {
+  const rules = useMemo<FaqListItem[]>(() => {
     if (chain?.rules_override) {
       return JSON.parse(chain.rules_override) as FaqListItem[];
     }
-    return data;
+
+    return faqListKeys.map((k) => t(k, faqItemTranslationOption) as any);
   }, [chain]);
 
   function handleClickChange() {
@@ -109,7 +109,7 @@ export default function HelpList() {
         <IonList>
           {rules.map((item, index) => (
             <IonItem routerLink={"/help/" + index} lines="full" key={index}>
-              {item.Title}
+              {item.title}
             </IonItem>
           ))}
         </IonList>
