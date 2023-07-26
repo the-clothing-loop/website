@@ -56,8 +56,7 @@ export default function CreateUpdateBulky({
   const [bulkyMessage, setBulkyMessage] = useState("");
   const [bulkyImageURL, setBulkyImageURL] = useState("");
   const [error, setError] = useState("");
-  const [isIos] = useState(() => isPlatform("ios"));
-  const [isAndroid] = useState(() => isPlatform("android"));
+  const [isCapacitor] = useState(() => isPlatform("capacitor"));
   const [loadingUpload, setLoadingUpload] = useState(State.loading);
   const [present] = useIonToast();
 
@@ -109,9 +108,7 @@ export default function CreateUpdateBulky({
   }
 
   function handleClickUpload() {
-    console.log("upload clicked");
-
-    if (isIos || isAndroid) {
+    if (isCapacitor) {
       setLoadingUpload(State.loading);
       handleNativeUpload()
         .then(() => {
@@ -275,7 +272,7 @@ export default function CreateUpdateBulky({
                   ? t("uploaded")
                   : t("upload")}
               </IonButton>
-              {isAndroid || isIos ? null : (
+              {isCapacitor ? null : (
                 <input
                   type="file"
                   id="cu-bulky-web-image-upload"
