@@ -64,9 +64,9 @@ func main() {
 	fmt.Printf("Found %d users\n", len(users))
 
 	apiCount := 0
-	defer fmt.Printf("API count: %d\n", apiCount)
 
 	httpClient := &http.Client{Timeout: 3 * time.Second}
+END:
 	for _, user := range users {
 		if user.Address == "" {
 			fmt.Printf("[%d] Address is empty '%s'\n", user.ID, strings.ReplaceAll(user.Address, "\n", " "))
@@ -77,7 +77,7 @@ func main() {
 
 			if err != nil {
 				fmt.Printf("[%d] HTTP client returned error: %e\n", user.ID, err)
-				return
+				break END
 			}
 
 			decoder := json.NewDecoder(res.Body)
@@ -85,7 +85,7 @@ func main() {
 			var geoObjectCollection GeoObjectCollection
 			if err := decoder.Decode(&geoObjectCollection); err != nil {
 				fmt.Printf("[%d] Error parsing JSON: %e\n", user.ID, err)
-				return
+				break END
 			}
 
 			if len(geoObjectCollection.Features) > 0 {
@@ -107,4 +107,6 @@ func main() {
 			fmt.Printf("[%d] Skipped address %s, since there's already coords set\n", user.ID, strings.ReplaceAll(user.Address, "\n", " "))
 		}
 	}
+
+	fmt.Printf("API count: %d\n", apiCount)
 }
