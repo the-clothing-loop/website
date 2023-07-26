@@ -1,7 +1,7 @@
 import {
-  CreateAnimation,
   IonButton,
   IonButtons,
+  IonCard,
   IonContent,
   IonHeader,
   IonIcon,
@@ -18,7 +18,12 @@ import {
   useIonToast,
 } from "@ionic/react";
 import type { IonModalCustomEvent } from "@ionic/core";
-import { cloudUploadOutline, syncOutline } from "ionicons/icons";
+import {
+  checkmarkOutline,
+  cloudUploadOutline,
+  hourglassOutline,
+  imageOutline,
+} from "ionicons/icons";
 import { ChangeEvent, RefObject, useContext, useState } from "react";
 import { BulkyItem, uploadImage, bulkyItemPut } from "../api";
 import { StoreContext } from "../Store";
@@ -26,6 +31,13 @@ import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-com
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { Camera, CameraResultType } from "@capacitor/camera";
+
+enum State {
+  idle,
+  error,
+  success,
+  loading,
+}
 
 export default function CreateUpdateBulky({
   bulky,
@@ -46,13 +58,14 @@ export default function CreateUpdateBulky({
   const [error, setError] = useState("");
   const [isIos] = useState(() => isPlatform("ios"));
   const [isAndroid] = useState(() => isPlatform("android"));
-  const [loadingUpload, setLoadingUpload] = useState(false);
+  const [loadingUpload, setLoadingUpload] = useState(State.loading);
   const [present] = useIonToast();
 
   function modalInit() {
     setBulkyTitle(bulky?.title || "");
     setBulkyMessage(bulky?.message || "");
     setBulkyImageURL(bulky?.image_url || "");
+    setLoadingUpload(State.idle);
   }
 
   function cancel() {
@@ -60,6 +73,7 @@ export default function CreateUpdateBulky({
     setBulkyTitle("");
     setBulkyMessage("");
     setBulkyImageURL("");
+    setLoadingUpload(State.idle);
   }
   async function createOrUpdate() {
     if (!bulkyTitle) {
@@ -98,13 +112,17 @@ export default function CreateUpdateBulky({
     console.log("upload clicked");
 
     if (isIos || isAndroid) {
-      setLoadingUpload(true);
+      setLoadingUpload(State.loading);
       handleNativeUpload()
+        .then(() => {
+          setLoadingUpload(State.success);
+          setTimeout(() => {
+            setLoadingUpload(State.idle);
+          }, 2000);
+        })
         .catch((err) => {
           toastError(present, err);
-        })
-        .finally(() => {
-          setLoadingUpload(false);
+          setLoadingUpload(State.error);
         });
     } else {
       const el = document.getElementById(
@@ -114,9 +132,11 @@ export default function CreateUpdateBulky({
     }
   }
 
-  async function handleWebUpload(e: ChangeEvent<HTMLInputElement>) {
+  function handleWebUpload(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    setLoadingUpload(State.loading);
 
     function getBase64(file: File) {
       return new Promise<string>((resolve, reject) => {
@@ -129,11 +149,23 @@ export default function CreateUpdateBulky({
         reader.onerror = (error) => reject(error);
       });
     }
-    // https://pqina.nl/blog/convert-a-file-to-a-base64-string-with-javascript/#encoding-the-file-as-a-base-string
-    const image64 = await getBase64(file);
 
-    const res = await uploadImage(image64, 800);
-    setBulkyImageURL(res.data.image);
+    (async () => {
+      // https://pqina.nl/blog/convert-a-file-to-a-base64-string-with-javascript/#encoding-the-file-as-a-base-string
+      const image64 = await getBase64(file);
+
+      const res = await uploadImage(image64, 800);
+      setBulkyImageURL(res.data.image);
+    })()
+      .then(() => {
+        setLoadingUpload(State.success);
+        setTimeout(() => {
+          setLoadingUpload(State.idle);
+        }, 2000);
+      })
+      .catch(() => {
+        setLoadingUpload(State.error);
+      });
   }
 
   async function handleNativeUpload() {
@@ -201,95 +233,134 @@ export default function CreateUpdateBulky({
               onIonInput={(e) => setBulkyMessage(e.detail.value + "")}
             />
           </IonItem>
-          <IonItem lines="none">
-            <IonLabel
-              style={{
-                fontSize: "14px",
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-            >
-              {t("image")}
-            </IonLabel>
-          </IonItem>
-          <IonItem color={error === "image-url" ? "danger" : undefined}>
-            {/* <IonLabel slot="start"></IonLabel> */}
-            <IonInput
-              label={t("imageURL")}
-              labelPlacement="start"
-              className="ion-text-right"
-              placeholder="image.jpg"
-              type="url"
-              value={bulkyImageURL}
-              onFocus={(e) => (e.target as any).select()}
-              onIonChange={(e) => setBulkyImageURL(e.detail.value + "")}
-            ></IonInput>
-            {isAndroid || isIos ? null : (
-              <input
-                type="file"
-                id="cu-bulky-web-image-upload"
-                name="filename"
-                className="ion-hide"
-                onChange={handleWebUpload}
-              />
-            )}
-          </IonItem>
           <IonItem
-            lines="none"
             color={error === "image-url" ? "danger" : undefined}
+            lines="none"
           >
-            <IonButton
-              onClick={handleClickUpload}
-              size="default"
-              style={{
-                width: "100%",
-              }}
-              className="ion-margin-top ion-margin-bottom"
-              expand="block"
-            >
-              <IonIcon
-                icon={cloudUploadOutline}
-                style={{ marginRight: "8px" }}
-              />
-              {t("upload")}
-              <CreateAnimation
-                duration={1000}
-                iterations={Infinity}
-                play
-                fromTo={{
-                  property: "transform",
-                  fromValue: "rotate(0deg)",
-                  toValue: "rotate(360deg)",
-                }}
+            <div style={{ width: "100%" }}>
+              <IonLabel style={{ marginTop: 8, marginBottom: 16 }}>
+                {t("image")}
+              </IonLabel>
+              <IonButton
+                onClick={handleClickUpload}
+                size="default"
+                style={{ width: "100%", marginTop: 8, marginBottom: 16 }}
+                expand="block"
+                color={
+                  loadingUpload === State.idle
+                    ? "primary"
+                    : loadingUpload === State.loading
+                    ? "light"
+                    : loadingUpload === State.success
+                    ? "success"
+                    : "warning"
+                }
               >
                 <IonIcon
+                  icon={
+                    loadingUpload === State.loading
+                      ? hourglassOutline
+                      : loadingUpload === State.success
+                      ? checkmarkOutline
+                      : cloudUploadOutline
+                  }
+                  style={{ marginRight: "8px" }}
                   size="default"
-                  className={loadingUpload ? "" : "ion-hide"}
-                  style={{ marginLeft: "8px" }}
-                  icon={syncOutline}
                 />
-              </CreateAnimation>
-            </IonButton>
+                {loadingUpload === State.loading
+                  ? t("loading")
+                  : loadingUpload === State.error
+                  ? "Error"
+                  : loadingUpload === State.success
+                  ? t("uploaded")
+                  : t("upload")}
+              </IonButton>
+              {isAndroid || isIos ? null : (
+                <input
+                  type="file"
+                  id="cu-bulky-web-image-upload"
+                  name="filename"
+                  className="ion-hide"
+                  onChange={handleWebUpload}
+                />
+              )}
+            </div>
           </IonItem>
           <IonItem lines="none">
-            {!!bulkyImageURL ? (
-              <div
-                style={{
-                  marginBottom: "16px",
-                  textAlign: "center",
-                  width: "100%",
-                }}
-              >
-                <IonImg
-                  src={bulkyImageURL}
-                  alt={t("loading")}
+            <div
+              style={{
+                marginBottom: "16px",
+                textAlign: "center",
+                width: "100%",
+              }}
+            >
+              {!(loadingUpload === State.loading) && bulkyImageURL ? (
+                <IonCard
+                  onClick={handleClickUpload}
                   style={{
-                    maxWidth: "100%",
-                    height: "300px",
+                    margin: "0 50px",
+                    border: "1px solid",
+                    borderColor: loadingUpload
+                      ? "var(--ion-color-medium)"
+                      : "var(--ion-color-primary)",
                   }}
-                />
-              </div>
-            ) : null}
+                >
+                  <IonImg
+                    src={bulkyImageURL}
+                    alt={t("loading")}
+                    style={{
+                      maxWidth: "100%",
+                    }}
+                  />
+                </IonCard>
+              ) : (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "300px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <IonCard
+                    onClick={handleClickUpload}
+                    style={{
+                      border: "1px solid",
+                      borderColor:
+                        loadingUpload === State.loading
+                          ? "var(--ion-color-medium)"
+                          : "var(--ion-color-primary)",
+                      width: 200,
+                      height: 200,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div style={{ position: "relative" }}>
+                      <IonIcon size="large" icon={imageOutline} />
+                      {loadingUpload === State.loading ? (
+                        <IonIcon
+                          icon={hourglassOutline}
+                          size="small"
+                          color="primary"
+                          style={{
+                            backgroundColor:
+                              "var(--ion-color-primary-contrast)",
+                            padding: 2,
+                            borderRadius: "50%",
+                            position: "absolute",
+                            bottom: -9,
+                            right: -11,
+                          }}
+                        />
+                      ) : null}
+                    </div>
+                  </IonCard>
+                </div>
+              )}
+            </div>
           </IonItem>
         </IonList>
       </IonContent>
