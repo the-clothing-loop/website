@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -50,49 +51,54 @@ type GeoObjectCollection struct {
 }
 
 func main() {
+	mbToken := flag.String("mb-token", "", "mapbox api token")
+	startflag := flag.Int("start", 1, "start of user_ids to check")
+	endflag := flag.Int("end", 1, "end of user_ids to check")
+	flag.Parse()
+
 	app.ConfigInit(".")
 	db := app.DatabaseInit()
 
 	var users []models.User
-	db.Find(&users)
+	db.Raw("SELECT * FROM users WHERE id >= ? AND id <= ?", *startflag, *endflag).Scan(&users)
+	fmt.Printf("Found %d users\n", len(users))
 
-	apiCalls := 0
 	for i := 0; i < len(users); i++ {
-		if apiCalls < app.Config.MAPBOX_API_LIMIT {
-			if users[i].Latitude == 0 || users[i].Longitude == 0 {
-				apiCalls++
+		if users[i].Latitude == 0 || users[i].Longitude == 0 {
 
-				httpClient := &http.Client{Timeout: 3 * time.Second}
-				res, err := httpClient.Get(fmt.Sprintf("https://api.mapbox.com/geocoding/v5/mapbox.places/%s.json?types=address&language=en&access_token=%s", url.QueryEscape(users[i].Address), app.Config.MAPBOX_ACCESS_TOKEN))
-				if err != nil {
-					log.Println(err)
-				}
+			httpClient := &http.Client{Timeout: 3 * time.Second}
+			res, err := httpClient.Get(fmt.Sprintf("https://api.mapbox.com/geocoding/v5/mapbox.places/%s.json?types=address&language=en&access_token=%s", url.QueryEscape(users[i].Address), *mbToken))
 
-				decoder := json.NewDecoder(res.Body)
-
-				var geoObjectCollection GeoObjectCollection
-				if err := decoder.Decode(&geoObjectCollection); err != nil {
-					fmt.Println("Error parsing JSON:", err)
-					return
-				}
-
-				if len(geoObjectCollection.Features) > 0 {
-					if len(geoObjectCollection.Features[0].Geometry.Coordinates) > 0 {
-						fmt.Printf("Found result for address %s: Lon: %f Lat: %f\n",
-							users[i].Address,
-							geoObjectCollection.Features[0].Geometry.Coordinates[0],
-							geoObjectCollection.Features[0].Geometry.Coordinates[1],
-						)
-						users[i].Longitude = geoObjectCollection.Features[0].Geometry.Coordinates[0]
-						users[i].Latitude = geoObjectCollection.Features[0].Geometry.Coordinates[1]
-					}
-				} else {
-					fmt.Printf("Found no results for address %s\n", strings.ReplaceAll(users[i].Address, "\n", " "))
-					users[i].Longitude = -1
-					users[i].Latitude = -1
-				}
-				db.Save(&users[i])
+			if err != nil {
+				log.Println(err)
 			}
+
+			decoder := json.NewDecoder(res.Body)
+
+			var geoObjectCollection GeoObjectCollection
+			if err := decoder.Decode(&geoObjectCollection); err != nil {
+				fmt.Println("Error parsing JSON:", err)
+				return
+			}
+
+			if len(geoObjectCollection.Features) > 0 {
+				if len(geoObjectCollection.Features[0].Geometry.Coordinates) > 0 {
+					fmt.Printf("Found result for address %s: Lon: %f Lat: %f\n",
+						users[i].Address,
+						geoObjectCollection.Features[0].Geometry.Coordinates[0],
+						geoObjectCollection.Features[0].Geometry.Coordinates[1],
+					)
+					users[i].Longitude = geoObjectCollection.Features[0].Geometry.Coordinates[0]
+					users[i].Latitude = geoObjectCollection.Features[0].Geometry.Coordinates[1]
+				}
+			} else {
+				fmt.Printf("Found no results for address %s\n", strings.ReplaceAll(users[i].Address, "\n", " "))
+				users[i].Longitude = -1
+				users[i].Latitude = -1
+			}
+			db.Save(&users[i])
+		} else {
+			fmt.Printf("skipped address %s, since there's alreade coords set\n", strings.ReplaceAll(users[i].Address, "\n", " "))
 		}
 	}
 }

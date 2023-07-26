@@ -43,8 +43,6 @@ var Config struct {
 	ONESIGNAL_APP_ID        string `yaml:"onesignal_app_id"`
 	ONESIGNAL_REST_API_KEY  string `yaml:"onesignal_rest_api_key"`
 	APPSTORE_REVIEWER_EMAIL string `yaml:"appstore_reviewer_email"`
-	MAPBOX_ACCESS_TOKEN     string `yaml:"mapbox_access_token"`
-	MAPBOX_API_LIMIT        int    `yaml:"mapbox_api_limit"`
 }
 
 func ConfigInit(path string) {
