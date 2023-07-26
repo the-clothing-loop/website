@@ -76,10 +76,9 @@ func main() {
 					return
 				}
 
-				if len(geoObjectCollection.Features) > 0 && geoObjectCollection.Features[0].Relevance > app.Config.MAPBOX_REQ_RELEVANCE {
+				if len(geoObjectCollection.Features) > 0 {
 					if len(geoObjectCollection.Features[0].Geometry.Coordinates) > 0 {
-						fmt.Printf("Found result with %f relevance for address %s: Lon: %f Lat: %f\n",
-							geoObjectCollection.Features[0].Relevance,
+						fmt.Printf("Found result for address %s: Lon: %f Lat: %f\n",
 							users[i].Address,
 							geoObjectCollection.Features[0].Geometry.Coordinates[0],
 							geoObjectCollection.Features[0].Geometry.Coordinates[1],
