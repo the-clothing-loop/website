@@ -383,12 +383,12 @@ export default function Settings() {
           <IonList className="ion-margin-top">
             <IonItem
               lines="full"
-              routerLink="/privacy-policy"
+              routerLink="/settings/privacy-policy"
               style={{ "--border-width": "0.55px 0px 0.55px 0px" }}
             >
               <IonLabel color="medium">{t("privacyPolicy")}</IonLabel>
             </IonItem>
-            <IonItem lines="none" routerLink="/open-source">
+            <IonItem lines="none" routerLink="/settings/open-source">
               <IonLabel color="medium">{t("openSource")}</IonLabel>
             </IonItem>
           </IonList>

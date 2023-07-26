@@ -179,33 +179,26 @@ export default function CreateUpdateBulky({
               autoCapitalize="words"
               enterkeyhint="next"
               label={t("title")}
+              labelPlacement="start"
               value={bulkyTitle}
-              onIonChange={(e) => setBulkyTitle(e.detail.value + "")}
+              onIonInput={(e) => setBulkyTitle(e.detail.value + "")}
             ></IonInput>
           </IonItem>
           <IonItem
-            lines="none"
+            lines="inset"
             color={error === "message" ? "danger" : undefined}
           >
             <IonTextarea
-              className="ion-margin-bottom ion-margin-top"
+              className="ion-margin-bottom"
               label={t("message")}
-              labelPlacement="stacked"
-              color="light"
-              style={{
-                backgroundColor: "var(--ion-color-light)",
-                color: "var(--ion-color-light-contrast)",
-                borderRadius: "8px",
-                padding: 8,
-                paddingTop: 0,
-              }}
+              labelPlacement="start"
               spellCheck="true"
               autoGrow
               autoCapitalize="sentences"
               autoCorrect="on"
               enterkeyhint="next"
               value={bulkyMessage}
-              onIonChange={(e) => setBulkyMessage(e.detail.value + "")}
+              onIonInput={(e) => setBulkyMessage(e.detail.value + "")}
             />
           </IonItem>
           <IonItem lines="none">

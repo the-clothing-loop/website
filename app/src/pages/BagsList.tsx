@@ -740,7 +740,7 @@ function BagSVG({ color }: { color: string }) {
           <path d="M0 38h38V0H0v38Z"></path>
         </clipPath>
       </defs>
-      <g clip-path="url(#a)" transform="matrix(1.25 0 0 -1.25 0 47.5)">
+      <g clipPath="url(#a)" transform="matrix(1.25 0 0 -1.25 0 47.5)">
         <path
           fill="#ffac33"
           d="M29 15a1 1 0 0 0-1 1v6c0 6.065-4.037 11-9 11-4.962 0-9-4.935-9-11v-6a1 1 0 1 0-2 0v6c0 7.168 4.935 13 11 13s11-5.832 11-13v-6a1 1 0 0 0-1-1"

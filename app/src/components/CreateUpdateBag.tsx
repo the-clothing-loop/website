@@ -117,6 +117,14 @@ export default function CreateUpdateBag({
 
     setBagHolder(user.uid);
   }
+  function handleSetBagEmoji(emoji: string) {
+    const search = " " + emoji;
+    if (bagNumber.includes(search)) {
+      setBagNumber((s) => s.replace(search, ""));
+    } else {
+      setBagNumber((s) => s + search);
+    }
+  }
   return (
     <IonModal
       ref={modal}
@@ -172,8 +180,9 @@ export default function CreateUpdateBag({
               <IonFabButton
                 key={i}
                 size="small"
-                color="light"
-                onClick={() => setBagNumber((s) => s + " " + emoji)}
+                color={bagNumber.includes(emoji) ? "primary" : "light"}
+                onClick={() => handleSetBagEmoji(emoji)}
+                style={{ fontSize: 20 }}
               >
                 {emoji}
               </IonFabButton>

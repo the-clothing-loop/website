@@ -72,6 +72,7 @@ import dayjs from "./dayjs";
 import { OneSignalInitCap, OneSignalInitReact } from "./onesignal";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import OpenSource from "./pages/OpenSource";
+import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 
 SplashScreen.show({
   autoHide: false,
@@ -193,6 +194,22 @@ function OnboardingRoute() {
 
 function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
   const { t } = useTranslation();
+  const { refresh } = useContext(StoreContext);
+  const [firstStart, setFirstStart] = useState(false);
+  const changeTabs = useThrottledCallback((tab: string) => {
+    if (firstStart) {
+      refresh(tab);
+    }
+  }, 2e5);
+  useEffect(() => {
+    setFirstStart(true);
+  }, []);
+
+  function handleTabsWillChange(e: CustomEvent<{ tab: string }>) {
+    const tab = e.detail.tab;
+    changeTabs(tab);
+  }
+
   return (
     <IonTabs>
       <IonRouterOutlet>
@@ -204,11 +221,19 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
         <Route exact path="/bags" component={BagsList}></Route>
         <Route exact path="/bulky-items" component={BulkyList}></Route>
         <Route exact path="/settings" component={Settings}></Route>
-        <Route exact path="/privacy-policy" component={PrivacyPolicy}></Route>
-        <Route exact path="/open-source" component={OpenSource}></Route>
+        <Route
+          exact
+          path="/settings/privacy-policy"
+          component={PrivacyPolicy}
+        ></Route>
+        <Route
+          exact
+          path="/settings/open-source"
+          component={OpenSource}
+        ></Route>
         <Route exact path="/todo" component={ToDo}></Route>
       </IonRouterOutlet>
-      <IonTabBar slot="bottom">
+      <IonTabBar slot="bottom" onIonTabsWillChange={handleTabsWillChange}>
         <IonTabButton tab="help" href="/help">
           <IonIcon aria-hidden="true" icon={bookOutline} />
           <IonLabel>{t("rules")}</IonLabel>

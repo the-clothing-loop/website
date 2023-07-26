@@ -19,9 +19,10 @@ import {
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
-import { useContext, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
 import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
+import { useLocation } from "react-router";
 
 interface MediaIcon {
   icon: string;
