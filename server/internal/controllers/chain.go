@@ -11,6 +11,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	"github.com/the-clothing-loop/website/server/pkg/tsp"
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -480,6 +481,9 @@ UPDATE user_chains
 SET is_approved = TRUE, created_at = NOW()
 WHERE user_id = ? AND chain_id = ?
 	`, user.ID, chain.ID)
+
+	newRoute, _ := tsp.GetRouteOrderWithNewUser(chain.ID, user.ID, db)
+	chain.SetRouteOrderByUserUIDs(db, newRoute) // update the route order
 
 	if user.Email.Valid {
 		views.EmailAnAdminApprovedYourJoinRequest(c, user.Name, user.Email.String, chain.Name)
