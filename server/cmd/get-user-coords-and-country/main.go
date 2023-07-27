@@ -102,7 +102,7 @@ func main() {
 					)
 					user.Longitude = geoObjectCollection.Features[0].Geometry.Coordinates[0]
 					user.Latitude = geoObjectCollection.Features[0].Geometry.Coordinates[1]
-					db.Save(&user)
+					db.Exec(`UPDATE users SET longitude = ?, latitude = ? WHERE id = ?`, user.Longitude, user.Latitude, user.ID)
 				}
 			} else {
 				fmt.Printf("[%d] Found no results for address %s\n", user.ID, strings.ReplaceAll(user.Address, "\n", " "))
