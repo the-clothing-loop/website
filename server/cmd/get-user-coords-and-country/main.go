@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 
@@ -56,6 +57,7 @@ func main() {
 	endflag := flag.Int("end", 1, "end of user_ids to check")
 	flag.Parse()
 
+	os.Setenv("SERVER_NO_MIGRATE", "true")
 	app.ConfigInit(".")
 	db := app.DatabaseInit()
 
@@ -64,20 +66,22 @@ func main() {
 	fmt.Printf("Found %d users\n", len(users))
 
 	apiCount := 0
+	apiCountP := &apiCount
+	defer func() {
+		fmt.Printf("API count: %d\n", *apiCountP)
+	}()
 
 	httpClient := &http.Client{Timeout: 3 * time.Second}
-END:
 	for _, user := range users {
 		if user.Address == "" {
 			fmt.Printf("[%d] Address is empty '%s'\n", user.ID, strings.ReplaceAll(user.Address, "\n", " "))
 		} else if user.Latitude == 0 || user.Longitude == 0 {
-
-			apiCount += 1
+			*apiCountP += 1
 			res, err := httpClient.Get(fmt.Sprintf("https://api.mapbox.com/geocoding/v5/mapbox.places/%s.json?types=address&language=en&access_token=%s", url.QueryEscape(user.Address), *mbToken))
 
 			if err != nil {
 				fmt.Printf("[%d] HTTP client returned error: %e\n", user.ID, err)
-				break END
+				return
 			}
 
 			decoder := json.NewDecoder(res.Body)
@@ -85,7 +89,7 @@ END:
 			var geoObjectCollection GeoObjectCollection
 			if err := decoder.Decode(&geoObjectCollection); err != nil {
 				fmt.Printf("[%d] Error parsing JSON: %e\n", user.ID, err)
-				break END
+				return
 			}
 
 			if len(geoObjectCollection.Features) > 0 {
@@ -98,15 +102,13 @@ END:
 					)
 					user.Longitude = geoObjectCollection.Features[0].Geometry.Coordinates[0]
 					user.Latitude = geoObjectCollection.Features[0].Geometry.Coordinates[1]
+					db.Save(&user)
 				}
 			} else {
 				fmt.Printf("[%d] Found no results for address %s\n", user.ID, strings.ReplaceAll(user.Address, "\n", " "))
 			}
-			db.Save(&user)
 		} else {
 			fmt.Printf("[%d] Skipped address %s, since there's already coords set\n", user.ID, strings.ReplaceAll(user.Address, "\n", " "))
 		}
 	}
-
-	fmt.Printf("API count: %d\n", apiCount)
 }
