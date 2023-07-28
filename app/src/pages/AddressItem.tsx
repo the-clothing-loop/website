@@ -16,6 +16,7 @@ import isPaused from "../utils/is_paused";
 
 interface MessagingApp {
   icon: string;
+  link: (n: string) => string;
   name: string;
   color: string;
   colorTint: string;
@@ -24,6 +25,7 @@ interface MessagingApp {
 const messagingApps: MessagingApp[] = [
   {
     icon: "/icons/sms.svg",
+    link: (n) => `sms:${n}`,
     name: "Sms",
     color: "#44e75f",
     colorTint: "#5dfc77",
@@ -32,7 +34,7 @@ const messagingApps: MessagingApp[] = [
   {
     icon: "/icons/whatsapp.svg",
     name: "WhatsApp",
-
+    link: (n) => `https://wa.me/${n}`,
     color: "#25d366",
     colorTint: "#73f793",
     colorFade: "#128c7e",
@@ -40,7 +42,7 @@ const messagingApps: MessagingApp[] = [
   {
     icon: "/icons/telegram.svg",
     name: "Telegram",
-
+    link: (n) => `https://t.me/+${n}`,
     color: "#29a9eb",
     colorTint: "#7eb9e1",
     colorFade: "#0f86d7",
@@ -48,7 +50,7 @@ const messagingApps: MessagingApp[] = [
   {
     icon: "/icons/signal.svg",
     name: "Signal",
-
+    link: (n) => `https://signal.me/+${n}`,
     color: "#3a76f0",
     colorTint: "#2f6ded",
     colorFade: "#3c3744",
@@ -65,6 +67,7 @@ export default function AddressItem({
   }, [match.params.uid, chainUsers]);
   const isUserPaused = isPaused(user?.paused_until || null);
 
+  let phone = user?.phone_number.replaceAll(/[^\d]/g, "") || "";
   return (
     <IonPage>
       <IonHeader translucent>
@@ -92,6 +95,8 @@ export default function AddressItem({
                 "--background-focused": app.colorFade,
                 "--background-hover": app.colorTint,
               }}
+              href={app.link(phone)}
+              target="_blank"
             >
               <IonImg
                 src={app.icon}
