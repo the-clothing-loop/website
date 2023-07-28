@@ -6,6 +6,8 @@
 
 DELETE FROM clothingloop.bags;
 
+DELETE FROM clothingloop.bulky_items;
+
 DELETE FROM clothingloop.user_chains;
 
 DELETE FROM clothingloop.user_tokens;
@@ -16,9 +18,9 @@ DELETE FROM clothingloop.newsletters;
 
 DELETE FROM clothingloop.payments;
 
-DELETE FROM clothingloop.users;
-
 DELETE FROM clothingloop.events;
+
+DELETE FROM clothingloop.users;
 
 ALTER TABLE clothingloop.chains AUTO_INCREMENT=1;
 
