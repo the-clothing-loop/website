@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -80,7 +81,7 @@ func RouteOptimize(c *gin.Context) {
 	// Given a ChainUID return an optimized route for all the approved participant of the loop
 	// with latitude and longitude.
 	cities := retrieveChainUsersAsTspCities(db, chain.ID)
-	minimalCost, optimalPath := tsp.RunOptimizeRouteWithCitiesMST[string](cities)
+	optimalPath, minimalCost := tsp.RunOptimizeRouteWithCitiesMST[string](cities)
 
 	c.JSON(200, gin.H{
 		"minimal_cost": minimalCost,
@@ -88,26 +89,30 @@ func RouteOptimize(c *gin.Context) {
 	})
 }
 
-func retrieveChainUsersAsTspCities(db *gorm.DB, ChainID uint) []tsp.City[string] {
+func retrieveChainUsersAsTspCities(db *gorm.DB, chainID uint) []tsp.City[string] {
 	allUserChains := &[]tsp.City[string]{}
 
-	err := db.Raw(`
+	err := db.Raw(fmt.Sprintf(`
 	SELECT
-		users.uid AS Key,
-		users.latitude AS Latitude,
-		users.longitude AS Longitude,
-		user_chains.route_order AS RouteOrder
+		users.uid AS %skey%s,
+		users.latitude AS latitude,
+		users.longitude AS longitude,
+		user_chains.route_order AS route_order
 	FROM user_chains
 	LEFT JOIN users ON user_chains.user_id = users.id
 	WHERE user_chains.chain_id = ? 
 	AND users.is_email_verified = TRUE 
 	AND user_chains.is_approved = TRUE
-	AND users.latitude <> 0 AND users.longitude <> 0 
-	ORDER BY user_chains.route_order ASC`, ChainID).Scan(allUserChains).Error
+	ORDER BY user_chains.route_order ASC`, "`", "`"), chainID).Scan(allUserChains).Error
 
 	if err != nil {
 		goscope.Log.Errorf("Unable to retrieve associations between a loop and its users: %v", err)
 		return nil
 	}
+
+	for i, city := range *allUserChains {
+		city.RouteOrder = i + 1
+	}
+
 	return *allUserChains
 }
