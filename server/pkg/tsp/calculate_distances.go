@@ -2,8 +2,8 @@ package tsp
 
 import "math"
 
-func createDistanceMatrix(users []UserChain) [][]float64 {
-	n := len(users)
+func (t *Tsp[K]) CreateDistanceMatrix() [][]float64 {
+	n := len(t.Cities)
 	matrix := make([][]float64, n)
 
 	for i := 0; i < n; i++ {
@@ -12,7 +12,7 @@ func createDistanceMatrix(users []UserChain) [][]float64 {
 
 	for i := 0; i < n; i++ {
 		for j := i; j < n; j++ {
-			distance := calculateDistance(users[i], users[j])
+			distance := calculateDistance(t.Cities[i].Latitude, t.Cities[i].Longitude, t.Cities[j].Latitude, t.Cities[j].Longitude)
 			matrix[i][j] = distance
 			matrix[j][i] = distance
 		}
@@ -20,12 +20,12 @@ func createDistanceMatrix(users []UserChain) [][]float64 {
 	return matrix
 }
 
-func calculateDistance(user1, user2 UserChain) float64 {
-	lat1 := user1.Latitude
-	lon1 := user1.Longitude
-	lat2 := user2.Latitude
-	lon2 := user2.Longitude
-
+func calculateDistance(
+	lat1,
+	lon1,
+	lat2,
+	lon2 float64,
+) float64 {
 	// Calculate distance using Haversine formula
 	dLat := toRadians(lat2 - lat1)
 	dLon := toRadians(lon2 - lon1)

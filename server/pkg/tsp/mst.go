@@ -4,10 +4,7 @@ package tsp
 
 const INT_MAX = float64(1e9)
 
-type MST struct {
-}
-
-func (MST) optimizeRoute(matrix [][]float64) (float64, []int) {
+func OptimizeRouteMST(matrix [][]float64) (float64, []int) {
 	var n = len(matrix)
 
 	var rootNode int
@@ -27,7 +24,8 @@ func (MST) optimizeRoute(matrix [][]float64) (float64, []int) {
 	var path = []int{}
 	var cost = float64(0)
 
-	prim := func() {
+	// prim
+	{
 		var max float64
 		var record float64
 		var parent int
@@ -56,16 +54,7 @@ func (MST) optimizeRoute(matrix [][]float64) (float64, []int) {
 		}
 	}
 
-	var preorder func(index int)
-	preorder = func(index int) {
-		path = append(path, index)
-		for _, i := range tree[index] {
-			preorder(i)
-		}
-	}
-
-	prim()
-	preorder(rootNode)
+	preorder(&tree, &path, rootNode)
 	path = append(path, rootNode) // to create the cycle
 	for i := 0; i < len(path)-1; i++ {
 		src := path[i]
@@ -73,4 +62,11 @@ func (MST) optimizeRoute(matrix [][]float64) (float64, []int) {
 		cost = cost + matrix[src][dest]
 	}
 	return cost, path
+}
+
+func preorder(tree *[][]int, path *[]int, index int) {
+	*path = append(*path, index)
+	for _, i := range (*tree)[index] {
+		preorder(tree, path, i)
+	}
 }

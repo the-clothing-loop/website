@@ -1,144 +1,87 @@
 package tsp
 
-import (
-	"time"
-
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
-	"gorm.io/gorm"
-)
-
-type TSPAlgorithm interface {
-	optimizeRoute(matrix [][]float64) (float64, []int)
+type Tsp[K ~int | string | uint] struct {
+	// Ordered by route
+	Cities []City[K]
 }
 
-type UserChain struct {
-	ID           uint
-	UID          string
-	Latitude     float64
-	Longitude    float64
-	IsChainAdmin bool
-	RouteOrder   int
-	CreatedAt    time.Time
+type City[K ~int | string | uint] struct {
+	Key        K
+	RouteOrder int
+	Latitude   float64
+	Longitude  float64
 }
 
-var optimizer TSPAlgorithm = MST{}
-
-/*
-Given a ChainUID return an optimized route for all the approved participant of the loop
-with latitude and longitude.
-*/
-func OptimizeRoute(ChainID uint, db *gorm.DB) (float64, []string) {
-	users := retrieveChainUsers(ChainID, db)
-	distanceMatrix := createDistanceMatrix(users)
-	minimalCost, optimalPath := optimizer.optimizeRoute(distanceMatrix)
-	// obtaining the uid  of the users based in his index in the optimalPath
-	orderedUsersId := sortUsersByOptimalPath(users, optimalPath)
-	return minimalCost, orderedUsersId
+func (t *Tsp[K]) SetCities(cities []City[K]) {
+	t.Cities = cities
 }
 
-/*
-Given a ChainID and the Id of a new user returns the list of UsersUIDS of the chain
-considering the addition of the new user
-*/
-func GetRouteOrderWithNewUser(ChainID uint, UserID uint, db *gorm.DB) ([]string, int) {
+// It is assumed that t.Cities is provided beforehand
+func (t *Tsp[K]) GetRouteOrderWithNewCity(Key K) (orderedKeys []K, newCityOptimalOrder int) {
+	newCityIndex, newCity := t.findCityByKey(Key)
+	newCityOptimalOrder = t.getOptimalPositionBasedInDistance(newCity, t.Cities)
 
-	usersOrderedByRoute := retrieveChainUsers(ChainID, db)
-	nUserIndex, nUser := findUserById(usersOrderedByRoute, UserID)
-	userOptimalOrder := getOptimalPositionBasedInDistance(nUser, usersOrderedByRoute)
-
-	uids := make([]string, 0, len(usersOrderedByRoute))
+	orderedKeys = make([]K, 0, len(t.Cities))
 	inserted := false
 
-	for i, user := range usersOrderedByRoute {
-		if i == nUserIndex {
+	for i, city := range t.Cities {
+		if i == newCityIndex {
 			continue
 		}
-		if i == userOptimalOrder-1 {
+		if i == newCityOptimalOrder-1 {
 			inserted = true
-			uids = append(uids, nUser.UID)
+			orderedKeys = append(orderedKeys, newCity.Key)
 		}
-		uids = append(uids, user.UID)
+		orderedKeys = append(orderedKeys, city.Key)
 	}
 
-	// the optimal position could be the last one, so, if the user was not inserted in the for
-	// is put at the end of the route
+	// The optimal position could be the last one, so, if the city was not inserted in the for loop it is put at the end of the route
 	if !inserted {
-		uids = append(uids, nUser.UID)
+		orderedKeys = append(orderedKeys, newCity.Key)
 	}
 
-	return uids, userOptimalOrder
+	return orderedKeys, newCityOptimalOrder
 }
 
-/*
-Return the optimal position of a newUser in the loop based in the nearest existing user.
-- The  optimal position is nearest user order + 1
-*/
-func getOptimalPositionBasedInDistance(newUser UserChain, chainUsers []UserChain) int {
-	if newUser.Latitude == 0 || newUser.Longitude == 0 || len(chainUsers) <= 2 {
-		return len(chainUsers) + 1
+// Return the optimal position of a new City in the loop based in the nearest existing city.
+//
+// The optimal position is: nearest city, order + 1
+func (t *Tsp[K]) getOptimalPositionBasedInDistance(newCity City[K], cities []City[K]) int {
+	if newCity.Latitude == 0 || newCity.Longitude == 0 || len(cities) <= 2 {
+		return len(cities) + 1
 	}
 
-	minimunDistance := INT_MAX
-	var user UserChain
-	for _, u := range chainUsers {
-		if u.ID != newUser.ID {
-			distance := calculateDistance(newUser, u)
-			if distance < minimunDistance {
-				minimunDistance = distance
-				user = u
+	minimumDistance := INT_MAX
+	var nearestCity City[K]
+	for _, c := range cities {
+		if c.Key != newCity.Key {
+			distance := calculateDistance(newCity.Latitude, newCity.Longitude, c.Latitude, c.Longitude)
+			if distance < minimumDistance {
+				minimumDistance = distance
+				nearestCity = c
 			}
 		}
 	}
-	return user.RouteOrder + 1
+	return nearestCity.RouteOrder + 1
 }
 
-func retrieveChainUsers(ChainID uint, db *gorm.DB) []UserChain {
+func (t *Tsp[K]) SortCitiesByOptimalPath(optimalPath []int) []K {
+	orderedCityKeys := make([]K, len(t.Cities))
 
-	allUserChains := &[]UserChain{}
-
-	err := db.Raw(`
-	SELECT
-		users.id AS id,
-		users.uid AS uid,
-		users.latitude AS latitude,
-		users.longitude AS longitude,
-		user_chains.is_chain_admin AS is_chain_admin,
-		user_chains.route_order AS route_order,
-		user_chains.created_at AS created_at
-	FROM user_chains
-	LEFT JOIN users ON user_chains.user_id = users.id
-	WHERE user_chains.chain_id = ? 
-	AND users.is_email_verified = TRUE 
-	AND user_chains.is_approved = TRUE
-	AND users.latitude <> 0 AND users.longitude <> 0 
-	ORDER BY user_chains.route_order ASC`, ChainID).Scan(allUserChains).Error
-
-	if err != nil {
-		goscope.Log.Errorf("Unable to retrieve associations between a loop and its users: %v", err)
-		return nil
+	for i := 0; i < len(t.Cities); i++ {
+		index := optimalPath[i]
+		orderedCityKeys[i] = t.Cities[index].Key
 	}
-	return *allUserChains
+	return orderedCityKeys
 }
 
-func sortUsersByOptimalPath(users []UserChain, optimalPath []int) []string {
-	orderedUsersId := make([]string, len(users))
-
-	for i := 0; i < len(users); i++ {
-		userIndex := optimalPath[i]
-		orderedUsersId[i] = users[userIndex].UID
-	}
-	return orderedUsersId
-}
-
-func findUserById(users []UserChain, UserId uint) (int, UserChain) {
-	var nUserIndex int
-	var nUser UserChain
-	for i, user := range users {
-		if user.ID == UserId {
-			nUserIndex = i
-			nUser = user
+func (t *Tsp[K]) findCityByKey(key K) (index int, city City[K]) {
+	for i, c := range t.Cities {
+		if c.Key == key {
+			index = i
+			city = c
 			break
 		}
 	}
-	return nUserIndex, nUser
+	return index, city
 }

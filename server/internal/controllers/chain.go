@@ -482,7 +482,9 @@ SET is_approved = TRUE, created_at = NOW()
 WHERE user_id = ? AND chain_id = ?
 	`, user.ID, chain.ID)
 
-	newRoute, _ := tsp.GetRouteOrderWithNewUser(chain.ID, user.ID, db)
+	// Given a ChainID and the UID of the new user returns the list of UserUIDs of the chain considering the addition of the new user
+	cities := retrieveChainUsersAsTspCities(db, chain.ID)
+	newRoute, _ := tsp.RunAddOptimalOrderNewCity[string](cities, user.UID)
 	chain.SetRouteOrderByUserUIDs(db, newRoute) // update the route order
 
 	if user.Email.Valid {
