@@ -69,7 +69,7 @@ import { OnboardingPageOne, OnboardingPageTwo } from "./pages/Onboarding";
 
 import { useTranslation } from "react-i18next";
 import dayjs from "./dayjs";
-import { OneSignalInitCap, OneSignalInitReact } from "./onesignal";
+import { OneSignalInitCap } from "./onesignal";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import OpenSource from "./pages/OpenSource";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
@@ -95,8 +95,6 @@ export default function App() {
         await OneSignalInitCap().catch((err) => {
           console.error(err);
         });
-      } else if (platforms.includes("pwa")) {
-        await OneSignalInitReact();
       }
       await auth();
     })();
