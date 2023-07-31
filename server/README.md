@@ -1,5 +1,7 @@
 # GoLang Server
 
+![Dependency Tree](https://www.plantuml.com/plantuml/png/PO-_RZ8n4CJxVOhjlWgk_qH152ZJHEaZOo-75V-nx8KJYdZts5Xdu5nOylvcPpMpJImYdws1V_ZkmnNvf1DgnnvFp27z7uPfcjR125UsrjBROHw6yh9FE8L9N2Xx2S_HPFlz-xb_sttiyQWDuO6EFX9ckzNCseqeJyADb01Oio7SKI2doCahVaKYWACtYcA9Gj49Wx-0zLIYUA7uFVexkW4KeIwB42fy8EaTHsyCnRIKh5TaEbhEQqaTlsYQPdXhySBFU6TpMZiU3aidfz3vf5MPvRbyDflLwb6heL87eF765kYv8i3JKDNQikEjPw-KfZqkDJfO2_Uu9TUINdD0bbx0bfmwM_C7)
+
 ## Development install
 
 ### 1. Dependencies
