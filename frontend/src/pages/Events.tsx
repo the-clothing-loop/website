@@ -275,7 +275,7 @@ function EventItem({ event }: { event: Event }) {
   if (event.image_url) image = event.image_url;
   return (
     <article className="flex flex-col bg-teal-light">
-      <Link to={eventURL} className="relative aspect-[4/3]">
+      <Link to={eventURL} className="relative aspect-[4/3] overflow-hidden">
         <div className=" text-md absolute mt-4 right-4 text-center z-10">
           <p className="bg-teal text-white py-2 px-3">
             <span className="inline-block pr-1 font-extrabold">
