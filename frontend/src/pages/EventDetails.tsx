@@ -376,10 +376,10 @@ export default function EventDetails() {
                   }
                 >
                   <div
-                    className={`aspect-[4/3] mb-4 ltr:mr-0 rtl:ml-0 relative 
+                    className={`aspect-[4/3] mb-4 ltr:mr-0 rtl:ml-0 relative transtion-[postion]
                   ${
                     imageExpanded
-                      ? "max-w-xl"
+                      ? "max-w-xl mt-8"
                       : "sm:w-64 sm:float-right rtl:sm:float-left sm:m-4"
                   }`}
                   >
@@ -408,7 +408,7 @@ export default function EventDetails() {
                     <img
                       src={image}
                       alt=""
-                      className="object-contain h-full w-full"
+                      className="object-cover h-full w-full"
                       onClick={() => setImageExpanded(true)}
                     />
                   </div>
