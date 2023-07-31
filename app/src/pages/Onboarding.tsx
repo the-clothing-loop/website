@@ -7,17 +7,14 @@ import {
   IonImg,
   IonPage,
   IonText,
-  IonicSlides,
 } from "@ionic/react";
 import {
   arrowBack,
   arrowForwardOutline,
-  chevronDownCircle,
   compassOutline,
   mapOutline,
 } from "ionicons/icons";
-import { useState } from "react";
-import { Redirect, Route, Switch, useHistory } from "react-router";
+import { useHistory } from "react-router";
 
 export function OnboardingPageOne() {
   const history = useHistory();
@@ -81,7 +78,6 @@ export function OnboardingPageOne() {
           <IonFabButton
             className="ion-margin-bottom"
             color="light"
-            size="small"
             onClick={() => {
               history.push("/onboarding/2");
             }}
@@ -154,7 +150,6 @@ export function OnboardingPageTwo() {
           <IonFabButton
             color="clear"
             onClick={() => history.goBack()}
-            size="small"
             className="ion-margin-bottom"
           >
             <IonIcon icon={arrowBack}></IonIcon>
@@ -162,7 +157,6 @@ export function OnboardingPageTwo() {
         </IonFab>
         <IonFab vertical="bottom" horizontal="end">
           <IonFabButton
-            size="small"
             color="light"
             onClick={() => history.push("/onboarding/3")}
             className="ion-margin-bottom"

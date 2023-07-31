@@ -23,5 +23,11 @@
    And run `npm i; npm run build:ios:production`
 3. Open xcode and open the workspace in the App directory;
    `xcode <root>/app/ios/App/App.xcworkspace`
-4. Run app on mobile device, archive
-5. Open archives from **Window** =>
+4. On the sidebar open the folder icon:
+   **[a] App**
+   -> **Targets App**
+   -> **Build Settings**
+   -> **Versioning**
+   -> **Marketing Version**
+5. Run app on mobile device, archive
+6. Open archives from **Window** => **Organizer**

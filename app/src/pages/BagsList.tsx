@@ -308,6 +308,7 @@ export default function BagsList() {
                             textAlign: "center",
                             fontWeight: "bold",
                             fontSize: 16,
+                            lineHeight: "22px",
                             color: "var(--ion-color-dark)",
                           }}
                           className="ion-text-ellipsis"
@@ -572,7 +573,7 @@ function SelectUserModal({
     useContext(StoreContext);
   const { t, i18n } = useTranslation();
 
-  const [selected, setSelected] = useState(selectedUserUID);
+  const [selectedOverride, setSelected] = useState("");
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
   const [search, setSearch] = useState("");
   const sortedRoute = useMemo(() => {
@@ -593,9 +594,6 @@ function SelectUserModal({
     }
     return arr;
   }, [selectedUserUID, route, authUser, chainUsers]);
-  useEffect(() => {
-    setSelected(selectedUserUID);
-  }, [selectedUserUID]);
 
   async function submit(userUID: string) {
     console.log("user:", userUID, " bag:", bagID);
@@ -627,13 +625,19 @@ function SelectUserModal({
     setUpdatedAt(null);
   }
 
+  function _didDismiss(e: IonModalCustomEvent<OverlayEventDetail<any>>) {
+    setSelected("");
+    if (didDismiss) didDismiss(e);
+  }
+
+  let selected = selectedOverride || selectedUserUID;
   return (
     <IonModal
       ref={modal}
       initialBreakpoint={0.5}
       breakpoints={[0, 0.5, 0.75, 1]}
-      onIonModalDidDismiss={didDismiss}
-      onIonModalWillPresent={() => willPresent()}
+      onIonModalDidDismiss={_didDismiss}
+      onIonModalWillPresent={willPresent}
     >
       <IonHeader>
         <IonToolbar>

@@ -1,5 +1,4 @@
 // import OneSignal from "onesignal-cordova-plugin";
-import OneSignalReact from "react-onesignal";
 
 const ONE_SIGNAL_ID = import.meta.env.VITE_ONE_SIGNAL_ID;
 
@@ -30,17 +29,4 @@ export function OneSignalInitCap(): Promise<string | boolean> {
       },
     );
   });
-}
-
-export async function OneSignalInitReact(): Promise<void> {
-  if (!ONE_SIGNAL_ID) return;
-  await OneSignalReact.init({
-    appId: ONE_SIGNAL_ID,
-    allowLocalhostAsSecureOrigin: true,
-  });
-
-  if (!window.plugins) window.plugins = {};
-  window.plugins.OneSignal = OneSignalReact;
-
-  return OneSignalReact.showSlidedownPrompt();
 }

@@ -24,6 +24,7 @@ import toastError from "../../toastError";
 import { bulkyItemRemove, BulkyItem, User } from "../api";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
+import { Clipboard } from "@capacitor/clipboard";
 
 export default function BulkyList() {
   const { t } = useTranslation();
@@ -84,7 +85,7 @@ export default function BulkyList() {
   }
   function handleClickReserve(user: User, bulkyItemName: string) {
     const handler = (
-      type: "sms" | "whatsapp" | "telegram" | "signal" | "share",
+      type: "sms" | "whatsapp" | "telegram" | "signal" | "copy",
     ) => {
       let phone = user.phone_number.replaceAll(/[^\d]/g, "");
       let message = window.encodeURI(
@@ -105,9 +106,25 @@ export default function BulkyList() {
         case "signal":
           window.open(`https://signal.me/+${phone}`, "_blank");
           break;
+        case "copy":
+          Clipboard.write({
+            string: user.phone_number,
+          });
+          present({
+            message: t("copiedToClipboard"),
+            color: "primary",
+            duration: 1300,
+          });
+          break;
       }
     };
     let buttons = [
+      {
+        text: t("copy"),
+        role: "submit",
+        cssClass: "ion-text-bold",
+        handler: () => handler("copy"),
+      },
       {
         text: "SMS",
         role: "submit",

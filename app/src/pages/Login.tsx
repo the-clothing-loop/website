@@ -219,7 +219,6 @@ export default function Login(props: { isLoggedIn: boolean }) {
           <IonFabButton
             color="clear"
             onClick={() => history.goBack()}
-            size="small"
             className="ion-margin-bottom"
           >
             <IonIcon icon={arrowBack}></IonIcon>
