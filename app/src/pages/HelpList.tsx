@@ -142,7 +142,7 @@ export default function HelpList() {
           href="https://www.clothingloop.org/"
           style={{
             display: "block",
-            color: "var(--ion-color-primary)",
+            color: "var(--ion-color-dark)",
             fontSize: "16px",
           }}
         >
