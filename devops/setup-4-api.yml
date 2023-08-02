@@ -111,8 +111,10 @@
     - name: Enable service api production
       ansible.builtin.service:
         name: cl-api-production
+        state: restarted
         enabled: true
     - name: Enable service api acceptance
       ansible.builtin.service:
         name: cl-api-acceptance
+        state: restarted
         enabled: true
