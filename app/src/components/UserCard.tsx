@@ -78,7 +78,7 @@ export default function UserCard({
   user: User;
   chain: Chain | null;
   isUserPaused: boolean;
-  showMessengers: boolean;
+  showMessengers?: boolean;
 }) {
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
