@@ -415,6 +415,7 @@ WHERE uc.chain_id = ?
 					user.Email.String,
 					user.PhoneNumber,
 					user.Address,
+					user.Sizes,
 				)
 			}
 		}

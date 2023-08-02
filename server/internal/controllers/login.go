@@ -138,6 +138,7 @@ UPDATE chains SET published = TRUE WHERE id IN (
 					user.Email.String,
 					user.PhoneNumber,
 					user.Address,
+					user.Sizes,
 				)
 			}
 		}

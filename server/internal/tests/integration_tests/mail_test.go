@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
 	"github.com/the-clothing-loop/website/server/internal/views"
 )
@@ -27,6 +28,7 @@ func TestEmailAParticipantJoinedTheLoop(t *testing.T) {
 		faker.Person().Contact().Email,
 		faker.Person().Contact().Phone,
 		faker.Address().Address(),
+		[]string{models.SizeEnumWomenMedium, models.SizeEnumWomenLarge, models.SizeEnumMenSmall, models.SizeEnumBaby},
 	)
 	assert.Nil(t, err)
 }
