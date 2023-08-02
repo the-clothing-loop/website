@@ -10,29 +10,15 @@ import {
   IonItemDivider,
   IonItemGroup,
   IonList,
-  IonLoading,
   IonPage,
   IonSkeletonText,
-  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
 import { useTranslation } from "react-i18next";
-import OpenSourceLicenses from "../../public/open_source_licenses.json";
 import { openOutline } from "ionicons/icons";
 import { useEffect, useMemo, useState } from "react";
 import { OpenSourceLicense, getOpenSouceLicenses } from "../api";
-
-function ReadLicenses(): Array<OpenSourceLicense> {
-  let licenses: Array<OpenSourceLicense> = [];
-  for (const license in OpenSourceLicenses) {
-    licenses.push({
-      name: license,
-      modules: (OpenSourceLicenses as any)[license],
-    });
-  }
-  return licenses;
-}
 
 export default function OpenSource() {
   const { t } = useTranslation();
