@@ -372,7 +372,7 @@ export default function EventDetails() {
                   className={
                     imageExpanded
                       ? "flex flex-col-reverse w-full content-center"
-                      : ""
+                      : "cursor-zoom-in"
                   }
                 >
                   <div
