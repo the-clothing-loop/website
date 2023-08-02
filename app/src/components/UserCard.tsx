@@ -24,6 +24,7 @@ import { IsChainAdmin } from "../Store";
 import { useMemo, useRef, useState } from "react";
 import { Share } from "@capacitor/share";
 import { isPlatform } from "@ionic/core";
+import { useLongPress } from "use-long-press";
 
 export default function UserCard({
   user,
@@ -38,28 +39,41 @@ export default function UserCard({
   const isAddressPrivate = IsPrivate(user.address);
   const isEmailPrivate = IsPrivate(user.email);
   const isUserAdmin = useMemo(() => IsChainAdmin(user, chain), [user, chain]);
-  const refCopy = useRef<HTMLIonPopoverElement>(null);
+  const refAddressPopup = useRef<HTMLIonPopoverElement>(null);
+  const refPhoneNumberPopup = useRef<HTMLIonPopoverElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
+  const longPressAddress = useLongPress(
+    (e) => {
+      refAddressPopup.current?.present(e as any);
+    },
+    { onCancel: (e) => {} },
+  );
+  const longPressPhoneNumber = useLongPress(
+    (e) => {
+      refPhoneNumberPopup.current?.present(e as any);
+    },
+    { onCancel: (e) => {} },
+  );
 
   function handleCopyPhoneNumber() {
     Clipboard.write({
       string: user.phone_number,
     });
-    refCopy.current?.dismiss();
+    refPhoneNumberPopup.current?.dismiss();
   }
 
   function handleSharePhoneNumber() {
     Share.share({
       url: "tel:" + user.phone_number,
     });
-    refCopy.current?.dismiss();
+    refPhoneNumberPopup.current?.dismiss();
   }
 
   function handleCopyAddress() {
     Clipboard.write({
       string: user.address,
     });
-    refCopy.current?.dismiss();
+    refAddressPopup.current?.dismiss();
   }
 
   function handleShareAddress() {
@@ -68,7 +82,7 @@ export default function UserCard({
         `https://www.google.com/maps/search/` +
         user.address.replaceAll(" ", "+"),
     });
-    refCopy.current?.dismiss();
+    refAddressPopup.current?.dismiss();
   }
 
   return (
@@ -110,7 +124,7 @@ export default function UserCard({
       <IonList>
         {isEmailPrivate ? null : (
           <>
-            <IonItem lines="none" id="item-phone-number">
+            <IonItem lines="none" {...longPressPhoneNumber()}>
               <IonLabel>
                 <h3 className="ion-text-bold">{t("phoneNumber")}</h3>
                 {user.phone_number ? (
@@ -118,11 +132,7 @@ export default function UserCard({
                 ) : null}
               </IonLabel>
             </IonItem>
-            <IonPopover
-              ref={refCopy}
-              trigger="item-phone-number"
-              triggerAction="context-menu"
-            >
+            <IonPopover ref={refPhoneNumberPopup}>
               <IonContent>
                 <IonList>
                   <IonItem
@@ -155,7 +165,6 @@ export default function UserCard({
         {isAddressPrivate ? null : (
           <>
             <IonItem
-              id="item-address"
               lines="none"
               button
               rel="noreferrer"
@@ -165,6 +174,7 @@ export default function UserCard({
                 `https://www.google.com/maps/search/` +
                 user.address.replaceAll(" ", "+")
               }
+              {...longPressAddress()}
             >
               <IonLabel>
                 <h3 className="ion-text-bold">{t("address")}</h3>
@@ -179,11 +189,7 @@ export default function UserCard({
                 />
               ) : null}
             </IonItem>
-            <IonPopover
-              ref={refCopy}
-              trigger="item-address"
-              triggerAction="context-menu"
-            >
+            <IonPopover ref={refAddressPopup}>
               <IonContent>
                 <IonList>
                   <IonItem
