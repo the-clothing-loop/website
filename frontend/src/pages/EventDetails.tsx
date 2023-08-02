@@ -40,6 +40,7 @@ export default function EventDetails() {
   const { pathname } = useLocation();
   const history = useHistory();
   const addCopyAttributes = useToClipboard();
+  const [imageExpanded, setImageExpanded] = useState(false);
 
   useEffect(() => {
     load();
@@ -367,8 +368,21 @@ export default function EventDetails() {
                 <h2 className="font-sans font-bold text-secondary text-2xl mb-4 px-0">
                   {t("eventDetails") + ":"}
                 </h2>
-                <div>
-                  <div className="aspect-[4/3] sm:float-right rtl:sm:float-left sm:w-64 mb-4 sm:m-4 ltr:mr-0 rtl:ml-0 relative">
+                <div
+                  className={
+                    imageExpanded
+                      ? "flex flex-col-reverse w-full content-center"
+                      : ""
+                  }
+                >
+                  <div
+                    className={`aspect-[4/3] mb-4 ltr:mr-0 rtl:ml-0 relative transtion-[postion]
+                  ${
+                    imageExpanded
+                      ? "max-w-xl mt-8"
+                      : "sm:w-64 sm:float-right rtl:sm:float-left sm:m-4"
+                  }`}
+                  >
                     {isOrganizer ? (
                       <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2 flex flex-row-reverse">
                         <label
@@ -395,6 +409,7 @@ export default function EventDetails() {
                       src={image}
                       alt=""
                       className="object-cover h-full w-full"
+                      onClick={() => setImageExpanded(true)}
                     />
                   </div>
                   <div
