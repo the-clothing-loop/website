@@ -292,7 +292,7 @@ export default function Settings() {
                     <IonIcon icon={compassOutline} />
                   </IonItem>
                 ) : null}
-                {chain ? (
+                {chain?.published ? (
                   <IonItem
                     lines="none"
                     button

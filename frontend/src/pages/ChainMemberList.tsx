@@ -136,6 +136,10 @@ export default function ChainMemberList() {
         chainUpdateBody.open_to_new_members = false;
       }
       await chainUpdate(chainUpdateBody);
+      setChain((s) => ({
+        ...(s as Chain),
+        ...chainUpdateBody,
+      }));
     } catch (err: any) {
       console.error("Error updating chain: ", err);
       setError(err?.data || `Error: ${JSON.stringify(err)}`);
@@ -164,6 +168,10 @@ export default function ChainMemberList() {
         chainUpdateBody.published = true;
       }
       await chainUpdate(chainUpdateBody);
+      setChain((s) => ({
+        ...(s as Chain),
+        ...chainUpdateBody,
+      }));
     } catch (err: any) {
       console.error("Error updating chain:", err);
       setError(err?.data || `Error: ${JSON.stringify(err)}`);
@@ -393,7 +401,11 @@ export default function ChainMemberList() {
         <div className="flex flex-col lg:flex-row max-w-screen-xl mx-auto pt-4 lg:mb-6">
           <section className="lg:w-1/3">
             <div className="relative bg-teal-light p-8">
-              <label className="absolute top-4 right-4">
+              <label
+                className={`absolute top-4 right-4 ${
+                  chain.published || authUser?.is_root_admin ? "" : "hidden"
+                }`}
+              >
                 <a
                   {...addCopyAttributes(
                     t,
