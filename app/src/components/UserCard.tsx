@@ -4,10 +4,10 @@ import {
   IonItem,
   IonLabel,
   IonText,
-  IonButton,
   IonImg,
   IonContent,
   IonPopover,
+  IonFabButton,
 } from "@ionic/react";
 import { Clipboard } from "@capacitor/clipboard";
 import {
@@ -26,14 +26,59 @@ import { Share } from "@capacitor/share";
 import { isPlatform } from "@ionic/core";
 import { useLongPress } from "use-long-press";
 
+interface MessagingApp {
+  icon: string;
+  link: (n: string) => string;
+  name: string;
+  color: string;
+  colorTint: string;
+  colorFade: string;
+}
+const messagingApps: MessagingApp[] = [
+  {
+    icon: "/icons/sms.svg",
+    link: (n) => `sms:${n}`,
+    name: "Sms",
+    color: "#44e75f",
+    colorTint: "#5dfc77",
+    colorFade: "#1dc93a",
+  },
+  {
+    icon: "/icons/whatsapp.svg",
+    name: "WhatsApp",
+    link: (n) => `https://wa.me/${n}`,
+    color: "#25d366",
+    colorTint: "#73f793",
+    colorFade: "#128c7e",
+  },
+  {
+    icon: "/icons/telegram.svg",
+    name: "Telegram",
+    link: (n) => `https://t.me/+${n}`,
+    color: "#29a9eb",
+    colorTint: "#7eb9e1",
+    colorFade: "#0f86d7",
+  },
+  {
+    icon: "/icons/signal.svg",
+    name: "Signal",
+    link: (n) => `https://signal.me/+${n}`,
+    color: "#3a76f0",
+    colorTint: "#2f6ded",
+    colorFade: "#3c3744",
+  },
+];
+
 export default function UserCard({
   user,
   chain,
   isUserPaused,
+  showMessengers = false,
 }: {
   user: User;
   chain: Chain | null;
   isUserPaused: boolean;
+  showMessengers: boolean;
 }) {
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
@@ -85,6 +130,7 @@ export default function UserCard({
     refAddressPopup.current?.dismiss();
   }
 
+  let phone = user?.phone_number.replaceAll(/[^\d]/g, "") || "";
   return (
     <div>
       <div className="ion-padding">
@@ -122,14 +168,20 @@ export default function UserCard({
         </IonText>
       </div>
       <IonList>
-        {isEmailPrivate ? null : (
+        {isEmailPrivate && !user.phone_number ? null : (
           <>
-            <IonItem lines="none" {...longPressPhoneNumber()}>
+            <IonItem
+              lines="none"
+              button
+              rel="noreferrer"
+              detail={false}
+              target="_blank"
+              href={`tel:` + user.phone_number}
+              {...longPressPhoneNumber()}
+            >
               <IonLabel>
                 <h3 className="ion-text-bold">{t("phoneNumber")}</h3>
-                {user.phone_number ? (
-                  <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
-                ) : null}
+                <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
               </IonLabel>
             </IonItem>
             <IonPopover ref={refPhoneNumberPopup}>
@@ -160,6 +212,33 @@ export default function UserCard({
                 </IonList>
               </IonContent>
             </IonPopover>
+            {showMessengers ? (
+              <div style={{ display: "flex", margin: "8px 16px" }}>
+                {messagingApps.map((app) => (
+                  <IonFabButton
+                    key={app.name}
+                    style={{
+                      marginInlineEnd: 8,
+                      "--background": app.color,
+                      "--background-activated": app.colorFade,
+                      "--background-focused": app.colorFade,
+                      "--background-hover": app.colorTint,
+                    }}
+                    href={app.link(phone)}
+                    target="_blank"
+                  >
+                    <IonImg
+                      src={app.icon}
+                      alt={app.name}
+                      style={{
+                        margin: 12,
+                        width: "100%",
+                      }}
+                    />
+                  </IonFabButton>
+                ))}
+              </div>
+            ) : null}
           </>
         )}
         {isAddressPrivate ? null : (
