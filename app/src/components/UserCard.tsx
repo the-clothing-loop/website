@@ -64,7 +64,7 @@ const messagingApps: MessagingApp[] = [
     name: "Signal",
     link: (n) => `https://signal.me/+${n}`,
     color: "#3a76f0",
-    colorTint: "#2f6ded",
+    colorTint: "#2259c8",
     colorFade: "#3c3744",
   },
 ];
@@ -130,7 +130,6 @@ export default function UserCard({
     refAddressPopup.current?.dismiss();
   }
 
-  let phone = user?.phone_number.replaceAll(/[^\d]/g, "") || "";
   return (
     <div>
       <div className="ion-padding">
@@ -213,31 +212,7 @@ export default function UserCard({
               </IonContent>
             </IonPopover>
             {showMessengers ? (
-              <div style={{ display: "flex", margin: "8px 16px" }}>
-                {messagingApps.map((app) => (
-                  <IonFabButton
-                    key={app.name}
-                    style={{
-                      marginInlineEnd: 8,
-                      "--background": app.color,
-                      "--background-activated": app.colorFade,
-                      "--background-focused": app.colorFade,
-                      "--background-hover": app.colorTint,
-                    }}
-                    href={app.link(phone)}
-                    target="_blank"
-                  >
-                    <IonImg
-                      src={app.icon}
-                      alt={app.name}
-                      style={{
-                        margin: 12,
-                        width: "100%",
-                      }}
-                    />
-                  </IonFabButton>
-                ))}
-              </div>
+              <MessengerIcons phoneNumber={user.phone_number} />
             ) : null}
           </>
         )}
@@ -313,6 +288,54 @@ export default function UserCard({
           </>
         )}
       </IonList>
+    </div>
+  );
+}
+
+function MessengerIcons(props: { phoneNumber: string }) {
+  let phone = props.phoneNumber.replaceAll(/[^\d]/g, "") || "";
+  return (
+    <div
+      style={{
+        display: "flex",
+        margin: "8px 16px",
+      }}
+    >
+      {messagingApps.map((app) => {
+        let isPhoneValid = props.phoneNumber.startsWith("+");
+        isPhoneValid = isPhoneValid || app.name === "Sms";
+        return (
+          <IonFabButton
+            disabled={!isPhoneValid}
+            color={isPhoneValid ? undefined : "medium"}
+            key={app.name}
+            style={{
+              marginInlineEnd: 8,
+              ...(isPhoneValid
+                ? {
+                    "--background": app.color,
+                    "--background-activated": app.colorFade,
+                    "--background-focused": app.colorFade,
+                    "--background-hover": app.colorTint,
+                  }
+                : {
+                    opacity: isPhoneValid ? 1 : 0.6,
+                  }),
+            }}
+            href={isPhoneValid ? app.link(phone) : undefined}
+            target={isPhoneValid ? "blank" : undefined}
+          >
+            <IonImg
+              src={app.icon}
+              alt={app.name}
+              style={{
+                margin: 12,
+                width: "100%",
+              }}
+            />
+          </IonFabButton>
+        );
+      })}
     </div>
   );
 }
