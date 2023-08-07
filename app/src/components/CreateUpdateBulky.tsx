@@ -235,13 +235,88 @@ export default function CreateUpdateBulky({
             lines="none"
           >
             <div style={{ width: "100%" }}>
-              <IonLabel style={{ marginTop: 8, marginBottom: 16 }}>
+              <IonLabel style={{ marginTop: 8, marginBottom: 0 }}>
                 {t("image")}
               </IonLabel>
+
+              <div
+                style={{
+                  textAlign: "center",
+                  width: "100%",
+                }}
+              >
+                {!(loadingUpload === State.loading) && bulkyImageURL ? (
+                  <IonCard
+                    onClick={handleClickUpload}
+                    style={{
+                      margin: "32px 50px",
+                      border: "1px solid",
+                      borderColor: loadingUpload
+                        ? "var(--ion-color-medium)"
+                        : "var(--ion-color-primary)",
+                    }}
+                  >
+                    <IonImg
+                      src={bulkyImageURL}
+                      alt={t("loading")}
+                      style={{
+                        maxWidth: "100%",
+                      }}
+                    />
+                  </IonCard>
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "300px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <IonCard
+                      onClick={handleClickUpload}
+                      style={{
+                        border: "1px solid",
+                        borderColor:
+                          loadingUpload === State.loading
+                            ? "var(--ion-color-medium)"
+                            : "var(--ion-color-primary)",
+                        width: 200,
+                        height: 200,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div style={{ position: "relative" }}>
+                        <IonIcon size="large" icon={imageOutline} />
+                        {loadingUpload === State.loading ? (
+                          <IonIcon
+                            icon={hourglassOutline}
+                            size="small"
+                            color="primary"
+                            style={{
+                              backgroundColor:
+                                "var(--ion-color-primary-contrast)",
+                              padding: 2,
+                              borderRadius: "50%",
+                              position: "absolute",
+                              bottom: -9,
+                              right: -11,
+                            }}
+                          />
+                        ) : null}
+                      </div>
+                    </IonCard>
+                  </div>
+                )}
+              </div>
+
               <IonButton
                 onClick={handleClickUpload}
                 size="default"
-                style={{ width: "100%", marginTop: 8, marginBottom: 16 }}
+                className="ion-no-margin"
                 expand="block"
                 color={
                   loadingUpload === State.idle
@@ -280,82 +355,6 @@ export default function CreateUpdateBulky({
                   className="ion-hide"
                   onChange={handleWebUpload}
                 />
-              )}
-            </div>
-          </IonItem>
-          <IonItem lines="none">
-            <div
-              style={{
-                marginBottom: "16px",
-                textAlign: "center",
-                width: "100%",
-              }}
-            >
-              {!(loadingUpload === State.loading) && bulkyImageURL ? (
-                <IonCard
-                  onClick={handleClickUpload}
-                  style={{
-                    margin: "0 50px",
-                    border: "1px solid",
-                    borderColor: loadingUpload
-                      ? "var(--ion-color-medium)"
-                      : "var(--ion-color-primary)",
-                  }}
-                >
-                  <IonImg
-                    src={bulkyImageURL}
-                    alt={t("loading")}
-                    style={{
-                      maxWidth: "100%",
-                    }}
-                  />
-                </IonCard>
-              ) : (
-                <div
-                  style={{
-                    width: "100%",
-                    height: "300px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <IonCard
-                    onClick={handleClickUpload}
-                    style={{
-                      border: "1px solid",
-                      borderColor:
-                        loadingUpload === State.loading
-                          ? "var(--ion-color-medium)"
-                          : "var(--ion-color-primary)",
-                      width: 200,
-                      height: 200,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div style={{ position: "relative" }}>
-                      <IonIcon size="large" icon={imageOutline} />
-                      {loadingUpload === State.loading ? (
-                        <IonIcon
-                          icon={hourglassOutline}
-                          size="small"
-                          color="primary"
-                          style={{
-                            backgroundColor:
-                              "var(--ion-color-primary-contrast)",
-                            padding: 2,
-                            borderRadius: "50%",
-                            position: "absolute",
-                            bottom: -9,
-                            right: -11,
-                          }}
-                        />
-                      ) : null}
-                    </div>
-                  </IonCard>
-                </div>
               )}
             </div>
           </IonItem>
