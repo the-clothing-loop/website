@@ -309,7 +309,9 @@ export default function Settings() {
                 <IonItem lines="none" className="ion-align-items-start">
                   <IonLabel>{t("interestedSizes")}</IonLabel>
                   <div className="ion-margin-top ion-margin-bottom" slot="end">
-                    {chain ? <Badges chain={chain} /> : null}
+                    {chain ? (
+                      <Badges genders={chain.genders} sizes={chain.genders} />
+                    ) : null}
                   </div>
                 </IonItem>
                 <IonItem lines="none">
