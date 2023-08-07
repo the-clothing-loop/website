@@ -77,7 +77,7 @@ export default function OpenSource() {
             <IonTitle size="large">{t("openSource")}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <div>
+        <div className="ion-margin-top">
           {shownLicenses.length ? (
             <IonList>
               {shownLicenses.map((license) => (
