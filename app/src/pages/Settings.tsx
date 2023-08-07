@@ -48,23 +48,21 @@ const VERSION = import.meta.env.VITE_APP_VERSION;
 
 export default function Settings() {
   const { t } = useTranslation();
-  const { authUser, chain, isAuthenticated, setPause, logout, setChain } =
-    useContext(StoreContext);
+  const {
+    authUser,
+    chain,
+    isAuthenticated,
+    setPause,
+    logout,
+    setChain,
+    isChainAdmin,
+  } = useContext(StoreContext);
   const [present] = useIonToast();
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
   const [expandedDescription, setExpandedDescription] = useState(false);
-
-  const isUserAdmin = useMemo(
-    () =>
-      authUser && chain
-        ? authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
-            ?.is_chain_admin || false
-        : false,
-    [authUser, chain],
-  );
 
   const [listOfChains, setListOfChains] = useState<Chain[]>([]);
   useEffect(() => {
@@ -280,7 +278,7 @@ export default function Settings() {
                     )}
                   </IonItem>
                 ) : null}
-                {isUserAdmin && chain ? (
+                {isChainAdmin && chain ? (
                   <IonItem
                     lines="none"
                     button
