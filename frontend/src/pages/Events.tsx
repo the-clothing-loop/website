@@ -200,10 +200,10 @@ export default function Events() {
             </div>
           )}
           {prevEvents ? (
-            <div className="opacity-70" key="event-prev">
-              <div className="flex justify-center">
+            <div key="event-prev">
+              <div className="sticky top-0 z-20 bg-white/50 flex justify-center">
                 <h4
-                  className="font-semibold px-3 my-6 relative
+                  className="font-semibold text-black/90 px-3 my-6 relative
                before:border-b-2 before:w-6 before:block before:absolute before:left-full before:top-3
                after:border-b-2 after:w-6 after:block after:absolute after:right-full after:top-3
                "
@@ -211,7 +211,7 @@ export default function Events() {
                   {t("previousEvents")}
                 </h4>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-70">
                 {prevEvents
                   .sort((a, b) =>
                     new Date(a.date) < new Date(b.date) ? 1 : -1
