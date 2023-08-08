@@ -18,10 +18,11 @@ import {
   mail,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { StoreContext } from "../Store";
+import { IsChainAdmin, StoreContext } from "../Store";
 import { useContext, useMemo, useRef } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
 import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
+import { User } from "../api";
 
 interface MediaIcon {
   icon: string;
@@ -59,17 +60,9 @@ const mediaIcons: MediaIcon[] = [
 
 export default function HelpList() {
   const { t } = useTranslation();
-  const { authUser, chain, setChain } = useContext(StoreContext);
+  const { authUser, chain, chainUsers, setChain, isChainAdmin } =
+    useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
-
-  const isUserAdmin = useMemo(
-    () =>
-      authUser && chain
-        ? authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
-            ?.is_chain_admin || false
-        : false,
-    [authUser, chain],
-  );
 
   const rules = useMemo<FaqListItem[]>(() => {
     if (chain?.rules_override) {
@@ -78,6 +71,11 @@ export default function HelpList() {
 
     return faqListKeys.map((k) => t(k, faqItemTranslationOption) as any);
   }, [chain]);
+
+  const hosts = useMemo<User[]>(
+    () => chainUsers.filter((u) => IsChainAdmin(u, chain)),
+    [chainUsers, chain],
+  );
 
   function handleClickChange() {
     modal.current?.present();
@@ -93,7 +91,7 @@ export default function HelpList() {
         <IonToolbar>
           <IonTitle>{t("howDoesItWork")}</IonTitle>
 
-          {isUserAdmin ? (
+          {isChainAdmin ? (
             <IonButtons slot="end">
               <IonButton onClick={handleClickChange}>{t("change")}</IonButton>
             </IonButtons>
@@ -113,8 +111,51 @@ export default function HelpList() {
             </IonItem>
           ))}
         </IonList>
+        <p
+          className="ion-text-center ion-text-uppercase ion-text-bold"
+          style={{
+            color: "var(--ion-color-medium)",
+            fontSize: "14px",
+            margin: "16px 0 0",
+          }}
+        >
+          {t("loopHost", { count: hosts.length })}
+        </p>
         <div
-          className="ion-margin-top"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            margin: "6px 0 10px",
+          }}
+        >
+          {hosts.map((host) => (
+            <IonButton
+              key={host.uid}
+              size="small"
+              routerLink={"/address/" + host.uid}
+              color="light"
+              style={{
+                margin: "6px",
+                fontSize: 16,
+              }}
+            >
+              {host.name}
+            </IonButton>
+          ))}
+        </div>
+
+        <p
+          className="ion-text-center ion-text-uppercase ion-text-bold"
+          style={{
+            color: "var(--ion-color-medium)",
+            fontSize: "14px",
+            margin: 0,
+          }}
+        >
+          {t("organization")}
+        </p>
+        <div
           style={{
             display: "flex",
             justifyContent: "center",
@@ -138,7 +179,7 @@ export default function HelpList() {
           ))}
         </div>
         <IonRouterLink
-          className="ion-text-center"
+          className="ion-text-center ion-margin-bottom"
           href="https://www.clothingloop.org/"
           style={{
             display: "block",
