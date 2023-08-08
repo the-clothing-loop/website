@@ -1,0 +1,26 @@
+name: Lint
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "server/**"
+  pull_request:
+
+jobs:
+  lint-golang:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.20"
+          check-latest: true
+          cache: true
+          cache-dependency-path: server/go.sum
+      - name: Install Dependencies Backend
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest
+      - name: Run Go Format
+        run: make lint-test
+        working-directory: ./server

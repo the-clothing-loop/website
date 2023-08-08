@@ -16,7 +16,8 @@
     "build:generate-open-source-page": "node ./generate-open-source-page.js",
     "preview": "vite preview",
     "generate:icons": "npx capacitor-assets generate",
-    "lint": "prettier -w ."
+    "lint:test": "prettier --check .",
+    "lint": "prettier --write ."
   },
   "dependencies": {
     "@capacitor/android": "^5.1.1",
