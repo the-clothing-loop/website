@@ -3,8 +3,10 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "server/**"
+      - server/**
   pull_request:
+    paths:
+      - server/**
 
 jobs:
   lint-golang:

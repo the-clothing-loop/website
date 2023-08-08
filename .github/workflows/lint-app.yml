@@ -5,6 +5,8 @@ on:
     paths:
       - app/**
   pull_request:
+    paths:
+      - app/**
 
 jobs:
   lint-app:

@@ -5,6 +5,8 @@ on:
     paths:
       - frontend/**
   pull_request:
+    paths:
+      - frontend/**
 
 jobs:
   lint-frontend:
