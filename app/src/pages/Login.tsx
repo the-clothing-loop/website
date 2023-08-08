@@ -203,11 +203,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 expand="block"
                 onClick={handleVerifyToken}
               >
-                {verifyState === State.loading ? (
-                  <IonLabel>{t("loading")}</IonLabel>
-                ) : (
-                  <IonLabel>{t("login")}</IonLabel>
-                )}
+                {verifyState === State.loading ? t("loading") : t("login")}
                 {verifyState === State.loading ? null : (
                   <IonIcon slot="end" icon={arrowForwardOutline} />
                 )}
