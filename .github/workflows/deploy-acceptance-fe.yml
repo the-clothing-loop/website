@@ -1,4 +1,4 @@
-name: Deploy Acceptance
+name: Deploy Acceptance Frontend
 on:
   workflow_dispatch:
   push:

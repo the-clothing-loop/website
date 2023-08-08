@@ -1,4 +1,4 @@
-name: Lint
+name: Lint Frontend
 on:
   workflow_dispatch:
   push:
