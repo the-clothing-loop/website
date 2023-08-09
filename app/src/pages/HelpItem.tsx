@@ -19,15 +19,16 @@ export interface FaqListItem {
 }
 
 export const faqListKeys = [
+  "howDoesItWork",
   "whereAreTheBags",
-  "max3Days",
-  "whatIsInTheBag",
   "whoDoIGiveTheBagTo",
+  "whatCanYouTakeFromTheBag",
+  "whatCantYouTakeFromTheBag",
   "whatToDoWithBulkyItems",
   "awayOrBusy",
   "foundSomethingYouLike",
-  "privacy",
   "newMembers",
+  "privacy",
   "feedback",
 ];
 
