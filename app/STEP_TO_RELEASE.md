@@ -8,7 +8,7 @@
    And run `npm i; npm run build:ios:production`
 3. Open xcode and open the workspace in the App directory;
    `xcode <root>/app/ios/App/App.xcworkspace`
-4. On the sidebar open the folder icon:
+4. On the sidebar open the folder icon, and update the version & marketing version:
    **[a] App**
    -> **Targets App**
    -> **Build Settings**

@@ -59,3 +59,8 @@ Welcome hosts to the realm of rules below.
 Messenger icons vanish if format's amiss.
 Upload button dances below the image box.
 Address item now boasts interested sizes.
+
+## v1.10
+
+Swap vanishing reset button for a conspicuous notice.
+Give the FAQ text a sparkling new update.
