@@ -52,3 +52,10 @@ Unlock the secrets: Licenses page added magically.
 ## v1.8
 
 Teensy-weensy improvements
+
+## v1.9
+
+Welcome hosts to the realm of rules below.
+Messenger icons vanish if format's amiss.
+Upload button dances below the image box.
+Address item now boasts interested sizes.
