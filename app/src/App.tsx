@@ -72,7 +72,7 @@ import dayjs from "./dayjs";
 import { OneSignalInitCap } from "./onesignal";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import OpenSource from "./pages/OpenSource";
-import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
+import { useThrottledCallback } from "use-debounce";
 
 SplashScreen.show({
   autoHide: false,

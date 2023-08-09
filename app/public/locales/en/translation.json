@@ -56,6 +56,7 @@
   "change": "Change",
   "reset": "Reset",
   "resetRules": "Reset Rules",
+  "resetDescription": "Reset all rules to template rules written by the Clothing Loop",
   "areYouSureYouWantToResetRules": "Are you sure you want to reset the Loop Rules to the current defaults?",
   "delete": "Delete",
   "deleteBag": "Delete Bag",

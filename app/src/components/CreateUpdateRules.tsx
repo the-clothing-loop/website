@@ -29,7 +29,11 @@ import type {
   IonReorderGroupCustomEvent,
   IonInputCustomEvent,
 } from "@ionic/core/components";
-import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
+import {
+  chevronDownOutline,
+  chevronUpOutline,
+  refreshOutline,
+} from "ionicons/icons";
 import { RefObject, useContext, useState } from "react";
 import { chainUpdate } from "../api";
 import { StoreContext } from "../Store";
@@ -184,9 +188,6 @@ export default function CreateUpdateRules(props: {
         <IonToolbar>
           <IonButtons slot="start">
             <IonButton onClick={cancel}>{t("cancel")}</IonButton>
-            <IonButton onClick={reset} color="danger">
-              {t("reset")}
-            </IonButton>
           </IonButtons>
           <IonTitle>{t("customLoopRules")}</IonTitle>
           <IonButtons slot="end">
@@ -201,6 +202,24 @@ export default function CreateUpdateRules(props: {
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
+          {chain?.rules_override ? (
+            <IonItem lines="full" color="dark" key="reset">
+              <IonIcon
+                icon={refreshOutline}
+                style={{
+                  marginLeft: 2,
+                  marginRight: 20,
+                }}
+              />
+              <IonLabel className="ion-text-wrap">
+                <h3>{t("resetRules")}</h3>
+                <p>{t("resetDescription")}</p>
+              </IonLabel>
+              <IonButton slot="end" onClick={reset} color="danger">
+                {t("reset")}
+              </IonButton>
+            </IonItem>
+          ) : null}
           <IonReorderGroup
             disabled={open !== -1}
             onIonItemReorder={handleReorder}
