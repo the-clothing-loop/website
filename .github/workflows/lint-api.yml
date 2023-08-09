@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - server/**
+      - "!server/internal/views/emails/**"
   pull_request:
     paths:
       - server/**
+      - "!server/internal/views/emails/**"
 
 jobs:
   lint-golang:

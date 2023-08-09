@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - frontend/**
+      - "!frontend/public/locales/**"
   pull_request:
     paths:
       - frontend/**
+      - "!frontend/public/locales/**"
 
 jobs:
   lint-frontend:
