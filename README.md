@@ -26,6 +26,7 @@ Checkout these readmes for more in-depth documentation:
 
 - Golang Server: [README.md](/server/README.md)
 - React Frontend: [README.md](/frontend/README.md)
+- Ionic App: [README.md](/app/README.md)
 - Ansible Devops: [README.md](/devops/README.md)
 - SQL scripts: [README.md](/server/sql/README.md)
 
