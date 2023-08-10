@@ -53,7 +53,7 @@ export default function BulkyList() {
     };
     presentAlert({
       header: t("deleteBulkyItem"),
-      message: t("areYouSureYouWantToDeleteThisBulkyItem?"),
+      message: t("areYouSureYouWantToDeleteThisBulkyItem"),
       buttons: [
         {
           text: t("cancel"),
