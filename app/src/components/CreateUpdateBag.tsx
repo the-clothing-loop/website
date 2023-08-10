@@ -136,7 +136,7 @@ export default function CreateUpdateBag({
           <IonButtons slot="start">
             <IonButton onClick={cancel}>{t("cancel")}</IonButton>
           </IonButtons>
-          <IonTitle>{t("createBag")}</IonTitle>
+          <IonTitle>{bag ? t("updateBag") : t("createBag")}</IonTitle>
           <IonButtons slot="end">
             <IonButton
               onClick={createOrUpdate}
