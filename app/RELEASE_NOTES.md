@@ -64,3 +64,7 @@ Address item now boasts interested sizes.
 
 Swap vanishing reset button for a conspicuous notice.
 Give the FAQ text a sparkling new update.
+
+## v1.11
+
+Putting the sparkle in last translations.
