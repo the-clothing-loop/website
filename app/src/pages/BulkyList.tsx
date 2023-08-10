@@ -171,7 +171,7 @@ export default function BulkyList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("bulkyItems")}</IonTitle>
+          <IonTitle>{t("bulkyItemsTitle")}</IonTitle>
 
           <IonButtons slot="end">
             <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
@@ -181,7 +181,7 @@ export default function BulkyList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("bulkyItems")}</IonTitle>
+            <IonTitle size="large">{t("bulkyItemsTitle")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <div>
