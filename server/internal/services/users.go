@@ -13,24 +13,17 @@ type UserContactData struct {
 	Email zero.String
 }
 
-// UsersService defines the methods for user-related operations.
-type UsersService interface {
-	GetByUID(userUID string, checkEmailVerification bool) (exist bool, user *models.User, err error)
-	GetByEmail(userEmail string) (exist bool, user *models.User, err error)
-	GetAdminsByChain(chainId uint) ([]UserContactData, error)
-}
-
-type usersService struct {
+type UsersService struct {
 	db *gorm.DB
 }
 
-func NewUsersService(db *gorm.DB) UsersService {
-	return &usersService{
+func NewUsersService(db *gorm.DB) *UsersService {
+	return &UsersService{
 		db: db,
 	}
 }
 
-func (u *usersService) GetByUID(userUID string, checkEmailVerification bool) (exist bool, user *models.User, err error) {
+func (u *UsersService) GetByUID(userUID string, checkEmailVerification bool) (exist bool, user *models.User, err error) {
 
 	if userUID == "" {
 		return false, user, errors.New("userUID is mandatory")
@@ -45,7 +38,7 @@ func (u *usersService) GetByUID(userUID string, checkEmailVerification bool) (ex
 	return executeQuery(u.db, query, userUID)
 }
 
-func (u *usersService) GetByEmail(userEmail string) (exist bool, user *models.User, err error) {
+func (u *UsersService) GetByEmail(userEmail string) (exist bool, user *models.User, err error) {
 	if userEmail == "" {
 		return false, user, errors.New("email is mandatory")
 	}
@@ -59,7 +52,7 @@ func executeQuery(db *gorm.DB, query string, values ...string) (exist bool, user
 	return user.ID != 0, user, err
 }
 
-func (u *usersService) GetAdminsByChain(chainId uint) ([]UserContactData, error) {
+func (u *UsersService) GetAdminsByChain(chainId uint) ([]UserContactData, error) {
 	results := []UserContactData{}
 
 	err := u.db.Raw(`
