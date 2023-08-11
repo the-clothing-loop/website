@@ -323,7 +323,7 @@ func ChainUpdate(c *gin.Context) {
 
 func ChainAddUser(c *gin.Context) {
 	db := getDB(c)
-	userServices := services.NewUsersService(db)
+	usersService := services.NewUsersService(db)
 
 	var body struct {
 		UserUID      string `json:"user_uid" binding:"required,uuid"`
@@ -349,7 +349,7 @@ func ChainAddUser(c *gin.Context) {
 		c.String(http.StatusConflict, "Loop is not open to new members")
 		return
 	}
-	exist, user, _ := userServices.GetByUID(body.UserUID, true)
+	exist, user, _ := usersService.GetByUID(body.UserUID, true)
 
 	if !exist {
 		c.String(http.StatusBadRequest, models.ErrUserNotFound.Error())
@@ -379,7 +379,7 @@ LIMIT 1
 		}
 
 		// find admin users related to the chain to email
-		results, err := userServices.GetAdminsByChain(chain.ID)
+		results, err := usersService.GetAdminsByChain(chain.ID)
 		if err != nil {
 			goscope.Log.Errorf("Error retrieving chain admins: %s", err)
 			c.String(http.StatusInternalServerError, "No admins exist for this loop")

@@ -29,8 +29,8 @@ func LoginEmail(c *gin.Context) {
 	}
 
 	// make sure that this email exists in db
-	userServices := services.NewUsersService(db)
-	exist, user, err := userServices.GetByEmail(body.Email)
+	usersService := services.NewUsersService(db)
+	exist, user, err := usersService.GetByEmail(body.Email)
 	if err != nil && !exist {
 		c.String(http.StatusUnauthorized, "Email is not yet registered")
 		return

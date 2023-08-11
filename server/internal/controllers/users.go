@@ -64,8 +64,8 @@ func UserGet(c *gin.Context) {
 		return
 	}
 
-	userServices := services.NewUsersService(db)
-	exist, user, _ := userServices.GetByUID(query.UserUID, true)
+	usersService := services.NewUsersService(db)
+	exist, user, _ := usersService.GetByUID(query.UserUID, true)
 	if !exist {
 		c.String(http.StatusBadRequest, "User not found")
 		return

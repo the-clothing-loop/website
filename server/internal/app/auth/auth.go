@@ -123,8 +123,8 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 	}
 
 	// get user
-	userServices := services.NewUsersService(db)
-	exist, user, err := userServices.GetByUID(userUID, false)
+	usersService := services.NewUsersService(db)
+	exist, user, err := usersService.GetByUID(userUID, false)
 	if err == nil && user.ID != 0 {
 		err = user.AddUserChainsToObject(db)
 	}
