@@ -5,6 +5,7 @@ import (
 
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/services"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -122,17 +123,16 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 	}
 
 	// get user
-	user = &models.User{}
-	if userUID != "" {
-		err := db.Raw(`SELECT * FROM users WHERE uid = ? LIMIT 1`, userUID).Scan(user).Error
-		if err == nil && user.ID != 0 {
-			err = user.AddUserChainsToObject(db)
-		}
-		if err != nil {
-			goscope.Log.Errorf("%v", err)
-		}
+	userServices := services.NewUsersService(db)
+	exist, user, err := userServices.GetByUID(userUID, false)
+	if err == nil && user.ID != 0 {
+		err = user.AddUserChainsToObject(db)
 	}
-	if user.ID == 0 {
+	if err != nil {
+		goscope.Log.Errorf("%v", err)
+	}
+
+	if !exist {
 		c.String(http.StatusBadRequest, "user UID must be set if chain UID is set")
 		return false, nil, nil, nil
 	}
