@@ -1,6 +1,9 @@
 package app
 
 import (
+	"fmt"
+	"net/http"
+	"os"
 	"strings"
 
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
@@ -43,4 +46,15 @@ func MailSend(m *mail.Msg) error {
 	}
 
 	return err
+}
+
+func MailRemoveAllEmails() {
+	url := fmt.Sprintf("http://%s:8025/api/v1/messages", Config.SMTP_HOST)
+	req, _ := http.NewRequest(http.MethodDelete, url, nil)
+	_, err := http.DefaultClient.Do(req)
+	if err != nil {
+		fmt.Printf("Error: %v", err)
+		os.Exit(1)
+		return
+	}
 }
