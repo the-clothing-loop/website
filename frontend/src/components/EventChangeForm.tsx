@@ -28,7 +28,7 @@ const defaultValues: EventCreateBody = {
   latitude: 0,
   longitude: 0,
   address: "",
-  price_currency: null,
+  price_currency: "€",
   price_value: 0,
   link: "",
   date: dayjs().minute(0).second(0).format(),
@@ -157,14 +157,16 @@ export default function EventChangeForm(props: {
 
     values.date_end = hasEndDate ? dateEnd : null;
 
-    if (eventPriceCurrency) {
+    if (eventPriceCurrency && eventPriceValue == 0) {
+      values.price_value = 0;
+      values.price_currency = "";
+    } else if (eventPriceCurrency && eventPriceValue != 0) {
       values.price_value = eventPriceValue;
       values.price_currency = eventPriceCurrency;
     } else {
       values.price_value = 0;
       values.price_currency = "";
     }
-
     props.onSubmit(values);
   }
 
