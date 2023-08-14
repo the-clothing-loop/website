@@ -8,7 +8,6 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
 
 	"github.com/gin-gonic/gin"
@@ -29,8 +28,7 @@ func LoginEmail(c *gin.Context) {
 	}
 
 	// make sure that this email exists in db
-	usersService := services.NewUsersService(db)
-	exist, user, err := usersService.GetByEmail(body.Email)
+	exist, user, err := models.UserGetByEmail(db, body.Email)
 	if err != nil && !exist {
 		c.String(http.StatusUnauthorized, "Email is not yet registered")
 		return

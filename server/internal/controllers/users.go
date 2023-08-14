@@ -11,7 +11,6 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"github.com/the-clothing-loop/website/server/internal/services"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
@@ -64,8 +63,7 @@ func UserGet(c *gin.Context) {
 		return
 	}
 
-	usersService := services.NewUsersService(db)
-	exist, user, _ := usersService.GetByUID(query.UserUID, true)
+	exist, user, _ := models.UserGetByUID(db, query.UserUID, true)
 	if !exist {
 		c.String(http.StatusBadRequest, "User not found")
 		return

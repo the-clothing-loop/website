@@ -10,7 +10,6 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"github.com/the-clothing-loop/website/server/pkg/tsp"
 
@@ -323,7 +322,6 @@ func ChainUpdate(c *gin.Context) {
 
 func ChainAddUser(c *gin.Context) {
 	db := getDB(c)
-	usersService := services.NewUsersService(db)
 
 	var body struct {
 		UserUID      string `json:"user_uid" binding:"required,uuid"`
@@ -349,7 +347,7 @@ func ChainAddUser(c *gin.Context) {
 		c.String(http.StatusConflict, "Loop is not open to new members")
 		return
 	}
-	exist, user, _ := usersService.GetByUID(body.UserUID, true)
+	exist, user, _ := models.UserGetByUID(db, body.UserUID, true)
 
 	if !exist {
 		c.String(http.StatusBadRequest, models.ErrUserNotFound.Error())
@@ -379,7 +377,7 @@ LIMIT 1
 		}
 
 		// find admin users related to the chain to email
-		results, err := usersService.GetAdminsByChain(chain.ID)
+		results, err := models.UserGetAdminsByChain(db, chain.ID)
 		if err != nil {
 			goscope.Log.Errorf("Error retrieving chain admins: %s", err)
 			c.String(http.StatusInternalServerError, "No admins exist for this loop")

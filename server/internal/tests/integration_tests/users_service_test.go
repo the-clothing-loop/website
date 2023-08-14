@@ -6,7 +6,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
 )
 
@@ -19,9 +18,6 @@ type testData struct {
 }
 
 func TestUsersService(t *testing.T) {
-
-	usersService := services.NewUsersService(db)
-
 	chain, _, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{})
 	expectedUserExist, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{IsChainAdmin: true})
 	tests := []testData{
@@ -52,7 +48,7 @@ func TestUsersService(t *testing.T) {
 
 		for _, test := range testsUID {
 			t.Run(test.testName, func(t *testing.T) {
-				exist, actualUser, err := usersService.GetByUID(test.user.UID, true)
+				exist, actualUser, err := models.UserGetByUID(db, test.user.UID, true)
 				assert.Equal(t, test.expectedExist, exist)
 				assert.Equal(t, test.expectedError, err)
 
@@ -75,7 +71,7 @@ func TestUsersService(t *testing.T) {
 
 		for _, test := range testsEmail {
 			t.Run(test.testName, func(t *testing.T) {
-				exist, actualUser, err := usersService.GetByEmail(test.email)
+				exist, actualUser, err := models.UserGetByEmail(db, test.email)
 				assert.Equal(t, test.expectedExist, exist)
 				assert.Equal(t, test.expectedError, err)
 
@@ -87,7 +83,7 @@ func TestUsersService(t *testing.T) {
 	})
 
 	t.Run("TestGetAdminsByChain", func(t *testing.T) {
-		users, err := usersService.GetAdminsByChain(chain.ID)
+		users, err := models.UserGetAdminsByChain(db, chain.ID)
 		assert.Equal(t, 1, len(users))
 		assert.Nil(t, err)
 	})

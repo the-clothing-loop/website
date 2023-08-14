@@ -16,8 +16,6 @@ folder internal {
   }
   folder models {
   }
-  folder services {
-  }
   folder views {
   }
 }
@@ -39,13 +37,10 @@ server_go <<-- app
 server_go <<-- controllers
 
 controllers <<-- models
-controllers <<-- services
 controllers <<-- views
 controllers <<-- tsp
 controllers <<-- imgbb
 controllers <<-- app
-
-services <<-- models
 
 app <<-- models
 

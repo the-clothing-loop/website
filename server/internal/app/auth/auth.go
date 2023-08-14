@@ -5,7 +5,6 @@ import (
 
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"github.com/the-clothing-loop/website/server/internal/services"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -123,8 +122,7 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 	}
 
 	// get user
-	usersService := services.NewUsersService(db)
-	exist, user, err := usersService.GetByUID(userUID, false)
+	exist, user, err := models.UserGetByUID(db, userUID, false)
 	if err == nil && user.ID != 0 {
 		err = user.AddUserChainsToObject(db)
 	}
