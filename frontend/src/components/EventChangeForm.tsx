@@ -228,14 +228,17 @@ export default function EventChangeForm(props: {
             type="date"
             name="date"
             value={sepDate.date.value}
-            onChange={sepDate.date.onChange}
+            onChange={e=>{
+              sepDateEnd.date.onChange(e);
+              sepDate.date.onChange(e)
+            }}
           />
         </div>
         <div>
           <TextForm
             required
             min={2}
-            label={t("time") + "*"}
+            label={hasEndDate ? (t("Start time") + "*"):(t("time") + "*")}
             name="time"
             type="time"
             value={sepDate.time.value}
@@ -244,55 +247,46 @@ export default function EventChangeForm(props: {
         </div>
         <div className="col-span-1 sm:col-span-2">
           <div className={`mb-3 mt-5 ${hasEndDate ? "bg-base-100" : ""}`}>
-            <label className="inline-flex items-center cursor-pointer p-4 transition-colors bg-base-100 bg-opacity-0 hover:bg-opacity-70">
-              <input
-                type="checkbox"
-                className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3"
-                checked={hasEndDate}
-                onChange={(e) => {
-                  const checked = e.target.checked;
-                  if (!checked) setValue("date_end", null);
-                  if (
-                    checked &&
-                    !props.initialValues &&
-                    !firstSetDefaultEndDate
-                  ) {
-                    setFirstSetDefaultEndDate(true);
-                    let d = dayjs(values.date);
-                    sepDateEnd.date.onChange({
-                      target: {
-                        valueAsDate: d.toDate(),
-                        value: d.format("YYYY-MM-DD"),
-                      },
-                    } as any);
-                  }
-                  setHasEndDate(checked);
-                }}
-              />
-              <span>End date</span>
-            </label>
-            {hasEndDate ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 pt-0 -mt-2">
-                <TextForm
-                  required
-                  min={2}
-                  label={t("date") + "*"}
-                  type="date"
-                  name="date_end"
-                  value={sepDateEnd.date.value}
-                  onChange={sepDateEnd.date.onChange}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 pt-0 pr-0 pl-0 -mt-2">
+              <label className="inline-flex items-center cursor-pointer p-4 transition-colors bg-base-100 bg-opacity-0 hover:bg-opacity-70">
+                <input
+                  type="checkbox"
+                  className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3"
+                  checked={hasEndDate}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    if (!checked) setValue("date_end", null);
+                    if (
+                      checked &&
+                      !props.initialValues &&
+                      !firstSetDefaultEndDate
+                    ) {
+                      setFirstSetDefaultEndDate(true);
+                      let d = dayjs(values.date);
+                      sepDateEnd.date.onChange({
+                        target: {
+                          valueAsDate: d.toDate(),
+                          value: d.format("YYYY-MM-DD"),
+                        },
+                      } as any);
+                    }
+                    setHasEndDate(checked);
+                  }}
                 />
-                <TextForm
-                  required
-                  min={2}
-                  label={t("time") + "*"}
-                  name="time"
-                  type="time"
-                  value={sepDateEnd.time.value}
-                  onChange={sepDateEnd.time.onChange}
-                />
-              </div>
-            ) : null}
+                <span>End time</span>
+              </label>
+                {hasEndDate ? (
+                  <TextForm
+                    required
+                    min={2}
+                    label={t("End time") + "*"}
+                    name="time"
+                    type="time"
+                    value={sepDateEnd.time.value}
+                    onChange={sepDateEnd.time.onChange}
+                  />
+                ) : null}
+            </div>            
           </div>
         </div>
         <div className="form-control">
