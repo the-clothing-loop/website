@@ -28,14 +28,8 @@ func LoginEmail(c *gin.Context) {
 	}
 
 	// make sure that this email exists in db
-	user := models.User{}
-	res := db.Raw(`
-SELECT *
-FROM users
-WHERE email = ?
-LIMIT 1
-	`, body.Email).Scan(&user)
-	if res.Error != nil || user.ID == 0 {
+	user, err := models.UserGetByEmail(db, body.Email)
+	if err != nil {
 		c.String(http.StatusUnauthorized, "Email is not yet registered")
 		return
 	}

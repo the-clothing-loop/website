@@ -63,21 +63,13 @@ func UserGet(c *gin.Context) {
 		return
 	}
 
-	user := &models.User{}
-	if query.UserUID != "" {
-		db.Raw(`
-SELECT users.*
-FROM users
-WHERE users.uid = ? AND is_email_verified = TRUE
-LIMIT 1
-		`, query.UserUID).First(user)
-	}
-	if user.ID == 0 {
+	user, err := models.UserGetByUID(db, query.UserUID, true)
+	if err != nil {
 		c.String(http.StatusBadRequest, "User not found")
 		return
 	}
 
-	err := user.AddUserChainsToObject(db)
+	err = user.AddUserChainsToObject(db)
 	if err != nil {
 		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
 		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())

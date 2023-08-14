@@ -15,7 +15,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
-	"gopkg.in/guregu/null.v3/zero"
 )
 
 const (
@@ -348,14 +347,8 @@ func ChainAddUser(c *gin.Context) {
 		c.String(http.StatusConflict, "Loop is not open to new members")
 		return
 	}
-
-	user := models.User{}
-	db.Raw(`
-SELECT * FROM users
-WHERE uid = ? AND is_email_verified = TRUE
-LIMIT 1
-	`, body.UserUID).Scan(&user)
-	if user.ID == 0 {
+	user, err := models.UserGetByUID(db, body.UserUID, true)
+	if err != nil {
 		c.String(http.StatusBadRequest, models.ErrUserNotFound.Error())
 		return
 	}
@@ -383,21 +376,12 @@ LIMIT 1
 		}
 
 		// find admin users related to the chain to email
-		results := []struct {
-			Name  string
-			Email zero.String
-			Chain string
-		}{}
-		db.Raw(`
-SELECT users.name AS name, users.email AS email, chains.name AS chain
-FROM user_chains AS uc
-LEFT JOIN users ON uc.user_id = users.id 
-LEFT JOIN chains ON chains.id = uc.chain_id
-WHERE uc.chain_id = ?
-	AND uc.is_chain_admin = TRUE
-	AND users.is_email_verified = TRUE
-`, chain.ID).Scan(&results)
-
+		results, err := models.UserGetAdminsByChain(db, chain.ID)
+		if err != nil {
+			goscope.Log.Errorf("Error retrieving chain admins: %s", err)
+			c.String(http.StatusInternalServerError, "No admins exist for this loop")
+			return
+		}
 		if len(results) == 0 {
 			goscope.Log.Errorf("Empty chain that is still public: ChainID: %d", chain.ID)
 			c.String(http.StatusInternalServerError, "No admins exist for this loop")
@@ -410,7 +394,7 @@ WHERE uc.chain_id = ?
 					c,
 					result.Email.String,
 					result.Name,
-					result.Chain,
+					chain.Name,
 					user.Name,
 					user.Email.String,
 					user.PhoneNumber,
