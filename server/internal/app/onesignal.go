@@ -29,10 +29,8 @@ func OneSignalCreateNotification(db *gorm.DB, userUIDs []string, notificationTit
 	notification.SetId(uuid.NewV4().String())
 	notification.SetIncludeExternalUserIds(userUIDs)
 	notification.SetIsAndroid(true)
-	// TODO: Change when enabling notifications on IOS
-	notification.SetIsIos(false)
-	notification.SetIsAnyWeb(true)
-	// notification.SetIncludedSegments([]string{"Subscribed Users"})
+	notification.SetIsIos(true)
+	notification.SetIsAnyWeb(false)
 	notification.SetHeadings(notificationTitle)
 	notification.SetContents(notificationContent)
 

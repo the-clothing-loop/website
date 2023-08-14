@@ -37,6 +37,15 @@ type MockEventOptions struct {
 }
 
 func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
+	var latitude, longitude float64
+	if faker.RandomNumber(5)+1 > 4 { // 4 / 6
+		// use the netherlands
+		latitude = float64(faker.Int64Between(5169917, 5237403)) / 100000
+		longitude = float64(faker.Int64Between(488969, 689583)) / 100000
+	} else {
+		latitude = faker.Address().Latitude()
+		longitude = faker.Address().Latitude()
+	}
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain())),
@@ -46,6 +55,8 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		PhoneNumber:     faker.Person().Contact().Phone,
 		Sizes:           MockSizes(false),
 		Address:         faker.Address().Address(),
+		Latitude:        latitude,
+		Longitude:       longitude,
 		UserToken: []models.UserToken{
 			{
 				Token:    uuid.NewV4().String(),

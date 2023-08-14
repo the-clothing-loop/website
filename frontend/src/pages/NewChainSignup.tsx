@@ -41,7 +41,7 @@ export default function Signup() {
       latitude: values.latitude || 0,
       longitude: values.longitude || 0,
     };
-    console.log("submit", registerUser);
+    console.info("submit", registerUser);
 
     if (registerUser) {
       history.push({

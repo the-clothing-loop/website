@@ -12,21 +12,23 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import {
-  earth,
   logoFacebook,
   logoInstagram,
   logoLinkedin,
+  mail,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { StoreContext } from "../Store";
+import { IsChainAdmin, StoreContext } from "../Store";
 import { useContext, useMemo, useRef } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
-import { FaqListItem } from "./HelpItem";
+import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
+import { User } from "../api";
 
 interface MediaIcon {
   icon: string;
   label: string;
   url: string;
+  color: string;
 }
 
 const mediaIcons: MediaIcon[] = [
@@ -34,45 +36,46 @@ const mediaIcons: MediaIcon[] = [
     icon: logoInstagram,
     label: "Instagram",
     url: "https://www.instagram.com/theclothingloop/",
+    color: "#EB4141",
   },
   {
-    icon: earth,
-    label: "Website",
-    url: "https://www.clothingloop.org",
+    icon: mail,
+    label: "Email",
+    url: "mailto:hello@clothingloop.org",
+    color: "#b464a8",
   },
   {
     icon: logoLinkedin,
     label: "LinkedIn",
     url: "https://www.linkedin.com/company/the-clothing-loop/",
+    color: "#0a66c2",
   },
   {
     icon: logoFacebook,
     label: "Facebook",
     url: "https://www.facebook.com/clothingloop/",
+    color: "#1b74e4",
   },
 ];
 
 export default function HelpList() {
   const { t } = useTranslation();
-  const { authUser, chain, setChain } = useContext(StoreContext);
+  const { authUser, chain, chainUsers, setChain, isChainAdmin } =
+    useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
 
-  const isUserAdmin = useMemo(
-    () =>
-      authUser && chain
-        ? authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
-            ?.is_chain_admin || false
-        : false,
-    [authUser, chain]
-  );
-
-  const data = t("list", { ns: "faq", returnObjects: true }) as FaqListItem[];
-  const rules = useMemo(() => {
+  const rules = useMemo<FaqListItem[]>(() => {
     if (chain?.rules_override) {
       return JSON.parse(chain.rules_override) as FaqListItem[];
     }
-    return data;
+
+    return faqListKeys.map((k) => t(k, faqItemTranslationOption) as any);
   }, [chain]);
+
+  const hosts = useMemo<User[]>(
+    () => chainUsers.filter((u) => IsChainAdmin(u, chain)),
+    [chainUsers, chain],
+  );
 
   function handleClickChange() {
     modal.current?.present();
@@ -88,7 +91,7 @@ export default function HelpList() {
         <IonToolbar>
           <IonTitle>{t("howDoesItWork")}</IonTitle>
 
-          {isUserAdmin ? (
+          {isChainAdmin ? (
             <IonButtons slot="end">
               <IonButton onClick={handleClickChange}>{t("change")}</IonButton>
             </IonButtons>
@@ -104,12 +107,55 @@ export default function HelpList() {
         <IonList>
           {rules.map((item, index) => (
             <IonItem routerLink={"/help/" + index} lines="full" key={index}>
-              {item.Title}
+              {item.title}
             </IonItem>
           ))}
         </IonList>
+        <p
+          className="ion-text-center ion-text-uppercase ion-text-bold"
+          style={{
+            color: "var(--ion-color-medium)",
+            fontSize: "14px",
+            margin: "16px 0 0",
+          }}
+        >
+          {t("loopHost", { count: hosts.length })}
+        </p>
         <div
-          className="ion-margin-top"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            margin: "6px 0 10px",
+          }}
+        >
+          {hosts.map((host) => (
+            <IonButton
+              key={host.uid}
+              size="small"
+              routerLink={"/address/" + host.uid}
+              color="light"
+              style={{
+                margin: "6px",
+                fontSize: 16,
+              }}
+            >
+              {host.name}
+            </IonButton>
+          ))}
+        </div>
+
+        <p
+          className="ion-text-center ion-text-uppercase ion-text-bold"
+          style={{
+            color: "var(--ion-color-medium)",
+            fontSize: "14px",
+            margin: 0,
+          }}
+        >
+          {t("organization")}
+        </p>
+        <div
           style={{
             display: "flex",
             justifyContent: "center",
@@ -124,25 +170,24 @@ export default function HelpList() {
               className="ion-margin"
             >
               <IonIcon
-                color="dark"
                 size="large"
                 icon={mi.icon}
+                style={{ color: mi.color }}
                 aria-label={mi.label}
               />
             </IonRouterLink>
           ))}
         </div>
         <IonRouterLink
-          className="ion-text-center"
-          aria-label="Email"
-          href="mailto:hello@clothingloop.org"
+          className="ion-text-center ion-margin-bottom"
+          href="https://www.clothingloop.org/"
           style={{
             display: "block",
-            color: "var(--ion-color-primary)",
-            fontSize: "14px",
+            color: "var(--ion-color-dark)",
+            fontSize: "16px",
           }}
         >
-          hello@clothingloop.org
+          www.clothingloop.org
         </IonRouterLink>
 
         <CreateUpdateRules

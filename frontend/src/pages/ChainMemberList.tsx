@@ -14,14 +14,14 @@ import {
   SelectHTMLAttributes,
 } from "react";
 
-import { useParams, Link, useHistory } from "react-router-dom";
+import { useParams, Link, useHistory, Redirect } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import dayjs from "../util/dayjs";
 import simplifyDays from "../util/simplify-days";
 
-import { AuthContext } from "../providers/AuthProvider";
+import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
@@ -40,7 +40,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
-import { routeGetOrder, routeSetOrder } from "../api/route";
+import { routeGetOrder, routeOptimizeOrder, routeSetOrder } from "../api/route";
 import useToClipboard from "../util/to-clipboard.hooks";
 import { bagGetAllByChain } from "../api/bag";
 import { Sleep } from "../util/sleep";
@@ -73,6 +73,9 @@ export default function ChainMemberList() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [bags, setBags] = useState<Bag[] | null>(null);
   const [route, setRoute] = useState<UID[] | null>(null);
+  const [routeWasOptimized, setRouteWasOptimized] = useState<boolean>(false);
+  const [previousRoute, setPreviousRoute] = useState<UID[] | null>(null);
+
   const [participantsSortBy, setParticipantsSortBy] =
     useState<ParticipantsSortBy>("date");
   const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
@@ -133,6 +136,10 @@ export default function ChainMemberList() {
         chainUpdateBody.open_to_new_members = false;
       }
       await chainUpdate(chainUpdateBody);
+      setChain((s) => ({
+        ...(s as Chain),
+        ...chainUpdateBody,
+      }));
     } catch (err: any) {
       console.error("Error updating chain: ", err);
       setError(err?.data || `Error: ${JSON.stringify(err)}`);
@@ -161,6 +168,10 @@ export default function ChainMemberList() {
         chainUpdateBody.published = true;
       }
       await chainUpdate(chainUpdateBody);
+      setChain((s) => ({
+        ...(s as Chain),
+        ...chainUpdateBody,
+      }));
     } catch (err: any) {
       console.error("Error updating chain:", err);
       setError(err?.data || `Error: ${JSON.stringify(err)}`);
@@ -251,6 +262,29 @@ export default function ChainMemberList() {
       });
   }
 
+  function optimizeRoute(chainUID: UID) {
+    routeOptimizeOrder(chainUID)
+      .then((res) => {
+        const optimal_path = res.data.optimal_path;
+
+        // saving current rooute before changing in the database
+        setPreviousRoute(route);
+        setRouteWasOptimized(true);
+        // set new order
+        routeSetOrder(chainUID, optimal_path);
+        setRoute(optimal_path);
+      })
+      .catch((err) => {
+        addToastError(GinParseErrors(t, err), err.status);
+      });
+  }
+
+  function returnToPreviousRoute(chainUID: UID) {
+    setRoute(previousRoute);
+    setRouteWasOptimized(false);
+    routeSetOrder(chainUID, previousRoute!);
+  }
+
   useEffect(() => {
     refresh(true);
   }, [history, authUser]);
@@ -277,13 +311,14 @@ export default function ChainMemberList() {
   }, [chain, unapprovedUsers]);
 
   async function refresh(firstPageLoad = false) {
+    if (!authUser) return;
     const bagGetAll = authUser
       ? bagGetAllByChain(chainUID, authUser.uid)
       : Promise.reject("authUser not set");
 
     try {
       let _hostChains: Chain[];
-      if (authUser?.is_root_admin) {
+      if (authUser.is_root_admin) {
         _hostChains = (
           await chainGetAll({ filter_out_unpublished: false })
         ).data.filter((c) => c.uid !== chainUID);
@@ -329,6 +364,11 @@ export default function ChainMemberList() {
     }
   }
 
+  if (authUser === null) {
+    console.info("Please redirect to /users/login", authUser);
+    return <Redirect to="/users/login" />;
+  }
+
   if (!(chain && users && unapprovedUsers && route && bags)) {
     console.log(chain, users, unapprovedUsers, route, bags);
     return null;
@@ -361,7 +401,11 @@ export default function ChainMemberList() {
         <div className="flex flex-col lg:flex-row max-w-screen-xl mx-auto pt-4 lg:mb-6">
           <section className="lg:w-1/3">
             <div className="relative bg-teal-light p-8">
-              <label className="absolute top-4 right-4">
+              <label
+                className={`absolute top-4 right-4 ${
+                  chain.published || authUser?.is_root_admin ? "" : "hidden"
+                }`}
+              >
                 <a
                   {...addCopyAttributes(
                     t,
@@ -464,14 +508,14 @@ export default function ChainMemberList() {
         </div>
 
         <div className="max-w-screen-xl mx-auto px-2 sm:px-8">
-          <div className="grid gap-4 sm:grid-cols-3 justify-items-center sm:justify-items-start">
-            <h2 className="order-1 sm:col-span-3 lg:col-span-1 font-semibold text-secondary self-center text-3xl">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 justify-items-center md:justify-items-start">
+            <h2 className="order-1 md:col-span-full lg:col-span-1 font-semibold text-secondary self-center text-3xl">
               {t("loopParticipant", {
                 count: unapprovedUsers.length + users.length,
               })}
             </h2>
 
-            <div className="order-3 sm:col-span-2 sm:order-2 lg:col-span-1 lg:justify-self-center flex border border-secondary bg-teal-light">
+            <div className="order-3 sm:order-2 lg:col-span-1 lg:justify-self-center flex border border-secondary bg-teal-light">
               <label>
                 <input
                   type="radio"
@@ -536,7 +580,30 @@ export default function ChainMemberList() {
                 </div>
               </label>
             </div>
-            <div className="order-2 sm:justify-self-end sm:self sm:order-3">
+            <div className="order-2 md:justify-self-end md:self md:order-3">
+              {selectedTable === "route" ? (
+                !routeWasOptimized ? (
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                    onClick={() => optimizeRoute(chain.uid)}
+                  >
+                    {t("routeOptimize")}
+                    <span className="feather feather-zap ms-3 text-primary" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                    onClick={() => returnToPreviousRoute(chain.uid)}
+                  >
+                    {t("routeUndoOptimize")}
+
+                    <span className="feather feather-corner-left-up ms-3" />
+                  </button>
+                )
+              ) : null}
+
               {selectedTable !== "unapproved" ? (
                 <UserDataExport
                   chainName={chain.name}
@@ -591,7 +658,7 @@ export default function ChainMemberList() {
 }
 
 function HostTable(props: {
-  authUser: User | null;
+  authUser: AuthProps["authUser"];
   chain: Chain;
   filteredUsersHost: User[];
   refresh: () => Promise<void>;
@@ -687,7 +754,7 @@ function HostTable(props: {
 }
 
 function ApproveTable(props: {
-  authUser: User | null;
+  authUser: AuthProps["authUser"];
   unapprovedUsers: User[];
   chain: Chain;
   refresh: () => Promise<void>;
@@ -891,7 +958,7 @@ function ApproveTable(props: {
 
 type ParticipantsSortBy = "name" | "email" | "date";
 function ParticipantsTable(props: {
-  authUser: User | null;
+  authUser: AuthProps["authUser"];
   users: User[];
   sortBy: ParticipantsSortBy;
   setSortBy: (sortBy: ParticipantsSortBy) => void;
@@ -1163,7 +1230,7 @@ function ParticipantsTable(props: {
 }
 
 function RouteTable(props: {
-  authUser: User | null;
+  authUser: AuthProps["authUser"];
   users: User[];
   chain: Chain;
   route: UID[];

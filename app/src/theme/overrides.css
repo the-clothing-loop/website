@@ -38,3 +38,7 @@
 .ion-icon[slot="start"] {
   margin-inline-end: 0.3em !important;
 }
+
+.ion-ce:not(.plt-hybrid) textarea {
+  caret-color: auto !important;
+}

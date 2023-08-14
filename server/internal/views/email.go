@@ -9,6 +9,7 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/wneessen/go-mail"
 
 	"github.com/gin-gonic/gin"
@@ -140,6 +141,7 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context,
 	participantEmail,
 	participantPhoneNumber,
 	participantAddress string,
+	participantSizeEnums []string,
 ) error {
 	// ? language hardcoded to english until language preference can be determined in the database
 	// i18n := getI18n(c)
@@ -147,6 +149,36 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context,
 
 	m := app.MailCreate()
 	m.AddToFormat(adminName, adminEmail)
+
+	sizesHtml := ""
+	{
+		childrenAdded := false
+		womenAdded := false
+		menAdded := false
+		// http://localhost:3000/images/categories/men-50.png
+		imgEl := `<img src="` + app.Config.SITE_BASE_URL_FE + `/images/categories/%s-50.png" alt="%s" width="12" height="12" style="padding-left: 30px; height: 12px; width: 12px"/>`
+		for _, v := range participantSizeEnums {
+			switch v {
+			case models.SizeEnumBaby, models.SizeEnum1_4YearsOld, models.SizeEnum5_12YearsOld:
+				if !childrenAdded {
+					sizesHtml += "<br/>" + fmt.Sprintf(imgEl, "baby", "baby") + " "
+					childrenAdded = true
+				}
+			case models.SizeEnumMenSmall, models.SizeEnumMenMedium, models.SizeEnumMenLarge, models.SizeEnumMenPlusSize:
+				if !menAdded {
+					sizesHtml += "<br/>" + fmt.Sprintf(imgEl, "man", "man") + " "
+					menAdded = true
+				}
+			case models.SizeEnumWomenSmall, models.SizeEnumWomenMedium, models.SizeEnumWomenLarge, models.SizeEnumWomenPlusSize:
+				if !womenAdded {
+					sizesHtml += "<br/>" + fmt.Sprintf(imgEl, "woman", "woman") + " "
+					womenAdded = true
+				}
+
+			}
+			sizesHtml += models.SizeLetters[v] + " "
+		}
+	}
 	err := emailGenerateMessage(m, i18n, "someone_is_interested_in_joining_your_loop", gin.H{
 		"Name":      adminName,
 		"ChainName": chainName,
@@ -155,6 +187,7 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context,
 			"Email":   participantEmail,
 			"Phone":   participantPhoneNumber,
 			"Address": participantAddress,
+			"Sizes":   template.HTML(sizesHtml),
 		},
 	})
 	if err != nil {

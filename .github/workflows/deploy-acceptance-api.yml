@@ -1,11 +1,11 @@
-name: Deploy Acceptance
+name: Deploy Acceptance Server
 on:
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - "server/**"
+      - server/**
 
 jobs:
   deploy-api:

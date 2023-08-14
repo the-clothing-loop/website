@@ -70,7 +70,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
         addToastError(GinParseErrors(t, err), err?.status);
       }
     } else {
-      console.log(`creating user: ${JSON.stringify(user)}`);
+      console.info("creating user: ", user);
       try {
         await registerChainAdmin(
           {

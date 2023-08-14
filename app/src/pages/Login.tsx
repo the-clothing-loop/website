@@ -4,28 +4,24 @@ import {
   IonTitle,
   IonContent,
   IonButton,
-  IonModal,
   IonItem,
   IonLabel,
   IonInput,
   IonIcon,
   IonText,
   useIonToast,
+  IonPage,
+  IonFab,
+  IonFabButton,
 } from "@ionic/react";
 import {
+  arrowBack,
   arrowForwardOutline,
   mailUnreadOutline,
   sendOutline,
 } from "ionicons/icons";
 import { Keyboard } from "@capacitor/keyboard";
-import {
-  Fragment,
-  KeyboardEventHandler,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import toastError from "../../toastError";
@@ -65,14 +61,14 @@ export default function Login(props: { isLoggedIn: boolean }) {
 
     (async () => {
       try {
-        const res = await loginEmail(email + "");
+        await loginEmail(email + "");
         setShowToken(true);
         setSentState(State.success);
         setSentTimeout(
           setTimeout(
             () => setSentState(State.idle),
-            1000 * 60 /* 1 min */
-          ) as any
+            1000 * 60 /* 1 min */,
+          ) as any,
         );
         Keyboard.hide();
       } catch (err) {
@@ -115,17 +111,18 @@ export default function Login(props: { isLoggedIn: boolean }) {
   }
 
   return (
-    <IonModal
-      ref={modal}
-      isOpen={!props.isLoggedIn}
-      canDismiss={async (d) => d === "success"}
-    >
-      <IonHeader>
+    <IonPage>
+      <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("login")}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding" fullscreen>
+        <IonHeader collapse="condense" className="ion-margin-bottom">
+          <IonToolbar>
+            <IonTitle size="large">{t("login")}</IonTitle>
+          </IonToolbar>
+        </IonHeader>
         <IonItem lines="none">
           <IonText>{t("pleaseEnterYourEmailAddress")}</IonText>
         </IonItem>
@@ -135,7 +132,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             labelPlacement="fixed"
             ref={inputEmail}
             type="email"
-            autocomplete="on"
+            autocomplete="email"
             autoSave="on"
             autofocus
             enterkeyhint="send"
@@ -149,6 +146,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
           <IonButton
             size="default"
             slot="end"
+            shape="round"
             expand="block"
             color={
               sentState === State.idle
@@ -172,7 +170,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         </IonItem>
         {showToken ? (
           <Fragment key="token">
-            <IonItem lines="none">
+            <IonItem lines="none" className="ion-margin-top">
               <IonText>{t("enterThePasscodeYouReceivedInYourEmail")}</IonText>
             </IonItem>
             <IonItem lines="none">
@@ -189,6 +187,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             </IonItem>
             <IonItem lines="none">
               <IonButton
+                shape="round"
                 color={
                   verifyState === State.idle
                     ? "primary"
@@ -204,11 +203,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 expand="block"
                 onClick={handleVerifyToken}
               >
-                {verifyState === State.loading ? (
-                  <IonLabel>{t("loading")}</IonLabel>
-                ) : (
-                  <IonLabel>{t("login")}</IonLabel>
-                )}
+                {verifyState === State.loading ? t("loading") : t("login")}
                 {verifyState === State.loading ? null : (
                   <IonIcon slot="end" icon={arrowForwardOutline} />
                 )}
@@ -216,7 +211,16 @@ export default function Login(props: { isLoggedIn: boolean }) {
             </IonItem>
           </Fragment>
         ) : null}
+        <IonFab vertical="bottom" horizontal="start">
+          <IonFabButton
+            color="clear"
+            onClick={() => history.goBack()}
+            className="ion-margin-bottom"
+          >
+            <IonIcon icon={arrowBack}></IonIcon>
+          </IonFabButton>
+        </IonFab>
       </IonContent>
-    </IonModal>
+    </IonPage>
   );
 }

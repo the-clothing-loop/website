@@ -1,4 +1,4 @@
-clothingloop.org {
+clothingloop.org, www.clothingloop.be, clothingloop.be {
 	redir https://www.clothingloop.org{uri}
 }
 

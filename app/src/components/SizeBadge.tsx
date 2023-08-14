@@ -76,17 +76,20 @@ function BadgeItem({ sizes, icon }: { sizes: string[]; icon: string }) {
   );
 }
 
-export default function Badges({ chain }: { chain: Chain }) {
+export default function Badges(props: {
+  sizes: string[] | null;
+  genders: string[] | null;
+}) {
   const children =
-    chain.sizes
+    props.sizes
       ?.filter((a) => categories[Genders.children].includes(a as Sizes))
       .sort((a, z) => a.localeCompare(z)) || [];
   const women =
-    chain.sizes
+    props.sizes
       ?.filter((a) => categories[Genders.women].includes(a as Sizes))
       .sort((a, z) => a.localeCompare(z)) || [];
   const men =
-    chain.sizes
+    props.sizes
       ?.filter((a) => categories[Genders.men].includes(a as Sizes))
       .sort((a, z) => a.localeCompare(z)) || [];
 
@@ -99,13 +102,13 @@ export default function Badges({ chain }: { chain: Chain }) {
         gap: 4,
       }}
     >
-      {women?.length || chain.genders?.includes(Genders.women) ? (
-        <BadgeItem sizes={women} icon="man" key="women" />
+      {women?.length || props.genders?.includes(Genders.women) ? (
+        <BadgeItem sizes={women} icon="woman" key="women" />
       ) : null}
-      {men?.length || chain.genders?.includes(Genders.men) ? (
-        <BadgeItem sizes={men} icon="woman" key="men" />
+      {men?.length || props.genders?.includes(Genders.men) ? (
+        <BadgeItem sizes={men} icon="man" key="men" />
       ) : null}
-      {children?.length || chain.genders?.includes(Genders.children) ? (
+      {children?.length || props.genders?.includes(Genders.children) ? (
         <BadgeItem sizes={children} icon="baby" key="children" />
       ) : null}
     </div>

@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
@@ -59,12 +60,13 @@ ORDER BY id ASC
 func BagPut(c *gin.Context) {
 	db := getDB(c)
 	var body struct {
-		UserUID   string  `json:"user_uid" binding:"required,uuid"`
-		ChainUID  string  `json:"chain_uid" binding:"required,uuid"`
-		BagID     int     `json:"bag_id,omitempty"`
-		HolderUID string  `json:"holder_uid" binding:"required,uuid"`
-		Number    *string `json:"number,omitempty"`
-		Color     *string `json:"color,omitempty"`
+		UserUID   string     `json:"user_uid" binding:"required,uuid"`
+		ChainUID  string     `json:"chain_uid" binding:"required,uuid"`
+		BagID     int        `json:"bag_id,omitempty"`
+		HolderUID string     `json:"holder_uid" binding:"required,uuid"`
+		Number    *string    `json:"number,omitempty"`
+		Color     *string    `json:"color,omitempty"`
+		UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -91,6 +93,9 @@ func BagPut(c *gin.Context) {
 	if body.Color != nil {
 		bag.Color = *(body.Color)
 	}
+	if body.UpdatedAt != nil {
+		bag.UpdatedAt = *(body.UpdatedAt)
+	}
 	bag.LastNotifiedAt = zero.Time{}
 
 	ucID := uint(0)
@@ -110,7 +115,11 @@ LIMIT 1
 	if bag.ID == 0 {
 		err = db.Create(&bag).Error
 	} else {
-		err = db.Save(&bag).Error
+		if body.UpdatedAt != nil {
+			err = db.Model(&bag).UpdateColumns(&bag).Error
+		} else {
+			err = db.Save(&bag).Error
+		}
 	}
 	if err != nil {
 		goscope.Log.Errorf("Unable to create or update bag: %v", err)

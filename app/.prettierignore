@@ -3,3 +3,5 @@
 /.vscode
 /build
 /.idea
+/ios
+/public/open_source_licenses.json

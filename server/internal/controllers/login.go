@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/golang/glog"
+	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -27,15 +28,18 @@ func LoginEmail(c *gin.Context) {
 	}
 
 	// make sure that this email exists in db
-	user := models.User{}
-	res := db.Raw(`
-SELECT *
-FROM users
-WHERE email = ?
-LIMIT 1
-	`, body.Email).Scan(&user)
-	if res.Error != nil || user.ID == 0 {
+	user, err := models.UserGetByEmail(db, body.Email)
+	if err != nil {
 		c.String(http.StatusUnauthorized, "Email is not yet registered")
+		return
+	}
+
+	if body.Email == app.Config.APPSTORE_REVIEWER_EMAIL {
+		_, err := auth.TokenCreateUnverifiedBackdoor(db, user.ID)
+		if err != nil {
+			c.String(http.StatusInternalServerError, "Unable to create token")
+			return
+		}
 		return
 	}
 
@@ -128,6 +132,7 @@ UPDATE chains SET published = TRUE WHERE id IN (
 					user.Email.String,
 					user.PhoneNumber,
 					user.Address,
+					user.Sizes,
 				)
 			}
 		}

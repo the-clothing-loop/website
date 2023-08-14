@@ -23,13 +23,11 @@ interface StorageAuth {
   token: string;
 }
 
-export type PauseAmount = "none" | "week" | "2weeks" | "3weeks";
-
 export const StoreContext = createContext({
   isAuthenticated: null as boolean | null,
   isChainAdmin: false,
   authUser: null as null | User,
-  setPause: (p: PauseAmount) => {},
+  setPause: (p: number) => {},
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
   route: [] as UID[],
@@ -40,6 +38,7 @@ export const StoreContext = createContext({
   login: (token: string) => Promise.reject<void>(),
   logout: () => Promise.reject<void>(),
   init: () => Promise.reject<void>(),
+  refresh: (tab: string) => Promise.reject<void>(),
 });
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
@@ -171,22 +170,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setIsChainAdmin(IsChainAdmin(authUser, _chain));
   }
 
-  async function _setPause(pause: PauseAmount) {
+  async function _setPause(pause: number) {
     if (!authUser) return;
 
     let pauseUntil = dayjs();
-    switch (pause) {
-      case "week":
-        pauseUntil = pauseUntil.add(1, "week");
-        break;
-      case "2weeks":
-        pauseUntil = pauseUntil.add(2, "week");
-        break;
-      case "3weeks":
-        pauseUntil = pauseUntil.add(3, "week");
-        break;
-      default:
-        pauseUntil = pauseUntil.add(-1, "week");
+    if (pause <= 0) {
+      pauseUntil = pauseUntil.add(-1, "week");
+    } else {
+      pauseUntil = pauseUntil.add(pause, "week");
     }
     await userUpdate({
       user_uid: authUser.uid,
@@ -198,6 +189,60 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (chain) {
       const _chainUsers = (await userGetAllByChain(chain.uid)).data;
       setChainUsers(_chainUsers);
+    }
+  }
+
+  async function _refresh(tab: string): Promise<void> {
+    if (!authUser) throw "You must be logged in to view this tab.";
+    if (tab === "help") {
+      if (!chain)
+        throw "You must have first selected a Loop in the settings tab.";
+
+      let _chain = await chainGet(chain.uid, true);
+      setChain(_chain.data);
+    } else if (tab === "address" || tab === "bags") {
+      if (!chain)
+        throw "You must have first selected a Loop in the settings tab.";
+
+      const [_chainUsers, _route, _bags] = await Promise.all([
+        userGetAllByChain(chain.uid),
+        routeGetOrder(chain.uid),
+        bagGetAllByChain(chain.uid, authUser.uid),
+      ]);
+      setChainUsers(_chainUsers.data);
+      setRoute(_route.data);
+      setBags(_bags.data);
+    } else if (tab === "bulky-items") {
+      if (!chain)
+        throw "You must have first selected a Loop in the settings tab.";
+
+      const [_chainUsers, _bulkyItems] = await Promise.all([
+        userGetAllByChain(chain.uid),
+        bulkyItemGetAllByChain(chain.uid, authUser.uid),
+      ]);
+      setChainUsers(_chainUsers.data);
+      setBulkyItems(_bulkyItems.data);
+    } else if (tab === "settings") {
+      if (authUser.uid) {
+        const [_authUser, _chain] = await Promise.allSettled([
+          userGetByUID(undefined, authUser.uid),
+          !!chain
+            ? chainGet(chain.uid, true)
+            : Promise.reject("No Loop selected"),
+        ]);
+
+        if (_authUser.status === "fulfilled") {
+          setAuthUser(_authUser.value.data);
+
+          if (_chain.status === "fulfilled") {
+            setChain(_chain.value.data);
+          } else {
+            setChain(null);
+          }
+        } else {
+          return _logout();
+        }
+      }
     }
   }
 
@@ -218,6 +263,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         authenticate: _authenticate,
         login: _login,
         init: _init,
+        refresh: _refresh,
       }}
     >
       {children}
@@ -229,7 +275,7 @@ function throwError(err: any) {
   document.getElementById("root")?.dispatchEvent(
     new CustomEvent("store-error", {
       detail: err,
-    })
+    }),
   );
 }
 

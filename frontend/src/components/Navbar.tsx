@@ -13,7 +13,6 @@ function Navbar() {
 
   function onClickMobileNavLink() {
     const el = document.getElementById("header-hamburger") as HTMLInputElement;
-    console.log(el.value);
 
     el.checked = false;
   }

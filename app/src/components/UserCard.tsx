@@ -4,10 +4,10 @@ import {
   IonItem,
   IonLabel,
   IonText,
-  IonButton,
   IonImg,
   IonContent,
   IonPopover,
+  IonFabButton,
 } from "@ionic/react";
 import { Clipboard } from "@capacitor/clipboard";
 import {
@@ -24,42 +24,101 @@ import { IsChainAdmin } from "../Store";
 import { useMemo, useRef, useState } from "react";
 import { Share } from "@capacitor/share";
 import { isPlatform } from "@ionic/core";
+import { useLongPress } from "use-long-press";
+
+interface MessagingApp {
+  icon: string;
+  link: (n: string) => string;
+  name: string;
+  color: string;
+  colorTint: string;
+  colorFade: string;
+}
+const messagingApps: MessagingApp[] = [
+  {
+    icon: "/icons/sms.svg",
+    link: (n) => `sms:${n}`,
+    name: "Sms",
+    color: "#44e75f",
+    colorTint: "#5dfc77",
+    colorFade: "#1dc93a",
+  },
+  {
+    icon: "/icons/whatsapp.svg",
+    name: "WhatsApp",
+    link: (n) => `https://wa.me/${n}`,
+    color: "#25d366",
+    colorTint: "#73f793",
+    colorFade: "#128c7e",
+  },
+  {
+    icon: "/icons/telegram.svg",
+    name: "Telegram",
+    link: (n) => `https://t.me/+${n}`,
+    color: "#29a9eb",
+    colorTint: "#7eb9e1",
+    colorFade: "#0f86d7",
+  },
+  {
+    icon: "/icons/signal.svg",
+    name: "Signal",
+    link: (n) => `https://signal.me/+${n}`,
+    color: "#3a76f0",
+    colorTint: "#2259c8",
+    colorFade: "#3c3744",
+  },
+];
 
 export default function UserCard({
   user,
   chain,
   isUserPaused,
+  showMessengers = false,
 }: {
   user: User;
   chain: Chain | null;
   isUserPaused: boolean;
+  showMessengers?: boolean;
 }) {
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
   const isEmailPrivate = IsPrivate(user.email);
   const isUserAdmin = useMemo(() => IsChainAdmin(user, chain), [user, chain]);
-  const refCopy = useRef<HTMLIonPopoverElement>(null);
+  const refAddressPopup = useRef<HTMLIonPopoverElement>(null);
+  const refPhoneNumberPopup = useRef<HTMLIonPopoverElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
+  const longPressAddress = useLongPress(
+    (e) => {
+      refAddressPopup.current?.present(e as any);
+    },
+    { onCancel: (e) => {} },
+  );
+  const longPressPhoneNumber = useLongPress(
+    (e) => {
+      refPhoneNumberPopup.current?.present(e as any);
+    },
+    { onCancel: (e) => {} },
+  );
 
   function handleCopyPhoneNumber() {
     Clipboard.write({
       string: user.phone_number,
     });
-    refCopy.current?.dismiss();
+    refPhoneNumberPopup.current?.dismiss();
   }
 
   function handleSharePhoneNumber() {
     Share.share({
       url: "tel:" + user.phone_number,
     });
-    refCopy.current?.dismiss();
+    refPhoneNumberPopup.current?.dismiss();
   }
 
   function handleCopyAddress() {
     Clipboard.write({
       string: user.address,
     });
-    refCopy.current?.dismiss();
+    refAddressPopup.current?.dismiss();
   }
 
   function handleShareAddress() {
@@ -68,7 +127,7 @@ export default function UserCard({
         `https://www.google.com/maps/search/` +
         user.address.replaceAll(" ", "+"),
     });
-    refCopy.current?.dismiss();
+    refAddressPopup.current?.dismiss();
   }
 
   return (
@@ -108,21 +167,23 @@ export default function UserCard({
         </IonText>
       </div>
       <IonList>
-        {isEmailPrivate ? null : (
+        {isEmailPrivate && !user.phone_number ? null : (
           <>
-            <IonItem lines="none" id="item-phone-number">
+            <IonItem
+              lines="none"
+              button
+              rel="noreferrer"
+              detail={false}
+              target="_blank"
+              href={`tel:` + user.phone_number}
+              {...longPressPhoneNumber()}
+            >
               <IonLabel>
-                <h3>{t("phoneNumber")}</h3>
-                {user.phone_number ? (
-                  <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
-                ) : null}
+                <h3 className="ion-text-bold">{t("phoneNumber")}</h3>
+                <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
               </IonLabel>
             </IonItem>
-            <IonPopover
-              ref={refCopy}
-              trigger="item-phone-number"
-              triggerAction="context-menu"
-            >
+            <IonPopover ref={refPhoneNumberPopup}>
               <IonContent>
                 <IonList>
                   <IonItem
@@ -150,12 +211,14 @@ export default function UserCard({
                 </IonList>
               </IonContent>
             </IonPopover>
+            {showMessengers ? (
+              <MessengerIcons phoneNumber={user.phone_number} />
+            ) : null}
           </>
         )}
         {isAddressPrivate ? null : (
           <>
             <IonItem
-              id="item-address"
               lines="none"
               button
               rel="noreferrer"
@@ -165,9 +228,10 @@ export default function UserCard({
                 `https://www.google.com/maps/search/` +
                 user.address.replaceAll(" ", "+")
               }
+              {...longPressAddress()}
             >
               <IonLabel>
-                <h3>{t("address")}</h3>
+                <h3 className="ion-text-bold">{t("address")}</h3>
                 {/* https://www.google.com/maps/@${long},${lat},14z */}
                 <p className="ion-text-wrap">{user?.address}</p>
               </IonLabel>
@@ -179,11 +243,7 @@ export default function UserCard({
                 />
               ) : null}
             </IonItem>
-            <IonPopover
-              ref={refCopy}
-              trigger="item-address"
-              triggerAction="context-menu"
-            >
+            <IonPopover ref={refAddressPopup}>
               <IonContent>
                 <IonList>
                   <IonItem
@@ -228,6 +288,54 @@ export default function UserCard({
           </>
         )}
       </IonList>
+    </div>
+  );
+}
+
+function MessengerIcons(props: { phoneNumber: string }) {
+  let phone = props.phoneNumber.replaceAll(/[^\d]/g, "") || "";
+  return (
+    <div
+      style={{
+        display: "flex",
+        margin: "8px 16px",
+      }}
+    >
+      {messagingApps.map((app) => {
+        let isPhoneValid = props.phoneNumber.startsWith("+");
+        isPhoneValid = isPhoneValid || app.name === "Sms";
+        return (
+          <IonFabButton
+            disabled={!isPhoneValid}
+            color={isPhoneValid ? undefined : "medium"}
+            key={app.name}
+            style={{
+              marginInlineEnd: 8,
+              ...(isPhoneValid
+                ? {
+                    "--background": app.color,
+                    "--background-activated": app.colorFade,
+                    "--background-focused": app.colorFade,
+                    "--background-hover": app.colorTint,
+                  }
+                : {
+                    opacity: isPhoneValid ? 1 : 0.6,
+                  }),
+            }}
+            href={isPhoneValid ? app.link(phone) : undefined}
+            target={isPhoneValid ? "blank" : undefined}
+          >
+            <IonImg
+              src={app.icon}
+              alt={app.name}
+              style={{
+                margin: 12,
+                width: "100%",
+              }}
+            />
+          </IonFabButton>
+        );
+      })}
     </div>
   );
 }

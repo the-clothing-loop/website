@@ -6,9 +6,9 @@ export default function getLanguages(isProduction) {
   /**
    * @typedef {string[]}
    */
-  let languages = ["en", "nl", "de", "fr", "es", "sv"];
+  let languages = ["en", "nl", "de", "fr", "es", "sv", "he"];
   if (!isProduction) {
-    languages = languages.concat(["he", "it"]);
+    languages = languages.concat(["it"]);
   }
   return languages;
 }
@@ -28,11 +28,11 @@ export function getLanguageFlags(isProduction) {
     { lng: "fr", title: "French", flag: "/images/flags/fr.svg" },
     { lng: "es", title: "Spanish", flag: "/images/flags/es.svg" },
     { lng: "sv", title: "Swedish", flag: "/images/flags/se.svg" },
+    { lng: "he", title: "Hebrew", flag: "/images/flags/il.svg" },
   ];
   if (!isProduction) {
     flags = flags.concat([
       { lng: "it", title: "Italian", flag: "/images/flags/it.svg" },
-      { lng: "he", title: "Hebrew", flag: "/images/flags/il.svg" },
     ]);
   }
   return flags;

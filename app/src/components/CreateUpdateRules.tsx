@@ -16,25 +16,35 @@ import {
   IonTitle,
   IonToolbar,
   ItemReorderEventDetail,
-  TextareaChangeEventDetail,
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
 
-import type { IonModalCustomEvent } from "@ionic/core";
+import type {
+  IonModalCustomEvent,
+  IonTextareaCustomEvent,
+  TextareaInputEventDetail,
+} from "@ionic/core";
 import type {
   IonReorderGroupCustomEvent,
-  IonTextareaCustomEvent,
   IonInputCustomEvent,
 } from "@ionic/core/components";
-import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
+import {
+  chevronDownOutline,
+  chevronUpOutline,
+  refreshOutline,
+} from "ionicons/icons";
 import { RefObject, useContext, useState } from "react";
 import { chainUpdate } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
-import { FaqListItem } from "../pages/HelpItem";
+import {
+  FaqListItem,
+  faqItemTranslationOption,
+  faqListKeys,
+} from "../pages/HelpItem";
 
 export default function CreateUpdateRules(props: {
   rules: string | null;
@@ -66,16 +76,41 @@ export default function CreateUpdateRules(props: {
   function modalInit() {
     setError("");
 
-    if (props.rules === null) {
-      const data = t("list", {
-        ns: "faq",
-        returnObjects: true,
-      }) as FaqListItem[];
+    if (!props.rules) {
+      const data: FaqListItem[] = faqListKeys.map(
+        (k) => t(k, faqItemTranslationOption) as any,
+      );
       setRules(data);
     } else {
       const data = JSON.parse(props.rules);
       setRules(data);
     }
+  }
+
+  function reset() {
+    if (!chain?.uid) return;
+    const handler = () => {
+      chainUpdate({
+        uid: chain.uid,
+        rules_override: "",
+      });
+      props.modal.current?.dismiss();
+    };
+
+    presentAlert({
+      header: t("resetRules"),
+      subHeader: t("areYouSureYouWantToResetRules"),
+      buttons: [
+        {
+          text: t("cancel"),
+        },
+        {
+          role: "destructive",
+          text: t("delete"),
+          handler,
+        },
+      ],
+    });
   }
 
   function cancel() {
@@ -100,7 +135,7 @@ export default function CreateUpdateRules(props: {
   }
 
   function handleReorder(
-    e: IonReorderGroupCustomEvent<ItemReorderEventDetail>
+    e: IonReorderGroupCustomEvent<ItemReorderEventDetail>,
   ) {
     setOpen(-1);
     (async () => {
@@ -111,12 +146,8 @@ export default function CreateUpdateRules(props: {
   function handleClickCreateRule() {
     const newRuleIndex = rules.length;
     setRule(newRuleIndex, {
-      Title: "",
-      "Title 2": "",
-      "Short explanation": "",
-      "Paragraph 1": "",
-      "Paragraph 2": "",
-      "Paragraph 3": "",
+      title: "",
+      content: "",
     });
     setOpen(newRuleIndex);
   }
@@ -126,10 +157,14 @@ export default function CreateUpdateRules(props: {
       deleteRule(index);
       setOpen(-1);
     };
+    let message = rules[index].content.split("\n", 1)[0] || "";
+    if (message.length > 10) {
+      message = message.slice(0, 20) + "...";
+    }
     presentAlert({
       header: t("removeRule"),
-      subHeader: rules[index].Title,
-      message: rules[index]["Short explanation"],
+      subHeader: rules[index].title,
+      message,
       buttons: [
         {
           text: t("cancel"),
@@ -152,7 +187,7 @@ export default function CreateUpdateRules(props: {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton onClick={cancel}>{t("Cancel")}</IonButton>
+            <IonButton onClick={cancel}>{t("cancel")}</IonButton>
           </IonButtons>
           <IonTitle>{t("customLoopRules")}</IonTitle>
           <IonButtons slot="end">
@@ -167,6 +202,24 @@ export default function CreateUpdateRules(props: {
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
+          {chain?.rules_override ? (
+            <IonItem lines="full" color="dark" key="reset">
+              <IonIcon
+                icon={refreshOutline}
+                style={{
+                  marginLeft: 2,
+                  marginRight: 20,
+                }}
+              />
+              <IonLabel className="ion-text-wrap">
+                <h3>{t("resetRules")}</h3>
+                <p>{t("resetDescription")}</p>
+              </IonLabel>
+              <IonButton slot="end" onClick={reset} color="danger">
+                {t("reset")}
+              </IonButton>
+            </IonItem>
+          ) : null}
           <IonReorderGroup
             disabled={open !== -1}
             onIonItemReorder={handleReorder}
@@ -202,31 +255,14 @@ function RuleItem(props: {
   setOpen: (a: (b: boolean) => boolean) => void;
   onClickDeleteRule: () => void;
 }) {
-  let paragraphs = [
-    props.rule["Paragraph 1"],
-    props.rule["Paragraph 2"],
-    props.rule["Paragraph 3"],
-  ].join("\n");
   const toggleOpen = () => props.setOpen((v) => !v);
   const { t } = useTranslation();
 
-  function setParagraphs(e: IonTextareaCustomEvent<TextareaChangeEventDetail>) {
-    let values = (e.target.value || "").split("\n");
-    let p1 = values.shift() || "";
-    let p2 = values.shift() || "";
-    let p3 = values.join("\n") || "";
-
-    props.setRule({
-      ...props.rule,
-      "Paragraph 1": p1,
-      "Paragraph 2": p2,
-      "Paragraph 3": p3,
-    });
-  }
-
   function setRuleItem(
-    e: IonInputCustomEvent<InputChangeEventDetail>,
-    key: keyof FaqListItem
+    e:
+      | IonInputCustomEvent<InputChangeEventDetail>
+      | IonTextareaCustomEvent<TextareaInputEventDetail>,
+    key: keyof FaqListItem,
   ) {
     props.setRule({
       ...props.rule,
@@ -248,7 +284,7 @@ function RuleItem(props: {
             />
           </IonButton>
         </IonButtons>
-        <IonLabel onClick={toggleOpen}>{props.rule.Title}</IonLabel>
+        <IonLabel onClick={toggleOpen}>{props.rule.title}</IonLabel>
 
         <div slot="end">
           {props.open ? (
@@ -261,32 +297,23 @@ function RuleItem(props: {
         </div>
       </IonItem>
       <div className={props.open ? "" : "ion-hide"}>
-        <IonItem lines="none" color="light">
+        <IonItem lines="inset" color="light">
           <IonInput
-            label="Title"
+            label={t("title")}
             labelPlacement="stacked"
             type="text"
-            value={props.rule.Title}
-            onIonChange={(e) => setRuleItem(e, "Title")}
+            value={props.rule.title}
+            onIonInput={(e) => setRuleItem(e, "title")}
           />
         </IonItem>
-        <IonItem lines="none" color="light">
-          <IonInput
-            label="Short explanation"
-            labelPlacement="stacked"
-            type="text"
-            value={props.rule["Short explanation"]}
-            onIonChange={(e) => setRuleItem(e, "Short explanation")}
-          />
-        </IonItem>
-        <IonItem lines="none" color="light">
+        <IonItem lines="full" color="light">
           <IonTextarea
-            label="paragraphs"
+            label={t("shortExplanation")}
             labelPlacement="stacked"
-            rows={6}
-            style={{ lineHeight: "1.4em" }}
-            value={paragraphs}
-            onIonChange={(e) => setParagraphs(e)}
+            autocapitalize="sentences"
+            autoGrow
+            value={props.rule.content}
+            onIonInput={(e) => setRuleItem(e, "content")}
           />
         </IonItem>
       </div>

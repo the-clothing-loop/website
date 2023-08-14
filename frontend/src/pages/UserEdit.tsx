@@ -57,7 +57,7 @@ export default function UserEdit() {
           userUpdateBody.longitude = values.longitude;
         }
         if (chainUID) userUpdateBody.chain_uid = chainUID;
-        console.log(userUpdateBody);
+        console.info(userUpdateBody);
 
         await userUpdate(userUpdateBody);
         setTimeout(() => {

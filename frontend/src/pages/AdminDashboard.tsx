@@ -1,5 +1,5 @@
 //Resources
-import { Link, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
@@ -19,9 +19,10 @@ export default function AdminDashboard() {
   const history = useHistory();
 
   function deleteClicked() {
-    const chainNames = authUser?.is_root_admin
+    if (!authUser) return;
+    const chainNames = authUser.is_root_admin
       ? undefined
-      : (authUser?.chains
+      : (authUser.chains
           .filter((uc) => uc.is_chain_admin)
           .map((uc) => chains.find((c) => c.uid === uc.chain_uid))
           .filter((c) => c && c.total_hosts && c.total_hosts === 1)
@@ -82,6 +83,10 @@ export default function AdminDashboard() {
     () => !!authUser?.chains.find((uc) => uc.is_chain_admin),
     [authUser]
   );
+
+  if (authUser === null) {
+    return <Redirect to="/users/login" />;
+  }
 
   if (!authUser) return null;
   return (

@@ -6,6 +6,7 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
+  IonItemDivider,
   IonLabel,
   IonList,
   IonPage,
@@ -29,6 +30,7 @@ import { useTranslation } from "react-i18next";
 import {
   compassOutline,
   copyOutline,
+  ellipsisHorizontal,
   eyeOffOutline,
   eyeOutline,
   lockClosedOutline,
@@ -46,22 +48,21 @@ const VERSION = import.meta.env.VITE_APP_VERSION;
 
 export default function Settings() {
   const { t } = useTranslation();
-  const { authUser, chain, isAuthenticated, setPause, logout, setChain } =
-    useContext(StoreContext);
+  const {
+    authUser,
+    chain,
+    isAuthenticated,
+    setPause,
+    logout,
+    setChain,
+    isChainAdmin,
+  } = useContext(StoreContext);
   const [present] = useIonToast();
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
-
-  const isUserAdmin = useMemo(
-    () =>
-      authUser && chain
-        ? authUser?.chains.find((uc) => uc.chain_uid === chain.uid)
-            ?.is_chain_admin || false
-        : false,
-    [authUser, chain]
-  );
+  const [expandedDescription, setExpandedDescription] = useState(false);
 
   const [listOfChains, setListOfChains] = useState<Chain[]>([]);
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function Settings() {
     Promise.all(
       authUser.chains
         .filter((uc) => uc.is_approved)
-        .map((uc) => chainGet(uc.chain_uid))
+        .map((uc) => chainGet(uc.chain_uid)),
     )
       .then((chains) => {
         setListOfChains(chains.map((c) => c.data));
@@ -87,7 +88,7 @@ export default function Settings() {
   }, [authUser]);
 
   function handleChainSelect(
-    e: IonSelectCustomEvent<SelectChangeEventDetail<any>>
+    e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
   ) {
     const chainUID = e.detail.value;
     const c = listOfChains.find((c) => c.uid === chainUID) || null;
@@ -104,7 +105,7 @@ export default function Settings() {
         },
         {
           text: t("unPause"),
-          handler: () => setPause("none"),
+          handler: () => setPause(0),
           role: "destructive",
         },
       ]);
@@ -113,16 +114,32 @@ export default function Settings() {
         header: t("pauseUntil"),
         buttons: [
           {
-            text: t("week", { count: 1 }),
-            handler: () => setPause("week"),
+            text: t("week", { count: 10 }),
+            handler: () => setPause(10),
           },
           {
-            text: t("week", { count: 2 }),
-            handler: () => setPause("2weeks"),
+            text: t("week", { count: 8 }),
+            handler: () => setPause(8),
+          },
+          {
+            text: t("week", { count: 6 }),
+            handler: () => setPause(6),
+          },
+          {
+            text: t("week", { count: 4 }),
+            handler: () => setPause(4),
           },
           {
             text: t("week", { count: 3 }),
-            handler: () => setPause("3weeks"),
+            handler: () => setPause(3),
+          },
+          {
+            text: t("week", { count: 2 }),
+            handler: () => setPause(2),
+          },
+          {
+            text: t("week", { count: 1 }),
+            handler: () => setPause(1),
           },
           {
             text: t("cancel"),
@@ -151,12 +168,13 @@ export default function Settings() {
   let isUserPaused = isPaused(authUser?.paused_until || null);
 
   let pausedDayjs = isUserPaused && dayjs(authUser!.paused_until);
+  let showExpandButton = (chain?.description.length || 0) > 200;
 
   return (
     <IonPage>
       <IonHeader collapse="fade">
         <IonToolbar>
-          <IonTitle>{t("settings")}</IonTitle>
+          <IonTitle>{t("info")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       {isAuthenticated === true ? (
@@ -176,7 +194,7 @@ export default function Settings() {
               detail={false}
             >
               <IonLabel className="ion-text-wrap">
-                <h3>{t("pauseParticipation")}</h3>
+                <h3 className="ion-text-bold">{t("pauseParticipation")}</h3>
                 <p className="ion-no-wrap">
                   {pausedDayjs
                     ? pausedDayjs.fromNow()
@@ -199,6 +217,13 @@ export default function Settings() {
             </IonItem>
             <IonCard color="secondary">
               <IonList>
+                <IonItemDivider
+                  style={{
+                    background: "var(--ion-color-secondary-shade)",
+                  }}
+                >
+                  {t("loopInformation")}
+                </IonItemDivider>
                 <IonItem lines="none">
                   <IonSelect
                     ref={refChainSelect}
@@ -253,7 +278,7 @@ export default function Settings() {
                     )}
                   </IonItem>
                 ) : null}
-                {isUserAdmin && chain ? (
+                {isChainAdmin && chain ? (
                   <IonItem
                     lines="none"
                     button
@@ -265,7 +290,7 @@ export default function Settings() {
                     <IonIcon icon={compassOutline} />
                   </IonItem>
                 ) : null}
-                {chain ? (
+                {chain?.published ? (
                   <IonItem
                     lines="none"
                     button
@@ -282,13 +307,43 @@ export default function Settings() {
                 <IonItem lines="none" className="ion-align-items-start">
                   <IonLabel>{t("interestedSizes")}</IonLabel>
                   <div className="ion-margin-top ion-margin-bottom" slot="end">
-                    {chain ? <Badges chain={chain} /> : null}
+                    {chain ? (
+                      <Badges genders={chain.genders} sizes={chain.genders} />
+                    ) : null}
                   </div>
                 </IonItem>
                 <IonItem lines="none">
                   <IonLabel>
                     <h3>{t("description")}</h3>
-                    <p>{chain?.description}</p>
+                    <p
+                      style={{
+                        whiteSpace: "pre-wrap",
+                        overflow: "hidden",
+                        display: "block",
+                        ...(!expandedDescription && showExpandButton
+                          ? {
+                              maxHeight: 60,
+                            }
+                          : {}),
+                      }}
+                    >
+                      {chain?.description}
+                    </p>
+                    {!expandedDescription && showExpandButton ? (
+                      <IonButton
+                        onClick={() => setExpandedDescription((s) => !s)}
+                        size="small"
+                        color="clear"
+                        expand="block"
+                        style={{
+                          marginTop: -6,
+                          "--padding-start": "0px",
+                          // "--padding-end": "5px",
+                        }}
+                      >
+                        <IonIcon icon={ellipsisHorizontal} color="primary" />
+                      </IonButton>
+                    ) : null}
                   </IonLabel>
                 </IonItem>
               </IonList>
@@ -326,8 +381,15 @@ export default function Settings() {
             version: {VERSION}
           </IonText>
           <IonList className="ion-margin-top">
-            <IonItem lines="full" routerLink="/privacy-policy">
+            <IonItem
+              lines="full"
+              routerLink="/settings/privacy-policy"
+              style={{ "--border-width": "0.55px 0px 0.55px 0px" }}
+            >
               <IonLabel color="medium">{t("privacyPolicy")}</IonLabel>
+            </IonItem>
+            <IonItem lines="none" routerLink="/settings/open-source">
+              <IonLabel color="medium">{t("openSource")}</IonLabel>
             </IonItem>
           </IonList>
         </IonContent>

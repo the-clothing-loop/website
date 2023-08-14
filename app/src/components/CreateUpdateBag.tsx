@@ -2,6 +2,7 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonFabButton,
   IonHeader,
   IonIcon,
   IonInput,
@@ -19,7 +20,7 @@ import {
 
 import type { IonSelectCustomEvent, IonModalCustomEvent } from "@ionic/core";
 import { checkmarkCircle, ellipse } from "ionicons/icons";
-import { FormEvent, RefObject, useContext, useState } from "react";
+import { RefObject, useContext, useState } from "react";
 import { Bag, bagColors, bagPut, UID } from "../api";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
@@ -46,7 +47,7 @@ export default function CreateUpdateBag({
   function modalInit() {
     setError("");
     setBagColor(bag?.color || bagColors[2]);
-    setBagHolder(bag?.user_uid || null);
+    setBagHolder(bag?.user_uid || authUser?.uid || null);
 
     if (bag === null) {
       let highestNumber = 0;
@@ -107,7 +108,7 @@ export default function CreateUpdateBag({
     }
   }
   function handleSelectBagHolder(
-    e: IonSelectCustomEvent<SelectChangeEventDetail<any>>
+    e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
   ) {
     let userUID = e.detail.value;
 
@@ -115,6 +116,14 @@ export default function CreateUpdateBag({
     if (!user || !chain) return;
 
     setBagHolder(user.uid);
+  }
+  function handleSetBagEmoji(emoji: string) {
+    const search = " " + emoji;
+    if (bagNumber.includes(search)) {
+      setBagNumber((s) => s.replace(search, ""));
+    } else {
+      setBagNumber((s) => s + search);
+    }
   }
   return (
     <IonModal
@@ -125,9 +134,9 @@ export default function CreateUpdateBag({
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton onClick={cancel}>{t("Cancel")}</IonButton>
+            <IonButton onClick={cancel}>{t("cancel")}</IonButton>
           </IonButtons>
-          <IonTitle>{t("createBag")}</IonTitle>
+          <IonTitle>{bag ? t("updateBag") : t("createBag")}</IonTitle>
           <IonButtons slot="end">
             <IonButton
               onClick={createOrUpdate}
@@ -140,25 +149,44 @@ export default function CreateUpdateBag({
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
-          <IonItem lines="none">
-            <IonLabel className="ion-text-wrap">
-              {t("theNextBagNumberIsAutomaticallySelected")}
-            </IonLabel>
-          </IonItem>
           <IonItem
             lines="none"
             color={error === "number" ? "danger" : undefined}
           >
-            <IonLabel slot="start">{t("bagNumber")}</IonLabel>
             <IonInput
               type="text"
-              slot="end"
-              className="ion-text-right"
+              label={t("bagName")}
+              labelPlacement="start"
+              max={18}
+              spellCheck
+              autoCapitalize="words"
+              maxlength={18}
+              counter
+              placeholder=""
               value={bagNumber}
+              onFocus={(e) => (e.target as any as HTMLInputElement).select()}
               onIonChange={(e) =>
                 setBagNumber(e.detail.value?.toString() || "")
               }
             />
+          </IonItem>
+          <IonItem
+            lines="none"
+            style={{
+              marginTop: -20,
+            }}
+          >
+            {["👻", "🐰"].map((emoji, i) => (
+              <IonFabButton
+                key={i}
+                size="small"
+                color={bagNumber.includes(emoji) ? "primary" : "light"}
+                onClick={() => handleSetBagEmoji(emoji)}
+                style={{ fontSize: 20 }}
+              >
+                {emoji}
+              </IonFabButton>
+            ))}
           </IonItem>
           <IonItem lines="none">
             <IonLabel>

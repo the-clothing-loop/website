@@ -2,27 +2,26 @@ import {
   IonButton,
   IonButtons,
   IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
   IonCol,
   IonContent,
+  IonDatetime,
+  IonDatetimeButton,
   IonGrid,
   IonHeader,
   IonIcon,
   IonItem,
+  IonItemDivider,
   IonLabel,
   IonList,
   IonModal,
   IonPage,
-  IonPopover,
   IonRadio,
   IonRadioGroup,
   IonRefresher,
   IonRefresherContent,
   IonRouterLink,
   IonRow,
+  IonSearchbar,
   IonText,
   IonTitle,
   IonToolbar,
@@ -33,11 +32,14 @@ import {
   chevronForwardOutline,
   closeOutline,
   ellipsisHorizontal,
-  person,
+  pauseCircle,
   personCircleOutline,
-  trashBinOutline,
 } from "ionicons/icons";
-import type { IonModalCustomEvent } from "@ionic/core/components";
+import type {
+  DatetimeChangeEventDetail,
+  IonDatetimeCustomEvent,
+  IonModalCustomEvent,
+} from "@ionic/core/components";
 import {
   useContext,
   useRef,
@@ -48,7 +50,7 @@ import {
   useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Bag, bagPut, bagRemove, UID } from "../api";
+import { Bag, bagPut, bagRemove, UID, User } from "../api";
 import CreateBag from "../components/CreateUpdateBag";
 import { StoreContext } from "../Store";
 import dayjs from "../dayjs";
@@ -58,6 +60,7 @@ import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-com
 import IsPrivate from "../utils/is_private";
 
 const MIN_BAG_LIST = 9;
+const MIN_USERS_FOR_SEARCH = 15;
 
 export default function BagsList() {
   const { t } = useTranslation();
@@ -133,14 +136,14 @@ export default function BagsList() {
       await setChain(chain, authUser!.uid);
     };
     presentAlert({
-      header: "Delete Bag",
-      message: "Are you sure you want to delete bag number " + bagNo + "?",
+      header: t("deleteBag"),
+      message: t("areYouSureYouWantToDeleteBag", { name: bagNo }),
       buttons: [
         {
-          text: "Cancel",
+          text: t("cancel"),
         },
         {
-          text: "Delete",
+          text: t("delete"),
           role: "destructive",
           handler,
         },
@@ -167,7 +170,7 @@ export default function BagsList() {
     sheetModal.current?.present();
   }
   function handleDidDismissSheetModal(
-    e: IonModalCustomEvent<OverlayEventDetail<any>>
+    e: IonModalCustomEvent<OverlayEventDetail<any>>,
   ) {
     e.detail.data;
   }
@@ -199,6 +202,9 @@ export default function BagsList() {
             <IonTitle size="large">{t("whereIsTheBag")}</IonTitle>
           </IonToolbar>
         </IonHeader>
+        <IonText color="medium" className="ion-margin">
+          {t("clickOnBagToChangeHolder")}
+        </IonText>
         <div>
           <IonRefresher
             slot="fixed"
@@ -216,7 +222,10 @@ export default function BagsList() {
                 if (routeIndex === -1) return null;
                 const bagUpdatedAt = dayjs(bag.updated_at);
                 const isBagTooOld = bagUpdatedAt.isBefore(
-                  dayjs().add(-7, "days")
+                  dayjs().add(-7, "days"),
+                );
+                const isBagNameNumeric = Number.isSafeInteger(
+                  Number.parseInt(bag.number),
                 );
 
                 return (
@@ -253,7 +262,7 @@ export default function BagsList() {
                       <div
                         key="old"
                         style={{
-                          fontSize: 11,
+                          fontSize: 14,
                           display: "block",
                           position: "absolute",
                           top: "5px",
@@ -282,45 +291,42 @@ export default function BagsList() {
                       </div>
                       <div
                         style={{
-                          padding: 20,
-                          paddingBottom: 10,
+                          padding: "20px 10px 10px",
                         }}
+                        onClick={() => handleClickItem(bag.id, bag.user_uid)}
                       >
                         <div
                           className="bagslist-bag-icon"
-                          onClick={() => handleClickItem(bag.id, bag.user_uid)}
+                          style={{
+                            padding: "10px 20px 2px",
+                          }}
                         >
                           <BagSVG color={bag.color} />
                         </div>
                         <div
                           style={{
-                            paddingLeft: 10,
-                            paddingRight: 10,
                             textAlign: "center",
                             fontWeight: "bold",
+                            fontSize: 16,
+                            lineHeight: "22px",
+                            color: "var(--ion-color-dark)",
                           }}
+                          className="ion-text-ellipsis"
                         >
-                          {t("bag") + " " + bag.number}
+                          {(bag.number.length > 7 ? "" : t("bag") + " ") +
+                            bag.number}
                         </div>
                       </div>
-                      <IonRouterLink routerLink={"/address/" + user.uid}>
-                        <IonCardHeader style={{ padding: 10 }}>
-                          <IonCardTitle
-                            className="ion-text-ellipsis"
-                            style={{ fontSize: 14 }}
-                          >
-                            {user.name}
-                          </IonCardTitle>
-                          <IonCardSubtitle
-                            style={{ fontSize: 12, textTransform: "none" }}
-                          >
-                            {t("route") + ": #" + (routeIndex + 1)}
-                            <IonIcon
-                              icon={chevronForwardOutline}
-                              className="ion-icon-text"
-                            ></IonIcon>
-                          </IonCardSubtitle>
-                        </IonCardHeader>
+
+                      <IonRouterLink
+                        routerLink={"/address/" + user.uid}
+                        style={{
+                          padding: "12px 8px",
+                          display: "block",
+                          backgroundColor: "var(--ion-color-light)",
+                        }}
+                      >
+                        <UserLink user={user} routeIndex={routeIndex} />
                       </IonRouterLink>
                     </Card>
                   </IonCol>
@@ -332,14 +338,25 @@ export default function BagsList() {
                 let routeIndex = route.indexOf(user.uid);
                 if (routeIndex === -1) return null;
                 const bagUpdatedAt = dayjs(bag.updated_at);
-                const isBagTooOld = !bagUpdatedAt.isBefore(
-                  dayjs().add(-7, "days")
+                const isBagTooOld = bagUpdatedAt.isBefore(
+                  dayjs().add(-7, "days"),
                 );
                 let isOpen = openCard == bag.id;
                 return (
-                  <IonCol size="12" key={bag.id}>
+                  <IonCol
+                    size="12"
+                    key={bag.id}
+                    style={{
+                      padding: "2px 5px",
+                    }}
+                  >
                     <IonCard className="ion-no-margin">
-                      <IonItem lines="none">
+                      <IonItem
+                        lines="none"
+                        style={{
+                          padding: "3px 0",
+                        }}
+                      >
                         <div
                           slot="start"
                           style={{ width: 24, height: 24 }}
@@ -349,19 +366,25 @@ export default function BagsList() {
                           <BagSVG color={bag.color} />
                         </div>
                         <div
+                          className="ion-text-ellipsis"
                           onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
-                          {t("bag") + " " + bag.number}
+                          <span className="ion-text-bold">
+                            {(bag.number.length > 7 ? "" : t("bag") + " ") +
+                              bag.number}
+                          </span>
                           <span
                             style={{
                               display: "block",
-                              fontSize: 10,
+                              fontSize: 14,
                               marginTop: 3,
                               ...(isBagTooOld
                                 ? {
                                     color: "var(--ion-color-danger)",
                                   }
-                                : {}),
+                                : {
+                                    color: "var(--ion-color-medium)",
+                                  }),
                             }}
                           >
                             {bagUpdatedAt.toDate().toLocaleDateString()}
@@ -405,36 +428,9 @@ export default function BagsList() {
                             color="light"
                             slot="end"
                             routerLink={"/address/" + user.uid}
+                            style={{ width: 115, height: 35 }}
                           >
-                            <span
-                              style={{
-                                display: "flex",
-                                width: 115,
-                                justifyContent: "space-between",
-                              }}
-                            >
-                              <span
-                                style={{ fontSize: 14 }}
-                                className="ion-text-ellipsis"
-                              >
-                                <IonIcon
-                                  icon={person}
-                                  style={{
-                                    width: 12,
-                                    height: 12,
-                                    marginInlineEnd: 4,
-                                  }}
-                                  className="ion-icon-text"
-                                />
-                                {user.name.split(" ")[0]}
-                              </span>
-                              <span
-                                style={{ fontSize: 14 }}
-                                className="ion-text-right"
-                              >
-                                {"#" + (routeIndex + 1)}
-                              </span>
-                            </span>
+                            <UserLink user={user} routeIndex={routeIndex} />
                           </IonButton>
                         )}
                         {isChainAdmin ? (
@@ -499,7 +495,7 @@ function Card({
           setOpen(false);
         }
       },
-    }
+    },
   );
 
   function handleEdit<E>(e: MouseEvent<E>) {
@@ -575,9 +571,11 @@ function SelectUserModal({
 }) {
   const { chain, chainUsers, route, authUser, setChain } =
     useContext(StoreContext);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const [selected, setSelected] = useState(selectedUserUID);
+  const [selectedOverride, setSelected] = useState("");
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const [search, setSearch] = useState("");
   const sortedRoute = useMemo(() => {
     const indexSelected = route.indexOf(selectedUserUID);
     const routeWithIndex = route.map<[string, number]>((r, i) => [r, i]);
@@ -596,9 +594,6 @@ function SelectUserModal({
     }
     return arr;
   }, [selectedUserUID, route, authUser, chainUsers]);
-  useEffect(() => {
-    setSelected(selectedUserUID);
-  }, [selectedUserUID]);
 
   async function submit(userUID: string) {
     console.log("user:", userUID, " bag:", bagID);
@@ -610,16 +605,39 @@ function SelectUserModal({
       user_uid: authUser!.uid,
       holder_uid: userUID,
       bag_id: bagID!,
+      ...(updatedAt === null
+        ? {}
+        : {
+            updated_at: updatedAt.toISOString(),
+          }),
     });
     await setChain(chain, authUser!.uid);
   }
 
+  function handleChangeDatetime(
+    e: IonDatetimeCustomEvent<DatetimeChangeEventDetail>,
+  ) {
+    let datetime = new Date(e.detail.value + "");
+    setUpdatedAt(datetime);
+  }
+
+  function willPresent() {
+    setUpdatedAt(null);
+  }
+
+  function _didDismiss(e: IonModalCustomEvent<OverlayEventDetail<any>>) {
+    setSelected("");
+    if (didDismiss) didDismiss(e);
+  }
+
+  let selected = selectedOverride || selectedUserUID;
   return (
     <IonModal
       ref={modal}
       initialBreakpoint={0.5}
       breakpoints={[0, 0.5, 0.75, 1]}
-      onIonModalDidDismiss={didDismiss}
+      onIonModalDidDismiss={_didDismiss}
+      onIonModalWillPresent={willPresent}
     >
       <IonHeader>
         <IonToolbar>
@@ -638,6 +656,31 @@ function SelectUserModal({
       </IonHeader>
       <IonContent>
         <IonList>
+          <IonItem lines="full">
+            <IonLabel>{t("dateOfDelivery")}</IonLabel>
+            <div slot="end">
+              <IonDatetimeButton datetime="datetime"></IonDatetimeButton>
+              <IonModal keepContentsMounted={true}>
+                <IonDatetime
+                  id="datetime"
+                  presentation="date"
+                  locale={i18n.language}
+                  onIonChange={handleChangeDatetime}
+                ></IonDatetime>
+              </IonModal>
+            </div>
+          </IonItem>
+          {sortedRoute.length > MIN_USERS_FOR_SEARCH ? (
+            <IonItem lines="full" color="light">
+              <IonSearchbar
+                placeholder={t("search")}
+                onIonInput={(e) => setSearch(e.detail.value as string)}
+                onIonClear={() => setSearch("")}
+              />
+            </IonItem>
+          ) : null}
+        </IonList>
+        <IonList>
           <IonRadioGroup
             value={selected}
             onIonChange={(e) => setSelected(e.detail.value)}
@@ -645,21 +688,30 @@ function SelectUserModal({
             {sortedRoute.map(([r, i]) => {
               const user = chainUsers?.find((u) => u.uid === r);
               if (!user) return null;
+              // search
+              let found =
+                search !== "" ? RegExp(search, "i").test(user.name) : true;
+              if (!found) return null;
+
               const isAddressPrivate = IsPrivate(user.address);
               const isSelected = selected === user.uid;
               //   let uc = user.chains.find((u) => u.chain_uid === chain.uid);
               return (
-                <IonItem
-                  lines="full"
-                  key={user.uid}
-                  // color={isSelected ? "primary" : undefined}
-                  // onClick={() => submit(user.uid)}
-                >
+                <IonItem lines="full" key={user.uid}>
                   <span slot="start" className="ion-text-bold">{`#${
                     i + 1
                   }`}</span>
                   <IonLabel>
-                    <h2>
+                    <h2
+                      style={{
+                        fontSize: 18,
+                        ...(isSelected
+                          ? {
+                              fontWeight: 500,
+                            }
+                          : {}),
+                      }}
+                    >
                       {user.name}
                       {user.uid === authUser?.uid ? (
                         <IonIcon
@@ -693,7 +745,7 @@ function BagSVG({ color }: { color: string }) {
           <path d="M0 38h38V0H0v38Z"></path>
         </clipPath>
       </defs>
-      <g clip-path="url(#a)" transform="matrix(1.25 0 0 -1.25 0 47.5)">
+      <g clipPath="url(#a)" transform="matrix(1.25 0 0 -1.25 0 47.5)">
         <path
           fill="#ffac33"
           d="M29 15a1 1 0 0 0-1 1v6c0 6.065-4.037 11-9 11-4.962 0-9-4.935-9-11v-6a1 1 0 1 0-2 0v6c0 7.168 4.935 13 11 13s11-5.832 11-13v-6a1 1 0 0 0-1-1"
@@ -708,5 +760,55 @@ function BagSVG({ color }: { color: string }) {
         ></path>
       </g>
     </svg>
+  );
+}
+
+function UserLink({ user, routeIndex }: { user: User; routeIndex: number }) {
+  const { t } = useTranslation();
+  return (
+    <div
+      className="ion-text-bold"
+      style={{
+        color: "var(--ion-color-medium)",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "baseline",
+        fontSize: 12,
+        width: "100%",
+      }}
+    >
+      {user.paused_until ? (
+        <IonIcon
+          style={{
+            transform: "translateY(1px)",
+            width: 16,
+            height: 16,
+            minWidth: 16,
+            marginInlineEnd: 3,
+          }}
+          icon={pauseCircle}
+        />
+      ) : (
+        <span style={{ marginInlineEnd: 3 }}>{"#" + (routeIndex + 1)}</span>
+      )}
+      <span
+        className="ion-text-ellipsis"
+        style={{
+          fontSize: 14,
+          flexGrow: 1,
+          display: "block",
+          color: user.paused_until
+            ? "var(--ion-color-medium)"
+            : "var(--ion-color-dark)",
+        }}
+      >
+        {user.name}
+      </span>
+      <IonIcon
+        icon={chevronForwardOutline}
+        className="ion-icon-text"
+        style={{ minWidth: 12, width: 12 }}
+      ></IonIcon>
+    </div>
   );
 }

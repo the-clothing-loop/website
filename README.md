@@ -14,7 +14,7 @@ Are you multilingual? Help us translate this website into your local tongue with
 
 https://crowdin.com/project/the-clothing-loop
 
-:netherlands: :de: :fr: :it: :es: :portugal: :sweden: :iran: :united_arab_emirates: :cn:
+:netherlands: :fr: :de: :israel: :it: :jp: :kr: :poland: :portugal: :es: :sweden:
 
 ## Developers getting started
 
@@ -26,6 +26,7 @@ Checkout these readmes for more in-depth documentation:
 
 - Golang Server: [README.md](/server/README.md)
 - React Frontend: [README.md](/frontend/README.md)
+- Ionic App: [README.md](/app/README.md)
 - Ansible Devops: [README.md](/devops/README.md)
 - SQL scripts: [README.md](/server/sql/README.md)
 

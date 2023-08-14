@@ -29,7 +29,7 @@ export default function MessageSubmitted(props: any) {
             className="btn btn-primary ml-4"
             onClick={() => history.push("/faq")}
           >
-            {t("FAQ's")}
+            {t("faq")}
           </button>
         </div>
       </main>

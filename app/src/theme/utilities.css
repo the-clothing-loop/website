@@ -1,5 +1,5 @@
 .ion-text-bold {
-  font-weight: bold;
+  font-weight: bold !important;
 }
 .ion-text-normal {
   font-weight: normal !important;
@@ -44,4 +44,27 @@
   .badge-item-img {
     filter: invert(1);
   }
+}
+
+.fade-enter {
+  opacity: 0;
+  transform: translateY(-3%);
+}
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0%);
+}
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0%);
+}
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(-3%);
+}
+.fade-enter-active,
+.fade-exit-active {
+  transition:
+    opacity 400ms,
+    transform 400ms linear;
 }

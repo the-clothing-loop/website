@@ -53,7 +53,7 @@ func Routes() *gin.Engine {
 
 		// At minute 31.
 		// https://crontab.guru/#31_*_*_*_*
-		Scheduler.Cron("3 3 1 * *").Do(controllers.CronHourly, db)
+		Scheduler.Cron("31 * * * *").Do(controllers.CronHourly, db)
 
 		Scheduler.StartAsync()
 
@@ -129,6 +129,7 @@ func Routes() *gin.Engine {
 	// route
 	v2.GET("/route/order", controllers.RouteOrderGet)
 	v2.POST("/route/order", controllers.RouteOrderSet)
+	v2.GET("/route/optimize", controllers.RouteOptimize)
 
 	// contact
 	v2.POST("/contact/newsletter", controllers.ContactNewsletter)

@@ -1,84 +1,46 @@
 {
-  "list": [
-    {
-      "Title": "Waar zijn de tassen?",
-      "Title 2": "Wat moet je doen als je een tas krijgt?",
-      "Short explanation": "Click the globe icon with magnifying glass below, look for the bag with the right number and add your name in the dropdown menu. Do not forget to also fill in the date!",
-      "Paragraph 1": "This way everyone can see where the bags are and if they are divided equally. If two bags get too close, pass along the first one a bit faster if possible.",
-      "Paragraph 2": "Accidentally have two bags at the same time? Please wait a week before passing along the last one!",
-      "Paragraph 3": "Ps: the order of the bags is by date! This way you can easily see which ones are slacking."
-    },
-    {
-      "Title": "Max 3 days to shop",
-      "Title 2": "What am I allowed to keep?",
-      "Short explanation": "Feel free to keep what suits you! Don't be shy. You can always try something and add it to the next bag when you do not like it!",
-      "Paragraph 1": "Make sure that everyone shares the responsibility for good quality items. Do you see anything that shouldn’t be in the Loop, for example it has stains or holes? Take it out and donate it to a clothing container. This way, it can still be used for someone or something else. If in doubt, ask the person next to you if he/she agrees and decide then.",
-      "Paragraph 2": "And last but not least, set a good example yourself; share some nice photos and encourage others to do the same.",
-      "Paragraph 3": ""
-    },
-    {
-      "Title": "What belongs in the bag?",
-      "Title 2": "Which things can I add to the bag?",
-      "Short explanation": "Please only add clothing that is ready for a new owner. Be mindful of stains, holes, or other obvious signs of wear. (If you discard of it because it looks worn, someone else will probably not take it either. Better bring those items to your local recycling.) If the bag is full, please wait for the next one to add your clothes!",
-      "Paragraph 1": "Sizewise: mixed bags usually work well, as sizes vary per brand and proportions are different as well. But this only works within a certain width. We recommend having a mix of items from size 36 - 42 (Small Medium Large) and starting a new Clothing Loop for plus sizes.",
-      "Paragraph 2": "What not to add to the bag: underwear (unless new with tags), and items that are too bulky. You can try to find a new owner for them through theBulky Items section in this app!",
-      "Paragraph 3": "There are no guarantees that you will find something that you like. But finding one dream item is more worth than having 10 items in your wardrobe that you don’t wear. And realize that you can make someone else very very happy and that this is part of the Clothing Loop mentality!"
-    },
-    {
-      "Title": "Who to give the bag to next?",
-      "Title 2": "Wie geef ik de tas nadien?",
-      "Short explanation": "Click the icon of a house below",
-      "Paragraph 1": "The address list is in the right order, check who's name is below your name in the list!",
-      "Paragraph 2": "New members will be added to the Loop every (few) week(s), so please always dubbelcheck who to bring it to next!",
-      "Paragraph 3": "*Some Loops have a 'ghostrider' bag, that one travels the other way around. To switch things up and also have other people (and styles!) before you."
-    },
-    {
-      "Title": "What to do with bulky items?",
-      "Title 2": "What to do with bulky items like a winter coat or some chunky boots?",
-      "Short explanation": "Click 'Bulky items' below and add the item. People can react to it and pick it up.",
-      "Paragraph 1": "Please move the slider if the item is gone, then we can delete it from the app!",
-      "Paragraph 2": "",
-      "Paragraph 3": ""
-    },
-    {
-      "Title": "Afwezig of bezet?",
-      "Title 2": "Sla een tas over!",
-      "Short explanation": "Ik ben te druk om deze week te winkelen",
-      "Paragraph 1": "Pleas notify the person before you on the address list via a private message, that you will be away. He/she/they can then bring the bag to the next person on the list to keep things moving!",
-      "Paragraph 2": "",
-      "Paragraph 3": ""
-    },
-    {
-      "Title": "Iets gevonden dat je leuk vindt?",
-      "Title 2": "Het delen van foto's is even leuk als het delen van kleding!",
-      "Short explanation": "Snap a quick selfie to show the group you found something nice! It  is so motivating to see things actually find loving new homes! You can use whatsapp or the chat area below, though the latter does not have notifications.",
-      "Paragraph 1": "Sometimes it is also nice to share a picture of an item you donate, espacially if it has a wonderful memory attached to it.",
-      "Paragraph 2": "Ps: keep it positive and on topic!",
-      "Paragraph 3": ""
-    },
-    {
-      "Title": "Privacy",
-      "Title 2": "Hoe gaan we om met persoonlijke gegevens?",
-      "Short explanation": "Contact details, pictures and other data remain within the group and cannot be shared without permission. If a member leaves the Loop, their address will be permanently deleted.",
-      "Paragraph 1": "Only people joining this loop can see this information. If you quit a loop, please delete the app from your phone",
-      "Paragraph 2": "",
-      "Paragraph 3": ""
-    },
-    {
-      "Title": "Nieuwe leden",
-      "Title 2": "Ik ken iemand die graag zou willen meedoen!",
-      "Short explanation": "The more the merrier! The Clothing Loop is an initiative open to everyone. People can sign up though www.clothingloop.org",
-      "Paragraph 1": "(Please do not share the link to this app directly to avoid chaos!)",
-      "Paragraph 2": "",
-      "Paragraph 3": ""
-    },
-    {
-      "Title": "Feedback en suggesties",
-      "Title 2": "We'd love to hear from you!  Let you local host know via phone or email, or contact us directly via hello@clothingloop.org",
-      "Short explanation": "",
-      "Paragraph 1": "",
-      "Paragraph 2": "",
-      "Paragraph 3": ""
-    }
-  ]
+  "howDoesItWork": {
+    "title": "Hoe werkt het?",
+    "content": "De Clothing Loop is een initiatief waarmee mensen gemakkelijk kleding kunnen ruilen met anderen in hun eigen buurt. Het is leuk, gratis en duurzaam! Het idee is simpel: (grote) tassen gevuld met kleding reizen langs een route; langs alle deelnemers in een bepaalde stad of wijk.\n\nLaat je de tas thuisbezorgen door de persoon voor je in de Loop. Het is dan tijd om te winkelen! Neem items die je leuk vindt en leg iets terug dat nog in goede staat is en klaar is voor een nieuwe eigenaar. Deel een foto met je laatste vondst in het bijbehorende communicatiekanaal. Zo leuk om te zien waar spullen terecht komen! Vervolgens breng je de tas naar de volgende persoon op de lijst."
+  },
+  "whereAreTheBags": {
+    "title": "Waar zijn de tassen?",
+    "content": "Onderin dit scherm zie je een icoontje van een tas, als je daarop klikt kun je aangeven dat je een tas hebt ontvangen. Klik op de tas als je hem hebt ontvangen en scroll in de lijst met namen naar beneden tot je jouw naam tegenkomt. Geef ook de datum aan waarop je de tas ontvangen hebt. Op deze manier kunnen we ervoor zorgen dat we weten waar de tassen zijn en of ze nog goed verdeeld zijn over de route. Een overzicht van de verdeling van de tassen kan je zien bij de Route.\n\nWen jezelf dus aan dit bij elke tas aam te geven dat je hem hebt ontvangen! Heb je per ongeluk twee tassen tegelijk in huis? Houd dan eentje een week langer bij je thuis of breng hem naar een plek in de route waar er weinig tassen zijn (doe dit wel in overleg met de host).\n\nEr rouleren verschillende tassen in onze Loop, ongeveer 1 tas per 6 adressen. Als iedereen hem op tijd doorgeeft heb je dus elke 3-4 weken een tas thuis."
+  },
+  "whoDoIGiveTheBagTo": {
+    "title": "Aan wie geef ik de tas door?",
+    "content": "Onderin het scherm zie je een huis icoontje. In dit scherm kan je de volgorde van de Loop zien. De tas gaat naar diegene na jouw in de lijst. Als je op hun naam klikt, kan je diegenes adres en contactgegevens vinden.  Je kan als deelnemer alleen de gegevens zien van 2 deelnemers voor jou en 2 deelnemers na jou. Om de tas naar de volgende te brengen zoek je degene die na jou op de lijst staat op en klik op de naam om het adres te zien waar de tas heen moet. Dan kan jij contact met diegene opnemen en afspreken wanneer je de tas brengt.\n\nHou er wel rekening mee dat de route kan veranderen in de loop van de tijd. Dus check altijd even de app voordat je de tas doorgeeft. Op deze manier zorgen we ervoor dat nieuwe mensen aan de loop route kunnen worden toegevoegd. En iedereen ook weer eens iemand anders ontmoet.\n\nAls je na 2 dagen nog geen reactie op je afspraakverzoek hebt en geen bericht hebt ontvangen dat degene na jou een rondje overslaat, neem dan contact op met de volgende persoon op de lijst. Zo gaat het doorgeefsysteem niet opstropen. Als iemand langere tijd niet reageert, geef dit dan door aan de host.\n\n\n\n* De zogenoemde spooktassen reizen tegen de richting in."
+  },
+  "whatCanYouTakeFromTheBag": {
+    "title": "Wat mag wel je uit de tas halen?",
+    "content": "Voel je vrij om uit de tas te halen wat je mooi vindt en waarvan je gebruik gaat maken. Wees niet te bescheiden! De ervaring leert dat ze sneller te vol dan te leeg raken.\nJe hoeft dus niet hetzelfde aantal kledingstukken erin te doen als je eruit haalt.\n\nAls je even geen aanvulling hebt, geen probleem en zeker geen reden om te stoppen met je deelname. Beter een halve tas parels dan een volle tas met voor de helft parels en de helft meuk. Dat haalt het niveau alleen maar omlaag!\n\nOok als je nog kleding in de tas ziet zitten, die je eerder zelf in de tas hebt gedaan, haal die er dan weer uit. Op deze manier zorgen we ervoor dat kleding niet rond blijft gaan in de ketting.\n\nAls je kleding in de tas ziet zitten waarvan je denkt dat het niet voldoet aan de criteria van heel, schoon en niet verwassen, haal dit er ook uit en breng het naar de textielcontainer (hier kan dan nog isolatiemateriaal van worden gemaakt). Zo houden we samen het niveau van de tas hoog! Twijfel je? Overleg dan met degene na je op de lijst."
+  },
+  "whatCantYouTakeFromTheBag": {
+    "title": "Wat mag je niet in de tas stoppen?",
+    "content": "Stop alleen hele, schone en niet verwassen kleding terug. Wees écht kritisch! Het is een goede graadmeter om te bedenken of je het zelf leuk zou vinden om zoiets in de tas te vinden. Oude schoenen, sokken, ondergoed en panties kunnen niet in de tas.\n\nAls de tas vol zit, doe er dan even geen extra kleding in en wacht op de volgende tas. Kijk ook naar het seizoen, dikke wollen truien in donkere kleuren in de zomer wil niemand hebben op dat moment. En je hoeft ook niet alles in 1 keer erin te doen. Het is leuk om het te verspreiden over de tassen.\n\nSieraden kunnen in een apart zakje of doosje gedaan worden. En ook accessoires kunnen worden toegevoegd.\n\nKledingstukken als winterjassen (omdat ze zo groot zijn) of hoeden (die kunnen indeuken) kan je plaatsen bij \"Overig Aanbod\". Deze items zijn niet geschikt voor de tas, maar kunnen nog wel geruild worden.\n\nDaarnaast is het belangrijk om alleen kleding in de tas te stoppen die in jouw loop wordt geruild (bijvoorbeeld geen kinderkleding in een volwassenkledingtas). Wat er geruild wordt in een tas, verschilt per Loop. Twijfel je, neem dan contact op met jouw host."
+  },
+  "whatToDoWithBulkyItems": {
+    "title": "Wat doe ik met grote items?",
+    "content": "Past iets niet in de tas? Heb je een item dat te volumineus is voor de tas? Klik op 'Overig Aanbod', met het doos icoontje, onderin het scherm en plaats een foto van je item. Andere deelnemers kunnen hierop reageren en contact met je opnemen om het direct bij je op te halen.\n\nAls er meerdere gegadigden zijn kan je het item verloten, verdelen of aan de eerst reagerende geven.\nWanneer de spullen met elkaar uitgewisseld zijn, verwijder dan de foto. Zo houden wij samen een beschikbaar overzicht. "
+  },
+  "awayOrBusy": {
+    "title": "Op vakantie of te druk?",
+    "content": "Zet jezelf dan even op Pauze. Dit kan je doen bij Info. Geef daarin aan hoeveel weken je op Pauze wilt.\n\nHeb je wel weer tijd om te ruilen? Dan kan je zelf  weer onpauzeren (Unpause). Op deze manier kan je voorganger, jou overslaan en contact opnemen met de volgende persoon in de Loop."
+  },
+  "foundSomethingYouLike": {
+    "title": "Foto's delen is leuk!",
+    "content": "Show je vondsten! Dit is leuk om te zien, zeker voor de vorige eigenaar van het stuk! Ook is het af en toe leuk te delen welke parels je zelf in de tassen stopt. Deel de vondsten die jij hebt gevonden in de groepschat van de tas (dit kan een WhatsApp, Signal, FaceBook, etc. groep zijn). _Een host kan hier de link plakken naar de groep, als ze dat willen.\n\nHeb jij een hele mooie vondst met een goed verhaal, dan willen wij dat graag horen. Stuur dan een mailtje naar hello@clothingloop.org en misschien delen wij dit verhaal dan verder op onze socials. Dit inspireert andere weer om ook kleding te gaan ruilen."
+  },
+  "newMembers": {
+    "title": "Ik ken iemand die ook mee wil doen!",
+    "content": "Ken je iemand die mee wil doen. The more the merrier!\n\nIedereen is welkom om mee te doen aan de Clothing Loop. We selecteren niet op wie je bent, alleen welke kleding jij wilt dragen. Vraag de toekomstige ruiler om zich in te schrijven op www.clothingloop.org. Als diegene meewilt doen met jouw Loop, dan kan je ook een deelbare link specifiek naar deze Loop vinden bij Info. "
+  },
+  "privacy": {
+    "title": "Privacy",
+    "content": "Hoe gaan we met de contactgegevens en gedeelde foto's om?\n\nAlle contactgegevens, foto's en andere informatie zijn alleen bestemd voor gebruik binnen de groep. Zij mogen niet zonder toestemming gedeeld worden met derden.  Door deel te nemen aan de Clothing Loop stem je in om je contactgegevens en andere info binnen de groep te delen. Alleen mensen die zijn toegeltaten tot de Loop hebben toegang tot de app.  Nieuwe mensen kunnen alleen meedoen als ze door de beheerder worden toegevoegd. Als je niet meer deelneemt, verlaat dan de Loop (en geef dit ook door aan de host). Het uitgebreidde privacy regelement kan je vinden in de app bij Info of ga naar onze website www.clothingloop.org"
+  },
+  "feedback": {
+    "title": "Feedback en suggesties",
+    "content": "Heb je een idee of suggestie voor jouw lokale Loop? Stuur dan de host een berichtje.\n\nHeb je feedback of een suggestie voor de algemene website en organisatie, stuur dan een email naar hello@clothingloop.org . Wij horen graag van jou, want samen maken wij dit project.\n\nThrift, Swap, Borrow and gebruik wat je al hebt!"
+  }
 }

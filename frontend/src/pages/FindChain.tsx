@@ -13,7 +13,7 @@ import type * as GeoJSONTypes from "geojson";
 import mapboxgl from "mapbox-gl";
 
 // Project resources
-import { AuthContext } from "../providers/AuthProvider";
+import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { Chain, UID, User } from "../api/types";
 import { chainAddUser, chainGetAll } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
@@ -112,6 +112,7 @@ export default function FindChain({ location }: { location: Location }) {
   const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
   const [focusedChain, setFocusedChain] = useState<Chain | null>(null);
   const [visibleChains, setVisibleChains] = useState<Chain[]>([]);
+  const [chainDetailsOpen, setChainDetailsOpen] = useState(false);
 
   const mapRef = useRef<any>();
 
@@ -272,9 +273,20 @@ export default function FindChain({ location }: { location: Location }) {
               return Math.min(aDistance, bDistance);
             });
             let _focusedChain = _sortedChains[0];
+
+            e.clickOnLayer = true;
+            setChainDetailsOpen(true);
+
             handleSetFocusedChain(_focusedChain, _map);
           }
         });
+
+        _map.on("click", (e) => {
+          if (!e.clickOnLayer) {
+            setChainDetailsOpen(false);
+          }
+        });
+
         // zoom during click on a cluster
         _map.on("click", "chain-cluster", (e) => {
           console.log("cluster click event", e);
@@ -517,6 +529,13 @@ export default function FindChain({ location }: { location: Location }) {
     addToastError("Access tokens not configured", 500);
     return <div></div>;
   }
+  const selectedFocusedChains = visibleChains
+    .filter((c) => c.uid !== focusedChain?.uid)
+    .map((chain) => {
+      const selected = !!selectedChains.find((c) => chain.uid === c.uid);
+      return { selected, chain };
+    })
+    .sort((a, b) => (a.selected === b.selected ? 0 : b.selected ? 1 : -1));
 
   return (
     <>
@@ -574,8 +593,55 @@ export default function FindChain({ location }: { location: Location }) {
               </button>
             </div>
           </div>
+          <dialog
+            open={chainDetailsOpen}
+            className="sm:invisible absoluete w-72 align-center overflow-y-auto overflow-x-visible inset-0 z-50 justify-center items-center p-0 open:flex bg-white/80"
+            tabIndex={-1}
+          >
+            <form className="w-full z-10">
+              {focusedChain ? (
+                <FocusedChain
+                  chain={focusedChain}
+                  authUser={authUser}
+                  onClickJoin={(e) => handleClickJoin(e, focusedChain)}
+                  onClickViewChain={(e) =>
+                    handleClickViewChain(e, focusedChain.uid)
+                  }
+                />
+              ) : null}
+              <div>
+                {selectedFocusedChains.filter(({ selected }) => selected)
+                  .length ? (
+                  <div className="text-xs bg-grey/20 p-1 text-center font-semibold">
+                    {t("selectLoop")}
+                  </div>
+                ) : null}
+                {selectedFocusedChains.map(({ chain, selected }) => {
+                  return (
+                    <button
+                      className={`p-1.5 block w-full border-t border-b border-grey/10 last:border-none text-secondary text-ellipsis overflow-hidden whitespace-nowrap ${
+                        selected ? "font-semibold" : "hidden md:block"
+                      }`}
+                      key={chain.uid}
+                      onClick={() => handleSetFocusedChain(chain)}
+                    >
+                      {chain.name}
+                    </button>
+                  );
+                })}
+              </div>
+              <button
+                key="close"
+                type="reset"
+                className="btn btn-sm btn-ghost float-right mr-4 mb-4"
+                onClick={() => setChainDetailsOpen(false)}
+              >
+                {t("close")}
+              </button>
+            </form>
+          </dialog>
           <div
-            className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
+            className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible invisible sm:visible ${
               visibleChains.length ? "" : "hidden"
             }`}
           >
@@ -603,36 +669,19 @@ export default function FindChain({ location }: { location: Location }) {
             ) : null}
 
             <div className="glass shadow-md">
-              {visibleChains
-                .filter((c) => c.uid !== focusedChain?.uid)
-                .map((chain) => {
-                  const selected = !!selectedChains.find(
-                    (c) => chain.uid === c.uid
-                  );
-                  return { selected, chain };
-                })
-                .sort((a, b) =>
-                  a.selected === b.selected ? 0 : b.selected ? 1 : -1
-                )
-                .map(({ chain, selected }) => {
-                  return (
-                    <button
-                      className={`p-1.5 block w-full border-b border-grey/10 last:border-none ${
-                        selected ? "bg-white" : "hidden md:block"
-                      }`}
-                      key={chain.uid}
-                      onClick={() => handleSetFocusedChain(chain)}
-                    >
-                      <h1
-                        className={`text-secondary text-ellipsis overflow-hidden w-full whitespace-nowrap ${
-                          selected ? "font-semibold" : ""
-                        }`}
-                      >
-                        {chain.name}
-                      </h1>
-                    </button>
-                  );
-                })}
+              {selectedFocusedChains.map(({ chain, selected }) => {
+                return (
+                  <button
+                    className={`p-1.5 block w-full border-b border-grey/10 last:border-none text-secondary text-ellipsis overflow-hidden whitespace-nowrap ${
+                      selected ? "font-semibold bg-white" : "hidden md:block"
+                    }`}
+                    key={chain.uid}
+                    onClick={() => handleSetFocusedChain(chain)}
+                  >
+                    {chain.name}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -664,7 +713,7 @@ function FocusedChain({
   onClickViewChain,
 }: {
   chain: Chain;
-  authUser: User | null;
+  authUser: AuthProps["authUser"];
   onClickJoin: MouseEventHandler<HTMLButtonElement>;
   onClickViewChain: MouseEventHandler<HTMLButtonElement>;
 }) {
@@ -672,8 +721,8 @@ function FocusedChain({
   const userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
 
   return (
-    <div className="p-4 w-full mb-1 bg-white shadow-md" key={chain.uid}>
-      <div className="mb-2">
+    <div className="p-4 w-full mb-1 sm:bg-white sm:shadow-md" key={chain.uid}>
+      <div className="sm:mb-2">
         <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
           {chain.name}
         </h1>

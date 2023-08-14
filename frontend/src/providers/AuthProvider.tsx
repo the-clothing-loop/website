@@ -16,7 +16,13 @@ export enum UserRefreshState {
 }
 
 export type AuthProps = {
-  authUser: User | null;
+  /**
+   * Types define the state of the login process
+   * - User: Is logged in
+   * - null: Is logged out
+   * - undefined: Is not finished loading
+   */
+  authUser: User | null | undefined;
   // ? Should loading only be used for authentication or also for login & logout?
   loading: boolean;
   authLoginValidate: (apiKey: string) => Promise<undefined | User>;
@@ -25,7 +31,7 @@ export type AuthProps = {
 };
 
 export const AuthContext = createContext<AuthProps>({
-  authUser: null,
+  authUser: undefined,
   loading: true,
   authLoginValidate: (apiKey) => Promise.reject(),
   authLogout: () => Promise.reject(),
@@ -40,23 +46,23 @@ const cookieOptions: Cookies.CookieAttributes = {
 };
 
 export function AuthProvider({ children }: PropsWithChildren<{}>) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthProps["authUser"]>(undefined);
   const [loading, setLoading] = useState(true);
   function authLoginValidate(apiKey: string) {
     setLoading(true);
     return (async () => {
-      let user: User | undefined;
+      let _user: User | null | undefined = undefined;
       try {
-        user = (await apiLogin(apiKey)).data.user;
-        setUser(user);
-
-        Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
+        _user = (await apiLogin(apiKey)).data.user;
+        Cookies.set(KEY_USER_UID, _user.uid, cookieOptions);
       } catch (err) {
+        setUser(null);
         setLoading(false);
         throw err;
       }
+      setUser(_user);
       setLoading(false);
-      return user;
+      return _user;
     })();
   }
   function authLogout() {
@@ -70,7 +76,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
   }
   function authUserRefresh() {
     setLoading(true);
-    console.log("trying to login");
+    console.info("trying to login");
     return (async () => {
       let oldUserUID = getOldStorageUserUID();
       if (oldUserUID) {
@@ -93,12 +99,14 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
           await authLogout().catch((err) => {
             console.error("force logout failed:", err);
           });
-          console.log("force logout");
+          console.info("force logout");
           return UserRefreshState.ForceLoggedOut;
         }
         console.log("logged in");
         return UserRefreshState.LoggedIn;
       }
+
+      setUser(null);
 
       console.log("never logged in");
       return UserRefreshState.NeverLoggedIn;

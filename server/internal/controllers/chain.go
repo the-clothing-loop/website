@@ -11,10 +11,10 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	"github.com/the-clothing-loop/website/server/pkg/tsp"
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
-	"gopkg.in/guregu/null.v3/zero"
 )
 
 const (
@@ -95,6 +95,7 @@ func ChainGet(c *gin.Context) {
 		ChainUID  string `form:"chain_uid" binding:"required"`
 		AddRules  bool   `form:"add_rules" binding:"omitempty"`
 		AddTotals bool   `form:"add_totals" binding:"omitempty"`
+		AddTheme  bool   `form:"add_theme" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -124,6 +125,9 @@ func ChainGet(c *gin.Context) {
 
 	if query.AddRules {
 		body["rules_override"] = chain.RulesOverride
+	}
+	if query.AddTheme {
+		body["theme"] = chain.Theme
 	}
 	if query.AddTotals {
 		result := struct {
@@ -242,6 +246,7 @@ func ChainUpdate(c *gin.Context) {
 		RulesOverride    *string   `json:"rules_override,omitempty"`
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
+		Theme            *string   `json:"theme,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -305,7 +310,9 @@ func ChainUpdate(c *gin.Context) {
 	if body.OpenToNewMembers != nil {
 		valuesToUpdate["open_to_new_members"] = *(body.OpenToNewMembers)
 	}
-
+	if body.Theme != nil {
+		valuesToUpdate["theme"] = *(body.Theme)
+	}
 	err := db.Model(chain).Updates(valuesToUpdate).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to update loop values: %v", err)
@@ -340,14 +347,8 @@ func ChainAddUser(c *gin.Context) {
 		c.String(http.StatusConflict, "Loop is not open to new members")
 		return
 	}
-
-	user := models.User{}
-	db.Raw(`
-SELECT * FROM users
-WHERE uid = ? AND is_email_verified = TRUE
-LIMIT 1
-	`, body.UserUID).Scan(&user)
-	if user.ID == 0 {
+	user, err := models.UserGetByUID(db, body.UserUID, true)
+	if err != nil {
 		c.String(http.StatusBadRequest, models.ErrUserNotFound.Error())
 		return
 	}
@@ -375,21 +376,12 @@ LIMIT 1
 		}
 
 		// find admin users related to the chain to email
-		results := []struct {
-			Name  string
-			Email zero.String
-			Chain string
-		}{}
-		db.Raw(`
-SELECT users.name AS name, users.email AS email, chains.name AS chain
-FROM user_chains AS uc
-LEFT JOIN users ON uc.user_id = users.id 
-LEFT JOIN chains ON chains.id = uc.chain_id
-WHERE uc.chain_id = ?
-	AND uc.is_chain_admin = TRUE
-	AND users.is_email_verified = TRUE
-`, chain.ID).Scan(&results)
-
+		results, err := models.UserGetAdminsByChain(db, chain.ID)
+		if err != nil {
+			goscope.Log.Errorf("Error retrieving chain admins: %s", err)
+			c.String(http.StatusInternalServerError, "No admins exist for this loop")
+			return
+		}
 		if len(results) == 0 {
 			goscope.Log.Errorf("Empty chain that is still public: ChainID: %d", chain.ID)
 			c.String(http.StatusInternalServerError, "No admins exist for this loop")
@@ -402,11 +394,12 @@ WHERE uc.chain_id = ?
 					c,
 					result.Email.String,
 					result.Name,
-					result.Chain,
+					chain.Name,
 					user.Name,
 					user.Email.String,
 					user.PhoneNumber,
 					user.Address,
+					user.Sizes,
 				)
 			}
 		}
@@ -473,6 +466,11 @@ UPDATE user_chains
 SET is_approved = TRUE, created_at = NOW()
 WHERE user_id = ? AND chain_id = ?
 	`, user.ID, chain.ID)
+
+	// Given a ChainID and the UID of the new user returns the list of UserUIDs of the chain considering the addition of the new user
+	cities := retrieveChainUsersAsTspCities(db, chain.ID)
+	newRoute, _ := tsp.RunAddOptimalOrderNewCity[string](cities, user.UID)
+	chain.SetRouteOrderByUserUIDs(db, newRoute) // update the route order
 
 	if user.Email.Valid {
 		views.EmailAnAdminApprovedYourJoinRequest(c, user.Name, user.Email.String, chain.Name)
