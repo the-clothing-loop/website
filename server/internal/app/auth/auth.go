@@ -122,15 +122,12 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 	}
 
 	// get user
-	exist, user, err := models.UserGetByUID(db, userUID, false)
-	if err == nil && user.ID != 0 {
+	user, err := models.UserGetByUID(db, userUID, false)
+	if err == nil {
 		err = user.AddUserChainsToObject(db)
 	}
 	if err != nil {
 		goscope.Log.Errorf("%v", err)
-	}
-
-	if !exist {
 		c.String(http.StatusBadRequest, "user UID must be set if chain UID is set")
 		return false, nil, nil, nil
 	}

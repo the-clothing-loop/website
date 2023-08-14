@@ -13,7 +13,6 @@ type testData struct {
 	testName      string
 	email         string
 	user          *models.User
-	expectedExist bool
 	expectedError error
 }
 
@@ -25,14 +24,12 @@ func TestUsersService(t *testing.T) {
 			testName:      "User exist",
 			email:         expectedUserExist.Email.String,
 			user:          expectedUserExist,
-			expectedExist: true,
 			expectedError: nil,
 		},
 		{
 			testName:      "User not exist",
 			email:         "nonexistent@example.com",
 			user:          &models.User{UID: "nonExistentUID"},
-			expectedExist: false,
 			expectedError: errors.New("record not found"),
 		},
 	}
@@ -42,18 +39,18 @@ func TestUsersService(t *testing.T) {
 			testName:      "It has error because uid is empty",
 			email:         "",
 			user:          &models.User{UID: ""},
-			expectedExist: false,
-			expectedError: errors.New("userUID is mandatory"),
+			expectedError: errors.New("record not found"),
 		})
 
 		for _, test := range testsUID {
 			t.Run(test.testName, func(t *testing.T) {
-				exist, actualUser, err := models.UserGetByUID(db, test.user.UID, true)
-				assert.Equal(t, test.expectedExist, exist)
+				actualUser, err := models.UserGetByUID(db, test.user.UID, true)
 				assert.Equal(t, test.expectedError, err)
 
-				if test.expectedExist && test.expectedError == nil {
+				if test.expectedError == nil {
 					assert.Equal(t, test.user.ID, actualUser.ID)
+				} else {
+					assert.Nil(t, actualUser)
 				}
 
 			})
@@ -65,18 +62,18 @@ func TestUsersService(t *testing.T) {
 			testName:      "It has error because email is empty",
 			email:         "",
 			user:          &models.User{UID: ""},
-			expectedExist: false,
-			expectedError: errors.New("email is mandatory"),
+			expectedError: errors.New("Email is required"),
 		})
 
 		for _, test := range testsEmail {
 			t.Run(test.testName, func(t *testing.T) {
-				exist, actualUser, err := models.UserGetByEmail(db, test.email)
-				assert.Equal(t, test.expectedExist, exist)
+				actualUser, err := models.UserGetByEmail(db, test.email)
 				assert.Equal(t, test.expectedError, err)
 
-				if test.expectedExist && test.expectedError == nil {
+				if test.expectedError == nil {
 					assert.Equal(t, test.user.ID, actualUser.ID)
+				} else {
+					assert.Nil(t, actualUser)
 				}
 			})
 		}

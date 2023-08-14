@@ -347,9 +347,8 @@ func ChainAddUser(c *gin.Context) {
 		c.String(http.StatusConflict, "Loop is not open to new members")
 		return
 	}
-	exist, user, _ := models.UserGetByUID(db, body.UserUID, true)
-
-	if !exist {
+	user, err := models.UserGetByUID(db, body.UserUID, true)
+	if err != nil {
 		c.String(http.StatusBadRequest, models.ErrUserNotFound.Error())
 		return
 	}
