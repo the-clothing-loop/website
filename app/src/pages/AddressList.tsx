@@ -70,22 +70,11 @@ export default function AddressList() {
                 key={user.uid}
                 color={isUserPaused ? "light" : undefined}
               >
-                <IonText
-                  className="ion-text-ellipsis"
-                  style={{
-                    marginTop: "6px",
-                    marginBottom: "6px",
-                  }}
-                >
+                <IonText className="ion-text-ellipsis tw-my-1.5">
                   <h5
-                    className="ion-no-margin"
-                    style={
-                      isUserPaused
-                        ? {
-                            color: "var(--ion-color-medium)",
-                          }
-                        : {}
-                    }
+                    className={`ion-no-margin ${
+                      isUserPaused ? "tw-text-medium" : ""
+                    }`}
                   >
                     {user.name}
 
@@ -93,33 +82,17 @@ export default function AddressList() {
                       <IonIcon
                         icon={personCircleOutline}
                         color="medium"
-                        style={{
-                          width: 18,
-                          height: 18,
-                          margin: 0,
-                          marginLeft: 5,
-                          verticalAlign: "text-top",
-                        }}
+                        className="tw-w-[18px] tw-h-[18px] tw-m-0 tw-ml-[5px] tw-align-text-top"
                       />
                     ) : isUserHost ? (
                       <IonIcon
                         icon={shield}
                         color="medium"
-                        style={{
-                          width: 16,
-                          height: 16,
-                          margin: 0,
-                          marginLeft: 5,
-                          verticalAlign: "text-top",
-                        }}
+                        className="tw-w-4 tw-h-4 tw-m-0 tw-ml-[5px] tw-align-text-top"
                       />
                     ) : null}
                   </h5>
-                  <span
-                    style={{
-                      opacity: 0.6,
-                    }}
-                  >
+                  <span className="tw-opacity-60">
                     {isUserPaused ? (
                       <small>{t("paused")}</small>
                     ) : isAddressPrivate ? (
@@ -132,22 +105,13 @@ export default function AddressList() {
                 <IonText
                   slot="start"
                   color="medium"
-                  className="ion-text-bold"
-                  style={{
-                    width: 30,
-                    textWrap: "nowrap",
-                  }}
+                  className="ion-text-bold tw-w-[30px] tw-whitespace-nowrap"
                 >
                   {isUserPaused ? (
                     <IonIcon
                       icon={pauseCircleSharp}
                       color="medium"
-                      style={{
-                        width: 24,
-                        height: 24,
-                        margin: 0,
-                        verticalAlign: "text-top",
-                      }}
+                      className="tw-w-6 tw-h-6 tw-m-0 tw-align-text-top "
                     />
                   ) : (
                     <span>{"#" + (i + 1)}</span>
@@ -156,22 +120,19 @@ export default function AddressList() {
                 <div
                   slot="end"
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 40,
-                    paddingBottom: userBags.length < 4 ? 20 : 0,
                     width:
                       userBags.length < 4
                         ? 0
                         : 20 * Math.floor(userBags.length / 2),
-                    flexWrap: "wrap-reverse",
-                    alignItems: "flex-end",
+                    paddingBottom: userBags.length < 4 ? 20 : 0,
                   }}
+                  className="tw-flex tw-flex-col tw-h-10 tw-flex-wrap-reverse tw-items-end"
                 >
                   {userBags.map((b) => (
                     <IonIcon
                       icon={bagHandle}
-                      style={{ color: b.color, margin: 2 }}
+                      style={{ color: b.color }}
+                      className="tw-m-0.5"
                       key={b.id}
                     />
                   ))}

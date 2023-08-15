@@ -62,7 +62,6 @@ import Theme from "./pages/Theme";
 import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
 import Loading from "./pages/Loading";
-import ToDo from "./pages/ToDo";
 import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -231,7 +230,6 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
           path="/settings/open-source"
           component={OpenSource}
         ></Route>
-        <Route exact path="/todo" component={ToDo}></Route>
       </IonRouterOutlet>
       <IonTabBar slot="bottom" onIonTabsWillChange={handleTabsWillChange}>
         <IonTabButton tab="help" href="/help">
@@ -245,17 +243,7 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
         <IonTabButton tab="bags" href="/bags">
           <IonIcon aria-hidden="true" icon={bagHandleOutline} />
           {hasOldBag ? (
-            <div
-              style={{
-                backgroundColor: "var(--ion-color-danger)",
-                borderRadius: "100%",
-                width: "10px",
-                height: "10px",
-                position: "absolute",
-                top: "3px",
-                left: "calc(50% + 10px)",
-              }}
-            ></div>
+            <div className="tw-bg-danger tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)]"></div>
           ) : null}
           <IonLabel>{t("bags")}</IonLabel>
         </IonTabButton>

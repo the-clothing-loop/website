@@ -69,9 +69,7 @@ export default function HelpItem({
       </IonHeader>
       <IonContent className="ion-padding">
         <IonText>
-          <h1 style={{ marginTop: 0, fontSize: 30, fontWeight: "bold" }}>
-            {item.title}
-          </h1>
+          <h1 className="tw-mt-0 tw-text-[30px] tw-font-bold">{item.title}</h1>
           {item.content.split("\n").map((s, i) => (
             <p key={i}>{s}</p>
           ))}
