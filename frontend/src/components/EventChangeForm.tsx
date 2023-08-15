@@ -228,9 +228,9 @@ export default function EventChangeForm(props: {
             type="date"
             name="date"
             value={sepDate.date.value}
-            onChange={e=>{
+            onChange={(e) => {
               sepDateEnd.date.onChange(e);
-              sepDate.date.onChange(e)
+              sepDate.date.onChange(e);
             }}
           />
         </div>
@@ -238,7 +238,7 @@ export default function EventChangeForm(props: {
           <TextForm
             required
             min={2}
-            label={hasEndDate ? (t("Start time") + "*"):(t("time") + "*")}
+            label={hasEndDate ? t("Start time") + "*" : t("time") + "*"}
             name="time"
             type="time"
             value={sepDate.time.value}
@@ -275,18 +275,18 @@ export default function EventChangeForm(props: {
                 />
                 <span>End time</span>
               </label>
-                {hasEndDate ? (
-                  <TextForm
-                    required
-                    min={2}
-                    label={t("End time") + "*"}
-                    name="time"
-                    type="time"
-                    value={sepDateEnd.time.value}
-                    onChange={sepDateEnd.time.onChange}
-                  />
-                ) : null}
-            </div>            
+              {hasEndDate ? (
+                <TextForm
+                  required
+                  min={2}
+                  label={t("End time") + "*"}
+                  name="time"
+                  type="time"
+                  value={sepDateEnd.time.value}
+                  onChange={sepDateEnd.time.onChange}
+                />
+              ) : null}
+            </div>
           </div>
         </div>
         <div className="form-control">
