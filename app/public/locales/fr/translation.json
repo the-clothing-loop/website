@@ -1,5 +1,7 @@
 {
   "info": "Information",
+  "information": "Information",
+  "account": "Account",
   "loopInformation": "Loop Information",
   "rules": "Rules",
   "addresses": "Adresses",
@@ -7,6 +9,7 @@
   "bags": "Sacs",
   "whereIsTheBag": "Où est le sac ?",
   "bulkyItems": "Bulky Items",
+  "bulkyItemsTitle": "Bulky Items",
   "reserve": "Reserve",
   "settings": "Settings",
   "cancel": "Annuler",
