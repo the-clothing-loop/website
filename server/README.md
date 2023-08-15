@@ -130,3 +130,22 @@ And to stop the docker containers
 Although the `golang.go` vscode extension should lint your code for you, there is also a command as well:
 
 `make lint`
+
+## Setting up authentication in Postman
+
+| Variable | Type    | Example                                    | Description                                   |
+| -------- | ------- | ------------------------------------------ | --------------------------------------------- |
+| base     | default | http://localhost:8084                      | Base server url                               |
+| token    | secret  | \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* | Login, in a browser and find the token cookie |
+| userUID  | default | e896d087-5dd0-44fa-a549-2ead33a63d7a       | User UID                                      |
+| chainUID | default | 48ca9112-912a-43b4-a8bc-16dcd79f383d       | Chain UID                                     |
+
+1. Here's how to find cookies from the website:
+   Chromium: https://superuser.com/a/1114501
+   Firefox: https://firefox-source-docs.mozilla.org/devtools-user/storage_inspector/index.html
+2. Select the cookie named `token` and copy its value
+3. Paste the value into Postman
+4. Make sure that the `userUID` is from the account you logged in with
+5. If you want to send api requests that have a higher authentication level;
+   - **AuthState3AdminChainUser** & **AuthState2UserOfChain**: you need to set the `chainUID` to a loop that will relate to the user (see `user_chains` table) and if need be, have `user_chains.is_chain_admin` set to **True**.
+   - **AuthState4RootUser**: you need to set the `users.is_root_admin` database cell to **True**.
