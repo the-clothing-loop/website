@@ -304,16 +304,21 @@ export default function Settings() {
                   </IonItem>
                 ) : null}
                 {isChainAdmin && chain ? (
-                  <IonItem
-                    lines="none"
-                    button
-                    detail={false}
-                    target="_blank"
-                    href={`https://www.clothingloop.org/loops/${chain.uid}/members`}
-                  >
-                    <IonLabel>{t("goToAdminPortal")}</IonLabel>
-                    <IonIcon icon={compassOutline} />
-                  </IonItem>
+                  <>
+                    <IonItem lines="none" button routerLink="/settings/theme">
+                      <IonLabel>{t("setLoopTheme")}</IonLabel>
+                    </IonItem>
+                    <IonItem
+                      lines="none"
+                      button
+                      detail={false}
+                      target="_blank"
+                      href={`https://www.clothingloop.org/loops/${chain.uid}/members`}
+                    >
+                      <IonLabel>{t("goToAdminPortal")}</IonLabel>
+                      <IonIcon icon={compassOutline} />
+                    </IonItem>
+                  </>
                 ) : null}
                 {chain?.published ? (
                   <IonItem

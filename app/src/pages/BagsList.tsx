@@ -10,7 +10,6 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
-  IonItemDivider,
   IonLabel,
   IonList,
   IonModal,
@@ -47,7 +46,6 @@ import {
   MouseEvent,
   RefObject,
   useMemo,
-  useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID, User } from "../api";

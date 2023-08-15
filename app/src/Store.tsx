@@ -120,7 +120,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     try {
       const chainUID: string | null = await storage.get("chain_uid");
       if (_isAuthenticated && chainUID) {
-        _chain = (await chainGet(chainUID)).data;
+        _chain = (await chainGet(chainUID, false, true)).data;
         await _setChain(_chain, _authUser!.uid);
         _isChainAdmin = IsChainAdmin(_authUser, _chain);
       } else if (chainUID) {
@@ -145,7 +145,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (c && _authUserUID) {
       try {
         const res = await Promise.all([
-          chainGet(c.uid, true),
+          chainGet(c.uid, true, true),
           userGetAllByChain(c.uid),
           routeGetOrder(c.uid),
           bagGetAllByChain(c.uid, _authUserUID),
@@ -198,7 +198,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       if (!chain)
         throw "You must have first selected a Loop in the settings tab.";
 
-      let _chain = await chainGet(chain.uid, true);
+      let _chain = await chainGet(chain.uid, true, true);
       setChain(_chain.data);
     } else if (tab === "address" || tab === "bags") {
       if (!chain)
