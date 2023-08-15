@@ -31,7 +31,7 @@ export default function AddressItem({
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/address">Back</IonBackButton>
+            <IonBackButton defaultHref="/address">{t("back")}</IonBackButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
