@@ -233,20 +233,20 @@ func ChainUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		UID              string    `json:"uid" binding:"required"`
-		Name             *string   `json:"name,omitempty"`
-		Description      *string   `json:"description,omitempty"`
-		Address          *string   `json:"address,omitempty"`
-		CountryCode      *string   `json:"country_code,omitempty"`
-		Latitude         *float32  `json:"latitude,omitempty"`
-		Longitude        *float32  `json:"longitude,omitempty"`
-		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=70.0"`
-		Sizes            *[]string `json:"sizes,omitempty"`
-		Genders          *[]string `json:"genders,omitempty"`
-		RulesOverride    *string   `json:"rules_override,omitempty"`
-		Published        *bool     `json:"published,omitempty"`
-		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
-		Theme            *string   `json:"theme,omitempty"`
+		UID              string             `json:"uid" binding:"required"`
+		Name             *string            `json:"name,omitempty"`
+		Description      *string            `json:"description,omitempty"`
+		Address          *string            `json:"address,omitempty"`
+		CountryCode      *string            `json:"country_code,omitempty"`
+		Latitude         *float32           `json:"latitude,omitempty"`
+		Longitude        *float32           `json:"longitude,omitempty"`
+		Radius           *float32           `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=70.0"`
+		Sizes            *[]string          `json:"sizes,omitempty"`
+		Genders          *[]string          `json:"genders,omitempty"`
+		RulesOverride    *string            `json:"rules_override,omitempty"`
+		Published        *bool              `json:"published,omitempty"`
+		OpenToNewMembers *bool              `json:"open_to_new_members,omitempty"`
+		Theme            *map[string]string `json:"theme,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -311,7 +311,8 @@ func ChainUpdate(c *gin.Context) {
 		valuesToUpdate["open_to_new_members"] = *(body.OpenToNewMembers)
 	}
 	if body.Theme != nil {
-		valuesToUpdate["theme"] = *(body.Theme)
+		j, _ := json.Marshal(body.Genders)
+		valuesToUpdate["theme"] = string(j)
 	}
 	err := db.Model(chain).Updates(valuesToUpdate).Error
 	if err != nil {

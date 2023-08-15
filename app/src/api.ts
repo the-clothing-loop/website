@@ -77,6 +77,7 @@ export interface Chain {
   published: boolean;
   open_to_new_members: boolean;
   rules_override?: string;
+  theme?: Record<string, string> | null;
 }
 
 export interface Bag {
@@ -139,9 +140,9 @@ export function userGetByUID(chainUID: string | undefined, userUID: string) {
   return window.axios.get<User>("/v2/user", { params });
 }
 
-export function chainGet(chainUID: UID, addRules: boolean = false) {
+export function chainGet(chainUID: UID, addRules = false, addTheme = false) {
   return window.axios.get<Chain>("/v2/chain", {
-    params: { chain_uid: chainUID, add_rules: addRules },
+    params: { chain_uid: chainUID, add_rules: addRules, add_theme: addTheme },
   });
 }
 
