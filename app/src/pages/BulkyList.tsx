@@ -210,7 +210,7 @@ export default function BulkyList() {
                         textShadow:
                           "1px 0 10px var(--ion-color-dark), 0 0 0.2em var(--ion-color-dark)",
                       }}
-                      className="tw-absolute tw-top-0 tw-left-0 tw-right-0 tw-pt-3 tw-px-5 tw-text-[16px]"
+                      className="tw-absolute tw-top-0 tw-left-0 tw-right-0 tw-pt-3 tw-px-5 tw-text-base tw-leading-5"
                     >
                       {createdAt.toLocaleDateString()}
                     </IonCardSubtitle>
@@ -242,14 +242,14 @@ export default function BulkyList() {
                     className="tw-text-dark tw-py-[3px]"
                   >
                     <p
-                      className={`tw-text-[1rem] tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
+                      className={`tw-text-base tw-leading-5 tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
                         shouldExpandText ? "tw-max-h-[46px]" : ""
                       }`}
                     >
                       {bulkyItem.message}
                     </p>
                     {shouldExpandText ? (
-                      <span className="tw-mt-[-3px] tw-text-[14px] tw-font-semibold tw-block tw-text-primary">
+                      <span className="tw-mt-[-3px] tw-text-sm tw-leading-5 tw-font-semibold tw-block tw-text-primary">
                         {t("readMore")}
                       </span>
                     ) : null}
@@ -260,7 +260,7 @@ export default function BulkyList() {
                     className="tw-my-0 -tw-mx-4"
                   >
                     <IonText className="tw-my-2 ty-mx-0">
-                      <h3 className="ion-no-margin ion-text-bold tw-text-[18px]">
+                      <h3 className="ion-no-margin ion-text-bold tw-text-lg tw-leading-5">
                         {user.name}
                       </h3>
                       <p className="ion-text-wrap tw-opacity-60">
@@ -316,7 +316,7 @@ export default function BulkyList() {
             initialBreakpoint={0.6}
             breakpoints={[0, 0.6, 1]}
           >
-            <div className="ion-padding tw-text-[18px]">
+            <div className="ion-padding tw-text-lg tw-leading-6">
               <h1 className="tw-mt-0">{modalDesc.title}</h1>
               {modalDesc.message.split("\n").map((s, i) => (
                 <Fragment key={i}>

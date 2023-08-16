@@ -22,7 +22,7 @@ export function OnboardingPageOne() {
     <IonPage>
       <IonContent color="primary">
         <div className="tw-flex tw-justify-center tw-items-center tw-flex-col tw-h-full">
-          <IonText className="tw-text-center tw-font-bold tw-text-[20px] tw-font-sans tw-leading-[1.4rem] tw-mb-10">
+          <IonText className="tw-text-center tw-font-bold tw-text-xl tw-leading-7 tw-font-sans tw-mb-10">
             Welcome to
             <br /> the Clothing Loop's app
           </IonText>
@@ -30,7 +30,7 @@ export function OnboardingPageOne() {
             className="tw-w-[70%] tw-max-w-[400px]"
             src="https://images.clothingloop.org/426x/paloeka_nichon_landscape.jpg"
           />
-          <IonText className="tw-text-center tw-font-bold tw-text-[30px] tw-font-serif tw-my-10">
+          <IonText className="tw-text-center tw-font-bold tw-text-3xl tw-leading-10 tw-font-serif tw-my-10">
             Locate bags
             <br /> and pass them on!
           </IonText>
@@ -67,7 +67,7 @@ export function OnboardingPageTwo() {
     <IonPage>
       <IonContent fullscreen color="secondary">
         <div className="tw-flex tw-justify-center tw-items-center tw-flex-col tw-h-full">
-          <IonText className="tw-text-center tw-font-bold tw-text-[20px] tw-font-sans tw-mb-10">
+          <IonText className="tw-text-center tw-font-bold tw-text-xl tw-leading-7 tw-font-sans tw-mb-10">
             You'll need an account
             <br /> to use this app
           </IonText>

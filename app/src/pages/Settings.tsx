@@ -231,7 +231,7 @@ export default function Settings() {
                   <IonSelect
                     ref={refChainSelect}
                     aria-label={t("selectALoop")}
-                    className="tw-text-[26px]"
+                    className="tw-text-2xl"
                     labelPlacement="floating"
                     justify="space-between"
                     value={chain?.uid || ""}

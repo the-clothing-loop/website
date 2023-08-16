@@ -111,7 +111,7 @@ export default function HelpList() {
             </IonItem>
           ))}
         </IonList>
-        <p className="ion-text-center ion-text-uppercase ion-text-bold tw-text-medium tw-text-[14px] tw-mt-4 tw-m-0">
+        <p className="ion-text-center ion-text-uppercase ion-text-bold tw-text-medium tw-text-sm tw-leading-4 tw-mt-4 tw-m-0">
           {t("loopHost", { count: hosts.length })}
         </p>
         <div className="tw-flex tw-justify-center tw-flex-wrap tw-mt-1.5 tw-m-0 tw-mb-2.5">
@@ -121,14 +121,14 @@ export default function HelpList() {
               size="small"
               routerLink={"/address/" + host.uid}
               color="light"
-              className="tw-m-1.5 tw-text-[16px]"
+              className="tw-m-1.5 tw-text-base"
             >
               {host.name}
             </IonButton>
           ))}
         </div>
 
-        <p className="ion-text-center ion-text-uppercase ion-text-bold tw-text-medium tw-text-[14px] tw-m-0">
+        <p className="ion-text-center ion-text-uppercase ion-text-bold tw-text-medium tw-text-sm tw-leading-4 tw-m-0">
           {t("organization")}
         </p>
         <div className="tw-flex tw-justify-center">
@@ -151,7 +151,7 @@ export default function HelpList() {
         </div>
         <IonRouterLink
           href="https://www.clothingloop.org/"
-          className="ion-text-center ion-margin-bottom tw-block tw-text-dark tw-text-[16px] !tw-mb-6"
+          className="ion-text-center ion-margin-bottom tw-block tw-text-dark tw-text-sm tw-leading-4 !tw-mb-6"
         >
           www.clothingloop.org
         </IonRouterLink>
