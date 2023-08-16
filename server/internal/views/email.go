@@ -56,10 +56,9 @@ var emailsTemplates = map[string]*template.Template{
 	"it": mustParseFS(emailsFS, "emails/it/*.gohtml"),
 }
 var emailLayoutTemplate = mustParseFS(emailsFS, "emails/layout.gohtml")
+var lang = []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
 
 func init() {
-	lang := []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
-
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/translations.json", l))
 		if err != nil {
