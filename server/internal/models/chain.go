@@ -33,7 +33,7 @@ type Chain struct {
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 	DeletedAt        zero.Time
-	Theme            *map[string]string `gorm:"serializer:json"`
+	Theme            string
 }
 
 func (c *Chain) SetRouteOrderByUserUIDs(db *gorm.DB, userUIDs []string) error {
