@@ -148,25 +148,39 @@ export default function Footer() {
                   </li>
                 </ul>
               </div>
-              <div className="hidden md:col-span-2 md:row-start-2 lg:row-start-auto lg:col-span-2 self-end flex justify-center md:justify-start space-x-4 mt-3 mb-6 px-3">
+              <div className="md:col-span-2 md:row-start-2 lg:row-start-auto lg:col-span-2 self-end flex justify-center md:justify-start space-x-4 mt-3 mb-6 px-3">
                 {mobileOS === MobileOS.IOS || mobileOS === MobileOS.OTHER ? (
-                  <a href="#" target="_blank">
+                  <a
+                    href="https://testflight.apple.com/join/bFOGBLNw"
+                    target="_blank"
+                    className="relative"
+                  >
                     <img
                       src={AppStore}
                       alt="App Store Logo"
                       style={{ height: 50 }}
                     />
+                    <span className="absolute -top-2 -right-2 block rounded py-0.5 px-1.5 text-xs bg-blue font-semibold tracking-widest text-white">
+                      Beta
+                    </span>
                   </a>
                 ) : null}
 
                 {mobileOS === MobileOS.ANDROID ||
                 mobileOS === MobileOS.OTHER ? (
-                  <a href="#" target="_blank">
+                  <a
+                    href="https://play.google.com/apps/testing/org.clothingloop.app"
+                    target="_blank"
+                    className="relative"
+                  >
                     <img
                       src={GooglePlay}
                       alt="Google Play Logo"
                       style={{ height: 50 }}
                     />
+                    <span className="absolute -top-2 -right-2 block rounded py-0.5 px-1.5 text-xs bg-blue font-semibold tracking-widest text-white">
+                      Beta
+                    </span>
                   </a>
                 ) : null}
               </div>
