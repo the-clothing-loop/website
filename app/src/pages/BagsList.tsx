@@ -271,7 +271,7 @@ export default function BagsList() {
                         <div className="bagslist-bag-icon tw-pt-2.5 tw-px-5 tw-pb-0.5">
                           <BagSVG color={bag.color} />
                         </div>
-                        <div className="ion-text-ellipsis tw-text-center tw-font-bold tw-text-base tw-leading-4 tw-text-dark ">
+                        <div className="ion-text-ellipsis tw-text-center tw-font-bold tw-text-base tw-text-dark ">
                           {(bag.number.length > 7 ? "" : t("bag") + " ") +
                             bag.number}
                         </div>
