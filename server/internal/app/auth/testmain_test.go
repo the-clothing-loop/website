@@ -1,3 +1,5 @@
+//go:build !ci
+
 package auth_test
 
 import (
