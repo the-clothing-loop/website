@@ -151,7 +151,7 @@ export default function HelpList() {
         </div>
         <IonRouterLink
           href="https://www.clothingloop.org/"
-          className="ion-text-center ion-margin-bottom tw-block tw-text-dark tw-text-[16px]"
+          className="ion-text-center ion-margin-bottom tw-block tw-text-dark tw-text-[16px] !tw-mb-6"
         >
           www.clothingloop.org
         </IonRouterLink>
