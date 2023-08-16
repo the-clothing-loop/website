@@ -87,7 +87,7 @@ export default function OpenSource() {
           ) : (
             <IonList>
               <IonItem>
-                <IonSkeletonText animated={true} style={{ width: "80px" }} />
+                <IonSkeletonText animated={true} className="tw-w-[80px]" />
               </IonItem>
             </IonList>
           )}

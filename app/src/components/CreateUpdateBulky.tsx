@@ -234,77 +234,41 @@ export default function CreateUpdateBulky({
             color={error === "image-url" ? "danger" : undefined}
             lines="none"
           >
-            <div style={{ width: "100%" }}>
-              <IonLabel style={{ marginTop: 8, marginBottom: 0 }}>
-                {t("image")}
-              </IonLabel>
+            <div className="tw-w-full">
+              <IonLabel className="tw-mt-2 tw-mb-0">{t("image")}</IonLabel>
 
-              <div
-                style={{
-                  textAlign: "center",
-                  width: "100%",
-                }}
-              >
+              <div className="tw-text-center tw-w-full">
                 {!(loadingUpload === State.loading) && bulkyImageURL ? (
                   <IonCard
                     onClick={handleClickUpload}
-                    style={{
-                      margin: "32px 50px",
-                      border: "1px solid",
-                      borderColor: loadingUpload
-                        ? "var(--ion-color-medium)"
-                        : "var(--ion-color-primary)",
-                    }}
+                    className={`tw-my-8 tw-mx-[50px] tw-border tw-border-solid ${
+                      loadingUpload ? "tw-border-medium" : "tw-border-primary"
+                    }`}
                   >
                     <IonImg
                       src={bulkyImageURL}
                       alt={t("loading")}
-                      style={{
-                        maxWidth: "100%",
-                      }}
+                      className="tw-max-w-full"
                     />
                   </IonCard>
                 ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "300px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div className="tw-w-full tw-h-[300px] tw-flex tw-justify-center tw-items-center">
                     <IonCard
                       onClick={handleClickUpload}
-                      style={{
-                        border: "1px solid",
-                        borderColor:
-                          loadingUpload === State.loading
-                            ? "var(--ion-color-medium)"
-                            : "var(--ion-color-primary)",
-                        width: 200,
-                        height: 200,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
+                      className={`tw-border tw-border-solid tw-w-[200px] tw-h-[200px] tw-flex tw-justify-center tw-items-center ${
+                        loadingUpload === State.loading
+                          ? "tw-border-medium"
+                          : "tw-border-primary"
+                      }`}
                     >
-                      <div style={{ position: "relative" }}>
+                      <div className="tw-relative">
                         <IonIcon size="large" icon={imageOutline} />
                         {loadingUpload === State.loading ? (
                           <IonIcon
                             icon={hourglassOutline}
                             size="small"
                             color="primary"
-                            style={{
-                              backgroundColor:
-                                "var(--ion-color-primary-contrast)",
-                              padding: 2,
-                              borderRadius: "50%",
-                              position: "absolute",
-                              bottom: -9,
-                              right: -11,
-                            }}
+                            className="tw-bg-primary-contrast tw-p-[2px] tw-rounded-full tw-absolute tw-bottom-[9px] tw-right-[-11px]"
                           />
                         ) : null}
                       </div>
@@ -316,7 +280,7 @@ export default function CreateUpdateBulky({
               <IonButton
                 onClick={handleClickUpload}
                 size="default"
-                className="ion-no-margin"
+                className="tw-m-0 tw-mb-4"
                 expand="block"
                 color={
                   loadingUpload === State.idle
@@ -336,7 +300,7 @@ export default function CreateUpdateBulky({
                       ? checkmarkOutline
                       : cloudUploadOutline
                   }
-                  style={{ marginRight: "8px" }}
+                  className="tw-mr-2"
                   size="default"
                 />
                 {loadingUpload === State.loading

@@ -13,15 +13,7 @@ export default function Loading() {
   return (
     <IonPage>
       <IonContent fullscreen>
-        <div
-          style={{
-            display: "flex",
-            height: "100%",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <div className="tw-flex tw-h-full tw-flex-col tw-justify-center tw-items-center">
           <CreateAnimation
             duration={1000}
             iterations={Infinity}

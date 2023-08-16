@@ -170,19 +170,14 @@ export default function CreateUpdateBag({
               }
             />
           </IonItem>
-          <IonItem
-            lines="none"
-            style={{
-              marginTop: -20,
-            }}
-          >
+          <IonItem lines="none" className="-tw-mt-5">
             {["👻", "🐰"].map((emoji, i) => (
               <IonFabButton
                 key={i}
                 size="small"
                 color={bagNumber.includes(emoji) ? "primary" : "light"}
                 onClick={() => handleSetBagEmoji(emoji)}
-                style={{ fontSize: 20 }}
+                className="tw-text-xl"
               >
                 {emoji}
               </IonFabButton>

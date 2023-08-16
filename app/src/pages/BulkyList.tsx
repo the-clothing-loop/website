@@ -198,92 +198,58 @@ export default function BulkyList() {
               <IonCard key={bulkyItem.id}>
                 {bulkyItem.image_url ? (
                   <div
-                    style={{
-                      position: "relative",
-                      minHeight: 124,
-                      backgroundColor:
-                        i % 2 === 0
-                          ? "var(--ion-color-primary-shade)"
-                          : "var(--ion-color-secondary-shade)",
-                    }}
+                    className={`tw-relative tw-min-h-[124px] ${
+                      i % 2 === 0
+                        ? "tw-bg-primary-shade"
+                        : "tw-bg-secondary-shade"
+                    }`}
                   >
                     <IonCardSubtitle
                       color="light"
                       style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        padding: "12px 20px 0",
-                        fontSize: 16,
                         textShadow:
                           "1px 0 10px var(--ion-color-dark), 0 0 0.2em var(--ion-color-dark)",
                       }}
+                      className="tw-absolute tw-top-0 tw-left-0 tw-right-0 tw-pt-3 tw-px-5 tw-text-base tw-leading-5"
                     >
                       {createdAt.toLocaleDateString()}
                     </IonCardSubtitle>
                     <img
                       alt={bulkyItem.title}
                       src={bulkyItem.image_url}
-                      style={{
-                        display: "block",
-                      }}
+                      className="tw-block"
                       onError={onImgErrorHideAlt}
                     />
                     <IonCardTitle
                       color="light"
                       style={{
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        padding: "0 20px 20px",
                         textShadow:
                           "1px 0 10px var(--ion-color-dark), 0 0 0.2em var(--ion-color-dark)",
                       }}
+                      className="tw-absolute tw-bottom-0 tw-left-0 tw-right-0 tw-pt-0 tw-p-5"
                     >
                       {bulkyItem.title}
                     </IonCardTitle>
                   </div>
                 ) : null}
-                <IonCardContent style={{ paddingBottom: 5 }}>
+                <IonCardContent className="tw-pb-[5px]">
                   <IonText
                     onClick={
                       shouldExpandText
                         ? () => handleClickReadMore(bulkyItem)
                         : undefined
                     }
-                    style={{
-                      color: "var(--ion-color-dark)",
-                      paddingTop: 3,
-                      paddingBottom: 3,
-                    }}
+                    className="tw-text-dark tw-py-[3px]"
                   >
                     <p
-                      style={{
-                        fontSize: 16,
-                        whiteSpace: "pre-wrap",
-                        overflow: "hidden",
-                        display: "block",
-                        ...(shouldExpandText
-                          ? {
-                              maxHeight: 46,
-                            }
-                          : {}),
-                      }}
+                      className={`tw-text-base tw-leading-5 tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
+                        shouldExpandText ? "tw-max-h-[46px]" : ""
+                      }`}
                     >
                       {bulkyItem.message}
                     </p>
                     {shouldExpandText ? (
-                      <span
-                        style={{
-                          marginTop: -3,
-                          fontSize: 14,
-                          fontWeight: "semi-bold",
-                          display: "block",
-                          color: "var(--ion-color-primary)",
-                        }}
-                      >
+                      <span className="tw-mt-[-3px] tw-text-sm tw-leading-5 tw-font-semibold tw-block tw-text-primary">
                         {t("readMore")}
                       </span>
                     ) : null}
@@ -291,33 +257,20 @@ export default function BulkyList() {
                   <IonItem
                     lines="none"
                     routerLink={"/address/" + user.uid}
-                    style={{
-                      margin: "0 -16px",
-                    }}
+                    className="tw-my-0 -tw-mx-4"
                   >
-                    <IonText
-                      style={{
-                        padding: "8px 0",
-                      }}
-                    >
-                      <h3
-                        className="ion-no-margin ion-text-bold"
-                        style={{
-                          fontSize: 18,
-                        }}
-                      >
+                    <IonText className="tw-my-2 ty-mx-0">
+                      <h3 className="ion-no-margin ion-text-bold tw-text-lg tw-leading-5">
                         {user.name}
                       </h3>
-                      <p style={{ opacity: 0.6 }} className="ion-text-wrap">
+                      <p className="ion-text-wrap tw-opacity-60">
                         {user.address}
                       </p>
                     </IonText>
                   </IonItem>
                 </IonCardContent>
 
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
+                <div className="tw-flex tw-justify-between">
                   <IonButtons className="ion-margin-bottom ion-margin-horizontal">
                     {isMe || isChainAdmin ? (
                       <>
@@ -342,7 +295,7 @@ export default function BulkyList() {
                       slot="end"
                       fill="clear"
                       color="warning"
-                      style={{ fontWeight: "bold" }}
+                      className="tw-font-bold"
                       onClick={() => handleClickReserve(user, bulkyItem.title)}
                     >
                       {t("reserve")}
@@ -363,13 +316,8 @@ export default function BulkyList() {
             initialBreakpoint={0.6}
             breakpoints={[0, 0.6, 1]}
           >
-            <div
-              className="ion-padding"
-              style={{
-                fontSize: 18,
-              }}
-            >
-              <h1 style={{ marginTop: 0 }}>{modalDesc.title}</h1>
+            <div className="ion-padding tw-text-lg tw-leading-6">
+              <h1 className="tw-mt-0">{modalDesc.title}</h1>
               {modalDesc.message.split("\n").map((s, i) => (
                 <Fragment key={i}>
                   {s}

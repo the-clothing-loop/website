@@ -111,56 +111,27 @@ export default function HelpList() {
             </IonItem>
           ))}
         </IonList>
-        <p
-          className="ion-text-center ion-text-uppercase ion-text-bold"
-          style={{
-            color: "var(--ion-color-medium)",
-            fontSize: "14px",
-            margin: "16px 0 0",
-          }}
-        >
+        <p className="ion-text-center ion-text-uppercase ion-text-bold tw-text-medium tw-text-sm tw-leading-4 tw-mt-4 tw-m-0">
           {t("loopHost", { count: hosts.length })}
         </p>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            margin: "6px 0 10px",
-          }}
-        >
+        <div className="tw-flex tw-justify-center tw-flex-wrap tw-mt-1.5 tw-m-0 tw-mb-2.5">
           {hosts.map((host) => (
             <IonButton
               key={host.uid}
               size="small"
               routerLink={"/address/" + host.uid}
               color="light"
-              style={{
-                margin: "6px",
-                fontSize: 16,
-              }}
+              className="tw-m-1.5 tw-text-base"
             >
               {host.name}
             </IonButton>
           ))}
         </div>
 
-        <p
-          className="ion-text-center ion-text-uppercase ion-text-bold"
-          style={{
-            color: "var(--ion-color-medium)",
-            fontSize: "14px",
-            margin: 0,
-          }}
-        >
+        <p className="ion-text-center ion-text-uppercase ion-text-bold tw-text-medium tw-text-sm tw-leading-4 tw-m-0">
           {t("organization")}
         </p>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
+        <div className="tw-flex tw-justify-center">
           {mediaIcons.map((mi) => (
             <IonRouterLink
               rel="noreferrer"
@@ -179,13 +150,8 @@ export default function HelpList() {
           ))}
         </div>
         <IonRouterLink
-          className="ion-text-center ion-margin-bottom"
           href="https://www.clothingloop.org/"
-          style={{
-            display: "block",
-            color: "var(--ion-color-dark)",
-            fontSize: "16px",
-          }}
+          className="ion-text-center ion-margin-bottom tw-block tw-text-dark tw-text-sm tw-leading-4 !tw-mb-6"
         >
           www.clothingloop.org
         </IonRouterLink>
