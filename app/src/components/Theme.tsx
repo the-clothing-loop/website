@@ -20,7 +20,6 @@ export default function Theme(props: { name: string | undefined }) {
   const [selectedTheme, setSelectedTheme] = useState("default");
 
   function changeTheme(color: string) {
-    if (color === "grey") color = "default";
     setTheme(color);
     refModel.current?.dismiss();
   }
@@ -85,7 +84,7 @@ export default function Theme(props: { name: string | undefined }) {
 }
 
 const COLORS = [
-  { name: "grey", color: "#a5a5a5" },
+  { name: "default", color: "#a5a5a5" },
   { name: "leafGreen", color: "#a6c665" },
   { name: "green", color: "#66926e" },
   { name: "yellow", color: "#f4b63f" },
