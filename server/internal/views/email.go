@@ -10,7 +10,6 @@ import (
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"github.com/wneessen/go-mail"
 
 	"github.com/gin-gonic/gin"
 )
@@ -88,13 +87,12 @@ func getI18n(c *gin.Context) string {
 }
 
 // Adds subject and body to message
-func emailGenerateMessage(m *mail.Msg, lng, templateName string, data any, subjectValues ...any) error {
+func emailGenerateMessage(m *app.Mail, lng, templateName string, data any, subjectValues ...any) error {
 	// subject
 	var subject string
 	{
 		templateKey := "header_" + templateName
-		subject = fmt.Sprintf(emailsTranslations[lng][templateKey], subjectValues...)
-		m.Subject(subject)
+		m.Subject = fmt.Sprintf(emailsTranslations[lng][templateKey], subjectValues...)
 	}
 
 	bodyBuffer := new(bytes.Buffer)
@@ -127,7 +125,7 @@ func emailGenerateMessage(m *mail.Msg, lng, templateName string, data any, subje
 		if err != nil {
 			return err
 		}
-		m.SetBodyString(mail.TypeTextHTML, buf.String())
+		m.Body = buf.String()
 	}
 
 	return nil
@@ -148,7 +146,8 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context,
 	i18n := "en"
 
 	m := app.MailCreate()
-	m.AddToFormat(adminName, adminEmail)
+	m.To.Name = adminName
+	m.To.Address = adminEmail
 
 	sizesHtml := ""
 	{
@@ -203,12 +202,13 @@ func EmailContactUserMessage(c *gin.Context,
 	message string,
 ) error {
 	m := app.MailCreate()
-	m.AddToFormat("The Clothing Loop", app.Config.SMTP_SENDER)
+	m.To.Name = "The Clothing Loop"
+	m.To.Address = app.Config.SMTP_SENDER
 	err := emailGenerateMessage(m, "en", "contact_confirmation", gin.H{
 		"Name":    name,
 		"Email":   email,
 		"Message": message,
-	}, email)
+	})
 	if err != nil {
 		return err
 	}
@@ -222,7 +222,8 @@ func EmailContactConfirmation(c *gin.Context,
 ) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
-	m.AddToFormat(name, email)
+	m.To.Name = name
+	m.To.Address = email
 	err := emailGenerateMessage(m, i18n, "contact_confirmation", gin.H{
 		"Name":    name,
 		"Message": message,
@@ -240,7 +241,8 @@ func EmailSubscribeToNewsletter(c *gin.Context,
 ) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
-	m.AddToFormat(name, email)
+	m.To.Name = name
+	m.To.Address = email
 	err := emailGenerateMessage(m, i18n, "subscribed_to_newsletter", gin.H{"Name": name})
 	if err != nil {
 		return err
@@ -256,7 +258,8 @@ func EmailRegisterVerification(c *gin.Context,
 ) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
-	m.AddToFormat(name, email)
+	m.To.Name = name
+	m.To.Address = email
 	err := emailGenerateMessage(m, i18n, "register_verification", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
@@ -276,7 +279,8 @@ func EmailLoginVerification(c *gin.Context,
 ) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
-	m.AddToFormat(name, email)
+	m.To.Name = name
+	m.To.Address = email
 	err := emailGenerateMessage(m, i18n, "login_verification", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
@@ -297,7 +301,8 @@ func EmailAnAdminApprovedYourJoinRequest(c *gin.Context,
 ) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
-	m.AddToFormat(name, email)
+	m.To.Name = name
+	m.To.Address = email
 	err := emailGenerateMessage(m, i18n, "an_admin_approved_your_join_request", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
@@ -319,7 +324,8 @@ func EmailAnAdminDeniedYourJoinRequest(c *gin.Context,
 	// i18n := getI18n(c)
 	i18n := "en"
 	m := app.MailCreate()
-	m.AddToFormat(name, email)
+	m.To.Name = name
+	m.To.Address = email
 	err := emailGenerateMessage(m, i18n, "an_admin_denied_your_join_request", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
@@ -340,12 +346,13 @@ func EmailPoke(c *gin.Context,
 ) error {
 	i18n := "en"
 	m := app.MailCreate()
-	m.AddToFormat(name, email)
+	m.To.Name = name
+	m.To.Address = email
 	err := emailGenerateMessage(m, i18n, "poke", gin.H{
 		"Name":            name,
 		"ChainName":       chainName,
 		"ParticipantName": participantName,
-	})
+	}, name, chainName)
 	if err != nil {
 		return err
 	}
@@ -370,7 +377,8 @@ func EmailApproveReminder(
 	// i18n := getI18n(c)
 	i18n := "en"
 	m := app.MailCreate()
-	m.AddToFormat(name, email)
+	m.To.Name = name
+	m.To.Address = email
 	err := emailGenerateMessage(m, i18n, "approve_reminder", gin.H{
 		"Name":      name,
 		"BaseURL":   app.Config.SITE_BASE_URL_FE,
