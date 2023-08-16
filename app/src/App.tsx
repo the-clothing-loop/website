@@ -58,7 +58,6 @@ import HelpList from "./pages/HelpList";
 import HelpItem from "./pages/HelpItem";
 import Login from "./pages/Login";
 import Settings from "./pages/Settings";
-import Theme from "./pages/Theme";
 import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
 import Loading from "./pages/Loading";
@@ -219,7 +218,6 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
         <Route exact path="/bags" component={BagsList}></Route>
         <Route exact path="/bulky-items" component={BulkyList}></Route>
         <Route exact path="/settings" component={Settings}></Route>
-        <Route exact path="/settings/theme" component={Theme}></Route>
         <Route
           exact
           path="/settings/privacy-policy"

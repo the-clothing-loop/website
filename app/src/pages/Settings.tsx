@@ -36,6 +36,7 @@ import {
   lockClosedOutline,
   pauseCircle,
   shareOutline,
+  sparklesOutline,
   stopCircle,
 } from "ionicons/icons";
 import dayjs from "../dayjs";
@@ -43,6 +44,7 @@ import isPaused from "../utils/is_paused";
 import Badges from "../components/SizeBadge";
 import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
+import Theme from "../components/Theme";
 
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
@@ -279,9 +281,17 @@ export default function Settings() {
                 ) : null}
                 {isChainAdmin && chain ? (
                   <>
-                    <IonItem lines="none" button routerLink="/settings/theme">
+                    <IonItem
+                      lines="none"
+                      button
+                      id="open-modal-theme"
+                      detail={false}
+                    >
                       <IonLabel>{t("setLoopTheme")}</IonLabel>
+                      <IonIcon slot="end" icon={sparklesOutline} />
                     </IonItem>
+                    <Theme color={chain.theme as any} />
+
                     <IonItem
                       lines="none"
                       button
