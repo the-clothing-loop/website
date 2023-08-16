@@ -222,9 +222,6 @@ export default function BagsList() {
                 const isBagTooOld = bagUpdatedAt.isBefore(
                   dayjs().add(-7, "days"),
                 );
-                const isBagNameNumeric = Number.isSafeInteger(
-                  Number.parseInt(bag.number),
-                );
 
                 return (
                   <IonCol size="6" key={"inRoute" + bag.id}>
