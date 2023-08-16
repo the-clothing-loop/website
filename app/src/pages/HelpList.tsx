@@ -111,7 +111,7 @@ export default function HelpList() {
             </IonItem>
           ))}
         </IonList>
-        <p className="ion-text-center ion-text-uppercase ion-text-bold tw-text-medium tw-text-sm tw-leading-4 tw-mt-4 tw-m-0">
+        <p className="ion-text-center ion-text-uppercase !tw-font-bold tw-text-medium tw-text-sm tw-leading-4 tw-mt-4 tw-m-0">
           {t("loopHost", { count: hosts.length })}
         </p>
         <div className="tw-flex tw-justify-center tw-flex-wrap tw-mt-1.5 tw-m-0 tw-mb-2.5">
@@ -128,7 +128,7 @@ export default function HelpList() {
           ))}
         </div>
 
-        <p className="ion-text-center ion-text-uppercase ion-text-bold tw-text-medium tw-text-sm tw-leading-4 tw-m-0">
+        <p className="ion-text-center ion-text-uppercase !tw-font-bold tw-text-medium tw-text-sm tw-leading-4 tw-m-0">
           {t("organization")}
         </p>
         <div className="tw-flex tw-justify-center">

@@ -26,7 +26,7 @@ export default function Loading() {
           >
             <IonIcon size="large" className="ion-margin" icon={syncOutline} />
           </CreateAnimation>
-          <IonText className="ion-text-bold">{t("loading...")}</IonText>
+          <IonText className="!tw-font-bold">{t("loading...")}</IonText>
         </div>
       </IonContent>
     </IonPage>

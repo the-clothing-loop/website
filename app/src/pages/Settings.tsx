@@ -200,7 +200,7 @@ export default function Settings() {
                 detail={false}
               >
                 <IonLabel className="ion-text-wrap">
-                  <h3 className="ion-text-bold">{t("pauseParticipation")}</h3>
+                  <h3 className="!tw-font-bold">{t("pauseParticipation")}</h3>
                   <p className="ion-no-wrap">
                     {pausedDayjs
                       ? pausedDayjs.fromNow()
@@ -290,7 +290,7 @@ export default function Settings() {
                       <IonLabel>{t("setLoopTheme")}</IonLabel>
                       <IonIcon slot="end" icon={sparklesOutline} />
                     </IonItem>
-                    <Theme color={chain.theme as any} />
+                    <Theme name={chain.theme} />
 
                     <IonItem
                       lines="none"

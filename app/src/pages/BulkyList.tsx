@@ -122,37 +122,37 @@ export default function BulkyList() {
       {
         text: t("copy"),
         role: "submit",
-        cssClass: "ion-text-bold",
+        cssClass: "!tw-font-bold",
         handler: () => handler("copy"),
       },
       {
         text: "SMS",
         role: "submit",
-        cssClass: "ion-text-bold",
+        cssClass: "!tw-font-bold",
         handler: () => handler("sms"),
       },
       {
         text: "Telegram",
         role: "submit",
-        cssClass: "ion-text-bold",
+        cssClass: "!tw-font-bold",
         handler: () => handler("telegram"),
       },
       {
         text: "Signal",
         role: "submit",
-        cssClass: "ion-text-bold",
+        cssClass: "!tw-font-bold",
         handler: () => handler("signal"),
       },
       {
         text: "WhatsApp",
         role: "submit",
-        cssClass: "ion-text-bold",
+        cssClass: "!tw-font-bold",
         handler: () => handler("whatsapp"),
       },
       {
         text: t("close"),
         role: "cancel",
-        cssClass: "ion-text-normal",
+        cssClass: "!tw-font-normal",
       },
     ];
 
@@ -260,7 +260,7 @@ export default function BulkyList() {
                     className="tw-my-0 -tw-mx-4"
                   >
                     <IonText className="tw-my-2 ty-mx-0">
-                      <h3 className="ion-no-margin ion-text-bold tw-text-lg tw-leading-5">
+                      <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
                         {user.name}
                       </h3>
                       <p className="ion-text-wrap tw-opacity-60">

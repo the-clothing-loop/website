@@ -47,7 +47,7 @@ export default function AddressItem({
 
         {isChainAdmin ? (
           <IonItem lines="none" className="ion-align-items-start">
-            <IonLabel className="ion-text-bold">
+            <IonLabel className="!tw-font-bold">
               {t("interestedSizes")}
             </IonLabel>
             <div className="ion-margin-top ion-margin-bottom" slot="end">

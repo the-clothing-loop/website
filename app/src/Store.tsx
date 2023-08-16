@@ -15,6 +15,7 @@ import {
   BulkyItem,
   bulkyItemGetAllByChain,
   userUpdate,
+  chainUpdate,
 } from "./api";
 import dayjs from "./dayjs";
 
@@ -28,6 +29,7 @@ export const StoreContext = createContext({
   isChainAdmin: false,
   authUser: null as null | User,
   setPause: (p: number) => {},
+  setTheme: (c: string) => {},
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
   route: [] as UID[],
@@ -170,6 +172,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setIsChainAdmin(IsChainAdmin(authUser, _chain));
   }
 
+  async function _setTheme(c: string) {
+    if (!chain) throw Error("No loop selected");
+    const oldTheme = chain.theme;
+    setChain((s) => ({ ...(s as Chain), theme: c }));
+    chainUpdate({
+      uid: chain.uid,
+      theme: c,
+    }).catch((e) => {
+      setChain((s) => ({ ...(s as Chain), theme: oldTheme }));
+    });
+  }
+
   async function _setPause(pause: number) {
     if (!authUser) return;
 
@@ -251,6 +265,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       value={{
         authUser,
         setPause: _setPause,
+        setTheme: _setTheme,
         route,
         bags,
         bulkyItems,

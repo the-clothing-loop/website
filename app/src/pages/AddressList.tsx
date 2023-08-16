@@ -105,7 +105,7 @@ export default function AddressList() {
                 <IonText
                   slot="start"
                   color="medium"
-                  className="ion-text-bold tw-w-[30px] tw-whitespace-nowrap"
+                  className="!tw-font-bold tw-w-[30px] tw-whitespace-nowrap"
                 >
                   {isUserPaused ? (
                     <IonIcon

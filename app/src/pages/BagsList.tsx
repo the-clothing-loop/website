@@ -313,7 +313,7 @@ export default function BagsList() {
                           className="ion-text-ellipsis"
                           onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
-                          <span className="ion-text-bold">
+                          <span className="!tw-font-bold">
                             {(bag.number.length > 7 ? "" : t("bag") + " ") +
                               bag.number}
                           </span>
@@ -609,7 +609,7 @@ function SelectUserModal({
               //   let uc = user.chains.find((u) => u.chain_uid === chain.uid);
               return (
                 <IonItem lines="full" key={user.uid}>
-                  <span slot="start" className="ion-text-bold">{`#${
+                  <span slot="start" className="!tw-font-bold">{`#${
                     i + 1
                   }`}</span>
                   <IonLabel>
@@ -622,7 +622,7 @@ function SelectUserModal({
                       {user.uid === authUser?.uid ? (
                         <IonIcon
                           icon={personCircleOutline}
-                          className="ion-icon-text"
+                          className="tw-translate-y-0.5 tw-px-0.5"
                         />
                       ) : null}
                     </h2>
@@ -672,7 +672,7 @@ function BagSVG({ color }: { color: string }) {
 function UserLink({ user, routeIndex }: { user: User; routeIndex: number }) {
   const { t } = useTranslation();
   return (
-    <div className="ion-text-bold tw-text-medium tw-flex tw-flex-row tw-items-baseline tw-text-xs tw-w-full">
+    <div className="!tw-font-bold tw-text-medium tw-flex tw-flex-row tw-items-baseline tw-text-xs tw-w-full">
       {user.paused_until ? (
         <IonIcon
           className="tw-translate-y-px tw-w-4 tw-h-4 tw-min-w-[16px] tw-me-[3px]"
@@ -690,7 +690,7 @@ function UserLink({ user, routeIndex }: { user: User; routeIndex: number }) {
       </span>
       <IonIcon
         icon={chevronForwardOutline}
-        className="ion-icon-text tw-min-w-[12px] tw-w-3"
+        className="tw-translate-y-0.5 tw-px-0.5 tw-min-w-[12px] tw-w-3"
       ></IonIcon>
     </div>
   );

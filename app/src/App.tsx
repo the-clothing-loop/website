@@ -82,7 +82,7 @@ setupIonicReact({
 });
 
 export default function App() {
-  const { isAuthenticated, init, authenticate, bags } =
+  const { isAuthenticated, init, authenticate, bags, chain } =
     useContext(StoreContext);
   const history = useHistory();
   let location = useLocation();
@@ -105,6 +105,16 @@ export default function App() {
       root?.removeEventListener("store-error", eventCatchStoreErr);
     };
   }, []);
+
+  useEffect(() => {
+    if (!chain || chain.theme === undefined) return;
+    const bodyEl = document.getElementsByTagName("body")[0];
+
+    let theme = chain.theme;
+    if (theme === "default" || !theme) theme = "grey";
+
+    bodyEl.setAttribute("data-theme", theme);
+  }, [chain?.theme]);
 
   async function auth() {
     let success = false;
@@ -259,3 +269,29 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
     </IonTabs>
   );
 }
+
+interface CssVars {
+  light: string;
+  lightShade: string;
+  lightTint: string;
+  medium: string;
+  mediumShade: string;
+  mediumTint: string;
+}
+const THEME_TO_CSS_VARS = {
+  grey: { "": "", color: "#a5a5a5" },
+  leafGreen: { "": "", color: "#a6c665" },
+  green: { "": "", color: "#66926e" },
+  yellow: { "": "", color: "#f4b63f" },
+  orange: { "": "", color: "#ef953d" },
+  redLight: { "": "", color: "#e39aa1" },
+  red: { "": "", color: "#c73643" },
+  pinkLight: { "": "", color: "#ecbbd0" },
+  pink: { "": "", color: "#dc77a3" },
+  lilacLight: { "": "", color: "#dab5d6" },
+  lilac: { "": "", color: "#b76dac" },
+  purple: { "": "", color: "#a899c2" },
+  skyBlue: { "": "", color: "#7ecfe0" },
+  blueLight: { "": "", color: "#89b3d9" },
+  blue: { "": "", color: "#1467b3" },
+};
