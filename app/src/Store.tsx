@@ -241,7 +241,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         const [_authUser, _chain] = await Promise.allSettled([
           userGetByUID(undefined, authUser.uid),
           !!chain
-            ? chainGet(chain.uid, true)
+            ? chainGet(chain.uid, true, true)
             : Promise.reject("No Loop selected"),
         ]);
 

@@ -17,30 +17,48 @@ import {
 import { useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
+import type {
+  IonModalCustomEvent,
+  OverlayEventDetail,
+} from "@ionic/core/dist/types/components";
 
-export default function Theme(props: { name: string | undefined }) {
+export default function Theme() {
   const { t } = useTranslation();
-  const { setTheme } = useContext(StoreContext);
+  const { setTheme, chain } = useContext(StoreContext);
   const refModel = useRef<HTMLIonModalElement>(null);
-  const [selectedTheme, setSelectedTheme] = useState("default");
+  const [selectedTheme, _setSelectedTheme] = useState("default");
+  const [previousTheme, setPreviousTheme] = useState("default");
 
   function changeTheme(color: string) {
-    setTheme(color);
-    refModel.current?.dismiss();
+    refModel.current?.dismiss(color, "submit");
   }
 
-  function modalInit() {
-    setSelectedTheme(props.name || "default");
+  function setSelectedTheme(color: string) {
+    const bodyEl = document.getElementsByTagName("body")[0];
+    bodyEl.setAttribute("data-theme", color);
+    _setSelectedTheme(color);
   }
-  function didDismiss() {
-    setSelectedTheme("default");
+
+  function willPresent() {
+    let theme = chain?.theme || "default";
+    console.log("Modal init", theme);
+    _setSelectedTheme(theme);
+    setPreviousTheme(theme);
+  }
+  function didDismiss(e: IonModalCustomEvent<OverlayEventDetail<any>>) {
+    if (e.detail.role === "submit") {
+      setTheme(e.detail.data);
+    }
+
+    const bodyEl = document.getElementsByTagName("body")[0];
+    bodyEl.setAttribute("data-theme", previousTheme);
   }
 
   return (
     <IonModal
       ref={refModel}
       trigger="open-modal-theme"
-      onIonModalWillPresent={modalInit}
+      onIonModalWillPresent={willPresent}
       onIonModalDidDismiss={didDismiss}
       initialBreakpoint={0.25}
       breakpoints={[0, 0.25, 0.5]}

@@ -290,7 +290,7 @@ export default function Settings() {
                       <IonLabel>{t("setLoopTheme")}</IonLabel>
                       <IonIcon slot="end" icon={sparklesOutline} />
                     </IonItem>
-                    <Theme name={chain.theme} />
+                    <Theme />
 
                     <IonItem
                       lines="none"
