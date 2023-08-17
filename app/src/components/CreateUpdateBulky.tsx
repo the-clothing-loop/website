@@ -268,7 +268,7 @@ export default function CreateUpdateBulky({
                             icon={hourglassOutline}
                             size="small"
                             color="primary"
-                            className="tw-bg-primary-contrast tw-p-[2px] tw-rounded-full tw-absolute tw-bottom-[9px] tw-right-[-11px]"
+                            className="tw-bg-primary-contrast tw-p-[2px] tw-rounded-full tw-absolute -tw-bottom-1 -tw-right-3"
                           />
                         ) : null}
                       </div>
