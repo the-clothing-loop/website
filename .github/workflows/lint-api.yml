@@ -28,3 +28,6 @@ jobs:
       - name: Run Go Format
         run: make lint-test
         working-directory: ./server
+      - name: Run Go Test
+        run: make test-ci
+        working-directory: ./server

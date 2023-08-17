@@ -1,6 +1,6 @@
 # GoLang Server
 
-![Dependency Tree](https://www.plantuml.com/plantuml/png/PO-_RZ8n4CJxVOhjlWgk_qH152ZJHEaZOo-75V-nx8KJYdZts5Xdu5nOylvcPpMpJImYdws1V_ZkmnNvf1DgnnvFp27z7uPfcjR125UsrjBROHw6yh9FE8L9N2Xx2S_HPFlz-xb_sttiyQWDuO6EFX9ckzNCseqeJyADb01Oio7SKI2doCahVaKYWACtYcA9Gj49Wx-0zLIYUA7uFVexkW4KeIwB42fy8EaTHsyCnRIKh5TaEbhEQqaTlsYQPdXhySBFU6TpMZiU3aidfz3vf5MPvRbyDflLwb6heL87eF765kYv8i3JKDNQikEjPw-KfZqkDJfO2_Uu9TUINdD0bbx0bfmwM_C7)
+![Dependency Tree](https://www.plantuml.com/plantuml/png/POy_JmCn3CLtVmflJEtjg4CHxSW2x2XDt6j4_aIEhwSAzRkJQ-WVBaCi--UyvBrr5iKoU8SVmeEMWGdW2LzZEg4SR4OR9E919ENdhXl7SPcS2fDWgQFlhaCtdQ9JmM1MHofQme5TaL_Qz-tBvcsBU-i8TxIFJ5ZatehOqAC-gD1J1X0hZd13YOAXe4_uoKG0--WCyMI5E2Y7Fu3rgKny9FxgumMT0KhzkwnIgl2ET0p2qJdYF5_vQCWrz6XflCBppKRwxY_iwihtkzrSAJarEkrDOMMUcjLgiRZRlwDY6-36Rso67gC0F0nrMzCqlEPfSJ7Rm1ghmTLVAVy-WZK5CtZt2m00)
 
 ## Development install
 
@@ -130,3 +130,22 @@ And to stop the docker containers
 Although the `golang.go` vscode extension should lint your code for you, there is also a command as well:
 
 `make lint`
+
+## Setting up authentication in Postman
+
+| Variable | Type    | Example                                    | Description                                   |
+| -------- | ------- | ------------------------------------------ | --------------------------------------------- |
+| base     | default | http://localhost:8084                      | Base server url                               |
+| token    | secret  | \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* | Login, in a browser and find the token cookie |
+| userUID  | default | e896d087-5dd0-44fa-a549-2ead33a63d7a       | User UID                                      |
+| chainUID | default | 48ca9112-912a-43b4-a8bc-16dcd79f383d       | Chain UID                                     |
+
+1. Here's how to find cookies from the website:
+   Chromium: https://superuser.com/a/1114501
+   Firefox: https://firefox-source-docs.mozilla.org/devtools-user/storage_inspector/index.html
+2. Select the cookie named `token` and copy its value
+3. Paste the value into Postman
+4. Make sure that the `userUID` is from the account you logged in with
+5. If you want to send api requests that have a higher authentication level;
+   - **AuthState3AdminChainUser** & **AuthState2UserOfChain**: you need to set the `chainUID` to a loop that will relate to the user (see `user_chains` table) and if need be, have `user_chains.is_chain_admin` set to **True**.
+   - **AuthState4RootUser**: you need to set the `users.is_root_admin` database cell to **True**.

@@ -122,17 +122,12 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 	}
 
 	// get user
-	user = &models.User{}
-	if userUID != "" {
-		err := db.Raw(`SELECT * FROM users WHERE uid = ? LIMIT 1`, userUID).Scan(user).Error
-		if err == nil && user.ID != 0 {
-			err = user.AddUserChainsToObject(db)
-		}
-		if err != nil {
-			goscope.Log.Errorf("%v", err)
-		}
+	user, err := models.UserGetByUID(db, userUID, false)
+	if err == nil {
+		err = user.AddUserChainsToObject(db)
 	}
-	if user.ID == 0 {
+	if err != nil {
+		goscope.Log.Errorf("%v", err)
 		c.String(http.StatusBadRequest, "user UID must be set if chain UID is set")
 		return false, nil, nil, nil
 	}

@@ -172,58 +172,83 @@ export default function Settings() {
 
   return (
     <IonPage>
-      <IonHeader collapse="fade">
+      <IonHeader collapse="fade" translucent>
         <IonToolbar>
-          <IonTitle>{t("info")}</IonTitle>
+          <IonTitle>{t("information")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       {isAuthenticated === true ? (
-        <IonContent>
-          {authUser ? (
-            <UserCard
-              user={authUser}
-              chain={chain}
-              isUserPaused={isUserPaused}
-            />
-          ) : null}
+        <IonContent fullscreen color="light">
+          <IonItemDivider
+            className="ion-margin-start ion-margin-top ion-text-uppercase"
+            style={{
+              background: "transparent",
+              color: "var(--ion-color-medium-shade)",
+            }}
+          >
+            {t("account")}
+          </IonItemDivider>
+          <IonCard
+            style={{
+              marginTop: 6,
+              "--background": "var(--ion-color-primary-contrast)",
+            }}
+          >
+            {authUser ? (
+              <UserCard
+                user={authUser}
+                chain={chain}
+                isUserPaused={isUserPaused}
+              />
+            ) : null}
+            <IonList>
+              <IonItem
+                lines="none"
+                button
+                onClick={() => handlePauseButton(isUserPaused)}
+                detail={false}
+              >
+                <IonLabel className="ion-text-wrap">
+                  <h3 className="ion-text-bold">{t("pauseParticipation")}</h3>
+                  <p className="ion-no-wrap">
+                    {pausedDayjs
+                      ? pausedDayjs.fromNow()
+                      : t("setTimerForACoupleOfWeeks")}
+                  </p>
+                </IonLabel>
+                <IonButton slot="end" color="primary">
+                  {isUserPaused ? (
+                    <>
+                      <span>{t("unPause")}</span>
+                      <IonIcon icon={stopCircle} style={{ marginLeft: 8 }} />
+                    </>
+                  ) : (
+                    <>
+                      <span>{t("pauseUntil")}</span>
+                      <IonIcon icon={pauseCircle} style={{ marginLeft: 8 }} />
+                    </>
+                  )}
+                </IonButton>
+              </IonItem>
+            </IonList>
+          </IonCard>
           <IonList>
-            <IonItem
-              lines="none"
-              button
-              onClick={() => handlePauseButton(isUserPaused)}
-              detail={false}
+            <IonItemDivider
+              className="ion-margin-start ion-text-uppercase"
+              style={{
+                background: "transparent",
+                color: "var(--ion-color-medium-shade)",
+              }}
             >
-              <IonLabel className="ion-text-wrap">
-                <h3 className="ion-text-bold">{t("pauseParticipation")}</h3>
-                <p className="ion-no-wrap">
-                  {pausedDayjs
-                    ? pausedDayjs.fromNow()
-                    : t("setTimerForACoupleOfWeeks")}
-                </p>
-              </IonLabel>
-              <IonButton slot="end" color="primary">
-                {isUserPaused ? (
-                  <>
-                    <span>{t("unPause")}</span>
-                    <IonIcon icon={stopCircle} style={{ marginLeft: 8 }} />
-                  </>
-                ) : (
-                  <>
-                    <span>{t("pauseUntil")}</span>
-                    <IonIcon icon={pauseCircle} style={{ marginLeft: 8 }} />
-                  </>
-                )}
-              </IonButton>
-            </IonItem>
-            <IonCard color="secondary">
+              {t("loopInformation")}
+            </IonItemDivider>
+            <IonCard
+              style={{
+                marginTop: 6,
+                "--background": "var(--ion-color-primary-contrast)",
+              }}
+            >
               <IonList>
-                <IonItemDivider
-                  style={{
-                    background: "var(--ion-color-secondary-shade)",
-                  }}
-                >
-                  {t("loopInformation")}
-                </IonItemDivider>
                 <IonItem lines="none">
                   <IonSelect
                     ref={refChainSelect}

@@ -113,3 +113,53 @@ LIMIT 1
 
 	return e, nil
 }
+
+type UserContactData struct {
+	Name  string
+	Email zero.String
+}
+
+// Expects the userUID not to be empty
+func UserGetByUID(db *gorm.DB, userUID string, checkEmailVerification bool) (*User, error) {
+	query := `SELECT * FROM users	WHERE uid = ?`
+	if checkEmailVerification {
+		query += ` AND is_email_verified = TRUE`
+	}
+	query += ` LIMIT 1`
+
+	user := &User{}
+	err := db.Raw(query, userUID).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func UserGetByEmail(db *gorm.DB, userEmail string) (*User, error) {
+	if userEmail == "" {
+		return nil, errors.New("Email is required")
+	}
+	query := `SELECT * FROM users	WHERE email = ? LIMIT 1`
+	user := &User{}
+	err := db.Raw(query, userEmail).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func UserGetAdminsByChain(db *gorm.DB, chainId uint) ([]UserContactData, error) {
+	results := []UserContactData{}
+	err := db.Raw(`
+	SELECT users.name AS name, users.email AS email
+	FROM user_chains AS uc
+	LEFT JOIN users ON uc.user_id = users.id 
+	WHERE uc.chain_id = ?
+		AND uc.is_chain_admin = TRUE
+		AND users.is_email_verified = TRUE
+	`, chainId).Scan(&results).Error
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}
