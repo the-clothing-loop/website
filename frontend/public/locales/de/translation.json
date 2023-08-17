@@ -264,6 +264,8 @@
   "addToCalendar": "Add event to your calendar",
   "date": "Datum",
   "time": "Zeit",
+  "startTime": "Start time",
+  "endTime": "End time",
   "contactHost": "Host kontaktieren",
   "eventDetails": "Event Details",
   "relatedLoop": "Related Loop",
