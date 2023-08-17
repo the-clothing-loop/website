@@ -1,6 +1,9 @@
 {
   "info": "Info",
+  "information": "Information",
+  "account": "Account",
   "loopInformation": "Loop Information",
+  "setLoopTheme": "Set Loop theme",
   "rules": "Rules",
   "addresses": "Addresses",
   "bag": "Bag",

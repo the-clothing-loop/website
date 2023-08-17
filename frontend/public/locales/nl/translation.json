@@ -264,6 +264,8 @@
   "addToCalendar": "Evenement aan je agenda toevoegen",
   "date": "Datum",
   "time": "Tijd",
+  "startTime": "Start time",
+  "endTime": "End time",
   "contactHost": "Contacteer Host",
   "eventDetails": "Evenement Details",
   "relatedLoop": "Verwante Loop",
