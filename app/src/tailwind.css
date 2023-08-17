@@ -1,3 +1,9 @@
 /* @tailwind base; */
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .tw-invert-1 {
+    filter: invert(1);
+  }
+}

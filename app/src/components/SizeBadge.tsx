@@ -58,7 +58,7 @@ function BadgeItem({ sizes, icon }: { sizes: string[]; icon: string }) {
     <IonBadge color="light" className="tw-flex-row-reverse tw-flex">
       <IonImg
         src={`/categories/${icon}-50.png`}
-        className="dark:tw-invert tw-w-4 tw-h-4"
+        className="dark:tw-invert-1 tw-w-4 tw-h-4"
       />
       {sizes.map((s) => (
         <span className="tw-m-0.5" key={s}>
