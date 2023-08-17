@@ -114,7 +114,7 @@ export default function App() {
     if (theme === "default" || !theme) theme = "grey";
 
     bodyEl.setAttribute("data-theme", theme);
-  }, [chain?.theme]);
+  }, [chain]);
 
   async function auth() {
     let success = false;

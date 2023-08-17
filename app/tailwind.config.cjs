@@ -2,6 +2,8 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 
 const colors = {
   transparent: "transparent",
+  text: "var(--ion-text-color)",
+  background: "var(--ion-background-color)",
   primary: {
     DEFAULT: "var(--ion-color-primary)",
     contrast: "var(--ion-color-primary-contrast)",

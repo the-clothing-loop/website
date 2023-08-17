@@ -134,7 +134,7 @@ export default function UserCard({
     <div>
       <div className="ion-padding">
         <IonText>
-          <h1 className="ion-no-margin tw-relative">
+          <h1 className="ion-no-margin tw-relative tw-text-text">
             {user?.name}
             {isUserAdmin ? (
               <IonIcon

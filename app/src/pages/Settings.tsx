@@ -184,7 +184,7 @@ export default function Settings() {
           <IonItemDivider className="ion-margin-start ion-margin-top ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
             {t("account")}
           </IonItemDivider>
-          <IonCard className="tw-mt-1.5 tw-bg-primary-contrast">
+          <IonCard className="tw-mt-1.5 tw-bg-background">
             {authUser ? (
               <UserCard
                 user={authUser}
@@ -227,7 +227,7 @@ export default function Settings() {
             <IonItemDivider className="ion-margin-start ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
               {t("loopInformation")}
             </IonItemDivider>
-            <IonCard className="tw-mt-1.5 tw-bg-primary-contrast">
+            <IonCard className="tw-mt-1.5 tw-bg-background">
               <IonList>
                 <IonItem lines="none">
                   <IonSelect
