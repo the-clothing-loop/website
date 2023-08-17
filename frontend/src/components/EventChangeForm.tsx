@@ -238,7 +238,7 @@ export default function EventChangeForm(props: {
           <TextForm
             required
             min={2}
-            label={hasEndDate ? t("Start time") + "*" : t("time") + "*"}
+            label={hasEndDate ? t("startTime") + "*" : t("time") + "*"}
             name="time"
             type="time"
             value={sepDate.time.value}
@@ -247,8 +247,8 @@ export default function EventChangeForm(props: {
         </div>
         <div className="col-span-1 sm:col-span-2">
           <div className={`mb-3 mt-5 ${hasEndDate ? "bg-base-100" : ""}`}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 pt-0 pr-0 pl-0 -mt-2">
-              <label className="inline-flex items-center cursor-pointer p-4 transition-colors bg-base-100 bg-opacity-0 hover:bg-opacity-70">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 -mt-2">
+              <label className="inline-flex cursor-pointer p-4 transition-colors bg-base-100 bg-opacity-0 hover:bg-opacity-70">
                 <input
                   type="checkbox"
                   className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3"
@@ -273,18 +273,20 @@ export default function EventChangeForm(props: {
                     setHasEndDate(checked);
                   }}
                 />
-                <span>End time</span>
+                <span>{t("endTime")}</span>
               </label>
               {hasEndDate ? (
-                <TextForm
-                  required
-                  min={2}
-                  label={t("End time") + "*"}
-                  name="time"
-                  type="time"
-                  value={sepDateEnd.time.value}
-                  onChange={sepDateEnd.time.onChange}
-                />
+                <div className="pb-4">
+                  <TextForm
+                    required
+                    min={2}
+                    label={t("endTime") + "*"}
+                    name="time"
+                    type="time"
+                    value={sepDateEnd.time.value}
+                    onChange={sepDateEnd.time.onChange}
+                  />
+                </div>
               ) : null}
             </div>
           </div>
