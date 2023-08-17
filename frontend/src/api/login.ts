@@ -32,7 +32,7 @@ export function registerChainAdmin(
   return window.axios.post<never>("/v2/register/chain-admin", { user, chain });
 }
 
-export function registerBasicUser(user: RequestRegisterUser, chainUID: string) {
+export function registerBasicUser(user: RequestRegisterUser, chainUID?: string) {
   return window.axios.post<never>("/v2/register/basic-user", {
     user,
     chain_uid: chainUID,
