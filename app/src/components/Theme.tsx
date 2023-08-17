@@ -8,7 +8,12 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { checkmarkCircle, ellipse } from "ionicons/icons";
+import {
+  checkmark,
+  checkmarkCircle,
+  checkmarkSharp,
+  ellipse,
+} from "ionicons/icons";
 import { useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
@@ -66,13 +71,23 @@ export default function Theme(props: { name: string | undefined }) {
                   onClick={() => setSelectedTheme(c.name)}
                   className="hover:!tw-opacity-100 tw-group"
                 >
-                  <IonIcon
-                    icon={selected ? checkmarkCircle : ellipse}
-                    style={{ color: c.color }}
-                    size="large"
-                    aria-label={c.name}
-                    className=""
-                  />
+                  {c.name === "rainbow" ? (
+                    <span className="tw-h-[26px] tw-w-[26px] tw-bg-rainbow-btn tw-rounded-full tw-flex tw-justify-center tw-items-center">
+                      <IonIcon
+                        icon={checkmarkSharp}
+                        style={{ color: "#fff", fontSize: 22 }}
+                        aria-label={c.name}
+                        className={selected ? "" : "tw-hidden"}
+                      />
+                    </span>
+                  ) : (
+                    <IonIcon
+                      icon={selected ? checkmarkCircle : ellipse}
+                      style={{ color: c.color }}
+                      size="large"
+                      aria-label={c.name}
+                    />
+                  )}
                 </IonButton>
               );
             })}
@@ -87,16 +102,19 @@ const COLORS = [
   { name: "default", color: "#a5a5a5" },
   { name: "leafGreen", color: "#a6c665" },
   { name: "green", color: "#66926e" },
+  { name: "teal", color: "#48808b" },
   { name: "yellow", color: "#f4b63f" },
   { name: "orange", color: "#ef953d" },
-  { name: "redLight", color: "#e39aa1" },
   { name: "red", color: "#c73643" },
   { name: "pinkLight", color: "#ecbbd0" },
   { name: "pink", color: "#dc77a3" },
-  { name: "lilacLight", color: "#dab5d6" },
   { name: "lilac", color: "#b76dac" },
-  { name: "purple", color: "#a899c2" },
-  { name: "skyBlue", color: "#7ecfe0" },
-  { name: "blueLight", color: "#89b3d9" },
+  { name: "purple", color: "#6c45b0" },
+  { name: "skyBlue", color: "#43c6e0" },
+  { name: "blueLight", color: "#3f94e4" },
   { name: "blue", color: "#1467b3" },
+  {
+    name: "rainbow",
+    color: "transparent",
+  },
 ];
