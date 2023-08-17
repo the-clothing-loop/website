@@ -204,13 +204,7 @@ export default function CreateUpdateRules(props: {
         <IonList>
           {chain?.rules_override ? (
             <IonItem lines="full" color="dark" key="reset">
-              <IonIcon
-                icon={refreshOutline}
-                style={{
-                  marginLeft: 2,
-                  marginRight: 20,
-                }}
-              />
+              <IonIcon icon={refreshOutline} className="tw-ml-0.5 tw-mr-5" />
               <IonLabel className="ion-text-wrap">
                 <h3>{t("resetRules")}</h3>
                 <p>{t("resetDescription")}</p>

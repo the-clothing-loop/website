@@ -10,7 +10,6 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
-  IonItemDivider,
   IonLabel,
   IonList,
   IonModal,
@@ -47,7 +46,6 @@ import {
   MouseEvent,
   RefObject,
   useMemo,
-  useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID, User } from "../api";
@@ -209,7 +207,7 @@ export default function BagsList() {
           <IonRefresher
             slot="fixed"
             onIonRefresh={handleRefresh}
-            style={{ zIndex: 0 }}
+            className="tw-z-0"
           >
             <IonRefresherContent />
           </IonRefresher>
@@ -224,9 +222,6 @@ export default function BagsList() {
                 const isBagTooOld = bagUpdatedAt.isBefore(
                   dayjs().add(-7, "days"),
                 );
-                const isBagNameNumeric = Number.isSafeInteger(
-                  Number.parseInt(bag.number),
-                );
 
                 return (
                   <IonCol size="6" key={"inRoute" + bag.id}>
@@ -239,8 +234,7 @@ export default function BagsList() {
                         handleClickDelete(bag.id, bag.number)
                       }
                       onClickEdit={() => handleClickEdit(bag)}
-                      className="ion-no-margin"
-                      style={{ position: "relative", overflow: "visible" }}
+                      className="ion-no-margin tw-relative tw-overflow-visible"
                     >
                       {isChainAdmin ? (
                         <IonButton
@@ -249,11 +243,8 @@ export default function BagsList() {
                           style={{
                             "--padding-start": "5px",
                             "--padding-end": "5px",
-                            position: "absolute",
-                            top: 0,
-                            right: 3,
-                            zIndex: 2,
                           }}
+                          className="tw-absolute tw-top-0 tw-right-[3px] tw-z-10"
                           onClick={() => handleClickOptions(bag.id)}
                         >
                           <IonIcon icon={ellipsisHorizontal} />
@@ -261,58 +252,23 @@ export default function BagsList() {
                       ) : null}
                       <div
                         key="old"
-                        style={{
-                          fontSize: 14,
-                          display: "block",
-                          position: "absolute",
-                          top: "5px",
-                          left: "10px",
-                          ...(isBagTooOld
-                            ? {
-                                color: "var(--ion-color-danger)",
-                              }
-                            : {}),
-                        }}
+                        className={`tw-text-sm tw-block tw-absolute tw-top-[5px] tw-left-[10px] ${
+                          isBagTooOld ? "tw-text-danger" : ""
+                        }`}
                       >
                         {bagUpdatedAt.toDate().toLocaleDateString()}
                         {isBagTooOld ? (
-                          <span
-                            style={{
-                              backgroundColor: "var(--ion-color-danger)",
-                              height: 6,
-                              width: 6,
-                              borderRadius: "100%",
-                              display: "inline-block",
-                              marginInlineStart: 3,
-                              marginBottom: 1,
-                            }}
-                          ></span>
+                          <span className="tw-bg-danger tw-h-1.5 tw-w-1.5 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
                         ) : null}
                       </div>
                       <div
-                        style={{
-                          padding: "20px 10px 10px",
-                        }}
+                        className="tw-p-2.5 tw-pt-5"
                         onClick={() => handleClickItem(bag.id, bag.user_uid)}
                       >
-                        <div
-                          className="bagslist-bag-icon"
-                          style={{
-                            padding: "10px 20px 2px",
-                          }}
-                        >
+                        <div className="bagslist-bag-icon tw-pt-2.5 tw-px-5 tw-pb-0.5">
                           <BagSVG color={bag.color} />
                         </div>
-                        <div
-                          style={{
-                            textAlign: "center",
-                            fontWeight: "bold",
-                            fontSize: 16,
-                            lineHeight: "22px",
-                            color: "var(--ion-color-dark)",
-                          }}
-                          className="ion-text-ellipsis"
-                        >
+                        <div className="ion-text-ellipsis tw-text-center tw-font-bold tw-text-base tw-text-dark ">
                           {(bag.number.length > 7 ? "" : t("bag") + " ") +
                             bag.number}
                         </div>
@@ -320,11 +276,7 @@ export default function BagsList() {
 
                       <IonRouterLink
                         routerLink={"/address/" + user.uid}
-                        style={{
-                          padding: "12px 8px",
-                          display: "block",
-                          backgroundColor: "var(--ion-color-light)",
-                        }}
+                        className="tw-py-3 tw-px-2 tw-block tw-bg-light"
                       >
                         <UserLink user={user} routeIndex={routeIndex} />
                       </IonRouterLink>
@@ -346,21 +298,13 @@ export default function BagsList() {
                   <IonCol
                     size="12"
                     key={bag.id}
-                    style={{
-                      padding: "2px 5px",
-                    }}
+                    className="tw-py-0.5 tw-px-[5px]"
                   >
                     <IonCard className="ion-no-margin">
-                      <IonItem
-                        lines="none"
-                        style={{
-                          padding: "3px 0",
-                        }}
-                      >
+                      <IonItem lines="none" className="tw-py-[3px] tw-px-0">
                         <div
                           slot="start"
-                          style={{ width: 24, height: 24 }}
-                          className="bagslist-bag-icon"
+                          className="bagslist-bag-icon tw-w-6 tw-h-6"
                           onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
                           <BagSVG color={bag.color} />
@@ -369,37 +313,18 @@ export default function BagsList() {
                           className="ion-text-ellipsis"
                           onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
-                          <span className="ion-text-bold">
+                          <span className="!tw-font-bold">
                             {(bag.number.length > 7 ? "" : t("bag") + " ") +
                               bag.number}
                           </span>
                           <span
-                            style={{
-                              display: "block",
-                              fontSize: 14,
-                              marginTop: 3,
-                              ...(isBagTooOld
-                                ? {
-                                    color: "var(--ion-color-danger)",
-                                  }
-                                : {
-                                    color: "var(--ion-color-medium)",
-                                  }),
-                            }}
+                            className={`tw-block tw-text-base tw-mt-[3px] ${
+                              isBagTooOld ? "tw-text-danger" : "tw-text-medium"
+                            }`}
                           >
                             {bagUpdatedAt.toDate().toLocaleDateString()}
                             {isBagTooOld ? (
-                              <span
-                                style={{
-                                  backgroundColor: "var(--ion-color-danger)",
-                                  height: 6,
-                                  width: 6,
-                                  borderRadius: "100%",
-                                  display: "inline-block",
-                                  marginInlineStart: 3,
-                                  marginBottom: 1,
-                                }}
-                              ></span>
+                              <span className="tw-bg-danger tw-h-1.5 tw-w-1.5 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
                             ) : null}
                           </span>
                         </div>
@@ -428,7 +353,7 @@ export default function BagsList() {
                             color="light"
                             slot="end"
                             routerLink={"/address/" + user.uid}
-                            style={{ width: 115, height: 35 }}
+                            className="tw-w-[115px] tw-h-[35px]"
                           >
                             <UserLink user={user} routeIndex={routeIndex} />
                           </IonButton>
@@ -518,19 +443,7 @@ function Card({
       {open ? (
         <div
           key="options"
-          style={{
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: "#ffffffa0",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 2,
-          }}
+          className="tw-absolute tw-inset-0 tw-bg-[#ffffffa0] tw-flex tw-flex-col tw-justify-center tw-items-center tw-z-10"
         >
           <IonButton
             size="small"
@@ -538,10 +451,8 @@ function Card({
             style={{
               "--padding-start": "5px",
               "--padding-end": "5px",
-              position: "absolute",
-              top: 0,
-              right: 3,
             }}
+            className="tw-absolute tw-top-0 tw-right-[3px]"
             onClick={handleClose}
           >
             <IonIcon icon={closeOutline} />
@@ -698,31 +609,26 @@ function SelectUserModal({
               //   let uc = user.chains.find((u) => u.chain_uid === chain.uid);
               return (
                 <IonItem lines="full" key={user.uid}>
-                  <span slot="start" className="ion-text-bold">{`#${
+                  <span slot="start" className="!tw-font-bold">{`#${
                     i + 1
                   }`}</span>
                   <IonLabel>
                     <h2
-                      style={{
-                        fontSize: 18,
-                        ...(isSelected
-                          ? {
-                              fontWeight: 500,
-                            }
-                          : {}),
-                      }}
+                      className={`tw-text-lg ${
+                        isSelected ? "tw-font-semibold" : ""
+                      }`}
                     >
                       {user.name}
                       {user.uid === authUser?.uid ? (
                         <IonIcon
                           icon={personCircleOutline}
-                          className="ion-icon-text"
+                          className="tw-translate-y-0.5 tw-px-0.5"
                         />
                       ) : null}
                     </h2>
                     {isAddressPrivate ? null : (
                       <IonText color={isSelected ? undefined : "medium"}>
-                        <p style={{ fontSize: 14 }}>{user.address}</p>
+                        <p className="tw-text-sm">{user.address}</p>
                       </IonText>
                     )}
                   </IonLabel>
@@ -766,48 +672,25 @@ function BagSVG({ color }: { color: string }) {
 function UserLink({ user, routeIndex }: { user: User; routeIndex: number }) {
   const { t } = useTranslation();
   return (
-    <div
-      className="ion-text-bold"
-      style={{
-        color: "var(--ion-color-medium)",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "baseline",
-        fontSize: 12,
-        width: "100%",
-      }}
-    >
+    <div className="!tw-font-bold tw-text-medium tw-flex tw-flex-row tw-items-baseline tw-text-xs tw-w-full">
       {user.paused_until ? (
         <IonIcon
-          style={{
-            transform: "translateY(1px)",
-            width: 16,
-            height: 16,
-            minWidth: 16,
-            marginInlineEnd: 3,
-          }}
+          className="tw-translate-y-px tw-w-4 tw-h-4 tw-min-w-[16px] tw-me-[3px]"
           icon={pauseCircle}
         />
       ) : (
-        <span style={{ marginInlineEnd: 3 }}>{"#" + (routeIndex + 1)}</span>
+        <span className="tw-me-[3px]">{"#" + (routeIndex + 1)}</span>
       )}
       <span
-        className="ion-text-ellipsis"
-        style={{
-          fontSize: 14,
-          flexGrow: 1,
-          display: "block",
-          color: user.paused_until
-            ? "var(--ion-color-medium)"
-            : "var(--ion-color-dark)",
-        }}
+        className={`ion-text-ellipsis tw-text-sm tw-flex-grow tw-block ${
+          user.paused_until ? "tw-text-medium" : "tw-text-dark"
+        }`}
       >
         {user.name}
       </span>
       <IonIcon
         icon={chevronForwardOutline}
-        className="ion-icon-text"
-        style={{ minWidth: 12, width: 12 }}
+        className="tw-translate-y-0.5 tw-px-0.5 tw-min-w-[12px] tw-w-3"
       ></IonIcon>
     </div>
   );
