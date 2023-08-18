@@ -3,28 +3,51 @@ import {
   FocusEvent,
   HTMLInputTypeAttribute,
   InputHTMLAttributes,
-  ChangeEvent,
+  useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
 import PopoverOnHover from "./Popover";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input/max";
+import Cookies from "js-cookie";
+import "react-phone-number-input/style.css";
+import { ipinfoGet } from "../api/ipinfo";
 
-const phoneRegExp = /^\+?\(?[0-9]{1,3}\)?[-\s\./0-9]+$/g;
+const IPINFO_KEY = import.meta.env.VITE_IPINFO_API_KEY;
+const COOKIE_IPINFO_COUNTRY = "ipinfo_country";
 
 interface PhoneFormFieldProps {
   classes?: {
     root?: string;
   };
   required?: boolean;
-  value?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  value: string;
+  onChange: (e: string) => void;
 }
 export function PhoneFormField(props: PhoneFormFieldProps) {
   const { t } = useTranslation();
 
   const [valid, setValid] = useState(true);
+  const [defaultCountry, setDefaultCountry] = useState(
+    () => Cookies.get(COOKIE_IPINFO_COUNTRY) || ""
+  );
+  useEffect(() => {
+    if (defaultCountry) return;
+
+    ipinfoGet(IPINFO_KEY)
+      .then((res) => {
+        return res.data.country;
+      })
+      .catch((err) => {
+        return "NL";
+      })
+      .then((res) => {
+        Cookies.set(COOKIE_IPINFO_COUNTRY, res);
+        setDefaultCountry(res);
+      });
+  }, []);
 
   function onBlur(e: FocusEvent<HTMLInputElement>) {
-    let v = phoneRegExp.test(e.target.value);
+    let v = isValidPhoneNumber(e.target.value);
     console.log(e.target.value, v);
 
     setValid(v);
@@ -38,13 +61,15 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
           {props.required ? "*" : ""}
         </span>
       </div>
-      <input
+      <PhoneInput
+        international
+        defaultCountry={defaultCountry as any}
+        value={props.value}
+        onChange={props.onChange as any}
+        onBlur={onBlur}
         type="phone"
         name="phone"
         aria-invalid={!valid}
-        onBlur={onBlur}
-        onChange={props.onChange}
-        value={props.value}
         className={`input input-bordered w-full ${
           valid
             ? "input-secondary"

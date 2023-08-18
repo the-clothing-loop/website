@@ -51,6 +51,7 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^6.15.5",
     "react-i18next": "^11.8.11",
+    "react-phone-number-input": "^3.3.4",
     "react-places-autocomplete": "^7.3.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",

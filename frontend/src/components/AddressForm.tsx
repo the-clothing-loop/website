@@ -11,6 +11,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import PopoverOnHover from "./Popover";
 import { userGetByUID, userHasNewsletter } from "../api/user";
 
+import { isValidPhoneNumber } from "react-phone-number-input/max";
 import { AuthContext } from "../providers/AuthProvider";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 
@@ -105,6 +106,10 @@ export default function AddressForm(props: {
     e.preventDefault();
 
     (async () => {
+      if (!isValidPhoneNumber(values.phone)) {
+        addToastError(t("required") + ": " + t("phoneNumber"), 400);
+        return;
+      }
       if (openAddress) {
         if (!(address.street && address.city && address.country)) {
           addToastError(t("required") + ": " + t("address"), 400);
@@ -207,7 +212,7 @@ export default function AddressForm(props: {
         <PhoneFormField
           required
           value={values.phone}
-          onChange={(e) => setValue("phone", e.target.value)}
+          onChange={(e) => setValue("phone", e)}
         />
         {!authUser ? (
           <TextForm
