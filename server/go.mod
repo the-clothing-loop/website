@@ -3,6 +3,7 @@ module github.com/the-clothing-loop/website/server
 go 1.20
 
 require (
+	github.com/0xch4z/selectr v0.2.0
 	github.com/GGP1/atoll v0.6.0
 	github.com/OneSignal/onesignal-go-api v1.0.4
 	github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c
