@@ -41,7 +41,7 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
         return "NL";
       })
       .then((res) => {
-        Cookies.set(COOKIE_IPINFO_COUNTRY, res);
+        Cookies.set(COOKIE_IPINFO_COUNTRY, res, { expires: 365 });
         setDefaultCountry(res);
       });
   }, []);
