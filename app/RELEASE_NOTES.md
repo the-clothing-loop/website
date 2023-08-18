@@ -68,3 +68,8 @@ Give the FAQ text a sparkling new update.
 ## v1.11
 
 Putting the sparkle in last translations.
+
+## v1.12
+
+A kaleidoscope of colors: Theme support upgrade.
+A fresh coat of paint for the info page.
