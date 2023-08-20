@@ -99,61 +99,33 @@ func UserGetAllOfChain(c *gin.Context) {
 	isAuthState3AdminChainUser := isAuthUserChainAdmin || authUser.IsRootAdmin
 
 	// retrieve user from query
-	users := &[]models.User{}
-	allUserChains := &[]models.UserChain{}
-
 	tx := db.Begin()
-	err := tx.Raw(`
-SELECT
-	user_chains.id             AS id,
-	user_chains.chain_id       AS chain_id,
-	chains.uid                 AS chain_uid,
-	user_chains.user_id        AS user_id,
-	users.uid                  AS user_uid,
-	user_chains.is_chain_admin AS is_chain_admin,
-	user_chains.created_at     AS created_at,
-	user_chains.is_approved    AS is_approved
-FROM user_chains
-LEFT JOIN chains ON user_chains.chain_id = chains.id
-LEFT JOIN users ON user_chains.user_id = users.id
-WHERE users.id IN (
-	SELECT user_chains.user_id
-	FROM user_chains
-	LEFT JOIN chains ON chains.id = user_chains.chain_id
-	WHERE chains.id = ?
-)
-	`, chain.ID).Scan(allUserChains).Error
+	allUserChains, err := models.UserChainGeDataByChain(tx, chain.ID)
+
 	if err != nil {
 		goscope.Log.Errorf("Unable to retrieve associations between a loop and its users: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to retrieve associations between a loop and its users")
 		return
 	}
-	err = tx.Raw(`
-SELECT users.*
-FROM users
-LEFT JOIN user_chains ON user_chains.user_id = users.id 
-LEFT JOIN chains      ON chains.id = user_chains.chain_id
-WHERE chains.id = ? AND users.is_email_verified = TRUE
-	`, chain.ID).Scan(users).Error
-	if err != nil {
+	users, errUsersByChain := models.UserGetAllUsersByChain(tx, chain.ID)
+	if errUsersByChain != nil {
 		goscope.Log.Errorf("Unable to retrieve associated users of a loop: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to retrieve associated users of a loop")
 		return
 	}
 	tx.Commit()
 
-	for i, user := range *users {
+	for i, user := range users {
 		thisUserChains := []models.UserChain{}
-		for ii := range *allUserChains {
-			userChain := (*allUserChains)[ii]
+		for ii := range allUserChains {
+			userChain := (allUserChains)[ii]
 			if userChain.UserID == user.ID {
 				// goscope.Log.Infof("userchain is added (userChain.ID: %d -> user.ID: %d)\n", userChain.ID, user.ID)
 				thisUserChains = append(thisUserChains, userChain)
 			}
 		}
-		(*users)[i].Chains = thisUserChains
+		(users)[i].Chains = thisUserChains
 	}
-
 	// omit user data from participants
 	if !isAuthState3AdminChainUser {
 		route, err := chain.GetRouteOrderByUserUID(db)
@@ -191,7 +163,7 @@ WHERE uc.chain_id = ? AND bi.id IS NOT NULL
 		// fmt.Printf("order len: %d\tallowed indexes: %+v\n", len(route), indexAllowed)
 
 		// fmt.Printf("auth order: %v\n", authUserRouteOrder)
-		for i, user := range *users {
+		for i, user := range users {
 			// find users above and below this user in the route order
 			routeOrder := routeIndex(route, user.UID)
 			_, isChainAdmin := user.IsPartOfChain(chain.UID)
@@ -219,10 +191,10 @@ WHERE uc.chain_id = ? AND bi.id IS NOT NULL
 			}
 			if isPrivate {
 				if !isChainAdmin {
-					(*users)[i].Email = zero.StringFrom("***")
-					(*users)[i].PhoneNumber = "***"
+					(users)[i].Email = zero.StringFrom("***")
+					(users)[i].PhoneNumber = "***"
 				}
-				(*users)[i].Address = "***"
+				(users)[i].Address = "***"
 			}
 		}
 	}

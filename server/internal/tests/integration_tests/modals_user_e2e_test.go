@@ -86,4 +86,13 @@ func TestUsersService(t *testing.T) {
 		assert.Equal(t, 1, len(users))
 		assert.Nil(t, err)
 	})
+
+	t.Run("TestGetAllUsersByChain", func(t *testing.T) {
+		// adding more users
+		mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{})
+		mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{})
+		users, err := models.UserGetAllUsersByChain(db, chain.ID)
+		assert.Equal(t, 4, len(users))
+		assert.Nil(t, err)
+	})
 }
