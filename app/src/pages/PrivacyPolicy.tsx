@@ -22,9 +22,7 @@ export default function PrivacyPolicy() {
       </IonHeader>
       <IonContent className="ion-padding">
         <IonText>
-          <h1 style={{ marginTop: 0, fontSize: 30, fontWeight: "bold" }}>
-            Privacy Policy
-          </h1>
+          <h1 className="tw-mt-0 tw-text-3xl tw-font-bold">Privacy Policy</h1>
 
           <p>Version dated 2022, February 9th</p>
           <p>

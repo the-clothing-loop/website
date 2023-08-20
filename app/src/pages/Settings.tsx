@@ -36,6 +36,7 @@ import {
   lockClosedOutline,
   pauseCircle,
   shareOutline,
+  sparklesOutline,
   stopCircle,
 } from "ionicons/icons";
 import dayjs from "../dayjs";
@@ -43,6 +44,7 @@ import isPaused from "../utils/is_paused";
 import Badges from "../components/SizeBadge";
 import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
+import Theme from "../components/Theme";
 
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
@@ -179,21 +181,10 @@ export default function Settings() {
       </IonHeader>
       {isAuthenticated === true ? (
         <IonContent fullscreen color="light">
-          <IonItemDivider
-            className="ion-margin-start ion-margin-top ion-text-uppercase"
-            style={{
-              background: "transparent",
-              color: "var(--ion-color-medium-shade)",
-            }}
-          >
+          <IonItemDivider className="ion-margin-start ion-margin-top ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
             {t("account")}
           </IonItemDivider>
-          <IonCard
-            style={{
-              marginTop: 6,
-              "--background": "var(--ion-color-primary-contrast)",
-            }}
-          >
+          <IonCard className="tw-mt-1.5 tw-bg-background">
             {authUser ? (
               <UserCard
                 user={authUser}
@@ -209,7 +200,7 @@ export default function Settings() {
                 detail={false}
               >
                 <IonLabel className="ion-text-wrap">
-                  <h3 className="ion-text-bold">{t("pauseParticipation")}</h3>
+                  <h3 className="!tw-font-bold">{t("pauseParticipation")}</h3>
                   <p className="ion-no-wrap">
                     {pausedDayjs
                       ? pausedDayjs.fromNow()
@@ -220,12 +211,12 @@ export default function Settings() {
                   {isUserPaused ? (
                     <>
                       <span>{t("unPause")}</span>
-                      <IonIcon icon={stopCircle} style={{ marginLeft: 8 }} />
+                      <IonIcon icon={stopCircle} className="tw-ml-2" />
                     </>
                   ) : (
                     <>
                       <span>{t("pauseUntil")}</span>
-                      <IonIcon icon={pauseCircle} style={{ marginLeft: 8 }} />
+                      <IonIcon icon={pauseCircle} className="tw-ml-2" />
                     </>
                   )}
                 </IonButton>
@@ -233,27 +224,16 @@ export default function Settings() {
             </IonList>
           </IonCard>
           <IonList>
-            <IonItemDivider
-              className="ion-margin-start ion-text-uppercase"
-              style={{
-                background: "transparent",
-                color: "var(--ion-color-medium-shade)",
-              }}
-            >
+            <IonItemDivider className="ion-margin-start ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
               {t("loopInformation")}
             </IonItemDivider>
-            <IonCard
-              style={{
-                marginTop: 6,
-                "--background": "var(--ion-color-primary-contrast)",
-              }}
-            >
+            <IonCard className="tw-mt-1.5 tw-bg-background">
               <IonList>
                 <IonItem lines="none">
                   <IonSelect
                     ref={refChainSelect}
                     aria-label={t("selectALoop")}
-                    style={{ fontSize: 26 }}
+                    className="tw-text-2xl"
                     labelPlacement="floating"
                     justify="space-between"
                     value={chain?.uid || ""}
@@ -277,11 +257,7 @@ export default function Settings() {
                     {!chain.open_to_new_members ? (
                       <>
                         <IonIcon size="small" icon={lockClosedOutline} />
-                        <span
-                          key="closed"
-                          className="ion-margin-end"
-                          style={{ marginInlineStart: 6 }}
-                        >
+                        <span key="closed" className="ion-margin-end tw-ms-1.5">
                           {t("closed")}
                         </span>
                       </>
@@ -289,14 +265,14 @@ export default function Settings() {
                     {!chain.published ? (
                       <>
                         <IonIcon size="small" icon={eyeOffOutline} />
-                        <span key="closed" style={{ marginInlineStart: 6 }}>
+                        <span key="closed" className="tw-ms-1.5">
                           {t("draft")}
                         </span>
                       </>
                     ) : (
                       <>
                         <IonIcon size="small" icon={eyeOutline} />
-                        <span key="visible" style={{ marginInlineStart: 6 }}>
+                        <span key="visible" className="tw-ms-1.5">
                           {t("visible")}
                         </span>
                       </>
@@ -304,16 +280,29 @@ export default function Settings() {
                   </IonItem>
                 ) : null}
                 {isChainAdmin && chain ? (
-                  <IonItem
-                    lines="none"
-                    button
-                    detail={false}
-                    target="_blank"
-                    href={`https://www.clothingloop.org/loops/${chain.uid}/members`}
-                  >
-                    <IonLabel>{t("goToAdminPortal")}</IonLabel>
-                    <IonIcon icon={compassOutline} />
-                  </IonItem>
+                  <>
+                    <IonItem
+                      lines="none"
+                      button
+                      id="open-modal-theme"
+                      detail={false}
+                    >
+                      <IonLabel>{t("setLoopTheme")}</IonLabel>
+                      <IonIcon slot="end" icon={sparklesOutline} />
+                    </IonItem>
+                    <Theme />
+
+                    <IonItem
+                      lines="none"
+                      button
+                      detail={false}
+                      target="_blank"
+                      href={`https://www.clothingloop.org/loops/${chain.uid}/members`}
+                    >
+                      <IonLabel>{t("goToAdminPortal")}</IonLabel>
+                      <IonIcon icon={compassOutline} />
+                    </IonItem>
+                  </>
                 ) : null}
                 {chain?.published ? (
                   <IonItem
@@ -341,16 +330,11 @@ export default function Settings() {
                   <IonLabel>
                     <h3>{t("description")}</h3>
                     <p
-                      style={{
-                        whiteSpace: "pre-wrap",
-                        overflow: "hidden",
-                        display: "block",
-                        ...(!expandedDescription && showExpandButton
-                          ? {
-                              maxHeight: 60,
-                            }
-                          : {}),
-                      }}
+                      className={`tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
+                        !expandedDescription && showExpandButton
+                          ? "tw-max-h-[60px]"
+                          : ""
+                      }`}
                     >
                       {chain?.description}
                     </p>
@@ -360,11 +344,7 @@ export default function Settings() {
                         size="small"
                         color="clear"
                         expand="block"
-                        style={{
-                          marginTop: -6,
-                          "--padding-start": "0px",
-                          // "--padding-end": "5px",
-                        }}
+                        className="-tw-mt-1.5 tw-ps-0"
                       >
                         <IonIcon icon={ellipsisHorizontal} color="primary" />
                       </IonButton>
@@ -375,9 +355,9 @@ export default function Settings() {
             </IonCard>
           </IonList>
 
-          <div className="ion-padding" style={{ marginTop: "1em" }}>
+          <div className="ion-padding tw-mt-4">
             <IonButton id="settings-logout-btn" expand="block" color="danger">
-              Logout
+              {t("logout")}
             </IonButton>
             <IonAlert
               trigger="settings-logout-btn"
@@ -395,14 +375,7 @@ export default function Settings() {
               ]}
             ></IonAlert>
           </div>
-          <IonText
-            className="ion-text-center"
-            style={{
-              display: "block",
-              color: "var(--ion-color-medium)",
-              fontSize: "14px",
-            }}
-          >
+          <IonText className="ion-text-center tw-block tw-text-medium tw-text-sm">
             version: {VERSION}
           </IonText>
           <IonList className="ion-margin-top">

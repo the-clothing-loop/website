@@ -170,19 +170,14 @@ export default function CreateUpdateBag({
               }
             />
           </IonItem>
-          <IonItem
-            lines="none"
-            style={{
-              marginTop: -20,
-            }}
-          >
+          <IonItem lines="none" className="-tw-mt-5">
             {["👻", "🐰"].map((emoji, i) => (
               <IonFabButton
                 key={i}
                 size="small"
                 color={bagNumber.includes(emoji) ? "primary" : "light"}
                 onClick={() => handleSetBagEmoji(emoji)}
-                style={{ fontSize: 20 }}
+                className="tw-text-xl"
               >
                 {emoji}
               </IonFabButton>
@@ -200,13 +195,13 @@ export default function CreateUpdateBag({
                       size="default"
                       key={c}
                       onClick={() => setBagColor(c)}
-                      className="bag-color-select-button"
+                      className="hover:!tw-opacity-100 tw-group"
                     >
                       <IonIcon
                         icon={selected ? checkmarkCircle : ellipse}
                         style={{ color: c }}
                         size="large"
-                        className="bag-color-select-icon"
+                        className="tw-border-2 tw-border-solid tw-border-transparent tw-rounded-full group-hover:tw-border-medium group-active:tw-border-primary"
                       />
                     </IonButton>
                   );
@@ -221,7 +216,7 @@ export default function CreateUpdateBag({
             <IonSelect
               label={t("bagHolder") || ""}
               labelPlacement="stacked"
-              className="ion-text-bold"
+              className="!tw-font-bold"
               placeholder={t("selectTheNewBagHolder") || ""}
               value={bagHolder}
               color={error === "holder" ? "danger" : undefined}

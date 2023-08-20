@@ -61,7 +61,6 @@ import Settings from "./pages/Settings";
 import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
 import Loading from "./pages/Loading";
-import ToDo from "./pages/ToDo";
 import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -83,7 +82,7 @@ setupIonicReact({
 });
 
 export default function App() {
-  const { isAuthenticated, init, authenticate, bags } =
+  const { isAuthenticated, init, authenticate, bags, chain } =
     useContext(StoreContext);
   const history = useHistory();
   let location = useLocation();
@@ -106,6 +105,16 @@ export default function App() {
       root?.removeEventListener("store-error", eventCatchStoreErr);
     };
   }, []);
+
+  useEffect(() => {
+    if (!chain || chain.theme === undefined) return;
+    const bodyEl = document.getElementsByTagName("body")[0];
+
+    let theme = chain.theme;
+    if (theme === "default" || !theme) theme = "grey";
+
+    bodyEl.setAttribute("data-theme", theme);
+  }, [chain]);
 
   async function auth() {
     let success = false;
@@ -229,7 +238,6 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
           path="/settings/open-source"
           component={OpenSource}
         ></Route>
-        <Route exact path="/todo" component={ToDo}></Route>
       </IonRouterOutlet>
       <IonTabBar slot="bottom" onIonTabsWillChange={handleTabsWillChange}>
         <IonTabButton tab="help" href="/help">
@@ -243,17 +251,7 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
         <IonTabButton tab="bags" href="/bags">
           <IonIcon aria-hidden="true" icon={bagHandleOutline} />
           {hasOldBag ? (
-            <div
-              style={{
-                backgroundColor: "var(--ion-color-danger)",
-                borderRadius: "100%",
-                width: "10px",
-                height: "10px",
-                position: "absolute",
-                top: "3px",
-                left: "calc(50% + 10px)",
-              }}
-            ></div>
+            <div className="tw-bg-danger tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)]"></div>
           ) : null}
           <IonLabel>{t("bags")}</IonLabel>
         </IonTabButton>
@@ -271,3 +269,29 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
     </IonTabs>
   );
 }
+
+interface CssVars {
+  light: string;
+  lightShade: string;
+  lightTint: string;
+  medium: string;
+  mediumShade: string;
+  mediumTint: string;
+}
+const THEME_TO_CSS_VARS = {
+  grey: { "": "", color: "#a5a5a5" },
+  leafGreen: { "": "", color: "#a6c665" },
+  green: { "": "", color: "#66926e" },
+  yellow: { "": "", color: "#f4b63f" },
+  orange: { "": "", color: "#ef953d" },
+  redLight: { "": "", color: "#e39aa1" },
+  red: { "": "", color: "#c73643" },
+  pinkLight: { "": "", color: "#ecbbd0" },
+  pink: { "": "", color: "#dc77a3" },
+  lilacLight: { "": "", color: "#dab5d6" },
+  lilac: { "": "", color: "#b76dac" },
+  purple: { "": "", color: "#a899c2" },
+  skyBlue: { "": "", color: "#7ecfe0" },
+  blueLight: { "": "", color: "#89b3d9" },
+  blue: { "": "", color: "#1467b3" },
+};

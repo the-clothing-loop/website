@@ -1,0 +1,26 @@
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .tw-invert-1 {
+    filter: invert(1);
+  }
+
+  .tw-bg-rainbow-btn {
+    background: linear-gradient(
+      45deg,
+      hsl(8, 100%, 45%) 0%,
+      hsl(8, 100%, 45%) 27.3%,
+      hsl(33, 100%, 50%) 27.3%,
+      hsl(33, 100%, 50%) 38.6%,
+      hsl(56, 100%, 42%) 38.6%,
+      hsl(56, 100%, 42%) 50%,
+      hsl(133, 82%, 43%) 50%,
+      hsl(133, 82%, 43%) 61.3%,
+      hsl(222, 100%, 59%) 61.3%,
+      hsl(222, 100%, 59%) 72.6%,
+      hsl(292, 70%, 55%) 72.6%
+    );
+  }
+}

@@ -55,20 +55,13 @@ export const SizeLetters: Record<Sizes | string, string> = {
 };
 function BadgeItem({ sizes, icon }: { sizes: string[]; icon: string }) {
   return (
-    <IonBadge
-      color="light"
-      style={{ flexDirection: "row-reverse", display: "flex" }}
-    >
+    <IonBadge color="light" className="tw-flex-row-reverse tw-flex">
       <IonImg
         src={`/categories/${icon}-50.png`}
-        style={{
-          width: 16,
-          height: 16,
-        }}
-        className="badge-item-img"
+        className="dark:tw-invert-1 tw-w-4 tw-h-4"
       />
       {sizes.map((s) => (
-        <span style={{ margin: 2 }} key={s}>
+        <span className="tw-m-0.5" key={s}>
           {SizeLetters[s]}
         </span>
       ))}
@@ -94,14 +87,7 @@ export default function Badges(props: {
       .sort((a, z) => a.localeCompare(z)) || [];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-end",
-        gap: 4,
-      }}
-    >
+    <div className="tw-flex tw-flex-col tw-items-end tw-gap-1">
       {women?.length || props.genders?.includes(Genders.women) ? (
         <BadgeItem sizes={women} icon="woman" key="women" />
       ) : null}

@@ -39,6 +39,7 @@
     "@ionic/storage": "^4.0.0",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
+    "autoprefixer": "^10.4.15",
     "dayjs": "^1.11.9",
     "i18next": "^23.2.10",
     "i18next-browser-languagedetector": "^7.1.0",
@@ -46,6 +47,7 @@
     "ionicons": "^7.1.2",
     "nlf": "^2.1.1",
     "onesignal-cordova-plugin": "^3.3.1",
+    "postcss": "^8.4.27",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.0.2",
@@ -53,6 +55,7 @@
     "react-router-dom": "*",
     "react-transition-group": "^4.4.5",
     "redaxios": "^0.5.1",
+    "tailwindcss": "^3.3.3",
     "use-debounce": "^9.0.4",
     "use-long-press": "^3.1.5"
   },

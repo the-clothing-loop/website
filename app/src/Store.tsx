@@ -15,6 +15,7 @@ import {
   BulkyItem,
   bulkyItemGetAllByChain,
   userUpdate,
+  chainUpdate,
 } from "./api";
 import dayjs from "./dayjs";
 
@@ -28,6 +29,7 @@ export const StoreContext = createContext({
   isChainAdmin: false,
   authUser: null as null | User,
   setPause: (p: number) => {},
+  setTheme: (c: string) => {},
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
   route: [] as UID[],
@@ -120,7 +122,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     try {
       const chainUID: string | null = await storage.get("chain_uid");
       if (_isAuthenticated && chainUID) {
-        _chain = (await chainGet(chainUID)).data;
+        _chain = (await chainGet(chainUID, false, true)).data;
         await _setChain(_chain, _authUser!.uid);
         _isChainAdmin = IsChainAdmin(_authUser, _chain);
       } else if (chainUID) {
@@ -145,7 +147,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (c && _authUserUID) {
       try {
         const res = await Promise.all([
-          chainGet(c.uid, true),
+          chainGet(c.uid, true, true),
           userGetAllByChain(c.uid),
           routeGetOrder(c.uid),
           bagGetAllByChain(c.uid, _authUserUID),
@@ -168,6 +170,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setBags(_bags);
     setBulkyItems(_bulkyItems);
     setIsChainAdmin(IsChainAdmin(authUser, _chain));
+  }
+
+  async function _setTheme(c: string) {
+    if (!chain) throw Error("No loop selected");
+    const oldTheme = chain.theme;
+    setChain((s) => ({ ...(s as Chain), theme: c }));
+    chainUpdate({
+      uid: chain.uid,
+      theme: c,
+    }).catch((e) => {
+      setChain((s) => ({ ...(s as Chain), theme: oldTheme }));
+    });
   }
 
   async function _setPause(pause: number) {
@@ -198,7 +212,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       if (!chain)
         throw "You must have first selected a Loop in the settings tab.";
 
-      let _chain = await chainGet(chain.uid, true);
+      let _chain = await chainGet(chain.uid, true, true);
       setChain(_chain.data);
     } else if (tab === "address" || tab === "bags") {
       if (!chain)
@@ -227,7 +241,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         const [_authUser, _chain] = await Promise.allSettled([
           userGetByUID(undefined, authUser.uid),
           !!chain
-            ? chainGet(chain.uid, true)
+            ? chainGet(chain.uid, true, true)
             : Promise.reject("No Loop selected"),
         ]);
 
@@ -251,6 +265,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       value={{
         authUser,
         setPause: _setPause,
+        setTheme: _setTheme,
         route,
         bags,
         bulkyItems,

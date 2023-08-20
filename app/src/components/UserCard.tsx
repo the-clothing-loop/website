@@ -134,19 +134,13 @@ export default function UserCard({
     <div>
       <div className="ion-padding">
         <IonText>
-          <h1 className="ion-no-margin" style={{ position: "relative" }}>
+          <h1 className="ion-no-margin tw-relative tw-text-text">
             {user?.name}
             {isUserAdmin ? (
               <IonIcon
                 icon={shield}
                 color="primary"
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  margin: 0,
-                  marginLeft: "5px",
-                  verticalAlign: "text-top",
-                }}
+                className="tw-w-[18px] tw-h-[18px] tw-m-0 tw-ml-[5px] tw-align-text-top"
               />
             ) : null}
 
@@ -154,13 +148,7 @@ export default function UserCard({
               <IonIcon
                 icon={pauseCircleSharp}
                 color="medium"
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  margin: 0,
-                  marginLeft: "5px",
-                  verticalAlign: "text-top",
-                }}
+                className="tw-w-[18px] tw-h-[18px] tw-m-0 tw-ml-[5px] tw-align-text-top"
               />
             ) : null}
           </h1>
@@ -179,7 +167,7 @@ export default function UserCard({
               {...longPressPhoneNumber()}
             >
               <IonLabel>
-                <h3 className="ion-text-bold">{t("phoneNumber")}</h3>
+                <h3 className="!tw-font-bold">{t("phoneNumber")}</h3>
                 <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
               </IonLabel>
             </IonItem>
@@ -231,14 +219,14 @@ export default function UserCard({
               {...longPressAddress()}
             >
               <IonLabel>
-                <h3 className="ion-text-bold">{t("address")}</h3>
+                <h3 className="!tw-font-bold">{t("address")}</h3>
                 {/* https://www.google.com/maps/@${long},${lat},14z */}
                 <p className="ion-text-wrap">{user?.address}</p>
               </IonLabel>
               {user.address ? (
                 <IonImg
                   slot="end"
-                  style={{ width: 24, height: 24 }}
+                  className="tw-w-[24px] tw-h-[24px]"
                   src="/google_maps_logo.svg"
                 />
               ) : null}
@@ -295,12 +283,7 @@ export default function UserCard({
 function MessengerIcons(props: { phoneNumber: string }) {
   let phone = props.phoneNumber.replaceAll(/[^\d]/g, "") || "";
   return (
-    <div
-      style={{
-        display: "flex",
-        margin: "8px 16px",
-      }}
-    >
+    <div className="tw-flex tw-my-2 tw-mx-4">
       {messagingApps.map((app) => {
         let isPhoneValid = props.phoneNumber.startsWith("+");
         isPhoneValid = isPhoneValid || app.name === "Sms";
@@ -309,9 +292,9 @@ function MessengerIcons(props: { phoneNumber: string }) {
             disabled={!isPhoneValid}
             color={isPhoneValid ? undefined : "medium"}
             key={app.name}
-            style={{
-              marginInlineEnd: 8,
-              ...(isPhoneValid
+            className="tw-me-2"
+            style={
+              isPhoneValid
                 ? {
                     "--background": app.color,
                     "--background-activated": app.colorFade,
@@ -320,18 +303,15 @@ function MessengerIcons(props: { phoneNumber: string }) {
                   }
                 : {
                     opacity: isPhoneValid ? 1 : 0.6,
-                  }),
-            }}
+                  }
+            }
             href={isPhoneValid ? app.link(phone) : undefined}
             target={isPhoneValid ? "blank" : undefined}
           >
             <IonImg
               src={app.icon}
               alt={app.name}
-              style={{
-                margin: 12,
-                width: "100%",
-              }}
+              className="tw-m-3 tw-w-full"
             />
           </IonFabButton>
         );

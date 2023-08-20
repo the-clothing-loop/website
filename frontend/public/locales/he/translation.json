@@ -264,6 +264,8 @@
   "addToCalendar": "הוסיפו את האירוע ליומן שלכם",
   "date": "תאריך",
   "time": "שעה",
+  "startTime": "Start time",
+  "endTime": "End time",
   "contactHost": "פרטי קשר של המארחים",
   "eventDetails": "פרטי האירוע",
   "relatedLoop": "לולאה קשורה",
