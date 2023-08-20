@@ -120,8 +120,8 @@ export default function Login() {
                     <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
                   </button>
                 )}
-                <div>
-                  New to the Clothing Loop?
+                <div className="mt-4 prose">
+                  New to the Clothing Loop?{" "}
                   <Link to={"/users/signup"}>Click here</Link> to register
                 </div>
               </form>
