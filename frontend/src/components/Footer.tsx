@@ -148,7 +148,7 @@ export default function Footer() {
                   </li>
                 </ul>
               </div>
-              <div className="md:col-span-2 md:row-start-2 lg:row-start-auto lg:col-span-2 self-end flex justify-center md:justify-start mt-3 mb-6 px-3">
+              <div className="hidden md:col-span-2 md:row-start-2 lg:row-start-auto lg:col-span-2 self-end justify-center md:justify-start mt-3 mb-6 px-3">
                 {mobileOS === MobileOS.IOS || mobileOS === MobileOS.OTHER ? (
                   <a
                     href="https://testflight.apple.com/join/bFOGBLNw"
