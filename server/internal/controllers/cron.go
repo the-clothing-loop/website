@@ -4,6 +4,7 @@ import (
 	"github.com/OneSignal/onesignal-go-api"
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"gorm.io/gorm"
 )
@@ -11,6 +12,10 @@ import (
 func CronMonthly(db *gorm.DB) {
 	closeChainsWithOldPendingParticipants(db)
 	emailHostsOldPendingParticipants(db)
+}
+
+func CronDaily(db *gorm.DB) {
+	emailSendAgain(db)
 }
 
 func CronHourly(db *gorm.DB) {
@@ -115,7 +120,7 @@ ORDER BY u.email
 	for i := range emailValues {
 		email := emailValues[i]
 		glog.Infof("Sending email approve reminder to %s", email.Email)
-		go views.EmailApproveReminder(email.Name, email.Email, email.Approvals)
+		go views.EmailApproveReminder(db, email.Name, email.Email, email.Approvals)
 	}
 }
 
@@ -163,5 +168,19 @@ AND b.last_notified_at IS NULL
 		}
 
 		db.Exec(`UPDATE bags SET last_notified_at = NOW() WHERE id IN ?`, bagIDs)
+	}
+}
+
+func emailSendAgain(db *gorm.DB) {
+	ms, _ := models.MailGetDueForResend(db)
+
+	for _, m := range ms {
+		err := app.MailSend(db, m)
+		if err != nil {
+			m.AddError(db, err)
+			continue
+		}
+
+		m.UpdateDBFailedResend(db, err)
 	}
 }

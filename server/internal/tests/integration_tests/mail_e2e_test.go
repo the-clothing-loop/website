@@ -22,7 +22,7 @@ func TestMail(t *testing.T) {
 
 func TestEmailAParticipantJoinedTheLoop(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailAParticipantJoinedTheLoop(c,
+	err := views.EmailAParticipantJoinedTheLoop(c, db,
 		faker.Person().Contact().Email,
 		faker.Person().Name(),
 		faker.Company().Name(),
@@ -37,7 +37,7 @@ func TestEmailAParticipantJoinedTheLoop(t *testing.T) {
 
 func TestEmailContactUserMessage(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailContactUserMessage(c,
+	err := views.EmailContactUserMessage(c, db,
 		faker.Person().Name(),
 		faker.Person().Contact().Email,
 		faker.Lorem().Paragraph(2),
@@ -47,7 +47,7 @@ func TestEmailContactUserMessage(t *testing.T) {
 
 func TestEmailContactConfirmation(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailContactConfirmation(c,
+	err := views.EmailContactConfirmation(c, db,
 		faker.Person().Name(),
 		faker.Person().Contact().Email,
 		faker.Lorem().Paragraph(2),
@@ -57,7 +57,7 @@ func TestEmailContactConfirmation(t *testing.T) {
 
 func TestEmailSubscribeToNewsletter(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailSubscribeToNewsletter(c,
+	err := views.EmailSubscribeToNewsletter(c, db,
 		faker.Person().Name(),
 		faker.Person().Contact().Email,
 	)
@@ -66,7 +66,7 @@ func TestEmailSubscribeToNewsletter(t *testing.T) {
 
 func TestEmailRegisterVerification(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailRegisterVerification(c,
+	err := views.EmailRegisterVerification(c, db,
 		faker.Person().Name(),
 		faker.Person().Contact().Email,
 		faker.UUID().V4(),
@@ -76,7 +76,7 @@ func TestEmailRegisterVerification(t *testing.T) {
 
 func TestEmailLoginVerificationWebsite(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailLoginVerification(c,
+	err := views.EmailLoginVerification(c, db,
 		faker.Person().Name(),
 		faker.Person().Contact().Email,
 		faker.UUID().V4(),
@@ -85,7 +85,7 @@ func TestEmailLoginVerificationWebsite(t *testing.T) {
 }
 func TestEmailLoginVerificationApp(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailLoginVerification(c,
+	err := views.EmailLoginVerification(c, db,
 		faker.Person().Name(),
 		faker.Person().Contact().Email,
 		fmt.Sprintf("%08d", faker.RandomNumber(8)),
@@ -98,7 +98,7 @@ func TestEmailAnAdminDeniedYourJoinRequest(t *testing.T) {
 
 	reasons := []string{"other", "too_far_away", "sizes_genders"}
 	for _, reason := range reasons {
-		err := views.EmailAnAdminDeniedYourJoinRequest(c,
+		err := views.EmailAnAdminDeniedYourJoinRequest(c, db,
 			faker.Person().Name(),
 			faker.Person().Contact().Email,
 			faker.Company().Name(),
@@ -109,7 +109,7 @@ func TestEmailAnAdminDeniedYourJoinRequest(t *testing.T) {
 }
 func TestEmailPoke(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailPoke(c,
+	err := views.EmailPoke(c, db,
 		faker.Person().Name(),
 		faker.Person().Contact().Email,
 		faker.Person().Name(),
@@ -135,7 +135,7 @@ func TestEmailApproveReminder(t *testing.T) {
 		},
 	}
 
-	err := views.EmailApproveReminder(
+	err := views.EmailApproveReminder(db,
 		faker.Person().Name(),
 		faker.Person().Contact().Email,
 		approvals,
