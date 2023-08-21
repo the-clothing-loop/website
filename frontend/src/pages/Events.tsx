@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet";
 import { useState, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import { Event } from "../api/types";
 import { eventGetAll, eventGetPrevious } from "../api/event";
@@ -159,6 +159,7 @@ export default function Events() {
                 }}
               />
             </div>
+
             {authUser ? (
               <Link
                 to="/events/create"
@@ -167,7 +168,28 @@ export default function Events() {
                 <span className="pr-2 rtl:pr-0 rtl:pl-2 feather feather-plus" />
                 {t("createEvent")}
               </Link>
-            ) : null}
+            ) : (
+              <div
+                className="btn btn-primary mb-4 md:mb-0 "
+                onClick={() =>
+                  addModal({
+                    message: "You must be a registered user to create an event",
+                    actions: [
+                      {
+                        text: t("signup"),
+                        type: "secondary",
+                        fn: () => {
+                          window.location.replace("/users/signup");
+                        },
+                      },
+                    ],
+                  })
+                }
+              >
+                <span className="pr-2 rtl:pr-0 rtl:pl-2 feather feather-plus" />
+                {t("createEvent")}
+              </div>
+            )}
           </div>
 
           {!events ? (
