@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"gopkg.in/guregu/null.v3"
@@ -36,21 +37,21 @@ func (m *Mail) AddToQueue(db *gorm.DB) error {
 	return db.Create(m).Error
 }
 
-func (m *Mail) AddError(db *gorm.DB, err error) error {
-	return db.Exec(`UPDATE mail_retries SET err = ? WHERE id = ?`, err.Error(), m.ID).Error
-}
-
-func (m *Mail) UpdateDBFailedResend(db *gorm.DB, err error) error {
+func (m *Mail) UpdateNextRetryAttempt(db *gorm.DB, err error) error {
 	m.NextRetryAttempt += 1
-	if m.NextRetryAttempt >= m.MaxRetryAttempts+1 {
+	if m.NextRetryAttempt >= m.MaxRetryAttempts+1 || err == nil {
 		return db.Exec(`DELETE FROM mail_retries WHERE id = ?`, m.ID).Error
 	}
 
+	newErr := err.Error()
+	if m.Err.Valid {
+		newErr = fmt.Sprintf("%s, %s", newErr, m.Err.String)
+	}
 	return db.Exec(`
 UPDATE mail_retries
 SET next_retry_attempt = ?, err = ?
 WHERE id = ?
-	`, m.NextRetryAttempt, err.Error(), m.ID).Error
+	`, m.NextRetryAttempt, newErr, m.ID).Error
 }
 
 func MailGetDueForResend(db *gorm.DB) ([]*Mail, error) {

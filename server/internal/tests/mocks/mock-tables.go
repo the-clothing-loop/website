@@ -239,9 +239,9 @@ func MockMail(t *testing.T, db *gorm.DB, o MockMailOptions) (mail *models.Mail) 
 		glog.Fatalf("Unable to create testEvent: %v", err)
 	}
 
-	// t.Cleanup(func() {
-	// 	db.Exec(`DELETE FROM mail_retries WHERE id = ?`, mail.ID)
-	// })
+	t.Cleanup(func() {
+		db.Exec(`DELETE FROM mail_retries WHERE id = ?`, mail.ID)
+	})
 
 	return mail
 }

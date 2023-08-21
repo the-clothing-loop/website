@@ -172,15 +172,12 @@ AND b.last_notified_at IS NULL
 }
 
 func emailSendAgain(db *gorm.DB) {
+	glog.Info("Running emailSendAgain")
 	ms, _ := models.MailGetDueForResend(db)
 
 	for _, m := range ms {
 		err := app.MailSend(db, m)
-		if err != nil {
-			m.AddError(db, err)
-			continue
-		}
 
-		m.UpdateDBFailedResend(db, err)
+		m.UpdateNextRetryAttempt(db, err)
 	}
 }
