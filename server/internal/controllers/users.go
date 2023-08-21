@@ -124,7 +124,7 @@ func UserGetAllOfChain(c *gin.Context) {
 				thisUserChains = append(thisUserChains, userChain)
 			}
 		}
-		(users)[i].Chains = thisUserChains
+		users[i].Chains = thisUserChains
 	}
 	// omit user data from participants
 	if !isAuthState3AdminChainUser {
@@ -191,10 +191,10 @@ WHERE uc.chain_id = ? AND bi.id IS NOT NULL
 			}
 			if isPrivate {
 				if !isChainAdmin {
-					(users)[i].Email = zero.StringFrom("***")
-					(users)[i].PhoneNumber = "***"
+					users[i].Email = zero.StringFrom("***")
+					users[i].PhoneNumber = "***"
 				}
-				(users)[i].Address = "***"
+				users[i].Address = "***"
 			}
 		}
 	}
