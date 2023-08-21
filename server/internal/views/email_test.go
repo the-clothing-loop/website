@@ -1,6 +1,8 @@
 package views
 
 import (
+	"fmt"
+	"html/template"
 	"strconv"
 	"strings"
 	"testing"
@@ -179,7 +181,7 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 						s, _ := selectr.Parse(v)
 						value, err := s.Resolve(tpl.Data)
 						assert.NoError(t, err, v)
-						assert.Contains(t, m.Body, value, v)
+						assert.Contains(t, m.Body, template.HTMLEscapeString(fmt.Sprint(value)), v)
 					}
 				})
 			}
