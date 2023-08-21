@@ -164,7 +164,7 @@ func UserGetAdminsByChain(db *gorm.DB, chainId uint) ([]UserContactData, error) 
 	return results, nil
 }
 
-func UserGetAllUsersByChain(db *gorm.DB, chainId uint) ([]User, error) {
+func UserGetAllUsersByChain(db *gorm.DB, chainID uint) ([]User, error) {
 	results := []User{}
 
 	err := db.Raw(`
@@ -172,7 +172,7 @@ func UserGetAllUsersByChain(db *gorm.DB, chainId uint) ([]User, error) {
 	FROM users
 	LEFT JOIN user_chains ON user_chains.user_id = users.id 
 	WHERE user_chains.chain_id = ? AND users.is_email_verified = TRUE
-	`, chainId).Scan(&results).Error
+	`, chainID).Scan(&results).Error
 
 	if err != nil {
 		return nil, err

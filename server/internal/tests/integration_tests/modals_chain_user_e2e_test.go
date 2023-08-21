@@ -17,8 +17,8 @@ func TestChainUsersService(t *testing.T) {
 	mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{})
 	mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{})
 
-	t.Run("UserChainGeDataByChain", func(t *testing.T) {
-		chainUserData, err := models.UserChainGeDataByChain(db, chain.ID)
+	t.Run("UserChainGetIndirectByChain", func(t *testing.T) {
+		chainUserData, err := models.UserChainGetIndirectByChain(db, chain.ID)
 		assert.Equal(t, 5, len(chainUserData))
 		assert.Nil(t, err)
 	})

@@ -88,7 +88,7 @@ DELETE FROM bulky_items WHERE user_chain_id IN (
 	return nil
 }
 
-func UserChainGeDataByChain(db *gorm.DB, chainId uint) ([]UserChain, error) {
+func UserChainGetIndirectByChain(db *gorm.DB, chainID uint) ([]UserChain, error) {
 	results := []UserChain{}
 
 	err := db.Raw(`
@@ -104,8 +104,13 @@ func UserChainGeDataByChain(db *gorm.DB, chainId uint) ([]UserChain, error) {
 	FROM user_chains
 	LEFT JOIN chains ON user_chains.chain_id = chains.id
 	LEFT JOIN users ON user_chains.user_id = users.id
-	WHERE chains.id = ?
-	`, chainId).Scan(&results).Error
+	WHERE users.id IN (
+		SELECT user_chains.user_id
+		FROM user_chains
+		LEFT JOIN chains ON chains.id = user_chains.chain_id
+		WHERE chains.id = ?
+	)	
+	`, chainID).Scan(&results).Error
 
 	if err != nil {
 		return nil, err

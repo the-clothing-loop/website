@@ -100,7 +100,7 @@ func UserGetAllOfChain(c *gin.Context) {
 
 	// retrieve user from query
 	tx := db.Begin()
-	allUserChains, err := models.UserChainGeDataByChain(tx, chain.ID)
+	allUserChains, err := models.UserChainGetIndirectByChain(tx, chain.ID)
 
 	if err != nil {
 		goscope.Log.Errorf("Unable to retrieve associations between a loop and its users: %v", err)
