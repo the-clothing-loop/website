@@ -54,8 +54,7 @@ WHERE uc.is_chain_admin = TRUE AND u.email IS NOT NULL AND uc.chain_id IN (
 	}
 
 	for _, v := range userAdmins {
-		go views.EmailPoke(
-			c,
+		go views.EmailPoke(c, db,
 			v.Name,
 			v.Email,
 			user.Name,

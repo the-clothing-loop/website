@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"fmt"
+	"html/template"
 	"math/rand"
 	"strings"
 	"testing"
@@ -13,6 +14,7 @@ import (
 
 	Faker "github.com/jaswdr/faker"
 	uuid "github.com/satori/go.uuid"
+	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 )
@@ -34,6 +36,13 @@ type MockChainAndUserOptions struct {
 
 type MockEventOptions struct {
 	IsNotPublished bool
+}
+
+type MockMailOptions struct {
+	CreatedAt        time.Time
+	IsErr            bool
+	MaxRetryAttempts int
+	NextRetryAttempt int
 }
 
 func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
@@ -206,4 +215,33 @@ func randomEnums(enums []string, zeroOrMore bool) (result []string) {
 	}
 
 	return result
+}
+
+func MockMail(t *testing.T, db *gorm.DB, o MockMailOptions) (mail *models.Mail) {
+	mail = &models.Mail{
+		SenderName:       faker.Person().Name(),
+		SenderAddress:    faker.Person().Contact().Email,
+		ToName:           faker.Person().Name(),
+		ToAddress:        faker.Person().Contact().Email,
+		Subject:          faker.Lorem().Sentence(5),
+		Body:             template.HTMLEscapeString(faker.Lorem().Paragraph(3)),
+		MaxRetryAttempts: o.MaxRetryAttempts,
+		NextRetryAttempt: o.NextRetryAttempt,
+	}
+	if o.IsErr {
+		mail.Err = null.NewString("FakeError: Invalid "+faker.Pet().Cat(), true)
+	}
+	if !o.CreatedAt.IsZero() {
+		mail.CreatedAt = o.CreatedAt
+	}
+
+	if err := db.Create(mail).Error; err != nil {
+		glog.Fatalf("Unable to create testEvent: %v", err)
+	}
+
+	t.Cleanup(func() {
+		db.Exec(`DELETE FROM mail_retries WHERE id = ?`, mail.ID)
+	})
+
+	return mail
 }

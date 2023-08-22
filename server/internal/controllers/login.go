@@ -48,7 +48,7 @@ func LoginEmail(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	err = views.EmailLoginVerification(c, user.Name, user.Email.String, token, body.IsApp)
+	err = views.EmailLoginVerification(c, db, user.Name, user.Email.String, token, body.IsApp)
 	if err != nil {
 		glog.Errorf("Unable to send email: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to send email")
@@ -123,8 +123,7 @@ UPDATE chains SET published = TRUE WHERE id IN (
 
 		for _, result := range results {
 			if result.Email.Valid {
-				go views.EmailAParticipantJoinedTheLoop(
-					c,
+				go views.EmailAParticipantJoinedTheLoop(c, db,
 					result.Email.String,
 					result.Name,
 					result.Chain,
@@ -231,7 +230,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		return
 	}
 
-	go views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
+	go views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func RegisterBasicUser(c *gin.Context) {
@@ -302,7 +301,7 @@ func RegisterBasicUser(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
+	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func Logout(c *gin.Context) {

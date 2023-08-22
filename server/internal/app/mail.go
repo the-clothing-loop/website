@@ -10,18 +10,13 @@ import (
 	"strings"
 
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+	"github.com/the-clothing-loop/website/server/internal/models"
+	"gorm.io/gorm"
 
 	gomail "github.com/wneessen/go-mail"
 )
 
 var smtpClient *gomail.Client
-
-type Mail struct {
-	Sender  mail.Address
-	To      mail.Address
-	Subject string
-	Body    string
-}
 
 func MailInit() {
 	var err error
@@ -39,18 +34,16 @@ func MailInit() {
 	}
 }
 
-func MailCreate() *Mail {
-	m := &Mail{
-		Sender: mail.Address{
-			Name:    "The Clothing Loop",
-			Address: Config.SMTP_SENDER,
-		},
+func MailCreate() *models.Mail {
+	m := &models.Mail{
+		SenderName:    "The Clothing Loop",
+		SenderAddress: Config.SMTP_SENDER,
 	}
 	return m
 }
 
-func MailSend(m *Mail) error {
-	if Config.ENV == EnvEnumAcceptance && strings.HasSuffix(m.To.Address, "@example.com") {
+func MailSend(db *gorm.DB, m *models.Mail) error {
+	if Config.ENV == EnvEnumAcceptance && strings.HasSuffix(m.ToAddress, "@example.com") {
 		return nil
 	}
 
@@ -62,6 +55,13 @@ func MailSend(m *Mail) error {
 	}
 	if err != nil {
 		goscope.Log.Errorf("Unable to send email: %v", err)
+
+		// Ensure that the email is not sent infinitely by the retry mechanism
+		if m.NextRetryAttempt == 0 && m.MaxRetryAttempts > models.MAIL_RETRY_NEVER {
+			m.NextRetryAttempt = 1
+			m.AddToQueue(db)
+			fmt.Printf("Adding email to resend queue: %++v", m)
+		}
 		return err
 	}
 
@@ -79,21 +79,15 @@ func MailRemoveAllEmails() {
 	}
 }
 
-func mailSendByBrevoApi(m *Mail) error {
-	// toJSON := []map[string]any{}
-	// for _, t := range m.To {
-	// 	toJSON = append(toJSON, map[string]any{
-	// 	})
-	// }
-
+func mailSendByBrevoApi(m *models.Mail) error {
 	postBody, _ := json.Marshal(map[string]any{
 		"sender": map[string]any{
-			"name":  m.Sender.Name,
-			"email": m.Sender.Address,
+			"name":  m.SenderName,
+			"email": m.SenderAddress,
 		},
 		"to": []map[string]any{{
-			"name":  m.To.Name,
-			"email": m.To.Address,
+			"name":  m.ToName,
+			"email": m.ToAddress,
 		}},
 		"subject":     m.Subject,
 		"htmlContent": m.Body,
@@ -118,11 +112,20 @@ func mailSendByBrevoApi(m *Mail) error {
 	return nil
 }
 
-func mailSendBySmtp(m *Mail) error {
+func mailSendBySmtp(m *models.Mail) error {
 	gm := gomail.NewMsg()
 
-	gm.From(m.Sender.String())
-	gm.AddTo(m.To.String())
+	from := mail.Address{
+		Name:    m.SenderName,
+		Address: m.SenderAddress,
+	}
+	to := mail.Address{
+		Name:    m.ToName,
+		Address: m.ToAddress,
+	}
+
+	gm.From(from.String())
+	gm.AddTo(to.String())
 	gm.Subject(m.Subject)
 	gm.SetBodyString(gomail.TypeTextHTML, m.Body)
 

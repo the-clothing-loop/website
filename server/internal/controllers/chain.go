@@ -390,8 +390,7 @@ LIMIT 1
 
 		for _, result := range results {
 			if result.Email.Valid {
-				go views.EmailAParticipantJoinedTheLoop(
-					c,
+				go views.EmailAParticipantJoinedTheLoop(c, db,
 					result.Email.String,
 					result.Name,
 					chain.Name,
@@ -473,7 +472,7 @@ WHERE user_id = ? AND chain_id = ?
 	chain.SetRouteOrderByUserUIDs(db, newRoute) // update the route order
 
 	if user.Email.Valid {
-		views.EmailAnAdminApprovedYourJoinRequest(c, user.Name, user.Email.String, chain.Name)
+		views.EmailAnAdminApprovedYourJoinRequest(c, db, user.Name, user.Email.String, chain.Name)
 	}
 }
 
@@ -502,7 +501,7 @@ func ChainDeleteUnapproved(c *gin.Context) {
 	}
 
 	if user.Email.Valid {
-		views.EmailAnAdminDeniedYourJoinRequest(c, user.Name, user.Email.String, chain.Name,
+		views.EmailAnAdminDeniedYourJoinRequest(c, db, user.Name, user.Email.String, chain.Name,
 			query.Reason)
 	}
 
