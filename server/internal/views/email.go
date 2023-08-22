@@ -203,7 +203,6 @@ func EmailContactUserMessage(c *gin.Context, db *gorm.DB,
 	message string,
 ) error {
 	m := app.MailCreate()
-	m.MaxRetryAttempts = models.MAIL_RETRY_NEXT_WEEK
 	m.ToName = "The Clothing Loop"
 	m.ToAddress = app.Config.SMTP_SENDER
 	err := emailGenerateMessage(m, "en", "contact_confirmation", gin.H{
