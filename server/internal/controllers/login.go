@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/golang/glog"
@@ -232,6 +233,62 @@ func RegisterChainAdmin(c *gin.Context) {
 	}
 
 	go views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
+}
+
+func RegisterOrphanedUser(c *gin.Context) {
+	db := getDB(c)
+	fmt.Println("Test Print")
+	var body struct {
+		User UserCreateRequestBody `json:"user" binding:"required"`
+	}
+	// Tries to bind uuid in go code with uid from JSON from the frontend and cant because it isnt there
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
+		c.String(http.StatusBadRequest, models.ErrSizeInvalid.Error())
+		return
+	}
+
+	user := &models.User{
+		UID:             uuid.NewV4().String(),
+		Email:           zero.StringFrom(body.User.Email),
+		IsEmailVerified: false,
+		IsRootAdmin:     false,
+		Name:            body.User.Name,
+		PhoneNumber:     body.User.PhoneNumber,
+		Sizes:           body.User.Sizes,
+		Address:         body.User.Address,
+		Latitude:        body.User.Latitude,
+		Longitude:       body.User.Longitude,
+	}
+
+	fmt.Println(user)
+
+	if res := db.Create(user); res.Error != nil {
+		goscope.Log.Warningf("User already exists: %v", res.Error)
+		c.String(http.StatusConflict, "User already exists")
+		return
+	}
+
+	if body.User.Newsletter {
+		n := &models.Newsletter{
+			Email:    body.User.Email,
+			Name:     body.User.Name,
+			Verified: false,
+		}
+		n.CreateOrUpdate(db)
+	}
+
+	token, err := auth.TokenCreateUnverified(db, user.ID)
+	if err != nil {
+		goscope.Log.Errorf("Unable to create token: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to create token")
+		return
+	}
+	views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
 }
 
 func RegisterBasicUser(c *gin.Context) {
