@@ -23,6 +23,7 @@
   "dependencies": {
     "@capacitor/android": "^5.1.1",
     "@capacitor/app": "5.0.5",
+    "@capacitor/app-launcher": "^5.0.6",
     "@capacitor/assets": "^2.0.4",
     "@capacitor/camera": "^5.0.5",
     "@capacitor/clipboard": "^5.0.5",
