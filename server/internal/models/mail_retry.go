@@ -9,10 +9,9 @@ import (
 )
 
 const (
-	MAIL_RETRY_NEVER      = 0
-	MAIL_RETRY_NEXT_DAY   = 1
-	MAIL_RETRY_NEXT_WEEK  = 2
-	MAIL_RETRY_TWO_MONTHS = 3
+	MAIL_RETRY_NEVER    = 0
+	MAIL_RETRY_NEXT_DAY = 1
+	MAIL_RETRY_TWO_DAYS = 2
 )
 
 type Mail struct {
@@ -40,7 +39,7 @@ func (m *Mail) AddToQueue(db *gorm.DB) error {
 func (m *Mail) UpdateNextRetryAttempt(db *gorm.DB, err error) error {
 	m.NextRetryAttempt += 1
 	if m.NextRetryAttempt >= m.MaxRetryAttempts+1 || err == nil {
-		return db.Exec(`DELETE FROM mail_retries WHERE id = ?`, m.ID).Error
+		return db.Exec(`UPDATE mail_retries SET next_retry_attempt = 0 WHERE id = ?`, m.ID).Error
 	}
 
 	newErr := err.Error()
@@ -59,8 +58,8 @@ func MailGetDueForResend(db *gorm.DB) ([]*Mail, error) {
 	err := db.Raw(`
 SELECT * FROM mail_retries
 WHERE (next_retry_attempt = 1 AND created_at < (NOW() - INTERVAL 15 HOUR))
-	OR (next_retry_attempt = 2 AND created_at < (NOW() - INTERVAL 7 DAY))
-	OR (next_retry_attempt = 3 AND created_at < (NOW() - INTERVAL 2 MONTH))
+	OR (next_retry_attempt = 2 AND created_at < (NOW() - INTERVAL 2 DAY))
+	OR (next_retry_attempt = 3 AND created_at < (NOW() - INTERVAL 3 DAY))
 	`).Scan(&mails).Error
 	if err != nil {
 		return nil, err

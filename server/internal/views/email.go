@@ -146,7 +146,7 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context, db *gorm.DB,
 	i18n := "en"
 
 	m := app.MailCreate()
-	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_MONTHS
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = adminName
 	m.ToAddress = adminEmail
 
@@ -259,6 +259,7 @@ func EmailRegisterVerification(c *gin.Context, db *gorm.DB,
 ) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
 	err := emailGenerateMessage(m, i18n, "register_verification", gin.H{
@@ -302,6 +303,7 @@ func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, db *gorm.DB,
 ) error {
 	i18n := getI18n(c)
 	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
 	err := emailGenerateMessage(m, i18n, "an_admin_approved_your_join_request", gin.H{
@@ -325,6 +327,7 @@ func EmailAnAdminDeniedYourJoinRequest(c *gin.Context, db *gorm.DB,
 	// i18n := getI18n(c)
 	i18n := "en"
 	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
 	err := emailGenerateMessage(m, i18n, "an_admin_denied_your_join_request", gin.H{
@@ -347,6 +350,7 @@ func EmailPoke(c *gin.Context, db *gorm.DB,
 ) error {
 	i18n := "en"
 	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
 	err := emailGenerateMessage(m, i18n, "poke", gin.H{
@@ -378,6 +382,7 @@ func EmailApproveReminder(db *gorm.DB,
 	// i18n := getI18n(c)
 	i18n := "en"
 	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
 	err := emailGenerateMessage(m, i18n, "approve_reminder", gin.H{
