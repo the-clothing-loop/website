@@ -55,6 +55,15 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		latitude = faker.Address().Latitude()
 		longitude = faker.Address().Latitude()
 	}
+	chains := []models.UserChain{}
+	if chainID != 0 {
+		chains = append(chains, models.UserChain{
+			ChainID:      chainID,
+			IsChainAdmin: o.IsChainAdmin,
+			IsApproved:   !o.IsNotApproved,
+			RouteOrder:   o.RouteOrderIndex,
+		})
+	}
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain())),
@@ -72,14 +81,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 				Verified: !o.IsNotTokenVerified,
 			},
 		},
-		Chains: []models.UserChain{
-			{
-				ChainID:      chainID,
-				IsChainAdmin: o.IsChainAdmin,
-				IsApproved:   !o.IsNotApproved,
-				RouteOrder:   o.RouteOrderIndex,
-			},
-		},
+		Chains: chains,
 	}
 	if err := db.Create(user).Error; err != nil {
 		glog.Fatalf("Unable to create testUser: %v", err)

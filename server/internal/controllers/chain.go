@@ -441,6 +441,8 @@ func ChainRemoveUser(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
 		return
 	}
+
+	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
 }
 
 func ChainApproveUser(c *gin.Context) {
@@ -465,6 +467,8 @@ UPDATE user_chains
 SET is_approved = TRUE, created_at = NOW()
 WHERE user_id = ? AND chain_id = ?
 	`, user.ID, chain.ID)
+
+	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
 
 	// Given a ChainID and the UID of the new user returns the list of UserUIDs of the chain considering the addition of the new user
 	cities := retrieveChainUsersAsTspCities(db, chain.ID)
@@ -499,6 +503,8 @@ func ChainDeleteUnapproved(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
 		return
 	}
+
+	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
 
 	if user.Email.Valid {
 		views.EmailAnAdminDeniedYourJoinRequest(c, db, user.Name, user.Email.String, chain.Name,

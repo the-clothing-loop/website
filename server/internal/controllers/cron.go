@@ -38,6 +38,7 @@ FROM user_chains AS uc
 JOIN users AS u ON u.id = uc.user_id
 JOIN chains AS c ON c.id = uc.chain_id
 WHERE uc.is_approved = FALSE
+	AND u.is_email_verified = TRUE
 	AND uc.created_at < (NOW() - INTERVAL 60 DAY)
 	AND uc.last_notified_is_unapproved_at IS NULL
 	`).Scan(&pendingValues).Error
@@ -128,7 +129,7 @@ ORDER BY u.email
 func closeChainsWithOldPendingParticipants(db *gorm.DB) {
 	glog.Info("Running closeChainsWithOldPendingParticipants")
 	db.Exec(`
-UPDATE chains SET published = FALSE WHERE id IN (
+UPDATE chains SET published = FALSE, open_to_new_members = FALSE WHERE id IN (
 	SELECT uc.chain_id
 	FROM user_chains AS uc
 	JOIN chains AS c ON c.id = uc.chain_id
