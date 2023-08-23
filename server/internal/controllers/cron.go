@@ -1,13 +1,19 @@
 package controllers
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/OneSignal/onesignal-go-api"
+	"github.com/go-playground/validator/v10"
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"gorm.io/gorm"
 )
+
+var validate = validator.New()
 
 func CronMonthly(db *gorm.DB) {
 	closeChainsWithOldPendingParticipants(db)
@@ -174,11 +180,26 @@ AND b.last_notified_at IS NULL
 
 func emailSendAgain(db *gorm.DB) {
 	glog.Info("Running emailSendAgain")
-	ms, _ := models.MailGetDueForResend(db)
+	ms, err := models.MailGetDueForResend(db)
+	if err != nil {
+		return
+	}
 
+	fmt.Printf("Error mail send: %++v", ms)
 	for _, m := range ms {
-		err := app.MailSend(db, m)
+		err := validate.Var(m.ToAddress, "email")
+		if err != nil {
+			m.Delete(db)
+			continue
+		}
+		err = app.MailSend(db, m)
+		// err = models.ErrMailLastRetry
+		errr := m.UpdateNextRetryAttempt(db, err)
 
-		m.UpdateNextRetryAttempt(db, err)
+		if errr != nil {
+			if errors.Is(models.ErrMailLastRetry, errr) {
+				views.EmailRootAdminFailedLastRetry(db, m.ToAddress, m.Subject)
+			}
+		}
 	}
 }

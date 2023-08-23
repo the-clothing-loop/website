@@ -14,6 +14,8 @@ const (
 	MAIL_RETRY_TWO_DAYS = 2
 )
 
+var ErrMailLastRetry = fmt.Errorf("Last failed attempt")
+
 type Mail struct {
 	ID               uint
 	SenderName       string
@@ -36,10 +38,18 @@ func (m *Mail) AddToQueue(db *gorm.DB) error {
 	return db.Create(m).Error
 }
 
+func (m *Mail) Delete(db *gorm.DB) error {
+	return db.Delete(m).Error
+}
+
 func (m *Mail) UpdateNextRetryAttempt(db *gorm.DB, err error) error {
 	m.NextRetryAttempt += 1
 	if m.NextRetryAttempt >= m.MaxRetryAttempts+1 || err == nil {
-		return db.Exec(`UPDATE mail_retries SET next_retry_attempt = 0 WHERE id = ?`, m.ID).Error
+		db.Exec(`UPDATE mail_retries SET next_retry_attempt = 0 WHERE id = ?`, m.ID)
+		if err != nil {
+			return ErrMailLastRetry
+		}
+		return nil
 	}
 
 	newErr := err.Error()
@@ -59,7 +69,6 @@ func MailGetDueForResend(db *gorm.DB) ([]*Mail, error) {
 SELECT * FROM mail_retries
 WHERE (next_retry_attempt = 1 AND created_at < (NOW() - INTERVAL 15 HOUR))
 	OR (next_retry_attempt = 2 AND created_at < (NOW() - INTERVAL 2 DAY))
-	OR (next_retry_attempt = 3 AND created_at < (NOW() - INTERVAL 3 DAY))
 	`).Scan(&mails).Error
 	if err != nil {
 		return nil, err

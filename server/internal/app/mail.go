@@ -60,7 +60,7 @@ func MailSend(db *gorm.DB, m *models.Mail) error {
 		if m.NextRetryAttempt == 0 && m.MaxRetryAttempts > models.MAIL_RETRY_NEVER {
 			m.NextRetryAttempt = 1
 			m.AddToQueue(db)
-			fmt.Printf("Adding email to resend queue: %++v", m)
+			fmt.Printf("Adding email to resend queue: %s to: %s", m.Subject, m.ToAddress)
 		}
 		return err
 	}

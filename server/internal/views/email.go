@@ -131,6 +131,17 @@ func emailGenerateMessage(m *models.Mail, lng, templateName string, data any, su
 	return nil
 }
 
+func EmailRootAdminFailedLastRetry(db *gorm.DB, email, subject string) error {
+	m := app.MailCreate()
+
+	m.ToName = "The Clothing Loop"
+	m.ToAddress = app.Config.SMTP_SENDER
+	m.Subject = "Failed last attempt to send email"
+	m.Body = fmt.Sprintf("Failed to send email<br/><strong>To:</strong> %s<br/><strong>Subject:</strong> %s", email, subject)
+
+	return app.MailSend(db, m)
+}
+
 func EmailAParticipantJoinedTheLoop(c *gin.Context, db *gorm.DB,
 	adminEmail,
 	adminName,
