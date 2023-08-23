@@ -15,7 +15,7 @@ import (
 )
 
 func TestOldPendingParticipantsCloseOldChain(t *testing.T) {
-	chain, _, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
+	chain, host, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
 		IsChainAdmin:       true,
 		IsOpenToNewMembers: true,
 		IsNotPublished:     false,
@@ -45,6 +45,10 @@ WHERE chain_id = ?
 UPDATE user_chains SET last_notified_is_unapproved_at = (NOW() - INTERVAL 32 DAY)
 WHERE chain_id = ?
 	`, chain.ID)
+	db.Exec(`
+UPDATE users SET last_signed_in_at = (NOW() - INTERVAL 95 DAY)
+WHERE id IN ?
+	`, []uint{host.ID, participant.ID})
 
 	controllers.CronMonthly(db)
 
