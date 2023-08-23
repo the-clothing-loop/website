@@ -136,12 +136,17 @@ func closeChainsWithOldPendingParticipants(db *gorm.DB) {
 	glog.Info("Running closeChainsWithOldPendingParticipants")
 	db.Exec(`
 UPDATE chains SET published = FALSE, open_to_new_members = FALSE WHERE id IN (
-	SELECT uc.chain_id
+	SELECT DISTINCT(uc.chain_id)
 	FROM user_chains AS uc
 	JOIN chains AS c ON c.id = uc.chain_id
 	WHERE uc.is_approved = FALSE
 		AND uc.last_notified_is_unapproved_at < (NOW() - INTERVAL 30 DAY)
 		AND c.published = TRUE
+		AND c.id NOT IN (
+			SELECT DISTINCT(uc2.chain_id) FROM users AS u
+			JOIN user_chains AS uc2 ON uc2.chain_id = c.id AND uc2.is_chain_admin = TRUE
+			WHERE u.last_signed_in_at > (NOW() - INTERVAL 90 DAY)
+		)
 )
 	`)
 }
