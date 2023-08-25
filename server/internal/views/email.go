@@ -82,7 +82,7 @@ func getI18nGin(c *gin.Context) string {
 }
 func getI18n(i18n string) string {
 	switch i18n {
-	case "nl", "de", "fr", "es", "sv":
+	case "nl", "de", "fr", "he", "es", "sv":
 	default:
 		i18n = "en"
 	}
