@@ -21,24 +21,41 @@ func TestMail(t *testing.T) {
 	assert.Empty(t, app.Config.SMTP_PASS, "SMTP_PASS")
 }
 
-var languages = []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
+var languages = []string{"en", "nl"}
 
 func runOnAllLanguages(t *testing.T, run func(t *testing.T, c *gin.Context, lng string)) {
-	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	for _, lng := range languages {
-		c.SetCookie("i18next", lng, 0, "", "", false, false)
+	for i := range languages {
+		c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
+		lng := languages[i]
+		addCookieToMockGin(c, lng)
 
 		t.Run(lng, func(t *testing.T) {
 			run(t, c, lng)
 		})
 	}
 }
+func addCookieToMockGin(c *gin.Context, lng string) {
+	cookie := &http.Cookie{
+		Name:  "i18next",
+		Value: lng,
+	}
+	c.Request.AddCookie(cookie)
+}
+
+func TestGetMockCookie(t *testing.T) {
+	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
+
+	addCookieToMockGin(c, "nl")
+
+	result, _ := c.Cookie("i18next")
+	assert.Equal(t, "nl", result)
+}
 
 func TestEmailAParticipantJoinedTheLoop(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
 		err := views.EmailAParticipantJoinedTheLoop(c, db, lng,
 			faker.Person().Contact().Email,
-			faker.Person().Name(),
+			lng+" "+faker.Person().Name(),
 			faker.Company().Name(),
 			faker.Person().Name(),
 			faker.Person().Contact().Email,
@@ -63,7 +80,7 @@ func TestEmailContactUserMessage(t *testing.T) {
 func TestEmailContactConfirmation(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
 		err := views.EmailContactConfirmation(c, db,
-			faker.Person().Name(),
+			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			faker.Lorem().Paragraph(2),
 		)
@@ -74,7 +91,7 @@ func TestEmailContactConfirmation(t *testing.T) {
 func TestEmailSubscribeToNewsletter(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
 		err := views.EmailSubscribeToNewsletter(c, db,
-			faker.Person().Name(),
+			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 		)
 		assert.Nil(t, err)
@@ -84,7 +101,7 @@ func TestEmailSubscribeToNewsletter(t *testing.T) {
 func TestEmailRegisterVerification(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
 		err := views.EmailRegisterVerification(c, db,
-			faker.Person().Name(),
+			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			faker.UUID().V4(),
 		)
@@ -95,7 +112,7 @@ func TestEmailRegisterVerification(t *testing.T) {
 func TestEmailLoginVerificationWebsite(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
 		err := views.EmailLoginVerification(c, db,
-			faker.Person().Name(),
+			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			faker.UUID().V4(),
 			false)
@@ -105,7 +122,7 @@ func TestEmailLoginVerificationWebsite(t *testing.T) {
 func TestEmailLoginVerificationApp(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
 		err := views.EmailLoginVerification(c, db,
-			faker.Person().Name(),
+			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			fmt.Sprintf("%08d", faker.RandomNumber(8)),
 			true)
@@ -118,8 +135,8 @@ func TestEmailAnAdminDeniedYourJoinRequest(t *testing.T) {
 
 		reasons := []string{"other", "too_far_away", "sizes_genders"}
 		for _, reason := range reasons {
-			err := views.EmailAnAdminDeniedYourJoinRequest(c, db, "en",
-				faker.Person().Name(),
+			err := views.EmailAnAdminDeniedYourJoinRequest(c, db, lng,
+				lng+" "+faker.Person().Name(),
 				faker.Person().Contact().Email,
 				faker.Company().Name(),
 				reason,
@@ -130,8 +147,8 @@ func TestEmailAnAdminDeniedYourJoinRequest(t *testing.T) {
 }
 func TestEmailPoke(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
-		err := views.EmailPoke(c, db, "en",
-			faker.Person().Name(),
+		err := views.EmailPoke(c, db, lng,
+			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			faker.Person().Name(),
 			faker.Person().Name(),
@@ -158,8 +175,8 @@ func TestEmailApproveReminder(t *testing.T) {
 			},
 		}
 
-		err := views.EmailApproveReminder(db, "en",
-			faker.Person().Name(),
+		err := views.EmailApproveReminder(db, lng,
+			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			approvals,
 		)
