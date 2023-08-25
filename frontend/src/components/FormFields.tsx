@@ -14,6 +14,8 @@ import { ipinfoGet } from "../api/ipinfo";
 
 const IPINFO_KEY = import.meta.env.VITE_IPINFO_API_KEY;
 const COOKIE_IPINFO_COUNTRY = "ipinfo_country";
+/** in days */
+const COOKIE_IPINFO_COUNTRY_EXPIRES = 31;
 
 interface PhoneFormFieldProps {
   classes?: {
@@ -41,7 +43,9 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
         return "NL";
       })
       .then((res) => {
-        Cookies.set(COOKIE_IPINFO_COUNTRY, res, { expires: 365 });
+        Cookies.set(COOKIE_IPINFO_COUNTRY, res, {
+          expires: COOKIE_IPINFO_COUNTRY_EXPIRES,
+        });
         setDefaultCountry(res);
       });
   }, []);

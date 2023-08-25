@@ -55,6 +55,10 @@ func Routes() *gin.Engine {
 		// https://crontab.guru/#31_*_*_*_*
 		Scheduler.Cron("31 * * * *").Do(controllers.CronHourly, db)
 
+		// At 02:08.
+		// https://crontab.guru/#8_2_*_*_*
+		Scheduler.Cron("8 2 * * *").Do(controllers.CronDaily, db)
+
 		Scheduler.StartAsync()
 
 		// testing

@@ -112,3 +112,11 @@ WHERE user_id = ? AND chain_id = ?
 
 	return tx.Commit().Error
 }
+
+func (c *Chain) ClearAllLastNotifiedIsUnapprovedAt(db *gorm.DB) error {
+	return db.Exec(`
+	UPDATE user_chains
+	SET last_notified_is_unapproved_at = NULL
+	WHERE chain_id = ?
+	`, c.ID).Error
+}

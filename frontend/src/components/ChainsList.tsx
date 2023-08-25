@@ -21,6 +21,9 @@ import { Chain, UID } from "../api/types";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "../util/dayjs";
+import useToClipboard from "../util/to-clipboard.hooks";
+
+const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 interface Props {
   chains: Chain[];
@@ -32,6 +35,7 @@ export default function ChainsList({ chains, setChains }: Props) {
   const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addToastError, addModal, addToast } = useContext(ToastContext);
   const [isPokeable, setIsPokeable] = useState(false);
+  const addCopyAttributes = useToClipboard();
 
   useEffect(() => {
     load();
@@ -154,6 +158,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                   dayjs(userChain.created_at).isBefore(
                     dayjs().subtract(7, "days")
                   );
+                let shareLink = `${VITE_BASE_URL}/loops/${chain.uid}/users/signup`;
 
                 return (
                   <tr
@@ -218,14 +223,25 @@ export default function ChainsList({ chains, setChains }: Props) {
                           {userChain ? (
                             <ul
                               tabIndex={0}
-                              className={`dropdown-content menu shadow bg-base-100 w-64 ${
-                                isUserAdmin ? "h-full" : ""
-                              }`}
+                              className="dropdown-content menu shadow bg-base-100 w-64"
                             >
-                              <li
-                                className={isUserAdmin ? "h-full" : ""}
-                                key="leave"
-                              >
+                              <li key="share">
+                                <a
+                                  {...addCopyAttributes(
+                                    t,
+                                    "loop-share-" + chain.uid,
+                                    "font-bold text-start",
+                                    shareLink
+                                  )}
+                                  href={shareLink}
+                                >
+                                  {t("shareLink")}
+                                  <small className="ms-2 font-bold text-base-300">
+                                    {t("copy")}
+                                  </small>
+                                </a>
+                              </li>
+                              <li key="leave">
                                 <a
                                   className={`text-red font-bold ${
                                     isUserAdmin ? "h-full" : ""

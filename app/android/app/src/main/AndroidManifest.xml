@@ -29,6 +29,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
+    <queries>
+        <package android:name="com.google.android.gm" />
+    </queries>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

@@ -87,3 +87,33 @@ DELETE FROM bulky_items WHERE user_chain_id IN (
 
 	return nil
 }
+
+func UserChainGetIndirectByChain(db *gorm.DB, chainID uint) ([]UserChain, error) {
+	results := []UserChain{}
+
+	err := db.Raw(`
+	SELECT
+		user_chains.id             AS id,
+		user_chains.chain_id       AS chain_id,
+		chains.uid                 AS chain_uid,
+		user_chains.user_id        AS user_id,
+		users.uid                  AS user_uid,
+		user_chains.is_chain_admin AS is_chain_admin,
+		user_chains.created_at     AS created_at,
+		user_chains.is_approved    AS is_approved
+	FROM user_chains
+	LEFT JOIN chains ON user_chains.chain_id = chains.id
+	LEFT JOIN users ON user_chains.user_id = users.id
+	WHERE users.id IN (
+		SELECT user_chains.user_id
+		FROM user_chains
+		LEFT JOIN chains ON chains.id = user_chains.chain_id
+		WHERE chains.id = ?
+	)	
+	`, chainID).Scan(&results).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}

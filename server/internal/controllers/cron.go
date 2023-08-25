@@ -1,16 +1,27 @@
 package controllers
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/OneSignal/onesignal-go-api"
+	"github.com/go-playground/validator/v10"
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"gorm.io/gorm"
 )
 
+var validate = validator.New()
+
 func CronMonthly(db *gorm.DB) {
 	closeChainsWithOldPendingParticipants(db)
 	emailHostsOldPendingParticipants(db)
+}
+
+func CronDaily(db *gorm.DB) {
+	emailSendAgain(db)
 }
 
 func CronHourly(db *gorm.DB) {
@@ -33,6 +44,7 @@ FROM user_chains AS uc
 JOIN users AS u ON u.id = uc.user_id
 JOIN chains AS c ON c.id = uc.chain_id
 WHERE uc.is_approved = FALSE
+	AND u.is_email_verified = TRUE
 	AND uc.created_at < (NOW() - INTERVAL 60 DAY)
 	AND uc.last_notified_is_unapproved_at IS NULL
 	`).Scan(&pendingValues).Error
@@ -61,10 +73,11 @@ WHERE uc.is_approved = FALSE
 		Name    string `gorm:"u.name"`
 		Email   string `gorm:"u.email"`
 		ChainID uint   `gorm:"c.id"`
+		I18n    string `gorm:"u.i18n"`
 	}
 	hostsByChain := []*HostByChainValue{}
 	db.Raw(`
-SELECT u.name, u.email, uc.chain_id
+SELECT u.name, u.email, uc.chain_id, u.i18n
 FROM users AS u
 JOIN user_chains AS uc ON uc.user_id = u.id
 WHERE uc.chain_id IN ? AND uc.is_chain_admin IS TRUE
@@ -75,6 +88,7 @@ ORDER BY u.email
 	type EmailValue struct {
 		Name      string
 		Email     string
+		I18n      string
 		Approvals []*views.EmailApproveReminderItem
 	}
 	emailValues := []*EmailValue{}
@@ -96,6 +110,7 @@ ORDER BY u.email
 		if isNewEmailValue {
 			emailValue.Name = h.Name
 			emailValue.Email = h.Email
+			emailValue.I18n = h.I18n
 			emailValue.Approvals = []*views.EmailApproveReminderItem{}
 		}
 
@@ -115,7 +130,7 @@ ORDER BY u.email
 	for i := range emailValues {
 		email := emailValues[i]
 		glog.Infof("Sending email approve reminder to %s", email.Email)
-		go views.EmailApproveReminder(email.Name, email.Email, email.Approvals)
+		go views.EmailApproveReminder(db, email.I18n, email.Name, email.Email, email.Approvals)
 	}
 }
 
@@ -123,13 +138,19 @@ ORDER BY u.email
 func closeChainsWithOldPendingParticipants(db *gorm.DB) {
 	glog.Info("Running closeChainsWithOldPendingParticipants")
 	db.Exec(`
-UPDATE chains SET published = FALSE WHERE id IN (
-	SELECT uc.chain_id
+UPDATE chains SET published = FALSE, open_to_new_members = FALSE WHERE id IN (
+	SELECT DISTINCT(uc.chain_id)
 	FROM user_chains AS uc
 	JOIN chains AS c ON c.id = uc.chain_id
 	WHERE uc.is_approved = FALSE
 		AND uc.last_notified_is_unapproved_at < (NOW() - INTERVAL 30 DAY)
 		AND c.published = TRUE
+		AND c.id NOT IN (
+			SELECT DISTINCT(uc2.chain_id) FROM user_chains AS uc2
+			JOIN users AS u2 ON u2.id = uc2.user_id
+			WHERE u2.last_signed_in_at > (NOW() - INTERVAL 90 DAY)
+				AND uc2.is_chain_admin = TRUE
+		)
 )
 	`)
 }
@@ -163,5 +184,31 @@ AND b.last_notified_at IS NULL
 		}
 
 		db.Exec(`UPDATE bags SET last_notified_at = NOW() WHERE id IN ?`, bagIDs)
+	}
+}
+
+func emailSendAgain(db *gorm.DB) {
+	glog.Info("Running emailSendAgain")
+	ms, err := models.MailGetDueForResend(db)
+	if err != nil {
+		return
+	}
+
+	fmt.Printf("Error mail send: %++v", ms)
+	for _, m := range ms {
+		err := validate.Var(m.ToAddress, "email")
+		if err != nil {
+			m.Delete(db)
+			continue
+		}
+		err = app.MailSend(db, m)
+		// err = models.ErrMailLastRetry
+		errr := m.UpdateNextRetryAttempt(db, err)
+
+		if errr != nil {
+			if errors.Is(models.ErrMailLastRetry, errr) {
+				views.EmailRootAdminFailedLastRetry(db, m.ToAddress, m.Subject)
+			}
+		}
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -20,24 +21,55 @@ func TestMail(t *testing.T) {
 	assert.Empty(t, app.Config.SMTP_PASS, "SMTP_PASS")
 }
 
-func TestEmailAParticipantJoinedTheLoop(t *testing.T) {
+var languages = []string{"en", "nl"}
+
+func runOnAllLanguages(t *testing.T, run func(t *testing.T, c *gin.Context, lng string)) {
+	for i := range languages {
+		c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
+		lng := languages[i]
+		addCookieToMockGin(c, lng)
+
+		t.Run(lng, func(t *testing.T) {
+			run(t, c, lng)
+		})
+	}
+}
+func addCookieToMockGin(c *gin.Context, lng string) {
+	cookie := &http.Cookie{
+		Name:  "i18next",
+		Value: lng,
+	}
+	c.Request.AddCookie(cookie)
+}
+
+func TestGetMockCookie(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailAParticipantJoinedTheLoop(c,
-		faker.Person().Contact().Email,
-		faker.Person().Name(),
-		faker.Company().Name(),
-		faker.Person().Name(),
-		faker.Person().Contact().Email,
-		faker.Person().Contact().Phone,
-		faker.Address().Address(),
-		[]string{models.SizeEnumWomenMedium, models.SizeEnumWomenLarge, models.SizeEnumMenSmall, models.SizeEnumBaby},
-	)
-	assert.Nil(t, err)
+
+	addCookieToMockGin(c, "nl")
+
+	result, _ := c.Cookie("i18next")
+	assert.Equal(t, "nl", result)
+}
+
+func TestEmailAParticipantJoinedTheLoop(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailAParticipantJoinedTheLoop(c, db, lng,
+			faker.Person().Contact().Email,
+			lng+" "+faker.Person().Name(),
+			faker.Company().Name(),
+			faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Person().Contact().Phone,
+			faker.Address().Address(),
+			[]string{models.SizeEnumWomenMedium, models.SizeEnumWomenLarge, models.SizeEnumMenSmall, models.SizeEnumBaby},
+		)
+		assert.Nil(t, err)
+	})
 }
 
 func TestEmailContactUserMessage(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailContactUserMessage(c,
+	err := views.EmailContactUserMessage(c, db,
 		faker.Person().Name(),
 		faker.Person().Contact().Email,
 		faker.Lorem().Paragraph(2),
@@ -46,99 +78,108 @@ func TestEmailContactUserMessage(t *testing.T) {
 }
 
 func TestEmailContactConfirmation(t *testing.T) {
-	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailContactConfirmation(c,
-		faker.Person().Name(),
-		faker.Person().Contact().Email,
-		faker.Lorem().Paragraph(2),
-	)
-	assert.Nil(t, err)
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailContactConfirmation(c, db,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Lorem().Paragraph(2),
+		)
+		assert.Nil(t, err)
+	})
 }
 
 func TestEmailSubscribeToNewsletter(t *testing.T) {
-	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailSubscribeToNewsletter(c,
-		faker.Person().Name(),
-		faker.Person().Contact().Email,
-	)
-	assert.Nil(t, err)
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailSubscribeToNewsletter(c, db,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+		)
+		assert.Nil(t, err)
+	})
 }
 
 func TestEmailRegisterVerification(t *testing.T) {
-	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailRegisterVerification(c,
-		faker.Person().Name(),
-		faker.Person().Contact().Email,
-		faker.UUID().V4(),
-	)
-	assert.Nil(t, err)
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailRegisterVerification(c, db,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.UUID().V4(),
+		)
+		assert.Nil(t, err)
+	})
 }
 
 func TestEmailLoginVerificationWebsite(t *testing.T) {
-	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailLoginVerification(c,
-		faker.Person().Name(),
-		faker.Person().Contact().Email,
-		faker.UUID().V4(),
-		false)
-	assert.Nil(t, err)
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailLoginVerification(c, db,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.UUID().V4(),
+			false)
+		assert.Nil(t, err)
+	})
 }
 func TestEmailLoginVerificationApp(t *testing.T) {
-	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailLoginVerification(c,
-		faker.Person().Name(),
-		faker.Person().Contact().Email,
-		fmt.Sprintf("%08d", faker.RandomNumber(8)),
-		true)
-	assert.Nil(t, err)
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailLoginVerification(c, db,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			fmt.Sprintf("%08d", faker.RandomNumber(8)),
+			true)
+		assert.Nil(t, err)
+	})
 }
 
 func TestEmailAnAdminDeniedYourJoinRequest(t *testing.T) {
-	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
 
-	reasons := []string{"other", "too_far_away", "sizes_genders"}
-	for _, reason := range reasons {
-		err := views.EmailAnAdminDeniedYourJoinRequest(c,
-			faker.Person().Name(),
-			faker.Person().Contact().Email,
-			faker.Company().Name(),
-			reason,
-		)
-		assert.Nil(t, err)
-	}
+		reasons := []string{"other", "too_far_away", "sizes_genders"}
+		for _, reason := range reasons {
+			err := views.EmailAnAdminDeniedYourJoinRequest(c, db, lng,
+				lng+" "+faker.Person().Name(),
+				faker.Person().Contact().Email,
+				faker.Company().Name(),
+				reason,
+			)
+			assert.Nil(t, err)
+		}
+	})
 }
 func TestEmailPoke(t *testing.T) {
-	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailPoke(c,
-		faker.Person().Name(),
-		faker.Person().Contact().Email,
-		faker.Person().Name(),
-		faker.Person().Name(),
-	)
-	assert.Nil(t, err)
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailPoke(c, db, lng,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Person().Name(),
+			faker.Person().Name(),
+		)
+		assert.Nil(t, err)
+	})
 }
 func TestEmailApproveReminder(t *testing.T) {
-	approvals := []*views.EmailApproveReminderItem{
-		{
-			Name:        faker.Person().Name(),
-			Email:       faker.Person().Contact().Email,
-			ChainID:     faker.UInt(),
-			UserChainID: faker.UInt(),
-			ChainName:   faker.Company().Name(),
-		},
-		{
-			Name:        faker.Person().Name(),
-			Email:       faker.Person().Contact().Email,
-			ChainID:     faker.UInt(),
-			UserChainID: faker.UInt(),
-			ChainName:   faker.Company().Name(),
-		},
-	}
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		approvals := []*views.EmailApproveReminderItem{
+			{
+				Name:        faker.Person().Name(),
+				Email:       faker.Person().Contact().Email,
+				ChainID:     faker.UInt(),
+				UserChainID: faker.UInt(),
+				ChainName:   faker.Company().Name(),
+			},
+			{
+				Name:        faker.Person().Name(),
+				Email:       faker.Person().Contact().Email,
+				ChainID:     faker.UInt(),
+				UserChainID: faker.UInt(),
+				ChainName:   faker.Company().Name(),
+			},
+		}
 
-	err := views.EmailApproveReminder(
-		faker.Person().Name(),
-		faker.Person().Contact().Email,
-		approvals,
-	)
-	assert.Nil(t, err)
+		err := views.EmailApproveReminder(db, lng,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			approvals,
+		)
+		assert.Nil(t, err)
+	})
 }

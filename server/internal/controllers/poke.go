@@ -34,6 +34,7 @@ func Poke(c *gin.Context) {
 		Name      string `gorm:"name"`
 		Email     string `gorm:"email"`
 		ChainName string `gorm:"chain_name"`
+		I18n      string `gorm:"i18n"`
 	}{}
 	db.Raw(`
 SELECT u.name AS name, u.email AS email, c.name AS chain_name FROM users AS u
@@ -54,8 +55,7 @@ WHERE uc.is_chain_admin = TRUE AND u.email IS NOT NULL AND uc.chain_id IN (
 	}
 
 	for _, v := range userAdmins {
-		go views.EmailPoke(
-			c,
+		go views.EmailPoke(c, db, v.I18n,
 			v.Name,
 			v.Email,
 			user.Name,

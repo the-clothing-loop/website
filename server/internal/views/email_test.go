@@ -1,6 +1,8 @@
 package views
 
 import (
+	"fmt"
+	"html/template"
 	"strconv"
 	"strings"
 	"testing"
@@ -8,7 +10,7 @@ import (
 	"github.com/0xch4z/selectr"
 	Faker "github.com/jaswdr/faker"
 	"github.com/stretchr/testify/assert"
-	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/models"
 )
 
 var faker = Faker.New()
@@ -165,7 +167,7 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 				t.Run(tpl.Name, func(t *testing.T) {
 					assert.NotNil(t, emailsTemplates[lng])
 
-					m := &app.Mail{}
+					m := &models.Mail{}
 					err := emailGenerateMessage(m, lng, tpl.Name, tpl.Data, tpl.Args...)
 
 					assert.NoError(t, err)
@@ -179,7 +181,7 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 						s, _ := selectr.Parse(v)
 						value, err := s.Resolve(tpl.Data)
 						assert.NoError(t, err, v)
-						assert.Contains(t, m.Body, value, v)
+						assert.Contains(t, m.Body, template.HTMLEscapeString(fmt.Sprint(value)), v)
 					}
 				})
 			}
