@@ -1,6 +1,45 @@
 # GoLang Server
 
-![Dependency Tree](https://www.plantuml.com/plantuml/png/POy_JmCn3CLtVmflJEtjg4CHxSW2x2XDt6j4_aIEhwSAzRkJQ-WVBaCi--UyvBrr5iKoU8SVmeEMWGdW2LzZEg4SR4OR9E919ENdhXl7SPcS2fDWgQFlhaCtdQ9JmM1MHofQme5TaL_Qz-tBvcsBU-i8TxIFJ5ZatehOqAC-gD1J1X0hZd13YOAXe4_uoKG0--WCyMI5E2Y7Fu3rgKny9FxgumMT0KhzkwnIgl2ET0p2qJdYF5_vQCWrz6XflCBppKRwxY_iwihtkzrSAJarEkrDOMMUcjLgiRZRlwDY6-36Rso67gC0F0nrMzCqlEPfSJ7Rm1ghmTLVAVy-WZK5CtZt2m00)
+```mermaid
+---
+title: Dependency Tree
+---
+
+flowchart LR
+   cmd
+
+   subgraph internal
+      server_go[/server.go\]
+
+
+      app
+      controllers
+      models
+      views
+
+      controllers --> server_go
+
+      views --> controllers
+      app --> controllers
+      app --> server_go
+      models --> controllers
+
+      models --> app
+      models --> views
+   end
+
+   subgraph pkg
+      imgbb
+      tsp
+   end
+
+
+server_go --> cmd
+app --> cmd
+
+pkg --> internal
+
+```
 
 ## Development install
 
