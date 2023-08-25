@@ -117,6 +117,7 @@ LIMIT 1
 type UserContactData struct {
 	Name  string
 	Email zero.String
+	I18n  string
 }
 
 // Expects the userUID not to be empty
@@ -151,7 +152,7 @@ func UserGetByEmail(db *gorm.DB, userEmail string) (*User, error) {
 func UserGetAdminsByChain(db *gorm.DB, chainId uint) ([]UserContactData, error) {
 	results := []UserContactData{}
 	err := db.Raw(`
-	SELECT users.name AS name, users.email AS email
+	SELECT users.name AS name, users.email AS email, users.i18n AS i18n
 	FROM user_chains AS uc
 	LEFT JOIN users ON uc.user_id = users.id 
 	WHERE uc.chain_id = ?

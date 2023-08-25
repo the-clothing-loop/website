@@ -76,8 +76,11 @@ func init() {
 	}
 }
 
-func getI18n(c *gin.Context) string {
+func getI18nGin(c *gin.Context) string {
 	i18n, _ := c.Cookie("i18next")
+	return getI18n(i18n)
+}
+func getI18n(i18n string) string {
 	switch i18n {
 	case "nl", "de", "fr", "es", "sv":
 	default:
@@ -142,7 +145,7 @@ func EmailRootAdminFailedLastRetry(db *gorm.DB, email, subject string) error {
 	return app.MailSend(db, m)
 }
 
-func EmailAParticipantJoinedTheLoop(c *gin.Context, db *gorm.DB,
+func EmailAParticipantJoinedTheLoop(c *gin.Context, db *gorm.DB, lng,
 	adminEmail,
 	adminName,
 	chainName,
@@ -152,9 +155,7 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context, db *gorm.DB,
 	participantAddress string,
 	participantSizeEnums []string,
 ) error {
-	// ? language hardcoded to english until language preference can be determined in the database
-	// i18n := getI18n(c)
-	i18n := "en"
+	lng = getI18n(lng)
 
 	m := app.MailCreate()
 	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
@@ -190,7 +191,7 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context, db *gorm.DB,
 			sizesHtml += models.SizeLetters[v] + " "
 		}
 	}
-	err := emailGenerateMessage(m, i18n, "someone_is_interested_in_joining_your_loop", gin.H{
+	err := emailGenerateMessage(m, lng, "someone_is_interested_in_joining_your_loop", gin.H{
 		"Name":      adminName,
 		"ChainName": chainName,
 		"Participant": gin.H{
@@ -232,7 +233,7 @@ func EmailContactConfirmation(c *gin.Context, db *gorm.DB,
 	email,
 	message string,
 ) error {
-	i18n := getI18n(c)
+	i18n := getI18nGin(c)
 	m := app.MailCreate()
 	m.ToName = name
 	m.ToAddress = email
@@ -251,7 +252,7 @@ func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB,
 	name,
 	email string,
 ) error {
-	i18n := getI18n(c)
+	i18n := getI18nGin(c)
 	m := app.MailCreate()
 	m.ToName = name
 	m.ToAddress = email
@@ -268,7 +269,7 @@ func EmailRegisterVerification(c *gin.Context, db *gorm.DB,
 	email,
 	token string,
 ) error {
-	i18n := getI18n(c)
+	i18n := getI18nGin(c)
 	m := app.MailCreate()
 	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
@@ -290,7 +291,7 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB,
 	token string,
 	isApp bool,
 ) error {
-	i18n := getI18n(c)
+	i18n := getI18nGin(c)
 	m := app.MailCreate()
 	m.ToName = name
 	m.ToAddress = email
@@ -307,17 +308,17 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB,
 	return app.MailSend(db, m)
 }
 
-func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, db *gorm.DB,
+func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
 	name,
 	email,
 	chainName string,
 ) error {
-	i18n := getI18n(c)
+	lng = getI18n(lng)
 	m := app.MailCreate()
 	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
-	err := emailGenerateMessage(m, i18n, "an_admin_approved_your_join_request", gin.H{
+	err := emailGenerateMessage(m, lng, "an_admin_approved_your_join_request", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
 	})
@@ -328,20 +329,18 @@ func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, db *gorm.DB,
 	return app.MailSend(db, m)
 }
 
-func EmailAnAdminDeniedYourJoinRequest(c *gin.Context, db *gorm.DB,
+func EmailAnAdminDeniedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
 	name,
 	email,
 	chainName,
 	reason string,
 ) error {
-	// ? language hardcoded to english until language preference can be determined in the database
-	// i18n := getI18n(c)
-	i18n := "en"
+	lng = getI18n(lng)
 	m := app.MailCreate()
 	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
-	err := emailGenerateMessage(m, i18n, "an_admin_denied_your_join_request", gin.H{
+	err := emailGenerateMessage(m, lng, "an_admin_denied_your_join_request", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
 		"Reason":    reason,
@@ -353,18 +352,18 @@ func EmailAnAdminDeniedYourJoinRequest(c *gin.Context, db *gorm.DB,
 	return app.MailSend(db, m)
 }
 
-func EmailPoke(c *gin.Context, db *gorm.DB,
+func EmailPoke(c *gin.Context, db *gorm.DB, lng,
 	name,
 	email,
 	participantName,
 	chainName string,
 ) error {
-	i18n := "en"
+	lng = getI18n(lng)
 	m := app.MailCreate()
 	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
-	err := emailGenerateMessage(m, i18n, "poke", gin.H{
+	err := emailGenerateMessage(m, lng, "poke", gin.H{
 		"Name":            name,
 		"ChainName":       chainName,
 		"ParticipantName": participantName,
@@ -384,19 +383,17 @@ type EmailApproveReminderItem struct {
 	ChainName   string `gorm:"chain_name"`
 }
 
-func EmailApproveReminder(db *gorm.DB,
+func EmailApproveReminder(db *gorm.DB, lng,
 	name,
 	email string,
 	approvals []*EmailApproveReminderItem,
 ) error {
-	// ? language hardcoded to english until language preference can be determined in the database
-	// i18n := getI18n(c)
-	i18n := "en"
+	lng = getI18n(lng)
 	m := app.MailCreate()
 	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
-	err := emailGenerateMessage(m, i18n, "approve_reminder", gin.H{
+	err := emailGenerateMessage(m, lng, "approve_reminder", gin.H{
 		"Name":      name,
 		"BaseURL":   app.Config.SITE_BASE_URL_FE,
 		"Approvals": approvals,

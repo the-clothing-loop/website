@@ -92,12 +92,14 @@ func LoginValidate(c *gin.Context) {
 		Name  string
 		Email zero.String
 		Chain string
+		I18n  string
 	}
 	err = db.Raw(`
 SELECT
  users.name AS name, 
  users.email AS email,
- chains.name AS chain
+ chains.name AS chain,
+ users.i18n AS i18n
 FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id 
 LEFT JOIN chains ON chains.id = user_chains.chain_id
@@ -123,7 +125,7 @@ UPDATE chains SET published = TRUE WHERE id IN (
 
 		for _, result := range results {
 			if result.Email.Valid {
-				go views.EmailAParticipantJoinedTheLoop(c, db,
+				go views.EmailAParticipantJoinedTheLoop(c, db, result.I18n,
 					result.Email.String,
 					result.Name,
 					result.Chain,

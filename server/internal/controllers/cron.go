@@ -73,10 +73,11 @@ WHERE uc.is_approved = FALSE
 		Name    string `gorm:"u.name"`
 		Email   string `gorm:"u.email"`
 		ChainID uint   `gorm:"c.id"`
+		I18n    string `gorm:"u.i18n"`
 	}
 	hostsByChain := []*HostByChainValue{}
 	db.Raw(`
-SELECT u.name, u.email, uc.chain_id
+SELECT u.name, u.email, uc.chain_id, u.i18n
 FROM users AS u
 JOIN user_chains AS uc ON uc.user_id = u.id
 WHERE uc.chain_id IN ? AND uc.is_chain_admin IS TRUE
@@ -87,6 +88,7 @@ ORDER BY u.email
 	type EmailValue struct {
 		Name      string
 		Email     string
+		I18n      string
 		Approvals []*views.EmailApproveReminderItem
 	}
 	emailValues := []*EmailValue{}
@@ -108,6 +110,7 @@ ORDER BY u.email
 		if isNewEmailValue {
 			emailValue.Name = h.Name
 			emailValue.Email = h.Email
+			emailValue.I18n = h.I18n
 			emailValue.Approvals = []*views.EmailApproveReminderItem{}
 		}
 
@@ -127,7 +130,7 @@ ORDER BY u.email
 	for i := range emailValues {
 		email := emailValues[i]
 		glog.Infof("Sending email approve reminder to %s", email.Email)
-		go views.EmailApproveReminder(db, email.Name, email.Email, email.Approvals)
+		go views.EmailApproveReminder(db, email.I18n, email.Name, email.Email, email.Approvals)
 	}
 }
 
