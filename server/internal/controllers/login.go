@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/golang/glog"
@@ -237,11 +236,9 @@ func RegisterChainAdmin(c *gin.Context) {
 
 func RegisterOrphanedUser(c *gin.Context) {
 	db := getDB(c)
-	fmt.Println("Test Print")
 	var body struct {
 		User UserCreateRequestBody `json:"user" binding:"required"`
 	}
-	// Tries to bind uuid in go code with uid from JSON from the frontend and cant because it isnt there
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -264,8 +261,6 @@ func RegisterOrphanedUser(c *gin.Context) {
 		Latitude:        body.User.Latitude,
 		Longitude:       body.User.Longitude,
 	}
-
-	fmt.Println(user)
 
 	if res := db.Create(user); res.Error != nil {
 		goscope.Log.Warningf("User already exists: %v", res.Error)
