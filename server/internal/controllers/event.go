@@ -376,5 +376,5 @@ LIMIT 1
 		icalE.SetOrganizer(user.Email.String, ics.WithCN(user.Name))
 	}
 
-	c.String(http.StatusOK, cal.Serialize())
+	c.Data(http.StatusOK, "text/calendar", []byte(cal.Serialize()))
 }
