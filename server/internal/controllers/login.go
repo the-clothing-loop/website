@@ -284,7 +284,7 @@ func RegisterOrphanedUser(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
+	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func RegisterBasicUser(c *gin.Context) {
