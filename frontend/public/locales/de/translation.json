@@ -133,6 +133,7 @@
   "selectSize": "Kleidungsgröße auswählen",
   "about": "Über uns",
   "exportData": "Daten exportieren",
+  "exportToSpreadsheet": "Open with Excel or LibreOffice",
   "editLoopInformation": "Loop Daten bearbeiten",
   "newsletterSubscription": "Newsletter Anmeldung",
   "editAdminContacts": "Host Kontakte bearbeiten",
