@@ -66,11 +66,12 @@ export default function About() {
                 </div>
                 <div className="relative -bottom-4 md:-bottom-8 flex justify-center">
                   <Link
-                    className=" btn btn-accent btn-outline bg-white text-lg"
+                    className="btn btn-accent btn-outline border-2 bg-green-lighter text-2xl"
                     to="/faq"
                   >
                     {t("faq", { ns: "translation" })}
-                    <span className="feather feather-help-circle ms-2"></span>
+                    <span className="feather feather-arrow-left ltr:hidden ms-2"></span>
+                    <span className="feather feather-arrow-right rtl:hidden ms-2"></span>
                   </Link>
                 </div>
               </div>
