@@ -62,7 +62,7 @@ export function UserDataExport(props: {
       data={data ? data : ""}
       headers={usersHeaders}
       filename={`${props.chainName}-participants.csv`}
-      className="btn btn-secondary btn-outline tooltip flex"
+      className="btn btn-secondary btn-outline tooltip md:tooltip-left rtl:md:tooltip-right flex"
       data-tip={t("exportToSpreadsheet")}
     >
       {t("exportData")}
