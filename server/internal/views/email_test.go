@@ -188,3 +188,23 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 		})
 	}
 }
+
+func TestGetI18n(t *testing.T) {
+	list := []struct {
+		Lng    string
+		Expect string
+	}{
+		{Lng: "en", Expect: "en"},
+		{Lng: "nl", Expect: "nl"},
+		{Lng: "de", Expect: "de"},
+		{Lng: "fr", Expect: "fr"},
+		{Lng: "es", Expect: "es"},
+		{Lng: "sv", Expect: "sv"},
+		// English override
+		{Lng: "zh", Expect: "en"},
+	}
+
+	for _, item := range list {
+		assert.Equal(t, item.Expect, getI18n(item.Lng))
+	}
+}

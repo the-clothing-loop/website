@@ -5,6 +5,7 @@ package integration_tests
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -15,10 +16,22 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/views"
 )
 
-func TestMail(t *testing.T) {
+func TestMailEnvironment(t *testing.T) {
 	assert.NotEmpty(t, app.Config.SMTP_HOST, "SMTP_HOST")
 	assert.NotEmpty(t, app.Config.SMTP_USER, "SMTP_USER")
 	assert.Empty(t, app.Config.SMTP_PASS, "SMTP_PASS")
+
+	assert.Equal(t, app.EnvEnumTesting, app.Config.ENV)
+}
+
+func TestMailSend(t *testing.T) {
+	m := app.MailCreate()
+	m.ToName = faker.Person().Name()
+	m.ToAddress = faker.Person().Contact().Email
+	m.Body = strings.Join(strings.Split((faker.Lorem().Paragraph(5)), "\n"), "<br/>")
+	m.Subject = strings.Join(faker.Lorem().Words(4), " ")
+
+	app.MailSend(db, m)
 }
 
 var languages = []string{"en", "nl"}
