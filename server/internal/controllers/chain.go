@@ -343,22 +343,27 @@ func ChainAddUser(c *gin.Context) {
 	if !ok {
 		return
 	}
-	if !chain.OpenToNewMembers {
+
+	user, err := models.UserGetByUID(db, body.UserUID, true)
+	userChain := &models.UserChain{}
+	if err == nil {
+		db.Raw(`
+SELECT * FROM user_chains
+WHERE user_id = ? AND chain_id = ?
+LIMIT 1
+	`, user.ID, chain.ID).Scan(userChain)
+	}
+
+	// If patch is editing an existing userChain instead of creating a new one, then conflict will be ignored
+	if !chain.OpenToNewMembers && userChain.ID == 0 {
 		c.String(http.StatusConflict, "Loop is not open to new members")
 		return
 	}
-	user, err := models.UserGetByUID(db, body.UserUID, true)
 	if err != nil {
 		c.String(http.StatusBadRequest, models.ErrUserNotFound.Error())
 		return
 	}
 
-	userChain := &models.UserChain{}
-	db.Raw(`
-SELECT * FROM user_chains
-WHERE user_id = ? AND chain_id = ?
-LIMIT 1
-	`, user.ID, chain.ID).Scan(userChain)
 	if userChain.ID != 0 {
 		if (!userChain.IsChainAdmin && body.IsChainAdmin) || (userChain.IsChainAdmin && !body.IsChainAdmin) {
 			userChain.IsChainAdmin = body.IsChainAdmin
