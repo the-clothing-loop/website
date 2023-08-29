@@ -2,13 +2,16 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/OneSignal/onesignal-go-api"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/views"
 	"gopkg.in/guregu/null.v3/zero"
 )
 
@@ -125,6 +128,16 @@ LIMIT 1
 		goscope.Log.Errorf("Unable to create or update bag: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to create or update bag")
 		return
+	}
+
+	if body.UserUID != body.HolderUID {
+		err := app.OneSignalCreateNotification(db, []string{body.HolderUID},
+			*views.Notifications["bagHasBeenAssignedToYouTitle"],
+			onesignal.StringMap{},
+		)
+		if err != nil {
+			goscope.Log.Errorf("Notification creation failed: %v", err)
+		}
 	}
 }
 
