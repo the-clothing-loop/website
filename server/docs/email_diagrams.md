@@ -59,7 +59,7 @@ flowchart TD
    ST(Start) --> A
     A[Send email to user]--> B{sent status}
     B -->|Sent| B1[OK]
-    B -->|Not sent| B2[Save email in database<sup>1</sup>]
+    B -->|Not sent| B2["Save email in database¹"]
     B2 --> C[/One day later/]
     C -->E{Has sent email\n3 times and failed}
     E --> |NO| D[Send email again]
@@ -68,4 +68,4 @@ flowchart TD
     F --> G(END)
 ```
 
-<sup>1</sup> The emails can be found in the database following the first send failure in the database table `mail_retries`.
+¹ The emails can be found in the database following the first send failure in the database table `mail_retries`.
