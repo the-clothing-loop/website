@@ -15,9 +15,9 @@ flowchart TD
       SF --> |True| S0
       SF --> |False| S1[Loop is abandoned]
    end
-   Start --> SB1
+   Start(Start) --> SB1
    SB1 --> |Loop is abandoned| A[Loop is set to draft and closed]
-   A --> End
+   A --> End(End)
 
 ```
 

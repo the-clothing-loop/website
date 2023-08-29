@@ -176,8 +176,16 @@ AND b.last_notified_at IS NULL
 		for i := range *res {
 			item := (*res)[i]
 			glog.Infof("Create notification for user %v holding bag %v\n", item.UserUID, item.BagNumber)
+			bagNumber := func(i18nBag string) string {
+				// Prefixed by "Bag " if bag name is shorter than 7
+				// See: server/docs/bag_name.md
+				if len(item.BagNumber) > 7 {
+					return fmt.Sprintf("%s %s", i18nBag, item.BagNumber)
+				}
+				return item.BagNumber
+			}
 			app.OneSignalCreateNotification(db, []string{item.UserUID}, *views.Notifications["bagYouAreHoldingIsTooOldTitle"], onesignal.StringMap{
-				En: onesignal.PtrString(item.BagNumber),
+				En: onesignal.PtrString(bagNumber(*views.Notifications["bag"].En)),
 			})
 
 			bagIDs = append(bagIDs, item.BagID)
