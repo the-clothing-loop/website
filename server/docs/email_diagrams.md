@@ -1,5 +1,27 @@
 # Email flow diagrams
 
+## Delayed unregistered loop approval
+
+```mermaid
+
+flowchart
+   Start(Start) --> A["Person (without an account) selects a loop from the map and clicks on join"]
+   A --> B[Person fills in the the registration form and submits successfully]
+   B --> C[/Many days later/]
+
+   C -. If never registered .-> C3[Nothing happens]
+   C3 --> D3(End)
+
+   C --> D[Person logs in for the first time]
+   D --> E[Email is sent to the loop host]
+
+   C -- Mean while --> C2[Loop host does not receive an email]
+   C2 --> D
+
+   E --> End(End)
+
+```
+
 ## Find abandoned loops
 
 ```mermaid
