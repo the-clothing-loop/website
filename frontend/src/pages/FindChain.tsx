@@ -288,7 +288,7 @@ export default function FindChain({ location }: { location: Location }) {
               if (err) return;
               _map.easeTo({
                 center: (features[0].geometry as any).coordinates,
-                zoom,
+                zoom: zoom * 1.2,
               });
             });
           } catch (err) {
