@@ -16,11 +16,14 @@ func OneSignalInit() {
 	OneSignalClient = onesignal.NewAPIClient(configuration)
 }
 
-func OneSignalGetAuth() context.Context {
+func oneSignalGetAuth() context.Context {
 	return context.WithValue(context.Background(), onesignal.AppAuth, Config.ONESIGNAL_REST_API_KEY)
 }
 
 func OneSignalCreateNotification(db *gorm.DB, userUIDs []string, notificationTitle, notificationContent onesignal.StringMap) error {
+	if OneSignalClient == nil {
+		return nil
+	}
 	if len(userUIDs) == 0 {
 		return fmt.Errorf("No users to send a notification to")
 	}
@@ -34,7 +37,7 @@ func OneSignalCreateNotification(db *gorm.DB, userUIDs []string, notificationTit
 	notification.SetHeadings(notificationTitle)
 	notification.SetContents(notificationContent)
 
-	auth := OneSignalGetAuth()
+	auth := oneSignalGetAuth()
 	_, resp, err := OneSignalClient.DefaultApi.CreateNotification(auth).Notification(*notification).Execute()
 	if err != nil {
 		fmt.Printf("response error: %++v\n", resp)
