@@ -96,7 +96,9 @@
   "paused": "Pauze",
   "unPause": "Hervatten",
   "areYouSureUnPause": "Weet je zeker dat je wilt doorgaan?",
-  "week_one": "{{count}} Week",
-  "week_other": "{{count}} Weken",
+  "week_one": "Één week",
+  "week_other": "{{count}} weken",
+  "day_one": "Één dag",
+  "day_other": "{{count}} dagen",
   "setTimerForACoupleOfWeeks": "Selecteer hoeveel weken je je deelname wilt onderbreken"
 }

@@ -172,6 +172,17 @@ export default function Settings() {
 
   let pausedDayjs = isUserPaused && dayjs(authUser!.paused_until);
   let showExpandButton = (chain?.description.length || 0) > 200;
+  let pausedFromNow = "";
+  {
+    const now = dayjs();
+    if (pausedDayjs) {
+      if (pausedDayjs.isBefore(now.add(7, "day"))) {
+        pausedFromNow = t("day", { count: pausedDayjs.diff(now, "day") + 1 });
+      } else {
+        pausedFromNow = t("week", { count: pausedDayjs.diff(now, "week") + 1 });
+      }
+    }
+  }
 
   return (
     <IonPage>
@@ -213,7 +224,7 @@ export default function Settings() {
                   <h3 className="!tw-font-bold">{t("pauseParticipation")}</h3>
                   <p className="ion-no-wrap">
                     {pausedDayjs
-                      ? pausedDayjs.fromNow()
+                      ? pausedFromNow
                       : t("setTimerForACoupleOfWeeks")}
                   </p>
                 </IonLabel>
