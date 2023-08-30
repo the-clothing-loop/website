@@ -224,22 +224,6 @@ export default function FindChain({ location }: { location: Location }) {
             ],
           },
         });
-        _map.addLayer({
-          id: "chain-single-minimum",
-          type: "circle",
-          source: "chains",
-          filter: [">", ["zoom"], clusterMaxZoom],
-          paint: {
-            "circle-color": [
-              "case",
-              ["get", "open_to_new_members"],
-              ["rgba", 240, 196, 73, 0.4], // #f0c449
-              ["rgba", 0, 0, 0, 0.0],
-            ],
-            "circle-radius": 5,
-            "circle-stroke-width": 0,
-          },
-        });
 
         // Initalize chainsInView
         _map.on("idle", () => {
@@ -250,7 +234,7 @@ export default function FindChain({ location }: { location: Location }) {
           getVisibleChains(_map, _chains);
         });
 
-        _map.on("click", ["chain-single", "chain-single-minimum"], (e) => {
+        _map.on("click", "chain-single", (e) => {
           if (e.features) {
             let uids = e.features
               .map((f) => f.properties?.uid)
@@ -321,6 +305,11 @@ export default function FindChain({ location }: { location: Location }) {
 
               // auto select
               setSelectedChains([chain]);
+
+              const uniqueFeatures = [...new Set(features.map((f) => f.id))];
+              if (uniqueFeatures.length === 1) {
+                handleSetFocusedChain(chain, _map);
+              }
             } catch (err) {
               console.warn(err);
               _map.easeTo({
@@ -343,35 +332,45 @@ export default function FindChain({ location }: { location: Location }) {
   }, []);
 
   function handleSetFocusedChain(_focusedChain: Chain, _map?: mapboxgl.Map) {
-    _map = _map ? _map : map;
-    setFocusedChain(_focusedChain);
+    _map = _map || map;
+
     const features = _map!.queryRenderedFeatures(undefined, {
-      layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
+      layers: ["chain-cluster", "chain-single"],
     }) as any as GeoJSONChains["features"];
-    for (let i = 0; i < features.length; i++) {
-      let featUID = features[i]?.id;
-      if (features[i].properties!.uid === _focusedChain!.uid) {
+
+    // unset the previous focused Feature
+    if (focusedChain) {
+      let featPrev = features.find(
+        (f) => f.properties.uid === focusedChain.uid
+      );
+      if (featPrev)
         _map!.setFeatureState(
           {
             source: "chains",
-            id: featUID,
-          },
-          {
-            clicked: true,
-          }
-        );
-      } else {
-        _map!.setFeatureState(
-          {
-            source: "chains",
-            id: featUID,
+            id: featPrev.id,
           },
           {
             clicked: false,
           }
         );
-      }
     }
+
+    // set the State
+    setFocusedChain(_focusedChain);
+
+    // set the Feature
+    features.forEach((f) => {
+      _map!.setFeatureState(
+        {
+          source: "chains",
+          id: f.id,
+        },
+        {
+          clicked: f.properties.uid === _focusedChain.uid,
+        }
+      );
+    });
+
     _map!.easeTo({
       duration: 700,
       animate: true,
@@ -383,7 +382,7 @@ export default function FindChain({ location }: { location: Location }) {
   function getVisibleChains(map: mapboxgl.Map, chains: Chain[]) {
     const center = map.getCenter();
     const features = map!.queryRenderedFeatures(undefined, {
-      layers: ["chain-cluster", "chain-single", "chain-single-minimum"],
+      layers: ["chain-cluster", "chain-single"],
     }) as any as GeoJSONChains["features"];
     let visibleFeatures: GeoJSONChains["features"] = [];
     if (features.length) {
