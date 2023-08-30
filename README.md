@@ -30,6 +30,8 @@ Checkout these readmes for more in-depth documentation:
 - Ansible Devops: [README.md](/devops/README.md)
 - SQL scripts: [README.md](/server/sql/README.md)
 
+Here are some flow diagrams to demonstrate some complex logic [README.md](/server/docs/README.md)
+
 ## License
 
 MIT
