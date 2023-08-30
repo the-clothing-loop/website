@@ -224,7 +224,7 @@ export default function BulkyList() {
                     className="tw-text-dark tw-py-[3px]"
                   >
                     <p
-                      className={`tw-text-base tw-leading-5 tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
+                      className={`!tw-text-lg !tw-leading-5 tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
                         shouldExpandText ? "tw-max-h-[46px]" : ""
                       }`}
                     >
