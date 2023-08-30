@@ -142,7 +142,7 @@ export default function CreateUpdateBag({
               onClick={createOrUpdate}
               color={!error ? "primary" : "danger"}
             >
-              {bag ? t("update") : t("create")}
+              {t("save")}
             </IonButton>
           </IonButtons>
         </IonToolbar>

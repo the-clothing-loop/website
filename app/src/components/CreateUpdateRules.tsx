@@ -195,7 +195,7 @@ export default function CreateUpdateRules(props: {
               onClick={createOrUpdate}
               color={!error ? "primary" : "danger"}
             >
-              {props.rules ? t("update") : t("create")}
+              {t("save")}
             </IonButton>
           </IonButtons>
         </IonToolbar>

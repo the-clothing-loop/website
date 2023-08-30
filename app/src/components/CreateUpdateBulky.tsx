@@ -194,7 +194,7 @@ export default function CreateUpdateBulky({
               onClick={createOrUpdate}
               color={!error ? "primary" : "danger"}
             >
-              {bulky ? t("update") : t("create")}
+              {t("save")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
