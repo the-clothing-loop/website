@@ -268,7 +268,6 @@ export default function BagsList() {
                           <BagSVG color={bag.color} />
                         </div>
                         <div className="ion-text-ellipsis tw-text-center tw-font-bold tw-text-base tw-text-dark ">
-                          // See: server/docs/bag_name.md
                           {(bag.number.length > 7 ? "" : t("bag") + " ") +
                             bag.number}
                         </div>
