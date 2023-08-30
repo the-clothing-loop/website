@@ -598,15 +598,12 @@ function SelectUserModal({
             {sortedRoute.map(([r, i]) => {
               const user = chainUsers?.find((u) => u.uid === r);
               if (!user) return null;
-              // search
               let found =
                 search !== "" ? RegExp(search, "i").test(user.name) : true;
               if (!found) return null;
 
-              const isAddressPrivate = IsPrivate(user.address);
               const isSelected = selected === user.uid;
               const isMe = user.uid === authUser?.uid;
-              //   let uc = user.chains.find((u) => u.chain_uid === chain.uid);
               return (
                 <IonItem lines="full" key={user.uid}>
                   <span slot="start" className="!tw-font-bold">{`#${
@@ -620,11 +617,6 @@ function SelectUserModal({
                     >
                       {user.name}
                     </h2>
-                    {isAddressPrivate ? null : (
-                      <IonText color={isSelected ? undefined : "medium"}>
-                        <p className="tw-text-sm">{user.address}</p>
-                      </IonText>
-                    )}
                   </IonLabel>
                   <IonRadio slot="end" value={user.uid} />
                 </IonItem>
