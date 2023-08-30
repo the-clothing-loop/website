@@ -21,7 +21,7 @@ import {
   useIonToast,
 } from "@ionic/react";
 import { isPlatform, type IonSelectCustomEvent } from "@ionic/core";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";

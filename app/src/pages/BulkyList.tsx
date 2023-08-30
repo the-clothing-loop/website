@@ -298,7 +298,7 @@ export default function BulkyList() {
                       className="tw-font-bold"
                       onClick={() => handleClickReserve(user, bulkyItem.title)}
                     >
-                      {t("reserve")}
+                      {t("contact")}
                       <IonIcon
                         slot="end"
                         icon={chatbubbleEllipsesSharp}
