@@ -15,7 +15,7 @@ flowchart
    C --> D[Person logs in for the first time]
    D --> E[Email is sent to the loop host]
 
-   C -- Mean while --> C2[Loop host does not receive an email]
+   C -- Meanwhile --> C2[Loop host does not receive an email]
    C2 --> D
 
    E --> End(End)
