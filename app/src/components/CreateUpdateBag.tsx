@@ -175,7 +175,7 @@ export default function CreateUpdateBag({
               <IonFabButton
                 key={i}
                 size="small"
-                color={bagNumber.includes(emoji) ? "primary" : "light"}
+                color={bagNumber.includes(emoji) ? "primary" : "transparent"}
                 onClick={() => handleSetBagEmoji(emoji)}
                 className="tw-text-xl"
               >
