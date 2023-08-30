@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useContext } from "react";
-import { useParams, useHistory, useLocation } from "react-router-dom";
+import { useParams, useHistory, useLocation, Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import { UID, User } from "../api/types";
@@ -33,10 +33,6 @@ export default function UserEdit() {
       user?.chains.find((uc) => uc.chain_uid === chainUID)?.is_chain_admin ||
       false,
     [user, chainUID]
-  );
-  const userIsAnyChainAdmin = useMemo(
-    () => !!user?.chains.find((uc) => uc.is_chain_admin),
-    [user]
   );
 
   function onSubmit(values: ValuesForm) {
@@ -81,6 +77,9 @@ export default function UserEdit() {
     })();
   }, [history, userUID]);
 
+  if (!authUser) {
+    return <Redirect to="/users/login" />;
+  }
   if (!user) return null;
   return (
     <>

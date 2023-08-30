@@ -34,6 +34,7 @@ import {
   eyeOffOutline,
   eyeOutline,
   lockClosedOutline,
+  openOutline,
   pauseCircle,
   shareOutline,
   sparklesOutline,
@@ -49,7 +50,7 @@ import Theme from "../components/Theme";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 export default function Settings() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     authUser,
     chain,
@@ -181,10 +182,19 @@ export default function Settings() {
       </IonHeader>
       {isAuthenticated === true ? (
         <IonContent fullscreen color="light">
-          <IonItemDivider className="ion-margin-start ion-margin-top ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
+          <IonItemDivider className="tw-relative ion-margin-start ion-margin-top ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
             {t("account")}
+            <IonButton
+              fill="clear"
+              className="tw-absolute tw-top tw-right-0 tw-normal-case tw-mr-8"
+              href={`https://www.clothingloop.org/${i18n.resolvedLanguage}/users/me/edit`}
+              target="_blank"
+            >
+              {t("edit")}
+              <IonIcon icon={openOutline} className="tw-text-sm tw-ml-1" />
+            </IonButton>
           </IonItemDivider>
-          <IonCard className="tw-mt-1.5 tw-bg-background">
+          <IonCard className="tw-mt-1.5 tw-bg-background tw-relative">
             {authUser ? (
               <UserCard
                 user={authUser}
