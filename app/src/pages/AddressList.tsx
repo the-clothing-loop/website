@@ -14,12 +14,7 @@ import {
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
-import {
-  bagHandle,
-  pauseCircleSharp,
-  personCircleOutline,
-  shield,
-} from "ionicons/icons";
+import { bagHandle, pauseCircleSharp, shield } from "ionicons/icons";
 import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
 
@@ -73,18 +68,16 @@ export default function AddressList() {
                 <IonText className="ion-text-ellipsis tw-my-1.5">
                   <h5
                     className={`ion-no-margin ${
-                      isUserPaused ? "tw-text-medium" : ""
+                      isMe
+                        ? "tw-text-primary"
+                        : isUserPaused
+                        ? "tw-text-medium"
+                        : ""
                     }`}
                   >
                     {user.name}
 
-                    {isMe ? (
-                      <IonIcon
-                        icon={personCircleOutline}
-                        color="medium"
-                        className="tw-w-[18px] tw-h-[18px] tw-m-0 tw-ml-[5px] tw-align-text-top"
-                      />
-                    ) : isUserHost ? (
+                    {isUserHost ? (
                       <IonIcon
                         icon={shield}
                         color="medium"

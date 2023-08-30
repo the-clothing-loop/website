@@ -32,7 +32,6 @@ import {
   closeOutline,
   ellipsisHorizontal,
   pauseCircle,
-  personCircleOutline,
 } from "ionicons/icons";
 import type {
   DatetimeChangeEventDetail,
@@ -607,6 +606,7 @@ function SelectUserModal({
 
               const isAddressPrivate = IsPrivate(user.address);
               const isSelected = selected === user.uid;
+              const isMe = user.uid === authUser?.uid;
               //   let uc = user.chains.find((u) => u.chain_uid === chain.uid);
               return (
                 <IonItem lines="full" key={user.uid}>
@@ -615,17 +615,11 @@ function SelectUserModal({
                   }`}</span>
                   <IonLabel>
                     <h2
-                      className={`tw-text-lg ${
-                        isSelected ? "tw-font-semibold" : ""
+                      className={`tw-text-lg ${isMe ? "tw-text-primary" : ""} ${
+                        isSelected ? "!tw-font-semibold" : ""
                       }`}
                     >
                       {user.name}
-                      {user.uid === authUser?.uid ? (
-                        <IonIcon
-                          icon={personCircleOutline}
-                          className="tw-translate-y-0.5 tw-px-0.5"
-                        />
-                      ) : null}
                     </h2>
                     {isAddressPrivate ? null : (
                       <IonText color={isSelected ? undefined : "medium"}>
