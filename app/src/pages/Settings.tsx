@@ -2,6 +2,7 @@ import {
   IonAlert,
   IonButton,
   IonCard,
+  IonChip,
   IonContent,
   IonHeader,
   IonIcon,
@@ -14,6 +15,7 @@ import {
   IonSelectOption,
   IonText,
   IonTitle,
+  IonToggle,
   IonToolbar,
   SelectChangeEventDetail,
   useIonActionSheet,
@@ -223,24 +225,26 @@ export default function Settings() {
                 <IonLabel className="ion-text-wrap">
                   <h3 className="!tw-font-bold">{t("pauseParticipation")}</h3>
                   <p className="ion-no-wrap">
-                    {pausedDayjs
-                      ? pausedFromNow
-                      : t("setTimerForACoupleOfWeeks")}
+                    <span>
+                      {isUserPaused
+                        ? t("yourParticipationIsPausedClick")
+                        : t("setTimerForACoupleOfWeeks")}
+                    </span>
                   </p>
+                  {pausedDayjs ? (
+                    <IonChip>
+                      <IonIcon icon={pauseCircle} />
+                      <IonLabel>{pausedFromNow}</IonLabel>
+                    </IonChip>
+                  ) : null}
                 </IonLabel>
-                <IonButton slot="end" color="primary">
-                  {isUserPaused ? (
-                    <>
-                      <span>{t("unPause")}</span>
-                      <IonIcon icon={stopCircle} className="tw-ml-2" />
-                    </>
-                  ) : (
-                    <>
-                      <span>{t("pauseUntil")}</span>
-                      <IonIcon icon={pauseCircle} className="tw-ml-2" />
-                    </>
-                  )}
-                </IonButton>
+                <IonToggle
+                  slot="end"
+                  checked={isUserPaused}
+                  onIonChange={(e) => {
+                    e.target.checked = !e.detail.checked;
+                  }}
+                />
               </IonItem>
             </IonList>
           </IonCard>
