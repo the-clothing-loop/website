@@ -171,7 +171,7 @@ export default function CreateUpdateBag({
             />
           </IonItem>
           <IonItem lines="none" className="-tw-mt-5">
-            {["👻", "🐰"].map((emoji, i) => (
+            {["👻", "🐰", "👟"].map((emoji, i) => (
               <IonFabButton
                 key={i}
                 size="small"
