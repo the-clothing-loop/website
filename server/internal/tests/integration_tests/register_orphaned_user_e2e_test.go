@@ -30,10 +30,8 @@ func TestRegisterOrphanedUser(t *testing.T) {
 	user, _ := mocks.MockOrphanedUser(t, db, mocks.MockChainAndUserOptions{})
 	fmt.Println(user)
 
-	// create gin.Context mock
 	url := "/v2/register/orphaned-user"
 
-	//c, resultFunc := mocks.MockGinContext(db, http.MethodGet, url, nil, token)
 	participantEmail := fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain())
 
 	c, resultFunc := mocks.MockGinContext(db, http.MethodPost, url, &gin.H{
@@ -53,7 +51,6 @@ func TestRegisterOrphanedUser(t *testing.T) {
 
 	assert.Equal(t, 200, result.Response.StatusCode)
 
-	// Checks the user gets added
 	testUser := &models.User{}
 	db.Raw("SELECT * FROM users WHERE email = ? LIMIT 1", participantEmail).Scan(testUser)
 	assert.NotEmpty(t, testUser.ID, "user of participant email: %s not found", participantEmail)
