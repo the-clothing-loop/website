@@ -48,23 +48,6 @@ func TokenCreateUnverified(db *gorm.DB, userID uint) (string, error) {
 	return token, nil
 }
 
-func TokenCreateUnverifiedBackdoor(db *gorm.DB, userID uint) (string, error) {
-	// create token
-	token := "12345678"
-
-	// set token in database
-	res := db.Create(&models.UserToken{
-		Token:    token,
-		Verified: false,
-		UserID:   userID,
-	})
-	if res.Error != nil {
-		return "", res.Error
-	}
-
-	return token, nil
-}
-
 // Returns the user before it was verified
 func TokenVerify(db *gorm.DB, token string) (bool, *models.User, string) {
 	newToken := uuid.NewV4().String()

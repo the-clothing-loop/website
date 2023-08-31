@@ -5,3 +5,5 @@ UPDATE users SET email = "host@example.com", name = "Host" WHERE id = 2;
 UPDATE user_chains SET is_chain_admin = TRUE, is_approved = TRUE WHERE user_id = 2;
 UPDATE users SET email = "user@example.com", name = "Participant" WHERE id = 3;
 UPDATE user_chains SET is_chain_admin = FALSE, is_approved = TRUE WHERE user_id = 3;
+UPDATE users SET email = "review@example.com", name = "App Publishing Host" WHERE id = 4;
+UPDATE user_chains SET is_chain_admin = TRUE, is_approved = TRUE WHERE user_id = 4;
