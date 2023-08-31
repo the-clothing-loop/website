@@ -27,12 +27,6 @@ type MockChainAndUserOptions struct {
 
 func TestRegisterOrphanedUser(t *testing.T) {
 
-	// create user chain mock
-
-	/*chain, user, token := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
-		IsChainAdmin: true,
-	})*/
-
 	user, _ := mocks.MockOrphanedUser(t, db, mocks.MockChainAndUserOptions{})
 	fmt.Println(user)
 
