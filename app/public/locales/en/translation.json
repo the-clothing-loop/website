@@ -97,9 +97,9 @@
   "unPause": "Un-pause",
   "areYouSureUnPause": "Are you sure you want to Un-pause?",
   "yourParticipationIsPausedClick": "Your participation is paused. Click the button to rejoin.",
-  "week_one": "one week",
+  "week_one": "One week",
   "week_other": "{{count}} weeks",
-  "day_one": "one day",
+  "day_one": "One day",
   "day_other": "{{count}} days",
   "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation"
 }
