@@ -390,8 +390,7 @@ LIMIT 1
 
 		for _, result := range results {
 			if result.Email.Valid {
-				go views.EmailAParticipantJoinedTheLoop(
-					c,
+				go views.EmailAParticipantJoinedTheLoop(c, db, result.I18n,
 					result.Email.String,
 					result.Name,
 					chain.Name,
@@ -442,6 +441,8 @@ func ChainRemoveUser(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
 		return
 	}
+
+	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
 }
 
 func ChainApproveUser(c *gin.Context) {
@@ -467,13 +468,15 @@ SET is_approved = TRUE, created_at = NOW()
 WHERE user_id = ? AND chain_id = ?
 	`, user.ID, chain.ID)
 
+	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
+
 	// Given a ChainID and the UID of the new user returns the list of UserUIDs of the chain considering the addition of the new user
 	cities := retrieveChainUsersAsTspCities(db, chain.ID)
 	newRoute, _ := tsp.RunAddOptimalOrderNewCity[string](cities, user.UID)
 	chain.SetRouteOrderByUserUIDs(db, newRoute) // update the route order
 
 	if user.Email.Valid {
-		views.EmailAnAdminApprovedYourJoinRequest(c, user.Name, user.Email.String, chain.Name)
+		views.EmailAnAdminApprovedYourJoinRequest(c, db, user.I18n, user.Name, user.Email.String, chain.Name)
 	}
 }
 
@@ -501,8 +504,10 @@ func ChainDeleteUnapproved(c *gin.Context) {
 		return
 	}
 
+	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
+
 	if user.Email.Valid {
-		views.EmailAnAdminDeniedYourJoinRequest(c, user.Name, user.Email.String, chain.Name,
+		views.EmailAnAdminDeniedYourJoinRequest(c, db, user.I18n, user.Name, user.Email.String, chain.Name,
 			query.Reason)
 	}
 

@@ -10,8 +10,6 @@ import {
   MouseEventHandler,
   ReactElement,
   DragEvent,
-  LegacyRef,
-  SelectHTMLAttributes,
 } from "react";
 
 import { useParams, Link, useHistory, Redirect } from "react-router-dom";

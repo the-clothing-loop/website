@@ -371,52 +371,55 @@ body[data-theme="blue"] {
   }
 }
 body[data-theme="rainbow"] {
-  --ion-tab-bar-background: linear-gradient(
-      0deg,
-      rgba(230, 30, 0, 0.2) 0%,
-      rgba(230, 30, 0, 0.2) 16.6%,
-      rgba(255, 142, 0, 0.2) 16.6%,
-      rgba(255, 142, 0, 0.2) 33.3%,
-      rgba(212, 198, 0, 0.2) 33.3%,
-      rgba(212, 198, 0, 0.2) 50%,
-      rgba(20, 201, 59, 0.2) 50%,
-      rgba(20, 201, 59, 0.2) 66.6%,
-      rgba(45, 108, 255, 0.2) 66.6%,
-      rgba(45, 108, 255, 0.2) 83.3%,
-      rgba(199, 60, 221, 0.2) 83.3%
-    )
-    #fff;
-
-  .button.ion-color-primary {
-    --ion-color-base: linear-gradient(
-        90deg,
-        hsl(8, 100%, 35%) 0%,
-        hsl(8, 100%, 35%) 16.6%,
-        hsl(33, 100%, 40%) 16.6%,
-        hsl(33, 100%, 40%) 33.3%,
-        hsl(56, 100%, 32%) 33.3%,
-        hsl(56, 100%, 32%) 50%,
-        hsl(133, 82%, 33%) 50%,
-        hsl(133, 82%, 33%) 66.6%,
-        hsl(222, 100%, 49%) 66.6%,
-        hsl(222, 100%, 49%) 83.3%,
-        hsl(292, 70%, 45%) 83.3%
-      )
-      #fff !important;
-  }
-
-  --ion-color-primary: hsl(259, 37%, 51%);
   --ion-tab-bar-color: hsl(215, 30%, 52%);
-  --ion-color-primary-rgb: 203, 148, 172;
+  --ion-color-primary: rgb(113, 84, 176);
+  --ion-color-primary-rgb: 113, 84, 176;
   --ion-color-primary-shade: #bb658a;
   --ion-color-primary-tint: #eea1c2;
   --ion-color-light: #f7eff2;
   @media (prefers-color-scheme: dark) {
-    --ion-color-primary: hsl(334, 100%, 78%);
-    --ion-color-primary-rgb: 220, 119, 163;
-    --ion-color-light: #2e1e27;
     --ion-tab-bar-color: hsl(190, 61%, 50%);
-    --ion-tab-bar-background: linear-gradient(
+    --ion-color-primary: rgb(255, 143, 191);
+    --ion-color-primary-rgb: 255, 143, 191;
+    --ion-color-light: #2e1e27;
+  }
+}
+body[data-theme="rainbow"] .button.ion-color-primary {
+  --ion-color-base: linear-gradient(
+      90deg,
+      hsl(8, 100%, 35%) 0%,
+      hsl(8, 100%, 35%) 16.6%,
+      hsl(33, 100%, 40%) 16.6%,
+      hsl(33, 100%, 40%) 33.3%,
+      hsl(56, 100%, 32%) 33.3%,
+      hsl(56, 100%, 32%) 50%,
+      hsl(133, 82%, 33%) 50%,
+      hsl(133, 82%, 33%) 66.6%,
+      hsl(222, 100%, 49%) 66.6%,
+      hsl(222, 100%, 49%) 83.3%,
+      hsl(292, 70%, 45%) 83.3%
+    )
+    #fff !important;
+}
+body[data-theme="rainbow"] ion-tab-button {
+  --background: linear-gradient(
+      0deg,
+      hsla(8, 100%, 45%, 0.2) 0%,
+      hsla(8, 100%, 45%, 0.2) 16.6%,
+      hsla(33, 100%, 50%, 0.2) 16.6%,
+      hsla(33, 100%, 50%, 0.2) 33.3%,
+      hsla(56, 100%, 42%, 0.2) 33.3%,
+      hsla(56, 100%, 42%, 0.2) 50%,
+      hsla(133, 82%, 43%, 0.2) 50%,
+      hsla(133, 82%, 43%, 0.2) 66.6%,
+      hsla(222, 100%, 59%, 0.2) 66.6%,
+      hsla(222, 100%, 59%, 0.2) 83.3%,
+      hsla(292, 70%, 55%, 0.2) 83.3%
+    )
+    #fff;
+
+  @media (prefers-color-scheme: dark) {
+    --background: linear-gradient(
         0deg,
         hsla(8, 80%, 45%, 0.4) 0%,
         hsla(8, 80%, 45%, 0.4) 16.6%,

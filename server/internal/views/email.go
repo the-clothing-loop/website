@@ -10,6 +10,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 )
@@ -75,10 +76,13 @@ func init() {
 	}
 }
 
-func getI18n(c *gin.Context) string {
+func getI18nGin(c *gin.Context) string {
 	i18n, _ := c.Cookie("i18next")
+	return getI18n(i18n)
+}
+func getI18n(i18n string) string {
 	switch i18n {
-	case "nl", "de", "fr", "es", "sv":
+	case "nl", "de", "fr", "he", "es", "sv":
 	default:
 		i18n = "en"
 	}
@@ -86,7 +90,7 @@ func getI18n(c *gin.Context) string {
 }
 
 // Adds subject and body to message
-func emailGenerateMessage(m *app.Mail, lng, templateName string, data any, subjectValues ...any) error {
+func emailGenerateMessage(m *models.Mail, lng, templateName string, data any, subjectValues ...any) error {
 	// subject
 	var subject string
 	{
@@ -130,7 +134,18 @@ func emailGenerateMessage(m *app.Mail, lng, templateName string, data any, subje
 	return nil
 }
 
-func EmailAParticipantJoinedTheLoop(c *gin.Context,
+func EmailRootAdminFailedLastRetry(db *gorm.DB, email, subject string) error {
+	m := app.MailCreate()
+
+	m.ToName = "The Clothing Loop"
+	m.ToAddress = app.Config.SMTP_SENDER
+	m.Subject = "Failed last attempt to send email"
+	m.Body = fmt.Sprintf("Failed to send email<br/><strong>To:</strong> %s<br/><strong>Subject:</strong> %s", email, subject)
+
+	return app.MailSend(db, m)
+}
+
+func EmailAParticipantJoinedTheLoop(c *gin.Context, db *gorm.DB, lng,
 	adminEmail,
 	adminName,
 	chainName,
@@ -140,13 +155,12 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context,
 	participantAddress string,
 	participantSizeEnums []string,
 ) error {
-	// ? language hardcoded to english until language preference can be determined in the database
-	// i18n := getI18n(c)
-	i18n := "en"
+	lng = getI18n(lng)
 
 	m := app.MailCreate()
-	m.To.Name = adminName
-	m.To.Address = adminEmail
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = adminName
+	m.ToAddress = adminEmail
 
 	sizesHtml := ""
 	{
@@ -177,7 +191,7 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context,
 			sizesHtml += models.SizeLetters[v] + " "
 		}
 	}
-	err := emailGenerateMessage(m, i18n, "someone_is_interested_in_joining_your_loop", gin.H{
+	err := emailGenerateMessage(m, lng, "someone_is_interested_in_joining_your_loop", gin.H{
 		"Name":      adminName,
 		"ChainName": chainName,
 		"Participant": gin.H{
@@ -192,17 +206,17 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context,
 		return err
 	}
 
-	return app.MailSend(m)
+	return app.MailSend(db, m)
 }
 
-func EmailContactUserMessage(c *gin.Context,
+func EmailContactUserMessage(c *gin.Context, db *gorm.DB,
 	name,
 	email,
 	message string,
 ) error {
 	m := app.MailCreate()
-	m.To.Name = "The Clothing Loop"
-	m.To.Address = app.Config.SMTP_SENDER
+	m.ToName = "The Clothing Loop"
+	m.ToAddress = app.Config.SMTP_SENDER
 	err := emailGenerateMessage(m, "en", "contact_confirmation", gin.H{
 		"Name":    name,
 		"Email":   email,
@@ -212,17 +226,17 @@ func EmailContactUserMessage(c *gin.Context,
 		return err
 	}
 
-	return app.MailSend(m)
+	return app.MailSend(db, m)
 }
-func EmailContactConfirmation(c *gin.Context,
+func EmailContactConfirmation(c *gin.Context, db *gorm.DB,
 	name,
 	email,
 	message string,
 ) error {
-	i18n := getI18n(c)
+	i18n := getI18nGin(c)
 	m := app.MailCreate()
-	m.To.Name = name
-	m.To.Address = email
+	m.ToName = name
+	m.ToAddress = email
 	err := emailGenerateMessage(m, i18n, "contact_confirmation", gin.H{
 		"Name":    name,
 		"Message": message,
@@ -231,34 +245,35 @@ func EmailContactConfirmation(c *gin.Context,
 		return err
 	}
 
-	return app.MailSend(m)
+	return app.MailSend(db, m)
 }
 
-func EmailSubscribeToNewsletter(c *gin.Context,
+func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB,
 	name,
 	email string,
 ) error {
-	i18n := getI18n(c)
+	i18n := getI18nGin(c)
 	m := app.MailCreate()
-	m.To.Name = name
-	m.To.Address = email
+	m.ToName = name
+	m.ToAddress = email
 	err := emailGenerateMessage(m, i18n, "subscribed_to_newsletter", gin.H{"Name": name})
 	if err != nil {
 		return err
 	}
 
-	return app.MailSend(m)
+	return app.MailSend(db, m)
 }
 
-func EmailRegisterVerification(c *gin.Context,
+func EmailRegisterVerification(c *gin.Context, db *gorm.DB,
 	name,
 	email,
 	token string,
 ) error {
-	i18n := getI18n(c)
+	i18n := getI18nGin(c)
 	m := app.MailCreate()
-	m.To.Name = name
-	m.To.Address = email
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
 	err := emailGenerateMessage(m, i18n, "register_verification", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
@@ -267,19 +282,19 @@ func EmailRegisterVerification(c *gin.Context,
 	if err != nil {
 		return err
 	}
-	return app.MailSend(m)
+	return app.MailSend(db, m)
 }
 
-func EmailLoginVerification(c *gin.Context,
+func EmailLoginVerification(c *gin.Context, db *gorm.DB,
 	name,
 	email,
 	token string,
 	isApp bool,
 ) error {
-	i18n := getI18n(c)
+	i18n := getI18nGin(c)
 	m := app.MailCreate()
-	m.To.Name = name
-	m.To.Address = email
+	m.ToName = name
+	m.ToAddress = email
 	err := emailGenerateMessage(m, i18n, "login_verification", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
@@ -290,19 +305,20 @@ func EmailLoginVerification(c *gin.Context,
 		return err
 	}
 
-	return app.MailSend(m)
+	return app.MailSend(db, m)
 }
 
-func EmailAnAdminApprovedYourJoinRequest(c *gin.Context,
+func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
 	name,
 	email,
 	chainName string,
 ) error {
-	i18n := getI18n(c)
+	lng = getI18n(lng)
 	m := app.MailCreate()
-	m.To.Name = name
-	m.To.Address = email
-	err := emailGenerateMessage(m, i18n, "an_admin_approved_your_join_request", gin.H{
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "an_admin_approved_your_join_request", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
 	})
@@ -310,22 +326,21 @@ func EmailAnAdminApprovedYourJoinRequest(c *gin.Context,
 		return err
 	}
 
-	return app.MailSend(m)
+	return app.MailSend(db, m)
 }
 
-func EmailAnAdminDeniedYourJoinRequest(c *gin.Context,
+func EmailAnAdminDeniedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
 	name,
 	email,
 	chainName,
 	reason string,
 ) error {
-	// ? language hardcoded to english until language preference can be determined in the database
-	// i18n := getI18n(c)
-	i18n := "en"
+	lng = getI18n(lng)
 	m := app.MailCreate()
-	m.To.Name = name
-	m.To.Address = email
-	err := emailGenerateMessage(m, i18n, "an_admin_denied_your_join_request", gin.H{
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "an_admin_denied_your_join_request", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
 		"Reason":    reason,
@@ -334,20 +349,21 @@ func EmailAnAdminDeniedYourJoinRequest(c *gin.Context,
 		return err
 	}
 
-	return app.MailSend(m)
+	return app.MailSend(db, m)
 }
 
-func EmailPoke(c *gin.Context,
+func EmailPoke(c *gin.Context, db *gorm.DB, lng,
 	name,
 	email,
 	participantName,
 	chainName string,
 ) error {
-	i18n := "en"
+	lng = getI18n(lng)
 	m := app.MailCreate()
-	m.To.Name = name
-	m.To.Address = email
-	err := emailGenerateMessage(m, i18n, "poke", gin.H{
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "poke", gin.H{
 		"Name":            name,
 		"ChainName":       chainName,
 		"ParticipantName": participantName,
@@ -356,7 +372,7 @@ func EmailPoke(c *gin.Context,
 		return err
 	}
 
-	return app.MailSend(m)
+	return app.MailSend(db, m)
 }
 
 type EmailApproveReminderItem struct {
@@ -367,18 +383,17 @@ type EmailApproveReminderItem struct {
 	ChainName   string `gorm:"chain_name"`
 }
 
-func EmailApproveReminder(
+func EmailApproveReminder(db *gorm.DB, lng,
 	name,
 	email string,
 	approvals []*EmailApproveReminderItem,
 ) error {
-	// ? language hardcoded to english until language preference can be determined in the database
-	// i18n := getI18n(c)
-	i18n := "en"
+	lng = getI18n(lng)
 	m := app.MailCreate()
-	m.To.Name = name
-	m.To.Address = email
-	err := emailGenerateMessage(m, i18n, "approve_reminder", gin.H{
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "approve_reminder", gin.H{
 		"Name":      name,
 		"BaseURL":   app.Config.SITE_BASE_URL_FE,
 		"Approvals": approvals,
@@ -387,5 +402,5 @@ func EmailApproveReminder(
 		return err
 	}
 
-	return app.MailSend(m)
+	return app.MailSend(db, m)
 }

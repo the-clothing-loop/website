@@ -13,6 +13,7 @@ import {
   IonPage,
   IonFab,
   IonFabButton,
+  isPlatform,
 } from "@ionic/react";
 import {
   arrowBack,
@@ -27,6 +28,7 @@ import { useHistory } from "react-router";
 import toastError from "../../toastError";
 import { loginEmail } from "../api";
 import { StoreContext } from "../Store";
+import { AppLauncher } from "@capacitor/app-launcher";
 
 enum State {
   idle,
@@ -47,6 +49,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
   const inputEmail = useRef<HTMLIonInputElement>(null);
   const inputToken = useRef<HTMLIonInputElement>(null);
 
+  const [isCapacitor] = useState(() => isPlatform("capacitor"));
   const [showToken, setShowToken] = useState(false);
   const [sentState, setSentState] = useState(State.idle);
   const [verifyState, setVerifyState] = useState(State.idle);
@@ -110,6 +113,14 @@ export default function Login(props: { isLoggedIn: boolean }) {
     })();
   }
 
+  function openMailApp() {
+    if (isPlatform("ios")) {
+      window.location.href = "com.apple.mobilemail://";
+    } else if (isPlatform("android")) {
+      AppLauncher.openUrl({ url: "com.google.android.gm" });
+    }
+  }
+
   return (
     <IonPage>
       <IonHeader translucent>
@@ -142,12 +153,24 @@ export default function Login(props: { isLoggedIn: boolean }) {
             placeholder={t("yourEmailAddress")!}
           />
         </IonItem>
-        <IonItem lines="none">
+        <IonItem lines="none" className="tw-text-right tw-mt-4">
+          {isCapacitor && showToken ? (
+            <IonButton
+              key="open-mail-app"
+              size="default"
+              slot="end"
+              shape="round"
+              color="light"
+              className="tw-me-4"
+              onClick={openMailApp}
+            >
+              {t("openMailApp")}
+            </IonButton>
+          ) : null}
           <IonButton
             size="default"
             slot="end"
             shape="round"
-            expand="block"
             color={
               sentState === State.idle
                 ? "primary"

@@ -55,6 +55,10 @@ func Routes() *gin.Engine {
 		// https://crontab.guru/#31_*_*_*_*
 		Scheduler.Cron("31 * * * *").Do(controllers.CronHourly, db)
 
+		// At 02:08.
+		// https://crontab.guru/#8_2_*_*_*
+		Scheduler.Cron("8 2 * * *").Do(controllers.CronDaily, db)
+
 		Scheduler.StartAsync()
 
 		// testing
@@ -83,6 +87,7 @@ func Routes() *gin.Engine {
 
 	// login
 	v2.POST("/register/basic-user", controllers.RegisterBasicUser)
+	v2.POST("/register/orphaned-user", controllers.RegisterOrphanedUser)
 	v2.POST("/register/chain-admin", controllers.RegisterChainAdmin)
 	v2.POST("/login/email", controllers.LoginEmail)
 	v2.GET("/login/validate", controllers.LoginValidate)

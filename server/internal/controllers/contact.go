@@ -57,11 +57,11 @@ func ContactNewsletter(c *gin.Context) {
 		app.SendInBlue.CreateContact(c.Request.Context(), body.Email)
 	}
 
-	views.EmailSubscribeToNewsletter(c, name, body.Email)
+	views.EmailSubscribeToNewsletter(c, db, name, body.Email)
 }
 
 func ContactMail(c *gin.Context) {
-	// db := getDB(c)
+	db := getDB(c)
 
 	var body struct {
 		Name     string `json:"name" binding:"required"`
@@ -77,12 +77,12 @@ func ContactMail(c *gin.Context) {
 		return
 	}
 
-	err2 := views.EmailContactUserMessage(c, body.Name, body.Email, body.Message)
+	err2 := views.EmailContactUserMessage(c, db, body.Name, body.Email, body.Message)
 	if err2 != nil {
 		glog.Errorf("Unable to send email: %v", err2)
 	}
 
-	err := views.EmailContactConfirmation(c, body.Name, body.Email, body.Message)
+	err := views.EmailContactConfirmation(c, db, body.Name, body.Email, body.Message)
 	if err != nil {
 		glog.Errorf("Unable to send email: %v", err)
 	}

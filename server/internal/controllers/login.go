@@ -48,7 +48,7 @@ func LoginEmail(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	err = views.EmailLoginVerification(c, user.Name, user.Email.String, token, body.IsApp)
+	err = views.EmailLoginVerification(c, db, user.Name, user.Email.String, token, body.IsApp)
 	if err != nil {
 		glog.Errorf("Unable to send email: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to send email")
@@ -92,12 +92,14 @@ func LoginValidate(c *gin.Context) {
 		Name  string
 		Email zero.String
 		Chain string
+		I18n  string
 	}
 	err = db.Raw(`
 SELECT
  users.name AS name, 
  users.email AS email,
- chains.name AS chain
+ chains.name AS chain,
+ users.i18n AS i18n
 FROM user_chains
 LEFT JOIN users ON user_chains.user_id = users.id 
 LEFT JOIN chains ON chains.id = user_chains.chain_id
@@ -123,8 +125,7 @@ UPDATE chains SET published = TRUE WHERE id IN (
 
 		for _, result := range results {
 			if result.Email.Valid {
-				go views.EmailAParticipantJoinedTheLoop(
-					c,
+				go views.EmailAParticipantJoinedTheLoop(c, db, result.I18n,
 					result.Email.String,
 					result.Name,
 					result.Chain,
@@ -231,7 +232,59 @@ func RegisterChainAdmin(c *gin.Context) {
 		return
 	}
 
-	go views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
+	go views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
+}
+
+func RegisterOrphanedUser(c *gin.Context) {
+	db := getDB(c)
+	var body struct {
+		User UserCreateRequestBody `json:"user" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
+		c.String(http.StatusBadRequest, models.ErrSizeInvalid.Error())
+		return
+	}
+
+	user := &models.User{
+		UID:             uuid.NewV4().String(),
+		Email:           zero.StringFrom(body.User.Email),
+		IsEmailVerified: false,
+		IsRootAdmin:     false,
+		Name:            body.User.Name,
+		PhoneNumber:     body.User.PhoneNumber,
+		Sizes:           body.User.Sizes,
+		Address:         body.User.Address,
+		Latitude:        body.User.Latitude,
+		Longitude:       body.User.Longitude,
+	}
+
+	if res := db.Create(user); res.Error != nil {
+		goscope.Log.Warningf("User already exists: %v", res.Error)
+		c.String(http.StatusConflict, "User already exists")
+		return
+	}
+
+	if body.User.Newsletter {
+		n := &models.Newsletter{
+			Email:    body.User.Email,
+			Name:     body.User.Name,
+			Verified: false,
+		}
+		n.CreateOrUpdate(db)
+	}
+
+	token, err := auth.TokenCreateUnverified(db, user.ID)
+	if err != nil {
+		goscope.Log.Errorf("Unable to create token: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to create token")
+		return
+	}
+	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func RegisterBasicUser(c *gin.Context) {
@@ -302,7 +355,7 @@ func RegisterBasicUser(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	views.EmailRegisterVerification(c, user.Name, user.Email.String, token)
+	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
 func Logout(c *gin.Context) {

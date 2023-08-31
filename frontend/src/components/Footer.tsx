@@ -157,7 +157,7 @@ export default function Footer() {
                   >
                     <img
                       src={AppStore}
-                      alt="App Store Logo"
+                      alt="Download on the App Store"
                       style={{ height: 50 }}
                     />
                     <span className="absolute -top-2 -right-2 block rounded py-0.5 px-1.5 text-xs bg-blue font-semibold tracking-widest text-white">
@@ -177,7 +177,7 @@ export default function Footer() {
                   >
                     <img
                       src={GooglePlay}
-                      alt="Google Play Logo"
+                      alt="Get it on Google Play"
                       style={{ height: 50 }}
                     />
                     <span className="absolute -top-2 -right-2 block rounded py-0.5 px-1.5 text-xs bg-blue font-semibold tracking-widest text-white">

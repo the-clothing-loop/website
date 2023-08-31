@@ -8,11 +8,12 @@ import { TwoColumnLayout } from "../components/Layouts";
 import AddressForm, { ValuesForm } from "../components/AddressForm";
 import { Chain, User } from "../api/types";
 import { chainAddUser, chainGet } from "../api/chain";
-import { registerBasicUser } from "../api/login";
+import { registerBasicUser, registerOrphanedUser } from "../api/login";
 import { ToastContext } from "../providers/ToastProvider";
 import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { TFunction } from "i18next";
+import { userGetByUID } from "../api/user";
 
 interface Params {
   chainUID: string;
@@ -67,8 +68,23 @@ export default function Signup() {
 
     (async () => {
       try {
-        await registerBasicUser(
-          {
+        if (chainUID) {
+          await registerBasicUser(
+            {
+              name: values.name,
+              email: values.email,
+              phone_number: values.phone,
+              newsletter: values.newsletter,
+              address: values.address,
+              sizes: values.sizes,
+              latitude: values.latitude || 0,
+              longitude: values.longitude || 0,
+            },
+            chainUID
+          );
+        } else {
+          console.log("register orphaned user");
+          await registerOrphanedUser({
             name: values.name,
             email: values.email,
             phone_number: values.phone,
@@ -77,9 +93,9 @@ export default function Signup() {
             sizes: values.sizes,
             latitude: values.latitude || 0,
             longitude: values.longitude || 0,
-          },
-          chainUID
-        );
+          });
+        }
+
         setSubmitted(true);
         window.goatcounter?.count({
           path: "new-user",
