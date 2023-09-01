@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet";
 import { useState, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 
 import { Event } from "../api/types";
 import { eventGetAll, eventGetPrevious } from "../api/event";
@@ -33,6 +33,7 @@ const DEFAULT_LONGITUDE = 4.89707;
 
 export default function Events() {
   const { t } = useTranslation();
+  const history = useHistory();
 
   const { addToastError, addModal } = useContext(ToastContext);
   const authUser = useContext(AuthContext).authUser;
@@ -173,13 +174,20 @@ export default function Events() {
                 className="btn btn-primary mb-4 md:mb-0 "
                 onClick={() =>
                   addModal({
-                    message: "You must be a registered user to create an event",
+                    message: t("mustBeRegistered"),
                     actions: [
                       {
                         text: t("signup"),
+                        type: "primary",
+                        fn: () => {
+                          history.push("/users/signup");
+                        },
+                      },
+                      {
+                        text: t("login"),
                         type: "secondary",
                         fn: () => {
-                          window.location.replace("/users/signup");
+                          history.push("/users/login");
                         },
                       },
                     ],
