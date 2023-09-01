@@ -49,6 +49,7 @@ const colors = {
     DEFAULT: "#a6c665",
   },
   green: {
+    lighter: "#e8efe9",
     light: "#b1c8b6",
     DEFAULT: "#66926e",
   },

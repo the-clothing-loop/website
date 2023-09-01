@@ -289,24 +289,16 @@ function MessengerIcons(props: { phoneNumber: string }) {
         isPhoneValid = isPhoneValid || app.name === "Sms";
         return (
           <IonFabButton
-            disabled={!isPhoneValid}
-            color={isPhoneValid ? undefined : "medium"}
             key={app.name}
-            className="tw-me-2"
-            style={
-              isPhoneValid
-                ? {
-                    "--background": app.color,
-                    "--background-activated": app.colorFade,
-                    "--background-focused": app.colorFade,
-                    "--background-hover": app.colorTint,
-                  }
-                : {
-                    opacity: isPhoneValid ? 1 : 0.6,
-                  }
-            }
+            className={`tw-me-2 ${isPhoneValid ? "" : "tw-hidden"}`}
+            style={{
+              "--background": app.color,
+              "--background-activated": app.colorFade,
+              "--background-focused": app.colorFade,
+              "--background-hover": app.colorTint,
+            }}
             href={isPhoneValid ? app.link(phone) : undefined}
-            target={isPhoneValid ? "blank" : undefined}
+            target="blank"
           >
             <IonImg
               src={app.icon}

@@ -133,6 +133,7 @@
   "selectSize": "Välj en klädstorlek",
   "about": "Om",
   "exportData": "Exportera data",
+  "exportToSpreadsheet": "Open with Excel or LibreOffice",
   "editLoopInformation": "Redigera Loop information",
   "newsletterSubscription": "Prenumeration på nyhetsbrev",
   "editAdminContacts": "Edit Host contacts",

@@ -146,7 +146,7 @@ export default function Signup() {
             alt="Nichon giving a large bag of clothes to another woman"
             credit="Anke Teunissen"
           >
-            <div>
+            <div className="relative">
               <h1 className="font-semibold text-3xl text-secondary mb-3">
                 {t("join")}
                 <span> {chain?.name}</span>
@@ -158,13 +158,13 @@ export default function Signup() {
                   className="max-w-xs"
                   id="address-form"
                 >
-                  <dl>
-                    <dt className="font-bold mb-1">{t("name")}</dt>
-                    <dd className="mb-2">{authUser.name}</dd>
-                    <dt className="font-bold mb-1">{t("email")}</dt>
-                    <dd className="mb-2">{authUser.email}</dd>
+                  <dl className="sm:absolute -top-8">
+                    <dt className="inline font-bold mb-1">
+                      {t("account") + ": "}
+                    </dt>
+                    <dd className="inline mb-2">{authUser.name}</dd>
                   </dl>
-                  <div className="mb-4">
+                  <div className="my-4">
                     <button
                       type="button"
                       className="btn btn-secondary btn-outline mr-3"

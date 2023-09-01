@@ -142,7 +142,7 @@ export default function CreateUpdateBag({
               onClick={createOrUpdate}
               color={!error ? "primary" : "danger"}
             >
-              {bag ? t("update") : t("create")}
+              {t("save")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -171,11 +171,11 @@ export default function CreateUpdateBag({
             />
           </IonItem>
           <IonItem lines="none" className="-tw-mt-5">
-            {["👻", "🐰"].map((emoji, i) => (
+            {["👻", "🐰", "👟"].map((emoji, i) => (
               <IonFabButton
                 key={i}
                 size="small"
-                color={bagNumber.includes(emoji) ? "primary" : "light"}
+                color={bagNumber.includes(emoji) ? "primary" : "transparent"}
                 onClick={() => handleSetBagEmoji(emoji)}
                 className="tw-text-xl"
               >

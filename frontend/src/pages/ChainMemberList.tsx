@@ -400,7 +400,7 @@ export default function ChainMemberList() {
           <section className="lg:w-1/3">
             <div className="relative bg-teal-light p-8">
               <label
-                className={`absolute top-4 right-4 ${
+                className={`absolute top-4 end-4 ${
                   chain.published || authUser?.is_root_admin ? "" : "hidden"
                 }`}
               >
@@ -408,13 +408,13 @@ export default function ChainMemberList() {
                   {...addCopyAttributes(
                     t,
                     "loop-detail-share",
-                    "relative btn btn-circle btn-secondary tooltip flex group",
+                    "relative btn btn-circle btn-secondary tooltip ltr:tooltip-left rtl:tooltip-right md:tooltip-top flex group",
                     shareLink
                   )}
                   href={shareLink}
                 >
                   <span className="feather feather-share text-lg" />
-                  <span className="absolute top-full -mt-1 group-hover:mt-1 text-xs bg-secondary shadow-lg rounded-sm py-1 px-2  whitespace-nowrap group-hover:bg-secondary-focus transition-all opacity-40 group-hover:opacity-100">
+                  <span className="absolute top-full end-0 md:end-auto -mt-1 group-hover:mt-1 text-xs bg-secondary shadow-lg rounded-sm py-1 px-2  whitespace-nowrap group-hover:bg-secondary-focus transition-all opacity-40 group-hover:opacity-100">
                     {t("shareLink")}
                   </span>
                 </a>
@@ -578,12 +578,12 @@ export default function ChainMemberList() {
                 </div>
               </label>
             </div>
-            <div className="order-2 md:justify-self-end md:self md:order-3">
+            <div className="order-2 md:justify-self-end lg:order-3 sm:-ms-8 flex flex-col xs:flex-row items-center">
               {selectedTable === "route" ? (
                 !routeWasOptimized ? (
                   <button
                     type="button"
-                    className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                    className="btn btn-secondary btn-outline xs:me-4 mb-4 xs:mb-0"
                     onClick={() => optimizeRoute(chain.uid)}
                   >
                     {t("routeOptimize")}
@@ -592,7 +592,7 @@ export default function ChainMemberList() {
                 ) : (
                   <button
                     type="button"
-                    className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                    className="btn btn-secondary btn-outline me-4"
                     onClick={() => returnToPreviousRoute(chain.uid)}
                   >
                     {t("routeUndoOptimize")}
@@ -730,7 +730,7 @@ function HostTable(props: {
               <tr key={u.uid} className="[&>td]:hover:bg-base-200/[0.6]">
                 <td className="md:hidden !px-0">
                   <DropdownMenu
-                    classes="dropdown-right"
+                    classes="ltr:dropdown-right rtl:dropdown-left"
                     items={dropdownItems(u)}
                   />
                 </td>
@@ -887,7 +887,7 @@ function ApproveTable(props: {
                     >
                       <td className="lg:hidden !px-0">
                         <DropdownMenu
-                          classes="dropdown-right"
+                          classes="ltr:dropdown-right rtl:dropdown-left"
                           items={[
                             <button
                               type="button"
@@ -1173,7 +1173,7 @@ function ParticipantsTable(props: {
                     : []),
                 ];
 
-                let dropdownClasses = "dropdown-right";
+                let dropdownClasses = "ltr:dropdown-right rtl:dropdown-left";
                 if (i > 1) {
                   dropdownClasses += " dropdown-end";
                 }
@@ -1262,7 +1262,7 @@ function RouteTable(props: {
     <>
       <div className="mt-6 relative overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="table table-compact w-full mb-10">
+          <table className="table table-compact w-full mb-20">
             <thead>
               <tr>
                 <th className="w-[0.1%]" colSpan={2}>

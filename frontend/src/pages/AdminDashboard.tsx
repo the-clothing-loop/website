@@ -35,7 +35,13 @@ export default function AdminDashboard() {
           ? () => (
               <>
                 <p className="mb-2">{t("deleteAccountWithLoops")}</p>
-                <ul className="list-disc text-sm font-semibold mx-8">
+                <ul
+                  className={`text-sm font-semibold mx-8 ${
+                    chainNames.length > 1
+                      ? "list-disc"
+                      : "list-none text-center"
+                  }`}
+                >
                   {chainNames.map((name) => (
                     <li key={name}>{name}</li>
                   ))}

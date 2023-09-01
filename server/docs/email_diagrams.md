@@ -1,5 +1,27 @@
 # Email flow diagrams
 
+## Delayed unregistered loop approval
+
+```mermaid
+
+flowchart
+   Start(Start) --> A["Person (without an account) selects a loop from the map and clicks on join"]
+   A --> B[Person fills in the the registration form and submits successfully]
+   B --> C[/Many days later/]
+
+   C -. If never registered .-> C3[Nothing happens]
+   C3 --> D3(End)
+
+   C --> D[Person logs in for the first time]
+   D --> E[Email is sent to the loop host]
+
+   C -- Meanwhile --> C2[Loop host does not receive an email]
+   C2 --> D
+
+   E --> End(End)
+
+```
+
 ## Find abandoned loops
 
 ```mermaid
@@ -15,9 +37,9 @@ flowchart TD
       SF --> |True| S0
       SF --> |False| S1[Loop is abandoned]
    end
-   Start --> SB1
+   Start(Start) --> SB1
    SB1 --> |Loop is abandoned| A[Loop is set to draft and closed]
-   A --> End
+   A --> End(End)
 
 ```
 
@@ -37,7 +59,7 @@ flowchart TD
    ST(Start) --> A
     A[Send email to user]--> B{sent status}
     B -->|Sent| B1[OK]
-    B -->|Not sent| B2[Save email in database<sup>1</sup>]
+    B -->|Not sent| B2["Save email in database¹"]
     B2 --> C[/One day later/]
     C -->E{Has sent email\n3 times and failed}
     E --> |NO| D[Send email again]
@@ -46,4 +68,4 @@ flowchart TD
     F --> G(END)
 ```
 
-<sup>1</sup> The emails can be found in the database following the first send failure in the database table `mail_retries`.
+¹ The emails can be found in the database following the first send failure in the database table `mail_retries`.

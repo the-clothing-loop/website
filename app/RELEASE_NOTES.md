@@ -73,3 +73,14 @@ Putting the sparkle in last translations.
 
 A kaleidoscope of colors: Theme support upgrade.
 A fresh coat of paint for the info page.
+
+# v1.13
+
+Fix weeks counter during paused state.
+Add edit button for the user.
+Add sneaker button to bag emojis.
+Replace create with save.
+Replace reserve with contact.
+Remove address from select bag holder.
+Remove person circle icon.
+Hide im icons if phone is not international.

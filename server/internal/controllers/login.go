@@ -34,18 +34,13 @@ func LoginEmail(c *gin.Context) {
 		return
 	}
 
-	if body.Email == app.Config.APPSTORE_REVIEWER_EMAIL {
-		_, err := auth.TokenCreateUnverifiedBackdoor(db, user.ID)
-		if err != nil {
-			c.String(http.StatusInternalServerError, "Unable to create token")
-			return
-		}
-		return
-	}
-
 	token, err := auth.TokenCreateUnverified(db, user.ID)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Unable to create token")
+		return
+	}
+	if body.IsApp && body.Email == app.Config.APPSTORE_REVIEWER_EMAIL {
+		c.String(http.StatusOK, token)
 		return
 	}
 	err = views.EmailLoginVerification(c, db, user.Name, user.Email.String, token, body.IsApp)

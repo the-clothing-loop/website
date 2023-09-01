@@ -5,15 +5,6 @@ import { useTranslation } from "react-i18next";
 import { UID, User } from "../api/types";
 import { Sizes } from "../api/enums";
 
-interface ChainData {
-  name: string;
-  address: string;
-  genders: string;
-  sizes: string;
-  published: boolean;
-  description: string;
-}
-
 export const SizeNames: Record<Sizes | string, string> = {
   "1": "baby",
   "2": "1_to_4",
@@ -71,10 +62,11 @@ export function UserDataExport(props: {
       data={data ? data : ""}
       headers={usersHeaders}
       filename={`${props.chainName}-participants.csv`}
-      className="btn btn-secondary btn-outline"
+      className="btn btn-secondary btn-outline tooltip md:tooltip-left rtl:md:tooltip-right flex"
+      data-tip={t("exportToSpreadsheet")}
     >
       {t("exportData")}
-      <span className="feather feather-download ml-3 rtl:ml-0 rtl:mr-3" />
+      <span className="feather feather-download ms-3" />
     </CSVLink>
   );
 }

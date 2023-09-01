@@ -32,7 +32,6 @@ import {
   closeOutline,
   ellipsisHorizontal,
   pauseCircle,
-  personCircleOutline,
 } from "ionicons/icons";
 import type {
   DatetimeChangeEventDetail,
@@ -599,14 +598,12 @@ function SelectUserModal({
             {sortedRoute.map(([r, i]) => {
               const user = chainUsers?.find((u) => u.uid === r);
               if (!user) return null;
-              // search
               let found =
                 search !== "" ? RegExp(search, "i").test(user.name) : true;
               if (!found) return null;
 
-              const isAddressPrivate = IsPrivate(user.address);
               const isSelected = selected === user.uid;
-              //   let uc = user.chains.find((u) => u.chain_uid === chain.uid);
+              const isMe = user.uid === authUser?.uid;
               return (
                 <IonItem lines="full" key={user.uid}>
                   <span slot="start" className="!tw-font-bold">{`#${
@@ -614,23 +611,12 @@ function SelectUserModal({
                   }`}</span>
                   <IonLabel>
                     <h2
-                      className={`tw-text-lg ${
-                        isSelected ? "tw-font-semibold" : ""
+                      className={`tw-text-lg ${isMe ? "tw-text-primary" : ""} ${
+                        isSelected ? "!tw-font-semibold" : ""
                       }`}
                     >
                       {user.name}
-                      {user.uid === authUser?.uid ? (
-                        <IonIcon
-                          icon={personCircleOutline}
-                          className="tw-translate-y-0.5 tw-px-0.5"
-                        />
-                      ) : null}
                     </h2>
-                    {isAddressPrivate ? null : (
-                      <IonText color={isSelected ? undefined : "medium"}>
-                        <p className="tw-text-sm">{user.address}</p>
-                      </IonText>
-                    )}
                   </IonLabel>
                   <IonRadio slot="end" value={user.uid} />
                 </IonItem>

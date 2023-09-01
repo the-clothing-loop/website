@@ -84,9 +84,7 @@ export default function BulkyList() {
     modal.current?.present();
   }
   function handleClickReserve(user: User, bulkyItemName: string) {
-    const handler = (
-      type: "sms" | "whatsapp" | "telegram" | "signal" | "copy",
-    ) => {
+    const handler = (type: "sms" | "whatsapp" | "telegram" | "signal") => {
       let phone = user.phone_number.replaceAll(/[^\d]/g, "");
       let message = window.encodeURI(
         t("imInterestedInThisBulkyItem", { name: bulkyItemName }),
@@ -106,25 +104,9 @@ export default function BulkyList() {
         case "signal":
           window.open(`https://signal.me/+${phone}`, "_blank");
           break;
-        case "copy":
-          Clipboard.write({
-            string: user.phone_number,
-          });
-          present({
-            message: t("copiedToClipboard"),
-            color: "primary",
-            duration: 1300,
-          });
-          break;
       }
     };
     let buttons = [
-      {
-        text: t("copy"),
-        role: "submit",
-        cssClass: "!tw-font-bold",
-        handler: () => handler("copy"),
-      },
       {
         text: "SMS",
         role: "submit",
@@ -242,7 +224,7 @@ export default function BulkyList() {
                     className="tw-text-dark tw-py-[3px]"
                   >
                     <p
-                      className={`tw-text-base tw-leading-5 tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
+                      className={`!tw-text-lg !tw-leading-5 tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
                         shouldExpandText ? "tw-max-h-[46px]" : ""
                       }`}
                     >
@@ -298,7 +280,7 @@ export default function BulkyList() {
                       className="tw-font-bold"
                       onClick={() => handleClickReserve(user, bulkyItem.title)}
                     >
-                      {t("reserve")}
+                      {t("contact")}
                       <IonIcon
                         slot="end"
                         icon={chatbubbleEllipsesSharp}

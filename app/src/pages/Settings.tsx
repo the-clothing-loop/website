@@ -2,6 +2,7 @@ import {
   IonAlert,
   IonButton,
   IonCard,
+  IonChip,
   IonContent,
   IonHeader,
   IonIcon,
@@ -14,6 +15,7 @@ import {
   IonSelectOption,
   IonText,
   IonTitle,
+  IonToggle,
   IonToolbar,
   SelectChangeEventDetail,
   useIonActionSheet,
@@ -21,7 +23,7 @@ import {
   useIonToast,
 } from "@ionic/react";
 import { isPlatform, type IonSelectCustomEvent } from "@ionic/core";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
@@ -34,6 +36,7 @@ import {
   eyeOffOutline,
   eyeOutline,
   lockClosedOutline,
+  openOutline,
   pauseCircle,
   shareOutline,
   sparklesOutline,
@@ -49,7 +52,7 @@ import Theme from "../components/Theme";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 export default function Settings() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     authUser,
     chain,
@@ -171,6 +174,17 @@ export default function Settings() {
 
   let pausedDayjs = isUserPaused && dayjs(authUser!.paused_until);
   let showExpandButton = (chain?.description.length || 0) > 200;
+  let pausedFromNow = "";
+  {
+    const now = dayjs();
+    if (pausedDayjs) {
+      if (pausedDayjs.isBefore(now.add(7, "day"))) {
+        pausedFromNow = t("day", { count: pausedDayjs.diff(now, "day") + 1 });
+      } else {
+        pausedFromNow = t("week", { count: pausedDayjs.diff(now, "week") + 1 });
+      }
+    }
+  }
 
   return (
     <IonPage>
@@ -181,10 +195,19 @@ export default function Settings() {
       </IonHeader>
       {isAuthenticated === true ? (
         <IonContent fullscreen color="light">
-          <IonItemDivider className="ion-margin-start ion-margin-top ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
+          <IonItemDivider className="tw-relative ion-margin-start ion-margin-top ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
             {t("account")}
+            <IonButton
+              fill="clear"
+              className="tw-absolute tw-top tw-right-0 tw-normal-case tw-mr-8 tw-text-base"
+              href={`https://www.clothingloop.org/${i18n.resolvedLanguage}/users/me/edit`}
+              target="_blank"
+            >
+              {t("edit")}
+              <IonIcon icon={openOutline} className="tw-text-sm tw-ml-1" />
+            </IonButton>
           </IonItemDivider>
-          <IonCard className="tw-mt-1.5 tw-bg-background">
+          <IonCard className="tw-mt-1.5 tw-bg-background tw-relative">
             {authUser ? (
               <UserCard
                 user={authUser}
@@ -202,24 +225,26 @@ export default function Settings() {
                 <IonLabel className="ion-text-wrap">
                   <h3 className="!tw-font-bold">{t("pauseParticipation")}</h3>
                   <p className="ion-no-wrap">
-                    {pausedDayjs
-                      ? pausedDayjs.fromNow()
-                      : t("setTimerForACoupleOfWeeks")}
+                    <span>
+                      {isUserPaused
+                        ? t("yourParticipationIsPausedClick")
+                        : t("setTimerForACoupleOfWeeks")}
+                    </span>
                   </p>
+                  {pausedDayjs ? (
+                    <IonChip>
+                      <IonIcon icon={pauseCircle} />
+                      <IonLabel>{pausedFromNow}</IonLabel>
+                    </IonChip>
+                  ) : null}
                 </IonLabel>
-                <IonButton slot="end" color="primary">
-                  {isUserPaused ? (
-                    <>
-                      <span>{t("unPause")}</span>
-                      <IonIcon icon={stopCircle} className="tw-ml-2" />
-                    </>
-                  ) : (
-                    <>
-                      <span>{t("pauseUntil")}</span>
-                      <IonIcon icon={pauseCircle} className="tw-ml-2" />
-                    </>
-                  )}
-                </IonButton>
+                <IonToggle
+                  slot="end"
+                  checked={isUserPaused}
+                  onIonChange={(e) => {
+                    e.target.checked = !e.detail.checked;
+                  }}
+                />
               </IonItem>
             </IonList>
           </IonCard>
