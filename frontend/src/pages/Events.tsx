@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet";
 import { useState, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { Event } from "../api/types";
 import { eventGetAll, eventGetPrevious } from "../api/event";
