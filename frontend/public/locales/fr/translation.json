@@ -289,5 +289,8 @@
   "bags": "Sacs",
   "checkAddress": "Vérifier l'adresse",
   "youEntered": "Vous avez entré :",
-  "weFound": "Nous avons trouvé (recommandé) :"
+  "weFound": "Nous avons trouvé (recommandé) :",
+  "newToTheClothingLoop": "New to the Clothing Loop?",
+  "clickHereToRegister": "<1>Click here</1> to register",
+  "mustBeRegistered": "You must be registered to create an event"
 }
