@@ -121,8 +121,13 @@ export default function Login() {
                   </button>
                 )}
                 <div className="mt-4 prose">
-                  New to the Clothing Loop?{" "}
-                  <Link to={"/users/signup"}>Click here</Link> to register
+                  {t("newToTheClothingLoop") + " "}
+                  <Trans
+                    i18nKey="clickHereToRegister"
+                    components={{
+                      "1": <Link className="font-medium" to="/users/signup" />,
+                    }}
+                  />
                 </div>
               </form>
             </div>

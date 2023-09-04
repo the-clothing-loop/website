@@ -83,7 +83,7 @@ export default function Signup() {
             chainUID
           );
         } else {
-          console.log("register orphaned user");
+          console.info("register orphaned user");
           await registerOrphanedUser({
             name: values.name,
             email: values.email,
