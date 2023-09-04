@@ -1,15 +1,18 @@
 import {
   IonAlert,
   IonButton,
+  IonButtons,
   IonCard,
   IonChip,
   IonContent,
+  IonDatetime,
   IonHeader,
   IonIcon,
   IonItem,
   IonItemDivider,
   IonLabel,
   IonList,
+  IonModal,
   IonPage,
   IonSelect,
   IonSelectOption,
@@ -22,8 +25,15 @@ import {
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
-import { isPlatform, type IonSelectCustomEvent } from "@ionic/core";
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  isPlatform,
+  type IonSelectCustomEvent,
+  DatetimeChangeEventDetail,
+  IonDatetimeCustomEvent,
+  IonModalCustomEvent,
+  OverlayEventDetail,
+} from "@ionic/core";
+import { RefObject, useContext, useEffect, useRef, useState } from "react";
 import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
@@ -37,10 +47,8 @@ import {
   eyeOutline,
   lockClosedOutline,
   openOutline,
-  pauseCircle,
   shareOutline,
   sparklesOutline,
-  stopCircle,
 } from "ionicons/icons";
 import dayjs from "../dayjs";
 import isPaused from "../utils/is_paused";
@@ -48,7 +56,6 @@ import Badges from "../components/SizeBadge";
 import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
 import Theme from "../components/Theme";
-
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 export default function Settings() {
@@ -65,6 +72,7 @@ export default function Settings() {
   const [present] = useIonToast();
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
+  const refSelectPauseExpiryModal = useRef<HTMLIonModalElement>(null);
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
   const [expandedDescription, setExpandedDescription] = useState(false);
@@ -110,41 +118,28 @@ export default function Settings() {
         },
         {
           text: t("unPause"),
-          handler: () => setPause(0),
+          handler: () => setPause(false),
           role: "destructive",
         },
       ]);
     } else {
       presentActionSheet({
         header: t("pauseUntil"),
+
         buttons: [
           {
-            text: t("week", { count: 10 }),
-            handler: () => setPause(10),
+            text: t("selectPauseDuration"),
+            handler: () =>
+              setTimeout(
+                () => refSelectPauseExpiryModal.current?.present(),
+                100,
+              ),
           },
           {
-            text: t("week", { count: 8 }),
-            handler: () => setPause(8),
-          },
-          {
-            text: t("week", { count: 6 }),
-            handler: () => setPause(6),
-          },
-          {
-            text: t("week", { count: 4 }),
-            handler: () => setPause(4),
-          },
-          {
-            text: t("week", { count: 3 }),
-            handler: () => setPause(3),
-          },
-          {
-            text: t("week", { count: 2 }),
-            handler: () => setPause(2),
-          },
-          {
-            text: t("week", { count: 1 }),
-            handler: () => setPause(1),
+            text: t("untilITurnItBackOn"),
+            handler: () => {
+              setPause(true);
+            },
           },
           {
             text: t("cancel"),
@@ -171,19 +166,31 @@ export default function Settings() {
   }
 
   let isUserPaused = isPaused(authUser?.paused_until || null);
-
-  let pausedDayjs = isUserPaused && dayjs(authUser!.paused_until);
+  let pausedDayjs = isUserPaused ? dayjs(authUser!.paused_until) : null;
   let showExpandButton = (chain?.description.length || 0) > 200;
   let pausedFromNow = "";
   {
     const now = dayjs();
     if (pausedDayjs) {
-      if (pausedDayjs.isBefore(now.add(7, "day"))) {
-        pausedFromNow = t("day", { count: pausedDayjs.diff(now, "day") + 1 });
+      if (pausedDayjs.year() < now.add(20, "year").year()) {
+        if (pausedDayjs.isBefore(now.add(7, "day"))) {
+          pausedFromNow = t("day", { count: pausedDayjs.diff(now, "day") + 1 });
+        } else {
+          pausedFromNow = t("week", {
+            count: pausedDayjs.diff(now, "week"),
+          });
+        }
       } else {
-        pausedFromNow = t("week", { count: pausedDayjs.diff(now, "week") + 1 });
+        pausedFromNow = t("untilITurnItBackOn");
       }
     }
+    console.log(
+      "paused from now",
+      "'" + pausedFromNow + "'",
+      pausedDayjs?.year(),
+      now.set("years", 20).isBefore(pausedDayjs),
+      now.year(),
+    );
   }
 
   return (
@@ -231,21 +238,26 @@ export default function Settings() {
                         : t("setTimerForACoupleOfWeeks")}
                     </span>
                   </p>
-                  {pausedDayjs ? (
+                  {pausedFromNow ? (
                     <IonChip>
-                      <IonIcon icon={pauseCircle} />
                       <IonLabel>{pausedFromNow}</IonLabel>
                     </IonChip>
                   ) : null}
                 </IonLabel>
                 <IonToggle
                   slot="end"
+                  className="ion-toggle-pause"
+                  color="medium"
                   checked={isUserPaused}
                   onIonChange={(e) => {
                     e.target.checked = !e.detail.checked;
                   }}
                 />
               </IonItem>
+              <SelectPauseExpiryModal
+                modal={refSelectPauseExpiryModal}
+                submit={(d) => setPause(d)}
+              />
             </IonList>
           </IonCard>
           <IonList>
@@ -418,5 +430,75 @@ export default function Settings() {
         </IonContent>
       ) : null}
     </IonPage>
+  );
+}
+
+function SelectPauseExpiryModal({
+  modal,
+  submit,
+}: {
+  modal: RefObject<HTMLIonModalElement>;
+  submit: (endDate: Date | boolean) => void;
+}) {
+  const { t, i18n } = useTranslation();
+  const [endDate, setEndDate] = useState<Date>(new Date());
+  function willPresent() {
+    setEndDate(new Date());
+  }
+  function handleChangeDatetime(
+    e: IonDatetimeCustomEvent<DatetimeChangeEventDetail>,
+  ) {
+    let datetime = new Date(e.detail.value + "");
+    setEndDate(datetime);
+  }
+
+  function didDismiss(e: IonModalCustomEvent<OverlayEventDetail<any>>) {
+    if (e.detail.role === "submit") submit(e.detail.data);
+  }
+  return (
+    <IonModal
+      ref={modal}
+      onIonModalDidDismiss={didDismiss}
+      onIonModalWillPresent={willPresent}
+      style={{
+        "--width": "350px",
+        "--height": "394px",
+        "--border-radius": "10px",
+      }}
+    >
+      <IonHeader>
+        <IonToolbar style={{ "--ion-safe-area-top": 0 }}>
+          <IonButtons slot="start">
+            <IonButton onClick={() => modal.current?.dismiss(null, "dismiss")}>
+              {t("cancel")}
+            </IonButton>
+          </IonButtons>
+          <IonTitle>{t("pauseUntil")}</IonTitle>
+          <IonButtons slot="end">
+            <IonButton
+              onClick={() => modal.current?.dismiss(endDate, "submit")}
+            >
+              {t("save")}
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent
+        color="light"
+        style={{
+          width: 350,
+          height: 350,
+        }}
+      >
+        <IonDatetime
+          className="tw-mx-auto"
+          presentation="date"
+          firstDayOfWeek={1}
+          min={dayjs().add(1, "day").toISOString()}
+          locale={i18n.language}
+          onIonChange={handleChangeDatetime}
+        ></IonDatetime>
+      </IonContent>
+    </IonModal>
   );
 }

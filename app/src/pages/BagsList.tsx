@@ -572,6 +572,7 @@ function SelectUserModal({
               <IonDatetimeButton datetime="datetime"></IonDatetimeButton>
               <IonModal keepContentsMounted={true}>
                 <IonDatetime
+                  firstDayOfWeek={1}
                   id="datetime"
                   presentation="date"
                   locale={i18n.language}

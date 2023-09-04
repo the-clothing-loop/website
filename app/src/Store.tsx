@@ -28,7 +28,7 @@ export const StoreContext = createContext({
   isAuthenticated: null as boolean | null,
   isChainAdmin: false,
   authUser: null as null | User,
-  setPause: (p: number) => {},
+  setPause: (date: Date | boolean) => {},
   setTheme: (c: string) => {},
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
@@ -184,14 +184,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     });
   }
 
-  async function _setPause(pause: number) {
+  async function _setPause(pause: Date | boolean) {
     if (!authUser) return;
 
     let pauseUntil = dayjs();
-    if (pause <= 0) {
+    if (pause === true) {
+      pauseUntil = pauseUntil.add(100, "years");
+    } else if (pause === false || pause < new Date()) {
       pauseUntil = pauseUntil.add(-1, "week");
     } else {
-      pauseUntil = pauseUntil.add(pause, "week");
+      pauseUntil = dayjs(pause);
     }
     await userUpdate({
       user_uid: authUser.uid,

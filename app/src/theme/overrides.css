@@ -42,3 +42,7 @@
 .ion-ce:not(.plt-hybrid) textarea {
   caret-color: auto !important;
 }
+
+.ion-toggle-pause {
+  --handle-background-checked: url(/icons/pause-small-outline.svg), #fff;
+}
