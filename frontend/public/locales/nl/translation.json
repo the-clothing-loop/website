@@ -289,5 +289,8 @@
   "bags": "Tassen",
   "checkAddress": "Controleer adres",
   "youEntered": "Jij hebt ingevoerd:",
-  "weFound": "We vonden (aanbevolen):"
+  "weFound": "We vonden (aanbevolen):",
+  "newToTheClothingLoop": "New to the Clothing Loop?",
+  "clickHereToRegister": "<1>Click here</1> to register",
+  "mustBeRegistered": "You must be registered to create an event"
 }
