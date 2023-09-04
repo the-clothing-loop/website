@@ -26,8 +26,7 @@ type MockChainAndUserOptions struct {
 }
 
 func TestRegisterOrphanedUser(t *testing.T) {
-
-	user, _ := mocks.MockOrphanedUser(t, db, mocks.MockChainAndUserOptions{})
+	user, _ := mocks.MockUser(t, db, 0, mocks.MockChainAndUserOptions{})
 	fmt.Println(user)
 
 	url := "/v2/register/orphaned-user"

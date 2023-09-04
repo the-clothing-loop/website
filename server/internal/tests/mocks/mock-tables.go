@@ -101,47 +101,6 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	return user, user.UserToken[0].Token
 }
 
-func MockOrphanedUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (user *models.User, token string) {
-	var latitude, longitude float64
-	if faker.RandomNumber(5)+1 > 4 { // 4 / 6
-		latitude = float64(faker.Int64Between(5169917, 5237403)) / 100000
-		longitude = float64(faker.Int64Between(488969, 689583)) / 100000
-	} else {
-		latitude = faker.Address().Latitude()
-		longitude = faker.Address().Latitude()
-	}
-	user = &models.User{
-		UID:             uuid.NewV4().String(),
-		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain())),
-		IsEmailVerified: !o.IsNotEmailVerified,
-		IsRootAdmin:     o.IsRootAdmin,
-		Name:            "Fake " + faker.Person().Name(),
-		PhoneNumber:     faker.Person().Contact().Phone,
-		Sizes:           MockSizes(false),
-		Address:         faker.Address().Address(),
-		Latitude:        latitude,
-		Longitude:       longitude,
-		UserToken: []models.UserToken{
-			{
-				Token:    uuid.NewV4().String(),
-				Verified: !o.IsNotTokenVerified,
-			},
-		},
-	}
-	if err := db.Create(user).Error; err != nil {
-		glog.Fatalf("Unable to create testUser: %v", err)
-	}
-
-	t.Cleanup(func() {
-		tx := db.Begin()
-		tx.Exec(`DELETE FROM user_tokens WHERE user_id = ?`, user.ID)
-		tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID)
-		tx.Commit()
-	})
-
-	return user, user.UserToken[0].Token
-}
-
 func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (chain *models.Chain, user *models.User, token string) {
 	var latitude, longitude float64
 	if faker.RandomNumber(5)+1 > 4 { // 4 / 6
