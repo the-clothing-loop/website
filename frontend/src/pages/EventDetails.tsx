@@ -369,18 +369,18 @@ export default function EventDetails() {
                   {t("eventDetails") + ":"}
                 </h2>
                 <div
-                  className={
+                  className={`flex ${
                     imageExpanded
-                      ? "flex flex-col-reverse w-full content-center"
-                      : "cursor-zoom-in"
-                  }
+                      ? "flex-col-reverse w-full content-center"
+                      : "sm:cursor-zoom-in"
+                  }`}
                 >
                   <div
-                    className={`aspect-[4/3] mb-4 ltr:mr-0 rtl:ml-0 relative transtion-[postion]
+                    className={`aspect-[4/3] mb-4 ltr:mr-0 rtl:ml-0 relative transtion-[postion] mt-8
                   ${
                     imageExpanded
                       ? "max-w-xl mt-8"
-                      : "sm:w-64 sm:float-right rtl:sm:float-left sm:m-4"
+                      : "mt-8 sm:w-64 sm:float-right rtl:sm:float-left sm:m-4"
                   }`}
                   >
                     {isOrganizer ? (
