@@ -101,5 +101,7 @@
   "week_other": "{{count}} weeks",
   "day_one": "One day",
   "day_other": "{{count}} days",
+  "untilITurnItBackOn": "Until I turn it back on",
+  "selectPauseDuration": "Select pause duration",
   "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation"
 }
