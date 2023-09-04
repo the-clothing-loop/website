@@ -87,7 +87,7 @@ func Routes() *gin.Engine {
 
 	// login
 	v2.POST("/register/basic-user", controllers.RegisterBasicUser)
-	v2.POST("/register/orphaned-user", controllers.RegisterOrphanedUser)
+	v2.POST("/register/orphaned-user", controllers.RegisterBasicUser)
 	v2.POST("/register/chain-admin", controllers.RegisterChainAdmin)
 	v2.POST("/login/email", controllers.LoginEmail)
 	v2.GET("/login/validate", controllers.LoginValidate)

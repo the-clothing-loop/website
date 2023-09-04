@@ -44,7 +44,7 @@ func TestRegisterOrphanedUser(t *testing.T) {
 		},
 	}, "")
 
-	controllers.RegisterOrphanedUser(c)
+	controllers.RegisterBasicUser(c)
 
 	result := resultFunc()
 

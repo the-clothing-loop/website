@@ -230,63 +230,11 @@ func RegisterChainAdmin(c *gin.Context) {
 	go views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
 }
 
-func RegisterOrphanedUser(c *gin.Context) {
-	db := getDB(c)
-	var body struct {
-		User UserCreateRequestBody `json:"user" binding:"required"`
-	}
-
-	if err := c.ShouldBindJSON(&body); err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		return
-	}
-	if ok := models.ValidateAllSizeEnum(body.User.Sizes); !ok {
-		c.String(http.StatusBadRequest, models.ErrSizeInvalid.Error())
-		return
-	}
-
-	user := &models.User{
-		UID:             uuid.NewV4().String(),
-		Email:           zero.StringFrom(body.User.Email),
-		IsEmailVerified: false,
-		IsRootAdmin:     false,
-		Name:            body.User.Name,
-		PhoneNumber:     body.User.PhoneNumber,
-		Sizes:           body.User.Sizes,
-		Address:         body.User.Address,
-		Latitude:        body.User.Latitude,
-		Longitude:       body.User.Longitude,
-	}
-
-	if res := db.Create(user); res.Error != nil {
-		goscope.Log.Warningf("User already exists: %v", res.Error)
-		c.String(http.StatusConflict, "User already exists")
-		return
-	}
-
-	if body.User.Newsletter {
-		n := &models.Newsletter{
-			Email:    body.User.Email,
-			Name:     body.User.Name,
-			Verified: false,
-		}
-		n.CreateOrUpdate(db)
-	}
-
-	token, err := auth.TokenCreateUnverified(db, user.ID)
-	if err != nil {
-		goscope.Log.Errorf("Unable to create token: %v", err)
-		c.String(http.StatusInternalServerError, "Unable to create token")
-		return
-	}
-	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
-}
-
 func RegisterBasicUser(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		ChainUID string                `json:"chain_uid" binding:"uuid,required"`
+		ChainUID string                `json:"chain_uid" binding:"omitempty,uuid"`
 		User     UserCreateRequestBody `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -299,7 +247,7 @@ func RegisterBasicUser(c *gin.Context) {
 	}
 
 	var chainID uint
-	{
+	if body.ChainUID != "" {
 		var row struct {
 			ID uint `gorm:"id"`
 		}
@@ -329,12 +277,14 @@ func RegisterBasicUser(c *gin.Context) {
 		c.String(http.StatusConflict, "User already exists")
 		return
 	}
-	db.Create(&models.UserChain{
-		UserID:       user.ID,
-		ChainID:      chainID,
-		IsChainAdmin: false,
-		IsApproved:   false,
-	})
+	if body.ChainUID != "" {
+		db.Create(&models.UserChain{
+			UserID:       user.ID,
+			ChainID:      chainID,
+			IsChainAdmin: false,
+			IsApproved:   false,
+		})
+	}
 	if body.User.Newsletter {
 		n := &models.Newsletter{
 			Email:    body.User.Email,
