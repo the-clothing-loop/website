@@ -289,5 +289,8 @@
   "bags": "תיקים",
   "checkAddress": "בדקו כתובת",
   "youEntered": "הכנסתם:",
-  "weFound": "מצאנו (מומלצים):"
+  "weFound": "מצאנו (מומלצים):",
+  "newToTheClothingLoop": "New to the Clothing Loop?",
+  "clickHereToRegister": "<1>Click here</1> to register",
+  "mustBeRegistered": "You must be registered to create an event"
 }
