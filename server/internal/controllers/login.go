@@ -234,7 +234,7 @@ func RegisterBasicUser(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		ChainUID string                `json:"chain_uid" binding:"uuid,required"`
+		ChainUID string                `json:"chain_uid" binding:"omitempty,uuid"`
 		User     UserCreateRequestBody `json:"user" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -247,7 +247,7 @@ func RegisterBasicUser(c *gin.Context) {
 	}
 
 	var chainID uint
-	{
+	if body.ChainUID != "" {
 		var row struct {
 			ID uint `gorm:"id"`
 		}
@@ -277,12 +277,14 @@ func RegisterBasicUser(c *gin.Context) {
 		c.String(http.StatusConflict, "User already exists")
 		return
 	}
-	db.Create(&models.UserChain{
-		UserID:       user.ID,
-		ChainID:      chainID,
-		IsChainAdmin: false,
-		IsApproved:   false,
-	})
+	if body.ChainUID != "" {
+		db.Create(&models.UserChain{
+			UserID:       user.ID,
+			ChainID:      chainID,
+			IsChainAdmin: false,
+			IsApproved:   false,
+		})
+	}
 	if body.User.Newsletter {
 		n := &models.Newsletter{
 			Email:    body.User.Email,

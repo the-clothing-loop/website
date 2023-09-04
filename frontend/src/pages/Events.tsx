@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet";
 import { useState, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { Event } from "../api/types";
 import { eventGetAll, eventGetPrevious } from "../api/event";
@@ -33,6 +33,7 @@ const DEFAULT_LONGITUDE = 4.89707;
 
 export default function Events() {
   const { t } = useTranslation();
+  const history = useHistory();
 
   const { addToastError, addModal } = useContext(ToastContext);
   const authUser = useContext(AuthContext).authUser;
@@ -159,6 +160,7 @@ export default function Events() {
                 }}
               />
             </div>
+
             {authUser ? (
               <Link
                 to="/events/create"
@@ -167,7 +169,35 @@ export default function Events() {
                 <span className="pr-2 rtl:pr-0 rtl:pl-2 feather feather-plus" />
                 {t("createEvent")}
               </Link>
-            ) : null}
+            ) : (
+              <div
+                className="btn btn-primary mb-4 md:mb-0 "
+                onClick={() =>
+                  addModal({
+                    message: t("mustBeRegistered"),
+                    actions: [
+                      {
+                        text: t("signup"),
+                        type: "primary",
+                        fn: () => {
+                          history.push("/users/signup");
+                        },
+                      },
+                      {
+                        text: t("login"),
+                        type: "secondary",
+                        fn: () => {
+                          history.push("/users/login");
+                        },
+                      },
+                    ],
+                  })
+                }
+              >
+                <span className="pr-2 rtl:pr-0 rtl:pl-2 feather feather-plus" />
+                {t("createEvent")}
+              </div>
+            )}
           </div>
 
           {!events ? (

@@ -39,6 +39,12 @@ export function registerBasicUser(user: RequestRegisterUser, chainUID: string) {
   });
 }
 
+export function registerOrphanedUser(user: RequestRegisterUser) {
+  return window.axios.post<never>("/v2/register/orphaned-user", {
+    user,
+  });
+}
+
 export function loginEmail(email: string) {
   return window.axios.post<never>("/v2/login/email", { email });
 }

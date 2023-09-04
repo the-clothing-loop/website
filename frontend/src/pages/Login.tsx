@@ -120,6 +120,15 @@ export default function Login() {
                     <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
                   </button>
                 )}
+                <div className="mt-4 prose">
+                  {t("newToTheClothingLoop") + " "}
+                  <Trans
+                    i18nKey="clickHereToRegister"
+                    components={{
+                      "1": <Link className="font-medium" to="/users/signup" />,
+                    }}
+                  />
+                </div>
               </form>
             </div>
           </div>

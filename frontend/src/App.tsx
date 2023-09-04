@@ -176,6 +176,12 @@ export default function App() {
                       path={`${base}/loops/:chainUID/users/signup`}
                       component={Signup}
                     />
+                    {/* Sign up disconnected from a loop */}
+                    <Route
+                      exact
+                      path={`${base}/users/signup`}
+                      component={Signup}
+                    />
 
                     <Route exact path={`${base}/faq`} component={FAQ} />
                     <Route

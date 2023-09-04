@@ -100,6 +100,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 
 	return user, user.UserToken[0].Token
 }
+
 func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (chain *models.Chain, user *models.User, token string) {
 	var latitude, longitude float64
 	if faker.RandomNumber(5)+1 > 4 { // 4 / 6
