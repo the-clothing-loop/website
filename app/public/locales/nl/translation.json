@@ -97,11 +97,11 @@
   "unPause": "Hervatten",
   "areYouSureUnPause": "Weet je zeker dat je wilt doorgaan?",
   "yourParticipationIsPausedClick": "Je deelname is gepauzeerd. Klik op de knop om weer mee te doen.",
-  "week_one": "One week",
+  "week_one": "Één week",
   "week_other": "{{count}} weken",
-  "day_one": "One day",
+  "day_one": "Één dag",
   "day_other": "{{count}} dagen",
-  "untilITurnItBackOn": "Until I turn it back on",
-  "selectPauseDuration": "Select pause duration",
+  "untilITurnItBackOn": "Totdat ik het weer uit zet",
+  "selectPauseDuration": "Kies een tijdsduur",
   "setTimerForACoupleOfWeeks": "Selecteer hoeveel weken je je deelname wilt onderbreken"
 }
