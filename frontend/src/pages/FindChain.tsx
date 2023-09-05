@@ -716,6 +716,14 @@ function FocusedChain({
   onClickJoin: MouseEventHandler<HTMLButtonElement>;
   onClickViewChain: MouseEventHandler<HTMLButtonElement>;
 }) {
+  function handleClickShortenedDesc(e: MouseEvent) {
+    let input = (e.target as HTMLParagraphElement).parentElement?.querySelector(
+      "input"
+    );
+
+    if (input) input.checked = true;
+  }
+
   const { t } = useTranslation();
   const userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
 
@@ -737,14 +745,7 @@ function FocusedChain({
               <p
                 className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12 relative before:block before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-white/90 before:to-transparent before:bottom-0 peer-checked:before:hidden"
                 tabIndex={0}
-                onClick={(e) => {
-                  let input = (
-                    e.target as HTMLParagraphElement
-                  ).parentElement?.querySelector("input");
-                  console.log("input", input);
-
-                  if (input) input.checked = true;
-                }}
+                onClick={handleClickShortenedDesc}
               >
                 {chain.description.split("\n").map((s, i) => {
                   if (i === 0) return s;
@@ -760,7 +761,8 @@ function FocusedChain({
               <label
                 htmlFor={"checkbox-desc-more-" + chain.uid}
                 aria-label="expand"
-                className="btn btn-xs btn-ghost bg-teal-light feather feather-more-horizontal"
+                className="btn btn-xs btn-ghost bg-teal-light feather feather-more-horizontal peer-checked:hidden"
+                onClick={handleClickShortenedDesc}
               ></label>
             </div>
           ) : (
