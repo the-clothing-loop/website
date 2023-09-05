@@ -303,7 +303,11 @@ export default function EventDetails() {
                         </dd>
                       </Fragment>
                     ) : null}
-                    <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                    <dt
+                      className={`mb-2 font-bold font-sans text-xl text-teal ${
+                        event.genders?.length ? "" : "hidden"
+                      }`}
+                    >
                       {t("categories") + ":"}
                     </dt>
 
@@ -312,7 +316,11 @@ export default function EventDetails() {
                         <SizeBadges g={event.genders} />
                       ) : null}
                     </dd>
-                    <dt className="mb-2 font-bold font-sans text-xl text-teal">
+                    <dt
+                      className={`mb-2 font-bold font-sans text-xl text-teal ${
+                        event.link ? "" : "hidden"
+                      }`}
+                    >
                       {t("organizedBy") + ":"}
                     </dt>
                     <dd className="mr-2 mb-1 ltr:ml-4 rtl:mr-4">
