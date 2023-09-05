@@ -60,7 +60,7 @@ const LanguageSwitcher = (props: { className?: string }) => {
     >
       <label
         tabIndex={0}
-        className="btn btn-outline w-36 justify-between"
+        className="btn btn-outline w-40 justify-between"
         onClick={onToggle}
       >
         {btnLabelLanguage.title}
@@ -72,7 +72,8 @@ const LanguageSwitcher = (props: { className?: string }) => {
       </label>
       <ul
         tabIndex={0}
-        className="dropdown-content menu w-36 shadow bg-base-100"
+        className="dropdown-content menu w-40 shadow bg-base-100"
+        dir="ltr"
       >
         {languageFlags.map((el) => {
           let active = btnLabelLanguage.lng === el.lng;
@@ -82,7 +83,9 @@ const LanguageSwitcher = (props: { className?: string }) => {
                 className="flex justify-between text-sm"
                 onClick={() => handleChange(el.lng)}
               >
-                {el.title}
+                <span className={el.rtl ? "w-full text-right" : ""}>
+                  {el.title}
+                </span>
                 <img className="w-6" src={el.flag} alt={el.title + " flag"} />
               </button>
             </li>
