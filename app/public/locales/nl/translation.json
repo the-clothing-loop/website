@@ -101,5 +101,7 @@
   "week_other": "{{count}} weken",
   "day_one": "Één dag",
   "day_other": "{{count}} dagen",
+  "untilITurnItBackOn": "Totdat ik het weer uit zet",
+  "selectPauseDuration": "Kies een tijdsduur",
   "setTimerForACoupleOfWeeks": "Selecteer hoeveel weken je je deelname wilt onderbreken"
 }
