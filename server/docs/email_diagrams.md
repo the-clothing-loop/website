@@ -65,7 +65,24 @@ flowchart TD
     E --> |NO| D[Send email again]
     D --> B
     E --> F[Send error email to\nclothingloop.org]
-    F --> G(END)
+    F --> End(End)
 ```
 
 ¹ The emails can be found in the database following the first send failure in the database table `mail_retries`.
+
+## Delete loops
+
+```mermaid
+flowchart TD
+   Start("Start ¹") --> A
+   A[Loop is abandoned] --> B[/5 months later/]
+   B --> C[Mail all participants that this abandoned loop will be deleted,\nasking if someone wants to take it over]
+   C --- |And| D[Mail all hosts that this abandoned loop will be deleted]
+   D --> E[/3 weeks later/]
+   E --> F[Mail hosts that loop will be deleted shortly]
+   F --> G[/3 weeks later/]
+   G --> H[Delete loop]
+   H --> End(End)
+```
+
+¹ This begins at the end of [Find abandoned loops](https://github.com/the-clothing-loop/website/blob/main/server/docs/email_diagrams.md#find-abandoned-loops)
