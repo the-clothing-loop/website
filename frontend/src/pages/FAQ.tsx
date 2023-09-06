@@ -1,4 +1,4 @@
-import { useState, MouseEvent, useEffect } from "react";
+import { useState, MouseEvent, useEffect, useMemo } from "react";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
@@ -7,8 +7,26 @@ interface AccordionFaqTranslation {
   answer: string;
 }
 
+const ARR_PARTICIPANT_KEYS = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
+const ARR_HOST_KEYS = [
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+];
+
 export default function FAQ() {
-  const { t } = useTranslation("faq");
+  const { t, i18n } = useTranslation("faq");
 
   useEffect(() => {
     window.goatcounter?.count({
@@ -18,15 +36,25 @@ export default function FAQ() {
     });
   }, []);
 
-  const arrHosts = t("arrHosts", {
-    returnObjects: true,
-    defaultValue: [],
-  }) as AccordionFaqTranslation[];
+  const [arrParticipants, arrHosts] = useMemo<
+    [AccordionFaqTranslation[], AccordionFaqTranslation[]]
+  >(() => {
+    let objHosts = t("arrHosts", {
+      returnObjects: true,
+      defaultValue: {},
+    }) as Record<string, AccordionFaqTranslation>;
+    let objParticipants = t("arrParticipants", {
+      returnObjects: true,
+      defaultValue: {},
+    }) as Record<string, AccordionFaqTranslation>;
 
-  const arrParticipants = t("arrParticipants", {
-    returnObjects: true,
-    defaultValue: [],
-  }) as AccordionFaqTranslation[];
+    let arrParticipants = ARR_PARTICIPANT_KEYS.map(
+      (key) => objParticipants[key]
+    ).filter((v) => !!v);
+    let arrHosts = ARR_HOST_KEYS.map((key) => objHosts[key]).filter((v) => !!v);
+
+    return [arrParticipants, arrHosts];
+  }, [i18n.language]);
 
   return (
     <>

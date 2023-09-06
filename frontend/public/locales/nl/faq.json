@@ -1,100 +1,100 @@
 {
   "faqForParticipants": "FAQ voor Deelnemers",
-  "arrParticipants": [
-    {
+  "arrParticipants": {
+    "0": {
       "question": "Ik heb mij aangemeld, wanneer word ik toegevoegd aan de Loop",
       "answer": "Als je onze bevestigingsmail hebt ontvangen, is je inschrijving geslaagd! De host van de Loop is op de hoogte gebracht en zal contact met je opnemen om je aan de route toe te voegen. Dit kan soms even duren omdat alle hosts de Loop in hun vrije tijd organiseren. De meeste hosts voegen elke 2 tot 4 weken nieuwe leden toe."
     },
-    {
+    "1": {
       "question": "Zijn er regels over hoeveel je eruit kunt halen, en moet je dezelfde hoeveelheid kleding doneren als je eruit haalt?",
       "answer": "Nee, er zijn hier geen regels. Soms neem je een beetje meer, soms breng je meer bij. Voeg alsjeblieft geen kleren toe aan de tassen die niet van goede kwaliteit zijn, gewoon om iets toe te voegen! Het is beter om een half vol zak schatten te hebben dan om een volle tas te hebben van minder kwaliteit."
     },
-    {
+    "2": {
       "question": "Moet je evenveel kleding doneren als je eruit haalt?",
       "answer": "Niet per se, maar bedenk wel dat het systeem het beste werkt als er een mooi evenwicht is tussen schenken en nemen. Kleding die versleten, bevlekt of beschadigd is, is nooit welkom."
     },
-    {
+    "3": {
       "question": "Kunnen verschillende maten van kleding in dezelfde tas zitten?",
       "answer": "Gemengde tassen werken heel normaal, omdat de formaten per merk verschillen en verhoudingen. Maar dit werkt alleen binnen een bepaalde breedte. We raden aan om een mix van items van grootte 36 - 42 (S, M and L) en een nieuwe Loop beginnen voor kleinere of grotere formaten."
     },
-    {
+    "4": {
       "question": "Hoe vermijd je “van ruilen komt huilen”?",
       "answer": "Er zijn geen garanties dat je iets zult vinden wat je leuk vindt. Soms zullen een paar tassen je huis passeren dat mogelijk geen kleding voor je heeft. Vergeet echter niet dat het vinden van een droomitem meer waard is dan 10 items in uw gardrobe dat je niet draagt. En een ander heel blij maken met iets dat stof ligt te vergaren in je kledingkast is ook een belangrijk (en leuk!) onderdeel van de Clothing Loop mentaliteit!"
     },
-    {
+    "5": {
       "question": "Wat te doen met grote kleren (zoals winterjas) die niet in de tas passen?",
       "answer": "Grote items kunnen worden gefotografeerd en gedeeld via jouw communicatiekanaal, of via de <a target='_blank' href='https://template-clothing-loop.glideapp.io'>Glide app</a>. In een privébericht kunnen mensen reageren en het ophalen regelen."
     },
-    {
+    "6": {
       "question": "Mag ik ook schoenen in de tas doen?",
       "answer": "Dat is aan de lokale host om te beslissen. Als de Loop toestaat om schoenen aan de tas toe te voegen, stop dan alleen \"zo goed als nieuw\" schoenen toe, en <b>niet meer dan 2 paren per tas</b>. En stop de schoenen in een aparte tas om te voorkomen dat ze gescheiden blijven van de rest de kleding. "
     },
-    {
+    "7": {
       "question": "Ik krijg de fout: “je account bestaat al”.",
       "answer": "Je hebt eerder al een account aangemaakt bij de Clothing Loop. Om je bij een nieuwe Loop aan te melden, moet je eerst inloggen:<ol><li>Klik in de rechterbovenhoek om in te loggen.</li><li>Voer jouw e-mailadres in dat je hebt gebruikt om uw Loop te registreren.</li><li>Controleer jouw e-mail (en spamfolder!) voor onze verificatielink. We gebruiken een link in plaats van een wachtwoord!</li><li>Daarna kan jij je aanmelden bij de desbetreffende nieuwe Loop.</li></ol>"
     },
-    {
+    "8": {
       "question": "Moet ik betalen om mee te doen aan de Clothing Loop?",
       "answer": "No, you do not have to pay to participate in the Clothing Loop. The Clothing Loop is an initiative that wants to make clothes swapping easy and accessible. As a participant, you “pay” with your clothes. Make sure that if you add clothes to your local Loop, they are gems that can be worn again. If you have saved money by participating in the Clothing Loop and/or want to support the Clothing Loop movement and our mission, you can of course always <a href='/donate'>donate here</a>."
     }
-  ],
+  },
   "faqForHosts": "FAQ voor Beheerders",
-  "arrHosts": [
-    {
+  "arrHosts": {
+    "0": {
       "question": "Hoe kan ik de app gebruiken?",
       "answer": "U kunt de app kopiëren en deze gebruiken binnen uw groep. U hoeft alleen de adreslijst in te vullen in onze sjabloon. Het is super eenvoudig! We hebben een video tutorial en slide dek gemaakt om je aan de slag te helpen. Neem contact op als je nog steeds in de problemen komt!"
     },
-    {
+    "1": {
       "question": "Zijn er grafische sjablonen die we kunnen gebruiken?",
       "answer": "Absoluut, wij hebben je een map gemaakt waar je logo sjablonen, handleidingen en meer, allemaal kunt vinden. Gebruik er zoveel als je wilt!"
     },
-    {
+    "2": {
       "question": "Introductie van een \"Spooktas\" in de Loop",
       "answer": "Zodra uw Loop een tijdje loopt, kan je er verandering in brengen door een \"Spooktas\" invoeren die in de andere richting reist. Plotseling heb je andere mensen voor je in de route, en dus ook andere stijlen in de tas. Als je dat doet, maak mensen ervan bewust dat ze geen kleding in de \"Spooktas\" moeten stoppen die ze eerder uit de normale tas hebben gehaald. Daarnaast raden wij aan om het aantal Spookrijders beperkt te houden om het niet te moeilijk te maken en het speciaal te houden."
     },
-    {
+    "3": {
       "question": "Hoe gaat men om met een grote groep mensen in de communicatiekanalen?",
       "answer": "Vooral wanneer groepen groter worden, is het belangrijk om ervoor te zorgen dat mensen niet worden gebombardeerd met (irrelevante) berichten. Je kunt enkele regels instellen voor wat wel en niet gedeeld mag worden via de app van de groep. Bijvoorbeeld:<br /><br /><span>Ja,</span> in de app:<ul><li>Selfies van leuke dingen die je van de tas of leuke dingen die je doet meeneemt</li><li>Complimenten aan anderen</li><li>Logistiek en organisatorische relevante updates</li></ul><span>Nee,</span> niet in de app:<ul><li>Alles niet gerelateerd aan de Clothing Loop (verzoeken voor enquêtes, uitnodigingen voor nieuwe groepen, fondswerving, memes, enz.). Als je van iedereen iets wilt vragen, gebruik dan een polling-app zoals LouLou in plaats daarvan</li></ul>"
     },
-    {
+    "4": {
       "question": "Wat als ik geen tijd meer heb om een Loop te beheren die ik heb opgericht?",
       "answer": "Gebruik de groep! Vraag of iemand anders de keten wil overnemen en beheren."
     },
-    {
+    "5": {
       "question": "Wat als iemand wil meedoen, maar te ver weg woont?",
       "answer": "Als iemand heeft aangemeld voor je Loop maar te ver buiten je Loop woont, het is aan jou om te beslissen of hij/zij of hen zich mogen aansluiten. Eén ding dat u kunt doen om de afstand tussen adressen te verkleinen, is om die persoon te vragen andere deelnemers te vinden tussen hun omgeving en de oorspronkelijke Loop locatie."
     },
-    {
+    "6": {
       "question": "Wat is een ideale groepsgrootte?",
       "answer": "We raden aan om minimaal 20 personen in een groep te hebben: na 20 adressen herkent u meestal niets meer in de tas zodat u kunt blijven wisselen. Er is geen echt maximum, het is aan jou wat er nog steeds werkt! In Nederland ligt een Loop op gemiddeld 45 mensen. Maar met 130 mensen lopen Loops en probleem!"
     },
-    {
+    "7": {
       "question": "Wat moeten we doen als de Clothing Loop niet goed werkt?",
       "answer": "Als de kwaliteit van de kleding niet hoog genoeg is, zouden mensen de Loop kunnen verlaten. Zorg ervoor dat iedereen de verantwoordelijkheid deelt om alleen producten van goede kwaliteit toe te voegen.<br/><br/>Zie je iets dat niet in de Loop zou moeten staan? Pak het uit en doneer het aan een kledingcontainer. Op die manier kan het nog steeds worden gerecycled. Vraag in geval van twijfel de persoon naast je of hen het daarmee eens is en dan een besluit neemt.<br/><br/>Een grondstofkleur kan de levensduur van een kledingstuk enorm verlengen! Je kan dit advies binnen jouw Loop delen.<br/><br/>Tot slot stel zelf een goed voorbeeld; deel een paar mooie foto's en moedig anderen aan hetzelfde te doen!"
     },
-    {
+    "8": {
       "question": "Hoe organiseer je een grote groep mensen in de communicatiekanalen?",
       "answer": "Vooral wanneer groepen groter worden, is het belangrijk om ervoor te zorgen dat mensen niet worden gebombardeerd met (irrelevante) berichten. Je kunt enkele regels instellen voor wat wel en niet gedeeld mag worden via de app van de groep. Bijvoorbeeld:<br /><br /><span>Ja,</span> in de app:<ul><li>Selfies met leuke items uit de tas</li><li>Complimenten aan anderen (gebruik de emotican functie!</li><li>Logistiek en organisatorische relevante updates</li></ul><span>Nee,</span> niet in de app:<ul><li>Alles ongerelateerd aan de Clothing Loop (verzoeken voor enquêtes, uitnodigingen voor nieuwe groepen, fondswerving, memes, enz.). Als je van iedereen iets wilt vragen, gebruik dan de poll functie van Whatsapp of bijvoorbeeld LouLou. </li></ul>"
     },
-    {
+    "9": {
       "question": "Wat als ik geen tijd meer heb om de Loop te beheren die ik heb opgericht?",
       "answer": "Gebruik de groep! Vraag of iemand anders wil helpen met het hosten van de Loop. Na verloop van tijd wil hen mogelijk de Loop volledig overnemen."
     },
-    {
+    "10": {
       "question": "Wat als iemand wil meedoen, maar te ver weg woont?",
       "answer": "Als iemand heeft aangemeld voor je Loop maar te ver buiten je Loop woont, het is aan jou om te beslissen of  hen zich mag aansluiten bij jouw Loop. Eén ding dat je kan doen om de afstand tussen adressen te verkleinen, is om die persoon te vragen andere deelnemers te vinden tussen hun adres en de oorspronkelijke Loop locatie."
     },
-    {
+    "11": {
       "question": "Wat is een ideale groepsgrootte?",
       "answer": "We raden aan om minimaal 20 personen in een groep te hebben: na 20 adressen herken je meestal niets meer in de tas zodat je kan blijven wisselen.  <b>Er is geen echt maximum <b>, het is aan jou wat er nog steeds werkt! In Nederland ligt een Loop op gemiddeld 45 mensen. Maar er zijn goed lopende Loops met meer dan 180 deelnemers!"
     },
-    {
+    "12": {
       "question": "Wat als iemand verhuist en mee wilt doen in een hun nieuwe buurt?",
       "answer": "Jij als Loop host kan hen uit jouw Loop verwijderen nadat je bent ingelogd op onze website. Als hen weer in hun nieuwe buurt wilt meedoen, vraag hen dan gewoon opnieuw aan te melden bij een Loop in diens buurt met hun nieuwe adres."
     },
-    {
+    "13": {
       "question": "Wat moeten we doen als de Clothing Loop niet goed werkt?",
       "answer": "Zorg ervoor dat iedereen de verantwoordelijkheid deelt om alleen kledingstukken van goede kwaliteit toe te voegen aan de tas.<br/><br/>Zie je iets dat niet in de tas zou moeten zitten? Probeer het te doneren aan je lokale textielrecyclingsprogramma. Vraag in geval van twijfel de persoon die naast jou op de adreslijst staat, of hen het daarmee eens is. Het is goed om een paar mensen te laten functioneren als ‘checkpoints’ langs de route, om ervoor te zorgen dat de tassen in goede staat blijven. Want als de kwaliteit van de kleding niet hoog genoeg is, kunnen mensen misschien de Loop verlaten en dat zou een schande zijn!<br/><br/>Een <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>pluizentondeuse</a> kan de levensduur van een kledingstuk enorm verlengen! Je kan deze tip delen in de groep.<br/><br/>En last but not least stel zelf een goed voorbeeld in: deel een paar mooie foto's en moedig anderen aan hetzelfde te doen! Het is voor mensen een enorme motivatie om dan leuke kledingstukken ook aan de tas te doneren."
     }
-  ]
+  }
 }

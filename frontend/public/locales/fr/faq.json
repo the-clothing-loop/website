@@ -1,100 +1,100 @@
 {
   "faqForParticipants": "Question-réponse pour les participants",
-  "arrParticipants": [
-    {
+  "arrParticipants": {
+    "0": {
       "question": "Y a-t-il des règles concernant le nombre de vêtements que l'on peut prendre, et doit-on remettre la même quantité de vêtements que l'on prend ?",
       "answer": "Non, il n'y a pas de règles en la matière. Parfois vous prenez un peu plus, parfois vous donnerez plus. Veuillez ne pas ajouter des vêtements de mauvaise qualité dans les sacs, juste pour mettre quelque chose ! Il est préférable d'avoir un sac à moitié rempli de trésors que d'avoir un sac plein de vêtements de moindre qualité."
     },
-    {
+    "1": {
       "question": "Peut-on mettre toutes les tailles de vêtements dans le même sac ?",
       "answer": "Les sacs mixtes fonctionnent parfaitement bien en général, car les tailles peuvent varier selon les différentes marques et les proportions peuvent également varier. Cela ne fonctionne toutefois que dans une certaine mesure. Nous conseillons de mélanger les tailles 36 à 42 (S, M et L) et de créer un nouveau Loop pour les tailles plus petites ou plus grandes."
     },
-    {
+    "2": {
       "question": "Comment éviter de tomber dans le piège du regret ?",
       "answer": "Il n'y a aucune garantie que vous trouverez quelque chose qui vous plaît. Il est possible que quelques sacs passent par chez vous et qu'ils ne contiennent rien d'intéressant pour vous. Mais n'oubliez pas : trouver un article de rêve a plus de valeur que 10 articles que vous ne portez pas. Et le fait de rendre quelqu'un d'autre très heureux avec un vêtement qui prend la poussière dans votre garde-robe est aussi un aspect important (et fun !) de la philosophie du Clothing Loop !"
     },
-    {
+    "3": {
       "question": "Peut-on également mettre des chaussures dans le sac ?",
       "answer": "La réponse courte est oui. Gardez cependant à l'esprit que les chaussures sont plus difficiles à transmettre que les vêtements. Il y a beaucoup plus de tailles, et elles s'usent beaucoup plus vite que les vêtements. Soyez donc très sélectif avec les chaussures ! N'ajoutez que des paires \"comme neuves\" et ne mettez pas plus de deux paires par sac."
     },
-    {
+    "4": {
       "question": "Que faire des vêtements volumineux (comme les manteaux d'hiver) qui ne rentrent pas dans le sac ?",
       "answer": "Les vêtements volumineux peuvent être photographiés et partagés via votre canal de communication ou via <a target='_blank' href='https://template-clothing-loop.glideapp.io'> l'application Glide</a>. Ceux que l'article intéresse peuvent répondre par un message privé et organiser le ramassage."
     },
-    {
+    "5": {
       "question": "Je reçois le message d'erreur : \"votre compte existe déjà\".",
       "answer": "Vous avez déjà créé un compte dans le Clothing Loop. Pour vous inscrire à un nouveau Loop, vous devez d'abord vous connecter :<ol><li>Cliquez en haut à droite sur login.</li><li>Entrez l'adresse e-mail que vous avez utilisée pour enregistrer votre Loop.</li><li>Vérifiez votre e-mail (et votre fichier spam !) pour notre lien de vérification. Nous utilisons un lien au lieu d'un mot de passe !</li><li>Vous pourrez alors vous inscrire pour un nouveau Loop.</li></ol>"
     },
-    {
+    "6": {
       "question": "Peut-on également mettre des chaussures dans le sac ?",
       "answer": "C'est à votre hôte local de décider. Si votre Loop vous permet d'ajouter des chaussures au sac, n'ajoutez que des chaussures comme neuves, et <b>pas plus de 2 paires par sac</b>. Veuillez emballer les chaussures dans un sac pour éviter qu'elles ne touchent les vêtements. "
     },
-    {
+    "7": {
       "question": "Je reçois le message d'erreur : \"votre compte existe déjà\".",
       "answer": "Vous avez déjà créé un compte dans le Clothing Loop. Pour vous inscrire à un nouveau Loop, vous devez d'abord vous connecter :<ol><li>Cliquez en haut à droite sur login.</li><li>Entrez l'adresse e-mail que vous avez utilisée pour enregistrer votre Loop.</li><li>Vérifiez votre e-mail (et votre fichier spam !) pour notre lien de vérification. Nous utilisons un lien au lieu d'un mot de passe !</li><li>Vous pourrez alors vous inscrire pour un nouveau Loop.</li></ol>"
     },
-    {
+    "8": {
       "question": "Do I need to pay to join the Clothing Loop?",
       "answer": "No, you do not have to pay to participate in the Clothing Loop. The Clothing Loop is an initiative that wants to make clothes swapping easy and accessible. As a participant, you “pay” with your clothes. Make sure that if you add clothes to your local Loop, they are gems that can be worn again. If you have saved money by participating in the Clothing Loop and/or want to support the Clothing Loop movement and our mission, you can of course always <a href='/donate'>donate here</a>."
     }
-  ],
+  },
   "faqForHosts": "Question-réponse pour les organisateurs",
-  "arrHosts": [
-    {
+  "arrHosts": {
+    "0": {
       "question": "Comment faire pour utiliser l'application ?",
       "answer": "Vous pouvez copier l'application et l'utiliser au sein de votre groupe. Il suffit de remplir la liste d'adresses dans notre modèle téléchargeable. C'est super facile ! Nous avons créé un vidéo tutorial et un diaporama pour vous aider à vous lancer. N'hésitez pas à nous contacter ici si vous rencontrez des difficultés !"
     },
-    {
+    "1": {
       "question": "Y a-t-il des modèles graphiques que nous pouvons utiliser ?",
       "answer": "Absolument ! Nous avons créé un dossier dans lequel vous pouvez trouver des modèles de logos, des manuels et autres. Utilisez-les autant que vous le souhaitez !"
     },
-    {
+    "2": {
       "question": "L'introduction d'un \"sac fantôme\" dans le Loop",
       "answer": "Une fois que votre Loop fonctionne de manière satisfaisante, vous pouvez avoir envie de faire bouger un peu les choses ! Vous pouvez alors introduire un \"sac fantôme\", c'est-a-dire un sac qui circule a contresens. Comme ça, tout d'un coup, il y aura d'autres personnes qui vous précèdent dans la chaîne, et donc il y aura d'autres styles dans le sac. Si vous introduisez ce sac, veillez à ce que les participants ne mettent pas dans le sac \"sac fantôme\" des vêtements qu'ils ont retirés d'un sac normal. Limitez le nombre de \"sacs fantômes\" à 1 ou 2, pour que ce sac reste spécial et simple à la fois."
     },
-    {
+    "3": {
       "question": "Comment gérer un grand nombre de personnes dans le canal de communication ?",
       "answer": "Lorsque les groupes grandissent, il est important de s'assurer que les participants ne sont pas bombardés de messages (non pertinents). Nous vous conseillons d'établir des règles concernant ce qui peut ou ne peut pas être partagé via l'application de groupe. Par exemple :<ul class='list-none'><li><b>Oui,</b> à partager dans l'application:<ul><li>Des selfies de jolies choses que vous avez prises du sac ou de jolies choses que vous mettez dans le sac</li><li>Des compliments à d'autres participants</li><li>Des mises à jour pertinentes en matière de logistique et d'organisation</li></ul></li><li><b>Non,</b> à ne pas partager dans l'application:<ul><li>Tout ce qui n'est pas lié au Loop (tels que demandes de sondages, invitations pour de nouveaux groupes, collecte de fonds, mèmes, etcetera). Si vous voulez demander l'avis de tous sur un sujet, utilisez plutôt une application de sondage.</li><li>Utilisez la fonction de message privé lorsque votre propos ne concerne qu'une seule personne.</li></ul></li></ul>"
     },
-    {
+    "4": {
       "question": "Que faire si je n'ai plus le temps de gérer le Loop que j'ai mis en place ?",
       "answer": "Recourez au groupe ! Demandez si quelqu'un d'autre veut prendre le relais et gérer le Loop."
     },
-    {
+    "5": {
       "question": "Que faire si quelqu'un veut rejoindre le Loop mais cette personne habite à une trop grande distance ?",
       "answer": "Si quelqu'un s'est inscrit à votre Loop mais cette personne habite trop loin de la zone de votre Loop, c'est à vous de décider si elle/il peut joindre. Si vous décidez de ne pas le faire, envoyez-leur un courriel pour les en informer. En cas de doute : pour réduire la distance entre deux adresses, vous pouvez demander à cette personne de trouver d'autres participants entre son adresse et le lieu initial du Loop."
     },
-    {
+    "6": {
       "question": "Combien de personnes peuvent se joindre à un Loop ?",
       "answer": "Nous conseillons un minimum de 20 personnes dans un Loop : à partir de 20 participants, vous ne reconnaissez généralement plus rien dans le sac ! Cela veut dire que tous vos vêtements ont été choisis. <b>Il n'y a pas vraiment de maximum</b>, c'est à vous de voir ce qui fonctionne correctement ! Aux Pays-Bas, un Loop compte en moyenne 45 personnes. Mais il y a des Loops qui fonctionnent sans problème avec 180 participants !"
     },
-    {
+    "7": {
       "question": "Que faire si quelqu'un déménage et veut s'inscrire dans une autre région ?",
       "answer": "En tant qu'hôte du Loop vous pouvez les désinscrire de votre Loop lorsque vous êtes identifié sur notre site web. S'ils souhaitent rejoindre un Loop dans leur nouveau quartier, demandez-leur de s'inscrire à nouveau avec leur nouvelle adresse."
     },
-    {
+    "8": {
       "question": "Que faire si notre Loop ne fonctionne pas bien ?",
       "answer": "Si la qualité des vêtements n'est pas satisfaisante, les participants risquent de quitter le Loop. Veillez à ce que chacun partage la responsabilité de n'ajouter que des vêtements de bonne qualité.<br/><br/>Vous remarquez un vêtement qui ne devrait pas être dans le sac ? Enlevez-le du sac et apportez-le à un conteneur de recyclage de vêtements. Ainsi, le vêtement sera recyclé. En cas de doute, demandez à la personne avant ou âpres vous dans le Loop si elle est d'accord d'enlever le vêtement en question, et décidez par la suite.<br/><br/>Un rasoir anti bouloche/anti-peluche peut énormément prolonger la durée de vie d'un vêtement ! Vous pouvez partager ce conseil au sein de votre communauté.<br/><br/>Et pour conclure, montrez le bon exemple vous-même ; partagez de belles photos et encouragez les autres à faire de même !"
     },
-    {
+    "9": {
       "question": "Que faire si je n'ai plus le temps de gérer le Loop que j'ai mis en place ?",
       "answer": "Recourez au groupe ! Demandez si quelqu'un d'autre veut prendre le relais et gérer le Loop."
     },
-    {
+    "10": {
       "question": "Que faire si quelqu'un veut rejoindre le Loop mais cette personne habite à une trop grande distance ?",
       "answer": "Si quelqu'un s'est inscrit à votre Loop mais cette personne habite trop loin de la zone de votre Loop, c'est à vous de décider si elle/il peut joindre. Si vous décidez de ne pas le faire, envoyez-leur un courriel pour les en informer. En cas de doute : pour réduire la distance entre deux adresses, vous pouvez demander à cette personne de trouver d'autres participants entre son adresse et le lieu initial du Loop."
     },
-    {
+    "11": {
       "question": "Combien de personnes peuvent se joindre à un Loop ?",
       "answer": "Nous conseillons un minimum de 20 personnes dans un Loop : à partir de 20 participants, vous ne reconnaissez généralement plus rien dans le sac ! Cela veut dire que tous vos vêtements ont été choisis. <b>Il n'y a pas vraiment de maximum</b>, c'est à vous de voir ce qui fonctionne correctement ! Aux Pays-Bas, un Loop compte en moyenne 45 personnes. Mais il y a des Loops qui fonctionnent sans problème avec 180 participants !"
     },
-    {
+    "12": {
       "question": "Que faire si quelqu'un déménage et veut s'inscrire dans une autre région ?",
       "answer": "En tant qu'hôte du Loop vous pouvez les désinscrire de votre Loop lorsque vous êtes identifié sur notre site web. S'ils souhaitent rejoindre un Loop dans leur nouveau quartier, demandez-leur de s'inscrire à nouveau avec leur nouvelle adresse."
     },
-    {
+    "13": {
       "question": "Que faire si notre Loop ne fonctionne pas bien ?",
       "answer": "Assurez-vous que tous les participants partagent la responsabilité de n'ajouter que des vêtements de bonne qualité et en bon état.<br/><br/>Vous remarquez un vêtement qui ne devrait pas être dans le sac ? Faites-en don à votre programme local de recyclage des textiles. En cas de doute, demandez à la personne avant ou âpres vous dans le Loop si elle est d'accord d'enlever ce vêtement du sac. Il est conseillé de faire appel à quelques personnes qui servent de \"points de contrôle\" le long de l'itinéraire, afin de s'assurer que les sacs gardent leur qualité. Si la qualité des vêtements n'est pas satisfaisante, les participants risquent de quitter le Loop et ce serait dommage !<br/><br/>Un <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>rasoir anti bouloche/anti-peluche</a> peut prolonger la durée de vie d'un vêtement ! Vous pouvez partager ce conseil au sein de votre communauté.<br/><br/>Et pour conclure, montrez le bon exemple vous-même ; partagez de belles photos et encouragez les autres à faire de même ! Le fait de voir où les vêtements finissent est une grande motivation pour les gens de faire don de beaux vêtements."
     }
-  ]
+  }
 }
