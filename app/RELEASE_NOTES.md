@@ -84,3 +84,8 @@
 - Remove address from select bag holder.
 - Remove person circle icon.
 - Hide im icons if phone is not international.
+
+# v1.14
+
+- Change app icon and add smaller icon.
+- Set your own date for pause duration.
