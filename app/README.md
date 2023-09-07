@@ -11,11 +11,11 @@ https://ionicframework.com/docs
 
 ## Notes
 
-**using Chromes console log server**
+### Using Chromes console log server
 
 chrome://inspect/#devices
 
-**IOS setup**
+### IOS setup
 
 ```
 PRJ=~/Projects/clothingloop
@@ -34,3 +34,9 @@ sudo xcodebuild -license accept
 npm i
 npm run dev:ios
 ```
+
+### Setting an app icon
+
+Set the icon in `assets/icon.png` the run the following command:
+
+`npm run generate:icons`
