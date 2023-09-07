@@ -318,12 +318,16 @@ export default function EventDetails() {
                     </dd>
                     <dt
                       className={`mb-2 font-bold font-sans text-xl text-teal ${
-                        event.link ? "" : "hidden"
+                        event.chain_uid || event.link ? "" : "hidden"
                       }`}
                     >
                       {t("organizedBy") + ":"}
                     </dt>
-                    <dd className="mr-2 mb-1 ltr:ml-4 rtl:mr-4">
+                    <dd
+                      className={`mr-2 mb-1 ltr:ml-4 rtl:mr-4 ${
+                        event.chain_uid || event.link ? "" : "hidden"
+                      }`}
+                    >
                       {event.chain_uid ? (
                         <Link
                           to={"/loops/" + event.chain_uid + "/users/signup"}
