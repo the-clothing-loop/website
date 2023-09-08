@@ -1,6 +1,6 @@
 {
-  "short_name": "ClothingLoop",
   "name": "My Clothing Loop",
+  "short_name": "ClothingLoop",
   "icons": [
     {
       "src": "favicon.ico",
