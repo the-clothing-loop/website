@@ -5,6 +5,6 @@
   Created by Lucian I. Last on 18/07/2023.
   
 */
-NSCameraUsageDescription = "This app requires access to your phone’s camera.";
-NSPhotoLibraryAddUsageDescription = "Add a photo from your photo library.";
-NSPhotoLibraryUsageDescription = "This app requires access to the photo library.";
+NSCameraUsageDescription = "Access to the camera allows you to take and share photos with others in a Loop";
+NSPhotoLibraryAddUsageDescription = "Add a photo from your photo library to share photos with others in a Loop.";
+NSPhotoLibraryUsageDescription = "Use a photo from your photo library to share photos with others in a Loop.";

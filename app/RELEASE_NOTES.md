@@ -89,3 +89,7 @@
 
 - Change app icon and add smaller icon.
 - Set your own date for pause duration.
+
+# v1.15
+
+- Add GDPR Account deletion steps
