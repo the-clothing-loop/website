@@ -91,6 +91,8 @@
   "loopHost_one": "Loop host",
   "loopHost_other": "Loop hosts",
   "wereWorkingOnIt": "We werken eraan.",
+  "deleteAccount": "Delete Account",
+  "deleteAccountExplanation": "To permanently delete your Clothing Loop account; please <1>click here</1> to open the web portal, (follow the login instructions if you are not logged in), then click the 'Delete Account' button",
   "pauseParticipation": "Pauzeer deelname",
   "pauseUntil": "Pauzeer tot",
   "paused": "Pauze",
