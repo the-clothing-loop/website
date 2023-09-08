@@ -39,7 +39,7 @@ func LoginEmail(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	if body.IsApp && body.Email == app.Config.APPSTORE_REVIEWER_EMAIL {
+	if body.Email == app.Config.APPSTORE_REVIEWER_EMAIL {
 		c.String(http.StatusOK, token)
 		return
 	}

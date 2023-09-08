@@ -14,8 +14,8 @@ import { GinParseErrors } from "../util/gin-errors";
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
 export default function Login() {
-  const { authUser } = useContext(AuthContext);
   const history = useHistory();
+  const { authUser } = useContext(AuthContext);
   const { addToast, addToastError } = useContext(ToastContext);
   const { t } = useTranslation();
 
@@ -40,22 +40,33 @@ export default function Login() {
     setActive(true);
 
     (async () => {
+      let apiKey: string | undefined;
       try {
-        await loginEmail(email);
-        addToast({
-          type: "success",
-          message: t("loginEmailSent"),
-        });
-        setLoading(false);
-        setTimeout(() => {
-          setActive(false);
-        }, 1000 * 60 * 2 /* 2 min */);
+        const res = await loginEmail(email);
+        console.log(res);
+
+        if (res.data && res.data.length > 0) {
+          apiKey = res.data;
+        } else {
+          addToast({
+            type: "success",
+            message: t("loginEmailSent"),
+          });
+          setLoading(false);
+          setTimeout(() => {
+            setActive(false);
+          }, 1000 * 60 * 2 /* 2 min */);
+        }
       } catch (err: any) {
         console.info("Unable to send login email", err);
         setActive(false);
         setLoading(false);
         setError("email");
         addToastError(GinParseErrors(t, err), err?.status);
+      }
+
+      if (apiKey) {
+        history.replace("/users/login/validate?apiKey=" + apiKey);
       }
     })();
   }

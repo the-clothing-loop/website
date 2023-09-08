@@ -46,7 +46,7 @@ export function registerOrphanedUser(user: RequestRegisterUser) {
 }
 
 export function loginEmail(email: string) {
-  return window.axios.post<never>("/v2/login/email", { email });
+  return window.axios.post<string>("/v2/login/email", { email });
 }
 
 export function loginValidate(key: string) {
