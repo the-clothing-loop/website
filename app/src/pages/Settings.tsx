@@ -38,7 +38,7 @@ import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import toastError from "../../toastError";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import {
   compassOutline,
   copyOutline,
@@ -49,6 +49,7 @@ import {
   openOutline,
   shareOutline,
   sparklesOutline,
+  warningOutline,
 } from "ionicons/icons";
 import dayjs from "../dayjs";
 import isPaused from "../utils/is_paused";
@@ -423,8 +424,35 @@ export default function Settings() {
             >
               <IonLabel color="medium">{t("privacyPolicy")}</IonLabel>
             </IonItem>
-            <IonItem lines="none" routerLink="/settings/open-source">
+            <IonItem lines="full" routerLink="/settings/open-source">
               <IonLabel color="medium">{t("openSource")}</IonLabel>
+            </IonItem>
+            <IonItem lines="none" detail={false}>
+              <IonLabel color="medium" className="ion-text-wrap">
+                <h3 className="mb-3">
+                  {t("deleteAccount")}
+                  <IonIcon
+                    color="danger"
+                    icon={warningOutline}
+                    className="tw-ml-1"
+                  />
+                </h3>
+                <p>
+                  <Trans
+                    t={t}
+                    i18nKey="deleteAccountExplanation"
+                    components={{
+                      "1": (
+                        <a
+                          href="https://clothingloop.org/admin/dashboard"
+                          target="_blank"
+                          className="tw-text-danger tw-font-medium"
+                        />
+                      ),
+                    }}
+                  />
+                </p>
+              </IonLabel>
             </IonItem>
           </IonList>
         </IonContent>
