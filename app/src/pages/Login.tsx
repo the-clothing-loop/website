@@ -66,8 +66,8 @@ export default function Login(props: { isLoggedIn: boolean }) {
     (async () => {
       try {
         const res = await loginEmail(email + "");
-        if (res.data.toString().length) {
-          setTokenOverride(res.data);
+        if (res.data && (res.data + "").length) {
+          setTokenOverride(res.data + "");
         }
         setShowToken(true);
         setSentState(State.success);

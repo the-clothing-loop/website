@@ -116,7 +116,7 @@ window.axios = redaxios.create({
 });
 
 export function loginEmail(email: string) {
-  return window.axios.post<string>(
+  return window.axios.post<unknown>(
     "/v2/login/email",
     { email, app: true },
     { auth: undefined, withCredentials: false },

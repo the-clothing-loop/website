@@ -45,8 +45,8 @@ export default function Login() {
         const res = await loginEmail(email);
         console.log(res);
 
-        if (res.data && res.data.length > 0) {
-          apiKey = res.data;
+        if (res.data && (res.data + "").length) {
+          apiKey = res.data + "";
         } else {
           addToast({
             type: "success",
