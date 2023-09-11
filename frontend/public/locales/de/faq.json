@@ -23,7 +23,7 @@
     },
     "5": {
       "question": "Was tun mit sperriger Kleidung (wie Wintermänteln), die nicht in die Tasche passt?",
-      "answer": "Große Gegenstände können über Deinen Kommunikationskanal fotografiert und geteilt werden oder über die <a target='_blank' href='https://template-clothing-loop.glideapp.io'>Glide App</a>. In einer privaten Nachricht können die Leute reagieren und die Abholung organisieren."
+      "answer": "Big items can be photographed and shared via your communication channel, or in the Clothing Loop App. In a private message, people can respond and organize pick-up."
     },
     "6": {
       "question": "Kann ich auch Schuhe in die Tasche legen?",
@@ -61,8 +61,12 @@
       "answer": "Benutze die Gruppe! Frag ob jemand anders die Loop übernehmen will."
     },
     "5": {
-      "question": "What if someone wants to join but lives too far away?",
-      "answer": "Wenn sich jemand für Deinen Loop angemeldet hat, aber zu weit außerhalb deines Loop Gebiets wohnt, liegt es an Dir zu entscheiden, ob er/sie/sie teilnehmen darf. Eine Sache, die Du tun kannst, um den Abstand zwischen Adressen zu verringern, ist, diese Person zu bitten, andere Teilnehmer zwischen ihrem Bereich und dem ursprünglichen Loop Standort zu finden."
+      "question": "How can I start using the App?",
+      "answer": "Yes! We made an app that you can very easily set up for your Loop. The app is available for iOS, Android and as web version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />You can download the app and use it within your group.  It is super easy! You can find a more detailed guide on how to use the app in our <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
+    },
+    "5_5": {
+      "question": "How to make a route?",
+      "answer": "You can make a route in the admin page of your Account. Click on Route and you will find an Optimize Route Button. Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. New participants will be placed in the most logical spot in the current list."
     },
     "6": {
       "question": "Was ist eine ideale Gruppengröße?",
@@ -71,6 +75,10 @@
     "7": {
       "question": "Was tun, wenn die Clothing Loop nicht richtig funktioniert?",
       "answer": "Wenn die Qualität der Kleidung nicht hoch genug ist, verlassen die Leute möglicherweise den Loop. Sorge dafür, dass jeder die Verantwortung dafür trägt, dass nur Artikel von guter Qualität reingelegt werden.<br/><br/>Siehst Du etwas, das nicht im Loop sein sollte? Nimm es raus und spende es an einen Kleidercontainer. Auf diese Weise kann es immer noch recycelt werden. Frag im Zweifelsfall die Person nach Dir, ob sie damit einverstanden ist und entscheide dann.<br/><br/>Ein Textilrasierer kann die Lebensdauer eines Kleidungsstücks enorm verlängern! Du kannst diesen Rat in Deiner Community teilen.<br/><br/>Und last but not least, geh selbst mit gutem Beispiel voran. Teile ein paar schöne Fotos und ermutige andere, dasselbe zu tun!"
+    },
+    "7_5": {
+      "question": "Introducing a “Bunny Bag” in the Loop",
+      "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! <b>You can then introduce a “Bunny Bag” that always skips an address,</b> so all of a sudden you have other people before you on the route, and also a few other styles in the bag. Keep the number of bunny bags limited to 1 or 2, to keep it special and simple."
     },
     "8": {
       "question": "Wie kann man eine große Gruppe von Menschen im Kommunikationskanal verwalten?",
