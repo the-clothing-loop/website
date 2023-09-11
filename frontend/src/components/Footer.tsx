@@ -149,9 +149,18 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="md:col-span-2 md:row-start-2 lg:row-start-auto lg:col-span-2 self-end flex justify-center md:justify-start mt-3 mb-6 px-3">
+                {/* <a
+                  href="https://app.clothingloop.org"
+                  target="_blank"
+                  className="relative"
+                >
+                  <div className=" w-[50px] h-[50px] rounded-lg border border-[#a6a6a6] bg-[#000000] text-white me-4 flex flex-col justify-center items-center text-xs">
+                    <span className="text-center">Web App</span>
+                  </div>
+                </a> */}
                 {mobileOS === MobileOS.IOS || mobileOS === MobileOS.OTHER ? (
                   <a
-                    href="https://testflight.apple.com/join/bFOGBLNw"
+                    href="https://apps.apple.com/us/app/my-clothing-loop/id6451443500"
                     target="_blank"
                     className="relative"
                   >
@@ -160,16 +169,13 @@ export default function Footer() {
                       alt="Download on the App Store"
                       style={{ height: 50 }}
                     />
-                    <span className="absolute -top-2 -right-2 block rounded py-0.5 px-1.5 text-xs bg-blue font-semibold tracking-widest text-white">
-                      Beta
-                    </span>
                   </a>
                 ) : null}
 
                 {mobileOS === MobileOS.ANDROID ||
                 mobileOS === MobileOS.OTHER ? (
                   <a
-                    href="https://play.google.com/apps/testing/org.clothingloop.app"
+                    href="https://play.google.com/store/apps/details?id=org.clothingloop.app"
                     target="_blank"
                     className={`relative ${
                       mobileOS === MobileOS.OTHER ? "ms-4" : ""
@@ -180,9 +186,6 @@ export default function Footer() {
                       alt="Get it on Google Play"
                       style={{ height: 50 }}
                     />
-                    <span className="absolute -top-2 -right-2 block rounded py-0.5 px-1.5 text-xs bg-blue font-semibold tracking-widest text-white">
-                      Beta
-                    </span>
                   </a>
                 ) : null}
               </div>
