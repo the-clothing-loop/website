@@ -33,7 +33,7 @@ import {
   UnapprovedReason,
 } from "../api/chain";
 import { Bag, Chain, UID, User, UserChain } from "../api/types";
-import { userGetAllByChain, userTransferChain, userCopyChain } from "../api/user";
+import { userGetAllByChain, userTransferChain } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import { SizeBadges } from "../components/Badges";
 import FormJup from "../util/form-jup";
@@ -238,7 +238,12 @@ export default function ChainMemberList() {
 
     setLoadingTransfer(LoadingState.loading);
 
-    userTransferChain(transferFromChainUID, transferToChainUID, transferUserUID)
+    userTransferChain(
+      transferFromChainUID,
+      transferToChainUID,
+      transferUserUID,
+      false
+    )
       .then(async () => {
         setLoadingTransfer(LoadingState.success);
         refSelectTransferParticipant.current.value = "";
@@ -375,7 +380,7 @@ export default function ChainMemberList() {
   let shareLink = `${VITE_BASE_URL}/loops/${chainUID}/users/signup`;
 
   let userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
-  console.log("what are use chains?", userChain);
+
   let isUserAdmin = userChain?.is_chain_admin || false;
   let classSubmitTransfer = "btn btn-sm";
   switch (loadingTransfer) {
@@ -1075,7 +1080,7 @@ function ParticipantsTable(props: {
 
             if (!toChainUID) return Error("Invalid loop");
 
-            userTransferChain(props.chain.uid, toChainUID, user.uid)
+            userTransferChain(props.chain.uid, toChainUID, user.uid, false)
               .catch((err) => {
                 addToastError(GinParseErrors(t, err), err.status);
               })
@@ -1087,65 +1092,63 @@ function ParticipantsTable(props: {
       ],
     });
   }
-function onCopy(user: User) {
-  addModal({
-    message: t("copyParticipantToLoop"),
-    content: () => (
-      <div>
-        <div className="flex flex-col items-center">
-          <PopoverOnHover
-            message={t("copyParticipantInfo")}
-            className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left rtl:tooltip-right"
-          />
-          <p className="mb-4">
-            <span className="feather feather-user inline-block mr-1" />
-            {user.name}
-          </p>
-          <p className="mb-1 font-semibold text-sm">{props.chain.name}</p>
-          <span className="feather feather-arrow-down inline-block mb-1" />
-        </div>
-        <select
-          className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
-          name="loop"
-          defaultValue=""
-          required
-        >
-          <option disabled value="">
-            {t("selectLoop")}
-          </option>
-          {props.hostChains.map((u) => (
-            <option key={u.uid} value={u.uid}>
-              {u.name}
+  function onCopy(user: User) {
+    addModal({
+      message: t("copyParticipantToLoop"),
+      content: () => (
+        <div>
+          <div className="flex flex-col items-center">
+            <PopoverOnHover
+              message={t("copyParticipantInfo")}
+              className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left rtl:tooltip-right"
+            />
+            <p className="mb-4">
+              <span className="feather feather-user inline-block mr-1" />
+              {user.name}
+            </p>
+            <p className="mb-1 font-semibold text-sm">{props.chain.name}</p>
+            <span className="feather feather-arrow-down inline-block mb-1" />
+          </div>
+          <select
+            className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
+            name="loop"
+            defaultValue=""
+            required
+          >
+            <option disabled value="">
+              {t("selectLoop")}
             </option>
-          ))}
-        </select>
-      </div>
-    ),
-    actions: [
-      {
-        text: t("copy"),
-        type: "success",
-        submit: true,
-        fn(formValues) {
-          let toChainUID = formValues?.loop || "";
+            {props.hostChains.map((u) => (
+              <option key={u.uid} value={u.uid}>
+                {u.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      ),
+      actions: [
+        {
+          text: t("copy"),
+          type: "success",
+          submit: true,
+          fn(formValues) {
+            let toChainUID = formValues?.loop || "";
 
-          if (!toChainUID) return Error("Invalid loop");
+            if (!toChainUID) return Error("Invalid loop");
 
-          userCopyChain(props.chain.uid, toChainUID, user.uid)
-          .catch((err) => {
-            addToastError(GinParseErrors(t, err), err.status);
-          })
-          .finally(() => {
-            props.refresh();
-          });
-
+            userTransferChain(props.chain.uid, toChainUID, user.uid, true)
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => {
+                props.refresh();
+              });
+          },
         },
-      },
-    ],
-  });
-}
+      ],
+    });
+  }
 
-  
   function getUserChain(u: User): UserChain {
     return u.chains.find((uc) => uc.chain_uid === props.chain.uid)!;
   }
@@ -1229,12 +1232,13 @@ function onCopy(user: User) {
                           {t("transfer")}
                         </button>,
                         <button
-                        type="button"
-                        onClick={() => onCopy(u)}
-                        className="text-red"
-                      >
-                        {t("copy")}
-                      </button>,                      ]
+                          type="button"
+                          onClick={() => onCopy(u)}
+                          className="text-red"
+                        >
+                          {t("copy")}
+                        </button>,
+                      ]
                     : []),
                 ];
 
@@ -1487,7 +1491,7 @@ function DropdownMenu(props: { items: ReactElement[]; classes: string }) {
 }
 
 function getUserChain(u: User, chainUID: UID): UserChain {
-  console.log(u)
+
   return u.chains.find((uc) => uc.chain_uid === chainUID)!;
 }
 

@@ -105,7 +105,6 @@ func Routes() *gin.Engine {
 	v2.DELETE("/user", controllers.UserDelete)
 	v2.DELETE("/user/purge", controllers.UserPurge)
 	v2.POST("/user/transfer-chain", controllers.UserTransferChain)
-	v2.POST("/user/copy-chain", controllers.UserCopyChain)
 
 	// chain
 	v2.GET("/chain", controllers.ChainGet)

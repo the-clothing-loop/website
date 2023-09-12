@@ -61,24 +61,13 @@ export function userHasNewsletter(
 export function userTransferChain(
   fromChainUID: UID,
   toChainUID: UID,
-  transferUserUID: UID
+  transferUserUID: UID,
+  isCopy: boolean
 ) {
   return window.axios.post<never>("v2/user/transfer-chain", {
     from_chain_uid: fromChainUID,
     to_chain_uid: toChainUID,
     transfer_user_uid: transferUserUID,
-  });
-}
-
-export function userCopyChain(
-  fromChainUID: UID,
-  toChainUID: UID,
-  transferUserUID: UID
-) {
-  console.log("am i in the right endpoint lol")
-  return window.axios.post<never>("v2/user/copy-chain", {
-    from_chain_uid: fromChainUID,
-    to_chain_uid: toChainUID,
-    transfer_user_uid: transferUserUID,
+    is_copy: isCopy,
   });
 }
