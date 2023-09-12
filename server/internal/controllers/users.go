@@ -566,6 +566,94 @@ LIMIT 1
 	}
 }
 
+func UserCopyChain(c *gin.Context) {
+	db := getDB(c)
+
+	var body struct {
+		TransferUserUID string `json:"transfer_user_uid" binding:"required,uuid"`
+		FromChainUID    string `json:"from_chain_uid" binding:"required,uuid"`
+		ToChainUID      string `json:"to_chain_uid" binding:"required,uuid"`
+	}
+	fmt.Println("in user copy chains")
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, authUser, authChain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.FromChainUID)
+	if !ok {
+		return
+	}
+
+	if !authUser.IsRootAdmin {
+		_, isChainAdmin := authUser.IsPartOfChain(body.ToChainUID)
+		if !isChainAdmin {
+			c.String(http.StatusUnauthorized, "you must be a host of both loops")
+			return
+		}
+	}
+
+	// finished authentication
+
+	handleError := func(tx *gorm.DB, err error) {
+		tx.Rollback()
+		goscope.Log.Errorf("UserCopyChain: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to copy user to loop")
+	}
+	var err error
+	tx := db.Begin()
+
+	var result struct {
+		UserID      uint `gorm:"user_id"`
+		FromChainID uint `gorm:"from_chain_id"`
+		ToChainID   uint `gorm:"to_chain_id"`
+	}
+	err = tx.Raw(`
+SELECT u.id as user_id, uc.chain_id as from_chain_id, c2.id as to_chain_id
+FROM users AS u
+JOIN user_chains AS uc ON uc.user_id = u.id AND uc.chain_id = ?
+JOIN chains AS c2 ON c2.uid = ?
+WHERE u.uid = ?
+LIMIT 1
+	`, authChain.ID, body.ToChainUID, body.TransferUserUID).Scan(&result).Error
+	if result.UserID == 0 && err == nil {
+		err = fmt.Errorf("User %s not found", body.TransferUserUID)
+	}
+	if err != nil {
+		handleError(tx, err)
+		return
+	}
+
+	uc := &models.UserChain{}
+	tx.
+		Where("user_id = ?", result.UserID).
+		Where("chain_id = ?", result.FromChainID).
+		Find(uc)
+
+	if uc.ID == 0 {
+		handleError(tx, fmt.Errorf("User %s not found", body.TransferUserUID))
+		return
+	}
+
+	if err := db.Create(&models.UserChain{
+		UserID:       result.UserID,
+		ChainID:      result.ToChainID,
+		IsChainAdmin: false,
+	}).Error; err != nil {
+		goscope.Log.Errorf("User could not be added to chain: %v", err)
+		c.String(http.StatusInternalServerError, "User could not be added to chain due to unknown error")
+		return
+	}
+
+	db.Exec(`
+UPDATE user_chains
+SET is_approved = TRUE, created_at = NOW()
+WHERE user_id = ? AND chain_id = ?
+	`, result.UserID, result.ToChainID)
+
+}
+
 func routeIndex(route []string, userUID string) int {
 	for i, uid := range route {
 		if uid == userUID {
