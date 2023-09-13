@@ -1036,7 +1036,7 @@ function ParticipantsTable(props: {
       ],
     });
   }
-  function onTransfer(user: User) {
+  function onTransfer(user: User, isCopy: Boolean) {
     addModal({
       message: t("transferParticipantToLoop"),
       content: () => (
@@ -1072,83 +1072,35 @@ function ParticipantsTable(props: {
       ),
       actions: [
         {
-          text: t("transfer"),
+          text: isCopy ? t("copy") : t("transfer"),
           type: "success",
           submit: true,
           fn(formValues) {
             let toChainUID = formValues?.loop || "";
-
             if (!toChainUID) return Error("Invalid loop");
 
-            userTransferChain(props.chain.uid, toChainUID, user.uid, false)
-              .catch((err) => {
-                addToastError(GinParseErrors(t, err), err.status);
-              })
-              .finally(() => {
-                props.refresh();
-              });
+            if (isCopy) {
+              userTransferChain(props.chain.uid, toChainUID, user.uid, true)
+                .catch((err) => {
+                  addToastError(GinParseErrors(t, err), err.status);
+                })
+                .finally(() => {
+                  props.refresh();
+                });
+            } else {
+              userTransferChain(props.chain.uid, toChainUID, user.uid, false)
+                .catch((err) => {
+                  addToastError(GinParseErrors(t, err), err.status);
+                })
+                .finally(() => {
+                  props.refresh();
+                });
+            }
           },
         },
       ],
     });
   }
-  function onCopy(user: User) {
-    addModal({
-      message: t("copyParticipantToLoop"),
-      content: () => (
-        <div>
-          <div className="flex flex-col items-center">
-            <PopoverOnHover
-              message={t("copyParticipantInfo")}
-              className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left rtl:tooltip-right"
-            />
-            <p className="mb-4">
-              <span className="feather feather-user inline-block mr-1" />
-              {user.name}
-            </p>
-            <p className="mb-1 font-semibold text-sm">{props.chain.name}</p>
-            <span className="feather feather-arrow-down inline-block mb-1" />
-          </div>
-          <select
-            className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
-            name="loop"
-            defaultValue=""
-            required
-          >
-            <option disabled value="">
-              {t("selectLoop")}
-            </option>
-            {props.hostChains.map((u) => (
-              <option key={u.uid} value={u.uid}>
-                {u.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      ),
-      actions: [
-        {
-          text: t("copy"),
-          type: "success",
-          submit: true,
-          fn(formValues) {
-            let toChainUID = formValues?.loop || "";
-
-            if (!toChainUID) return Error("Invalid loop");
-
-            userTransferChain(props.chain.uid, toChainUID, user.uid, true)
-              .catch((err) => {
-                addToastError(GinParseErrors(t, err), err.status);
-              })
-              .finally(() => {
-                props.refresh();
-              });
-          },
-        },
-      ],
-    });
-  }
-
   function getUserChain(u: User): UserChain {
     return u.chains.find((uc) => uc.chain_uid === props.chain.uid)!;
   }
@@ -1226,14 +1178,14 @@ function ParticipantsTable(props: {
                     ? [
                         <button
                           type="button"
-                          onClick={() => onTransfer(u)}
+                          onClick={() => onTransfer(u, false)}
                           className="text-red"
                         >
                           {t("transfer")}
                         </button>,
                         <button
                           type="button"
-                          onClick={() => onCopy(u)}
+                          onClick={() => onTransfer(u, true)}
                           className="text-red"
                         >
                           {t("copy")}
@@ -1491,7 +1443,6 @@ function DropdownMenu(props: { items: ReactElement[]; classes: string }) {
 }
 
 function getUserChain(u: User, chainUID: UID): UserChain {
-
   return u.chains.find((uc) => uc.chain_uid === chainUID)!;
 }
 
