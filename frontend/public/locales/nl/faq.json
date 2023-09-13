@@ -23,7 +23,7 @@
     },
     "5": {
       "question": "Wat te doen met grote kleren (zoals winterjas) die niet in de tas passen?",
-      "answer": "Big items can be photographed and shared via your communication channel, or in the Clothing Loop App. In a private message, people can respond and organize pick-up."
+      "answer": "Grote items kunnen worden gefotografeerd en gedeeld via het communicatiekanaal, of via de Clothing Loop app. In een privébericht kunnen mensen reageren en oppakken organiseren."
     },
     "6": {
       "question": "Mag ik ook schoenen in de tas doen?",
@@ -35,7 +35,7 @@
     },
     "8": {
       "question": "Moet ik betalen om mee te doen aan de Clothing Loop?",
-      "answer": "No, you do not have to pay to participate in the Clothing Loop. The Clothing Loop is an initiative that wants to make clothes swapping easy and accessible. As a participant, you “pay” with your clothes. Make sure that if you add clothes to your local Loop, they are gems that can be worn again. If you have saved money by participating in the Clothing Loop and/or want to support the Clothing Loop movement and our mission, you can of course always <a href='/donate'>donate here</a>."
+      "answer": "Nee, je hoeft niet te betalen om deel te nemen aan de Clothing Loop. De Clothing Loop is een initiatief dat kleding ruilen makkelijk en toegankelijk wil maken. Als deelnemer 'betaal' je met je kleren. Zorg ervoor dat als je kleding aan je lokale Loop toevoegt, het pareltjes zijn die weer gedragen kunnen worden. Als je geld hebt bespaard door deel te nemen aan de kleding Loop en/of wil je de Clothing Loop beweging en onze missie ondersteunen, je kan natuurlijk altijd <a href='/donate'>doneren hier</a>."
     }
   },
   "faqForHosts": "FAQ voor Beheerders",
@@ -62,11 +62,11 @@
     },
     "5": {
       "question": "Hoe kan ik de app gaan gebruiken?",
-      "answer": "Yes! We made an app that you can very easily set up for your Loop. The app is available for iOS, Android and as web version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />You can download the app and use it within your group.  It is super easy! You can find a more detailed guide on how to use the app in our <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
+      "answer": "Ja! We hebben een app gemaakt die je heel makkelijk voor jouw Loop kunt gebruiken. De app is beschikbaar voor iOS, Android en als webversie: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />U kunt de app downloaden en binnen jouw Loop gebruiken. Het is super makkelijk! Je kunt een meer gedetailleerde handleiding vinden over het gebruik van de app in onze <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit voor Loop Hosts</a>."
     },
     "5_5": {
       "question": "Hoe maak je een route?",
-      "answer": "You can make a route in the admin page of your Account. Click on Route and you will find an Optimize Route Button. Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. New participants will be placed in the most logical spot in the current list."
+      "answer": "Je kunt een route maken op de pagina van de beheerders van jouw Loop in Account. Klik op Route en je vindt een Optimaliseer routeknop. Zodra je op die knop klikt, worden alle adressen gereorganiseerd om de beste route te maken. Het is ook mogelijk om de adressen een voor een te veranderen, als dat in dat in jouw geval beter werkt. Nieuwe deelnemers worden automatisch op de meest logische plek in de huidige lijst worden geplaatst."
     },
     "6": {
       "question": "Wat is een ideale groepsgrootte?",
@@ -78,7 +78,7 @@
     },
     "7_5": {
       "question": "Introduceer een \"Konijnentas\" in de Loop",
-      "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! <b>You can then introduce a “Bunny Bag” that always skips an address,</b> so all of a sudden you have other people before you on the route, and also a few other styles in the bag. Keep the number of bunny bags limited to 1 or 2, to keep it special and simple."
+      "answer": "Zodra je Loop een tijdje loopt, kunt u dit een beetje veranderen! <b>Je kunt dan een \"Konijntas\" introduceren, deze slaat altijd een adres over</b>. Zodat je plotseling andere mensen voor je hebt in de route, en daardoor ook net andere stijlen hebt in het tas. Houd het aantal konijnentassen beperkt tot 1 of 2, om het speciaal en makkelijk te houden."
     },
     "8": {
       "question": "Hoe organiseer je een grote groep mensen in de communicatiekanalen?",
