@@ -1038,7 +1038,7 @@ function ParticipantsTable(props: {
   }
   function onTransfer(user: User, isCopy: Boolean) {
     addModal({
-      message: t("transferParticipantToLoop"),
+      message: t("copyParticipantToLoop"),
       content: () => (
         <div>
           <div className="flex flex-col items-center">
