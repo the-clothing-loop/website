@@ -420,7 +420,7 @@ export default function EventDetails() {
                     <img
                       src={image}
                       alt=""
-                      className="object-cover h-full w-full"
+                      className="object-fit h-full w-full"
                       onClick={() => setImageExpanded(true)}
                     />
                   </div>
