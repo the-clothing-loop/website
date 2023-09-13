@@ -9,7 +9,7 @@
   },
   "whoDoIGiveTheBagTo": {
     "title": "Aan wie geef ik de tas door?",
-    "content": "Onderin het scherm zie je een huis icoontje. In dit scherm kan je de volgorde van de Loop zien. De tas gaat naar diegene na jouw in de lijst. Als je op hun naam klikt, kan je diegenes adres en contactgegevens vinden.  Je kan als deelnemer alleen de gegevens zien van 2 deelnemers voor jou en 2 deelnemers na jou. Om de tas naar de volgende te brengen zoek je degene die na jou op de lijst staat op en klik op de naam om het adres te zien waar de tas heen moet. Dan kan jij contact met diegene opnemen en afspreken wanneer je de tas brengt.\n\nHou er wel rekening mee dat de route kan veranderen in de loop van de tijd. Dus check altijd even de app voordat je de tas doorgeeft. Op deze manier zorgen we ervoor dat nieuwe mensen aan de loop route kunnen worden toegevoegd. En iedereen ook weer eens iemand anders ontmoet.\n\nAls je na 2 dagen nog geen reactie op je afspraakverzoek hebt en geen bericht hebt ontvangen dat degene na jou een rondje overslaat, neem dan contact op met de volgende persoon op de lijst. Zo gaat het doorgeefsysteem niet opstropen. Als iemand langere tijd niet reageert, geef dit dan door aan de host.\n\n\n\n* De zogenoemde spooktassen reizen tegen de richting in."
+    "content": "Onderin het scherm zie je een huis icoontje. In dit scherm kan je de volgorde van de Loop zien. De tas gaat naar diegene na jouw in de lijst. Als je op hun naam klikt, kan je diegenes adres en contactgegevens vinden. Je kan als deelnemer alleen de gegevens zien van 2 deelnemers voor jou en 2 deelnemers na jou. Om de tas naar de volgende te brengen zoek je degene die na jou op de lijst staat op en klik op de naam om het adres te zien waar de tas heen moet. Dan kan jij contact met diegene opnemen en afspreken wanneer je de tas brengt.\n\nHou er wel rekening mee dat de route kan veranderen in de loop van de tijd. Dus check altijd even de app voordat je de tas doorgeeft. Op deze manier zorgen we ervoor dat nieuwe mensen aan de loop route kunnen worden toegevoegd. En iedereen ook weer eens iemand anders ontmoet.\n\nAls je na 2 dagen nog geen reactie op je afspraakverzoek hebt en geen bericht hebt ontvangen dat degene na jou een rondje overslaat, neem dan contact op met de volgende persoon op de lijst. Zo gaat het doorgeefsysteem niet opstropen. Als iemand langere tijd niet reageert, geef dit dan door aan de host."
   },
   "whatCanYouTakeFromTheBag": {
     "title": "Wat mag wel je uit de tas halen?",
@@ -25,11 +25,11 @@
   },
   "awayOrBusy": {
     "title": "Op vakantie of te druk?",
-    "content": "Zet jezelf dan even op Pauze. Dit kan je doen bij Info. Geef daarin aan hoeveel weken je op Pauze wilt.\n\nHeb je wel weer tijd om te ruilen? Dan kan je zelf  weer onpauzeren (Unpause). Op deze manier kan je voorganger, jou overslaan en contact opnemen met de volgende persoon in de Loop."
+    "content": "Zet jezelf dan even op Pauze. Dit kan je doen bij Info. Geef daarin aan hoelang je op Pauze wilt.\n\nHeb je wel weer tijd om te ruilen? Dan kan je zelf  weer onpauzeren (Unpause). Op deze manier kan je voorganger, jou overslaan en contact opnemen met de volgende persoon in de Loop."
   },
   "foundSomethingYouLike": {
     "title": "Foto's delen is leuk!",
-    "content": "Show je vondsten! Dit is leuk om te zien, zeker voor de vorige eigenaar van het stuk! Ook is het af en toe leuk te delen welke parels je zelf in de tassen stopt. Deel de vondsten die jij hebt gevonden in de groepschat van de tas (dit kan een WhatsApp, Signal, FaceBook, etc. groep zijn). _Een host kan hier de link plakken naar de groep, als ze dat willen.\n\nHeb jij een hele mooie vondst met een goed verhaal, dan willen wij dat graag horen. Stuur dan een mailtje naar hello@clothingloop.org en misschien delen wij dit verhaal dan verder op onze socials. Dit inspireert andere weer om ook kleding te gaan ruilen."
+    "content": "Show je vondsten! Dit is leuk om te zien, zeker voor de vorige eigenaar van het stuk! Ook is het af en toe leuk te delen welke parels je zelf in de tassen stopt. Deel de vondsten die jij hebt gevonden in de groepschat van de tas (dit kan een WhatsApp, Signal, FaceBook, etc. groep zijn). Een host kan hier de link plakken naar de groep, als ze dat willen.\n\nHeb jij een hele mooie vondst met een goed verhaal, dan willen wij dat graag horen. Stuur dan een mailtje naar hello@clothingloop.org en misschien delen wij dit verhaal dan verder op onze socials. Dit inspireert andere weer om ook kleding te gaan ruilen."
   },
   "newMembers": {
     "title": "Ik ken iemand die ook mee wil doen!",
@@ -37,7 +37,7 @@
   },
   "privacy": {
     "title": "Privacy",
-    "content": "Hoe gaan we met de contactgegevens en gedeelde foto's om?\n\nAlle contactgegevens, foto's en andere informatie zijn alleen bestemd voor gebruik binnen de groep. Zij mogen niet zonder toestemming gedeeld worden met derden.  Door deel te nemen aan de Clothing Loop stem je in om je contactgegevens en andere info binnen de groep te delen. Alleen mensen die zijn toegeltaten tot de Loop hebben toegang tot de app.  Nieuwe mensen kunnen alleen meedoen als ze door de beheerder worden toegevoegd. Als je niet meer deelneemt, verlaat dan de Loop (en geef dit ook door aan de host). Het uitgebreidde privacy regelement kan je vinden in de app bij Info of ga naar onze website www.clothingloop.org"
+    "content": "Hoe gaan we met de contactgegevens en gedeelde foto's om?\n\nAlle contactgegevens, foto's en andere informatie zijn alleen bestemd voor gebruik binnen de groep. Zij mogen niet zonder toestemming gedeeld worden met derden.  Door deel te nemen aan de Clothing Loop stem je in om je contactgegevens en andere info binnen de groep te delen. Alleen mensen die zijn toegeltaten tot de Loop hebben toegang tot de app.  Nieuwe mensen kunnen alleen meedoen als ze door de host zijn toegevoegd. Als je niet meer deelneemt, verlaat dan de Loop (en geef dit ook door aan de host). Het uitgebreidde privacy regelement kan je vinden in de app bij Info of ga naar onze website www.clothingloop.org"
   },
   "feedback": {
     "title": "Feedback en suggesties",
