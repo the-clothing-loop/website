@@ -1043,7 +1043,9 @@ function ParticipantsTable(props: {
         <div>
           <div className="flex flex-col items-center">
             <PopoverOnHover
-              message={t("transferParticipantInfo")}
+              message={
+                isCopy ? t("copyParticipantInfo") : t("transferParticipantInfo")
+              }
               className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left rtl:tooltip-right"
             />
             <p className="mb-4">
