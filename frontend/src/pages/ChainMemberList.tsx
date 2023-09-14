@@ -408,13 +408,13 @@ export default function ChainMemberList() {
                   {...addCopyAttributes(
                     t,
                     "loop-detail-share",
-                    "relative btn btn-circle btn-secondary tooltip ltr:tooltip-left rtl:tooltip-right md:tooltip-top flex group",
+                    "relative btn btn-circle btn-secondary tooltip tooltip-left lg:!tooltip-top flex group",
                     shareLink
                   )}
                   href={shareLink}
                 >
                   <span className="feather feather-share text-lg" />
-                  <span className="absolute top-full end-0 md:end-auto -mt-1 group-hover:mt-1 text-xs bg-secondary shadow-lg rounded-sm py-1 px-2  whitespace-nowrap group-hover:bg-secondary-focus transition-all opacity-40 group-hover:opacity-100">
+                  <span className="absolute top-full end-0 lg:end-auto -mt-1 group-hover:mt-1 text-xs bg-secondary shadow-lg rounded-sm py-1 px-2  whitespace-nowrap group-hover:bg-secondary-focus transition-all opacity-40 group-hover:opacity-100">
                     {t("shareLink")}
                   </span>
                 </a>
@@ -739,7 +739,7 @@ function HostTable(props: {
                 <td>{u.phone_number}</td>
                 <td className="text-right hidden md:table-cell">
                   <DropdownMenu
-                    classes="dropdown-left"
+                    classes="ltr:dropdown-left rtl:!dropdown-right"
                     items={dropdownItems(u)}
                   />
                 </td>
@@ -1038,7 +1038,7 @@ function ParticipantsTable(props: {
           <div className="flex flex-col items-center">
             <PopoverOnHover
               message={t("transferParticipantInfo")}
-              className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left rtl:tooltip-right"
+              className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left"
             />
             <p className="mb-4">
               <span className="feather feather-user inline-block mr-1" />

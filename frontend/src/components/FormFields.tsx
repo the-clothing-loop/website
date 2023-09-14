@@ -112,7 +112,7 @@ export function TextForm({
       {!!info && (
         <PopoverOnHover
           message={info}
-          className="absolute top-0 -right-2 rtl:right-auto rtl:-left-2 tooltip-left rtl:tooltip-right"
+          className="absolute top-0 -right-2 rtl:right-auto rtl:-left-2 tooltip-left"
         />
       )}
       <label>
