@@ -527,12 +527,13 @@ func UserTransferChain(c *gin.Context) {
 	tx := db.Begin()
 
 	var result struct {
-		UserID              uint `gorm:"user_id"`
-		FromChainID         uint `gorm:"from_chain_id"`
-		ToChainID           uint `gorm:"to_chain_id"`
-		ToUserChainIDExists uint `gorm:"to_user_chain_exists"`
+		UserID              uint     `gorm:"user_id"`
+		FromChainID         uint     `gorm:"from_chain_id"`
+		ToChainID           uint     `gorm:"to_chain_id"`
+		ToUserChainIDExists null.Int `gorm:"to_user_chain_exists"`
 	}
-	row := tx.Raw(`
+	// err =
+	row := tx.Debug().Raw(`
 	SELECT u.id as user_id, uc.chain_id as from_chain_id, c2.id as to_chain_id, (
 		SELECT uc_dest.id FROM user_chains AS uc_dest WHERE uc_dest.chain_id = c2.id AND uc_dest.user_id = u.id
 		) as to_user_chain_exists
@@ -552,6 +553,8 @@ LIMIT 1
 		return
 	}
 
+	fmt.Printf("result: %++v\n", result)
+
 	uc := &models.UserChain{}
 	err = tx.Raw(`SELECT * FROM user_chains WHERE chain_id = ? AND user_id = ? LIMIT 1`, result.FromChainID, result.UserID).Scan(uc).Error
 
@@ -563,15 +566,15 @@ LIMIT 1
 	// If the user already exists in the destination chain:
 	// - on copy instruction:     do nothing
 	// - on transfer instruction: remove from source chain
-	if result.ToUserChainIDExists != 0 {
+	if result.ToUserChainIDExists.Valid {
 		// remove source user_chain and move it's dependencies to destination
 		if !body.IsCopy {
-			err = tx.Exec(`UPDATE bags SET user_chain_id = ? WHERE user_chain_id = ?`, result.ToUserChainIDExists, uc.ID).Error
+			err = tx.Exec(`UPDATE bags SET user_chain_id = ? WHERE user_chain_id = ?`, result.ToUserChainIDExists.Int64, uc.ID).Error
 			if err != nil {
 				handleError(tx, err)
 				return
 			}
-			err = tx.Exec(`UPDATE bulky_items SET user_chain_id = ? WHERE user_chain_id = ?`, result.ToUserChainIDExists, uc.ID).Error
+			err = tx.Exec(`UPDATE bulky_items SET user_chain_id = ? WHERE user_chain_id = ?`, result.ToUserChainIDExists.Int64, uc.ID).Error
 			if err != nil {
 				handleError(tx, err)
 				return
