@@ -26,6 +26,7 @@ import dayjs from "../util/dayjs";
 import useToClipboard from "../util/to-clipboard.hooks";
 import { AuthContext } from "../providers/AuthProvider";
 import { uploadImage } from "../api/imgbb";
+import SanitizedHtml from "../components/SanitizedHtml";
 
 // Media
 const ClothesImage =
@@ -384,7 +385,7 @@ export default function EventDetails() {
                   className={`${
                     imageExpanded
                       ? "flex-col-reverse w-full content-center"
-                      : "sm:cursor-zoom-in"
+                      : ""
                   }`}
                 >
                   <div
@@ -392,7 +393,7 @@ export default function EventDetails() {
                   ${
                     imageExpanded
                       ? "max-w-xl mt-8"
-                      : "mt-8 sm:w-64 sm:float-right rtl:sm:float-left sm:m-4"
+                      : "mt-8 sm:w-64 sm:float-right rtl:sm:float-left sm:m-4 sm:cursor-zoom-in"
                   }`}
                   >
                     {isOrganizer ? (
@@ -429,10 +430,30 @@ export default function EventDetails() {
                       onClick={() => setImageExpanded(true)}
                     />
                   </div>
-                  <div
+                  <SanitizedHtml
                     className="prose"
-                    dangerouslySetInnerHTML={{ __html: event.description }}
-                  ></div>
+                    options={{
+                      allowedTags: [
+                        "small",
+                        "sub",
+                        "sup",
+                        "br",
+                        "p",
+                        "strong",
+                        "b",
+                        "em",
+                        "ul",
+                        "ol",
+                        "li",
+                        "a",
+                      ],
+                      allowedAttributes: {
+                        a: ["href", "name", "target"],
+                      },
+                    }}
+                  >
+                    {event.description}
+                  </SanitizedHtml>
                 </div>
               </div>
             </div>
