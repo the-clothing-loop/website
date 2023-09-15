@@ -532,8 +532,7 @@ func UserTransferChain(c *gin.Context) {
 		ToChainID           uint     `gorm:"to_chain_id"`
 		ToUserChainIDExists null.Int `gorm:"to_user_chain_exists"`
 	}
-	// err =
-	row := tx.Debug().Raw(`
+	row := tx.Raw(`
 	SELECT u.id as user_id, uc.chain_id as from_chain_id, c2.id as to_chain_id, (
 		SELECT uc_dest.id FROM user_chains AS uc_dest WHERE uc_dest.chain_id = c2.id AND uc_dest.user_id = u.id
 		) as to_user_chain_exists
@@ -552,8 +551,6 @@ LIMIT 1
 		handleError(tx, err)
 		return
 	}
-
-	fmt.Printf("result: %++v\n", result)
 
 	uc := &models.UserChain{}
 	err = tx.Raw(`SELECT * FROM user_chains WHERE chain_id = ? AND user_id = ? LIMIT 1`, result.FromChainID, result.UserID).Scan(uc).Error
