@@ -238,7 +238,12 @@ export default function ChainMemberList() {
 
     setLoadingTransfer(LoadingState.loading);
 
-    userTransferChain(transferFromChainUID, transferToChainUID, transferUserUID)
+    userTransferChain(
+      transferFromChainUID,
+      transferToChainUID,
+      transferUserUID,
+      false
+    )
       .then(async () => {
         setLoadingTransfer(LoadingState.success);
         refSelectTransferParticipant.current.value = "";
@@ -375,6 +380,7 @@ export default function ChainMemberList() {
   let shareLink = `${VITE_BASE_URL}/loops/${chainUID}/users/signup`;
 
   let userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
+
   let isUserAdmin = userChain?.is_chain_admin || false;
   let classSubmitTransfer = "btn btn-sm";
   switch (loadingTransfer) {
@@ -1030,14 +1036,16 @@ function ParticipantsTable(props: {
       ],
     });
   }
-  function onTransfer(user: User) {
+  function onTransfer(user: User, isCopy: boolean) {
     addModal({
-      message: t("transferParticipantToLoop"),
+      message: t("copyParticipantToLoop"),
       content: () => (
         <div>
           <div className="flex flex-col items-center">
             <PopoverOnHover
-              message={t("transferParticipantInfo")}
+              message={
+                isCopy ? t("copyParticipantInfo") : t("transferParticipantInfo")
+              }
               className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left"
             />
             <p className="mb-4">
@@ -1066,15 +1074,14 @@ function ParticipantsTable(props: {
       ),
       actions: [
         {
-          text: t("transfer"),
+          text: isCopy ? t("copy") : t("transfer"),
           type: "success",
           submit: true,
           fn(formValues) {
             let toChainUID = formValues?.loop || "";
-
             if (!toChainUID) return Error("Invalid loop");
 
-            userTransferChain(props.chain.uid, toChainUID, user.uid)
+            userTransferChain(props.chain.uid, toChainUID, user.uid, isCopy)
               .catch((err) => {
                 addToastError(GinParseErrors(t, err), err.status);
               })
@@ -1086,7 +1093,6 @@ function ParticipantsTable(props: {
       ],
     });
   }
-
   function getUserChain(u: User): UserChain {
     return u.chains.find((uc) => uc.chain_uid === props.chain.uid)!;
   }
@@ -1164,10 +1170,17 @@ function ParticipantsTable(props: {
                     ? [
                         <button
                           type="button"
-                          onClick={() => onTransfer(u)}
+                          onClick={() => onTransfer(u, false)}
                           className="text-red"
                         >
                           {t("transfer")}
+                        </button>,
+                        <button
+                          type="button"
+                          onClick={() => onTransfer(u, true)}
+                          className="text-red"
+                        >
+                          {t("copy")}
                         </button>,
                       ]
                     : []),
