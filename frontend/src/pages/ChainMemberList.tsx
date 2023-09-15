@@ -1036,7 +1036,7 @@ function ParticipantsTable(props: {
       ],
     });
   }
-  function onTransfer(user: User, isCopy: Boolean) {
+  function onTransfer(user: User, isCopy: boolean) {
     addModal({
       message: t("copyParticipantToLoop"),
       content: () => (
