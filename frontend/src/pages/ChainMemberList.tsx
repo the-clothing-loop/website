@@ -1081,23 +1081,13 @@ function ParticipantsTable(props: {
             let toChainUID = formValues?.loop || "";
             if (!toChainUID) return Error("Invalid loop");
 
-            if (isCopy) {
-              userTransferChain(props.chain.uid, toChainUID, user.uid, true)
-                .catch((err) => {
-                  addToastError(GinParseErrors(t, err), err.status);
-                })
-                .finally(() => {
-                  props.refresh();
-                });
-            } else {
-              userTransferChain(props.chain.uid, toChainUID, user.uid, false)
-                .catch((err) => {
-                  addToastError(GinParseErrors(t, err), err.status);
-                })
-                .finally(() => {
-                  props.refresh();
-                });
-            }
+            userTransferChain(props.chain.uid, toChainUID, user.uid, isCopy)
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => {
+                props.refresh();
+              });
           },
         },
       ],
