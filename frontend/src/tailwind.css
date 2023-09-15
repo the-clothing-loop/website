@@ -149,6 +149,26 @@ summary.marker\:content-none::-webkit-details-marker {
   margin-left: 100%;
 }
 
+[dir="rtl"] .tooltip-left::before {
+  right: auto;
+  left: var(--tooltip-offset);
+}
+[dir="rtl"] .tooltip-left::after {
+  border-color: transparent var(--tooltip-color) transparent transparent;
+  left: calc(var(--tooltip-tail-offset) + 1px);
+  right: auto;
+}
+
+[dir="rtl"] .tooltip-right::before {
+  left: auto;
+  right: var(--tooltip-offset);
+}
+[dir="rtl"] .tooltip-right::after {
+  border-color: transparent var(--tooltip-color) transparent transparent;
+  left: calc(var(--tooltip-tail-offset) + 1px);
+  right: auto;
+}
+
 /* CSS for other than iOS devices */
 @supports not (-webkit-touch-callout: none) {
   /* android scrolls too fast when scroll-snap-type */

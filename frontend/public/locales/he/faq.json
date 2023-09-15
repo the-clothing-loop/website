@@ -23,7 +23,7 @@
     },
     "5": {
       "question": "מה עושים עם בגדים כבדים/גדולים (כמו מעילי חורף) שלא מתאימים לתיק?",
-      "answer": "פריטים גדולים אפשר לצלם ולשתף בערוצי התקשורת שלכם או דרך <a target='_blank' href='https://template-clothing-loop.glideapp.io'> אפליקציית גלייד </a>. ניתן להגיב ולתאם איסוף באמצעות הודעה פרטית."
+      "answer": "Big items can be photographed and shared via your communication channel, or in the Clothing Loop App. In a private message, people can respond and organize pick-up."
     },
     "6": {
       "question": "האם ניתן לשים בתיק נעליים?",
@@ -61,8 +61,12 @@
       "answer": "<ol><li>הקליקו בפינה הימנית העליונה על התחברות.</li><li>הזינו את כתובת המייל איתה נרשמתם ללולאה.</li><li>בדקו את תיבת המייל שלכם (גם את תיבת הספאם!) וחפשו את לינק האימות שלנו. אנו משתמשים בלינק ולא בסיסמה!</li><li>כעת אתם מחוברים ויכולים לצפות ולערוך את הלולאה (או הלולאות) שלכם ולראות משתתפים חדשים.</li></ol>"
     },
     "5": {
-      "question": "איך ניתן להתחיל ולהשתמש באפליקציית גלייד?",
-      "answer": "כן! יצרנו אפליקציה בעזרתה תוכלו ליצור בקלות את הלולאות שלכם.<br/><br/>ניתן להשתמש באפליקציה בקבוצה שלכם. כל מה שצריך לעשות זאת זה למלא את הכתובות ברשימה ב <a target='_blank' href='https://docs.google.com/document/d/12YcVwD4jzVKDcLxssnzqq7B2fzYC8kcewsnyFJ-A7cE/edit'> תבנית הניתנת להורדה</a>. זה ממש קל! מוזמנים ליצור איתנו קשר במייל אם עדיין יש בעיות!"
+      "question": "How can I start using the App?",
+      "answer": "Yes! We made an app that you can very easily set up for your Loop. The app is available for iOS, Android and as web version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />You can download the app and use it within your group.  It is super easy! You can find a more detailed guide on how to use the app in our <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
+    },
+    "5_5": {
+      "question": "How to make a route?",
+      "answer": "You can make a route in the admin page of your Account. Click on Route and you will find an Optimize Route Button. Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. New participants will be placed in the most logical spot in the current list."
     },
     "6": {
       "question": "האם יש תמונות או תבניות גרפיות בהן ניתן להשתמש?",
@@ -71,6 +75,10 @@
     "7": {
       "question": "הכירו את \"רוכב הרפאים\" בלולאה",
       "answer": "אחרי שהלולאה שלכם נמשכת כבר זמן מה, ייתכן שתרצו לשנות קצת את הדברים!<b>אתם יכולים להכיר ללולאה את תיק \"רוכב הרפאים\" שמטייל בכיון השני,</b>ואז יש אנשים אחרים לפניכם במסלול, וגם פריטים עם סטייל שונה. אם אתם עושים זאת, וודאו שהאנשים מודעים לכך כדי שלא ישימו בתיק \"רוכב הרפאים\" פריטים שהם לקחו מהתיק הקודם הרגיל. כדאי לשמור את מספר תיקי רוכבי הרפאים ל-1 או 2, כדי לשמור זאת מיוחד ופשוט. "
+    },
+    "7_5": {
+      "question": "Introducing a “Bunny Bag” in the Loop",
+      "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! <b>You can then introduce a “Bunny Bag” that always skips an address,</b> so all of a sudden you have other people before you on the route, and also a few other styles in the bag. Keep the number of bunny bags limited to 1 or 2, to keep it special and simple."
     },
     "8": {
       "question": "איך לנהל קבוצה גדולה של אנשים בערוצי התקשורת?",

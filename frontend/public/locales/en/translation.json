@@ -259,6 +259,7 @@
   "allowLocation": "Allow browser to see your location",
   "allow": "Allow browser access",
   "upcomingSwapEvents": "Upcoming Swap Events",
+  "welcomeOverviewLiveSwap": "Welcome to the overview of <b>upcoming live clothing swap events</b>. Never miss another opportunity to swap your socks off, whether in your own neighborhood, or during a little getaway. We try our best to make this overview as complete as possible, and everyone is invited to <b>add their own swap party</b> to this calendar. Share the love and the clothes!<br/><br/>N.B: this calendar is intended <b>for clothes swaps only</b>. Both free events and those asking a small entrance fee are welcome to promote their event here, but shops, markets and/or other commercial activities that do not belong on this calendar will be removed.",
   "eventsNear": "Events Near",
   "distance": "Distance",
   "anyDistance": "Any distance",

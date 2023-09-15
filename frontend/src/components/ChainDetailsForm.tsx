@@ -260,7 +260,7 @@ export default function ChainDetailsForm({
           <div className="form-control relative w-full mb-4">
             <PopoverOnHover
               message={t("optionalFieldTypeAnything")}
-              className="absolute top-0 -right-2 rtl:right-auto rtl:-left-2 tooltip-left rtl:tooltip-right"
+              className="absolute top-0 -right-2 rtl:right-auto rtl:-left-2 tooltip-left"
             />
             <label>
               <div className="label">
@@ -288,7 +288,7 @@ export default function ChainDetailsForm({
               <div className="flex justify-end -mr-2 -mt-3">
                 <PopoverOnHover
                   message={t("mixedBagsUsuallyWorkBestThereforeWeRecommentTo")}
-                  className="tooltip-left rtl:tooltip-right"
+                  className="tooltip-left"
                 />
               </div>
               <SizesDropdown
