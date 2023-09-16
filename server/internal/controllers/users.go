@@ -492,6 +492,7 @@ func UserTransferChain(c *gin.Context) {
 		TransferUserUID string `json:"transfer_user_uid" binding:"required,uuid"`
 		FromChainUID    string `json:"from_chain_uid" binding:"required,uuid"`
 		ToChainUID      string `json:"to_chain_uid" binding:"required,uuid"`
+		IsCopy          bool   `json:"is_copy"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -510,30 +511,39 @@ func UserTransferChain(c *gin.Context) {
 			return
 		}
 	}
-
 	// finished authentication
 
 	handleError := func(tx *gorm.DB, err error) {
 		tx.Rollback()
 		goscope.Log.Errorf("UserTransferChain: %v", err)
-		c.String(http.StatusInternalServerError, "Unable transfer user from loop to loop")
+		responseBody := "Unable transfer user from loop to loop"
+		if body.IsCopy {
+			responseBody = "Unable copy user from loop to loop"
+		}
+		c.String(http.StatusInternalServerError, responseBody)
 	}
 	var err error
+	// run in a queue with the ability to rollback on failure, race conditions are mitigated as well
 	tx := db.Begin()
 
 	var result struct {
-		UserID      uint `gorm:"user_id"`
-		FromChainID uint `gorm:"from_chain_id"`
-		ToChainID   uint `gorm:"to_chain_id"`
+		UserID              uint     `gorm:"user_id"`
+		FromChainID         uint     `gorm:"from_chain_id"`
+		ToChainID           uint     `gorm:"to_chain_id"`
+		ToUserChainIDExists null.Int `gorm:"to_user_chain_exists"`
 	}
-	err = tx.Raw(`
-SELECT u.id as user_id, uc.chain_id as from_chain_id, c2.id as to_chain_id
-FROM users AS u
-JOIN user_chains AS uc ON uc.user_id = u.id AND uc.chain_id = ?
+	row := tx.Raw(`
+	SELECT u.id as user_id, uc.chain_id as from_chain_id, c2.id as to_chain_id, (
+		SELECT uc_dest.id FROM user_chains AS uc_dest WHERE uc_dest.chain_id = c2.id AND uc_dest.user_id = u.id
+		) as to_user_chain_exists
+		FROM users AS u
+		JOIN user_chains AS uc ON uc.user_id = u.id AND uc.chain_id = ?
 JOIN chains AS c2 ON c2.uid = ?
 WHERE u.uid = ?
 LIMIT 1
-	`, authChain.ID, body.ToChainUID, body.TransferUserUID).Scan(&result).Error
+	`, authChain.ID, body.ToChainUID, body.TransferUserUID).Row()
+	// For some stupid reason gorm doesn't handle this properly with a simple Scan function
+	err = row.Scan(&result.UserID, &result.FromChainID, &result.ToChainID, &result.ToUserChainIDExists)
 	if result.UserID == 0 && err == nil {
 		err = fmt.Errorf("User %s not found", body.TransferUserUID)
 	}
@@ -543,20 +553,64 @@ LIMIT 1
 	}
 
 	uc := &models.UserChain{}
-	tx.
-		Where("user_id = ?", result.UserID).
-		Where("chain_id = ?", result.FromChainID).
-		Find(uc)
+	err = tx.Raw(`SELECT * FROM user_chains WHERE chain_id = ? AND user_id = ? LIMIT 1`, result.FromChainID, result.UserID).Scan(uc).Error
 
-	if uc.ID == 0 {
+	if uc.ID == 0 || err != nil {
 		handleError(tx, fmt.Errorf("User %s not found", body.TransferUserUID))
 		return
 	}
-	uc.ChainID = result.ToChainID
-	err = tx.Save(uc).Error
-	if err != nil {
-		handleError(tx, err)
+
+	// If the user already exists in the destination chain:
+	// - on copy instruction:     do nothing
+	// - on transfer instruction: remove from source chain
+	if result.ToUserChainIDExists.Valid {
+		// remove source user_chain and move it's dependencies to destination
+		if !body.IsCopy {
+			err = tx.Exec(`UPDATE bags SET user_chain_id = ? WHERE user_chain_id = ?`, result.ToUserChainIDExists.Int64, uc.ID).Error
+			if err != nil {
+				handleError(tx, err)
+				return
+			}
+			err = tx.Exec(`UPDATE bulky_items SET user_chain_id = ? WHERE user_chain_id = ?`, result.ToUserChainIDExists.Int64, uc.ID).Error
+			if err != nil {
+				handleError(tx, err)
+				return
+			}
+			err = tx.Exec(`DELETE FROM user_chains WHERE where user_id = ? AND chain_id = ?`, result.UserID, result.FromChainID).Error
+			if err != nil {
+				handleError(tx, err)
+				return
+			}
+		}
+
+		err = tx.Commit().Error
+		if err != nil {
+			handleError(tx, err)
+		}
 		return
+	} else if body.IsCopy {
+		// Copy from one chain to another
+
+		err = tx.Create(&models.UserChain{
+			UserID:       result.UserID,
+			ChainID:      result.ToChainID,
+			IsChainAdmin: uc.IsChainAdmin,
+			IsApproved:   uc.IsApproved,
+		}).Error
+		if err != nil {
+			tx.Rollback()
+			goscope.Log.Errorf("User could not be added to chain: %v", err)
+			c.String(http.StatusInternalServerError, "User could not be added to chain due to unknown error")
+			return
+		}
+	} else {
+		// Transfer from one chain to another
+
+		err = tx.Exec(`UPDATE user_chains SET chain_id = ?, route_order = 0 WHERE id = ?`, result.ToChainID, uc.ID).Error
+		if err != nil {
+			handleError(tx, err)
+			return
+		}
 	}
 
 	err = tx.Commit().Error
