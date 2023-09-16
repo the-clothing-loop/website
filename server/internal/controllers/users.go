@@ -392,6 +392,17 @@ HAVING COUNT(uc.id) = 1
 		c.String(http.StatusInternalServerError, "Unable to disconnect user bag connections")
 		return
 	}
+	err = tx.Exec(`
+UPDATE events SET user_id = (
+	SELECT id FROM users WHERE is_root_admin = 1 LIMIT 1
+) WHERE user_id = ?
+	`, user.ID).Error
+	if err != nil {
+		tx.Rollback()
+		goscope.Log.Errorf("UserPurge: Unable to remove event connections: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to remove event connections")
+		return
+	}
 	err = tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
@@ -404,6 +415,13 @@ HAVING COUNT(uc.id) = 1
 		tx.Rollback()
 		goscope.Log.Errorf("UserPurge: Unable to remove token connections: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to remove token connections")
+		return
+	}
+	err = tx.Exec(`DELETE FROM user_onesignals WHERE user_id = ?`, user.ID).Error
+	if err != nil {
+		tx.Rollback()
+		goscope.Log.Errorf("UserPurge: Unable to remove onesignal connections: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to remove onesignal connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID).Error
