@@ -332,34 +332,6 @@ func UserUpdate(c *gin.Context) {
 	}
 }
 
-func UserDelete(c *gin.Context) {
-	db := getDB(c)
-
-	var query struct {
-		UserUID  string `form:"user_uid" binding:"required,uuid"`
-		ChainUID string `form:"chain_uid" binding:"required,uuid"`
-	}
-	if err := c.ShouldBindQuery(&query); err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	ok, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
-	if !ok {
-		return
-	}
-
-	// first find user id
-	var userID uint
-	db.Raw("SELECT id FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&userID)
-	if userID == 0 {
-		c.String(http.StatusBadRequest, "User is not found")
-		return
-	}
-
-	db.Delete(&models.User{}, userID)
-}
-
 func UserPurge(c *gin.Context) {
 	db := getDB(c)
 
