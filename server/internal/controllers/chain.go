@@ -229,6 +229,52 @@ func ChainGetAll(c *gin.Context) {
 	c.JSON(200, chainsJson)
 }
 
+func ChainGetNear(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		Latitude  float32 `form:"latitude" binding:"required,latitude"`
+		Longitude float32 `form:"longitude" binding:"required,longitude"`
+		Radius    float32 `form:"radius" binding:"required,longitude"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	chains := []models.Chain{}
+	sql := "SELECT * FROM chains"
+	args := []any{}
+
+	sql = fmt.Sprintf("%s WHERE %s <= ? ", sql, sqlCalcDistance("chains.latitude", "chains.longitude", "?", "?"))
+	args = append(args, query.Latitude, query.Longitude, query.Radius)
+
+	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
+		goscope.Log.Warningf("Chain not found: %v", err)
+		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
+		return
+	}
+
+	chainsJson := []*gin.H{}
+	for _, chain := range chains {
+		chainsJson = append(chainsJson, &gin.H{
+			"uid":                 chain.UID,
+			"name":                chain.Name,
+			"description":         chain.Description,
+			"address":             chain.Address,
+			"latitude":            chain.Latitude,
+			"longitude":           chain.Longitude,
+			"radius":              chain.Radius,
+			"sizes":               chain.Sizes,
+			"genders":             chain.Genders,
+			"published":           chain.Published,
+			"open_to_new_members": chain.OpenToNewMembers,
+		})
+	}
+
+	c.JSON(200, chainsJson)
+}
+
 func ChainUpdate(c *gin.Context) {
 	db := getDB(c)
 
