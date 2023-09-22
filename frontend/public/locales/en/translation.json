@@ -294,6 +294,8 @@
   "youEntered": "You entered:",
   "weFound": "We found (recommended):",
   "newToTheClothingLoop": "New to the Clothing Loop?",
+  "doYouHaveAnAccount": "Do you already have an account?",
   "clickHereToRegister": "<1>Click here</1> to register",
+  "clickHereToLogin": "<1>Click here</1> to login",
   "mustBeRegistered": "You must be registered to create an event"
 }

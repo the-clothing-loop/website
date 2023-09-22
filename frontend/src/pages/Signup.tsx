@@ -1,7 +1,7 @@
 // React / plugins
 import { useState, useEffect, FormEvent, useContext } from "react";
-import { useTranslation } from "react-i18next";
-import { Redirect, useParams, useHistory } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
+import { Redirect, useParams, useHistory, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import { TwoColumnLayout } from "../components/Layouts";
@@ -13,7 +13,6 @@ import { ToastContext } from "../providers/ToastProvider";
 import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { TFunction } from "i18next";
-import { userGetByUID } from "../api/user";
 
 interface Params {
   chainUID: string;
@@ -129,6 +128,19 @@ export default function Signup() {
     })();
   }
 
+  function onEmailExist() {
+    addModal({
+      message: "The email you provided already exists. Would you like to log in instead?",
+      actions: [
+        {
+          text: t("login"),
+          type: "default",
+          fn: () => history.push(chainUID?`/loops/${chainUID}/users/login`:"/users/login"),
+        },
+      ],
+    });
+  }
+
   if (submitted) {
     return <Redirect to={"/thankyou"} />;
   } else {
@@ -177,6 +189,15 @@ export default function Signup() {
                 </form>
               ) : (
                 <div>
+                  <div className="mt-4 prose">
+                    {t("doYouHaveAnAccount") + " "}
+                    <Trans
+                      i18nKey="clickHereToLogin"
+                      components={{
+                        "1": <Link className="font-small" to={chainUID?`/loops/${chainUID}/users/login`:"/users/login"} />,
+                      }}
+                    />
+                  </div>
                   <AddressForm
                     userUID={undefined}
                     onSubmit={onSubmitNewUser}
@@ -185,6 +206,7 @@ export default function Signup() {
                     showTosPrivacyPolicy
                     onlyShowEditableAddress
                     classes="mb-4"
+                    onEmailExist={onEmailExist}
                   />
                   <div className="mb-4">
                     <button

@@ -19,9 +19,11 @@ func LoginEmail(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		Email string `binding:"required,email" json:"email"`
-		IsApp bool   `json:"app"`
+		Email    string `binding:"required,email" json:"email"`
+		IsApp    bool   `json:"app"`
+		ChainUID string `json:"chain_uid" binding:"omitempty,uuid"`
 	}
+
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, "Email required")
 		return
@@ -47,6 +49,27 @@ func LoginEmail(c *gin.Context) {
 	if err != nil {
 		glog.Errorf("Unable to send email: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to send email")
+		return
+	}
+
+	// If the user is Login becuase he joined a chain
+	// we add the record to the chain_user table if not exist
+	if body.ChainUID != "" {
+		chainID, err := models.ChainCheckIfExist(db, body.ChainUID, true)
+		if chainID == 0 {
+			goscope.Log.Warningf("Chain does not exist: %v", err)
+			return
+		}
+		relationId, _ := models.UserChainCheckIfRelationExist(db, chainID, user.ID, false)
+
+		if relationId == 0 {
+			db.Create(&models.UserChain{
+				UserID:       user.ID,
+				ChainID:      chainID,
+				IsChainAdmin: false,
+				IsApproved:   false,
+			})
+		}
 	}
 }
 
@@ -246,20 +269,6 @@ func RegisterBasicUser(c *gin.Context) {
 		return
 	}
 
-	var chainID uint
-	if body.ChainUID != "" {
-		var row struct {
-			ID uint `gorm:"id"`
-		}
-		err := db.Raw("SELECT id FROM chains WHERE uid = ? AND deleted_at IS NULL AND open_to_new_members = TRUE LIMIT 1", body.ChainUID).Scan(&row).Error
-		chainID = row.ID
-		if chainID == 0 {
-			goscope.Log.Warningf("Chain does not exist: %v", err)
-			c.String(http.StatusBadRequest, "Chain does not exist")
-			return
-		}
-	}
-
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           zero.StringFrom(body.User.Email),
@@ -277,7 +286,15 @@ func RegisterBasicUser(c *gin.Context) {
 		c.String(http.StatusConflict, "User already exists")
 		return
 	}
+
 	if body.ChainUID != "" {
+		chainID, err := models.ChainCheckIfExist(db, body.ChainUID, true)
+		if chainID == 0 {
+			goscope.Log.Warningf("Chain does not exist: %v", err)
+			c.String(http.StatusBadRequest, "Chain does not exist")
+			return
+		}
+
 		db.Create(&models.UserChain{
 			UserID:       user.ID,
 			ChainID:      chainID,
@@ -285,6 +302,7 @@ func RegisterBasicUser(c *gin.Context) {
 			IsApproved:   false,
 		})
 	}
+
 	if body.User.Newsletter {
 		n := &models.Newsletter{
 			Email:    body.User.Email,

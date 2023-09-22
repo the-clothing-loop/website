@@ -117,3 +117,25 @@ func UserChainGetIndirectByChain(db *gorm.DB, chainID uint) ([]UserChain, error)
 	}
 	return results, nil
 }
+
+func UserChainCheckIfRelationExist(db *gorm.DB, ChainID uint, UserID uint, checkIfIsApproved bool) (uint, error) {
+	var row struct {
+		ID uint `gorm:"id"`
+	}
+	query := "SELECT id FROM user_chains WHERE chain_id = ? AND user_id = ?"
+
+	if checkIfIsApproved {
+		query += " AND is_approved = TRUE"
+	}
+	query += " LIMIT 1"
+
+	err := db.Raw(query, ChainID, UserID).First(&row).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 0, nil
+		}
+		return 0, err
+	}
+
+	return row.ID, nil
+}
