@@ -48,8 +48,8 @@ export default function Login() {
     (async () => {
       let apiKey: string | undefined;
       try {
-        let res
-        if(chainUID){
+        let res;
+        if (chainUID) {
           res = await loginEmailAndAddToChain(email, chainUID);
         } else {
           res = await loginEmail(email);
@@ -147,7 +147,16 @@ export default function Login() {
                   <Trans
                     i18nKey="clickHereToRegister"
                     components={{
-                      "1": <Link className="font-medium" to={chainUID?`/loops/${chainUID}/users/signup`:"/users/signup"} />,
+                      "1": (
+                        <Link
+                          className="font-medium"
+                          to={
+                            chainUID
+                              ? `/loops/${chainUID}/users/signup`
+                              : "/users/signup"
+                          }
+                        />
+                      ),
                     }}
                   />
                 </div>

@@ -135,7 +135,10 @@ export default function Signup() {
         {
           text: t("login"),
           type: "default",
-          fn: () => history.push(chainUID?`/loops/${chainUID}/users/login`:"/users/login"),
+          fn: () =>
+            history.push(
+              chainUID ? `/loops/${chainUID}/users/login` : "/users/login"
+            ),
         },
       ],
     });
@@ -194,7 +197,16 @@ export default function Signup() {
                     <Trans
                       i18nKey="clickHereToLogin"
                       components={{
-                        "1": <Link className="font-small" to={chainUID?`/loops/${chainUID}/users/login`:"/users/login"} />,
+                        "1": (
+                          <Link
+                            className="font-small"
+                            to={
+                              chainUID
+                                ? `/loops/${chainUID}/users/login`
+                                : "/users/login"
+                            }
+                          />
+                        ),
                       }}
                     />
                   </div>

@@ -203,7 +203,7 @@ export default function AddressForm(props: {
     const exists = response.data;
 
     if (exists) {
-      props.onEmailExist()
+      props.onEmailExist();
     }
   }
 

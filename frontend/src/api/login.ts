@@ -50,7 +50,10 @@ export function loginEmail(email: string) {
 }
 
 export function loginEmailAndAddToChain(email: string, chainUID: string) {
-  return window.axios.post<unknown>("/v2/login/email", { email, chain_uid: chainUID });
+  return window.axios.post<unknown>("/v2/login/email", {
+    email,
+    chain_uid: chainUID,
+  });
 }
 
 export function loginValidate(key: string) {
