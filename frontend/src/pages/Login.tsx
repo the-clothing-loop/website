@@ -147,7 +147,7 @@ export default function Login() {
                   <Trans
                     i18nKey="clickHereToRegister"
                     components={{
-                      "1": <Link className="font-medium" to="/users/signup" />,
+                      "1": <Link className="font-medium" to={chainUID?`/loops/${chainUID}/users/signup`:"/users/signup"} />,
                     }}
                   />
                 </div>
