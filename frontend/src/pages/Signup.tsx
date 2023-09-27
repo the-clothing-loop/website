@@ -1,5 +1,5 @@
 // React / plugins
-import { useState, useEffect, FormEvent, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Redirect, useParams, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -13,7 +13,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import { TFunction } from "i18next";
-import { userGetByUID } from "../api/user";
+import { Genders } from "../api/enums";
 
 interface Params {
   chainUID: string;
@@ -132,6 +132,19 @@ export default function Signup() {
   if (submitted) {
     return <Redirect to={"/thankyou"} />;
   } else {
+    let image =
+      chain?.genders?.length && chain.genders[0] === Genders.men
+        ? {
+            src: "https://images.clothingloop.org/cx585,cw2678,x600/mannen_amersfoort.jpg",
+            alt: "Two men wearing jumpers, the left wearing a baseball cap, the right glasses, between them is a large blue bag with the number 11 taped on.",
+            credit: "",
+          }
+        : {
+            src: "https://images.clothingloop.org/x600/join_loop.jpg",
+            alt: "Nichon giving a large bag of clothes to another woman",
+            credit: "Anke Teunissen",
+          };
+
     return (
       <>
         <Helmet>
@@ -142,9 +155,9 @@ export default function Signup() {
         <main className="md:p-10">
           <TwoColumnLayout
             t={t}
-            img="https://images.clothingloop.org/x600/join_loop.jpg"
-            alt="Nichon giving a large bag of clothes to another woman"
-            credit="Anke Teunissen"
+            img={image.src}
+            alt={image.alt}
+            credit={image.credit}
           >
             <div className="relative">
               <h1 className="font-semibold text-3xl text-secondary mb-3">
