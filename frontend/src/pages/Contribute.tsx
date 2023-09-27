@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import useToClipboard from "../util/to-clipboard.hooks";
 
 // Media
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
@@ -19,6 +20,7 @@ export default function Contribute() {
       event: true,
     });
   }, []);
+  const addCopyAttributes = useToClipboard();
 
   return (
     <>
@@ -35,7 +37,7 @@ export default function Contribute() {
             {t("howToContribute")}
           </h1>
           <div className="flex">
-            <div>
+            <div className="w-1/2">
               <div className="prose font-serif text-2xl font-bold text-secondary py-4">
                 <p>
                   <Trans i18nKey="startALoop" ns="contribute" />
@@ -46,56 +48,102 @@ export default function Contribute() {
                   </p>
                 </div>
               </div>
-              <div className="prose font-serif text-2xl font-bold text-secondary">
-                <p>
-                  <Trans i18nKey="shareSwapStory" ns="contribute" />
-                </p>
-                <div className="prose font-serif text-lg font-normal">
-                  <p>
-                    <Trans
-                      i18nKey="shareSwapStoryDesc"
-                      ns="contribute"
-                      components={{
-                        p: <p></p>,
-                        aInstagram: (
-                          <a
-                            className="link"
-                            href="https://www.instagram.com/theclothingloop/"
-                            target="_blank"
-                          />
-                        ),
-                        aFacebook: (
-                          <a
-                            className="link"
-                            href="https://www.facebook.com/clothingloop/"
-                            target="_blank"
-                          />
-                        ),
-                        aLinkedin: (
-                          <a
-                            className="link"
-                            href="https://www.linkedin.com/company/the-clothing-loop/"
-                            target="_blank"
-                          />
-                        ),
-                        aEmail: (
-                          <a
-                            className="link"
-                            href="mailto:hello@clothingloop.org"
-                            aria-label="Our email address"
-                          ></a>
-                        ),
-                      }}
-                    />
-                  </p>
-                </div>
-              </div>
             </div>
-            <img
-              src={map}
-              alt="map of the clothign loop in Amsterdam area"
-              className="w-1/2 mx-auto object-contain object-center px-6 mb-6 md:mb-0 mt-12"
-            />
+            <Link className="w-1/2 pl-12" to="/loops/find" target="_blank">
+              <img
+                src={map}
+                alt="map of the clothign loop in Amsterdam area"
+                className=" object-cover hover:ring-[2rem] ring-secondary transition-[box-shadow] ring-[1rem] md:ring-0"
+              />
+            </Link>
+          </div>
+          <div className="prose font-serif text-2xl font-bold text-secondary mt-4">
+            <p>
+              <Trans i18nKey="shareSwapStory" ns="contribute" />
+            </p>
+          </div>
+
+          <div className="flex">
+            <div className="prose font-serif text-lg font-normal mt-0">
+              <p>
+                <Trans
+                  i18nKey="shareSwapStoryDesc"
+                  ns="contribute"
+                  components={{
+                    p: <p></p>,
+                    aInstagram: (
+                      <a
+                        className="link"
+                        href="https://www.instagram.com/theclothingloop/"
+                        target="_blank"
+                      />
+                    ),
+                    aFacebook: (
+                      <a
+                        className="link"
+                        href="https://www.facebook.com/clothingloop/"
+                        target="_blank"
+                      />
+                    ),
+                    aLinkedin: (
+                      <a
+                        className="link"
+                        href="https://www.linkedin.com/company/the-clothing-loop/"
+                        target="_blank"
+                      />
+                    ),
+                    aEmail: (
+                      <a
+                        className="link"
+                        href="mailto:hello@clothingloop.org"
+                        aria-label="Our email address"
+                      ></a>
+                    ),
+                  }}
+                />
+              </p>
+            </div>
+
+            <div className="px-3 mx-auto inline-block mb-0 pb-0 self-center">
+              <ul className="flex mx-auto">
+                <li className="items-center lg:order-4">
+                  <a
+                    href="mailto:hello@clothingloop.org"
+                    aria-label="Our email address"
+                    className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center hover:bg-[#b464a8] feather feather-mail text-lg"
+                  ></a>
+                </li>
+                <li className="mb-3 items-center lg:order-2">
+                  <a
+                    href="https://www.instagram.com/theclothingloop/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-circle btn-outline feather feather-instagram text-lg mr-3 rtl:mr-0 rtl:ml-3 hover:bg-instagram"
+                    aria-label="link to our instagram account"
+                  ></a>
+                </li>
+                <li className="mb-3 items-center lg:order-1">
+                  <a
+                    href="https://www.facebook.com/clothingloop/"
+                    rel="noreferrer"
+                    aria-label="Our Facebook page"
+                    className="flex flex-row items-center group"
+                  >
+                    <span className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-facebook feather feather-facebook text-lg"></span>
+                  </a>
+                </li>
+                <li className="mb-3 items-center lg:order-3">
+                  <a
+                    href="https://www.linkedin.com/company/the-clothing-loop/"
+                    rel="noreferrer"
+                    aria-label="Our LinkedIn page"
+                    className="flex flex-row items-center group"
+                  >
+                    <span className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#0a66c2] feather feather-linkedin text-lg"></span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div className="flex my-12">
@@ -104,17 +152,33 @@ export default function Contribute() {
               alt="crowdin"
               className="w-[40%] mx-auto object-contain object-center px-6"
             />
-            <div>
-              <div className="prose font-serif text-2xl font-bold text-secondary">
+            <div className="prose font-serif text-2xl font-bold text-secondary">
+              <p>
+                <Trans
+                  i18nKey="crowdin"
+                  ns="contribute"
+                  components={{
+                    p: <p></p>,
+                    aCrowdin: (
+                      <a
+                        className="prose font-serif text-2xl font-bold text-secondary"
+                        href="https://crowdin.com/project/the-clothing-loop"
+                        target="_blank"
+                      />
+                    ),
+                  }}
+                />
+              </p>
+              <div className="prose font-serif text-lg font-normal">
                 <p>
                   <Trans
-                    i18nKey="crowdin"
+                    i18nKey="crowdinDesc"
                     ns="contribute"
                     components={{
                       p: <p></p>,
                       aCrowdin: (
                         <a
-                          className="prose font-serif text-2xl font-bold text-secondary"
+                          className="link"
                           href="https://crowdin.com/project/the-clothing-loop"
                           target="_blank"
                         />
@@ -122,48 +186,30 @@ export default function Contribute() {
                     }}
                   />
                 </p>
-                <div className="prose font-serif text-lg font-normal">
-                  <p>
-                    <Trans
-                      i18nKey="crowdinDesc"
-                      ns="contribute"
-                      components={{
-                        p: <p></p>,
-                        aCrowdin: (
-                          <a
-                            className="link"
-                            href="https://crowdin.com/project/the-clothing-loop"
-                            target="_blank"
-                          />
-                        ),
-                      }}
-                    />
-                  </p>
-                </div>
               </div>
-              <div className="prose font-serif text-2xl font-bold text-secondary">
-                <p>
-                  <Trans i18nKey="swap" ns="contribute" />
-                </p>
-                <div className="prose font-serif text-lg font-normal">
-                  <p>
-                    <Trans
-                      i18nKey="swapDesc"
-                      ns="contribute"
-                      components={{
-                        p: <p></p>,
-                        aEvents: (
-                          <Link
-                            className="link"
-                            to="/events"
-                            target="_blank"
-                          ></Link>
-                        ),
-                      }}
-                    />
-                  </p>
-                </div>
-              </div>
+            </div>
+          </div>
+          <div className="prose font-serif text-2xl font-bold text-secondary">
+            <p>
+              <Trans i18nKey="swap" ns="contribute" />
+            </p>
+            <div className="prose font-serif text-lg font-normal">
+              <p>
+                <Trans
+                  i18nKey="swapDesc"
+                  ns="contribute"
+                  components={{
+                    p: <p></p>,
+                    aEvents: (
+                      <Link
+                        className="link"
+                        to="/events"
+                        target="_blank"
+                      ></Link>
+                    ),
+                  }}
+                />
+              </p>
             </div>
           </div>
           <div className="prose font-serif text-2xl font-bold text-secondary">
@@ -175,6 +221,47 @@ export default function Contribute() {
                 <Trans i18nKey="feedbackDesc" ns="contribute" />
               </p>
             </div>
+          </div>
+
+          <div className="px-3 rtl:text-right mx-auto inline-block float-right">
+            <ul className="flex mx-auto">
+              <li className="mb-3 inline-flex items-center lg:order-4">
+                <a
+                  href="mailto:hello@clothingloop.org"
+                  aria-label="Our email address"
+                  className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center hover:bg-[#b464a8] feather feather-mail text-lg"
+                ></a>
+              </li>
+              <li className="inline-flex items-center lg:order-2">
+                <a
+                  href="https://www.instagram.com/theclothingloop/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn-circle btn-outline feather feather-instagram text-lg mr-3 rtl:mr-0 rtl:ml-3 hover:bg-instagram"
+                  aria-label="link to our instagram account"
+                ></a>
+              </li>
+              <li className="inline-flex items-center lg:order-1">
+                <a
+                  href="https://www.facebook.com/clothingloop/"
+                  rel="noreferrer"
+                  aria-label="Our Facebook page"
+                  className="flex flex-row items-center group"
+                >
+                  <span className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-facebook feather feather-facebook text-lg"></span>
+                </a>
+              </li>
+              <li className="inline-flex items-center lg:order-3">
+                <a
+                  href="https://www.linkedin.com/company/the-clothing-loop/"
+                  rel="noreferrer"
+                  aria-label="Our LinkedIn page"
+                  className="flex flex-row items-center group"
+                >
+                  <span className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#0a66c2] feather feather-linkedin text-lg"></span>
+                </a>
+              </li>
+            </ul>
           </div>
           <div className="prose font-serif text-2xl font-bold text-secondary">
             <p>
