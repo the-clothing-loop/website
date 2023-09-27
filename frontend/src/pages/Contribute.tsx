@@ -48,8 +48,7 @@ export default function Contribute() {
               </div>
               <div className="prose font-serif text-2xl font-bold text-secondary">
                 <p>
-                  {" "}
-                  <Trans i18nKey="shareSwapStory" ns="contribute" />{" "}
+                  <Trans i18nKey="shareSwapStory" ns="contribute" />
                 </p>
                 <div className="prose font-serif text-lg font-normal">
                   <p>
@@ -59,22 +58,25 @@ export default function Contribute() {
                       components={{
                         p: <p></p>,
                         aInstagram: (
-                          <Link
+                          <a
                             className="link"
-                            to="https://www.instagram.com/theclothingloop/"
-                          ></Link>
+                            href="https://www.instagram.com/theclothingloop/"
+                            target="_blank"
+                          />
                         ),
                         aFacebook: (
-                          <Link
+                          <a
                             className="link"
-                            to="https://www.facebook.com/clothingloop/"
-                          ></Link>
+                            href="https://www.facebook.com/clothingloop/"
+                            target="_blank"
+                          />
                         ),
                         aLinkedin: (
-                          <Link
+                          <a
                             className="link"
-                            to="https://www.linkedin.com/company/the-clothing-loop/"
-                          ></Link>
+                            href="https://www.linkedin.com/company/the-clothing-loop/"
+                            target="_blank"
+                          />
                         ),
                         aEmail: (
                           <a
@@ -111,10 +113,11 @@ export default function Contribute() {
                     components={{
                       p: <p></p>,
                       aCrowdin: (
-                        <Link
+                        <a
                           className="prose font-serif text-2xl font-bold text-secondary"
-                          to="https://crowdin.com/project/the-clothing-loop"
-                        ></Link>
+                          href="https://crowdin.com/project/the-clothing-loop"
+                          target="_blank"
+                        />
                       ),
                     }}
                   />
@@ -127,10 +130,11 @@ export default function Contribute() {
                       components={{
                         p: <p></p>,
                         aCrowdin: (
-                          <Link
+                          <a
                             className="link"
-                            to="https://crowdin.com/project/the-clothing-loop"
-                          ></Link>
+                            href="https://crowdin.com/project/the-clothing-loop"
+                            target="_blank"
+                          />
                         ),
                       }}
                     />
@@ -151,7 +155,8 @@ export default function Contribute() {
                         aEvents: (
                           <Link
                             className="link"
-                            to="https://www.clothingloop.org/en/events"
+                            to="/events"
+                            target="_blank"
                           ></Link>
                         ),
                       }}
@@ -183,10 +188,11 @@ export default function Contribute() {
                   components={{
                     p: <p></p>,
                     aGithub: (
-                      <Link
+                      <a
                         className="link"
-                        to="https://github.com/the-clothing-loop/website/issues"
-                      ></Link>
+                        href="https://github.com/the-clothing-loop/website/issues"
+                        target="_blank"
+                      />
                     ),
                     aEmail: (
                       <a
@@ -210,7 +216,8 @@ export default function Contribute() {
                   aDonate: (
                     <Link
                       className="prose font-serif text-2xl font-bold text-secondary"
-                      to="https://www.clothingloop.org/en/donate"
+                      to="/donate"
+                      target="_blank"
                     ></Link>
                   ),
                 }}
@@ -226,7 +233,8 @@ export default function Contribute() {
                     aDonate: (
                       <Link
                         className="link"
-                        to="https://www.clothingloop.org/en/donate"
+                        to="/donate"
+                        target="_blank"
                       ></Link>
                     ),
                   }}
