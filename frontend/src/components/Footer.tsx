@@ -206,14 +206,12 @@ export default function Footer() {
             >
               {t("privacy")}
             </Link>
-            <a
+            <Link
               className="btn btn-ghost text-white text-base font-normal"
-              href="https://github.com/the-clothing-loop/website"
-              target="_blank"
-              rel="noreferrer"
+              to="/contribute"
             >
               {t("contribute")}
-            </a>
+            </Link>
           </div>
 
           <p className="text-center sm:text-right" aria-label="copyright">

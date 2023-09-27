@@ -25,6 +25,7 @@ import Home from "./pages/Home";
 import { ToastProvider } from "./providers/ToastProvider";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
+import Contribute from "./pages/Contribute";
 
 // Lazy
 const FindChain = React.lazy(() => import("./pages/FindChain"));
@@ -201,7 +202,11 @@ export default function App() {
                       path={`${base}/privacy-policy`}
                       component={PrivacyPolicy}
                     />
-
+                    <Route
+                      exact
+                      path={`${base}/contribute`}
+                      component={Contribute}
+                    />
                     <Route
                       exact
                       path={`${base}/admin/dashboard`}
