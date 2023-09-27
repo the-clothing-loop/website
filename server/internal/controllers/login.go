@@ -52,7 +52,7 @@ func LoginEmail(c *gin.Context) {
 		return
 	}
 
-	// If the user is Login becuase he joined a chain
+	// If the user is Login because he joined a chain
 	// we add the record to the chain_user table if not exist
 	if body.ChainUID != "" {
 		chainID, err := models.ChainCheckIfExist(db, body.ChainUID, true)
