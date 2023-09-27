@@ -9,6 +9,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import FormJup from "../util/form-jup";
 import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
+import type { Response } from "redaxios";
 
 //media
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
@@ -48,13 +49,12 @@ export default function Login() {
     (async () => {
       let apiKey: string | undefined;
       try {
-        let res;
+        let res: Response<unknown>;
         if (chainUID) {
           res = await loginEmailAndAddToChain(email, chainUID);
         } else {
           res = await loginEmail(email);
         }
-        console.log(res);
 
         if (res.data && (res.data + "").length) {
           apiKey = res.data + "";
