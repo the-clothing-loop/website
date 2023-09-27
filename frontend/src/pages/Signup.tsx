@@ -130,7 +130,7 @@ export default function Signup() {
 
   function onEmailExist() {
     addModal({
-      message: t("email.exists"),
+      message: t("emailExists"),
       actions: [
         {
           text: t("login"),
