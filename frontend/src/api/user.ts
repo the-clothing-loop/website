@@ -67,6 +67,7 @@ export function userTransferChain(
 }
 
 export function userCheckEmailExists(email: string) {
-  let params: { email: string } = { email };
-  return window.axios.get<boolean>("/v2/user/check-email", { params });
+  return window.axios.get<boolean>("/v2/user/check-email", {
+    params: { email },
+  });
 }
