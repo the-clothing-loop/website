@@ -134,9 +134,9 @@ func emailGenerateMessage(m *models.Mail, lng, templateName string, data any, su
 	return nil
 }
 
-func EmailAccountDeletedSuccessfully(c *gin.Context, db *gorm.DB, lng,
-	email,
-	name string,
+func EmailAccountDeletedSuccessfully(db *gorm.DB, lng,
+	name,
+	email string,
 ) error {
 	lng = getI18n(lng)
 
@@ -154,7 +154,7 @@ func EmailAccountDeletedSuccessfully(c *gin.Context, db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
+func EmailAnAdminApprovedYourJoinRequest(db *gorm.DB, lng,
 	name,
 	email,
 	chainName string,
@@ -175,7 +175,7 @@ func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-func EmailAnAdminDeniedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
+func EmailAnAdminDeniedYourJoinRequest(db *gorm.DB, lng,
 	name,
 	email,
 	chainName,
@@ -248,7 +248,7 @@ func EmailContactConfirmation(c *gin.Context, db *gorm.DB,
 	return app.MailSend(db, m)
 }
 
-func EmailContactReceived(c *gin.Context, db *gorm.DB,
+func EmailContactReceived(db *gorm.DB,
 	name,
 	email,
 	message string,
@@ -356,7 +356,7 @@ func EmailLoopIsDeleted(db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-func EmailPoke(c *gin.Context, db *gorm.DB, lng,
+func EmailPoke(db *gorm.DB, lng,
 	name,
 	email,
 	participantName,
@@ -400,7 +400,7 @@ func EmailRegisterVerification(c *gin.Context, db *gorm.DB,
 	return app.MailSend(db, m)
 }
 
-func EmailSomeoneIsInterestedInJoiningYourLoop(c *gin.Context, db *gorm.DB, lng,
+func EmailSomeoneIsInterestedInJoiningYourLoop(db *gorm.DB, lng,
 	adminEmail,
 	adminName,
 	chainName,
@@ -464,7 +464,7 @@ func EmailSomeoneIsInterestedInJoiningYourLoop(c *gin.Context, db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-func EmailSomeoneLeftLoop(c *gin.Context, db *gorm.DB, lng,
+func EmailSomeoneLeftLoop(db *gorm.DB, lng,
 	name,
 	email,
 	chainName,
@@ -486,7 +486,7 @@ func EmailSomeoneLeftLoop(c *gin.Context, db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-func EmailSomeoneIsWaitingToBeAccepted(c *gin.Context, db *gorm.DB, lng,
+func EmailSomeoneWaitingToBeAccepted(db *gorm.DB, lng,
 	name,
 	email,
 	chainName,
@@ -497,7 +497,7 @@ func EmailSomeoneIsWaitingToBeAccepted(c *gin.Context, db *gorm.DB, lng,
 	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
-	err := emailGenerateMessage(m, lng, "someone_is_waiting_to_be_accepted", gin.H{
+	err := emailGenerateMessage(m, lng, "someone_waiting_to_be_accepted", gin.H{
 		"Name":            name,
 		"ParticipantName": participantName,
 		"ChainName":       chainName,
@@ -524,7 +524,7 @@ func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB,
 	return app.MailSend(db, m)
 }
 
-func EmailYouSignedUpForLoop(c *gin.Context, db *gorm.DB, lng,
+func EmailYouSignedUpForLoop(db *gorm.DB, lng,
 	name,
 	email,
 	chainName string,
@@ -544,7 +544,7 @@ func EmailYouSignedUpForLoop(c *gin.Context, db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-func EmailYourLoopDeletedNextMonth(c *gin.Context, db *gorm.DB, lng,
+func EmailYourLoopDeletedNextMonth(db *gorm.DB, lng,
 	name,
 	email,
 	chainName,
@@ -566,7 +566,7 @@ func EmailYourLoopDeletedNextMonth(c *gin.Context, db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-func EmailYourLoopDeletedNextWeek(c *gin.Context, db *gorm.DB, lng,
+func EmailYourLoopDeletedNextWeek(db *gorm.DB, lng,
 	name,
 	email,
 	chainName,
