@@ -9,6 +9,7 @@ import useToClipboard from "../util/to-clipboard.hooks";
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 const crowdin = "../../public/images/crowdin-grid.png";
 const map = "../../public/images/mapscreenshot.png";
+const events = "../../public/images/events.png";
 
 export default function Contribute() {
   const { t } = useTranslation("contribute");
@@ -36,9 +37,9 @@ export default function Contribute() {
           <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-16">
             {t("howToContribute")}
           </h1>
-          <div className="flex">
+          <div className="flex items-center">
             <div className="w-1/2">
-              <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
+              <p className="prose font-serif text-2xl font-bold text-secondary -mt-8">
                 <Trans i18nKey="startALoop" ns="contribute" />
               </p>
               <p className="prose font-serif text-lg font-normal my-4">
@@ -182,25 +183,29 @@ export default function Contribute() {
           <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
             <Trans i18nKey="swap" ns="contribute" />
           </p>
-          <p className="prose font-serif text-lg font-normal my-4">
-            <Trans
-              i18nKey="swapDesc"
-              ns="contribute"
-              components={{
-                p: <p></p>,
-                aEvents: (
-                  <Link className="link" to="/events" target="_blank"></Link>
-                ),
-              }}
-            />
-          </p>
+          <div className="flex">
+            <p className="prose font-serif text-lg font-normal my-4 w-[45%]">
+              <Trans
+                i18nKey="swapDesc"
+                ns="contribute"
+                components={{
+                  p: <p></p>,
+                  aEvents: (
+                    <Link className="link" to="/events" target="_blank"></Link>
+                  ),
+                }}
+              />
+            </p>
+
+            <img src={events} alt="events page" className="w-[55%]" />
+          </div>
+
           <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
             <Trans i18nKey="feedback" ns="contribute" />
           </p>
           <p className="prose font-serif text-lg font-normal  my-4">
             <Trans i18nKey="feedbackDesc" ns="contribute" />
           </p>
-
 
           <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
             <Trans i18nKey="website" ns="contribute" />
