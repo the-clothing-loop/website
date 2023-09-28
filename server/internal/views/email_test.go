@@ -231,6 +231,7 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 			Data: map[string]any{
 				"Name":      faker.Person().Name(),
 				"ChainName": faker.Company().Name(),
+				"ChainUID":  faker.UUID().V4(),
 			},
 			DataExpected: []string{"Name", "ChainName"},
 			Args:         []any{},

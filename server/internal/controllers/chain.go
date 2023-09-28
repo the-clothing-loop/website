@@ -395,7 +395,7 @@ LIMIT 1
 
 		for _, result := range results {
 			if result.Email.Valid {
-				go views.EmailAParticipantJoinedTheLoop(c, db, result.I18n,
+				go views.EmailSomeoneIsInterestedInJoiningYourLoop(c, db, result.I18n,
 					result.Email.String,
 					result.Name,
 					chain.Name,

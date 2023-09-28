@@ -66,7 +66,7 @@ func TestGetMockCookie(t *testing.T) {
 
 func TestEmailAParticipantJoinedTheLoop(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
-		err := views.EmailAParticipantJoinedTheLoop(c, db, lng,
+		err := views.EmailSomeoneIsInterestedInJoiningYourLoop(c, db, lng,
 			faker.Person().Contact().Email,
 			lng+" "+faker.Person().Name(),
 			faker.Company().Name(),
@@ -82,7 +82,7 @@ func TestEmailAParticipantJoinedTheLoop(t *testing.T) {
 
 func TestEmailContactUserMessage(t *testing.T) {
 	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailContactUserMessage(c, db,
+	err := views.EmailContactReceived(c, db,
 		faker.Person().Name(),
 		faker.Person().Contact().Email,
 		faker.Lorem().Paragraph(2),
