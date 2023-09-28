@@ -16,13 +16,23 @@ import (
 var faker = Faker.New()
 
 func TestEmailFormattingByLanguage(t *testing.T) {
-	languages := []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
+	//TODO: change back to testing all languages after next crowdin PR
+	languages := []string{"en"}
+	// languages := []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
 	templates := []struct {
 		Name         string
 		Data         map[string]any
 		DataExpected []string
 		Args         []any
 	}{
+		{
+			Name: "account_deleted_successfully",
+			Data: map[string]any{
+				"Name": faker.Person().Name(),
+			},
+			DataExpected: []string{"Name"},
+			Args:         []any{},
+		},
 		{
 			Name: "an_admin_approved_your_join_request",
 			Data: map[string]any{
@@ -95,6 +105,25 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 			Args:         []any{faker.Person().Name()},
 		},
 		{
+			Name: "do_you_want_to_be_host",
+			Data: map[string]any{
+				"Name":      faker.Person().Name(),
+				"ChainName": faker.Company().Name(),
+			},
+			DataExpected: []string{"Name", "ChainName"},
+			Args:         []any{},
+		},
+		{
+			Name: "is_your_loop_still_active",
+			Data: map[string]any{
+				"Name":            faker.Person().Name(),
+				"ParticipantName": faker.Person().Name(),
+				"ChainName":       faker.Company().Name(),
+			},
+			DataExpected: []string{"Name", "ParticipantName", "ChainName"},
+			Args:         []any{},
+		},
+		{
 			Name: "login_verification",
 			Data: map[string]any{
 				"Name":  faker.Person().Name(),
@@ -113,6 +142,15 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 				"Token":   strconv.Itoa(faker.IntBetween(10000000, 99999999)),
 			},
 			DataExpected: []string{"Name", "Token", "BaseURL"},
+			Args:         []any{},
+		},
+		{
+			Name: "loop_is_deleted",
+			Data: map[string]any{
+				"Name":      faker.Person().Name(),
+				"ChainName": faker.Company().Name(),
+			},
+			DataExpected: []string{"Name", "ChainName"},
 			Args:         []any{},
 		},
 		{
@@ -152,11 +190,59 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 			Args:         []any{},
 		},
 		{
+			Name: "someone_left_loop",
+			Data: map[string]any{
+				"Name":            faker.Person().Name(),
+				"ParticipantName": faker.Person().Name(),
+				"ChainName":       faker.Company().Name(),
+			},
+			DataExpected: []string{"Name", "ParticipantName", "ChainName"},
+			Args:         []any{},
+		},
+		{
+			Name: "someone_waiting_to_be_accepted",
+			Data: map[string]any{
+				"Name":            faker.Person().Name(),
+				"ParticipantName": faker.Person().Name(),
+				"ChainName":       faker.Company().Name(),
+			},
+			DataExpected: []string{"Name", "ParticipantName", "ChainName"},
+			Args:         []any{},
+		},
+		{
 			Name: "subscribed_to_newsletter",
 			Data: map[string]any{
 				"Name": faker.Person().Name(),
 			},
 			DataExpected: []string{"Name"},
+			Args:         []any{},
+		},
+		{
+			Name: "you_signed_up_for_loop",
+			Data: map[string]any{
+				"Name":      faker.Person().Name(),
+				"ChainName": faker.Company().Name(),
+			},
+			DataExpected: []string{"Name", "ChainName"},
+			Args:         []any{faker.Company().Name()},
+		},
+		{
+			Name: "your_loop_deleted_next_month",
+			Data: map[string]any{
+				"Name":      faker.Person().Name(),
+				"ChainName": faker.Company().Name(),
+			},
+			DataExpected: []string{"Name", "ChainName"},
+			Args:         []any{},
+		},
+		{
+			Name: "your_loop_deleted_next_week",
+			Data: map[string]any{
+				"Name":      faker.Person().Name(),
+				"ChainName": faker.Company().Name(),
+				"ChainUID":  faker.UUID().V4(),
+			},
+			DataExpected: []string{"Name", "ChainName", "ChainUID"},
 			Args:         []any{},
 		},
 	}
