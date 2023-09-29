@@ -81,7 +81,7 @@ export default function CreateUpdateBag({
     // validate that bag number does not already exist
     if (bags.find((b) => b.id !== bag?.id && b.number === bagNumber)) {
       setError("number");
-      console.warn("bag number already exists");
+      toastError(present, "Bag name already exists");
       return;
     }
 
