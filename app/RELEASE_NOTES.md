@@ -93,3 +93,7 @@
 # v1.15
 
 - Add GDPR Account deletion steps
+
+# v1.16
+
+- Fix changing bag name
