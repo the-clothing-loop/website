@@ -38,10 +38,10 @@ export default function Contribute() {
           </h1>
           <div className="flex items-center">
             <div className="w-1/2">
-              <p className="prose font-serif text-2xl font-bold text-secondary -mt-8">
+              <p className="prose font-serif text-2xl font-bold text-secondary -mt-8 mb-4">
                 <Trans i18nKey="startALoop" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal my-4">
+              <p className="prose font-serif text-lg font-normal">
                 <Trans i18nKey="startALoopDesc" ns="contribute" />
               </p>
             </div>
@@ -54,8 +54,8 @@ export default function Contribute() {
             </Link>
           </div>
 
-          <div className="flex flex-col md:flex-row md:items-center md:mb-16 my-12">
-            <div className="w-2/3 min-w-[350px] md:w-1/3 mx-auto mb-8 items-center prose font-serif font-bold bg-teal-light px-8 py-6 md:px-0 md:py-12 text-center">
+          <div className="flex flex-col md:flex-row md:items-center md:mb-16 my-12 items-center">
+            <div className="flex flex-col items-center w-2/3 min-w-[350px] md:w-1/3 md:h-80 prose font-serif font-bold bg-teal-light text-center px-8 md:px-0 py-6 md:py-12 mx-auto">
               <h2 className="font-serif font-bold text-lg md:text-lg mb-4 my-auto md:px-6">
                 <span className="inline md:block mb-8 text-5xl font-bold font-secondary">
                   {t("findUs")}
@@ -63,8 +63,8 @@ export default function Contribute() {
               </h2>
               
               {/* Social Meida Icons */}
-              <div >
-                <ul className="grid grid-cols-4 md:grid-cols-4 gap-x-0 gap-y-0 md:gap-x-8 md:gap-y-2 px-0 my-0 justify-items-center md:px-12">
+              <div className="inline-block">
+                <ul className="grid grid-cols-4 md:grid-cols-4 gap-x-0 gap-y-0 md:gap-x-8 px-0 my-0 justify-items-center md:px-12">
                   <li className="list-none lg:order-4 px-0 w-12">
                     <a
                       href="mailto:hello@clothingloop.org"
@@ -105,10 +105,10 @@ export default function Contribute() {
               </div>
             </div>
             <div className="md:ml-8 w-full md:w-2/3">
-              <p className="prose font-serif text-2xl font-bold text-secondary my-4">
+              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="shareSwapStory" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal mt-0">
+              <p className="prose font-serif text-lg font-normal mb-4">
                 <Trans
                   i18nKey="shareSwapStoryDesc"
                   ns="contribute"
@@ -146,10 +146,10 @@ export default function Contribute() {
                 />
               </p>
 
-              <p className="prose font-serif text-2xl font-bold text-secondary mt-8">
+              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="feedback" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal my-4">
+              <p className="prose font-serif text-lg font-normal">
                 <Trans i18nKey="feedbackDesc" ns="contribute" />
               </p>
             </div>
@@ -185,7 +185,7 @@ export default function Contribute() {
                   }}
                 />
               </p>
-              <p className="prose font-serif text-lg font-normal my-4">
+              <p className="prose font-serif text-lg font-normal mb-4">
                 <Trans
                   i18nKey="crowdinDesc"
                   ns="contribute"
@@ -208,7 +208,7 @@ export default function Contribute() {
               <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
                 <Trans i18nKey="swap" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal my-4">
+              <p className="prose font-serif text-lg font-normal mb-4">
                 <Trans
                   i18nKey="swapDesc"
                   ns="contribute"
@@ -234,10 +234,10 @@ export default function Contribute() {
             </Link>
           </div>
 
-          <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
+          <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
             <Trans i18nKey="website" ns="contribute" />
           </p>
-          <p className="prose font-serif text-lg font-normal my-4">
+          <p className="prose font-serif text-lg font-normal mb-4">
             <Trans
               i18nKey="websiteDesc"
               ns="contribute"
@@ -276,7 +276,7 @@ export default function Contribute() {
               }}
             />
           </p>
-          <p className="prose font-serif text-lg font-normal my-4">
+          <p className="prose font-serif text-lg font-normal mb-4">
             <Trans
               i18nKey="donateDesc"
               ns="contribute"
