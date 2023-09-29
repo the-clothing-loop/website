@@ -165,9 +165,7 @@ export default function CreateUpdateBag({
               placeholder=""
               value={bagNumber}
               onFocus={(e) => (e.target as any as HTMLInputElement).select()}
-              onIonChange={(e) =>
-                setBagNumber(e.detail.value?.toString() || "")
-              }
+              onIonInput={(e) => setBagNumber(e.detail.value?.toString() || "")}
             />
           </IonItem>
           <IonItem lines="none" className="-tw-mt-5">
