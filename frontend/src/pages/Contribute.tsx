@@ -21,7 +21,6 @@ export default function Contribute() {
       event: true,
     });
   }, []);
-  const addCopyAttributes = useToClipboard();
 
   return (
     <>
@@ -50,103 +49,127 @@ export default function Contribute() {
               <img
                 src={map}
                 alt="map of the clothign loop in Amsterdam area"
-                className=" object-cover hover:ring-[2rem] ring-secondary transition-[box-shadow] ring-[1rem] md:ring-0"
+                className="object-cover hover:ring-[1.5rem] ring-secondary transition-[box-shadow]"
               />
             </Link>
           </div>
-          <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
-            <Trans i18nKey="shareSwapStory" ns="contribute" />
-          </p>
 
-          <div className="flex my-4">
-            <p className="prose font-serif text-lg font-normal mt-0">
-              <Trans
-                i18nKey="shareSwapStoryDesc"
-                ns="contribute"
-                components={{
-                  p: <p></p>,
-                  aInstagram: (
+          <div className="flex flex-col md:flex-row md:items-center md:mb-16 my-12">
+            <div className="w-2/3 min-w-[350px] md:w-1/3 mx-auto mb-8 items-center prose font-serif font-bold bg-teal-light px-8 py-6 md:px-0 md:py-12 text-center">
+              <h2 className="font-serif font-bold text-lg md:text-lg mb-4 my-auto md:px-6">
+                <span className="inline md:block mb-8 text-5xl font-bold font-secondary">
+                  {t("findUs")}
+                </span>
+              </h2>
+              
+              {/* Social Meida Icons */}
+              <div >
+                <ul className="grid grid-cols-4 md:grid-cols-4 gap-x-0 gap-y-0 md:gap-x-8 md:gap-y-2 px-0 my-0 justify-items-center md:px-12">
+                  <li className="list-none lg:order-4 px-0 w-12">
                     <a
-                      className="link"
-                      href="https://www.instagram.com/theclothingloop/"
-                      target="_blank"
-                    />
-                  ),
-                  aFacebook: (
-                    <a
-                      className="link"
-                      href="https://www.facebook.com/clothingloop/"
-                      target="_blank"
-                    />
-                  ),
-                  aLinkedin: (
-                    <a
-                      className="link"
-                      href="https://www.linkedin.com/company/the-clothing-loop/"
-                      target="_blank"
-                    />
-                  ),
-                  aEmail: (
-                    <a
-                      className="link"
                       href="mailto:hello@clothingloop.org"
                       aria-label="Our email address"
+                      className="btn btn-circle btn-outline hover:bg-[#b464a8] feather feather-mail font-bold text-lg !no-underline"
                     ></a>
-                  ),
-                }}
-              />
-            </p>
+                  </li>
+                  <li className="list-none lg:order-2 px-0 w-12">
+                    <a
+                      href="https://www.instagram.com/theclothingloop/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn btn-circle btn-outline feather feather-instagram text-lg font-bold hover:bg-instagram !no-underline"
+                      aria-label="link to our instagram account"
+                    ></a>
+                  </li>
+                  <li className="list-none lg:order-1 px-0 w-12">
+                    <a
+                      href="https://www.facebook.com/clothingloop/"
+                      rel="noreferrer"
+                      aria-label="Our Facebook page"
+                      className="!no-underline"
+                    >
+                      <span className="btn btn-circle btn-outline group-hover:text-white group-hover:border-base-content group-hover:bg-facebook feather feather-facebook text-lg"></span>
+                    </a>
+                  </li>
+                  <li className="list-none lg:order-3 px-0 w-12">
+                    <a
+                      href="https://www.linkedin.com/company/the-clothing-loop/"
+                      rel="noreferrer"
+                      aria-label="Our LinkedIn page"
+                      className="!no-underline"
+                    >
+                      <span className="btn btn-circle btn-outline group-hover:text-white group-hover:border-base-content group-hover:bg-[#0a66c2] feather feather-linkedin text-lg"></span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="md:ml-8 w-full md:w-2/3">
+              <p className="prose font-serif text-2xl font-bold text-secondary my-4">
+                <Trans i18nKey="shareSwapStory" ns="contribute" />
+              </p>
+              <p className="prose font-serif text-lg font-normal mt-0">
+                <Trans
+                  i18nKey="shareSwapStoryDesc"
+                  ns="contribute"
+                  components={{
+                    p: <p></p>,
+                    aInstagram: (
+                      <a
+                        className="link"
+                        href="https://www.instagram.com/theclothingloop/"
+                        target="_blank"
+                      />
+                    ),
+                    aFacebook: (
+                      <a
+                        className="link"
+                        href="https://www.facebook.com/clothingloop/"
+                        target="_blank"
+                      />
+                    ),
+                    aLinkedin: (
+                      <a
+                        className="link"
+                        href="https://www.linkedin.com/company/the-clothing-loop/"
+                        target="_blank"
+                      />
+                    ),
+                    aEmail: (
+                      <a
+                        className="link"
+                        href="mailto:hello@clothingloop.org"
+                        aria-label="Our email address"
+                      ></a>
+                    ),
+                  }}
+                />
+              </p>
 
-            <div className="px-3 mx-auto inline-block mb-0 pb-0 self-center">
-              <ul className="flex mx-auto">
-                <li className="items-center lg:order-4">
-                  <a
-                    href="mailto:hello@clothingloop.org"
-                    aria-label="Our email address"
-                    className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center hover:bg-[#b464a8] feather feather-mail text-lg"
-                  ></a>
-                </li>
-                <li className="mb-3 items-center lg:order-2">
-                  <a
-                    href="https://www.instagram.com/theclothingloop/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn btn-circle btn-outline feather feather-instagram text-lg mr-3 rtl:mr-0 rtl:ml-3 hover:bg-instagram"
-                    aria-label="link to our instagram account"
-                  ></a>
-                </li>
-                <li className="mb-3 items-center lg:order-1">
-                  <a
-                    href="https://www.facebook.com/clothingloop/"
-                    rel="noreferrer"
-                    aria-label="Our Facebook page"
-                    className="flex flex-row items-center group"
-                  >
-                    <span className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-facebook feather feather-facebook text-lg"></span>
-                  </a>
-                </li>
-                <li className="mb-3 items-center lg:order-3">
-                  <a
-                    href="https://www.linkedin.com/company/the-clothing-loop/"
-                    rel="noreferrer"
-                    aria-label="Our LinkedIn page"
-                    className="flex flex-row items-center group"
-                  >
-                    <span className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#0a66c2] feather feather-linkedin text-lg"></span>
-                  </a>
-                </li>
-              </ul>
+              <p className="prose font-serif text-2xl font-bold text-secondary mt-8">
+                <Trans i18nKey="feedback" ns="contribute" />
+              </p>
+              <p className="prose font-serif text-lg font-normal my-4">
+                <Trans i18nKey="feedbackDesc" ns="contribute" />
+              </p>
             </div>
           </div>
 
-          <div className="flex mt-4">
-            <img
-              src={crowdin}
-              alt="crowdin"
-              className="w-[40%] mx-auto object-contain object-center px-6 my-4"
-            />
-            <div className="my-4">
-              <p className="prose font-serif text-2xl font-bold text-secondary">
+          <div className="flex items-center mt-12">
+            <a
+              className="w-[40%] pr-12"
+              href="https://crowdin.com/project/the-clothing-loop"
+              target="_blank"
+            >
+              <img
+                src={crowdin}
+                alt="crowdin"
+                className="object-cover hover:ring-[1.5rem] ring-secondary transition-[box-shadow]"
+              />
+            </a>
+
+            <div className="w-[60%] self-center">
+              <p className="prose font-serif text-2xl font-bold text-secondary -mt-8">
                 <Trans
                   i18nKey="crowdin"
                   ns="contribute"
@@ -180,32 +203,36 @@ export default function Contribute() {
               </p>
             </div>
           </div>
-          <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
-            <Trans i18nKey="swap" ns="contribute" />
-          </p>
-          <div className="flex">
-            <p className="prose font-serif text-lg font-normal my-4 w-[45%]">
-              <Trans
-                i18nKey="swapDesc"
-                ns="contribute"
-                components={{
-                  p: <p></p>,
-                  aEvents: (
-                    <Link className="link" to="/events" target="_blank"></Link>
-                  ),
-                }}
+          <div className="flex items-center mt-12">
+            <div className="w-1/2">
+              <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
+                <Trans i18nKey="swap" ns="contribute" />
+              </p>
+              <p className="prose font-serif text-lg font-normal my-4">
+                <Trans
+                  i18nKey="swapDesc"
+                  ns="contribute"
+                  components={{
+                    p: <p></p>,
+                    aEvents: (
+                      <Link
+                        className="link"
+                        to="/events"
+                        target="_blank"
+                      ></Link>
+                    ),
+                  }}
+                />
+              </p>
+            </div>
+            <Link className="w-1/2 pl-12" to="/events" target="_blank">
+              <img
+                src={events}
+                alt="events page"
+                className="object-cover hover:ring-[1.5rem] ring-secondary transition-[box-shadow]"
               />
-            </p>
-
-            <img src={events} alt="events page" className="w-[55%]" />
+            </Link>
           </div>
-
-          <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
-            <Trans i18nKey="feedback" ns="contribute" />
-          </p>
-          <p className="prose font-serif text-lg font-normal  my-4">
-            <Trans i18nKey="feedbackDesc" ns="contribute" />
-          </p>
 
           <p className="prose font-serif text-2xl font-bold text-secondary mt-4">
             <Trans i18nKey="website" ns="contribute" />
