@@ -7,11 +7,11 @@
     "crowdin": "Help us translate using <aCrowdin>Crowdin</aCrowdin>",
     "crowdinDesc": "Our web app is able to reach you in numerous languages due to the kind people who take the time to translate it using <aCrowdin>Crowdin</aCrowdin>. We would love for the Clothing Loop to be accessible to as many people as possible, and if you're multilingual and want to contribute to the Clothing Loop, consider adding translations!",
     "swap": "Plan a Clothes Swap Event!",
-    "swapDesc": "A swap party is a great way to trade clothes without necessarily committing to starting a clothing loop. Also, check out <aEvents>upcoming events</aEvents> on our calendar!",
+    "swapDesc": "A swap party is a great way to trade clothes if you're not sure if you want to join or start a clothing loop yet or if you just want the chance to meet up with friends and neighbors and swap clothes! Also, check out <aEvents>upcoming events</aEvents> on our calendar!",
     "feedback": "Send us Feedback",
     "feedbackDesc": "We are always excited to hear from Clothing Loop members about how we can improve or how the Clothing Loop has positively impacted you. If you have any feedback you would like to share, please email us or reach out to us on social media.",
     "website": "Contribute to Our Website",
-    "websiteDesc": "Do you code? The Clothing Loop is an open-source website. Click <aGithub>here</aGithub> to see our open tasks on Githib or <aEmail>email us</aEmail> if you're interested in volunteering your programming skills and want to connect with us on Slack and join our weekly developer meetings.",
+    "websiteDesc": "Do you code? The Clothing Loop is an open-source website. Click <aGithub>here</aGithub> to see our open tasks on Github or <aEmail>email us</aEmail> if you're interested in volunteering your programming skills and want to connect with us on Slack and join our weekly developer meetings.",
     "donate": "<aDonate>Donate</aDonate>",
     "donateDesc": "All <aDonate>donations</aDonate> to the Clothing Loop are greatly appreciated to help offset costs to keep the Clothing Loop free and available for all users.",
     "findUs": "Where to Find Us"

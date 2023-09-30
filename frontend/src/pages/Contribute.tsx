@@ -43,8 +43,48 @@ export default function Contribute() {
               <p className="prose font-serif text-2xl font-bold text-secondary -mt-8 mb-4">
                 <Trans i18nKey="startALoop" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal">
+              <p className="prose font-serif text-lg font-normal mb-8">
                 <Trans i18nKey="startALoopDesc" ns="contribute" />
+              </p>
+              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
+                <Trans i18nKey="shareSwapStory" ns="contribute" />
+              </p>
+              <p className="prose font-serif text-lg font-normal mb-8">
+                <Trans
+                  i18nKey="shareSwapStoryDesc"
+                  ns="contribute"
+                  components={{
+                    p: <p></p>,
+                    aInstagram: (
+                      <a
+                        className="link"
+                        href="https://www.instagram.com/theclothingloop/"
+                        target="_blank"
+                      />
+                    ),
+                    aFacebook: (
+                      <a
+                        className="link"
+                        href="https://www.facebook.com/clothingloop/"
+                        target="_blank"
+                      />
+                    ),
+                    aLinkedin: (
+                      <a
+                        className="link"
+                        href="https://www.linkedin.com/company/the-clothing-loop/"
+                        target="_blank"
+                      />
+                    ),
+                    aEmail: (
+                      <a
+                        className="link"
+                        href="mailto:hello@clothingloop.org"
+                        aria-label="Our email address"
+                      ></a>
+                    ),
+                  }}
+                />
               </p>
             </div>
             <Link
@@ -61,7 +101,7 @@ export default function Contribute() {
           </div>
 
           <div className="flex flex-col-reverse md:flex-row md:items-center mb-8 my-12 items-center content-center">
-            <div className="p-12 md:p-8 flex flex-col items-center w-2/3 md:w-1/3 min-w-[350px] prose font-serif font-bold bg-teal-light text-center">
+            <div className="p-12 md:p-8 flex flex-col items-center min-w-[350px] prose font-serif font-bold bg-teal-light text-center">
               <h2 className="font-serif font-bold text-lg md:text-lg py-0 my-auto mb-8 max-w-[300px]">
                 <span className="inline md:block text-5xl font-bold font-secondary">
                   {t("findUs")}
@@ -70,7 +110,7 @@ export default function Contribute() {
 
               {/* Social Meida Icons */}
               <div className="inline-block my-auto">
-                <ul className="flex gap-4 px-0 my-0 justify-items-center md:px-12">
+                <ul className="flex gap-4 px-0 my-0 justify-items-center">
                   <li className="list-none px-0 w-12">
                     <a
                       href="mailto:hello@clothingloop.org"
@@ -112,47 +152,6 @@ export default function Contribute() {
             </div>
             <div className="md:ml-8 w-full md:w-2/3 mb-8 md:mb-0">
               <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
-                <Trans i18nKey="shareSwapStory" ns="contribute" />
-              </p>
-              <p className="prose font-serif text-lg font-normal mb-8">
-                <Trans
-                  i18nKey="shareSwapStoryDesc"
-                  ns="contribute"
-                  components={{
-                    p: <p></p>,
-                    aInstagram: (
-                      <a
-                        className="link"
-                        href="https://www.instagram.com/theclothingloop/"
-                        target="_blank"
-                      />
-                    ),
-                    aFacebook: (
-                      <a
-                        className="link"
-                        href="https://www.facebook.com/clothingloop/"
-                        target="_blank"
-                      />
-                    ),
-                    aLinkedin: (
-                      <a
-                        className="link"
-                        href="https://www.linkedin.com/company/the-clothing-loop/"
-                        target="_blank"
-                      />
-                    ),
-                    aEmail: (
-                      <a
-                        className="link"
-                        href="mailto:hello@clothingloop.org"
-                        aria-label="Our email address"
-                      ></a>
-                    ),
-                  }}
-                />
-              </p>
-
-              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="feedback" ns="contribute" />
               </p>
               <p className="prose font-serif text-lg font-normal">
@@ -162,11 +161,11 @@ export default function Contribute() {
           </div>
 
           <div className="flex flex-col md:flex-row items-center mb-8">
-            <div className="w-full md:w-1/2 md:pr-8 mb-4 md:mb-0">
+            <div className="w-full md:w-2/3 md:pr-12 mb-4 md:mb-0">
               <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="swap" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal mb-4">
+              <p className="prose font-serif text-lg font-normal mb-8">
                 <Trans
                   i18nKey="swapDesc"
                   ns="contribute"
@@ -182,30 +181,6 @@ export default function Contribute() {
                   }}
                 />
               </p>
-            </div>
-            <Link className="w-2/3 md:w-1/2" to="/events" target="_blank">
-              <img
-                src={events}
-                alt="screenshot of the events page"
-                className="object-cover hover:ring-[1.5rem] ring-secondary transition-[box-shadow]"
-              />
-            </Link>
-          </div>
-
-          <div className="flex flex-col-reverse md:flex-row items-center mb-8">
-            <a
-              className="w-2/3 md:w-1/3 md:pr-8 max-w-md "
-              href="https://crowdin.com/project/the-clothing-loop"
-              target="_blank"
-            >
-              <img
-                src={crowdin}
-                alt="the different languages we have on Crowdin"
-                className="object-cover hover:ring-[1.5rem] ring-secondary transition-[box-shadow]"
-              />
-            </a>
-
-            <div className="w-full md:w-2/3 self-center mb-8 md:mb-0">
               <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
                 <Trans
                   i18nKey="crowdin"
@@ -239,6 +214,31 @@ export default function Contribute() {
                 />
               </p>
             </div>
+            <div className="relative w-2/3 md:w-1/3">
+              <Link to="/events" target="_blank">
+                <img
+                  src={events}
+                  alt="screenshot of the events page"
+                  className="object-cover hover:ring-[1.5rem] ring-secondary transition-[box-shadow]"
+                />
+              </Link>
+              <img
+                className="hidden md:block -z-10 absolute -right-10 -top-10"
+                src={CirclesFrame}
+                aria-hidden
+                alt=""
+              />
+              <img
+                className="hidden sm:block -z-10 absolute -left-10 -bottom-10"
+                aria-hidden
+                alt=""
+                src={CirclesFrame}
+              />
+            </div>
+          </div>
+
+          <div className="relative flex flex-col-reverse md:flex-row items-center mb-8">
+            <div className="w-full md:w-2/3 self-center mb-8 md:mb-0"></div>
           </div>
           <div className="flex flex-col md:flex-row mb-8">
             <div className="w-full md:w-1/2 md:pr-8">
@@ -271,7 +271,7 @@ export default function Contribute() {
               <img
                 src={additions}
                 alt="a graph of additions and deletions on GitHub"
-                className="object-contain w-full mb-8 md:mb-0"
+                className="object-contain w-full mb-8 md:mb-0 "
               />
             </div>
             <img
