@@ -103,7 +103,7 @@ export default function Contribute() {
           <div className="flex flex-col-reverse md:flex-row md:items-center mb-8 my-12 items-center content-center">
             <div className="p-12 md:p-8 flex flex-col items-center min-w-[350px] prose font-serif font-bold bg-teal-light text-center">
               <h2 className="font-serif font-bold text-lg md:text-lg py-0 my-auto mb-8 max-w-[300px]">
-                <span className="inline md:block text-5xl font-bold font-secondary">
+                <span className="inline md:block text-5xl font-bold font-secondary tracking-wide">
                   {t("findUs")}
                 </span>
               </h2>
@@ -160,7 +160,7 @@ export default function Contribute() {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center mb-8">
+          <div className="flex flex-col md:flex-row items-center mb-16">
             <div className="w-full md:w-2/3 md:pr-12 mb-4 md:mb-0">
               <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="swap" ns="contribute" />
@@ -197,7 +197,7 @@ export default function Contribute() {
                   }}
                 />
               </p>
-              <p className="prose font-serif text-lg font-normal">
+              <p className="prose font-serif text-lg font-normal mb-4 md:mb-0">
                 <Trans
                   i18nKey="crowdinDesc"
                   ns="contribute"
@@ -237,11 +237,13 @@ export default function Contribute() {
             </div>
           </div>
 
-          <div className="relative flex flex-col-reverse md:flex-row items-center mb-8">
-            <div className="w-full md:w-2/3 self-center mb-8 md:mb-0"></div>
-          </div>
-          <div className="flex flex-col md:flex-row mb-8">
-            <div className="w-full md:w-1/2 md:pr-8">
+          <div className="flex flex-col-reverse md:flex-row mb-8">
+            <img
+              src={network}
+              alt="the network graph of the Clothing Loop on GitHub"
+              className="object-contain w-full md:w-1/2 md:pr-4"
+            />
+            <div className="w-full md:w-1/2 md:pl-4">
               <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="website" ns="contribute" />
               </p>
@@ -267,48 +269,40 @@ export default function Contribute() {
                     ),
                   }}
                 />
+              </p>{" "}
+              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
+                <Trans
+                  i18nKey="donate"
+                  ns="contribute"
+                  components={{
+                    p: <p></p>,
+                    aDonate: (
+                      <Link
+                        className="prose font-serif text-2xl font-bold text-secondary"
+                        to="/donate"
+                        target="_blank"
+                      ></Link>
+                    ),
+                  }}
+                />
               </p>
-              <img
-                src={additions}
-                alt="a graph of additions and deletions on GitHub"
-                className="object-contain w-full mb-8 md:mb-0 "
-              />
+              <p className="prose font-serif text-lg font-normal mb-4">
+                <Trans
+                  i18nKey="donateDesc"
+                  ns="contribute"
+                  components={{
+                    p: <p></p>,
+                    aDonate: (
+                      <Link
+                        className="link"
+                        to="/donate"
+                        target="_blank"
+                      ></Link>
+                    ),
+                  }}
+                />
+              </p>
             </div>
-            <img
-              src={network}
-              alt="a graph of additions and deletions on GitHub"
-              className="object-contain w-full md:w-1/2 md:pl-8"
-            />
-          </div>
-          <div className="mb-8">
-            <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
-              <Trans
-                i18nKey="donate"
-                ns="contribute"
-                components={{
-                  p: <p></p>,
-                  aDonate: (
-                    <Link
-                      className="prose font-serif text-2xl font-bold text-secondary"
-                      to="/donate"
-                      target="_blank"
-                    ></Link>
-                  ),
-                }}
-              />
-            </p>
-            <p className="prose font-serif text-lg font-normal mb-4">
-              <Trans
-                i18nKey="donateDesc"
-                ns="contribute"
-                components={{
-                  p: <p></p>,
-                  aDonate: (
-                    <Link className="link" to="/donate" target="_blank"></Link>
-                  ),
-                }}
-              />
-            </p>
           </div>
         </div>
       </main>
