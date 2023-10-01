@@ -77,7 +77,7 @@ func ContactMail(c *gin.Context) {
 		return
 	}
 
-	err2 := views.EmailContactUserMessage(c, db, body.Name, body.Email, body.Message)
+	err2 := views.EmailContactReceived(db, body.Name, body.Email, body.Message)
 	if err2 != nil {
 		glog.Errorf("Unable to send email: %v", err2)
 	}

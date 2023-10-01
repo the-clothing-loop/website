@@ -34,7 +34,9 @@ func TestMailSend(t *testing.T) {
 	app.MailSend(db, m)
 }
 
-var languages = []string{"en", "nl"}
+// TODO: change back to testing all languages after next crowdin PR
+// var languages = []string{"en", "nl"}
+var languages = []string{"en"}
 
 func runOnAllLanguages(t *testing.T, run func(t *testing.T, c *gin.Context, lng string)) {
 	for i := range languages {
@@ -64,30 +66,69 @@ func TestGetMockCookie(t *testing.T) {
 	assert.Equal(t, "nl", result)
 }
 
-func TestEmailAParticipantJoinedTheLoop(t *testing.T) {
+func TestEmailAccountDeletedSuccessfully(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
-		err := views.EmailAParticipantJoinedTheLoop(c, db, lng,
-			faker.Person().Contact().Email,
+		err := views.EmailAccountDeletedSuccessfully(db, lng,
 			lng+" "+faker.Person().Name(),
-			faker.Company().Name(),
-			faker.Person().Name(),
 			faker.Person().Contact().Email,
-			faker.Person().Contact().Phone,
-			faker.Address().Address(),
-			[]string{models.SizeEnumWomenMedium, models.SizeEnumWomenLarge, models.SizeEnumMenSmall, models.SizeEnumBaby},
 		)
 		assert.Nil(t, err)
 	})
 }
 
-func TestEmailContactUserMessage(t *testing.T) {
-	c, _ := mocks.MockGinContext(db, http.MethodGet, "/", nil, "test")
-	err := views.EmailContactUserMessage(c, db,
-		faker.Person().Name(),
-		faker.Person().Contact().Email,
-		faker.Lorem().Paragraph(2),
-	)
-	assert.Nil(t, err)
+func TestEmailAnAdminApprovedYourJoinRequest(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailAnAdminApprovedYourJoinRequest(db, lng,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Company().Name(),
+		)
+		assert.Nil(t, err)
+	})
+}
+
+func TestEmailAnAdminDeniedYourJoinRequest(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+
+		reasons := []string{"other", "too_far_away", "sizes_genders"}
+		for _, reason := range reasons {
+			err := views.EmailAnAdminDeniedYourJoinRequest(db, lng,
+				lng+" "+faker.Person().Name(),
+				faker.Person().Contact().Email,
+				faker.Company().Name(),
+				reason,
+			)
+			assert.Nil(t, err)
+		}
+	})
+}
+
+func TestEmailApproveReminder(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		approvals := []*views.EmailApproveReminderItem{
+			{
+				Name:        faker.Person().Name(),
+				Email:       faker.Person().Contact().Email,
+				ChainID:     faker.UInt(),
+				UserChainID: faker.UInt(),
+				ChainName:   faker.Company().Name(),
+			},
+			{
+				Name:        faker.Person().Name(),
+				Email:       faker.Person().Contact().Email,
+				ChainID:     faker.UInt(),
+				UserChainID: faker.UInt(),
+				ChainName:   faker.Company().Name(),
+			},
+		}
+
+		err := views.EmailApproveReminder(db, lng,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			approvals,
+		)
+		assert.Nil(t, err)
+	})
 }
 
 func TestEmailContactConfirmation(t *testing.T) {
@@ -101,22 +142,33 @@ func TestEmailContactConfirmation(t *testing.T) {
 	})
 }
 
-func TestEmailSubscribeToNewsletter(t *testing.T) {
+func TestEmailContactReceived(t *testing.T) {
+	err := views.EmailContactReceived(db,
+		faker.Person().Name(),
+		faker.Person().Contact().Email,
+		faker.Lorem().Paragraph(2),
+	)
+	assert.Nil(t, err)
+}
+
+func TestEmailDoYouWantToBeHost(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
-		err := views.EmailSubscribeToNewsletter(c, db,
+		err := views.EmailDoYouWantToBeHost(db, lng,
 			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
+			faker.Company().Name(),
 		)
 		assert.Nil(t, err)
 	})
 }
 
-func TestEmailRegisterVerification(t *testing.T) {
+func TestEmailIsYourLoopStillActive(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
-		err := views.EmailRegisterVerification(c, db,
+		err := views.EmailIsYourLoopStillActive(db, lng,
 			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
-			faker.UUID().V4(),
+			faker.Company().Name(),
+			faker.Person().Name(),
 		)
 		assert.Nil(t, err)
 	})
@@ -143,24 +195,20 @@ func TestEmailLoginVerificationApp(t *testing.T) {
 	})
 }
 
-func TestEmailAnAdminDeniedYourJoinRequest(t *testing.T) {
+func TestEmailLoopIsDeleted(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
-
-		reasons := []string{"other", "too_far_away", "sizes_genders"}
-		for _, reason := range reasons {
-			err := views.EmailAnAdminDeniedYourJoinRequest(c, db, lng,
-				lng+" "+faker.Person().Name(),
-				faker.Person().Contact().Email,
-				faker.Company().Name(),
-				reason,
-			)
-			assert.Nil(t, err)
-		}
+		err := views.EmailLoopIsDeleted(db, lng,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Company().Name(),
+		)
+		assert.Nil(t, err)
 	})
 }
+
 func TestEmailPoke(t *testing.T) {
 	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
-		err := views.EmailPoke(c, db, lng,
+		err := views.EmailPoke(db, lng,
 			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			faker.Person().Name(),
@@ -169,29 +217,98 @@ func TestEmailPoke(t *testing.T) {
 		assert.Nil(t, err)
 	})
 }
-func TestEmailApproveReminder(t *testing.T) {
-	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
-		approvals := []*views.EmailApproveReminderItem{
-			{
-				Name:        faker.Person().Name(),
-				Email:       faker.Person().Contact().Email,
-				ChainID:     faker.UInt(),
-				UserChainID: faker.UInt(),
-				ChainName:   faker.Company().Name(),
-			},
-			{
-				Name:        faker.Person().Name(),
-				Email:       faker.Person().Contact().Email,
-				ChainID:     faker.UInt(),
-				UserChainID: faker.UInt(),
-				ChainName:   faker.Company().Name(),
-			},
-		}
 
-		err := views.EmailApproveReminder(db, lng,
+func TestEmailRegisterVerification(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailRegisterVerification(c, db,
 			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
-			approvals,
+			faker.UUID().V4(),
+		)
+		assert.Nil(t, err)
+	})
+}
+
+func TestEmailSomeoneIsInterestedInJoiningYourLoop(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailSomeoneIsInterestedInJoiningYourLoop(db, lng,
+			faker.Person().Contact().Email,
+			lng+" "+faker.Person().Name(),
+			faker.Company().Name(),
+			faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Person().Contact().Phone,
+			faker.Address().Address(),
+			[]string{models.SizeEnumWomenMedium, models.SizeEnumWomenLarge, models.SizeEnumMenSmall, models.SizeEnumBaby},
+		)
+		assert.Nil(t, err)
+	})
+}
+
+func TestEmailSomeoneLeftLoop(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailSomeoneLeftLoop(db, lng,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Company().Name(),
+			faker.Person().Name(),
+		)
+		assert.Nil(t, err)
+	})
+}
+
+func TestEmailSomeoneWaitingToBeAccepted(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailSomeoneWaitingToBeAccepted(db, lng,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Company().Name(),
+			faker.Person().Name(),
+		)
+		assert.Nil(t, err)
+	})
+}
+
+func TestEmailSubscribeToNewsletter(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailSubscribeToNewsletter(c, db,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+		)
+		assert.Nil(t, err)
+	})
+}
+
+func TestEmailYouSignedUpForLoop(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailYouSignedUpForLoop(db, lng,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Company().Name(),
+		)
+		assert.Nil(t, err)
+	})
+}
+
+func TestEmailYourLoopDeletedNextMonth(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailYourLoopDeletedNextMonth(db, lng,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Company().Name(),
+			faker.UUID().V4(),
+		)
+		assert.Nil(t, err)
+	})
+}
+
+func TestEmailYourLoopDeletedNextWeek(t *testing.T) {
+	runOnAllLanguages(t, func(t *testing.T, c *gin.Context, lng string) {
+		err := views.EmailYourLoopDeletedNextWeek(db, lng,
+			lng+" "+faker.Person().Name(),
+			faker.Person().Contact().Email,
+			faker.Company().Name(),
+			faker.UUID().V4(),
 		)
 		assert.Nil(t, err)
 	})
