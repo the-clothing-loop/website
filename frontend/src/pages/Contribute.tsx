@@ -35,21 +35,21 @@ export default function Contribute() {
       </Helmet>
       <main>
         <div className="max-w-screen-xl mx-auto pt-10 px-10 md:px-20">
-          <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-16">
+          <h1 className="font-bold text-secondary text-4xl md:text-6xl mb-16 flex">
             {t("howToContribute")}
           </h1>
-          <div className="flex flex-col md:flex-row items-center">
+          <div className="flex flex-col md:flex-row items-center mb-8">
             <div className="w-full md:w-1/2 mb-8 md:mb-0">
-              <p className="prose font-serif text-2xl font-bold text-secondary -mt-8 mb-4">
+              <p className="prose text-2xl font-bold text-secondary -mt-8 mb-4">
                 <Trans i18nKey="startALoop" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal mb-8">
+              <p className="prose text-lg font-normal mb-8">
                 <Trans i18nKey="startALoopDesc" ns="contribute" />
               </p>
-              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
+              <p className="prose text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="shareSwapStory" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal mb-8">
+              <p className="prose text-lg font-normal md:mb-8">
                 <Trans
                   i18nKey="shareSwapStoryDesc"
                   ns="contribute"
@@ -76,13 +76,6 @@ export default function Contribute() {
                         target="_blank"
                       />
                     ),
-                    aEmail: (
-                      <a
-                        className="link"
-                        href="mailto:hello@clothingloop.org"
-                        aria-label="Our email address"
-                      ></a>
-                    ),
                   }}
                 />
               </p>
@@ -100,11 +93,11 @@ export default function Contribute() {
             </Link>
           </div>
 
-          <div className="flex flex-col-reverse md:flex-row md:items-center mb-8 my-12 items-center content-center">
-            <div className="p-12 md:p-8 flex flex-col items-center min-w-[350px] prose font-serif font-bold bg-teal-light text-center">
-              <h2 className="font-serif font-bold text-lg md:text-lg py-0 my-auto mb-8 max-w-[300px]">
+          <div className="flex flex-col-reverse md:flex-row md:items-center mb-8 items-center content-center">
+            <div className="p-12 md:px-8 flex flex-col items-center min-w-[350px] prose font-bold bg-teal-light text-center">
+              <h2 className="font-bold text-lg md:text-lg py-0 my-auto mb-8 max-w-[300px]">
                 <span className="inline md:block text-5xl font-bold font-secondary tracking-wide">
-                  {t("findUs")}
+                  {t("WhereToFindUs")}
                 </span>
               </h2>
 
@@ -151,21 +144,21 @@ export default function Contribute() {
               </div>
             </div>
             <div className="md:ml-8 w-full md:w-2/3 mb-8 md:mb-0">
-              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
+              <p className="prose text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="feedback" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal">
+              <p className="prose text-lg font-normal">
                 <Trans i18nKey="feedbackDesc" ns="contribute" />
               </p>
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center mb-16">
+          <div className="flex flex-col md:flex-row items-center mb-8 md:mb-16">
             <div className="w-full md:w-2/3 md:pr-12 mb-4 md:mb-0">
-              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
+              <p className="prose text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="swap" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal mb-8">
+              <p className="prose text-lg font-normal mb-8">
                 <Trans
                   i18nKey="swapDesc"
                   ns="contribute"
@@ -173,7 +166,7 @@ export default function Contribute() {
                     p: <p></p>,
                     aEvents: (
                       <Link
-                        className="link"
+                        className="link font-bold"
                         to="/events"
                         target="_blank"
                       ></Link>
@@ -181,7 +174,7 @@ export default function Contribute() {
                   }}
                 />
               </p>
-              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
+              <p className="prose text-2xl font-bold text-secondary mb-4">
                 <Trans
                   i18nKey="crowdin"
                   ns="contribute"
@@ -189,7 +182,7 @@ export default function Contribute() {
                     p: <p></p>,
                     aCrowdin: (
                       <a
-                        className="prose font-serif text-2xl font-bold text-secondary"
+                        className="prose text-2xl font-bold text-secondary"
                         href="https://crowdin.com/project/the-clothing-loop"
                         target="_blank"
                       />
@@ -197,7 +190,7 @@ export default function Contribute() {
                   }}
                 />
               </p>
-              <p className="prose font-serif text-lg font-normal mb-4 md:mb-0">
+              <p className="prose text-lg font-normal mb-4 md:mb-0">
                 <Trans
                   i18nKey="crowdinDesc"
                   ns="contribute"
@@ -205,7 +198,7 @@ export default function Contribute() {
                     p: <p></p>,
                     aCrowdin: (
                       <a
-                        className="link"
+                        className="link font-bold"
                         href="https://crowdin.com/project/the-clothing-loop"
                         target="_blank"
                       />
@@ -214,7 +207,7 @@ export default function Contribute() {
                 />
               </p>
             </div>
-            <div className="relative w-2/3 md:w-1/3">
+            <div className="relative w-full md:w-1/3">
               <Link to="/events" target="_blank">
                 <img
                   src={events}
@@ -244,10 +237,10 @@ export default function Contribute() {
               className="object-contain w-full md:w-1/2 md:pr-4"
             />
             <div className="w-full md:w-1/2 md:pl-4">
-              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
+              <p className="prose text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="website" ns="contribute" />
               </p>
-              <p className="prose font-serif text-lg font-normal mb-8">
+              <p className="prose text-lg font-normal mb-8">
                 <Trans
                   i18nKey="websiteDesc"
                   ns="contribute"
@@ -269,8 +262,8 @@ export default function Contribute() {
                     ),
                   }}
                 />
-              </p>{" "}
-              <p className="prose font-serif text-2xl font-bold text-secondary mb-4">
+              </p>
+              <p className="prose text-2xl font-bold text-secondary mb-4">
                 <Trans
                   i18nKey="donate"
                   ns="contribute"
@@ -278,7 +271,7 @@ export default function Contribute() {
                     p: <p></p>,
                     aDonate: (
                       <Link
-                        className="prose font-serif text-2xl font-bold text-secondary"
+                        className="prose text-2xl font-bold text-secondary"
                         to="/donate"
                         target="_blank"
                       ></Link>
@@ -286,7 +279,7 @@ export default function Contribute() {
                   }}
                 />
               </p>
-              <p className="prose font-serif text-lg font-normal mb-4">
+              <p className="prose text-lg font-normal mb-8">
                 <Trans
                   i18nKey="donateDesc"
                   ns="contribute"
