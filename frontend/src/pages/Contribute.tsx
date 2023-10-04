@@ -32,12 +32,12 @@ export default function Contribute() {
       event: true,
     });
 
-    loadMostRecentEvent();
+    loadNextUpcomingEvent();
   }, []);
 
   useEffect(() => {}, []);
 
-  async function loadMostRecentEvent() {
+  async function loadNextUpcomingEvent() {
     try {
       const latitude = 52.377956;
       const longitude = 4.89707;
@@ -53,6 +53,68 @@ export default function Contribute() {
       addToastError(GinParseErrors(t, err), err.status);
     }
   }
+
+  function NextUpcomingEvent({ event }: { event: Event }) {
+    const { t } = useTranslation();
+    const date = dayjs(event.date);
+
+    const eventPriceValue =
+      event.price_value % 1 === 0
+        ? event.price_value
+        : event.price_value.toFixed(2);
+
+    let image = ClothesImage;
+    if (event.image_url) image = event.image_url;
+    return (
+      <article className="flex flex-col bg-teal-light">
+        <Link
+          to="/events"
+          className="relative aspect-[4/3] overflow-hidden"
+          target="_blank"
+        >
+          <div className=" text-md absolute mt-4 right-4 text-center z-10">
+            <p className="bg-teal text-white py-2 px-3">
+              <span className="inline-block pr-1 font-extrabold">
+                {date.format("MMMM")}
+              </span>
+              <span>{" " + date.format("D")}</span>
+            </p>
+            {event.price_currency ? (
+              <p className="py-1 px-3 bg-yellow-dark text-black">
+                <span className="inline-block pr-1 font-bold">
+                  {event.price_currency}
+                </span>
+                <span className="inline-block pr-1 font-bold">
+                  {eventPriceValue}
+                </span>
+              </p>
+            ) : (
+              <p className="py-1 px-3 bg-white/90 text-black">
+                <span className="inline-block pr-1 font-semibold">
+                  {t("priceFree")}
+                </span>
+              </p>
+            )}
+          </div>
+          <img src={image} className="w-full h-full object-cover" />
+        </Link>
+
+        <div className="m-4 mb-2">
+          <h2 className="text-xl text-teal font-bold">
+            <Link to={"/events/" + event.uid}>{event.name}</Link>
+          </h2>
+        </div>
+        <div className="flex-grow mx-4 mb-2">
+          <span className="feather feather-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+          <address className="inline">{event.address}</address>
+        </div>
+        <div className="m-4 mt-0">
+          {event.genders?.length ? <SizeBadges g={event.genders} /> : null}
+        </div>
+      </article>
+    );
+  }
+
   return (
     <>
       <Helmet>
@@ -238,7 +300,9 @@ export default function Contribute() {
             </div>
             <div className="relative w-full md:w-1/3">
               <div className="object-cover hover:ring-[1.5rem] ring-secondary transition-[box-shadow]">
-                {event ? <EventItem event={event} key={event.uid} /> : null}
+                {event ? (
+                  <NextUpcomingEvent event={event} key={event.uid} />
+                ) : null}
               </div>
               <img
                 className="hidden md:block -z-10 absolute -right-10 -top-10"
@@ -325,66 +389,5 @@ export default function Contribute() {
         </div>
       </main>
     </>
-  );
-}
-
-function EventItem({ event }: { event: Event }) {
-  const { t } = useTranslation();
-  const date = dayjs(event.date);
-
-  const eventPriceValue =
-    event.price_value % 1 === 0
-      ? event.price_value
-      : event.price_value.toFixed(2);
-
-  let image = ClothesImage;
-  if (event.image_url) image = event.image_url;
-  return (
-    <article className="flex flex-col bg-teal-light">
-      <Link
-        to="/events"
-        className="relative aspect-[4/3] overflow-hidden"
-        target="_blank"
-      >
-        <div className=" text-md absolute mt-4 right-4 text-center z-10">
-          <p className="bg-teal text-white py-2 px-3">
-            <span className="inline-block pr-1 font-extrabold">
-              {date.format("MMMM")}
-            </span>
-            <span>{" " + date.format("D")}</span>
-          </p>
-          {event.price_currency ? (
-            <p className="py-1 px-3 bg-yellow-dark text-black">
-              <span className="inline-block pr-1 font-bold">
-                {event.price_currency}
-              </span>
-              <span className="inline-block pr-1 font-bold">
-                {eventPriceValue}
-              </span>
-            </p>
-          ) : (
-            <p className="py-1 px-3 bg-white/90 text-black">
-              <span className="inline-block pr-1 font-semibold">
-                {t("priceFree")}
-              </span>
-            </p>
-          )}
-        </div>
-        <img src={image} className="w-full h-full object-cover" />
-      </Link>
-
-      <div className="m-4 mb-2">
-        <h2 className="text-xl text-teal font-bold">
-          <Link to={"/events/" + event.uid}>{event.name}</Link>
-        </h2>
-      </div>
-      <div className="flex-grow mx-4 mb-2">
-        <span className="feather feather-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
-        <address className="inline">{event.address}</address>
-      </div>
-      <div className="m-4 mt-0">
-        {event.genders?.length ? <SizeBadges g={event.genders} /> : null}
-      </div>
-    </article>
   );
 }
