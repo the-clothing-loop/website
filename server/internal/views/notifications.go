@@ -20,9 +20,4 @@ var Notifications map[string]*onesignal.StringMap = map[string]*onesignal.String
 		En: onesignal.PtrString("A bag has been assigned to you"),
 		// Nl: "",
 	},
-
-	"bag": {
-		En: onesignal.PtrString("Bag"),
-		// Nl: "",
-	},
 }

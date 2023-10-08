@@ -268,8 +268,7 @@ export default function BagsList() {
                           <BagSVG color={bag.color} />
                         </div>
                         <div className="ion-text-ellipsis tw-text-center tw-font-bold tw-text-base tw-text-dark ">
-                          {(bag.number.length > 7 ? "" : t("bag") + " ") +
-                            bag.number}
+                          {bag.number}
                         </div>
                       </div>
 
@@ -313,8 +312,7 @@ export default function BagsList() {
                           onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
                           <span className="!tw-font-bold">
-                            {(bag.number.length > 7 ? "" : t("bag") + " ") +
-                              bag.number}
+                              {bag.number}
                           </span>
                           <span
                             className={`tw-block tw-text-base tw-mt-[3px] ${
