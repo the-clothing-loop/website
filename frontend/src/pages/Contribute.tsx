@@ -12,10 +12,7 @@ import { SizeBadges } from "../components/Badges";
 
 // Media
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
-const crowdin = "../../public/images/crowdin-grid.png";
 const map = "../../public/images/mapscreenshot.png";
-const events = "../../public/images/events.png";
-const additions = "../../public/images/additionsdeletions.png";
 const network = "../../public/images/networkgraph.png";
 const ClothesImage =
   "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
