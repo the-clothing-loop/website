@@ -28,8 +28,8 @@ func ContactNewsletter(c *gin.Context) {
 
 	if !body.Subscribe {
 		db.Raw("DELETE FROM newsletters WHERE email = ?", body.Email)
-		if app.SendInBlue != nil {
-			app.SendInBlue.DeleteContact(c.Request.Context(), body.Email)
+		if app.Brevo != nil {
+			app.Brevo.DeleteContact(c.Request.Context(), body.Email)
 		}
 
 		return
@@ -53,8 +53,8 @@ func ContactNewsletter(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
-	if app.SendInBlue != nil {
-		app.SendInBlue.CreateContact(c.Request.Context(), body.Email)
+	if app.Brevo != nil {
+		app.Brevo.CreateContact(c.Request.Context(), body.Email)
 	}
 
 	views.EmailSubscribeToNewsletter(c, db, name, body.Email)

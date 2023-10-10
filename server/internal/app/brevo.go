@@ -4,26 +4,26 @@ import (
 	"context"
 	"fmt"
 
+	lib "github.com/getbrevo/brevo-go/lib"
 	"github.com/gin-gonic/gin"
-	lib "github.com/sendinblue/APIv3-go-library/v2/lib"
 )
 
-var SendInBlue *sendInBlue
+var Brevo *brevo
 
-type sendInBlue struct {
+type brevo struct {
 	client *lib.APIClient
 }
 
-func SendInBlueInit() {
+func BrevoInit() {
 	cfg := lib.NewConfiguration()
 	cfg.AddDefaultHeader("api-key", Config.SENDINBLUE_API_KEY)
-	SendInBlue = &sendInBlue{lib.NewAPIClient(cfg)}
+	Brevo = &brevo{lib.NewAPIClient(cfg)}
 }
 
-func (sib *sendInBlue) CreateContact(ctx context.Context, email string) error {
+func (b *brevo) CreateContact(ctx context.Context, email string) error {
 	var params = lib.CreateContact{Email: email}
 
-	obj, resp, err := sib.client.ContactsApi.CreateContact(ctx, params)
+	obj, resp, err := b.client.ContactsApi.CreateContact(ctx, params)
 	if err != nil {
 		fmt.Println("Error in ContactsApi->CreateContact", err.Error())
 		return err
@@ -32,8 +32,8 @@ func (sib *sendInBlue) CreateContact(ctx context.Context, email string) error {
 	return nil
 }
 
-func (sib *sendInBlue) ExistsContact(ctx context.Context, email string) error {
-	obj, resp, err := sib.client.ContactsApi.GetContactStats(ctx, email, nil)
+func (b *brevo) ExistsContact(ctx context.Context, email string) error {
+	obj, resp, err := b.client.ContactsApi.GetContactStats(ctx, email, nil)
 	if err != nil {
 		fmt.Println("Error in ContactsApi->GetContactStats", err.Error())
 		return err
@@ -42,8 +42,8 @@ func (sib *sendInBlue) ExistsContact(ctx context.Context, email string) error {
 	return nil
 }
 
-func (sib *sendInBlue) DeleteContact(ctx context.Context, email string) error {
-	resp, err := sib.client.ContactsApi.DeleteContact(ctx, email)
+func (b *brevo) DeleteContact(ctx context.Context, email string) error {
+	resp, err := b.client.ContactsApi.DeleteContact(ctx, email)
 	if err != nil {
 		fmt.Println("Error in ContactsApi->DeleteContact", err.Error())
 		return err
@@ -67,7 +67,7 @@ type webhookUnsubscribeResponse struct {
 	Tag          string `json:"tag"`                                     // internal tag of campaign
 }
 
-func (sib *sendInBlue) WebhookUnsubscribed(c *gin.Context) (email string, err error) {
+func (sib *brevo) WebhookUnsubscribed(c *gin.Context) (email string, err error) {
 	var body *webhookUnsubscribeResponse
 	if err = c.BindJSON(body); err != nil {
 		return "", err
