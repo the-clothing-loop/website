@@ -311,9 +311,7 @@ export default function BagsList() {
                           className="ion-text-ellipsis"
                           onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
-                          <span className="!tw-font-bold">
-                              {bag.number}
-                          </span>
+                          <span className="!tw-font-bold">{bag.number}</span>
                           <span
                             className={`tw-block tw-text-base tw-mt-[3px] ${
                               isBagTooOld ? "tw-text-danger" : "tw-text-medium"
