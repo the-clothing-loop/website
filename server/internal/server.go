@@ -22,7 +22,7 @@ func Routes() *gin.Engine {
 	app.MailInit()
 
 	if app.Config.ENV == app.EnvEnumProduction || (app.Config.SENDINBLUE_API_KEY != "" && app.Config.ENV == app.EnvEnumDevelopment) {
-		app.SendInBlueInit()
+		app.BrevoInit()
 	}
 
 	if app.Config.ONESIGNAL_APP_ID != "" && app.Config.ONESIGNAL_REST_API_KEY != "" {

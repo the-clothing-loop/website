@@ -325,8 +325,8 @@ func UserUpdate(c *gin.Context) {
 				c.String(http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
-			if app.SendInBlue != nil && user.Email.Valid {
-				app.SendInBlue.DeleteContact(c.Request.Context(), user.Email.String)
+			if app.Brevo != nil && user.Email.Valid {
+				app.Brevo.DeleteContact(c.Request.Context(), user.Email.String)
 			}
 		}
 	}
@@ -467,8 +467,8 @@ UPDATE events SET user_id = (
 			c.String(http.StatusInternalServerError, "Unable to remove newsletter")
 			return
 		}
-		if app.SendInBlue != nil {
-			app.SendInBlue.DeleteContact(c.Request.Context(), user.Email.String)
+		if app.Brevo != nil {
+			app.Brevo.DeleteContact(c.Request.Context(), user.Email.String)
 		}
 	}
 
