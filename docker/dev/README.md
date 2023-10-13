@@ -21,6 +21,8 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 choco install make
 ```
 
+If you struggle here see (https://stackoverflow.com/questions/48148664/the-term-execution-policy-is-not-recognized) and 
+
 ## 1.b. Install make on macos
 
 Make sure that you have brew installed https://brew.sh/
@@ -32,21 +34,21 @@ brew install make
 ## 2. Fork repository
 
 1. Go to [github.com/the-clothing-loop/website](https://github.com/the-clothing-loop/website) and name it something like "clothing-loop"
-2. Disable actions in fork
-3. Clone repo locally "git clone https://github.com/<your_username>/clothing-loop.git"
+2. Disable actions in fork (see https://github.com/orgs/community/discussions/26704)
+3. Clone repo locally "git clone https://github.com/<your_username>/clothing-loop.git" (in VS code)
 4. Open in VS code, open workspace, installed recommended extensions if asked
 5. copy `/clothing-loop/server/config.example.yml` to same directory and name it `config.dev.yml`
 6. copy `/clothing-loop/frontend/.env-example` to same directory and name it `.env`
 
 ## 3. Start using docker compose
 
-1. Open a terminal and cd into `clothing-loop/docker/dev`
-2. Run `make docker-start` this will setup and start the container, wait till this finishes
+1. Open a terminal (in VS code) and cd into `clothing-loop/docker/dev`
+2. Run `make docker-start` this will setup and start the container, wait till this finishes (if the docker won't start it might help to open Docker Desktop first and try again, see: https://stackoverflow.com/questions/67788960/error-during-connect-this-error-may-indicate-that-the-docker-daemon-is-not-runn) 
 3. Run `make server-start` to start rest API backend (written in go) this will create the MYSQL database
-4. In new tab run `make db-setup` to seed the db with dummy data
+4. In new tab run `make db-setup` to seed the db with dummy data (cd into `clothing-loop/docker/dev` first)
 5. If you do not have a MYSQL client, install one, like HeidiSQL (Windows).
    The server is `128.0.0.1` and user: `root` and password is `fb4aeaa6d860dbabe785675e` (from docker-compose.yml). The tables should be populated.
-6. Run `make frontend-start` to start the frontend using Vite, it should be visible at <http://localhost:3000>
+6. Run `make frontend-start` to start the frontend using Vite, it should be visible at <http://localhost:3000> in your browser of choice
 
 ## 4. Login
 
