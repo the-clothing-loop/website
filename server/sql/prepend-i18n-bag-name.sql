@@ -1,20 +1,22 @@
-UPDATE bags b
-    JOIN user_chains bag_chain ON 
-        b.user_chain_id = bag_chain.id
-    JOIN user_chains uc ON
-        bag_chain.chain_id = uc.chain_id AND uc.is_chain_admin = 1
-    JOIN users u ON
-        uc.user_id = u.id AND LENGTH(u.i18n) = 2
-SET b.number = IF(
-    LENGTH(b.number) < 7 AND (
-        (u.i18n = 'nl' AND LEFT(b.number, 4) != 'Tas ') OR 
-        (u.i18n = 'fr' AND LEFT(b.number, 4) != 'Sac ') OR 
-        (u.i18n NOT IN ('nl', 'fr') AND LEFT(b.number, 4) != 'Bag ')
-    ),
+UPDATE bags AS b
+    JOIN (
+        SELECT b.id AS bag_id, u.id AS user_id, u.i18n,
+        ROW_NUMBER() OVER (PARTITION BY b.id ORDER BY FIELD(LOWER(u.i18n), 'en', 'fr', 'nl') DESC) AS row_num
+        FROM bags b
+            JOIN user_chains bag_chain ON b.user_chain_id = bag_chain.id
+            JOIN user_chains uc ON bag_chain.chain_id = uc.chain_id AND uc.is_chain_admin = 1
+            LEFT JOIN users u ON uc.user_id = u.id
+    ) AS ru ON b.id = ru.bag_id
+SET b.number = CASE
+    WHEN LENGTH(b.number) < 7 AND (
+        LEFT(b.number, 4) != 'Tas ' AND
+        LEFT(b.number, 4) != 'Sac ' AND
+        LEFT(b.number, 4) != 'Bag ')
+    THEN
         CASE
-            WHEN u.i18n = 'nl' THEN CONCAT('Tas ', b.number)
-            WHEN u.i18n = 'fr' THEN CONCAT('Sac ', b.number)
-            ELSE CONCAT('Bag ', b.number)
-        END,
-        b.number
-);
+            WHEN LOWER(ru.i18n) = 'en' THEN CONCAT('Bag ', b.number)
+            WHEN LOWER(ru.i18n) = 'fr' THEN CONCAT('Sac ', b.number)
+            ELSE CONCAT('Tas ', b.number)
+        END
+    ELSE b.number
+END;
