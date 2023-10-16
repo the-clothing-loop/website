@@ -45,12 +45,6 @@ export function chainRemoveUser(chainUID: UID, userUID: UID) {
   });
 }
 
-export function userDelete(chainUID: UID, userUID: UID) {
-  return window.axios.delete<never>("/v2/user", {
-    params: { user_uid: userUID, chain_uid: chainUID },
-  });
-}
-
 export function chainUserApprove(chainUID: UID, userUID: UID) {
   return window.axios.patch<never>("/v2/chain/approve-user", {
     user_uid: userUID,

@@ -360,7 +360,7 @@ export default function Settings() {
                   <IonLabel>{t("interestedSizes")}</IonLabel>
                   <div className="ion-margin-top ion-margin-bottom" slot="end">
                     {chain ? (
-                      <Badges genders={chain.genders} sizes={chain.genders} />
+                      <Badges genders={chain.genders} sizes={chain.sizes} />
                     ) : null}
                   </div>
                 </IonItem>

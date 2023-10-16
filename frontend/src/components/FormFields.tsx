@@ -3,19 +3,11 @@ import {
   FocusEvent,
   HTMLInputTypeAttribute,
   InputHTMLAttributes,
-  useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
 import PopoverOnHover from "./Popover";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input/max";
-import Cookies from "js-cookie";
 import "react-phone-number-input/style.css";
-import { ipinfoGet } from "../api/ipinfo";
-
-const IPINFO_KEY = import.meta.env.VITE_IPINFO_API_KEY;
-const COOKIE_IPINFO_COUNTRY = "ipinfo_country";
-/** in days */
-const COOKIE_IPINFO_COUNTRY_EXPIRES = 31;
 
 interface PhoneFormFieldProps {
   classes?: {
@@ -29,26 +21,6 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
   const { t } = useTranslation();
 
   const [valid, setValid] = useState(true);
-  const [defaultCountry, setDefaultCountry] = useState(
-    () => Cookies.get(COOKIE_IPINFO_COUNTRY) || ""
-  );
-  useEffect(() => {
-    if (defaultCountry) return;
-
-    ipinfoGet(IPINFO_KEY)
-      .then((res) => {
-        return res.data.country;
-      })
-      .catch((err) => {
-        return "NL";
-      })
-      .then((res) => {
-        Cookies.set(COOKIE_IPINFO_COUNTRY, res, {
-          expires: COOKIE_IPINFO_COUNTRY_EXPIRES,
-        });
-        setDefaultCountry(res);
-      });
-  }, []);
 
   function onBlur(e: FocusEvent<HTMLInputElement>) {
     let v = isValidPhoneNumber(e.target.value);
@@ -67,7 +39,6 @@ export function PhoneFormField(props: PhoneFormFieldProps) {
       </div>
       <PhoneInput
         international
-        defaultCountry={defaultCountry as any}
         value={props.value}
         onChange={props.onChange as any}
         onBlur={onBlur}

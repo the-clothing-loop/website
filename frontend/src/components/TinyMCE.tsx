@@ -13,7 +13,7 @@ import "tinymce/skins/ui/oxide/skin.min.css";
 // importing the plugin js.
 // if you use a plugin that is not listed here the editor will fail to load
 import "tinymce/plugins/advlist";
-import "tinymce/plugins/anchor";
+// import "tinymce/plugins/anchor";
 import "tinymce/plugins/autolink";
 import "tinymce/plugins/autoresize";
 import "tinymce/plugins/autosave";
@@ -66,11 +66,9 @@ export function TinyMCE({ onChange, ...props }: Props) {
       selector: "textarea#" + id,
       plugins: [
         "advlist",
-        "anchor",
-        "autolink",
         "directionality",
         "link",
-        "image",
+        "autolink",
         "lists",
         "charmap",
         "pagebreak",
@@ -82,9 +80,13 @@ export function TinyMCE({ onChange, ...props }: Props) {
         "emoticons",
       ],
       menubar: false,
-      toolbar: "bold italic bullist numlist emoticons", // link image",
+      toolbar: "bold italic bullist numlist emoticons", // image",
       content_css: [],
       directionality: i18n.language === "he" ? "rtl" : "ltr",
+      link_quicklink: true,
+      link_default_target: "_blank",
+      contextmenu: [],
+      browser_spellcheck: true,
     });
 
     let _editor = tinymce.get(id);
@@ -107,5 +109,5 @@ export function TinyMCE({ onChange, ...props }: Props) {
     }
   }, [i18n.language]);
 
-  return <textarea id={id} {...props} />;
+  return <textarea id={id} {...props} spellCheck />;
 }

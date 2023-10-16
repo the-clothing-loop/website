@@ -37,12 +37,6 @@ export function userAddAsChainAdmin(chainUID: string, userUID: string) {
   });
 }
 
-export function userDelete(chainUID: string, userUID: string) {
-  return window.axios.delete<never>("/v2/user/", {
-    params: { user_uid: userUID, chain_uid: chainUID },
-  });
-}
-
 export function userPurge(userUID: string) {
   return window.axios.delete<never>("v2/user/purge", {
     params: { user_uid: userUID },

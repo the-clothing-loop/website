@@ -325,39 +325,11 @@ func UserUpdate(c *gin.Context) {
 				c.String(http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
-			if app.SendInBlue != nil && user.Email.Valid {
-				app.SendInBlue.DeleteContact(c.Request.Context(), user.Email.String)
+			if app.Brevo != nil && user.Email.Valid {
+				app.Brevo.DeleteContact(c.Request.Context(), user.Email.String)
 			}
 		}
 	}
-}
-
-func UserDelete(c *gin.Context) {
-	db := getDB(c)
-
-	var query struct {
-		UserUID  string `form:"user_uid" binding:"required,uuid"`
-		ChainUID string `form:"chain_uid" binding:"required,uuid"`
-	}
-	if err := c.ShouldBindQuery(&query); err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	ok, _, _ := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
-	if !ok {
-		return
-	}
-
-	// first find user id
-	var userID uint
-	db.Raw("SELECT id FROM users WHERE uid = ? LIMIT 1", query.UserUID).Scan(&userID)
-	if userID == 0 {
-		c.String(http.StatusBadRequest, "User is not found")
-		return
-	}
-
-	db.Delete(&models.User{}, userID)
 }
 
 func UserPurge(c *gin.Context) {
@@ -420,6 +392,17 @@ HAVING COUNT(uc.id) = 1
 		c.String(http.StatusInternalServerError, "Unable to disconnect user bag connections")
 		return
 	}
+	err = tx.Exec(`
+UPDATE events SET user_id = (
+	SELECT id FROM users WHERE is_root_admin = 1 LIMIT 1
+) WHERE user_id = ?
+	`, user.ID).Error
+	if err != nil {
+		tx.Rollback()
+		goscope.Log.Errorf("UserPurge: Unable to remove event connections: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to remove event connections")
+		return
+	}
 	err = tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
@@ -432,6 +415,13 @@ HAVING COUNT(uc.id) = 1
 		tx.Rollback()
 		goscope.Log.Errorf("UserPurge: Unable to remove token connections: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to remove token connections")
+		return
+	}
+	err = tx.Exec(`DELETE FROM user_onesignals WHERE user_id = ?`, user.ID).Error
+	if err != nil {
+		tx.Rollback()
+		goscope.Log.Errorf("UserPurge: Unable to remove onesignal connections: %v", err)
+		c.String(http.StatusInternalServerError, "Unable to remove onesignal connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID).Error
@@ -477,8 +467,8 @@ HAVING COUNT(uc.id) = 1
 			c.String(http.StatusInternalServerError, "Unable to remove newsletter")
 			return
 		}
-		if app.SendInBlue != nil {
-			app.SendInBlue.DeleteContact(c.Request.Context(), user.Email.String)
+		if app.Brevo != nil {
+			app.Brevo.DeleteContact(c.Request.Context(), user.Email.String)
 		}
 	}
 

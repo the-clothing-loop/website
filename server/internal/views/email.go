@@ -134,18 +134,273 @@ func emailGenerateMessage(m *models.Mail, lng, templateName string, data any, su
 	return nil
 }
 
-func EmailRootAdminFailedLastRetry(db *gorm.DB, email, subject string) error {
-	m := app.MailCreate()
+func EmailAccountDeletedSuccessfully(db *gorm.DB, lng,
+	name,
+	email string,
+) error {
+	lng = getI18n(lng)
 
-	m.ToName = "The Clothing Loop"
-	m.ToAddress = app.Config.SMTP_SENDER
-	m.Subject = "Failed last attempt to send email"
-	m.Body = fmt.Sprintf("Failed to send email<br/><strong>To:</strong> %s<br/><strong>Subject:</strong> %s", email, subject)
+	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "account_deleted_successfully", gin.H{
+		"Name": name,
+	})
+	if err != nil {
+		return err
+	}
 
 	return app.MailSend(db, m)
 }
 
-func EmailAParticipantJoinedTheLoop(c *gin.Context, db *gorm.DB, lng,
+func EmailAnAdminApprovedYourJoinRequest(db *gorm.DB, lng,
+	name,
+	email,
+	chainName string,
+) error {
+	lng = getI18n(lng)
+	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "an_admin_approved_your_join_request", gin.H{
+		"Name":      name,
+		"ChainName": chainName,
+	})
+	if err != nil {
+		return err
+	}
+
+	return app.MailSend(db, m)
+}
+
+func EmailAnAdminDeniedYourJoinRequest(db *gorm.DB, lng,
+	name,
+	email,
+	chainName,
+	reason string,
+) error {
+	lng = getI18n(lng)
+	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "an_admin_denied_your_join_request", gin.H{
+		"Name":      name,
+		"ChainName": chainName,
+		"Reason":    reason,
+	})
+	if err != nil {
+		return err
+	}
+
+	return app.MailSend(db, m)
+}
+
+type EmailApproveReminderItem struct {
+	Name        string `gorm:"name"`
+	Email       string `gorm:"email"`
+	ChainID     uint   `gorm:"chain_id"`
+	UserChainID uint   `gorm:"user_chain_id"`
+	ChainName   string `gorm:"chain_name"`
+}
+
+func EmailApproveReminder(db *gorm.DB, lng,
+	name,
+	email string,
+	approvals []*EmailApproveReminderItem,
+) error {
+	lng = getI18n(lng)
+	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "approve_reminder", gin.H{
+		"Name":      name,
+		"BaseURL":   app.Config.SITE_BASE_URL_FE,
+		"Approvals": approvals,
+	})
+	if err != nil {
+		return err
+	}
+
+	return app.MailSend(db, m)
+}
+
+func EmailContactConfirmation(c *gin.Context, db *gorm.DB,
+	name,
+	email,
+	message string,
+) error {
+	i18n := getI18nGin(c)
+	m := app.MailCreate()
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, i18n, "contact_confirmation", gin.H{
+		"Name":    name,
+		"Message": message,
+	})
+	if err != nil {
+		return err
+	}
+
+	return app.MailSend(db, m)
+}
+
+func EmailContactReceived(db *gorm.DB,
+	name,
+	email,
+	message string,
+) error {
+	m := app.MailCreate()
+	m.ToName = "The Clothing Loop"
+	m.ToAddress = app.Config.SMTP_SENDER
+	err := emailGenerateMessage(m, "en", "contact_received", gin.H{
+		"Name":    name,
+		"Email":   email,
+		"Message": message,
+	})
+	if err != nil {
+		return err
+	}
+
+	return app.MailSend(db, m)
+}
+
+func EmailDoYouWantToBeHost(db *gorm.DB, lng,
+	name,
+	email,
+	chainName string,
+) error {
+	lng = getI18n(lng)
+	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "do_you_want_to_be_host", gin.H{
+		"Name":      name,
+		"ChainName": chainName,
+	})
+	if err != nil {
+		return err
+	}
+
+	return app.MailSend(db, m)
+}
+
+func EmailIsYourLoopStillActive(db *gorm.DB, lng,
+	name,
+	email,
+	chainName,
+	participantName string,
+) error {
+	lng = getI18n(lng)
+	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "is_your_loop_still_active", gin.H{
+		"Name":            name,
+		"ParticipantName": participantName,
+		"ChainName":       chainName,
+	})
+	if err != nil {
+		return err
+	}
+
+	return app.MailSend(db, m)
+}
+
+func EmailLoginVerification(c *gin.Context, db *gorm.DB,
+	name,
+	email,
+	token string,
+	isApp bool,
+) error {
+	i18n := getI18nGin(c)
+	m := app.MailCreate()
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, i18n, "login_verification", gin.H{
+		"Name":    name,
+		"BaseURL": app.Config.SITE_BASE_URL_FE,
+		"Token":   token,
+		"IsApp":   isApp,
+	})
+	if err != nil {
+		return err
+	}
+
+	return app.MailSend(db, m)
+}
+
+func EmailLoopIsDeleted(db *gorm.DB, lng,
+	name,
+	email,
+	chainName string,
+) error {
+	lng = getI18n(lng)
+	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "loop_is_deleted", gin.H{
+		"Name":      name,
+		"ChainName": chainName,
+	})
+	if err != nil {
+		return err
+	}
+
+	return app.MailSend(db, m)
+}
+
+func EmailPoke(db *gorm.DB, lng,
+	name,
+	email,
+	participantName,
+	chainName string,
+) error {
+	lng = getI18n(lng)
+	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "poke", gin.H{
+		"Name":            name,
+		"ChainName":       chainName,
+		"ParticipantName": participantName,
+	}, name, chainName)
+	if err != nil {
+		return err
+	}
+
+	return app.MailSend(db, m)
+}
+
+func EmailRegisterVerification(c *gin.Context, db *gorm.DB,
+	name,
+	email,
+	token string,
+) error {
+	i18n := getI18nGin(c)
+	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, i18n, "register_verification", gin.H{
+		"Name":    name,
+		"BaseURL": app.Config.SITE_BASE_URL_FE,
+		"Token":   token,
+	})
+	if err != nil {
+		return err
+	}
+	return app.MailSend(db, m)
+}
+
+func EmailSomeoneIsInterestedInJoiningYourLoop(db *gorm.DB, lng,
 	adminEmail,
 	adminName,
 	chainName,
@@ -209,42 +464,47 @@ func EmailAParticipantJoinedTheLoop(c *gin.Context, db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-func EmailContactUserMessage(c *gin.Context, db *gorm.DB,
+func EmailSomeoneLeftLoop(db *gorm.DB, lng,
 	name,
 	email,
-	message string,
+	chainName,
+	participantName string,
 ) error {
+	lng = getI18n(lng)
 	m := app.MailCreate()
-	m.ToName = "The Clothing Loop"
-	m.ToAddress = app.Config.SMTP_SENDER
-	err := emailGenerateMessage(m, "en", "contact_confirmation", gin.H{
-		"Name":    name,
-		"Email":   email,
-		"Message": message,
-	})
-	if err != nil {
-		return err
-	}
-
-	return app.MailSend(db, m)
-}
-func EmailContactConfirmation(c *gin.Context, db *gorm.DB,
-	name,
-	email,
-	message string,
-) error {
-	i18n := getI18nGin(c)
-	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
-	err := emailGenerateMessage(m, i18n, "contact_confirmation", gin.H{
-		"Name":    name,
-		"Message": message,
+	err := emailGenerateMessage(m, lng, "someone_left_loop", gin.H{
+		"Name":            name,
+		"ParticipantName": participantName,
+		"ChainName":       chainName,
 	})
 	if err != nil {
 		return err
 	}
+	return app.MailSend(db, m)
+}
 
+func EmailSomeoneWaitingToBeAccepted(db *gorm.DB, lng,
+	name,
+	email,
+	chainName,
+	participantName string,
+) error {
+	lng = getI18n(lng)
+	m := app.MailCreate()
+	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
+	m.ToName = name
+	m.ToAddress = email
+	err := emailGenerateMessage(m, lng, "someone_waiting_to_be_accepted", gin.H{
+		"Name":            name,
+		"ParticipantName": participantName,
+		"ChainName":       chainName,
+	})
+	if err != nil {
+		return err
+	}
 	return app.MailSend(db, m)
 }
 
@@ -264,61 +524,16 @@ func EmailSubscribeToNewsletter(c *gin.Context, db *gorm.DB,
 	return app.MailSend(db, m)
 }
 
-func EmailRegisterVerification(c *gin.Context, db *gorm.DB,
-	name,
-	email,
-	token string,
-) error {
-	i18n := getI18nGin(c)
-	m := app.MailCreate()
-	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
-	m.ToName = name
-	m.ToAddress = email
-	err := emailGenerateMessage(m, i18n, "register_verification", gin.H{
-		"Name":    name,
-		"BaseURL": app.Config.SITE_BASE_URL_FE,
-		"Token":   token,
-	})
-	if err != nil {
-		return err
-	}
-	return app.MailSend(db, m)
-}
-
-func EmailLoginVerification(c *gin.Context, db *gorm.DB,
-	name,
-	email,
-	token string,
-	isApp bool,
-) error {
-	i18n := getI18nGin(c)
-	m := app.MailCreate()
-	m.ToName = name
-	m.ToAddress = email
-	err := emailGenerateMessage(m, i18n, "login_verification", gin.H{
-		"Name":    name,
-		"BaseURL": app.Config.SITE_BASE_URL_FE,
-		"Token":   token,
-		"IsApp":   isApp,
-	})
-	if err != nil {
-		return err
-	}
-
-	return app.MailSend(db, m)
-}
-
-func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
+func EmailYouSignedUpForLoop(db *gorm.DB, lng,
 	name,
 	email,
 	chainName string,
 ) error {
 	lng = getI18n(lng)
 	m := app.MailCreate()
-	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
-	err := emailGenerateMessage(m, lng, "an_admin_approved_your_join_request", gin.H{
+	err := emailGenerateMessage(m, lng, "you_signed_up_for_loop", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
 	})
@@ -329,21 +544,20 @@ func EmailAnAdminApprovedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-func EmailAnAdminDeniedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
+func EmailYourLoopDeletedNextMonth(db *gorm.DB, lng,
 	name,
 	email,
 	chainName,
-	reason string,
+	chainUID string,
 ) error {
 	lng = getI18n(lng)
 	m := app.MailCreate()
-	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
-	err := emailGenerateMessage(m, lng, "an_admin_denied_your_join_request", gin.H{
+	err := emailGenerateMessage(m, lng, "your_loop_deleted_next_month", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
-		"Reason":    reason,
+		"ChainUID":  chainUID,
 	})
 	if err != nil {
 		return err
@@ -352,22 +566,21 @@ func EmailAnAdminDeniedYourJoinRequest(c *gin.Context, db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-func EmailPoke(c *gin.Context, db *gorm.DB, lng,
+func EmailYourLoopDeletedNextWeek(db *gorm.DB, lng,
 	name,
 	email,
-	participantName,
-	chainName string,
+	chainName,
+	chainUID string,
 ) error {
 	lng = getI18n(lng)
 	m := app.MailCreate()
-	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
-	err := emailGenerateMessage(m, lng, "poke", gin.H{
-		"Name":            name,
-		"ChainName":       chainName,
-		"ParticipantName": participantName,
-	}, name, chainName)
+	err := emailGenerateMessage(m, lng, "your_loop_deleted_next_week", gin.H{
+		"Name":      name,
+		"ChainName": chainName,
+		"ChainUID":  chainUID,
+	})
 	if err != nil {
 		return err
 	}
@@ -375,32 +588,13 @@ func EmailPoke(c *gin.Context, db *gorm.DB, lng,
 	return app.MailSend(db, m)
 }
 
-type EmailApproveReminderItem struct {
-	Name        string `gorm:"name"`
-	Email       string `gorm:"email"`
-	ChainID     uint   `gorm:"chain_id"`
-	UserChainID uint   `gorm:"user_chain_id"`
-	ChainName   string `gorm:"chain_name"`
-}
-
-func EmailApproveReminder(db *gorm.DB, lng,
-	name,
-	email string,
-	approvals []*EmailApproveReminderItem,
-) error {
-	lng = getI18n(lng)
+func EmailRootAdminFailedLastRetry(db *gorm.DB, email, subject string) error {
 	m := app.MailCreate()
-	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
-	m.ToName = name
-	m.ToAddress = email
-	err := emailGenerateMessage(m, lng, "approve_reminder", gin.H{
-		"Name":      name,
-		"BaseURL":   app.Config.SITE_BASE_URL_FE,
-		"Approvals": approvals,
-	})
-	if err != nil {
-		return err
-	}
+
+	m.ToName = "The Clothing Loop"
+	m.ToAddress = app.Config.SMTP_SENDER
+	m.Subject = "Failed last attempt to send email"
+	m.Body = fmt.Sprintf("Failed to send email<br/><strong>To:</strong> %s<br/><strong>Subject:</strong> %s", email, subject)
 
 	return app.MailSend(db, m)
 }

@@ -441,7 +441,7 @@ LIMIT 1
 
 		for _, result := range results {
 			if result.Email.Valid {
-				go views.EmailAParticipantJoinedTheLoop(c, db, result.I18n,
+				go views.EmailSomeoneIsInterestedInJoiningYourLoop(db, result.I18n,
 					result.Email.String,
 					result.Name,
 					chain.Name,
@@ -527,7 +527,7 @@ WHERE user_id = ? AND chain_id = ?
 	chain.SetRouteOrderByUserUIDs(db, newRoute) // update the route order
 
 	if user.Email.Valid {
-		views.EmailAnAdminApprovedYourJoinRequest(c, db, user.I18n, user.Name, user.Email.String, chain.Name)
+		views.EmailAnAdminApprovedYourJoinRequest(db, user.I18n, user.Name, user.Email.String, chain.Name)
 	}
 }
 
@@ -558,7 +558,7 @@ func ChainDeleteUnapproved(c *gin.Context) {
 	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
 
 	if user.Email.Valid {
-		views.EmailAnAdminDeniedYourJoinRequest(c, db, user.I18n, user.Name, user.Email.String, chain.Name,
+		views.EmailAnAdminDeniedYourJoinRequest(db, user.I18n, user.Name, user.Email.String, chain.Name,
 			query.Reason)
 	}
 
