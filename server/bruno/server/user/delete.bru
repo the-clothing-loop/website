@@ -1,0 +1,16 @@
+meta {
+  name: delete
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{base}}/v2/user?chain_uid=&user_uid=
+  body: none
+  auth: none
+}
+
+query {
+  chain_uid: 
+  user_uid: 
+}

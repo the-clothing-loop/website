@@ -1,0 +1,25 @@
+meta {
+  name: create
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base}}/v2/chain
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "name": "",
+      "description": "",
+      "address": "",
+      "latitude": 8.9,
+      "longitude": 3.8,
+      "radius": 0.1,
+      "sizes": [
+          ""
+      ]
+  }
+}

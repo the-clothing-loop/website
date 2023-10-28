@@ -1,0 +1,25 @@
+meta {
+  name: register basic user
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base}}/v2/register/basic-user
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "chain_uid":"{{chainUID}}",
+      "user": {
+          "email":"test@example.com",
+          "name": "Test",
+          "address":"Lorem ipsum 10",
+          "phone_number": "",
+          "newsletter": false,
+          "sizes": []
+      }
+  }
+}

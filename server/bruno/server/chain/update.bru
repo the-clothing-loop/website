@@ -1,0 +1,26 @@
+meta {
+  name: update
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{base}}/v2/chain
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "uid": "{{chainUID}}",
+      "name": "",
+      "description": "",
+      "address": "",
+      "latitude": 8.9,
+      "longitude": 3.8,
+      "radius": 0.1,
+      "sizes": [
+          ""
+      ]
+  }
+}

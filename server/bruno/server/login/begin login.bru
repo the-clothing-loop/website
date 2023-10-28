@@ -1,0 +1,17 @@
+meta {
+  name: begin login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/v2/login/email
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "email":"{{userEmail}}"
+  }
+}

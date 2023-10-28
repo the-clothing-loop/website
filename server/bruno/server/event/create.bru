@@ -1,0 +1,25 @@
+meta {
+  name: create
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base}}/v2/event/
+  body: text
+  auth: none
+}
+
+body:text {
+  {
+      "uid": "{{eventUID}}",
+      "name": "Seven of Nine",
+      "desciption": "You are to be assimilated",
+      "latitude": 53.0,
+      "longitude": 3.2,
+      "address": "mystreet 23",
+      "date": "2020-12-31",
+      "genders": ["1", "3"],
+      "chain_uid": "{{chainUID}}"
+  }
+}

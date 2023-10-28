@@ -1,0 +1,23 @@
+meta {
+  name: validate login
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base}}/v2/login/validate?apiKey={{token}}
+  body: none
+  auth: none
+}
+
+query {
+  apiKey: {{token}}
+}
+
+script:pre-request {
+  //  
+}
+
+tests {
+  //  
+}

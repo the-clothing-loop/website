@@ -1,0 +1,11 @@
+meta {
+  name: unapprove user
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{base}}/v2/chain/unapproved-user
+  body: none
+  auth: none
+}

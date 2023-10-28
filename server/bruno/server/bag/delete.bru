@@ -1,0 +1,16 @@
+meta {
+  name: delete
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{base}}/v2/bag/all?user_uid={{userUID}}&chain_uid={{chainUID}}
+  body: none
+  auth: none
+}
+
+query {
+  user_uid: {{userUID}}
+  chain_uid: {{chainUID}}
+}

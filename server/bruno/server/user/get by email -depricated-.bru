@@ -1,0 +1,16 @@
+meta {
+  name: get by email -depricated-
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base}}/v2/user?chain_uid={{chainUID}}&email={{userEmail}}
+  body: none
+  auth: none
+}
+
+query {
+  chain_uid: {{chainUID}}
+  email: {{userEmail}}
+}
