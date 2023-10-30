@@ -120,3 +120,24 @@ func (c *Chain) ClearAllLastNotifiedIsUnapprovedAt(db *gorm.DB) error {
 	WHERE chain_id = ?
 	`, c.ID).Error
 }
+
+func ChainGetNamesByIDs(db *gorm.DB, chainIDs []uint) ([]string, error) {
+
+	type aux struct {
+		Name string
+	}
+	results := []aux{}
+
+	query := `SELECT chains.name FROM chains WHERE id IN ?`
+	err := db.Raw(query, chainIDs).Find(&results).Error
+	if err != nil {
+		return nil, err
+	}
+
+	names := []string{}
+	for _, v := range results {
+		names = append(names, v.Name)
+	}
+
+	return names, nil
+}
