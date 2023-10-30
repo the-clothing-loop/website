@@ -236,7 +236,7 @@ func ChainGetNear(c *gin.Context) {
 	var query struct {
 		Latitude  float32 `form:"latitude" binding:"required,latitude"`
 		Longitude float32 `form:"longitude" binding:"required,longitude"`
-		Radius    float32 `form:"radius" binding:"required,longitude"`
+		Radius    float32 `form:"radius" binding:"required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
 		c.String(http.StatusBadRequest, err.Error())
@@ -244,10 +244,10 @@ func ChainGetNear(c *gin.Context) {
 	}
 
 	chains := []models.Chain{}
-	sql := "SELECT * FROM chains"
+	sql := "SELECT UID, Name, Genders FROM chains"
 	args := []any{}
 
-	sql = fmt.Sprintf("%s WHERE %s <= ? ", sql, sqlCalcDistance("chains.latitude", "chains.longitude", "?", "?"))
+	sql = fmt.Sprintf("%s WHERE %s <= ? AND chains.published = TRUE", sql, sqlCalcDistance("chains.latitude", "chains.longitude", "?", "?"))
 	args = append(args, query.Latitude, query.Longitude, query.Radius)
 
 	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
@@ -259,17 +259,9 @@ func ChainGetNear(c *gin.Context) {
 	chainsJson := []*gin.H{}
 	for _, chain := range chains {
 		chainsJson = append(chainsJson, &gin.H{
-			"uid":                 chain.UID,
-			"name":                chain.Name,
-			"description":         chain.Description,
-			"address":             chain.Address,
-			"latitude":            chain.Latitude,
-			"longitude":           chain.Longitude,
-			"radius":              chain.Radius,
-			"sizes":               chain.Sizes,
-			"genders":             chain.Genders,
-			"published":           chain.Published,
-			"open_to_new_members": chain.OpenToNewMembers,
+			"uid":     chain.UID,
+			"name":    chain.Name,
+			"genders": chain.Genders,
 		})
 	}
 
