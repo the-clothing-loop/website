@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/golang/glog"
@@ -74,6 +75,9 @@ func ContactMail(c *gin.Context) {
 		return
 	}
 	if !(body.Honeypot != nil && !*body.Honeypot) {
+		if app.Config.ENV == app.EnvEnumDevelopment {
+			fmt.Println("Honeypot activated")
+		}
 		return
 	}
 
@@ -87,7 +91,7 @@ func ContactMail(c *gin.Context) {
 		glog.Errorf("Unable to send email: %v", err)
 	}
 
-	if err2 != nil || err == nil {
+	if err2 != nil || err != nil {
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to send email"))
 	}
 }
