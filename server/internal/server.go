@@ -62,7 +62,9 @@ func Routes() *gin.Engine {
 		Scheduler.StartAsync()
 
 		// testing
-		Scheduler.RunAll()
+		if app.Config.ENV == app.EnvEnumDevelopment {
+			Scheduler.RunAll()
+		}
 	}
 
 	// router
