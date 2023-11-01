@@ -67,6 +67,32 @@ DELETE FROM bulky_items WHERE user_chain_id IN (
 }
 
 func (u *User) DeleteUserChainDependenciesAllChains(db *gorm.DB) (err error) {
+	// TODO: send notification to host
+	// give away bags to the next host
+	err = db.Exec(`
+UPDATE bags AS b
+SET user_chain_id = (
+	SELECT uc.id FROM user_chains AS uc
+	WHERE uc.is_chain_admin IS TRUE
+		AND uc.is_approved IS TRUE
+		AND uc.chain_id = (
+			SELECT uc2.chain_id FROM user_chains AS uc2
+			WHERE uc2.id = b.user_chain_id
+		)
+	ORDER BY
+     uc.user_id != ? DESC,
+     uc.user_id
+	LIMIT 1
+)
+WHERE b.user_chain_id IN (
+	SELECT id FROM user_chains WHERE user_id = ?
+)
+	`, u.ID, u.ID).Error
+	if err != nil {
+		return fmt.Errorf("Unable to give away connected bags from user: %v", err)
+	}
+
+	// delete other bags unable to give away
 	err = db.Exec(`
 DELETE FROM bags WHERE user_chain_id IN (
 	SELECT id FROM user_chains WHERE user_id = ?
@@ -76,6 +102,7 @@ DELETE FROM bags WHERE user_chain_id IN (
 		return fmt.Errorf("Unable to delete bulky items from user: %v", err)
 	}
 
+	// delete bulky items from user
 	err = db.Exec(`
 DELETE FROM bulky_items WHERE user_chain_id IN (
 	SELECT id FROM user_chains WHERE user_id = ?
