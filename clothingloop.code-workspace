@@ -17,6 +17,9 @@
     },
     {
       "path": "docker"
+    },
+    {
+      "path": "bruno"
     }
   ],
   "settings": {
