@@ -1,0 +1,16 @@
+meta {
+  name: get all
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base}}/v2/bulky-item/all?user_uid={{userUID}}&chain_uid={{chainUID}}
+  body: none
+  auth: none
+}
+
+query {
+  user_uid: {{userUID}}
+  chain_uid: {{chainUID}}
+}

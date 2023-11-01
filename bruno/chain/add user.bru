@@ -1,0 +1,19 @@
+meta {
+  name: add user
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base}}/v2/chain/add-user
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "chain_uid": "{{chainUID}}",
+    "user_uid": "f5051b97-4eba-448e-944c-3aa7523e74c0",
+    "is_chain_admin": true
+  }
+}

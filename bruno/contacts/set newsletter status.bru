@@ -1,0 +1,19 @@
+meta {
+  name: set newsletter status
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/v2/contact/newsletter
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "name": "John Smith",
+      "email": "test@example.com",
+      "subscribe": true
+  }
+}

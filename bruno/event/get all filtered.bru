@@ -1,0 +1,17 @@
+meta {
+  name: get all filtered
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base}}/v2/event/all?latitude=52.641460&longitude=5.056810&radius=1000
+  body: none
+  auth: none
+}
+
+query {
+  latitude: 52.641460
+  longitude: 5.056810
+  radius: 1000
+}
