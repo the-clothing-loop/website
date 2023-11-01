@@ -16,7 +16,8 @@ import (
 var validate = validator.New()
 
 func CronMonthly(db *gorm.DB) {
-	closeChainsWithOldPendingParticipants(db)
+	// TODO: fix automatic Loop closure
+	// closeChainsWithOldPendingParticipants(db)
 	emailHostsOldPendingParticipants(db)
 }
 
