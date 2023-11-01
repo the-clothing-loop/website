@@ -5,3 +5,9 @@ auth {
 auth:bearer {
   token: {{token}}
 }
+
+tests {
+  test("should status ok", function() {
+    expect(res.status).to.equal(200) 
+  })
+}

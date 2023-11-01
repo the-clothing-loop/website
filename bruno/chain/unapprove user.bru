@@ -5,7 +5,21 @@ meta {
 }
 
 delete {
-  url: {{base}}/v2/chain/unapproved-user
+  url: {{base}}/v2/chain/unapproved-user?user_uid=f5051b97-4eba-448e-944c-3aa7523e74c0&chain_uid={{chainUID}}&reason=other
   body: none
   auth: none
+}
+
+query {
+  user_uid: f5051b97-4eba-448e-944c-3aa7523e74c0
+  chain_uid: {{chainUID}}
+  reason: other
+}
+
+body:json {
+  {
+    "user_uid": "f5051b97-4eba-448e-944c-3aa7523e74c0",
+    "chain_uid": "{{chainUID}}",
+    "reason": "other"
+  }
 }

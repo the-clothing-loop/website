@@ -6,8 +6,22 @@ meta {
 
 post {
   url: {{base}}/v2/route/order
-  body: text
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "chain_uid": "{{chainUID}}",
+    "route_order": [
+      "a151dcbc-d97b-46c5-bac0-90565da8e345",
+      "7711dc5f-396f-4c98-b86e-171f568f7ddb",
+      "6d71acc5-a2d5-4734-b2ac-ed5c11242dfd",
+      "ba6cf778-9d87-4090-bd88-52195b6aa876",
+      "2d5e1a55-0b56-48b0-a55e-c32a09614f80",
+      "11e52eea-7542-42ab-aa4e-c3a08ce51d7d"
+    ]
+  }
 }
 
 body:text {

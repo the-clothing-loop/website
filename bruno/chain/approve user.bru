@@ -6,6 +6,13 @@ meta {
 
 patch {
   url: {{base}}/v2/chain/approve-user
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "user_uid": "f5051b97-4eba-448e-944c-3aa7523e74c0",
+    "chain_uid": "{{chainUID}}"
+  }
 }
