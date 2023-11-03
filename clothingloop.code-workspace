@@ -20,6 +20,9 @@
     },
     {
       "path": "bruno"
+    },
+    {
+      "path": ".husky"
     }
   ],
   "settings": {
