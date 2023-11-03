@@ -244,7 +244,7 @@ func ChainGetNear(c *gin.Context) {
 	}
 
 	chains := []models.Chain{}
-	sql := "SELECT UID, Name, Genders FROM chains"
+	sql := "SELECT uid, name, genders FROM chains"
 	args := []any{}
 
 	sql = fmt.Sprintf("%s WHERE %s <= ? AND chains.published = TRUE", sql, sqlCalcDistance("chains.latitude", "chains.longitude", "?", "?"))
