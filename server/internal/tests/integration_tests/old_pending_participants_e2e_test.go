@@ -15,6 +15,7 @@ import (
 )
 
 func TestOldPendingParticipantsCloseOldChain(t *testing.T) {
+	t.Skip("Skipping as closeChainsWithOldPendingParticipants is commented out")
 	chain, host, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
 		IsChainAdmin:       true,
 		IsOpenToNewMembers: true,
