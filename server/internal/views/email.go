@@ -260,7 +260,7 @@ func EmailContactReceived(db *gorm.DB,
 		"Name":    name,
 		"Email":   email,
 		"Message": message,
-	})
+	}, name)
 	if err != nil {
 		return err
 	}

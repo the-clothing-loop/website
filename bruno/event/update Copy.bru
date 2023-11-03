@@ -1,0 +1,18 @@
+meta {
+  name: update Copy
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{base}}/v2/event/
+  body: text
+  auth: none
+}
+
+body:text {
+  {
+      "uid": "{{eventUID}}",
+      "name": "Seven of Nine"
+  }
+}
