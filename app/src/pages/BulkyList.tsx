@@ -25,6 +25,7 @@ import { bulkyItemRemove, BulkyItem, User } from "../api";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
 import { Clipboard } from "@capacitor/clipboard";
+import "../tailwind.css";
 
 export default function BulkyList() {
   const { t } = useTranslation();
@@ -154,167 +155,170 @@ export default function BulkyList() {
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("bulkyItemsTitle")}</IonTitle>
-
           <IonButtons slot="end">
             <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen class="bg-blue">
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("bulkyItemsTitle")}</IonTitle>
+            <IonTitle
+              size="large"
+              className="tw-text-blue tw-font-serif tw-font-bold "
+            >
+              {t("bulkyItemsTitle")}
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
-        <div>
-          {bulkyItems.map((bulkyItem, i) => {
-            const user = chainUsers.find((u) => u.uid === bulkyItem.user_uid);
-            if (!user) return null;
-            const isMe = authUser?.uid === user.uid;
-            let createdAt = new Date(bulkyItem.created_at);
-            let shouldExpandText =
-              bulkyItem.message.length > 50 ||
-              bulkyItem.message.split("\n").length > 4;
+        {bulkyItems.map((bulkyItem, i) => {
+          const user = chainUsers.find((u) => u.uid === bulkyItem.user_uid);
+          if (!user) return null;
+          const isMe = authUser?.uid === user.uid;
+          let createdAt = new Date(bulkyItem.created_at);
+          let shouldExpandText =
+            bulkyItem.message.length > 50 ||
+            bulkyItem.message.split("\n").length > 4;
 
-            return (
-              <IonCard key={bulkyItem.id}>
-                {bulkyItem.image_url ? (
-                  <div
-                    className={`tw-relative tw-min-h-[124px] ${
-                      i % 2 === 0
-                        ? "tw-bg-primary-shade"
-                        : "tw-bg-secondary-shade"
+          return (
+            <IonCard key={bulkyItem.id} className="tw-bg-light tw-rounded-none">
+              {bulkyItem.image_url ? (
+                <div
+                  className={`tw-relative tw-min-h-[124px] ${
+                    i % 2 === 0
+                      ? "tw-bg-primary-shade"
+                      : "tw-bg-secondary-shade"
+                  }`}
+                >
+                  <IonCardSubtitle
+                    color="light"
+                    style={{
+                      textShadow:
+                        "1px 0 10px var(--ion-color-dark), 0 0 0.2em var(--ion-color-dark)",
+                    }}
+                    className="tw-absolute tw-top-0 tw-left-0 tw-right-0 tw-pt-3 tw-px-5 tw-text-base tw-leading-5"
+                  >
+                    {createdAt.toLocaleDateString()}
+                  </IonCardSubtitle>
+                  <img
+                    alt={bulkyItem.title}
+                    src={bulkyItem.image_url}
+                    className="tw-block"
+                    onError={onImgErrorHideAlt}
+                  />
+                  <IonCardTitle
+                    color="light"
+                    style={{
+                      textShadow:
+                        "1px 0 10px var(--ion-color-dark), 0 0 0.2em var(--ion-color-dark)",
+                    }}
+                    className="tw-absolute tw-bottom-0 tw-left-0 tw-right-0 tw-pt-0 tw-p-5"
+                  >
+                    {bulkyItem.title}
+                  </IonCardTitle>
+                </div>
+              ) : null}
+              <IonCardContent className="tw-pb-[5px]">
+                <IonText
+                  onClick={
+                    shouldExpandText
+                      ? () => handleClickReadMore(bulkyItem)
+                      : undefined
+                  }
+                  className="tw-text-dark tw-py-[3px]"
+                >
+                  <p
+                    className={`!tw-text-lg !tw-leading-5 tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
+                      shouldExpandText ? "tw-max-h-[46px]" : ""
                     }`}
                   >
-                    <IonCardSubtitle
-                      color="light"
-                      style={{
-                        textShadow:
-                          "1px 0 10px var(--ion-color-dark), 0 0 0.2em var(--ion-color-dark)",
-                      }}
-                      className="tw-absolute tw-top-0 tw-left-0 tw-right-0 tw-pt-3 tw-px-5 tw-text-base tw-leading-5"
-                    >
-                      {createdAt.toLocaleDateString()}
-                    </IonCardSubtitle>
-                    <img
-                      alt={bulkyItem.title}
-                      src={bulkyItem.image_url}
-                      className="tw-block"
-                      onError={onImgErrorHideAlt}
-                    />
-                    <IonCardTitle
-                      color="light"
-                      style={{
-                        textShadow:
-                          "1px 0 10px var(--ion-color-dark), 0 0 0.2em var(--ion-color-dark)",
-                      }}
-                      className="tw-absolute tw-bottom-0 tw-left-0 tw-right-0 tw-pt-0 tw-p-5"
-                    >
-                      {bulkyItem.title}
-                    </IonCardTitle>
-                  </div>
-                ) : null}
-                <IonCardContent className="tw-pb-[5px]">
-                  <IonText
-                    onClick={
-                      shouldExpandText
-                        ? () => handleClickReadMore(bulkyItem)
-                        : undefined
-                    }
-                    className="tw-text-dark tw-py-[3px]"
-                  >
-                    <p
-                      className={`!tw-text-lg !tw-leading-5 tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
-                        shouldExpandText ? "tw-max-h-[46px]" : ""
-                      }`}
-                    >
-                      {bulkyItem.message}
+                    {bulkyItem.message}
+                  </p>
+                  {shouldExpandText ? (
+                    <span className="tw-mt-[-3px] tw-text-sm tw-leading-5 tw-font-semibold tw-block tw-text-primary">
+                      {t("readMore")}
+                    </span>
+                  ) : null}
+                </IonText>
+                <IonItem
+                  lines="none"
+                  routerLink={"/address/" + user.uid}
+                  className="tw-my-0 -tw-mx-4"
+                >
+                  <IonText className="tw-my-2 ty-mx-0">
+                    <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
+                      {user.name}
+                    </h3>
+                    <p className="ion-text-wrap tw-opacity-60">
+                      {user.address}
                     </p>
-                    {shouldExpandText ? (
-                      <span className="tw-mt-[-3px] tw-text-sm tw-leading-5 tw-font-semibold tw-block tw-text-primary">
-                        {t("readMore")}
-                      </span>
-                    ) : null}
                   </IonText>
-                  <IonItem
-                    lines="none"
-                    routerLink={"/address/" + user.uid}
-                    className="tw-my-0 -tw-mx-4"
+                </IonItem>
+              </IonCardContent>
+
+              <div className="tw-flex tw-justify-between">
+                <IonButtons className="ion-margin-bottom ion-margin-horizontal">
+                  {isMe || isChainAdmin ? (
+                    <>
+                      <IonButton
+                        fill="clear"
+                        onClick={() => handleClickEdit(bulkyItem)}
+                      >
+                        {t("edit")}
+                      </IonButton>
+                      <IonButton
+                        fill="clear"
+                        color="danger"
+                        onClick={() => handleClickDelete(bulkyItem.id)}
+                      >
+                        {t("delete")}
+                      </IonButton>
+                    </>
+                  ) : null}
+                </IonButtons>
+                <IonButtons className="ion-margin-bottom ion-margin-horizontal">
+                  <IonButton
+                    slot="end"
+                    fill="clear"
+                    color="warning"
+                    className="tw-font-bold"
+                    onClick={() => handleClickReserve(user, bulkyItem.title)}
                   >
-                    <IonText className="tw-my-2 ty-mx-0">
-                      <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
-                        {user.name}
-                      </h3>
-                      <p className="ion-text-wrap tw-opacity-60">
-                        {user.address}
-                      </p>
-                    </IonText>
-                  </IonItem>
-                </IonCardContent>
-
-                <div className="tw-flex tw-justify-between">
-                  <IonButtons className="ion-margin-bottom ion-margin-horizontal">
-                    {isMe || isChainAdmin ? (
-                      <>
-                        <IonButton
-                          fill="clear"
-                          onClick={() => handleClickEdit(bulkyItem)}
-                        >
-                          {t("edit")}
-                        </IonButton>
-                        <IonButton
-                          fill="clear"
-                          color="danger"
-                          onClick={() => handleClickDelete(bulkyItem.id)}
-                        >
-                          {t("delete")}
-                        </IonButton>
-                      </>
-                    ) : null}
-                  </IonButtons>
-                  <IonButtons className="ion-margin-bottom ion-margin-horizontal">
-                    <IonButton
+                    {t("contact")}
+                    <IonIcon
                       slot="end"
-                      fill="clear"
-                      color="warning"
-                      className="tw-font-bold"
-                      onClick={() => handleClickReserve(user, bulkyItem.title)}
-                    >
-                      {t("contact")}
-                      <IonIcon
-                        slot="end"
-                        icon={chatbubbleEllipsesSharp}
-                        className="ion-icon"
-                      />
-                    </IonButton>
-                  </IonButtons>
-                </div>
-              </IonCard>
-            );
-          })}
+                      icon={chatbubbleEllipsesSharp}
+                      className="ion-icon"
+                    />
+                  </IonButton>
+                </IonButtons>
+              </div>
+            </IonCard>
+          );
+        })}
 
-          <IonModal
-            ref={refModalDesc}
-            initialBreakpoint={0.6}
-            breakpoints={[0, 0.6, 1]}
-          >
-            <div className="ion-padding tw-text-lg tw-leading-6">
-              <h1 className="tw-mt-0">{modalDesc.title}</h1>
-              {modalDesc.message.split("\n").map((s, i) => (
-                <Fragment key={i}>
-                  {s}
-                  <br />
-                </Fragment>
-              ))}
-            </div>
-          </IonModal>
-        </div>
-        <CreateUpdateBulky
-          modal={modal}
-          didDismiss={() => refresh("bulky-items")}
-          bulky={updateBulky}
-        />
+        <IonModal
+          ref={refModalDesc}
+          initialBreakpoint={0.6}
+          breakpoints={[0, 0.6, 1]}
+        >
+          <div className="ion-padding tw-text-lg tw-leading-6">
+            <h1 className="tw-mt-0">{modalDesc.title}</h1>
+            {modalDesc.message.split("\n").map((s, i) => (
+              <Fragment key={i}>
+                {s}
+                <br />
+              </Fragment>
+            ))}
+          </div>
+        </IonModal>
       </IonContent>
+
+      <CreateUpdateBulky
+        modal={modal}
+        didDismiss={() => refresh("bulky-items")}
+        bulky={updateBulky}
+      />
     </IonPage>
   );
 }

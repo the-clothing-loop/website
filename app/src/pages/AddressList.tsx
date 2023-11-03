@@ -4,6 +4,7 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonImg,
   IonItem,
   IonList,
   IonPage,
@@ -17,6 +18,7 @@ import { StoreContext } from "../Store";
 import { bagHandle, pauseCircleSharp, shield } from "ionicons/icons";
 import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
+import croppedLogo from "../../public/the_clothing_loop_logo_cropped.png";
 
 export default function AddressList() {
   const { chain, chainUsers, route, authUser, bags, isChainAdmin } =
@@ -43,7 +45,9 @@ export default function AddressList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("addresses")}</IonTitle>
+            <IonTitle size="large" className="tw-text-red">
+              {t("addresses")}
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>
@@ -134,6 +138,10 @@ export default function AddressList() {
             );
           })}
         </IonList>
+        <IonImg
+          src={croppedLogo}
+          className="tw-w-full tw-h-auto tw-mx-auto tw-absolute tw-bottom-12"
+        />
       </IonContent>
     </IonPage>
   );

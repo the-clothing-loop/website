@@ -196,14 +196,15 @@ export default function Settings() {
 
   return (
     <IonPage>
-      <IonHeader collapse="fade" translucent>
+      <IonHeader collapse="fade" >
         <IonToolbar>
           <IonTitle>{t("information")}</IonTitle>
         </IonToolbar>
       </IonHeader>
+
       {isAuthenticated === true ? (
-        <IonContent fullscreen color="light">
-          <IonItemDivider className="tw-relative ion-margin-start ion-margin-top ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
+        <IonContent fullscreen class="bg-orange-light">
+          <IonItemDivider className="tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-text-orange tw-font-serif tw-font-bold">
             {t("account")}
             <IonButton
               fill="clear"
@@ -215,7 +216,7 @@ export default function Settings() {
               <IonIcon icon={openOutline} className="tw-text-sm tw-ml-1" />
             </IonButton>
           </IonItemDivider>
-          <IonCard className="tw-mt-1.5 tw-bg-background tw-relative">
+          <IonCard className="tw-mt-1.5 tw-bg-light tw-rounded-none tw-relative">
             {authUser ? (
               <UserCard
                 user={authUser}
@@ -262,10 +263,10 @@ export default function Settings() {
             </IonList>
           </IonCard>
           <IonList>
-            <IonItemDivider className="ion-margin-start ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
+            <IonItemDivider className="ion-margin-start tw-bg-transparent tw-text-2xl tw-text-orange tw-font-serif tw-font-bold">
               {t("loopInformation")}
             </IonItemDivider>
-            <IonCard className="tw-mt-1.5 tw-bg-background">
+            <IonCard className="tw-mt-1.5 tw-bg-light tw-rounded-none">
               <IonList>
                 <IonItem lines="none">
                   <IonSelect

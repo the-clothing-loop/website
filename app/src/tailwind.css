@@ -23,4 +23,56 @@
       hsl(292, 70%, 55%) 72.6%
     );
   }
+  .ion-button {
+    /* add css from tailwind classes to another class */
+    @apply .tw-text-center .tw-mb-4;
+
+    /* See custom properties in the ionic docs
+    https://ionicframework.com/docs/api/button#css-custom-properties */
+    background: #93e9be;
+    background-hover: #9ce0be;
+    background-focused: #88f4be;
+
+    color: blue;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .tw-text-stroke-secondary {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsla(var(--s));
+    -moz-text-stroke: 1.5px hsla(var(--s));
+  }
+  .tw-text-stroke-accent {
+    color: transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #448c7f;
+  }
+  .tw-bg-orange {
+    background: #e8c593
+  }
+  .bg-orange-light{
+    --ion-background-color: #f4e7d0
+  }
+
+  .tw-text-orange {
+    color: #d97706
+  }
+
+  .tw-text-blue {
+    color: #3a66b3
+  }
+
+  .tw-bg-blue-light {
+    background: #d6e4f2
+  }
+  .bg-blue {
+    --ion-background-color: #d6e4f2
+  }
+
+  .tw-text-red {
+    color: #c73642
+  }
+
+
 }
