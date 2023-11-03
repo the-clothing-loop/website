@@ -16,9 +16,7 @@ import (
 var faker = Faker.New()
 
 func TestEmailFormattingByLanguage(t *testing.T) {
-	//TODO: change back to testing all languages after next crowdin PR
-	languages := []string{"en"}
-	// languages := []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
+	languages := []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
 	templates := []struct {
 		Name         string
 		Data         map[string]any
