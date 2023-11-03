@@ -17,6 +17,12 @@
     },
     {
       "path": "docker"
+    },
+    {
+      "path": "bruno"
+    },
+    {
+      "path": ".husky"
     }
   ],
   "settings": {

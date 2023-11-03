@@ -1,0 +1,17 @@
+meta {
+  name: delete
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{base}}/v2/bulky-item?user_uid={{userUID}}&chain_uid={{chainUID}}&id=5
+  body: none
+  auth: none
+}
+
+query {
+  user_uid: {{userUID}}
+  chain_uid: {{chainUID}}
+  id: 5
+}

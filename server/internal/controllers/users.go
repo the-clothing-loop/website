@@ -325,8 +325,8 @@ func UserUpdate(c *gin.Context) {
 				c.String(http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
-			if app.SendInBlue != nil && user.Email.Valid {
-				app.SendInBlue.DeleteContact(c.Request.Context(), user.Email.String)
+			if app.Brevo != nil && user.Email.Valid {
+				app.Brevo.DeleteContact(c.Request.Context(), user.Email.String)
 			}
 		}
 	}
@@ -383,15 +383,7 @@ HAVING COUNT(uc.id) = 1
 		c.String(http.StatusInternalServerError, "Unable to disconnect bag connections")
 		return
 	}
-	err = tx.Exec(`DELETE FROM bags WHERE user_chain_id IN (
-		SELECT id FROM user_chains WHERE user_id = ?
-	)`, user.ID).Error
-	if err != nil {
-		tx.Rollback()
-		goscope.Log.Errorf("UserPurge: %v", err)
-		c.String(http.StatusInternalServerError, "Unable to disconnect user bag connections")
-		return
-	}
+
 	err = tx.Exec(`
 UPDATE events SET user_id = (
 	SELECT id FROM users WHERE is_root_admin = 1 LIMIT 1
@@ -467,8 +459,8 @@ UPDATE events SET user_id = (
 			c.String(http.StatusInternalServerError, "Unable to remove newsletter")
 			return
 		}
-		if app.SendInBlue != nil {
-			app.SendInBlue.DeleteContact(c.Request.Context(), user.Email.String)
+		if app.Brevo != nil {
+			app.Brevo.DeleteContact(c.Request.Context(), user.Email.String)
 		}
 	}
 

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/golang/glog"
@@ -28,8 +29,8 @@ func ContactNewsletter(c *gin.Context) {
 
 	if !body.Subscribe {
 		db.Raw("DELETE FROM newsletters WHERE email = ?", body.Email)
-		if app.SendInBlue != nil {
-			app.SendInBlue.DeleteContact(c.Request.Context(), body.Email)
+		if app.Brevo != nil {
+			app.Brevo.DeleteContact(c.Request.Context(), body.Email)
 		}
 
 		return
@@ -53,8 +54,8 @@ func ContactNewsletter(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
-	if app.SendInBlue != nil {
-		app.SendInBlue.CreateContact(c.Request.Context(), body.Email)
+	if app.Brevo != nil {
+		app.Brevo.CreateContact(c.Request.Context(), body.Email)
 	}
 
 	views.EmailSubscribeToNewsletter(c, db, name, body.Email)
@@ -74,6 +75,9 @@ func ContactMail(c *gin.Context) {
 		return
 	}
 	if !(body.Honeypot != nil && !*body.Honeypot) {
+		if app.Config.ENV == app.EnvEnumDevelopment {
+			fmt.Println("Honeypot activated")
+		}
 		return
 	}
 
@@ -87,7 +91,7 @@ func ContactMail(c *gin.Context) {
 		glog.Errorf("Unable to send email: %v", err)
 	}
 
-	if err2 != nil || err == nil {
+	if err2 != nil || err != nil {
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to send email"))
 	}
 }

@@ -8,6 +8,7 @@ require (
 	github.com/OneSignal/onesignal-go-api v1.0.4
 	github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c
 	github.com/disintegration/imaging v1.6.2
+	github.com/getbrevo/brevo-go v1.0.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-co-op/gocron v1.29.0
 	github.com/go-playground/validator/v10 v10.14.1
@@ -15,7 +16,6 @@ require (
 	github.com/jaswdr/faker v1.18.0
 	github.com/lil5/goscope2 v1.4.2
 	github.com/satori/go.uuid v1.2.0
-	github.com/sendinblue/APIv3-go-library/v2 v2.1.2
 	github.com/stretchr/testify v1.8.4
 	github.com/stripe/stripe-go/v73 v73.16.0
 	github.com/wneessen/go-mail v0.3.9
@@ -53,12 +53,12 @@ require (
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.10.0 // indirect
-	golang.org/x/image v0.8.0 // indirect
-	golang.org/x/net v0.11.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/image v0.10.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/oauth2 v0.9.0 // indirect
-	golang.org/x/sys v0.9.0 // indirect
-	golang.org/x/text v0.10.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 )

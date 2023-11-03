@@ -22,7 +22,7 @@ func Routes() *gin.Engine {
 	app.MailInit()
 
 	if app.Config.ENV == app.EnvEnumProduction || (app.Config.SENDINBLUE_API_KEY != "" && app.Config.ENV == app.EnvEnumDevelopment) {
-		app.SendInBlueInit()
+		app.BrevoInit()
 	}
 
 	if app.Config.ONESIGNAL_APP_ID != "" && app.Config.ONESIGNAL_REST_API_KEY != "" {
@@ -62,7 +62,9 @@ func Routes() *gin.Engine {
 		Scheduler.StartAsync()
 
 		// testing
-		Scheduler.RunAll()
+		if app.Config.ENV == app.EnvEnumDevelopment {
+			Scheduler.RunAll()
+		}
 	}
 
 	// router
@@ -115,6 +117,7 @@ func Routes() *gin.Engine {
 	v2.PATCH("/chain/approve-user", controllers.ChainApproveUser)
 	v2.DELETE("/chain/unapproved-user", controllers.ChainDeleteUnapproved)
 	v2.POST("/chain/poke", controllers.Poke)
+	v2.GET("/chain/near", controllers.ChainGetNear)
 
 	// bag
 	v2.GET("/bag/all", controllers.BagGetAll)

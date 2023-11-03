@@ -1,0 +1,22 @@
+meta {
+  name: create or update
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{base}}/v2/bag
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "user_uid": "{{userUID}}",
+    "chain_uid": "{{chainUID}}",
+    "holder_uid": "{{userUID}}",
+    "bag_id": 1,
+    "number": "Bag 1",
+    "color": "#ccff00"
+  }
+}
