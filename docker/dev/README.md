@@ -45,7 +45,7 @@ brew install make
 ## 3. Start using docker compose
 
 1. Open a terminal and cd into `clothing-loop/docker/dev`
-2. Run `make docker-start` this will setup and start the container, wait till this finishes (if the docker won't start it might help to open Docker Desktop first and try again, see: https://stackoverflow.com/questions/67788960/error-during-connect-this-error-may-indicate-that-the-docker-daemon-is-not-runn) 
+2. Run `make docker-start` this will setup and start the container, wait till this finishes (if the docker won't start it might help to open Docker Desktop first and try again, see: [stackoverflow error-during-connect-this-error-may-indicate-that-the-docker-daemon-is-not-runn](https://stackoverflow.com/questions/67788960/error-during-connect-this-error-may-indicate-that-the-docker-daemon-is-not-runn)) 
 3. Run `make server-start` to start rest API backend (written in go) this will create the MYSQL database.
 4. In new tab run `make db-setup` to seed the db with dummy data (cd into `clothing-loop/docker/dev` first).
 5. If you do not have a MYSQL client, install one, like DBeaver (cross-platform, advised), TablePlus (MacOS) or HeidiSQL (Windows).
