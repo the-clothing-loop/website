@@ -160,7 +160,7 @@ export default function BulkyList() {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen class="bg-blue">
+      <IonContent fullscreen class={chain?.theme == "default" ? "bg-blue" : ""}>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle
