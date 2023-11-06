@@ -31,7 +31,7 @@ type ChainCreateRequestBody struct {
 	CountryCode      string   `json:"country_code" binding:"required"`
 	Latitude         float64  `json:"latitude" binding:"required"`
 	Longitude        float64  `json:"longitude" binding:"required"`
-	Radius           float32  `json:"radius" binding:"required,gte=1.0,lte=70.0"`
+	Radius           float32  `json:"radius" binding:"required,gte=1.0,lte=100.0"`
 	OpenToNewMembers bool     `json:"open_to_new_members" binding:"required"`
 	Sizes            []string `json:"sizes" binding:"required"`
 	Genders          []string `json:"genders" binding:"required"`
@@ -279,7 +279,7 @@ func ChainUpdate(c *gin.Context) {
 		CountryCode      *string   `json:"country_code,omitempty"`
 		Latitude         *float32  `json:"latitude,omitempty"`
 		Longitude        *float32  `json:"longitude,omitempty"`
-		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=70.0"`
+		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=100.0"`
 		Sizes            *[]string `json:"sizes,omitempty"`
 		Genders          *[]string `json:"genders,omitempty"`
 		RulesOverride    *string   `json:"rules_override,omitempty"`
