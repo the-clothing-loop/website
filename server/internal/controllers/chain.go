@@ -10,6 +10,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"github.com/the-clothing-loop/website/server/pkg/tsp"
 
@@ -229,6 +230,44 @@ func ChainGetAll(c *gin.Context) {
 	c.JSON(200, chainsJson)
 }
 
+func ChainGetNear(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		Latitude  float32 `form:"latitude" binding:"required,latitude"`
+		Longitude float32 `form:"longitude" binding:"required,longitude"`
+		Radius    float32 `form:"radius" binding:"required"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	chains := []models.Chain{}
+	sql := "SELECT uid, name, genders FROM chains"
+	args := []any{}
+
+	sql = fmt.Sprintf("%s WHERE %s <= ? AND chains.published = TRUE", sql, sqlCalcDistance("chains.latitude", "chains.longitude", "?", "?"))
+	args = append(args, query.Latitude, query.Longitude, query.Radius)
+
+	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
+		goscope.Log.Warningf("Chain not found: %v", err)
+		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
+		return
+	}
+
+	chainsJson := []*gin.H{}
+	for _, chain := range chains {
+		chainsJson = append(chainsJson, &gin.H{
+			"uid":     chain.UID,
+			"name":    chain.Name,
+			"genders": chain.Genders,
+		})
+	}
+
+	c.JSON(200, chainsJson)
+}
+
 func ChainUpdate(c *gin.Context) {
 	db := getDB(c)
 
@@ -379,34 +418,13 @@ LIMIT 1
 			c.String(http.StatusInternalServerError, "User could not be added to chain due to unknown error")
 			return
 		}
-
-		// find admin users related to the chain to email
-		results, err := models.UserGetAdminsByChain(db, chain.ID)
+		err := services.EmailLoopAdminsOnUserJoin(db, user, chain.ID)
 		if err != nil {
-			goscope.Log.Errorf("Error retrieving chain admins: %s", err)
-			c.String(http.StatusInternalServerError, "No admins exist for this loop")
+			goscope.Log.Errorf("Unable to send email to associated loop admins: %v", err)
+			c.String(http.StatusInternalServerError, err.Error())
 			return
 		}
-		if len(results) == 0 {
-			goscope.Log.Errorf("Empty chain that is still public: ChainID: %d", chain.ID)
-			c.String(http.StatusInternalServerError, "No admins exist for this loop")
-			return
-		}
-
-		for _, result := range results {
-			if result.Email.Valid {
-				go views.EmailSomeoneIsInterestedInJoiningYourLoop(db, result.I18n,
-					result.Email.String,
-					result.Name,
-					chain.Name,
-					user.Name,
-					user.Email.String,
-					user.PhoneNumber,
-					user.Address,
-					user.Sizes,
-				)
-			}
-		}
+		services.EmailYouSignedUpForLoop(db, user, chain.Name)
 	}
 }
 

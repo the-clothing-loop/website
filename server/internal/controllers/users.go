@@ -383,15 +383,7 @@ HAVING COUNT(uc.id) = 1
 		c.String(http.StatusInternalServerError, "Unable to disconnect bag connections")
 		return
 	}
-	err = tx.Exec(`DELETE FROM bags WHERE user_chain_id IN (
-		SELECT id FROM user_chains WHERE user_id = ?
-	)`, user.ID).Error
-	if err != nil {
-		tx.Rollback()
-		goscope.Log.Errorf("UserPurge: %v", err)
-		c.String(http.StatusInternalServerError, "Unable to disconnect user bag connections")
-		return
-	}
+
 	err = tx.Exec(`
 UPDATE events SET user_id = (
 	SELECT id FROM users WHERE is_root_admin = 1 LIMIT 1

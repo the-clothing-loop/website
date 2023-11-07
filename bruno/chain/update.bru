@@ -1,0 +1,18 @@
+meta {
+  name: update
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{base}}/v2/chain
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "uid": "{{chainUID}}",
+    "description": "Changed description"
+  }
+}

@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+cd server && make lint-test && \
+cd ../frontend && npm run lint:test && \
+cd ../app && npm run lint:test
