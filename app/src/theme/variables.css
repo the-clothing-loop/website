@@ -203,6 +203,22 @@ http://ionicframework.com/docs/theming/ */
 /**
  * Theme
  */
+ body[data-theme="default"] {
+  --ion-color-primary: #fdab58;
+  --ion-color-primary-rgb: 253, 171, 88;
+  --ion-color-primary-shade: #688332;
+  --ion-color-primary-tint: #95b15e;
+  --ion-color-light: #f5f7ef;
+  --ion-color-secondary: #3f94e4;
+  --ion-color-secondary-rgb: 63, 148, 228;
+  --ion-color-secondary-shade: #3076b6;
+  --ion-color-secondary-tint: #5eaffc;
+  @media (prefers-color-scheme: dark) {
+    --ion-color-primary: #9dbc5f;
+    --ion-color-primary-rgb: 157, 188, 95;
+    --ion-color-light: #292e1e;
+  }
+}
 body[data-theme="leafGreen"] {
   --ion-color-primary: #86a051;
   --ion-color-primary-rgb: 134, 160, 81;

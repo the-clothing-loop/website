@@ -149,7 +149,7 @@ export default function BulkyList() {
   function onImgErrorHideAlt(e: any) {
     e.target.style.display = "none";
   }
-
+  console.log(chain?.theme);
   return (
     <IonPage>
       <IonHeader translucent>
@@ -190,35 +190,26 @@ export default function BulkyList() {
                       : "tw-bg-secondary-shade"
                   }`}
                 >
-                  <IonCardSubtitle
-                    color="light"
-                    style={{
-                      textShadow:
-                        "1px 0 10px var(--ion-color-dark), 0 0 0.2em var(--ion-color-dark)",
-                    }}
-                    className="tw-absolute tw-top-0 tw-left-0 tw-right-0 tw-pt-3 tw-px-5 tw-text-base tw-leading-5"
-                  >
-                    {createdAt.toLocaleDateString()}
-                  </IonCardSubtitle>
                   <img
                     alt={bulkyItem.title}
                     src={bulkyItem.image_url}
                     className="tw-block"
                     onError={onImgErrorHideAlt}
                   />
-                  <IonCardTitle
-                    color="light"
-                    style={{
-                      textShadow:
-                        "1px 0 10px var(--ion-color-dark), 0 0 0.2em var(--ion-color-dark)",
-                    }}
-                    className="tw-absolute tw-bottom-0 tw-left-0 tw-right-0 tw-pt-0 tw-p-5"
-                  >
-                    {bulkyItem.title}
-                  </IonCardTitle>
                 </div>
               ) : null}
               <IonCardContent className="tw-pb-[5px]">
+                <div className="tw-flex tw-flex-row tw-justify-between tw-mb-6">
+                  <IonText color="dark" className="tw-text-3xl ">
+                    {bulkyItem.title}
+                  </IonText>
+                  <IonText
+                    color="dark"
+                    className="tw-text-md tw-self-end tw-pb-1"
+                  >
+                    {createdAt.toLocaleDateString()}
+                  </IonText>
+                </div>
                 <IonText
                   onClick={
                     shouldExpandText
@@ -226,73 +217,98 @@ export default function BulkyList() {
                       : undefined
                   }
                   className="tw-text-dark tw-py-[3px]"
-                >
-                  <p
-                    className={`!tw-text-lg !tw-leading-5 tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
-                      shouldExpandText ? "tw-max-h-[46px]" : ""
-                    }`}
-                  >
-                    {bulkyItem.message}
-                  </p>
-                  {shouldExpandText ? (
-                    <span className="tw-mt-[-3px] tw-text-sm tw-leading-5 tw-font-semibold tw-block tw-text-primary">
-                      {t("readMore")}
-                    </span>
-                  ) : null}
-                </IonText>
+                ></IonText>
                 <IonItem
                   lines="none"
                   routerLink={"/address/" + user.uid}
                   className="tw-my-0 -tw-mx-4"
                 >
-                  <IonText className="tw-my-2 ty-mx-0">
-                    <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
-                      {user.name}
-                    </h3>
-                    <p className="ion-text-wrap tw-opacity-60">
-                      {user.address}
-                    </p>
+                  <IonText className="tw-my-2 ">
+                    <div className="tw-flex tw-flex-row tw-justify-between tw-mb-4">
+                      <div>
+                        <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
+                          {t("phoneNumber")}
+                        </h3>
+                        <p className="ion-text-wrap tw-opacity-60">
+                          {user.phone_number}
+                        </p>
+                      </div>
+                      {/* 
+                      <IonButton
+                        slot="end"
+                        fill="clear"
+                        color="warning"
+                        className="tw-font-bold"
+                        onClick={() =>
+                          handleClickReserve(user, bulkyItem.title)
+                        }
+                      >
+                        <IonIcon
+                          slot="end"
+                          icon={chatbubbleEllipsesSharp}
+                          className="ion-icon"
+                        />
+                      </IonButton>*/}
+                    </div>
+                    <div className="tw-mb-4">
+                      <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
+                        {t("address")}
+                      </h3>
+                      <p className="ion-text-wrap tw-opacity-60">
+                        {user.address}
+                      </p>
+                    </div>
+                    {shouldExpandText ? (
+                      <span className="tw-mt-[-3px] tw-text-sm tw-leading-5 tw-font-semibold tw-block tw-text-primary">
+                        {t("readMore")}
+                      </span>
+                    ) : null}
+                    <div className="tw-mb-4">
+                      <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
+                        {t("description")}
+                      </h3>
+                      <p
+                        className={`ion-text-wrap tw-opacity-60  ${
+                          shouldExpandText ? "tw-max-h-[46px]" : ""
+                        }`}
+                      >
+                        {bulkyItem.message}
+                      </p>
+                    </div>
                   </IonText>
                 </IonItem>
               </IonCardContent>
 
-              <div className="tw-flex tw-justify-between">
-                <IonButtons className="ion-margin-bottom ion-margin-horizontal">
-                  {isMe || isChainAdmin ? (
-                    <>
-                      <IonButton
-                        fill="clear"
-                        onClick={() => handleClickEdit(bulkyItem)}
-                      >
-                        {t("edit")}
-                      </IonButton>
-                      <IonButton
-                        fill="clear"
-                        color="danger"
-                        onClick={() => handleClickDelete(bulkyItem.id)}
-                      >
-                        {t("delete")}
-                      </IonButton>
-                    </>
-                  ) : null}
-                </IonButtons>
-                <IonButtons className="ion-margin-bottom ion-margin-horizontal">
-                  <IonButton
-                    slot="end"
-                    fill="clear"
-                    color="warning"
-                    className="tw-font-bold"
-                    onClick={() => handleClickReserve(user, bulkyItem.title)}
-                  >
-                    {t("contact")}
-                    <IonIcon
-                      slot="end"
-                      icon={chatbubbleEllipsesSharp}
-                      className="ion-icon"
-                    />
-                  </IonButton>
-                </IonButtons>
-              </div>
+              <IonButtons className="tw-flex tw-justify-between ion-margin-bottom ion-margin-horizontal ">
+                {isMe || isChainAdmin ? (
+                  <>
+                    <IonButton
+                      fill="clear"
+                      className="tw-font-bold"
+                      onClick={() => handleClickEdit(bulkyItem)}
+                    >
+                      {t("edit")}
+                    </IonButton>
+                    <IonButton
+                      fill="clear"
+                      color="danger"
+                      className="tw-font-bold"
+                      onClick={() => handleClickDelete(bulkyItem.id)}
+                    >
+                      {t("delete")}
+                    </IonButton>
+                  </>
+                ) : null}
+                <IonButton
+                  slot="end"
+                  fill="clear"
+                  color="warning"
+                  className="tw-font-bold"
+                  onClick={() => handleClickReserve(user, bulkyItem.title)}
+                >
+                  {t("contact")}
+                </IonButton>
+              </IonButtons>
             </IonCard>
           );
         })}
