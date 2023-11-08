@@ -20,3 +20,9 @@ SET b.number = CASE
         END
     ELSE b.number
 END;
+
+-- Find all bags from outside the netherlands that have the Dutch bag prefix
+SELECT b.*, c.country_code FROM bags AS b
+LEFT JOIN user_chains AS uc ON uc.id = b.user_chain_id
+LEFT JOIN chains AS c ON c.id = uc.chain_id
+WHERE country_code != "NL" AND country_code != "BE" AND LEFT(b.number, 4) = "Tas ";
