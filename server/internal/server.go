@@ -62,7 +62,9 @@ func Routes() *gin.Engine {
 		Scheduler.StartAsync()
 
 		// testing
-		Scheduler.RunAll()
+		if app.Config.ENV == app.EnvEnumDevelopment {
+			Scheduler.RunAll()
+		}
 	}
 
 	// router
@@ -109,12 +111,14 @@ func Routes() *gin.Engine {
 	v2.GET("/chain", controllers.ChainGet)
 	v2.GET("/chain/all", controllers.ChainGetAll)
 	v2.PATCH("/chain", controllers.ChainUpdate)
+	v2.DELETE("/chain", controllers.ChainDelete)
 	v2.POST("/chain", controllers.ChainCreate)
 	v2.POST("/chain/add-user", controllers.ChainAddUser)
 	v2.POST("/chain/remove-user", controllers.ChainRemoveUser)
 	v2.PATCH("/chain/approve-user", controllers.ChainApproveUser)
 	v2.DELETE("/chain/unapproved-user", controllers.ChainDeleteUnapproved)
 	v2.POST("/chain/poke", controllers.Poke)
+	v2.GET("/chain/near", controllers.ChainGetNear)
 
 	// bag
 	v2.GET("/bag/all", controllers.BagGetAll)

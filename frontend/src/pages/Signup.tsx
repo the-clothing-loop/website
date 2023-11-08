@@ -190,15 +190,17 @@ export default function Signup() {
                 </form>
               ) : (
                 <div>
-                  <AddressForm
-                    userUID={undefined}
-                    onSubmit={onSubmitNewUser}
-                    isNewsletterRequired={false}
-                    showNewsletter
-                    showTosPrivacyPolicy
-                    onlyShowEditableAddress
-                    classes="mb-4"
-                  />
+                  {chain?.open_to_new_members && chain.published ? (
+                    <AddressForm
+                      userUID={undefined}
+                      onSubmit={onSubmitNewUser}
+                      isNewsletterRequired={false}
+                      showNewsletter
+                      showTosPrivacyPolicy
+                      onlyShowEditableAddress
+                      classes="mb-4"
+                    />
+                  ) : null}
                   <div className="mb-4">
                     <button
                       type="button"

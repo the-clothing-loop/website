@@ -1,0 +1,18 @@
+meta {
+  name: update
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{base}}/v2/user
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "user_uid": "{{userUID}}",
+    "name": "New John Doe"
+  }
+}

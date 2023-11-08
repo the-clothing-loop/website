@@ -1,0 +1,16 @@
+meta {
+  name: get by uid
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base}}/v2/user?chain_uid={{chainUID}}&user_uid={{userUID}}
+  body: none
+  auth: none
+}
+
+query {
+  chain_uid: {{chainUID}}
+  user_uid: {{userUID}}
+}

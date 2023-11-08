@@ -10,6 +10,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"github.com/the-clothing-loop/website/server/pkg/tsp"
 
@@ -30,7 +31,7 @@ type ChainCreateRequestBody struct {
 	CountryCode      string   `json:"country_code" binding:"required"`
 	Latitude         float64  `json:"latitude" binding:"required"`
 	Longitude        float64  `json:"longitude" binding:"required"`
-	Radius           float32  `json:"radius" binding:"required,gte=1.0,lte=70.0"`
+	Radius           float32  `json:"radius" binding:"required,gte=1.0,lte=100.0"`
 	OpenToNewMembers bool     `json:"open_to_new_members" binding:"required"`
 	Sizes            []string `json:"sizes" binding:"required"`
 	Genders          []string `json:"genders" binding:"required"`
@@ -130,19 +131,7 @@ func ChainGet(c *gin.Context) {
 		body["theme"] = chain.Theme
 	}
 	if query.AddTotals {
-		result := struct {
-			TotalMembers int `gorm:"total_members"`
-			TotalHosts   int `gorm:"total_hosts"`
-		}{}
-		db.Raw(`
-SELECT COUNT(uc1.id) AS total_members, (
-	SELECT COUNT(uc2.id)
-	FROM user_chains AS uc2
-	WHERE uc2.chain_id = ? AND uc2.is_chain_admin = TRUE
-	) AS total_hosts
-FROM user_chains AS uc1
-WHERE uc1.chain_id = ?
-		`, chain.ID, chain.ID).Scan(&result)
+		result := chain.GetTotals(db)
 		body["total_members"] = result.TotalMembers
 		body["total_hosts"] = result.TotalHosts
 	}
@@ -229,6 +218,44 @@ func ChainGetAll(c *gin.Context) {
 	c.JSON(200, chainsJson)
 }
 
+func ChainGetNear(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		Latitude  float32 `form:"latitude" binding:"required,latitude"`
+		Longitude float32 `form:"longitude" binding:"required,longitude"`
+		Radius    float32 `form:"radius" binding:"required"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	chains := []models.Chain{}
+	sql := "SELECT uid, name, genders FROM chains"
+	args := []any{}
+
+	sql = fmt.Sprintf("%s WHERE %s <= ? AND chains.published = TRUE", sql, sqlCalcDistance("chains.latitude", "chains.longitude", "?", "?"))
+	args = append(args, query.Latitude, query.Longitude, query.Radius)
+
+	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
+		goscope.Log.Warningf("Chain not found: %v", err)
+		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
+		return
+	}
+
+	chainsJson := []*gin.H{}
+	for _, chain := range chains {
+		chainsJson = append(chainsJson, &gin.H{
+			"uid":     chain.UID,
+			"name":    chain.Name,
+			"genders": chain.Genders,
+		})
+	}
+
+	c.JSON(200, chainsJson)
+}
+
 func ChainUpdate(c *gin.Context) {
 	db := getDB(c)
 
@@ -240,7 +267,7 @@ func ChainUpdate(c *gin.Context) {
 		CountryCode      *string   `json:"country_code,omitempty"`
 		Latitude         *float32  `json:"latitude,omitempty"`
 		Longitude        *float32  `json:"longitude,omitempty"`
-		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=70.0"`
+		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=100.0"`
 		Sizes            *[]string `json:"sizes,omitempty"`
 		Genders          *[]string `json:"genders,omitempty"`
 		RulesOverride    *string   `json:"rules_override,omitempty"`
@@ -320,6 +347,37 @@ func ChainUpdate(c *gin.Context) {
 	}
 }
 
+func ChainDelete(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, authUser, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+	if !ok {
+		return
+	}
+
+	totals := chain.GetTotals(db)
+
+	// ensure that there is only one chain admin in the loop
+	if !authUser.IsRootAdmin && totals.TotalHosts > 1 {
+		c.String(http.StatusFailedDependency, "A Loop can only be deleted if there are no co-hosts")
+		return
+	}
+
+	httperr := services.ChainDelete(db, chain)
+	if httperr != nil {
+		c.AbortWithError(httperr.Status, httperr)
+		return
+	}
+}
+
 func ChainAddUser(c *gin.Context) {
 	db := getDB(c)
 
@@ -379,34 +437,13 @@ LIMIT 1
 			c.String(http.StatusInternalServerError, "User could not be added to chain due to unknown error")
 			return
 		}
-
-		// find admin users related to the chain to email
-		results, err := models.UserGetAdminsByChain(db, chain.ID)
+		err := services.EmailLoopAdminsOnUserJoin(db, user, chain.ID)
 		if err != nil {
-			goscope.Log.Errorf("Error retrieving chain admins: %s", err)
-			c.String(http.StatusInternalServerError, "No admins exist for this loop")
+			goscope.Log.Errorf("Unable to send email to associated loop admins: %v", err)
+			c.String(http.StatusInternalServerError, err.Error())
 			return
 		}
-		if len(results) == 0 {
-			goscope.Log.Errorf("Empty chain that is still public: ChainID: %d", chain.ID)
-			c.String(http.StatusInternalServerError, "No admins exist for this loop")
-			return
-		}
-
-		for _, result := range results {
-			if result.Email.Valid {
-				go views.EmailSomeoneIsInterestedInJoiningYourLoop(db, result.I18n,
-					result.Email.String,
-					result.Name,
-					chain.Name,
-					user.Name,
-					user.Email.String,
-					user.PhoneNumber,
-					user.Address,
-					user.Sizes,
-				)
-			}
-		}
+		services.EmailYouSignedUpForLoop(db, user, chain.Name)
 	}
 }
 
@@ -515,5 +552,4 @@ func ChainDeleteUnapproved(c *gin.Context) {
 		views.EmailAnAdminDeniedYourJoinRequest(db, user.I18n, user.Name, user.Email.String, chain.Name,
 			query.Reason)
 	}
-
 }

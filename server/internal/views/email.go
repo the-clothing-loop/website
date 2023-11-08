@@ -260,7 +260,7 @@ func EmailContactReceived(db *gorm.DB,
 		"Name":    name,
 		"Email":   email,
 		"Message": message,
-	})
+	}, name)
 	if err != nil {
 		return err
 	}
@@ -536,7 +536,7 @@ func EmailYouSignedUpForLoop(db *gorm.DB, lng,
 	err := emailGenerateMessage(m, lng, "you_signed_up_for_loop", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
-	})
+	}, chainName)
 	if err != nil {
 		return err
 	}

@@ -23,6 +23,7 @@ import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
+  chainDelete,
   chainDeleteUnapproved,
   chainGet,
   chainGetAll,
@@ -43,6 +44,7 @@ import useToClipboard from "../util/to-clipboard.hooks";
 import { bagGetAllByChain } from "../api/bag";
 import { Sleep } from "../util/sleep";
 import PopoverOnHover from "../components/Popover";
+import DOMPurify from "dompurify";
 
 enum LoadingState {
   idle,
@@ -62,7 +64,7 @@ export default function ChainMemberList() {
   const history = useHistory();
   const { t } = useTranslation();
   const { chainUID } = useParams<Params>();
-  const { authUser } = useContext(AuthContext);
+  const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addToastError, addModal } = useContext(ToastContext);
 
   const [hostChains, setHostChains] = useState<Chain[]>([]);
@@ -288,6 +290,59 @@ export default function ChainMemberList() {
     routeSetOrder(chainUID, previousRoute!);
   }
 
+  function handleClickDeleteLoop() {
+    addModal({
+      message: t("deleteLoop"),
+      content:
+        chain && users
+          ? () => (
+              <>
+                <p
+                  className="mb-2"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(
+                      t("areYouSureDeleteLoop", {
+                        chain: chain.name,
+                      })
+                    ),
+                  }}
+                ></p>
+                <ul
+                  className={`text-sm font-semibold mx-8 ${
+                    users.length > 1 ? "list-disc" : "list-none text-center"
+                  }`}
+                >
+                  {users
+                    .filter((u) => u.uid !== authUser?.uid)
+                    .map((u) => (
+                      <li key={u.uid}>{u.name}</li>
+                    ))}
+                </ul>
+              </>
+            )
+          : undefined,
+      actions: [
+        {
+          text: t("delete"),
+          type: "error",
+          fn: () => {
+            if (!chain) return;
+            chainDelete(chain.uid)
+              .then(() => {
+                authUserRefresh().then(() => {
+                  history.replace("/admin/dashboard");
+                });
+              })
+              .catch((e) => {
+                addToastError(GinParseErrors(t, e), e?.status);
+                throw e;
+              });
+          },
+        },
+      ],
+    });
+  }
+
   useEffect(() => {
     refresh(true);
   }, [history, authUser]);
@@ -479,9 +534,9 @@ export default function ChainMemberList() {
                     </div>
                   </div>
 
-                  <div className="text-center">
+                  <div className="flex flex-col md:flex-row justify-center pt-4 gap-4">
                     <Link
-                      className="btn btn-sm btn-secondary mt-4 w-full md:w-[120px]"
+                      className="btn btn-sm btn-secondary w-full md:w-auto"
                       to={`/loops/${chainUID}/edit`}
                     >
                       {t("editLoop")}
@@ -490,6 +545,18 @@ export default function ChainMemberList() {
                         aria-hidden
                       />
                     </Link>
+
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-error w-full md:w-auto"
+                      onClick={handleClickDeleteLoop}
+                    >
+                      {t("deleteLoop")}
+                      <span
+                        className="ltr:ml-2 rtl:mr-2 feather feather-trash"
+                        aria-hidden
+                      />
+                    </button>
                   </div>
                 </>
               ) : null}

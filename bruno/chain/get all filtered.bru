@@ -1,0 +1,17 @@
+meta {
+  name: get all filtered
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base}}/v2/chain/all?filter_sizes=3
+  body: none
+  auth: none
+}
+
+query {
+  filter_sizes: 3
+  ~filter_sizes: B
+  ~filter_genders: 1
+}

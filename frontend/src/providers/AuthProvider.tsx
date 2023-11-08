@@ -79,37 +79,37 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     console.info("trying to login");
     return (async () => {
       let oldUserUID = getOldStorageUserUID();
-      if (oldUserUID) {
-        // check if authentication still works
-        try {
-          const user = (await userGetByUID(undefined, oldUserUID)).data;
-          setUser(user);
+      // without a user uid authentication is not possible
+      if (!oldUserUID) {
+        setUser(null);
 
-          Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
-          setLoading(false);
-          if (user.i18n && user.i18n !== i18n.language) {
-            i18n.changeLanguage(user.i18n);
-          } else {
-            userUpdate({
-              user_uid: user.uid,
-              i18n: i18n.language,
-            });
-          }
-        } catch (err) {
-          await authLogout().catch((err) => {
-            console.error("force logout failed:", err);
-          });
-          console.info("force logout");
-          return UserRefreshState.ForceLoggedOut;
-        }
-        console.log("logged in");
-        return UserRefreshState.LoggedIn;
+        console.log("never logged in");
+        return UserRefreshState.NeverLoggedIn;
       }
 
-      setUser(null);
+      try {
+        const user = (await userGetByUID(undefined, oldUserUID)).data;
+        setUser(user);
 
-      console.log("never logged in");
-      return UserRefreshState.NeverLoggedIn;
+        Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
+        setLoading(false);
+        if (user.i18n && user.i18n !== i18n.language) {
+          i18n.changeLanguage(user.i18n);
+        } else {
+          userUpdate({
+            user_uid: user.uid,
+            i18n: i18n.language,
+          });
+        }
+      } catch (err) {
+        await authLogout().catch((err) => {
+          console.error("force logout failed:", err);
+        });
+        console.info("force logout");
+        return UserRefreshState.ForceLoggedOut;
+      }
+      console.log("logged in");
+      return UserRefreshState.LoggedIn;
     })();
   }
   const history = useHistory();

@@ -16,7 +16,8 @@ import (
 var validate = validator.New()
 
 func CronMonthly(db *gorm.DB) {
-	closeChainsWithOldPendingParticipants(db)
+	// TODO: fix automatic Loop closure
+	// closeChainsWithOldPendingParticipants(db)
 	emailHostsOldPendingParticipants(db)
 }
 
@@ -134,26 +135,26 @@ ORDER BY u.email
 	}
 }
 
-// Close chains if pending participants are still pending 30 days after reminder email is sent
-func closeChainsWithOldPendingParticipants(db *gorm.DB) {
-	glog.Info("Running closeChainsWithOldPendingParticipants")
-	db.Exec(`
-UPDATE chains SET published = FALSE, open_to_new_members = FALSE WHERE id IN (
-	SELECT DISTINCT(uc.chain_id)
-	FROM user_chains AS uc
-	JOIN chains AS c ON c.id = uc.chain_id
-	WHERE uc.is_approved = FALSE
-		AND uc.last_notified_is_unapproved_at < (NOW() - INTERVAL 30 DAY)
-		AND c.published = TRUE
-		AND c.id NOT IN (
-			SELECT DISTINCT(uc2.chain_id) FROM user_chains AS uc2
-			JOIN users AS u2 ON u2.id = uc2.user_id
-			WHERE u2.last_signed_in_at > (NOW() - INTERVAL 90 DAY)
-				AND uc2.is_chain_admin = TRUE
-		)
-)
-	`)
-}
+// // Close chains if pending participants are still pending 30 days after reminder email is sent
+// func closeChainsWithOldPendingParticipants(db *gorm.DB) {
+// 	glog.Info("Running closeChainsWithOldPendingParticipants")
+// 	db.Exec(`
+// UPDATE chains SET published = FALSE, open_to_new_members = FALSE WHERE id IN (
+// 	SELECT DISTINCT(uc.chain_id)
+// 	FROM user_chains AS uc
+// 	JOIN chains AS c ON c.id = uc.chain_id
+// 	WHERE uc.is_approved = FALSE
+// 		AND uc.last_notified_is_unapproved_at < (NOW() - INTERVAL 30 DAY)
+// 		AND c.published = TRUE
+// 		AND c.id NOT IN (
+// 			SELECT DISTINCT(uc2.chain_id) FROM user_chains AS uc2
+// 			JOIN users AS u2 ON u2.id = uc2.user_id
+// 			WHERE u2.last_signed_in_at > (NOW() - INTERVAL 90 DAY)
+// 				AND uc2.is_chain_admin = TRUE
+// 		)
+// )
+// 	`)
+// }
 
 func notifyIfIsHoldingABagForTooLong(db *gorm.DB) {
 	glog.Info("Running notifyIfIsHoldingABagForTooLong")
