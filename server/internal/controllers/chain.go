@@ -131,19 +131,7 @@ func ChainGet(c *gin.Context) {
 		body["theme"] = chain.Theme
 	}
 	if query.AddTotals {
-		result := struct {
-			TotalMembers int `gorm:"total_members"`
-			TotalHosts   int `gorm:"total_hosts"`
-		}{}
-		db.Raw(`
-SELECT COUNT(uc1.id) AS total_members, (
-	SELECT COUNT(uc2.id)
-	FROM user_chains AS uc2
-	WHERE uc2.chain_id = ? AND uc2.is_chain_admin = TRUE
-	) AS total_hosts
-FROM user_chains AS uc1
-WHERE uc1.chain_id = ?
-		`, chain.ID, chain.ID).Scan(&result)
+		result := chain.GetTotals(db)
 		body["total_members"] = result.TotalMembers
 		body["total_hosts"] = result.TotalHosts
 	}
@@ -359,6 +347,37 @@ func ChainUpdate(c *gin.Context) {
 	}
 }
 
+func ChainDelete(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, authUser, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+	if !ok {
+		return
+	}
+
+	totals := chain.GetTotals(db)
+
+	// ensure that there is only one chain admin in the loop
+	if !authUser.IsRootAdmin && totals.TotalHosts > 1 {
+		c.String(http.StatusFailedDependency, "A Loop can only be deleted if there are no co-hosts")
+		return
+	}
+
+	httperr := services.ChainDelete(db, chain)
+	if httperr != nil {
+		c.AbortWithError(httperr.Status, httperr)
+		return
+	}
+}
+
 func ChainAddUser(c *gin.Context) {
 	db := getDB(c)
 
@@ -533,5 +552,4 @@ func ChainDeleteUnapproved(c *gin.Context) {
 		views.EmailAnAdminDeniedYourJoinRequest(db, user.I18n, user.Name, user.Email.String, chain.Name,
 			query.Reason)
 	}
-
 }

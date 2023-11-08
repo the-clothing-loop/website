@@ -52,3 +52,13 @@ func EmailYouSignedUpForLoop(db *gorm.DB, user *models.User, chainNames ...strin
 	}
 	return nil
 }
+
+// is run by services.ChainDelete
+func emailLoopHasBeenDeleted(db *gorm.DB, users []models.UserContactData, chainName string) {
+	for _, user := range users {
+		if user.Email.Valid {
+			continue
+		}
+		views.EmailLoopIsDeleted(db, user.I18n, user.Name, user.Email.String, chainName)
+	}
+}
