@@ -22,10 +22,12 @@ require (
 	gopkg.in/guregu/null.v3 v3.5.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.1
+	github.com/samber/lo v1.38.1
 	gorm.io/gorm v1.25.1
 )
 
 require (
+	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	github.com/antihax/optional v1.0.0 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect

@@ -515,11 +515,12 @@ func UserTransferChain(c *gin.Context) {
 		ToUserChainIDExists null.Int `gorm:"to_user_chain_exists"`
 	}
 	row := tx.Raw(`
-	SELECT u.id as user_id, uc.chain_id as from_chain_id, c2.id as to_chain_id, (
-		SELECT uc_dest.id FROM user_chains AS uc_dest WHERE uc_dest.chain_id = c2.id AND uc_dest.user_id = u.id
-		) as to_user_chain_exists
-		FROM users AS u
-		JOIN user_chains AS uc ON uc.user_id = u.id AND uc.chain_id = ?
+SELECT u.id as user_id, uc.chain_id as from_chain_id, c2.id as to_chain_id, (
+	SELECT uc_dest.id FROM user_chains AS uc_dest
+	WHERE uc_dest.chain_id = c2.id AND uc_dest.user_id = u.id
+) as to_user_chain_exists
+FROM users AS u
+JOIN user_chains AS uc ON uc.user_id = u.id AND uc.chain_id = ?
 JOIN chains AS c2 ON c2.uid = ?
 WHERE u.uid = ?
 LIMIT 1
@@ -558,7 +559,7 @@ LIMIT 1
 				handleError(tx, err)
 				return
 			}
-			err = tx.Exec(`DELETE FROM user_chains WHERE where user_id = ? AND chain_id = ?`, result.UserID, result.FromChainID).Error
+			err = tx.Exec(`DELETE FROM user_chains WHERE user_id = ? AND chain_id = ?`, result.UserID, result.FromChainID).Error
 			if err != nil {
 				handleError(tx, err)
 				return
