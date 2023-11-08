@@ -4,6 +4,8 @@
   "leave": "Salir",
   "leaveLoop": "Abandonar el Loop",
   "areYouSureLeaveLoop": "¿Estás segura/seguro de que desea que “{{ name }}” deje el Loop “{{ chain }}”?",
+  "deleteLoop": "Delete Loop",
+  "areYouSureDeleteLoop": "Are you sure you want to delete “{{ chain }}” Loop?<br/><br/>The following participants will be notified:",
   "setAsAParticipant": "Establece como participante",
   "selected": "Seleccionado",
   "selectParticipant": "Seleccionar participante",
