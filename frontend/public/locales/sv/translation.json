@@ -4,6 +4,8 @@
   "leave": "Lämna",
   "leaveLoop": "Lämna Loop",
   "areYouSureLeaveLoop": "Är du säkert du vill ta bort \"{{ name }}\" från “{{ chain }}” Loop?",
+  "deleteLoop": "Delete Loop",
+  "areYouSureDeleteLoop": "Are you sure you want to delete “{{ chain }}” Loop?<br/><br/>The following participants will be notified:",
   "setAsAParticipant": "Ställ in som deltagare",
   "selected": "Vald",
   "selectParticipant": "Vald deltagare",
