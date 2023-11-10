@@ -32,6 +32,7 @@ export const StoreContext = createContext({
   setTheme: (c: string) => {},
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
+  listOfChains: [] as Array<Chain>,
   route: [] as UID[],
   bags: [] as Bag[],
   bulkyItems: [] as BulkyItem[],
@@ -47,6 +48,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chain, setChain] = useState<Chain | null>(null);
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
+  const [listOfChains, setListOfChains] = useState<Array<Chain>>([]);
   const [route, setRoute] = useState<UID[]>([]);
   const [bags, setBags] = useState<Bag[]>([]);
   const [bulkyItems, setBulkyItems] = useState<BulkyItem[]>([]);
@@ -54,6 +56,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isChainAdmin, setIsChainAdmin] = useState(false);
 
+  // Get storage from IndexedDB or LocalStorage
   async function _init() {
     const _storage = await storage.create();
 
@@ -75,6 +78,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     await storage.set("chain_uid", null);
     setAuthUser(null);
     setChain(null);
+    setListOfChains([]);
     setRoute([]);
     setBags([]);
     setBulkyItems([]);
@@ -89,8 +93,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       user_uid: res.data.user.uid,
       token: res.data.token,
     } as StorageAuth);
-    setAuthUser(res.data.user);
     setIsAuthenticated(true);
+    _refresh("settings", res.data.user);
   }
 
   async function _authenticate() {
@@ -208,8 +212,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  async function _refresh(tab: string): Promise<void> {
-    if (!authUser) throw "You must be logged in to view this tab.";
+  async function _refresh(tab: string, __authUser: User | null): Promise<void> {
+    if (!__authUser) _logout();
+
     if (tab === "help") {
       if (!chain)
         throw "You must have first selected a Loop in the settings tab.";
@@ -223,7 +228,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const [_chainUsers, _route, _bags] = await Promise.all([
         userGetAllByChain(chain.uid),
         routeGetOrder(chain.uid),
-        bagGetAllByChain(chain.uid, authUser.uid),
+        bagGetAllByChain(chain.uid, __authUser!.uid),
       ]);
       setChainUsers(_chainUsers.data);
       setRoute(_route.data);
@@ -234,31 +239,35 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
       const [_chainUsers, _bulkyItems] = await Promise.all([
         userGetAllByChain(chain.uid),
-        bulkyItemGetAllByChain(chain.uid, authUser.uid),
+        bulkyItemGetAllByChain(chain.uid, __authUser!.uid),
       ]);
       setChainUsers(_chainUsers.data);
       setBulkyItems(_bulkyItems.data);
     } else if (tab === "settings") {
-      if (authUser.uid) {
-        const [_authUser, _chain] = await Promise.allSettled([
-          userGetByUID(undefined, authUser.uid),
-          !!chain
-            ? chainGet(chain.uid, true, true)
-            : Promise.reject("No Loop selected"),
-        ]);
-
-        if (_authUser.status === "fulfilled") {
-          setAuthUser(_authUser.value.data);
-
-          if (_chain.status === "fulfilled") {
-            setChain(_chain.value.data);
-          } else {
-            setChain(null);
+      const _authUser = await userGetByUID(undefined, __authUser!.uid).catch(
+        (e) => {
+          console.warn(e);
+          return null;
+        },
+      );
+      if (_authUser === null) return _logout();
+      let _chain: Chain | null = null;
+      const _listOfChains = await Promise.all(
+        _authUser.data.chains
+          .filter((uc) => uc.is_approved)
+          .map((uc) => chainGet(uc.chain_uid)),
+      ).then((chains) =>
+        chains.map((c) => {
+          if (c.data.uid === chain?.uid) {
+            _chain = c.data;
           }
-        } else {
-          return _logout();
-        }
-      }
+          return c.data;
+        }),
+      );
+
+      setAuthUser(_authUser.data);
+      setListOfChains(_listOfChains);
+      setChain(_chain);
     }
   }
 
@@ -273,6 +282,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         bulkyItems,
         chain,
         chainUsers,
+        listOfChains,
         setChain: _setChain,
         isAuthenticated,
         isChainAdmin,
@@ -280,7 +290,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         authenticate: _authenticate,
         login: _login,
         init: _init,
-        refresh: _refresh,
+        refresh: (t) => _refresh(t, authUser),
       }}
     >
       {children}

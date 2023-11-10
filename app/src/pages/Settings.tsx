@@ -69,6 +69,7 @@ export default function Settings() {
     logout,
     setChain,
     isChainAdmin,
+    listOfChains,
   } = useContext(StoreContext);
   const [present] = useIonToast();
   const [presentActionSheet] = useIonActionSheet();
@@ -77,26 +78,8 @@ export default function Settings() {
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
   const [expandedDescription, setExpandedDescription] = useState(false);
-
-  const [listOfChains, setListOfChains] = useState<Chain[]>([]);
   useEffect(() => {
-    if (!authUser) {
-      setListOfChains([]);
-      return;
-    }
-
-    Promise.all(
-      authUser.chains
-        .filter((uc) => uc.is_approved)
-        .map((uc) => chainGet(uc.chain_uid)),
-    )
-      .then((chains) => {
-        setListOfChains(chains.map((c) => c.data));
-      })
-      .catch((err) => {
-        toastError(present, err);
-      });
-    if (!chain) {
+    if (!chain && authUser) {
       refChainSelect.current?.open();
     }
   }, [authUser]);
@@ -185,13 +168,6 @@ export default function Settings() {
         pausedFromNow = t("untilITurnItBackOn");
       }
     }
-    console.log(
-      "paused from now",
-      "'" + pausedFromNow + "'",
-      pausedDayjs?.year(),
-      now.set("years", 20).isBefore(pausedDayjs),
-      now.year(),
-    );
   }
 
   return (
