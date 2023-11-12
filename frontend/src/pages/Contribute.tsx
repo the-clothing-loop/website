@@ -16,6 +16,7 @@ const map = "../../public/images/mapscreenshot.png";
 const network = "../../public/images/networkgraph.png";
 const ClothesImage =
   "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
+const githubActivity = "../../public/images/gource-cut1.mp4";
 
 export default function Contribute() {
   const { t } = useTranslation("contribute");
@@ -109,6 +110,19 @@ export default function Contribute() {
     );
   }
 
+  async function videoHandler(play: boolean) {
+    let video = document.getElementById("github-video") as HTMLVideoElement;
+    try {
+      if (play) {
+        await video.play();
+      } else {
+        await video.pause();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <Helmet>
@@ -120,8 +134,8 @@ export default function Contribute() {
       </Helmet>
       <main>
         <div className="max-w-screen-xl mx-auto pt-10 px-10 md:px-20">
-        <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-16">
-        {t("howToContribute")}
+          <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-16">
+            {t("howToContribute")}
           </h1>
           <div className="flex flex-col md:flex-row items-center mb-8">
             <div className="w-full md:w-1/2 mb-8 md:mb-0">
@@ -332,13 +346,20 @@ export default function Contribute() {
               />
             </div>
           </div>
-
           <div className="flex flex-col-reverse md:flex-row mb-8">
-            <img
-              src={network}
-              alt="the network graph of the Clothing Loop on GitHub"
-              className="object-contain w-full md:w-1/2 md:pr-4"
-            />
+            <div
+              onMouseEnter={() => videoHandler(true)}
+              onMouseLeave={() => videoHandler(false)}
+              className="w-full md:w-1/2 aspect-video pr-4 self-center"
+            >
+              <video
+                title="what is the Clothing Loop"
+                src={githubActivity}
+                id="github-video"
+                muted={true}
+              ></video>
+            </div>
+
             <div className="w-full md:w-1/2 md:pl-4">
               <p className="prose text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans
@@ -375,7 +396,7 @@ export default function Contribute() {
               <p className="prose text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="feedback" ns="contribute" />
               </p>
-              <p className="prose text-md md:text-lg font-normal mb-8">
+              <p className="prose text-md md:text-lg font-normal">
                 <Trans i18nKey="feedbackDesc" ns="contribute" />
               </p>
             </div>
