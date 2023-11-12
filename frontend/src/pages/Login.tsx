@@ -1,23 +1,30 @@
 import { FormEvent, useContext, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import { TwoColumnLayout } from "../components/Layouts";
-import { loginEmail } from "../api/login";
+import { loginEmail, loginEmailAndAddToChain } from "../api/login";
 import { ToastContext } from "../providers/ToastProvider";
 import FormJup from "../util/form-jup";
 import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
+import type { Response } from "redaxios";
 
 //media
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
+
+interface Params {
+  chainUID: string;
+}
 
 export default function Login() {
   const history = useHistory();
   const { authUser } = useContext(AuthContext);
   const { addToast, addToastError } = useContext(ToastContext);
   const { t } = useTranslation();
+
+  const { chainUID } = useParams<Params>();
 
   const [error, setError] = useState("");
   const [active, setActive] = useState(false);
@@ -42,8 +49,12 @@ export default function Login() {
     (async () => {
       let apiKey: string | undefined;
       try {
-        const res = await loginEmail(email);
-        console.log(res);
+        let res: Response<unknown>;
+        if (chainUID) {
+          res = await loginEmailAndAddToChain(email, chainUID);
+        } else {
+          res = await loginEmail(email);
+        }
 
         if (res.data && (res.data + "").length) {
           apiKey = res.data + "";
@@ -136,7 +147,16 @@ export default function Login() {
                   <Trans
                     i18nKey="clickHereToRegister"
                     components={{
-                      "1": <Link className="font-medium" to="/users/signup" />,
+                      "1": (
+                        <Link
+                          className="font-medium"
+                          to={
+                            chainUID
+                              ? `/loops/${chainUID}/users/signup`
+                              : "/users/signup"
+                          }
+                        />
+                      ),
                     }}
                   />
                 </div>

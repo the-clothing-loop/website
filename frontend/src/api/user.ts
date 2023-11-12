@@ -65,3 +65,9 @@ export function userTransferChain(
     is_copy: isCopy,
   });
 }
+
+export function userCheckEmailExists(email: string) {
+  return window.axios.get<boolean>("/v2/user/check-email", {
+    params: { email },
+  });
+}

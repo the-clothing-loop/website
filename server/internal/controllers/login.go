@@ -20,8 +20,9 @@ func LoginEmail(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		Email string `binding:"required,email" json:"email"`
-		IsApp bool   `json:"app"`
+		Email    string `binding:"required,email" json:"email"`
+		IsApp    bool   `json:"app"`
+		ChainUID string `json:"chain_uid" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, "Email required")
@@ -48,6 +49,38 @@ func LoginEmail(c *gin.Context) {
 	if err != nil {
 		glog.Errorf("Unable to send email: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to send email")
+		return
+	}
+
+	// If the user is Login because he joined a chain
+	// we add the record to the chain_user table if not exist
+	if body.ChainUID != "" {
+		chainID, err := models.ChainCheckIfExist(db, body.ChainUID, true)
+		if chainID == 0 {
+			goscope.Log.Warningf("Chain does not exist: %v", err)
+			return
+		}
+		relationId, _ := models.UserChainCheckIfRelationExist(db, chainID, user.ID, false)
+
+		if relationId == 0 {
+			db.Create(&models.UserChain{
+				UserID:       user.ID,
+				ChainID:      chainID,
+				IsChainAdmin: false,
+				IsApproved:   false,
+			})
+
+			err = services.EmailLoopAdminsOnUserJoin(db, user, chainID)
+			if err != nil {
+				goscope.Log.Errorf("Unable to send email to associated loop admins: %v", err)
+				c.String(http.StatusInternalServerError, "Unable to send email to associated loop admins")
+				return
+			}
+
+			chainNames, _ := models.ChainGetNamesByIDs(db, chainID)
+			go services.EmailYouSignedUpForLoop(db, user, chainNames...)
+
+		}
 	}
 }
 
@@ -102,7 +135,7 @@ func LoginValidate(c *gin.Context) {
 				return
 			}
 
-			chainNames, _ := models.ChainGetNamesByIDs(db, chainIDs)
+			chainNames, _ := models.ChainGetNamesByIDs(db, chainIDs...)
 			go services.EmailYouSignedUpForLoop(db, user, chainNames...)
 
 		}

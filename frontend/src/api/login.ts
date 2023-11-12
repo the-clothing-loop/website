@@ -49,6 +49,13 @@ export function loginEmail(email: string) {
   return window.axios.post<unknown>("/v2/login/email", { email });
 }
 
+export function loginEmailAndAddToChain(email: string, chainUID: string) {
+  return window.axios.post<unknown>("/v2/login/email", {
+    email,
+    chain_uid: chainUID,
+  });
+}
+
 export function loginValidate(key: string) {
   return window.axios.get<{ user: User }>(`/v2/login/validate?apiKey=${key}`);
 }

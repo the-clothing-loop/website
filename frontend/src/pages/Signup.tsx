@@ -1,7 +1,7 @@
 // React / plugins
 import { useState, useEffect, useContext } from "react";
-import { useTranslation } from "react-i18next";
-import { Redirect, useParams, useHistory } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
+import { Redirect, useParams, useHistory, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import { TwoColumnLayout } from "../components/Layouts";
@@ -129,6 +129,22 @@ export default function Signup() {
     })();
   }
 
+  function onEmailExist() {
+    addModal({
+      message: t("userExists"),
+      actions: [
+        {
+          text: t("login"),
+          type: "default",
+          fn: () =>
+            history.push(
+              chainUID ? `/loops/${chainUID}/users/login` : "/users/login"
+            ),
+        },
+      ],
+    });
+  }
+
   if (submitted) {
     return <Redirect to={"/thankyou"} />;
   } else {
@@ -191,15 +207,36 @@ export default function Signup() {
               ) : (
                 <div>
                   {chain?.open_to_new_members && chain.published ? (
-                    <AddressForm
-                      userUID={undefined}
-                      onSubmit={onSubmitNewUser}
-                      isNewsletterRequired={false}
-                      showNewsletter
-                      showTosPrivacyPolicy
-                      onlyShowEditableAddress
-                      classes="mb-4"
-                    />
+                    <>
+                      <div className="mt-4 prose">
+                        {t("doYouHaveAnAccount") + " "}
+                        <Trans
+                          i18nKey="clickHereToLogin"
+                          components={{
+                            "1": (
+                              <Link
+                                className="font-small"
+                                to={
+                                  chainUID
+                                    ? `/loops/${chainUID}/users/login`
+                                    : "/users/login"
+                                }
+                              />
+                            ),
+                          }}
+                        />
+                      </div>
+                      <AddressForm
+                        userUID={undefined}
+                        onSubmit={onSubmitNewUser}
+                        isNewsletterRequired={false}
+                        showNewsletter
+                        showTosPrivacyPolicy
+                        onlyShowEditableAddress
+                        onEmailExist={onEmailExist}
+                        classes="mb-4"
+                      />
+                    </>
                   ) : null}
                   <div className="mb-4">
                     <button
