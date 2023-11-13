@@ -1,12 +1,18 @@
+(hsts) {
+	header Strict-Transport-Security "max-age=300; includeSubDomains"
+}
+
 vpsnode1.vps.webdock.cloud {
 	respond "Hello, world!"
 }
 
 clothingloop.org, www.clothingloop.be, clothingloop.be {
+	import hsts
 	redir https://www.clothingloop.org{uri}
 }
 
 api.clothingloop.org, admin.clothingloop.org, app.clothingloop.org, www.clothingloop.org {
+	import hsts
 	header Cache-Control no-cache
 
 	root * /var/caddy/maint.clothingloop.org
@@ -20,6 +26,7 @@ api.clothingloop.org, admin.clothingloop.org, app.clothingloop.org, www.clothing
 }
 
 acc.clothingloop.org {
+	import hsts
 	log {
 		output file /var/log/caddy/acc.clothingloop.org-error.log
 		format console
