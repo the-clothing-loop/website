@@ -202,9 +202,7 @@ export default function AddressForm(props: {
     const response = await userCheckEmailExists(email);
     const exists = response.data;
 
-    if (exists) {
-      props.onEmailExist();
-    }
+    if (exists) props.onEmailExist();
   }
 
   return (

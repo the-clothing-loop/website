@@ -187,9 +187,9 @@ WHERE user_chains.chain_id = ? AND users.is_email_verified = TRUE
 	return results, nil
 }
 
-func UserCheckEmail(db *gorm.DB, userEmail string) (uint, error) {
+func UserCheckEmail(db *gorm.DB, userEmail string) (userID uint, found bool, err error) {
 	if userEmail == "" {
-		return 0, errors.New("Email is required")
+		return 0, false, errors.New("Email is required")
 	}
 
 	var row struct {
@@ -197,12 +197,12 @@ func UserCheckEmail(db *gorm.DB, userEmail string) (uint, error) {
 	}
 
 	query := `SELECT id FROM users WHERE email = ? LIMIT 1`
-	err := db.Raw(query, userEmail).First(&row).Error
+	err = db.Raw(query, userEmail).First(&row).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return 0, nil
+			return 0, false, nil
 		}
-		return 0, err
+		return 0, false, err
 	}
-	return row.ID, nil
+	return row.ID, true, nil
 }

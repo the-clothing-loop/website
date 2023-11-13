@@ -99,12 +99,15 @@ func TestUsersService(t *testing.T) {
 	t.Run("TestUserCheckEmail", func(t *testing.T) {
 		for _, test := range tests {
 			t.Run(test.testName, func(t *testing.T) {
-				userID, _ := models.UserCheckEmail(db, test.email)
+				userID, found, err := models.UserCheckEmail(db, test.email)
 				if test.expectedError == nil {
 					assert.Equal(t, test.user.ID, userID)
+					assert.True(t, found)
 				} else {
 					assert.Equal(t, uint(0), userID)
+					assert.False(t, found)
 				}
+				assert.Nil(t, err)
 			})
 		}
 	})
