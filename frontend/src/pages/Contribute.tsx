@@ -12,11 +12,11 @@ import { SizeBadges } from "../components/Badges";
 
 // Media
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
-const map = "../../public/images/mapscreenshot.png";
-const network = "../../public/images/networkgraph.png";
+const map = "https://images.clothingloop.org/0x0/map_image_4.png";
 const ClothesImage =
   "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
-const githubActivity = "../../public/images/gource-cut1.mp4";
+// Correct github neural network goes here
+const githubActivity = "";
 
 export default function Contribute() {
   const { t } = useTranslation("contribute");
@@ -353,7 +353,7 @@ export default function Contribute() {
               className="w-full md:w-1/2 aspect-video pr-4 self-center"
             >
               <video
-                title="what is the Clothing Loop"
+                title="Neural Network of Our Github Repository Over Time"
                 src={githubActivity}
                 id="github-video"
                 muted={true}
