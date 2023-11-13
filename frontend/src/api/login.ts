@@ -1,5 +1,5 @@
 import { Sizes } from "./enums";
-import { User } from "./types";
+import { UID, User } from "./types";
 
 export interface RequestRegisterUser {
   name: string;
@@ -32,7 +32,7 @@ export function registerChainAdmin(
   return window.axios.post<never>("/v2/register/chain-admin", { user, chain });
 }
 
-export function registerBasicUser(user: RequestRegisterUser, chainUID: string) {
+export function registerBasicUser(user: RequestRegisterUser, chainUID: UID) {
   return window.axios.post<never>("/v2/register/basic-user", {
     user,
     chain_uid: chainUID,
@@ -49,7 +49,7 @@ export function loginEmail(email: string) {
   return window.axios.post<unknown>("/v2/login/email", { email });
 }
 
-export function loginEmailAndAddToChain(email: string, chainUID: string) {
+export function loginEmailAndAddToChain(email: string, chainUID: UID) {
   return window.axios.post<unknown>("/v2/login/email", {
     email,
     chain_uid: chainUID,
