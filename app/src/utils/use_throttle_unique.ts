@@ -1,6 +1,5 @@
 import { useState } from "react";
 import useThrottledCallback from "beautiful-react-hooks/useThrottledCallback";
-import { isFirstRun } from "vitest";
 
 // ensures that the first call run by each key is overrides the throttle
 export function useThrottleUnique(
