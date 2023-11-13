@@ -206,7 +206,7 @@ export default function Signup() {
                 </form>
               ) : (
                 <div>
-                  {chain?.open_to_new_members && chain.published ? (
+                  {!chain || (chain.open_to_new_members && chain.published) ? (
                     <>
                       <div className="mt-4 prose">
                         {t("doYouHaveAnAccount") + " "}
