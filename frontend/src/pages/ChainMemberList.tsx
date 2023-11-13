@@ -295,31 +295,34 @@ export default function ChainMemberList() {
       message: t("deleteLoop"),
       content:
         chain && users
-          ? () => (
-              <>
-                <p
-                  className="mb-2"
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(
-                      t("areYouSureDeleteLoop", {
-                        chain: chain.name,
-                      })
-                    ),
-                  }}
-                ></p>
-                <ul
-                  className={`text-sm font-semibold mx-8 ${
-                    users.length > 1 ? "list-disc" : "list-none text-center"
-                  }`}
-                >
-                  {users
-                    .filter((u) => u.uid !== authUser?.uid)
-                    .map((u) => (
+          ? () => {
+              let otherUsers = users.filter((u) => u.uid !== authUser?.uid);
+              return (
+                <>
+                  <p
+                    className="mb-2"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(
+                        t("areYouSureDeleteLoop", {
+                          chain: chain.name,
+                        })
+                      ),
+                    }}
+                  ></p>
+                  <ul
+                    className={`text-sm font-semibold mx-8 ${
+                      otherUsers.length > 1
+                        ? "list-disc"
+                        : "list-none text-center"
+                    }`}
+                  >
+                    {otherUsers.map((u) => (
                       <li key={u.uid}>{u.name}</li>
                     ))}
-                </ul>
-              </>
-            )
+                  </ul>
+                </>
+              );
+            }
           : undefined,
       actions: [
         {

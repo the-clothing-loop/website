@@ -179,14 +179,19 @@ func ChainGetNamesByIDs(db *gorm.DB, chainIDs []uint) ([]string, error) {
 	return names, nil
 }
 
+// This excludes unapproved users
 func (c *Chain) GetUserContactData(db *gorm.DB) ([]UserContactData, error) {
 	users := []UserContactData{}
 	err := db.Raw(`
-SELECT u.name, u.email, u.i18n, c.name
+SELECT
+	u.name AS name,
+	u.email AS email,
+	u.i18n AS i18n,
+	c.name AS chain_name
 FROM user_chains AS uc
 LEFT JOIN users AS u ON u.id = uc.user_id
 LEFT JOIN chains AS c ON c.id = uc.chain_id
-WHERE c.id = ?
+WHERE uc.is_approved = TRUE AND c.id = ?
 	`, c.ID).Scan(&users).Error
 	if err != nil {
 		return nil, err
@@ -202,15 +207,18 @@ type ChainTotals struct {
 
 func (c *Chain) GetTotals(db *gorm.DB) *ChainTotals {
 	result := &ChainTotals{}
-	db.Raw(`
-	SELECT COUNT(uc1.id) AS total_members, (
-		SELECT COUNT(uc2.id)
-		FROM user_chains AS uc2
-		WHERE uc2.chain_id = ? AND uc2.is_chain_admin = TRUE
-		) AS total_hosts
-	FROM user_chains AS uc1
-	WHERE uc1.chain_id = ?
-			`, c.ID, c.ID).Scan(&result)
+	err := db.Raw(`
+SELECT COUNT(uc1.id) AS total_members, (
+	SELECT COUNT(uc2.id)
+	FROM user_chains AS uc2
+	WHERE uc2.chain_id = ? AND uc2.is_chain_admin = TRUE
+	) AS total_hosts
+FROM user_chains AS uc1
+WHERE uc1.chain_id = ?
+	`, c.ID, c.ID).Scan(&result).Error
+	if err != nil {
+		panic(err)
+	}
 
 	return result
 }
