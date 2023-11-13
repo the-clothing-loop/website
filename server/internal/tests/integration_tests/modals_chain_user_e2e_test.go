@@ -24,19 +24,21 @@ func TestChainUsersService(t *testing.T) {
 	})
 
 	t.Run("UserChainCheckIfRelationExist", func(t *testing.T) {
+		unapprovedUser, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{IsNotApproved: true})
 
-		unnaprovedUser, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{IsNotApproved: true})
-
-		relationId, err := models.UserChainCheckIfRelationExist(db, chain.ID, unnaprovedUser.ID, false)
-		assert.NotZero(t, relationId)
+		relationID, found, err := models.UserChainCheckIfRelationExist(db, chain.ID, unapprovedUser.ID, false)
+		assert.NotZero(t, relationID)
+		assert.True(t, found)
 		assert.Nil(t, err)
 
-		notExistenRelationId, err := models.UserChainCheckIfRelationExist(db, chain.ID, unnaprovedUser.ID, true)
-		assert.Zero(t, notExistenRelationId)
+		notExistRelationID, found, err := models.UserChainCheckIfRelationExist(db, chain.ID, unapprovedUser.ID, true)
+		assert.Zero(t, notExistRelationID)
+		assert.False(t, found)
 		assert.Nil(t, err)
 
-		notExistenRelationId1, err := models.UserChainCheckIfRelationExist(db, 0, 0, false)
-		assert.Zero(t, notExistenRelationId1)
+		notExistRelationID1, found, err := models.UserChainCheckIfRelationExist(db, 0, 0, false)
+		assert.Zero(t, notExistRelationID1)
+		assert.False(t, found)
 		assert.Nil(t, err)
 	})
 

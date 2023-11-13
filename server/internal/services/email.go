@@ -15,16 +15,15 @@ Given a user and a list of ChainIds, this method performs the following actions:
 - sends them an email with the new user's information.
 - Also, it sends an email to the user for every loop he intends to join.
 */
-func EmailLoopAdminsOnUserJoin(db *gorm.DB, user *models.User, chainIds ...uint) error {
-
+func EmailLoopAdminsOnUserJoin(db *gorm.DB, user *models.User, chainIDs ...uint) error {
 	// find admin users related to the chain to email
-	results, err := models.UserGetAdminsByChain(db, chainIds...)
+	results, err := models.UserGetAdminsByChain(db, chainIDs...)
 	if err != nil {
 		return err
 	}
 
 	if len(results) == 0 {
-		goscope.Log.Errorf("Empty chain that is still public: ChainID: %d", chainIds)
+		goscope.Log.Errorf("Empty chain that is still public: ChainID: %d", chainIDs)
 		return fmt.Errorf("No admins exist for this loop")
 	}
 

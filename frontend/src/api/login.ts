@@ -56,8 +56,16 @@ export function loginEmailAndAddToChain(email: string, chainUID: UID) {
   });
 }
 
-export function loginValidate(key: string) {
-  return window.axios.get<{ user: User }>(`/v2/login/validate?apiKey=${key}`);
+export function loginValidate(key: string, chainUID: UID) {
+  let params: Record<string, string> = {
+    apiKey: key,
+  };
+  if (chainUID) {
+    params["c"] = chainUID;
+  }
+  return window.axios.get<{ user: User }>(`/v2/login/validate?apiKey=${key}`, {
+    params,
+  });
 }
 
 export function logout() {

@@ -145,7 +145,7 @@ func UserChainGetIndirectByChain(db *gorm.DB, chainID uint) ([]UserChain, error)
 	return results, nil
 }
 
-func UserChainCheckIfRelationExist(db *gorm.DB, ChainID uint, UserID uint, checkIfIsApproved bool) (uint, error) {
+func UserChainCheckIfRelationExist(db *gorm.DB, ChainID uint, UserID uint, checkIfIsApproved bool) (userChainID uint, found bool, err error) {
 	var row struct {
 		ID uint `gorm:"id"`
 	}
@@ -156,13 +156,13 @@ func UserChainCheckIfRelationExist(db *gorm.DB, ChainID uint, UserID uint, check
 	}
 	query += " LIMIT 1"
 
-	err := db.Raw(query, ChainID, UserID).First(&row).Error
+	err = db.Raw(query, ChainID, UserID).First(&row).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return 0, nil
+			return 0, false, nil
 		}
-		return 0, err
+		return 0, false, err
 	}
 
-	return row.ID, nil
+	return row.ID, true, nil
 }
