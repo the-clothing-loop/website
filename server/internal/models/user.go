@@ -115,10 +115,10 @@ LIMIT 1
 }
 
 type UserContactData struct {
-	Name      string
-	Email     zero.String
-	I18n      string
-	ChainName string
+	Name      string      `gorm:"name"`
+	Email     zero.String `gorm:"email"`
+	I18n      string      `gorm:"i18n"`
+	ChainName string      `gorm:"chain_name"`
 }
 
 // Expects the userUID not to be empty

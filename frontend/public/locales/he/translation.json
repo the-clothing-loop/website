@@ -4,6 +4,8 @@
   "leave": "עזוב",
   "leaveLoop": "עזוב לולאה",
   "areYouSureLeaveLoop": "האם אתם בטוחים שברצונכם “{{ name }}” לעזוב “{{ chain }}” לולאה?",
+  "deleteLoop": "Delete Loop",
+  "areYouSureDeleteLoop": "Are you sure you want to delete “{{ chain }}” Loop?<br/><br/>The following participants will be notified:",
   "setAsAParticipant": "הגדר כמשתתף",
   "selected": "נבחר",
   "selectParticipant": "בחר משתתף",

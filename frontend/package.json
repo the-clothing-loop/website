@@ -6,6 +6,7 @@
   "type": "module",
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.8",
+    "@types/dompurify": "^3.0.5",
     "@types/jest": "^26.0.15",
     "@types/node": "^20.0.0",
     "@types/react": "^17.0.0",
@@ -36,6 +37,7 @@
     "@types/react-helmet": "^6.1.1",
     "dayjs": "^1.11.7",
     "deck.gl": "^8.8.20",
+    "dompurify": "^3.0.6",
     "events": "^3.3.0",
     "goscope2-sdk-js": "github:lil5/goscope2#v1.4.2",
     "i18next": "^22.4.6",

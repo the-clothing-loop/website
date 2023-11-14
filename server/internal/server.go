@@ -111,6 +111,7 @@ func Routes() *gin.Engine {
 	v2.GET("/chain", controllers.ChainGet)
 	v2.GET("/chain/all", controllers.ChainGetAll)
 	v2.PATCH("/chain", controllers.ChainUpdate)
+	v2.DELETE("/chain", controllers.ChainDelete)
 	v2.POST("/chain", controllers.ChainCreate)
 	v2.POST("/chain/add-user", controllers.ChainAddUser)
 	v2.POST("/chain/remove-user", controllers.ChainRemoveUser)

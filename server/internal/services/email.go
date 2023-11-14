@@ -29,18 +29,19 @@ func EmailLoopAdminsOnUserJoin(db *gorm.DB, user *models.User, chainIds ...uint)
 	}
 
 	for _, result := range results {
-		if result.Email.Valid {
-			views.EmailSomeoneIsInterestedInJoiningYourLoop(db, result.I18n,
-				result.Email.String,
-				result.Name,
-				result.ChainName,
-				user.Name,
-				user.Email.String,
-				user.PhoneNumber,
-				user.Address,
-				user.Sizes,
-			)
+		if !result.Email.Valid {
+			continue
 		}
+		views.EmailSomeoneIsInterestedInJoiningYourLoop(db, result.I18n,
+			result.Email.String,
+			result.Name,
+			result.ChainName,
+			user.Name,
+			user.Email.String,
+			user.PhoneNumber,
+			user.Address,
+			user.Sizes,
+		)
 	}
 
 	return nil
@@ -48,7 +49,20 @@ func EmailLoopAdminsOnUserJoin(db *gorm.DB, user *models.User, chainIds ...uint)
 
 func EmailYouSignedUpForLoop(db *gorm.DB, user *models.User, chainNames ...string) error {
 	for _, chainName := range chainNames {
+		if !user.Email.Valid {
+			continue
+		}
 		views.EmailYouSignedUpForLoop(db, user.I18n, user.Name, user.Email.String, chainName)
 	}
 	return nil
+}
+
+// is run by services.ChainDelete
+func emailLoopHasBeenDeleted(db *gorm.DB, users []models.UserContactData, chainName string) {
+	for _, user := range users {
+		if !user.Email.Valid {
+			continue
+		}
+		views.EmailLoopIsDeleted(db, user.I18n, user.Name, user.Email.String, chainName)
+	}
 }
