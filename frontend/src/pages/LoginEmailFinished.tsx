@@ -36,7 +36,12 @@ export default function LoginEmailFinished() {
         if (user?.i18n) {
           i18n.changeLanguage(user.i18n);
         }
-        history.replace("/admin/dashboard");
+
+        if (chainUID) {
+          history.replace("/thankyou/");
+        } else {
+          history.replace("/admin/dashboard");
+        }
       } catch (err: any) {
         addToastError(t("errorLoggingIn"), 401);
         console.error("Error logging in", err);
