@@ -1,19 +1,21 @@
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
 //Project resources
 import { TwoColumnLayout } from "../components/Layouts";
 import { useQueryParam } from "use-query-params";
+import { useContext } from "react";
+import { AuthContext } from "../providers/AuthProvider";
 
 export interface IProps {
   heading: string;
   subheading: string;
-  confirmationEmail: string;
 }
 
-function Content({ heading, subheading, confirmationEmail }: IProps) {
-  let history = useHistory();
+function Content({ heading, subheading }: IProps) {
+  const history = useHistory();
+  const { authUser } = useContext(AuthContext);
   const { t } = useTranslation();
 
   return (
@@ -23,7 +25,7 @@ function Content({ heading, subheading, confirmationEmail }: IProps) {
       </h1>
       <div className="prose mb-6">
         <p className="text-lg">{subheading}</p>
-        <p>{confirmationEmail}</p>
+        {authUser ? null : <p>{t("confirmationEmailIsOnItsWay")}</p>}
         <p>{t("happySwapping")}</p>
       </div>
       <div className="flex flex-row justify-start">
@@ -63,7 +65,6 @@ export function NewLoopConfirmation(props: any) {
           <Content
             heading={t("thankYouForStartingThisLoop", { name })}
             subheading={t("youAreUnlockingTheClothesSwapPotential")}
-            confirmationEmail={t("confirmationEmailIsOnItsWay")}
           />
         </TwoColumnLayout>
       </main>
@@ -89,7 +90,6 @@ export function JoinLoopConfirmation(props: any) {
           <Content
             heading={t("thankYouForSigningUp")}
             subheading={t("yourClosetIsAboutToBecomeAWholeLotMoreSustainable")}
-            confirmationEmail={t("confirmationEmailIsOnItsWay")}
           />
         </TwoColumnLayout>
       </main>
