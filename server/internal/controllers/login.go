@@ -80,9 +80,6 @@ func LoginValidate(c *gin.Context) {
 		return
 	}
 
-	// Join request chains to be notified
-	chainIDs := []uint{}
-
 	// Is the first time verifying the user account
 	if user.Email.Valid && !user.IsEmailVerified {
 		db.Exec(`UPDATE chains SET published = TRUE WHERE id IN (
@@ -93,6 +90,7 @@ func LoginValidate(c *gin.Context) {
 		db.Exec(`UPDATE user_chains SET created_at = NOW() WHERE user_id = ?`, user.ID)
 
 		// Add all chains to be notified
+		chainIDs := []uint{}
 		for _, uc := range user.Chains {
 			if !uc.IsChainAdmin {
 				chainIDs = append(chainIDs, uc.ChainID)
@@ -134,6 +132,10 @@ func LoginValidate(c *gin.Context) {
 				IsChainAdmin: false,
 				IsApproved:   false,
 			})
+
+			chainNames, _ := models.ChainGetNamesByIDs(db, chainID)
+			services.EmailYouSignedUpForLoop(db, user, chainNames...)
+			services.EmailLoopAdminsOnUserJoin(db, user, chainID)
 		}
 	}
 
