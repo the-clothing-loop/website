@@ -41,5 +41,4 @@ func TestChainUsersService(t *testing.T) {
 		assert.False(t, found)
 		assert.Nil(t, err)
 	})
-
 }
