@@ -40,7 +40,7 @@ export default function AddressForm(props: {
   showTosPrivacyPolicy?: boolean;
   showNewsletter?: boolean;
   onlyShowEditableAddress?: boolean;
-  onEmailExist?: () => void;
+  onEmailExist?: (email: string) => void;
 }) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -202,7 +202,7 @@ export default function AddressForm(props: {
     const response = await userCheckEmailExists(email);
     const exists = response.data;
 
-    if (exists) props.onEmailExist();
+    if (exists) props.onEmailExist(email);
   }
 
   return (

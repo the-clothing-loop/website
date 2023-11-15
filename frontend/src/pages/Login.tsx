@@ -10,6 +10,7 @@ import FormJup from "../util/form-jup";
 import { AuthContext } from "../providers/AuthProvider";
 import { GinParseErrors } from "../util/gin-errors";
 import type { Response } from "redaxios";
+import { useQueryParam } from "use-query-params";
 
 //media
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
@@ -25,6 +26,7 @@ export default function Login() {
   const { t } = useTranslation();
 
   const { chainUID } = useParams<Params>();
+  const [defaultEmail = ""] = useQueryParam<string>("email");
 
   const [error, setError] = useState("");
   const [active, setActive] = useState(false);
@@ -124,6 +126,7 @@ export default function Login() {
                   placeholder={t("email")}
                   type="email"
                   name="email"
+                  defaultValue={defaultEmail}
                   required
                 />
                 {active ? (

@@ -129,17 +129,20 @@ export default function Signup() {
     })();
   }
 
-  function onEmailExist() {
+  function onEmailExist(email: string) {
     addModal({
       message: t("userExists"),
       actions: [
         {
           text: t("login"),
           type: "default",
-          fn: () =>
-            history.push(
-              chainUID ? `/loops/${chainUID}/users/login` : "/users/login"
-            ),
+          fn: () => {
+            let url = chainUID
+              ? `/loops/${chainUID}/users/login`
+              : "/users/login";
+            url += `?email=${email}`;
+            return history.push(url);
+          },
         },
       ],
     });
