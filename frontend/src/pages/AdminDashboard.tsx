@@ -1,6 +1,6 @@
 //Resources
 import { Link, Redirect, useHistory } from "react-router-dom";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
@@ -13,7 +13,7 @@ import { Chain } from "../api/types";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
-  const { authUser } = useContext(AuthContext);
+  const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addModal } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>([]);
   const history = useHistory();
@@ -75,6 +75,10 @@ export default function AdminDashboard() {
       ],
     });
   }
+
+  useEffect(() => {
+    authUserRefresh();
+  }, []);
 
   useEscape(() => {
     let el = document.getElementById(
