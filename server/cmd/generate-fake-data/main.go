@@ -76,5 +76,8 @@ func main() {
 			})
 		}
 		log.Printf("Added     -> User\t(ID: %d)\tto Chain (ID: %d)", user.ID, chain.ID)
+
+		bag := mocks.MockBag(t, db, chain.ID, user.ID, mocks.MockBagOptions{})
+		log.Printf("Generated -> Bag\t(ID: %d)", bag.ID)
 	}
 }
