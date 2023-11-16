@@ -50,14 +50,6 @@ tunnel-db-vps1:
 stripe-dev:
 	stripe listen --forward-to localhost:8084/v2/payment/webhook
 
-.PHONY: docker-start
-docker-start:
-	@cd docker; docker compose up -d
-
-.PHONY: stop
-docker-stop:
-	@cd docker; docker compose down
-
 .PHONY: coords-migrate
 coords-migrate:
 	@SERVER_ENV=production go run cmd/get-user-coords-and-country/main.go -mb-token="" -start=1001 -end=2000 2>&1 | tee -a coords.log
