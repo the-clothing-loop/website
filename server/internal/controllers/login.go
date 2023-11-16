@@ -20,8 +20,9 @@ func LoginEmail(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		Email string `binding:"required,email" json:"email"`
-		IsApp bool   `json:"app"`
+		Email    string `binding:"required,email" json:"email"`
+		IsApp    bool   `json:"app"`
+		ChainUID string `json:"chain_uid" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, "Email required")
@@ -44,10 +45,12 @@ func LoginEmail(c *gin.Context) {
 		c.String(http.StatusOK, token)
 		return
 	}
-	err = views.EmailLoginVerification(c, db, user.Name, user.Email.String, token, body.IsApp)
+
+	err = views.EmailLoginVerification(c, db, user.Name, user.Email.String, token, body.IsApp, body.ChainUID)
 	if err != nil {
 		glog.Errorf("Unable to send email: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to send email")
+		return
 	}
 }
 
@@ -55,7 +58,8 @@ func LoginValidate(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		Key string `form:"apiKey,required"`
+		Key      string `form:"apiKey,required"`
+		ChainUID string `form:"c" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, "Malformed url: apiKey required")
@@ -78,7 +82,6 @@ func LoginValidate(c *gin.Context) {
 
 	// Is the first time verifying the user account
 	if user.Email.Valid && !user.IsEmailVerified {
-
 		db.Exec(`UPDATE chains SET published = TRUE WHERE id IN (
 			SELECT chain_id FROM user_chains WHERE user_id = ? AND is_chain_admin = TRUE
 	   )`, user.ID)
@@ -86,7 +89,7 @@ func LoginValidate(c *gin.Context) {
 		// Reset joined-at time
 		db.Exec(`UPDATE user_chains SET created_at = NOW() WHERE user_id = ?`, user.ID)
 
-		// email a participant joined the loop
+		// Add all chains to be notified
 		chainIDs := []uint{}
 		for _, uc := range user.Chains {
 			if !uc.IsChainAdmin {
@@ -102,11 +105,40 @@ func LoginValidate(c *gin.Context) {
 				return
 			}
 
-			chainNames, _ := models.ChainGetNamesByIDs(db, chainIDs)
+			chainNames, _ := models.ChainGetNamesByIDs(db, chainIDs...)
 			go services.EmailYouSignedUpForLoop(db, user, chainNames...)
+		}
+	} else if query.ChainUID != "" {
+		chainID, found, err := models.ChainCheckIfExist(db, query.ChainUID, true)
+		if err != nil {
+			goscope.Log.Errorf("Chain cannot be found: %v", err)
+			c.String(http.StatusInternalServerError, "Loop does not exist")
+			return
+		}
+		if !found {
+			c.String(http.StatusFailedDependency, "Loop does not exist")
+			return
+		}
+		_, found, err = models.UserChainCheckIfRelationExist(db, chainID, user.ID, false)
+		if err != nil {
+			goscope.Log.Errorf("Chain connection unable to lookup: %v", err)
+			c.String(http.StatusInternalServerError, "Loop connection unable to lookup")
+			return
+		}
+		if !found {
+			db.Create(&models.UserChain{
+				UserID:       user.ID,
+				ChainID:      chainID,
+				IsChainAdmin: false,
+				IsApproved:   false,
+			})
 
+			chainNames, _ := models.ChainGetNamesByIDs(db, chainID)
+			services.EmailYouSignedUpForLoop(db, user, chainNames...)
+			services.EmailLoopAdminsOnUserJoin(db, user, chainID)
 		}
 	}
+
 	// re-add IsEmailVerified, see TokenVerify
 	user.IsEmailVerified = true
 

@@ -1,0 +1,29 @@
+meta {
+  name: validate login & register chain
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base}}/v2/login/validate?apiKey={{thisApiKey}}&c={{thisChainUID}}
+  body: none
+  auth: none
+}
+
+query {
+  apiKey: {{thisApiKey}}
+  c: {{thisChainUID}}
+}
+
+vars:pre-request {
+  thisApiKey: 1234897
+  thisChainUID: 6c2564a8-3997-4775-b2ad-6c4b06e8c8d9
+}
+
+script:pre-request {
+  //  
+}
+
+tests {
+  //  
+}

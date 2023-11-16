@@ -611,3 +611,22 @@ func routeIndex(route []string, userUID string) int {
 	}
 	return -1
 }
+
+func UserCheckIfEmailExists(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		Email string `form:"email" binding:"required,email"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	_, found, err := models.UserCheckEmail(db, query.Email)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Error Checking user email")
+		return
+	}
+	c.JSON(200, found)
+}

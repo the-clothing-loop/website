@@ -1,7 +1,7 @@
 meta {
-  name: begin login
+  name: begin login & register chain
   type: http
-  seq: 1
+  seq: 2
 }
 
 post {
@@ -12,6 +12,7 @@ post {
 
 body:json {
   {
-    "email": "{{userEmail}}"
+    "email": "{{userEmail}}",
+    "chain_uid": "{{chainUID}}"
   }
 }

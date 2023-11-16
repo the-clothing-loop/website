@@ -158,7 +158,7 @@ func (c *Chain) Delete(db *gorm.DB) error {
 	return nil
 }
 
-func ChainGetNamesByIDs(db *gorm.DB, chainIDs []uint) ([]string, error) {
+func ChainGetNamesByIDs(db *gorm.DB, chainIDs ...uint) ([]string, error) {
 
 	type aux struct {
 		Name string
@@ -221,4 +221,26 @@ WHERE uc1.chain_id = ?
 	}
 
 	return result
+}
+
+func ChainCheckIfExist(db *gorm.DB, ChainUID string, checkIfIsOpenToNewMembers bool) (chainID uint, found bool, err error) {
+	var row struct {
+		ID uint `gorm:"id"`
+	}
+	query := "SELECT id FROM chains WHERE uid = ? AND deleted_at IS NULL"
+	if checkIfIsOpenToNewMembers {
+		query += " AND open_to_new_members = TRUE"
+	}
+	query += " LIMIT 1"
+
+	err = db.Raw(query, ChainUID).Scan(&row).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 0, false, nil
+		}
+
+		return 0, false, err
+	}
+
+	return row.ID, true, nil
 }
