@@ -17,10 +17,7 @@ i18n
     supportedLngs: languages,
     fallbackLng: "en",
     debug: false,
-    detection: {
-      order: ["path", "cookie"],
-      caches: ["cookie"],
-    },
+    detection: {},
     interpolation: {
       escapeValue: false,
     },
