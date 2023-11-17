@@ -1,6 +1,7 @@
 # Steps to release app
 
 1. Edit the `VITE_APP_VERSION` in [.env.production](/.env.production) (e.g.: `v1.4`)
+   And add a summary to the RELEASE_NOTES.md file
 
 **Apple App Store**
 

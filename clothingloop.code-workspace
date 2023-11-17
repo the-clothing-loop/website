@@ -17,13 +17,20 @@
     },
     {
       "path": "docker"
+    },
+    {
+      "path": "bruno"
+    },
+    {
+      "path": ".husky"
     }
   ],
   "settings": {
     "yaml.schemas": {
       "https://json.schemastore.org/prometheus.rules.test.json": "file:///Users/lil5/Projects/clothingloop/clothing-loop/server/config.test.yml"
     },
-    "prettier.documentSelectors": [".prettierrc.yml"]
+    "prettier.documentSelectors": [".prettierrc.yml"],
+    "vitest.enable": true
   },
   "extensions": {
     "recommendations": [

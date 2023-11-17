@@ -19,5 +19,9 @@ export default defineConfig((mode) => {
       },
     },
     build: { outDir: "build" },
+    test: {
+      environment: "jsdom",
+      globals: true,
+    },
   };
 });

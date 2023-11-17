@@ -1,0 +1,4 @@
+/environments/*.bru
+/environments/Example.bru
+/_ignored_/
+!.gitkeep

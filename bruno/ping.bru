@@ -1,0 +1,17 @@
+meta {
+  name: ping
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base}}/v2/ping
+  body: none
+  auth: none
+}
+
+tests {
+  test("should return pong", function() {
+    expect(res.getBody()).to.equal("pong");
+  })
+}

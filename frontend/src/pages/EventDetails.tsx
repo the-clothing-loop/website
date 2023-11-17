@@ -26,6 +26,7 @@ import dayjs from "../util/dayjs";
 import useToClipboard from "../util/to-clipboard.hooks";
 import { AuthContext } from "../providers/AuthProvider";
 import { uploadImage } from "../api/imgbb";
+import SanitizedHtml from "../components/SanitizedHtml";
 
 // Media
 const ClothesImage =
@@ -169,11 +170,11 @@ export default function EventDetails() {
               <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-6 px-0">
                 {event.name}
               </h1>
-              <div className="flex flex-row md:mt-6">
+              <div className="flex flex-col sm:flex-row md:mt-6 space-y-4 sm:space-y-0">
                 <a
                   href={icalURL}
                   download={icalFilename}
-                  className="btn btn-primary mr-4 rtl:mr-0 rtl:ml-4"
+                  className="btn btn-primary sm:me-4"
                 >
                   <span className="relative mr-4 rtl:mr-1 rtl:ml-3" aria-hidden>
                     <span className="inline-block feather feather-calendar relative transform scale-125"></span>
@@ -185,7 +186,7 @@ export default function EventDetails() {
                   <>
                     <Link
                       to={`/events/` + event.uid + `/edit`}
-                      className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                      className="btn btn-secondary btn-outline sm:me-4"
                     >
                       <span className="feather feather-edit mr-3 rtl:mr-0 rtl:ml-3"></span>
                       {t("edit")}
@@ -381,10 +382,10 @@ export default function EventDetails() {
                   {t("eventDetails") + ":"}
                 </h2>
                 <div
-                  className={`flex ${
+                  className={`${
                     imageExpanded
                       ? "flex-col-reverse w-full content-center"
-                      : "sm:cursor-zoom-in"
+                      : ""
                   }`}
                 >
                   <div
@@ -392,14 +393,14 @@ export default function EventDetails() {
                   ${
                     imageExpanded
                       ? "max-w-xl mt-8"
-                      : "mt-8 sm:w-64 sm:float-right rtl:sm:float-left sm:m-4"
+                      : "mt-8 sm:w-64 sm:float-right rtl:sm:float-left sm:m-4 sm:cursor-zoom-in"
                   }`}
                   >
                     {isOrganizer ? (
                       <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2 flex flex-row-reverse">
                         <label
                           key="upload-image"
-                          className="tooltip tooltip-bottom"
+                          className="tooltip tooltip-left md:!tooltip-bottom"
                           data-tip={t("uploadImage")}
                         >
                           <input
@@ -420,14 +421,39 @@ export default function EventDetails() {
                     <img
                       src={image}
                       alt=""
-                      className="object-cover h-full w-full"
+                      id="foo"
+                      className={"h-full w-full".concat(
+                        imageExpanded
+                          ? " object-contain"
+                          : " object-contain sm:object-cover"
+                      )}
                       onClick={() => setImageExpanded(true)}
                     />
                   </div>
-                  <div
+                  <SanitizedHtml
                     className="prose"
-                    dangerouslySetInnerHTML={{ __html: event.description }}
-                  ></div>
+                    options={{
+                      allowedTags: [
+                        "small",
+                        "sub",
+                        "sup",
+                        "br",
+                        "p",
+                        "strong",
+                        "b",
+                        "em",
+                        "ul",
+                        "ol",
+                        "li",
+                        "a",
+                      ],
+                      allowedAttributes: {
+                        a: ["href", "name", "target"],
+                      },
+                    }}
+                  >
+                    {event.description}
+                  </SanitizedHtml>
                 </div>
               </div>
             </div>

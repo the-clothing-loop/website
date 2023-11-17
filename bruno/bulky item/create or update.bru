@@ -1,0 +1,22 @@
+meta {
+  name: create or update
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{base}}/v2/bulky-item
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "user_uid": "{{userUID}}",
+    "chain_uid": "{{chainUID}}",
+    "id": 6,
+    "title": "Nikes 36",
+    "message": "Worn for 2 weeks",
+    "image_url": "https://picsum.photos/200/300"
+  }
+}

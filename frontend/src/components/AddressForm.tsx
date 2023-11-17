@@ -9,7 +9,11 @@ import { PhoneFormField } from "./FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
 import PopoverOnHover from "./Popover";
-import { userGetByUID, userHasNewsletter } from "../api/user";
+import {
+  userCheckEmailExists,
+  userGetByUID,
+  userHasNewsletter,
+} from "../api/user";
 
 import { isValidPhoneNumber } from "react-phone-number-input/max";
 import { AuthContext } from "../providers/AuthProvider";
@@ -36,6 +40,7 @@ export default function AddressForm(props: {
   showTosPrivacyPolicy?: boolean;
   showNewsletter?: boolean;
   onlyShowEditableAddress?: boolean;
+  onEmailExist?: (email: string) => void;
 }) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -191,6 +196,15 @@ export default function AddressForm(props: {
     })();
   }
 
+  async function checkEmail(email: string) {
+    if (!props.onEmailExist || !email) return;
+
+    const response = await userCheckEmailExists(email);
+    const exists = response.data;
+
+    if (exists) props.onEmailExist(email);
+  }
+
   return (
     <div className={props.classes}>
       <form
@@ -223,6 +237,7 @@ export default function AddressForm(props: {
             min={2}
             value={values.email}
             onChange={(e) => setValue("email", e.target.value)}
+            onBlur={(e) => checkEmail(e.target.value)}
           />
         ) : null}
 

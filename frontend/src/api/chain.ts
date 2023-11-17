@@ -26,6 +26,10 @@ export function chainUpdate(chain: ChainUpdateBody) {
   return window.axios.patch<never>("/v2/chain", chain);
 }
 
+export function chainDelete(chainUID: UID) {
+  return window.axios.delete<never>(`/v2/chain?chain_uid=${chainUID}`);
+}
+
 export function chainAddUser(
   chainUID: UID,
   userUID: UID,
@@ -42,12 +46,6 @@ export function chainRemoveUser(chainUID: UID, userUID: UID) {
   return window.axios.post<never>("/v2/chain/remove-user", {
     user_uid: userUID,
     chain_uid: chainUID,
-  });
-}
-
-export function userDelete(chainUID: UID, userUID: UID) {
-  return window.axios.delete<never>("/v2/user", {
-    params: { user_uid: userUID, chain_uid: chainUID },
   });
 }
 

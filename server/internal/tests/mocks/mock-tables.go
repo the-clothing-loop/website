@@ -44,6 +44,9 @@ type MockMailOptions struct {
 	MaxRetryAttempts int
 	NextRetryAttempt int
 }
+type MockBagOptions struct {
+	BagNameOverride string
+}
 
 func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions) (user *models.User, token string) {
 	var latitude, longitude float64
@@ -247,4 +250,31 @@ func MockMail(t *testing.T, db *gorm.DB, o MockMailOptions) (mail *models.Mail) 
 	})
 
 	return mail
+}
+
+func MockBag(t *testing.T, db *gorm.DB, chainID, userID uint, o MockBagOptions) *models.Bag {
+	userChainID := uint(0)
+	db.Raw("SELECT id FROM user_chains WHERE chain_id = ? AND user_id = ?", chainID, userID).Scan(&userChainID)
+	if userChainID == 0 {
+		return nil
+	}
+
+	name := o.BagNameOverride
+	if name == "" {
+		name = faker.Beer().Name()
+	}
+
+	bag := &models.Bag{
+		Number:      name,
+		Color:       faker.Color().Hex(),
+		UserChainID: userChainID,
+	}
+	if err := db.Create(bag).Error; err != nil {
+		glog.Fatalf("Unable to create testEvent: %v", err)
+	}
+
+	t.Cleanup(func() {
+		db.Exec(`DELETE FROM bags WHERE id = ?`, bag.ID)
+	})
+	return bag
 }

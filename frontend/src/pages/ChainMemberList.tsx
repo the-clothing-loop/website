@@ -23,6 +23,7 @@ import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
+  chainDelete,
   chainDeleteUnapproved,
   chainGet,
   chainGetAll,
@@ -43,6 +44,7 @@ import useToClipboard from "../util/to-clipboard.hooks";
 import { bagGetAllByChain } from "../api/bag";
 import { Sleep } from "../util/sleep";
 import PopoverOnHover from "../components/Popover";
+import DOMPurify from "dompurify";
 
 enum LoadingState {
   idle,
@@ -62,7 +64,7 @@ export default function ChainMemberList() {
   const history = useHistory();
   const { t } = useTranslation();
   const { chainUID } = useParams<Params>();
-  const { authUser } = useContext(AuthContext);
+  const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addToastError, addModal } = useContext(ToastContext);
 
   const [hostChains, setHostChains] = useState<Chain[]>([]);
@@ -288,6 +290,62 @@ export default function ChainMemberList() {
     routeSetOrder(chainUID, previousRoute!);
   }
 
+  function handleClickDeleteLoop() {
+    addModal({
+      message: t("deleteLoop"),
+      content:
+        chain && users
+          ? () => {
+              let otherUsers = users.filter((u) => u.uid !== authUser?.uid);
+              return (
+                <>
+                  <p
+                    className="mb-2"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(
+                        t("areYouSureDeleteLoop", {
+                          chain: chain.name,
+                        })
+                      ),
+                    }}
+                  ></p>
+                  <ul
+                    className={`text-sm font-semibold mx-8 ${
+                      otherUsers.length > 1
+                        ? "list-disc"
+                        : "list-none text-center"
+                    }`}
+                  >
+                    {otherUsers.map((u) => (
+                      <li key={u.uid}>{u.name}</li>
+                    ))}
+                  </ul>
+                </>
+              );
+            }
+          : undefined,
+      actions: [
+        {
+          text: t("delete"),
+          type: "error",
+          fn: () => {
+            if (!chain) return;
+            chainDelete(chain.uid)
+              .then(() => {
+                authUserRefresh().then(() => {
+                  history.replace("/admin/dashboard");
+                });
+              })
+              .catch((e) => {
+                addToastError(GinParseErrors(t, e), e?.status);
+                throw e;
+              });
+          },
+        },
+      ],
+    });
+  }
+
   useEffect(() => {
     refresh(true);
   }, [history, authUser]);
@@ -414,13 +472,13 @@ export default function ChainMemberList() {
                   {...addCopyAttributes(
                     t,
                     "loop-detail-share",
-                    "relative btn btn-circle btn-secondary tooltip ltr:tooltip-left rtl:tooltip-right md:tooltip-top flex group",
+                    "relative btn btn-circle btn-secondary tooltip tooltip-left lg:!tooltip-top flex group",
                     shareLink
                   )}
                   href={shareLink}
                 >
                   <span className="feather feather-share text-lg" />
-                  <span className="absolute top-full end-0 md:end-auto -mt-1 group-hover:mt-1 text-xs bg-secondary shadow-lg rounded-sm py-1 px-2  whitespace-nowrap group-hover:bg-secondary-focus transition-all opacity-40 group-hover:opacity-100">
+                  <span className="absolute top-full end-0 lg:end-auto -mt-1 group-hover:mt-1 text-xs bg-secondary shadow-lg rounded-sm py-1 px-2  whitespace-nowrap group-hover:bg-secondary-focus transition-all opacity-40 group-hover:opacity-100">
                     {t("shareLink")}
                   </span>
                 </a>
@@ -479,9 +537,9 @@ export default function ChainMemberList() {
                     </div>
                   </div>
 
-                  <div className="text-center">
+                  <div className="flex flex-col md:flex-row justify-center pt-4 gap-4">
                     <Link
-                      className="btn btn-sm btn-secondary mt-4 w-full md:w-[120px]"
+                      className="btn btn-sm btn-secondary w-full md:w-auto"
                       to={`/loops/${chainUID}/edit`}
                     >
                       {t("editLoop")}
@@ -490,6 +548,18 @@ export default function ChainMemberList() {
                         aria-hidden
                       />
                     </Link>
+
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-error w-full md:w-auto"
+                      onClick={handleClickDeleteLoop}
+                    >
+                      {t("deleteLoop")}
+                      <span
+                        className="ltr:ml-2 rtl:mr-2 feather feather-trash"
+                        aria-hidden
+                      />
+                    </button>
                   </div>
                 </>
               ) : null}
@@ -745,7 +815,7 @@ function HostTable(props: {
                 <td>{u.phone_number}</td>
                 <td className="text-right hidden md:table-cell">
                   <DropdownMenu
-                    classes="dropdown-left"
+                    classes="ltr:dropdown-left rtl:!dropdown-right"
                     items={dropdownItems(u)}
                   />
                 </td>
@@ -1036,7 +1106,7 @@ function ParticipantsTable(props: {
       ],
     });
   }
-  function onTransfer(user: User, isCopy: Boolean) {
+  function onTransfer(user: User, isCopy: boolean) {
     addModal({
       message: t("copyParticipantToLoop"),
       content: () => (
@@ -1046,7 +1116,7 @@ function ParticipantsTable(props: {
               message={
                 isCopy ? t("copyParticipantInfo") : t("transferParticipantInfo")
               }
-              className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left rtl:tooltip-right"
+              className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left"
             />
             <p className="mb-4">
               <span className="feather feather-user inline-block mr-1" />
@@ -1081,23 +1151,13 @@ function ParticipantsTable(props: {
             let toChainUID = formValues?.loop || "";
             if (!toChainUID) return Error("Invalid loop");
 
-            if (isCopy) {
-              userTransferChain(props.chain.uid, toChainUID, user.uid, true)
-                .catch((err) => {
-                  addToastError(GinParseErrors(t, err), err.status);
-                })
-                .finally(() => {
-                  props.refresh();
-                });
-            } else {
-              userTransferChain(props.chain.uid, toChainUID, user.uid, false)
-                .catch((err) => {
-                  addToastError(GinParseErrors(t, err), err.status);
-                })
-                .finally(() => {
-                  props.refresh();
-                });
-            }
+            userTransferChain(props.chain.uid, toChainUID, user.uid, isCopy)
+              .catch((err) => {
+                addToastError(GinParseErrors(t, err), err.status);
+              })
+              .finally(() => {
+                props.refresh();
+              });
           },
         },
       ],

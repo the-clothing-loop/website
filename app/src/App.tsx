@@ -46,13 +46,7 @@ import "./theme/variables.css";
 import "./theme/utilities.css";
 import "./theme/overrides.css";
 import { StoreContext } from "./Store";
-import {
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { PropsWithChildren, useContext, useEffect, useMemo } from "react";
 
 import HelpList from "./pages/HelpList";
 import HelpItem from "./pages/HelpItem";
@@ -71,7 +65,7 @@ import dayjs from "./dayjs";
 import { OneSignalInitCap } from "./onesignal";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import OpenSource from "./pages/OpenSource";
-import { useThrottledCallback } from "use-debounce";
+import { useThrottleUnique } from "./utils/use_throttle_unique";
 
 SplashScreen.show({
   autoHide: false,
@@ -87,6 +81,7 @@ export default function App() {
   const history = useHistory();
   let location = useLocation();
 
+  // initialize one signal, run initial calls and capture error events
   useEffect(() => {
     (async () => {
       const platforms = getPlatforms();
@@ -106,6 +101,7 @@ export default function App() {
     };
   }, []);
 
+  // set the chain theme, and change when selected chain is changed
   useEffect(() => {
     if (!chain || chain.theme === undefined) return;
     const bodyEl = document.getElementsByTagName("body")[0];
@@ -199,21 +195,25 @@ function OnboardingRoute() {
   );
 }
 
+const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
+
 function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
   const { t } = useTranslation();
   const { refresh } = useContext(StoreContext);
-  const [firstStart, setFirstStart] = useState(false);
-  const changeTabs = useThrottledCallback((tab: string) => {
-    if (firstStart) {
+  const changeTabs = useThrottleUnique(
+    (tab: string) => {
+      // console.log("refresh", tab);
       refresh(tab);
-    }
-  }, 2e5);
-  useEffect(() => {
-    setFirstStart(true);
-  }, []);
-
+    },
+    ChangeTabs,
+    60e3,
+    // { leading: true, trailing: false },
+  );
   function handleTabsWillChange(e: CustomEvent<{ tab: string }>) {
     const tab = e.detail.tab;
+    const tabIndex = ChangeTabs.indexOf(tab);
+    // console.log("tab change", tab);
+    if (tabIndex === -1) return;
     changeTabs(tab);
   }
 

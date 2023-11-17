@@ -81,7 +81,7 @@ export default function CreateUpdateBag({
     // validate that bag number does not already exist
     if (bags.find((b) => b.id !== bag?.id && b.number === bagNumber)) {
       setError("number");
-      console.warn("bag number already exists");
+      toastError(present, "Bag name already exists");
       return;
     }
 
@@ -165,9 +165,7 @@ export default function CreateUpdateBag({
               placeholder=""
               value={bagNumber}
               onFocus={(e) => (e.target as any as HTMLInputElement).select()}
-              onIonChange={(e) =>
-                setBagNumber(e.detail.value?.toString() || "")
-              }
+              onIonInput={(e) => setBagNumber(e.detail.value?.toString() || "")}
             />
           </IonItem>
           <IonItem lines="none" className="-tw-mt-5">

@@ -136,10 +136,17 @@ export default function Events() {
       </Helmet>
       <main>
         <div className="max-w-screen-xl min-h-screen mx-auto py-10 px-6 md:px-20">
-          <div className="flex flex-row">
-            <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-8">
+          <div className="">
+            <h1 className="font-serif font-bold text-secondary text-4xl md:text-6xl mb-4">
               {t("upcomingSwapEvents")}
             </h1>
+
+            <p
+              className="block text-sm max-w-5xl mb-4"
+              dangerouslySetInnerHTML={{
+                __html: t("welcomeOverviewLiveSwap"),
+              }}
+            ></p>
           </div>
 
           <div className="flex flex-col-reverse md:flex-row justify-start md:justify-between pb-4 md:pb-8">

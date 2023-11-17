@@ -1,0 +1,20 @@
+meta {
+  name: transfer chain
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{base}}/v2/user/transfer-chain
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "transfer_user_uid": "",
+    "from_chain_uid": "",
+    "to_chain_uid": "",
+    "is_copy": false
+  }
+}

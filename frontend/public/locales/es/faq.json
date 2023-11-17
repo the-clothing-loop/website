@@ -23,7 +23,7 @@
     },
     "5": {
       "question": "¿Qué se hace con la ropa abultada, como los abrigos de invierno, que no entran en la bolsa?",
-      "answer": "Puedes sacar fotos de los artículos grandes y compartirlas a través del canal de comunicación o en la aplicación <a target='_blank' href='https://template-clothing-loop.glideapp.io'>Glide</a>. La entrega se organiza entre las personas mediante mensaje privado."
+      "answer": "Big items can be photographed and shared via your communication channel, or in the Clothing Loop App. In a private message, people can respond and organize pick-up."
     },
     "6": {
       "question": "¿También puedo poner zapatos en la bolsa?",
@@ -61,8 +61,12 @@
       "answer": "<ol><li>Haz clic en la esquina superior derecha en el inicio de sesión.</li><li>Introduce la dirección de correo electrónico que utilizaste para registrarte en tu Loop.</li><li>Busca en tu correo electrónico, incluso en tu carpeta de spam, nuestro enlace de verificación (utilizamos un enlace en lugar de una contraseña).</li><li>Ahora que estás registrado.a puedes ver y editar tu(s) Loop(s), y ver los nuevos participantes.</li></ol>"
     },
     "5": {
-      "question": "¿Cómo puedo empezar a usar la aplicación Glide?",
-      "answer": "Hemos creado una aplicación que puedes configurar fácilmente para tu propio Loop.<br/><br/>Puedes copiar la aplicación y usarla en tu grupo. Solo tienes que llenar la lista de direcciones en nuestra <a target='_blank' href='https://docs.google.com/document/d/12YcVwD4jzVKDcLxssnzqq7B2fzYC8kcewsnyFJ-A7cE/edit'>plantilla descargable</a>. ¡Es súper fácil! Si aún así tienes dificultades, envíanos un email."
+      "question": "How can I start using the App?",
+      "answer": "Yes! We made an app that you can very easily set up for your Loop. The app is available for iOS, Android and as web version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />You can download the app and use it within your group.  It is super easy! You can find a more detailed guide on how to use the app in our <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
+    },
+    "5_5": {
+      "question": "How to make a route?",
+      "answer": "You can make a route in the admin page of your Account. Click on Route and you will find an Optimize Route Button. Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. New participants will be placed in the most logical spot in the current list."
     },
     "6": {
       "question": "¿Hay plantillas gráficas que podamos usar?",
@@ -71,6 +75,10 @@
     "7": {
       "question": "Presentación del \"Ghost rider\" en el Loop",
       "answer": "Cuando tu Loop ya ha estado funcionando después de cierto tiempo, tal vez quieras cambiar algo. <b>Puedes incluir una bolsa \"ghost rider\" que viaja en la otra dirección para que de repente haya otras personas antes que tú en la ruta ¡y estilos diferentes en la bolsa! Si vas a incluir una bolsa ghost rider, avísale a la gente que no ponga los artículos que ha sacado previamente de una bolsa normal. Trata de que la cantidad no supere 1 o 2 bolsas ghost rider, para que sea especial y simple."
+    },
+    "7_5": {
+      "question": "Introducing a “Bunny Bag” in the Loop",
+      "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! <b>You can then introduce a “Bunny Bag” that always skips an address,</b> so all of a sudden you have other people before you on the route, and also a few other styles in the bag. Keep the number of bunny bags limited to 1 or 2, to keep it special and simple."
     },
     "8": {
       "question": "¿Cómo se gestiona un grupo de muchas personas en el canal de comunicación?",

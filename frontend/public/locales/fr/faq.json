@@ -23,7 +23,7 @@
     },
     "5": {
       "question": "Je reçois le message d'erreur : \"votre compte existe déjà\".",
-      "answer": "Vous avez déjà créé un compte dans le Clothing Loop. Pour vous inscrire à un nouveau Loop, vous devez d'abord vous connecter :<ol><li>Cliquez en haut à droite sur login.</li><li>Entrez l'adresse e-mail que vous avez utilisée pour enregistrer votre Loop.</li><li>Vérifiez votre e-mail (et votre fichier spam !) pour notre lien de vérification. Nous utilisons un lien au lieu d'un mot de passe !</li><li>Vous pourrez alors vous inscrire pour un nouveau Loop.</li></ol>"
+      "answer": "Big items can be photographed and shared via your communication channel, or in the Clothing Loop App. In a private message, people can respond and organize pick-up."
     },
     "6": {
       "question": "Peut-on également mettre des chaussures dans le sac ?",
@@ -61,8 +61,12 @@
       "answer": "Recourez au groupe ! Demandez si quelqu'un d'autre veut prendre le relais et gérer le Loop."
     },
     "5": {
-      "question": "Que faire si quelqu'un veut rejoindre le Loop mais cette personne habite à une trop grande distance ?",
-      "answer": "Si quelqu'un s'est inscrit à votre Loop mais cette personne habite trop loin de la zone de votre Loop, c'est à vous de décider si elle/il peut joindre. Si vous décidez de ne pas le faire, envoyez-leur un courriel pour les en informer. En cas de doute : pour réduire la distance entre deux adresses, vous pouvez demander à cette personne de trouver d'autres participants entre son adresse et le lieu initial du Loop."
+      "question": "How can I start using the App?",
+      "answer": "Yes! We made an app that you can very easily set up for your Loop. The app is available for iOS, Android and as web version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />You can download the app and use it within your group.  It is super easy! You can find a more detailed guide on how to use the app in our <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
+    },
+    "5_5": {
+      "question": "How to make a route?",
+      "answer": "You can make a route in the admin page of your Account. Click on Route and you will find an Optimize Route Button. Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. New participants will be placed in the most logical spot in the current list."
     },
     "6": {
       "question": "Combien de personnes peuvent se joindre à un Loop ?",
@@ -71,6 +75,10 @@
     "7": {
       "question": "Que faire si quelqu'un déménage et veut s'inscrire dans une autre région ?",
       "answer": "En tant qu'hôte du Loop vous pouvez les désinscrire de votre Loop lorsque vous êtes identifié sur notre site web. S'ils souhaitent rejoindre un Loop dans leur nouveau quartier, demandez-leur de s'inscrire à nouveau avec leur nouvelle adresse."
+    },
+    "7_5": {
+      "question": "Introducing a “Bunny Bag” in the Loop",
+      "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! <b>You can then introduce a “Bunny Bag” that always skips an address,</b> so all of a sudden you have other people before you on the route, and also a few other styles in the bag. Keep the number of bunny bags limited to 1 or 2, to keep it special and simple."
     },
     "8": {
       "question": "Que faire si notre Loop ne fonctionne pas bien ?",

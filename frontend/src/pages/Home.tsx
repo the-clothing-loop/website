@@ -11,27 +11,13 @@ import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
 import useIntersectionObserver from "../components/Counters/hooks";
 import { useRef } from "react";
 
-//Media
-const ClothesImage =
-  "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
-const Selfies = "https://images.clothingloop.org/768x/selfies.jpg";
-//Logos
-const SfmLogo = "https://images.clothingloop.org/160x/sfm_logo.png";
-const CollActionLogo =
-  "https://images.clothingloop.org/208x/logo_collaction.png";
-const ImpactHubLogo = "https://images.clothingloop.org/600x/logo_impacthub.svg";
-const EssenseLogo = "https://images.clothingloop.org/208x/essense_logo.svg";
-const WdcdLogo = "https://images.clothingloop.org/160x,jpeg/logo_wdcd.png";
-const DoenLogo =
-  "https://images.clothingloop.org/160x/npl_buurtfonds_logo_2023.png";
-const PNHLogo = "https://images.clothingloop.org/208x/pnh_logo.png";
-const MEAXLogo = "https://images.clothingloop.org/208x/meax_logo.png";
 
 interface Supporter {
   logo: string;
   url: string;
   alt: string;
+  class: string;
 }
 
 export default function Home() {
@@ -46,51 +32,61 @@ export default function Home() {
 
   let history = useHistory();
 
-  const supporters: Supporter[][] = [
-    [
-      {
-        logo: SfmLogo,
-        url: "https://slowfashion.global/",
-        alt: "Slow Fashion Movement",
-      },
-      {
-        logo: DoenLogo,
-        url: "https://www.doen.nl/en",
-        alt: "Stichting Doen",
-      },
-      {
-        logo: WdcdLogo,
-        url: "https://www.whatdesigncando.com/",
-        alt: "What Design Can Do",
-      },
-      {
-        logo: ImpactHubLogo,
-        url: "https://impacthub.net/",
-        alt: "Impact Hub",
-      },
-    ],
-    [
-      {
-        logo: PNHLogo,
-        url: "https://www.noord-holland.nl/",
-        alt: "Provincie Noord-Holland",
-      },
-      {
-        logo: MEAXLogo,
-        url: "https://maex.nl/#/initiative/8be552d9-8b8a-4b9e-ac00-9d425e627696",
-        alt: "MEAX",
-      },
-      {
-        logo: EssenseLogo,
-        url: "https://essense.eu/",
-        alt: "Essense",
-      },
-      {
-        logo: CollActionLogo,
-        url: "https://www.collaction.org/",
-        alt: "CollAction",
-      },
-    ],
+  const supporters: Supporter[] = [
+    {
+      logo: "https://images.clothingloop.org/160x/sfm_logo.png",
+      url: "https://slowfashion.global/",
+      alt: "Slow Fashion Movement",
+      class: "ps-[8.333333%] w-3/12 md:ps-0 md:w-3/12 lg:w-2/12",
+    },
+    {
+      logo: "https://images.clothingloop.org/x100/npl_buurtfonds_logo_2023.png",
+      url: "https://www.doen.nl/en",
+      alt: "Stichting Doen",
+      class: "w-8/12 md:w-5/12 lg:w-4/12",
+    },
+    {
+      logo: "https://images.clothingloop.org/160x,jpeg/logo_wdcd.png",
+      url: "https://www.whatdesigncando.com/",
+      alt: "What Design Can Do",
+      class: "w-1/2 md:w-4/12 lg:w-2/12",
+    },
+    {
+      logo: "https://images.clothingloop.org/160x/logo_impact_hub.png",
+      url: "https://impacthub.net/",
+      alt: "Impact Hub",
+      class: "w-1/2 md:w-3/12 lg:w-2/12",
+    },
+    {
+      logo: "https://images.clothingloop.org/208x/pnh_logo.png",
+      url: "https://www.noord-holland.nl/",
+      alt: "Provincie Noord-Holland",
+      class: "pt-4 md:pt-0 w-full md:w-5/12 lg:w-4/12",
+    },
+    {
+      logo: "https://images.clothingloop.org/x74/logo_collaction.png",
+      url: "https://www.collaction.org/",
+      alt: "CollAction",
+      class: "w-1/2 md:w-4/12 lg:w-4/12",
+    },
+    {
+      logo: "https://images.clothingloop.org/208x/meax_logo.png",
+      url: "https://maex.nl/#/initiative/8be552d9-8b8a-4b9e-ac00-9d425e627696",
+      alt: "MEAX",
+      class: "w-1/2 md:w-4/12 lg:w-4/12",
+    },
+    {
+      logo: "https://images.clothingloop.org/x120/de_duurzame_100.jpg",
+      url: "https://verhalen.trouw.nl/duurzame100/",
+      alt: "Trouw - Duurzame 100",
+      class: "w-1/2 md:w-4/12 lg:w-3/6",
+    },
+    {
+      logo: "https://images.clothingloop.org/120x/duurzame_dinsdag.jpg",
+      url: "https://www.duurzamedinsdag.nl/",
+      alt: "Duurzame dinsdag",
+      class: "w-1/2 md:w-4/12 lg:w-3/6",
+    },
   ];
 
   return (
@@ -292,7 +288,7 @@ export default function Home() {
         <section className="flex flex-col-reverse md:flex-row items-center mb-12 md:mb-20">
           <div className="md:w-1/2">
             <img
-              src={ClothesImage}
+              src="https://images.clothingloop.org/768x/nichon_zelfportret.jpg"
               className="object-cover object-top w-full max-h-[600px]"
               alt="Nichon taking clothes out of a Clothing Loop bag"
             />
@@ -361,35 +357,13 @@ export default function Home() {
             </p>
           </div>
           <ul className="max-w-screen-md mx-auto flex flex-wrap items-center justify-evenly mb-2 sm:mb-20">
-            {supporters[0].map((el, i) => {
+            {supporters.map((el, i) => {
               return (
                 <li
-                  className="w-1/2 md:w-1/4 flex justify-center mb-4 md:mb-8"
+                  className={el.class + " flex justify-center mb-4 md:mb-8"}
                   key={i}
                 >
-                  <a
-                    className="w-40"
-                    href={el.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <img className="w-full" src={el.logo} alt={el.alt} />
-                  </a>
-                </li>
-              );
-            })}
-            {supporters[1].map((el, i) => {
-              return (
-                <li
-                  className="w-1/2 flex justify-center mb-8 sm:my-4 px-6"
-                  key={i}
-                >
-                  <a
-                    className="w-52"
-                    href={el.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <a href={el.url} target="_blank" rel="noreferrer">
                     <img className="w-full" src={el.logo} alt={el.alt} />
                   </a>
                 </li>
