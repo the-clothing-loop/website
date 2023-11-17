@@ -296,6 +296,9 @@
   "youEntered": "Jij hebt ingevoerd:",
   "weFound": "We vonden (aanbevolen):",
   "newToTheClothingLoop": "Nieuw bij de Clothing Loop?",
+  "doYouHaveAnAccount": "Do you already have an account?",
   "clickHereToRegister": "<1>Klik hier</1> om te registreren",
-  "mustBeRegistered": "Je moet geregistreerd zijn om een evenement aan te maken"
+  "clickHereToLogin": "<1>Click here</1> to login",
+  "mustBeRegistered": "Je moet geregistreerd zijn om een evenement aan te maken",
+  "userExists": "User already exists"
 }
