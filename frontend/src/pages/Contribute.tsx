@@ -9,19 +9,21 @@ import { GinParseErrors } from "../util/gin-errors";
 import { ToastContext } from "../providers/ToastProvider";
 import dayjs from "../util/dayjs";
 import { SizeBadges } from "../components/Badges";
+import { getLanguageFlags } from "../languages";
+
+const translationFlags = getLanguageFlags(false);
 
 // Media
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
-const map = "https://images.clothingloop.org/0x0/map_image_4.png";
+const map = "https://images.clothingloop.org/640x0/map_image_4.png";
 const ClothesImage =
   "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
-// Correct github neural network goes here
-const githubActivity = "";
 
 export default function Contribute() {
   const { t } = useTranslation("contribute");
-  const { addToastError, addModal } = useContext(ToastContext);
+  const { addToastError } = useContext(ToastContext);
   const [event, setEvent] = useState<Event | null>(null);
+  const [isHoveringDonate, setIsHoveringDonate] = useState(false);
 
   useEffect(() => {
     window.goatcounter?.count({
@@ -138,48 +140,54 @@ export default function Contribute() {
             {t("howToContribute")}
           </h1>
           <div className="flex flex-col md:flex-row items-center mb-8">
-            <div className="w-full md:w-1/2 mb-8 md:mb-0">
-              <p className="prose text-xl md:text-2xl font-bold text-secondary -mt-8 mb-4">
-                <Trans
-                  i18nKey="donate"
-                  ns="contribute"
-                  components={{
-                    p: <p></p>,
-                    aDonate: (
-                      <Link
-                        className="prose text-xl md:text-2xl font-bold text-secondary"
-                        to="/donate"
-                        target="_blank"
-                      ></Link>
-                    ),
-                  }}
-                />
-              </p>
-              <p className="prose text-md md:text-lg font-normal mb-8">
+            <div className="w-full md:w-1/2">
+              <h2 className="-mt-8 mb-4">
+                <Link
+                  className="text-xl md:text-2xl font-bold text-secondary group"
+                  to="/donate"
+                >
+                  {t("donate")}
+                  <span
+                    className={`ms-2 align-text-bottom border rounded-full inline-flex items-center justify-center w-8 h-8 group-hover:bg-red-light group-hover:text-white transition-colors ${
+                      isHoveringDonate ? "bg-red-light text-white" : "text-red"
+                    }`}
+                  >
+                    <span className="feather feather-heart text-base font-bold" />
+                  </span>
+                </Link>
+              </h2>
+              <p className="prose font-normal mb-8">
                 <Trans
                   i18nKey="donateDesc"
                   ns="contribute"
                   components={{
-                    p: <p></p>,
                     aDonate: (
                       <Link
                         className="link"
                         to="/donate"
                         target="_blank"
+                        onMouseEnter={() => setIsHoveringDonate(true)}
+                        onMouseLeave={() => setIsHoveringDonate(false)}
                       ></Link>
                     ),
                   }}
                 />
               </p>
-              <p className="prose text-xl md:text-2xl font-bold text-secondary mb-4">
+              <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="startALoop" ns="contribute" />
-              </p>
-              <p className="prose text-md md:text-lg font-normal md:mb-8">
+              </h2>
+              <p className="prose mb-4">
                 <Trans i18nKey="startALoopDesc" ns="contribute" />
               </p>
+              <Link
+                to="/"
+                className="btn btn-primary w-full sm:w-auto btn-outline text-black md:mb-8"
+              >
+                {t("startNewLoop", { ns: "translation" })}
+              </Link>
             </div>
             <Link
-              className="w-full md:w-1/2 md:pl-12"
+              className="hidden md:block md:w-1/2 md:pl-12"
               to="/loops/find"
               target="_blank"
             >
@@ -191,8 +199,8 @@ export default function Contribute() {
             </Link>
           </div>
 
-          <div className="flex flex-col-reverse md:flex-row items-center mb-8 md:mb-16">
-            <div className="relative w-full md:w-1/3 mb-4 md:mb-0">
+          <div className="flex flex-col md:flex-row items-center mb-8 md:mb-16">
+            <div className="relative w-full md:w-1/3 mb-8 md:mb-0">
               <div className="object-cover hover:ring-[1.5rem] ring-secondary transition-[box-shadow]">
                 {event ? (
                   <NextUpcomingEvent event={event} key={event.uid} />
@@ -223,17 +231,16 @@ export default function Contribute() {
               />
             </div>
 
-            <div className="w-full md:w-2/3 md:pl-12 ">
+            <div className="w-full md:w-2/3 md:pl-24 ">
               <div className="w-full md:w-2/3 mb-8 md:mb-0">
-                <p className="prose text-xl md:text-2xl font-bold text-secondary mb-4">
+                <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                   <Trans i18nKey="swap" ns="contribute" />
-                </p>
-                <p className="prose text-md md:text-lg font-normal mb-8">
+                </h2>
+                <p className="prose font-normal mb-8">
                   <Trans
                     i18nKey="swapDesc"
                     ns="contribute"
                     components={{
-                      p: <p></p>,
                       aEvents: (
                         <Link
                           className="link font-bold"
@@ -245,10 +252,10 @@ export default function Contribute() {
                   />
                 </p>
               </div>
-              <p className="prose text-xl md:text-2xl font-bold text-secondary mb-4">
+              <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="shareSwapStory" ns="contribute" />
-              </p>
-              <p className="prose text-md md:text-lg font-normal mb-8">
+              </h2>
+              <p className="prose font-normal mb-8">
                 <Trans
                   i18nKey="shareSwapStoryDesc"
                   ns="contribute"
@@ -278,10 +285,10 @@ export default function Contribute() {
                   }}
                 />
               </p>
-              <p className="prose text-xl md:text-2xl font-bold text-secondary mb-4">
+              <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="website" ns="contribute" />
-              </p>
-              <p className="prose text-md md:text-lg font-normal mb-8 md:mb-0">
+              </h2>
+              <p className="prose font-normal mb-3">
                 <Trans
                   i18nKey="websiteDesc"
                   ns="contribute"
@@ -304,19 +311,37 @@ export default function Contribute() {
                   }}
                 />
               </p>
+              <div className="flex gap-4">
+                <a
+                  className="group"
+                  target="_blank"
+                  href="https://github.com/the-clothing-loop/website/issues"
+                >
+                  <span className="flex border rounded-full h-12 px-4 items-center group-hover:text-white group-hover:border-base-content group-hover:bg-black text-lg transition-colors">
+                    <span className="feather feather-git-branch me-2" />
+                    Github
+                  </span>
+                </a>
+                <a
+                  className="group"
+                  href="mailto:hello@clothingloop.org"
+                  aria-label="Our email address"
+                >
+                  <span className="btn btn-circle btn-outline flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#b464a8] feather feather-mail text-lg"></span>
+                </a>
+              </div>
             </div>
           </div>
           <div className="flex flex-col-reverse md:flex-row mb-8">
             <div className="w-full md:w-1/2 md:pr-4">
-              <p className="prose text-xl md:text-2xl font-bold text-secondary mb-4">
+              <p className="text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans
                   i18nKey="crowdin"
                   ns="contribute"
                   components={{
-                    p: <p></p>,
                     aCrowdin: (
                       <a
-                        className="prose text-xl md:text-2xl font-bold text-secondary"
+                        className="underline"
                         href="https://crowdin.com/project/the-clothing-loop"
                         target="_blank"
                       />
@@ -324,12 +349,11 @@ export default function Contribute() {
                   }}
                 />
               </p>
-              <p className="prose text-md md:text-lg font-normal mb-8">
+              <p className="prose font-normal mb-2">
                 <Trans
                   i18nKey="crowdinDesc"
                   ns="contribute"
                   components={{
-                    p: <p></p>,
                     aCrowdin: (
                       <a
                         className="link font-bold"
@@ -340,24 +364,55 @@ export default function Contribute() {
                   }}
                 />
               </p>
-              <p className="prose text-xl md:text-2xl font-bold text-secondary mb-4">
+              <ol className="flex flex-wrap gap-2 mb-8">
+                {translationFlags.map((flag) => {
+                  const isEN = flag.lng === "en";
+                  let crowdinUrl =
+                    "https://crowdin.com/project/the-clothing-loop/";
+                  if (flag.lng !== "en") {
+                    crowdinUrl += flag.lng;
+                  }
+                  return (
+                    <li>
+                      <a href={crowdinUrl} target="_blank">
+                        <img
+                          src={flag.flag}
+                          alt={flag.lng}
+                          className="w-10 border-4 border-transparent hover:border-teal/40 transition-colors"
+                        />
+                      </a>
+                    </li>
+                  );
+                })}
+              </ol>
+              <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="feedback" ns="contribute" />
-              </p>
-              <p className="prose text-md md:text-lg font-normal">
+              </h2>
+              <p className="prose font-normal mb-4">
                 <Trans i18nKey="feedbackDesc" ns="contribute" />
               </p>
-            </div>{" "}
+              <Link to="/contact-us" className="btn btn-secondary btn-outline">
+                {t("contactUs", { ns: "translation" })}
+                <span className="feather feather-arrow-right ml-4 rtl:hidden" />
+                <span className="feather feather-arrow-left mr-4 ltr:hidden" />
+              </Link>
+            </div>
             <div
               onMouseEnter={() => videoHandler(true)}
               onMouseLeave={() => videoHandler(false)}
-              className="w-full md:w-1/2 aspect-video pl-4 self-center"
+              className="w-full md:w-1/2 aspect-video md:pl-4 max-xs:-mx-8 max-xs:w-auto self-center mb-8 md:mb-0"
             >
               <video
-                title="Neural Network of Our Github Repository Over Time"
-                src={githubActivity}
+                title="Editing files as a display of fireworks from our Github repository"
                 id="github-video"
-                muted={true}
-              ></video>
+                muted
+                loop
+              >
+                <source
+                  src="https://images.clothingloop.org/original/gource-cut1.webm"
+                  type="video/webm"
+                />
+              </video>
             </div>
           </div>
         </div>
