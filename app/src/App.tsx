@@ -199,13 +199,14 @@ const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
 
 function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
   const { t } = useTranslation();
-  const { refresh } = useContext(StoreContext);
+  const { refresh, chain } = useContext(StoreContext);
   const changeTabs = useThrottleUnique(
     (tab: string) => {
       // console.log("refresh", tab);
       refresh(tab);
     },
     ChangeTabs,
+    [chain],
     60e3,
     // { leading: true, trailing: false },
   );

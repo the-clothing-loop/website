@@ -5,12 +5,13 @@ import useThrottledCallback from "beautiful-react-hooks/useThrottledCallback";
 export function useThrottleUnique(
   func: (key: string, ...a: any[]) => void,
   possibleKeys: string[],
+  dependencies: any[],
   delay: number,
 ) {
   const [usedKeys, setUsedKeys] = useState<string[]>([]);
   const [firstRun, setFirstRun] = useState(true);
   const handleThrottledFuncArr = possibleKeys.map((k) =>
-    useThrottledCallback(func, undefined, delay, {
+    useThrottledCallback(func, dependencies, delay, {
       leading: true,
       trailing: false,
     }),

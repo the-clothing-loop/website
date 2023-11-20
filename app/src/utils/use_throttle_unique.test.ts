@@ -13,6 +13,7 @@ test("adds 1 + 2 to equal 3", () => {
         ++counter;
       },
       keys,
+      [],
       500, // 500 milliseconds throttle
     ),
   );

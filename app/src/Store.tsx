@@ -93,6 +93,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       user_uid: res.data.user.uid,
       token: res.data.token,
     } as StorageAuth);
+    setAuthUser(res.data.user);
     setIsAuthenticated(true);
     _refresh("settings", res.data.user);
   }
