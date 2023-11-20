@@ -31,7 +31,10 @@ export default function useToClipboard() {
         copying === id ? "tooltip-open" : ""
       } ${moreClasses}`,
       onClick: (e: MouseEvent) => handleToClipboard(e, id, text),
-      "data-tip": copying === id ? t("copiedToClipboard") : t("copy"),
+      "data-tip":
+        copying === id
+          ? t("copiedToClipboard", { ns: "translation" })
+          : t("copy", { ns: "translation" }),
     } as Attributes;
   }
 

@@ -10,6 +10,7 @@ import { ToastContext } from "../providers/ToastProvider";
 import dayjs from "../util/dayjs";
 import { SizeBadges } from "../components/Badges";
 import { getLanguageFlags } from "../languages";
+import useToClipboard from "../util/to-clipboard.hooks";
 
 const translationFlags = getLanguageFlags(false);
 
@@ -24,6 +25,7 @@ export default function Contribute() {
   const [event, setEvent] = useState<Event | null>(null);
   const [isHoveringDonate, setIsHoveringDonate] = useState(false);
   const githubVideo = useRef<HTMLVideoElement>(null);
+  const addCopyAttributes = useToClipboard();
 
   useEffect(() => {
     window.goatcounter?.count({
@@ -38,14 +40,11 @@ export default function Contribute() {
     try {
       const latitude = 52.377956;
       const longitude = 4.89707;
-      const radius = 3000;
+      const radius = 0;
 
       const _events = await eventGetAll({ latitude, longitude, radius });
-      setEvent(
-        _events.data.sort((a, b) =>
-          new Date(a.date) > new Date(b.date) ? 1 : -1
-        )[0]
-      );
+      const eventIndex = Math.floor(Math.random() * _events.data.length);
+      setEvent(_events.data.length === 0 ? null : _events.data[eventIndex]);
     } catch (err: any) {
       addToastError(GinParseErrors(t, err), err.status);
     }
@@ -144,20 +143,13 @@ export default function Contribute() {
             <div className="w-full md:w-1/2">
               <h2 className="-mt-8 mb-4">
                 <Link
-                  className="text-xl md:text-2xl font-bold text-secondary group"
+                  className="text-xl md:text-2xl font-bold text-secondary"
                   to="/donate"
                 >
                   {t("donate")}
-                  <span
-                    className={`ms-2 align-text-bottom border rounded-full inline-flex items-center justify-center w-8 h-8 group-hover:bg-red-light group-hover:text-white transition-colors ${
-                      isHoveringDonate ? "bg-red-light text-white" : "text-red"
-                    }`}
-                  >
-                    <span className="feather feather-heart text-base font-bold" />
-                  </span>
                 </Link>
               </h2>
-              <p className="prose font-normal mb-8">
+              <p className="prose font-normal mb-4">
                 <Trans
                   i18nKey="donateDesc"
                   ns="contribute"
@@ -173,7 +165,18 @@ export default function Contribute() {
                     ),
                   }}
                 />
-              </p>
+              </p>{" "}
+              <Link
+                className={`mb-8 max-xs:w-full btn btn-outline text-lg font-semibold hover:bg-red-light text-red group ${
+                  isHoveringDonate
+                    ? "bg-red-light text-white border-black"
+                    : "text-red"
+                }`}
+                to="/donate"
+              >
+                <span>{t("donate")}</span>
+                <span className="ms-3 feather feather-heart text-base font-bold" />
+              </Link>
               <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="startALoop" ns="contribute" />
               </h2>
@@ -181,10 +184,12 @@ export default function Contribute() {
                 <Trans i18nKey="startALoopDesc" ns="contribute" />
               </p>
               <Link
-                to="/"
+                to="/loops/new/users/signup"
                 className="btn btn-primary w-full sm:w-auto btn-outline text-black md:mb-8"
               >
                 {t("startNewLoop", { ns: "translation" })}
+                <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
+                <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
               </Link>
             </div>
             <Link
@@ -237,7 +242,7 @@ export default function Contribute() {
                 <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                   <Trans i18nKey="swap" ns="contribute" />
                 </h2>
-                <p className="prose font-normal mb-8">
+                <p className="prose font-normal mb-4">
                   <Trans
                     i18nKey="swapDesc"
                     ns="contribute"
@@ -252,11 +257,18 @@ export default function Contribute() {
                     }}
                   />
                 </p>
+                <Link
+                  className="max-xs:w-full btn btn-accent text-white mb-8"
+                  to="/events"
+                >
+                  <span className="feather feather-calendar me-3 text-xl" />
+                  {t("events", { ns: "translation" })}
+                </Link>
               </div>
               <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="shareSwapStory" ns="contribute" />
               </h2>
-              <p className="prose font-normal mb-8">
+              <p className="prose font-normal mb-4">
                 <Trans
                   i18nKey="shareSwapStoryDesc"
                   ns="contribute"
@@ -286,6 +298,25 @@ export default function Contribute() {
                   }}
                 />
               </p>
+              <div className="mb-8">
+                <div className="inline-flex w-auto">
+                  <a
+                    className="btn btn-square bg-instagram text-white feather feather-instagram text-2xl"
+                    href="https://www.instagram.com/theclothingloop/"
+                    target="_blank"
+                  ></a>
+                  <button
+                    {...addCopyAttributes(
+                      t,
+                      "contribute-copy-hashtag",
+                      "ms-4 input input-bordered bg-white",
+                      "#theclothingloop"
+                    )}
+                  >
+                    #theclothingloop
+                  </button>
+                </div>
+              </div>
               <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="website" ns="contribute" />
               </h2>
