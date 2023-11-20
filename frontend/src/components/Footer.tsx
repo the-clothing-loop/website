@@ -65,6 +65,9 @@ export default function Footer() {
                 <Link className="link link-hover mb-1" to="/about">
                   {t("about")}
                 </Link>
+                <Link className="link link-hover mb-1" to="/contribute">
+                  {t("contribute")}
+                </Link>
               </div>
               <div className="flex flex-col items-center md:items-start px-3 pb-6 pt-0">
                 <span className="text-secondary font-bold text-2xl mb-3">
@@ -208,12 +211,6 @@ export default function Footer() {
               to="/privacy-policy"
             >
               {t("privacy")}
-            </Link>
-            <Link
-              className="btn btn-ghost text-white text-base font-normal"
-              to="/contribute"
-            >
-              {t("contribute")}
             </Link>
           </div>
 
