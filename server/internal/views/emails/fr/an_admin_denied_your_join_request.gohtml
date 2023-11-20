@@ -12,4 +12,6 @@
 <p>Malheureusement, votre demande pour joindre le Loop {{ .ChainName }} a été refusée pour une autre raison.</p>
 
 Allez sur le site web www.clothingloop.org et lancez un nouveau Loop.</p>
+{{ else if eq .Reason "loop_not_active" }}
+<p>Unfortunately, your request to join The {{ .ChainName }} Loop has been denied as this Loop is no longer active.</p>
 {{ end }}
