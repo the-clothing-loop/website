@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 
 import { Trans, useTranslation } from "react-i18next";
@@ -15,7 +15,6 @@ const translationFlags = getLanguageFlags(false);
 
 // Media
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
-const map = "https://images.clothingloop.org/640x0/map_image_4.png";
 const ClothesImage =
   "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
 
@@ -24,6 +23,7 @@ export default function Contribute() {
   const { addToastError } = useContext(ToastContext);
   const [event, setEvent] = useState<Event | null>(null);
   const [isHoveringDonate, setIsHoveringDonate] = useState(false);
+  const githubVideo = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     window.goatcounter?.count({
@@ -113,7 +113,8 @@ export default function Contribute() {
   }
 
   async function videoHandler(play: boolean) {
-    let video = document.getElementById("github-video") as HTMLVideoElement;
+    let video = githubVideo.current;
+    if (!video) return;
     try {
       if (play) {
         await video.play();
@@ -192,7 +193,7 @@ export default function Contribute() {
               target="_blank"
             >
               <img
-                src={map}
+                src="https://images.clothingloop.org/640x0/map_image_4.png"
                 alt="map of the clothing loop in Amsterdam area"
                 className="object-cover hover:ring-[1.5rem] ring-secondary transition-[box-shadow]"
               />
@@ -400,11 +401,12 @@ export default function Contribute() {
             <div
               onMouseEnter={() => videoHandler(true)}
               onMouseLeave={() => videoHandler(false)}
-              className="w-full md:w-1/2 aspect-video md:pl-4 max-xs:-mx-8 max-xs:w-auto self-center mb-8 md:mb-0"
+              className="relative w-full md:w-1/2 aspect-video md:pl-4 max-xs:-mx-8 max-xs:w-auto self-center mb-8 md:mb-0 group"
             >
               <video
                 title="Editing files as a display of fireworks from our Github repository"
-                id="github-video"
+                ref={githubVideo}
+                poster="https://images.clothingloop.org/672x378/gource-cut1-placeholder.jpg"
                 muted
                 loop
               >
@@ -412,7 +414,12 @@ export default function Contribute() {
                   src="https://images.clothingloop.org/original/gource-cut1.webm"
                   type="video/webm"
                 />
+                <source
+                  src="https://images.clothingloop.org/original/gource-cut1.mp4"
+                  type="video/mp4"
+                />
               </video>
+              <div className="absolute bottom-6 left-7 text-white leading-none text-2xl feather feather-play group-hover:opacity-0 transition-opacity"></div>
             </div>
           </div>
         </div>
