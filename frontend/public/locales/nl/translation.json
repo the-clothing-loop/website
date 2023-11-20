@@ -252,6 +252,7 @@
   "reasonForDenyingJoin": "Geef een reden om het verzoek te weigeren",
   "tooFarAway": "Te ver weg",
   "differentSizes": "Andere maten",
+  "loopNotActive": "Loop not active",
   "other": "Overig",
   "events": "Agenda",
   "previousEvents": "Eerdere evenementen",

@@ -252,6 +252,7 @@
   "reasonForDenyingJoin": "אנא ציין סיבה לדחיית הבקשה",
   "tooFarAway": "רחוק מדי",
   "differentSizes": "מידות שונות",
+  "loopNotActive": "Loop not active",
   "other": "אחר",
   "events": "אירועים",
   "previousEvents": "אירועים קודמים",
