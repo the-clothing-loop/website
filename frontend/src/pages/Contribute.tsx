@@ -314,21 +314,19 @@ export default function Contribute() {
               </p>
               <div className="flex gap-4">
                 <a
-                  className="group"
+                  className="btn text-white hover:ring-4 ring-purple-light"
                   target="_blank"
                   href="https://github.com/the-clothing-loop/website/issues"
                 >
-                  <span className="flex border rounded-full h-12 px-4 items-center group-hover:text-white group-hover:border-base-content group-hover:bg-black text-lg transition-colors">
                     <span className="feather feather-git-branch me-2" />
-                    Github
-                  </span>
+                  <span>Github</span>
                 </a>
                 <a
-                  className="group"
+                  className="btn btn-outline btn-square hover:bg-[#b464a8] hover:border-[#b464a8]"
                   href="mailto:hello@clothingloop.org"
                   aria-label="Our email address"
                 >
-                  <span className="btn btn-circle btn-outline flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#b464a8] feather feather-mail text-lg"></span>
+                  <span className="feather feather-mail text-lg"></span>
                 </a>
               </div>
             </div>
