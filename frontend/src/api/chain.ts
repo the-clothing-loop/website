@@ -60,6 +60,7 @@ export enum UnapprovedReason {
   OTHER = "other",
   TOO_FAR_AWAY = "too_far_away",
   SIZES_GENDERS = "sizes_genders",
+  LOOP_NOT_ACTIVE = "loop_not_active",
 }
 
 export function chainDeleteUnapproved(

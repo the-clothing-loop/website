@@ -75,6 +75,7 @@ export default function ChainMemberList() {
   const [route, setRoute] = useState<UID[] | null>(null);
   const [routeWasOptimized, setRouteWasOptimized] = useState<boolean>(false);
   const [previousRoute, setPreviousRoute] = useState<UID[] | null>(null);
+  const [changingPublishedAuto, setChangingPublishedAuto] = useState(false);
 
   const [participantsSortBy, setParticipantsSortBy] =
     useState<ParticipantsSortBy>("date");
@@ -178,6 +179,38 @@ export default function ChainMemberList() {
       setOpenToNewMembers(oldValue);
       setPublished(oldValuePublished);
     }
+  }
+
+  function handleReasonLoopNotActive() {
+    if (!chain?.published) return;
+
+    let oldValueOpenToNewMembers = chain?.open_to_new_members || false;
+    let oldValuePublished = chain?.published || false;
+    setPublished(false);
+    setOpenToNewMembers(false);
+    const chainUpdateBody = {
+      uid: chainUID,
+      published: false,
+      open_to_new_members: false,
+    };
+    chainUpdate(chainUpdateBody)
+      .then(() => {
+        setChain((s) => ({
+          ...(s as Chain),
+          ...chainUpdateBody,
+        }));
+
+        setChangingPublishedAuto(true);
+        setTimeout(() => {
+          setChangingPublishedAuto(false);
+        }, 1500);
+      })
+      .catch((err: any) => {
+        console.error("Error updating chain: ", err);
+        setError(err?.data || `Error: ${JSON.stringify(err)}`);
+        setPublished(oldValuePublished);
+        setOpenToNewMembers(oldValueOpenToNewMembers);
+      });
   }
 
   function onAddCoHost(e: FormEvent) {
@@ -504,7 +537,11 @@ export default function ChainMemberList() {
 
               {isUserAdmin || authUser?.is_root_admin ? (
                 <>
-                  <div className="mt-4">
+                  <div
+                    className={`mt-4 ${
+                      changingPublishedAuto ? "bg-yellow/[.6]" : ""
+                    }`}
+                  >
                     <div className="form-control w-full">
                       <label className="cursor-pointer label">
                         <span className="label-text">{t("published")}</span>
@@ -700,6 +737,7 @@ export default function ChainMemberList() {
               unapprovedUsers={unapprovedUsers}
               chain={chain}
               refresh={refresh}
+              onReasonLoopNotActive={handleReasonLoopNotActive}
             />
           ) : selectedTable === "participants" ? (
             <ParticipantsTable
@@ -832,6 +870,7 @@ function ApproveTable(props: {
   unapprovedUsers: User[];
   chain: Chain;
   refresh: () => Promise<void>;
+  onReasonLoopNotActive: () => void;
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
@@ -902,6 +941,14 @@ function ApproveTable(props: {
           type: "secondary",
           fn: () => {
             chainDeleteUnapprovedReason(UnapprovedReason.SIZES_GENDERS);
+          },
+        },
+        {
+          text: t("loopNotActive"),
+          type: "secondary",
+          fn: () => {
+            chainDeleteUnapprovedReason(UnapprovedReason.LOOP_NOT_ACTIVE);
+            props.onReasonLoopNotActive();
           },
         },
         {

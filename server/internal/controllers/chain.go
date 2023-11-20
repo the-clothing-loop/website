@@ -19,9 +19,10 @@ import (
 )
 
 const (
-	UnapprovedReasonOther        = "other"
-	UnapprovedReasonOutOfAria    = "out_of_aria"
-	UnapprovedReasonSizesGenders = "sizes_genders"
+	UnapprovedReasonOther         = "other"
+	UnapprovedReasonOutOfAria     = "out_of_aria"
+	UnapprovedReasonSizesGenders  = "sizes_genders"
+	UnapprovedReasonLoopNotActive = "loop_not_active"
 )
 
 type ChainCreateRequestBody struct {
@@ -527,7 +528,7 @@ func ChainDeleteUnapproved(c *gin.Context) {
 	var query struct {
 		UserUID  string `form:"user_uid" binding:"required,uuid"`
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
-		Reason   string `form:"reason" binding:"required,oneof='other' 'too_far_away' 'sizes_genders'"`
+		Reason   string `form:"reason" binding:"required,oneof='other' 'too_far_away' 'sizes_genders' 'loop_not_active'"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
