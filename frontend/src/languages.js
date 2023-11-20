@@ -8,7 +8,7 @@ export default function getLanguages(isProduction) {
    */
   let languages = ["en", "nl", "de", "fr", "es", "sv", "he"];
   if (!isProduction) {
-    languages = languages.concat(["it"]);
+    languages = languages.concat(["it", "pt"]);
   }
   return languages;
 }
@@ -32,7 +32,8 @@ export function getLanguageFlags(isProduction) {
   ];
   if (!isProduction) {
     flags = flags.concat([
-      { lng: "it", title: "Italian", flag: "/images/flags/it.svg" },
+      { lng: "it", title: "Italiano", flag: "/images/flags/it.svg" },
+      { lng: "pt", title: "Português", flag: "/images/flags/pt.svg" },
     ]);
   }
   return flags;

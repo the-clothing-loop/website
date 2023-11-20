@@ -318,7 +318,7 @@ export default function Contribute() {
                   target="_blank"
                   href="https://github.com/the-clothing-loop/website/issues"
                 >
-                    <span className="feather feather-git-branch me-2" />
+                  <span className="feather feather-git-branch me-2" />
                   <span>Github</span>
                 </a>
                 <a
@@ -364,25 +364,26 @@ export default function Contribute() {
                 />
               </p>
               <ol className="flex flex-wrap gap-2 mb-8">
-                {translationFlags.map((flag) => {
-                  const isEN = flag.lng === "en";
-                  let crowdinUrl =
-                    "https://crowdin.com/project/the-clothing-loop/";
-                  if (flag.lng !== "en") {
-                    crowdinUrl += flag.lng;
-                  }
-                  return (
-                    <li>
-                      <a href={crowdinUrl} target="_blank">
-                        <img
-                          src={flag.flag}
-                          alt={flag.lng}
-                          className="w-10 border-4 border-transparent hover:border-teal/40 transition-colors"
-                        />
-                      </a>
-                    </li>
-                  );
-                })}
+                {translationFlags
+                  .filter((f) => f.lng !== "en")
+                  .map((flag) => {
+                    let crowdinUrl = `https://crowdin.com/project/the-clothing-loop/${flag.lng}`;
+                    if (flag.lng === "pt") {
+                      crowdinUrl += "-PT";
+                    }
+
+                    return (
+                      <li key={flag.lng}>
+                        <a href={crowdinUrl} target="_blank">
+                          <img
+                            src={flag.flag}
+                            alt={flag.lng}
+                            className="w-10 border-4 border-transparent hover:border-teal/40 transition-colors"
+                          />
+                        </a>
+                      </li>
+                    );
+                  })}
               </ol>
               <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="feedback" ns="contribute" />
