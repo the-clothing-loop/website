@@ -7,9 +7,11 @@
 {{ else if eq .Reason "too_far_away" }}
 <p>לצערנו, בקשתכם להצטרף ללולאת {{ .ChainName }}נדחתה. זאת מאחר ומקום מגוריכם הינו מחוץ לאזור בו הלולאה פעילה.</p>
 
-<p>Maybe there is another Loop where you live, or you can start one yourself! Go to the website: www.clothingloop.org and start a new Loop.</p>
+<p>אולי יש לולאה אחרת במקום מגוריכם, או שתוכלו להקים לולאה חדשה בעצמכם! </p>אנא בקרו באתר: www.clothingloop.org והתחילו לולאה חדשה
 {{ else if eq .Reason "other" }}
 <p>לצערנו, בקשתכם להצטרף ללולאת {{ .ChainName }}נדחתה מסיבה אחרת.</p>
 
 <p>אנא בקרו באתר: www.clothingloop.org והתחילו לולאה חדשה</p>
+{{ else if eq .Reason "loop_not_active" }}
+<p>Unfortunately, your request to join The {{ .ChainName }} Loop has been denied as this Loop is no longer active.</p>
 {{ end }}
