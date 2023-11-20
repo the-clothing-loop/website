@@ -198,7 +198,7 @@ export default function Contribute() {
               target="_blank"
             >
               <img
-                src="https://images.clothingloop.org/640x0/map_image_4.png"
+                src="https://images.clothingloop.org/640x0/map_image_5.jpg"
                 alt="map of the clothing loop in Amsterdam area"
                 className="object-cover hover:ring-[1.5rem] ring-secondary transition-[box-shadow]"
               />

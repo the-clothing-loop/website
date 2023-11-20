@@ -200,7 +200,7 @@ export default function Home() {
                   }`}
                 >
                   <img
-                    src="https://images.clothingloop.org/600x,jpeg/map_image_3.png"
+                    src="https://images.clothingloop.org/600x,jpeg/map_image_5.jpg"
                     alt="map"
                   />
                 </Link>

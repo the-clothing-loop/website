@@ -73,7 +73,7 @@ export function OnboardingPageTwo() {
           </IonText>
           <IonImg
             className="tw-w-[70%] tw-max-w-[400px]"
-            src="https://images.clothingloop.org/600x,jpeg/map_image_3.png"
+            src="https://images.clothingloop.org/600x,jpeg/map_image_5.jpg"
           />
           <IonText className="tw-text-center tw-font-bold tw-text-[26px] tw-font-serif tw-my-10">
             If you haven't already,
