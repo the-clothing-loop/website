@@ -65,7 +65,6 @@ import dayjs from "./dayjs";
 import { OneSignalInitCap } from "./onesignal";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import OpenSource from "./pages/OpenSource";
-import { useThrottleUnique } from "./utils/use_throttle_unique";
 
 SplashScreen.show({
   autoHide: false,
@@ -200,22 +199,13 @@ const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
 function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
   const { t } = useTranslation();
   const { refresh, chain } = useContext(StoreContext);
-  const changeTabs = useThrottleUnique(
-    (tab: string) => {
-      // console.log("refresh", tab);
-      refresh(tab);
-    },
-    ChangeTabs,
-    [chain],
-    60e3,
-    // { leading: true, trailing: false },
-  );
+
   function handleTabsWillChange(e: CustomEvent<{ tab: string }>) {
     const tab = e.detail.tab;
     const tabIndex = ChangeTabs.indexOf(tab);
     // console.log("tab change", tab);
     if (tabIndex === -1) return;
-    changeTabs(tab);
+    refresh(tab);
   }
 
   return (
