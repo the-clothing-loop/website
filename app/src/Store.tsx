@@ -93,6 +93,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setBulkyItems([]);
     setIsAuthenticated(false);
     setIsChainAdmin(false);
+    setBagListView("dynamic");
   }
 
   async function _login(token: string) {
