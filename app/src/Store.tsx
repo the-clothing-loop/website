@@ -24,6 +24,8 @@ interface StorageAuth {
   token: string;
 }
 
+type BagListView = "dynamic" | "list" | "card";
+
 export const StoreContext = createContext({
   isAuthenticated: null as boolean | null,
   isChainAdmin: false,
@@ -44,6 +46,8 @@ export const StoreContext = createContext({
   refresh: (tab: string) => Promise.reject<void>(),
   isOverlayPausedOpen: false,
   closeOverlayPaused: () => {},
+  bagListView: "dynamic" as BagListView,
+  setBagListView: (v: BagListView) => {},
 });
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
@@ -58,6 +62,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isChainAdmin, setIsChainAdmin] = useState(false);
   const [isOverlayPausedOpen, setIsOverlayPausedOpen] = useState(true);
+  const [bagListView, setBagListView] = useState<BagListView>("dynamic");
 
   // Get storage from IndexedDB or LocalStorage
   async function _init() {
@@ -67,6 +72,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (version !== 1) {
       await _storage.set("version", 1);
     }
+    setBagListView((await _storage.get("bag_list_view")) || "dynamic");
     setStorage(_storage);
   }
 
@@ -285,6 +291,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     );
   }
 
+  function _setBagListView(v: BagListView) {
+    setBagListView(v);
+    storage.set("bag_list_view", v);
+  }
+
   return (
     <StoreContext.Provider
       value={{
@@ -307,6 +318,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         refresh: (t) => _refresh(t, authUser),
         isOverlayPausedOpen,
         closeOverlayPaused,
+        bagListView,
+        setBagListView: _setBagListView,
       }}
     >
       {children}

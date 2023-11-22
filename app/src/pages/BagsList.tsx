@@ -14,6 +14,7 @@ import {
   IonList,
   IonModal,
   IonPage,
+  IonPopover,
   IonRadio,
   IonRadioGroup,
   IonRefresher,
@@ -31,6 +32,10 @@ import {
   chevronForwardOutline,
   closeOutline,
   ellipsisHorizontal,
+  ellipsisHorizontalCircleOutline,
+  flashOutline,
+  gridOutline,
+  list,
   pauseCircle,
 } from "ionicons/icons";
 import type {
@@ -62,8 +67,17 @@ const MIN_USERS_FOR_SEARCH = 15;
 
 export default function BagsList() {
   const { t } = useTranslation();
-  const { isChainAdmin, chain, chainUsers, bags, setChain, authUser, route } =
-    useContext(StoreContext);
+  const {
+    isChainAdmin,
+    chain,
+    chainUsers,
+    bags,
+    setChain,
+    authUser,
+    route,
+    bagListView,
+    setBagListView,
+  } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const sheetModal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
@@ -102,26 +116,32 @@ export default function BagsList() {
 
     let _bagsCard: Bag[] = [];
     let _bagsList: Bag[] = [];
-    if (bags.length < MIN_BAG_LIST) {
+    if (bagListView === "card") {
       _bagsCard = bags;
+    } else if (bagListView === "list") {
+      _bagsList = bags;
     } else {
-      bags.forEach((bag) => {
-        if (authUser?.uid === bag.user_uid) {
-          _bagsCard.push(bag);
-          return;
-        }
+      if (bags.length < MIN_BAG_LIST) {
+        _bagsCard = bags;
+      } else {
+        bags.forEach((bag) => {
+          if (authUser?.uid === bag.user_uid) {
+            _bagsCard.push(bag);
+            return;
+          }
 
-        let routeIndex = route.indexOf(bag.user_uid);
-        if (indexAllowed.indexOf(routeIndex) !== -1) {
-          _bagsCard.push(bag);
-          return;
-        }
+          let routeIndex = route.indexOf(bag.user_uid);
+          if (indexAllowed.indexOf(routeIndex) !== -1) {
+            _bagsCard.push(bag);
+            return;
+          }
 
-        _bagsList.push(bag);
-      });
+          _bagsList.push(bag);
+        });
+      }
     }
     return [_bagsCard, _bagsList];
-  }, [bags, route]);
+  }, [bags, route, bagListView]);
 
   function refreshBags() {
     setChain(chain, authUser!.uid);
@@ -186,6 +206,48 @@ export default function BagsList() {
       <OverlayPaused />
       <IonHeader translucent>
         <IonToolbar>
+          <IonButtons>
+            <IonButton id="popover-bag-view">
+              <IonIcon icon={ellipsisHorizontalCircleOutline} />
+            </IonButton>
+            <IonPopover trigger="popover-bag-view" dismissOnSelect={true}>
+              <IonContent>
+                <IonList>
+                  <IonItem
+                    button={true}
+                    detail={false}
+                    lines="full"
+                    color={bagListView === "dynamic" ? "primary" : undefined}
+                    onClick={() => setBagListView("dynamic")}
+                  >
+                    <IonIcon slot="start" icon={flashOutline}></IonIcon>
+                    {t("dynamic")}
+                  </IonItem>
+                  <IonItem
+                    button={true}
+                    detail={false}
+                    lines="full"
+                    color={bagListView === "list" ? "primary" : undefined}
+                    onClick={() => setBagListView("list")}
+                  >
+                    <IonIcon slot="start" icon={list}></IonIcon>
+                    {t("list")}
+                  </IonItem>
+                  <IonItem
+                    button={true}
+                    detail={false}
+                    lines="none"
+                    color={bagListView === "card" ? "primary" : undefined}
+                    onClick={() => setBagListView("card")}
+                  >
+                    <IonIcon slot="start" icon={gridOutline}></IonIcon>
+                    {t("card")}
+                  </IonItem>
+                </IonList>
+              </IonContent>
+            </IonPopover>
+          </IonButtons>
+
           <IonTitle>{t("whereIsTheBag")}</IonTitle>
 
           {isChainAdmin ? (
