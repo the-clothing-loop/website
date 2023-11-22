@@ -139,6 +139,7 @@ func Routes() *gin.Engine {
 	v2.GET("/route/order", controllers.RouteOrderGet)
 	v2.POST("/route/order", controllers.RouteOrderSet)
 	v2.GET("/route/optimize", controllers.RouteOptimize)
+	v2.GET("/route/coordinates", controllers.GetRouteCoordinates)
 
 	// contact
 	v2.POST("/contact/newsletter", controllers.ContactNewsletter)

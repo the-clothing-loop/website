@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -87,6 +88,46 @@ func RouteOptimize(c *gin.Context) {
 		"minimal_cost": minimalCost,
 		"optimal_path": optimalPath,
 	})
+}
+
+func GetRouteCoordinates(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// the authenticated user should be a chain admin
+	ok, authUser, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
+	if !ok {
+		return
+	}
+
+	_, isChainAdmin := authUser.IsPartOfChain(chain.UID)
+
+	cities := retrieveChainUsersAsTspCities(db, chain.ID)
+
+	type Response struct {
+		UserUID    string  `json:"user_uid"`
+		Latitude   float64 `json:"latitude"`
+		Longitude  float64 `json:"longitude"`
+		RouteOrder int     `json:"route_order"`
+	}
+	response := []Response{}
+	for _, city := range cities {
+		response = append(response, Response{
+			UserUID:    lo.Ternary(isChainAdmin, city.Key, ""),
+			Latitude:   city.Latitude,
+			Longitude:  city.Longitude,
+			RouteOrder: city.RouteOrder,
+		})
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func retrieveChainUsersAsTspCities(db *gorm.DB, chainID uint) []tsp.City[string] {
