@@ -42,6 +42,8 @@ export const StoreContext = createContext({
   logout: () => Promise.reject<void>(),
   init: () => Promise.reject<void>(),
   refresh: (tab: string) => Promise.reject<void>(),
+  isOverlayPausedOpen: false,
+  closeOverlayPaused: () => {},
 });
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
@@ -55,6 +57,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [storage, setStorage] = useState(new Storage({ name: "store_v1" }));
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isChainAdmin, setIsChainAdmin] = useState(false);
+  const [isOverlayPausedOpen, setIsOverlayPausedOpen] = useState(true);
 
   // Get storage from IndexedDB or LocalStorage
   async function _init() {
@@ -272,6 +275,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  function closeOverlayPaused() {
+    setIsOverlayPausedOpen(false);
+    setTimeout(
+      () => {
+        setIsOverlayPausedOpen(true);
+      },
+      1000 * 60 * 60,
+    );
+  }
+
   return (
     <StoreContext.Provider
       value={{
@@ -292,6 +305,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         login: _login,
         init: _init,
         refresh: (t) => _refresh(t, authUser),
+        isOverlayPausedOpen,
+        closeOverlayPaused,
       }}
     >
       {children}

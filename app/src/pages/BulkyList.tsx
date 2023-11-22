@@ -25,6 +25,7 @@ import { bulkyItemRemove, BulkyItem, User } from "../api";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
 import { Clipboard } from "@capacitor/clipboard";
+import OverlayPaused from "../components/OverlayPaused";
 
 export default function BulkyList() {
   const { t } = useTranslation();
@@ -151,6 +152,7 @@ export default function BulkyList() {
 
   return (
     <IonPage>
+      <OverlayPaused />
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("bulkyItemsTitle")}</IonTitle>

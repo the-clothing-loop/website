@@ -55,6 +55,7 @@ import { Sleep } from "../utils/sleep";
 import { useLongPress } from "use-long-press";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import IsPrivate from "../utils/is_private";
+import OverlayPaused from "../components/OverlayPaused";
 
 const MIN_BAG_LIST = 9;
 const MIN_USERS_FOR_SEARCH = 15;
@@ -182,6 +183,7 @@ export default function BagsList() {
 
   return (
     <IonPage>
+      <OverlayPaused />
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("whereIsTheBag")}</IonTitle>
