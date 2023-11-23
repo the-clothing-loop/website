@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -102,12 +101,10 @@ func GetRouteCoordinates(c *gin.Context) {
 	}
 
 	// the authenticated user should be a chain admin
-	ok, authUser, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
 	if !ok {
 		return
 	}
-
-	_, isChainAdmin := authUser.IsPartOfChain(chain.UID)
 
 	cities := retrieveChainUsersAsTspCities(db, chain.ID)
 
@@ -120,7 +117,7 @@ func GetRouteCoordinates(c *gin.Context) {
 	response := []Response{}
 	for _, city := range cities {
 		response = append(response, Response{
-			UserUID:    lo.Ternary(isChainAdmin, city.Key, ""),
+			UserUID:    city.Key,
 			Latitude:   city.Latitude,
 			Longitude:  city.Longitude,
 			RouteOrder: city.RouteOrder,
