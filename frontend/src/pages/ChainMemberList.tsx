@@ -45,6 +45,7 @@ import { bagGetAllByChain } from "../api/bag";
 import { Sleep } from "../util/sleep";
 import PopoverOnHover from "../components/Popover";
 import DOMPurify from "dompurify";
+import RouteMapPopup from "../components/RouteMap/RouteMapPopup";
 
 enum LoadingState {
   idle,
@@ -73,9 +74,9 @@ export default function ChainMemberList() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [bags, setBags] = useState<Bag[] | null>(null);
   const [route, setRoute] = useState<UID[] | null>(null);
-  const [routeWasOptimized, setRouteWasOptimized] = useState<boolean>(false);
   const [previousRoute, setPreviousRoute] = useState<UID[] | null>(null);
   const [changingPublishedAuto, setChangingPublishedAuto] = useState(false);
+  const [isOpenRouteMapPopup, setIsOpenRouteMapPopup] = useState(false);
 
   const [participantsSortBy, setParticipantsSortBy] =
     useState<ParticipantsSortBy>("date");
@@ -300,26 +301,24 @@ export default function ChainMemberList() {
       });
   }
 
-  function optimizeRoute(chainUID: UID) {
-    routeOptimizeOrder(chainUID)
-      .then((res) => {
-        const optimal_path = res.data.optimal_path;
+  async function optimizeRoute(chainUID: UID) {
+    try {
+      const res = await routeOptimizeOrder(chainUID);
+      const optimal_path = res.data.optimal_path;
 
-        // saving current rooute before changing in the database
-        setPreviousRoute(route);
-        setRouteWasOptimized(true);
-        // set new order
-        routeSetOrder(chainUID, optimal_path);
-        setRoute(optimal_path);
-      })
-      .catch((err) => {
-        addToastError(GinParseErrors(t, err), err.status);
-      });
+      // saving current rooute before changing in the database
+      setPreviousRoute(route);
+      // set new order
+      routeSetOrder(chainUID, optimal_path);
+      setRoute(optimal_path);
+    } catch (err: any) {
+      addToastError(GinParseErrors(t, err), err?.status);
+      throw err;
+    }
   }
 
   function returnToPreviousRoute(chainUID: UID) {
     setRoute(previousRoute);
-    setRouteWasOptimized(false);
     routeSetOrder(chainUID, previousRoute!);
   }
 
@@ -464,7 +463,7 @@ export default function ChainMemberList() {
   }
 
   if (!(chain && users && unapprovedUsers && route && bags)) {
-    console.log(chain, users, unapprovedUsers, route, bags);
+    // console.log(chain, users, unapprovedUsers, route, bags);
     return null;
   }
 
@@ -614,6 +613,15 @@ export default function ChainMemberList() {
                 chain={chain}
                 refresh={refresh}
               />
+              {isOpenRouteMapPopup ? (
+                <RouteMapPopup
+                  chain={chain}
+                  route={route}
+                  closeFunc={() => setIsOpenRouteMapPopup(false)}
+                  optimizeRoute={() => optimizeRoute(chain.uid)}
+                  returnToPreviousRoute={() => returnToPreviousRoute(chain.uid)}
+                />
+              ) : null}
             </div>
           </section>
         </div>
@@ -693,26 +701,22 @@ export default function ChainMemberList() {
             </div>
             <div className="order-2 md:justify-self-end lg:order-3 sm:-ms-8 flex flex-col xs:flex-row items-center">
               {selectedTable === "route" ? (
-                !routeWasOptimized ? (
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-outline xs:me-4 mb-4 xs:mb-0"
-                    onClick={() => optimizeRoute(chain.uid)}
-                  >
-                    {t("routeOptimize")}
-                    <span className="feather feather-zap ms-3 text-primary" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-outline me-4"
-                    onClick={() => returnToPreviousRoute(chain.uid)}
-                  >
-                    {t("routeUndoOptimize")}
-
-                    <span className="feather feather-corner-left-up ms-3" />
-                  </button>
-                )
+                <button
+                  type="button"
+                  className={`btn hidden lg:inline-flex me-4 ${
+                    isOpenRouteMapPopup
+                      ? "btn-outline"
+                      : "btn-accent text-white"
+                  }`}
+                  onClick={() => setIsOpenRouteMapPopup(!isOpenRouteMapPopup)}
+                >
+                  {t("map")}
+                  <span
+                    className={`feather ${
+                      isOpenRouteMapPopup ? "feather-x" : "feather-map"
+                    } ms-3`}
+                  />
+                </button>
               ) : null}
 
               {selectedTable !== "unapproved" ? (
