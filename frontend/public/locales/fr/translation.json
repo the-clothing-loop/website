@@ -47,6 +47,7 @@
   "route": "Itinéraire",
   "routeOptimize": "Optimize Route",
   "routeUndoOptimize": "Undo Optimize Route",
+  "map": "Map",
   "approve": "Approuver",
   "pendingApproval": "En attente de l'approbation de l'organisateur",
   "deny": "Refuser",

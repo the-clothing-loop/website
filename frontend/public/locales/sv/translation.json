@@ -47,6 +47,7 @@
   "route": "Route",
   "routeOptimize": "Optimize Route",
   "routeUndoOptimize": "Undo Optimize Route",
+  "map": "Map",
   "approve": "Godkänna",
   "pendingApproval": "Väntar på administratörsgodkännande",
   "deny": "Förnäka",
