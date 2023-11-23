@@ -1,19 +1,35 @@
 import { useTranslation } from "react-i18next";
 import { Chain, UID } from "../../api/types";
-import { LegacyRef, useRef, MouseEvent } from "react";
+import { useRef, MouseEvent, useState } from "react";
 import RouteMap from "./RouteMap";
 
 export default function RouteMapPopup(props: {
   chain: Chain;
   closeFunc: () => void;
   route: UID[];
-  routeWasOptimized: boolean;
-  optimizeRoute: () => void;
+  optimizeRoute: () => Promise<void>;
   returnToPreviousRoute: () => void;
 }) {
   const { t } = useTranslation();
   const ref = useRef<HTMLDialogElement>(null);
   const refButtonClose = useRef<HTMLButtonElement>(null);
+  const [routeWasOptimized, setRouteWasOptimized] = useState(false);
+
+  function returnToPreviousRoute() {
+    props.returnToPreviousRoute();
+    setRouteWasOptimized(false);
+  }
+
+  function optimizeRoute() {
+    props.optimizeRoute().then(
+      () => {
+        setRouteWasOptimized(true);
+      },
+      () => {
+        setRouteWasOptimized(false);
+      }
+    );
+  }
 
   function handleBackgroundClick(e: MouseEvent) {
     e.preventDefault();
@@ -25,7 +41,7 @@ export default function RouteMapPopup(props: {
   }
 
   return (
-    <div className="absolute inset-0 p-4 bg-white/30">
+    <div className="absolute inset-0 p-4 bg-white/30 hidden lg:block">
       <dialog
         open
         className="relative w-full h-full flex p-0 shadow-lg"
@@ -37,16 +53,15 @@ export default function RouteMapPopup(props: {
           className="flex flex-col bg-white w-full h-full p-6"
           style={{ "--tw-shadow": "#333" } as any}
         >
-          <h5 className="text-lg mb-6 min-w-[300px]">{t("map")}</h5>
           <div className="flex-grow">
             <RouteMap chain={props.chain} route={props.route} />
           </div>
           <div className="mt-4 flex justify-between">
-            {props.routeWasOptimized ? (
+            {routeWasOptimized ? (
               <button
                 type="button"
                 className="btn btn-sm btn-ghost bg-teal-light text-teal"
-                onClick={props.returnToPreviousRoute}
+                onClick={returnToPreviousRoute}
               >
                 {t("routeUndoOptimize")}
                 <span className="feather feather-corner-left-up ms-2" />
@@ -55,9 +70,9 @@ export default function RouteMapPopup(props: {
               <button
                 type="button"
                 className="btn btn-sm btn-ghost bg-teal-light text-teal"
-                onClick={props.optimizeRoute}
+                onClick={optimizeRoute}
               >
-                {t("optimize")}
+                {t("routeOptimize")}
                 <span className="feather feather-zap ms-2" />
               </button>
             )}

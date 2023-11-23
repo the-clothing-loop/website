@@ -15,7 +15,7 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
       accessToken: MAPBOX_TOKEN,
       style: "mapbox://styles/mapbox/light-v11",
       center: [props.chain.longitude, props.chain.latitude],
-      zoom: 9,
+      zoom: 11,
     });
     setMap(_map);
 
