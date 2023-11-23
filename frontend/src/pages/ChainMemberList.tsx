@@ -45,6 +45,7 @@ import { bagGetAllByChain } from "../api/bag";
 import { Sleep } from "../util/sleep";
 import PopoverOnHover from "../components/Popover";
 import DOMPurify from "dompurify";
+import RouteMapPopup from "../components/RouteMap/RouteMapPopup";
 
 enum LoadingState {
   idle,
@@ -76,6 +77,7 @@ export default function ChainMemberList() {
   const [routeWasOptimized, setRouteWasOptimized] = useState<boolean>(false);
   const [previousRoute, setPreviousRoute] = useState<UID[] | null>(null);
   const [changingPublishedAuto, setChangingPublishedAuto] = useState(false);
+  const [isOpenRouteMapPopup, setIsOpenRouteMapPopup] = useState(false);
 
   const [participantsSortBy, setParticipantsSortBy] =
     useState<ParticipantsSortBy>("date");
@@ -614,6 +616,15 @@ export default function ChainMemberList() {
                 chain={chain}
                 refresh={refresh}
               />
+              {isOpenRouteMapPopup ? (
+                <RouteMapPopup
+                  chain={chain}
+                  closeFunc={() => setIsOpenRouteMapPopup(false)}
+                  routeWasOptimized={routeWasOptimized}
+                  optimizeRoute={() => optimizeRoute(chain.uid)}
+                  returnToPreviousRoute={() => returnToPreviousRoute(chain.uid)}
+                />
+              ) : null}
             </div>
           </section>
         </div>
@@ -696,11 +707,11 @@ export default function ChainMemberList() {
                 !routeWasOptimized ? (
                   <button
                     type="button"
-                    className="btn btn-secondary btn-outline xs:me-4 mb-4 xs:mb-0"
-                    onClick={() => optimizeRoute(chain.uid)}
+                    className="btn btn-accent text-white xs:me-4 mb-4 xs:mb-0"
+                    onClick={() => setIsOpenRouteMapPopup(true)}
                   >
-                    {t("routeOptimize")}
-                    <span className="feather feather-zap ms-3 text-primary" />
+                    {t("map")}
+                    <span className="feather feather-map ms-3" />
                   </button>
                 ) : (
                   <button
