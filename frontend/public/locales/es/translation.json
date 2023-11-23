@@ -47,6 +47,7 @@
   "route": "Ruta",
   "routeOptimize": "Optimize Route",
   "routeUndoOptimize": "Undo Optimize Route",
+  "map": "Map",
   "approve": "Aprobar",
   "pendingApproval": "Pendiente de aprobación",
   "deny": "Rechazar",
