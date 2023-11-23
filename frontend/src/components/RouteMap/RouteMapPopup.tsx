@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { Chain } from "../../api/types";
+import { Chain, UID } from "../../api/types";
 import { LegacyRef, useRef, MouseEvent } from "react";
 import RouteMap from "./RouteMap";
 
 export default function RouteMapPopup(props: {
   chain: Chain;
   closeFunc: () => void;
+  route: UID[];
   routeWasOptimized: boolean;
   optimizeRoute: () => void;
   returnToPreviousRoute: () => void;
@@ -38,11 +39,7 @@ export default function RouteMapPopup(props: {
         >
           <h5 className="text-lg mb-6 min-w-[300px]">{t("map")}</h5>
           <div className="flex-grow">
-            <RouteMap
-              centerLatitude={props.chain.latitude}
-              centerLongitude={props.chain.longitude}
-              chainUID={props.chain.uid}
-            />
+            <RouteMap chain={props.chain} route={props.route} />
           </div>
           <div className="mt-4 flex justify-between">
             {props.routeWasOptimized ? (

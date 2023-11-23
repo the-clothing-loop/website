@@ -466,7 +466,7 @@ export default function ChainMemberList() {
   }
 
   if (!(chain && users && unapprovedUsers && route && bags)) {
-    console.log(chain, users, unapprovedUsers, route, bags);
+    // console.log(chain, users, unapprovedUsers, route, bags);
     return null;
   }
 
@@ -619,6 +619,7 @@ export default function ChainMemberList() {
               {isOpenRouteMapPopup ? (
                 <RouteMapPopup
                   chain={chain}
+                  route={route}
                   closeFunc={() => setIsOpenRouteMapPopup(false)}
                   routeWasOptimized={routeWasOptimized}
                   optimizeRoute={() => optimizeRoute(chain.uid)}
