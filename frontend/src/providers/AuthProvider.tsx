@@ -97,7 +97,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
         Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
         setLoading(false);
         const isChanged = user.i18n ? user.i18n !== i18n.language : false;
-        const isUnset = !!user.i18n;
+        const isUnset = !user.i18n;
         if (!isUnset && isChanged) {
           i18n.changeLanguage(user.i18n);
         }
