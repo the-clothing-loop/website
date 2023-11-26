@@ -34,6 +34,7 @@ type Chain struct {
 	UpdatedAt        time.Time
 	DeletedAt        zero.Time
 	Theme            string
+	RoutePrivacy     int
 }
 
 func (c *Chain) SetRouteOrderByUserUIDs(db *gorm.DB, userUIDs []string) error {

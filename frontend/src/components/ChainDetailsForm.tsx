@@ -22,6 +22,7 @@ interface Props {
   onSubmit: (values: RegisterChainForm) => void;
   initialValues?: RegisterChainForm;
   showBack?: boolean;
+  showRoutePrivacyField?: boolean;
 }
 
 export type RegisterChainForm = Omit<
@@ -69,6 +70,7 @@ export default function ChainDetailsForm({
   onSubmit,
   initialValues,
   showBack,
+  showRoutePrivacyField,
 }: Props) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -86,6 +88,7 @@ export default function ChainDetailsForm({
     sizes: [],
     longitude: 0,
     latitude: 0,
+    route_privacy: 2,
     ...initialValues,
   });
 
@@ -256,6 +259,20 @@ export default function ChainDetailsForm({
             step="0.1"
             info={t("decideOnTheAreaYourLoopWillBeActiveIn")}
           />
+
+          {showRoutePrivacyField && (
+            <TextForm
+              type="number"
+              required
+              label={t("routePrivacy")}
+              name="route_privacy"
+              value={values.route_privacy}
+              onChange={(e) => setValue("route_privacy", e.target.valueAsNumber) }
+              step="1"
+              min={-1}
+              info={t("routePrivacyInfo")}
+            />
+          )}
 
           <div className="form-control relative w-full mb-4">
             <PopoverOnHover

@@ -80,6 +80,7 @@ func ChainCreate(c *gin.Context) {
 				RouteOrder:   0,
 			},
 		},
+		RoutePrivacy: 2, // default route_privacy
 	}
 	if err := db.Create(&chain).Error; err != nil {
 		goscope.Log.Warningf("Unable to create chain: %v", err)
@@ -123,6 +124,7 @@ func ChainGet(c *gin.Context) {
 		"genders":             chain.Genders,
 		"published":           chain.Published,
 		"open_to_new_members": chain.OpenToNewMembers,
+		"route_privacy":       chain.RoutePrivacy,
 	}
 
 	if query.AddRules {
@@ -275,6 +277,7 @@ func ChainUpdate(c *gin.Context) {
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 		Theme            *string   `json:"theme,omitempty"`
+		RoutePrivacy     *int      `json:"route_privacy"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -340,6 +343,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Theme != nil {
 		valuesToUpdate["theme"] = *(body.Theme)
+	}
+	if body.RoutePrivacy != nil {
+		valuesToUpdate["route_privacy"] = *(body.RoutePrivacy)
 	}
 	err := db.Model(chain).Updates(valuesToUpdate).Error
 	if err != nil {

@@ -68,6 +68,7 @@ export default function ChainEdit() {
         <p className="text-sm mb-1">{t("clickToChangeLoopLocation")}</p>
         <ChainDetailsForm
           showBack
+          showRoutePrivacyField
           onSubmit={handleSubmit}
           initialValues={chain}
         />
