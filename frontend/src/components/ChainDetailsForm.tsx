@@ -267,7 +267,9 @@ export default function ChainDetailsForm({
               label={t("routePrivacy")}
               name="route_privacy"
               value={values.route_privacy}
-              onChange={(e) => setValue("route_privacy", e.target.valueAsNumber) }
+              onChange={(e) =>
+                setValue("route_privacy", e.target.valueAsNumber)
+              }
               step="1"
               min={-1}
               info={t("routePrivacyInfo")}

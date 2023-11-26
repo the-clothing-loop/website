@@ -48,7 +48,7 @@ export interface Chain {
   rules_override?: string;
   total_members?: number;
   total_hosts?: number;
-  route_privacy: number
+  route_privacy: number;
 }
 
 export interface Event {

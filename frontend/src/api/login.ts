@@ -23,7 +23,7 @@ export interface RequestRegisterChain {
   open_to_new_members: boolean;
   sizes: Array<Sizes | string> | null;
   genders: Array<Sizes | string> | null;
-  route_privacy: number
+  route_privacy: number;
 }
 
 export function registerChainAdmin(
