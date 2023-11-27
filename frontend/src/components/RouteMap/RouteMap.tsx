@@ -2,7 +2,7 @@ import mapboxjs, { GeoJSONSource } from "mapbox-gl";
 import { useEffect, useState } from "react";
 import { RouteCoordinate, routeCoordinates } from "../../api/route";
 import { Chain, UID } from "../../api/types";
-import type { FeatureCollection } from "geojson";
+import type { FeatureCollection, Polygon, Feature } from "geojson";
 import { useDebouncedCallback } from "use-debounce";
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -27,12 +27,28 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
           data: mapToGeoJSONCoords(coords, props.route),
         });
 
+        _map.addSource("route-poly", {
+          type: "geojson",
+          data: mapToGeoJSONPolygonCoords(coords, props.route),
+        });
+
+        _map.addLayer({
+          id: "outline",
+          type: "line",
+          source: "route-poly",
+          layout: {},
+          paint: {
+            "line-color": ["rgba", 0, 0, 0, 0.4],
+            "line-width": 2,
+          },
+        });
+
         _map.addLayer({
           id: "point-bg",
           type: "circle",
           source: "route",
           paint: {
-            "circle-color": ["rgba", 239, 149, 61, 0.6], // #ef953d
+            "circle-color": "#f1bb87", //["rgba", 239, 149, 61, 0.6], // #ef953d
             "circle-radius": 15,
             "circle-stroke-width": 0,
           },
@@ -59,9 +75,11 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
   const debouncedUpdateSource = useDebouncedCallback(
     async () => {
       const routeSource = map!.getSource("route") as GeoJSONSource;
+      const routePolySource = map!.getSource("route-poly") as GeoJSONSource;
       if (!routeSource) return;
       const coords = (await routeCoordinates(props.chain.uid)).data;
       routeSource.setData(mapToGeoJSONCoords(coords, props.route));
+      routePolySource.setData(mapToGeoJSONPolygonCoords(coords, props.route));
     },
     2e3,
     {}
@@ -96,5 +114,19 @@ function mapToGeoJSONCoords(
         },
       };
     }),
+  };
+}
+
+function mapToGeoJSONPolygonCoords(
+  coords: RouteCoordinate[],
+  route: UID[]
+): Feature {
+  return {
+    type: "Feature",
+    geometry: {
+      type: "Polygon",
+      coordinates: [coords.map((coord) => [coord.longitude, coord.latitude])],
+    } as Polygon,
+    properties: {},
   };
 }
