@@ -3,11 +3,11 @@
   "arrParticipants": {
     "0": {
       "question": "נרשמנו, מתי מוסיפים אותנו לרשימה?",
-      "answer": "אם קיבלתם מייל אישור מאיתנו, הבקשה לרישום עברה בהצלחה! מארחי הלולאה עודכנו והם יצרו איתכם קשר על מנת להוסיף אתכם למסלול.<br/>מאחר וכל המארחים מנהלים את הלולאות בהתנדבות ובזמנם החופשי, זה עשוי לקחת זמן מה. בדרך-כלל, רוב המארחים מוסיפים חברים חדשים פעם בשבועיים עד 4 שבועות."
+      "answer": "If you have verified your email address, your request to join the Loop has come through successfully! <strong>The host of the Loop has been notified</strong> and will contact you to add you to the route.<br/>This can sometimes take a little while as all hosts manage the Loop in their spare time. Most hosts add new members once every 2 to 4 weeks."
     },
     "1": {
       "question": "האם יש הנחיות לגבי כמה פריטים אפשר לשמור?",
-      "answer": "לא, אין הנחיות, אבל כדאי לזכור שהמערכת עובדת הכי טוב באיזון.<b>כל תיק הוא שונה.</b> לפעמים מוצאים יותר, לפעמים לא מוצאים שום דבר. כל בגד שנלבש שוב הוא ניצחון!"
+      "answer": "No, there are <strong>no hard rules</strong> here, but keep in mind the system works best when in balance. <b>Every bag is different.</b> Sometimes you find more, sometimes you don’t find anything. Every garment that is worn again is a win!"
     },
     "2": {
       "question": "האם צריך לתרום את אותה כמות בגדים שלוקחים מהתיק?",
@@ -15,11 +15,11 @@
     },
     "3": {
       "question": "האם כל מידות הבגדים יכולות להיות באותו התיק?",
-      "answer": "בדרך-כלל תיקים מעורבים עובדים הכי טוב כי המידות משתנות פר-מותג ולאנשים שונים יש פרופורציות שונות.<br/>אנחנו ממליצים שיהיה מיקס של בגדים במידות 36-42 (כלומר S, M ו- X(L)) וכדאי להתחיל לולאה נפרדת במיוחד למידות קטנות או גדולות יותר."
+      "answer": "<strong>Mixed bags work perfectly well usually</strong>, as sizes vary per brand and all people’s proportions are different.<br/>We recommend having a mix of items from size 36 - 42 (S, M and (X)L, and starting separate Loops especially for smaller or bigger sizes."
     },
     "4": {
       "question": "איך להימנע ממצב שהמוצא זוכה והמפסיד בוכה?",
-      "answer": "אין ערובה שתמצאו משהו שתאהבו. לעתים יעברו אצלכם כמה תיקים בלי שתמצאו משהו עבורכם.<br/>אבל זכרו: למצוא פריט חלומי שווה יותר מ-10 פריטים שנמצאים אצלכם בארון ואתם לא לובשים. גם לשמח מישהו אחר עם פריט שהעלה אבק בארון שלכם זה משמעותי (וכיף!) מבחינת המנטליות של ה-Clothing Loop!"
+      "answer": "There are <strong>no guarantees that you will find something you like</strong>. Sometimes a few bags will pass your house that do not hold an item for you.<br/>But remember: finding one dream item is more worth than having 10 items in your wardrobe that you don’t wear. And making someone else very happy with something that was collecting dust in your wardrobe is also a significant (and fun!) part of the Clothing Loop mentality!"
     },
     "5": {
       "question": "מה עושים עם בגדים כבדים/גדולים (כמו מעילי חורף) שלא מתאימים לתיק?",
@@ -27,15 +27,46 @@
     },
     "6": {
       "question": "האם ניתן לשים בתיק נעליים?",
-      "answer": "זה תלוי במארחים שלכם ולהחלטתם. אם ניתן לעשות זאת, הוסיפו נעליים במצב \"כמו חדש\" ו<b>לא יותר מ-2 זוגות נעליים בתיק</b>. בנוסף, ארזו אותם בשקית נפרדת כדי לשמור על הבגדים שבתיק נקיים. "
+      "answer": "That is up <strong>to your local host to decide</strong>. If your Loop allows you to add shoes to the bag, only add “as good as new” pairs, and <b>no more than 2 pairs per bag</b>. And please wrap them in a separate bag to avoid them touching the clothes. "
     },
     "7": {
       "question": "קיבלנו הודעת שגיאה \"החשבון שלכם כבר קיים\".",
-      "answer": "יצרתם בעבר חשבון ב- Clothing Loop. על מנת להירשם ללולאה חדשה, ראשית אתם צריכים להתחבר:<ol><li> הקליקו בפינה הימנית העליונה על התחברות.</li><li>הזינו את כתובת המייל איתה נרשמתם ללולאה שלכם.</li><li>בדקו את תיבת המייל שלכם (גם את תיבת הספאם!) וחפשו את לינק האימות שלנו. אנו משתמשים בלינק ולא בסיסמה!</li><li>ואז תוכלו להירשם ללולאה חדשה.</li></ol>"
+      "answer": "Previously, <strong>you have created an account at the Clothing Loop already.</strong> To sign up for a new Loop, you will need to log in first. Click in the top right corner on login, Enter the email address you used to register your Loop.<br/>Check your email (and spam folder!) for our verification link. We use a link instead of a password! Then you will be able to sign up for a new Loop."
+    }
+  },
+  "faqForApp": "FAQ for the App",
+  "arrApp": {
+    "0": {
+      "question": "What is the Clothing Loop App?",
+      "answer": "<strong>The Clothing Loop App is made to make organizing a Loop easier.</strong> You can start using the app, if you are part of a Loop. A host can decide together with the participants if they want to start using the app to organize their Loop.<br/>In the app: you can find the rules of your local Loop, you can find out who to bring the bag to next, where the bags are and post bulky items that do not fit into the bag."
     },
-    "8": {
-      "question": "Do I need to pay to join the Clothing Loop?",
-      "answer": "No, you do not have to pay to participate in the Clothing Loop. The Clothing Loop is an initiative that wants to make clothes swapping easy and accessible. As a participant, you “pay” with your clothes. Make sure that if you add clothes to your local Loop, they are gems that can be worn again. If you have saved money by participating in the Clothing Loop and/or want to support the Clothing Loop movement and our mission, you can of course always <a href='/donate'>donate here</a>."
+    "1": {
+      "question": "Where can I find the app?",
+      "answer": "You can find the app in <a target='_blank' href='https://play.google.com/store/apps/details?id=org.clothingloop.app'>Google Playstore</a>, <a target='_blank' href='https://apps.apple.com/us/app/my-clothing-loop/id6451443500'>Apple Appstore</a>, or as web-version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>"
+    },
+    "2": {
+      "question": "Can I change the Rules in the App?",
+      "answer": "Yes, <strong>as a host you are able to change, adjust, and add rules in the App</strong>. Participants are not able to change the rules. To change the rules, click in the upper right corner on Change. After you have changed the rules, click on Save to save your changes."
+    },
+    "3": {
+      "question": "Which addresses can I see?",
+      "answer": "As a host, you can see everybody's information in your Loop. As a participant, you can only see the information of the two participants before and after you. A participant is also able to see the information of a host."
+    },
+    "4": {
+      "question": "How to set a bag to my name?",
+      "answer": "If you have received a bag, you can set a bag to your name in the tab of Bags. Click on the picture of the Bag and search for your name. Also, note the date of when the bag arrived. It is important to note that you have received the bag every time."
+    },
+    "5": {
+      "question": "What are Bulky Items (like winter coats)?",
+      "answer": "<strong>Big items that are too big for the bag can be photographed and shared.</strong> Click on Create, make a title and description, and create a new Bulky Item. Other participants then can click on your name to find your information. In a private message, participants can respond and organize pick-up. After the pick-up, a Bulky Item has to be removed from the list."
+    },
+    "6": {
+      "question": "Can I use the app as I partake in multiple Loops?",
+      "answer": "Yes, you can use the app while you are involved in multiple Loops. If you go to Info, you can switch between Loops, after you click on the name of the Loop."
+    },
+    "7": {
+      "question": "Why do I only see an SMS button?",
+      "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
     }
   },
   "faqForHosts": "שאלות נפוצות למארחים",
@@ -46,11 +77,11 @@
     },
     "1": {
       "question": "איך ניתן למצוא אנשים שיצטרפו ללולאה שלנו?",
-      "answer": "התחילו בקטן. שאלו חברים ומכרים בסביבה שלכם, למשל בחדר הכושר שלכם, במסגרת שיעורי ריקוד ועוד. אחרי שיצרתם קבוצה קטנה, ניתן לבקש מכל אחד להזמין לפחות אדם נוסף ואז הלולאה תגדל באופן אורגני. אתם יכולים גם להוציא הודעה לעיתונות לתקשורת המקומית שלכם. יצרנו לכם תבנית<a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'> טיוטה </a> שתוכלו למלא!"
+      "answer": "Start small! <strong>Ask friends and acquaintances in your direct environment</strong> like your sports club or dance school. When you have a small crowd gathered, you can ask everyone to invite at least one more person, then the group will grow organically. You can also send out a press release to your local media. We already drafted you a <a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'>template</a> to fill in!"
     },
     "2": {
       "question": "כמה זמן לוקח לארח ולנהל לולאה?",
-      "answer": "המתנדבים שלנו אומרים שהם משקיעים בממוצע 1 ו-&#189; שעות בחודש לטובת אירוח לולאה."
+      "answer": "Our volunteers say they spend on average <strong>1&#189; hours per month</strong> on hosting the Loop."
     },
     "3": {
       "question": "איך רושמים לולאה חדשה?",
@@ -62,11 +93,11 @@
     },
     "5": {
       "question": "How can I start using the App?",
-      "answer": "Yes! We made an app that you can very easily set up for your Loop. The app is available for iOS, Android and as web version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />You can download the app and use it within your group.  It is super easy! You can find a more detailed guide on how to use the app in our <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
+      "answer": "Yes! We made an app that you can very easily set up for your Loop. The app is available for iOS, Android and as web version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />You can <strong>download the app and use it within your group</strong>. It is super easy! You can find a more detailed guide on how to use the app in our <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
     },
     "5_5": {
       "question": "How to make a route?",
-      "answer": "You can make a route in the admin page of your Account. Click on Route and you will find an Optimize Route Button. Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. New participants will be placed in the most logical spot in the current list."
+      "answer": "You can make a route in the admin page of your Account. <strong>Click on Route and you will find an Optimize Route Button.</strong> Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. <strong>New participants will be placed in the most logical spot in the current list.</strong>"
     },
     "6": {
       "question": "האם יש תמונות או תבניות גרפיות בהן ניתן להשתמש?",
@@ -84,13 +115,17 @@
       "question": "איך לנהל קבוצה גדולה של אנשים בערוצי התקשורת?",
       "answer": "במיוחד כשקבוצות נעשות גדולות, חשוב מאד לוודא שאנשים אינם מוצפים בהודעות (שאינן רלוונטיות). אתם יכולים להגדיר כמה כללים והנחיות עבור מה צריך ומה לא צריך להיות משותף באפליקציית הקבוצה. לדוגמא:<ul class='list-none'><li><b> כן,</b> באפליקציה:<ul><li>סלפי של פריטים יפים שנלקחו מהתיק או פריטים יפים שהוספו לתיק</li><li>מחמאות לאחרים</li><li>עדכונים לוגיסטיים וארגוניים רלוונטים מהמארחים. לא </b> לא באפליקציה <ul><li>כל מה שלא קשור ל Clothing Loop (בקשות לסקרים, הוספה לקבוצות חדשות, גיוס כספים, מימז וכו'). אם אתם מעוניינים לשאול את כולם משהו, השתמשו באופציית ה-Poll באפליקציית ווצאפ</li><li>השתמשו בהודעה פרטית כאשר ההודעה נוגעת רק לאדם אחד.</li></ul></li></ul>"
     },
+    "8_5": {
+      "question": "Why don’t I see a participant that signed up?",
+      "answer": "When you know a participant has signed up, but you don’t see them in the participant’s list in Account and you haven’t received the automatic email from us. It’s probably because the participant’s email address hasn’t been verified. <strong>Please ask a new participant to log in.</strong> Once they’ve logged in, their account is verified. Now you’ll receive the email and see them in the New list."
+    },
     "9": {
       "question": "מה אם אין ביכולתנו להמשיך ולארח את ה- Clothing Loop שהתחלנו?",
-      "answer": "השתמשו בקבוצה! שאלו אם מישהו מעונין לעזור באירוח הלולאה. עם הזמן הם עשויים לקחת את האירוח בצורה מלאה."
+      "answer": "Use the group! <strong>Ask if someone else wants to help out hosting the Loop.</strong> Over time they may want to take over completely."
     },
     "10": {
       "question": "מה קורה אם מישהו רוצה להצטרף אבל גר רחוק מדי?",
-      "answer": "אם מישהו ביקש להירשם ללולאה שלך אבל גר רחוק מדי מחוץ לאזור הלולאה, זה תלוי בכם אם הוא יכול להצטרף. במידה ולא, אנא שלחו לו מייל ועדכנו אותו. אם יש ספק, דבר אחד שניתן לעשות על מנת לצמצם את המרחק, זה לבקש מאותו אדם (שביקש להצטרף) למצוא מצטרפים חדשים בין האזור שלו לאזור הלולאה המקורית."
+      "answer": "If someone signed up for your Loop but lives too far outside of your Loop area, <strong>it is up to you to decide if they may join</strong>. If they cannot, please send them an email to let them know. When in doubt: one thing you can do to decrease the distance between addresses, is to ask that person to find other participants between their area and the original Loop location."
     },
     "11": {
       "question": "מהו גודל הקבוצה האידיאלי?",
@@ -98,11 +133,11 @@
     },
     "12": {
       "question": "מה קורה אם מישהו עובר דירה ורוצה להצטרף ללולאה באזור אחר?",
-      "answer": "אתם כמארחי לולאה יכולים להסירו מהלולאה כאשר אתם מחוברים לדף הבית שלנו. אם הם רוצים להצטרף שוב ללולאה בשכונה החדשה, בקשו מהם פשוט להירשם שוב עם הכתובת החדשה."
+      "answer": "You as Loop host can remove them from your Loop when signed in on our website. If they want to join again in their new neighborhood, ask them to simply sign up again with their new address.<br/><strong>Participants can login on our website, and edit their account details</strong> in their account page. Meaning: they can leave a Loop and sign up for another one."
     },
     "13": {
       "question": "מה ניתן לעשות אם ה-Clothing Loop אינה עובדת היטב?",
-      "answer": "כדאי לוודא שכולם חולקים אחריות על הוספת פריטים באיכות טובה.<br/><br/>מצאתם משהו שאינו צריך להיות בתיק? נסו לתרום זאת לתוכנית מיחזור טקסטיל באזור המגורים שלכם. אם יש ספק, התייעצו עם האדם הבא ברשימת הכתובות. זה טוב שיהיו כמה אנשים שיתפקדו כ\"נקודת בדיקה\" לאורך המסלול, זאת כדי לוודא שהתיקים נשארים במצב טוב. אם איכות הבגדים אינה גבוהה מספיק, אנשים עלולים לעזוב את הלולאה וזה ממש חבל!<br/><br/><a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'> מגלח הבדים</a> יכול להאריך את חיי פריטי הלבוש בצורה עצומה! אתם יכולים לחלוק את העצה הזו בתוך הקהילה שלכם.<br/><br/>ואחרון חביב, שמשו דוגמא טובה בעצמכם: שתפו תמונות יפות  ועודדו אחרים לעשות זאת גם! לראות איפה פריטים בסופו של דבר התגלגלו, נותן מוטיבציה עצומה לאנשים אחרים לתרום פריטים נחמדים."
+      "answer": "Make sure that <strong>everyone shares the responsibility for only adding good quality items.</strong><br/><br/>Do you see something that shouldn’t be in a bag? Try to donate it to your local textile recycling program. If in doubt, ask the person next to you on the address list  if they agree. It is good to have a few people function as ‘checkpoints’ along the route, to make sure the bags stay in good condition. Because if the quality of the clothing isn’t high enough, people might leave the Loop and that would be a shame!<br/><br/>A <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>fabric shaver</a> can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, <strong>set a good example yourself: share some nice photos and encourage others to do the same!</strong> Seeing where items end up is a huge motivation for people to donate nice items."
     }
   }
 }
