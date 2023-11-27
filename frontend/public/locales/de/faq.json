@@ -7,7 +7,7 @@
     },
     "1": {
       "question": "Gibt es Regeln, wieviel du behalten kannst?",
-      "answer": "Nein, es gibt keine harte Regeln. Gemischte Taschen funktionieren normalerweise sehr gut, da die Größen je nach Marke variieren und auch die Proportionen unterschiedlich sind, aber das funktioniert nur innerhalb eines bestimmten Umfangs. Wir empfehlen einen Mix von Artikeln der Größen 36 - 42 (S, M und L) und den Start eines neuen Clothing Loops für kleinere oder größere Größen!"
+      "answer": "Nein, es gibt <strong>keine harte Regeln</strong>. Gemischte Taschen funktionieren normalerweise sehr gut, da die Größen je nach Marke variieren und auch die Proportionen unterschiedlich sind, aber das funktioniert nur innerhalb eines bestimmten Umfangs. Wir empfehlen einen Mix von Artikeln der Größen 36 - 42 (S, M und L) und den Start eines neuen Clothing Loops für kleinere oder größere Größen!"
     },
     "2": {
       "question": "Wie vermeidet man „Finders Keeper, Verlierer Keiler“?",
@@ -38,6 +38,41 @@
       "answer": "No, you do not have to pay to participate in the Clothing Loop. The Clothing Loop is an initiative that wants to make clothes swapping easy and accessible. As a participant, you “pay” with your clothes. Make sure that if you add clothes to your local Loop, they are gems that can be worn again. If you have saved money by participating in the Clothing Loop and/or want to support the Clothing Loop movement and our mission, you can of course always <a href='/donate'>donate here</a>."
     }
   },
+  "faqForApp": "FAQ for the App",
+  "arrApp": {
+    "0": {
+      "question": "What is the Clothing Loop App?",
+      "answer": "<strong>The Clothing Loop App is made to make organizing a Loop easier.</strong> You can start using the app, if you are part of a Loop. A host can decide together with the participants if they want to start using the app to organize their Loop.<br/>In the app: you can find the rules of your local Loop, you can find out who to bring the bag to next, where the bags are and post bulky items that do not fit into the bag."
+    },
+    "1": {
+      "question": "Where can I find the app?",
+      "answer": "You can find the app in <a target='_blank' href='https://play.google.com/store/apps/details?id=org.clothingloop.app'>Google Playstore</a>, <a target='_blank' href='https://apps.apple.com/us/app/my-clothing-loop/id6451443500'>Apple Appstore</a>, or as web-version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>"
+    },
+    "2": {
+      "question": "Can I change the Rules in the App?",
+      "answer": "Yes, <strong>as a host you are able to change, adjust, and add rules in the App</strong>. Participants are not able to change the rules. To change the rules, click in the upper right corner on Change. After you have changed the rules, click on Save to save your changes."
+    },
+    "3": {
+      "question": "Which addresses can I see?",
+      "answer": "As a host, you can see everybody's information in your Loop. As a participant, you can only see the information of the two participants before and after you. A participant is also able to see the information of a host."
+    },
+    "4": {
+      "question": "How to set a bag to my name?",
+      "answer": "If you have received a bag, you can set a bag to your name in the tab of Bags. Click on the picture of the Bag and search for your name. Also, note the date of when the bag arrived. It is important to note that you have received the bag every time."
+    },
+    "5": {
+      "question": "What are Bulky Items (like winter coats)?",
+      "answer": "<strong>Big items that are too big for the bag can be photographed and shared.</strong> Click on Create, make a title and description, and create a new Bulky Item. Other participants then can click on your name to find your information. In a private message, participants can respond and organize pick-up. After the pick-up, a Bulky Item has to be removed from the list."
+    },
+    "6": {
+      "question": "Can I use the app as I partake in multiple Loops?",
+      "answer": "Yes, you can use the app while you are involved in multiple Loops. If you go to Info, you can switch between Loops, after you click on the name of the Loop."
+    },
+    "7": {
+      "question": "Why do I only see an SMS button?",
+      "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
+    }
+  },
   "faqForHosts": "FAQ für Hosts",
   "arrHosts": {
     "0": {
@@ -62,11 +97,11 @@
     },
     "5": {
       "question": "How can I start using the App?",
-      "answer": "Yes! We made an app that you can very easily set up for your Loop. The app is available for iOS, Android and as web version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />You can download the app and use it within your group.  It is super easy! You can find a more detailed guide on how to use the app in our <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
+      "answer": "Yes! We made an app that you can very easily set up for your Loop. The app is available for iOS, Android and as web version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />You can <strong>download the app and use it within your group</strong>. It is super easy! You can find a more detailed guide on how to use the app in our <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
     },
     "5_5": {
       "question": "How to make a route?",
-      "answer": "You can make a route in the admin page of your Account. Click on Route and you will find an Optimize Route Button. Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. New participants will be placed in the most logical spot in the current list."
+      "answer": "You can make a route in the admin page of your Account. <strong>Click on Route and you will find an Optimize Route Button.</strong> Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. <strong>New participants will be placed in the most logical spot in the current list.</strong>"
     },
     "6": {
       "question": "Was ist eine ideale Gruppengröße?",
@@ -84,13 +119,17 @@
       "question": "Wie kann man eine große Gruppe von Menschen im Kommunikationskanal verwalten?",
       "answer": "Besonders wenn Gruppen größer werden, ist es wichtig, sicherzustellen, dass die Leute nicht mit (irrelevanten) Nachrichten bombardiert werden. Du kannst einige Regeln einrichten, was über die Gruppenapplikation geteilt werden sollte und was nicht. Zum Beispiel:<ul class='list-none'><li><b>Ja,</b> in der App:<ul><li>Selfies von tollen Sachen die Du aus der Tasche genommen oder von denen die Du hineingelegt hast</li><li>Komplimente an andere</li><li>Logistische und organisatorische relevante Updates vom Host</li></ul></li><li><b>Nein,</b> Nicht in der App:<ul><li>Alles ohne Bezug zum Clothing Loop (Anfragen für Umfragen, Einladungen für neue Gruppen, Spendenaufrufe, Memes, etc). Wenn Du alle Mitglieder zu etwas befragen willst, verwende stattdessen die Umfrage-Funktion</li><li>Verwende die private Nachrichtenfunktion, wenn Deine Nachricht nur eine Person betrifft.</li></ul></li></ul>"
     },
+    "8_5": {
+      "question": "Why don’t I see a participant that signed up?",
+      "answer": "When you know a participant has signed up, but you don’t see them in the participant’s list in Account and you haven’t received the automatic email from us. It’s probably because the participant’s email address hasn’t been verified. <strong>Please ask a new participant to log in.</strong> Once they’ve logged in, their account is verified. Now you’ll receive the email and see them in the New list."
+    },
     "9": {
       "question": "Was ist, wenn ich keine Zeit mehr habe, um den Clothing Loop zu verwalten, den ich gestartet habe?",
-      "answer": "Benutze die Gruppe! Frag, ob jemand anderes beim Hosten des Loops helfen möchte. Im Laufe der Zeit kann es sein, dass die Person dann die komplette Übernahme übernehmen möchte."
+      "answer": "Benutze die Gruppe! <strong>Frag, ob jemand anderes beim Hosten des Loops helfen möchte.</strong> Im Laufe der Zeit kann es sein, dass die Person dann die komplette Übernahme übernehmen möchte."
     },
     "10": {
       "question": "Was ist, wenn jemand beitreten will, aber zu weit weg lebt?",
-      "answer": "Wenn sich jemand für Deinen Loop angemeldet hat, aber zu weit außerhalb deines Loop Gebiets wohnt, liegt es an Dir zu entscheiden, ob er/sie/sie teilnehmen darf. Eine Sache, die Du tun kannst, um den Abstand zwischen Adressen zu verringern, ist, diese Person zu bitten, andere Teilnehmer zwischen ihrem Bereich und dem ursprünglichen Loop Standort zu finden."
+      "answer": "Wenn sich jemand für Deinen Loop angemeldet hat, aber zu weit außerhalb deines Loop Gebiets wohnt, <strong>liegt es an Dir zu entscheiden, ob er/sie/sie teilnehmen darf.</strong> Eine Sache, die Du tun kannst, um den Abstand zwischen Adressen zu verringern, ist, diese Person zu bitten, andere Teilnehmer zwischen ihrem Bereich und dem ursprünglichen Loop Standort zu finden."
     },
     "11": {
       "question": "Was ist eine ideale Gruppengröße?",
