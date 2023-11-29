@@ -245,7 +245,7 @@ export default function AddressForm(props: {
           <div className="">
             <address>{values.address}</address>
             <label className="btn btn-ghost">
-              <span className="">{t("edit")}</span>
+              <span className="">{t("editAddress")}</span>
 
               <input
                 type="checkbox"
