@@ -22,10 +22,13 @@ import SearchBar, {
   toUrlSearchParams,
 } from "../components/FindChain/SearchBar";
 import { SizeBadges } from "../components/Badges";
-import { circleRadiusKm } from "../util/maps";
+import { circleRadiusKm, useMapZoom } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
+
+const MAX_ZOOM = 13;
+const MIN_ZOOM = 3;
 
 export type ChainPredicate = (chain: Chain) => boolean;
 
@@ -41,9 +44,6 @@ type GeoJSONChains = GeoJSONTypes.FeatureCollection<
     cluster?: boolean;
   }
 >;
-
-const maxZoom = 13;
-const minZoom = 3;
 
 function mapToGeoJSONChains(
   chains: Chain[],
@@ -107,7 +107,7 @@ export default function FindChain({ location }: { location: Location }) {
 
   const [chains, setChains] = useState<Chain[]>();
   const [map, setMap] = useState<mapboxgl.Map>();
-  const [zoom, setZoom] = useState(4);
+  const { zoom, setZoom, mapZoom } = useMapZoom(4, MIN_ZOOM, MAX_ZOOM);
   const [locationLoading, setLocationLoading] = useState(false);
   const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
   const [focusedChain, setFocusedChain] = useState<Chain | null>(null);
@@ -506,24 +506,6 @@ export default function FindChain({ location }: { location: Location }) {
     );
   }
 
-  function mapZoom(o: "+" | "-") {
-    let z = map?.getZoom() || 4;
-    switch (o) {
-      case "+":
-        if (z < maxZoom) {
-          console.log("z", z + 1);
-          map?.setZoom(z + 1);
-        }
-        break;
-      case "-":
-        if (z > minZoom) {
-          console.log("z", z - 1);
-          map?.setZoom(z - 1);
-        }
-        break;
-    }
-  }
-
   if (!MAPBOX_TOKEN) {
     addToastError("Access tokens not configured", 500);
     return <div></div>;
@@ -572,21 +554,21 @@ export default function FindChain({ location }: { location: Location }) {
             <div className="btn-group btn-group-vertical">
               <button
                 className={`btn rounded-t-full p-0 w-12 h-12 ${
-                  zoom >= maxZoom
+                  zoom >= MAX_ZOOM
                     ? "btn-disabled bg-white/30"
                     : "glass bg-white/60 hover:bg-white/90 btn-outline"
                 }`}
-                onClick={() => mapZoom("+")}
+                onClick={() => mapZoom(map, "+")}
               >
                 <span className="feather feather-plus text-base-content text-lg" />
               </button>
               <button
                 className={`btn rounded-b-full p-0 w-12 h-12 ${
-                  zoom <= minZoom
+                  zoom <= MIN_ZOOM
                     ? "btn-disabled bg-white/30"
                     : "glass bg-white/60 hover:bg-white/90 btn-outline"
                 }`}
-                onClick={() => mapZoom("-")}
+                onClick={() => mapZoom(map, "-")}
               >
                 <span className="feather feather-minus text-base-content text-lg" />
               </button>
