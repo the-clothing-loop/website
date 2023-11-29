@@ -112,7 +112,7 @@ export default function AddressForm(props: {
 
     (async () => {
       if (!isValidPhoneNumber(values.phone)) {
-        addToastError(t("required") + ": " + t("phoneNumber"), 400);
+        addToastError(t("enterValidPhoneNumberWithCountryCode"), 400);
         return;
       }
       if (openAddress) {

@@ -220,6 +220,7 @@
   },
   "mustBeAtLeastChar": "Must be at least 2 characters",
   "required": "Required",
+  "enterValidPhoneNumberWithCountryCode": "Enter a valid phone number with country code",
   "loops": "Loops",
   "countries": "Countries",
   "yourDonationAmountMustBePositive": "Your donation amount must be positive",
