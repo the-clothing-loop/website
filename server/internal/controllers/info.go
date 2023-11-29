@@ -27,7 +27,7 @@ SELECT (
 ) as total_users,	(
 	SELECT COUNT(DISTINCT country_code)
 	FROM chains
-	WHERE country_code IS NOT NULL
+	WHERE country_code IS NOT NULL AND chains.published = TRUE
 ) as total_countries;
 	`).Scan(&data).Error
 	if err != nil {
