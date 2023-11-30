@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/golang/glog"
+	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 
@@ -32,6 +33,11 @@ type MockChainAndUserOptions struct {
 	IsNotPublished     bool
 	IsOpenToNewMembers bool
 	RouteOrderIndex    int
+
+	// for generating new members
+	OnlyEmailExampleCom bool
+	OverrideLongitude   *float64
+	OverrideLatitude    *float64
 }
 
 type MockEventOptions struct {
@@ -69,15 +75,15 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	}
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain())),
+		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), lo.Ternary(o.OnlyEmailExampleCom, "example.com", faker.Internet().FreeEmailDomain()))),
 		IsEmailVerified: !o.IsNotEmailVerified,
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Fake " + faker.Person().Name(),
 		PhoneNumber:     faker.Person().Contact().Phone,
 		Sizes:           MockSizes(false),
 		Address:         faker.Address().Address(),
-		Latitude:        latitude,
-		Longitude:       longitude,
+		Latitude:        lo.Ternary(o.OverrideLongitude == nil, longitude, *(o.OverrideLatitude)),
+		Longitude:       lo.Ternary(o.OverrideLatitude == nil, latitude, *(o.OverrideLongitude)),
 		UserToken: []models.UserToken{
 			{
 				Token:    uuid.NewV4().String(),
