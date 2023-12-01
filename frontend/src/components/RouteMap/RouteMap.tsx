@@ -10,7 +10,7 @@ type LineType = "mixed" | "line" | "dot";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 const MAX_ZOOM = 13;
-const MIN_ZOOM = 6;
+const MIN_ZOOM = 3;
 const KEY_ROUTE_MAP_LINE = "route_map_line";
 
 export default function RouteMap(props: { chain: Chain; route: UID[] }) {
