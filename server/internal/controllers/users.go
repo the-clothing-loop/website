@@ -11,6 +11,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/views"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
@@ -459,6 +460,9 @@ UPDATE events SET user_id = (
 			c.String(http.StatusInternalServerError, "Unable to remove newsletter")
 			return
 		}
+
+		views.EmailAccountDeletedSuccessfully(db, user.I18n, user.Name, user.Email.String)
+
 		if app.Brevo != nil {
 			app.Brevo.DeleteContact(c.Request.Context(), user.Email.String)
 		}

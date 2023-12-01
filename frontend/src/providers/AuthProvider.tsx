@@ -73,6 +73,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     return (async () => {
       await apiLogout().catch((e) => console.warn(e));
       Cookies.remove(KEY_USER_UID, cookieOptions);
+      window.localStorage.removeItem("route_map_line");
       setUser(null);
       setLoading(false);
     })();

@@ -1,5 +1,5 @@
 (hsts) {
-	header Strict-Transport-Security "max-age=300; includeSubDomains"
+	header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
 }
 
 clothingloop.org, www.clothingloop.be, clothingloop.be {
