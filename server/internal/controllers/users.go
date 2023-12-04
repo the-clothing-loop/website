@@ -146,7 +146,7 @@ WHERE uc.chain_id = ? AND bi.id IS NOT NULL
 		`, chain.ID).Scan(&usersWithBulkyItems)
 
 		authUserRouteOrder := routeIndex(route, authUser.UID)
-		indexAllowed := calculateAllowedIndex(authUserRouteOrder, chain.RoutePrivacy, routeLength)
+		indexAllowed := calculateAllowedIndexes(authUserRouteOrder, chain.RoutePrivacy, routeLength)
 		// fmt.Printf("order len: %d\tallowed indexes: %+v\n", len(route), indexAllowed)
 
 		// fmt.Printf("auth order: %v\n", authUserRouteOrder)
@@ -615,7 +615,7 @@ func UserCheckIfEmailExists(c *gin.Context) {
 /*
 Allowed indexes depend on the route_privacy defined by the admin
 */
-func calculateAllowedIndex(authUserRouteOrder, routePrivacy, routeLength int) []int {
+func calculateAllowedIndexes(authUserRouteOrder, routePrivacy, routeLength int) []int {
 
 	indexAllowed := []int{}
 
@@ -627,7 +627,6 @@ func calculateAllowedIndex(authUserRouteOrder, routePrivacy, routeLength int) []
 		for i := 0; i < routeLength; i++ {
 			indexAllowed = append(indexAllowed, i)
 		}
-		fmt.Println("IIIIndexAllowed", indexAllowed)
 		return indexAllowed
 	}
 
@@ -651,7 +650,6 @@ func calculateAllowedIndex(authUserRouteOrder, routePrivacy, routeLength int) []
 			indexAllowed[i] = index % routeLength
 		}
 	}
-	fmt.Println("IIIIndexAllowed", indexAllowed)
 	return indexAllowed
 }
 
