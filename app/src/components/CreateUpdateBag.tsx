@@ -53,7 +53,7 @@ export default function CreateUpdateBag({
       let highestNumber = 0;
       {
         bags.forEach((bag) => {
-          let bagNumber = parseInt(bag.number);
+          let bagNumber = parseInt(bag.number.replace(/[^\d]/g, ""));
           if (!isNaN(bagNumber)) {
             if (bagNumber > highestNumber) {
               highestNumber = bagNumber;
@@ -63,7 +63,7 @@ export default function CreateUpdateBag({
         highestNumber++;
       }
 
-      setBagNumber(highestNumber + "");
+      setBagNumber(`${t("bag")} ${highestNumber}`);
     } else {
       setBagNumber(bag.number);
     }

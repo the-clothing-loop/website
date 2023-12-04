@@ -59,8 +59,8 @@ import dayjs from "../dayjs";
 import { Sleep } from "../utils/sleep";
 import { useLongPress } from "use-long-press";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
-import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
+import { Dayjs } from "dayjs";
 
 const MIN_BAG_LIST = 9;
 const MIN_USERS_FOR_SEARCH = 15;
@@ -282,8 +282,11 @@ export default function BagsList() {
                 let routeIndex = route.indexOf(user.uid);
                 if (routeIndex === -1) return null;
                 const bagUpdatedAt = dayjs(bag.updated_at);
-                const isBagTooOld = bagUpdatedAt.isBefore(
-                  dayjs().add(-7, "days"),
+                const { isBagTooOldMe, isBagTooOldHost } = BagTooOld(
+                  authUser,
+                  bag.user_uid,
+                  isChainAdmin,
+                  bagUpdatedAt,
                 );
 
                 return (
@@ -316,11 +319,11 @@ export default function BagsList() {
                       <div
                         key="old"
                         className={`tw-text-sm tw-block tw-absolute tw-top-[5px] tw-left-[10px] ${
-                          isBagTooOld ? "tw-text-danger" : ""
+                          isBagTooOldMe ? "tw-text-danger" : ""
                         }`}
                       >
                         {bagUpdatedAt.toDate().toLocaleDateString()}
-                        {isBagTooOld ? (
+                        {isBagTooOldMe || isBagTooOldHost ? (
                           <span className="tw-bg-danger tw-h-1.5 tw-w-1.5 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
                         ) : null}
                       </div>
@@ -352,8 +355,11 @@ export default function BagsList() {
                 let routeIndex = route.indexOf(user.uid);
                 if (routeIndex === -1) return null;
                 const bagUpdatedAt = dayjs(bag.updated_at);
-                const isBagTooOld = bagUpdatedAt.isBefore(
-                  dayjs().add(-7, "days"),
+                const { isBagTooOldMe, isBagTooOldHost } = BagTooOld(
+                  authUser,
+                  bag.user_uid,
+                  isChainAdmin,
+                  bagUpdatedAt,
                 );
                 let isOpen = openCard == bag.id;
                 return (
@@ -378,11 +384,13 @@ export default function BagsList() {
                           <span className="!tw-font-bold">{bag.number}</span>
                           <span
                             className={`tw-block tw-text-base tw-mt-[3px] ${
-                              isBagTooOld ? "tw-text-danger" : "tw-text-medium"
+                              isBagTooOldMe
+                                ? "tw-text-danger"
+                                : "tw-text-medium"
                             }`}
                           >
                             {bagUpdatedAt.toDate().toLocaleDateString()}
-                            {isBagTooOld ? (
+                            {isBagTooOldMe || isBagTooOldHost ? (
                               <span className="tw-bg-danger tw-h-1.5 tw-w-1.5 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
                             ) : null}
                           </span>
@@ -741,4 +749,17 @@ function UserLink({ user, routeIndex }: { user: User; routeIndex: number }) {
       ></IonIcon>
     </div>
   );
+}
+
+function BagTooOld(
+  authUser: User | null,
+  bagUserUID: string,
+  isChainAdmin: boolean,
+  bagUpdatedAt: Dayjs,
+) {
+  const isBagTooOld = bagUpdatedAt.isBefore(dayjs().add(-7, "days"));
+  const isBagTooOldMe = bagUserUID === authUser?.uid && isBagTooOld;
+  const isBagTooOldHost = isChainAdmin && isBagTooOld;
+
+  return { isBagTooOld, isBagTooOldMe, isBagTooOldHost };
 }
