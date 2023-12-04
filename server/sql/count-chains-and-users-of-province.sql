@@ -6,6 +6,12 @@ SELECT(
 ,(
 	SELECT COUNT(uc.id)
 	FROM chains AS c
+	LEFT JOIN user_chains AS uc ON uc.chain_id = c.id AND uc.is_chain_admin = TRUE
+	WHERE address LIKE CONCAT('%', 'North Holland', '%')
+) AS total_hosts;
+,(
+	SELECT COUNT(uc.id)
+	FROM chains AS c
 	LEFT JOIN user_chains AS uc ON uc.chain_id = c.id
 	WHERE address LIKE CONCAT('%', 'North Holland', '%')
 ) AS total_participants;
