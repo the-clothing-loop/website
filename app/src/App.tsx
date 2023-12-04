@@ -45,6 +45,8 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import "./theme/utilities.css";
 import "./theme/overrides.css";
+/* Theme changes for development */
+// import "./theme/dev.css";
 import { StoreContext } from "./Store";
 import { PropsWithChildren, useContext, useEffect, useMemo } from "react";
 
