@@ -48,7 +48,7 @@ import {
   lockClosedOutline,
   openOutline,
   shareOutline,
-  sparklesOutline,
+  sparkles,
   warningOutline,
 } from "ionicons/icons";
 import dayjs from "../dayjs";
@@ -302,7 +302,7 @@ export default function Settings() {
                       detail={false}
                     >
                       <IonLabel>{t("setLoopTheme")}</IonLabel>
-                      <IonIcon slot="end" icon={sparklesOutline} />
+                      <IonIcon slot="end" icon={sparkles} color="primary" />
                     </IonItem>
                     <Theme />
 
