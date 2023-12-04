@@ -26,6 +26,7 @@ import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
 import { Clipboard } from "@capacitor/clipboard";
 import "../tailwind.css";
+import OverlayPaused from "../components/OverlayPaused";
 
 export default function BulkyList() {
   const { t } = useTranslation();
@@ -152,6 +153,7 @@ export default function BulkyList() {
   console.log(chain?.theme);
   return (
     <IonPage>
+      <OverlayPaused />
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("bulkyItemsTitle")}</IonTitle>

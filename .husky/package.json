@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "postinstall": "npm run prepare",
+    "remove-husky": "git config --unset core.hooksPath",
+    "prepare": "cd .. && husky install"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3"
+  }
+}

@@ -1,0 +1,28 @@
+meta {
+  name: create
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base}}/v2/chain
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "New Chain from api",
+    "description": "loop from bruno",
+    "address": "Bruno v1",
+    "latitude": 8.9,
+    "longitude": 3.8,
+    "radius": 6,
+    "open_to_new_members": true,
+    "country_code": "nl",
+    "sizes": [
+      "A"
+    ],
+    "genders": []
+  }
+}

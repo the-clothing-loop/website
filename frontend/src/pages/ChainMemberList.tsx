@@ -23,6 +23,7 @@ import { AuthContext, AuthProps } from "../providers/AuthProvider";
 import { UserDataExport } from "../components/DataExport";
 import {
   chainAddUser,
+  chainDelete,
   chainDeleteUnapproved,
   chainGet,
   chainGetAll,
@@ -43,6 +44,8 @@ import useToClipboard from "../util/to-clipboard.hooks";
 import { bagGetAllByChain } from "../api/bag";
 import { Sleep } from "../util/sleep";
 import PopoverOnHover from "../components/Popover";
+import DOMPurify from "dompurify";
+import RouteMapPopup from "../components/RouteMap/RouteMapPopup";
 
 enum LoadingState {
   idle,
@@ -62,7 +65,7 @@ export default function ChainMemberList() {
   const history = useHistory();
   const { t } = useTranslation();
   const { chainUID } = useParams<Params>();
-  const { authUser } = useContext(AuthContext);
+  const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addToastError, addModal } = useContext(ToastContext);
 
   const [hostChains, setHostChains] = useState<Chain[]>([]);
@@ -71,8 +74,9 @@ export default function ChainMemberList() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [bags, setBags] = useState<Bag[] | null>(null);
   const [route, setRoute] = useState<UID[] | null>(null);
-  const [routeWasOptimized, setRouteWasOptimized] = useState<boolean>(false);
   const [previousRoute, setPreviousRoute] = useState<UID[] | null>(null);
+  const [changingPublishedAuto, setChangingPublishedAuto] = useState(false);
+  const [isOpenRouteMapPopup, setIsOpenRouteMapPopup] = useState(false);
 
   const [participantsSortBy, setParticipantsSortBy] =
     useState<ParticipantsSortBy>("date");
@@ -178,6 +182,38 @@ export default function ChainMemberList() {
     }
   }
 
+  function handleReasonLoopNotActive() {
+    if (!chain?.published) return;
+
+    let oldValueOpenToNewMembers = chain?.open_to_new_members || false;
+    let oldValuePublished = chain?.published || false;
+    setPublished(false);
+    setOpenToNewMembers(false);
+    const chainUpdateBody = {
+      uid: chainUID,
+      published: false,
+      open_to_new_members: false,
+    };
+    chainUpdate(chainUpdateBody)
+      .then(() => {
+        setChain((s) => ({
+          ...(s as Chain),
+          ...chainUpdateBody,
+        }));
+
+        setChangingPublishedAuto(true);
+        setTimeout(() => {
+          setChangingPublishedAuto(false);
+        }, 1500);
+      })
+      .catch((err: any) => {
+        console.error("Error updating chain: ", err);
+        setError(err?.data || `Error: ${JSON.stringify(err)}`);
+        setPublished(oldValuePublished);
+        setOpenToNewMembers(oldValueOpenToNewMembers);
+      });
+  }
+
   function onAddCoHost(e: FormEvent) {
     e.preventDefault();
     if (!chain) return;
@@ -265,27 +301,81 @@ export default function ChainMemberList() {
       });
   }
 
-  function optimizeRoute(chainUID: UID) {
-    routeOptimizeOrder(chainUID)
-      .then((res) => {
-        const optimal_path = res.data.optimal_path;
+  async function optimizeRoute(chainUID: UID) {
+    try {
+      const res = await routeOptimizeOrder(chainUID);
+      const optimal_path = res.data.optimal_path;
 
-        // saving current rooute before changing in the database
-        setPreviousRoute(route);
-        setRouteWasOptimized(true);
-        // set new order
-        routeSetOrder(chainUID, optimal_path);
-        setRoute(optimal_path);
-      })
-      .catch((err) => {
-        addToastError(GinParseErrors(t, err), err.status);
-      });
+      // saving current rooute before changing in the database
+      setPreviousRoute(route);
+      // set new order
+      routeSetOrder(chainUID, optimal_path);
+      setRoute(optimal_path);
+    } catch (err: any) {
+      addToastError(GinParseErrors(t, err), err?.status);
+      throw err;
+    }
   }
 
   function returnToPreviousRoute(chainUID: UID) {
     setRoute(previousRoute);
-    setRouteWasOptimized(false);
     routeSetOrder(chainUID, previousRoute!);
+  }
+
+  function handleClickDeleteLoop() {
+    addModal({
+      message: t("deleteLoop"),
+      content:
+        chain && users
+          ? () => {
+              let otherUsers = users.filter((u) => u.uid !== authUser?.uid);
+              return (
+                <>
+                  <p
+                    className="mb-2"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(
+                        t("areYouSureDeleteLoop", {
+                          chain: chain.name,
+                        })
+                      ),
+                    }}
+                  ></p>
+                  <ul
+                    className={`text-sm font-semibold mx-8 ${
+                      otherUsers.length > 1
+                        ? "list-disc"
+                        : "list-none text-center"
+                    }`}
+                  >
+                    {otherUsers.map((u) => (
+                      <li key={u.uid}>{u.name}</li>
+                    ))}
+                  </ul>
+                </>
+              );
+            }
+          : undefined,
+      actions: [
+        {
+          text: t("delete"),
+          type: "error",
+          fn: () => {
+            if (!chain) return;
+            chainDelete(chain.uid)
+              .then(() => {
+                authUserRefresh().then(() => {
+                  history.replace("/admin/dashboard");
+                });
+              })
+              .catch((e) => {
+                addToastError(GinParseErrors(t, e), e?.status);
+                throw e;
+              });
+          },
+        },
+      ],
+    });
   }
 
   useEffect(() => {
@@ -373,7 +463,7 @@ export default function ChainMemberList() {
   }
 
   if (!(chain && users && unapprovedUsers && route && bags)) {
-    console.log(chain, users, unapprovedUsers, route, bags);
+    // console.log(chain, users, unapprovedUsers, route, bags);
     return null;
   }
 
@@ -446,7 +536,11 @@ export default function ChainMemberList() {
 
               {isUserAdmin || authUser?.is_root_admin ? (
                 <>
-                  <div className="mt-4">
+                  <div
+                    className={`mt-4 ${
+                      changingPublishedAuto ? "bg-yellow/[.6]" : ""
+                    }`}
+                  >
                     <div className="form-control w-full">
                       <label className="cursor-pointer label">
                         <span className="label-text">{t("published")}</span>
@@ -479,9 +573,9 @@ export default function ChainMemberList() {
                     </div>
                   </div>
 
-                  <div className="text-center">
+                  <div className="flex flex-col md:flex-row justify-center pt-4 gap-4">
                     <Link
-                      className="btn btn-sm btn-secondary mt-4 w-full md:w-[120px]"
+                      className="btn btn-sm btn-secondary w-full md:w-auto"
                       to={`/loops/${chainUID}/edit`}
                     >
                       {t("editLoop")}
@@ -490,6 +584,18 @@ export default function ChainMemberList() {
                         aria-hidden
                       />
                     </Link>
+
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-error w-full md:w-auto"
+                      onClick={handleClickDeleteLoop}
+                    >
+                      {t("deleteLoop")}
+                      <span
+                        className="ltr:ml-2 rtl:mr-2 feather feather-trash"
+                        aria-hidden
+                      />
+                    </button>
                   </div>
                 </>
               ) : null}
@@ -507,6 +613,15 @@ export default function ChainMemberList() {
                 chain={chain}
                 refresh={refresh}
               />
+              {isOpenRouteMapPopup ? (
+                <RouteMapPopup
+                  chain={chain}
+                  route={route}
+                  closeFunc={() => setIsOpenRouteMapPopup(false)}
+                  optimizeRoute={() => optimizeRoute(chain.uid)}
+                  returnToPreviousRoute={() => returnToPreviousRoute(chain.uid)}
+                />
+              ) : null}
             </div>
           </section>
         </div>
@@ -586,26 +701,22 @@ export default function ChainMemberList() {
             </div>
             <div className="order-2 md:justify-self-end lg:order-3 sm:-ms-8 flex flex-col xs:flex-row items-center">
               {selectedTable === "route" ? (
-                !routeWasOptimized ? (
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-outline xs:me-4 mb-4 xs:mb-0"
-                    onClick={() => optimizeRoute(chain.uid)}
-                  >
-                    {t("routeOptimize")}
-                    <span className="feather feather-zap ms-3 text-primary" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-outline me-4"
-                    onClick={() => returnToPreviousRoute(chain.uid)}
-                  >
-                    {t("routeUndoOptimize")}
-
-                    <span className="feather feather-corner-left-up ms-3" />
-                  </button>
-                )
+                <button
+                  type="button"
+                  className={`btn hidden lg:inline-flex me-4 ${
+                    isOpenRouteMapPopup
+                      ? "btn-outline"
+                      : "btn-accent text-white"
+                  }`}
+                  onClick={() => setIsOpenRouteMapPopup(!isOpenRouteMapPopup)}
+                >
+                  {t("map")}
+                  <span
+                    className={`feather ${
+                      isOpenRouteMapPopup ? "feather-x" : "feather-map"
+                    } ms-3`}
+                  />
+                </button>
               ) : null}
 
               {selectedTable !== "unapproved" ? (
@@ -630,6 +741,7 @@ export default function ChainMemberList() {
               unapprovedUsers={unapprovedUsers}
               chain={chain}
               refresh={refresh}
+              onReasonLoopNotActive={handleReasonLoopNotActive}
             />
           ) : selectedTable === "participants" ? (
             <ParticipantsTable
@@ -762,6 +874,7 @@ function ApproveTable(props: {
   unapprovedUsers: User[];
   chain: Chain;
   refresh: () => Promise<void>;
+  onReasonLoopNotActive: () => void;
 }) {
   const { t, i18n } = useTranslation();
   const { addToastError, addModal } = useContext(ToastContext);
@@ -832,6 +945,14 @@ function ApproveTable(props: {
           type: "secondary",
           fn: () => {
             chainDeleteUnapprovedReason(UnapprovedReason.SIZES_GENDERS);
+          },
+        },
+        {
+          text: t("loopNotActive"),
+          type: "secondary",
+          fn: () => {
+            chainDeleteUnapprovedReason(UnapprovedReason.LOOP_NOT_ACTIVE);
+            props.onReasonLoopNotActive();
           },
         },
         {

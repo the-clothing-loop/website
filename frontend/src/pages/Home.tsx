@@ -1,15 +1,13 @@
-// Material
+import { useRef } from "react";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 
-// Project resources
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Testimonials from "../components/Testimonials";
 import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
 import useIntersectionObserver from "../components/Counters/hooks";
-import { useRef } from "react";
 
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
@@ -202,7 +200,7 @@ export default function Home() {
                   }`}
                 >
                   <img
-                    src="https://images.clothingloop.org/600x,jpeg/map_image_3.png"
+                    src="https://images.clothingloop.org/600x,jpeg/map_image_5.jpg"
                     alt="map"
                   />
                 </Link>

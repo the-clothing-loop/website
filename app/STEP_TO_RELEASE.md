@@ -15,8 +15,9 @@
    -> **Build Settings**
    -> **Versioning**
    -> **Marketing Version**
-5. Run app on mobile device, archive
-6. Open archives from **Window** => **Organizer**
+5. Run app on mobile device
+6. Archive the running app, from **Run** => **Archive**
+7. Open archives from **Window** => **Organizer**
 
 `**Google Play Store**
 

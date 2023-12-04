@@ -260,7 +260,7 @@ func EmailContactReceived(db *gorm.DB,
 		"Name":    name,
 		"Email":   email,
 		"Message": message,
-	})
+	}, name)
 	if err != nil {
 		return err
 	}
@@ -317,15 +317,21 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB,
 	email,
 	token string,
 	isApp bool,
+	chainUID string,
 ) error {
 	i18n := getI18nGin(c)
 	m := app.MailCreate()
 	m.ToName = name
 	m.ToAddress = email
+	// This is a hack to add the chain param to the url
+	// Changing this in the template would be more work in combination with Crowdin
+	if chainUID != "" {
+		token += "&c=" + chainUID
+	}
 	err := emailGenerateMessage(m, i18n, "login_verification", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
-		"Token":   token,
+		"Token":   template.URL(token),
 		"IsApp":   isApp,
 	})
 	if err != nil {
@@ -536,7 +542,7 @@ func EmailYouSignedUpForLoop(db *gorm.DB, lng,
 	err := emailGenerateMessage(m, lng, "you_signed_up_for_loop", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
-	})
+	}, chainName)
 	if err != nil {
 		return err
 	}

@@ -11,6 +11,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/views"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
@@ -383,15 +384,7 @@ HAVING COUNT(uc.id) = 1
 		c.String(http.StatusInternalServerError, "Unable to disconnect bag connections")
 		return
 	}
-	err = tx.Exec(`DELETE FROM bags WHERE user_chain_id IN (
-		SELECT id FROM user_chains WHERE user_id = ?
-	)`, user.ID).Error
-	if err != nil {
-		tx.Rollback()
-		goscope.Log.Errorf("UserPurge: %v", err)
-		c.String(http.StatusInternalServerError, "Unable to disconnect user bag connections")
-		return
-	}
+
 	err = tx.Exec(`
 UPDATE events SET user_id = (
 	SELECT id FROM users WHERE is_root_admin = 1 LIMIT 1
@@ -467,6 +460,9 @@ UPDATE events SET user_id = (
 			c.String(http.StatusInternalServerError, "Unable to remove newsletter")
 			return
 		}
+
+		views.EmailAccountDeletedSuccessfully(db, user.I18n, user.Name, user.Email.String)
+
 		if app.Brevo != nil {
 			app.Brevo.DeleteContact(c.Request.Context(), user.Email.String)
 		}
@@ -523,11 +519,12 @@ func UserTransferChain(c *gin.Context) {
 		ToUserChainIDExists null.Int `gorm:"to_user_chain_exists"`
 	}
 	row := tx.Raw(`
-	SELECT u.id as user_id, uc.chain_id as from_chain_id, c2.id as to_chain_id, (
-		SELECT uc_dest.id FROM user_chains AS uc_dest WHERE uc_dest.chain_id = c2.id AND uc_dest.user_id = u.id
-		) as to_user_chain_exists
-		FROM users AS u
-		JOIN user_chains AS uc ON uc.user_id = u.id AND uc.chain_id = ?
+SELECT u.id as user_id, uc.chain_id as from_chain_id, c2.id as to_chain_id, (
+	SELECT uc_dest.id FROM user_chains AS uc_dest
+	WHERE uc_dest.chain_id = c2.id AND uc_dest.user_id = u.id
+) as to_user_chain_exists
+FROM users AS u
+JOIN user_chains AS uc ON uc.user_id = u.id AND uc.chain_id = ?
 JOIN chains AS c2 ON c2.uid = ?
 WHERE u.uid = ?
 LIMIT 1
@@ -566,7 +563,7 @@ LIMIT 1
 				handleError(tx, err)
 				return
 			}
-			err = tx.Exec(`DELETE FROM user_chains WHERE where user_id = ? AND chain_id = ?`, result.UserID, result.FromChainID).Error
+			err = tx.Exec(`DELETE FROM user_chains WHERE user_id = ? AND chain_id = ?`, result.UserID, result.FromChainID).Error
 			if err != nil {
 				handleError(tx, err)
 				return
@@ -617,4 +614,23 @@ func routeIndex(route []string, userUID string) int {
 		}
 	}
 	return -1
+}
+
+func UserCheckIfEmailExists(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		Email string `form:"email" binding:"required,email"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	_, found, err := models.UserCheckEmail(db, query.Email)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Error Checking user email")
+		return
+	}
+	c.JSON(200, found)
 }

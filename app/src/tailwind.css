@@ -75,4 +75,15 @@
   }
 
 
+
+  .tw-bg-paused {
+    background: rgb(255, 213, 52);
+    background: repeating-linear-gradient(
+      60deg,
+      transparent,
+      transparent 20px,
+      rgba(255, 213, 52, 1) 20px,
+      rgba(255, 213, 52, 1) 40px
+    );
+  }
 }

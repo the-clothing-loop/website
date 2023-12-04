@@ -1,0 +1,21 @@
+meta {
+  name: newsletter status
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{base}}/v2/user/newsletter?user_uid={{userUID}}
+  body: json
+  auth: none
+}
+
+query {
+  user_uid: {{userUID}}
+}
+
+body:json {
+  {
+      "user_uid": "{{userUID}}",
+  }
+}

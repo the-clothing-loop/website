@@ -26,6 +26,10 @@ export function chainUpdate(chain: ChainUpdateBody) {
   return window.axios.patch<never>("/v2/chain", chain);
 }
 
+export function chainDelete(chainUID: UID) {
+  return window.axios.delete<never>(`/v2/chain?chain_uid=${chainUID}`);
+}
+
 export function chainAddUser(
   chainUID: UID,
   userUID: UID,
@@ -56,6 +60,7 @@ export enum UnapprovedReason {
   OTHER = "other",
   TOO_FAR_AWAY = "too_far_away",
   SIZES_GENDERS = "sizes_genders",
+  LOOP_NOT_ACTIVE = "loop_not_active",
 }
 
 export function chainDeleteUnapproved(

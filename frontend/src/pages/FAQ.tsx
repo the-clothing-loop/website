@@ -1,3 +1,4 @@
+import { TFunction } from "i18next";
 import { useState, MouseEvent, useEffect, useMemo } from "react";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
@@ -7,7 +8,7 @@ interface AccordionFaqTranslation {
   answer: string;
 }
 
-const ARR_PARTICIPANT_KEYS = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
+const ARR_PARTICIPANT_KEYS = ["0", "1", "2", "3", "4", "5", "6", "7"];
 const ARR_HOST_KEYS = [
   "0",
   "1",
@@ -20,12 +21,23 @@ const ARR_HOST_KEYS = [
   "7",
   "7_5",
   "8",
+  "8_5",
   "9",
   "10",
   "11",
   "12",
   "13",
 ];
+const ARR_APP_KEYS = ["0", "1", "2", "3", "4", "5", "6", "7"];
+
+function ObjToArrFaqI18n(t: TFunction, i18nKey: string, keys: string[]) {
+  let obj = t(i18nKey, {
+    returnObjects: true,
+    defaultValue: {},
+  }) as Record<string, AccordionFaqTranslation>;
+
+  return keys.map((k) => obj[k]).filter((v) => !!v);
+}
 
 export default function FAQ() {
   const { t, i18n } = useTranslation("faq");
@@ -38,24 +50,16 @@ export default function FAQ() {
     });
   }, []);
 
-  const [arrParticipants, arrHosts] = useMemo<
-    [AccordionFaqTranslation[], AccordionFaqTranslation[]]
-  >(() => {
-    let objHosts = t("arrHosts", {
-      returnObjects: true,
-      defaultValue: {},
-    }) as Record<string, AccordionFaqTranslation>;
-    let objParticipants = t("arrParticipants", {
-      returnObjects: true,
-      defaultValue: {},
-    }) as Record<string, AccordionFaqTranslation>;
+  const [arrParticipants, arrHosts, arrApp] = useMemo(() => {
+    let arrHosts = ObjToArrFaqI18n(t, "arrHosts", ARR_HOST_KEYS);
+    let arrParticipants = ObjToArrFaqI18n(
+      t,
+      "arrParticipants",
+      ARR_PARTICIPANT_KEYS
+    );
+    let arrApp = ObjToArrFaqI18n(t, "arrApp", ARR_APP_KEYS);
 
-    let arrParticipants = ARR_PARTICIPANT_KEYS.map(
-      (key) => objParticipants[key]
-    ).filter((v) => !!v);
-    let arrHosts = ARR_HOST_KEYS.map((key) => objHosts[key]).filter((v) => !!v);
-
-    return [arrParticipants, arrHosts];
+    return [arrParticipants, arrHosts, arrApp];
   }, [i18n.language]);
 
   return (
@@ -66,22 +70,24 @@ export default function FAQ() {
       </Helmet>
 
       <main className="container mx-auto px-3 md:px-20 pt-10">
-        <div className="flex flex-col md:flex-row">
-          <div className="w-full md:w-1/2 md:pr-5 rtl:md:pr-0 rtl:md:pl-5">
-            <div className="mb-6">
-              <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
-                {t("faqForParticipants")}
-              </h1>
-              <AccordionFaqs arr={arrParticipants} initialOpen={0} />
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="mb-6">
+            <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
+              {t("faqForParticipants")}
+            </h1>
+            <AccordionFaqs arr={arrParticipants} initialOpen={0} />
           </div>
-          <div className="w-full md:w-1/2 md:pl-5 rtl:md:pl-0 rtl:md:pr-5">
-            <div className="mb-6">
-              <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
-                {t("faqForHosts")}
-              </h1>
-              <AccordionFaqs arr={arrHosts} />
-            </div>
+          <div className="mb-6">
+            <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
+              {t("faqForHosts")}
+            </h1>
+            <AccordionFaqs arr={arrHosts} />
+          </div>
+          <div className="mb-6">
+            <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
+              {t("faqForApp")}
+            </h1>
+            <AccordionFaqs arr={arrApp} />
           </div>
         </div>
       </main>

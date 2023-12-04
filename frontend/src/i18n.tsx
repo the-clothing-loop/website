@@ -18,8 +18,8 @@ i18n
     fallbackLng: "en",
     debug: false,
     detection: {
-      order: ["path", "cookie"],
-      caches: ["cookie"],
+      order: ["localStorage", "navigator", "path", "cookie"],
+      caches: ["localStorage"],
     },
     interpolation: {
       escapeValue: false,

@@ -2,9 +2,10 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/OneSignal/onesignal-go-api"
 	"net/http"
 	"time"
+
+	"github.com/OneSignal/onesignal-go-api"
 
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -76,7 +77,7 @@ func BagPut(c *gin.Context) {
 		return
 	}
 
-	ok, _, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, body.ChainUID)
+	ok, authUser, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, body.ChainUID)
 	if !ok {
 		return
 	}
@@ -90,6 +91,18 @@ func BagPut(c *gin.Context) {
 	LIMIT 1
 		`, body.BagID, chain.ID).Scan(&bag)
 	}
+
+	// if authUser is not host user can only set the bag holder
+	_, isChainAdmin := authUser.IsPartOfChain(chain.UID)
+	if !isChainAdmin {
+		isAllowed := bag.ID != 0 && body.Number == nil && body.Color == nil
+		if !isAllowed {
+			c.AbortWithError(401, fmt.Errorf("As participant you are not allowed to change the bag colour or name"))
+			return
+		}
+	}
+
+	// set default values
 	if body.Number != nil {
 		bag.Number = *(body.Number)
 	}
@@ -153,7 +166,7 @@ func BagRemove(c *gin.Context) {
 		return
 	}
 
-	ok, _, _, chain := auth.AuthenticateUserOfChain(c, db, query.ChainUID, query.UserUID)
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
 	if !ok {
 		return
 	}
