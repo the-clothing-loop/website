@@ -146,21 +146,7 @@ WHERE uc.chain_id = ? AND bi.id IS NOT NULL
 		`, chain.ID).Scan(&usersWithBulkyItems)
 
 		authUserRouteOrder := routeIndex(route, authUser.UID)
-		indexAllowed := [5]int{
-			authUserRouteOrder - 2,
-			authUserRouteOrder - 1,
-			authUserRouteOrder,
-			authUserRouteOrder + 1,
-			authUserRouteOrder + 2,
-		}
-		// ensure that the index overflows to the end or beginning
-		for i, index := range indexAllowed {
-			if index < 0 {
-				indexAllowed[i] = (index % routeLength) + routeLength
-			} else if index >= routeLength {
-				indexAllowed[i] = index % routeLength
-			}
-		}
+		indexAllowed := calculateAllowedIndex(authUserRouteOrder, chain.RoutePrivacy, routeLength)
 		// fmt.Printf("order len: %d\tallowed indexes: %+v\n", len(route), indexAllowed)
 
 		// fmt.Printf("auth order: %v\n", authUserRouteOrder)
@@ -607,15 +593,6 @@ LIMIT 1
 	}
 }
 
-func routeIndex(route []string, userUID string) int {
-	for i, uid := range route {
-		if uid == userUID {
-			return i
-		}
-	}
-	return -1
-}
-
 func UserCheckIfEmailExists(c *gin.Context) {
 	db := getDB(c)
 
@@ -633,4 +610,56 @@ func UserCheckIfEmailExists(c *gin.Context) {
 		return
 	}
 	c.JSON(200, found)
+}
+
+/*
+Allowed indexes depend on the route_privacy defined by the admin
+*/
+func calculateAllowedIndex(authUserRouteOrder, routePrivacy, routeLength int) []int {
+
+	indexAllowed := []int{}
+
+	if routePrivacy == 0 {
+		return []int{} // none
+	}
+
+	if routePrivacy == -1 || routePrivacy*2 > routeLength {
+		for i := 0; i < routeLength; i++ {
+			indexAllowed = append(indexAllowed, i)
+		}
+		fmt.Println("IIIIndexAllowed", indexAllowed)
+		return indexAllowed
+	}
+
+	i := routePrivacy
+	for i > 0 {
+		indexAllowed = append(indexAllowed, authUserRouteOrder-i)
+		i--
+	}
+	indexAllowed = append(indexAllowed, authUserRouteOrder)
+	i = 1
+	for i <= routePrivacy {
+		indexAllowed = append(indexAllowed, authUserRouteOrder+i)
+		i++
+	}
+
+	// ensure that the index overflows to the end or beginning
+	for i, index := range indexAllowed {
+		if index < 0 {
+			indexAllowed[i] = (index % routeLength) + routeLength
+		} else if index >= routeLength {
+			indexAllowed[i] = index % routeLength
+		}
+	}
+	fmt.Println("IIIIndexAllowed", indexAllowed)
+	return indexAllowed
+}
+
+func routeIndex(route []string, userUID string) int {
+	for i, uid := range route {
+		if uid == userUID {
+			return i
+		}
+	}
+	return -1
 }
