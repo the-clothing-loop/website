@@ -83,6 +83,7 @@ export default function ChainMemberList() {
   const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
+  const [isAppDisabled, setIsAppDisabled] = useState(false);
   const [error, setError] = useState("");
   const [selectedTable, setSelectedTable] = useState<SelectedTable>("route");
   const refSelectAddCoHost: any = useRef<HTMLSelectElement>();
@@ -179,6 +180,25 @@ export default function ChainMemberList() {
       setError(err?.data || `Error: ${JSON.stringify(err)}`);
       setOpenToNewMembers(oldValue);
       setPublished(oldValuePublished);
+    }
+  }
+
+  async function handleChangeIsAppDisabled(e: ChangeEvent<HTMLInputElement>) {
+    let isChecked = e.target.checked;
+    let oldValue = chain?.is_app_disabled || false;
+
+    setIsAppDisabled(isChecked);
+
+    try {
+      await chainUpdate({ uid: chainUID, is_app_disabled: isChecked });
+      setChain((s) => ({
+        ...(s as Chain),
+        is_app_disabled: isChecked,
+      }));
+    } catch (err: any) {
+      console.error("Error updating chain:", err);
+      setError(err?.data || `Error: ${JSON.stringify(err)}`);
+      setIsAppDisabled(oldValue);
     }
   }
 
@@ -427,7 +447,7 @@ export default function ChainMemberList() {
       setHostChains(_hostChains.sort((a, b) => a.name.localeCompare(b.name)));
 
       const [chainData, chainUsers, routeData, bagData] = await Promise.all([
-        chainGet(chainUID),
+        chainGet(chainUID, true, true),
         userGetAllByChain(chainUID),
         routeGetOrder(chainUID),
         bagGetAll,
@@ -449,6 +469,7 @@ export default function ChainMemberList() {
         setSelectedTable("unapproved");
       setPublished(chainData.data.published);
       setOpenToNewMembers(chainData.data.open_to_new_members);
+      setIsAppDisabled(chainData.data?.is_app_disabled || false);
     } catch (err: any) {
       if (Array.isArray(err)) err = err[0];
       if (err?.status === 401) {
@@ -568,6 +589,22 @@ export default function ChainMemberList() {
                           name="openToNewMembers"
                           checked={openToNewMembers}
                           onChange={handleChangeOpenToNewMembers}
+                        />
+                      </label>
+                    </div>
+                    <div className="form-control w-full">
+                      <label className="cursor-pointer label">
+                        <span className="label-text">
+                          {t("disableMyClothingLoopApp")}
+                        </span>
+                        <input
+                          type="checkbox"
+                          className={`checkbox checkbox-x checkbox-secondary checked:checkbox-error ${
+                            error === "isAppDisabled" ? "border-error" : ""
+                          }`}
+                          name="isAppDisabled"
+                          checked={isAppDisabled}
+                          onChange={handleChangeIsAppDisabled}
                         />
                       </label>
                     </div>

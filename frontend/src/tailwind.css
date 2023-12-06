@@ -24,6 +24,46 @@
     -moz-text-stroke: 1.5px hsla(var(--b1));
   }
 
+  .checkbox.checkbox-x:checked,
+  .checkbox.checkbox-x[aria-checked="true"],
+  .checkbox.checkbox-x[checked="true"] {
+    background-image: linear-gradient(
+        45deg,
+        hsl(var(--chkbg)) 21%,
+        transparent 21.99%,
+        transparent 78.99%,
+        hsl(var(--chkbg)) 79%
+      ),
+      linear-gradient(
+        -45deg,
+        hsl(var(--chkbg)) 21%,
+        transparent 21.99%,
+        transparent 43%,
+        hsl(var(--chkfg)) 43.99%,
+        hsl(var(--chkfg)) 57%,
+        transparent 57.99%,
+        transparent 78.99%,
+        hsl(var(--chkbg)) 79%
+      ),
+      linear-gradient(
+        45deg,
+        hsl(var(--chkbg)) 43%,
+        hsl(var(--chkfg)) 43%,
+        hsl(var(--chkfg)) 57%,
+        hsl(var(--chkbg)) 57%
+      );
+    /* minus */
+    /* background-color: (90deg, transparent 80%, hsl(var(--chkbg)) 80%),
+      linear-gradient(-90deg, transparent 80%, hsl(var(--chkbg)) 80%),
+      linear-gradient(
+        0deg,
+        hsl(var(--chkbg)) 43%,
+        hsl(var(--chkfg)) 43%,
+        hsl(var(--chkfg)) 57%,
+        hsl(var(--chkbg)) 57%
+      ); */
+  }
+
   .bg-instagram {
     background: rgb(224, 13, 171);
     background: -webkit-radial-gradient(
