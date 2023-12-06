@@ -46,7 +46,12 @@ export default function ChainsList({ chains, setChains }: Props) {
       try {
         let _chains: Chain[];
         if (authUser.is_root_admin) {
-          _chains = (await chainGetAll({ filter_out_unpublished: false })).data;
+          _chains = (
+            await chainGetAll({
+              filter_out_unpublished: false,
+              add_rules: true,
+            })
+          ).data;
         } else {
           let data = await Promise.all(
             authUser.chains.map((uc) => chainGet(uc.chain_uid, true))
@@ -137,6 +142,9 @@ export default function ChainsList({ chains, setChains }: Props) {
               <th align="left" className="max-xs:hidden">
                 {t("location")}
               </th>
+              <th align="right" className="max-xs:hidden">
+                {t("members")}
+              </th>
               <th align="center" className="max-xs:hidden">
                 {t("status")}
               </th>
@@ -174,6 +182,12 @@ export default function ChainsList({ chains, setChains }: Props) {
                       className="whitespace-normal max-xs:hidden"
                     >
                       {chain.address}
+                    </td>
+                    <td
+                      align="right"
+                      className="whitespace-normal max-xs:hidden"
+                    >
+                      {chain.total_members}
                     </td>
                     <td align="center" className="max-xs:hidden">
                       {userChain?.is_approved ||

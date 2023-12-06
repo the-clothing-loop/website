@@ -146,6 +146,7 @@ func ChainGetAll(c *gin.Context) {
 		FilterSizes     []string `form:"filter_sizes"`
 		FilterGenders   []string `form:"filter_genders"`
 		FilterPublished bool     `form:"filter_out_unpublished"`
+		AddTotals       bool     `form:"add_totals"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
 		c.String(http.StatusBadRequest, err.Error())
@@ -161,10 +162,29 @@ func ChainGetAll(c *gin.Context) {
 		return
 	}
 
-	chains := []models.Chain{}
-	sql := "SELECT * FROM chains"
+	chains := []struct {
+		models.Chain
+		TotalMembers int `gorm:"total_members"`
+		TotalHosts   int `gorm:"total_hosts"`
+	}{}
+	sql := "SELECT chains.*"
 	whereOrSql := []string{}
 	args := []any{}
+
+	if query.AddTotals {
+		sql = fmt.Sprintf(`%s, 
+(
+	SELECT COUNT(uc1.id) FROM user_chains AS uc1
+	WHERE uc1.chain_id = chains.id AND uc1.is_approved = TRUE
+) AS total_members,
+(
+	SELECT COUNT(uc2.id)
+	FROM user_chains AS uc2
+	WHERE uc2.chain_id = chains.id AND uc1.is_approved = TRUE AND uc2.is_chain_admin = TRUE
+) AS total_hosts
+		`, sql)
+	}
+	sql = fmt.Sprintf(`%s FROM chains`, sql)
 
 	// filter sizes and genders
 	isGendersEmpty := len(query.FilterGenders) == 0
@@ -213,6 +233,8 @@ func ChainGetAll(c *gin.Context) {
 			"genders":             chain.Genders,
 			"published":           chain.Published,
 			"open_to_new_members": chain.OpenToNewMembers,
+			"total_members":       chain.TotalMembers,
+			"total_hosts":         chain.TotalHosts,
 		})
 	}
 
