@@ -318,6 +318,7 @@ func ChainUpdate(c *gin.Context) {
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 		Theme            *string   `json:"theme,omitempty"`
+		IsAppDisabled    *bool     `json:"is_app_disabled,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -383,6 +384,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Theme != nil {
 		valuesToUpdate["theme"] = *(body.Theme)
+	}
+	if body.IsAppDisabled != nil {
+		valuesToUpdate["is_app_disabled"] = *(body.IsAppDisabled)
 	}
 	err := db.Model(chain).Updates(valuesToUpdate).Error
 	if err != nil {
