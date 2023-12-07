@@ -187,7 +187,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                       align="right"
                       className="whitespace-normal max-xs:hidden"
                     >
-                      {chain.total_members}
+                      {userChain?.is_approved ? chain.total_members : "-"}
                     </td>
                     <td align="center" className="max-xs:hidden">
                       {userChain?.is_approved ||
