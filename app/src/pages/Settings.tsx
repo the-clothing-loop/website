@@ -40,12 +40,15 @@ import UserCard from "../components/UserCard";
 import toastError from "../../toastError";
 import { Trans, useTranslation } from "react-i18next";
 import {
+  alertCircleOutline,
   compassOutline,
   copyOutline,
   ellipsisHorizontal,
   eyeOffOutline,
   eyeOutline,
   lockClosedOutline,
+  logoAndroid,
+  logoApple,
   openOutline,
   shareOutline,
   sparkles,
@@ -77,6 +80,7 @@ export default function Settings() {
   const refSelectPauseExpiryModal = useRef<HTMLIonModalElement>(null);
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
+  const [isIos] = useState(isPlatform("ios"));
   const [expandedDescription, setExpandedDescription] = useState(false);
   useEffect(() => {
     if (!chain && authUser) {
@@ -263,10 +267,27 @@ export default function Settings() {
                     })}
                   </IonSelect>
                 </IonItem>
+                {chain && chain.is_app_disabled ? (
+                  <IonItem lines="none" color="danger">
+                    <IonIcon
+                      size="small"
+                      icon={isIos ? logoApple : logoAndroid}
+                    />
+                    <span className="ion-margin-end tw-ms-1.5">
+                      {t("loopIsNotUsingThisApp")}
+                    </span>
+                  </IonItem>
+                ) : null}
                 {chain && (!chain.open_to_new_members || !chain.published) ? (
                   <IonItem
                     lines="none"
-                    color={chain.published ? "warning" : "danger"}
+                    color={
+                      chain.published
+                        ? "warning"
+                        : chain.is_app_disabled
+                        ? "medium"
+                        : "danger"
+                    }
                   >
                     {!chain.open_to_new_members ? (
                       <>
