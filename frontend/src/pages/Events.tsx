@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 import { useState, useContext, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 
 import { Event } from "../api/types";
@@ -277,11 +277,15 @@ export default function Events() {
               {nMorePrevEvents ? (
                 <div className="flex justify-center">
                   <h4 className="font-semibold text-black/90 px-3 my-6">
-                    <span className="text-4xl text-accent">
-                      {nMorePrevEvents}
-                    </span>{" "}
-                    more events
-                    <br /> previously entered
+                    <Trans
+                      i18nKey="nMoreEventsPrev"
+                      values={{
+                        n: nMorePrevEvents,
+                      }}
+                      components={{
+                        s: <span className="text-4xl text-accent" />,
+                      }}
+                    />
                   </h4>
                 </div>
               ) : null}
