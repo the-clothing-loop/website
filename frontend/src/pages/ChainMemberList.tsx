@@ -595,7 +595,9 @@ export default function ChainMemberList() {
                     <div className="form-control w-full">
                       <label className="cursor-pointer label">
                         <span className="label-text">
-                          {t("disableMyClothingLoopApp")}
+                          {isAppDisabled
+                            ? t("myClothingLoopDisabled")
+                            : t("myClothingLoopEnabled")}
                         </span>
                         <input
                           type="checkbox"
