@@ -180,7 +180,7 @@ func ChainGetAll(c *gin.Context) {
 (
 	SELECT COUNT(uc2.id)
 	FROM user_chains AS uc2
-	WHERE uc2.chain_id = chains.id AND uc1.is_approved = TRUE AND uc2.is_chain_admin = TRUE
+	WHERE uc2.chain_id = chains.id AND uc2.is_approved = TRUE AND uc2.is_chain_admin = TRUE
 ) AS total_hosts
 		`, sql)
 	}
