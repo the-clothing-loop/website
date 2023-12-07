@@ -5,6 +5,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"gorm.io/gorm"
+	"strconv"
 )
 
 func SendElapsedNotifications(db *gorm.DB) error {
@@ -15,7 +16,7 @@ func SendElapsedNotifications(db *gorm.DB) error {
 	for _, notification := range notifications {
 		sendErr := app.OneSignalCreateNotification(
 			db,
-			[]string{string(notification.UserID)},
+			[]string{strconv.FormatUint(uint64(notification.UserID), 10)},
 			*views.Notifications[notification.Title],
 			*views.Notifications[notification.Content],
 		)
