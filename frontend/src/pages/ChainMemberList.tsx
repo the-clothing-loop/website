@@ -183,17 +183,17 @@ export default function ChainMemberList() {
     }
   }
 
-  async function handleChangeIsAppDisabled(e: ChangeEvent<HTMLInputElement>) {
-    let isChecked = e.target.checked;
+  async function handleChangeIsAppEnabled(e: ChangeEvent<HTMLInputElement>) {
+    let isEnabled = e.target.checked;
     let oldValue = chain?.is_app_disabled || false;
 
-    setIsAppDisabled(isChecked);
+    setIsAppDisabled(!isEnabled);
 
     try {
-      await chainUpdate({ uid: chainUID, is_app_disabled: isChecked });
+      await chainUpdate({ uid: chainUID, is_app_disabled: !isEnabled });
       setChain((s) => ({
         ...(s as Chain),
-        is_app_disabled: isChecked,
+        is_app_disabled: !isEnabled,
       }));
     } catch (err: any) {
       console.error("Error updating chain:", err);
@@ -599,12 +599,12 @@ export default function ChainMemberList() {
                         </span>
                         <input
                           type="checkbox"
-                          className={`checkbox checkbox-x checkbox-secondary checked:checkbox-error ${
+                          className={`checkbox checkbox-x checked:checkbox-secondary checkbox-error ${
                             error === "isAppDisabled" ? "border-error" : ""
                           }`}
-                          name="isAppDisabled"
-                          checked={isAppDisabled}
-                          onChange={handleChangeIsAppDisabled}
+                          name="isAppEnabled"
+                          checked={!isAppDisabled}
+                          onChange={handleChangeIsAppEnabled}
                         />
                       </label>
                     </div>

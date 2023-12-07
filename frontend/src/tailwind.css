@@ -24,9 +24,7 @@
     -moz-text-stroke: 1.5px hsla(var(--b1));
   }
 
-  .checkbox.checkbox-x:checked,
-  .checkbox.checkbox-x[aria-checked="true"],
-  .checkbox.checkbox-x[checked="true"] {
+  .checkbox-x {
     background-image: linear-gradient(
         45deg,
         hsl(var(--chkbg)) 21%,
