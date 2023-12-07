@@ -599,7 +599,7 @@ export default function ChainMemberList() {
                         </span>
                         <input
                           type="checkbox"
-                          className={`checkbox checkbox-x checked:checkbox-secondary checkbox-error ${
+                          className={`checkbox checkbox-secondary ${
                             error === "isAppDisabled" ? "border-error" : ""
                           }`}
                           name="isAppEnabled"
