@@ -83,7 +83,7 @@ export default function FAQ() {
             </h1>
             <AccordionFaqs arr={arrHosts} />
           </div>
-          <div className="mb-6">
+          <div className="mb-6 md:mt-[-300px]">
             <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
               {t("faqForApp")}
             </h1>
