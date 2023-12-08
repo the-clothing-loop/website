@@ -510,7 +510,7 @@ function Card({
       {open ? (
         <div
           key="options"
-          className="tw-absolute tw-inset-0 tw-bg-[#ffffffa0] tw-flex tw-flex-col tw-justify-center tw-items-center tw-z-10"
+          className="tw-absolute tw-inset-0 tw-bg-[#ffffffa0] dark:tw-bg-[#000000a0] tw-flex tw-flex-col tw-justify-center tw-items-center tw-z-10"
         >
           <IonButton
             size="small"
