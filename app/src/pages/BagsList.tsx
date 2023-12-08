@@ -324,7 +324,7 @@ export default function BagsList() {
                       >
                         {bagUpdatedAt.toDate().toLocaleDateString()}
                         {isBagTooOldMe || isBagTooOldHost ? (
-                          <span className="tw-bg-danger tw-h-1.5 tw-w-1.5 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
+                          <span className="tw-bg-danger tw-h-2 tw-w-2 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
                         ) : null}
                       </div>
                       <div
@@ -391,7 +391,7 @@ export default function BagsList() {
                           >
                             {bagUpdatedAt.toDate().toLocaleDateString()}
                             {isBagTooOldMe || isBagTooOldHost ? (
-                              <span className="tw-bg-danger tw-h-1.5 tw-w-1.5 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
+                              <span className="tw-bg-danger tw-h-2 tw-w-2 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
                             ) : null}
                           </span>
                         </div>
