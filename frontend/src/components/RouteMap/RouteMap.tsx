@@ -165,7 +165,7 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
       <div className="flex flex-col absolute z-30 bottom-8 right-2.5 rtl:right-auto rtl:left-2.5">
         <button
           type="button"
-          className={`no-animation btn btn-sm mb-4 p-0 w-8 h-8 glass bg-orange/60 hover:bg-orange/90 btn-outline`}
+          className={`no-animation btn btn-sm mb-4 p-0 w-8 h-8 glass bg-purple-light/80 hover:bg-purple-light btn-outline`}
           onClick={() => handleNextLineType()}
         >
           <span
