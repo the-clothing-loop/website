@@ -184,7 +184,7 @@ export default function CreateUpdateBag({
           <IonItem lines="none">
             <IonLabel>
               {t("bagColor")}
-              <div className="ion-text-center ion-text-wrap">
+              <div className="tw-grid tw-grid-cols-[repeat(auto-fill,75px)] tw-justify-center">
                 {bagColors.map((c) => {
                   const selected = c === bagColor;
                   return (
