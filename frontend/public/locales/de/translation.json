@@ -260,6 +260,7 @@
   "other": "Anderes",
   "events": "Events",
   "previousEvents": "Previous Events",
+  "nMoreEventsPrev": "<s>{{ n }}</s> more events<br/>previously posted",
   "allEvents": "All Events",
   "eventName": "Event name",
   "sorryNoEvents": "Sorry, there are no events that match these filters.",

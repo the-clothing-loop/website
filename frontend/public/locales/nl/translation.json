@@ -260,6 +260,7 @@
   "other": "Overig",
   "events": "Agenda",
   "previousEvents": "Eerdere evenementen",
+  "nMoreEventsPrev": "<s>{{ n }}</s> more events<br/>previously posted",
   "allEvents": "Alle gebeurtenissen",
   "eventName": "Titel",
   "sorryNoEvents": "Sorry, er zijn geen gebeurtenissen die overeenkomen met deze filters.",
