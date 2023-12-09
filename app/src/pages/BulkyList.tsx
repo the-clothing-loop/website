@@ -281,12 +281,12 @@ export default function BulkyList() {
                 </IonItem>
               </IonCardContent>
 
-              <IonButtons className="tw-flex tw-justify-between ion-margin-bottom ion-margin-horizontal ">
+              <IonButtons className="tw-flex ion-margin-bottom ion-margin-horizontal ">
                 {isMe || isChainAdmin ? (
                   <>
                     <IonButton
                       fill="clear"
-                      className="tw-font-bold"
+                      className="tw-font-bold tw-w-1/3"
                       onClick={() => handleClickEdit(bulkyItem)}
                     >
                       {t("edit")}
@@ -294,7 +294,7 @@ export default function BulkyList() {
                     <IonButton
                       fill="clear"
                       color="danger"
-                      className="tw-font-bold"
+                      className="tw-font-bold tw-w-1/3"
                       onClick={() => handleClickDelete(bulkyItem.id)}
                     >
                       {t("delete")}
@@ -305,7 +305,7 @@ export default function BulkyList() {
                   slot="end"
                   fill="clear"
                   color="warning"
-                  className="tw-font-bold"
+                  className="tw-font-bold tw-w-1/3"
                   onClick={() => handleClickReserve(user, bulkyItem.title)}
                 >
                   {t("contact")}
