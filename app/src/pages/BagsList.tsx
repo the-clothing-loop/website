@@ -326,11 +326,11 @@ export default function BagsList() {
                         ) : null}
                       </div>
                       <div
-                        className={`tw-p-2.5 tw-pt-5 tw-bg-[${bagColor}]`}
+                        className={`tw-p-2.5 tw-pt-5`}
                         onClick={() => handleClickItem(bag.id, bag.user_uid)}
                       >
                         <div className="bagslist-bag-icon tw-pt-2.5 tw-px-5 tw-pb-0.5">
-                          <BagSVG color={"white"} />
+                          <BagSVG color={bag.color} />
                         </div>
                         <div className="ion-text-ellipsis tw-text-center tw-font-bold tw-text-base tw-text-dark ">
                           {bag.number}
@@ -339,7 +339,7 @@ export default function BagsList() {
 
                       <IonRouterLink
                         routerLink={"/address/" + user.uid}
-                        className={`tw-py-3 tw-px-2 tw-block tw-bg-[${bagColor}]/50`}
+                        className="tw-py-3 tw-px-2 tw-block tw-bg-light"
                       >
                         <UserLink user={user} routeIndex={routeIndex} />
                       </IonRouterLink>
@@ -367,7 +367,7 @@ export default function BagsList() {
                       <IonItem lines="none" className="tw-py-[3px] tw-px-0">
                         <div
                           slot="start"
-                          className={`bagslist-bag-icon tw-w-6 tw-h-6 tw-bg-[${bagColor}]`}
+                          className="bagslist-bag-icon tw-w-6 tw-h-6"
                           onClick={() => handleClickItem(bag.id, bag.user_uid)}
                         >
                           <BagSVG color={bag.color} />

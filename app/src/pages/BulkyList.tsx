@@ -225,16 +225,7 @@ export default function BulkyList() {
                   routerLink={"/address/" + user.uid}
                   className="tw-my-0 -tw-mx-4"
                 >
-                  <IonText className="tw-my-2 ">
-                    <div className="tw-flex tw-flex-row tw-justify-between tw-mb-4">
-                      <div>
-                        <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
-                          {t("phoneNumber")}
-                        </h3>
-                        <p className="ion-text-wrap tw-opacity-60">
-                          {user.phone_number}
-                        </p>
-                      </div>
+                  <IonText>
                       {/* 
                       <IonButton
                         slot="end"
@@ -251,7 +242,6 @@ export default function BulkyList() {
                           className="ion-icon"
                         />
                       </IonButton>*/}
-                    </div>
                     <div className="tw-mb-4">
                       <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
                         {t("address")}
