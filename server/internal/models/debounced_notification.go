@@ -1,9 +1,10 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
-	"time"
 )
 
 type DebouncedNotification struct {
@@ -26,16 +27,9 @@ func GetElapsedNotifications(db *gorm.DB) ([]DebouncedNotification, error) {
 }
 
 func AddNotification(db *gorm.DB, notification DebouncedNotification) error {
-	err := db.Clauses(clause.OnConflict{UpdateAll: true}).Create(&notification).Error
-	return err
+	return db.Clauses(clause.OnConflict{UpdateAll: true}).Create(&notification).Error
 }
 
 func (n *DebouncedNotification) Delete(db *gorm.DB) error {
-	tx := db.Begin()
-	err := tx.Exec(`DELETE FROM debounced_notifications WHERE title = ? and user_id = ?`, n.Title, n.UserID).Error
-	if err != nil {
-		return err
-	}
-	tx.Commit()
-	return nil
+	return db.Exec(`DELETE FROM debounced_notifications WHERE title = ? and user_id = ?`, n.Title, n.UserID).Error
 }
