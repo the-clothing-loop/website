@@ -167,7 +167,7 @@ export default function BulkyList() {
           <IonToolbar>
             <IonTitle
               size="large"
-              className="tw-text-blue tw-font-serif tw-font-bold "
+              className={chain?.theme == "default" ? "tw-text-blue tw-font-serif tw-font-bold" : ""}
             >
               {t("bulkyItemsTitle")}
             </IonTitle>
@@ -281,7 +281,7 @@ export default function BulkyList() {
                 </IonItem>
               </IonCardContent>
 
-              <IonButtons className="tw-flex ion-margin-bottom ion-margin-horizontal ">
+              <IonButtons className="tw-flex tw-justify-around ion-margin-bottom ion-margin-horizontal ">
                 {isMe || isChainAdmin ? (
                   <>
                     <IonButton
