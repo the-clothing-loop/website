@@ -33,7 +33,6 @@
     background-hover: #9ce0be;
     background-focused: #88f4be;
 
-    color: blue;
 
     padding-top: 10px;
     padding-bottom: 10px;
@@ -51,7 +50,7 @@
   .tw-bg-orange {
     background: #e8c593
   }
-  .bg-orange-light{
+  .tw-bg-orange-light{
     --ion-background-color: #f4e7d0
   }
 

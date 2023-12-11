@@ -179,7 +179,7 @@ export default function Settings() {
       </IonHeader>
 
       {isAuthenticated === true ? (
-        <IonContent fullscreen class={chain?.theme=="default" ? "bg-orange-light" : ""}>
+        <IonContent fullscreen class={chain?.theme=="default" ? "tw-bg-orange-light" : ""}>
           <IonItemDivider className="tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-text-orange tw-font-serif tw-font-bold">
             {t("account")}
             <IonButton
