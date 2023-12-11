@@ -230,7 +230,7 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
           component={OpenSource}
         ></Route>
       </IonRouterOutlet>
-      <IonTabBar slot="bottom" onIonTabsWillChange={handleTabsWillChange}>
+      <IonTabBar slot="bottom" onIonTabsWillChange={handleTabsWillChange} color={"primary"}>
         <IonTabButton tab="help" href="/help">
           <IonIcon aria-hidden="true" icon={bookOutline} />
           <IonLabel>{t("rules")}</IonLabel>
