@@ -263,7 +263,7 @@
   "other": "אחר",
   "events": "אירועים",
   "previousEvents": "אירועים קודמים",
-  "nMoreEventsPrev": "<s>{{ n }}</s> more events<br/>previously posted",
+  "nMoreEventsPrev": "&<s>{{ n }}</s> more events<br/>previously posted",
   "allEvents": "כל האירועים",
   "eventName": "שם האירוע",
   "sorryNoEvents": "מצטערים אך אין אירועים שתואמים את הסינון שנבחר.",
