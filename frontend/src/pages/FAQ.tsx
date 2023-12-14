@@ -50,7 +50,7 @@ export default function FAQ() {
     });
   }, []);
 
-  const [arrParticipants, arrHosts, arrApp] = useMemo(() => {
+  const [arrParticipants, arrHosts, arrApp, appMarginCss] = useMemo(() => {
     let arrHosts = ObjToArrFaqI18n(t, "arrHosts", ARR_HOST_KEYS);
     let arrParticipants = ObjToArrFaqI18n(
       t,
@@ -58,8 +58,17 @@ export default function FAQ() {
       ARR_PARTICIPANT_KEYS
     );
     let arrApp = ObjToArrFaqI18n(t, "arrApp", ARR_APP_KEYS);
+    let appMarginCss = "md:mt-[-150px]";
+    switch (i18n.language) {
+      case "en":
+        appMarginCss = "md:mt-[-300px]";
+        break;
+      case "fr":
+      case "es":
+        appMarginCss = "";
+    }
 
-    return [arrParticipants, arrHosts, arrApp];
+    return [arrParticipants, arrHosts, arrApp, appMarginCss];
   }, [i18n.language]);
 
   return (
@@ -83,7 +92,7 @@ export default function FAQ() {
             </h1>
             <AccordionFaqs arr={arrHosts} />
           </div>
-          <div className="mb-6 md:mt-[-300px]">
+          <div className={"mb-6 ".concat(appMarginCss)}>
             <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
               {t("faqForApp")}
             </h1>
