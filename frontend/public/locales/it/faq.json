@@ -69,41 +69,6 @@
       "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
     }
   },
-  "faqForApp": "FAQ for the App",
-  "arrApp": {
-    "0": {
-      "question": "What is the Clothing Loop App?",
-      "answer": "<strong>The Clothing Loop App is made to make organizing a Loop easier.</strong> You can start using the app, if you are part of a Loop. A host can decide together with the participants if they want to start using the app to organize their Loop.<br/>In the app: you can find the rules of your local Loop, you can find out who to bring the bag to next, where the bags are and post bulky items that do not fit into the bag."
-    },
-    "1": {
-      "question": "Where can I find the app?",
-      "answer": "You can find the app in <a target='_blank' href='https://play.google.com/store/apps/details?id=org.clothingloop.app'>Google Playstore</a>, <a target='_blank' href='https://apps.apple.com/us/app/my-clothing-loop/id6451443500'>Apple Appstore</a>, or as web-version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>"
-    },
-    "2": {
-      "question": "Can I change the Rules in the App?",
-      "answer": "Yes, <strong>as a host you are able to change, adjust, and add rules in the App</strong>. Participants are not able to change the rules. To change the rules, click in the upper right corner on Change. After you have changed the rules, click on Save to save your changes."
-    },
-    "3": {
-      "question": "Which addresses can I see?",
-      "answer": "As a host, you can see everybody's information in your Loop. As a participant, you can only see the information of the two participants before and after you. A participant is also able to see the information of a host."
-    },
-    "4": {
-      "question": "How to set a bag to my name?",
-      "answer": "If you have received a bag, you can set a bag to your name in the tab of Bags. Click on the picture of the Bag and search for your name. Also, note the date of when the bag arrived. It is important to note that you have received the bag every time."
-    },
-    "5": {
-      "question": "What are Bulky Items (like winter coats)?",
-      "answer": "<strong>Big items that are too big for the bag can be photographed and shared.</strong> Click on Create, make a title and description, and create a new Bulky Item. Other participants then can click on your name to find your information. In a private message, participants can respond and organize pick-up. After the pick-up, a Bulky Item has to be removed from the list."
-    },
-    "6": {
-      "question": "Can I use the app as I partake in multiple Loops?",
-      "answer": "Yes, you can use the app while you are involved in multiple Loops. If you go to Info, you can switch between Loops, after you click on the name of the Loop."
-    },
-    "7": {
-      "question": "Why do I only see an SMS button?",
-      "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
-    }
-  },
   "faqForHosts": "FAQ per gli Hosts",
   "arrHosts": {
     "0": {
