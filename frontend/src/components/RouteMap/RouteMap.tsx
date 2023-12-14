@@ -5,6 +5,7 @@ import { Chain, UID } from "../../api/types";
 import type { FeatureCollection, Polygon, Feature } from "geojson";
 import { useDebouncedCallback } from "use-debounce";
 import { useMapZoom } from "../../util/maps";
+import { useTranslation } from "react-i18next";
 
 type LineType = "mixed" | "line" | "dot";
 
@@ -17,6 +18,7 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
   const [map, setMap] = useState<mapboxjs.Map>();
   const { zoom, setZoom, mapZoom } = useMapZoom(11, MIN_ZOOM, MAX_ZOOM);
   const [id] = useState(() => window.crypto.randomUUID());
+  const { t } = useTranslation();
   const [lineType, setLineType] = useState(
     () =>
       (window.localStorage.getItem(KEY_ROUTE_MAP_LINE) || "mixed") as LineType
@@ -71,7 +73,7 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
           type: "circle",
           source: "route",
           paint: {
-            "circle-color": "#f1bb87", //["rgba", 239, 149, 61, 0.6], // #ef953d
+            "circle-color": "#c2b8d4", // #a899c2
             "circle-radius": 15,
             "circle-stroke-width": 0,
           },
@@ -153,20 +155,26 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
     );
   }
 
-  let lineTypeIcon =
-    lineType === "line"
-      ? "feather-minus"
-      : lineType === "dot"
-      ? "feather-circle"
-      : "feather-git-commit";
+  let lineTypeIcon = "feather-git-commit";
+  let lineTypeHoverText = t("showRouteOrder");
+  if (lineType === "line") {
+    lineTypeIcon = "feather-minus";
+    lineTypeHoverText = t("showRoute");
+  } else if (lineType === "dot") {
+    lineTypeIcon = "feather-circle";
+    lineTypeHoverText = t("showAddress");
+  }
   return (
     <div className="w-full h-full relative">
       <div id={id} className="w-full h-full"></div>
       <div className="flex flex-col absolute z-30 bottom-8 right-2.5 rtl:right-auto rtl:left-2.5">
         <button
           type="button"
-          className={`no-animation btn btn-sm mb-4 p-0 w-8 h-8 glass bg-purple-light/80 hover:bg-purple-light btn-outline`}
+          className={`no-animation btn btn-sm mb-4 p-0 w-8 h-8 glass bg-purple-light/80 hover:bg-purple-light btn-outline tooltip tooltip-left ${
+            props.route.length > 1 ? "" : "hidden"
+          }`}
           onClick={() => handleNextLineType()}
+          data-tip={lineTypeHoverText}
         >
           <span
             className={`feather text-base-content text-lg ${lineTypeIcon}`}
