@@ -221,7 +221,7 @@ export default function BagsList() {
                     onClick={() => setBagListView("dynamic")}
                   >
                     <IonIcon slot="start" icon={flashOutline}></IonIcon>
-                    {t("dynamic")}
+                    {t("automatic")}
                   </IonItem>
                   <IonItem
                     button={true}
