@@ -33,7 +33,6 @@
     background-hover: #9ce0be;
     background-focused: #88f4be;
 
-
     padding-top: 10px;
     padding-bottom: 10px;
   }
@@ -47,34 +46,33 @@
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: #448c7f;
   }
-  .tw-bg-orange {
-    background: #e8c593
-  }
-  .tw-bg-orange-light{
-    --ion-background-color: #f4e7d0
-  }
-
   .tw-text-orange {
-    color: #d97706
+    color: #d97706;
   }
-
   .tw-text-blue {
-    color: #3a66b3
+    color: #3a66b3;
   }
-
-  .tw-bg-blue-light {
-    background: #d6e4f2
-  }
-  .bg-blue {
-    --ion-background-color: #d6e4f2
-  }
-
   .tw-text-red {
-    color: #c73642
+    color: #c73642;
   }
-
-
-
+  .tw-text-purple {
+    color: #513484;
+  }
+  .tw-bg-orange {
+    background: #e8c593;
+  }
+  .tw-bg-orange-light {
+    --ion-background-color: #f4e7d0;
+  }
+  .tw-bg-blue {
+    --ion-background-color: #d6e4f2;
+  }
+  .tw-bg-blue-light {
+    background: #d6e4f2;
+  }
+  .tw-bg-purple-light {
+    --ion-background-color: #e4dcf1;
+  }
   .tw-bg-paused {
     background: rgb(255, 213, 52);
     background: repeating-linear-gradient(

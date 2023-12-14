@@ -76,6 +76,7 @@ export default function HelpList() {
     () => chainUsers.filter((u) => IsChainAdmin(u, chain)),
     [chainUsers, chain],
   );
+  const themeColor = chain?.theme === "default" ? "#d1c5e8" : "primary";
 
   function handleClickChange() {
     modal.current?.present();
@@ -89,7 +90,11 @@ export default function HelpList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("howDoesItWork")}</IonTitle>
+          <IonTitle
+            className={chain?.theme == "default" ? "tw-text-purple" : ""}
+          >
+            {t("howDoesItWork")}
+          </IonTitle>
 
           {isChainAdmin ? (
             <IonButtons slot="end">
@@ -98,10 +103,20 @@ export default function HelpList() {
           ) : null}
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent
+        fullscreen
+        class={chain?.theme == "default" ? "tw-bg-purple-light" : ""}
+      >
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("howDoesItWork")}</IonTitle>
+            <IonTitle
+              size="large"
+              className={`tw-font-serif tw-font-bold ${
+                chain?.theme == "default" ? "tw-text-purple " : ""
+              }`}
+            >
+              {t("howDoesItWork")}
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>
@@ -111,56 +126,64 @@ export default function HelpList() {
             </IonItem>
           ))}
         </IonList>
-        <p className="ion-text-center ion-text-uppercase !tw-font-bold tw-text-medium tw-text-sm tw-leading-4 tw-mt-4 tw-m-0">
-          {t("loopHost", { count: hosts.length })}
-        </p>
-        <div className="tw-flex tw-justify-center tw-flex-wrap tw-mt-1.5 tw-m-0 tw-mb-2.5">
-          {hosts.map((host) => (
-            <IonButton
-              key={host.uid}
-              size="small"
-              routerLink={"/address/" + host.uid}
-              color="light"
-              className="tw-m-1.5 tw-text-base"
-            >
-              {host.name}
-            </IonButton>
-          ))}
+        <div className="tw-relative tw-overflow-hidden">
+          <p className="ion-text-center ion-text-uppercase !tw-font-bold tw-text-medium tw-text-sm tw-leading-4 tw-mt-4 tw-m-0">
+            {t("loopHost", { count: hosts.length })}
+          </p>
+          <div className="tw-flex tw-justify-center tw-flex-wrap tw-mt-1.5 tw-m-0 tw-mb-2.5">
+            {hosts.map((host) => (
+              <IonButton
+                key={host.uid}
+                size="small"
+                routerLink={"/address/" + host.uid}
+                color="light"
+                className="tw-m-1.5 tw-text-base"
+              >
+                {host.name}
+              </IonButton>
+            ))}
+          </div>
+          <p className="ion-text-center ion-text-uppercase !tw-font-bold tw-text-medium tw-text-sm tw-leading-4 tw-m-0">
+            {t("organization")}
+          </p>
+          <div className="tw-flex tw-justify-center">
+            {mediaIcons.map((mi) => (
+              <IonRouterLink
+                rel="noreferrer"
+                target="_blank"
+                href={mi.url}
+                key={mi.label}
+                className="ion-margin"
+              >
+                <IonIcon
+                  size="large"
+                  icon={mi.icon}
+                  style={{ color: mi.color }}
+                  aria-label={mi.label}
+                />
+              </IonRouterLink>
+            ))}
+          </div>
+          <IonRouterLink
+            href="https://www.clothingloop.org/"
+            className="ion-text-center ion-margin-bottom tw-block tw-text-dark tw-text-sm tw-leading-4 !tw-mb-6"
+          >
+            www.clothingloop.org
+          </IonRouterLink>
+          <CreateUpdateRules
+            rules={chain?.rules_override || null}
+            modal={modal}
+            didDismiss={refreshChain}
+          />
+          {/* Background SVG  -tw-top-80 tw-left-36*/}
+          <IonIcon
+            aria-hidden="true"
+            icon="/icons/v2_o.svg"
+            style={{ color: "#d1c5e8", fontSize: 500 }}
+            color={chain?.theme === "default" ? "" : themeColor}
+            className="tw-absolute -tw-right-64 -tw-bottom-60 -tw-z-10"
+          />
         </div>
-
-        <p className="ion-text-center ion-text-uppercase !tw-font-bold tw-text-medium tw-text-sm tw-leading-4 tw-m-0">
-          {t("organization")}
-        </p>
-        <div className="tw-flex tw-justify-center">
-          {mediaIcons.map((mi) => (
-            <IonRouterLink
-              rel="noreferrer"
-              target="_blank"
-              href={mi.url}
-              key={mi.label}
-              className="ion-margin"
-            >
-              <IonIcon
-                size="large"
-                icon={mi.icon}
-                style={{ color: mi.color }}
-                aria-label={mi.label}
-              />
-            </IonRouterLink>
-          ))}
-        </div>
-        <IonRouterLink
-          href="https://www.clothingloop.org/"
-          className="ion-text-center ion-margin-bottom tw-block tw-text-dark tw-text-sm tw-leading-4 !tw-mb-6"
-        >
-          www.clothingloop.org
-        </IonRouterLink>
-
-        <CreateUpdateRules
-          rules={chain?.rules_override || null}
-          modal={modal}
-          didDismiss={refreshChain}
-        />
       </IonContent>
     </IonPage>
   );
