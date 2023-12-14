@@ -34,6 +34,7 @@ export interface UserUpdateBody {
   i18n?: string;
   longitude?: number;
   latitude?: number;
+  accepted_toh?: boolean;
 }
 export function userUpdate(user: UserUpdateBody) {
   return window.axios.patch<never>("/v2/user", user);

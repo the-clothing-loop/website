@@ -251,6 +251,7 @@ func UserUpdate(c *gin.Context) {
 		I18n        *string    `json:"i18n,omitempty"`
 		Latitude    *float64   `json:"latitude,omitempty"`
 		Longitude   *float64   `json:"longitude,omitempty"`
+		AcceptedTOH *bool      `json:"accepted_toh,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -300,6 +301,9 @@ func UserUpdate(c *gin.Context) {
 		}
 		if body.I18n != nil {
 			userChanges["i18n"] = *body.I18n
+		}
+		if body.AcceptedTOH != nil {
+			userChanges["accepted_toh"] = *body.AcceptedTOH
 		}
 		if len(userChanges) > 0 {
 			if err := db.Model(user).Updates(userChanges).Error; err != nil {

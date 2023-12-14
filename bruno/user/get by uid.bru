@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{base}}/v2/user?chain_uid={{chainUID}}&user_uid={{userUID}}
+  url: {{base}}/v2/user?chain_uid={{chainUID}}&user_uid={{userUID}}&add_approved_toh=true
   body: none
   auth: none
 }
@@ -13,4 +13,5 @@ get {
 query {
   chain_uid: {{chainUID}}
   user_uid: {{userUID}}
+  add_approved_toh: true
 }

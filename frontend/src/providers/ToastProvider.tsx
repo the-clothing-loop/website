@@ -17,6 +17,7 @@ export interface Modal {
   message: string;
   content?: () => JSX.Element;
   actions: ModalAction[];
+  forceOpen?: boolean;
 }
 export interface ModalAction {
   type: "ghost" | "default" | "primary" | "secondary" | "success" | "error";
@@ -171,6 +172,7 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
 
   function handleBackgroundClick(e: MouseEvent) {
     e.preventDefault();
+    if (props.modal.forceOpen) return;
     if (window.innerWidth > 900) {
       if (e.target === e.currentTarget) {
         props.closeFunc();
@@ -193,7 +195,7 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
         {props.modal.content ? <props.modal.content /> : null}
         <div
           className={
-            props.modal.actions.length === 1
+            props.modal.actions.length === 1 && !props.modal.forceOpen
               ? "mt-4 flex justify-between"
               : "mt-4 flex flex-col items-stretch gap-3"
           }
@@ -232,7 +234,9 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
             key="close"
             type="reset"
             ref={refButtonClose}
-            className="btn btn-sm btn-ghost"
+            className={
+              props.modal.forceOpen ? "hidden" : "btn btn-sm btn-ghost"
+            }
             onClick={() => props.closeFunc()}
           >
             {props.modal.actions.length ? t("cancel") : t("close")}

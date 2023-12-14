@@ -1,15 +1,24 @@
 //Resources
 import { Link, Redirect, useHistory } from "react-router-dom";
-import { useContext, useEffect, useMemo, useState } from "react";
+import {
+  UIEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
 import { AuthContext } from "../providers/AuthProvider";
-import { userPurge } from "../api/user";
+import { userPurge, userUpdate } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import ChainsList from "../components/ChainsList";
 import { useEscape } from "../util/escape.hooks";
 import { Chain } from "../api/types";
+import { TermsOfHostsHTML } from "./TermsOfHosts";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
@@ -17,6 +26,11 @@ export default function AdminDashboard() {
   const { addModal } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>([]);
   const history = useHistory();
+
+  const isChainAdmin = useMemo(
+    () => !!authUser?.chains.find((uc) => uc.is_chain_admin),
+    [authUser]
+  );
 
   function deleteClicked() {
     if (!authUser) return;
@@ -80,6 +94,79 @@ export default function AdminDashboard() {
     authUserRefresh();
   }, []);
 
+  useEffect(() => {
+    if (authUser && isChainAdmin && authUser.accepted_toh === false) {
+      console.log("You have not approved the Terms of Hosts!");
+      addModal({
+        message:
+          "You must approve the Terms of Hosts to continue administering your Loop(s)!",
+        content: () => {
+          const ref = useRef<HTMLDivElement>(null);
+          const getElBtns = () =>
+            ref.current?.parentElement?.parentElement?.querySelectorAll(
+              "div:nth-child(3) > button"
+            ) as any as HTMLButtonElement[];
+          const scrollingCheck = useDebouncedCallback(
+            (e: UIEvent<HTMLDivElement>) => {
+              let target = e.target as HTMLDivElement;
+              // if scrolled to the bottom of the page
+              if (target.scrollTop + 10 > target.scrollTop) {
+                getElBtns().forEach((el) => el.removeAttribute("disabled"));
+              }
+            },
+            300,
+            {
+              trailing: true,
+            }
+          );
+
+          useEffect(() => {
+            getElBtns().forEach((el) =>
+              el.setAttribute("disabled", "disabled")
+            );
+          }, []);
+
+          const scrollUp = () => {
+            ref.current?.scrollTo({
+              top: ref.current!.scrollHeight,
+              left: 0,
+              behavior: "smooth",
+            });
+          };
+          return (
+            <div className="relative">
+              <div
+                ref={ref}
+                className="border border-grey overflow-y-auto h-[33.333vh] text-xs py-0.5 px-2 bg-grey-light"
+                onScroll={scrollingCheck}
+              >
+                <TermsOfHostsHTML className="prose text-xs prose-terms-modal" />
+              </div>
+              <button
+                onClick={scrollUp}
+                className="absolute bottom-0 right-0 mb-2 mr-2 btn btn-circle btn-sm btn-secondary opacity-50 feather feather-arrow-down"
+              ></button>
+            </div>
+          );
+        },
+        actions: [
+          {
+            type: "primary",
+            text: t("Accept"),
+            fn: () => {
+              userUpdate({
+                user_uid: authUser.uid,
+                accepted_toh: true,
+              });
+            },
+            submit: true,
+          },
+        ],
+        forceOpen: true,
+      });
+    }
+  }, [authUser, isChainAdmin]);
+
   useEscape(() => {
     let el = document.getElementById(
       "modal-circle-loop"
@@ -88,11 +175,6 @@ export default function AdminDashboard() {
       el.checked = false;
     }
   });
-
-  const isChainAdmin = useMemo(
-    () => !!authUser?.chains.find((uc) => uc.is_chain_admin),
-    [authUser]
-  );
 
   if (authUser === null) {
     return <Redirect to="/users/login" />;

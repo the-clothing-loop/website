@@ -120,6 +120,12 @@ func (u *User) SetAcceptedTOH() {
 	u.AcceptedTOHJSON = &u.AcceptedTOH
 }
 
+func (u *User) AcceptTOH(db *gorm.DB) {
+	if !u.AcceptedTOH {
+		db.Exec(`INSERT INTO users SET allow_toh = TRUE WHERE id = ?`, u.ID)
+	}
+}
+
 type UserContactData struct {
 	Name      string      `gorm:"name"`
 	Email     zero.String `gorm:"email"`
