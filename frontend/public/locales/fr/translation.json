@@ -263,7 +263,7 @@
   "other": "Autre",
   "events": "Événements",
   "previousEvents": "Événements précédents",
-  "nMoreEventsPrev": "<s>{{ n }}</s> more events<br/>previously posted",
+  "nMoreEventsPrev": "&<s>{{ n }}</s> more events<br/>previously posted",
   "allEvents": "Tous les événements",
   "eventName": "Nom de l'événement",
   "sorryNoEvents": "Désolé, aucun événement ne correspond à ces filtres.",
