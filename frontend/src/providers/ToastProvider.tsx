@@ -6,6 +6,7 @@ import {
   useEffect,
   useRef,
   useState,
+  SyntheticEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -180,12 +181,21 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
     }
   }
 
+  // When clicking the Escape button the modal is closed
+  // except for when the modal is set to "forceOpen".
+  function handleEsc(e: SyntheticEvent<Element>) {
+    if (props.modal.forceOpen) {
+      e.preventDefault();
+    }
+  }
+
   return (
     <dialog
       className="fixed overflow-visible inset-0 z-50 open:flex justify-center items-center p-0 shadow-lg backdrop:bg-white/30"
       ref={refDisplay}
       tabIndex={-1}
       onClick={handleBackgroundClick}
+      onCancel={handleEsc}
     >
       <form
         className="bg-white max-w-screen-sm p-6 z-10"
