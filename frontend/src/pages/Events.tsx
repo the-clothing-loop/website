@@ -1,10 +1,14 @@
 import { Helmet } from "react-helmet";
 import { useState, useContext, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 
 import { Event } from "../api/types";
-import { eventGetAll, eventGetPrevious } from "../api/event";
+import {
+  EventGetPreviousResponse,
+  eventGetAll,
+  eventGetPrevious,
+} from "../api/event";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import { SizeBadges } from "../components/Badges";
 import useForm from "../util/form.hooks";
@@ -38,7 +42,10 @@ export default function Events() {
   const { addToastError, addModal } = useContext(ToastContext);
   const authUser = useContext(AuthContext).authUser;
   const [events, setEvents] = useState<Event[] | null>(null);
-  const [prevEvents, setPrevEvents] = useState<Event[] | null>(null);
+  const [prevEvents, setPrevEvents] = useState<EventGetPreviousResponse | null>(
+    null
+  );
+  const [nMorePrevEvents, setNMorePrevEvents] = useState(0);
   const [values, setValue, setValues] = useForm<SearchValues>(() => {
     const urlParams = new URLSearchParams("/events");
     let latitude =
@@ -85,12 +92,22 @@ export default function Events() {
     try {
       const [allData, prevData] = await Promise.all([
         eventGetAll({ latitude, longitude, radius }),
-        eventGetPrevious({ latitude, longitude, radius }),
+        eventGetPrevious({ latitude, longitude, radius, include_total: true }),
       ]);
 
       const filterFunc = createFilterFunc(filterGenders);
       setEvents(allData.data?.filter(filterFunc));
       setPrevEvents(prevData.data);
+
+      {
+        let nMorePrevEvents = 0;
+        if (prevData.data?.previous_events) {
+          nMorePrevEvents =
+            prevData.data.previous_total - prevData.data.previous_events.length;
+          if (nMorePrevEvents < 0) nMorePrevEvents = 0;
+        }
+        setNMorePrevEvents(nMorePrevEvents);
+      }
     } catch (err: any) {
       addToastError(GinParseErrors(t, err), err.status);
     }
@@ -236,7 +253,7 @@ export default function Events() {
                 ))}
             </div>
           )}
-          {prevEvents ? (
+          {prevEvents?.previous_events ? (
             <div key="event-prev">
               <div className="sticky top-0 z-20 bg-white/50 flex justify-center">
                 <h4
@@ -249,7 +266,7 @@ export default function Events() {
                 </h4>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-70">
-                {prevEvents
+                {prevEvents.previous_events
                   .sort((a, b) =>
                     new Date(a.date) < new Date(b.date) ? 1 : -1
                   )
@@ -257,6 +274,23 @@ export default function Events() {
                     <EventItem event={event} key={event.uid} />
                   ))}
               </div>
+              {nMorePrevEvents ? (
+                <div className="flex justify-center">
+                  <h4 className="font-semibold text-black/90 px-3 my-6">
+                    <Trans
+                      i18nKey="nMoreEventsPrev"
+                      values={{
+                        n: nMorePrevEvents,
+                      }}
+                      components={{
+                        s: (
+                          <span className="text-4xl text-accent ms-1.5 me-0.5" />
+                        ),
+                      }}
+                    />
+                  </h4>
+                </div>
+              ) : null}
             </div>
           ) : null}
         </div>

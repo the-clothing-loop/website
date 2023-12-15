@@ -223,7 +223,7 @@ export default function BagsList() {
                     onClick={() => setBagListView("dynamic")}
                   >
                     <IonIcon slot="start" icon={flashOutline}></IonIcon>
-                    {t("dynamic")}
+                    {t("automatic")}
                   </IonItem>
                   <IonItem
                     button={true}
@@ -326,7 +326,7 @@ export default function BagsList() {
                       >
                         {bagUpdatedAt.toDate().toLocaleDateString()}
                         {isBagTooOldMe || isBagTooOldHost ? (
-                          <span className="tw-bg-danger tw-h-1.5 tw-w-1.5 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
+                          <span className="tw-bg-danger tw-h-2 tw-w-2 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
                         ) : null}
                       </div>
                       <div
@@ -393,7 +393,7 @@ export default function BagsList() {
                           >
                             {bagUpdatedAt.toDate().toLocaleDateString()}
                             {isBagTooOldMe || isBagTooOldHost ? (
-                              <span className="tw-bg-danger tw-h-1.5 tw-w-1.5 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
+                              <span className="tw-bg-danger tw-h-2 tw-w-2 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
                             ) : null}
                           </span>
                         </div>
@@ -512,7 +512,7 @@ function Card({
       {open ? (
         <div
           key="options"
-          className="tw-absolute tw-inset-0 tw-bg-[#ffffffa0] tw-flex tw-flex-col tw-justify-center tw-items-center tw-z-10"
+          className="tw-absolute tw-inset-0 tw-bg-[#ffffffa0] dark:tw-bg-[#000000a0] tw-flex tw-flex-col tw-justify-center tw-items-center tw-z-10"
         >
           <IonButton
             size="small"

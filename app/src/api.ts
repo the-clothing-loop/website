@@ -101,14 +101,23 @@ export interface BulkyItem {
 }
 
 export const bagColors = [
+  "#ef953d",
   "#f4b63f",
   "#a6c665",
-  "#1467b3",
-  "#3c3c3b",
   "#66926e",
-  "#c73643",
-  "#dc77a3",
+  "#7ecfe0",
+  "#89b3d9",
+  "#1467b3",
+  "#a899c2",
   "#513484",
+  "#dab5d6",
+  "#b76dac",
+  "#ecbbd0",
+  "#dc77a3",
+  "#e39aa1",
+  "#c73643",
+  "#a5a5a5",
+  "#3c3c3b",
 ];
 
 window.axios = redaxios.create({
