@@ -20,7 +20,7 @@ export default function OverlayPaused() {
 
   function goToSettings() {
     refresh("settings").then(() => {
-      history.replace("/settings");
+      history.replace("/settings", { openChainSelect: true });
     });
   }
 

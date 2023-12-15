@@ -60,7 +60,10 @@ import Badges from "../components/SizeBadge";
 import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
 import Theme from "../components/Theme";
+import { useLocation } from "react-router";
 const VERSION = import.meta.env.VITE_APP_VERSION;
+
+type State = { openChainSelect?: boolean } | undefined;
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
@@ -75,6 +78,7 @@ export default function Settings() {
     listOfChains,
   } = useContext(StoreContext);
   const [present] = useIonToast();
+  const { state } = useLocation<State>();
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
   const refSelectPauseExpiryModal = useRef<HTMLIonModalElement>(null);
@@ -83,10 +87,11 @@ export default function Settings() {
   const [isIos] = useState(isPlatform("ios"));
   const [expandedDescription, setExpandedDescription] = useState(false);
   useEffect(() => {
-    if (!chain && authUser) {
+    if (!authUser) return;
+    if (!chain || state?.openChainSelect) {
       refChainSelect.current?.open();
     }
-  }, [authUser]);
+  }, [authUser, state]);
 
   function handleChainSelect(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
