@@ -11,6 +11,7 @@ interface RequestChainGetAllParams {
   filter_sizes?: string[];
   filter_genders?: string[];
   filter_out_unpublished?: boolean;
+  add_rules?: boolean;
 }
 export function chainGetAll(params?: RequestChainGetAllParams) {
   return window.axios.get<Chain[]>("/v2/chain/all", { params });

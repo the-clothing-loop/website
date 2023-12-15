@@ -211,10 +211,10 @@ func (c *Chain) GetTotals(db *gorm.DB) *ChainTotals {
 SELECT COUNT(uc1.id) AS total_members, (
 	SELECT COUNT(uc2.id)
 	FROM user_chains AS uc2
-	WHERE uc2.chain_id = ? AND uc2.is_chain_admin = TRUE
+	WHERE uc2.chain_id = ? AND uc2.is_approved = TRUE AND uc2.is_chain_admin = TRUE
 	) AS total_hosts
 FROM user_chains AS uc1
-WHERE uc1.chain_id = ?
+WHERE uc1.chain_id = ? AND uc1.is_approved = TRUE
 	`, c.ID, c.ID).Scan(&result).Error
 	if err != nil {
 		panic(err)

@@ -148,9 +148,10 @@ func EventGetPrevious(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		Latitude  float32 `form:"latitude" binding:"required,latitude"`
-		Longitude float32 `form:"longitude" binding:"required,longitude"`
-		Radius    float32 `form:"radius"`
+		Latitude     float32 `form:"latitude" binding:"required,latitude"`
+		Longitude    float32 `form:"longitude" binding:"required,longitude"`
+		Radius       float32 `form:"radius"`
+		IncludeTotal bool    `form:"include_total"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -174,7 +175,19 @@ func EventGetPrevious(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, events)
+	res := gin.H{
+		"previous_events": events,
+	}
+	if query.IncludeTotal {
+		total := 0
+		db.Raw(`SELECT COUNT(*) FROM events WHERE date < NOW()`).Scan(&total)
+		if err != nil {
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
+		res["previous_total"] = total
+	}
+	c.JSON(http.StatusOK, res)
 }
 
 // The distance between two longlat points calculated in km.
