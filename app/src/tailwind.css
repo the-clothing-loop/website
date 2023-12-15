@@ -58,8 +58,8 @@
   .tw-text-purple {
     color: #513484;
   }
-  .tw-bg-orange {
-    background: #e8c593;
+  .tw-bg-white-transparent {
+    background: rgba(255, 255, 255, 0.5);
   }
   .tw-bg-orange-light {
     --ion-background-color: #f4e7d0;
