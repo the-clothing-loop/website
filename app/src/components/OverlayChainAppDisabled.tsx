@@ -42,7 +42,12 @@ export default function OverlayAppDisabled() {
         <IonCard className="tw-bg-background">
           <IonCardContent className="tw-text-text">
             <h1 className="!tw-mb-4">{t("loopIsNotUsingThisApp")}</h1>
-            {isUserHost ? null : (
+            {isUserHost ? (
+              <p
+                className="!tw-mb-3"
+                dangerouslySetInnerHTML={{ __html: t("pleaseEnableLoopApp") }}
+              ></p>
+            ) : (
               <>
                 <p className="!tw-mb-3">{t("pleaseContactYourLoopHost")}</p>
                 <div className="tw-flex tw-justify-center tw-flex-wrap tw-mt-1.5 tw-m-0 tw-mb-2.5">
