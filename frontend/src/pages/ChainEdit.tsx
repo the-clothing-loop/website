@@ -11,6 +11,7 @@ import { chainGet, chainUpdate, ChainUpdateBody } from "../api/chain";
 import { Chain } from "../api/types";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
+import { AuthContext } from "../providers/AuthProvider";
 
 interface Params {
   chainUID: string;
@@ -20,6 +21,7 @@ export default function ChainEdit() {
   const { t } = useTranslation();
   const history = useHistory();
   const { addToastError } = useContext(ToastContext);
+  const { authUser } = useContext(AuthContext);
   const { chainUID } = useParams<Params>();
 
   const [chain, setChain] = useState<Chain>();
@@ -70,6 +72,7 @@ export default function ChainEdit() {
           showBack
           onSubmit={handleSubmit}
           initialValues={chain}
+          showAllowedTOH={!authUser?.accepted_toh}
         />
       </main>
     </>

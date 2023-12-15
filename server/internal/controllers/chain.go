@@ -25,6 +25,8 @@ const (
 	UnapprovedReasonLoopNotActive = "loop_not_active"
 )
 
+const ErrAllowTOHFalse = "The Terms of the Hosts must be approved"
+
 type ChainCreateRequestBody struct {
 	Name             string   `json:"name" binding:"required"`
 	Description      string   `json:"description"`
@@ -36,6 +38,7 @@ type ChainCreateRequestBody struct {
 	OpenToNewMembers bool     `json:"open_to_new_members" binding:"required"`
 	Sizes            []string `json:"sizes" binding:"required"`
 	Genders          []string `json:"genders" binding:"required"`
+	AllowTOH         bool     `json:"allow_toh" binding:"required"`
 }
 
 func ChainCreate(c *gin.Context) {
@@ -57,6 +60,9 @@ func ChainCreate(c *gin.Context) {
 	if ok := models.ValidateAllGenderEnum(body.Genders); !ok {
 		c.String(http.StatusBadRequest, models.ErrGenderInvalid.Error())
 		return
+	}
+	if !body.AllowTOH {
+		c.String(http.StatusBadRequest, ErrAllowTOHFalse)
 	}
 
 	chain := models.Chain{
@@ -85,6 +91,10 @@ func ChainCreate(c *gin.Context) {
 		goscope.Log.Warningf("Unable to create chain: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to create chain")
 		return
+	}
+
+	if err := user.AcceptTOH(db); err != nil {
+		goscope.Log.Errorf("Unable to set toh to true, during chain creation: %v", err)
 	}
 
 	c.Status(200)
