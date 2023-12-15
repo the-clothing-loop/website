@@ -102,16 +102,19 @@ export default function AdminDashboard() {
           "You must approve the Terms of Hosts to continue administering your Loop(s)!",
         content: () => {
           const ref = useRef<HTMLDivElement>(null);
-          const getElBtns = () =>
-            ref.current?.parentElement?.parentElement?.querySelectorAll(
+          const getElBtn = () =>
+            ref.current?.parentElement?.parentElement?.querySelector(
               "div:nth-child(3) > button"
-            ) as any as HTMLButtonElement[];
+            ) as HTMLButtonElement;
           const scrollingCheck = useDebouncedCallback(
             (e: UIEvent<HTMLDivElement>) => {
               let target = e.target as HTMLDivElement;
               // if scrolled to the bottom of the page
-              if (target.scrollTop + 10 > target.scrollTop) {
-                getElBtns().forEach((el) => el.removeAttribute("disabled"));
+              if (
+                target.scrollTop + target.clientHeight + 100 >
+                target.scrollHeight
+              ) {
+                getElBtn().removeAttribute("disabled");
               }
             },
             300,
@@ -121,9 +124,7 @@ export default function AdminDashboard() {
           );
 
           useEffect(() => {
-            getElBtns().forEach((el) =>
-              el.setAttribute("disabled", "disabled")
-            );
+            getElBtn().setAttribute("disabled", "disabled");
           }, []);
 
           const scrollUp = () => {
