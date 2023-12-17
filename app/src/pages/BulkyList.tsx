@@ -150,7 +150,7 @@ export default function BulkyList() {
   function onImgErrorHideAlt(e: any) {
     e.target.style.display = "none";
   }
-  console.log(chain?.theme);
+
   return (
     <IonPage>
       <OverlayPaused />
@@ -162,7 +162,7 @@ export default function BulkyList() {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen class={chain?.theme == "default" ? "bg-blue" : ""}>
+      <IonContent fullscreen class={chain?.theme == "default" ? "tw-bg-blue" : ""}>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle

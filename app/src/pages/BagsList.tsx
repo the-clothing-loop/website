@@ -285,7 +285,6 @@ export default function BagsList() {
                 const isBagTooOld = bagUpdatedAt.isBefore(
                   dayjs().add(-7, "days"),
                 );
-                console.log(bag.color)
                 const bagColor = bag.color
                 return (
                   <IonCol size="6" key={"inRoute" + bag.id}>

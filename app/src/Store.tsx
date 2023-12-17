@@ -266,7 +266,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const _listOfChains = await Promise.all(
         _authUser.data.chains
           .filter((uc) => uc.is_approved)
-          .map((uc) => chainGet(uc.chain_uid)),
+          .map((uc) => chainGet(uc.chain_uid, true, true)),
       ).then((chains) =>
         chains.map((c) => {
           if (c.data.uid === chain?.uid) {
