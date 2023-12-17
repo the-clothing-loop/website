@@ -400,7 +400,7 @@ export default function Settings() {
             />
             <IonIcon
               aria-hidden="true"
-              icon="/icons/v2_o.svg"
+              icon="/v2_o.svg"
               style={{ color: "#ecd6b5", fontSize: 500 }}
               color={chain?.theme === "default" ? "" : "primary"}
               className="tw-absolute -tw-right-64 -tw-bottom-[340px] -tw-z-10"

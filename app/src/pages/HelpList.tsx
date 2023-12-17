@@ -175,12 +175,12 @@ export default function HelpList() {
             modal={modal}
             didDismiss={refreshChain}
           />
-          {/* Background SVG  -tw-top-80 tw-left-36*/}
+          {/* Background SVG */}
           <IonIcon
             aria-hidden="true"
-            icon="/icons/v2_o.svg"
+            icon="/v2_o.svg"
             style={{ color: "#d1c5e8", fontSize: 500 }}
-            color={chain?.theme === "default" ? "" : themeColor}
+            color={chain?.theme === "default" ? "" : "primary"}
             className="tw-absolute -tw-right-64 -tw-bottom-60 -tw-z-10"
           />
         </div>
