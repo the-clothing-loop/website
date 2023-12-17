@@ -157,17 +157,34 @@ export default function BulkyList() {
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("bulkyItemsTitle")}</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
+          <IonButtons
+            slot="end"
+            className={`${
+              chain?.theme === "default" ? "tw-text-blue" : "primary"
+            }`}
+          >
+            <IonButton
+              onClick={handleClickCreate}
+              color={chain?.theme === "default" ? "tw-text-blue" : "primary"}
+            >
+              {t("create")}
+            </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen class={chain?.theme == "default" ? "tw-bg-blue" : ""}>
+      <IonContent
+        fullscreen
+        class={chain?.theme == "default" ? "tw-bg-blue" : ""}
+      >
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle
               size="large"
-              className={chain?.theme == "default" ? "tw-text-blue tw-font-serif tw-font-bold" : ""}
+              className={
+                chain?.theme == "default"
+                  ? "tw-text-blue tw-font-serif tw-font-bold"
+                  : ""
+              }
             >
               {t("bulkyItemsTitle")}
             </IonTitle>
@@ -226,7 +243,7 @@ export default function BulkyList() {
                   className="tw-my-0 -tw-mx-4"
                 >
                   <IonText>
-                      {/* 
+                    {/* 
                       <IonButton
                         slot="end"
                         fill="clear"

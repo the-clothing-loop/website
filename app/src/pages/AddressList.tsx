@@ -33,10 +33,16 @@ export default function AddressList() {
         <IonToolbar>
           <IonTitle>{t("addresses")}</IonTitle>
           {isChainAdmin ? (
-            <IonButtons slot="end">
+            <IonButtons
+              slot="end"
+              className={`${
+                chain?.theme === "default" ? "tw-text-red" : "primary"
+              }`}
+            >
               <IonButton
                 target="_blank"
                 href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}
+                color={chain?.theme === "default" ? "tw-text-red" : "primary"}
               >
                 {t("routeOrder")}
               </IonButton>

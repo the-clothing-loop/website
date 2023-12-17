@@ -97,8 +97,20 @@ export default function HelpList() {
           </IonTitle>
 
           {isChainAdmin ? (
-            <IonButtons slot="end">
-              <IonButton onClick={handleClickChange}>{t("change")}</IonButton>
+            <IonButtons
+              slot="end"
+              className={`${
+                chain?.theme === "default" ? "tw-text-purple" : "primary"
+              }`}
+            >
+              <IonButton
+                onClick={handleClickChange}
+                color={
+                  chain?.theme === "default" ? "tw-text-purple" : "primary"
+                }
+              >
+                {t("change")}
+              </IonButton>
             </IonButtons>
           ) : null}
         </IonToolbar>

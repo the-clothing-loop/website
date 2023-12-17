@@ -49,3 +49,6 @@
 ion-card {
   background: rgba(255, 255, 255, 0.5);
 }
+ion-button {
+  color: var(--ion-text-color-rgb);
+}
