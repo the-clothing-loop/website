@@ -203,7 +203,10 @@ export default function Settings() {
               <IonIcon icon={openOutline} className="tw-text-sm tw-ml-1" />
             </IonButton>
           </IonItemDivider>
-          <IonCard className="tw-mt-1.5 tw-rounded-none tw-relative tw-bg-white-transparent">
+          <IonCard
+            className="tw-mt-1.5 tw-rounded-none tw-relative ion-card"
+            color={"background"}
+          >
             {authUser ? (
               <UserCard
                 user={authUser}
@@ -256,7 +259,7 @@ export default function Settings() {
             >
               {t("loopInformation")}
             </IonItemDivider>
-            <IonCard className="tw-mt-1.5 tw-bg-white-transparent tw-rounded-none">
+            <IonCard className="tw-mt-1.5 tw-rounded-none">
               <IonList>
                 <IonItem lines="none">
                   <IonSelect
@@ -404,7 +407,7 @@ export default function Settings() {
               style={{ color: "#ecd6b5", fontSize: 500 }}
               color={chain?.theme === "default" ? "" : "primary"}
               className="tw-absolute -tw-right-64 -tw-bottom-[340px] -tw-z-10"
-            />{" "}
+            />
           </div>
           <IonAlert
             trigger="settings-logout-btn"

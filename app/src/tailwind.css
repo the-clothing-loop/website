@@ -23,19 +23,6 @@
       hsl(292, 70%, 55%) 72.6%
     );
   }
-  .ion-button {
-    /* add css from tailwind classes to another class */
-    @apply .tw-text-center .tw-mb-4;
-
-    /* See custom properties in the ionic docs
-    https://ionicframework.com/docs/api/button#css-custom-properties */
-    background: #93e9be;
-    background-hover: #9ce0be;
-    background-focused: #88f4be;
-
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
   .tw-text-stroke-secondary {
     color: transparent;
     -webkit-text-stroke: 1.5px hsla(var(--s));
@@ -53,13 +40,10 @@
     color: #3a66b3;
   }
   .tw-text-red {
-    color: #c73642;
+    color: #c73642 !important;
   }
   .tw-text-purple {
     color: #513484;
-  }
-  .tw-bg-white-transparent {
-    background: rgba(255, 255, 255, 0.5);
   }
   .tw-bg-orange-light {
     --ion-background-color: #f4e7d0;

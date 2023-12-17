@@ -46,3 +46,6 @@
 .ion-toggle-pause {
   --handle-background-checked: url(/icons/pause-small-outline.svg), #fff;
 }
+ion-card {
+  background: rgba(255, 255, 255, 0.5);
+}
