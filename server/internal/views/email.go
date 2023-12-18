@@ -345,6 +345,7 @@ func EmailLoopIsDeleted(db *gorm.DB, lng,
 	name,
 	email,
 	chainName string,
+	isPending bool,
 ) error {
 	lng = getI18n(lng)
 	m := app.MailCreate()
@@ -354,6 +355,7 @@ func EmailLoopIsDeleted(db *gorm.DB, lng,
 	err := emailGenerateMessage(m, lng, "loop_is_deleted", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
+		"IsPending": isPending,
 	})
 	if err != nil {
 		return err
@@ -377,7 +379,7 @@ func EmailPoke(db *gorm.DB, lng,
 		"Name":            name,
 		"ChainName":       chainName,
 		"ParticipantName": participantName,
-	}, name, chainName)
+	})
 	if err != nil {
 		return err
 	}

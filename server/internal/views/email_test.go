@@ -159,7 +159,6 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 				"ChainName":       faker.Company().Name(),
 			},
 			DataExpected: []string{"Name", "ParticipantName", "ChainName"},
-			Args:         []any{faker.Person().Name(), faker.Company().Name()},
 		},
 		{
 			Name: "register_verification",
