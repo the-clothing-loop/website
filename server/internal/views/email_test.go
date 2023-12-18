@@ -8,15 +8,27 @@ import (
 	"testing"
 
 	"github.com/0xch4z/selectr"
+	"github.com/go-playground/validator/v10"
 	Faker "github.com/jaswdr/faker"
 	"github.com/stretchr/testify/assert"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	BTagChecker "github.com/the-clothing-loop/website/server/pkg/btagchecker"
 )
 
+var validate = validator.New()
 var faker = Faker.New()
 
 func TestEmailFormattingByLanguage(t *testing.T) {
-	languages := []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
+	languages := []string{
+		"de",
+		"en",
+		"es",
+		"fr",
+		"he",
+		"it",
+		"nl",
+		"sv",
+	}
 	templates := []struct {
 		Name         string
 		Data         map[string]any
@@ -260,6 +272,8 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 					assert.NotContains(t, m.Subject, "%!")
 
 					assert.NotEmpty(t, m.Body)
+					assert.Nil(t, validate.Var(m.Body, "html"))
+					assert.True(t, BTagChecker.HasValidClosingTags(m.Body), "Check if the tags used within the provided string has any unclosed tags.")
 
 					for _, v := range tpl.DataExpected {
 						s, _ := selectr.Parse(v)
@@ -290,5 +304,27 @@ func TestGetI18n(t *testing.T) {
 
 	for _, item := range list {
 		assert.Equal(t, item.Expect, getI18n(item.Lng))
+	}
+}
+
+func TestValidateTag(t *testing.T) {
+	list := []struct {
+		Html     string
+		ExpectOk bool
+	}{
+		{Html: "<html><html>", ExpectOk: false},
+		{Html: "<html></html>", ExpectOk: true},
+		{Html: "<html>&</html>", ExpectOk: true},
+		{Html: "<html/></html>", ExpectOk: false},
+		{Html: "<html/>", ExpectOk: true},
+		{Html: "<div><p><p></div>", ExpectOk: false},
+		{Html: "<div><p></p></div>", ExpectOk: true},
+		{Html: "<div><p/></p></div>", ExpectOk: false},
+		{Html: "<div><p/></div>", ExpectOk: true},
+	}
+
+	for _, item := range list {
+		ok := BTagChecker.HasValidClosingTags(item.Html)
+		assert.Equalf(t, item.ExpectOk, ok, "[%v] Html:\t'%s'", item.ExpectOk, item.Html)
 	}
 }
