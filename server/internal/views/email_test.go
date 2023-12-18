@@ -117,8 +117,9 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 		{
 			Name: "do_you_want_to_be_host",
 			Data: map[string]any{
-				"Name":      faker.Person().Name(),
-				"ChainName": faker.Company().Name(),
+				"Name":        faker.Person().Name(),
+				"ChainName":   faker.Company().Name(),
+				"ToolkitLink": "http://" + faker.YouTube().GenerateFullURL(),
 			},
 			DataExpected: []string{"Name", "ChainName"},
 			Args:         []any{},
