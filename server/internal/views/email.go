@@ -379,7 +379,7 @@ func EmailPoke(db *gorm.DB, lng,
 		"Name":            name,
 		"ChainName":       chainName,
 		"ParticipantName": participantName,
-	}, name, chainName)
+	})
 	if err != nil {
 		return err
 	}
