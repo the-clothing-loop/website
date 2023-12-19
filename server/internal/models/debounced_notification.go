@@ -16,7 +16,7 @@ type DebouncedNotification struct {
 }
 
 func GetElapsedNotifications(db *gorm.DB) ([]DebouncedNotification, error) {
-	var notifications []DebouncedNotification
+	notifications := []DebouncedNotification{}
 	err := db.Raw(
 		`SELECT * FROM debounced_notifications WHERE updated_at < DATE_SUB( NOW(), INTERVAL wait_minutes MINUTE )`,
 	).Scan(&notifications).Error
