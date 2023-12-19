@@ -20,6 +20,8 @@
   "uploadImage": "Télécharger une image",
   "draft": "Concept",
   "openToNewMembers": "Ouvert à de nouveaux participants",
+  "myClothingLoopDisabled": "My Clothing Loop App is disabled",
+  "myClothingLoopEnabled": "My Clothing Loop App is enabled",
   "closed": "Fermé",
   "peopleWithCount_one": "{{ count }} personnes",
   "peopleWithCount_other": "{{ count }} personnes",
