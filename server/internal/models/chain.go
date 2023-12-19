@@ -213,7 +213,6 @@ func ChainGetNamesByIDs(db *gorm.DB, chainIDs ...uint) ([]string, error) {
 	return names, nil
 }
 
-// This excludes unapproved users
 func (c *Chain) GetUserContactData(db *gorm.DB) ([]UserContactData, error) {
 	users := []UserContactData{}
 	err := db.Raw(`
@@ -221,11 +220,12 @@ SELECT
 	u.name AS name,
 	u.email AS email,
 	u.i18n AS i18n,
-	c.name AS chain_name
+	c.name AS chain_name,
+	uc.is_approved as is_approved
 FROM user_chains AS uc
 LEFT JOIN users AS u ON u.id = uc.user_id
 LEFT JOIN chains AS c ON c.id = uc.chain_id
-WHERE uc.is_approved = TRUE AND c.id = ?
+WHERE c.id = ?
 	`, c.ID).Scan(&users).Error
 	if err != nil {
 		return nil, err
