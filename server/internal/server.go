@@ -51,13 +51,13 @@ func Routes() *gin.Engine {
 		// https://crontab.guru/#3_3_1_*_*
 		Scheduler.Cron("3 3 1 * *").Do(controllers.CronMonthly, db)
 
-		// At minute 31.
-		// https://crontab.guru/#31_*_*_*_*
-		Scheduler.Cron("31 * * * *").Do(controllers.CronHourly, db)
-
 		// At 02:08.
 		// https://crontab.guru/#8_2_*_*_*
 		Scheduler.Cron("8 2 * * *").Do(controllers.CronDaily, db)
+
+		// At minute 31.
+		// https://crontab.guru/#31_*_*_*_*
+		Scheduler.Cron("31 * * * *").Do(controllers.CronHourly, db)
 
 		// At every minute
 		// https://crontab.guru/#*_*_*_*_*
