@@ -20,6 +20,8 @@
   "uploadImage": "Upload afbeelding",
   "draft": "Ontwerp",
   "openToNewMembers": "Open voor nieuwe leden",
+  "myClothingLoopDisabled": "My Clothing Loop App is disabled",
+  "myClothingLoopEnabled": "My Clothing Loop App is enabled",
   "closed": "Gesloten",
   "peopleWithCount_one": "{{ count }} persoon",
   "peopleWithCount_other": "{{ count }} mensen",
