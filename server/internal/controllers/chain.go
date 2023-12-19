@@ -94,10 +94,11 @@ func ChainGet(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		ChainUID  string `form:"chain_uid" binding:"required"`
-		AddRules  bool   `form:"add_rules" binding:"omitempty"`
-		AddTotals bool   `form:"add_totals" binding:"omitempty"`
-		AddTheme  bool   `form:"add_theme" binding:"omitempty"`
+		ChainUID         string `form:"chain_uid" binding:"required"`
+		AddRules         bool   `form:"add_rules" binding:"omitempty"`
+		AddTotals        bool   `form:"add_totals" binding:"omitempty"`
+		AddTheme         bool   `form:"add_theme" binding:"omitempty"`
+		AddIsAppDisabled bool   `form:"add_is_app_disabled" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -105,36 +106,53 @@ func ChainGet(c *gin.Context) {
 	}
 
 	chain := &models.Chain{}
-	err := db.Raw(`SELECT * FROM chains WHERE uid = ? LIMIT 1`, query.ChainUID).Scan(chain).Error
+	sql := models.ChainResponseSQLSelect
+	if query.AddRules {
+		sql += `,
+		chains.rules_override`
+	}
+	if query.AddTheme {
+		sql += `,
+		chains.theme`
+	}
+	if query.AddIsAppDisabled {
+		sql += `,
+		chains.is_app_disabled`
+	}
+	sql += ` FROM chains WHERE uid = ? LIMIT 1`
+	err := db.Raw(sql, query.ChainUID).Scan(chain).Error
 	if err != nil || chain.ID == 0 {
 		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return
 	}
 
-	body := gin.H{
-		"uid":                 chain.UID,
-		"name":                chain.Name,
-		"description":         chain.Description,
-		"address":             chain.Address,
-		"latitude":            chain.Latitude,
-		"longitude":           chain.Longitude,
-		"radius":              chain.Radius,
-		"sizes":               chain.Sizes,
-		"genders":             chain.Genders,
-		"published":           chain.Published,
-		"open_to_new_members": chain.OpenToNewMembers,
+	body := models.ChainResponse{
+		UID:              chain.UID,
+		Name:             chain.Name,
+		Description:      chain.Description,
+		Address:          chain.Address,
+		Latitude:         chain.Latitude,
+		Longitude:        chain.Longitude,
+		Radius:           chain.Radius,
+		Sizes:            chain.Sizes,
+		Genders:          chain.Genders,
+		Published:        chain.Published,
+		OpenToNewMembers: chain.OpenToNewMembers,
 	}
 
 	if query.AddRules {
-		body["rules_override"] = chain.RulesOverride
+		body.RulesOverride = &chain.RulesOverride
 	}
 	if query.AddTheme {
-		body["theme"] = chain.Theme
+		body.Theme = &chain.Theme
 	}
 	if query.AddTotals {
 		result := chain.GetTotals(db)
-		body["total_members"] = result.TotalMembers
-		body["total_hosts"] = result.TotalHosts
+		body.TotalMembers = &result.TotalMembers
+		body.TotalHosts = &result.TotalHosts
+	}
+	if query.AddIsAppDisabled {
+		body.IsAppDisabled = &chain.IsAppDisabled
 	}
 	c.JSON(200, body)
 }
@@ -167,7 +185,7 @@ func ChainGetAll(c *gin.Context) {
 		TotalMembers int `gorm:"total_members"`
 		TotalHosts   int `gorm:"total_hosts"`
 	}{}
-	sql := "SELECT chains.*"
+	sql := models.ChainResponseSQLSelect
 	whereOrSql := []string{}
 	args := []any{}
 
@@ -219,23 +237,26 @@ func ChainGetAll(c *gin.Context) {
 		return
 	}
 
-	chainsJson := []*gin.H{}
+	chainsJson := []*models.ChainResponse{}
 	for _, chain := range chains {
-		chainsJson = append(chainsJson, &gin.H{
-			"uid":                 chain.UID,
-			"name":                chain.Name,
-			"description":         chain.Description,
-			"address":             chain.Address,
-			"latitude":            chain.Latitude,
-			"longitude":           chain.Longitude,
-			"radius":              chain.Radius,
-			"sizes":               chain.Sizes,
-			"genders":             chain.Genders,
-			"published":           chain.Published,
-			"open_to_new_members": chain.OpenToNewMembers,
-			"total_members":       chain.TotalMembers,
-			"total_hosts":         chain.TotalHosts,
-		})
+		cJSON := &models.ChainResponse{
+			UID:              chain.UID,
+			Name:             chain.Name,
+			Description:      chain.Description,
+			Address:          chain.Address,
+			Latitude:         chain.Latitude,
+			Longitude:        chain.Longitude,
+			Radius:           chain.Radius,
+			Sizes:            chain.Sizes,
+			Genders:          chain.Genders,
+			Published:        chain.Published,
+			OpenToNewMembers: chain.OpenToNewMembers,
+		}
+		if query.AddTotals {
+			cJSON.TotalMembers = &chain.TotalMembers
+			cJSON.TotalHosts = &chain.TotalHosts
+		}
+		chainsJson = append(chainsJson, cJSON)
 	}
 
 	c.JSON(200, chainsJson)
@@ -297,6 +318,7 @@ func ChainUpdate(c *gin.Context) {
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 		Theme            *string   `json:"theme,omitempty"`
+		IsAppDisabled    *bool     `json:"is_app_disabled,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -362,6 +384,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Theme != nil {
 		valuesToUpdate["theme"] = *(body.Theme)
+	}
+	if body.IsAppDisabled != nil {
+		valuesToUpdate["is_app_disabled"] = *(body.IsAppDisabled)
 	}
 	err := db.Model(chain).Updates(valuesToUpdate).Error
 	if err != nil {

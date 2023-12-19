@@ -7,7 +7,7 @@ import { openOutline } from "ionicons/icons";
 import { useHistory } from "react-router";
 import { OverlayContainsState, OverlayState } from "../utils/overlay_open";
 
-export default function OverlayPaused() {
+export default function OverlayAppDisabled() {
   const { t } = useTranslation();
   const history = useHistory();
   const { chain, chainUsers, refresh, authUser, overlayState, closeOverlay } =
@@ -28,11 +28,12 @@ export default function OverlayPaused() {
     authUser?.chains.find((uc) => uc.chain_uid === chain?.uid)
       ?.is_chain_admin || false;
 
-  let isExplicitlyPublished = chain === null ? true : chain.published;
+  let isExplicitlyAppDisabled = chain?.is_app_disabled || false;
+  //   console.log("isExplicitlyAppDisabled", isExplicitlyAppDisabled);
 
   if (
-    isExplicitlyPublished ||
-    OverlayContainsState(overlayState, OverlayState.CLOSE_PAUSED)
+    !isExplicitlyAppDisabled ||
+    OverlayContainsState(overlayState, OverlayState.CLOSE_CHAIN_APP_DISABLED)
   )
     return null;
   return (
@@ -40,8 +41,13 @@ export default function OverlayPaused() {
       <div className="tw-relative tw-z-20 tw-flex tw-h-full tw-flex-col tw-justify-center tw-items-center tw-text-center">
         <IonCard className="tw-bg-background">
           <IonCardContent className="tw-text-text">
-            <h1 className="!tw-mb-4">{t("loopIsNotPublished")}</h1>
-            {isUserHost ? null : (
+            <h1 className="!tw-mb-4">{t("loopIsNotUsingThisApp")}</h1>
+            {isUserHost ? (
+              <p
+                className="!tw-mb-3"
+                dangerouslySetInnerHTML={{ __html: t("pleaseEnableLoopApp") }}
+              ></p>
+            ) : (
               <>
                 <p className="!tw-mb-3">{t("pleaseContactYourLoopHost")}</p>
                 <div className="tw-flex tw-justify-center tw-flex-wrap tw-mt-1.5 tw-m-0 tw-mb-2.5">
@@ -82,7 +88,9 @@ export default function OverlayPaused() {
                 expand="block"
                 className="tw-mt-4"
                 color="light"
-                onClick={() => closeOverlay(OverlayState.CLOSE_PAUSED)}
+                onClick={() =>
+                  closeOverlay(OverlayState.CLOSE_CHAIN_APP_DISABLED)
+                }
               >
                 {t("hide")}
               </IonButton>

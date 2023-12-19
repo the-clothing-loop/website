@@ -34,7 +34,41 @@ type Chain struct {
 	UpdatedAt        time.Time
 	DeletedAt        zero.Time
 	Theme            string
+	IsAppDisabled    bool
 }
+
+type ChainResponse struct {
+	UID              string   `json:"uid"`
+	Name             string   `json:"name"`
+	Description      string   `json:"description"`
+	Address          string   `json:"address"`
+	Latitude         float64  `json:"latitude"`
+	Longitude        float64  `json:"longitude"`
+	Radius           float32  `json:"radius"`
+	Sizes            []string `json:"sizes"`
+	Genders          []string `json:"genders"`
+	Published        bool     `json:"published"`
+	OpenToNewMembers bool     `json:"open_to_new_members"`
+	TotalMembers     *int     `json:"total_members,omitempty"`
+	TotalHosts       *int     `json:"total_hosts,omitempty"`
+	RulesOverride    *string  `json:"rules_override,omitempty"`
+	Theme            *string  `json:"theme,omitempty"`
+	IsAppDisabled    *bool    `json:"is_app_disabled,omitempty"`
+}
+
+// Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members
+const ChainResponseSQLSelect = `SELECT chains.id,
+chains.uid,
+chains.name,
+chains.description,
+chains.address,
+chains.latitude,
+chains.longitude,
+chains.radius,
+chains.sizes,
+chains.genders,
+chains.published,
+chains.open_to_new_members`
 
 func (c *Chain) SetRouteOrderByUserUIDs(db *gorm.DB, userUIDs []string) error {
 	tx := db.Begin()

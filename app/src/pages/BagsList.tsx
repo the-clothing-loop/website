@@ -61,6 +61,7 @@ import { useLongPress } from "use-long-press";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import OverlayPaused from "../components/OverlayPaused";
 import { Dayjs } from "dayjs";
+import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 
 const MIN_BAG_LIST = 9;
 const MIN_USERS_FOR_SEARCH = 15;
@@ -204,6 +205,7 @@ export default function BagsList() {
   return (
     <IonPage>
       <OverlayPaused />
+      <OverlayAppDisabled />
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons>
