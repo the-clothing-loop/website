@@ -20,6 +20,8 @@
   "uploadImage": "Bild hochladen",
   "draft": "Entwurf",
   "openToNewMembers": "Für neue Mitglieder öffnen",
+  "myClothingLoopDisabled": "My Clothing Loop App is disabled",
+  "myClothingLoopEnabled": "My Clothing Loop App is enabled",
   "closed": "Geschlossen",
   "peopleWithCount_one": "{{ count }} Menschen",
   "peopleWithCount_other": "{{ count }} Leute",
