@@ -20,6 +20,8 @@
   "uploadImage": "העלאת תמונות",
   "draft": "טיוטה",
   "openToNewMembers": "פתוח למשתתפים",
+  "myClothingLoopDisabled": "My Clothing Loop App is disabled",
+  "myClothingLoopEnabled": "My Clothing Loop App is enabled",
   "closed": "סגור",
   "peopleWithCount_one": "{{ count }} אדם",
   "peopleWithCount_other": "{{ count }} אנשים",
