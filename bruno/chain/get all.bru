@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: {{base}}/v2/chain/all
+  url: {{base}}/v2/chain/all?add_totals=true
   body: none
   auth: none
+}
+
+query {
+  add_totals: true
 }

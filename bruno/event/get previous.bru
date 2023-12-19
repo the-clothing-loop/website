@@ -1,0 +1,18 @@
+meta {
+  name: get previous
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base}}/v2/event/previous?latitude=52.641460&longitude=5.056810&radius=1000&include_total=true
+  body: none
+  auth: none
+}
+
+query {
+  latitude: 52.641460
+  longitude: 5.056810
+  radius: 1000
+  include_total: true
+}

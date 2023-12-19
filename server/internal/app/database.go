@@ -27,6 +27,7 @@ func DatabaseInit() *gorm.DB {
 func DatabaseAutoMigrate(db *gorm.DB) {
 	hadIsApprovedColumn := db.Migrator().HasColumn(&models.UserChain{}, "is_approved")
 
+	// User Tokens
 	if db.Migrator().HasTable("user_tokens") {
 		columnTypes, err := db.Migrator().ColumnTypes("user_tokens")
 		if err == nil {
@@ -66,6 +67,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 			}
 		}
 	}
+	// Bags
 	if db.Migrator().HasTable("bags") {
 		columnTypes, err := db.Migrator().ColumnTypes("bags")
 		if err == nil {
@@ -80,6 +82,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 			}
 		}
 	}
+	// Mail removed
 	if db.Migrator().HasTable("mails") {
 		db.Exec(`DROP TABLE mails`)
 	}

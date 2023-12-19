@@ -26,6 +26,10 @@ lint:
 test:
 	@go test ./...
 
+.PHONY: test-force
+test-force:
+	@go clean -testcache; go test ./...
+
 .PHONY: test-ci
 test-ci:
 	@go test -tags ci ./...

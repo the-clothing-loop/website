@@ -30,8 +30,16 @@ export const EVENT_IMAGE_EXPIRATION = 60 * 60 * 24 * 30 * 5;
 export function eventGetAll(params?: EventGetAllParams) {
   return window.axios.get<Event[]>("/v2/event/all", { params });
 }
-export function eventGetPrevious(params?: EventGetAllParams) {
-  return window.axios.get<Event[]>("/v2/event/previous", { params });
+export interface EventGetPreviousResponse {
+  previous_events: Event[];
+  previous_total: number;
+}
+export function eventGetPrevious(
+  params?: EventGetAllParams & { include_total?: boolean }
+) {
+  return window.axios.get<EventGetPreviousResponse>("/v2/event/previous", {
+    params,
+  });
 }
 export function eventGet(uid: UID) {
   return window.axios.get<Event>(`/v2/event/${uid}`);
