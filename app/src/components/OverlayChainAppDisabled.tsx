@@ -65,36 +65,35 @@ export default function OverlayAppDisabled() {
                 </div>
               </>
             )}
+            {isUserHost ? (
+              <IonButton
+                href={`https://clothingloop.org/loops/${chain?.uid}/members`}
+                target="_blank"
+                expand="block"
+                className="tw-mb-4"
+              >
+                {t("editLoop")}
+                <IonIcon slot="end" icon={openOutline}></IonIcon>
+              </IonButton>
+            ) : null}
             <IonButton
               onClick={goToSettings}
               expand="block"
-              color="primary"
-              fill={isUserHost ? "outline" : "solid"}
+              color={isUserHost ? "light" : "primary"}
             >
               {t("selectADifferentLoop")}
             </IonButton>
             {isUserHost ? (
-              <>
-                <IonButton
-                  href={`https://clothingloop.org/loops/${chain?.uid}/members`}
-                  target="_blank"
-                  expand="block"
-                  className="tw-mt-4"
-                >
-                  {t("editLoop")}
-                  <IonIcon slot="end" icon={openOutline}></IonIcon>
-                </IonButton>
-                <IonButton
-                  expand="block"
-                  className="tw-mt-4"
-                  color="light"
-                  onClick={() =>
-                    closeOverlay(OverlayState.CLOSE_CHAIN_APP_DISABLED)
-                  }
-                >
-                  {t("hide")}
-                </IonButton>
-              </>
+              <IonButton
+                expand="block"
+                className="tw-mt-4"
+                color="light"
+                onClick={() =>
+                  closeOverlay(OverlayState.CLOSE_CHAIN_APP_DISABLED)
+                }
+              >
+                {t("hide")}
+              </IonButton>
             ) : null}
           </IonCardContent>
         </IonCard>
