@@ -109,13 +109,21 @@ acc.clothingloop.org {
 	header X-Robots-Tag noindex
 
 	route {
-		header Cache-Control max-age=3600
+		header Cache-Control no-cache
 		header /assets/* Cache-Control max-age=31536000
-		header /api/* Cache-Control no-cache
 	}
 
 	handle_path /api/* {
 		reverse_proxy 127.0.0.1:8082
+	}
+
+	redir /mailpit /mailpit/
+	handle_path /mailpit/* {
+		basicauth bcrypt {
+			hello@clothingloop.org TUFJTFBJVF9QQVNTV09SRA==
+		}
+		rewrite * /mailpit{path}
+		reverse_proxy 127.0.0.1:8085
 	}
 
 	handle {

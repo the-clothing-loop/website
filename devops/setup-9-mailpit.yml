@@ -1,0 +1,34 @@
+- hosts: server
+  become: true
+  tasks:
+    - name: Check what is installed
+      package_facts:
+        manager: "auto"
+    - name: Install curl if not already installed
+      ansible.builtin.apt:
+        pkg:
+          - curl
+      when: "ansible_facts.packages['curl'] is undefined"
+    # - name: Install mailpit
+    #   ansible.builtin.shell: |
+    #     curl -fsSL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh -o /tmp/mailpit_install.sh
+    #     sudo bash /tmp/mailpit_install.sh
+    - name: Add mailpit service
+      vars:
+        service_desc: Mailpit
+        service_user: clothingloop
+        service_exec: "/usr/local/bin/mailpit --smtp 127.0.0.1:8084 --listen 127.0.0.1:8085 --smtp-auth-allow-insecure --smtp-auth-accept-any --webroot /mailpit/"
+      ansible.builtin.template:
+        src: templates/service.j2
+        dest: /etc/systemd/system/cl-mailpit.service
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Systemd reload
+      ansible.builtin.shell: |
+        systemctl daemon-reload
+    - name: Enable service mailpit
+      ansible.builtin.service:
+        name: cl-mailpit
+        enabled: true
+        state: restarted
