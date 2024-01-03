@@ -63,6 +63,10 @@ www.clothingloop.org {
 		encode zstd gzip
 	}
 
+	handle_path /toolkit {
+		redir https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27
+	}
+
 	handle @searchbot {
 		request_header X-Prerender-Token PRERENDER_TOKEN
 		rewrite * /{scheme}://{host}{uri}
