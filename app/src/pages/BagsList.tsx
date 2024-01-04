@@ -260,7 +260,9 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large" className="tw-text-[#518d7d]" >{t("whereIsTheBag")}</IonTitle>
+            <IonTitle size="large" className="tw-text-[#518d7d]">
+              {t("whereIsTheBag")}
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonText color="medium" className="ion-margin">
@@ -285,7 +287,7 @@ export default function BagsList() {
                 const isBagTooOld = bagUpdatedAt.isBefore(
                   dayjs().add(-7, "days"),
                 );
-                const bagColor = bag.color
+                const bagColor = bag.color;
                 return (
                   <IonCol size="6" key={"inRoute" + bag.id}>
                     <Card
