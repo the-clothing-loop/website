@@ -63,6 +63,7 @@ func ChainCreate(c *gin.Context) {
 	}
 	if !body.AllowTOH {
 		c.String(http.StatusBadRequest, ErrAllowTOHFalse)
+		return
 	}
 
 	chain := models.Chain{
