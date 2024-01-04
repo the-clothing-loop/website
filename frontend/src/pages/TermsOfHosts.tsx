@@ -5,11 +5,11 @@ export default function TermsOfHosts() {
     <>
       <Helmet>
         <title>The Clothing Loop | Terms of Hosts</title>
-        <meta name="description" content="Terms of use" />
+        <meta name="description" content="Terms of Hosts" />
       </Helmet>
       <div className="container mx-auto px-4 md:px-20 py-10">
         <h1 className="font-serif text-secondary font-bold text-5xl mb-4">
-          {"Terms of Use - The Clothing Loop"}
+          {"Terms of Hosts - The Clothing Loop"}
         </h1>
 
         <TermsOfHostsHTML className="prose" />
