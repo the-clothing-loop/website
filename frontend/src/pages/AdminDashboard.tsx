@@ -111,7 +111,7 @@ export default function AdminDashboard() {
               let target = e.target as HTMLDivElement;
               // if scrolled to the bottom of the page
               if (
-                target.scrollTop + target.clientHeight + 100 >
+                target.scrollTop + target.clientHeight + 200 >
                 target.scrollHeight
               ) {
                 getElBtn().removeAttribute("disabled");
