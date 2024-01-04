@@ -283,7 +283,9 @@ export default function Events() {
                         n: nMorePrevEvents,
                       }}
                       components={{
-                        s: <span className="text-4xl text-accent" />,
+                        s: (
+                          <span className="text-4xl text-accent ms-1.5 me-0.5" />
+                        ),
                       }}
                     />
                   </h4>

@@ -128,10 +128,11 @@ func (u *User) AcceptTOH(db *gorm.DB) error {
 }
 
 type UserContactData struct {
-	Name      string      `gorm:"name"`
-	Email     zero.String `gorm:"email"`
-	I18n      string      `gorm:"i18n"`
-	ChainName string      `gorm:"chain_name"`
+	Name       string      `gorm:"name"`
+	Email      zero.String `gorm:"email"`
+	I18n       string      `gorm:"i18n"`
+	ChainName  string      `gorm:"chain_name"`
+	IsApproved bool        `gorm:"is_approved"`
 }
 
 // Expects the userUID not to be empty

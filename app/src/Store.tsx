@@ -18,6 +18,7 @@ import {
   chainUpdate,
 } from "./api";
 import dayjs from "./dayjs";
+import { OverlayState } from "./utils/overlay_open";
 
 interface StorageAuth {
   user_uid: string;
@@ -44,8 +45,8 @@ export const StoreContext = createContext({
   logout: () => Promise.reject<void>(),
   init: () => Promise.reject<void>(),
   refresh: (tab: string) => Promise.reject<void>(),
-  isOverlayPausedOpen: false,
-  closeOverlayPaused: () => {},
+  overlayState: OverlayState.OPEN_ALL,
+  closeOverlay: (s: OverlayState) => {},
   bagListView: "dynamic" as BagListView,
   setBagListView: (v: BagListView) => {},
 });
@@ -61,7 +62,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [storage, setStorage] = useState(new Storage({ name: "store_v1" }));
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isChainAdmin, setIsChainAdmin] = useState(false);
-  const [isOverlayPausedOpen, setIsOverlayPausedOpen] = useState(true);
+  const [overlayState, setOverlayState] = useState(OverlayState.OPEN_ALL);
   const [bagListView, setBagListView] = useState<BagListView>("dynamic");
 
   // Get storage from IndexedDB or LocalStorage
@@ -162,7 +163,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (c && _authUserUID) {
       try {
         const res = await Promise.all([
-          chainGet(c.uid, true, true),
+          chainGet(c.uid, true, true, true),
           userGetAllByChain(c.uid),
           routeGetOrder(c.uid),
           bagGetAllByChain(c.uid, _authUserUID),
@@ -230,7 +231,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       if (!chain)
         throw "You must have first selected a Loop in the settings tab.";
 
-      let _chain = await chainGet(chain.uid, true, true);
+      let _chain = await chainGet(chain.uid, true, true, true);
       setChain(_chain.data);
     } else if (tab === "address" || tab === "bags") {
       if (!chain)
@@ -268,7 +269,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           .filter((uc) => uc.is_approved)
           .map((uc) => {
             const isCurrentChain = uc.chain_uid === chain?.uid;
-            return chainGet(uc.chain_uid, isCurrentChain, isCurrentChain);
+            return chainGet(uc.chain_uid, isCurrentChain, isCurrentChain, true);
           }),
       ).then((chains) =>
         chains.map((c) => {
@@ -285,13 +286,17 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  function closeOverlayPaused() {
-    setIsOverlayPausedOpen(false);
+  function closeOverlay(sTo: OverlayState) {
+    setOverlayState((s) => {
+      let newTo = s + sTo;
+      if (newTo > OverlayState.CLOSE_ALL) newTo = OverlayState.CLOSE_ALL;
+      return newTo;
+    });
     setTimeout(
       () => {
-        setIsOverlayPausedOpen(true);
+        setOverlayState(OverlayState.OPEN_ALL);
       },
-      1000 * 60 * 60,
+      1000 * 60 * 60, // 1 hour
     );
   }
 
@@ -320,8 +325,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         login: _login,
         init: _init,
         refresh: (t) => _refresh(t, authUser),
-        isOverlayPausedOpen,
-        closeOverlayPaused,
+        overlayState: overlayState,
+        closeOverlay,
         bagListView,
         setBagListView: _setBagListView,
       }}

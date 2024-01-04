@@ -279,8 +279,9 @@ func EmailDoYouWantToBeHost(db *gorm.DB, lng,
 	m.ToName = name
 	m.ToAddress = email
 	err := emailGenerateMessage(m, lng, "do_you_want_to_be_host", gin.H{
-		"Name":      name,
-		"ChainName": chainName,
+		"Name":        name,
+		"ChainName":   chainName,
+		"ToolkitLink": "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27",
 	})
 	if err != nil {
 		return err
@@ -345,6 +346,7 @@ func EmailLoopIsDeleted(db *gorm.DB, lng,
 	name,
 	email,
 	chainName string,
+	isPending bool,
 ) error {
 	lng = getI18n(lng)
 	m := app.MailCreate()
@@ -354,6 +356,7 @@ func EmailLoopIsDeleted(db *gorm.DB, lng,
 	err := emailGenerateMessage(m, lng, "loop_is_deleted", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
+		"IsPending": isPending,
 	})
 	if err != nil {
 		return err
@@ -377,7 +380,7 @@ func EmailPoke(db *gorm.DB, lng,
 		"Name":            name,
 		"ChainName":       chainName,
 		"ParticipantName": participantName,
-	}, name, chainName)
+	})
 	if err != nil {
 		return err
 	}

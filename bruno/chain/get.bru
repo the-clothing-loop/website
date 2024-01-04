@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{base}}/v2/chain?chain_uid={{chainUID}}&add_totals=true
+  url: {{base}}/v2/chain?chain_uid={{chainUID}}&add_totals=true&add_is_app_disabled=true
   body: none
   auth: none
 }
@@ -13,4 +13,5 @@ get {
 query {
   chain_uid: {{chainUID}}
   add_totals: true
+  add_is_app_disabled: true
 }
