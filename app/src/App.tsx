@@ -45,6 +45,8 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import "./theme/utilities.css";
 import "./theme/overrides.css";
+/* Theme changes for development */
+// import "./theme/dev.css";
 import { StoreContext } from "./Store";
 import { PropsWithChildren, useContext, useEffect, useMemo } from "react";
 
@@ -75,8 +77,15 @@ setupIonicReact({
 });
 
 export default function App() {
-  const { isAuthenticated, init, authenticate, bags, chain } =
-    useContext(StoreContext);
+  const {
+    isAuthenticated,
+    init,
+    authenticate,
+    bags,
+    chain,
+    authUser,
+    isChainAdmin,
+  } = useContext(StoreContext);
   const history = useHistory();
   let location = useLocation();
 
@@ -130,6 +139,7 @@ export default function App() {
     if (!bags.length) return false;
 
     return bags.some((b) => {
+      if (!(b.user_uid === authUser?.uid)) return false;
       const updatedAt = dayjs(b.updated_at);
       const now = dayjs();
       return updatedAt.isBefore(now.add(-7, "days"));

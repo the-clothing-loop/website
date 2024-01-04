@@ -27,6 +27,14 @@
         owner: root
         group: root
         mode: "0644"
+    - name: Replace MAILPIT_PASSWORD
+      replace:
+        path: /etc/caddy/Caddyfile
+        regexp: "TUFJTFBJVF9QQVNTV09SRA=="
+        replace: "{{ mailpit_ui_password_bcrypt }}"
+        owner: root
+        group: root
+        mode: "0644"
     - name: Add maintenance caddy file
       ansible.builtin.template:
         src: templates/Caddyfile.maint

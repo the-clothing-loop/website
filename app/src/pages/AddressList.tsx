@@ -20,6 +20,7 @@ import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
 import croppedLogo from "../../public/the_clothing_loop_logo_cropped.png";
 import OverlayPaused from "../components/OverlayPaused";
+import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 
 export default function AddressList() {
   const { chain, chainUsers, route, authUser, bags, isChainAdmin } =
@@ -29,6 +30,7 @@ export default function AddressList() {
   return (
     <IonPage>
       <OverlayPaused />
+      <OverlayAppDisabled />
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{t("addresses")}</IonTitle>

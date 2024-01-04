@@ -1,5 +1,19 @@
 # DevOps
 
+## Used ports
+
+| Port | Description |
+|-----:|----------------|
+| 80 | Caddy |
+| 443 | Caddy |
+| 3306 | MySQL |
+| 8081 | cl_api_prod |
+| 8082 | cl_api_acc |
+| 8083 | image_proxy |
+| 8084 | mailpit smtp |
+| 8085 | mailpit ui |
+
+
 ## Setup developers computer
 
 ### 1. Setup ssh access

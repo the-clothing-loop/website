@@ -1,28 +1,17 @@
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonIcon,
-  IonPage,
-} from "@ionic/react";
+import { IonButton, IonCard, IonCardContent, IonIcon } from "@ionic/react";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { IsChainAdmin, StoreContext } from "../Store";
 import { User } from "../api";
 import { openOutline } from "ionicons/icons";
 import { useHistory } from "react-router";
+import { OverlayContainsState, OverlayState } from "../utils/overlay_open";
 
 export default function OverlayPaused() {
   const { t } = useTranslation();
   const history = useHistory();
-  const {
-    chain,
-    chainUsers,
-    refresh,
-    authUser,
-    isOverlayPausedOpen,
-    closeOverlayPaused,
-  } = useContext(StoreContext);
+  const { chain, chainUsers, refresh, authUser, overlayState, closeOverlay } =
+    useContext(StoreContext);
 
   const hosts = useMemo<User[]>(
     () => chainUsers.filter((u) => IsChainAdmin(u, chain)),
@@ -31,7 +20,7 @@ export default function OverlayPaused() {
 
   function goToSettings() {
     refresh("settings").then(() => {
-      history.replace("/settings");
+      history.replace("/settings", { openChainSelect: true });
     });
   }
 
@@ -41,7 +30,11 @@ export default function OverlayPaused() {
 
   let isExplicitlyPublished = chain === null ? true : chain.published;
 
-  if (isExplicitlyPublished || !isOverlayPausedOpen) return null;
+  if (
+    isExplicitlyPublished ||
+    OverlayContainsState(overlayState, OverlayState.CLOSE_PAUSED)
+  )
+    return null;
   return (
     <div className="tw-absolute tw-inset-0">
       <div className="tw-relative tw-z-20 tw-flex tw-h-full tw-flex-col tw-justify-center tw-items-center tw-text-center">
@@ -66,34 +59,33 @@ export default function OverlayPaused() {
                 </div>
               </>
             )}
+            {isUserHost ? (
+              <IonButton
+                href={`https://clothingloop.org/loops/${chain?.uid}/members`}
+                target="_blank"
+                expand="block"
+                className="tw-mb-4"
+              >
+                {t("editLoop")}
+                <IonIcon slot="end" icon={openOutline}></IonIcon>
+              </IonButton>
+            ) : null}
             <IonButton
               onClick={goToSettings}
               expand="block"
-              color="primary"
-              fill={isUserHost ? "outline" : "solid"}
+              color={isUserHost ? "light" : "primary"}
             >
               {t("selectADifferentLoop")}
             </IonButton>
             {isUserHost ? (
-              <>
-                <IonButton
-                  href={`https://clothingloop.org/loops/${chain?.uid}/members`}
-                  target="_blank"
-                  expand="block"
-                  className="tw-mt-4"
-                >
-                  {t("editLoop")}
-                  <IonIcon slot="end" icon={openOutline}></IonIcon>
-                </IonButton>
-                <IonButton
-                  expand="block"
-                  className="tw-mt-4"
-                  color="light"
-                  onClick={() => closeOverlayPaused()}
-                >
-                  {t("hide")}
-                </IonButton>
-              </>
+              <IonButton
+                expand="block"
+                className="tw-mt-4"
+                color="light"
+                onClick={() => closeOverlay(OverlayState.CLOSE_PAUSED)}
+              >
+                {t("hide")}
+              </IonButton>
             ) : null}
           </IonCardContent>
         </IonCard>

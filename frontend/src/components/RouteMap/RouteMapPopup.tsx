@@ -41,7 +41,7 @@ export default function RouteMapPopup(props: {
   }
 
   return (
-    <div className="absolute inset-0 p-4 bg-white/30 hidden lg:block">
+    <div className="absolute inset-0 px-4 bg-white/30 hidden lg:block">
       <dialog
         open
         className="relative w-full h-full flex p-0 shadow-lg"

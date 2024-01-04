@@ -89,9 +89,11 @@ export default function EventChangeForm(props: {
   initialValues?: EventCreateBody;
   onSubmit: (v: EventCreateBody) => void;
 }) {
+  const { t } = useTranslation();
   const { authUser } = useContext(AuthContext);
   const { addToastError } = useContext(ToastContext);
   const refFileInput = useRef<HTMLInputElement>(null);
+
   const [values, setValue, setValues] = useForm<EventCreateBody>(
     props.initialValues || defaultValues
   );
@@ -99,7 +101,8 @@ export default function EventChangeForm(props: {
   const [hasEndDate, setHasEndDate] = useState(values.date_end !== null);
   const [firstSetDefaultEndDate, setFirstSetDefaultEndDate] = useState(false);
   const [dateEnd, setDateEnd] = useState(
-    values.date_end || dayjs().add(2, "hour").minute(0).second(0).format()
+    values.date_end ||
+      dayjs(values.date).add(2, "hour").minute(0).second(0).format()
   );
   const sepDateEnd = useSepDateTime(dateEnd, setDateEnd);
   const [deleteImageUrl, setDeleteImageUrl] = useState("");
@@ -119,7 +122,13 @@ export default function EventChangeForm(props: {
   const [eventPriceCurrency, _setEventPriceCurrency] = useState(
     () => values.price_currency || ""
   );
-  const { t } = useTranslation();
+  const [chains, setChains] = useState<Chain[]>([]);
+
+  useEffect(() => {
+    getChains();
+  }, []);
+
+  useEffect(() => {}, [props.initialValues]);
 
   function setEventPriceCurrency(e: ChangeEvent<HTMLSelectElement>) {
     const v = e.target.value;
@@ -170,11 +179,6 @@ export default function EventChangeForm(props: {
     props.onSubmit(values);
   }
 
-  const [chains, setChains] = useState<Chain[]>([]);
-  useEffect(() => {
-    getChains();
-  }, []);
-
   async function getChains() {
     if (!authUser) return;
     let chainUIDs = authUser.chains
@@ -193,6 +197,11 @@ export default function EventChangeForm(props: {
   }
 
   const isValidPrice = validatePrice(eventPriceText);
+
+  console.log("initial values: ", props.initialValues);
+  console.log("Date values: ", values.date);
+  console.log("Date End values: ", values.date_end);
+  console.log("Date End calc: ", dateEnd);
 
   return (
     <div className="w-full">

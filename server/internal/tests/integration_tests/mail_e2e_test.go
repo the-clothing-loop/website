@@ -201,6 +201,7 @@ func TestEmailLoopIsDeleted(t *testing.T) {
 			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			faker.Company().Name(),
+			faker.Bool(),
 		)
 		assert.Nil(t, err)
 	})
