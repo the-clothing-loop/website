@@ -1,9 +1,27 @@
---- Migrations for Terms of Hosts
+--- Migrations for Terms of Hosts (should be run 40 days after ToH start)
 
---- Draft all Loops where the host has not accepted the toh
+--- Draft all Loops where all the hosts have not accepted the toh
+UPDATE chains AS c2 SET c2.published = FALSE, c2.open_to_new_members = FALSE
+WHERE c2.id IN ( 
+	SELECT c.id FROM chains AS c
+	WHERE c.published = TRUE AND (
+		SELECT COUNT(uc.id) FROM user_chains AS uc
+		JOIN users AS u ON uc.user_id = u.id
+		WHERE uc.chain_id = c.id
+			AND uc.is_chain_admin = TRUE
+			AND uc.is_approved = TRUE
+			AND COALESCE(u.accepted_toh, 0) != TRUE
+	) > 0 AND (
+		SELECT COUNT(uc.id) FROM user_chains AS uc
+		JOIN users AS u ON uc.user_id = u.id
+		WHERE uc.chain_id = c.id
+			AND uc.is_chain_admin = TRUE
+			AND uc.is_approved = TRUE
+			AND u.accepted_toh = TRUE
+	) = 0
+);
 
-
---- List Loops where only some hosts have not accepted the toh (should be run 40 days after ToH start)
+--- List Loops where only some hosts have not accepted the toh
 SELECT c.id, c.name,
    JSON_ARRAYAGG(CONCAT("host id: ",h.id," name: ", h.name," accepted_toh: ", COALESCE(accepted_toh, 0))) AS hosts
 FROM chains AS c
