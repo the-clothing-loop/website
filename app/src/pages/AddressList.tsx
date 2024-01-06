@@ -18,7 +18,6 @@ import { StoreContext } from "../Store";
 import { bagHandle, pauseCircleSharp, shield } from "ionicons/icons";
 import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
-import croppedLogo from "../../public/the_clothing_loop_logo_cropped.png";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 
@@ -143,8 +142,8 @@ export default function AddressList() {
           })}
         </IonList>
         <IonImg
-          src={croppedLogo}
-          className="tw-w-full tw-h-auto tw-mx-auto tw-absolute tw-bottom-12"
+          src="/the_clothing_loop_logo_cropped.svg"
+          className="tw-w-full tw-h-auto tw-mx-auto tw-absolute tw-bottom-12 dark:tw-invert-[60%]"
         />
       </IonContent>
     </IonPage>
