@@ -76,7 +76,6 @@ export default function HelpList() {
     () => chainUsers.filter((u) => IsChainAdmin(u, chain)),
     [chainUsers, chain],
   );
-  const themeColor = chain?.theme === "default" ? "#d1c5e8" : "primary";
 
   function handleClickChange() {
     modal.current?.present();
@@ -98,14 +97,19 @@ export default function HelpList() {
 
           {isChainAdmin ? (
             <IonButtons slot="end">
-              <IonButton onClick={handleClickChange}>{t("change")}</IonButton>
+              <IonButton
+                onClick={handleClickChange}
+                className={chain?.theme == "default" ? "!tw-text-purple" : ""}
+              >
+                {t("change")}
+              </IonButton>
             </IonButtons>
           ) : null}
         </IonToolbar>
       </IonHeader>
       <IonContent
         fullscreen
-        class={chain?.theme == "default" ? "tw-bg-purple-light" : ""}
+        class={chain?.theme == "default" ? "tw-bg-purple-contrast" : ""}
       >
         <IonHeader collapse="condense">
           <IonToolbar>
@@ -175,13 +179,13 @@ export default function HelpList() {
             modal={modal}
             didDismiss={refreshChain}
           />
-          {/* Background SVG */}
+
           <IonIcon
             aria-hidden="true"
             icon="/v2_o.svg"
-            style={{ color: "#d1c5e8", fontSize: 500 }}
+            style={{ fontSize: 500 }}
             color={chain?.theme === "default" ? "" : "primary"}
-            className="tw-absolute -tw-right-64 -tw-bottom-60 -tw-z-10"
+            className="tw-absolute -tw-right-64 -tw-bottom-60 -tw-z-10 tw-text-purple-shade"
           />
         </div>
       </IonContent>

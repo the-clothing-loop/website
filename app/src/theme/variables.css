@@ -83,7 +83,20 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-shade: #e0e0e0;
   --ion-color-light-tint: #ffffff;
 
-  --ion-item-background: transparent;
+  /** orange **/
+  --ion-color-orange: #d97706;
+  --ion-color-orange-contrast: #f4e7d0;
+  /** blue **/
+  --ion-color-blue: #3a66b3;
+  --ion-color-blue-contrast: #d6e4f2;
+  /** red **/
+  --ion-color-red: #c73642;
+  /** green **/
+  --ion-color-green: #518d7d;
+  /** purple **/
+  --ion-color-purple: #513484;
+  --ion-color-purple-contrast: #e4dcf1;
+  --ion-color-purple-shade: #d1c5e8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -155,6 +168,10 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-light-contrast-rgb: 255, 255, 255;
     --ion-color-light-shade: #1e2023;
     --ion-color-light-tint: #383a3e;
+
+    --ion-color-purple: #d1c5e8;
+    --ion-color-purple-contrast: #261e2e;
+    --ion-color-purple-shade: #2e213b;
   }
 
   /*

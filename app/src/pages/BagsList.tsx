@@ -262,7 +262,7 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large" className="tw-text-[#518d7d]">
+            <IonTitle size="large" className="tw-text-green tw-font-serif">
               {t("whereIsTheBag")}
             </IonTitle>
           </IonToolbar>
@@ -323,7 +323,7 @@ export default function BagsList() {
                       <div
                         key="old"
                         className={`tw-text-sm tw-block tw-absolute tw-top-[5px] tw-left-[10px] ${
-                          isBagTooOldMe ? "tw-text-danger" : "tw-text-[#ffffff]"
+                          isBagTooOldMe ? "tw-text-danger" : "tw-text-text"
                         }`}
                       >
                         {bagUpdatedAt.toDate().toLocaleDateString()}

@@ -46,32 +46,26 @@
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: #448c7f;
   }
-  .tw-text-orange {
-    color: #d97706;
-  }
-  .tw-text-blue {
-    color: #3a66b3;
-  }
-  .tw-text-red {
-    color: #c73642;
-  }
-  .tw-text-purple {
-    color: #513484;
-  }
   .tw-bg-white-transparent {
     background: rgba(255, 255, 255, 0.5);
   }
-  .tw-bg-orange-light {
-    --ion-background-color: #f4e7d0;
+  .tw-bg-orange-contrast {
+    --ion-background-color: var(--ion-color-orange-contrast);
   }
   .tw-bg-blue {
-    --ion-background-color: #d6e4f2;
+    --ion-background-color: var(--ion-color-blue);
   }
-  .tw-bg-blue-light {
-    background: #d6e4f2;
+  .tw-bg-blue-contrast {
+    background: var(--ion-color-blue-contrast);
   }
-  .tw-bg-purple-light {
-    --ion-background-color: #e4dcf1;
+  .tw-text-purple {
+    --color: var(--ion-color-purple);
+  }
+  .tw-text-red {
+    --color: var(--ion-color-red);
+  }
+  .tw-bg-purple-contrast {
+    --ion-background-color: var(--ion-color-purple-contrast);
   }
   .tw-bg-paused {
     background: rgb(255, 213, 52);
