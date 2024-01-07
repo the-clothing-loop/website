@@ -262,7 +262,9 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large" className="tw-text-[#518d7d]" >{t("whereIsTheBag")}</IonTitle>
+            <IonTitle size="large" className="tw-text-green tw-font-serif">
+              {t("whereIsTheBag")}
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonText color="medium" className="ion-margin">
@@ -290,7 +292,7 @@ export default function BagsList() {
                   isChainAdmin,
                   bagUpdatedAt,
                 );
-                const bagColor = bag.color
+                const bagColor = bag.color;
                 return (
                   <IonCol size="6" key={"inRoute" + bag.id}>
                     <Card
@@ -321,7 +323,7 @@ export default function BagsList() {
                       <div
                         key="old"
                         className={`tw-text-sm tw-block tw-absolute tw-top-[5px] tw-left-[10px] ${
-                          isBagTooOldMe ? "tw-text-danger" : ""
+                          isBagTooOldMe ? "tw-text-danger" : "tw-text-text"
                         }`}
                       >
                         {bagUpdatedAt.toDate().toLocaleDateString()}
@@ -512,7 +514,7 @@ function Card({
       {open ? (
         <div
           key="options"
-          className="tw-absolute tw-inset-0 tw-bg-[#ffffffa0] tw-flex tw-flex-col tw-justify-center tw-items-center tw-z-10"
+          className="tw-absolute tw-inset-0 tw-bg-[#ffffffa0] dark:tw-bg-[#000000a0] tw-flex tw-flex-col tw-justify-center tw-items-center tw-z-10"
         >
           <IonButton
             size="small"

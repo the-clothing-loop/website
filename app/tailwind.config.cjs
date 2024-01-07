@@ -58,6 +58,21 @@ const colors = {
     shade: "var(--ion-color-light-shade)",
     tint: "var(--ion-color-light-tint)",
   },
+  orange: {
+    DEFAULT: "var(--ion-color-orange)",
+    contrast: "var(--ion-color-orange-contrast)",
+  },
+  blue: {
+    DEFAULT: "var(--ion-color-blue)",
+    contrast: "var(--ion-color-blue-contrast)",
+  },
+  green: "var(--ion-color-green)",
+  red: "var(--ion-color-red)",
+  purple: {
+    DEFAULT: "var(--ion-color-purple)",
+    contrast: "var(--ion-color-purple-contrast)",
+    shade: "var(--ion-color-purple-shade)",
+  },
 };
 
 /** @type {import('tailwindcss').Config} */

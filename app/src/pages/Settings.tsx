@@ -194,7 +194,7 @@ export default function Settings() {
       {isAuthenticated === true ? (
         <IonContent
           fullscreen
-          class={chain?.theme == "default" ? "tw-bg-orange-light" : ""}
+          class={chain?.theme == "default" ? "tw-bg-orange-contrast" : ""}
         >
           <IonItemDivider
             className={`tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-font-serif tw-font-bold ${
