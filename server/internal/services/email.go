@@ -62,6 +62,6 @@ func emailLoopHasBeenDeleted(db *gorm.DB, users []models.UserContactData, chainN
 		if !user.Email.Valid {
 			continue
 		}
-		views.EmailLoopIsDeleted(db, user.I18n, user.Name, user.Email.String, chainName)
+		views.EmailLoopIsDeleted(db, user.I18n, user.Name, user.Email.String, chainName, user.IsApproved)
 	}
 }

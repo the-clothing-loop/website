@@ -66,6 +66,7 @@ func EventCreate(c *gin.Context) {
 		Address:        body.Address,
 		Link:           body.Link,
 		Date:           body.Date,
+		DateEnd:        body.DateEnd,
 		Genders:        body.Genders,
 		UserID:         user.ID,
 		ImageUrl:       body.ImageUrl,
@@ -148,9 +149,10 @@ func EventGetPrevious(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		Latitude  float32 `form:"latitude" binding:"required,latitude"`
-		Longitude float32 `form:"longitude" binding:"required,longitude"`
-		Radius    float32 `form:"radius"`
+		Latitude     float32 `form:"latitude" binding:"required,latitude"`
+		Longitude    float32 `form:"longitude" binding:"required,longitude"`
+		Radius       float32 `form:"radius"`
+		IncludeTotal bool    `form:"include_total"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -174,7 +176,19 @@ func EventGetPrevious(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, events)
+	res := gin.H{
+		"previous_events": events,
+	}
+	if query.IncludeTotal {
+		total := 0
+		db.Raw(`SELECT COUNT(*) FROM events WHERE date < NOW()`).Scan(&total)
+		if err != nil {
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
+		res["previous_total"] = total
+	}
+	c.JSON(http.StatusOK, res)
 }
 
 // The distance between two longlat points calculated in km.
@@ -225,7 +239,7 @@ func EventUpdate(c *gin.Context) {
 		Latitude       *float64   `json:"latitude,omitempty" binding:"omitempty,latitude"`
 		Longitude      *float64   `json:"longitude,omitempty" binding:"omitempty,longitude"`
 		Date           *time.Time `json:"date,omitempty"`
-		DateEnd        *null.Time `json:"date_end,omitempty"`
+		DateEnd        *time.Time `json:"date_end,omitempty"`
 		Genders        *[]string  `json:"genders,omitempty"`
 		ImageUrl       *string    `json:"image_url,omitempty"`
 		ImageDeleteUrl *string    `json:"image_delete_url,omitempty"`
@@ -291,9 +305,12 @@ func EventUpdate(c *gin.Context) {
 	}
 	if body.Date != nil {
 		event.Date = *(body.Date)
-	}
-	if body.DateEnd != nil {
-		event.DateEnd = *(body.DateEnd)
+		// Must set the start date to set the end date
+		if body.DateEnd != nil {
+			event.DateEnd = null.Time{Time: *(body.DateEnd), Valid: true}
+		} else {
+			event.DateEnd = null.Time{}
+		}
 	}
 	if body.Genders != nil {
 		event.Genders = *(body.Genders)

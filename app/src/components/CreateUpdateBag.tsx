@@ -53,7 +53,7 @@ export default function CreateUpdateBag({
       let highestNumber = 0;
       {
         bags.forEach((bag) => {
-          let bagNumber = parseInt(bag.number);
+          let bagNumber = parseInt(bag.number.replace(/[^\d]/g, ""));
           if (!isNaN(bagNumber)) {
             if (bagNumber > highestNumber) {
               highestNumber = bagNumber;
@@ -63,7 +63,7 @@ export default function CreateUpdateBag({
         highestNumber++;
       }
 
-      setBagNumber(highestNumber + "");
+      setBagNumber(`${t("bag")} ${highestNumber}`);
     } else {
       setBagNumber(bag.number);
     }
@@ -184,7 +184,7 @@ export default function CreateUpdateBag({
           <IonItem lines="none">
             <IonLabel>
               {t("bagColor")}
-              <div className="ion-text-center ion-text-wrap">
+              <div className="tw-grid tw-grid-cols-[repeat(auto-fill,75px)] tw-justify-center">
                 {bagColors.map((c) => {
                   const selected = c === bagColor;
                   return (

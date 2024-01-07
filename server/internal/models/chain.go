@@ -34,7 +34,41 @@ type Chain struct {
 	UpdatedAt        time.Time
 	DeletedAt        zero.Time
 	Theme            string
+	IsAppDisabled    bool
 }
+
+type ChainResponse struct {
+	UID              string   `json:"uid"`
+	Name             string   `json:"name"`
+	Description      string   `json:"description"`
+	Address          string   `json:"address"`
+	Latitude         float64  `json:"latitude"`
+	Longitude        float64  `json:"longitude"`
+	Radius           float32  `json:"radius"`
+	Sizes            []string `json:"sizes"`
+	Genders          []string `json:"genders"`
+	Published        bool     `json:"published"`
+	OpenToNewMembers bool     `json:"open_to_new_members"`
+	TotalMembers     *int     `json:"total_members,omitempty"`
+	TotalHosts       *int     `json:"total_hosts,omitempty"`
+	RulesOverride    *string  `json:"rules_override,omitempty"`
+	Theme            *string  `json:"theme,omitempty"`
+	IsAppDisabled    *bool    `json:"is_app_disabled,omitempty"`
+}
+
+// Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members
+const ChainResponseSQLSelect = `SELECT chains.id,
+chains.uid,
+chains.name,
+chains.description,
+chains.address,
+chains.latitude,
+chains.longitude,
+chains.radius,
+chains.sizes,
+chains.genders,
+chains.published,
+chains.open_to_new_members`
 
 func (c *Chain) SetRouteOrderByUserUIDs(db *gorm.DB, userUIDs []string) error {
 	tx := db.Begin()
@@ -179,7 +213,6 @@ func ChainGetNamesByIDs(db *gorm.DB, chainIDs ...uint) ([]string, error) {
 	return names, nil
 }
 
-// This excludes unapproved users
 func (c *Chain) GetUserContactData(db *gorm.DB) ([]UserContactData, error) {
 	users := []UserContactData{}
 	err := db.Raw(`
@@ -187,11 +220,12 @@ SELECT
 	u.name AS name,
 	u.email AS email,
 	u.i18n AS i18n,
-	c.name AS chain_name
+	c.name AS chain_name,
+	uc.is_approved as is_approved
 FROM user_chains AS uc
 LEFT JOIN users AS u ON u.id = uc.user_id
 LEFT JOIN chains AS c ON c.id = uc.chain_id
-WHERE uc.is_approved = TRUE AND c.id = ?
+WHERE c.id = ?
 	`, c.ID).Scan(&users).Error
 	if err != nil {
 		return nil, err
@@ -211,10 +245,10 @@ func (c *Chain) GetTotals(db *gorm.DB) *ChainTotals {
 SELECT COUNT(uc1.id) AS total_members, (
 	SELECT COUNT(uc2.id)
 	FROM user_chains AS uc2
-	WHERE uc2.chain_id = ? AND uc2.is_chain_admin = TRUE
+	WHERE uc2.chain_id = ? AND uc2.is_approved = TRUE AND uc2.is_chain_admin = TRUE
 	) AS total_hosts
 FROM user_chains AS uc1
-WHERE uc1.chain_id = ?
+WHERE uc1.chain_id = ? AND uc1.is_approved = TRUE
 	`, c.ID, c.ID).Scan(&result).Error
 	if err != nil {
 		panic(err)

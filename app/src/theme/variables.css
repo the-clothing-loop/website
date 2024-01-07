@@ -9,6 +9,8 @@ http://ionicframework.com/docs/theming/ */
   --ion-text-color: #000000;
   --ion-text-color-rgb: 0, 0, 0;
 
+  --ion-tab-bar-background: #3575e7;
+
   /** primary **/
   --ion-color-primary: #448c7f;
   --ion-color-primary-rgb: 68, 140, 127;
@@ -221,6 +223,7 @@ http://ionicframework.com/docs/theming/ */
 }
 body[data-theme="leafGreen"] {
   --ion-color-primary: #86a051;
+  --ion-tab-bar-background: #86a051;
   --ion-color-primary-rgb: 134, 160, 81;
   --ion-color-primary-shade: #688332;
   --ion-color-primary-tint: #95b15e;
@@ -233,6 +236,7 @@ body[data-theme="leafGreen"] {
 }
 body[data-theme="green"] {
   --ion-color-primary: #66926e;
+  --ion-tab-bar-background: #66926e;
   --ion-color-primary-rgb: 102, 146, 110;
   --ion-color-primary-shade: #4e7154;
   --ion-color-primary-tint: #70a87a;
@@ -245,6 +249,7 @@ body[data-theme="green"] {
 }
 body[data-theme="teal"] {
   --ion-color-primary: #48808b;
+  --ion-tab-bar-background: #48808b;
   --ion-color-primary-rgb: 72, 128, 139;
   --ion-color-primary-shade: #386670;
   --ion-color-primary-tint: #57a8b8;
@@ -257,6 +262,7 @@ body[data-theme="teal"] {
 }
 body[data-theme="yellow"] {
   --ion-color-primary: #e0a63b;
+  --ion-tab-bar-background: #e0a63b;
   --ion-color-primary-rgb: 224, 166, 59;
   --ion-color-primary-shade: #c89331;
   --ion-color-primary-tint: #fec760;
@@ -269,6 +275,7 @@ body[data-theme="yellow"] {
 }
 body[data-theme="orange"] {
   --ion-color-primary: #e8913a;
+  --ion-tab-bar-background: #e8913a;
   --ion-color-primary-rgb: 232, 145, 58;
   --ion-color-primary-shade: #c97e32;
   --ion-color-primary-tint: #fdab58;
@@ -281,6 +288,7 @@ body[data-theme="orange"] {
 }
 body[data-theme="red"] {
   --ion-color-primary: #dd3d45;
+  --ion-tab-bar-background: #dd3d45;
   --ion-color-primary-rgb: 221, 61, 69;
   --ion-color-primary-shade: #9c3146;
   --ion-color-primary-tint: #e33e5f;
@@ -293,6 +301,7 @@ body[data-theme="red"] {
 }
 body[data-theme="pinkLight"] {
   --ion-color-primary: #cb94ac;
+  --ion-tab-bar-background: #cb94ac;
   --ion-color-primary-rgb: 203, 148, 172;
   --ion-color-primary-shade: #ba869c;
   --ion-color-primary-tint: #e7bfd1;
@@ -305,18 +314,7 @@ body[data-theme="pinkLight"] {
 }
 body[data-theme="pink"] {
   --ion-color-primary: #dc77a3;
-  --ion-color-primary-rgb: 203, 148, 172;
-  --ion-color-primary-shade: #bb658a;
-  --ion-color-primary-tint: #eea1c2;
-  --ion-color-light: #f7eff2;
-  @media (prefers-color-scheme: dark) {
-    --ion-color-primary: #dc77a3;
-    --ion-color-primary-rgb: 220, 119, 163;
-    --ion-color-light: #2e1e27;
-  }
-}
-body[data-theme="pink"] {
-  --ion-color-primary: #dc77a3;
+  --ion-tab-bar-background: #dc77a3;
   --ion-color-primary-rgb: 203, 148, 172;
   --ion-color-primary-shade: #bb658a;
   --ion-color-primary-tint: #eea1c2;
@@ -329,6 +327,7 @@ body[data-theme="pink"] {
 }
 body[data-theme="lilac"] {
   --ion-color-primary: #b76dac;
+  --ion-tab-bar-background: #b76dac;
   --ion-color-primary-rgb: 183, 109, 172;
   --ion-color-primary-shade: #99588f;
   --ion-color-primary-tint: #cb79bf;
@@ -341,6 +340,7 @@ body[data-theme="lilac"] {
 }
 body[data-theme="purple"] {
   --ion-color-primary: #9a69ed;
+  --ion-tab-bar-background: #9a69ed;
   --ion-color-primary-rgb: 154, 105, 237;
   --ion-color-primary-shade: #513484;
   --ion-color-primary-tint: #b085fb;
@@ -353,18 +353,21 @@ body[data-theme="purple"] {
 }
 body[data-theme="skyBlue"] {
   --ion-color-primary: #43c6e0;
+  --ion-tab-bar-background: #35a1b7;
   --ion-color-primary-rgb: 67, 198, 224;
   --ion-color-primary-shade: #35a1b7;
   --ion-color-primary-tint: #61e0fa;
   --ion-color-light: #eff5f7;
   @media (prefers-color-scheme: dark) {
     --ion-color-primary: #7ecfe0;
+    --ion-tab-bar-background: #43c6e0;
     --ion-color-primary-rgb: 126, 207, 224;
     --ion-color-light: #1e2b2e;
   }
 }
 body[data-theme="blueLight"] {
   --ion-color-primary: #3f94e4;
+  --ion-tab-bar-background: #3f94e4;
   --ion-color-primary-rgb: 63, 148, 228;
   --ion-color-primary-shade: #3076b6;
   --ion-color-primary-tint: #5eaffc;
@@ -377,12 +380,14 @@ body[data-theme="blueLight"] {
 }
 body[data-theme="blue"] {
   --ion-color-primary: #1454b3;
+  --ion-tab-bar-background: #1454b3;
   --ion-color-primary-rgb: 20, 103, 179;
   --ion-color-primary-shade: #104595;
   --ion-color-primary-tint: #1b63cf;
   --ion-color-light: #eff1f7;
   @media (prefers-color-scheme: dark) {
     --ion-color-primary: #1467b3;
+    --ion-tab-bar-background: #1b63cf;
     --ion-color-primary-rgb: 20, 103, 179;
     --ion-color-light: #1e1f2e;
   }
@@ -394,63 +399,41 @@ body[data-theme="rainbow"] {
   --ion-color-primary-shade: #bb658a;
   --ion-color-primary-tint: #eea1c2;
   --ion-color-light: #f7eff2;
+  --ion-tab-bar-background: linear-gradient(
+      0deg,
+      hsla(8, 100%, 45%, 0.7) 0%,
+      hsla(8, 100%, 45%, 0.7) 16.6%,
+      hsla(33, 100%, 50%, 0.7) 16.6%,
+      hsla(33, 100%, 50%, 0.7) 33.3%,
+      hsla(56, 100%, 42%, 0.7) 33.3%,
+      hsla(56, 100%, 42%, 0.7) 50%,
+      hsla(133, 82%, 43%, 0.7) 50%,
+      hsla(133, 82%, 43%, 0.7) 66.6%,
+      hsla(222, 100%, 59%, 0.7) 66.6%,
+      hsla(222, 100%, 59%, 0.7) 83.3%,
+      hsla(292, 70%, 55%, 0.7) 83.3%
+    ),
+    #000;
   @media (prefers-color-scheme: dark) {
     --ion-tab-bar-color: hsl(190, 61%, 50%);
     --ion-color-primary: rgb(255, 143, 191);
     --ion-color-primary-rgb: 255, 143, 191;
     --ion-color-light: #2e1e27;
-  }
-}
-body[data-theme="rainbow"] .button.ion-color-primary {
-  --ion-color-base: linear-gradient(
-      90deg,
-      hsl(8, 100%, 35%) 0%,
-      hsl(8, 100%, 35%) 16.6%,
-      hsl(33, 100%, 40%) 16.6%,
-      hsl(33, 100%, 40%) 33.3%,
-      hsl(56, 100%, 32%) 33.3%,
-      hsl(56, 100%, 32%) 50%,
-      hsl(133, 82%, 33%) 50%,
-      hsl(133, 82%, 33%) 66.6%,
-      hsl(222, 100%, 49%) 66.6%,
-      hsl(222, 100%, 49%) 83.3%,
-      hsl(292, 70%, 45%) 83.3%
-    )
-    #fff !important;
-}
-body[data-theme="rainbow"] ion-tab-button {
-  --background: linear-gradient(
-      0deg,
-      hsla(8, 100%, 45%, 0.2) 0%,
-      hsla(8, 100%, 45%, 0.2) 16.6%,
-      hsla(33, 100%, 50%, 0.2) 16.6%,
-      hsla(33, 100%, 50%, 0.2) 33.3%,
-      hsla(56, 100%, 42%, 0.2) 33.3%,
-      hsla(56, 100%, 42%, 0.2) 50%,
-      hsla(133, 82%, 43%, 0.2) 50%,
-      hsla(133, 82%, 43%, 0.2) 66.6%,
-      hsla(222, 100%, 59%, 0.2) 66.6%,
-      hsla(222, 100%, 59%, 0.2) 83.3%,
-      hsla(292, 70%, 55%, 0.2) 83.3%
-    )
-    #fff;
-
-  @media (prefers-color-scheme: dark) {
-    --background: linear-gradient(
+    --ion-tab-bar-background: linear-gradient(
         0deg,
-        hsla(8, 80%, 45%, 0.4) 0%,
-        hsla(8, 80%, 45%, 0.4) 16.6%,
-        hsla(33, 80%, 50%, 0.4) 16.6%,
-        hsla(33, 80%, 50%, 0.4) 33.3%,
-        hsla(56, 80%, 42%, 0.4) 33.3%,
-        hsla(56, 80%, 42%, 0.4) 50%,
-        hsla(133, 62%, 43%, 0.4) 50%,
-        hsla(133, 62%, 43%, 0.4) 66.6%,
-        hsla(222, 80%, 59%, 0.4) 66.6%,
-        hsla(222, 80%, 59%, 0.4) 83.3%,
-        hsla(292, 50%, 55%, 0.4) 83.3%
-      )
-      #000;
+        hsla(8, 80%, 45%, 0.7) 0%,
+        hsla(8, 80%, 45%, 0.7) 16.6%,
+        hsla(33, 80%, 50%, 0.7) 16.6%,
+        hsla(33, 80%, 50%, 0.7) 33.3%,
+        hsla(56, 80%, 42%, 0.7) 33.3%,
+        hsla(56, 80%, 42%, 0.7) 50%,
+        hsla(133, 62%, 43%, 0.7) 50%,
+        hsla(133, 62%, 43%, 0.7) 66.6%,
+        hsla(222, 80%, 59%, 0.7) 66.6%,
+        hsla(222, 80%, 59%, 0.7) 83.3%,
+        hsla(292, 50%, 55%, 0.7) 83.3%
+      ),
+      #fff;
   }
 }
 
