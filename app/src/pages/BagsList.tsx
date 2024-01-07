@@ -337,12 +337,12 @@ export default function BagsList() {
                       >
                         <BagSVG bag={bag} />
                       </div>
-                        <IonRouterLink
-                          routerLink={"/address/" + user.uid}
-                          className="tw-py-3 tw-px-2 tw-block tw-bg-light"
-                        >
-                          <UserLink user={user} routeIndex={routeIndex} />
-                        </IonRouterLink>
+                      <IonRouterLink
+                        routerLink={"/address/" + user.uid}
+                        className="tw-py-3 tw-px-2 tw-block tw-bg-light"
+                      >
+                        <UserLink user={user} routeIndex={routeIndex} />
+                      </IonRouterLink>
                     </Card>
                   </IonCol>
                 );
