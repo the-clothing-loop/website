@@ -96,6 +96,10 @@
   input.input-reset[type="number"] {
     -moz-appearance: textfield;
   }
+
+  .prose-terms-modal * {
+    @apply my-0.5 !font-sans text-xs !text-black;
+  }
 }
 
 :root {

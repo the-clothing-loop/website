@@ -36,6 +36,8 @@ type User struct {
 	I18n            string          `json:"i18n"`
 	Latitude        float64         `json:"-"`
 	Longitude       float64         `json:"-"`
+	AcceptedTOH     bool            `json:"-"`
+	AcceptedTOHJSON *bool           `json:"accepted_toh,omitempty" gorm:"-:migration;<-:false"`
 }
 
 func (u *User) AddUserChainsToObject(db *gorm.DB) error {
@@ -112,6 +114,17 @@ LIMIT 1
 	}
 
 	return e, nil
+}
+
+func (u *User) SetAcceptedTOH() {
+	u.AcceptedTOHJSON = &u.AcceptedTOH
+}
+
+func (u *User) AcceptTOH(db *gorm.DB) error {
+	if !u.AcceptedTOH {
+		return db.Exec(`UPDATE users SET accepted_toh = TRUE WHERE id = ?`, u.ID).Error
+	}
+	return nil
 }
 
 type UserContactData struct {

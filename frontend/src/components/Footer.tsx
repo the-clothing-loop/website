@@ -216,6 +216,12 @@ export default function Footer() {
             </Link>
             <Link
               className="btn btn-ghost text-white text-base font-normal"
+              to="/terms-of-hosts"
+            >
+              {t("termsOfHosts")}
+            </Link>
+            <Link
+              className="btn btn-ghost text-white text-base font-normal"
               to="/privacy-policy"
             >
               {t("privacy")}
