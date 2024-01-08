@@ -32,6 +32,7 @@ type MockChainAndUserOptions struct {
 	IsChainAdmin       bool
 	IsNotPublished     bool
 	IsOpenToNewMembers bool
+	RoutePrivacy       int
 	RouteOrderIndex    int
 
 	// for generating new members
@@ -131,6 +132,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
 		Published:        !o.IsNotPublished,
 		OpenToNewMembers: o.IsOpenToNewMembers,
+		RoutePrivacy:     lo.Ternary(o.RoutePrivacy == 0, 2, o.RoutePrivacy),
 		Sizes:            MockSizes(true),
 		Genders:          MockGenders(false),
 		UserChains:       []models.UserChain{},
