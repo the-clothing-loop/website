@@ -34,8 +34,9 @@ func UserGet(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UserUID  string `form:"user_uid" binding:"omitempty,uuid"`
-		ChainUID string `form:"chain_uid" binding:"omitempty,uuid"`
+		UserUID        string `form:"user_uid" binding:"omitempty,uuid"`
+		ChainUID       string `form:"chain_uid" binding:"omitempty,uuid"`
+		AddApprovedTOH bool   `form:"add_approved_toh" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -49,18 +50,23 @@ func UserGet(c *gin.Context) {
 	}
 
 	ok := false
+	var authUser *models.User
 	if query.ChainUID == "" {
-		okk, authUser, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
-		ok = okk
+		ok, authUser, _ = auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
 
 		if !ok || query.UserUID != authUser.UID {
 			c.String(http.StatusUnauthorized, "For elevated privileges include a chain_uid")
 			return
 		}
 	} else {
-		ok, _, _ = auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+		ok, authUser, _ = auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
 	}
 	if !ok {
+		return
+	}
+	isMe := authUser.UID == query.UserUID
+	if !isMe && query.AddApprovedTOH && !authUser.IsRootAdmin {
+		c.String(http.StatusUnauthorized, "User details requested are not authorized")
 		return
 	}
 
@@ -75,6 +81,10 @@ func UserGet(c *gin.Context) {
 		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
 		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
 		return
+	}
+
+	if query.AddApprovedTOH {
+		user.SetAcceptedTOH()
 	}
 
 	c.JSON(200, user)
@@ -241,6 +251,7 @@ func UserUpdate(c *gin.Context) {
 		I18n        *string    `json:"i18n,omitempty"`
 		Latitude    *float64   `json:"latitude,omitempty"`
 		Longitude   *float64   `json:"longitude,omitempty"`
+		AcceptedTOH *bool      `json:"accepted_toh,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -290,6 +301,9 @@ func UserUpdate(c *gin.Context) {
 		}
 		if body.I18n != nil {
 			userChanges["i18n"] = *body.I18n
+		}
+		if body.AcceptedTOH != nil {
+			userChanges["accepted_toh"] = *body.AcceptedTOH
 		}
 		if len(userChanges) > 0 {
 			if err := db.Model(user).Updates(userChanges).Error; err != nil {

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Redirect, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -46,6 +46,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
       open_to_new_members: true,
       sizes: values.sizes,
       genders: values.genders,
+      allow_toh: true,
     };
 
     if (!(newChain.address?.length > 5)) {
@@ -130,6 +131,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
             onSubmit={onSubmit}
             //submitError={error}
             showBack={!state.only_create_chain}
+            showAllowedTOH={!authUser?.accepted_toh}
           />
         </div>
       </main>

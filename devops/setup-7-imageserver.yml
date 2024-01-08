@@ -17,10 +17,11 @@
         mode: "0775"
     - name: Add imageproxy service
       vars:
-        api_service_user: clothingloop
-        api_service_exec: "/usr/local/bin/imageproxy -cache memory:200:8h -addr localhost:8083 -allowHosts images.clothingloop.org -baseURL https://images.clothingloop.org/original/"
+        service_desc: ImageProxy
+        service_user: clothingloop
+        service_exec: "/usr/local/bin/imageproxy -cache memory:200:8h -addr localhost:8083 -allowHosts images.clothingloop.org -baseURL https://images.clothingloop.org/original/"
       ansible.builtin.template:
-        src: templates/image.service.j2
+        src: templates/service.j2
         dest: /etc/systemd/system/cl-image.service
         owner: root
         group: root
