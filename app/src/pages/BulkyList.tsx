@@ -175,7 +175,7 @@ export default function BulkyList() {
       </IonHeader>
       <IonContent
         fullscreen
-        class={chain?.theme == "default" ? "tw-bg-blue" : ""}
+        class={chain?.theme == "default" ? "tw-bg-blue-contrast" : ""}
       >
         <IonHeader collapse="condense">
           <IonToolbar>
@@ -242,6 +242,7 @@ export default function BulkyList() {
                   lines="none"
                   routerLink={"/address/" + user.uid}
                   className="tw-my-0 -tw-mx-4"
+                  color="background"
                 >
                   <IonText>
                     {/* 
