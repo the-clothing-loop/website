@@ -9,8 +9,9 @@
 --         1. "List hosts, in loops where none of the hosts have accepted the toh" save for day 56
 --         2. "Draft all Loops where all the hosts have not accepted the toh"
 --         3. "Set all the hosts who have not accepted the toh, in a Loop where +1 hosts have accepted toh, as participant."
+--         4. Uncomment cron func "closeChainsWithOldPendingParticipants"
 -- Day 56: Send a reminder to hosts from loops, where all have not accepted toh
-
+-- Day 65: Send an email to all participants asking if they what to become host for this loop.
 
 --- Draft all Loops where all the hosts have not accepted the toh
 UPDATE chains AS c2 SET c2.published = FALSE, c2.open_to_new_members = FALSE
@@ -95,3 +96,18 @@ WHERE uc3.user_id IN (
 				AND u2.accepted_toh = TRUE
 	) > 0
 );
+
+
+-- List chains to close if pending participants are still pending 30 days after reminder email is sent
+SELECT DISTINCT(uc.chain_id)
+	FROM user_chains AS uc
+	JOIN chains AS c ON c.id = uc.chain_id
+	WHERE uc.is_approved = FALSE
+		AND uc.last_notified_is_unapproved_at < (NOW() - INTERVAL 30 DAY)
+		AND c.published = TRUE
+		AND c.id NOT IN (
+			SELECT DISTINCT(uc2.chain_id) FROM user_chains AS uc2
+			JOIN users AS u2 ON u2.id = uc2.user_id
+			WHERE u2.last_signed_in_at > (NOW() - INTERVAL 90 DAY)
+				AND uc2.is_chain_admin = TRUE
+		)
