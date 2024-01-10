@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useRef, useState, useContext } from "react";
 import { useHistory } from "react-router";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import type * as GeoJSONTypes from "geojson";
@@ -23,11 +23,12 @@ interface Props {
   initialValues?: RegisterChainForm;
   showBack?: boolean;
   showRoutePrivacyField?: boolean;
+  showAllowedTOH: boolean;
 }
 
 export type RegisterChainForm = Omit<
   RequestRegisterChain,
-  "open_to_new_members"
+  "open_to_new_members" | "allow_toh"
 >;
 
 type GeoJSONPoint = GeoJSONTypes.FeatureCollection<
@@ -71,6 +72,7 @@ export default function ChainDetailsForm({
   initialValues,
   showBack,
   showRoutePrivacyField,
+  showAllowedTOH,
 }: Props) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -294,6 +296,33 @@ export default function ChainDetailsForm({
               />
             </label>
           </div>
+
+          {showAllowedTOH ? (
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">
+                  <Trans
+                    i18nKey="iAccept<1>Toh</1>Star"
+                    components={{
+                      "1": (
+                        <a
+                          href="/terms-of-hosts"
+                          target="_blank"
+                          className="link"
+                        ></a>
+                      ),
+                    }}
+                  ></Trans>
+                </span>
+                <input
+                  type="checkbox"
+                  required
+                  className="checkbox border-black"
+                  name="toh"
+                />
+              </label>
+            </div>
+          ) : null}
 
           <div className="flex flex-col sm:flex-row items-end mb-6">
             <div className="w-full sm:w-1/2 pb-4 sm:pb-0 sm:pr-4 rtl:sm:pr-0 rtl:sm:pl-4">

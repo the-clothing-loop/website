@@ -40,15 +40,18 @@ import UserCard from "../components/UserCard";
 import toastError from "../../toastError";
 import { Trans, useTranslation } from "react-i18next";
 import {
+  alertCircleOutline,
   compassOutline,
   copyOutline,
   ellipsisHorizontal,
   eyeOffOutline,
   eyeOutline,
   lockClosedOutline,
+  logoAndroid,
+  logoApple,
   openOutline,
   shareOutline,
-  sparklesOutline,
+  sparkles,
   warningOutline,
 } from "ionicons/icons";
 import dayjs from "../dayjs";
@@ -57,7 +60,10 @@ import Badges from "../components/SizeBadge";
 import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
 import Theme from "../components/Theme";
+import { useLocation } from "react-router";
 const VERSION = import.meta.env.VITE_APP_VERSION;
+
+type State = { openChainSelect?: boolean } | undefined;
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
@@ -72,17 +78,20 @@ export default function Settings() {
     listOfChains,
   } = useContext(StoreContext);
   const [present] = useIonToast();
+  const { state } = useLocation<State>();
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
   const refSelectPauseExpiryModal = useRef<HTMLIonModalElement>(null);
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
+  const [isIos] = useState(isPlatform("ios"));
   const [expandedDescription, setExpandedDescription] = useState(false);
   useEffect(() => {
-    if (!chain && authUser) {
+    if (!authUser) return;
+    if (!chain || state?.openChainSelect) {
       refChainSelect.current?.open();
     }
-  }, [authUser]);
+  }, [authUser, state]);
 
   function handleChainSelect(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
@@ -263,10 +272,27 @@ export default function Settings() {
                     })}
                   </IonSelect>
                 </IonItem>
+                {chain && chain.is_app_disabled ? (
+                  <IonItem lines="none" color="danger">
+                    <IonIcon
+                      size="small"
+                      icon={isIos ? logoApple : logoAndroid}
+                    />
+                    <span className="ion-margin-end tw-ms-1.5">
+                      {t("loopIsNotUsingThisApp")}
+                    </span>
+                  </IonItem>
+                ) : null}
                 {chain && (!chain.open_to_new_members || !chain.published) ? (
                   <IonItem
                     lines="none"
-                    color={chain.published ? "warning" : "danger"}
+                    color={
+                      chain.published
+                        ? "warning"
+                        : chain.is_app_disabled
+                        ? "medium"
+                        : "danger"
+                    }
                   >
                     {!chain.open_to_new_members ? (
                       <>
@@ -302,7 +328,7 @@ export default function Settings() {
                       detail={false}
                     >
                       <IonLabel>{t("setLoopTheme")}</IonLabel>
-                      <IonIcon slot="end" icon={sparklesOutline} />
+                      <IonIcon slot="end" icon={sparkles} color="primary" />
                     </IonItem>
                     <Theme />
 

@@ -65,6 +65,12 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		latitude = faker.Address().Latitude()
 		longitude = faker.Address().Latitude()
 	}
+	if o.OverrideLatitude != nil {
+		latitude = *o.OverrideLatitude
+	}
+	if o.OverrideLongitude != nil {
+		longitude = *o.OverrideLongitude
+	}
 	chains := []models.UserChain{}
 	if chainID != 0 {
 		chains = append(chains, models.UserChain{
@@ -83,8 +89,8 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		PhoneNumber:     faker.Person().Contact().Phone,
 		Sizes:           MockSizes(false),
 		Address:         faker.Address().Address(),
-		Latitude:        lo.Ternary(o.OverrideLongitude == nil, longitude, *(o.OverrideLatitude)),
-		Longitude:       lo.Ternary(o.OverrideLatitude == nil, latitude, *(o.OverrideLongitude)),
+		Latitude:        longitude,
+		Longitude:       latitude,
 		UserToken: []models.UserToken{
 			{
 				Token:    uuid.NewV4().String(),

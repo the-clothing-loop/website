@@ -1,9 +1,17 @@
 import { Chain, UID } from "./types";
 import { RequestRegisterChain } from "./login";
 
-export function chainGet(chainUID: UID, addTotals: boolean = false) {
+export function chainGet(
+  chainUID: UID,
+  addTotals = false,
+  addIsAppDisabled = false
+) {
   return window.axios.get<Chain>("/v2/chain", {
-    params: { chain_uid: chainUID, add_totals: addTotals },
+    params: {
+      chain_uid: chainUID,
+      add_totals: addTotals,
+      add_is_app_disabled: addIsAppDisabled,
+    },
   });
 }
 
@@ -11,6 +19,7 @@ interface RequestChainGetAllParams {
   filter_sizes?: string[];
   filter_genders?: string[];
   filter_out_unpublished?: boolean;
+  add_rules?: boolean;
 }
 export function chainGetAll(params?: RequestChainGetAllParams) {
   return window.axios.get<Chain[]>("/v2/chain/all", { params });

@@ -181,6 +181,10 @@ func RegisterChainAdmin(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Newsletter-Box must be checked to create a new loop admin.")
 		return
 	}
+	if !body.Chain.AllowTOH {
+		c.String(http.StatusBadRequest, ErrAllowTOHFalse)
+		return
+	}
 
 	chain := &models.Chain{
 		UID:              uuid.NewV4().String(),
@@ -207,6 +211,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Address:         body.User.Address,
 		Latitude:        body.User.Latitude,
 		Longitude:       body.User.Longitude,
+		AcceptedTOH:     true,
 	}
 	if err := db.Create(user).Error; err != nil {
 		goscope.Log.Warningf("User already exists: %v", err)

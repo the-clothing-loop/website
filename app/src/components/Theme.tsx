@@ -8,12 +8,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import {
-  checkmark,
-  checkmarkCircle,
-  checkmarkSharp,
-  ellipse,
-} from "ionicons/icons";
+import { checkmarkCircle, checkmarkSharp, ellipse } from "ionicons/icons";
 import { useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
@@ -60,8 +55,8 @@ export default function Theme() {
       trigger="open-modal-theme"
       onIonModalWillPresent={willPresent}
       onIonModalDidDismiss={didDismiss}
-      initialBreakpoint={0.25}
-      breakpoints={[0, 0.25, 0.5]}
+      initialBreakpoint={0.35}
+      breakpoints={[0, 0.35, 0.5]}
     >
       <IonToolbar>
         <IonButtons slot="start">

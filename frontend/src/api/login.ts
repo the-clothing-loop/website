@@ -24,6 +24,7 @@ export interface RequestRegisterChain {
   sizes: Array<Sizes | string> | null;
   genders: Array<Sizes | string> | null;
   route_privacy?: number;
+  allow_toh: boolean;
 }
 
 export function registerChainAdmin(

@@ -136,6 +136,7 @@ ORDER BY u.email
 }
 
 // // Close chains if pending participants are still pending 30 days after reminder email is sent
+// TODO: Send an email to all participants asking if they what to become host for this loop.
 // func closeChainsWithOldPendingParticipants(db *gorm.DB) {
 // 	glog.Info("Running closeChainsWithOldPendingParticipants")
 // 	db.Exec(`
