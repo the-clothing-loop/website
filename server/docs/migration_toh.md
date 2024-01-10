@@ -3,21 +3,21 @@
 ## General flow
 
 ```mermaid
-
 gantt
-   weekday monday
-   tickInterval 1week
-   Section Developer
-   Terms of Hosts live : 2024-01-15, 1d
-   Day 40 closeChainsWithOldPendingParticipants live : 2024-02-24, 1d
-   Day 40 Run migrations (Save list hosts, draft loops, Set host to participant) : 2024-02-24, 1d
-   Section Email
-   Day 14 Email accept toh : 2024-01-29, 1d
-   Day 21 Email accept toh : 2024-02-05, 1d
-   Day 30 Email loop +1 warn host set to participant : 2024-02-14, 1d
-   Day 30 Email warn host set loop draft : 2024-02-14, 1d
-   Day 56 Email reminder hosts drafted loops : 2024-03-11, 1d
-   Day 65 Email participants of drafted loops to become host : 2024-03-20, 1d
+   title Timeline of Terms of Hosts
+
+   section Developer
+   Terms of Hosts live                                                              : 2024-01-15, 1d
+   Day 40 closeChainsWithOldPendingParticipants live                                : 2024-02-24, 1d
+   Day 40 Run migrations (Save list hosts, draft loops, Set host to participant)    : 2024-02-24, 1d
+
+   section Email
+   Day 14 Email accept toh                                     : 2024-01-29, 1d
+   Day 21 Email accept toh                                     : 2024-02-05, 1d
+   Day 30 Email loop +1 warn host set to participant           : 2024-02-14, 1d
+   Day 30 Email warn host set loop draft                       : 2024-02-14, 1d
+   Day 56 Email reminder hosts drafted loops                   : 2024-03-11, 1d
+   Day 65 Email participants of drafted loops to become host   : 2024-03-20, 1d
 ```
 
 **Migrations for Terms of Hosts (should be run 40 days after ToH start)**
