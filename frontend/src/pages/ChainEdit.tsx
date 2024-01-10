@@ -47,7 +47,7 @@ export default function ChainEdit() {
   useEffect(() => {
     (async () => {
       try {
-        let chain = (await chainGet(chainUID)).data;
+        let chain = (await chainGet(chainUID, false, false, true)).data;
 
         setChain(chain);
       } catch (err: any) {

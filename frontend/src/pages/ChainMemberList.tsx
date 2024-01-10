@@ -447,7 +447,7 @@ export default function ChainMemberList() {
       setHostChains(_hostChains.sort((a, b) => a.name.localeCompare(b.name)));
 
       const [chainData, chainUsers, routeData, bagData] = await Promise.all([
-        chainGet(chainUID, true, true),
+        chainGet(chainUID, true, true, true),
         userGetAllByChain(chainUID),
         routeGetOrder(chainUID),
         bagGetAll,

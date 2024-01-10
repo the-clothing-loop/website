@@ -4,13 +4,15 @@ import { RequestRegisterChain } from "./login";
 export function chainGet(
   chainUID: UID,
   addTotals = false,
-  addIsAppDisabled = false
+  addIsAppDisabled = false,
+  AddRoutePrivacy = false
 ) {
   return window.axios.get<Chain>("/v2/chain", {
     params: {
       chain_uid: chainUID,
       add_totals: addTotals,
       add_is_app_disabled: addIsAppDisabled,
+      add_route_privacy: AddRoutePrivacy,
     },
   });
 }

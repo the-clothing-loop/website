@@ -48,7 +48,7 @@ export interface Chain {
   open_to_new_members: boolean;
   total_members?: number;
   total_hosts?: number;
-  route_privacy: number;
+  route_privacy?: number;
   rules_override?: string;
   theme?: string;
   is_app_disabled?: boolean;

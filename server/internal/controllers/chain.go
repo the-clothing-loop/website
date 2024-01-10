@@ -111,6 +111,7 @@ func ChainGet(c *gin.Context) {
 		AddTotals        bool   `form:"add_totals" binding:"omitempty"`
 		AddTheme         bool   `form:"add_theme" binding:"omitempty"`
 		AddIsAppDisabled bool   `form:"add_is_app_disabled" binding:"omitempty"`
+		AddRoutePrivacy  bool   `form:"add_route_privacy" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -150,7 +151,6 @@ func ChainGet(c *gin.Context) {
 		Genders:          chain.Genders,
 		Published:        chain.Published,
 		OpenToNewMembers: chain.OpenToNewMembers,
-		RoutePrivacy:     &(chain.RoutePrivacy),
 	}
 
 	if query.AddRules {
@@ -166,6 +166,9 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddIsAppDisabled {
 		body.IsAppDisabled = &chain.IsAppDisabled
+	}
+	if query.AddRoutePrivacy {
+		body.RoutePrivacy = &chain.RoutePrivacy
 	}
 	c.JSON(200, body)
 }
