@@ -146,8 +146,11 @@ export default function AdminDashboard() {
                 </div>
                 <button
                   onClick={scrollUp}
-                  className="absolute bottom-0 right-0 mb-2 mr-2 btn btn-circle btn-sm btn-secondary opacity-50 feather feather-arrow-down"
-                ></button>
+                  className="absolute bottom-2 ltr:right-2 rtl:left-2 btn btn-circle btn-sm btn-secondary text-white opacity-50 hover:opacity-90 tooltip ltr:tooltip-left rtl:tooltip-right before:font-normal before:text-sm"
+                  data-tip="Scroll to the bottom."
+                >
+                  <span className="feather feather-arrow-down font-bold" />
+                </button>
               </div>
               <p className="text-xs mt-3 leading-relaxed">
                 You must have scrolled to the bottom to Accept or Deny the Terms
@@ -180,6 +183,8 @@ export default function AdminDashboard() {
               userUpdate({
                 user_uid: authUser.uid,
                 accepted_toh: false,
+              }).then(() => {
+                authUserRefresh();
               });
             },
             submit: true,
