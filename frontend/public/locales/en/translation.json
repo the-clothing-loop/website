@@ -200,7 +200,7 @@
   "termsOfService": "Terms of service",
   "termsOfHosts": "Terms of hosts",
   "acceptTohTitle": "Accept Terms of Hosts",
-  "acceptTohSubtitle": "Hosts have to accept the ToH to continue to organize your Loop(s)",
+  "acceptTohSubtitle": "As a host, you have to accept the Terms of Hosts to continue to organise your Loop(s)",
   "youMustScrollToAcceptToh": "You must have scrolled to the bottom to accept or deny the Terms of Hosts.",
   "ifClickDenyTohSetHost": "If you click “Deny” you will be set as a participant on all your Loops.",
   "privacy": "Privacy",
