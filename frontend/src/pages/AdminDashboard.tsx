@@ -98,7 +98,7 @@ export default function AdminDashboard() {
     if (authUser && isChainAdmin && authUser.accepted_toh === false) {
       console.log("You have not accepted the Terms of Hosts!");
       addModal({
-        message: t("youMustAcceptToh"),
+        message: t("acceptTohTitle"),
         content: () => {
           const ref = useRef<HTMLDivElement>(null);
           const getElBtn = () =>
@@ -135,6 +135,7 @@ export default function AdminDashboard() {
           };
           return (
             <div>
+              <p className="-mt-4 mb-4 text-sm">{t("acceptTohSubtitle")}</p>
               <div className="relative">
                 <div
                   ref={ref}
