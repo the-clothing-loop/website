@@ -96,10 +96,9 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (authUser && isChainAdmin && authUser.accepted_toh === false) {
-      console.log("You have not approved the Terms of Hosts!");
+      console.log("You have not accepted the Terms of Hosts!");
       addModal({
-        message:
-          "You must approve the Terms of Hosts to continue administering your Loop(s)!",
+        message: t("youMustAcceptToh"),
         content: () => {
           const ref = useRef<HTMLDivElement>(null);
           const getElBtn = () =>
@@ -153,12 +152,10 @@ export default function AdminDashboard() {
                 </button>
               </div>
               <p className="text-xs mt-3 leading-relaxed">
-                You must have scrolled to the bottom to Accept or Deny the Terms
-                of Hosts.
+                {t("youMustScrollToAcceptToh")}
                 <br />
                 <span className="text-red font-semibold">
-                  If you click "Deny" you will be set as a participant on all
-                  your Loops.
+                  {t("ifClickDenyTohSetHost")}
                 </span>
               </p>
             </div>
@@ -167,7 +164,7 @@ export default function AdminDashboard() {
         actions: [
           {
             type: "primary",
-            text: t("Accept"),
+            text: t("accept"),
             fn: () => {
               userUpdate({
                 user_uid: authUser.uid,
@@ -178,7 +175,7 @@ export default function AdminDashboard() {
           },
           {
             type: "error",
-            text: t("Deny"),
+            text: t("deny"),
             fn: () => {
               userUpdate({
                 user_uid: authUser.uid,
