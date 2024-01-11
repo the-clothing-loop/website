@@ -172,6 +172,12 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-purple: #d1c5e8;
     --ion-color-purple-contrast: #261e2e;
     --ion-color-purple-shade: #2e213b;
+
+
+    /** blue **/
+    --ion-color-blue: #d6e4f2;
+    --ion-color-blue-contrast: #162e45;
+
   }
 
   /*

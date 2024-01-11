@@ -166,7 +166,7 @@ export default function BulkyList() {
           >
             <IonButton
               onClick={handleClickCreate}
-              color={chain?.theme === "default" ? "tw-text-blue" : "primary"}
+              color={chain?.theme === "default" ? "tw-text-blue" : "primary" }
             >
               {t("create")}
             </IonButton>
@@ -297,6 +297,7 @@ export default function BulkyList() {
                       fill="clear"
                       className="tw-font-bold tw-w-1/3"
                       onClick={() => handleClickEdit(bulkyItem)}
+                      color="primary"
                     >
                       {t("edit")}
                     </IonButton>
