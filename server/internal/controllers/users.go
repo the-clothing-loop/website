@@ -304,6 +304,24 @@ func UserUpdate(c *gin.Context) {
 		}
 		if body.AcceptedTOH != nil {
 			userChanges["accepted_toh"] = *body.AcceptedTOH
+			if !*body.AcceptedTOH {
+				// set as participant for all connected chains
+				db.Exec(`UPDATE user_chains SET is_chain_admin = FALSE WHERE user_id = ?`, user.ID)
+				// find chains that don't have 1+ host and if connected to this user set to draft
+				db.Exec(`
+UPDATE chains AS c
+JOIN user_chains AS uc ON uc.chain_id = c.id
+SET c.open_to_new_members = FALSE, c.published = FALSE
+WHERE uc.user_id = ? AND c.id IN (
+	SELECT UNIQUE(c2.id)
+	FROM chains AS c2
+	LEFT JOIN user_chains AS uc2 ON uc2.chain_id = c2.id AND uc2.is_chain_admin = TRUE
+	WHERE c2.published = TRUE
+	GROUP BY c2.id
+	HAVING COUNT(uc2.id) = 0
+)
+				`, user.ID)
+			}
 		}
 		if len(userChanges) > 0 {
 			if err := db.Model(user).Updates(userChanges).Error; err != nil {
