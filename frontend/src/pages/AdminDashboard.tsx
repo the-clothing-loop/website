@@ -170,6 +170,8 @@ export default function AdminDashboard() {
               userUpdate({
                 user_uid: authUser.uid,
                 accepted_toh: true,
+              }).then(() => {
+                authUserRefresh();
               });
             },
             submit: true,
