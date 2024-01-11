@@ -36,6 +36,9 @@
   .tw-bg-white-transparent {
     background: rgba(255, 255, 255, 0.5);
   }
+  .tw-bg-transparent {
+    --ion-background-color: transparent;
+  }
   .tw-bg-orange-contrast {
     --ion-background-color: var(--ion-color-orange-contrast);
   }
@@ -53,6 +56,9 @@
   }
   .tw-text-blue {
     --color: var(--ion-color-blue);
+  }
+  .tw-text-blue-tint {
+    --color: var(--ion-color-blue-tint);
   }
   .tw-bg-purple-contrast {
     --ion-background-color: var(--ion-color-purple-contrast);

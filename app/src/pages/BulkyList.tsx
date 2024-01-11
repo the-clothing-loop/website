@@ -166,7 +166,7 @@ export default function BulkyList() {
           >
             <IonButton
               onClick={handleClickCreate}
-              color={chain?.theme === "default" ? "tw-text-blue" : "primary" }
+              color={chain?.theme === "default" ? "tw-text-blue" : "primary"}
             >
               {t("create")}
             </IonButton>
@@ -178,7 +178,7 @@ export default function BulkyList() {
         class={chain?.theme == "default" ? "tw-bg-blue-contrast" : ""}
       >
         <IonHeader collapse="condense">
-          <IonToolbar>
+          <IonToolbar className="tw-bg-transparent">
             <IonTitle
               size="large"
               className={
@@ -340,6 +340,16 @@ export default function BulkyList() {
             ))}
           </div>
         </IonModal>
+        <div className="relative">
+          {/* Background SVGs */}
+          <IonIcon
+            aria-hidden="true"
+            icon="/v2_o.svg"
+            style={{ color: "#83a2d7", fontSize: 500 }}
+            color={chain?.theme === "default" ? "" : "primary"}
+            className="tw-absolute tw-right-[180px] tw-top-[10px] -tw-z-10 tw-text-blue-tint"
+          />
+        </div>
       </IonContent>
 
       <CreateUpdateBulky
