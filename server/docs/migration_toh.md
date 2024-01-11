@@ -1,4 +1,4 @@
-# Migration Terms of Hosts
+# Terms of Hosts
 
 ## General flow
 
@@ -35,3 +35,16 @@ After ToH start there will be steps to ease the migration:
   4.  Uncomment cron func "closeChainsWithOldPendingParticipants"
 - Day 56: Send a reminder to hosts from loops, where all have not accepted toh
 - Day 65: Send an email to all participants asking if they what to become host for this loop.
+
+## Someone denies the Terms of Hosts
+
+```mermaid
+
+flowchart TB
+   Start(Start) --> A[Someone denies the Terms of Hosts]
+   A --> B[They are demoted from host to participant in all connected Loops]
+   B --> C[From those affected Loops those which do not contain +1 host as put to draft]
+   C --> End(End)
+```
+
+See code for more details [users.go:307 ~](/server/internal/controllers/users.go:307)
