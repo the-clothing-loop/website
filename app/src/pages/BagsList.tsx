@@ -332,7 +332,7 @@ export default function BagsList() {
                         ) : null}
                       </div>
                       <div
-                        className={`tw-p-0 tw-pt-0`}
+                        className="tw-p-0 tw-pt-0 tw-max-h-[174px]"
                         onClick={() => handleClickItem(bag.id, bag.user_uid)}
                       >
                         <BagSVG bag={bag} />

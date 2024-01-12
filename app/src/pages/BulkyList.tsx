@@ -345,9 +345,9 @@ export default function BulkyList() {
           <IonIcon
             aria-hidden="true"
             icon="/v2_o.svg"
-            style={{ color: "#83a2d7", fontSize: 500 }}
+            style={{ fontSize: 500 }}
             color={chain?.theme === "default" ? "" : "primary"}
-            className="tw-absolute tw-right-[180px] tw-top-[10px] -tw-z-10 tw-text-blue-tint"
+            className="tw-absolute tw-right-[180px] -tw-top-[20px] -tw-z-10 tw-text-blue-shade"
           />
         </div>
       </IonContent>

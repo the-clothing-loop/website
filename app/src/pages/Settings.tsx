@@ -184,7 +184,7 @@ export default function Settings() {
       <IonHeader collapse="fade">
         <IonToolbar>
           <IonTitle
-            className={`${chain?.theme === "default" ? "tw-text-orange" : ""}`}
+            className={`${chain?.theme === "default" ? "tw-text-orange dark:tw-text-red-contrast" : ""}`}
           >
             {t("information")}
           </IonTitle>
@@ -194,11 +194,11 @@ export default function Settings() {
       {isAuthenticated === true ? (
         <IonContent
           fullscreen
-          class={chain?.theme == "default" ? "tw-bg-orange-contrast" : ""}
+          class={chain?.theme == "default" ? "tw-bg-orange-contrast dark:tw-bg-red-shade" : ""}
         >
           <IonItemDivider
             className={`tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-font-serif tw-font-bold ${
-              chain?.theme === "default" ? "tw-text-orange" : ""
+              chain?.theme === "default" ? "tw-text-orange dark:tw-text-red-contrast" : ""
             }`}
           >
             {t("account")}
@@ -264,7 +264,7 @@ export default function Settings() {
           <IonList>
             <IonItemDivider
               className={`ion-margin-start tw-bg-transparent tw-text-2xl tw-font-serif tw-font-bold
-            ${chain?.theme === "default" ? "tw-text-orange" : ""}`}
+            ${chain?.theme === "default" ? "tw-text-orange dark:tw-text-red-contrast" : ""}`}
             >
               {t("loopInformation")}
             </IonItemDivider>
@@ -423,16 +423,16 @@ export default function Settings() {
             <IonIcon
               aria-hidden="true"
               icon="/public/v2_o_pattern_green.svg"
-              style={{ color: "#ecd6b5", fontSize: 400 }}
+              style={{ fontSize: 400 }}
               color={chain?.theme === "default" ? "" : "primary"}
-              className="tw-absolute -tw-left-28 -tw-bottom-[180px] -tw-z-10"
+              className="tw-absolute -tw-left-28 -tw-bottom-[180px] -tw-z-10 tw-text-orange-shade dark:tw-text-red"
             />
             <IonIcon
               aria-hidden="true"
               icon="/v2_o.svg"
-              style={{ color: "#ecd6b5", fontSize: 500 }}
+              style={{ fontSize: 500 }}
               color={chain?.theme === "default" ? "" : "primary"}
-              className="tw-absolute -tw-right-64 -tw-bottom-[340px] -tw-z-10"
+              className="tw-absolute -tw-right-64 -tw-bottom-[340px] -tw-z-10 tw-text-orange-shade dark:tw-text-red"
             />
           </div>
           <IonAlert

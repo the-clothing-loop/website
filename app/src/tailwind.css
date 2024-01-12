@@ -54,6 +54,9 @@
   .tw-text-red {
     --color: var(--ion-color-red);
   }
+  .tw-bg-red-shade {
+    --ion-background-color: var(--ion-color-red-shade);
+  }
   .tw-text-blue {
     --color: var(--ion-color-blue);
   }
