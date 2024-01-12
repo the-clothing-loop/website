@@ -184,7 +184,11 @@ export default function Settings() {
       <IonHeader collapse="fade">
         <IonToolbar>
           <IonTitle
-            className={`${chain?.theme === "default" ? "tw-text-orange dark:tw-text-red-contrast" : ""}`}
+            className={`${
+              chain?.theme === "default"
+                ? "tw-text-orange dark:tw-text-red-contrast"
+                : ""
+            }`}
           >
             {t("information")}
           </IonTitle>
@@ -194,11 +198,17 @@ export default function Settings() {
       {isAuthenticated === true ? (
         <IonContent
           fullscreen
-          class={chain?.theme == "default" ? "tw-bg-orange-contrast dark:tw-bg-red-shade" : ""}
+          class={
+            chain?.theme == "default"
+              ? "tw-bg-orange-contrast dark:tw-bg-red-shade"
+              : ""
+          }
         >
           <IonItemDivider
             className={`tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-font-serif tw-font-bold ${
-              chain?.theme === "default" ? "tw-text-orange dark:tw-text-red-contrast" : ""
+              chain?.theme === "default"
+                ? "tw-text-orange dark:tw-text-red-contrast"
+                : ""
             }`}
           >
             {t("account")}
@@ -213,7 +223,7 @@ export default function Settings() {
             </IonButton>
           </IonItemDivider>
           <IonCard
-            className="tw-mt-1.5 tw-rounded-none tw-relative ion-card"
+            className="tw-mt-1.5 tw-rounded-none tw-relative ion-card tw-bg-transparent"
             color={"background"}
           >
             {authUser ? (
@@ -264,7 +274,11 @@ export default function Settings() {
           <IonList>
             <IonItemDivider
               className={`ion-margin-start tw-bg-transparent tw-text-2xl tw-font-serif tw-font-bold
-            ${chain?.theme === "default" ? "tw-text-orange dark:tw-text-red-contrast" : ""}`}
+            ${
+              chain?.theme === "default"
+                ? "tw-text-orange dark:tw-text-red-contrast"
+                : ""
+            }`}
             >
               {t("loopInformation")}
             </IonItemDivider>
