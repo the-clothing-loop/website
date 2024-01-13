@@ -201,7 +201,9 @@ export default function BulkyList() {
             bulkyItem.message.split("\n").length > 4;
 
           return (
-            <IonCard key={bulkyItem.id} className="tw-bg-light tw-rounded-none">
+            <IonCard key={bulkyItem.id} className="tw-bg-light tw-rounded-none"
+            color={"background"}         
+            >
               {bulkyItem.image_url ? (
                 <div
                   className={`tw-relative tw-min-h-[124px] ${

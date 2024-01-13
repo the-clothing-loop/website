@@ -37,13 +37,13 @@ export default function AddressList() {
             <IonButtons
               slot="end"
               className={`${
-                chain?.theme === "default" ? "tw-text-red" : "primary"
+                chain?.theme === "default" ? "tw-text-red dark:tw-text-red-contrast" : "primary"
               }`}
             >
               <IonButton
                 target="_blank"
                 href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}
-                color={chain?.theme === "default" ? "tw-text-red" : "primary"}
+                color={chain?.theme === "default" ? "tw-text-red  dark:tw-text-red-contrast" : "primary"}
               >
                 {t("routeOrder")}
               </IonButton>
@@ -54,7 +54,7 @@ export default function AddressList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large" className="tw-text-red">
+            <IonTitle size="large" className="tw-text-red dark:tw-text-red-contrast">
               {t("addresses")}
             </IonTitle>
           </IonToolbar>

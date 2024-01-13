@@ -66,9 +66,6 @@ ion-tab-bar {
 body[data-theme="rainbow"] ion-tab-bar {
   background: var(--ion-color-light) !important;
 }
-ion-card {
-  background: rgba(255, 255, 255, 0.5);
-}
 ion-button {
   color: var(--ion-text-color-rgb);
 }
