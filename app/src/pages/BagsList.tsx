@@ -292,7 +292,6 @@ export default function BagsList() {
                   isChainAdmin,
                   bagUpdatedAt,
                 );
-                const bagColor = bag.color;
                 return (
                   <IonCol size="6" key={"inRoute" + bag.id}>
                     <Card

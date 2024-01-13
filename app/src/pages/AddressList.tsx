@@ -37,13 +37,19 @@ export default function AddressList() {
             <IonButtons
               slot="end"
               className={`${
-                chain?.theme === "default" ? "tw-text-red dark:tw-text-red-contrast" : "primary"
+                chain?.theme === "default"
+                  ? "tw-text-red dark:tw-text-red-contrast"
+                  : "primary"
               }`}
             >
               <IonButton
                 target="_blank"
                 href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}
-                color={chain?.theme === "default" ? "tw-text-red  dark:tw-text-red-contrast" : "primary"}
+                color={
+                  chain?.theme === "default"
+                    ? "tw-text-red  dark:tw-text-red-contrast"
+                    : "primary"
+                }
               >
                 {t("routeOrder")}
               </IonButton>
@@ -54,7 +60,10 @@ export default function AddressList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large" className="tw-text-red dark:tw-text-red-contrast">
+            <IonTitle
+              size="large"
+              className="tw-text-red dark:tw-text-red-contrast"
+            >
               {t("addresses")}
             </IonTitle>
           </IonToolbar>
@@ -147,10 +156,13 @@ export default function AddressList() {
             );
           })}
         </IonList>
-        <IonImg
-          src="/the_clothing_loop_logo_cropped.svg"
-          className="tw-w-full tw-h-auto tw-mx-auto tw-absolute tw-bottom-12 dark:tw-invert-[60%]"
+        <IonIcon
+          aria-hidden="true"
+          icon="/the_clothing_loop_logo_cropped.svg"
+          style={{ fontSize: 150 }}
+          className="tw-absolute tw-w-full tw-min-h-auto tw-invert-[60%] tw-bottom-0 tw-mb-8 tw-overflow-hidden tw-stroke-text dark:tw-stroke-light-tint"
         />
+
       </IonContent>
     </IonPage>
   );

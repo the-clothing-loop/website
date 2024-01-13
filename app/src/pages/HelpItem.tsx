@@ -85,7 +85,7 @@ export default function HelpItem({
             aria-hidden="true"
             icon="/the_clothing_loop_logo_cropped.svg"
             style={{ fontSize: 150 }}
-            className="tw-relative tw-w-full tw-min-h-auto tw-invert-[40%] tw-bottom-0 -tw-mb-4 tw-overflow-hidden tw-stroke-text"
+            className="tw-relative tw-w-full tw-min-h-auto tw-invert-[40%] tw-bottom-0 -tw-mb-8 tw-overflow-hidden tw-stroke-text dark:tw-stroke-light-tint"
           />
         </div>
       </IonContent>
