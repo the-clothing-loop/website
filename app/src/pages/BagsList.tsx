@@ -304,7 +304,7 @@ export default function BagsList() {
                         handleClickDelete(bag.id, bag.number)
                       }
                       onClickEdit={() => handleClickEdit(bag)}
-                      className="ion-no-margin tw-relative tw-overflow-visible tw-rounded-none"
+                      className="ion-no-margin tw-relative tw-overflow-visible tw-rounded-none tw-text-[0px]"
                     >
                       {isChainAdmin ? (
                         <IonButton
@@ -332,7 +332,7 @@ export default function BagsList() {
                         ) : null}
                       </div>
                       <div
-                        className="tw-p-0 tw-pt-0 tw-max-h-[174px]"
+                        className="tw-p-0 tw-pt-0"
                         onClick={() => handleClickItem(bag.id, bag.user_uid)}
                       >
                         <BagSVG bag={bag} />
