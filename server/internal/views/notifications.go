@@ -20,4 +20,10 @@ var Notifications map[string]*onesignal.StringMap = map[string]*onesignal.String
 		En: onesignal.PtrString("A bag has been assigned to you"),
 		// Nl: "",
 	},
+	"significantRouteChangeTitle": {
+		En: onesignal.PtrString("There has been a significant change to the route of your loop"),
+		// Nl: "",
+	},
+	// empty string to allow empty notification messages
+	"": {},
 }

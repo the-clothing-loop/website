@@ -99,6 +99,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.BulkyItem{},
 		&models.Payment{},
 		&models.Mail{},
+		&models.DebouncedNotification{},
 	)
 
 	if !db.Migrator().HasConstraint("user_chains", "uci_user_id_chain_id") {

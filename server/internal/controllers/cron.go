@@ -9,6 +9,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"gorm.io/gorm"
 )
@@ -27,6 +28,13 @@ func CronDaily(db *gorm.DB) {
 
 func CronHourly(db *gorm.DB) {
 	notifyIfIsHoldingABagForTooLong(db)
+}
+
+func CronEveryMinute(db *gorm.DB) {
+	err := services.SendElapsedNotifications(db)
+	if err != nil {
+		glog.Error(err)
+	}
 }
 
 // Email hosts about pending participants after 60 days.
