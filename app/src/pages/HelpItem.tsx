@@ -7,6 +7,7 @@ import {
   IonBackButton,
   IonButtons,
   IonImg,
+  IonIcon,
 } from "@ionic/react";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -64,24 +65,27 @@ export default function HelpItem({
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton className="tw-text-red">{t("back")}</IonBackButton>
+            <IonBackButton className="tw-text-red dark:tw-text-red-contrast">
+              {t("back")}
+            </IonBackButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
         <div className="tw-min-h-full tw-flex tw-flex-col">
           <IonText className="tw-flex-grow">
-            <h1 className="tw-mt-0 tw-text-3xl tw-font-bold tw-font-serif tw-text-red">
+            <h1 className="tw-mt-0 tw-text-3xl tw-font-bold tw-font-serif tw-text-red dark:tw-text-red-contrast">
               {item.title}
             </h1>
             {item.content.split("\n").map((s, i) => (
               <p key={i}>{s}</p>
             ))}
           </IonText>
-
-          <IonImg
-            src="/the_clothing_loop_logo_cropped.svg"
-            className="tw-w-full tw-h-auto tw-invert-[60%] -tw-mb-4 tw-mt-8"
+          <IonIcon
+            aria-hidden="true"
+            icon="/the_clothing_loop_logo_cropped.svg"
+            style={{ fontSize: 150 }}
+            className="tw-relative tw-w-full tw-min-h-auto tw-invert-[40%] tw-bottom-0 -tw-mb-4 tw-overflow-hidden tw-stroke-text"
           />
         </div>
       </IonContent>
