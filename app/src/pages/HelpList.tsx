@@ -184,7 +184,7 @@ export default function HelpList() {
             aria-hidden="true"
             icon="/v2_o.svg"
             style={{ fontSize: 500 }}
-            color={chain?.theme === "default" ? "" : "primary"}
+            color={chain?.theme === "default" ? "" : "light"}
             className="tw-absolute -tw-right-64 -tw-bottom-60 -tw-z-10 tw-text-purple-shade"
           />
         </div>

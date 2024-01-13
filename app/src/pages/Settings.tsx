@@ -439,14 +439,14 @@ export default function Settings() {
               aria-hidden="true"
               icon="/public/v2_o_pattern_green.svg"
               style={{ fontSize: 400 }}
-              color={chain?.theme === "default" ? "" : "primary"}
+              color={chain?.theme === "default" ? "" : "light"}
               className="tw-absolute -tw-left-28 -tw-bottom-[180px] -tw-z-10 tw-text-orange-shade dark:tw-text-red-shade"
             />
             <IonIcon
               aria-hidden="true"
               icon="/v2_o.svg"
               style={{ fontSize: 500 }}
-              color={chain?.theme === "default" ? "" : "primary"}
+              color={chain?.theme === "default" ? "" : "light"}
               className="tw-absolute -tw-right-64 -tw-bottom-[340px] -tw-z-10 tw-text-orange-shade dark:tw-text-red-shade"
             />
           </div>
