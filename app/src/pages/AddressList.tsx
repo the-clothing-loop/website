@@ -162,7 +162,6 @@ export default function AddressList() {
           style={{ fontSize: 150 }}
           className="tw-absolute tw-w-full tw-min-h-auto tw-invert-[60%] tw-bottom-0 tw-mb-8 tw-overflow-hidden tw-stroke-text dark:tw-stroke-light-tint"
         />
-
       </IonContent>
     </IonPage>
   );
