@@ -460,7 +460,7 @@ export default function BagsList() {
             icon="/v2_o.svg"
             style={{ fontSize: 400 }}
             color={chain?.theme === "default" ? "" : "light"}
-            className="tw-absolute tw-right-[170px] -tw-top-[180px] -tw-z-10 tw-text-orange-contrast dark:tw-text-red-shade"
+            className="tw-absolute tw-right-[170px] -tw-top-[180px] -tw-z-10 tw-text-orange-contrast dark:tw-text-red"
           />
         </div>
       </IonContent>
