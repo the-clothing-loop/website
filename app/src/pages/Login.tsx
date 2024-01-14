@@ -14,6 +14,7 @@ import {
   IonFab,
   IonFabButton,
   isPlatform,
+  IonImg,
 } from "@ionic/react";
 import {
   arrowBack,
@@ -22,7 +23,7 @@ import {
   sendOutline,
 } from "ionicons/icons";
 import { Keyboard } from "@capacitor/keyboard";
-import { Fragment, useContext, useRef, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import toastError from "../../toastError";
@@ -55,6 +56,20 @@ export default function Login(props: { isLoggedIn: boolean }) {
   const [verifyState, setVerifyState] = useState(State.idle);
   const [sentTimeout, setSentTimeout] = useState<number>();
   const [tokenOverride, setTokenOverride] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
+
+  const logoWhite = "./public/v2_logo_white.png";
+  const logoBlack = "./public/v2_logo_black.png";
+
+  useEffect(() => {
+    // Use matchMedia to check the user preference
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+    // Listen for changes to the prefers-color-scheme media query
+    prefersDark.addEventListener("change", (mediaQuery) =>
+      setDarkMode(mediaQuery.matches),
+    );
+  }, []);
 
   function handleSendEmail() {
     if (sentState === State.success || sentState === State.loading) return;
@@ -138,6 +153,10 @@ export default function Login(props: { isLoggedIn: boolean }) {
       </IonHeader>
       <IonContent className="ion-padding" fullscreen>
         <IonHeader collapse="condense" className="ion-margin-bottom">
+          <IonImg
+            src={darkMode ? logoWhite : logoBlack}
+            className="tw-w-full tw-px-8 tw-h-auto tw-mx-auto tw-mpt-4 tw-mb-12"
+          />
           <IonToolbar>
             <IonTitle size="large">{t("login")}</IonTitle>
           </IonToolbar>
