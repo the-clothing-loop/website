@@ -301,7 +301,7 @@ export default function BulkyList() {
                       fill="clear"
                       className="tw-font-bold tw-w-1/3"
                       onClick={() => handleClickEdit(bulkyItem)}
-                      color="primary"
+                      color="secondary"
                     >
                       {t("edit")}
                     </IonButton>

@@ -91,7 +91,7 @@ export default function AddressList() {
                   <h5
                     className={`ion-no-margin ${
                       isMe
-                        ? "tw-text-primary"
+                        ? "tw-text-primary dark:tw-text-primary-contrast"
                         : isUserPaused
                         ? "tw-text-medium"
                         : ""
