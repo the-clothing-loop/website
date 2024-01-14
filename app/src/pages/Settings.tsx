@@ -283,7 +283,10 @@ export default function Settings() {
             >
               {t("loopInformation")}
             </IonItemDivider>
-            <IonCard className="tw-mt-1.5 tw-rounded-none" color="background">
+            <IonCard
+              className="tw-mt-1.5 tw-rounded-none dark:tw-bg-red"
+              color="background"
+            >
               <IonList>
                 <IonItem lines="none">
                   <IonSelect
