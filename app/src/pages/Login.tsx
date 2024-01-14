@@ -260,11 +260,15 @@ export default function Login(props: { isLoggedIn: boolean }) {
             </IonItem>
           </Fragment>
         ) : null}
-        <div className="tw-bg-primary-shade dark:tw-bg-light tw-fixed tw-bottom-0 tw-h-1/3 tw-w-full -tw-z-10 -tw-ml-4" />
-        <IonImg
-          src={CirclesFrame}
-          className="tw-fixed tw-w-full tw-h-[33%] tw-left-12 -tw-bottom-12"
-        />
+        <div className="tw-bg-primary-shade dark:tw-bg-primary tw-fixed tw-bottom-0 tw-h-1/3 tw-w-full -tw-z-10 -tw-ml-4" />
+        <div className="relative">
+          <IonIcon
+            aria-hidden="true"
+            icon="/public/v2_o_pattern_green.svg"
+            style={{ fontSize: 400 }}
+            className="tw-absolute tw-left-20 -tw-bottom-[160px] -tw-z-10 tw-text-[#bfd6d3] dark:tw-text-primary-shade"
+          />
+        </div>
         <IonFab vertical="bottom" horizontal="start">
           <IonFabButton
             color="clear"

@@ -104,6 +104,8 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-purple: #513484;
   --ion-color-purple-contrast: #e4dcf1;
   --ion-color-purple-shade: #d1c5e8;
+  /** teal **/
+  --ion-color-teal: #83a2d7
 }
 
 @media (prefers-color-scheme: dark) {
@@ -113,14 +115,14 @@ http://ionicframework.com/docs/theming/ */
    */
 
   body {
-    --ion-color-primary: #428cff;
-    --ion-color-primary-rgb: 66, 140, 255;
+    --ion-color-primary: #1b3833;
+    --ion-color-primary-rgb: 54, 112, 102;
     --ion-color-primary-contrast: #ffffff;
     --ion-color-primary-contrast-rgb: 255, 255, 255;
-    --ion-color-primary-shade: #3a7be0;
-    --ion-color-primary-tint: #5598ff;
+    --ion-color-primary-shade: #142a26;
+    --ion-color-primary-tint: #448c7f;
 
-    --ion-color-secondary: #038ccc;
+    --ion-color-secondary: #203832;
     --ion-color-secondary-rgb: 3, 140, 204;
     --ion-color-secondary-contrast: #ffffff;
     --ion-color-secondary-contrast-rgb: 255, 255, 255;

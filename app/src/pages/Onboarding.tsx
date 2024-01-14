@@ -40,9 +40,15 @@ export function OnboardingPageOne() {
             </IonText>
           </h1>
         </div>
-        <div className="tw-bg-primary-shade dark:tw-bg-light tw-fixed tw-bottom-0 tw-h-[45%] tw-w-full -tw-z-10" />
-        <IonImg src={CirclesFrame} className="tw-fixed tw-bottom-0" />
-
+        <div className="tw-bg-primary-shade dark:tw-bg-primary tw-fixed tw-bottom-0 tw-h-[45%] tw-w-full -tw-z-10" />
+        <div className="relative">
+          <IonIcon
+            aria-hidden="true"
+            icon="/public/v2_o_pattern_green.svg"
+            style={{ fontSize: 400 }}
+            className="tw-absolute -tw-left-28 -tw-bottom-[180px] -tw-z-10 tw-text-[#bfd6d3] dark:tw-text-primary-shade"
+          />
+        </div>
         <IonFab vertical="bottom" horizontal="end">
           <IonFabButton
             className="ion-margin-bottom"
