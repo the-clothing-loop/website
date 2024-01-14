@@ -14,19 +14,32 @@ import {
   compassOutline,
   mapOutline,
 } from "ionicons/icons";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
 const logo = "https://images.clothingloop.org/x512/the_clothing_loop_logo.png";
-const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
 export function OnboardingPageOne() {
   const history = useHistory();
+
+  const [darkMode, setDarkMode] = useState(false);
+  const logoWhite = "./public/v2_logo_white.png";
+  const logoBlack = "./public/v2_logo_black.png";
+
+  useEffect(() => {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+    setDarkMode(prefersDark.matches);
+    prefersDark.addEventListener("change", (mediaQuery) =>
+      setDarkMode(mediaQuery.matches),
+    );
+  }, []);
+
   return (
     <IonPage>
       <IonContent>
         <IonImg
-          src={logo}
-          className="tw-w-full tw-px-8 tw-h-auto tw-mx-auto tw-pt-12"
+          src={darkMode ? logoWhite : logoBlack}
+          className="tw-w-full tw-px-14 tw-h-auto tw-mx-auto tw-mt-28"
         />
 
         <div className="tw-flex tw-justify-center">

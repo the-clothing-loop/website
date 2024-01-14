@@ -104,8 +104,6 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-purple: #513484;
   --ion-color-purple-contrast: #e4dcf1;
   --ion-color-purple-shade: #d1c5e8;
-  /** teal **/
-  --ion-color-teal: #83a2d7
 }
 
 @media (prefers-color-scheme: dark) {

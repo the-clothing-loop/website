@@ -60,11 +60,13 @@ export default function Login(props: { isLoggedIn: boolean }) {
 
   const logoWhite = "./public/v2_logo_white.png";
   const logoBlack = "./public/v2_logo_black.png";
-  const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
   useEffect(() => {
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
     setDarkMode(prefersDark.matches);
+    prefersDark.addEventListener("change", (mediaQuery) =>
+      setDarkMode(mediaQuery.matches),
+    );
   }, []);
 
   function handleSendEmail() {
