@@ -64,9 +64,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
 
   useEffect(() => {
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-    prefersDark.addEventListener("change", (mediaQuery) =>
-      setDarkMode(mediaQuery.matches),
-    );
+    setDarkMode(prefersDark.matches);
   }, []);
 
   function handleSendEmail() {
