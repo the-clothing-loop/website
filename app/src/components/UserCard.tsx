@@ -168,7 +168,12 @@ export default function UserCard({
             >
               <IonLabel>
                 <h3 className="!tw-font-bold">{t("phoneNumber")}</h3>
-                <a className="dark:tw-text-primary-contrast" href={"tel:" + user.phone_number}>{user.phone_number}</a>
+                <a
+                  className="dark:tw-text-primary-contrast"
+                  href={"tel:" + user.phone_number}
+                >
+                  {user.phone_number}
+                </a>
               </IonLabel>
             </IonItem>
             <IonPopover ref={refPhoneNumberPopup}>
