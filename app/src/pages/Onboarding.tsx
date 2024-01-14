@@ -31,14 +31,16 @@ export function OnboardingPageOne() {
 
         <div className="tw-flex tw-justify-center">
           <h1
-            className="tw-text-secondary tw-fixed tw-inset-y-[45%] tw-font-serif tw-font-bold tw-text-accent tw-text-7xl tw-md:text-9xl tw-mb-8 tw-rtl:text-end"
+            className="tw-text-secondary dark:tw-text-dark tw-fixed tw-inset-y-[45%] tw-font-serif tw-font-bold tw-text-accent tw-text-7xl tw-md:text-9xl tw-mb-8 tw-rtl:text-end"
             dir="ltr"
           >
             Swap, <br />
-            <IonText className="tw-text-stroke-accent">don't shop</IonText>
+            <IonText className="tw-text-stroke-accent dark:tw-text-stroke-dark">
+              don't shop
+            </IonText>
           </h1>
         </div>
-        <div className="tw-bg-primary-shade tw-fixed tw-bottom-0 tw-h-[45%] tw-w-full -tw-z-10" />
+        <div className="tw-bg-primary-shade dark:tw-bg-light tw-fixed tw-bottom-0 tw-h-[45%] tw-w-full -tw-z-10" />
         <IonImg src={CirclesFrame} className="tw-fixed tw-bottom-0" />
 
         <IonFab vertical="bottom" horizontal="end">

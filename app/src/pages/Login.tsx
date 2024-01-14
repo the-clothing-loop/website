@@ -60,12 +60,10 @@ export default function Login(props: { isLoggedIn: boolean }) {
 
   const logoWhite = "./public/v2_logo_white.png";
   const logoBlack = "./public/v2_logo_black.png";
+  const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
   useEffect(() => {
-    // Use matchMedia to check the user preference
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-
-    // Listen for changes to the prefers-color-scheme media query
     prefersDark.addEventListener("change", (mediaQuery) =>
       setDarkMode(mediaQuery.matches),
     );
@@ -155,7 +153,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         <IonHeader collapse="condense" className="ion-margin-bottom">
           <IonImg
             src={darkMode ? logoWhite : logoBlack}
-            className="tw-w-full tw-px-8 tw-h-auto tw-mx-auto tw-mpt-4 tw-mb-12"
+            className="tw-w-full tw-px-8 tw-h-auto tw-mx-auto tw-mpt-4 tw-mb-20"
           />
           <IonToolbar>
             <IonTitle size="large">{t("login")}</IonTitle>
@@ -180,7 +178,10 @@ export default function Login(props: { isLoggedIn: boolean }) {
             placeholder={t("yourEmailAddress")!}
           />
         </IonItem>
-        <IonItem lines="none" className="tw-text-right tw-mt-4">
+        <IonItem
+          lines="none"
+          className="tw-text-right tw-mt-4 tw-bg-transparent"
+        >
           {isCapacitor && showToken ? (
             <IonButton
               key="open-mail-app"
@@ -261,6 +262,11 @@ export default function Login(props: { isLoggedIn: boolean }) {
             </IonItem>
           </Fragment>
         ) : null}
+        <div className="tw-bg-primary-shade dark:tw-bg-light tw-fixed tw-bottom-0 tw-h-1/3 tw-w-full -tw-z-10 -tw-ml-4" />
+        <IonImg
+          src={CirclesFrame}
+          className="tw-fixed tw-w-full tw-h-[33%] tw-left-12 -tw-bottom-12"
+        />
         <IonFab vertical="bottom" horizontal="start">
           <IonFabButton
             color="clear"

@@ -33,6 +33,11 @@
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: #448c7f;
   }
+  .tw-text-stroke-dark {
+    color: transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #f4f5f8;
+  }
   .tw-bg-white-transparent {
     background: rgba(255, 255, 255, 0.5);
   }
