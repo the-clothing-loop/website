@@ -261,7 +261,7 @@ export default function BagsList() {
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
-          <IonToolbar>
+          <IonToolbar className="tw-bg-transparent">
             <IonTitle size="large" className="tw-text-green tw-font-serif">
               {t("whereIsTheBag")}
             </IonTitle>
@@ -453,6 +453,16 @@ export default function BagsList() {
           bagID={sheetModalBagID}
           didDismiss={handleDidDismissSheetModal}
         />
+        <div className="relative">
+          {/* Background SVG */}
+          <IonIcon
+            aria-hidden="true"
+            icon="/v2_o.svg"
+            style={{ fontSize: 400 }}
+            color={chain?.theme === "default" ? "" : "light"}
+            className="tw-absolute tw-right-[170px] -tw-top-[180px] -tw-z-10 tw-text-orange-contrast dark:tw-text-red-shade"
+          />
+        </div>
       </IonContent>
     </IonPage>
   );
