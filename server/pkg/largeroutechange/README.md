@@ -23,9 +23,9 @@ routeOldKeys := []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"}
 // The new bus stop route
 routeNewKeys := []string{"a", "b", "c", "j", "e", "f", "h", "g", "i", "d"},
 
-lrc := largeroutechange.New(busStopKeys)
+lrc := noderoute.New(busStopKeys)
 
-// Reshape the route to a data format that contains pointers to the previous and next node. 
+// Reshape the route to a data format that contains pointers to the previous and next node.
 routeOldNodes := lrc.NewNodeRoute(routeOldIDs)
 routeNewNodes := lrc.NewNodeRoute(routeNewIDs)
 
@@ -34,8 +34,9 @@ weightDirect := 0.5
 // A weight parameter that is applied when the 2nd stop away changes
 weightSecondary := 0.1
 
-weights, totalAvg := instance.IsLargeRouteChange(
-   routeOldNodes, routeNewNodes, 
+weights, totalAvg := IsLargeRouteChange(
+   instance,
+   routeOldNodes, routeNewNodes,
    weightDirect, weightSecondary,
 )
 // [weights] Calculate the differential for each stop
@@ -55,7 +56,3 @@ weights, totalAvg := instance.IsLargeRouteChange(
 // [totalAvg] The average of all the weights
 // > 0.7
 ```
-
-## License
-
-MIT License

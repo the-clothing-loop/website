@@ -4,60 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/the-clothing-loop/website/server/pkg/noderoute"
 )
-
-func TestAddTravelerKeys(t *testing.T) {
-	oKeys := []string{"1", "2", "3", "4", "5", "6"}
-	nKeys := []string{"1", "7", "3"}
-
-	in := New(oKeys)
-	in.AddTravelerKeys(nKeys)
-
-	assert.Equal(t, []string{"1", "2", "3", "4", "5", "6", "7"}, in.travelerKeys)
-}
-
-func TestNewNodeRoute(t *testing.T) {
-	in := New([]string{"0", "1", "2"})
-	nr := in.NewNodeRoute([]string{"0", "1", "2"})
-
-	// Verify that the entire route is included
-	assert.Equal(t, 0, nr[0].KeyIndex)
-	assert.Equal(t, 1, nr[1].KeyIndex)
-	assert.Equal(t, 2, nr[2].KeyIndex)
-
-	// Test prev values
-	assert.Equal(t, 2, nr[0].Prev.KeyIndex)
-	assert.Equal(t, 0, nr[1].Prev.KeyIndex)
-	assert.Equal(t, 1, nr[2].Prev.KeyIndex)
-
-	// Test next values
-	assert.Equal(t, 1, nr[0].Next.KeyIndex)
-	assert.Equal(t, 2, nr[1].Next.KeyIndex)
-	assert.Equal(t, 0, nr[2].Next.KeyIndex)
-
-	// Test Pointers
-	assert.Equal(t, nr[2], nr[0].Prev)
-	assert.Equal(t, nr[0], nr[1].Prev)
-	assert.Equal(t, nr[1], nr[2].Prev)
-
-	assert.Equal(t, nr[1], nr[0].Next)
-	assert.Equal(t, nr[2], nr[1].Next)
-	assert.Equal(t, nr[0], nr[2].Next)
-}
-
-func TestNewNodeRouteLen2(t *testing.T) {
-	in := New([]string{"0", "1"})
-	nr := in.NewNodeRoute([]string{"0", "1"})
-
-	assert.Equal(t, 0, nr[0].KeyIndex)
-	assert.Equal(t, 1, nr[1].KeyIndex)
-
-	assert.Equal(t, 1, nr[0].Prev.KeyIndex)
-	assert.Equal(t, 0, nr[1].Prev.KeyIndex)
-
-	assert.Equal(t, 1, nr[0].Next.KeyIndex)
-	assert.Equal(t, 0, nr[1].Next.KeyIndex)
-}
 
 func TestGenWeights(t *testing.T) {
 	tests := []struct {
@@ -141,16 +89,16 @@ func TestGenWeights(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
-			in := New([]string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"})
-			rOld := in.NewNodeRoute(test.RouteOld)
-			rNew := in.NewNodeRoute(test.RouteNew)
-			weights, totalAvg := in.IsLargeRouteChange(rOld, rNew, 0.5, 0.1)
+			nk := noderoute.New([]string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"})
+			rOld := nk.NewNodeRoute(test.RouteOld)
+			rNew := nk.NewNodeRoute(test.RouteNew)
+			weights, totalAvg := IsLargeRouteChange(nk, rOld, rNew, 0.5, 0.1)
 
 			assert.Equal(t, test.ExpectedTotal, totalAvg, "total average")
 
 			totalWeights := float64(0)
 			for i, weight := range weights {
-				key := in.travelerKeys[i]
+				key := nk.Keys[i]
 
 				if testWeight, ok := test.Expected[key]; ok {
 					totalWeights += testWeight
@@ -162,34 +110,23 @@ func TestGenWeights(t *testing.T) {
 }
 
 func TestNodeFind(t *testing.T) {
-	in := New([]string{"a", "b", "c", "d", "e", "f"})
-	nr := in.NewNodeRoute([]string{"a", "b", "c", "d", "e", "f"})
-	or := in.NewNodeRoute([]string{"b", "f", "e", "d", "c", "a"})
+	nk := noderoute.New([]string{"a", "b", "c", "d", "e", "f"})
+	nr := nk.NewNodeRoute([]string{"a", "b", "c", "d", "e", "f"})
+	or := nk.NewNodeRoute([]string{"b", "f", "e", "d", "c", "a"})
 
 	// Working get index by key
-	assert.Equal(t, 2, in.GetIndexByKey("c"))
+	assert.Equal(t, 2, nk.GetIndexByKey("c"))
 
 	// Find from node "d"
-	nn := nr[in.GetIndexByKey("d")]
-	on := or[in.GetIndexByKey("d")]
-	d1, d2 := nn.DiffNode(on)
+	nn := nr[nk.GetIndexByKey("d")]
+	on := or[nk.GetIndexByKey("d")]
+	d1, d2 := DiffNode(nn, on)
 	assert.Equal(t, 0, d1)
 	assert.Equal(t, 1, d2)
 }
 
-func TestIndexCircular(t *testing.T) {
-	arr := []string{"a", "b", "c"}
-	v := get(arr, 9)
-	assert.Equal(t, "a", v)
-
-	v = get(arr, 2)
-	assert.Equal(t, "c", v)
-
-	v = get(arr, -1)
-	assert.Equal(t, "c", v)
-}
 func TestIndexOutBound(t *testing.T) {
-	arr := map[int]string{0: "a", 1: "b", 2: "c"}
+	arr := []string{"a", "b", "c"}
 	v, err := getErr(arr, 9)
 	assert.False(t, err)
 	assert.Nil(t, v)
