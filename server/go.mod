@@ -11,7 +11,6 @@ require (
 	github.com/getbrevo/brevo-go v1.0.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-co-op/gocron v1.29.0
-	github.com/go-playground/assert/v2 v2.2.0
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/golang/glog v1.1.1
 	github.com/jaswdr/faker v1.18.0

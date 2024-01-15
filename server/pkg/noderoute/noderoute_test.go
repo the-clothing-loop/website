@@ -3,7 +3,7 @@ package noderoute
 import (
 	"testing"
 
-	"github.com/go-playground/assert/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAddKeys(t *testing.T) {
