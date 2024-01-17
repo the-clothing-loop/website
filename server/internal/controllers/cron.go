@@ -16,13 +16,13 @@ import (
 var validate = validator.New()
 
 func CronMonthly(db *gorm.DB) {
-	// TODO: fix automatic Loop closure
-	// closeChainsWithOldPendingParticipants(db)
+	closeChainsWithOldPendingParticipants(db)
 	emailHostsOldPendingParticipants(db)
 }
 
 func CronDaily(db *gorm.DB) {
 	emailSendAgain(db)
+	emailAbandonedChainRecruitment(db)
 }
 
 func CronHourly(db *gorm.DB) {
@@ -135,27 +135,74 @@ ORDER BY u.email
 	}
 }
 
-// // Close chains if pending participants are still pending 30 days after reminder email is sent
-// TODO: Send an email to all participants asking if they what to become host for this loop.
-// func closeChainsWithOldPendingParticipants(db *gorm.DB) {
-// 	glog.Info("Running closeChainsWithOldPendingParticipants")
-// 	db.Exec(`
-// UPDATE chains SET published = FALSE, open_to_new_members = FALSE WHERE id IN (
-// 	SELECT DISTINCT(uc.chain_id)
-// 	FROM user_chains AS uc
-// 	JOIN chains AS c ON c.id = uc.chain_id
-// 	WHERE uc.is_approved = FALSE
-// 		AND uc.last_notified_is_unapproved_at < (NOW() - INTERVAL 30 DAY)
-// 		AND c.published = TRUE
-// 		AND c.id NOT IN (
-// 			SELECT DISTINCT(uc2.chain_id) FROM user_chains AS uc2
-// 			JOIN users AS u2 ON u2.id = uc2.user_id
-// 			WHERE u2.last_signed_in_at > (NOW() - INTERVAL 90 DAY)
-// 				AND uc2.is_chain_admin = TRUE
-// 		)
-// )
-// 	`)
-// }
+// Close chains if pending participants are still pending 30 days after reminder email is sent
+func closeChainsWithOldPendingParticipants(db *gorm.DB) {
+	glog.Info("Running closeChainsWithOldPendingParticipants")
+	db.Exec(`
+	UPDATE chains SET published = FALSE, open_to_new_members = FALSE, last_abandoned_at = NOW() WHERE id IN (
+		SELECT DISTINCT(uc.chain_id)
+		FROM user_chains AS uc
+		JOIN chains AS c ON c.id = uc.chain_id
+		WHERE uc.is_approved = FALSE
+		AND uc.last_notified_is_unapproved_at < (NOW() - INTERVAL 30 DAY)
+		AND c.published = TRUE
+		AND c.id NOT IN (
+			SELECT DISTINCT(uc2.chain_id) FROM user_chains AS uc2
+			JOIN users AS u2 ON u2.id = uc2.user_id
+			WHERE u2.last_signed_in_at > (NOW() - INTERVAL 90 DAY)
+			AND uc2.is_chain_admin = TRUE
+		)
+	)
+	`)
+}
+
+func emailAbandonedChainRecruitment(db *gorm.DB) {
+	glog.Info("Running emailAbandonedChainRecruitment")
+
+	// Get the abandoned chains older than 7 days
+	chainIDs := []uint{}
+	err := db.Raw(`
+SELECT UNIQUE(c2.id) FROM chains AS c2
+JOIN user_chains AS uc ON uc.chain_id = c2.id AND uc.is_chain_admin = FALSE
+JOIN users ON uc.user_id = users.id AND users.is_email_verified = TRUE
+WHERE c2.last_abandoned_at < (NOW() - INTERVAL 7 DAY)
+	AND c2.last_abandoned_recruitment_email IS NULL
+GROUP BY c2.id
+HAVING COUNT(uc.id) > 0
+	`).Scan(&chainIDs).Error
+	if err != nil {
+		glog.Errorf("Unable to get abandoned chains %s", err)
+		return
+	}
+
+	// get participants of chains
+	users := []models.UserContactData{}
+	err = db.Raw(`
+SELECT
+	users.name AS name,
+	users.email AS email,
+	users.i18n AS i18n,
+	chains.name AS chain_name
+FROM user_chains AS uc
+LEFT JOIN users ON uc.user_id = users.id
+LEFT JOIN chains ON uc.chain_id = chains.id 
+WHERE chains IN ? AND uc.is_chain_admin = FALSE
+	`, chainIDs).Scan(&users).Error
+	if err != nil {
+		glog.Errorf("Unable to get participants of abandoned chains %s", err)
+		return
+	}
+
+	// send emails
+	// TODO: send emails
+
+	// prevent duplicate emails
+	err = db.Exec(`UPDATE chains AS c SET c.last_abandoned_recruitment_email = NOW() WHERE c.id IN ?`, chainIDs).Error
+	if err != nil {
+		glog.Errorf("Unable to prevent duplicate emails for abandoned chains %s", err)
+		return
+	}
+}
 
 func notifyIfIsHoldingABagForTooLong(db *gorm.DB) {
 	glog.Info("Running notifyIfIsHoldingABagForTooLong")

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -389,6 +390,12 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Published != nil {
 		valuesToUpdate["published"] = *(body.Published)
+
+		// reset abandoned status to NULL
+		if *(body.Published) && chain.LastAbandonedAt.Valid {
+			valuesToUpdate["last_abandoned_at"] = sql.NullTime{}
+			valuesToUpdate["last_abandoned_recruitment_email"] = sql.NullTime{}
+		}
 	}
 	if body.OpenToNewMembers != nil {
 		valuesToUpdate["open_to_new_members"] = *(body.OpenToNewMembers)
