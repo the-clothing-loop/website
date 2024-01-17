@@ -14,6 +14,7 @@ export interface User {
   i18n: string;
   longitude?: number;
   latitude?: number;
+  accepted_toh?: boolean;
 }
 
 export interface Bag {

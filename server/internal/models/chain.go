@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"errors"
 	"time"
 
@@ -14,27 +15,29 @@ var validate = validator.New()
 var ErrChainNotFound = errors.New("Chain not found")
 
 type Chain struct {
-	ID               uint
-	UID              string      `gorm:"uniqueIndex"`
-	FID              zero.String `gorm:"column:fid"`
-	Name             string
-	Description      string
-	Address          string
-	CountryCode      string
-	Latitude         float64
-	Longitude        float64
-	Radius           float32
-	Published        bool
-	OpenToNewMembers bool
-	RulesOverride    string
-	Sizes            []string `gorm:"serializer:json"`
-	Genders          []string `gorm:"serializer:json"`
-	UserChains       []UserChain
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
-	DeletedAt        zero.Time
-	Theme            string
-	IsAppDisabled    bool
+	ID                            uint
+	UID                           string      `gorm:"uniqueIndex"`
+	FID                           zero.String `gorm:"column:fid"`
+	Name                          string
+	Description                   string
+	Address                       string
+	CountryCode                   string
+	Latitude                      float64
+	Longitude                     float64
+	Radius                        float32
+	Published                     bool
+	OpenToNewMembers              bool
+	RulesOverride                 string
+	Sizes                         []string `gorm:"serializer:json"`
+	Genders                       []string `gorm:"serializer:json"`
+	UserChains                    []UserChain
+	CreatedAt                     time.Time
+	UpdatedAt                     time.Time
+	DeletedAt                     zero.Time
+	Theme                         string
+	IsAppDisabled                 bool
+	LastAbandonedAt               sql.NullTime
+	LastAbandonedRecruitmentEmail sql.NullTime
 }
 
 type ChainResponse struct {

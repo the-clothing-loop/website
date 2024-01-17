@@ -14,7 +14,7 @@ export default function Signup() {
   const { t } = useTranslation();
   const history = useHistory();
   const authUser = useContext(AuthContext).authUser;
-  const { addToastError } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
 
   if (authUser) {
     history.replace({
@@ -54,6 +54,23 @@ export default function Signup() {
     }
   }
 
+  function onEmailExist(email: string) {
+    console.log("Email already exists", email);
+    addModal({
+      message: t("userExists"),
+      actions: [
+        {
+          text: t("login"),
+          type: "default",
+          fn: () => {
+            let url = `/users/login?email=${email}`;
+            return history.push(url);
+          },
+        },
+      ],
+    });
+  }
+
   return (
     <>
       <Helmet>
@@ -90,6 +107,7 @@ export default function Signup() {
                 isNewsletterRequired={true}
                 showNewsletter
                 showTosPrivacyPolicy
+                onEmailExist={onEmailExist}
                 onlyShowEditableAddress={!authUser}
               />
               <div className="mt-4">

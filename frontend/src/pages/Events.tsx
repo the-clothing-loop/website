@@ -342,37 +342,53 @@ function EventItem({ event }: { event: Event }) {
       ? event.price_value
       : event.price_value.toFixed(2);
 
+  let isSfSeason2024 =
+    date.isAfter("2024-01-01") && date.isBefore("2024-03-01");
+
   let image = ClothesImage;
   if (event.image_url) image = event.image_url;
   return (
     <article className="flex flex-col bg-teal-light">
-      <Link to={eventURL} className="relative aspect-[4/3] overflow-hidden">
-        <div className=" text-md absolute mt-4 right-4 text-center z-10">
-          <p className="bg-teal text-white py-2 px-3">
-            <span className="inline-block pr-1 font-extrabold">
-              {date.format("MMMM")}
-            </span>
-            <span>{" " + date.format("D")}</span>
-          </p>
-          {event.price_currency ? (
-            <p className="py-1 px-3 bg-yellow-dark text-black">
-              <span className="inline-block pr-1 font-bold">
-                {event.price_currency}
+      <div className="relative flex">
+        <Link to={eventURL} className="relative aspect-[4/3] overflow-hidden">
+          <div className=" text-md absolute mt-4 right-4 text-center z-10">
+            <p className="bg-teal text-white py-2 px-3">
+              <span className="inline-block pr-1 font-extrabold">
+                {date.format("MMMM")}
               </span>
-              <span className="inline-block pr-1 font-bold">
-                {eventPriceValue}
-              </span>
+              <span>{" " + date.format("D")}</span>
             </p>
-          ) : (
-            <p className="py-1 px-3 bg-white/90 text-black">
-              <span className="inline-block pr-1 font-semibold">
-                {t("priceFree")}
-              </span>
-            </p>
-          )}
-        </div>
-        <img src={image} className="w-full h-full object-cover" />
-      </Link>
+            {event.price_currency ? (
+              <p className="py-1 px-3 bg-yellow-dark text-black">
+                <span className="inline-block pr-1 font-bold">
+                  {event.price_currency}
+                </span>
+                <span className="inline-block pr-1 font-bold">
+                  {eventPriceValue}
+                </span>
+              </p>
+            ) : (
+              <p className="py-1 px-3 bg-white/90 text-black">
+                <span className="inline-block pr-1 font-semibold">
+                  {t("priceFree")}
+                </span>
+              </p>
+            )}
+          </div>
+          <img
+            src={image}
+            className="w-full h-full object-cover"
+            alt="event cover image"
+          />
+        </Link>
+        {isSfSeason2024 ? (
+          <img
+            src="https://images.clothingloop.org/192x192/sf_season_2024.png"
+            className="absolute -bottom-4 left-2 w-24 rotate-[-22deg] "
+            alt="Part of Slow Fashion Season 2024"
+          />
+        ) : null}
+      </div>
 
       <div className="m-4 mb-2">
         <h2 className="text-xl text-teal font-bold">

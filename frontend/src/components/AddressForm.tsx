@@ -76,7 +76,7 @@ export default function AddressForm(props: {
       (async () => {
         try {
           const [userReq, hasNewsletterReq] = await Promise.all([
-            userGetByUID(props.chainUID, props!.userUID!),
+            userGetByUID(props.chainUID, props!.userUID!, false),
             userHasNewsletter(props.chainUID, props.userUID!),
           ]);
           const user = userReq.data;

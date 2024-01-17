@@ -130,6 +130,7 @@ export default function Signup() {
   }
 
   function onEmailExist(email: string) {
+    console.log("Email already exists", email);
     addModal({
       message: t("userExists"),
       actions: [

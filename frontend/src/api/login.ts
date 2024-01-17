@@ -23,6 +23,7 @@ export interface RequestRegisterChain {
   open_to_new_members: boolean;
   sizes: Array<Sizes | string> | null;
   genders: Array<Sizes | string> | null;
+  allow_toh: boolean;
 }
 
 export function registerChainAdmin(
