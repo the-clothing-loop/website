@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -15,6 +16,10 @@ func SendElapsedNotifications(db *gorm.DB) error {
 		return err
 	}
 	for _, notification := range notifications {
+		if app.Config.ENV == app.EnvEnumDevelopment {
+			fmt.Printf("OneSignal notification sent:\n\tTitle: %s\tContent: %s\n", notification.Title, notification.Content)
+			continue
+		}
 		err := app.OneSignalCreateNotification(
 			db,
 			[]string{strconv.FormatUint(uint64(notification.UserID), 10)},
