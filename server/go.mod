@@ -15,6 +15,7 @@ require (
 	github.com/golang/glog v1.1.1
 	github.com/jaswdr/faker v1.18.0
 	github.com/lil5/goscope2 v1.4.2
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/samber/lo v1.38.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.8.4

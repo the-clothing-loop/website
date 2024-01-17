@@ -96,16 +96,15 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (authUser && isChainAdmin && authUser.accepted_toh === false) {
-      console.log("You have not approved the Terms of Hosts!");
+      console.log("You have not accepted the Terms of Hosts!");
       addModal({
-        message:
-          "You must approve the Terms of Hosts to continue administering your Loop(s)!",
+        message: t("acceptTohTitle"),
         content: () => {
           const ref = useRef<HTMLDivElement>(null);
           const getElBtn = () =>
-            ref.current?.parentElement?.parentElement?.querySelector(
+            ref.current?.parentElement?.parentElement?.parentElement?.querySelectorAll(
               "div:nth-child(3) > button"
-            ) as HTMLButtonElement;
+            ) as NodeListOf<HTMLButtonElement>;
           const scrollingCheck = useDebouncedCallback(
             (e: UIEvent<HTMLDivElement>) => {
               let target = e.target as HTMLDivElement;
@@ -114,7 +113,7 @@ export default function AdminDashboard() {
                 target.scrollTop + target.clientHeight + 200 >
                 target.scrollHeight
               ) {
-                getElBtn().removeAttribute("disabled");
+                getElBtn().forEach((el) => el.removeAttribute("disabled"));
               }
             },
             300,
@@ -124,7 +123,7 @@ export default function AdminDashboard() {
           );
 
           useEffect(() => {
-            getElBtn().setAttribute("disabled", "disabled");
+            getElBtn().forEach((el) => el.setAttribute("disabled", "disabled"));
           }, []);
 
           const scrollUp = () => {
@@ -135,29 +134,57 @@ export default function AdminDashboard() {
             });
           };
           return (
-            <div className="relative">
-              <div
-                ref={ref}
-                className="border border-grey overflow-y-auto h-[33.333vh] text-xs py-0.5 px-2 bg-grey-light"
-                onScroll={scrollingCheck}
-              >
-                <TermsOfHostsHTML className="prose text-xs prose-terms-modal" />
+            <div>
+              <p className="-mt-4 mb-4 text-sm">{t("acceptTohSubtitle")}</p>
+              <div className="relative">
+                <div
+                  ref={ref}
+                  className="border border-grey overflow-y-auto h-[33.333vh] text-xs py-0.5 px-2 bg-grey-light"
+                  onScroll={scrollingCheck}
+                >
+                  <TermsOfHostsHTML className="prose text-xs prose-terms-modal" />
+                </div>
+                <button
+                  onClick={scrollUp}
+                  className="absolute bottom-2 ltr:right-2 rtl:left-2 btn btn-circle btn-sm btn-secondary text-white opacity-50 hover:opacity-90 tooltip ltr:tooltip-left rtl:tooltip-right before:font-normal before:text-sm"
+                  data-tip="Scroll to the bottom."
+                >
+                  <span className="feather feather-arrow-down font-bold" />
+                </button>
               </div>
-              <button
-                onClick={scrollUp}
-                className="absolute bottom-0 right-0 mb-2 mr-2 btn btn-circle btn-sm btn-secondary opacity-50 feather feather-arrow-down"
-              ></button>
+              <p className="text-xs mt-3 leading-relaxed">
+                {t("youMustScrollToAcceptToh")}
+                <br />
+                <span className="text-red font-semibold">
+                  {t("ifClickDenyTohSetHost")}
+                </span>
+              </p>
             </div>
           );
         },
         actions: [
           {
             type: "primary",
-            text: t("Accept"),
+            text: t("accept"),
             fn: () => {
               userUpdate({
                 user_uid: authUser.uid,
                 accepted_toh: true,
+              }).then(() => {
+                authUserRefresh();
+              });
+            },
+            submit: true,
+          },
+          {
+            type: "error",
+            text: t("deny"),
+            fn: () => {
+              userUpdate({
+                user_uid: authUser.uid,
+                accepted_toh: false,
+              }).then(() => {
+                authUserRefresh();
               });
             },
             submit: true,

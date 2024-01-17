@@ -126,19 +126,16 @@ export default function BagsList() {
         _bagsCard = bags;
       } else {
         bags.forEach((bag) => {
-          if (authUser?.uid === bag.user_uid) {
-            _bagsCard.push(bag);
-            return;
-          }
-
+          let isMe = authUser?.uid === bag.user_uid;
           let routeIndex = route.indexOf(bag.user_uid);
-          if (indexAllowed.indexOf(routeIndex) !== -1) {
-            _bagsCard.push(bag);
-            return;
-          }
+          let isClosest = indexAllowed.indexOf(routeIndex) !== -1;
 
-          _bagsList.push(bag);
+          if (isMe || isClosest) {
+            _bagsCard.push(bag);
+          }
         });
+
+        _bagsList = bags;
       }
     }
     return [_bagsCard, _bagsList];

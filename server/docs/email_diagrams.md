@@ -39,8 +39,9 @@ flowchart TD
    end
    Start(Start) --> SB1
    SB1 --> |Loop is abandoned| A[Loop is set to draft and closed]
-   A --> End(End)
-
+   A --> B[/7 days later/]
+   B --> C[Email is sent to all participants asking if they want to become host]
+   C --> End(End)
 ```
 
 ## Email resend #578
