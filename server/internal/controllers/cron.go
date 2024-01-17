@@ -3,12 +3,10 @@ package controllers
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/OneSignal/onesignal-go-api"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang/glog"
-	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
@@ -179,7 +177,6 @@ HAVING COUNT(uc.id) > 0
 	}
 
 	if len(chainIDs) == 0 {
-		glog.Info("No abandoned chains found")
 		return
 	}
 
@@ -207,23 +204,17 @@ ORDER BY chains.id DESC
 		return
 	}
 
-	// send emails
-	glog.Info("Sending emails %s", strings.Join(
-		lo.Map(users, func(u UserChainContactData, _ int) string {
-			return fmt.Sprintf("%s %s", u.ChainName, u.Email.String)
-		}),
-		", ",
-	))
+	if len(users) == 0 {
+		return
+	}
 
+	// send emails
 	for _, u := range users {
 		if !u.Email.Valid {
 			continue
 		}
 		views.EmailDoYouWantToBeHost(db, u.I18n, u.Name, u.Email.String, u.ChainName)
 	}
-
-	// TODO: test
-	return
 
 	// prevent duplicate emails
 	err = db.Exec(`UPDATE chains AS c SET c.last_abandoned_recruitment_email = NOW() WHERE c.id IN ?`, chainIDs).Error
