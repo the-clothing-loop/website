@@ -3,11 +3,15 @@ package app
 import (
 	"fmt"
 	"os"
+	"time"
 
+	cache "github.com/patrickmn/go-cache"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
+
+var Cache *cache.Cache
 
 func DatabaseInit() *gorm.DB {
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
@@ -20,6 +24,8 @@ func DatabaseInit() *gorm.DB {
 	if os.Getenv("SERVER_NO_MIGRATE") == "" {
 		DatabaseAutoMigrate(db)
 	}
+
+	Cache = cache.New(5*time.Minute, 10*time.Minute)
 
 	return db
 }

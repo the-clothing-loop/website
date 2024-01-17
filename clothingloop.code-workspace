@@ -23,6 +23,9 @@
     },
     {
       "path": ".husky"
+    },
+    {
+      "path": "translate_ai"
     }
   ],
   "settings": {
