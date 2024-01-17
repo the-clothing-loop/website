@@ -127,6 +127,10 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		latitude = faker.Address().Latitude()
 		longitude = faker.Address().Latitude()
 	}
+	routePrivacy := 2
+	if o.RoutePrivacy != nil {
+		routePrivacy = *o.RoutePrivacy
+	}
 	chain = &models.Chain{
 		UID:              uuid.NewV4().String(),
 		Name:             "Fake " + faker.Company().Name(),
@@ -138,7 +142,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
 		Published:        !o.IsNotPublished,
 		OpenToNewMembers: o.IsOpenToNewMembers,
-		RoutePrivacy:     lo.Ternary(o.RoutePrivacy == nil, 2, *o.RoutePrivacy),
+		RoutePrivacy:     routePrivacy,
 		Sizes:            MockSizes(true),
 		Genders:          MockGenders(false),
 		UserChains:       []models.UserChain{},
