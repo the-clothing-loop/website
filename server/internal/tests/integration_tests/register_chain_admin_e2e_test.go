@@ -30,6 +30,7 @@ func TestRegisterChainAdmin(t *testing.T) {
 			"open_to_new_members": true,
 			"sizes":               mocks.MockSizes(false),
 			"genders":             mocks.MockGenders(false),
+			"allow_toh":           true,
 		},
 		"user": gin.H{
 			"name":         "Test " + faker.Person().Name(),
@@ -48,7 +49,7 @@ func TestRegisterChainAdmin(t *testing.T) {
 	result := resultFunc()
 
 	// test
-	// assert.FailNowf(t, "testing", "status: %d, body: ~%s~, token: %s, header: %s", result.Response.StatusCode, result.Body, token, c.Request.Header.Get("Authorization"))
+	// assert.FailNowf(t, "testing", "status: %d, body: ~%s~, header: %s", result.Response.StatusCode, result.Body, c.Request.Header.Get("Authorization"))
 	assert.Equal(t, 200, result.Response.StatusCode)
 
 	testUser := &models.User{}
