@@ -1,4 +1,4 @@
---- List loop hosts and the pending participants older than 60 days
+--- List loop hosts and the pending participants older than 30 days
 
 SELECT
     u2.id,
@@ -21,11 +21,11 @@ FROM user_chains AS uc
     JOIN users AS u2 ON u2.id = uc2.user_id
 WHERE
     uc.is_approved = FALSE
-    AND uc.created_at < (NOW() - INTERVAL 60 DAY)
+    AND uc.created_at < (NOW() - INTERVAL 30 DAY)
 GROUP BY u2.id
 ORDER BY uc.chain_id ASC;
 
---- List participants older than 60 days
+--- List participants older than 30 days
 
 SELECT
     u.id,
@@ -48,6 +48,6 @@ FROM user_chains AS uc
     JOIN users AS u2 ON u2.id = uc2.user_id
 WHERE
     uc.is_approved = FALSE
-    AND uc.created_at < (NOW() - INTERVAL 60 DAY)
+    AND uc.created_at < (NOW() - INTERVAL 30 DAY)
 GROUP BY u.id
 ORDER BY uc.chain_id ASC;

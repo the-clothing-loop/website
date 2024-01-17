@@ -3,10 +3,12 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/OneSignal/onesignal-go-api"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang/glog"
+	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
@@ -29,7 +31,7 @@ func CronHourly(db *gorm.DB) {
 	notifyIfIsHoldingABagForTooLong(db)
 }
 
-// Email hosts about pending participants after 60 days.
+// Email hosts about pending participants after 30 days.
 func emailHostsOldPendingParticipants(db *gorm.DB) {
 	glog.Info("Running emailHostsOldPendingParticipants")
 	if db == nil {
@@ -46,7 +48,7 @@ JOIN users AS u ON u.id = uc.user_id
 JOIN chains AS c ON c.id = uc.chain_id
 WHERE uc.is_approved = FALSE
 	AND u.is_email_verified = TRUE
-	AND uc.created_at < (NOW() - INTERVAL 60 DAY)
+	AND uc.created_at < (NOW() - INTERVAL 30 DAY)
 	AND uc.last_notified_is_unapproved_at IS NULL
 	`).Scan(&pendingValues).Error
 	if err != nil {
@@ -147,9 +149,10 @@ func closeChainsWithOldPendingParticipants(db *gorm.DB) {
 		AND uc.last_notified_is_unapproved_at < (NOW() - INTERVAL 30 DAY)
 		AND c.published = TRUE
 		AND c.id NOT IN (
+			-- Find loop where the host has not signed-in in the last 30 days 
 			SELECT DISTINCT(uc2.chain_id) FROM user_chains AS uc2
 			JOIN users AS u2 ON u2.id = uc2.user_id
-			WHERE u2.last_signed_in_at > (NOW() - INTERVAL 90 DAY)
+			WHERE u2.last_signed_in_at > (NOW() - INTERVAL 30 DAY)
 			AND uc2.is_chain_admin = TRUE
 		)
 	)
@@ -175,18 +178,29 @@ HAVING COUNT(uc.id) > 0
 		return
 	}
 
+	if len(chainIDs) == 0 {
+		glog.Info("No abandoned chains found")
+		return
+	}
+
 	// get participants of chains
-	users := []models.UserContactData{}
+	type UserChainContactData struct {
+		models.UserContactData
+		ChainID uint `gorm:"chain_id"`
+	}
+	users := []UserChainContactData{}
 	err = db.Raw(`
 SELECT
 	users.name AS name,
 	users.email AS email,
 	users.i18n AS i18n,
-	chains.name AS chain_name
+	chains.name AS chain_name,
+	chains.id AS chain_id
 FROM user_chains AS uc
 LEFT JOIN users ON uc.user_id = users.id
 LEFT JOIN chains ON uc.chain_id = chains.id 
-WHERE chains IN ? AND uc.is_chain_admin = FALSE
+WHERE chains.id IN ? AND uc.is_chain_admin = FALSE
+ORDER BY chains.id DESC
 	`, chainIDs).Scan(&users).Error
 	if err != nil {
 		glog.Errorf("Unable to get participants of abandoned chains %s", err)
@@ -194,7 +208,22 @@ WHERE chains IN ? AND uc.is_chain_admin = FALSE
 	}
 
 	// send emails
-	// TODO: send emails
+	glog.Info("Sending emails %s", strings.Join(
+		lo.Map(users, func(u UserChainContactData, _ int) string {
+			return fmt.Sprintf("%s %s", u.ChainName, u.Email.String)
+		}),
+		", ",
+	))
+
+	for _, u := range users {
+		if !u.Email.Valid {
+			continue
+		}
+		views.EmailDoYouWantToBeHost(db, u.I18n, u.Name, u.Email.String, u.ChainName)
+	}
+
+	// TODO: test
+	return
 
 	// prevent duplicate emails
 	err = db.Exec(`UPDATE chains AS c SET c.last_abandoned_recruitment_email = NOW() WHERE c.id IN ?`, chainIDs).Error

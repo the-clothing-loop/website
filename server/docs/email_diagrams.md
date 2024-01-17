@@ -28,7 +28,7 @@ flowchart
 
 flowchart TD
    subgraph SB1[Loop is abandoned]
-      SA[Someone has requested to join the loop] --> SB[/60 days later/]
+      SA[Someone has requested to join the loop] --> SB[/30 days later/]
       SB --> |Nothing happened| SC[Email is sent to all hosts reminding\nto accept or decline 'join requests']
       SC --> SD[/30 days later/]
       SD --> SE{A host has responded\nto a 'join request'}
