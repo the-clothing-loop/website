@@ -382,11 +382,18 @@ function EventItem({ event }: { event: Event }) {
           />
         </Link>
         {isSfSeason2024 ? (
-          <img
-            src="https://images.clothingloop.org/192x192/sf_season_2024.png"
-            className="absolute -bottom-4 left-2 w-24 rotate-[-22deg] "
-            alt="Part of Slow Fashion Season 2024"
-          />
+          <a
+            target="_blank"
+            href="https://slowfashion.global/campaign-sfm/"
+            className="absolute -bottom-4 left-2 group"
+          >
+            <span className="group-hover:animate-[ping-sm_1s_ease-in-out_1] absolute inline-flex h-full w-full rounded-full bg-purple-light opacity-0 group-hover:opacity-75"></span>
+            <img
+              src="https://images.clothingloop.org/192x192/sf_season_2024.png"
+              className="w-24 rotate-[-22deg]"
+              alt="Part of Slow Fashion Season 2024"
+            />
+          </a>
         ) : null}
       </div>
 
