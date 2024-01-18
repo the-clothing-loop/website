@@ -181,18 +181,13 @@ HAVING COUNT(uc.id) > 0
 	}
 
 	// get participants of chains
-	type UserChainContactData struct {
-		models.UserContactData
-		ChainID uint `gorm:"chain_id"`
-	}
-	users := []UserChainContactData{}
+	users := []models.UserContactData{}
 	err = db.Raw(`
 SELECT
 	users.name AS name,
 	users.email AS email,
 	users.i18n AS i18n,
-	chains.name AS chain_name,
-	chains.id AS chain_id
+	chains.name AS chain_name
 FROM user_chains AS uc
 LEFT JOIN users ON uc.user_id = users.id
 LEFT JOIN chains ON uc.chain_id = chains.id 
