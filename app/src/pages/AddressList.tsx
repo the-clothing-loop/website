@@ -64,6 +64,7 @@ export default function AddressList() {
                 }
               >
                 {t("routeOrder")}
+                <IonIcon icon={openOutline} className="tw-text-sm tw-ml-1" />
               </IonButton>
             </IonButtons>
           ) : null}
