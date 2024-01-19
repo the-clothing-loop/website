@@ -37,6 +37,7 @@ export default function BulkyList() {
     setChain,
     authUser,
     isChainAdmin,
+    isThemeDefault,
     refresh,
   } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
@@ -160,13 +161,11 @@ export default function BulkyList() {
           <IonTitle>{t("bulkyItemsTitle")}</IonTitle>
           <IonButtons
             slot="end"
-            className={`${
-              chain?.theme === "default" ? "tw-text-blue" : "primary"
-            }`}
+            className={`${isThemeDefault ? "tw-text-blue" : "primary"}`}
           >
             <IonButton
               onClick={handleClickCreate}
-              color={chain?.theme === "default" ? "tw-text-blue" : "primary"}
+              color={isThemeDefault ? "tw-text-blue" : "primary"}
             >
               {t("create")}
             </IonButton>
@@ -175,16 +174,14 @@ export default function BulkyList() {
       </IonHeader>
       <IonContent
         fullscreen
-        class={chain?.theme == "default" ? "tw-bg-blue-contrast" : ""}
+        class={isThemeDefault ? "tw-bg-blue-contrast" : ""}
       >
         <IonHeader collapse="condense">
           <IonToolbar className="tw-bg-transparent">
             <IonTitle
               size="large"
               className={
-                chain?.theme == "default"
-                  ? "tw-text-blue tw-font-serif tw-font-bold"
-                  : ""
+                isThemeDefault ? "tw-text-blue tw-font-serif tw-font-bold" : ""
               }
             >
               {t("bulkyItemsTitle")}
@@ -249,22 +246,6 @@ export default function BulkyList() {
                   color="background"
                 >
                   <IonText>
-                    {/* 
-                      <IonButton
-                        slot="end"
-                        fill="clear"
-                        color="warning"
-                        className="tw-font-bold"
-                        onClick={() =>
-                          handleClickReserve(user, bulkyItem.title)
-                        }
-                      >
-                        <IonIcon
-                          slot="end"
-                          icon={chatbubbleEllipsesSharp}
-                          className="ion-icon"
-                        />
-                      </IonButton>*/}
                     <div className="tw-mb-4">
                       <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
                         {t("address")}
@@ -350,7 +331,7 @@ export default function BulkyList() {
             aria-hidden="true"
             icon="/v2_o.svg"
             style={{ fontSize: 500 }}
-            color={chain?.theme === "default" ? "" : "light"}
+            color={isThemeDefault ? "" : "light"}
             className="tw-absolute tw-right-[180px] -tw-top-[20px] -tw-z-10 tw-text-blue-tint dark:tw-text-blue-shade"
           />
         </div>

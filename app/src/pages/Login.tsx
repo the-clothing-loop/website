@@ -273,7 +273,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
               </Fragment>
             ) : null}
           </div>
-          <div className="tw-relative tw-flex-grow -tw-m-4 tw-mt-8 tw-inset-0 -tw-z-10 tw-bg-green-contrast tw-overflow-hidden">
+          <div className="tw-relative tw-flex-grow -tw-m-4 tw-mt-8 tw-inset-0 -tw-z-10 tw-bg-green tw-overflow-hidden">
             <div className="tw-absolute tw-overflow-hidden tw-inset-0 -tw-z-10">
               <IonIcon
                 aria-hidden="true"

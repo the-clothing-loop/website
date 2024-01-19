@@ -57,16 +57,30 @@ ion-tab-button {
   }
   background: var(--ion-tab-bar-background);
 }
+body[data-theme="default"] ion-tab-button {
+  --color: var(--ion-color-dark-tint) !important;
+  --color-selected: var(--ion-color-primary) !important;
+  @media (prefers-color-scheme: dark) {
+    --color: var(--ion-color-medium-tint) !important;
+    --color-selected: var(--ion-color-primary-tint) !important;
+  }
+}
 ion-tab-button.tab-selected {
   filter: brightness(115%);
 }
 ion-tab-bar {
   background: var(--ion-color-primary);
 }
-body[data-theme="rainbow"] ion-tab-bar {
-  background: var(--ion-color-light) !important;
+body[data-theme="default"] ion-tab-bar {
+  --ion-tab-bar-background: var(--ion-color-light);
+  --color: var(--ion-color-light-contrast);
 }
+
 ion-button {
-  color: var(--ion-text-color-rgb);
+  /* color: var(--ion-text-color-rgb); */
   --border-radius: 0 !important;
+}
+
+.ion-cloned-element.ios.title-large {
+  @apply tw-font-serif;
 }

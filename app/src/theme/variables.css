@@ -12,12 +12,12 @@ http://ionicframework.com/docs/theming/ */
   --ion-tab-bar-background: #3575e7;
 
   /** primary **/
-  --ion-color-primary: #448c7f;
+  --ion-color-primary: #518d7e;
   --ion-color-primary-rgb: 68, 140, 127;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-secondary-shade: #36abe0;
-  --ion-color-secondary-tint: #50c8ff;
+  --ion-color-primary-shade: #142a26;
+  --ion-color-primary-tint: #518d7e;
 
   /** secondary **/
   --ion-color-secondary: #518d7e;
@@ -76,7 +76,7 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-medium-tint: #9d9fa6;
 
   /** light **/
-  --ion-color-light: #ffffff;
+  --ion-color-light: #f4f4f4;
   --ion-color-light-rgb: 255, 255, 255;
   --ion-color-light-contrast: #000000;
   --ion-color-light-contrast-rgb: 0, 0, 0;
@@ -115,12 +115,19 @@ http://ionicframework.com/docs/theming/ */
    */
 
   body {
-    --ion-color-primary: #1b3833;
+    --ion-color-primary: #448c7f;
+    --ion-color-primary-rgb: 68, 140, 127;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-secondary-shade: #1b3833;
+    --ion-color-secondary-tint: #224943;
+    /* 
+    --ion-color-primary: ;
     --ion-color-primary-rgb: 54, 112, 102;
     --ion-color-primary-contrast: #ffffff;
     --ion-color-primary-contrast-rgb: 255, 255, 255;
     --ion-color-primary-shade: #142a26;
-    --ion-color-primary-tint: #448c7f;
+    --ion-color-primary-tint: #448c7f; */
 
     --ion-color-secondary: #518d7e;
     --ion-color-secondary-rgb: 3, 140, 204;
@@ -194,6 +201,11 @@ http://ionicframework.com/docs/theming/ */
     /** green **/
     --ion-color-green: #7fb5a7;
     --ion-color-green-contrast: #dbe8e6;
+    /** orange **/
+    --ion-color-orange: #ecd6b5;
+    --ion-color-orange-contrast: #4f2e09;
+    --ion-color-orange-shade: #2d1800;
+    --ion-color-orange-tint: #f4e7d0;
   }
 
   /*
@@ -243,7 +255,7 @@ http://ionicframework.com/docs/theming/ */
 /**
  * Theme
  */
-body[data-theme="default"] {
+/* body[data-theme="default"] {
   --ion-color-primary: #fdab58;
   --ion-color-primary-rgb: 253, 171, 88;
   --ion-color-primary-shade: #688332;
@@ -258,7 +270,7 @@ body[data-theme="default"] {
     --ion-color-primary-rgb: 157, 188, 95;
     --ion-color-light: #292e1e;
   }
-}
+} */
 body[data-theme="leafGreen"] {
   --ion-color-primary: #86a051;
   --ion-tab-bar-background: #86a051;

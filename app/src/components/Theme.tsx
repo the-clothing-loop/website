@@ -36,6 +36,7 @@ export default function Theme() {
 
   function willPresent() {
     let theme = chain?.theme || "default";
+    if (theme === "grey") theme = "default";
     console.log("Modal init", theme);
     _setSelectedTheme(theme);
     setPreviousTheme(theme);

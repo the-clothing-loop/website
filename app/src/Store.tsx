@@ -30,6 +30,7 @@ type BagListView = "dynamic" | "list" | "card";
 export const StoreContext = createContext({
   isAuthenticated: null as boolean | null,
   isChainAdmin: false,
+  isThemeDefault: true,
   authUser: null as null | User,
   setPause: (date: Date | boolean) => {},
   setTheme: (c: string) => {},
@@ -315,6 +316,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         bags,
         bulkyItems,
         chain,
+        isThemeDefault: !(chain?.theme !== "default"),
         chainUsers,
         listOfChains,
         setChain: _setChain,

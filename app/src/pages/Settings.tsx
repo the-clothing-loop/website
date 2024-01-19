@@ -34,10 +34,8 @@ import {
   OverlayEventDetail,
 } from "@ionic/core";
 import { RefObject, useContext, useEffect, useRef, useState } from "react";
-import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
-import toastError from "../../toastError";
 import { Trans, useTranslation } from "react-i18next";
 import {
   alertCircleOutline,
@@ -75,6 +73,7 @@ export default function Settings() {
     logout,
     setChain,
     isChainAdmin,
+    isThemeDefault,
     listOfChains,
   } = useContext(StoreContext);
   const [present] = useIonToast();
@@ -185,9 +184,7 @@ export default function Settings() {
         <IonToolbar>
           <IonTitle
             className={`${
-              chain?.theme === "default"
-                ? "tw-text-orange tw-bg-orange-contrast dark:tw-text-red-contrast dark:tw-bg-red"
-                : ""
+              isThemeDefault ? "tw-text-orange tw-bg-orange-shade" : ""
             }`}
             color={"background"}
           >
@@ -199,17 +196,11 @@ export default function Settings() {
       {isAuthenticated === true ? (
         <IonContent
           fullscreen
-          class={
-            chain?.theme == "default"
-              ? "tw-bg-orange-contrast dark:tw-bg-red"
-              : ""
-          }
+          class={isThemeDefault ? "tw-bg-orange-contrast" : ""}
         >
           <IonItemDivider
             className={`tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-font-serif tw-font-bold ${
-              chain?.theme === "default"
-                ? "tw-text-orange dark:tw-text-red-contrast"
-                : ""
+              isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
             }`}
           >
             {t("account")}
@@ -224,7 +215,9 @@ export default function Settings() {
             </IonButton>
           </IonItemDivider>
           <IonCard
-            className="tw-mt-1.5 tw-rounded-none tw-relative ion-card"
+            className={`tw-mt-1.5 tw-rounded-none tw-relative ion-card ${
+              isThemeDefault ? "tw-bg-orange-contrast" : "tw-bg-background"
+            }`}
             color={"background"}
           >
             {authUser ? (
@@ -272,19 +265,17 @@ export default function Settings() {
               />
             </IonList>
           </IonCard>
-          <IonList>
+          <IonList style={{ "--ion-item-background": "transparent" }}>
             <IonItemDivider
               className={`ion-margin-start tw-bg-transparent tw-text-2xl tw-font-serif tw-font-bold
-            ${
-              chain?.theme === "default"
-                ? "tw-text-orange dark:tw-text-red-contrast"
-                : ""
-            }`}
+            ${isThemeDefault ? "tw-text-orange" : ""}`}
             >
               {t("loopInformation")}
             </IonItemDivider>
             <IonCard
-              className="tw-mt-1.5 tw-rounded-none dark:tw-bg-red"
+              className={`tw-mt-1.5 tw-rounded-none ${
+                isThemeDefault ? "tw-bg-orange-contrast" : "tw-bg-background"
+              }`}
               color="background"
             >
               <IonList>
@@ -442,15 +433,19 @@ export default function Settings() {
               aria-hidden="true"
               icon="/public/v2_o_pattern_green.svg"
               style={{ fontSize: 400 }}
-              color={chain?.theme === "default" ? "" : "light"}
-              className="tw-absolute -tw-left-28 -tw-bottom-[180px] -tw-z-10 tw-text-orange-shade dark:tw-text-red-shade"
+              color={isThemeDefault ? "" : "light"}
+              className={`tw-absolute -tw-left-28 -tw-bottom-[190px] -tw-z-10 ${
+                isThemeDefault
+                  ? "tw-text-orange-shade dark:tw-text-red-shade"
+                  : ""
+              }`}
             />
             <IonIcon
               aria-hidden="true"
               icon="/v2_o.svg"
               style={{ fontSize: 500 }}
-              color={chain?.theme === "default" ? "" : "light"}
-              className="tw-absolute -tw-right-64 -tw-bottom-[340px] -tw-z-10 tw-text-orange-shade dark:tw-text-red-shade"
+              color={isThemeDefault ? "" : "light"}
+              className="tw-absolute tw-opacity-60 -tw-right-64 tw-top-[90px] -tw-z-10 tw-text-orange-shade dark:tw-text-red-shade"
             />
           </div>
           <IonAlert

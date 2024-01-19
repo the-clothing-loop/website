@@ -78,6 +78,7 @@ export default function BagsList() {
     route,
     bagListView,
     setBagListView,
+    isThemeDefault,
   } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const sheetModal = useRef<HTMLIonModalElement>(null);
@@ -310,7 +311,7 @@ export default function BagsList() {
                             "--padding-start": "5px",
                             "--padding-end": "5px",
                           }}
-                          className="tw-absolute tw-top-0 tw-right-[3px] tw-z-10"
+                          className="tw-absolute tw-z-10 tw-top-0 tw-right-[3px] tw-z-10"
                           onClick={() => handleClickOptions(bag.id)}
                         >
                           <IonIcon icon={ellipsisHorizontal} />
@@ -318,8 +319,8 @@ export default function BagsList() {
                       ) : null}
                       <div
                         key="old"
-                        className={`tw-text-sm tw-block tw-absolute tw-top-[5px] tw-left-[10px] ${
-                          isBagTooOldMe ? "tw-text-danger" : "tw-text-text"
+                        className={`tw-text-sm tw-block tw-absolute tw-z-10 tw-top-[5px] tw-left-[10px] ${
+                          isBagTooOldMe ? "tw-text-[#fdaab5]" : "tw-text-[#fff]"
                         }`}
                       >
                         {bagUpdatedAt.toDate().toLocaleDateString()}
@@ -328,10 +329,12 @@ export default function BagsList() {
                         ) : null}
                       </div>
                       <div
-                        className="tw-p-0 tw-pt-0"
+                        className="tw-relative tw-p-0 tw-pt-0 tw-overflow-hidden"
                         onClick={() => handleClickItem(bag.id, bag.user_uid)}
                       >
-                        <BagSVG bag={bag} />
+                        <div className="tw-scale-100 tw-transition-transform hover:tw-scale-105 tw-cursor-pointer">
+                          <BagSVG bag={bag} />
+                        </div>
                       </div>
                       <IonRouterLink
                         routerLink={"/address/" + user.uid}
@@ -364,30 +367,36 @@ export default function BagsList() {
                   >
                     <IonCard className="ion-no-margin">
                       <IonItem lines="none" className="tw-py-[3px] tw-px-0">
-                        <div
-                          slot="start"
-                          className="bagslist-bag-icon tw-w-6 tw-h-6"
-                          onClick={() => handleClickItem(bag.id, bag.user_uid)}
-                        >
-                          <BagSVG bag={bag} isList />
-                        </div>
-                        <div
-                          className="ion-text-ellipsis"
-                          onClick={() => handleClickItem(bag.id, bag.user_uid)}
-                        >
-                          <span className="!tw-font-bold">{bag.number}</span>
-                          <span
-                            className={`tw-block tw-text-base tw-mt-[3px] ${
-                              isBagTooOldMe
-                                ? "tw-text-danger"
-                                : "tw-text-medium"
-                            }`}
+                        <div className="tw-group tw-flex flex-row tw-items-center">
+                          <div
+                            slot="start"
+                            className="tw-w-6 tw-h-6 tw-mr-4 tw-scale-100 tw-transition-transform group-hover:tw-scale-125"
+                            onClick={() =>
+                              handleClickItem(bag.id, bag.user_uid)
+                            }
                           >
-                            {bagUpdatedAt.toDate().toLocaleDateString()}
-                            {isBagTooOldMe || isBagTooOldHost ? (
-                              <span className="tw-bg-danger tw-h-2 tw-w-2 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
-                            ) : null}
-                          </span>
+                            <BagSVG bag={bag} isList />
+                          </div>
+                          <div
+                            className="ion-text-ellipsis"
+                            onClick={() =>
+                              handleClickItem(bag.id, bag.user_uid)
+                            }
+                          >
+                            <span className="!tw-font-bold">{bag.number}</span>
+                            <span
+                              className={`tw-block tw-text-base tw-mt-[3px] ${
+                                isBagTooOldMe
+                                  ? "tw-text-danger"
+                                  : "tw-text-medium"
+                              }`}
+                            >
+                              {bagUpdatedAt.toDate().toLocaleDateString()}
+                              {isBagTooOldMe || isBagTooOldHost ? (
+                                <span className="tw-bg-danger tw-h-2 tw-w-2 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
+                              ) : null}
+                            </span>
+                          </div>
                         </div>
 
                         {isOpen ? (
@@ -456,8 +465,8 @@ export default function BagsList() {
             aria-hidden="true"
             icon="/v2_o.svg"
             style={{ fontSize: 400 }}
-            color={chain?.theme === "default" ? "" : "light"}
-            className="tw-absolute tw-right-[170px] -tw-top-[180px] -tw-z-10 tw-text-orange-contrast dark:tw-text-red"
+            color={isThemeDefault ? "" : "light"}
+            className="tw-absolute tw-right-[170px] -tw-top-[180px] -tw-z-10 tw-text-green tw-opacity-30"
           />
         </div>
       </IonContent>
@@ -703,6 +712,12 @@ function SelectUserModal({
 }
 
 function BagSVG({ bag, isList }: { bag: Bag; isList?: boolean }) {
+  let fontSize = (bag.number.length > 10 ? 10 : bag.number.length) * -1 + 40;
+  let fontSizeWrapped = 28;
+  if (bag.number.length < 13)
+    fontSizeWrapped += Math.pow((bag.number.length - 13) * -1 * 0.8, 1.5);
+  let padding = 10;
+
   return (
     <svg
       id="Laag_1"
@@ -753,9 +768,9 @@ function BagSVG({ bag, isList }: { bag: Bag; isList?: boolean }) {
         {isList ? null : (
           <switch>
             <foreignObject
-              width="178"
+              width={178 - padding * 2}
               height="121"
-              x="62"
+              x={62 + padding}
               y="118"
               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
             >
@@ -765,7 +780,7 @@ function BagSVG({ bag, isList }: { bag: Bag; isList?: boolean }) {
                   color: bag.color,
                   fontFamily: "'PlayfairDisplay-Bold'",
                   fontWeight: "bold",
-                  fontSize: bag.number.length * -1.8 + 52 + "px",
+                  fontSize: fontSizeWrapped + "px",
                   margin: "0",
                   display: "grid",
                   height: "100%",
@@ -785,7 +800,7 @@ function BagSVG({ bag, isList }: { bag: Bag; isList?: boolean }) {
               fill={bag.color}
               fontFamily="'PlayfairDisplay-Bold'"
               fontWeight="bold"
-              fontSize={bag.number.length * -1 + 40 + "px"}
+              fontSize={fontSize + "px"}
             >
               {bag.number}
             </text>

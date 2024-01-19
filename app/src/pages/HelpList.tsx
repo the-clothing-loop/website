@@ -60,8 +60,14 @@ const mediaIcons: MediaIcon[] = [
 
 export default function HelpList() {
   const { t } = useTranslation();
-  const { authUser, chain, chainUsers, setChain, isChainAdmin } =
-    useContext(StoreContext);
+  const {
+    authUser,
+    chain,
+    chainUsers,
+    setChain,
+    isChainAdmin,
+    isThemeDefault,
+  } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
 
   const rules = useMemo<FaqListItem[]>(() => {
@@ -89,9 +95,7 @@ export default function HelpList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle
-            className={chain?.theme == "default" ? "tw-text-purple" : ""}
-          >
+          <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
             {t("howDoesItWork")}
           </IonTitle>
 
@@ -99,7 +103,7 @@ export default function HelpList() {
             <IonButtons slot="end">
               <IonButton
                 onClick={handleClickChange}
-                className={chain?.theme == "default" ? "!tw-text-purple" : ""}
+                className={isThemeDefault ? "!tw-text-purple" : ""}
               >
                 {t("change")}
               </IonButton>
@@ -109,14 +113,14 @@ export default function HelpList() {
       </IonHeader>
       <IonContent
         fullscreen
-        class={chain?.theme == "default" ? "tw-bg-purple-contrast" : ""}
+        class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
       >
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle
               size="large"
               className={`tw-font-serif tw-font-bold ${
-                chain?.theme == "default" ? "tw-text-purple " : ""
+                isThemeDefault ? "tw-text-purple " : ""
               }`}
             >
               {t("howDoesItWork")}
@@ -184,7 +188,7 @@ export default function HelpList() {
             aria-hidden="true"
             icon="/v2_o.svg"
             style={{ fontSize: 500 }}
-            color={chain?.theme === "default" ? "" : "light"}
+            color={isThemeDefault ? "" : "light"}
             className="tw-absolute -tw-right-64 -tw-bottom-60 -tw-z-10 tw-text-purple-shade"
           />
         </div>

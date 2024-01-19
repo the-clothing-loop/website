@@ -115,7 +115,7 @@ export default function App() {
     const bodyEl = document.getElementsByTagName("body")[0];
 
     let theme = chain.theme;
-    if (theme === "default" || !theme) theme = "grey";
+    if (theme === "default" || !theme) theme = "default";
 
     bodyEl.setAttribute("data-theme", theme);
   }, [chain]);
@@ -240,11 +240,7 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
           component={OpenSource}
         ></Route>
       </IonRouterOutlet>
-      <IonTabBar
-        slot="bottom"
-        onIonTabsWillChange={handleTabsWillChange}
-        color={"primary"}
-      >
+      <IonTabBar slot="bottom" onIonTabsWillChange={handleTabsWillChange}>
         <IonTabButton tab="help" href="/help">
           <IonIcon aria-hidden="true" icon={bookOutline} />
           <IonLabel>{t("rules")}</IonLabel>
@@ -284,6 +280,7 @@ interface CssVars {
   mediumTint: string;
 }
 const THEME_TO_CSS_VARS = {
+  default: { "": "", color: "#a5a5a5" },
   grey: { "": "", color: "#a5a5a5" },
   leafGreen: { "": "", color: "#a6c665" },
   green: { "": "", color: "#66926e" },

@@ -15,15 +15,27 @@ import {
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
-import { bagHandle, pauseCircleSharp, shield } from "ionicons/icons";
+import {
+  bagHandle,
+  openOutline,
+  pauseCircleSharp,
+  shield,
+} from "ionicons/icons";
 import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 
 export default function AddressList() {
-  const { chain, chainUsers, route, authUser, bags, isChainAdmin } =
-    useContext(StoreContext);
+  const {
+    chain,
+    chainUsers,
+    route,
+    authUser,
+    bags,
+    isChainAdmin,
+    isThemeDefault,
+  } = useContext(StoreContext);
   const { t } = useTranslation();
 
   return (
@@ -37,7 +49,7 @@ export default function AddressList() {
             <IonButtons
               slot="end"
               className={`${
-                chain?.theme === "default"
+                isThemeDefault
                   ? "tw-text-red dark:tw-text-red-contrast"
                   : "primary"
               }`}
@@ -46,7 +58,7 @@ export default function AddressList() {
                 target="_blank"
                 href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}
                 color={
-                  chain?.theme === "default"
+                  isThemeDefault
                     ? "tw-text-red  dark:tw-text-red-contrast"
                     : "primary"
                 }
@@ -62,7 +74,7 @@ export default function AddressList() {
           <IonToolbar>
             <IonTitle
               size="large"
-              className="tw-text-red dark:tw-text-red-contrast"
+              className="tw-font-serif tw-text-red dark:tw-text-red-contrast"
             >
               {t("addresses")}
             </IonTitle>
@@ -91,7 +103,7 @@ export default function AddressList() {
                   <h5
                     className={`ion-no-margin ${
                       isMe
-                        ? "tw-text-primary dark:tw-text-primary-contrast"
+                        ? "tw-text-primary"
                         : isUserPaused
                         ? "tw-text-medium"
                         : ""
