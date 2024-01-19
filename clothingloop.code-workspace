@@ -32,7 +32,7 @@
     "prettier.documentSelectors": [
       ".prettierrc.yml"
     ],
-    "svg.preview.background": "dark-transparent"
+    "svg.preview.background": "transparent"
   },
   "extensions": {
     "recommendations": [

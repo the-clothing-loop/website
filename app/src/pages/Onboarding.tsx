@@ -8,61 +8,49 @@ import {
   IonPage,
   IonText,
 } from "@ionic/react";
-import {
-  arrowBack,
-  arrowForwardOutline,
-  compassOutline,
-  mapOutline,
-} from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { arrowBack, arrowForwardOutline, mapOutline } from "ionicons/icons";
 import { useHistory } from "react-router";
-
-const logo = "https://images.clothingloop.org/x512/the_clothing_loop_logo.png";
 
 export function OnboardingPageOne() {
   const history = useHistory();
 
-  const [darkMode, setDarkMode] = useState(false);
-  const logoWhite = "./public/v2_logo_white.png";
-  const logoBlack = "./public/v2_logo_black.png";
-
-  useEffect(() => {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-    setDarkMode(prefersDark.matches);
-    prefersDark.addEventListener("change", (mediaQuery) =>
-      setDarkMode(mediaQuery.matches),
-    );
-  }, []);
-
   return (
     <IonPage>
       <IonContent>
-        <IonImg
-          src={darkMode ? logoWhite : logoBlack}
-          className="tw-w-full tw-px-14 tw-h-auto tw-mx-auto tw-mt-28"
-        />
-
-        <div className="tw-flex tw-justify-center">
-          <h1
-            className="tw-text-secondary dark:tw-text-dark tw-fixed tw-inset-y-[45%] tw-font-serif tw-font-bold tw-text-accent tw-text-7xl tw-md:text-9xl tw-mb-8 tw-rtl:text-end"
-            dir="ltr"
-          >
-            Swap, <br />
-            <IonText className="tw-text-stroke-accent dark:tw-text-stroke-dark">
-              don't shop
-            </IonText>
-          </h1>
+        <div className="tw-absolute tw-top-1/4 tw-translate-x-0 -tw-translate-y-1/2 tw-w-full">
+          <IonImg
+            src="./public/v2_logo_white.png"
+            className="tw-w-52 md:tw-w-72 tw-hidden dark:tw-block tw-mx-auto"
+          />
+          <IonImg
+            src="./public/v2_logo_black.png"
+            className="tw-w-52 md:tw-w-72 dark:tw-hidden tw-mx-auto"
+          />
         </div>
-        <div className="tw-bg-primary-shade dark:tw-bg-primary tw-fixed tw-bottom-0 tw-h-[45%] tw-w-full -tw-z-10" />
-        <div className="relative">
+
+        <h1
+          className="tw-z-10 tw-block tw-absolute tw-inset-x tw-top-[55%] -tw-mt-20 md:-tw-mt-36 tw-px-4 md:tw-pl-[4%] tw-text-secondary dark:tw-text-dark tw-font-serif tw-font-bold tw-text-accent tw-text-7xl md:tw-text-9xl rtl:tw-text-end"
+          dir="ltr"
+        >
+          Swap, <br />
+          <span className="tw-text-stroke-accent dark:tw-text-stroke-dark">
+            don't shop
+          </span>
+        </h1>
+        <div className="tw-bg-green-contrast dark:tw-bg-primary tw-fixed tw-bottom-0 tw-h-[45%] tw-w-full -tw-z-10" />
+        <div className="tw-absolute tw-overflow-hidden tw-inset-0 -tw-z-10">
           <IonIcon
             aria-hidden="true"
             icon="/public/v2_o_pattern_green.svg"
             style={{ fontSize: 400 }}
-            className="tw-absolute -tw-left-28 -tw-bottom-[180px] -tw-z-10 tw-text-[#bfd6d3] dark:tw-text-primary-shade"
+            className="tw-absolute -tw-left-28 -tw-bottom-[170px] tw-text-green tw-opacity-70"
           />
         </div>
-        <IonFab vertical="bottom" horizontal="end">
+        <IonFab
+          vertical="bottom"
+          horizontal="end"
+          className="md:tw-mr-20 md:tw-mb-20"
+        >
           <IonFabButton
             className="ion-margin-bottom"
             color="light"
@@ -106,7 +94,11 @@ export function OnboardingPageTwo() {
             <IonIcon icon={mapOutline} className="ion-margin-start" />
           </IonButton>
         </div>
-        <IonFab vertical="bottom" horizontal="start">
+        <IonFab
+          vertical="bottom"
+          horizontal="start"
+          className="md:tw-ml-20 md:tw-mb-20"
+        >
           <IonFabButton
             color="clear"
             onClick={() => history.goBack()}
@@ -115,7 +107,11 @@ export function OnboardingPageTwo() {
             <IonIcon icon={arrowBack}></IonIcon>
           </IonFabButton>
         </IonFab>
-        <IonFab vertical="bottom" horizontal="end">
+        <IonFab
+          vertical="bottom"
+          horizontal="end"
+          className="md:tw-mr-20 md:tw-mb-20"
+        >
           <IonFabButton
             color="light"
             onClick={() => history.push("/onboarding/3")}

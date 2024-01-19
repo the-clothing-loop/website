@@ -149,131 +149,148 @@ export default function Login(props: { isLoggedIn: boolean }) {
           <IonTitle>{t("login")}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding" fullscreen>
-        <IonHeader collapse="condense" className="ion-margin-bottom">
-          <IonImg
-            src={darkMode ? logoWhite : logoBlack}
-            className="tw-w-full tw-px-8 tw-h-auto tw-mx-auto tw-mpt-4 tw-mb-20"
-          />
-          <IonToolbar>
-            <IonTitle size="large">{t("login")}</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonItem lines="none">
-          <IonText>{t("pleaseEnterYourEmailAddress")}</IonText>
-        </IonItem>
-        <IonItem lines="none">
-          <IonInput
-            label={t("email")!}
-            labelPlacement="fixed"
-            ref={inputEmail}
-            type="email"
-            autocomplete="email"
-            autoSave="on"
-            autofocus
-            enterkeyhint="send"
-            onKeyUp={handleInputEmailEnter}
-            aria-autocomplete="list"
-            required
-            placeholder={t("yourEmailAddress")!}
-          />
-        </IonItem>
-        <IonItem
-          lines="none"
-          className="tw-text-right tw-mt-4 tw-bg-transparent"
-        >
-          {isCapacitor && showToken ? (
-            <IonButton
-              key="open-mail-app"
-              size="default"
-              slot="end"
-              shape="round"
-              color="light"
-              className="tw-me-4"
-              onClick={openMailApp}
-            >
-              {t("openMailApp")}
-            </IonButton>
-          ) : null}
-          <IonButton
-            size="default"
-            slot="end"
-            shape="round"
-            color={
-              sentState === State.idle
-                ? "primary"
-                : sentState === State.success
-                ? "success"
-                : sentState === State.loading
-                ? "medium"
-                : "danger"
-            }
-            disabled={sentState === State.success}
-            onClick={handleSendEmail}
-          >
-            {sentState === State.loading ? t("loading") : t("send")}
-            {sentState === State.success ? (
-              <IonIcon slot="end" icon={mailUnreadOutline} />
-            ) : sentState === State.loading ? null : (
-              <IonIcon slot="end" icon={sendOutline} />
-            )}
-          </IonButton>
-        </IonItem>
-        {showToken ? (
-          <Fragment key="token">
-            <IonItem lines="none" className="ion-margin-top">
-              <IonText>{t("enterThePasscodeYouReceivedInYourEmail")}</IonText>
+      <IonContent fullscreen>
+        <div className="tw-h-full tw-flex tw-flex-col ion-padding">
+          <div className="tw-shrink-0 md:tw-max-w-xl md:tw-mx-auto">
+            <div className="tw-w-full tw-mb-16">
+              <IonImg
+                src="./public/v2_logo_white.png"
+                className="tw-w-52 md:tw-w-72 tw-hidden dark:tw-block tw-mx-auto"
+              />
+              <IonImg
+                src="./public/v2_logo_black.png"
+                className="tw-w-52 md:tw-w-72 dark:tw-hidden tw-mx-auto"
+              />
+            </div>
+            <IonHeader collapse="condense" className="ion-margin-bottom">
+              <IonToolbar>
+                <IonTitle size="large">{t("login")}</IonTitle>
+              </IonToolbar>
+            </IonHeader>
+            <IonItem lines="none">
+              <IonText>{t("pleaseEnterYourEmailAddress")}</IonText>
             </IonItem>
             <IonItem lines="none">
               <IonInput
-                type="number"
-                ref={inputToken}
-                autoCorrect="off"
-                placeholder="••••••"
-                label={t("passcode")!}
-                enterkeyhint="enter"
-                onKeyUp={handleInputTokenEnter}
+                label={t("email")!}
                 labelPlacement="fixed"
+                ref={inputEmail}
+                type="email"
+                autocomplete="email"
+                autoSave="on"
+                autofocus
+                enterkeyhint="send"
+                onKeyUp={handleInputEmailEnter}
+                aria-autocomplete="list"
+                required
+                placeholder={t("yourEmailAddress")!}
               />
             </IonItem>
-            <IonItem lines="none">
+            <IonItem
+              lines="none"
+              className="tw-text-right tw-mt-4 tw-bg-transparent"
+            >
+              {isCapacitor && showToken ? (
+                <IonButton
+                  key="open-mail-app"
+                  size="default"
+                  slot="end"
+                  shape="round"
+                  color="light"
+                  className="tw-me-4"
+                  onClick={openMailApp}
+                >
+                  {t("openMailApp")}
+                </IonButton>
+              ) : null}
               <IonButton
+                size="default"
+                slot="end"
                 shape="round"
                 color={
-                  verifyState === State.idle
+                  sentState === State.idle
                     ? "primary"
-                    : verifyState === State.success
+                    : sentState === State.success
                     ? "success"
-                    : verifyState === State.loading
+                    : sentState === State.loading
                     ? "medium"
                     : "danger"
                 }
-                size="default"
-                disabled={verifyState === State.success}
-                slot="end"
-                expand="block"
-                onClick={handleVerifyToken}
+                disabled={sentState === State.success}
+                onClick={handleSendEmail}
               >
-                {verifyState === State.loading ? t("loading") : t("login")}
-                {verifyState === State.loading ? null : (
-                  <IonIcon slot="end" icon={arrowForwardOutline} />
+                {sentState === State.loading ? t("loading") : t("send")}
+                {sentState === State.success ? (
+                  <IonIcon slot="end" icon={mailUnreadOutline} />
+                ) : sentState === State.loading ? null : (
+                  <IonIcon slot="end" icon={sendOutline} />
                 )}
               </IonButton>
             </IonItem>
-          </Fragment>
-        ) : null}
-        <div className="tw-bg-primary-shade dark:tw-bg-primary tw-fixed tw-bottom-0 tw-h-1/3 tw-w-full -tw-z-10 -tw-ml-4" />
-        <div className="relative">
-          <IonIcon
-            aria-hidden="true"
-            icon="/public/v2_o_pattern_green.svg"
-            style={{ fontSize: 400 }}
-            className="tw-absolute tw-left-20 -tw-bottom-[160px] -tw-z-10 tw-text-[#bfd6d3] dark:tw-text-primary-shade"
-          />
+            {showToken ? (
+              <Fragment key="token">
+                <IonItem lines="none" className="ion-margin-top">
+                  <IonText>
+                    {t("enterThePasscodeYouReceivedInYourEmail")}
+                  </IonText>
+                </IonItem>
+                <IonItem lines="none">
+                  <IonInput
+                    type="number"
+                    ref={inputToken}
+                    autoCorrect="off"
+                    placeholder="••••••"
+                    label={t("passcode")!}
+                    enterkeyhint="enter"
+                    onKeyUp={handleInputTokenEnter}
+                    labelPlacement="fixed"
+                  />
+                </IonItem>
+                <IonItem lines="none">
+                  <IonButton
+                    shape="round"
+                    color={
+                      verifyState === State.idle
+                        ? "primary"
+                        : verifyState === State.success
+                        ? "success"
+                        : verifyState === State.loading
+                        ? "medium"
+                        : "danger"
+                    }
+                    size="default"
+                    disabled={verifyState === State.success}
+                    slot="end"
+                    expand="block"
+                    onClick={handleVerifyToken}
+                  >
+                    {verifyState === State.loading ? t("loading") : t("login")}
+                    {verifyState === State.loading ? null : (
+                      <IonIcon slot="end" icon={arrowForwardOutline} />
+                    )}
+                  </IonButton>
+                </IonItem>
+              </Fragment>
+            ) : null}
+          </div>
+          <div className="tw-relative tw-flex-grow -tw-m-4 tw-mt-8 tw-inset-0 -tw-z-10 tw-bg-green-contrast tw-overflow-hidden">
+            <div className="tw-absolute tw-overflow-hidden tw-inset-0 -tw-z-10">
+              <IonIcon
+                aria-hidden="true"
+                icon="/public/v2_o_pattern_green.svg"
+                style={{ fontSize: 400 }}
+                className="tw-absolute -tw-left-28 -tw-bottom-[170px] tw-text-green dark:tw-text-primary-shade"
+              />
+            </div>
+          </div>
         </div>
-        <IonFab vertical="bottom" horizontal="start">
+        <IonFab
+          vertical="bottom"
+          horizontal="start"
+          className="md:tw-ml-20 md:tw-mb-20"
+        >
           <IonFabButton
-            color="clear"
+            color="light"
             onClick={() => history.goBack()}
             className="ion-margin-bottom"
           >

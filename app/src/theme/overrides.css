@@ -68,4 +68,5 @@ body[data-theme="rainbow"] ion-tab-bar {
 }
 ion-button {
   color: var(--ion-text-color-rgb);
+  --border-radius: 0 !important;
 }

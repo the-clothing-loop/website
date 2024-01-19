@@ -69,7 +69,10 @@ const colors = {
     shade: "var(--ion-color-blue-shade)",
     tint: "var(--ion-color-blue-tint)",
   },
-  green: "var(--ion-color-green)",
+  green: {
+    DEFAULT: "var(--ion-color-green)",
+    contrast: "var(--ion-color-green-contrast)",
+  },
   red: {
     DEFAULT: "var(--ion-color-red)",
     contrast: "var(--ion-color-red-contrast)",
@@ -85,8 +88,11 @@ const colors = {
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   prefix: "tw-",
+  preflight: false,
   theme: {
-    screens: {},
+    screens: {
+      md: "768px",
+    },
     colors,
     fontFamily: {
       sans: ["Montserrat", ...defaultTheme.fontFamily.sans],
