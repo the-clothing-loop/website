@@ -14,6 +14,11 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/models"
 )
 
+const (
+	CoordinateLatitude  = 1
+	CoordinateLongitude = 0
+)
+
 type GeoObject struct {
 	Type      string   `json:"type"`
 	PlaceType []string `json:"place_type"`
@@ -100,8 +105,8 @@ func main() {
 						geoObjectCollection.Features[0].Geometry.Coordinates[1],
 						strings.ReplaceAll(user.Address, "\n", " "),
 					)
-					user.Longitude = geoObjectCollection.Features[0].Geometry.Coordinates[0]
-					user.Latitude = geoObjectCollection.Features[0].Geometry.Coordinates[1]
+					user.Latitude = geoObjectCollection.Features[0].Geometry.Coordinates[CoordinateLatitude]
+					user.Longitude = geoObjectCollection.Features[0].Geometry.Coordinates[CoordinateLongitude]
 					db.Exec(`UPDATE users SET longitude = ?, latitude = ? WHERE id = ?`, user.Longitude, user.Latitude, user.ID)
 				}
 			} else {

@@ -40,13 +40,12 @@ func main() {
 	t := &testing.T{}
 
 	for i := 0; i < repeat; i++ {
-		latitude := float64(faker.Int64Between(5219424, 5223461)) / 100000
-		longitude := float64(faker.Int64Between(448153, 454333)) / 100000
+		coords := mocks.FakeDutchCoordinates()
 		user, _ := mocks.MockUser(t, db, 4, mocks.MockChainAndUserOptions{
 			IsChainAdmin:        false,
 			OnlyEmailExampleCom: true,
-			OverrideLongitude:   &longitude,
-			OverrideLatitude:    &latitude,
+			OverrideLatitude:    &coords.Latitude,
+			OverrideLongitude:   &coords.Longitude,
 		})
 
 		log.Printf("Generated -> User\t(ID: %d)", user.ID)

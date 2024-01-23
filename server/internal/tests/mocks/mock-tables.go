@@ -58,11 +58,12 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	var latitude, longitude float64
 	if faker.RandomNumber(5)+1 > 4 { // 4 / 6
 		// use the netherlands
-		latitude = float64(faker.Int64Between(5169917, 5237403)) / 100000
-		longitude = float64(faker.Int64Between(488969, 689583)) / 100000
+		coords := FakeDutchCoordinates()
+		latitude = coords.Latitude
+		longitude = coords.Longitude
 	} else {
 		latitude = faker.Address().Latitude()
-		longitude = faker.Address().Latitude()
+		longitude = faker.Address().Longitude()
 	}
 	if o.OverrideLatitude != nil {
 		latitude = *o.OverrideLatitude
@@ -88,8 +89,8 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		PhoneNumber:     faker.Person().Contact().Phone,
 		Sizes:           MockSizes(false),
 		Address:         faker.Address().Address(),
-		Latitude:        longitude,
-		Longitude:       latitude,
+		Latitude:        latitude,
+		Longitude:       longitude,
 		UserToken: []models.UserToken{
 			{
 				Token:    uuid.NewV4().String(),
@@ -124,7 +125,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		longitude = float64(faker.Int64Between(488969, 689583)) / 100000
 	} else {
 		latitude = faker.Address().Latitude()
-		longitude = faker.Address().Latitude()
+		longitude = faker.Address().Longitude()
 	}
 	chain = &models.Chain{
 		UID:              uuid.NewV4().String(),
@@ -200,7 +201,7 @@ func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint) (event *models.E
 			faker.Lorem().Sentence(2),
 		}, "\n"),
 		Latitude:  faker.Address().Latitude(),
-		Longitude: faker.Address().Latitude(),
+		Longitude: faker.Address().Longitude(),
 		Address:   faker.Address().Address(),
 		Date:      time.Now().Add(time.Duration(faker.IntBetween(1, 20)) * time.Hour),
 		Genders:   MockGenders(false),
@@ -289,4 +290,18 @@ func MockBag(t *testing.T, db *gorm.DB, chainID, userID uint, o MockBagOptions) 
 		db.Exec(`DELETE FROM bags WHERE id = ?`, bag.ID)
 	})
 	return bag
+}
+
+type Coordinates struct {
+	Latitude  float64
+	Longitude float64
+}
+
+func FakeDutchCoordinates() Coordinates {
+	latitude := float64(faker.Int64Between(5219424, 5223461)) / 100000
+	longitude := float64(faker.Int64Between(448153, 454333)) / 100000
+	return Coordinates{
+		Latitude:  latitude,
+		Longitude: longitude,
+	}
 }
