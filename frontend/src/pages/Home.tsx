@@ -77,13 +77,19 @@ export default function Home() {
       logo: "https://images.clothingloop.org/x120/de_duurzame_100.jpg",
       url: "https://verhalen.trouw.nl/duurzame100/",
       alt: "Trouw - Duurzame 100",
-      class: "w-1/2 md:w-4/12 lg:w-3/6",
+      class: "w-1/2 md:w-4/12 lg:w-2/6",
     },
     {
       logo: "https://images.clothingloop.org/120x/duurzame_dinsdag.jpg",
       url: "https://www.duurzamedinsdag.nl/",
       alt: "Duurzame dinsdag",
-      class: "w-1/2 md:w-4/12 lg:w-3/6",
+      class: "w-1/2 md:w-1/2 lg:w-2/6",
+    },
+    {
+      logo: "https://images.clothingloop.org/140x/zerowastelogo.png",
+      url: "https://zerowastenederland.nl/",
+      alt: "Zero Waste Nederland",
+      class: "pt-4 md:pt-0 w-full md:w-1/2 lg:w-2/6",
     },
   ];
 
