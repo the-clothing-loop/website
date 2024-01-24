@@ -174,6 +174,9 @@ HAVING COUNT(uc.id) > 0
 		glog.Errorf("Unable to get abandoned chains %s", err)
 		return
 	}
+	if len(chainIDs) == 0 {
+		return
+	}
 
 	// get participants of chains
 	users := []models.UserContactData{}
@@ -186,7 +189,7 @@ SELECT
 FROM user_chains AS uc
 LEFT JOIN users ON uc.user_id = users.id
 LEFT JOIN chains ON uc.chain_id = chains.id 
-WHERE chains IN ? AND uc.is_chain_admin = FALSE
+WHERE chains.id IN ? AND uc.is_chain_admin = FALSE
 	`, chainIDs).Scan(&users).Error
 	if err != nil {
 		glog.Errorf("Unable to get participants of abandoned chains %s", err)
