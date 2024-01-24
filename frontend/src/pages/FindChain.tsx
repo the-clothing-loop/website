@@ -165,6 +165,12 @@ export default function FindChain({ location }: { location: Location }) {
           clusterMaxZoom: clusterMaxZoom,
           clusterMinPoints: 1,
           clusterRadius: 25,
+          clusterProperties: {
+            sum_open_to_new_members: [
+              "+",
+              ["case", ["get", "open_to_new_members"], 1, 0],
+            ],
+          },
           generateId: true,
         });
 
@@ -174,7 +180,12 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: ["<=", ["zoom"], clusterMaxZoom],
           paint: {
-            "circle-color": ["rgba", 239, 149, 61, 0.6], // #ef953d
+            "circle-color": [
+              "case",
+              [">", ["coalesce", ["get", "sum_open_to_new_members"], 0], 0],
+              ["rgba", 239, 149, 61, 0.6], // #ef953d
+              ["rgba", 0, 0, 0, 0.1], // grey
+            ],
             "circle-radius": 15,
             "circle-stroke-width": 0,
           },
