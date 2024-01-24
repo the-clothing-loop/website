@@ -1,0 +1,24 @@
+meta {
+  name: Apple maps
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://api.apple-mapkit.com/v1/geocode?q=Dam 5, Amsterdam, Netherlands&lang=en-GB
+  body: none
+  auth: bearer
+}
+
+query {
+  q: Dam 5, Amsterdam, Netherlands
+  lang: en-GB
+}
+
+auth:bearer {
+  token: here
+}
+
+vars:pre-request {
+  token: here
+}
