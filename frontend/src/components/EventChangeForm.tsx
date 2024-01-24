@@ -21,6 +21,7 @@ import { chainGet } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
 import { useSepDateTime } from "../util/sep-date-time.hooks";
 import { TinyMCE } from "./TinyMCE";
+import { GEOJSON_LATITUDE_INDEX, GEOJSON_LONGITUDE_INDEX } from "../util/maps";
 
 const defaultValues: EventCreateBody = {
   name: "",
@@ -225,8 +226,8 @@ export default function EventChangeForm(props: {
               required
               onResult={(g) => {
                 setValue("address", g.query);
-                setValue("latitude", g.first?.[1] || 0);
-                setValue("longitude", g.first?.[0] || 0);
+                setValue("latitude", g.first?.[GEOJSON_LATITUDE_INDEX] || 0);
+                setValue("longitude", g.first?.[GEOJSON_LONGITUDE_INDEX] || 0);
               }}
             />
           </label>

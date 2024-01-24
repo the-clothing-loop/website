@@ -1,3 +1,4 @@
+import mapboxgl from "mapbox-gl";
 import { useState } from "react";
 
 export function circleRadiusKm(meters: number, latitude: number): number {
@@ -27,4 +28,17 @@ export function useMapZoom(initZoom: number, minZoom: number, maxZoom: number) {
   }
 
   return { zoom, setZoom, mapZoom };
+}
+
+export const GEOJSON_LATITUDE_INDEX = 1;
+export const GEOJSON_LONGITUDE_INDEX = 0;
+
+export function CoordsFromMapbox(o: [number, number] | number[]): {
+  latitude: number;
+  longitude: number;
+} {
+  return {
+    latitude: o[GEOJSON_LATITUDE_INDEX],
+    longitude: o[GEOJSON_LONGITUDE_INDEX],
+  };
 }

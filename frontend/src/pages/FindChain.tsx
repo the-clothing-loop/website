@@ -22,7 +22,12 @@ import SearchBar, {
   toUrlSearchParams,
 } from "../components/FindChain/SearchBar";
 import { SizeBadges } from "../components/Badges";
-import { circleRadiusKm, useMapZoom } from "../util/maps";
+import {
+  GEOJSON_LATITUDE_INDEX,
+  GEOJSON_LONGITUDE_INDEX,
+  circleRadiusKm,
+  useMapZoom,
+} from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
@@ -121,7 +126,9 @@ export default function FindChain({ location }: { location: Location }) {
       Number.parseFloat(urlParams.get("lo") || ""),
       Number.parseFloat(urlParams.get("la") || ""),
     ];
-    const hasCenter = !!(_center[0] && _center[1]);
+    const hasCenter = !!(
+      _center[GEOJSON_LONGITUDE_INDEX] && _center[GEOJSON_LATITUDE_INDEX]
+    );
     const _map = new mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
@@ -392,8 +399,8 @@ export default function FindChain({ location }: { location: Location }) {
         if (!f.properties?.cluster) {
           if (f.geometry.type !== "Point") continue;
           let fLngLat = new mapboxgl.LngLat(
-            f.geometry.coordinates[0],
-            f.geometry.coordinates[1]
+            f.geometry.coordinates[GEOJSON_LONGITUDE_INDEX],
+            f.geometry.coordinates[GEOJSON_LATITUDE_INDEX]
           );
           if (center.distanceTo(fLngLat) > 8000) continue;
           visibleFeatures.push(f as any);
@@ -403,12 +410,12 @@ export default function FindChain({ location }: { location: Location }) {
     let ans = visibleFeatures
       .sort((a, b) => {
         let aLngLat = new mapboxgl.LngLat(
-          a.geometry.coordinates[0],
-          a.geometry.coordinates[1]
+          a.geometry.coordinates[GEOJSON_LONGITUDE_INDEX],
+          a.geometry.coordinates[GEOJSON_LATITUDE_INDEX]
         );
         let bLngLat = new mapboxgl.LngLat(
-          b.geometry.coordinates[0],
-          b.geometry.coordinates[1]
+          b.geometry.coordinates[GEOJSON_LONGITUDE_INDEX],
+          b.geometry.coordinates[GEOJSON_LATITUDE_INDEX]
         );
         return aLngLat.distanceTo(bLngLat);
       })
