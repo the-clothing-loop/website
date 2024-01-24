@@ -101,8 +101,7 @@ func LoginValidate(c *gin.Context) {
 			err = services.EmailLoopAdminsOnUserJoin(db, user, chainIDs...)
 			if err != nil {
 				goscope.Log.Errorf("Unable to send email to associated loop admins: %v", err)
-				c.String(http.StatusInternalServerError, "Unable to send email to associated loop admins")
-				return
+				// This doesn't return because it would be impossible to login if attempting to join a loop without admins.
 			}
 
 			chainNames, _ := models.ChainGetNamesByIDs(db, chainIDs...)
