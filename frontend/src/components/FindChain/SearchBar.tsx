@@ -6,6 +6,10 @@ import categories from "../../util/categories";
 import useForm from "../../util/form.hooks";
 import CategoriesDropdown from "../CategoriesDropdown";
 import SizesDropdown from "../SizesDropdown";
+import {
+  GEOJSON_LATITUDE_INDEX,
+  GEOJSON_LONGITUDE_INDEX,
+} from "../../util/maps";
 
 export interface SearchValues {
   searchTerm: string;
@@ -27,8 +31,8 @@ export function toUrlSearchParams(
 ) {
   const queryParams = new URLSearchParams();
   if (longLat) {
-    queryParams.append("lo", longLat[0]!.toString());
-    queryParams.append("la", longLat[1]!.toString());
+    queryParams.append("lo", longLat[GEOJSON_LONGITUDE_INDEX]!.toString());
+    queryParams.append("la", longLat[GEOJSON_LATITUDE_INDEX]!.toString());
   }
   if (search.searchTerm) queryParams.append("q", search.searchTerm);
   for (const size of search.sizes) {

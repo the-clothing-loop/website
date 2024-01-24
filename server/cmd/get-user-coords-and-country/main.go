@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	CoordinateLatitude  = 1
-	CoordinateLongitude = 0
+	GeoJsonLatitude  = 1
+	GeoJsonLongitude = 0
 )
 
 type GeoObject struct {
@@ -99,14 +99,14 @@ func main() {
 
 			if len(geoObjectCollection.Features) > 0 {
 				if len(geoObjectCollection.Features[0].Geometry.Coordinates) > 0 {
-					fmt.Printf("[%d] Found result Lon: % 10f Lat: % 10f Address: %s\n",
+					fmt.Printf("[%d] Found result Lat: % 10f Lon: % 10f Address: %s\n",
 						user.ID,
-						geoObjectCollection.Features[0].Geometry.Coordinates[0],
-						geoObjectCollection.Features[0].Geometry.Coordinates[1],
+						geoObjectCollection.Features[0].Geometry.Coordinates[GeoJsonLatitude],
+						geoObjectCollection.Features[0].Geometry.Coordinates[GeoJsonLongitude],
 						strings.ReplaceAll(user.Address, "\n", " "),
 					)
-					user.Latitude = geoObjectCollection.Features[0].Geometry.Coordinates[CoordinateLatitude]
-					user.Longitude = geoObjectCollection.Features[0].Geometry.Coordinates[CoordinateLongitude]
+					user.Latitude = geoObjectCollection.Features[0].Geometry.Coordinates[GeoJsonLatitude]
+					user.Longitude = geoObjectCollection.Features[0].Geometry.Coordinates[GeoJsonLongitude]
 					db.Exec(`UPDATE users SET longitude = ?, latitude = ? WHERE id = ?`, user.Longitude, user.Latitude, user.ID)
 				}
 			} else {
