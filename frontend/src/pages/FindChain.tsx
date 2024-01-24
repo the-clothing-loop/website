@@ -29,6 +29,8 @@ import {
   useMapZoom,
 } from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
+import clothingCategories from "../util/categories";
+import { Genders, Sizes } from "../api/enums";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -86,15 +88,18 @@ function createFilterFunc(
       for (let s of sizes) {
         if (c.sizes?.includes(s)) return true;
       }
-      if (c.uid === "f3dc978d-8bf3-4c75-835a-1e24324f2be2") {
-        console.log("not found", c.sizes, sizes);
-      }
       return false;
     };
   } else if (genders?.length) {
     filterFunc = (c) => {
       for (let g of genders) {
         if (c.genders?.includes(g)) return true;
+        if (
+          c.sizes?.find((s) =>
+            clothingCategories[g as Genders].includes(s as Sizes)
+          )
+        )
+          return true;
       }
       return false;
     };
@@ -772,7 +777,7 @@ function FocusedChain({
 
         <div>
           <div className="flex flex-col w-full text-sm">
-            {chain.sizes?.length ? (
+            {chain.sizes?.length || chain.genders?.length ? (
               <>
                 <h2 className="mb-1">{t("sizes")}:</h2>
                 <div className="mb-2">
