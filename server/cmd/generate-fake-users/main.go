@@ -9,11 +9,7 @@ import (
 
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
-
-	Faker "github.com/jaswdr/faker"
 )
-
-var faker = Faker.New()
 
 // Create more fake users that are connected to a Loop.
 // This was written to be run connected to the Acceptance Database Server,
