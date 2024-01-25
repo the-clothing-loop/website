@@ -802,12 +802,12 @@ function FocusedChain({
 
         {userChain ? (
           userChain.is_approved ? (
-            <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 flex items-center">
+            <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 inline-flex items-center">
               {t("joined")}
               <span className="feather feather-check ml-3"></span>
             </p>
           ) : (
-            <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
+            <p className="px-3 font-semibold text-sm border border-secondary h-8 inline-flex items-center text-secondary">
               {t("pendingApproval")}
               <span className="feather feather-user-check ml-3"></span>
             </p>
@@ -823,7 +823,7 @@ function FocusedChain({
             <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
           </button>
         ) : (
-          <p className="px-3 font-semibold text-sm border border-secondary h-8 flex items-center text-secondary">
+          <p className="px-3 font-semibold text-sm border border-secondary h-8 inline-flex items-center text-secondary">
             {t("closed")}
             <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
           </p>
