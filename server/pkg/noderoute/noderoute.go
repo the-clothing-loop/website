@@ -78,3 +78,10 @@ func get[V any](arr []V, index int) V {
 
 	return arr[index]
 }
+
+type NodeWithInformation[T any] struct {
+	Key  string
+	Data T
+	Prev *NodeWithInformation[T]
+	Next *NodeWithInformation[T]
+}

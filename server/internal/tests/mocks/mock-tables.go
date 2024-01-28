@@ -36,6 +36,7 @@ type MockChainAndUserOptions struct {
 	RouteOrderIndex    int
 
 	// for generating new members
+	IsPaused            bool
 	OnlyEmailExampleCom bool
 	OverrideLongitude   *float64
 	OverrideLatitude    *float64
@@ -81,6 +82,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 			RouteOrder:   o.RouteOrderIndex,
 		})
 	}
+
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), lo.Ternary(o.OnlyEmailExampleCom, "example.com", faker.Internet().FreeEmailDomain()))),
@@ -100,6 +102,11 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		},
 		Chains: chains,
 	}
+
+	if o.IsPaused {
+		user.PausedUntil = null.NewTime(time.Now(), true)
+	}
+
 	if err := db.Create(user).Error; err != nil {
 		glog.Fatalf("Unable to create testUser: %v", err)
 	}

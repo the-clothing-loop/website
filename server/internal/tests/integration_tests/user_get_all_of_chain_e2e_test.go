@@ -19,14 +19,14 @@ func TestUserGetAllOfChainRoutePrivacyHost(t *testing.T) {
 	route_privacy := 1
 
 	// logged user
-	chain, user0, token1 := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{RoutePrivacy: &route_privacy, RouteOrderIndex: 3, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
+	chain, user0, token1 := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{IsChainAdmin: true, RoutePrivacy: &route_privacy, RouteOrderIndex: 3})
 
-	user1, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 1, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user2, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 2, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user3, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 4, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user4, token4 := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 5, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user5, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 6, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user6, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 7, IsChainAdmin: true, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
+	user1, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 1})
+	user2, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 2})
+	user3, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 4})
+	user4, token4 := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 5})
+	user5, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 6})
+	user6, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 7, IsChainAdmin: true})
 
 	expectedUsers := []*models.User{user0, user1, user2, user3, user4, user5, user6}
 
@@ -47,14 +47,14 @@ func TestUserGetAllOfChainRoutePrivacyHost(t *testing.T) {
 			if index != 3 /* one before me */ &&
 				index != 4 /* me */ &&
 				index != 5 /* one after me */ &&
-				index != 0 /* host */ {
+				index != 0 && index != 6 /* hosts */ {
 				assert.Equal(t, actualUser.Email.String, "***")
 				assert.Equal(t, actualUser.PhoneNumber, "***")
 				assert.Equal(t, actualUser.Address, "***")
 			} else {
 				assert.Equal(t, actualUser.Email.String, expectedUser.Email.String)
 				assert.Equal(t, actualUser.PhoneNumber, expectedUser.PhoneNumber)
-				if index != 6 { // cant see chain admin address
+				if index != 0 && index != 6 { // cant see chain admin address
 					assert.Equal(t, actualUser.Address, expectedUser.Address)
 				} else {
 					assert.Equal(t, actualUser.Address, "***")
@@ -90,14 +90,14 @@ func TestUserGetAllOfChainRoutePrivacyOverflowCase(t *testing.T) {
 	route_privacy := 2
 
 	// logged user
-	chain, user, token := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{RoutePrivacy: &route_privacy, RouteOrderIndex: 1, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
+	chain, user, token := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{RoutePrivacy: &route_privacy, RouteOrderIndex: 1})
 
-	user1, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 2, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user2, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 3, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user3, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 4, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user4, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 5, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user5, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 6, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user6, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 7, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
+	user1, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 2})
+	user2, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 3})
+	user3, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 4})
+	user4, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 5})
+	user5, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 6})
+	user6, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 7})
 
 	expectedUsers := []*models.User{user, user1, user2, user3, user4, user5, user6}
 
@@ -126,15 +126,57 @@ func TestUserGetAllOfChainRoutePrivacyOverflowCase(t *testing.T) {
 	}
 }
 
+func TestUserGetAllOfChainRoutePrivacyPausedUsers(t *testing.T) {
+
+	route_privacy := 1
+
+	// logged user
+	chain, user, token := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{RoutePrivacy: &route_privacy, RouteOrderIndex: 1})
+
+	user1, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 2, IsPaused: true})
+	user2, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 3, IsPaused: true})
+	user3, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 4})
+	user4, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 5})
+	user5, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 6})
+	user6, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 7, IsPaused: true})
+
+	expectedUsers := []*models.User{user, user1, user2, user3, user4, user5, user6}
+
+	url := fmt.Sprintf("/v2/user/all-chain?&chain_uid=%s", chain.UID)
+	c, resultFunc := mocks.MockGinContext(db, http.MethodGet, url, nil, token)
+
+	controllers.UserGetAllOfChain(c)
+	result := resultFunc()
+	actualUsers := &[]*models.User{}
+	json.Unmarshal([]byte(result.Body), actualUsers)
+
+	for index, actualUser := range *actualUsers {
+		expectedUser := expectedUsers[index]
+		assert.Equal(t, actualUser.UID, expectedUser.UID)
+
+		if index != 0 && // the logged user
+			index != 3 && // first not paused forward user
+			index != 5 { // first not paused backward user
+			assert.Equal(t, actualUser.Email.String, "***")
+			assert.Equal(t, actualUser.PhoneNumber, "***")
+			assert.Equal(t, actualUser.Address, "***")
+		} else {
+			assert.Equal(t, actualUser.Email.String, expectedUser.Email.String)
+			assert.Equal(t, actualUser.PhoneNumber, expectedUser.PhoneNumber)
+			assert.Equal(t, actualUser.Address, expectedUser.Address)
+		}
+	}
+}
+
 func TestUserGetAllOfChainRoutePrivacyEqual0(t *testing.T) {
 
 	route_privacy := 0
 
 	// logged user
-	chain, user, token := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{RoutePrivacy: &route_privacy, RouteOrderIndex: 1, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user1, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 2, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user2, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 3, IsChainAdmin: true, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user3, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 4, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
+	chain, user, token := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{RoutePrivacy: &route_privacy, RouteOrderIndex: 1})
+	user1, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 2})
+	user2, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 3, IsChainAdmin: true})
+	user3, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 4})
 
 	expectedUsers := []*models.User{user, user1, user2, user3}
 
@@ -172,10 +214,10 @@ func TestUserGetAllOfChainRoutePrivacyEqualMinusOne(t *testing.T) {
 	route_privacy := -1
 
 	// logged user
-	chain, user, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{RoutePrivacy: &route_privacy, RouteOrderIndex: 1, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user1, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 2, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user2, token := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 3, IsChainAdmin: true, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
-	user3, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 4, OverrideLatitude: new(float64), OverrideLongitude: new(float64)})
+	chain, user, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{RoutePrivacy: &route_privacy, RouteOrderIndex: 1})
+	user1, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 2})
+	user2, token := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 3, IsChainAdmin: true})
+	user3, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 4})
 
 	expectedUsers := []*models.User{user, user1, user2, user3}
 

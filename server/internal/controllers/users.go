@@ -7,11 +7,13 @@ import (
 	"time"
 
 	"github.com/golang/glog"
+	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	"github.com/the-clothing-loop/website/server/pkg/noderoute"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
@@ -139,66 +141,172 @@ func UserGetAllOfChain(c *gin.Context) {
 	}
 	// omit user data from participants
 	if !isAuthState3AdminChainUser {
-		route, err := chain.GetRouteOrderByUserUID(db)
+		users, err = omitUserData(db, chain, users, authUser.UID)
+
 		if err != nil {
-			c.String(http.StatusInternalServerError, err.Error())
+			goscope.Log.Errorf("Unable to omit user data: %v", err)
+			c.String(http.StatusInternalServerError, "Internal error hiding user information")
 			return
-		}
-		routeLength := len(route)
-
-		usersWithBulkyItems := []uint{}
-		db.Raw(`
-SELECT u.id
-FROM users AS u
-LEFT JOIN user_chains AS uc on uc.user_id = u.id
-LEFT JOIN bulky_items AS bi ON uc.id = bi.user_chain_id
-WHERE uc.chain_id = ? AND bi.id IS NOT NULL
-		`, chain.ID).Scan(&usersWithBulkyItems)
-
-		authUserRouteOrder := routeIndex(route, authUser.UID)
-		indexAllowed := calculateAllowedIndexes(authUserRouteOrder, chain.RoutePrivacy, routeLength)
-		// fmt.Printf("order len: %d\tallowed indexes: %+v\n", len(route), indexAllowed)
-
-		// fmt.Printf("auth order: %v\n", authUserRouteOrder)
-		for i, user := range users {
-			// find users above and below this user in the route order
-			routeOrder := routeIndex(route, user.UID)
-			_, isChainAdmin := user.IsPartOfChain(chain.UID)
-
-			isPrivate := true
-			{
-				isDirectlyBeforeOrAfter := false
-				for _, index := range indexAllowed {
-					if routeOrder == index {
-						isDirectlyBeforeOrAfter = true
-						break
-					}
-				}
-				isSameUser := authUser.UID == user.UID
-				hasBulkyItem := false
-				for _, id := range usersWithBulkyItems {
-					if id == user.ID {
-						hasBulkyItem = true
-					}
-				}
-				// fmt.Printf("(%v) directly: %v\tbulky: %v\tsame: %v\n", routeOrder, isDirectlyBeforeOrAfter, hasBulkyItem, isSameUser)
-				if isDirectlyBeforeOrAfter || hasBulkyItem || isSameUser {
-					isPrivate = false
-				}
-			}
-			if isPrivate {
-				if !isChainAdmin {
-					users[i].Email = zero.StringFrom("***")
-					users[i].PhoneNumber = "***"
-				}
-				users[i].Address = "***"
-			}
 		}
 	}
 
 	c.JSON(200, users)
 }
 
+func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUserUID string) ([]models.User, error) {
+
+	routePrivacy := chain.RoutePrivacy
+
+	// Show all users information
+	if routePrivacy == -1 {
+		return users, nil
+	}
+	// IF is 0, the user with bulky Item still shown?
+	// Hide all user except for admins
+	if routePrivacy == 0 {
+		for i, user := range users {
+			if user.UID != authUserUID {
+				_, isChainAdmin := user.IsPartOfChain(chain.UID)
+				hideUserInformation(isChainAdmin, &users[i])
+			}
+		}
+		return users, nil
+	}
+
+	route, err := chain.GetRouteOrderByUserUID(db)
+	if err != nil {
+		return nil, err
+	}
+
+	usersWithBulkyItems := []uint{}
+	db.Raw(`
+			SELECT u.id
+			FROM users AS u
+			LEFT JOIN user_chains AS uc on uc.user_id = u.id
+			LEFT JOIN bulky_items AS bi ON uc.id = bi.user_chain_id
+			WHERE uc.chain_id = ? AND bi.id IS NOT NULL
+		   `, chain.ID).Scan(&usersWithBulkyItems)
+
+	authUserRouteOrder := routeIndex(route, authUserUID)
+
+	type userData struct {
+		userIndex    int
+		hasBulkyItem bool
+		isChainAdmin bool
+	}
+
+	var head, iterator, currentUserNode *noderoute.NodeWithInformation[userData]
+
+	// Building the noderoute data structure
+	for _, userUID := range route {
+
+		// find user in users slice
+		user, userIndex, _ := lo.FindIndexOf[models.User](users, func(item models.User) bool {
+			return item.UID == userUID
+		})
+		// check if the user has bulkyItems
+		_, _, hasBulkyItems := lo.FindIndexOf[uint](usersWithBulkyItems, func(item uint) bool {
+			return item == user.ID
+		})
+
+		// check if is admin
+		_, isChainAdmin := user.IsPartOfChain(chain.UID)
+
+		// create the nodeRoute with the user information
+		node := &noderoute.NodeWithInformation[userData]{
+			Key: user.UID,
+			Data: userData{
+				userIndex:    userIndex,
+				hasBulkyItem: hasBulkyItems,
+				isChainAdmin: isChainAdmin,
+			},
+		}
+
+		if head == nil {
+			head = node
+			iterator = head
+		} else {
+			iterator.Next = node
+			node.Prev = iterator
+			iterator = node
+		}
+
+		// save the position of the authUser
+		if authUserRouteOrder == userIndex {
+			currentUserNode = node
+		}
+	}
+
+	// link last node with head and the head node with the last node, to create a circular list
+	iterator.Next = head
+	head.Prev = iterator
+
+	checkNode := func(currentNode *noderoute.NodeWithInformation[userData], routePrivacy int) int {
+		d := currentNode.Data
+		user := &users[d.userIndex]
+		hasBulkyItem := d.hasBulkyItem
+		isChainAdmin := d.isChainAdmin
+
+		if user.PausedUntil.Valid {
+			hideUserInformation(false, user)
+		} else {
+			if routePrivacy > 0 {
+				routePrivacy--
+			} else {
+				if !hasBulkyItem {
+					hideUserInformation(isChainAdmin, user)
+				}
+			}
+		}
+		return routePrivacy
+	}
+
+	// iterate all users starting from the AuthUser back and forward
+	forward := currentUserNode.Next
+	backward := currentUserNode.Prev
+
+	routePrivacyForward := chain.RoutePrivacy
+	routePrivacyBackward := chain.RoutePrivacy
+
+	breakNextIteration := false
+
+	for {
+
+		// if the user is paused, dont show the personal information
+		routePrivacyForward = checkNode(forward, routePrivacyForward)
+		routePrivacyBackward = checkNode(backward, routePrivacyBackward)
+
+		if breakNextIteration {
+			break
+		}
+
+		forward = forward.Next
+		backward = backward.Prev
+
+		if forward == backward {
+			checkNode(forward, routePrivacyForward+routePrivacyBackward)
+			// check node
+			// si queda algo de routePrivacyBackward +  routePrivacyForward hay que mostrarlo
+			// si no es paused o ver si es amdinb o bluky
+			break // break cycle
+		}
+
+		if forward.Next == backward {
+			breakNextIteration = true
+		}
+
+	}
+
+	return users, nil
+}
+
+func hideUserInformation(isChainAdmin bool, user *models.User) {
+	if !isChainAdmin {
+		user.Email = zero.StringFrom("***")
+		user.PhoneNumber = "***"
+	}
+	user.Address = "***"
+}
 func UserHasNewsletter(c *gin.Context) {
 	db := getDB(c)
 
