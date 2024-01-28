@@ -103,9 +103,9 @@ export default function ChainDetailsForm({
       zoom: hasCenter ? 10 : 4,
       minZoom: 1,
       maxZoom: 13,
-      center: (hasCenter
+      center: hasCenter
         ? [values.longitude, values.latitude]
-        : [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
+        : [4.8998197, 52.3673008],
       style: "mapbox://styles/mapbox/light-v11",
     });
     _map.addControl(new MapboxGeocoder({ accessToken: MAPBOX_TOKEN }));
@@ -169,17 +169,18 @@ export default function ChainDetailsForm({
   useEffect(() => {
     (map?.getSource("source") as mapboxgl.GeoJSONSource)?.setData(
       mapToGeoJSON({
-        longitude: values.longitude,
         latitude: values.latitude,
+        longitude: values.longitude,
         radius: values.radius,
       })
     );
-  }, [values.longitude, values.latitude, values.radius]);
+  }, [values.latitude, values.longitude, values.radius]);
 
   async function getPlaceInfo(
     longitude: number,
     latitude: number
   ): Promise<PlaceInfo> {
+    // https://docs.mapbox.com/api/search/geocoding/#reverse-geocoding
     const response = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${MAPBOX_TOKEN}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
     );

@@ -114,6 +114,12 @@ module.exports = {
             transform: "rotate(90deg)",
           },
         },
+        "ping-sm": {
+          "75%, 100%": {
+            transform: "scale(1.5)",
+            opacity: 0,
+          },
+        },
       },
       animation: {
         slide: "30s linear 0s slide infinite",

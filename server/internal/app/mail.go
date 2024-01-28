@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/mail"
 	"os"
-	"strings"
 
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -43,9 +42,9 @@ func MailCreate() *models.Mail {
 }
 
 func MailSend(db *gorm.DB, m *models.Mail) error {
-	if Config.ENV == EnvEnumAcceptance && strings.HasSuffix(m.ToAddress, "@example.com") {
-		return nil
-	}
+	// if Config.ENV == EnvEnumAcceptance && strings.HasSuffix(m.ToAddress, "@example.com") {
+	// 	return nil
+	// }
 
 	var err error
 	if Config.SENDINBLUE_API_KEY != "" {

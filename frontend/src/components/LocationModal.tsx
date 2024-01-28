@@ -60,8 +60,8 @@ function mapToGeoJSON(point: Point | undefined): GeoJSONPoint {
 
 export default function LocationModal({
   setValues,
-  longitude = 4.8998197,
   latitude = 52.3673008,
+  longitude = 4.8998197,
   radius = DEFAULT_RADIUS,
 }: Props) {
   const { t } = useTranslation();
@@ -83,9 +83,9 @@ export default function LocationModal({
       zoom: 7,
       minZoom: 1,
       maxZoom: 13,
-      center: (hasCenter
+      center: hasCenter
         ? [values.longitude, values.latitude]
-        : [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
+        : [4.8998197, 52.3673008],
       style: "mapbox://styles/mapbox/light-v11",
     });
     _map.addControl(new MapboxGeocoder({ accessToken: MAPBOX_TOKEN }));
@@ -96,8 +96,8 @@ export default function LocationModal({
         data: mapToGeoJSON(
           hasCenter
             ? {
-                longitude: values.longitude,
                 latitude: values.latitude,
+                longitude: values.longitude,
                 radius: values.radius,
               }
             : undefined

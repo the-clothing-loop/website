@@ -22,8 +22,15 @@ import SearchBar, {
   toUrlSearchParams,
 } from "../components/FindChain/SearchBar";
 import { SizeBadges } from "../components/Badges";
-import { circleRadiusKm, useMapZoom } from "../util/maps";
+import {
+  GEOJSON_LATITUDE_INDEX,
+  GEOJSON_LONGITUDE_INDEX,
+  circleRadiusKm,
+  useMapZoom,
+} from "../util/maps";
 import { GinParseErrors } from "../util/gin-errors";
+import clothingCategories from "../util/categories";
+import { Genders, Sizes } from "../api/enums";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
 
@@ -81,15 +88,18 @@ function createFilterFunc(
       for (let s of sizes) {
         if (c.sizes?.includes(s)) return true;
       }
-      if (c.uid === "f3dc978d-8bf3-4c75-835a-1e24324f2be2") {
-        console.log("not found", c.sizes, sizes);
-      }
       return false;
     };
   } else if (genders?.length) {
     filterFunc = (c) => {
       for (let g of genders) {
         if (c.genders?.includes(g)) return true;
+        if (
+          c.sizes?.find((s) =>
+            clothingCategories[g as Genders].includes(s as Sizes)
+          )
+        )
+          return true;
       }
       return false;
     };
@@ -121,7 +131,9 @@ export default function FindChain({ location }: { location: Location }) {
       Number.parseFloat(urlParams.get("lo") || ""),
       Number.parseFloat(urlParams.get("la") || ""),
     ];
-    const hasCenter = !!(_center[0] && _center[1]);
+    const hasCenter = !!(
+      _center[GEOJSON_LONGITUDE_INDEX] && _center[GEOJSON_LATITUDE_INDEX]
+    );
     const _map = new mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
@@ -158,6 +170,12 @@ export default function FindChain({ location }: { location: Location }) {
           clusterMaxZoom: clusterMaxZoom,
           clusterMinPoints: 1,
           clusterRadius: 25,
+          clusterProperties: {
+            sum_open_to_new_members: [
+              "+",
+              ["case", ["get", "open_to_new_members"], 1, 0],
+            ],
+          },
           generateId: true,
         });
 
@@ -167,7 +185,12 @@ export default function FindChain({ location }: { location: Location }) {
           source: "chains",
           filter: ["<=", ["zoom"], clusterMaxZoom],
           paint: {
-            "circle-color": ["rgba", 239, 149, 61, 0.6], // #ef953d
+            "circle-color": [
+              "case",
+              [">", ["coalesce", ["get", "sum_open_to_new_members"], 0], 0],
+              ["rgba", 239, 149, 61, 0.6], // #ef953d
+              ["rgba", 0, 0, 0, 0.1], // grey
+            ],
             "circle-radius": 15,
             "circle-stroke-width": 0,
           },
@@ -392,8 +415,8 @@ export default function FindChain({ location }: { location: Location }) {
         if (!f.properties?.cluster) {
           if (f.geometry.type !== "Point") continue;
           let fLngLat = new mapboxgl.LngLat(
-            f.geometry.coordinates[0],
-            f.geometry.coordinates[1]
+            f.geometry.coordinates[GEOJSON_LONGITUDE_INDEX],
+            f.geometry.coordinates[GEOJSON_LATITUDE_INDEX]
           );
           if (center.distanceTo(fLngLat) > 8000) continue;
           visibleFeatures.push(f as any);
@@ -403,12 +426,12 @@ export default function FindChain({ location }: { location: Location }) {
     let ans = visibleFeatures
       .sort((a, b) => {
         let aLngLat = new mapboxgl.LngLat(
-          a.geometry.coordinates[0],
-          a.geometry.coordinates[1]
+          a.geometry.coordinates[GEOJSON_LONGITUDE_INDEX],
+          a.geometry.coordinates[GEOJSON_LATITUDE_INDEX]
         );
         let bLngLat = new mapboxgl.LngLat(
-          b.geometry.coordinates[0],
-          b.geometry.coordinates[1]
+          b.geometry.coordinates[GEOJSON_LONGITUDE_INDEX],
+          b.geometry.coordinates[GEOJSON_LATITUDE_INDEX]
         );
         return aLngLat.distanceTo(bLngLat);
       })
@@ -754,7 +777,7 @@ function FocusedChain({
 
         <div>
           <div className="flex flex-col w-full text-sm">
-            {chain.sizes?.length ? (
+            {chain.sizes?.length || chain.genders?.length ? (
               <>
                 <h2 className="mb-1">{t("sizes")}:</h2>
                 <div className="mb-2">
