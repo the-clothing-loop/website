@@ -234,6 +234,10 @@ export default function FindChain({ location }: { location: Location }) {
           },
         });
 
+        const _marker = new mapboxgl.Marker({
+          color: "#518d7e",
+        });
+
         // Initalize chainsInView
         _map.on("idle", () => {
           getVisibleChains(_map, _chains);
@@ -268,6 +272,8 @@ export default function FindChain({ location }: { location: Location }) {
           if (!e.clickOnLayer) {
             setSidebarOpen(false);
           }
+
+          _marker.setLngLat(e.lngLat).addTo(_map);
         });
 
         // zoom during click on a cluster
