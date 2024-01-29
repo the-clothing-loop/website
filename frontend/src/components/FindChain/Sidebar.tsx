@@ -193,7 +193,7 @@ function SideBarChainItem(props: {
   if (props.type === ListChainType.Visible) {
     return (
       <button
-        className="w-full p-1.5 hidden sm:block border-b border-grey/10 last:border-none text-secondary text-ellipsis overflow-hidden whitespace-nowrap glass"
+        className="w-full p-1.5 hidden sm:block border-b border-grey/10 last:border-none text-secondary text-ellipsis overflow-hidden whitespace-nowrap glass cursor-pointer"
         key={props.chain.uid}
         type="button"
         onClick={() => props.onClickFocusChain(props.chain)}
