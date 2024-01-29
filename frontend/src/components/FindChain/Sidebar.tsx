@@ -138,7 +138,7 @@ export default function SideBar({
             type="button"
             data-tip={t("close")}
             onClick={handleClose}
-            className="absolute top-2 right-2 rtl:right-auto rtl:left-2 btn btn-sm btn-circle btn-accent tooltip tooltip-left"
+            className="absolute top-0 sm:top-2 right-2 rtl:right-auto rtl:left-2 btn btn-md sm:btn-sm text-2xl btn-circle btn-accent tooltip tooltip-left"
           >
             <span className="feather feather-arrow-left hidden sm:ltr:block"></span>
             <span className="feather feather-arrow-right hidden sm:rtl:block"></span>
