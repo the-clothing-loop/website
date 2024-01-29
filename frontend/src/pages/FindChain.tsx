@@ -1,34 +1,23 @@
-import {
-  useEffect,
-  useState,
-  useContext,
-  useRef,
-  MouseEvent,
-  MouseEventHandler,
-} from "react";
-import { useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useEffect, useState, useContext, useRef } from "react";
 import { Helmet } from "react-helmet";
 import type * as GeoJSONTypes from "geojson";
-import mapboxgl from "mapbox-gl";
+import mapboxgl, { MapboxGeoJSONFeature } from "mapbox-gl";
 
 // Project resources
-import { AuthContext, AuthProps } from "../providers/AuthProvider";
-import { Chain, UID, User } from "../api/types";
-import { chainAddUser, chainGetAll } from "../api/chain";
+import { Chain, UID } from "../api/types";
+import { chainGetAll } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
 import SearchBar, {
   SearchValues,
   toUrlSearchParams,
 } from "../components/FindChain/SearchBar";
-import { SizeBadges } from "../components/Badges";
+import Sidebar from "../components/FindChain/Sidebar";
 import {
   GEOJSON_LATITUDE_INDEX,
   GEOJSON_LONGITUDE_INDEX,
   circleRadiusKm,
   useMapZoom,
 } from "../util/maps";
-import { GinParseErrors } from "../util/gin-errors";
 import clothingCategories from "../util/categories";
 import { Genders, Sizes } from "../api/enums";
 
@@ -108,21 +97,18 @@ function createFilterFunc(
 }
 
 export default function FindChain({ location }: { location: Location }) {
-  const history = useHistory();
   const urlParams = new URLSearchParams(location.search);
 
-  const { t } = useTranslation();
-  const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addToastError, addModal } = useContext(ToastContext);
 
   const [chains, setChains] = useState<Chain[]>();
   const [map, setMap] = useState<mapboxgl.Map>();
   const { zoom, setZoom, mapZoom } = useMapZoom(4, MIN_ZOOM, MAX_ZOOM);
   const [locationLoading, setLocationLoading] = useState(false);
-  const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
-  const [focusedChain, setFocusedChain] = useState<Chain | null>(null);
+  const [mapClickedChains, setMapClickedChains] = useState<Chain[]>([]);
   const [visibleChains, setVisibleChains] = useState<Chain[]>([]);
-  const [chainDetailsOpen, setChainDetailsOpen] = useState(false);
+  const [focusedChain, setFocusedChain] = useState<Chain | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const mapRef = useRef<any>();
 
@@ -268,29 +254,20 @@ export default function FindChain({ location }: { location: Location }) {
             let _selectedChains = uids.map((uid) =>
               _chains.find((c) => c.uid === uid)
             ) as Chain[];
-            if (_selectedChains.length) {
-              _selectedChains.forEach((c) => console.info(c.name, c.uid));
-              setSelectedChains(_selectedChains);
-            }
-            let _sortedChains = _selectedChains.sort((a, b) => {
-              let aLngLat = new mapboxgl.LngLat(a.longitude, a.latitude);
-              let bLngLat = new mapboxgl.LngLat(b.longitude, b.latitude);
-              let aDistance = aLngLat.distanceTo(e.lngLat);
-              let bDistance = bLngLat.distanceTo(e.lngLat);
-              return Math.min(aDistance, bDistance);
-            });
-            let _focusedChain = _sortedChains[0];
 
             e.clickOnLayer = true;
-            setChainDetailsOpen(true);
-
-            handleSetFocusedChain(_focusedChain, _map);
+            setSidebarOpen(true);
+            setMapClickedChains(_selectedChains);
+            // setVisibleChains(_sortedChains);
+            if (mapClickedChains.length === 1) {
+              handleSetFocusedChain(_selectedChains[0], true, _map);
+            }
           }
         });
 
         _map.on("click", (e) => {
           if (!e.clickOnLayer) {
-            setChainDetailsOpen(false);
+            setSidebarOpen(false);
           }
         });
 
@@ -327,11 +304,12 @@ export default function FindChain({ location }: { location: Location }) {
               });
 
               // auto select
-              setSelectedChains([chain]);
+              setMapClickedChains([chain]);
+              setSidebarOpen(true);
 
               const uniqueFeatures = [...new Set(features.map((f) => f.id))];
               if (uniqueFeatures.length === 1) {
-                handleSetFocusedChain(chain, _map);
+                handleSetFocusedChain(chain, true, _map);
               }
             } catch (err) {
               console.warn(err);
@@ -354,32 +332,19 @@ export default function FindChain({ location }: { location: Location }) {
     };
   }, []);
 
-  function handleSetFocusedChain(_focusedChain: Chain, _map?: mapboxgl.Map) {
+  function handleSetFocusedChain(
+    _focusedChain: Chain | null,
+    shouldMove = false,
+    _map?: mapboxgl.Map
+  ) {
     _map = _map || map;
 
-    const features = _map!.queryRenderedFeatures(undefined, {
-      layers: ["chain-cluster", "chain-single"],
-    }) as any as GeoJSONChains["features"];
-
-    // unset the previous focused Feature
-    if (focusedChain) {
-      let featPrev = features.find(
-        (f) => f.properties.uid === focusedChain.uid
-      );
-      if (featPrev)
-        _map!.setFeatureState(
-          {
-            source: "chains",
-            id: featPrev.id,
-          },
-          {
-            clicked: false,
-          }
-        );
-    }
-
-    // set the State
     setFocusedChain(_focusedChain);
+    if (!_focusedChain) return;
+
+    let features = _map!.queryRenderedFeatures(undefined, {
+      layers: ["chain-cluster", "chain-single"],
+    }) as MapboxGeoJSONFeature[];
 
     // set the Feature
     features.forEach((f) => {
@@ -389,17 +354,18 @@ export default function FindChain({ location }: { location: Location }) {
           id: f.id,
         },
         {
-          clicked: f.properties.uid === _focusedChain.uid,
+          clicked: f.properties!.uid === _focusedChain.uid,
         }
       );
     });
 
-    _map!.easeTo({
-      duration: 700,
-      animate: true,
-      essential: true,
-      center: [_focusedChain.longitude, _focusedChain.latitude],
-    });
+    if (shouldMove)
+      _map!.easeTo({
+        duration: 700,
+        animate: true,
+        essential: true,
+        center: [_focusedChain.longitude, _focusedChain.latitude],
+      });
   }
 
   function getVisibleChains(map: mapboxgl.Map, chains: Chain[]) {
@@ -469,49 +435,7 @@ export default function FindChain({ location }: { location: Location }) {
         toUrlSearchParams(search, longLat)
     );
 
-    setSelectedChains([]);
-  }
-
-  function handleClickJoin(e: MouseEvent<HTMLButtonElement>, chain: Chain) {
-    e.preventDefault();
-    if (authUser && chain.uid) {
-      addModal({
-        message: t("AreYouSureJoinLoop", {
-          chainName: chain.name,
-        }),
-        actions: [
-          {
-            text: t("join"),
-            type: "secondary",
-            fn: () => {
-              chainAddUser(chain.uid, authUser.uid, false)
-                .then(() => {
-                  authUserRefresh();
-                  history.push({ pathname: "/thankyou" });
-                })
-                .catch((err) => {
-                  addToastError(GinParseErrors(t, err), err?.status);
-                });
-            },
-          },
-        ],
-      });
-    } else {
-      history.push({
-        pathname: `/loops/${chain.uid}/users/signup`,
-        state: {
-          chainId: chain.uid,
-        },
-      });
-    }
-  }
-
-  function handleClickViewChain(
-    e: MouseEvent<HTMLButtonElement>,
-    chainUID: UID
-  ) {
-    e.preventDefault();
-    history.push(`/loops/${chainUID}/members`);
+    setMapClickedChains([]);
   }
 
   function handleLocation() {
@@ -533,13 +457,6 @@ export default function FindChain({ location }: { location: Location }) {
     addToastError("Access tokens not configured", 500);
     return <div></div>;
   }
-  const selectedFocusedChains = visibleChains
-    .filter((c) => c.uid !== focusedChain?.uid)
-    .map((chain) => {
-      const selected = !!selectedChains.find((c) => chain.uid === c.uid);
-      return { selected, chain };
-    })
-    .sort((a, b) => (a.selected === b.selected ? 0 : b.selected ? 1 : -1));
 
   return (
     <>
@@ -597,238 +514,16 @@ export default function FindChain({ location }: { location: Location }) {
               </button>
             </div>
           </div>
-          <dialog
-            open={chainDetailsOpen}
-            className="sm:invisible absoluete w-72 align-center overflow-y-auto overflow-x-visible inset-0 z-50 justify-center items-center p-0 open:flex bg-white/80"
-            tabIndex={-1}
-          >
-            <form className="w-full z-10">
-              {focusedChain ? (
-                <FocusedChain
-                  chain={focusedChain}
-                  authUser={authUser}
-                  onClickJoin={(e) => handleClickJoin(e, focusedChain)}
-                  onClickViewChain={(e) =>
-                    handleClickViewChain(e, focusedChain.uid)
-                  }
-                />
-              ) : null}
-              <div>
-                {selectedFocusedChains.filter(({ selected }) => selected)
-                  .length ? (
-                  <div className="text-xs bg-grey/20 p-1 text-center font-semibold">
-                    {t("selectLoop")}
-                  </div>
-                ) : null}
-                {selectedFocusedChains.map(({ chain, selected }) => {
-                  return (
-                    <button
-                      className={`p-1.5 block w-full border-t border-b border-grey/10 last:border-none text-secondary text-ellipsis overflow-hidden whitespace-nowrap ${
-                        selected ? "font-semibold" : "hidden md:block"
-                      }`}
-                      key={chain.uid}
-                      onClick={() => handleSetFocusedChain(chain)}
-                    >
-                      {chain.name}
-                    </button>
-                  );
-                })}
-              </div>
-              <button
-                key="close"
-                type="reset"
-                className="btn btn-sm btn-ghost float-right mr-4 mb-4"
-                onClick={() => setChainDetailsOpen(false)}
-              >
-                {t("close")}
-              </button>
-            </form>
-          </dialog>
-          <div
-            className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible invisible sm:visible ${
-              visibleChains.length ? "" : "hidden"
-            }`}
-          >
-            <button
-              key="close"
-              type="button"
-              onClick={() => {
-                setSelectedChains([]);
-                setVisibleChains([]);
-                setFocusedChain(null);
-              }}
-              className="absolute md:hidden top-2 right-2 rtl:right-auto rtl:left-2 btn btn-sm btn-circle btn-outline"
-            >
-              <span className="feather feather-x"></span>
-            </button>
-            {focusedChain ? (
-              <FocusedChain
-                chain={focusedChain}
-                authUser={authUser}
-                onClickJoin={(e) => handleClickJoin(e, focusedChain)}
-                onClickViewChain={(e) =>
-                  handleClickViewChain(e, focusedChain.uid)
-                }
-              />
-            ) : null}
-
-            <div className="glass shadow-md">
-              {selectedFocusedChains.map(({ chain, selected }) => {
-                return (
-                  <button
-                    className={`p-1.5 block w-full border-b border-grey/10 last:border-none text-secondary text-ellipsis overflow-hidden whitespace-nowrap ${
-                      selected ? "font-semibold bg-white" : "hidden md:block"
-                    }`}
-                    key={chain.uid}
-                    onClick={() => handleSetFocusedChain(chain)}
-                  >
-                    {chain.name}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div
-            className={`absolute z-30 top-4 left-4 rtl:left-auto rtl:right-4 max-h-full w-72 overflow-y-auto overflow-x-visible ${
-              selectedChains.length ? "" : "hidden"
-            }`}
-          >
-            <button
-              key="close"
-              type="button"
-              onClick={() => setSelectedChains([])}
-              className="absolute top-2 right-2 rtl:right-auto rtl:left-2 btn btn-sm btn-circle btn-outline"
-            >
-              <span className="feather feather-arrow-left rtl:hidden"></span>
-              <span className="feather feather-arrow-right ltr:hidden"></span>
-            </button>
-          </div>
+          <Sidebar
+            mapClickedChains={mapClickedChains}
+            visibleChains={visibleChains}
+            focusedChain={focusedChain}
+            setFocusedChain={handleSetFocusedChain}
+            open={sidebarOpen}
+            setOpen={setSidebarOpen}
+          />
         </div>
       </main>
     </>
-  );
-}
-
-function FocusedChain({
-  chain,
-  authUser,
-  onClickJoin,
-  onClickViewChain,
-}: {
-  chain: Chain;
-  authUser: AuthProps["authUser"];
-  onClickJoin: MouseEventHandler<HTMLButtonElement>;
-  onClickViewChain: MouseEventHandler<HTMLButtonElement>;
-}) {
-  function handleClickShortenedDesc(e: MouseEvent) {
-    let input = (e.target as HTMLParagraphElement).parentElement?.querySelector(
-      "input"
-    );
-
-    if (input) input.checked = true;
-  }
-
-  const { t } = useTranslation();
-  const userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
-
-  return (
-    <div className="p-4 w-full mb-1 sm:bg-white sm:shadow-md" key={chain.uid}>
-      <div className="sm:mb-2">
-        <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
-          {chain.name}
-        </h1>
-
-        {chain.description ? (
-          chain.description.length > 200 ? (
-            <div className="mb-3">
-              <input
-                type="checkbox"
-                className="hidden peer"
-                id={"checkbox-desc-more-" + chain.uid}
-              />
-              <p
-                className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12 relative before:block before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-white/90 before:to-transparent before:bottom-0 peer-checked:before:hidden"
-                tabIndex={0}
-                onClick={handleClickShortenedDesc}
-              >
-                {chain.description.split("\n").map((s, i) => {
-                  if (i === 0) return s;
-
-                  return (
-                    <>
-                      <br />
-                      {s}
-                    </>
-                  );
-                })}
-              </p>
-              <label
-                htmlFor={"checkbox-desc-more-" + chain.uid}
-                aria-label="expand"
-                className="btn btn-xs btn-ghost bg-teal-light feather feather-more-horizontal peer-checked:hidden"
-                onClick={handleClickShortenedDesc}
-              ></label>
-            </div>
-          ) : (
-            <p className="mb-3 text-sm break-words">{chain.description}</p>
-          )
-        ) : null}
-
-        <div>
-          <div className="flex flex-col w-full text-sm">
-            {chain.sizes?.length || chain.genders?.length ? (
-              <>
-                <h2 className="mb-1">{t("sizes")}:</h2>
-                <div className="mb-2">
-                  <SizeBadges s={chain.sizes} g={chain.genders} />
-                </div>
-              </>
-            ) : null}
-          </div>
-          <div className="flex flex-col items-start">
-            {authUser?.is_root_admin || userChain?.is_chain_admin ? (
-              <button
-                key={"btn-view"}
-                className="btn btn-sm btn-secondary btn-outline mb-3"
-                onClick={onClickViewChain}
-              >
-                {t("viewLoop")}
-                <span className="feather feather-shield ml-3"></span>
-              </button>
-            ) : null}
-          </div>
-        </div>
-
-        {userChain ? (
-          userChain.is_approved ? (
-            <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 inline-flex items-center">
-              {t("joined")}
-              <span className="feather feather-check ml-3"></span>
-            </p>
-          ) : (
-            <p className="px-3 font-semibold text-sm border border-secondary h-8 inline-flex items-center text-secondary">
-              {t("pendingApproval")}
-              <span className="feather feather-user-check ml-3"></span>
-            </p>
-          )
-        ) : chain.open_to_new_members ? (
-          <button
-            onClick={onClickJoin}
-            type="button"
-            className="btn btn-sm btn-primary"
-          >
-            {t("join")}
-            <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
-            <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
-          </button>
-        ) : (
-          <p className="px-3 font-semibold text-sm border border-secondary h-8 inline-flex items-center text-secondary">
-            {t("closed")}
-            <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
-          </p>
-        )}
-      </div>
-    </div>
   );
 }
