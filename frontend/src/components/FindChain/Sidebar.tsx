@@ -128,7 +128,7 @@ export default function SideBar({
       tabIndex={-1}
     >
       <form className="w-full z-10">
-        <div className="sticky top-0" key="title">
+        <div className="sticky z-10 top-0" key="title">
           <div className="text-xs bg-grey/20 p-1 text-center font-semibold">
             {t("selectLoop")}
           </div>
@@ -180,6 +180,10 @@ function SideBarChainItem(props: {
     if (input) input.checked = true;
   }
 
+  const handleClickEnlarge = () => props.onClickFocusChain(props.chain);
+  const handleClickViewChain = () => props.onClickViewChain(props.chain);
+  const handleClickJoin = () => props.onClickJoin(props.chain);
+
   const { t } = useTranslation();
 
   const userChain = props.authUser?.chains.find(
@@ -189,7 +193,7 @@ function SideBarChainItem(props: {
   if (props.type === ListChainType.Visible) {
     return (
       <button
-        className="w-72 p-1.5 hidden sm:block border-b border-grey/10 last:border-none text-secondary text-ellipsis overflow-hidden whitespace-nowrap font-semibold glass"
+        className="w-full p-1.5 hidden sm:block border-b border-grey/10 last:border-none text-secondary text-ellipsis overflow-hidden whitespace-nowrap glass"
         key={props.chain.uid}
         type="button"
         onClick={() => props.onClickFocusChain(props.chain)}
@@ -203,15 +207,15 @@ function SideBarChainItem(props: {
 
   return (
     <div
-      className="p-4 w-full my-1 bg-white sm:shadow-md"
+      className={"p-4 w-full my-1 bg-white sm:shadow-md ".concat(
+        isLarge ? "" : "hover:opacity-80 cursor-pointer"
+      )}
       key={props.chain.uid}
+      onClick={isLarge ? undefined : handleClickEnlarge}
+      tabIndex={isLarge ? undefined : -1}
     >
       <div className="sm:mb-2">
-        <h1
-          className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words"
-          onClick={() => props.onClickFocusChain(props.chain)}
-          tabIndex={0}
-        >
+        <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
           {props.chain.name}
         </h1>
 
@@ -275,7 +279,7 @@ function SideBarChainItem(props: {
                   type="button"
                   key={"btn-view"}
                   className="btn btn-sm btn-secondary btn-outline mb-3"
-                  onClick={() => props.onClickViewChain(props.chain)}
+                  onClick={handleClickViewChain}
                 >
                   {t("viewLoop")}
                   <span className="feather feather-shield ml-3"></span>
@@ -299,7 +303,7 @@ function SideBarChainItem(props: {
           )
         ) : props.chain.open_to_new_members ? (
           <button
-            onClick={() => props.onClickJoin(props.chain)}
+            onClick={isLarge ? handleClickJoin : undefined}
             type="button"
             className="btn btn-sm btn-primary"
           >

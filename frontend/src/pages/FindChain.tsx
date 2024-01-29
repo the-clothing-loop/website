@@ -258,8 +258,7 @@ export default function FindChain({ location }: { location: Location }) {
             e.clickOnLayer = true;
             setSidebarOpen(true);
             setMapClickedChains(_selectedChains);
-            // setVisibleChains(_sortedChains);
-            if (mapClickedChains.length === 1) {
+            if (_selectedChains.length === 1) {
               handleSetFocusedChain(_selectedChains[0], true, _map);
             }
           }
