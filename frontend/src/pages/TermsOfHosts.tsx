@@ -19,6 +19,15 @@ export default function TermsOfHosts() {
 }
 
 export function TermsOfHostsHTML(props: { className: string }) {
+  const handleClickPrivacyPolicy = () =>
+    (window as any)
+      .open("https://www.clothingloop.org/privacy-policy", "_blank")
+      .focus();
+  const handleClickTermsOfUse = () =>
+    (window as any)
+      .open("https://www.clothingloop.org/terms-of-use", "_blank")
+      .focus();
+
   return (
     <div className={props.className}>
       <p>Version dated 2023, December 21th</p>
@@ -46,9 +55,18 @@ export function TermsOfHostsHTML(props: { className: string }) {
         </li>
         <li>
           These Terms of Hosting are in addition to our Terms of Use, which
-          remain applicable to you. The Terms of Use can be found here: [link].
-          In case of conflicting provisions between the Terms of Hosting and the
-          Terms of Use, the provisions of the Terms of Hosting prevail.
+          remain applicable to you. The Terms of Use can be found here:{" "}
+          <a
+            tabIndex={-1}
+            href="https://www.clothingloop.org/terms-of-use"
+            title="https://www.clothingloop.org/terms-of-use"
+            onClick={handleClickTermsOfUse}
+            rel="noreferrer"
+          >
+            https://www.clothingloop.org/terms-of-use
+          </a>
+          . In case of conflicting provisions between the Terms of Hosting and
+          the Terms of Use, the provisions of the Terms of Hosting prevail.
         </li>
         <li>
           We reserve the right to unilaterally amend these Terms of Hosting. We
@@ -303,6 +321,8 @@ export function TermsOfHostsHTML(props: { className: string }) {
             tabIndex={-1}
             href="https://www.clothingloop.org/privacy-policy"
             title="https://www.clothingloop.org/privacy-policy"
+            onClick={handleClickPrivacyPolicy}
+            rel="noreferrer"
           >
             Privacy &amp; Cookie policy
           </a>
