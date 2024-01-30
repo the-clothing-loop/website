@@ -202,7 +202,7 @@ export default function FindChain({ location }: { location: Location }) {
             "circle-color": [
               "case",
               ["==", ["feature-state", "clicked"], true],
-              ["rgba", 72, 128, 139, 0.4],
+              ["rgba", 81, 141, 126, 0.4],
               [
                 "case",
                 ["get", "open_to_new_members"],
