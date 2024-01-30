@@ -25,7 +25,7 @@ func TestRegisterChainAdmin(t *testing.T) {
 			"country_code":        faker.Address().CountryCode(),
 			"description":         faker.Company().CatchPhrase(),
 			"latitude":            faker.Address().Latitude(),
-			"longitude":           faker.Address().Latitude(),
+			"longitude":           faker.Address().Longitude(),
 			"radius":              float32(faker.RandomFloat(3, 2, 30)),
 			"open_to_new_members": true,
 			"sizes":               mocks.MockSizes(false),

@@ -56,4 +56,4 @@ stripe-dev:
 
 .PHONY: coords-migrate
 coords-migrate:
-	@SERVER_ENV=production go run cmd/get-user-coords-and-country/main.go -mb-token="" -start=1001 -end=2000 2>&1 | tee -a coords.log
+	@SERVER_ENV=production go run cmd/get-user-coords-and-country/main.go -mb-token="" 2>&1 | tee -a coords.log

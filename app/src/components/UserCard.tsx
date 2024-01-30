@@ -225,7 +225,7 @@ export default function UserCard({
             >
               <IonLabel>
                 <h3 className="!tw-font-bold">{t("address")}</h3>
-                {/* https://www.google.com/maps/@${long},${lat},14z */}
+                {/* https://www.google.com/maps/@${lat},${long},14z */}
                 <p className="ion-text-wrap">{user?.address}</p>
               </IonLabel>
               {user.address ? (

@@ -18,6 +18,7 @@ import {
 import { isValidPhoneNumber } from "react-phone-number-input/max";
 import { AuthContext } from "../providers/AuthProvider";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import { CoordsFromMapbox } from "../util/maps";
 
 export interface ValuesForm {
   name: string;
@@ -141,8 +142,9 @@ export default function AddressForm(props: {
           }
         }
         if (mapboxResult) {
-          values.latitude = mapboxResult.geometry.coordinates[0];
-          values.longitude = mapboxResult.geometry.coordinates[1];
+          let coords = CoordsFromMapbox(mapboxResult.geometry.coordinates);
+          values.latitude = coords.latitude;
+          values.longitude = coords.longitude;
         }
 
         if (!(address.street && address.city && address.country)) {
