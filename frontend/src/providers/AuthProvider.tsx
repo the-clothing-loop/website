@@ -13,6 +13,7 @@ export enum UserRefreshState {
   NeverLoggedIn,
   LoggedIn,
   ForceLoggedOut,
+  LoggedInForceAccountRedir,
 }
 
 export type AuthProps = {
@@ -108,6 +109,12 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
             i18n: i18n.language,
           });
         }
+        if (!user.accepted_toh) {
+          const isAnyChainAdmin = !!user.chains.find((uc) => !!uc.chain_uid);
+          if (isAnyChainAdmin) {
+            return UserRefreshState.LoggedInForceAccountRedir;
+          }
+        }
       } catch (err) {
         await authLogout().catch((err) => {
           console.error("force logout failed:", err);
@@ -128,6 +135,13 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
         const isHome = history.location.pathname === "/";
         if (!(isHome || isHomeI18n)) {
           history.push("/");
+        }
+      } else if (res === UserRefreshState.LoggedInForceAccountRedir) {
+        const isAdminI18n =
+          history.location.pathname.substring(3) === "/admin/dashboard";
+        const isAdmin = history.location.pathname === "/admin/dashboard";
+        if (!(isAdmin || isAdminI18n)) {
+          history.push("/admin/dashboard");
         }
       }
     });
