@@ -70,7 +70,7 @@ import OpenSource from "./pages/OpenSource";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 SplashScreen.show({
-  autoHide: false,
+  autoHide: true,
 });
 
 setupIonicReact({
@@ -131,7 +131,11 @@ export default function App() {
     }
     SplashScreen.hide();
 
-    if (success) history.replace("/help");
+    if (
+      success === IsAuthenticated.LoggedIn ||
+      success === IsAuthenticated.OfflineLoggedIn
+    )
+      history.replace("/help");
     else history.replace("/onboarding");
   }
 
