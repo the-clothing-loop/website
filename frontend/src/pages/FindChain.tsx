@@ -173,7 +173,16 @@ export default function FindChain({ location }: { location: Location }) {
           paint: {
             "circle-color": [
               "case",
-              [">", ["coalesce", ["get", "sum_open_to_new_members"], 0], 0],
+              [
+                "any",
+                [">", ["coalesce", ["get", "sum_open_to_new_members"], 0], 0],
+                [
+                  "all",
+                  ["<", ["coalesce", ["get", "point_count_abbreviated"], 0], 2],
+                  ["has", "open_to_new_members"],
+                  ["get", "open_to_new_members"],
+                ],
+              ],
               ["rgba", 239, 149, 61, 0.6], // #ef953d
               ["rgba", 0, 0, 0, 0.1], // grey
             ],

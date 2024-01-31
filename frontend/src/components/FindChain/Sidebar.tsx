@@ -90,9 +90,9 @@ export default function SideBar({
     const list = [] as ListCItem[];
 
     console.log(
-      "mapClickedChains: %s\tvisibleChains: %s",
-      mapClickedChains.length,
-      visibleChains.length
+      "mapClickedChainUIDs: %s\tvisibleChains: %s",
+      mapClickedChains.map((c) => c.uid).join(", "),
+      visibleChains.map((c) => c.uid).join(", ")
     );
 
     const uniqueVisibleChains = visibleChains.filter(
