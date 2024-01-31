@@ -66,10 +66,10 @@ const errLoopMustBeSelected =
 
 export function StoreProvider({
   children,
-  presentAlert,
+  onIsOffline,
 }: {
   children: React.ReactNode;
-  presentAlert: UseIonAlertResult[0];
+  onIsOffline: (err: any) => void;
 }) {
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chain, setChain] = useState<Chain | null>(null);
@@ -359,24 +359,7 @@ export function StoreProvider({
 
   function _connError(err: any) {
     console.log("Connection error");
-    presentAlert({
-      header: "Unable to reach our servers",
-      message:
-        err?.message ||
-        err?.data + "" ||
-        err?.statusText ||
-        "Unknown error occurred",
-      buttons: [
-        {
-          text: "Try Again",
-          role: "confirm",
-          handler() {
-            window.location.reload();
-          },
-        },
-      ],
-      backdropDismiss: false,
-    });
+    onIsOffline(err);
   }
 
   return (
