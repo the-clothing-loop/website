@@ -36,7 +36,7 @@ type MockChainAndUserOptions struct {
 	RouteOrderIndex    int
 
 	// for generating new members
-	IsPaused            bool
+	IsNotActive         bool
 	OnlyEmailExampleCom bool
 	OverrideLongitude   *float64
 	OverrideLatitude    *float64
@@ -103,8 +103,8 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		Chains: chains,
 	}
 
-	if o.IsPaused {
-		user.PausedUntil = null.NewTime(time.Now(), true)
+	if o.IsNotActive {
+		user.PausedUntil = null.NewTime(time.Now().Add(7), true)
 	}
 
 	if err := db.Create(user).Error; err != nil {

@@ -607,12 +607,28 @@ func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUse
 	if routePrivacy == -1 {
 		return users, nil
 	}
-	// If it is 0, the user with a bulky item is still shown?
-	// hide all user except for admins
+
+	usersWithBulkyItems := []uint{}
+	db.Raw(`
+			SELECT u.id
+			FROM users AS u
+			LEFT JOIN user_chains AS uc on uc.user_id = u.id
+			LEFT JOIN bulky_items AS bi ON uc.id = bi.user_chain_id
+			WHERE uc.chain_id = ? AND bi.id IS NOT NULL
+		   `, chain.ID).Scan(&usersWithBulkyItems)
+
 	if routePrivacy == 0 {
 		for i, user := range users {
 			if user.UID != authUserUID {
 				_, isChainAdmin := user.IsPartOfChain(chain.UID)
+
+				// check if the user has bulkyItems
+				_, _, hasBulkyItems := lo.FindIndexOf[uint](usersWithBulkyItems, func(item uint) bool {
+					return item == user.ID
+				})
+				if hasBulkyItems {
+					continue
+				}
 				hideUserInformation(isChainAdmin, &users[i])
 			}
 		}
@@ -623,15 +639,6 @@ func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUse
 	if err != nil {
 		return nil, err
 	}
-
-	usersWithBulkyItems := []uint{}
-	db.Raw(`
-			SELECT u.id
-			FROM users AS u
-			LEFT JOIN user_chains AS uc on uc.user_id = u.id
-			LEFT JOIN bulky_items AS bi ON uc.id = bi.user_chain_id
-			WHERE uc.chain_id = ? AND bi.id IS NOT NULL
-		   `, chain.ID).Scan(&usersWithBulkyItems)
 
 	_, authUserRouteOrder, _ := lo.FindIndexOf[string](route, func(item string) bool {
 		return item == authUserUID
@@ -715,19 +722,10 @@ func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUse
 	routePrivacyForward := chain.RoutePrivacy
 	routePrivacyBackward := chain.RoutePrivacy
 
-	breakNextIteration := false
-
 	for {
 		// if the user is paused, dont show the personal information
 		routePrivacyForward = checkNode(forward, routePrivacyForward)
 		routePrivacyBackward = checkNode(backward, routePrivacyBackward)
-
-		if breakNextIteration {
-			break
-		}
-
-		forward = forward.Next
-		backward = backward.Prev
 
 		if forward == backward {
 			checkNode(forward, routePrivacyForward+routePrivacyBackward)
@@ -735,8 +733,11 @@ func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUse
 		}
 
 		if forward.Next == backward {
-			breakNextIteration = true
+			break
 		}
+
+		forward = forward.Next
+		backward = backward.Prev
 	}
 	return users, nil
 }
