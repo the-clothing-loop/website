@@ -73,7 +73,7 @@ export default function HelpList() {
   }, [chain]);
 
   const hosts = useMemo<User[]>(
-    () => chainUsers.filter((u) => IsChainAdmin(u, chain)),
+    () => chainUsers.filter((u) => IsChainAdmin(u, chain?.uid)),
     [chainUsers, chain],
   );
 
@@ -82,7 +82,7 @@ export default function HelpList() {
   }
 
   function refreshChain() {
-    setChain(chain, authUser!.uid);
+    setChain(chain?.uid, authUser);
   }
 
   return (

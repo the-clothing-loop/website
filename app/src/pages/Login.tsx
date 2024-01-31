@@ -5,7 +5,6 @@ import {
   IonContent,
   IonButton,
   IonItem,
-  IonLabel,
   IonInput,
   IonIcon,
   IonText,
@@ -41,7 +40,7 @@ const KEYCODE_ENTER = 13;
 
 export default function Login(props: { isLoggedIn: boolean }) {
   const { t } = useTranslation();
-  const { login } = useContext(StoreContext);
+  const { login, connError } = useContext(StoreContext);
   const history = useHistory();
   const [present] = useIonToast();
 
@@ -78,9 +77,9 @@ export default function Login(props: { isLoggedIn: boolean }) {
           ) as any,
         );
         Keyboard.hide();
-      } catch (err) {
+      } catch (err: any) {
         setSentState(State.error);
-        toastError(present, err);
+        toastError(present, err?.statusText || err?.message);
         console.error(err);
       }
     })();
@@ -116,6 +115,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         history.replace("/settings", "select-loop");
       } catch (e: any) {
         console.error(e);
+        if (!(e?.status === 401)) connError(e);
         setVerifyState(State.error);
       }
     })();
@@ -245,7 +245,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         <IonFab vertical="bottom" horizontal="start">
           <IonFabButton
             color="clear"
-            onClick={() => history.goBack()}
+            onClick={() => history.replace("/onboarding/2")}
             className="ion-margin-bottom"
           >
             <IonIcon icon={arrowBack}></IonIcon>

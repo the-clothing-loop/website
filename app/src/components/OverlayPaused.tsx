@@ -14,7 +14,7 @@ export default function OverlayPaused() {
     useContext(StoreContext);
 
   const hosts = useMemo<User[]>(
-    () => chainUsers.filter((u) => IsChainAdmin(u, chain)),
+    () => chainUsers.filter((u) => IsChainAdmin(u, chain?.uid)),
     [chainUsers, chain],
   );
 
