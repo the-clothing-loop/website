@@ -5,7 +5,6 @@ import {
   IonContent,
   IonButton,
   IonItem,
-  IonLabel,
   IonInput,
   IonIcon,
   IonText,
@@ -116,7 +115,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         history.replace("/settings", "select-loop");
       } catch (e: any) {
         console.error(e);
-        connError(e);
+        if (!(e?.status === 401)) connError(e);
         setVerifyState(State.error);
       }
     })();
@@ -246,7 +245,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         <IonFab vertical="bottom" horizontal="start">
           <IonFabButton
             color="clear"
-            onClick={() => history.goBack()}
+            onClick={() => history.replace("/onboarding/2")}
             className="ion-margin-bottom"
           >
             <IonIcon icon={arrowBack}></IonIcon>

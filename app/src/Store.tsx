@@ -19,7 +19,6 @@ import {
 } from "./api";
 import dayjs from "./dayjs";
 import { OverlayState } from "./utils/overlay_open";
-import { UseIonAlertResult, useIonAlert } from "@ionic/react";
 
 interface StorageAuth {
   user_uid: string;
@@ -58,7 +57,7 @@ export const StoreContext = createContext({
   closeOverlay: (s: OverlayState) => {},
   bagListView: "dynamic" as BagListView,
   setBagListView: (v: BagListView) => {},
-  connError: (err: any) => {},
+  connError: (err: any) => Promise.resolve(IsAuthenticated.Unknown),
 });
 
 const errLoopMustBeSelected =
@@ -100,13 +99,13 @@ export function StoreProvider({
 
   async function _logout() {
     window.plugins?.OneSignal?.removeExternalUserId();
-    logout().catch((err) => {
+    await logout().catch((err) => {
       console.warn(err);
     });
     window.axios.defaults.auth = undefined;
 
-    await storage.set("auth", null);
-    await storage.set("chain_uid", null);
+    await storage.set("auth", "");
+    await storage.set("chain_uid", "");
     setAuthUser(null);
     setChain(null);
     setListOfChains([]);
@@ -147,20 +146,14 @@ export function StoreProvider({
         _isAuthenticated = IsAuthenticated.LoggedIn;
       } else {
         // logout without clearing empty token
+        console.log("logout without clearing empty token");
         _isAuthenticated = IsAuthenticated.LoggedOut;
+        window.axios.defaults.auth = undefined;
         setIsAuthenticated(_isAuthenticated);
         return _isAuthenticated;
       }
     } catch (err: any) {
-      if (err.code && err.code === 401) {
-        // logout if unauthorized
-        await _logout();
-        return IsAuthenticated.LoggedOut;
-      }
-
-      _connError(err);
-      _isAuthenticated = IsAuthenticated.OfflineLoggedIn;
-      setIsAuthenticated(_isAuthenticated);
+      _isAuthenticated = await _connError(err);
       return _isAuthenticated;
     }
 
@@ -329,11 +322,8 @@ export function StoreProvider({
     } catch (err: any) {
       if (err === errLoopMustBeSelected) {
         throw err;
-      } else if (err?.status === 401) {
-        return _logout();
       } else {
-        _connError(err);
-        throw new Error("Unable to reach our servers", err);
+        await _connError(err);
       }
     }
   }
@@ -357,9 +347,14 @@ export function StoreProvider({
     storage.set("bag_list_view", v);
   }
 
-  function _connError(err: any) {
+  async function _connError(err: any) {
+    if (err?.status === 401) {
+      await _logout();
+      return IsAuthenticated.LoggedOut;
+    }
     console.log("Connection error");
     onIsOffline(err);
+    return IsAuthenticated.OfflineLoggedIn;
   }
 
   return (
