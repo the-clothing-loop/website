@@ -47,7 +47,7 @@ import "./theme/utilities.css";
 import "./theme/overrides.css";
 /* Theme changes for development */
 // import "./theme/dev.css";
-import { StoreContext } from "./Store";
+import { IsAuthenticated, StoreContext } from "./Store";
 import { PropsWithChildren, useContext, useEffect, useMemo } from "react";
 
 import HelpList from "./pages/HelpList";
@@ -56,7 +56,7 @@ import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
-import Loading from "./pages/Loading";
+import Loading from "./components/PrivateRoute/Loading";
 import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -67,6 +67,7 @@ import dayjs from "./dayjs";
 import { OneSignalInitCap } from "./onesignal";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import OpenSource from "./pages/OpenSource";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 SplashScreen.show({
   autoHide: false,
@@ -121,11 +122,10 @@ export default function App() {
   }, [chain]);
 
   async function auth() {
-    let success = false;
+    let success = IsAuthenticated.Unknown;
     try {
       await init();
-      await authenticate();
-      success = true;
+      success = await authenticate();
     } catch (err) {
       console.warn(err);
     }
@@ -149,6 +149,7 @@ export default function App() {
   return (
     <IonApp>
       <Switch location={location}>
+        <Redirect exact from="/login" to="/onboarding/3" />
         <Route path="/onboarding" component={OnboardingRoute} />
         <PrivateRoute isAuthenticated={isAuthenticated}>
           <AppRoute hasOldBag={hasOldBag} />
@@ -160,32 +161,6 @@ export default function App() {
 
 function eventCatchStoreErr(e: any) {
   console.log(e);
-}
-
-function PrivateRoute({
-  children,
-  isAuthenticated,
-  ...rest
-}: PropsWithChildren<{ isAuthenticated: boolean | null }>) {
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        isAuthenticated === null ? (
-          <Loading />
-        ) : isAuthenticated ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/onboarding",
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
-  );
 }
 
 function OnboardingRoute() {

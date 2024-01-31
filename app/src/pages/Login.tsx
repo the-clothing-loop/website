@@ -41,7 +41,7 @@ const KEYCODE_ENTER = 13;
 
 export default function Login(props: { isLoggedIn: boolean }) {
   const { t } = useTranslation();
-  const { login } = useContext(StoreContext);
+  const { login, connError } = useContext(StoreContext);
   const history = useHistory();
   const [present] = useIonToast();
 
@@ -78,9 +78,9 @@ export default function Login(props: { isLoggedIn: boolean }) {
           ) as any,
         );
         Keyboard.hide();
-      } catch (err) {
+      } catch (err: any) {
         setSentState(State.error);
-        toastError(present, err);
+        toastError(present, err?.statusText || err?.message);
         console.error(err);
       }
     })();
@@ -116,6 +116,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         history.replace("/settings", "select-loop");
       } catch (e: any) {
         console.error(e);
+        connError(e);
         setVerifyState(State.error);
       }
     })();

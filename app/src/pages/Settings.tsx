@@ -99,7 +99,7 @@ export default function Settings() {
     const chainUID = e.detail.value;
     const c = listOfChains.find((c) => c.uid === chainUID) || null;
 
-    setChain(c, authUser!.uid);
+    setChain(chainUID, authUser);
   }
 
   function handlePauseButton(isUserPaused: boolean) {
@@ -186,279 +186,277 @@ export default function Settings() {
           <IonTitle>{t("information")}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      {isAuthenticated === true ? (
-        <IonContent fullscreen color="light">
-          <IonItemDivider className="tw-relative ion-margin-start ion-margin-top ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
-            {t("account")}
-            <IonButton
-              fill="clear"
-              className="tw-absolute tw-top tw-right-0 tw-normal-case tw-mr-8 tw-text-base"
-              href={`https://www.clothingloop.org/${i18n.resolvedLanguage}/users/me/edit`}
-              target="_blank"
-            >
-              {t("edit")}
-              <IonIcon icon={openOutline} className="tw-text-sm tw-ml-1" />
-            </IonButton>
-          </IonItemDivider>
-          <IonCard className="tw-mt-1.5 tw-bg-background tw-relative">
-            {authUser ? (
-              <UserCard
-                user={authUser}
-                chain={chain}
-                isUserPaused={isUserPaused}
-              />
-            ) : null}
-            <IonList>
-              <IonItem
-                lines="none"
-                button
-                onClick={() => handlePauseButton(isUserPaused)}
-                detail={false}
-              >
-                <IonLabel className="ion-text-wrap">
-                  <h3 className="!tw-font-bold">{t("pauseParticipation")}</h3>
-                  <p className="ion-no-wrap">
-                    <span>
-                      {isUserPaused
-                        ? t("yourParticipationIsPausedClick")
-                        : t("setTimerForACoupleOfWeeks")}
-                    </span>
-                  </p>
-                  {pausedFromNow ? (
-                    <IonChip>
-                      <IonLabel>{pausedFromNow}</IonLabel>
-                    </IonChip>
-                  ) : null}
-                </IonLabel>
-                <IonToggle
-                  slot="end"
-                  className="ion-toggle-pause"
-                  color="medium"
-                  checked={isUserPaused}
-                  onIonChange={(e) => {
-                    e.target.checked = !e.detail.checked;
-                  }}
-                />
-              </IonItem>
-              <SelectPauseExpiryModal
-                modal={refSelectPauseExpiryModal}
-                submit={(d) => setPause(d)}
-              />
-            </IonList>
-          </IonCard>
+      <IonContent fullscreen color="light">
+        <IonItemDivider className="tw-relative ion-margin-start ion-margin-top ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
+          {t("account")}
+          <IonButton
+            fill="clear"
+            className="tw-absolute tw-top tw-right-0 tw-normal-case tw-mr-8 tw-text-base"
+            href={`https://www.clothingloop.org/${i18n.resolvedLanguage}/users/me/edit`}
+            target="_blank"
+          >
+            {t("edit")}
+            <IonIcon icon={openOutline} className="tw-text-sm tw-ml-1" />
+          </IonButton>
+        </IonItemDivider>
+        <IonCard className="tw-mt-1.5 tw-bg-background tw-relative">
+          {authUser ? (
+            <UserCard
+              user={authUser}
+              chain={chain}
+              isUserPaused={isUserPaused}
+            />
+          ) : null}
           <IonList>
-            <IonItemDivider className="ion-margin-start ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
-              {t("loopInformation")}
-            </IonItemDivider>
-            <IonCard className="tw-mt-1.5 tw-bg-background">
-              <IonList>
-                <IonItem lines="none">
-                  <IonSelect
-                    ref={refChainSelect}
-                    aria-label={t("selectALoop")}
-                    className="tw-text-2xl"
-                    labelPlacement="floating"
-                    justify="space-between"
-                    value={chain?.uid || ""}
-                    onIonChange={handleChainSelect}
-                    interface="action-sheet"
-                  >
-                    {listOfChains.map((c) => {
-                      return (
-                        <IonSelectOption value={c.uid} key={c.uid}>
-                          {c.name}
-                        </IonSelectOption>
-                      );
-                    })}
-                  </IonSelect>
-                </IonItem>
-                {chain && chain.is_app_disabled ? (
-                  <IonItem lines="none" color="danger">
-                    <IonIcon
-                      size="small"
-                      icon={isIos ? logoApple : logoAndroid}
-                    />
-                    <span className="ion-margin-end tw-ms-1.5">
-                      {t("loopIsNotUsingThisApp")}
-                    </span>
-                  </IonItem>
+            <IonItem
+              lines="none"
+              button
+              onClick={() => handlePauseButton(isUserPaused)}
+              detail={false}
+            >
+              <IonLabel className="ion-text-wrap">
+                <h3 className="!tw-font-bold">{t("pauseParticipation")}</h3>
+                <p className="ion-no-wrap">
+                  <span>
+                    {isUserPaused
+                      ? t("yourParticipationIsPausedClick")
+                      : t("setTimerForACoupleOfWeeks")}
+                  </span>
+                </p>
+                {pausedFromNow ? (
+                  <IonChip>
+                    <IonLabel>{pausedFromNow}</IonLabel>
+                  </IonChip>
                 ) : null}
-                {chain && (!chain.open_to_new_members || !chain.published) ? (
+              </IonLabel>
+              <IonToggle
+                slot="end"
+                className="ion-toggle-pause"
+                color="medium"
+                checked={isUserPaused}
+                onIonChange={(e) => {
+                  e.target.checked = !e.detail.checked;
+                }}
+              />
+            </IonItem>
+            <SelectPauseExpiryModal
+              modal={refSelectPauseExpiryModal}
+              submit={(d) => setPause(d)}
+            />
+          </IonList>
+        </IonCard>
+        <IonList>
+          <IonItemDivider className="ion-margin-start ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
+            {t("loopInformation")}
+          </IonItemDivider>
+          <IonCard className="tw-mt-1.5 tw-bg-background">
+            <IonList>
+              <IonItem lines="none">
+                <IonSelect
+                  ref={refChainSelect}
+                  aria-label={t("selectALoop")}
+                  className="tw-text-2xl"
+                  labelPlacement="floating"
+                  justify="space-between"
+                  value={chain?.uid || ""}
+                  onIonChange={handleChainSelect}
+                  interface="action-sheet"
+                >
+                  {listOfChains.map((c) => {
+                    return (
+                      <IonSelectOption value={c.uid} key={c.uid}>
+                        {c.name}
+                      </IonSelectOption>
+                    );
+                  })}
+                </IonSelect>
+              </IonItem>
+              {chain && chain.is_app_disabled ? (
+                <IonItem lines="none" color="danger">
+                  <IonIcon
+                    size="small"
+                    icon={isIos ? logoApple : logoAndroid}
+                  />
+                  <span className="ion-margin-end tw-ms-1.5">
+                    {t("loopIsNotUsingThisApp")}
+                  </span>
+                </IonItem>
+              ) : null}
+              {chain && (!chain.open_to_new_members || !chain.published) ? (
+                <IonItem
+                  lines="none"
+                  color={
+                    chain.published
+                      ? "warning"
+                      : chain.is_app_disabled
+                      ? "medium"
+                      : "danger"
+                  }
+                >
+                  {!chain.open_to_new_members ? (
+                    <>
+                      <IonIcon size="small" icon={lockClosedOutline} />
+                      <span key="closed" className="ion-margin-end tw-ms-1.5">
+                        {t("closed")}
+                      </span>
+                    </>
+                  ) : null}
+                  {!chain.published ? (
+                    <>
+                      <IonIcon size="small" icon={eyeOffOutline} />
+                      <span key="closed" className="tw-ms-1.5">
+                        {t("draft")}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <IonIcon size="small" icon={eyeOutline} />
+                      <span key="visible" className="tw-ms-1.5">
+                        {t("visible")}
+                      </span>
+                    </>
+                  )}
+                </IonItem>
+              ) : null}
+              {isChainAdmin && chain ? (
+                <>
                   <IonItem
                     lines="none"
-                    color={
-                      chain.published
-                        ? "warning"
-                        : chain.is_app_disabled
-                        ? "medium"
-                        : "danger"
-                    }
+                    button
+                    id="open-modal-theme"
+                    detail={false}
                   >
-                    {!chain.open_to_new_members ? (
-                      <>
-                        <IonIcon size="small" icon={lockClosedOutline} />
-                        <span key="closed" className="ion-margin-end tw-ms-1.5">
-                          {t("closed")}
-                        </span>
-                      </>
-                    ) : null}
-                    {!chain.published ? (
-                      <>
-                        <IonIcon size="small" icon={eyeOffOutline} />
-                        <span key="closed" className="tw-ms-1.5">
-                          {t("draft")}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <IonIcon size="small" icon={eyeOutline} />
-                        <span key="visible" className="tw-ms-1.5">
-                          {t("visible")}
-                        </span>
-                      </>
-                    )}
+                    <IonLabel>{t("setLoopTheme")}</IonLabel>
+                    <IonIcon slot="end" icon={sparkles} color="primary" />
                   </IonItem>
-                ) : null}
-                {isChainAdmin && chain ? (
-                  <>
-                    <IonItem
-                      lines="none"
-                      button
-                      id="open-modal-theme"
-                      detail={false}
-                    >
-                      <IonLabel>{t("setLoopTheme")}</IonLabel>
-                      <IonIcon slot="end" icon={sparkles} color="primary" />
-                    </IonItem>
-                    <Theme />
+                  <Theme />
 
-                    <IonItem
-                      lines="none"
-                      button
-                      detail={false}
-                      target="_blank"
-                      href={`https://www.clothingloop.org/loops/${chain.uid}/members`}
-                    >
-                      <IonLabel>{t("goToAdminPortal")}</IonLabel>
-                      <IonIcon icon={compassOutline} />
-                    </IonItem>
-                  </>
-                ) : null}
-                {chain?.published ? (
                   <IonItem
                     lines="none"
                     button
                     detail={false}
-                    onClick={handleShareLoop}
+                    target="_blank"
+                    href={`https://www.clothingloop.org/loops/${chain.uid}/members`}
                   >
-                    <IonLabel>{t("shareLoop")}</IonLabel>
-                    <IonIcon
-                      slot="end"
-                      icon={isCapacitor ? shareOutline : copyOutline}
-                    />
+                    <IonLabel>{t("goToAdminPortal")}</IonLabel>
+                    <IonIcon icon={compassOutline} />
                   </IonItem>
-                ) : null}
-                <IonItem lines="none" className="ion-align-items-start">
-                  <IonLabel>{t("interestedSizes")}</IonLabel>
-                  <div className="ion-margin-top ion-margin-bottom" slot="end">
-                    {chain ? (
-                      <Badges genders={chain.genders} sizes={chain.sizes} />
-                    ) : null}
-                  </div>
-                </IonItem>
-                <IonItem lines="none">
-                  <IonLabel>
-                    <h3>{t("description")}</h3>
-                    <p
-                      className={`tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
-                        !expandedDescription && showExpandButton
-                          ? "tw-max-h-[60px]"
-                          : ""
-                      }`}
-                    >
-                      {chain?.description}
-                    </p>
-                    {!expandedDescription && showExpandButton ? (
-                      <IonButton
-                        onClick={() => setExpandedDescription((s) => !s)}
-                        size="small"
-                        color="clear"
-                        expand="block"
-                        className="-tw-mt-1.5 tw-ps-0"
-                      >
-                        <IonIcon icon={ellipsisHorizontal} color="primary" />
-                      </IonButton>
-                    ) : null}
-                  </IonLabel>
-                </IonItem>
-              </IonList>
-            </IonCard>
-          </IonList>
-
-          <div className="ion-padding tw-mt-4">
-            <IonButton id="settings-logout-btn" expand="block" color="danger">
-              {t("logout")}
-            </IonButton>
-            <IonAlert
-              trigger="settings-logout-btn"
-              header={t("logout")!}
-              message={t("areYouSureYouWantToLogout")!}
-              buttons={[
-                {
-                  text: t("cancel"),
-                },
-                {
-                  text: t("logout"),
-                  role: "destructive",
-                  handler: logout,
-                },
-              ]}
-            ></IonAlert>
-          </div>
-          <IonText className="ion-text-center tw-block tw-text-medium tw-text-sm">
-            version: {VERSION}
-          </IonText>
-          <IonList className="ion-margin-top">
-            <IonItem
-              lines="full"
-              routerLink="/settings/privacy-policy"
-              style={{ "--border-width": "0.55px 0px 0.55px 0px" }}
-            >
-              <IonLabel color="medium">{t("privacyPolicy")}</IonLabel>
-            </IonItem>
-            <IonItem lines="full" routerLink="/settings/open-source">
-              <IonLabel color="medium">{t("openSource")}</IonLabel>
-            </IonItem>
-            <IonItem lines="none" detail={false}>
-              <IonLabel color="medium" className="ion-text-wrap">
-                <h3 className="mb-3">
-                  {t("deleteAccount")}
+                </>
+              ) : null}
+              {chain?.published ? (
+                <IonItem
+                  lines="none"
+                  button
+                  detail={false}
+                  onClick={handleShareLoop}
+                >
+                  <IonLabel>{t("shareLoop")}</IonLabel>
                   <IonIcon
-                    color="danger"
-                    icon={warningOutline}
-                    className="tw-ml-1"
+                    slot="end"
+                    icon={isCapacitor ? shareOutline : copyOutline}
                   />
-                </h3>
-                <p>
-                  <Trans
-                    t={t}
-                    i18nKey="deleteAccountExplanation"
-                    components={{
-                      "1": (
-                        <a
-                          href="https://clothingloop.org/admin/dashboard"
-                          target="_blank"
-                          className="tw-text-danger tw-font-medium"
-                        />
-                      ),
-                    }}
-                  />
-                </p>
-              </IonLabel>
-            </IonItem>
-          </IonList>
-        </IonContent>
-      ) : null}
+                </IonItem>
+              ) : null}
+              <IonItem lines="none" className="ion-align-items-start">
+                <IonLabel>{t("interestedSizes")}</IonLabel>
+                <div className="ion-margin-top ion-margin-bottom" slot="end">
+                  {chain ? (
+                    <Badges genders={chain.genders} sizes={chain.sizes} />
+                  ) : null}
+                </div>
+              </IonItem>
+              <IonItem lines="none">
+                <IonLabel>
+                  <h3>{t("description")}</h3>
+                  <p
+                    className={`tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
+                      !expandedDescription && showExpandButton
+                        ? "tw-max-h-[60px]"
+                        : ""
+                    }`}
+                  >
+                    {chain?.description}
+                  </p>
+                  {!expandedDescription && showExpandButton ? (
+                    <IonButton
+                      onClick={() => setExpandedDescription((s) => !s)}
+                      size="small"
+                      color="clear"
+                      expand="block"
+                      className="-tw-mt-1.5 tw-ps-0"
+                    >
+                      <IonIcon icon={ellipsisHorizontal} color="primary" />
+                    </IonButton>
+                  ) : null}
+                </IonLabel>
+              </IonItem>
+            </IonList>
+          </IonCard>
+        </IonList>
+
+        <div className="ion-padding tw-mt-4">
+          <IonButton id="settings-logout-btn" expand="block" color="danger">
+            {t("logout")}
+          </IonButton>
+          <IonAlert
+            trigger="settings-logout-btn"
+            header={t("logout")!}
+            message={t("areYouSureYouWantToLogout")!}
+            buttons={[
+              {
+                text: t("cancel"),
+              },
+              {
+                text: t("logout"),
+                role: "destructive",
+                handler: logout,
+              },
+            ]}
+          ></IonAlert>
+        </div>
+        <IonText className="ion-text-center tw-block tw-text-medium tw-text-sm">
+          version: {VERSION}
+        </IonText>
+        <IonList className="ion-margin-top">
+          <IonItem
+            lines="full"
+            routerLink="/settings/privacy-policy"
+            style={{ "--border-width": "0.55px 0px 0.55px 0px" }}
+          >
+            <IonLabel color="medium">{t("privacyPolicy")}</IonLabel>
+          </IonItem>
+          <IonItem lines="full" routerLink="/settings/open-source">
+            <IonLabel color="medium">{t("openSource")}</IonLabel>
+          </IonItem>
+          <IonItem lines="none" detail={false}>
+            <IonLabel color="medium" className="ion-text-wrap">
+              <h3 className="mb-3">
+                {t("deleteAccount")}
+                <IonIcon
+                  color="danger"
+                  icon={warningOutline}
+                  className="tw-ml-1"
+                />
+              </h3>
+              <p>
+                <Trans
+                  t={t}
+                  i18nKey="deleteAccountExplanation"
+                  components={{
+                    "1": (
+                      <a
+                        href="https://clothingloop.org/admin/dashboard"
+                        target="_blank"
+                        className="tw-text-danger tw-font-medium"
+                      />
+                    ),
+                  }}
+                />
+              </p>
+            </IonLabel>
+          </IonItem>
+        </IonList>
+      </IonContent>
     </IonPage>
   );
 }

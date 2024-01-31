@@ -51,7 +51,7 @@ export default function BulkyList() {
       await bulkyItemRemove(chain!.uid, authUser!.uid, id).catch((err) => {
         toastError(present, err);
       });
-      await setChain(chain, authUser!.uid);
+      await setChain(chain?.uid, authUser);
     };
     presentAlert({
       header: t("deleteBulkyItem"),
