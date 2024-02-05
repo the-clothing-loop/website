@@ -1,10 +1,14 @@
 import { Helmet } from "react-helmet";
 import { useState, useContext, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 
 import { Event } from "../api/types";
-import { eventGetAll, eventGetPrevious } from "../api/event";
+import {
+  EventGetPreviousResponse,
+  eventGetAll,
+  eventGetPrevious,
+} from "../api/event";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import { SizeBadges } from "../components/Badges";
 import useForm from "../util/form.hooks";
@@ -38,7 +42,10 @@ export default function Events() {
   const { addToastError, addModal } = useContext(ToastContext);
   const authUser = useContext(AuthContext).authUser;
   const [events, setEvents] = useState<Event[] | null>(null);
-  const [prevEvents, setPrevEvents] = useState<Event[] | null>(null);
+  const [prevEvents, setPrevEvents] = useState<EventGetPreviousResponse | null>(
+    null
+  );
+  const [nMorePrevEvents, setNMorePrevEvents] = useState(0);
   const [values, setValue, setValues] = useForm<SearchValues>(() => {
     const urlParams = new URLSearchParams("/events");
     let latitude =
@@ -85,12 +92,22 @@ export default function Events() {
     try {
       const [allData, prevData] = await Promise.all([
         eventGetAll({ latitude, longitude, radius }),
-        eventGetPrevious({ latitude, longitude, radius }),
+        eventGetPrevious({ latitude, longitude, radius, include_total: true }),
       ]);
 
       const filterFunc = createFilterFunc(filterGenders);
       setEvents(allData.data?.filter(filterFunc));
       setPrevEvents(prevData.data);
+
+      {
+        let nMorePrevEvents = 0;
+        if (prevData.data?.previous_events) {
+          nMorePrevEvents =
+            prevData.data.previous_total - prevData.data.previous_events.length;
+          if (nMorePrevEvents < 0) nMorePrevEvents = 0;
+        }
+        setNMorePrevEvents(nMorePrevEvents);
+      }
     } catch (err: any) {
       addToastError(GinParseErrors(t, err), err.status);
     }
@@ -236,7 +253,7 @@ export default function Events() {
                 ))}
             </div>
           )}
-          {prevEvents ? (
+          {prevEvents?.previous_events ? (
             <div key="event-prev">
               <div className="sticky top-0 z-20 bg-white/50 flex justify-center">
                 <h4
@@ -249,7 +266,7 @@ export default function Events() {
                 </h4>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-70">
-                {prevEvents
+                {prevEvents.previous_events
                   .sort((a, b) =>
                     new Date(a.date) < new Date(b.date) ? 1 : -1
                   )
@@ -257,6 +274,23 @@ export default function Events() {
                     <EventItem event={event} key={event.uid} />
                   ))}
               </div>
+              {nMorePrevEvents ? (
+                <div className="flex justify-center">
+                  <h4 className="font-semibold text-black/90 px-3 my-6">
+                    <Trans
+                      i18nKey="nMoreEventsPrev"
+                      values={{
+                        n: nMorePrevEvents,
+                      }}
+                      components={{
+                        s: (
+                          <span className="text-4xl text-accent ms-1.5 me-0.5" />
+                        ),
+                      }}
+                    />
+                  </h4>
+                </div>
+              ) : null}
             </div>
           ) : null}
         </div>
@@ -308,37 +342,60 @@ function EventItem({ event }: { event: Event }) {
       ? event.price_value
       : event.price_value.toFixed(2);
 
+  let isSfSeason2024 =
+    date.isAfter("2024-01-01") && date.isBefore("2024-03-01");
+
   let image = ClothesImage;
   if (event.image_url) image = event.image_url;
   return (
     <article className="flex flex-col bg-teal-light">
-      <Link to={eventURL} className="relative aspect-[4/3] overflow-hidden">
-        <div className=" text-md absolute mt-4 right-4 text-center z-10">
-          <p className="bg-teal text-white py-2 px-3">
-            <span className="inline-block pr-1 font-extrabold">
-              {date.format("MMMM")}
-            </span>
-            <span>{" " + date.format("D")}</span>
-          </p>
-          {event.price_currency ? (
-            <p className="py-1 px-3 bg-yellow-dark text-black">
-              <span className="inline-block pr-1 font-bold">
-                {event.price_currency}
+      <div className="relative flex">
+        <Link to={eventURL} className="relative aspect-[4/3] overflow-hidden">
+          <div className=" text-md absolute mt-4 right-4 text-center z-10">
+            <p className="bg-teal text-white py-2 px-3">
+              <span className="inline-block pr-1 font-extrabold">
+                {date.format("MMMM")}
               </span>
-              <span className="inline-block pr-1 font-bold">
-                {eventPriceValue}
-              </span>
+              <span>{" " + date.format("D")}</span>
             </p>
-          ) : (
-            <p className="py-1 px-3 bg-white/90 text-black">
-              <span className="inline-block pr-1 font-semibold">
-                {t("priceFree")}
-              </span>
-            </p>
-          )}
-        </div>
-        <img src={image} className="w-full h-full object-cover" />
-      </Link>
+            {event.price_currency ? (
+              <p className="py-1 px-3 bg-yellow-dark text-black">
+                <span className="inline-block pr-1 font-bold">
+                  {event.price_currency}
+                </span>
+                <span className="inline-block pr-1 font-bold">
+                  {eventPriceValue}
+                </span>
+              </p>
+            ) : (
+              <p className="py-1 px-3 bg-white/90 text-black">
+                <span className="inline-block pr-1 font-semibold">
+                  {t("priceFree")}
+                </span>
+              </p>
+            )}
+          </div>
+          <img
+            src={image}
+            className="w-full h-full object-cover"
+            alt="event cover image"
+          />
+        </Link>
+        {isSfSeason2024 ? (
+          <a
+            target="_blank"
+            href="https://slowfashion.global/campaign-sfm/"
+            className="absolute -bottom-4 left-2 group"
+          >
+            <span className="group-hover:animate-[ping-sm_1s_ease-in-out_1] absolute inline-flex h-full w-full rounded-full bg-purple-light opacity-0 group-hover:opacity-75"></span>
+            <img
+              src="https://images.clothingloop.org/192x192/sf_season_2024.png"
+              className="w-24 rotate-[-22deg]"
+              alt="Part of Slow Fashion Season 2024"
+            />
+          </a>
+        ) : null}
+      </div>
 
       <div className="m-4 mb-2">
         <h2 className="text-xl text-teal font-bold">

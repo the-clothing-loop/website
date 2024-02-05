@@ -79,6 +79,7 @@ export interface Chain {
   open_to_new_members: boolean;
   rules_override?: string;
   theme?: string;
+  is_app_disabled?: boolean;
 }
 
 export interface Bag {
@@ -100,14 +101,23 @@ export interface BulkyItem {
 }
 
 export const bagColors = [
+  "#C9843E",
   "#f4b63f",
-  "#a6c665",
-  "#1467b3",
-  "#3c3c3b",
+  "#79A02D",
   "#66926e",
-  "#c73643",
-  "#dc77a3",
+  "#199FBA",
+  "#6494C2",
+  "#1467b3",
+  "#a899c2",
   "#513484",
+  "#B37EAD",
+  "#b76dac",
+  "#F57BB0",
+  "#A35C7B",
+  "#E38C95",
+  "#c73643",
+  "#7D7D7D",
+  "#3c3c3b",
 ];
 
 window.axios = redaxios.create({
@@ -141,9 +151,19 @@ export function userGetByUID(chainUID: string | undefined, userUID: string) {
   return window.axios.get<User>("/v2/user", { params });
 }
 
-export function chainGet(chainUID: UID, addRules = false, addTheme = false) {
+export function chainGet(
+  chainUID: UID,
+  addRules = false,
+  addTheme = false,
+  addIsAppDisabled = false,
+) {
   return window.axios.get<Chain>("/v2/chain", {
-    params: { chain_uid: chainUID, add_rules: addRules, add_theme: addTheme },
+    params: {
+      chain_uid: chainUID,
+      add_rules: addRules,
+      add_theme: addTheme,
+      add_is_app_disabled: addIsAppDisabled,
+    },
   });
 }
 

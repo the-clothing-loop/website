@@ -8,12 +8,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import {
-  checkmark,
-  checkmarkCircle,
-  checkmarkSharp,
-  ellipse,
-} from "ionicons/icons";
+import { checkmarkCircle, checkmarkSharp, ellipse } from "ionicons/icons";
 import { useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
@@ -36,11 +31,13 @@ export default function Theme() {
   function setSelectedTheme(color: string) {
     const bodyEl = document.getElementsByTagName("body")[0];
     bodyEl.setAttribute("data-theme", color);
+    if (color === "grey") color = "default";
     _setSelectedTheme(color);
   }
 
   function willPresent() {
     let theme = chain?.theme || "default";
+    if (theme === "grey") theme = "default";
     console.log("Modal init", theme);
     _setSelectedTheme(theme);
     setPreviousTheme(theme);
@@ -60,8 +57,8 @@ export default function Theme() {
       trigger="open-modal-theme"
       onIonModalWillPresent={willPresent}
       onIonModalDidDismiss={didDismiss}
-      initialBreakpoint={0.25}
-      breakpoints={[0, 0.25, 0.5]}
+      initialBreakpoint={0.35}
+      breakpoints={[0, 0.35, 0.5]}
     >
       <IonToolbar>
         <IonButtons slot="start">

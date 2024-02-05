@@ -9,11 +9,16 @@ import { PhoneFormField } from "./FormFields";
 import useForm from "../util/form.hooks";
 import { ToastContext } from "../providers/ToastProvider";
 import PopoverOnHover from "./Popover";
-import { userGetByUID, userHasNewsletter } from "../api/user";
+import {
+  userCheckEmailExists,
+  userGetByUID,
+  userHasNewsletter,
+} from "../api/user";
 
 import { isValidPhoneNumber } from "react-phone-number-input/max";
 import { AuthContext } from "../providers/AuthProvider";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import { CoordsFromMapbox } from "../util/maps";
 
 export interface ValuesForm {
   name: string;
@@ -36,6 +41,7 @@ export default function AddressForm(props: {
   showTosPrivacyPolicy?: boolean;
   showNewsletter?: boolean;
   onlyShowEditableAddress?: boolean;
+  onEmailExist?: (email: string) => void;
 }) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -71,7 +77,7 @@ export default function AddressForm(props: {
       (async () => {
         try {
           const [userReq, hasNewsletterReq] = await Promise.all([
-            userGetByUID(props.chainUID, props!.userUID!),
+            userGetByUID(props.chainUID, props!.userUID!, false),
             userHasNewsletter(props.chainUID, props.userUID!),
           ]);
           const user = userReq.data;
@@ -107,7 +113,7 @@ export default function AddressForm(props: {
 
     (async () => {
       if (!isValidPhoneNumber(values.phone)) {
-        addToastError(t("required") + ": " + t("phoneNumber"), 400);
+        addToastError(t("enterValidPhoneNumberWithCountryCode"), 400);
         return;
       }
       if (openAddress) {
@@ -136,8 +142,9 @@ export default function AddressForm(props: {
           }
         }
         if (mapboxResult) {
-          values.latitude = mapboxResult.geometry.coordinates[0];
-          values.longitude = mapboxResult.geometry.coordinates[1];
+          let coords = CoordsFromMapbox(mapboxResult.geometry.coordinates);
+          values.latitude = coords.latitude;
+          values.longitude = coords.longitude;
         }
 
         if (!(address.street && address.city && address.country)) {
@@ -191,6 +198,15 @@ export default function AddressForm(props: {
     })();
   }
 
+  async function checkEmail(email: string) {
+    if (!props.onEmailExist || !email) return;
+
+    const response = await userCheckEmailExists(email);
+    const exists = response.data;
+
+    if (exists) props.onEmailExist(email);
+  }
+
   return (
     <div className={props.classes}>
       <form
@@ -223,6 +239,7 @@ export default function AddressForm(props: {
             min={2}
             value={values.email}
             onChange={(e) => setValue("email", e.target.value)}
+            onBlur={(e) => checkEmail(e.target.value)}
           />
         ) : null}
 
@@ -230,7 +247,7 @@ export default function AddressForm(props: {
           <div className="">
             <address>{values.address}</address>
             <label className="btn btn-ghost">
-              <span className="">{t("edit")}</span>
+              <span className="">{t("editAddress")}</span>
 
               <input
                 type="checkbox"

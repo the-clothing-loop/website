@@ -106,6 +106,7 @@ func Routes() *gin.Engine {
 	v2.PATCH("/user", controllers.UserUpdate)
 	v2.DELETE("/user/purge", controllers.UserPurge)
 	v2.POST("/user/transfer-chain", controllers.UserTransferChain)
+	v2.GET("/user/check-email", controllers.UserCheckIfEmailExists)
 
 	// chain
 	v2.GET("/chain", controllers.ChainGet)
@@ -138,6 +139,7 @@ func Routes() *gin.Engine {
 	v2.GET("/route/order", controllers.RouteOrderGet)
 	v2.POST("/route/order", controllers.RouteOrderSet)
 	v2.GET("/route/optimize", controllers.RouteOptimize)
+	v2.GET("/route/coordinates", controllers.GetRouteCoordinates)
 
 	// contact
 	v2.POST("/contact/newsletter", controllers.ContactNewsletter)

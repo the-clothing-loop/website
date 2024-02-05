@@ -180,7 +180,7 @@ func TestEmailLoginVerificationWebsite(t *testing.T) {
 			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			faker.UUID().V4(),
-			false)
+			false, faker.UUID().V4())
 		assert.Nil(t, err)
 	})
 }
@@ -190,7 +190,7 @@ func TestEmailLoginVerificationApp(t *testing.T) {
 			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			fmt.Sprintf("%08d", faker.RandomNumber(8)),
-			true)
+			true, "")
 		assert.Nil(t, err)
 	})
 }
@@ -201,6 +201,7 @@ func TestEmailLoopIsDeleted(t *testing.T) {
 			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			faker.Company().Name(),
+			faker.Bool(),
 		)
 		assert.Nil(t, err)
 	})

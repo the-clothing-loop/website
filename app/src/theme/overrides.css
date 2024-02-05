@@ -46,3 +46,41 @@
 .ion-toggle-pause {
   --handle-background-checked: url(/icons/pause-small-outline.svg), #fff;
 }
+
+ion-tab-button {
+  display: block;
+  --color: var(--ion-color-light);
+  --color-selected: var(--ion-color-light);
+  @media (prefers-color-scheme: dark) {
+    --color: var(--ion-color-step-100);
+    --color-selected: var(--ion-color-step-50);
+  }
+  background: var(--ion-tab-bar-background);
+}
+body[data-theme="default"] ion-tab-button {
+  --color: var(--ion-color-dark-tint) !important;
+  --color-selected: var(--ion-color-primary) !important;
+  @media (prefers-color-scheme: dark) {
+    --color: var(--ion-color-medium-tint) !important;
+    --color-selected: var(--ion-color-primary-tint) !important;
+  }
+}
+ion-tab-button.tab-selected {
+  filter: brightness(115%);
+}
+ion-tab-bar {
+  background: var(--ion-color-primary);
+}
+body[data-theme="default"] ion-tab-bar {
+  --ion-tab-bar-background: var(--ion-color-light);
+  --color: var(--ion-color-light-contrast);
+}
+
+ion-button {
+  /* color: var(--ion-text-color-rgb); */
+  --border-radius: 0 !important;
+}
+
+.ion-cloned-element.ios.title-large {
+  @apply tw-font-serif;
+}

@@ -1,15 +1,13 @@
-// Material
+import { useRef } from "react";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 
-// Project resources
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Testimonials from "../components/Testimonials";
 import StandaloneSearchBar from "../components/FindChain/StandaloneSearchBar";
 import useIntersectionObserver from "../components/Counters/hooks";
-import { useRef } from "react";
 
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
@@ -79,13 +77,19 @@ export default function Home() {
       logo: "https://images.clothingloop.org/x120/de_duurzame_100.jpg",
       url: "https://verhalen.trouw.nl/duurzame100/",
       alt: "Trouw - Duurzame 100",
-      class: "w-1/2 md:w-4/12 lg:w-3/6",
+      class: "w-1/2 md:w-4/12 lg:w-2/6",
     },
     {
       logo: "https://images.clothingloop.org/120x/duurzame_dinsdag.jpg",
       url: "https://www.duurzamedinsdag.nl/",
       alt: "Duurzame dinsdag",
-      class: "w-1/2 md:w-4/12 lg:w-3/6",
+      class: "w-1/2 md:w-1/2 lg:w-2/6",
+    },
+    {
+      logo: "https://images.clothingloop.org/140x/zerowastelogo.png",
+      url: "https://zerowastenederland.nl/",
+      alt: "Zero Waste Nederland",
+      class: "pt-4 md:pt-0 w-full md:w-1/2 lg:w-2/6",
     },
   ];
 
@@ -202,7 +206,7 @@ export default function Home() {
                   }`}
                 >
                   <img
-                    src="https://images.clothingloop.org/600x,jpeg/map_image_3.png"
+                    src="https://images.clothingloop.org/600x,jpeg/map_image_5.jpg"
                     alt="map"
                   />
                 </Link>

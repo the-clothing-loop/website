@@ -18,3 +18,16 @@ export function routeOptimizeOrder(chainUID: UID) {
     params: { chain_uid: chainUID },
   });
 }
+
+export interface RouteCoordinate {
+  user_uid: string;
+  latitude: number;
+  longitude: number;
+  route_order: number;
+}
+
+export function routeCoordinates(chainUID: UID) {
+  return window.axios.get<RouteCoordinate[]>("/v2/route/coordinates", {
+    params: { chain_uid: chainUID },
+  });
+}

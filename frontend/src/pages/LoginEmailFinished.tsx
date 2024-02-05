@@ -14,7 +14,9 @@ export default function LoginEmailFinished() {
   const history = useHistory();
 
   const search = useLocation().search;
-  const apiKey = new URLSearchParams(search).get("apiKey");
+  const query = new URLSearchParams(search);
+  const apiKey = query.get("apiKey");
+  const chainUID = query.get("c") || "";
   const { authLoginValidate } = useContext(AuthContext);
   const { addToast, addToastError } = useContext(ToastContext);
 
@@ -25,7 +27,7 @@ export default function LoginEmailFinished() {
         if (!apiKey) {
           throw "apiKey does not exist";
         }
-        user = await authLoginValidate(apiKey!);
+        user = await authLoginValidate(apiKey!, chainUID);
         addToast({
           message: t("userIsLoggedIn"),
           type: "success",
@@ -34,7 +36,12 @@ export default function LoginEmailFinished() {
         if (user?.i18n) {
           i18n.changeLanguage(user.i18n);
         }
-        history.replace("/admin/dashboard");
+
+        if (chainUID) {
+          history.replace("/thankyou/");
+        } else {
+          history.replace("/admin/dashboard");
+        }
       } catch (err: any) {
         addToastError(t("errorLoggingIn"), 401);
         console.error("Error logging in", err);

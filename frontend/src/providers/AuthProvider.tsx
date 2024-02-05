@@ -25,7 +25,10 @@ export type AuthProps = {
   authUser: User | null | undefined;
   // ? Should loading only be used for authentication or also for login & logout?
   loading: boolean;
-  authLoginValidate: (apiKey: string) => Promise<undefined | User>;
+  authLoginValidate: (
+    apiKey: string,
+    chainUID: string
+  ) => Promise<undefined | User>;
   authLogout: () => Promise<void>;
   authUserRefresh: () => Promise<UserRefreshState>;
 };
@@ -33,7 +36,7 @@ export type AuthProps = {
 export const AuthContext = createContext<AuthProps>({
   authUser: undefined,
   loading: true,
-  authLoginValidate: (apiKey) => Promise.reject(),
+  authLoginValidate: (apiKey, c) => Promise.reject(),
   authLogout: () => Promise.reject(),
   authUserRefresh: () => Promise.reject(UserRefreshState.NeverLoggedIn),
 });
@@ -48,12 +51,12 @@ const cookieOptions: Cookies.CookieAttributes = {
 export function AuthProvider({ children }: PropsWithChildren<{}>) {
   const [user, setUser] = useState<AuthProps["authUser"]>(undefined);
   const [loading, setLoading] = useState(true);
-  function authLoginValidate(apiKey: string) {
+  function authLoginValidate(apiKey: string, chainUID: string) {
     setLoading(true);
     return (async () => {
       let _user: User | null | undefined = undefined;
       try {
-        _user = (await apiLogin(apiKey)).data.user;
+        _user = (await apiLogin(apiKey, chainUID)).data.user;
         Cookies.set(KEY_USER_UID, _user.uid, cookieOptions);
       } catch (err) {
         setUser(null);
@@ -70,6 +73,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     return (async () => {
       await apiLogout().catch((e) => console.warn(e));
       Cookies.remove(KEY_USER_UID, cookieOptions);
+      window.localStorage.removeItem("route_map_line");
       setUser(null);
       setLoading(false);
     })();
@@ -88,14 +92,17 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
       }
 
       try {
-        const user = (await userGetByUID(undefined, oldUserUID)).data;
+        const user = (await userGetByUID(undefined, oldUserUID, true)).data;
         setUser(user);
 
         Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
         setLoading(false);
-        if (user.i18n && user.i18n !== i18n.language) {
+        const isChanged = user.i18n ? user.i18n !== i18n.language : false;
+        const isUnset = !user.i18n;
+        if (!isUnset && isChanged) {
           i18n.changeLanguage(user.i18n);
-        } else {
+        }
+        if (isUnset || isChanged) {
           userUpdate({
             user_uid: user.uid,
             i18n: i18n.language,

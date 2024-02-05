@@ -36,6 +36,8 @@ type User struct {
 	I18n            string          `json:"i18n"`
 	Latitude        float64         `json:"-"`
 	Longitude       float64         `json:"-"`
+	AcceptedTOH     bool            `json:"-"`
+	AcceptedTOHJSON *bool           `json:"accepted_toh,omitempty" gorm:"-:migration;<-:false"`
 }
 
 func (u *User) AddUserChainsToObject(db *gorm.DB) error {
@@ -114,11 +116,23 @@ LIMIT 1
 	return e, nil
 }
 
+func (u *User) SetAcceptedTOH() {
+	u.AcceptedTOHJSON = &u.AcceptedTOH
+}
+
+func (u *User) AcceptTOH(db *gorm.DB) error {
+	if !u.AcceptedTOH {
+		return db.Exec(`UPDATE users SET accepted_toh = TRUE WHERE id = ?`, u.ID).Error
+	}
+	return nil
+}
+
 type UserContactData struct {
-	Name      string      `gorm:"name"`
-	Email     zero.String `gorm:"email"`
-	I18n      string      `gorm:"i18n"`
-	ChainName string      `gorm:"chain_name"`
+	Name       string      `gorm:"name"`
+	Email      zero.String `gorm:"email"`
+	I18n       string      `gorm:"i18n"`
+	ChainName  string      `gorm:"chain_name"`
+	IsApproved bool        `gorm:"is_approved"`
 }
 
 // Expects the userUID not to be empty
@@ -185,4 +199,24 @@ WHERE user_chains.chain_id = ? AND users.is_email_verified = TRUE
 		return nil, err
 	}
 	return results, nil
+}
+
+func UserCheckEmail(db *gorm.DB, userEmail string) (userID uint, found bool, err error) {
+	if userEmail == "" {
+		return 0, false, errors.New("Email is required")
+	}
+
+	var row struct {
+		ID uint `gorm:"id"`
+	}
+
+	query := `SELECT id FROM users WHERE email = ? LIMIT 1`
+	err = db.Raw(query, userEmail).First(&row).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 0, false, nil
+		}
+		return 0, false, err
+	}
+	return row.ID, true, nil
 }

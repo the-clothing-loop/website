@@ -1,0 +1,40 @@
+name: Deploy Acceptance App
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - app/**
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.5
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Install Dependencies app
+        run: npm ci
+        working-directory: ./app
+      - name: Build public files
+        run: npm run build:acceptance
+        working-directory: ./app
+      - name: Install SSH key
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
+        with:
+          private-key: ${{ secrets.VPS1_PRIVKEY }}
+          known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
+      - name: Send public files to vps
+        run: |
+          ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-app-acceptance"
+          rsync -az --delete ./app/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-app-acceptance/
+          ssh admin@vpsnode1.vps.webdock.cloud "\
+          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-app-acceptance/ /var/caddy/acc.app.clothingloop.org/; \
+          sudo systemctl reload caddy"
+          echo "done"

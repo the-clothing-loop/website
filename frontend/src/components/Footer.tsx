@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 //Project resources
@@ -22,6 +22,8 @@ export default function Footer() {
   const addCopyAttributes = useToClipboard();
   const currentYear = new Date().getFullYear();
   const [mobileOS, setMobileOS] = useState<MobileOS>(MobileOS.OTHER);
+  const location = useLocation();
+
   useEffect(() => {
     const detectMobileOS = () => {
       const userAgent = navigator.userAgent || navigator.vendor;
@@ -40,6 +42,8 @@ export default function Footer() {
     const os = detectMobileOS();
     setMobileOS(os);
   }, []);
+
+  let isFindPage = location.pathname.includes("/loops/find");
   return (
     <footer className="bg-white pt-8 lg:pt-16 w-full">
       <div className="relative">
@@ -47,7 +51,11 @@ export default function Footer() {
           className="absolute hidden lg:block top-0 ltr:right-0 rtl:left-0 bottom-0 bg-teal-light w-1/2"
           aria-hidden
         ></div>
-        <div className="lg:container lg:px-20 mx-auto flex flex-col lg:flex-row-reverse relative z-10">
+        <div
+          className={`lg:container lg:px-20 mx-auto flex ${
+            isFindPage ? "flex-col-reverse" : "flex-col"
+          } lg:flex-row-reverse relative z-10`}
+        >
           <Newsletter />
 
           <div className="container mx-auto lg:mx-0 lg:w-1/2 pt-6">
@@ -64,6 +72,9 @@ export default function Footer() {
                 </Link>
                 <Link className="link link-hover mb-1" to="/about">
                   {t("about")}
+                </Link>
+                <Link className="link link-hover mb-1" to="/contribute">
+                  {t("contribute")}
                 </Link>
               </div>
               <div className="flex flex-col items-center md:items-start px-3 pb-6 pt-0">
@@ -205,18 +216,16 @@ export default function Footer() {
             </Link>
             <Link
               className="btn btn-ghost text-white text-base font-normal"
+              to="/terms-of-hosts"
+            >
+              {t("termsOfHosts")}
+            </Link>
+            <Link
+              className="btn btn-ghost text-white text-base font-normal"
               to="/privacy-policy"
             >
               {t("privacy")}
             </Link>
-            <a
-              className="btn btn-ghost text-white text-base font-normal"
-              href="https://github.com/the-clothing-loop/website"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {t("contribute")}
-            </a>
           </div>
 
           <p className="text-center sm:text-right" aria-label="copyright">

@@ -14,6 +14,7 @@ export interface User {
   i18n: string;
   longitude?: number;
   latitude?: number;
+  accepted_toh?: boolean;
 }
 
 export interface Bag {
@@ -45,9 +46,11 @@ export interface Chain {
   sizes: string[] | null;
   published: boolean;
   open_to_new_members: boolean;
-  rules_override?: string;
   total_members?: number;
   total_hosts?: number;
+  rules_override?: string;
+  theme?: string;
+  is_app_disabled?: boolean;
 }
 
 export interface Event {

@@ -32,10 +32,41 @@
     "7": {
       "question": "Je reçois le message d'erreur : \"votre compte existe déjà\".",
       "answer": "Vous avez déjà créé un compte dans le Clothing Loop. Pour vous inscrire à un nouveau Loop, vous devez d'abord vous connecter :<ol><li>Cliquez en haut à droite sur login.</li><li>Entrez l'adresse e-mail que vous avez utilisée pour enregistrer votre Loop.</li><li>Vérifiez votre e-mail (et votre fichier spam !) pour notre lien de vérification. Nous utilisons un lien au lieu d'un mot de passe !</li><li>Vous pourrez alors vous inscrire pour un nouveau Loop.</li></ol>"
+    }
+  },
+  "faqForApp": "FAQ for the App",
+  "arrApp": {
+    "0": {
+      "question": "What is the Clothing Loop App?",
+      "answer": "<strong>The Clothing Loop App is made to make organizing a Loop easier.</strong> You can start using the app, if you are part of a Loop. A host can decide together with the participants if they want to start using the app to organize their Loop.<br/>In the app: you can find the rules of your local Loop, you can find out who to bring the bag to next, where the bags are and post bulky items that do not fit into the bag."
     },
-    "8": {
-      "question": "Do I need to pay to join the Clothing Loop?",
-      "answer": "No, you do not have to pay to participate in the Clothing Loop. The Clothing Loop is an initiative that wants to make clothes swapping easy and accessible. As a participant, you “pay” with your clothes. Make sure that if you add clothes to your local Loop, they are gems that can be worn again. If you have saved money by participating in the Clothing Loop and/or want to support the Clothing Loop movement and our mission, you can of course always <a href='/donate'>donate here</a>."
+    "1": {
+      "question": "Where can I find the app?",
+      "answer": "You can find the app in <a target='_blank' href='https://play.google.com/store/apps/details?id=org.clothingloop.app'>Google Playstore</a>, <a target='_blank' href='https://apps.apple.com/us/app/my-clothing-loop/id6451443500'>Apple Appstore</a>, or as web-version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>"
+    },
+    "2": {
+      "question": "Can I change the Rules in the App?",
+      "answer": "Yes, <strong>as a host you are able to change, adjust, and add rules in the App</strong>. Participants are not able to change the rules. To change the rules, click in the upper right corner on Change. After you have changed the rules, click on Save to save your changes."
+    },
+    "3": {
+      "question": "Which addresses can I see?",
+      "answer": "As a host, you can see everybody's information in your Loop. As a participant, you can only see the information of the two participants before and after you. A participant is also able to see the information of a host."
+    },
+    "4": {
+      "question": "How to set a bag to my name?",
+      "answer": "If you have received a bag, you can set a bag to your name in the tab of Bags. Click on the picture of the Bag and search for your name. Also, note the date of when the bag arrived. It is important to note that you have received the bag every time."
+    },
+    "5": {
+      "question": "What are Bulky Items (like winter coats)?",
+      "answer": "<strong>Big items that are too big for the bag can be photographed and shared.</strong> Click on Create, make a title and description, and create a new Bulky Item. Other participants then can click on your name to find your information. In a private message, participants can respond and organize pick-up. After the pick-up, a Bulky Item has to be removed from the list."
+    },
+    "6": {
+      "question": "Can I use the app as I partake in multiple Loops?",
+      "answer": "Yes, you can use the app while you are involved in multiple Loops. If you go to Info, you can switch between Loops, after you click on the name of the Loop."
+    },
+    "7": {
+      "question": "Why do I only see an SMS button?",
+      "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
     }
   },
   "faqForHosts": "Question-réponse pour les organisateurs",
@@ -83,6 +114,10 @@
     "8": {
       "question": "Que faire si notre Loop ne fonctionne pas bien ?",
       "answer": "Si la qualité des vêtements n'est pas satisfaisante, les participants risquent de quitter le Loop. Veillez à ce que chacun partage la responsabilité de n'ajouter que des vêtements de bonne qualité.<br/><br/>Vous remarquez un vêtement qui ne devrait pas être dans le sac ? Enlevez-le du sac et apportez-le à un conteneur de recyclage de vêtements. Ainsi, le vêtement sera recyclé. En cas de doute, demandez à la personne avant ou âpres vous dans le Loop si elle est d'accord d'enlever le vêtement en question, et décidez par la suite.<br/><br/>Un rasoir anti bouloche/anti-peluche peut énormément prolonger la durée de vie d'un vêtement ! Vous pouvez partager ce conseil au sein de votre communauté.<br/><br/>Et pour conclure, montrez le bon exemple vous-même ; partagez de belles photos et encouragez les autres à faire de même !"
+    },
+    "8_5": {
+      "question": "Why don’t I see a participant that signed up?",
+      "answer": "When you know a participant has signed up, but you don’t see them in the participant’s list in Account and you haven’t received the automatic email from us. It’s probably because the participant’s email address hasn’t been verified. <strong>Please ask a new participant to log in.</strong> Once they’ve logged in, their account is verified. Now you’ll receive the email and see them in the New list."
     },
     "9": {
       "question": "Que faire si je n'ai plus le temps de gérer le Loop que j'ai mis en place ?",

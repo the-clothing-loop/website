@@ -3,7 +3,6 @@
 package integration_tests
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -18,8 +17,7 @@ func TestChainModel(t *testing.T) {
 	t.Run("ChainGetNamesByIDs", func(t *testing.T) {
 		chainIds := []uint{chain.ID, chain1.ID}
 
-		chainNames, err := models.ChainGetNamesByIDs(db, chainIds)
-		fmt.Println(chainIds, chainNames)
+		chainNames, err := models.ChainGetNamesByIDs(db, chainIds...)
 		assert.Equal(t, chain.Name, chainNames[0])
 		assert.Equal(t, chain1.Name, chainNames[1])
 		assert.Nil(t, err)

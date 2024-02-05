@@ -25,7 +25,13 @@ app-start:
 server-start:
 	docker compose exec server sh -c 'go run cmd/server/main.go'
 
+.PHONY: test
+test:
+	cd ../../server && make test
+	cd ../../app && npm run test
+
 .PHONY: db-setup
 db-setup:
+	docker compose exec db sh -c 'mariadb -u root -pfb4aeaa6d860dbabe785675e --database clothingloop < /scripts/dev-purge.sql'
 	docker compose exec server sh -c 'go run cmd/generate-fake-data/main.go 200'
 	docker compose exec db sh -c 'mariadb -u root -pfb4aeaa6d860dbabe785675e --database clothingloop < /scripts/dev-setup-users.sql'

@@ -90,7 +90,7 @@ export default function CreateUpdateBulky({
     try {
       let body: Parameters<typeof bulkyItemPut>[0] = {
         chain_uid: chain!.uid,
-        user_uid: authUser!.uid,
+        user_uid: bulky?.user_uid || authUser!.uid,
         title: bulkyTitle,
         message: bulkyMessage,
         image_url: bulkyImageURL,

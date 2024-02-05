@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useMemo, useState } from "react";
 import { Storage } from "@ionic/storage";
 import {
   chainGet,
@@ -18,15 +18,26 @@ import {
   chainUpdate,
 } from "./api";
 import dayjs from "./dayjs";
+import { OverlayContainsState, OverlayState } from "./utils/overlay_open";
 
 interface StorageAuth {
   user_uid: string;
   token: string;
 }
 
+export enum IsAuthenticated {
+  Unknown,
+  LoggedIn,
+  LoggedOut,
+  OfflineLoggedIn,
+}
+
+type BagListView = "dynamic" | "list" | "card";
+
 export const StoreContext = createContext({
-  isAuthenticated: null as boolean | null,
+  isAuthenticated: IsAuthenticated.Unknown,
   isChainAdmin: false,
+  isThemeDefault: true,
   authUser: null as null | User,
   setPause: (date: Date | boolean) => {},
   setTheme: (c: string) => {},
@@ -36,15 +47,31 @@ export const StoreContext = createContext({
   route: [] as UID[],
   bags: [] as Bag[],
   bulkyItems: [] as BulkyItem[],
-  setChain: (c: Chain | null, uid: UID) => Promise.reject<void>(),
-  authenticate: () => Promise.reject<void>(),
+  setChain: (chainUID: UID | null | undefined, user: User | null) =>
+    Promise.reject<void>(),
+  authenticate: () => Promise.resolve(IsAuthenticated.Unknown),
   login: (token: string) => Promise.reject<void>(),
   logout: () => Promise.reject<void>(),
   init: () => Promise.reject<void>(),
   refresh: (tab: string) => Promise.reject<void>(),
+  overlayState: OverlayState.OPEN_ALL,
+  closeOverlay: (s: OverlayState) => {},
+  bagListView: "dynamic" as BagListView,
+  setBagListView: (v: BagListView) => {},
+  connError: (err: any) => Promise.resolve(IsAuthenticated.Unknown),
+  shouldBlur: false,
 });
 
-export function StoreProvider({ children }: { children: React.ReactNode }) {
+const errLoopMustBeSelected =
+  "You must have first selected a Loop in the settings tab.";
+
+export function StoreProvider({
+  children,
+  onIsOffline,
+}: {
+  children: React.ReactNode;
+  onIsOffline: (err: any) => void;
+}) {
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chain, setChain] = useState<Chain | null>(null);
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
@@ -53,8 +80,35 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [bags, setBags] = useState<Bag[]>([]);
   const [bulkyItems, setBulkyItems] = useState<BulkyItem[]>([]);
   const [storage, setStorage] = useState(new Storage({ name: "store_v1" }));
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    IsAuthenticated.Unknown,
+  );
   const [isChainAdmin, setIsChainAdmin] = useState(false);
+  const [overlayState, setOverlayState] = useState(OverlayState.OPEN_ALL);
+  const [bagListView, setBagListView] = useState<BagListView>("dynamic");
+
+  const shouldBlur = useMemo(() => {
+    let isAppDisabledPopup =
+      chain?.is_app_disabled &&
+      !OverlayContainsState(
+        overlayState,
+        OverlayState.CLOSE_CHAIN_APP_DISABLED,
+      );
+
+    let isDraftPopup =
+      !chain?.published &&
+      !OverlayContainsState(overlayState, OverlayState.CLOSE_PAUSED);
+
+    return isAppDisabledPopup || isDraftPopup || false;
+  }, [chain, overlayState]);
+
+  const isThemeDefault = useMemo(() => {
+    let theme = chain?.theme;
+    if (!theme) return true;
+    if (theme === "default") return true;
+
+    return false;
+  }, [chain]);
 
   // Get storage from IndexedDB or LocalStorage
   async function _init() {
@@ -64,26 +118,28 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (version !== 1) {
       await _storage.set("version", 1);
     }
+    setBagListView((await _storage.get("bag_list_view")) || "dynamic");
     setStorage(_storage);
   }
 
   async function _logout() {
     window.plugins?.OneSignal?.removeExternalUserId();
-    logout().catch((err) => {
+    await logout().catch((err) => {
       console.warn(err);
     });
     window.axios.defaults.auth = undefined;
 
-    await storage.set("auth", null);
-    await storage.set("chain_uid", null);
+    await storage.set("auth", "");
+    await storage.set("chain_uid", "");
     setAuthUser(null);
     setChain(null);
     setListOfChains([]);
     setRoute([]);
     setBags([]);
     setBulkyItems([]);
-    setIsAuthenticated(false);
+    setIsAuthenticated(IsAuthenticated.LoggedOut);
     setIsChainAdmin(false);
+    setBagListView("dynamic");
   }
 
   async function _login(token: string) {
@@ -93,17 +149,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       user_uid: res.data.user.uid,
       token: res.data.token,
     } as StorageAuth);
-    setIsAuthenticated(true);
+    setAuthUser(res.data.user);
+    setIsAuthenticated(IsAuthenticated.LoggedIn);
     _refresh("settings", res.data.user);
   }
 
-  async function _authenticate() {
+  // Will set the isAuthenticated value and directly return it as well (no need to run setIsAuthenticated)
+  async function _authenticate(): Promise<IsAuthenticated> {
     console.log("run authenticate");
     const auth = (await storage.get("auth")) as StorageAuth | null;
 
     let _authUser: typeof authUser = null;
-    let _chain: typeof chain = null;
-    let _isAuthenticated: typeof isAuthenticated = null;
+    let _isAuthenticated: typeof isAuthenticated = IsAuthenticated.Unknown;
     let _isChainAdmin: typeof isChainAdmin = false;
     try {
       if (auth && auth.user_uid && auth.token) {
@@ -111,69 +168,87 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
         _authUser = (await userGetByUID(undefined, auth.user_uid)).data;
 
-        _isAuthenticated = true;
+        _isAuthenticated = IsAuthenticated.LoggedIn;
       } else {
-        throw new Error("Not authenticated");
+        // logout without clearing empty token
+        console.log("logout without clearing empty token");
+        _isAuthenticated = IsAuthenticated.LoggedOut;
+        window.axios.defaults.auth = undefined;
+        setIsAuthenticated(_isAuthenticated);
+        return _isAuthenticated;
       }
-    } catch (err) {
-      window.axios.defaults.auth = undefined;
-      _isAuthenticated = false;
+    } catch (err: any) {
+      _isAuthenticated = await _connError(err);
+      return _isAuthenticated;
     }
 
-    if (_isAuthenticated && _authUser)
-      window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
+    // at this point it is safe to assume _isAuthenticated is LoggedIn
+
+    window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
 
     try {
       const chainUID: string | null = await storage.get("chain_uid");
-      if (_isAuthenticated && chainUID) {
-        _chain = (await chainGet(chainUID, false, true)).data;
-        await _setChain(_chain, _authUser!.uid);
-        _isChainAdmin = IsChainAdmin(_authUser, _chain);
+      if (chainUID) {
+        await _setChain(chainUID, _authUser);
       } else if (chainUID) {
-        throw new Error("Not authenticated but still has chain_uid");
+        console.info("Authenticated but has no selected chain_uid");
       }
-    } catch (err) {
-      throwError(err);
+    } catch (err: any) {
+      console.error(err);
       await storage.set("chain_uid", null);
+      return err?.isAuthenticated || IsAuthenticated.OfflineLoggedIn;
     }
 
     setAuthUser(_authUser);
     setIsChainAdmin(_isChainAdmin);
     setIsAuthenticated(_isAuthenticated);
+    return _isAuthenticated;
   }
 
-  async function _setChain(c: Chain | null, _authUserUID: UID | null) {
-    let _chain = c;
+  async function _setChain(
+    _chainUID: UID | null | undefined,
+    _authUser: User | null,
+  ) {
+    let _chain: typeof chain = null;
     let _chainUsers: typeof chainUsers = [];
     let _route: typeof route = [];
     let _bags: typeof bags = [];
+    let _isChainAdmin: typeof isChainAdmin = false;
     let _bulkyItems: typeof bulkyItems = [];
-    if (c && _authUserUID) {
+    if (_chainUID && _authUser) {
       try {
         const res = await Promise.all([
-          chainGet(c.uid, true, true),
-          userGetAllByChain(c.uid),
-          routeGetOrder(c.uid),
-          bagGetAllByChain(c.uid, _authUserUID),
-          bulkyItemGetAllByChain(c.uid, _authUserUID),
+          chainGet(_chainUID, true, true, true),
+          userGetAllByChain(_chainUID),
+          routeGetOrder(_chainUID),
+          bagGetAllByChain(_chainUID, _authUser.uid),
+          bulkyItemGetAllByChain(_chainUID, _authUser.uid),
         ]);
         _chain = res[0].data;
         _chainUsers = res[1].data;
         _route = res[2].data;
         _bags = res[3].data;
         _bulkyItems = res[4].data;
-      } catch (err) {
+        _isChainAdmin = IsChainAdmin(_authUser, _chainUID);
+      } catch (err: any) {
         throwError(err);
+        let _isAuthenticated = IsAuthenticated.OfflineLoggedIn;
+        if (err?.status === 401) {
+          _isAuthenticated = IsAuthenticated.LoggedOut;
+        }
+        err.isAuthenticated = _isAuthenticated;
+        setIsAuthenticated(_isAuthenticated);
+        throw err;
       }
     }
 
-    await storage.set("chain_uid", c ? c.uid : null);
+    await storage.set("chain_uid", _chainUID ? _chainUID : null);
     setChain(_chain);
     setChainUsers(_chainUsers);
     setRoute(_route);
     setBags(_bags);
     setBulkyItems(_bulkyItems);
-    setIsChainAdmin(IsChainAdmin(authUser, _chain));
+    setIsChainAdmin(_isChainAdmin);
   }
 
   async function _setTheme(c: string) {
@@ -215,60 +290,96 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   async function _refresh(tab: string, __authUser: User | null): Promise<void> {
     if (!__authUser) _logout();
 
-    if (tab === "help") {
-      if (!chain)
-        throw "You must have first selected a Loop in the settings tab.";
+    try {
+      if (tab === "help") {
+        if (!chain) throw errLoopMustBeSelected;
 
-      let _chain = await chainGet(chain.uid, true, true);
-      setChain(_chain.data);
-    } else if (tab === "address" || tab === "bags") {
-      if (!chain)
-        throw "You must have first selected a Loop in the settings tab.";
+        let _chain = await chainGet(chain.uid, true, true, true);
+        setChain(_chain.data);
+      } else if (tab === "address" || tab === "bags") {
+        if (!chain) throw errLoopMustBeSelected;
 
-      const [_chainUsers, _route, _bags] = await Promise.all([
-        userGetAllByChain(chain.uid),
-        routeGetOrder(chain.uid),
-        bagGetAllByChain(chain.uid, __authUser!.uid),
-      ]);
-      setChainUsers(_chainUsers.data);
-      setRoute(_route.data);
-      setBags(_bags.data);
-    } else if (tab === "bulky-items") {
-      if (!chain)
-        throw "You must have first selected a Loop in the settings tab.";
+        const [_chainUsers, _route, _bags] = await Promise.all([
+          userGetAllByChain(chain.uid),
+          routeGetOrder(chain.uid),
+          bagGetAllByChain(chain.uid, __authUser!.uid),
+        ]);
+        setChainUsers(_chainUsers.data);
+        setRoute(_route.data);
+        setBags(_bags.data);
+      } else if (tab === "bulky-items") {
+        if (!chain) throw errLoopMustBeSelected;
 
-      const [_chainUsers, _bulkyItems] = await Promise.all([
-        userGetAllByChain(chain.uid),
-        bulkyItemGetAllByChain(chain.uid, __authUser!.uid),
-      ]);
-      setChainUsers(_chainUsers.data);
-      setBulkyItems(_bulkyItems.data);
-    } else if (tab === "settings") {
-      const _authUser = await userGetByUID(undefined, __authUser!.uid).catch(
-        (e) => {
-          console.warn(e);
-          return null;
-        },
-      );
-      if (_authUser === null) return _logout();
-      let _chain: Chain | null = null;
-      const _listOfChains = await Promise.all(
-        _authUser.data.chains
-          .filter((uc) => uc.is_approved)
-          .map((uc) => chainGet(uc.chain_uid)),
-      ).then((chains) =>
-        chains.map((c) => {
-          if (c.data.uid === chain?.uid) {
-            _chain = c.data;
-          }
-          return c.data;
-        }),
-      );
+        const [_chainUsers, _bulkyItems] = await Promise.all([
+          userGetAllByChain(chain.uid),
+          bulkyItemGetAllByChain(chain.uid, __authUser!.uid),
+        ]);
+        setChainUsers(_chainUsers.data);
+        setBulkyItems(_bulkyItems.data);
+      } else if (tab === "settings") {
+        const _authUser = await userGetByUID(undefined, __authUser!.uid);
+        let _chain: Chain | null = null;
+        const _listOfChains = await Promise.all(
+          _authUser.data.chains
+            .filter((uc) => uc.is_approved)
+            .map((uc) => {
+              const isCurrentChain = uc.chain_uid === chain?.uid;
+              return chainGet(
+                uc.chain_uid,
+                isCurrentChain,
+                isCurrentChain,
+                true,
+              );
+            }),
+        ).then((chains) =>
+          chains.map((c) => {
+            if (c.data.uid === chain?.uid) {
+              _chain = c.data;
+            }
+            return c.data;
+          }),
+        );
 
-      setAuthUser(_authUser.data);
-      setListOfChains(_listOfChains);
-      setChain(_chain);
+        setAuthUser(_authUser.data);
+        setListOfChains(_listOfChains);
+        setChain(_chain);
+      }
+    } catch (err: any) {
+      if (err === errLoopMustBeSelected) {
+        throw err;
+      } else {
+        await _connError(err);
+      }
     }
+  }
+
+  function closeOverlay(sTo: OverlayState) {
+    setOverlayState((s) => {
+      let newTo = s + sTo;
+      if (newTo > OverlayState.CLOSE_ALL) newTo = OverlayState.CLOSE_ALL;
+      return newTo;
+    });
+    setTimeout(
+      () => {
+        setOverlayState(OverlayState.OPEN_ALL);
+      },
+      1000 * 60 * 60, // 1 hour
+    );
+  }
+
+  function _setBagListView(v: BagListView) {
+    setBagListView(v);
+    storage.set("bag_list_view", v);
+  }
+
+  async function _connError(err: any) {
+    if (err?.status === 401) {
+      await _logout();
+      return IsAuthenticated.LoggedOut;
+    }
+    console.log("Connection error");
+    onIsOffline(err);
+    return IsAuthenticated.OfflineLoggedIn;
   }
 
   return (
@@ -281,6 +392,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         bags,
         bulkyItems,
         chain,
+        isThemeDefault,
         chainUsers,
         listOfChains,
         setChain: _setChain,
@@ -291,6 +403,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         login: _login,
         init: _init,
         refresh: (t) => _refresh(t, authUser),
+        overlayState,
+        closeOverlay,
+        bagListView,
+        setBagListView: _setBagListView,
+        connError: _connError,
+        shouldBlur,
       }}
     >
       {children}
@@ -306,7 +424,12 @@ function throwError(err: any) {
   );
 }
 
-export function IsChainAdmin(user: User | null, chain: Chain | null) {
-  const userChain = user?.chains.find((uc) => uc.chain_uid === chain?.uid);
+export function IsChainAdmin(
+  user: User | null,
+  chainUID: UID | null | undefined,
+): boolean {
+  const userChain = chainUID
+    ? user?.chains.find((uc) => uc.chain_uid === chainUID)
+    : undefined;
   return userChain?.is_chain_admin || false;
 }

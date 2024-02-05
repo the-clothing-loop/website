@@ -3,11 +3,15 @@ package app
 import (
 	"fmt"
 	"os"
+	"time"
 
+	cache "github.com/patrickmn/go-cache"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
+
+var Cache *cache.Cache
 
 func DatabaseInit() *gorm.DB {
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
@@ -21,12 +25,15 @@ func DatabaseInit() *gorm.DB {
 		DatabaseAutoMigrate(db)
 	}
 
+	Cache = cache.New(5*time.Minute, 10*time.Minute)
+
 	return db
 }
 
 func DatabaseAutoMigrate(db *gorm.DB) {
 	hadIsApprovedColumn := db.Migrator().HasColumn(&models.UserChain{}, "is_approved")
 
+	// User Tokens
 	if db.Migrator().HasTable("user_tokens") {
 		columnTypes, err := db.Migrator().ColumnTypes("user_tokens")
 		if err == nil {
@@ -66,6 +73,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 			}
 		}
 	}
+	// Bags
 	if db.Migrator().HasTable("bags") {
 		columnTypes, err := db.Migrator().ColumnTypes("bags")
 		if err == nil {
@@ -80,6 +88,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 			}
 		}
 	}
+	// Mail removed
 	if db.Migrator().HasTable("mails") {
 		db.Exec(`DROP TABLE mails`)
 	}

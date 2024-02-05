@@ -279,8 +279,9 @@ func EmailDoYouWantToBeHost(db *gorm.DB, lng,
 	m.ToName = name
 	m.ToAddress = email
 	err := emailGenerateMessage(m, lng, "do_you_want_to_be_host", gin.H{
-		"Name":      name,
-		"ChainName": chainName,
+		"Name":        name,
+		"ChainName":   chainName,
+		"ToolkitLink": "https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27",
 	})
 	if err != nil {
 		return err
@@ -317,15 +318,21 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB,
 	email,
 	token string,
 	isApp bool,
+	chainUID string,
 ) error {
 	i18n := getI18nGin(c)
 	m := app.MailCreate()
 	m.ToName = name
 	m.ToAddress = email
+	// This is a hack to add the chain param to the url
+	// Changing this in the template would be more work in combination with Crowdin
+	if chainUID != "" {
+		token += "&c=" + chainUID
+	}
 	err := emailGenerateMessage(m, i18n, "login_verification", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
-		"Token":   token,
+		"Token":   template.URL(token),
 		"IsApp":   isApp,
 	})
 	if err != nil {
@@ -339,6 +346,7 @@ func EmailLoopIsDeleted(db *gorm.DB, lng,
 	name,
 	email,
 	chainName string,
+	isPending bool,
 ) error {
 	lng = getI18n(lng)
 	m := app.MailCreate()
@@ -348,6 +356,7 @@ func EmailLoopIsDeleted(db *gorm.DB, lng,
 	err := emailGenerateMessage(m, lng, "loop_is_deleted", gin.H{
 		"Name":      name,
 		"ChainName": chainName,
+		"IsPending": isPending,
 	})
 	if err != nil {
 		return err
@@ -371,7 +380,7 @@ func EmailPoke(db *gorm.DB, lng,
 		"Name":            name,
 		"ChainName":       chainName,
 		"ParticipantName": participantName,
-	}, name, chainName)
+	})
 	if err != nil {
 		return err
 	}

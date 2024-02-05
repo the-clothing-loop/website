@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/golang/glog"
+	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 
@@ -32,6 +33,11 @@ type MockChainAndUserOptions struct {
 	IsNotPublished     bool
 	IsOpenToNewMembers bool
 	RouteOrderIndex    int
+
+	// for generating new members
+	OnlyEmailExampleCom bool
+	OverrideLongitude   *float64
+	OverrideLatitude    *float64
 }
 
 type MockEventOptions struct {
@@ -52,11 +58,18 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	var latitude, longitude float64
 	if faker.RandomNumber(5)+1 > 4 { // 4 / 6
 		// use the netherlands
-		latitude = float64(faker.Int64Between(5169917, 5237403)) / 100000
-		longitude = float64(faker.Int64Between(488969, 689583)) / 100000
+		coords := FakeDutchCoordinates()
+		latitude = coords.Latitude
+		longitude = coords.Longitude
 	} else {
 		latitude = faker.Address().Latitude()
-		longitude = faker.Address().Latitude()
+		longitude = faker.Address().Longitude()
+	}
+	if o.OverrideLatitude != nil {
+		latitude = *o.OverrideLatitude
+	}
+	if o.OverrideLongitude != nil {
+		longitude = *o.OverrideLongitude
 	}
 	chains := []models.UserChain{}
 	if chainID != 0 {
@@ -69,7 +82,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	}
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), faker.Internet().FreeEmailDomain())),
+		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), lo.Ternary(o.OnlyEmailExampleCom, "example.com", faker.Internet().FreeEmailDomain()))),
 		IsEmailVerified: !o.IsNotEmailVerified,
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Fake " + faker.Person().Name(),
@@ -112,7 +125,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		longitude = float64(faker.Int64Between(488969, 689583)) / 100000
 	} else {
 		latitude = faker.Address().Latitude()
-		longitude = faker.Address().Latitude()
+		longitude = faker.Address().Longitude()
 	}
 	chain = &models.Chain{
 		UID:              uuid.NewV4().String(),
@@ -188,7 +201,7 @@ func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint) (event *models.E
 			faker.Lorem().Sentence(2),
 		}, "\n"),
 		Latitude:  faker.Address().Latitude(),
-		Longitude: faker.Address().Latitude(),
+		Longitude: faker.Address().Longitude(),
 		Address:   faker.Address().Address(),
 		Date:      time.Now().Add(time.Duration(faker.IntBetween(1, 20)) * time.Hour),
 		Genders:   MockGenders(false),
@@ -264,9 +277,29 @@ func MockBag(t *testing.T, db *gorm.DB, chainID, userID uint, o MockBagOptions) 
 		name = faker.Beer().Name()
 	}
 
+	colors := []string{
+		"#C9843E",
+		"#f4b63f",
+		"#79A02D",
+		"#66926e",
+		"#199FBA",
+		"#6494C2",
+		"#1467b3",
+		"#a899c2",
+		"#513484",
+		"#B37EAD",
+		"#b76dac",
+		"#F57BB0",
+		"#A35C7B",
+		"#E38C95",
+		"#c73643",
+		"#7D7D7D",
+		"#3c3c3b",
+	}
+
 	bag := &models.Bag{
 		Number:      name,
-		Color:       faker.Color().Hex(),
+		Color:       faker.RandomStringElement(colors),
 		UserChainID: userChainID,
 	}
 	if err := db.Create(bag).Error; err != nil {
@@ -277,4 +310,18 @@ func MockBag(t *testing.T, db *gorm.DB, chainID, userID uint, o MockBagOptions) 
 		db.Exec(`DELETE FROM bags WHERE id = ?`, bag.ID)
 	})
 	return bag
+}
+
+type Coordinates struct {
+	Latitude  float64
+	Longitude float64
+}
+
+func FakeDutchCoordinates() Coordinates {
+	latitude := float64(faker.Int64Between(5219424, 5223461)) / 100000
+	longitude := float64(faker.Int64Between(448153, 454333)) / 100000
+	return Coordinates{
+		Latitude:  latitude,
+		Longitude: longitude,
+	}
 }

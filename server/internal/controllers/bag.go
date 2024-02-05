@@ -113,6 +113,7 @@ func BagPut(c *gin.Context) {
 		bag.UpdatedAt = *(body.UpdatedAt)
 	}
 	bag.LastNotifiedAt = zero.Time{}
+	bag.LastUserEmailToUpdate = authUser.Email
 
 	ucID := uint(0)
 	db.Raw(`

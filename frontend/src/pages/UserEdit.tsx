@@ -35,6 +35,11 @@ export default function UserEdit() {
     [user, chainUID]
   );
 
+  const userIsAnyChainAdmin = useMemo(
+    () => !!user?.chains.find((uc) => uc.is_chain_admin),
+    [user]
+  );
+
   function onSubmit(values: ValuesForm) {
     console.info("submit", { ...values });
     if (!userUID) return;
@@ -56,9 +61,7 @@ export default function UserEdit() {
         console.info(userUpdateBody);
 
         await userUpdate(userUpdateBody);
-        setTimeout(() => {
-          history.goBack();
-        }, 1200);
+        history.goBack();
       } catch (err: any) {
         addToastError(GinParseErrors(t, err), err?.status);
       }
@@ -81,6 +84,7 @@ export default function UserEdit() {
     return <Redirect to="/users/login" />;
   }
   if (!user) return null;
+  let isMe = user.uid === authUser.uid;
   return (
     <>
       <Helmet>
@@ -102,7 +106,8 @@ export default function UserEdit() {
             userUID={userUID}
             chainUID={chainUID}
             classes="mb-6"
-            showNewsletter
+            showNewsletter={isMe}
+            isNewsletterRequired={userIsAnyChainAdmin && !user.is_root_admin}
           />
 
           <div className="flex">

@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useRef, useState, useContext } from "react";
 import { useHistory } from "react-router";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import type * as GeoJSONTypes from "geojson";
@@ -22,11 +22,12 @@ interface Props {
   onSubmit: (values: RegisterChainForm) => void;
   initialValues?: RegisterChainForm;
   showBack?: boolean;
+  showAllowedTOH: boolean;
 }
 
 export type RegisterChainForm = Omit<
   RequestRegisterChain,
-  "open_to_new_members"
+  "open_to_new_members" | "allow_toh"
 >;
 
 type GeoJSONPoint = GeoJSONTypes.FeatureCollection<
@@ -69,6 +70,7 @@ export default function ChainDetailsForm({
   onSubmit,
   initialValues,
   showBack,
+  showAllowedTOH,
 }: Props) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -98,9 +100,9 @@ export default function ChainDetailsForm({
       zoom: hasCenter ? 10 : 4,
       minZoom: 1,
       maxZoom: 13,
-      center: (hasCenter
+      center: hasCenter
         ? [values.longitude, values.latitude]
-        : [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
+        : [4.8998197, 52.3673008],
       style: "mapbox://styles/mapbox/light-v11",
     });
     _map.addControl(new MapboxGeocoder({ accessToken: MAPBOX_TOKEN }));
@@ -164,17 +166,18 @@ export default function ChainDetailsForm({
   useEffect(() => {
     (map?.getSource("source") as mapboxgl.GeoJSONSource)?.setData(
       mapToGeoJSON({
-        longitude: values.longitude,
         latitude: values.latitude,
+        longitude: values.longitude,
         radius: values.radius,
       })
     );
-  }, [values.longitude, values.latitude, values.radius]);
+  }, [values.latitude, values.longitude, values.radius]);
 
   async function getPlaceInfo(
     longitude: number,
     latitude: number
   ): Promise<PlaceInfo> {
+    // https://docs.mapbox.com/api/search/geocoding/#reverse-geocoding
     const response = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${MAPBOX_TOKEN}&cachebuster=1618224066302&autocomplete=true&types=locality%2Cplace`
     );
@@ -275,6 +278,33 @@ export default function ChainDetailsForm({
               />
             </label>
           </div>
+
+          {showAllowedTOH ? (
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">
+                  <Trans
+                    i18nKey="iAccept<1>Toh</1>Star"
+                    components={{
+                      "1": (
+                        <a
+                          href="/terms-of-hosts"
+                          target="_blank"
+                          className="link"
+                        ></a>
+                      ),
+                    }}
+                  ></Trans>
+                </span>
+                <input
+                  type="checkbox"
+                  required
+                  className="checkbox border-black"
+                  name="toh"
+                />
+              </label>
+            </div>
+          ) : null}
 
           <div className="flex flex-col sm:flex-row items-end mb-6">
             <div className="w-full sm:w-1/2 pb-4 sm:pb-0 sm:pr-4 rtl:sm:pr-0 rtl:sm:pl-4">

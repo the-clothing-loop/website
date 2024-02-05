@@ -41,7 +41,7 @@ export function SizeBadges({
 
   return (
     <ul className={`flex ${!!s ? "flex-col" : "flex-row"} items-start`}>
-      {women?.length || g?.includes(Genders.women) ? (
+      {women.length || g?.includes(Genders.women) ? (
         <SizeCatBadges
           t={t}
           key="women"
@@ -51,7 +51,7 @@ export function SizeBadges({
           color="bg-orange-light"
         />
       ) : null}
-      {men?.length || g?.includes(Genders.men) ? (
+      {men.length || g?.includes(Genders.men) ? (
         <SizeCatBadges
           t={t}
           key="men"
@@ -61,7 +61,7 @@ export function SizeBadges({
           color="bg-purple-lighter"
         />
       ) : null}
-      {children?.length || g?.includes(Genders.children) ? (
+      {children.length || g?.includes(Genders.children) ? (
         <SizeCatBadges
           t={t}
           key="children"

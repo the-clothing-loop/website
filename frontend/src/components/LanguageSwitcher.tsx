@@ -19,7 +19,13 @@ const LanguageSwitcher = (props: { className?: string }) => {
 
   const dropdown = useDropdown();
 
-  const handleChange = (lng: string) => {
+  const btnLabelLanguage = useMemo(() => {
+    return (
+      languageFlags.find((l) => l.lng === i18n.language) || languageFlags[0]
+    );
+  }, [i18n.language]);
+
+  function handleChange(lng: string) {
     dayjs.locale(lng);
     i18n.changeLanguage(lng);
     history.replace(
@@ -36,13 +42,7 @@ const LanguageSwitcher = (props: { className?: string }) => {
         i18n: lng,
       });
     }
-  };
-
-  const btnLabelLanguage = useMemo(() => {
-    return (
-      languageFlags.find((l) => l.lng === i18n.language) || languageFlags[0]
-    );
-  }, [i18n.language]);
+  }
 
   function onToggle(e: MouseEvent<HTMLLabelElement>) {
     // This ensures that the onClick event doesn't bubble up to the mobile navbar

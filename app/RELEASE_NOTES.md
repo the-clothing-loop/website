@@ -97,3 +97,10 @@
 # v1.16
 
 - Fix changing bag name
+
+# v1.17
+
+- Add overlay when Loop is set to draft
+- Add options to change the bag view; dynamic, list & card
+- Update map in onboarding
+- Always get updated data

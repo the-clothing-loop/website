@@ -25,6 +25,7 @@ import Home from "./pages/Home";
 import { ToastProvider } from "./providers/ToastProvider";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
+import Contribute from "./pages/Contribute";
 
 // Lazy
 const FindChain = React.lazy(() => import("./pages/FindChain"));
@@ -44,6 +45,7 @@ const Donate = React.lazy(() => import("./pages/Donations/Donate"));
 const About = React.lazy(() => import("./pages/About"));
 const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfUse = React.lazy(() => import("./pages/TermsOfUse"));
+const TermsOfHosts = React.lazy(() => import("./pages/TermsOfHosts"));
 const FAQ = React.lazy(() => import("./pages/FAQ"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const Events = React.lazy(() => import("./pages/Events"));
@@ -176,6 +178,12 @@ export default function App() {
                       path={`${base}/loops/:chainUID/users/signup`}
                       component={Signup}
                     />
+                    {/* Login connected to a loop */}
+                    <Route
+                      exact
+                      path={`${base}/loops/:chainUID/users/login`}
+                      component={Login}
+                    />
                     {/* Sign up disconnected from a loop */}
                     <Route
                       exact
@@ -198,10 +206,19 @@ export default function App() {
                     />
                     <Route
                       exact
+                      path={`${base}/terms-of-hosts`}
+                      component={TermsOfHosts}
+                    />
+                    <Route
+                      exact
                       path={`${base}/privacy-policy`}
                       component={PrivacyPolicy}
                     />
-
+                    <Route
+                      exact
+                      path={`${base}/contribute`}
+                      component={Contribute}
+                    />
                     <Route
                       exact
                       path={`${base}/admin/dashboard`}

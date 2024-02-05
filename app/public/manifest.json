@@ -22,6 +22,18 @@
   ],
   "start_url": ".",
   "display": "standalone",
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=org.clothingloop.app",
+      "id": "org.clothingloop.app"
+    },
+    {
+      "platform": "itunes",
+      "url": "https://itunes.apple.com/app/my-clothing-loop/id6451443500"
+    }
+  ],
   "theme_color": "#ffffff",
   "background_color": "#ffffff"
 }

@@ -89,6 +89,44 @@ func RouteOptimize(c *gin.Context) {
 	})
 }
 
+func GetRouteCoordinates(c *gin.Context) {
+	db := getDB(c)
+
+	var query struct {
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// the authenticated user should be a chain admin
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+	if !ok {
+		return
+	}
+
+	cities := retrieveChainUsersAsTspCities(db, chain.ID)
+
+	type Response struct {
+		UserUID    string  `json:"user_uid"`
+		Latitude   float64 `json:"latitude"`
+		Longitude  float64 `json:"longitude"`
+		RouteOrder int     `json:"route_order"`
+	}
+	response := []Response{}
+	for _, city := range cities {
+		response = append(response, Response{
+			UserUID:    city.Key,
+			Latitude:   city.Latitude,
+			Longitude:  city.Longitude,
+			RouteOrder: city.RouteOrder,
+		})
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
 func retrieveChainUsersAsTspCities(db *gorm.DB, chainID uint) []tsp.City[string] {
 	allUserChains := &[]tsp.City[string]{}
 
