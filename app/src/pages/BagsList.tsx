@@ -313,7 +313,7 @@ export default function BagsList() {
                             "--padding-start": "5px",
                             "--padding-end": "5px",
                           }}
-                          className="tw-absolute tw-z-10 tw-top-0 tw-right-[3px] tw-z-10"
+                          className="tw-absolute tw-z-10 tw-top-0 tw-right-[3px]"
                           onClick={() => handleClickOptions(bag.id)}
                         >
                           <IonIcon icon={ellipsisHorizontal} />
