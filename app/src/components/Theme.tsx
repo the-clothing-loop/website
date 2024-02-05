@@ -31,6 +31,7 @@ export default function Theme() {
   function setSelectedTheme(color: string) {
     const bodyEl = document.getElementsByTagName("body")[0];
     bodyEl.setAttribute("data-theme", color);
+    if (color === "grey") color = "default";
     _setSelectedTheme(color);
   }
 
