@@ -30,6 +30,27 @@ services:
     working_dir: /app
     stdin_open: true
     tty: true
+  tinode:
+    image: tinode/tinode
+    ports:
+      - 6060:6060
+      - 16060:16060
+      - 12000-12003:12000-12003
+    environment:
+      - MYSQL_DSN=tinode@tcp(tinodedb)/tinode
+    depends_on:
+      - tinodedb
+  tinodedb:
+    image: mariadb
+    ports:
+      - 127.0.0.1:3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=fb4aeaa6d860dbabe785675e
+      - MYSQL_DATABASE=tinode
+      - MYSQL_USER=tinode
+      - MYSQL_PASSWORD=72bd3937e91363a747f810e7
+    volumes:
+      - tinodedb:/var/lib/mysql
   mail:
     image: axllent/mailpit
     ports:
@@ -62,3 +83,4 @@ services:
 
 volumes:
   mysql:
+  tinodedb:

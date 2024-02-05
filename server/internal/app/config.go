@@ -43,6 +43,7 @@ var Config struct {
 	ONESIGNAL_APP_ID        string `yaml:"onesignal_app_id"`
 	ONESIGNAL_REST_API_KEY  string `yaml:"onesignal_rest_api_key"`
 	APPSTORE_REVIEWER_EMAIL string `yaml:"appstore_reviewer_email"`
+	TINODE_URL              string `yaml:"tinode_url"`
 }
 
 func ConfigInit(path string) {
