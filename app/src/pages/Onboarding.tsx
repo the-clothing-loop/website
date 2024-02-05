@@ -101,7 +101,7 @@ export function OnboardingPageTwo() {
         >
           <IonFabButton
             color="clear"
-            onClick={() => history.goBack()}
+            onClick={() => history.replace("/onboarding/1")}
             className="ion-margin-bottom"
           >
             <IonIcon icon={arrowBack}></IonIcon>

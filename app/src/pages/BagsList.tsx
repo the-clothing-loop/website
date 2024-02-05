@@ -144,14 +144,14 @@ export default function BagsList() {
   }, [bags, route, bagListView]);
 
   function refreshBags() {
-    setChain(chain, authUser!.uid);
+    setChain(chain?.uid, authUser);
   }
 
   function handleClickDelete(bagID: number, bagNo: string) {
     setOpenCard(-1);
     const handler = async () => {
       await bagRemove(chain!.uid, authUser!.uid, bagID);
-      await setChain(chain, authUser!.uid);
+      await setChain(chain?.uid, authUser);
     };
     presentAlert({
       header: t("deleteBag"),
@@ -175,7 +175,7 @@ export default function BagsList() {
   }
 
   function handleRefresh(e: CustomEvent<RefresherEventDetail>) {
-    const refreshPromise = setChain(chain, authUser!.uid);
+    const refreshPromise = setChain(chain?.uid, authUser);
     const sleepPromise = Sleep(500);
     Promise.all([refreshPromise, sleepPromise]).then(() => {
       e.detail.complete();
@@ -602,7 +602,7 @@ function SelectUserModal({
             updated_at: updatedAt.toISOString(),
           }),
     });
-    await setChain(chain, authUser!.uid);
+    await setChain(chain?.uid, authUser);
   }
 
   function handleChangeDatetime(
