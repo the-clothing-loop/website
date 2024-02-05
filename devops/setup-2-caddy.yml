@@ -61,6 +61,7 @@
         - "/var/caddy/clothingloop.org"
         - "/var/caddy/maint.clothingloop.org"
         - "/var/caddy/images.clothingloop.org"
+        - "/var/caddy/acc.app.clothingloop.org"
     - name: Copy maint files
       copy:
         src: "{{ item.src }}"
