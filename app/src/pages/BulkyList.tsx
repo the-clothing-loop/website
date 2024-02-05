@@ -39,6 +39,7 @@ export default function BulkyList() {
     isChainAdmin,
     isThemeDefault,
     refresh,
+    shouldBlur,
   } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
@@ -200,7 +201,9 @@ export default function BulkyList() {
           return (
             <IonCard
               key={bulkyItem.id}
-              className="tw-bg-light tw-rounded-none"
+              className={"tw-bg-light tw-rounded-none".concat(
+                shouldBlur ? " tw-blur" : "",
+              )}
               color={"background"}
             >
               {bulkyItem.image_url ? (

@@ -35,6 +35,7 @@ export default function AddressList() {
     bags,
     isChainAdmin,
     isThemeDefault,
+    shouldBlur,
   } = useContext(StoreContext);
   const { t } = useTranslation();
 
@@ -81,7 +82,7 @@ export default function AddressList() {
             </IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonList>
+        <IonList className={shouldBlur ? "tw-blur" : ""}>
           {route.map((userUID, i) => {
             const user = chainUsers.find((u) => u.uid === userUID);
             if (!user) return null;

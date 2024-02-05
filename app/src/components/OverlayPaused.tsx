@@ -90,7 +90,6 @@ export default function OverlayPaused() {
           </IonCardContent>
         </IonCard>
       </div>
-      <div className="tw-absolute tw-z-10 tw-inset-0 tw-bg-paused tw-opacity-20"></div>
     </div>
   );
 }

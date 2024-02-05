@@ -79,6 +79,7 @@ export default function BagsList() {
     bagListView,
     setBagListView,
     isThemeDefault,
+    shouldBlur,
   } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const sheetModal = useRef<HTMLIonModalElement>(null);
@@ -200,6 +201,7 @@ export default function BagsList() {
   function handleClickOptions(bagID: number) {
     if (isChainAdmin) setOpenCard(bagID);
   }
+
   return (
     <IonPage>
       <OverlayPaused />
@@ -277,7 +279,7 @@ export default function BagsList() {
             <IonRefresherContent />
           </IonRefresher>
           <IonGrid>
-            <IonRow>
+            <IonRow className={shouldBlur ? "tw-blur" : ""}>
               {bagsCard.map((bag) => {
                 const user = chainUsers.find((u) => u.uid === bag.user_uid);
                 if (!user) return null;
