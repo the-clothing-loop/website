@@ -60,8 +60,14 @@ const mediaIcons: MediaIcon[] = [
 
 export default function HelpList() {
   const { t } = useTranslation();
-  const { authUser, chain, chainUsers, setChain, isChainAdmin } =
-    useContext(StoreContext);
+  const {
+    authUser,
+    chain,
+    chainUsers,
+    setChain,
+    isChainAdmin,
+    isThemeDefault,
+  } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
 
   const rules = useMemo<FaqListItem[]>(() => {
@@ -89,19 +95,36 @@ export default function HelpList() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("howDoesItWork")}</IonTitle>
+          <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
+            {t("howDoesItWork")}
+          </IonTitle>
 
           {isChainAdmin ? (
             <IonButtons slot="end">
-              <IonButton onClick={handleClickChange}>{t("change")}</IonButton>
+              <IonButton
+                onClick={handleClickChange}
+                className={isThemeDefault ? "!tw-text-purple" : ""}
+              >
+                {t("change")}
+              </IonButton>
             </IonButtons>
           ) : null}
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent
+        fullscreen
+        class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
+      >
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("howDoesItWork")}</IonTitle>
+            <IonTitle
+              size="large"
+              className={`tw-font-serif tw-font-bold ${
+                isThemeDefault ? "tw-text-purple " : ""
+              }`}
+            >
+              {t("howDoesItWork")}
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList>
@@ -111,56 +134,64 @@ export default function HelpList() {
             </IonItem>
           ))}
         </IonList>
-        <p className="ion-text-center ion-text-uppercase !tw-font-bold tw-text-medium tw-text-sm tw-leading-4 tw-mt-4 tw-m-0">
-          {t("loopHost", { count: hosts.length })}
-        </p>
-        <div className="tw-flex tw-justify-center tw-flex-wrap tw-mt-1.5 tw-m-0 tw-mb-2.5">
-          {hosts.map((host) => (
-            <IonButton
-              key={host.uid}
-              size="small"
-              routerLink={"/address/" + host.uid}
-              color="light"
-              className="tw-m-1.5 tw-text-base"
-            >
-              {host.name}
-            </IonButton>
-          ))}
-        </div>
+        <div className="tw-relative tw-overflow-hidden">
+          <p className="ion-text-center ion-text-uppercase !tw-font-bold tw-text-medium tw-text-sm tw-leading-4 tw-mt-4 tw-m-0">
+            {t("loopHost", { count: hosts.length })}
+          </p>
+          <div className="tw-flex tw-justify-center tw-flex-wrap tw-mt-1.5 tw-m-0 tw-mb-2.5">
+            {hosts.map((host) => (
+              <IonButton
+                key={host.uid}
+                size="small"
+                routerLink={"/address/" + host.uid}
+                color="light"
+                className="tw-m-1.5 tw-text-base"
+              >
+                {host.name}
+              </IonButton>
+            ))}
+          </div>
+          <p className="ion-text-center ion-text-uppercase !tw-font-bold tw-text-medium tw-text-sm tw-leading-4 tw-m-0">
+            {t("organization")}
+          </p>
+          <div className="tw-flex tw-justify-center">
+            {mediaIcons.map((mi) => (
+              <IonRouterLink
+                rel="noreferrer"
+                target="_blank"
+                href={mi.url}
+                key={mi.label}
+                className="ion-margin"
+              >
+                <IonIcon
+                  size="large"
+                  icon={mi.icon}
+                  style={{ color: mi.color }}
+                  aria-label={mi.label}
+                />
+              </IonRouterLink>
+            ))}
+          </div>
+          <IonRouterLink
+            href="https://www.clothingloop.org/"
+            className="ion-text-center ion-margin-bottom tw-block tw-text-dark tw-text-sm tw-leading-4 !tw-mb-6"
+          >
+            www.clothingloop.org
+          </IonRouterLink>
+          <CreateUpdateRules
+            rules={chain?.rules_override || null}
+            modal={modal}
+            didDismiss={refreshChain}
+          />
 
-        <p className="ion-text-center ion-text-uppercase !tw-font-bold tw-text-medium tw-text-sm tw-leading-4 tw-m-0">
-          {t("organization")}
-        </p>
-        <div className="tw-flex tw-justify-center">
-          {mediaIcons.map((mi) => (
-            <IonRouterLink
-              rel="noreferrer"
-              target="_blank"
-              href={mi.url}
-              key={mi.label}
-              className="ion-margin"
-            >
-              <IonIcon
-                size="large"
-                icon={mi.icon}
-                style={{ color: mi.color }}
-                aria-label={mi.label}
-              />
-            </IonRouterLink>
-          ))}
+          <IonIcon
+            aria-hidden="true"
+            icon="/v2_o.svg"
+            style={{ fontSize: 500 }}
+            color={isThemeDefault ? "" : "light"}
+            className="tw-absolute -tw-right-64 -tw-bottom-60 -tw-z-10 tw-text-purple-shade"
+          />
         </div>
-        <IonRouterLink
-          href="https://www.clothingloop.org/"
-          className="ion-text-center ion-margin-bottom tw-block tw-text-dark tw-text-sm tw-leading-4 !tw-mb-6"
-        >
-          www.clothingloop.org
-        </IonRouterLink>
-
-        <CreateUpdateRules
-          rules={chain?.rules_override || null}
-          modal={modal}
-          didDismiss={refreshChain}
-        />
       </IonContent>
     </IonPage>
   );

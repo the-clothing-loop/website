@@ -4,6 +4,7 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonImg,
   IonItem,
   IonList,
   IonPage,
@@ -14,15 +15,28 @@ import {
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
-import { bagHandle, pauseCircleSharp, shield } from "ionicons/icons";
+import {
+  bagHandle,
+  openOutline,
+  pauseCircleSharp,
+  shield,
+} from "ionicons/icons";
 import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 
 export default function AddressList() {
-  const { chain, chainUsers, route, authUser, bags, isChainAdmin } =
-    useContext(StoreContext);
+  const {
+    chain,
+    chainUsers,
+    route,
+    authUser,
+    bags,
+    isChainAdmin,
+    isThemeDefault,
+    shouldBlur,
+  } = useContext(StoreContext);
   const { t } = useTranslation();
 
   return (
@@ -33,12 +47,25 @@ export default function AddressList() {
         <IonToolbar>
           <IonTitle>{t("addresses")}</IonTitle>
           {isChainAdmin ? (
-            <IonButtons slot="end">
+            <IonButtons
+              slot="end"
+              className={`${
+                isThemeDefault
+                  ? "tw-text-red dark:tw-text-red-contrast"
+                  : "primary"
+              }`}
+            >
               <IonButton
                 target="_blank"
                 href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}
+                color={
+                  isThemeDefault
+                    ? "tw-text-red  dark:tw-text-red-contrast"
+                    : "primary"
+                }
               >
                 {t("routeOrder")}
+                <IonIcon icon={openOutline} className="tw-text-sm tw-ml-1" />
               </IonButton>
             </IonButtons>
           ) : null}
@@ -47,10 +74,15 @@ export default function AddressList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{t("addresses")}</IonTitle>
+            <IonTitle
+              size="large"
+              className="tw-font-serif tw-text-red dark:tw-text-red-contrast"
+            >
+              {t("addresses")}
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonList>
+        <IonList className={shouldBlur ? "tw-blur" : ""}>
           {route.map((userUID, i) => {
             const user = chainUsers.find((u) => u.uid === userUID);
             if (!user) return null;
@@ -138,6 +170,12 @@ export default function AddressList() {
             );
           })}
         </IonList>
+        <IonIcon
+          aria-hidden="true"
+          icon="/the_clothing_loop_logo_cropped.svg"
+          style={{ fontSize: 150 }}
+          className="tw-absolute tw-w-full tw-min-h-auto tw-invert-[60%] tw-bottom-0 tw-mb-8 tw-overflow-hidden tw-stroke-text dark:tw-stroke-light-tint"
+        />
       </IonContent>
     </IonPage>
   );
