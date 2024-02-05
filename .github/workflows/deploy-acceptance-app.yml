@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - app-redesign-v2-#598
+      - main
     paths:
       - app/**
 
