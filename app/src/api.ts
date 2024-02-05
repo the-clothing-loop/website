@@ -101,22 +101,22 @@ export interface BulkyItem {
 }
 
 export const bagColors = [
-  "#ef953d",
+  "#C9843E",
   "#f4b63f",
-  "#a6c665",
+  "#79A02D",
   "#66926e",
-  "#7ecfe0",
-  "#89b3d9",
+  "#199FBA",
+  "#6494C2",
   "#1467b3",
   "#a899c2",
   "#513484",
-  "#dab5d6",
+  "#B37EAD",
   "#b76dac",
-  "#ecbbd0",
-  "#dc77a3",
-  "#e39aa1",
+  "#F57BB0",
+  "#A35C7B",
+  "#E38C95",
   "#c73643",
-  "#a5a5a5",
+  "#7D7D7D",
   "#3c3c3b",
 ];
 
