@@ -102,6 +102,14 @@ export function StoreProvider({
     return isAppDisabledPopup || isDraftPopup || false;
   }, [chain, overlayState]);
 
+  const isThemeDefault = useMemo(() => {
+    let theme = chain?.theme;
+    if (!theme) return true;
+    if (theme === "default") return true;
+
+    return false;
+  }, [chain]);
+
   // Get storage from IndexedDB or LocalStorage
   async function _init() {
     const _storage = await storage.create();
@@ -384,7 +392,7 @@ export function StoreProvider({
         bags,
         bulkyItems,
         chain,
-        isThemeDefault: !(chain?.theme !== "default"),
+        isThemeDefault,
         chainUsers,
         listOfChains,
         setChain: _setChain,
