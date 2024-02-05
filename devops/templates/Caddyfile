@@ -54,7 +54,7 @@ www.clothingloop.org {
 		path /fonts/* /icons/* /images/*
 	}
 
-	header @assets Cache-Control "max-age=31536000 must-revalidate"
+	header @assets Cache-Control "max-age=604800 must-revalidate"
 	header ?Cache-Control no-cache
 
 	handle_path /api/* {
@@ -109,7 +109,6 @@ acc.clothingloop.org {
 
 	route {
 		header Cache-Control no-cache
-		header /assets/* Cache-Control max-age=31536000
 	}
 
 	handle_path /api/* {
@@ -127,6 +126,32 @@ acc.clothingloop.org {
 
 	handle {
 		root * /var/caddy/acc.clothingloop.org
+		file_server
+		encode zstd gzip
+		try_files {path} /index.html
+	}
+}
+
+acc.app.clothingloop.org {
+	import hsts
+	log {
+		output file /var/log/caddy/acc.clothingloop.org-error.log
+		format console
+		level ERROR
+	}
+
+	header X-Robots-Tag noindex
+
+	route {
+		header Cache-Control no-cache
+	}
+
+	handle_path /api/* {
+		reverse_proxy 127.0.0.1:8082
+	}
+
+	handle {
+		root * /var/caddy/acc.app.clothingloop.org
 		file_server
 		encode zstd gzip
 		try_files {path} /index.html
