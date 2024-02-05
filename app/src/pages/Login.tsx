@@ -55,18 +55,6 @@ export default function Login(props: { isLoggedIn: boolean }) {
   const [verifyState, setVerifyState] = useState(State.idle);
   const [sentTimeout, setSentTimeout] = useState<number>();
   const [tokenOverride, setTokenOverride] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
-
-  const logoWhite = "./public/v2_logo_white.png";
-  const logoBlack = "./public/v2_logo_black.png";
-
-  useEffect(() => {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-    setDarkMode(prefersDark.matches);
-    prefersDark.addEventListener("change", (mediaQuery) =>
-      setDarkMode(mediaQuery.matches),
-    );
-  }, []);
 
   function handleSendEmail() {
     if (sentState === State.success || sentState === State.loading) return;
@@ -154,11 +142,11 @@ export default function Login(props: { isLoggedIn: boolean }) {
           <div className="tw-shrink-0 md:tw-max-w-xl md:tw-mx-auto">
             <div className="tw-w-full tw-mb-16">
               <IonImg
-                src="./public/v2_logo_white.png"
+                src="/v2_logo_white.png"
                 className="tw-w-52 md:tw-w-72 tw-hidden dark:tw-block tw-mx-auto"
               />
               <IonImg
-                src="./public/v2_logo_black.png"
+                src="/v2_logo_black.png"
                 className="tw-w-52 md:tw-w-72 dark:tw-hidden tw-mx-auto"
               />
             </div>
@@ -277,7 +265,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             <div className="tw-absolute tw-overflow-hidden tw-inset-0 -tw-z-10">
               <IonIcon
                 aria-hidden="true"
-                icon="/public/v2_o_pattern_green.svg"
+                icon="/v2_o_pattern_green.svg"
                 style={{ fontSize: 400 }}
                 className="tw-absolute -tw-left-28 -tw-bottom-[170px] tw-text-green dark:tw-text-primary-shade"
               />

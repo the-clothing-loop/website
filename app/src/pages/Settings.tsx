@@ -430,7 +430,7 @@ export default function Settings() {
           {/* Background SVGs */}
           <IonIcon
             aria-hidden="true"
-            icon="/public/v2_o_pattern_green.svg"
+            icon="/v2_o_pattern_green.svg"
             style={{ fontSize: 400 }}
             color={isThemeDefault ? "" : "light"}
             className={`tw-absolute -tw-left-28 -tw-bottom-[190px] -tw-z-10 ${

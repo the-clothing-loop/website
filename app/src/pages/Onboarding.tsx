@@ -19,11 +19,11 @@ export function OnboardingPageOne() {
       <IonContent>
         <div className="tw-absolute tw-top-1/4 tw-translate-x-0 -tw-translate-y-1/2 tw-w-full">
           <IonImg
-            src="./public/v2_logo_white.png"
+            src="/v2_logo_white.png"
             className="tw-w-52 md:tw-w-72 tw-hidden dark:tw-block tw-mx-auto"
           />
           <IonImg
-            src="./public/v2_logo_black.png"
+            src="/v2_logo_black.png"
             className="tw-w-52 md:tw-w-72 dark:tw-hidden tw-mx-auto"
           />
         </div>
@@ -41,7 +41,7 @@ export function OnboardingPageOne() {
         <div className="tw-absolute tw-overflow-hidden tw-inset-0 -tw-z-10">
           <IonIcon
             aria-hidden="true"
-            icon="/public/v2_o_pattern_green.svg"
+            icon="/v2_o_pattern_green.svg"
             style={{ fontSize: 400 }}
             className="tw-absolute -tw-left-28 -tw-bottom-[170px] tw-text-green tw-opacity-70"
           />
