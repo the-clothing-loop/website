@@ -119,6 +119,7 @@ acc.clothingloop.org {
 	handle_path /mailpit/* {
 		basicauth bcrypt {
 			hello@clothingloop.org TUFJTFBJVF9QQVNTV09SRA==
+			guest1 TUFJTFBJVF9QQVNTV09SRF9HVUVTVF8x
 		}
 		rewrite * /mailpit{path}
 		reverse_proxy 127.0.0.1:8085
