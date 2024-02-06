@@ -1,4 +1,4 @@
-/* @tailwind base; */
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -23,7 +23,54 @@
       hsl(292, 70%, 55%) 72.6%
     );
   }
-
+  .tw-text-stroke-secondary {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsla(var(--s));
+    -moz-text-stroke: 1.5px hsla(var(--s));
+  }
+  .tw-text-stroke-accent {
+    color: transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #448c7f;
+  }
+  .tw-text-stroke-dark {
+    color: transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #f4f5f8;
+  }
+  .tw-bg-white-transparent {
+    background: rgba(255, 255, 255, 0.5);
+  }
+  .tw-bg-transparent {
+    --ion-background-color: transparent;
+  }
+  .tw-bg-orange-contrast {
+    --ion-background-color: var(--ion-color-orange-contrast);
+  }
+  .tw-bg-blue {
+    --ion-background-color: var(--ion-color-blue);
+  }
+  .tw-bg-blue-contrast {
+    --ion-background-color: var(--ion-color-blue-contrast);
+  }
+  .tw-text-purple {
+    --color: var(--ion-color-purple);
+  }
+  .tw-text-red {
+    --color: var(--ion-color-red);
+  }
+  .tw-bg-red {
+    --ion-background-color: var(--ion-color-red);
+  }
+  .tw-text-blue {
+    --color: var(--ion-color-blue);
+  }
+  .tw-text-blue-tint {
+    --color: var(--ion-color-blue-tint);
+  }
+  .tw-bg-purple-contrast {
+    --ion-background-color: var(--ion-color-purple-contrast);
+  }
   .tw-bg-paused {
     background: rgb(255, 213, 52);
     background: repeating-linear-gradient(

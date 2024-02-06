@@ -30,11 +30,16 @@
     - name: Replace MAILPIT_PASSWORD
       replace:
         path: /etc/caddy/Caddyfile
-        regexp: "TUFJTFBJVF9QQVNTV09SRA=="
-        replace: "{{ mailpit_ui_password_bcrypt }}"
+        regexp: "{{ item.regexp }}"
+        replace: "{{ item.replace }}"
         owner: root
         group: root
         mode: "0644"
+      with_items:
+        - regexp: "TUFJTFBJVF9QQVNTV09SRA=="
+          replace: "{{ mailpit_ui_password_bcrypt }}"
+        - regexp: "TUFJTFBJVF9QQVNTV09SRF9HVUVTVF8x"
+          replace: "{{ mailpit_ui_password_bcrypt_guest1 }}"
     - name: Add maintenance caddy file
       ansible.builtin.template:
         src: templates/Caddyfile.maint
@@ -61,6 +66,7 @@
         - "/var/caddy/clothingloop.org"
         - "/var/caddy/maint.clothingloop.org"
         - "/var/caddy/images.clothingloop.org"
+        - "/var/caddy/acc.app.clothingloop.org"
     - name: Copy maint files
       copy:
         src: "{{ item.src }}"

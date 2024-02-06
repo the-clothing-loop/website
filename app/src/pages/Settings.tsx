@@ -34,10 +34,8 @@ import {
   OverlayEventDetail,
 } from "@ionic/core";
 import { RefObject, useContext, useEffect, useRef, useState } from "react";
-import { Chain, chainGet } from "../api";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
-import toastError from "../../toastError";
 import { Trans, useTranslation } from "react-i18next";
 import {
   alertCircleOutline,
@@ -75,6 +73,7 @@ export default function Settings() {
     logout,
     setChain,
     isChainAdmin,
+    isThemeDefault,
     listOfChains,
   } = useContext(StoreContext);
   const [present] = useIonToast();
@@ -99,7 +98,7 @@ export default function Settings() {
     const chainUID = e.detail.value;
     const c = listOfChains.find((c) => c.uid === chainUID) || null;
 
-    setChain(chainUID, authUser);
+    setChain(c?.uid, authUser);
   }
 
   function handlePauseButton(isUserPaused: boolean) {
@@ -181,13 +180,28 @@ export default function Settings() {
 
   return (
     <IonPage>
-      <IonHeader collapse="fade" translucent>
+      <IonHeader collapse="fade">
         <IonToolbar>
-          <IonTitle>{t("information")}</IonTitle>
+          <IonTitle
+            className={`${
+              isThemeDefault ? "tw-text-orange tw-bg-orange-shade" : ""
+            }`}
+            color={"background"}
+          >
+            {t("information")}
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen color="light">
-        <IonItemDivider className="tw-relative ion-margin-start ion-margin-top ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
+
+      <IonContent
+        fullscreen
+        class={isThemeDefault ? "tw-bg-orange-contrast" : ""}
+      >
+        <IonItemDivider
+          className={`tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-font-serif tw-font-bold ${
+            isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
+          }`}
+        >
           {t("account")}
           <IonButton
             fill="clear"
@@ -199,7 +213,12 @@ export default function Settings() {
             <IonIcon icon={openOutline} className="tw-text-sm tw-ml-1" />
           </IonButton>
         </IonItemDivider>
-        <IonCard className="tw-mt-1.5 tw-bg-background tw-relative">
+        <IonCard
+          className={`tw-mt-1.5 tw-rounded-none tw-relative ion-card ${
+            isThemeDefault ? "tw-bg-orange-contrast" : "tw-bg-background"
+          }`}
+          color={"background"}
+        >
           {authUser ? (
             <UserCard
               user={authUser}
@@ -245,11 +264,19 @@ export default function Settings() {
             />
           </IonList>
         </IonCard>
-        <IonList>
-          <IonItemDivider className="ion-margin-start ion-text-uppercase tw-bg-transparent tw-text-medium-shade">
+        <IonList style={{ "--ion-item-background": "transparent" }}>
+          <IonItemDivider
+            className={`ion-margin-start tw-bg-transparent tw-text-2xl tw-font-serif tw-font-bold
+            ${isThemeDefault ? "tw-text-orange" : ""}`}
+          >
             {t("loopInformation")}
           </IonItemDivider>
-          <IonCard className="tw-mt-1.5 tw-bg-background">
+          <IonCard
+            className={`tw-mt-1.5 tw-rounded-none ${
+              isThemeDefault ? "tw-bg-orange-contrast" : "tw-bg-background"
+            }`}
+            color="background"
+          >
             <IonList>
               <IonItem lines="none">
                 <IonSelect
@@ -398,22 +425,43 @@ export default function Settings() {
           <IonButton id="settings-logout-btn" expand="block" color="danger">
             {t("logout")}
           </IonButton>
-          <IonAlert
-            trigger="settings-logout-btn"
-            header={t("logout")!}
-            message={t("areYouSureYouWantToLogout")!}
-            buttons={[
-              {
-                text: t("cancel"),
-              },
-              {
-                text: t("logout"),
-                role: "destructive",
-                handler: logout,
-              },
-            ]}
-          ></IonAlert>
         </div>
+        <div className="relative">
+          {/* Background SVGs */}
+          <IonIcon
+            aria-hidden="true"
+            icon="/v2_o_pattern_green.svg"
+            style={{ fontSize: 400 }}
+            color={isThemeDefault ? "" : "light"}
+            className={`tw-absolute -tw-left-28 -tw-bottom-[190px] -tw-z-10 ${
+              isThemeDefault
+                ? "tw-text-orange-shade dark:tw-text-red-shade"
+                : ""
+            }`}
+          />
+          <IonIcon
+            aria-hidden="true"
+            icon="/v2_o.svg"
+            style={{ fontSize: 500 }}
+            color={isThemeDefault ? "" : "light"}
+            className="tw-absolute tw-opacity-60 -tw-right-64 tw-top-[90px] -tw-z-10 tw-text-orange-shade dark:tw-text-red-shade"
+          />
+        </div>
+        <IonAlert
+          trigger="settings-logout-btn"
+          header={t("logout")!}
+          message={t("areYouSureYouWantToLogout")!}
+          buttons={[
+            {
+              text: t("cancel"),
+            },
+            {
+              text: t("logout"),
+              role: "destructive",
+              handler: logout,
+            },
+          ]}
+        ></IonAlert>
         <IonText className="ion-text-center tw-block tw-text-medium tw-text-sm">
           version: {VERSION}
         </IonText>

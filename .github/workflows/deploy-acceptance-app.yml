@@ -1,11 +1,11 @@
-name: Deploy Acceptance Frontend
+name: Deploy Acceptance App
 on:
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - frontend/**
+      - app/**
 
 jobs:
   deploy-frontend:
@@ -18,13 +18,13 @@ jobs:
         with:
           node-version: 20.5
           cache: npm
-          cache-dependency-path: frontend/package-lock.json
-      - name: Install Dependencies Frontend
+          cache-dependency-path: app/package-lock.json
+      - name: Install Dependencies app
         run: npm ci
-        working-directory: ./frontend
+        working-directory: ./app
       - name: Build public files
         run: npm run build:acceptance
-        working-directory: ./frontend
+        working-directory: ./app
       - name: Install SSH key
         uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
@@ -32,9 +32,9 @@ jobs:
           known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
       - name: Send public files to vps
         run: |
-          ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-fe-acceptance"
-          rsync -az --delete ./frontend/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-fe-acceptance/
+          ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-app-acceptance"
+          rsync -az --delete ./app/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-app-acceptance/
           ssh admin@vpsnode1.vps.webdock.cloud "\
-          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-fe-acceptance/ /var/caddy/acc.clothingloop.org/; \
+          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-app-acceptance/ /var/caddy/acc.app.clothingloop.org/; \
           sudo systemctl reload caddy"
           echo "done"

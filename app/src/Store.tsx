@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useMemo, useState } from "react";
 import { Storage } from "@ionic/storage";
 import {
   chainGet,
@@ -18,7 +18,7 @@ import {
   chainUpdate,
 } from "./api";
 import dayjs from "./dayjs";
-import { OverlayState } from "./utils/overlay_open";
+import { OverlayContainsState, OverlayState } from "./utils/overlay_open";
 
 interface StorageAuth {
   user_uid: string;
@@ -37,6 +37,7 @@ type BagListView = "dynamic" | "list" | "card";
 export const StoreContext = createContext({
   isAuthenticated: IsAuthenticated.Unknown,
   isChainAdmin: false,
+  isThemeDefault: true,
   authUser: null as null | User,
   setPause: (date: Date | boolean) => {},
   setTheme: (c: string) => {},
@@ -58,6 +59,7 @@ export const StoreContext = createContext({
   bagListView: "dynamic" as BagListView,
   setBagListView: (v: BagListView) => {},
   connError: (err: any) => Promise.resolve(IsAuthenticated.Unknown),
+  shouldBlur: false,
 });
 
 const errLoopMustBeSelected =
@@ -84,6 +86,29 @@ export function StoreProvider({
   const [isChainAdmin, setIsChainAdmin] = useState(false);
   const [overlayState, setOverlayState] = useState(OverlayState.OPEN_ALL);
   const [bagListView, setBagListView] = useState<BagListView>("dynamic");
+
+  const shouldBlur = useMemo(() => {
+    let isAppDisabledPopup =
+      chain?.is_app_disabled &&
+      !OverlayContainsState(
+        overlayState,
+        OverlayState.CLOSE_CHAIN_APP_DISABLED,
+      );
+
+    let isDraftPopup =
+      !chain?.published &&
+      !OverlayContainsState(overlayState, OverlayState.CLOSE_PAUSED);
+
+    return isAppDisabledPopup || isDraftPopup || false;
+  }, [chain, overlayState]);
+
+  const isThemeDefault = useMemo(() => {
+    let theme = chain?.theme;
+    if (!theme) return true;
+    if (theme === "default") return true;
+
+    return false;
+  }, [chain]);
 
   // Get storage from IndexedDB or LocalStorage
   async function _init() {
@@ -367,6 +392,7 @@ export function StoreProvider({
         bags,
         bulkyItems,
         chain,
+        isThemeDefault,
         chainUsers,
         listOfChains,
         setChain: _setChain,
@@ -382,6 +408,7 @@ export function StoreProvider({
         bagListView,
         setBagListView: _setBagListView,
         connError: _connError,
+        shouldBlur,
       }}
     >
       {children}

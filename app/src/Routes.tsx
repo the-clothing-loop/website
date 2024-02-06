@@ -115,7 +115,7 @@ export default function Routes() {
     const bodyEl = document.getElementsByTagName("body")[0];
 
     let theme = chain.theme;
-    if (theme === "default" || !theme) theme = "grey";
+    if (theme === "grey" || !theme) theme = "default";
 
     bodyEl.setAttribute("data-theme", theme);
   }, [chain]);

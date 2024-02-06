@@ -78,6 +78,8 @@ export default function BagsList() {
     route,
     bagListView,
     setBagListView,
+    isThemeDefault,
+    shouldBlur,
   } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const sheetModal = useRef<HTMLIonModalElement>(null);
@@ -89,6 +91,7 @@ export default function BagsList() {
   const [updateBag, setUpdateBag] = useState<Bag | null>(null);
   const [sheetModalUserUID, setSheetModalUserUID] = useState("");
   const [sheetModalBagID, setSheetModalBagID] = useState(0);
+  const [bagColor, setBagColor] = useState("");
 
   const [bagsCard, bagsList] = useMemo(() => {
     if (!authUser) return [[], []];
@@ -258,8 +261,10 @@ export default function BagsList() {
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">{t("whereIsTheBag")}</IonTitle>
+          <IonToolbar className="tw-bg-transparent">
+            <IonTitle size="large" className="tw-text-green tw-font-serif">
+              {t("whereIsTheBag")}
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonText color="medium" className="ion-margin">
@@ -274,7 +279,7 @@ export default function BagsList() {
             <IonRefresherContent />
           </IonRefresher>
           <IonGrid>
-            <IonRow>
+            <IonRow className={shouldBlur ? "tw-blur" : ""}>
               {bagsCard.map((bag) => {
                 const user = chainUsers.find((u) => u.uid === bag.user_uid);
                 if (!user) return null;
@@ -287,7 +292,6 @@ export default function BagsList() {
                   isChainAdmin,
                   bagUpdatedAt,
                 );
-
                 return (
                   <IonCol size="6" key={"inRoute" + bag.id}>
                     <Card
@@ -299,17 +303,17 @@ export default function BagsList() {
                         handleClickDelete(bag.id, bag.number)
                       }
                       onClickEdit={() => handleClickEdit(bag)}
-                      className="ion-no-margin tw-relative tw-overflow-visible"
+                      className="ion-no-margin tw-relative tw-overflow-visible tw-rounded-none tw-text-[0px]"
                     >
                       {isChainAdmin ? (
                         <IonButton
                           size="small"
-                          color="light"
+                          color="clear"
                           style={{
                             "--padding-start": "5px",
                             "--padding-end": "5px",
                           }}
-                          className="tw-absolute tw-top-0 tw-right-[3px] tw-z-10"
+                          className="tw-absolute tw-z-10 tw-top-0 tw-right-[3px]"
                           onClick={() => handleClickOptions(bag.id)}
                         >
                           <IonIcon icon={ellipsisHorizontal} />
@@ -317,8 +321,8 @@ export default function BagsList() {
                       ) : null}
                       <div
                         key="old"
-                        className={`tw-text-sm tw-block tw-absolute tw-top-[5px] tw-left-[10px] ${
-                          isBagTooOldMe ? "tw-text-danger" : ""
+                        className={`tw-text-sm tw-block tw-absolute tw-z-10 tw-top-[5px] tw-left-[10px] ${
+                          isBagTooOldMe ? "tw-text-[#fdaab5]" : "tw-text-[#fff]"
                         }`}
                       >
                         {bagUpdatedAt.toDate().toLocaleDateString()}
@@ -327,17 +331,13 @@ export default function BagsList() {
                         ) : null}
                       </div>
                       <div
-                        className="tw-p-2.5 tw-pt-5"
+                        className="tw-relative tw-p-0 tw-pt-0 tw-overflow-hidden"
                         onClick={() => handleClickItem(bag.id, bag.user_uid)}
                       >
-                        <div className="bagslist-bag-icon tw-pt-2.5 tw-px-5 tw-pb-0.5">
-                          <BagSVG color={bag.color} />
-                        </div>
-                        <div className="ion-text-ellipsis tw-text-center tw-font-bold tw-text-base tw-text-dark ">
-                          {bag.number}
+                        <div className="tw-scale-100 tw-transition-transform hover:tw-scale-105 tw-cursor-pointer">
+                          <BagSVG bag={bag} />
                         </div>
                       </div>
-
                       <IonRouterLink
                         routerLink={"/address/" + user.uid}
                         className="tw-py-3 tw-px-2 tw-block tw-bg-light"
@@ -369,30 +369,36 @@ export default function BagsList() {
                   >
                     <IonCard className="ion-no-margin">
                       <IonItem lines="none" className="tw-py-[3px] tw-px-0">
-                        <div
-                          slot="start"
-                          className="bagslist-bag-icon tw-w-6 tw-h-6"
-                          onClick={() => handleClickItem(bag.id, bag.user_uid)}
-                        >
-                          <BagSVG color={bag.color} />
-                        </div>
-                        <div
-                          className="ion-text-ellipsis"
-                          onClick={() => handleClickItem(bag.id, bag.user_uid)}
-                        >
-                          <span className="!tw-font-bold">{bag.number}</span>
-                          <span
-                            className={`tw-block tw-text-base tw-mt-[3px] ${
-                              isBagTooOldMe
-                                ? "tw-text-danger"
-                                : "tw-text-medium"
-                            }`}
+                        <div className="tw-group tw-flex flex-row tw-items-center">
+                          <div
+                            slot="start"
+                            className="tw-w-6 tw-h-6 tw-mr-4 tw-scale-100 tw-transition-transform group-hover:tw-scale-125"
+                            onClick={() =>
+                              handleClickItem(bag.id, bag.user_uid)
+                            }
                           >
-                            {bagUpdatedAt.toDate().toLocaleDateString()}
-                            {isBagTooOldMe || isBagTooOldHost ? (
-                              <span className="tw-bg-danger tw-h-2 tw-w-2 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
-                            ) : null}
-                          </span>
+                            <BagSVG bag={bag} isList />
+                          </div>
+                          <div
+                            className="ion-text-ellipsis"
+                            onClick={() =>
+                              handleClickItem(bag.id, bag.user_uid)
+                            }
+                          >
+                            <span className="!tw-font-bold">{bag.number}</span>
+                            <span
+                              className={`tw-block tw-text-base tw-mt-[3px] ${
+                                isBagTooOldMe
+                                  ? "tw-text-danger"
+                                  : "tw-text-medium"
+                              }`}
+                            >
+                              {bagUpdatedAt.toDate().toLocaleDateString()}
+                              {isBagTooOldMe || isBagTooOldHost ? (
+                                <span className="tw-bg-danger tw-h-2 tw-w-2 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
+                              ) : null}
+                            </span>
+                          </div>
                         </div>
 
                         {isOpen ? (
@@ -455,6 +461,16 @@ export default function BagsList() {
           bagID={sheetModalBagID}
           didDismiss={handleDidDismissSheetModal}
         />
+        <div className="relative">
+          {/* Background SVG */}
+          <IonIcon
+            aria-hidden="true"
+            icon="/v2_o.svg"
+            style={{ fontSize: 400 }}
+            color={isThemeDefault ? "" : "light"}
+            className="tw-absolute tw-right-[170px] -tw-top-[180px] -tw-z-10 tw-text-green tw-opacity-30"
+          />
+        </div>
       </IonContent>
     </IonPage>
   );
@@ -697,27 +713,101 @@ function SelectUserModal({
   );
 }
 
-function BagSVG({ color }: { color: string }) {
+function BagSVG({ bag, isList }: { bag: Bag; isList?: boolean }) {
+  let fontSize = (bag.number.length > 10 ? 10 : bag.number.length) * -1 + 40;
+  let fontSizeWrapped = 28;
+  if (bag.number.length < 13)
+    fontSizeWrapped += Math.pow((bag.number.length - 13) * -1 * 0.8, 1.5);
+  let padding = 10;
+
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.5 47.5" id="bag">
-      <defs>
-        <clipPath id="a">
-          <path d="M0 38h38V0H0v38Z"></path>
-        </clipPath>
-      </defs>
-      <g clipPath="url(#a)" transform="matrix(1.25 0 0 -1.25 0 47.5)">
-        <path
-          fill="#ffac33"
-          d="M29 15a1 1 0 0 0-1 1v6c0 6.065-4.037 11-9 11-4.962 0-9-4.935-9-11v-6a1 1 0 1 0-2 0v6c0 7.168 4.935 13 11 13s11-5.832 11-13v-6a1 1 0 0 0-1-1"
-        ></path>
-        <path
-          fill={color || "#9266cc"}
-          d="M34.386 24.028C34.126 26.213 32.115 28 29.914 28H8.086c-2.2 0-4.212-1.787-4.471-3.972L1.472 5.972C1.212 3.787 2.8 2 5 2h28c2.2 0 3.788 1.787 3.529 3.972l-2.143 18.056Z"
-        ></path>
-        <path
-          fill="#ffd983"
-          d="M29 17a1 1 0 0 0-1 1v6c0 6.065-4.037 11-9 11-4.962 0-9-4.935-9-11v-6a1 1 0 1 0-2 0v6c0 7.168 4.935 13 11 13s11-5.832 11-13v-6a1 1 0 0 0-1-1"
-        ></path>
+    <svg
+      id="Laag_1"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      x="0px"
+      y="0px"
+      viewBox="32.3 21.34 235.2 238.09"
+      xmlSpace="preserve"
+    >
+      <style type="text/css">
+        {
+          // "\n\t.st0{fill:none;}\n\t.st1{fill:#FFFFFF;}\n\t.st2{fill:{bag.color};}\n\t.st3{font-family:'PlayfairDisplay-Bold';}\n\t.st4{font-size:115.218px;}\n"
+        }
+      </style>
+      <g>
+        <g>
+          {isList ? null : (
+            <rect
+              fill={bag.color}
+              x="32.3"
+              y="21.34"
+              width="235.2"
+              height="238.09"
+            ></rect>
+          )}
+          <path
+            className="st0"
+            fill="none"
+            d="M200.7,79.9c-9.6-7.1-20.4-11.2-32.2-12.6c11.4,5.2,21.1,12.6,28.7,22.5c6.5,8.4,11,17.8,13.4,28.1h16 C222.6,102.5,214,89.7,200.7,79.9z"
+          />
+          <path
+            className="st0"
+            fill="none"
+            d="M150.7,67.7c-1.5-0.3-3.2,0.2-4.8,0.5c-13.8,3-25.6,9.5-35.4,19.7c-8.3,8.6-13.9,18.7-16.8,30h111.5 c-3-11.7-8.7-21.9-17.1-30.5C177.7,76.8,165.2,70.2,150.7,67.7z"
+          />
+          <path
+            className="st0"
+            fill="none"
+            d="M130.8,67.3c-9.8,1.3-18.8,4.4-27.1,9.6C95.3,82,88.4,88.6,83,96.7c-4.4,6.6-7.6,13.6-9.5,21.2h14.8 C94.1,94.6,108.4,77.9,130.8,67.3z"
+          />
+          <path
+            className="st1"
+            fill={isList ? bag.color : "#fff"}
+            d="M232.2,117.9c-3.2-13.4-9.8-25.1-19.7-35c-8.4-8.4-18.4-14.4-29.8-18.1c-9.4-3-19-4-28.8-3.2 c-1.7,0.1-3.5,0.5-5.1,0.3c-7.1-0.8-14.3-0.8-21.4,0.4c-15.3,2.5-28.4,9.3-39.5,20.1c-10.1,9.9-16.8,21.8-20.1,35.5h-5.5v119.7 h175.2V117.9H232.2z M73.4,117.9c1.9-7.6,5.1-14.6,9.5-21.2c5.5-8.1,12.4-14.7,20.7-19.9c8.3-5.1,17.3-8.3,27.1-9.6 c-22.4,10.6-36.7,27.3-42.6,50.7H73.4z M93.7,117.9c2.9-11.4,8.5-21.4,16.8-30c9.8-10.2,21.6-16.7,35.4-19.7 c1.6-0.3,3.2-0.8,4.8-0.5c14.6,2.5,27,9.1,37.4,19.7c8.4,8.6,14.1,18.8,17.1,30.5H93.7z M210.7,117.9 c-2.4-10.3-6.9-19.6-13.4-28.1c-7.7-9.9-17.3-17.4-28.7-22.5c11.9,1.4,22.6,5.5,32.2,12.6c13.3,9.8,21.9,22.5,25.9,38H210.7z"
+          />
+        </g>
+        {isList ? null : (
+          <switch>
+            <foreignObject
+              width={178 - padding * 2}
+              height="121"
+              x={62 + padding}
+              y="118"
+              requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
+            >
+              <p
+                text-anchor="middle"
+                style={{
+                  color: bag.color,
+                  fontFamily: "'PlayfairDisplay-Bold'",
+                  fontWeight: "bold",
+                  fontSize: fontSizeWrapped + "px",
+                  margin: "0",
+                  display: "grid",
+                  height: "100%",
+                  textAlign: "center",
+                  alignItems: "center",
+                }}
+              >
+                {bag.number}
+              </p>
+            </foreignObject>
+            <text
+              transform="matrix(0.887 0 0 1 97.4705 180.6156)"
+              text-anchor="middle"
+              alignmentBaseline="middle"
+              x="57.30"
+              y="3%"
+              fill={bag.color}
+              fontFamily="'PlayfairDisplay-Bold'"
+              fontWeight="bold"
+              fontSize={fontSize + "px"}
+            >
+              {bag.number}
+            </text>
+          </switch>
+        )}
       </g>
     </svg>
   );

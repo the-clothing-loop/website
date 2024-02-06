@@ -277,9 +277,29 @@ func MockBag(t *testing.T, db *gorm.DB, chainID, userID uint, o MockBagOptions) 
 		name = faker.Beer().Name()
 	}
 
+	colors := []string{
+		"#C9843E",
+		"#f4b63f",
+		"#79A02D",
+		"#66926e",
+		"#199FBA",
+		"#6494C2",
+		"#1467b3",
+		"#a899c2",
+		"#513484",
+		"#B37EAD",
+		"#b76dac",
+		"#F57BB0",
+		"#A35C7B",
+		"#E38C95",
+		"#c73643",
+		"#7D7D7D",
+		"#3c3c3b",
+	}
+
 	bag := &models.Bag{
 		Number:      name,
-		Color:       faker.Color().Hex(),
+		Color:       faker.RandomStringElement(colors),
 		UserChainID: userChainID,
 	}
 	if err := db.Create(bag).Error; err != nil {
