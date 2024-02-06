@@ -558,7 +558,7 @@ export default function ChainMemberList() {
                   {t("peopleWithCount", { count: users.length })}
                 </dd>
 
-                {isUserAdmin && (
+                {isUserAdmin || authUser?.is_root_admin ? (
                   <>
                     <dt className="font-bold mb-2">{t("routePrivacy")}</dt>
                     <dd className="text-sm mb-1">
@@ -571,7 +571,7 @@ export default function ChainMemberList() {
                         : t("routePrivacyAllVisible")}
                     </dd>
                   </>
-                )}
+                ) : null}
               </dl>
 
               {isUserAdmin || authUser?.is_root_admin ? (
