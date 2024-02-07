@@ -653,7 +653,7 @@ func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUse
 	var head, iterator, currentUserNode *noderoute.NodeWithInformation[userData]
 
 	// Building the noderoute data structure
-	for _, userUID := range route {
+	for routeOrder, userUID := range route {
 
 		// find user in users slice
 		user, userIndex, _ := lo.FindIndexOf[models.User](users, func(item models.User) bool {
@@ -687,7 +687,7 @@ func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUse
 		}
 
 		// save the position of the authUser
-		if authUserRouteOrder == userIndex {
+		if authUserRouteOrder == routeOrder {
 			currentUserNode = node
 		}
 	}
