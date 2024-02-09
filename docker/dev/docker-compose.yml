@@ -59,7 +59,12 @@ services:
     volumes:
       - mysql:/var/lib/mysql
       - ../../server/sql:/scripts
+  mattermost:
+    platform: linux/amd64
+    image: mattermost/mattermost-preview
+    ports:
+      - 8065:8065
+    hostname: mattermost
 
 volumes:
   mysql:
-  tinodedb:
