@@ -14,6 +14,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"github.com/the-clothing-loop/website/server/pkg/tsp"
+	"gopkg.in/guregu/null.v3"
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -129,7 +130,8 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddIsAppDisabled {
 		sql += `,
-		chains.is_app_disabled`
+		chains.is_app_disabled,
+		chains.chat_room_id`
 	}
 	sql += ` FROM chains WHERE uid = ? LIMIT 1`
 	err := db.Raw(sql, query.ChainUID).Scan(chain).Error
@@ -165,6 +167,8 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddIsAppDisabled {
 		body.IsAppDisabled = &chain.IsAppDisabled
+		chatRoomID := null.StringFrom(chain.ChatRoomID.String)
+		body.ChatRoomID = &chatRoomID
 	}
 	c.JSON(200, body)
 }
