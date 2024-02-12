@@ -49,6 +49,7 @@ export interface Chain {
   total_members?: number;
   total_hosts?: number;
   rules_override?: string;
+  headers_override?: string;
   theme?: string;
   is_app_disabled?: boolean;
 }

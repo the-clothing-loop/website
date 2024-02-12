@@ -108,6 +108,7 @@ func ChainGet(c *gin.Context) {
 	var query struct {
 		ChainUID         string `form:"chain_uid" binding:"required"`
 		AddRules         bool   `form:"add_rules" binding:"omitempty"`
+		AddHeaders       bool   `form:"add_headers" binding:"omitempty"`
 		AddTotals        bool   `form:"add_totals" binding:"omitempty"`
 		AddTheme         bool   `form:"add_theme" binding:"omitempty"`
 		AddIsAppDisabled bool   `form:"add_is_app_disabled" binding:"omitempty"`
@@ -122,6 +123,10 @@ func ChainGet(c *gin.Context) {
 	if query.AddRules {
 		sql += `,
 		chains.rules_override`
+	}
+	if query.AddHeaders {
+		sql += `,
+		chains.headers_override`
 	}
 	if query.AddTheme {
 		sql += `,
@@ -154,6 +159,9 @@ func ChainGet(c *gin.Context) {
 
 	if query.AddRules {
 		body.RulesOverride = &chain.RulesOverride
+	}
+	if query.AddHeaders {
+		body.HeadersOverride = &chain.HeadersOverride
 	}
 	if query.AddTheme {
 		body.Theme = &chain.Theme
@@ -327,6 +335,7 @@ func ChainUpdate(c *gin.Context) {
 		Sizes            *[]string `json:"sizes,omitempty"`
 		Genders          *[]string `json:"genders,omitempty"`
 		RulesOverride    *string   `json:"rules_override,omitempty"`
+		HeadersOverride  *string   `json:"headers_override,omitempty"`
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 		Theme            *string   `json:"theme,omitempty"`
@@ -387,6 +396,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.RulesOverride != nil {
 		valuesToUpdate["rules_override"] = *(body.RulesOverride)
+	}
+	if body.HeadersOverride != nil {
+		valuesToUpdate["headers_override"] = *(body.HeadersOverride)
 	}
 	if body.Published != nil {
 		valuesToUpdate["published"] = *(body.Published)

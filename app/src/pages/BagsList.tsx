@@ -50,10 +50,12 @@ import {
   MouseEvent,
   RefObject,
   useMemo,
+  useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID, User } from "../api";
 import CreateBag from "../components/CreateUpdateBag";
+import EditHeaders from "../components/EditHeaders"
 import { StoreContext } from "../Store";
 import dayjs from "../dayjs";
 import { Sleep } from "../utils/sleep";
@@ -83,6 +85,7 @@ export default function BagsList() {
   } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const sheetModal = useRef<HTMLIonModalElement>(null);
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
   const [presentAlert] = useIonAlert();
 
   // -1: nothing is shown
@@ -92,6 +95,16 @@ export default function BagsList() {
   const [sheetModalUserUID, setSheetModalUserUID] = useState("");
   const [sheetModalBagID, setSheetModalBagID] = useState(0);
   const [bagColor, setBagColor] = useState("");
+
+  const header = useMemo(() => {
+    if (chain?.headers_override) {
+      return JSON.parse(chain.headers_override || "") as string;
+    }
+    return t("whereIsTheBag")
+  }, [chain]);
+
+  useEffect(() => {
+  },[sheetModalUserUID])
 
   const [bagsCard, bagsList] = useMemo(() => {
     if (!authUser) return [[], []];
@@ -202,6 +215,10 @@ export default function BagsList() {
     if (isChainAdmin) setOpenCard(bagID);
   }
 
+  function handleClickChange() {
+    headerSheetModal.current?.present();
+  }
+
   return (
     <IonPage>
       <OverlayPaused />
@@ -250,10 +267,11 @@ export default function BagsList() {
             </IonPopover>
           </IonButtons>
 
-          <IonTitle>{t("whereIsTheBag")}</IonTitle>
+          <IonTitle>{header}</IonTitle>
 
           {isChainAdmin ? (
             <IonButtons slot="end">
+              <IonButton onClick={handleClickChange}>{t("change")}</IonButton>
               <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
             </IonButtons>
           ) : null}
@@ -263,7 +281,7 @@ export default function BagsList() {
         <IonHeader collapse="condense">
           <IonToolbar className="tw-bg-transparent">
             <IonTitle size="large" className="tw-text-green tw-font-serif">
-              {t("whereIsTheBag")}
+              {header}
             </IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -460,6 +478,11 @@ export default function BagsList() {
           selectedUserUID={sheetModalUserUID}
           bagID={sheetModalBagID}
           didDismiss={handleDidDismissSheetModal}
+        />
+        <EditHeaders
+          modal={headerSheetModal}
+          didDismiss={handleDidDismissSheetModal}
+          initalHeader={t("whereIsTheBag")}
         />
         <div className="relative">
           {/* Background SVG */}

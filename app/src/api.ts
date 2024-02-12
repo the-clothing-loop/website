@@ -78,6 +78,7 @@ export interface Chain {
   published: boolean;
   open_to_new_members: boolean;
   rules_override?: string;
+  headers_override?: string;
   theme?: string;
   is_app_disabled?: boolean;
 }
@@ -154,6 +155,7 @@ export function userGetByUID(chainUID: string | undefined, userUID: string) {
 export function chainGet(
   chainUID: UID,
   addRules = false,
+  addHeaders = false,
   addTheme = false,
   addIsAppDisabled = false,
 ) {
@@ -161,6 +163,7 @@ export function chainGet(
     params: {
       chain_uid: chainUID,
       add_rules: addRules,
+      add_headers: addHeaders,
       add_theme: addTheme,
       add_is_app_disabled: addIsAppDisabled,
     },
