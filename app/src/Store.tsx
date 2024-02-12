@@ -218,7 +218,11 @@ export function StoreProvider({
     if (_chainUID && _authUser) {
       try {
         const res = await Promise.all([
-          chainGet(_chainUID, true, true, true),
+          chainGet(_chainUID, {
+            addRules: true,
+            addTheme: true,
+            addIsAppDisabled: true,
+          }),
           userGetAllByChain(_chainUID),
           routeGetOrder(_chainUID),
           bagGetAllByChain(_chainUID, _authUser.uid),
@@ -294,7 +298,11 @@ export function StoreProvider({
       if (tab === "help") {
         if (!chain) throw errLoopMustBeSelected;
 
-        let _chain = await chainGet(chain.uid, true, true, true);
+        let _chain = await chainGet(chain.uid, {
+          addRules: true,
+          addTheme: true,
+          addIsAppDisabled: true,
+        });
         setChain(_chain.data);
       } else if (tab === "address" || tab === "bags") {
         if (!chain) throw errLoopMustBeSelected;
@@ -309,7 +317,6 @@ export function StoreProvider({
         setBags(_bags.data);
       } else if (tab === "bulky-items") {
         if (!chain) throw errLoopMustBeSelected;
-
         const [_chainUsers, _bulkyItems] = await Promise.all([
           userGetAllByChain(chain.uid),
           bulkyItemGetAllByChain(chain.uid, __authUser!.uid),
@@ -324,15 +331,14 @@ export function StoreProvider({
             .filter((uc) => uc.is_approved)
             .map((uc) => {
               const isCurrentChain = uc.chain_uid === chain?.uid;
-              return chainGet(
-                uc.chain_uid,
-                isCurrentChain,
-                isCurrentChain,
-                true,
-              );
+              return chainGet(uc.chain_uid, {
+                addRules: isCurrentChain,
+                addTheme: isCurrentChain,
+                addIsAppDisabled: true,
+              });
             }),
-        ).then((chains) =>
-          chains.map((c) => {
+        ).then((resp) =>
+          resp.map((c) => {
             if (c.data.uid === chain?.uid) {
               _chain = c.data;
             }

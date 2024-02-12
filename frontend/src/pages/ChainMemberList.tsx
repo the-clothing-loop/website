@@ -447,7 +447,11 @@ export default function ChainMemberList() {
       setHostChains(_hostChains.sort((a, b) => a.name.localeCompare(b.name)));
 
       const [chainData, chainUsers, routeData, bagData] = await Promise.all([
-        chainGet(chainUID, true, true),
+        chainGet(chainUID, {
+          addTotals: true,
+          addIsAppDisabled: true,
+          addRoutePrivacy: true,
+        }),
         userGetAllByChain(chainUID),
         routeGetOrder(chainUID),
         bagGetAll,
@@ -553,6 +557,21 @@ export default function ChainMemberList() {
                 <dd className="text-sm mb-1">
                   {t("peopleWithCount", { count: users.length })}
                 </dd>
+
+                {isUserAdmin || authUser?.is_root_admin ? (
+                  <>
+                    <dt className="font-bold mb-2">{t("routePrivacy")}</dt>
+                    <dd className="text-sm mb-1">
+                      {chain.route_privacy === 0
+                        ? t("routePrivacyNoneVisible")
+                        : chain.route_privacy !== -1
+                        ? t("routePrivacyWithCount", {
+                            count: chain.route_privacy,
+                          })
+                        : t("routePrivacyAllVisible")}
+                    </dd>
+                  </>
+                ) : null}
               </dl>
 
               {isUserAdmin || authUser?.is_root_admin ? (

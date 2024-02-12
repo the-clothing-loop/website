@@ -32,9 +32,11 @@ type MockChainAndUserOptions struct {
 	IsChainAdmin       bool
 	IsNotPublished     bool
 	IsOpenToNewMembers bool
+	RoutePrivacy       *int
 	RouteOrderIndex    int
 
 	// for generating new members
+	IsNotActive         bool
 	OnlyEmailExampleCom bool
 	OverrideLongitude   *float64
 	OverrideLatitude    *float64
@@ -80,6 +82,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 			RouteOrder:   o.RouteOrderIndex,
 		})
 	}
+
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), lo.Ternary(o.OnlyEmailExampleCom, "example.com", faker.Internet().FreeEmailDomain()))),
@@ -99,6 +102,11 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		},
 		Chains: chains,
 	}
+
+	if o.IsNotActive {
+		user.PausedUntil = null.NewTime(time.Now().Add(7), true)
+	}
+
 	if err := db.Create(user).Error; err != nil {
 		glog.Fatalf("Unable to create testUser: %v", err)
 	}
@@ -127,6 +135,10 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		latitude = faker.Address().Latitude()
 		longitude = faker.Address().Longitude()
 	}
+	routePrivacy := 2
+	if o.RoutePrivacy != nil {
+		routePrivacy = *o.RoutePrivacy
+	}
 	chain = &models.Chain{
 		UID:              uuid.NewV4().String(),
 		Name:             "Fake " + faker.Company().Name(),
@@ -138,6 +150,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		Radius:           float32(Faker.Faker.RandomFloat(faker, 3, 2, 30)),
 		Published:        !o.IsNotPublished,
 		OpenToNewMembers: o.IsOpenToNewMembers,
+		RoutePrivacy:     routePrivacy,
 		Sizes:            MockSizes(true),
 		Genders:          MockGenders(false),
 		UserChains:       []models.UserChain{},

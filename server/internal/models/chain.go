@@ -36,6 +36,7 @@ type Chain struct {
 	DeletedAt                     zero.Time
 	Theme                         string
 	IsAppDisabled                 bool
+	RoutePrivacy                  int
 	LastAbandonedAt               sql.NullTime
 	LastAbandonedRecruitmentEmail sql.NullTime
 }
@@ -57,6 +58,7 @@ type ChainResponse struct {
 	RulesOverride    *string  `json:"rules_override,omitempty"`
 	Theme            *string  `json:"theme,omitempty"`
 	IsAppDisabled    *bool    `json:"is_app_disabled,omitempty"`
+	RoutePrivacy     *int     `json:"route_privacy,omitempty"`
 }
 
 // Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members
