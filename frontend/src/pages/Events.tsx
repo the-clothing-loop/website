@@ -350,7 +350,7 @@ function EventItem({ event }: { event: Event }) {
   return (
     <article className="flex flex-col bg-teal-light">
       <div className="relative flex">
-        <Link to={eventURL} className="relative aspect-[4/3] overflow-hidden">
+        <Link to={eventURL} className="relative aspect-[4/3] w-full">
           <div className=" text-md absolute mt-4 right-4 text-center z-10">
             <p className="bg-teal text-white py-2 px-3">
               <span className="inline-block pr-1 font-extrabold">
