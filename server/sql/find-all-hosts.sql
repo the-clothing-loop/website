@@ -5,7 +5,6 @@ SELECT
     uc.is_chain_admin
 FROM users AS u
     JOIN user_chains AS uc ON uc.user_id = u.id
+        AND uc.is_chain_admin = TRUE
 GROUP BY u.id
-HAVING
-    uc.is_chain_admin = TRUE
-    AND u.email is not NULL
+HAVING u.email is not NULL

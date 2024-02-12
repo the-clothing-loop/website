@@ -14,7 +14,7 @@ export default function OverlayPaused() {
     useContext(StoreContext);
 
   const hosts = useMemo<User[]>(
-    () => chainUsers.filter((u) => IsChainAdmin(u, chain)),
+    () => chainUsers.filter((u) => IsChainAdmin(u, chain?.uid)),
     [chainUsers, chain],
   );
 
@@ -40,7 +40,9 @@ export default function OverlayPaused() {
       <div className="tw-relative tw-z-20 tw-flex tw-h-full tw-flex-col tw-justify-center tw-items-center tw-text-center">
         <IonCard className="tw-bg-background">
           <IonCardContent className="tw-text-text">
-            <h1 className="!tw-mb-4">{t("loopIsNotPublished")}</h1>
+            <h1 className="!tw-mb-4">
+              {t("loopIsNotPublished", { name: chain?.name })}
+            </h1>
             {isUserHost ? null : (
               <>
                 <p className="!tw-mb-3">{t("pleaseContactYourLoopHost")}</p>
@@ -90,7 +92,6 @@ export default function OverlayPaused() {
           </IonCardContent>
         </IonCard>
       </div>
-      <div className="tw-absolute tw-z-10 tw-inset-0 tw-bg-paused tw-opacity-20"></div>
     </div>
   );
 }

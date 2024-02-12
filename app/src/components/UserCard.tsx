@@ -83,7 +83,10 @@ export default function UserCard({
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
   const isEmailPrivate = IsPrivate(user.email);
-  const isUserAdmin = useMemo(() => IsChainAdmin(user, chain), [user, chain]);
+  const isUserAdmin = useMemo(
+    () => IsChainAdmin(user, chain?.uid),
+    [user, chain],
+  );
   const refAddressPopup = useRef<HTMLIonPopoverElement>(null);
   const refPhoneNumberPopup = useRef<HTMLIonPopoverElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
@@ -168,7 +171,12 @@ export default function UserCard({
             >
               <IonLabel>
                 <h3 className="!tw-font-bold">{t("phoneNumber")}</h3>
-                <a href={"tel:" + user.phone_number}>{user.phone_number}</a>
+                <a
+                  className="dark:tw-text-primary-contrast"
+                  href={"tel:" + user.phone_number}
+                >
+                  {user.phone_number}
+                </a>
               </IonLabel>
             </IonItem>
             <IonPopover ref={refPhoneNumberPopup}>

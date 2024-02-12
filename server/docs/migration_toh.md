@@ -10,6 +10,7 @@ gantt
    Terms of Hosts live                                                              : 2024-01-15, 1d
    Day 40 closeChainsWithOldPendingParticipants live                                : 2024-02-24, 1d
    Day 40 Run migrations (Save list hosts, draft loops, Set host to participant)    : 2024-02-24, 1d
+   Day 65 Delete loops w zero hosts toh-accepted with no participants     : 2024-03-20, 1d
 
    section Email
    Day 14 Email accept toh                                     : 2024-01-29, 1d

@@ -31,11 +31,13 @@ export default function Theme() {
   function setSelectedTheme(color: string) {
     const bodyEl = document.getElementsByTagName("body")[0];
     bodyEl.setAttribute("data-theme", color);
+    if (color === "grey") color = "default";
     _setSelectedTheme(color);
   }
 
   function willPresent() {
     let theme = chain?.theme || "default";
+    if (theme === "grey") theme = "default";
     console.log("Modal init", theme);
     _setSelectedTheme(theme);
     setPreviousTheme(theme);

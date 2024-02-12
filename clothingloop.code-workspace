@@ -26,10 +26,16 @@
     },
     {
       "path": "translate_ai"
+    },
+    {
+      "path": "docs"
     }
   ],
   "settings": {
-    "prettier.documentSelectors": [".prettierrc.yml"]
+    "prettier.documentSelectors": [
+      ".prettierrc.yml"
+    ],
+    "svg.preview.background": "transparent"
   },
   "extensions": {
     "recommendations": [
