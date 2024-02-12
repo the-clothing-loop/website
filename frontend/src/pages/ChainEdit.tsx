@@ -47,7 +47,7 @@ export default function ChainEdit() {
   useEffect(() => {
     (async () => {
       try {
-        let chain = (await chainGet(chainUID)).data;
+        let chain = (await chainGet(chainUID, { addRoutePrivacy: true })).data;
 
         setChain(chain);
       } catch (err: any) {
@@ -70,6 +70,7 @@ export default function ChainEdit() {
         <p className="text-sm mb-1">{t("clickToChangeLoopLocation")}</p>
         <ChainDetailsForm
           showBack
+          showRoutePrivacyField
           onSubmit={handleSubmit}
           initialValues={chain}
           showAllowedTOH={!authUser?.accepted_toh}

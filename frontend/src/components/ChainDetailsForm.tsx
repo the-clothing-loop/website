@@ -22,6 +22,7 @@ interface Props {
   onSubmit: (values: RegisterChainForm) => void;
   initialValues?: RegisterChainForm;
   showBack?: boolean;
+  showRoutePrivacyField?: boolean;
   showAllowedTOH: boolean;
 }
 
@@ -70,6 +71,7 @@ export default function ChainDetailsForm({
   onSubmit,
   initialValues,
   showBack,
+  showRoutePrivacyField,
   showAllowedTOH,
 }: Props) {
   const { t } = useTranslation();
@@ -88,6 +90,7 @@ export default function ChainDetailsForm({
     sizes: [],
     longitude: 0,
     latitude: 0,
+    route_privacy: 2,
     ...initialValues,
   });
 
@@ -259,6 +262,61 @@ export default function ChainDetailsForm({
             step="0.1"
             info={t("decideOnTheAreaYourLoopWillBeActiveIn")}
           />
+
+          {showRoutePrivacyField && (
+            <div className="relative">
+              <TextForm
+                id="route_privacy_field"
+                type="number"
+                required
+                label={t("routePrivacy")}
+                name="route_privacy"
+                value={values.route_privacy}
+                onChange={(e) =>
+                  setValue("route_privacy", e.target.valueAsNumber)
+                }
+                step="1"
+                min={-1}
+                info={t("routePrivacyInfo")}
+              />
+              <label
+                htmlFor="route_privacy_field"
+                className={"absolute bottom-1 left-4 right-4 h-10 bg-white flex items-center ".concat(
+                  values.route_privacy === undefined || values.route_privacy > 0
+                    ? "hidden"
+                    : ""
+                )}
+              >
+                {values.route_privacy === 0
+                  ? t("routePrivacy0")
+                  : values.route_privacy === -1
+                  ? t("routePrivacy-1")
+                  : null}
+              </label>
+              <div className="flex flex-row absolute rtl:left-0 ltr:right-0 h-12 bottom-0 items-center pe-4 gap-2">
+                <button
+                  type="button"
+                  className="btn btn-circle btn-xs btn-secondary"
+                  onClick={() => {
+                    let rp = values.route_privacy || 0;
+                    if (rp === -1) return;
+                    setValue("route_privacy", rp - 1);
+                  }}
+                >
+                  <span className="feather feather-minus" />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-circle btn-xs btn-secondary"
+                  onClick={() =>
+                    setValue("route_privacy", (values.route_privacy || 0) + 1)
+                  }
+                >
+                  <span className="feather feather-plus" />
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="form-control relative w-full mb-4">
             <PopoverOnHover

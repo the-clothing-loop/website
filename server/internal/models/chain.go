@@ -37,6 +37,7 @@ type Chain struct {
 	DeletedAt                     zero.Time
 	Theme                         string
 	IsAppDisabled                 bool
+	RoutePrivacy                  int
 	LastAbandonedAt               sql.NullTime
 	LastAbandonedRecruitmentEmail sql.NullTime
 	ChatRoomID                    sql.NullString
@@ -59,6 +60,7 @@ type ChainResponse struct {
 	RulesOverride    *string      `json:"rules_override,omitempty"`
 	Theme            *string      `json:"theme,omitempty"`
 	IsAppDisabled    *bool        `json:"is_app_disabled,omitempty"`
+	RoutePrivacy     *int         `json:"route_privacy,omitempty"`
 	ChatRoomID       *null.String `json:"chat_room_id,omitempty"`
 }
 

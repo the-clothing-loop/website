@@ -153,16 +153,18 @@ export function userGetByUID(chainUID: string | undefined, userUID: string) {
 
 export function chainGet(
   chainUID: UID,
-  addRules = false,
-  addTheme = false,
-  addIsAppDisabled = false,
+  o: {
+    addRules?: boolean;
+    addTheme?: boolean;
+    addIsAppDisabled?: boolean;
+  } = {},
 ) {
   return window.axios.get<Chain>("/v2/chain", {
     params: {
       chain_uid: chainUID,
-      add_rules: addRules,
-      add_theme: addTheme,
-      add_is_app_disabled: addIsAppDisabled,
+      add_rules: o.addRules || false,
+      add_theme: o.addTheme || false,
+      add_is_app_disabled: o.addIsAppDisabled || false,
     },
   });
 }

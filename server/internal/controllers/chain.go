@@ -89,6 +89,7 @@ func ChainCreate(c *gin.Context) {
 				RouteOrder:   0,
 			},
 		},
+		RoutePrivacy: 2, // default route_privacy
 	}
 	if err := db.Create(&chain).Error; err != nil {
 		goscope.Log.Warningf("Unable to create chain: %v", err)
@@ -112,6 +113,7 @@ func ChainGet(c *gin.Context) {
 		AddTotals        bool   `form:"add_totals" binding:"omitempty"`
 		AddTheme         bool   `form:"add_theme" binding:"omitempty"`
 		AddIsAppDisabled bool   `form:"add_is_app_disabled" binding:"omitempty"`
+		AddRoutePrivacy  bool   `form:"add_route_privacy" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -169,6 +171,9 @@ func ChainGet(c *gin.Context) {
 		body.IsAppDisabled = &chain.IsAppDisabled
 		chatRoomID := null.StringFrom(chain.ChatRoomID.String)
 		body.ChatRoomID = &chatRoomID
+	}
+	if query.AddRoutePrivacy {
+		body.RoutePrivacy = &chain.RoutePrivacy
 	}
 	c.JSON(200, body)
 }
@@ -334,6 +339,7 @@ func ChainUpdate(c *gin.Context) {
 		Published        *bool     `json:"published,omitempty"`
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 		Theme            *string   `json:"theme,omitempty"`
+		RoutePrivacy     *int      `json:"route_privacy"`
 		IsAppDisabled    *bool     `json:"is_app_disabled,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -406,6 +412,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Theme != nil {
 		valuesToUpdate["theme"] = *(body.Theme)
+	}
+	if body.RoutePrivacy != nil {
+		valuesToUpdate["route_privacy"] = *(body.RoutePrivacy)
 	}
 	if body.IsAppDisabled != nil {
 		valuesToUpdate["is_app_disabled"] = *(body.IsAppDisabled)
