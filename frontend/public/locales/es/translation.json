@@ -318,5 +318,12 @@
   "clickHereToRegister": "<1>Click here</1> to register",
   "clickHereToLogin": "<1>Click here</1> to login",
   "mustBeRegistered": "You must be registered to create an event",
-  "userExists": "User already exists"
+  "userExists": "User already exists",
+  "routePrivacy-1": "No privacy",
+  "routePrivacy0": "Full privacy",
+  "routePrivacy": "Route Privacy",
+  "routePrivacyInfo": "Defines the visibility of participants within a loop. Set to 'no privacy' to make all participants visible to each other",
+  "routePrivacyAllVisible": "All participants in the route are visible to one another.",
+  "routePrivacyNoneVisible": "Participants are not visible to each other in the route.",
+  "routePrivacyWithCount": "{{ count }} participants above and {{ count }} participants below are visible."
 }
