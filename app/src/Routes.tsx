@@ -23,6 +23,7 @@ import {
   bagHandleOutline,
   cubeOutline,
   peopleCircleOutline,
+  chatbubblesOutline,
 } from "ionicons/icons";
 
 /* Core CSS required for Ionic components to work properly */
@@ -58,6 +59,7 @@ import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
 import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
+import Chat from "./pages/Chat";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { OnboardingPageOne, OnboardingPageTwo } from "./pages/Onboarding";
 
@@ -206,6 +208,7 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
         <Route path="/address/:uid" component={AddressItem}></Route>
         <Route exact path="/bags" component={BagsList}></Route>
         <Route exact path="/bulky-items" component={BulkyList}></Route>
+        <Route exact path="/chat" component={Chat}></Route>
         <Route exact path="/settings" component={Settings}></Route>
         <Route
           exact
@@ -235,9 +238,9 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
           <IonLabel>{t("bags")}</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="bulky-items" href="/bulky-items">
-          <IonIcon aria-hidden="true" icon={cubeOutline} />
-          <IonLabel>{t("bulkyItems")}</IonLabel>
+        <IonTabButton tab="chat" href="/chat">
+          <IonIcon aria-hidden="true" icon={chatbubblesOutline} />
+          <IonLabel>{t("chat")}</IonLabel>
         </IonTabButton>
 
         <IonTabButton tab="settings" href="/settings">

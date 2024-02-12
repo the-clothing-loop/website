@@ -5,7 +5,11 @@ meta {
 }
 
 patch {
-  url: {{base}}/v2/chat/{{chainUID}}/room
+  url: {{base}}/v2/chat/{{chainUID}}/room?renew_token=true
   body: none
   auth: none
+}
+
+query {
+  renew_token: true
 }

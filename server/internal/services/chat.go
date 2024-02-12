@@ -17,7 +17,7 @@ import (
 )
 
 // Checks if the user is registered on the matrix server if not they are registered
-func ChatPatchUser(db *gorm.DB, mmTeamId string, user *models.User) (chatUser, chatPass string, err error) {
+func ChatPatchUser(db *gorm.DB, mmTeamId string, user *models.User, renewToken bool) (chatToken string, err error) {
 	chatUserExists := false
 	// check if user exists properly
 	if user.ChatUserID.Valid {
@@ -31,11 +31,14 @@ func ChatPatchUser(db *gorm.DB, mmTeamId string, user *models.User) (chatUser, c
 			password := string(p)
 			_, err := app.ChatClient.UpdateUserPassword(context.TODO(), mmUser.Id, "", password)
 			if err != nil {
-				return "", "", err
+				return "", err
 			}
 			user.ChatPass.String = password
 
-			db.Exec(`UPDATE users SET chat_user_id = ?, chat_pass = ? WHERE id = ?`, user.ChatUserID.String, user.ChatPass.String, user.ID)
+			db.Exec(`UPDATE users SET chat_user_id = ?, chat_pass = ? WHERE id = ?`,
+				user.ChatUserID.String,
+				user.ChatPass.String,
+				user.ID)
 			chatUserExists = true
 		}
 	}
@@ -55,22 +58,37 @@ func ChatPatchUser(db *gorm.DB, mmTeamId string, user *models.User) (chatUser, c
 			),
 		})
 		if err != nil {
-			return "", "", err
+			return "", err
 		}
 
 		_, _, err = app.ChatClient.AddTeamMember(context.TODO(), mmTeamId, mmUser.Id)
 		if err != nil {
-			return "", "", err
+			return "", err
 		}
 
-		// fmt.Printf("ID: %s\tUser: %s\tPass: %s\tDisplay: %s\n", resp.UserID, user.ChatUserID.String, user.ChatPass.String, user.Name)
+		// Update database
 		user.ChatUserID = null.StringFrom(mmUser.Id)
+		user.ChatUser = null.StringFrom(username)
 		user.ChatPass = null.StringFrom(password)
-
-		db.Exec(`UPDATE users SET chat_user_id = ?, chat_pass = ? WHERE id = ?`, user.ChatUserID.String, user.ChatPass.String, user.ID)
+		db.Exec(`UPDATE users SET chat_user_id = ?, chat_user = ?, chat_pass = ? WHERE id = ?`,
+			user.ChatUserID.String,
+			user.ChatUser.String,
+			user.ChatPass.String,
+			user.ID)
 	}
 
-	return user.ChatUserID.String, user.ChatPass.String, nil
+	token := ""
+
+	if renewToken {
+		cliUser := model.NewAPIv4Client(app.ChatClient.URL)
+		_, _, err := cliUser.LoginById(context.TODO(), user.ChatUserID.String, user.ChatPass.String)
+		if err != nil {
+			return "", err
+		}
+		token = cliUser.AuthToken
+	}
+
+	return token, nil
 }
 
 func ChatJoinRoom(db *gorm.DB, chain *models.Chain, user *models.User, isChainAdmin bool) (ChatRoomID string, err error) {

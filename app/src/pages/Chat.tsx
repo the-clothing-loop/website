@@ -1,0 +1,207 @@
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonList,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
+import { sendOutline } from "ionicons/icons";
+import { useTranslation } from "react-i18next";
+import { MmData, StoreContext } from "../Store";
+import { useContext, useEffect, useState } from "react";
+import { patchGetOrJoinRoom } from "../api";
+import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
+import { Sleep } from "../utils/sleep";
+import { Post, PostList } from "@mattermost/types/posts";
+
+const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
+
+enum SendingMsgState {
+  DEFAULT,
+  SENDING,
+  ERROR,
+}
+
+type WebSocketMessagePosted = WebSocketMessage<{
+  channel_display_name: string;
+  channel_name: string;
+  channel_type: string;
+  post: string;
+  sender_name: string;
+  team_id: string;
+  set_online: true;
+}>;
+
+export default function Chat() {
+  const { t } = useTranslation();
+  const { chain, mmData, setMmData, isThemeDefault } = useContext(StoreContext);
+
+  const [mmWsClient, setMmWsClient] = useState<WebSocketClient | null>(null);
+  const [message, setMessage] = useState("");
+  const [sendingMsg, setSendingMsg] = useState(SendingMsgState.DEFAULT);
+  const [mmClient, setMmClient] = useState<Client4 | null>(null);
+  const [postList, setPostList] = useState<PostList>({
+    order: [],
+    posts: {},
+    next_post_id: "",
+    prev_post_id: "",
+    first_inaccessible_post_time: 0,
+  });
+
+  useEffect(() => {
+    if (chain && !mmClient) {
+      patchGetOrJoinRoom(chain.uid, !mmData.chat_token).then(async (resp) => {
+        console.log(
+          "chat token:\n\tNew: %s\n\tOld: %s\n",
+          resp.data.chat_token,
+          mmData.chat_token,
+        );
+
+        let _mmData: MmData = {
+          chat_token: mmData.chat_token || resp.data.chat_token,
+          ...resp.data,
+        };
+        console.log("chat token", _mmData.chat_token);
+        if (!_mmData.chat_token) throw new Error("mmData not found");
+        // Start client
+        let _mmClient = new Client4();
+        _mmClient.setUrl("http://localhost:5173/mm");
+        _mmClient.setToken(_mmData.chat_token!);
+
+        // Get initial post data
+        await reqPostList(_mmClient, _mmData).catch((err) => {
+          patchGetOrJoinRoom(chain.uid, true).then((resp) => {
+            _mmData = resp.data;
+            _mmClient.setToken(_mmData.chat_token!);
+
+            return reqPostList(_mmClient, _mmData);
+          });
+        });
+
+        // Start websocket
+        let _mmWsClient = new WebSocketClient();
+        let url = _mmClient.getWebSocketUrl().replace("http", "ws");
+        _mmWsClient.initialize(url, _mmData.chat_token);
+
+        _mmWsClient.addMessageListener((msg) => {
+          console.log("message listen:", msg);
+          if (msg.event === "posted") {
+            handlePostedMessage(_mmClient, _mmData, msg);
+          }
+        });
+
+        setMmClient(_mmClient);
+        setMmWsClient(_mmWsClient);
+        setMmData(_mmData);
+      });
+    }
+  }, [mmData, chain]);
+
+  async function handlePostedMessage(
+    _mmClient: Client4,
+    _mmData: MmData,
+    msg: WebSocketMessagePosted,
+  ) {
+    if (msg.broadcast.channel_id !== _mmData.chat_channel) {
+      // console.log("post channel not the same");
+      return;
+    }
+
+    let newPosts = await _mmClient?.getPostsAfter(
+      _mmData.chat_channel!,
+      postList.next_post_id,
+    );
+    if (!newPosts) {
+      console.log("No more new posts");
+      return;
+    }
+
+    // merge postlists
+    setPostList((s) => ({
+      order: [...newPosts!.order, ...s.order],
+      posts: {
+        ...newPosts!.posts,
+        ...s.posts,
+      },
+      next_post_id: newPosts!.next_post_id,
+      prev_post_id: s.prev_post_id,
+      first_inaccessible_post_time: newPosts!.first_inaccessible_post_time,
+    }));
+
+    // const postList = await mmClient?.getPosts(mmData.chat_channel);
+
+    // if (!postList) return;
+    // setPostList(postList);
+  }
+
+  async function reqPostList(_mmClient: Client4, _mmData: MmData) {
+    const _postlist = await _mmClient.getPosts(_mmData.chat_channel!, 0, 20);
+    setPostList(_postlist);
+  }
+
+  async function sendMessage() {
+    if (!mmData.chat_channel) return;
+    setSendingMsg(SendingMsgState.SENDING);
+    try {
+      await mmClient?.createPost({
+        channel_id: mmData.chat_channel,
+        message: message,
+      } as Partial<Post> as Post);
+      setMessage("");
+      setSendingMsg(SendingMsgState.DEFAULT);
+    } catch (e: any) {
+      console.error("Error creating post", e);
+      setSendingMsg(SendingMsgState.ERROR);
+      await Sleep(1000);
+      setSendingMsg(SendingMsgState.DEFAULT);
+    }
+  }
+
+  return (
+    <IonPage>
+      <IonHeader translucent>
+        <IonToolbar>
+          <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
+            {t("howDoesItWork")}
+          </IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent
+        fullscreen
+        class={isThemeDefault ? " tw-bg-purple-contrast" : ""}
+      >
+        <div className="tw-flex tw-flex-col tw-h-full">
+          <div className="tw-flex-grow tw-overflow-y-auto tw-flex tw-flex-col-reverse">
+            {postList.order.map((item) => {
+              let post = postList.posts[item];
+              return (
+                <div>
+                  <IonItem lines="full" key={post.id}>
+                    {post.message}
+                  </IonItem>
+                </div>
+              );
+            })}
+          </div>
+          <div>
+            <IonItem disabled={sendingMsg == SendingMsgState.SENDING}>
+              <IonInput
+                value={message}
+                disabled={sendingMsg == SendingMsgState.SENDING}
+                onIonInput={(e) => setMessage(e.detail.value as string)}
+              />
+              <IonButton slot="end" onClick={sendMessage} shape="round">
+                <IonIcon icon={sendOutline} />
+              </IonButton>
+            </IonItem>
+          </div>
+        </div>
+      </IonContent>
+    </IonPage>
+  );
+}

@@ -261,3 +261,19 @@ export function getOpenSouceLicenses() {
     baseURL: "",
   });
 }
+
+export interface RespPatchGetOrJoinRoom {
+  chat_team: string;
+  chat_channel: string;
+  chat_user: string;
+  chat_token?: string;
+}
+export function patchGetOrJoinRoom(chainUID: string, renewToken: boolean) {
+  return window.axios.patch<RespPatchGetOrJoinRoom>(
+    `/v2/chat/${chainUID}/room`,
+    undefined,
+    {
+      params: { renew_token: renewToken },
+    },
+  );
+}

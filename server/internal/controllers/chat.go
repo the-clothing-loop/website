@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,6 +21,14 @@ func ChatGetOrJoinChainChatRoom(c *gin.Context) {
 		return
 	}
 
+	var query struct {
+		RenewToken bool `form:"renew_token,omitempty"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
 	ok, user, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, uri.UID)
 	if !ok {
 		return
@@ -30,9 +39,13 @@ func ChatGetOrJoinChainChatRoom(c *gin.Context) {
 		return
 	}
 
-	_, _, err := services.ChatPatchUser(db, app.ChatTeamId, user)
+	token, err := services.ChatPatchUser(db, app.ChatTeamId, user, query.RenewToken)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	if token == "" && query.RenewToken {
+		c.AbortWithError(http.StatusTeapot, fmt.Errorf("token is not set"))
 		return
 	}
 
@@ -42,9 +55,13 @@ func ChatGetOrJoinChainChatRoom(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"chat_user": user.ChatUserID.String,
-		"chat_pass": user.ChatPass.String,
-		"chat_room": chain.ChatRoomID.String,
-	})
+	json := gin.H{
+		"chat_team":    app.ChatTeamId,
+		"chat_channel": chain.ChatRoomID.String,
+		"chat_user":    user.ChatUserID.String,
+	}
+	if token != "" {
+		json["chat_token"] = token
+	}
+	c.JSON(http.StatusOK, json)
 }

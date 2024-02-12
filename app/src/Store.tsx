@@ -16,6 +16,7 @@ import {
   bulkyItemGetAllByChain,
   userUpdate,
   chainUpdate,
+  RespPatchGetOrJoinRoom,
 } from "./api";
 import dayjs from "./dayjs";
 import { OverlayContainsState, OverlayState } from "./utils/overlay_open";
@@ -24,6 +25,8 @@ interface StorageAuth {
   user_uid: string;
   token: string;
 }
+
+export type MmData = Partial<RespPatchGetOrJoinRoom>;
 
 export enum IsAuthenticated {
   Unknown,
@@ -60,6 +63,8 @@ export const StoreContext = createContext({
   setBagListView: (v: BagListView) => {},
   connError: (err: any) => Promise.resolve(IsAuthenticated.Unknown),
   shouldBlur: false,
+  mmData: {} as MmData,
+  setMmData: (d: MmData) => {},
 });
 
 const errLoopMustBeSelected =
@@ -75,6 +80,7 @@ export function StoreProvider({
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chain, setChain] = useState<Chain | null>(null);
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
+  const [mmData, setMmData] = useState<MmData>({});
   const [listOfChains, setListOfChains] = useState<Array<Chain>>([]);
   const [route, setRoute] = useState<UID[]>([]);
   const [bags, setBags] = useState<Bag[]>([]);
@@ -119,6 +125,11 @@ export function StoreProvider({
       await _storage.set("version", 1);
     }
     setBagListView((await _storage.get("bag_list_view")) || "dynamic");
+    let _mmToken = (await _storage.get("mm_token")) || "";
+    setMmData((s) => {
+      s.chat_token = _mmToken;
+      return { ...s };
+    });
     setStorage(_storage);
   }
 
@@ -131,7 +142,8 @@ export function StoreProvider({
 
     await storage.set("auth", "");
     await storage.set("chain_uid", "");
-    setAuthUser(null);
+    await storage.set("mm_token", "");
+    setMmData({});
     setChain(null);
     setListOfChains([]);
     setRoute([]);
@@ -181,8 +193,6 @@ export function StoreProvider({
       _isAuthenticated = await _connError(err);
       return _isAuthenticated;
     }
-
-    // at this point it is safe to assume _isAuthenticated is LoggedIn
 
     window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
 
@@ -409,6 +419,8 @@ export function StoreProvider({
         setBagListView: _setBagListView,
         connError: _connError,
         shouldBlur,
+        mmData,
+        setMmData,
       }}
     >
       {children}
