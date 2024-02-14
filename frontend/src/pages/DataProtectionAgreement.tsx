@@ -35,7 +35,7 @@ export function DataProtectionAgreementHTML(
 ) {
   return (
     <div className={props.className}>
-      <p>Version dated 2023, December 21th</p>
+      <p>Version dated 2024, February 14th</p>
 
       <h2>Data Protection Agreement</h2>
 
