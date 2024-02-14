@@ -96,7 +96,7 @@ export default function AdminDashboard() {
       if (authUser.accepted_toh)
         console.log("You have not accepted the Terms of Hosts!");
       if (authUser.accepted_dpa)
-        console.log("You have not accepted the Data Protection Agreement!");
+        console.log("You have not accepted the Data Processing Agreement!");
       PopupLegal({
         t,
         authUserRefresh,

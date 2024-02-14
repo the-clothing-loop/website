@@ -8,12 +8,12 @@ export default function DataProtectionAgreement() {
   return (
     <>
       <Helmet>
-        <title>The Clothing Loop | Data Protection Agreement</title>
-        <meta name="description" content="Data Protection Agreement" />
+        <title>The Clothing Loop | Data Processing Agreement</title>
+        <meta name="description" content="Data Processing Agreement" />
       </Helmet>
       <div className="container mx-auto px-4 md:px-20 py-10">
         <h1 className="font-serif text-secondary font-bold text-5xl mb-4">
-          {"Data Protection Agreement - The Clothing Loop"}
+          {"Data Processing Agreement - The Clothing Loop"}
         </h1>
 
         <DataProtectionAgreementHTML
@@ -37,7 +37,7 @@ export function DataProtectionAgreementHTML(
     <div className={props.className}>
       <p>Version dated 2024, February 14th</p>
 
-      <h2>Data Protection Agreement</h2>
+      <h2>Data Processing Agreement</h2>
 
       <table className="table mx-auto text-center w-auto border border-base-200">
         <tbody>
@@ -1225,7 +1225,7 @@ export function DataProtectionAgreementHTML(
       </p>
       <p>
         Controller protects access keys. Access keys are given on a need to use
-        basis. Access keys are granted only if a Data Protection Agreement is
+        basis. Access keys are granted only if a Data Processing Agreement is
         signed.{" "}
       </p>
       <p className="text-base-300 text-center tracking-widest">Schedules 3/4</p>
