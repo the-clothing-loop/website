@@ -34,18 +34,18 @@
       "answer": "Ya has creado una cuenta en el The Clothing Loop. Para registrarte en un Loop nuevo, primero tienes que iniciar sesión:<ol><li>Haz clic en la esquina superior derecha en el inicio de sesión.</li><li>Introduce la dirección de correo electrónico que utilizaste para registrarte en tu Loop.</li><li>Busca en tu correo electrónico, incluso en tu carpeta de spam, nuestro enlace de verificación (utilizamos un enlace en lugar de una contraseña).</li><li>Podrás registrarte en un nuevo Loop.</li></ol>"
     }
   },
-  "faqForApp": "FAQ for the App",
+  "faqForApp": "FAQ para la aplicación",
   "arrApp": {
     "0": {
-      "question": "What is the Clothing Loop App?",
+      "question": "¿Qué es la aplicación Clothing Loop?",
       "answer": "<strong>The Clothing Loop App is made to make organizing a Loop easier.</strong> You can start using the app, if you are part of a Loop. A host can decide together with the participants if they want to start using the app to organize their Loop.<br/>In the app: you can find the rules of your local Loop, you can find out who to bring the bag to next, where the bags are and post bulky items that do not fit into the bag."
     },
     "1": {
-      "question": "Where can I find the app?",
-      "answer": "You can find the app in <a target='_blank' href='https://play.google.com/store/apps/details?id=org.clothingloop.app'>Google Playstore</a>, <a target='_blank' href='https://apps.apple.com/us/app/my-clothing-loop/id6451443500'>Apple Appstore</a>, or as web-version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>"
+      "question": "¿Dónde puedo encontrar la app?",
+      "answer": "Puede encontrar la aplicación en <a target='_blank' href='https://play.google.com/store/apps/details?id=org.clothingloop.app'>Google Playstore</a>, <a target='_blank' href='https://apps.apple.com/us/app/my-clothing-loop/id6451443500'>Apple Appstore</a>o como versión web: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>"
     },
     "2": {
-      "question": "Can I change the Rules in the App?",
+      "question": "¿Puedo cambiar las Reglas en la App?",
       "answer": "Yes, <strong>as a host you are able to change, adjust, and add rules in the App</strong>. Participants are not able to change the rules. To change the rules, click in the upper right corner on Change. After you have changed the rules, click on Save to save your changes."
     },
     "3": {
@@ -54,10 +54,10 @@
     },
     "4": {
       "question": "How to set a bag to my name?",
-      "answer": "If you have received a bag, you can set a bag to your name in the tab of Bags. Click on the picture of the Bag and search for your name. Also, note the date of when the bag arrived. It is important to note that you have received the bag every time."
+      "answer": "Si has recibido una bolsa, puedes poner una bolsa a tu nombre en la pestaña de Bolsas. Haga clic en la imagen de la Bolsa y busque su nombre. Además, tenga en cuenta la fecha de llegada de la bolsa. Es importante tener en cuenta que ha recibido la bolsa cada vez."
     },
     "5": {
-      "question": "What are Bulky Items (like winter coats)?",
+      "question": "¿Qué son los artículos voluminosos (como los abrigos de invierno)?",
       "answer": "<strong>Big items that are too big for the bag can be photographed and shared.</strong> Click on Create, make a title and description, and create a new Bulky Item. Other participants then can click on your name to find your information. In a private message, participants can respond and organize pick-up. After the pick-up, a Bulky Item has to be removed from the list."
     },
     "6": {
