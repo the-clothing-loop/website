@@ -318,12 +318,5 @@
   "clickHereToRegister": "<1>Klik hier</1> om te registreren",
   "clickHereToLogin": "<1>Klik hier</1> om in te loggen",
   "mustBeRegistered": "Je moet geregistreerd zijn om een evenement aan te maken",
-  "userExists": "Gebruiker bestaat al",
-  "routePrivacy-1": "No privacy",
-  "routePrivacy0": "Full privacy",
-  "routePrivacy": "Route Privacy",
-  "routePrivacyInfo": "Defines the visibility of participants within a loop. Set to 'no privacy' to make all participants visible to each other",
-  "routePrivacyAllVisible": "All participants in the route are visible to one another.",
-  "routePrivacyNoneVisible": "Participants are not visible to each other in the route.",
-  "routePrivacyWithCount": "{{ count }} participants above and {{ count }} participants below are visible."
+  "userExists": "Gebruiker bestaat al"
 }
