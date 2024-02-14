@@ -3,40 +3,45 @@
 @tailwind utilities;
 
 @layer utilities {
-ol.list-custom {
-  counter-reset:i;
-  list-style-type:none;
-  @apply pl-12;
-}
-ol.list-custom>li,
-ol.list-custom>li>ol>li,
-ol.list-custom>li>ol>li>ol>li
-{ list-style-type:none; }
-ol.list-custom>li:before,
-ol.list-custom>li>ol>li:before,
-ol.list-custom>li>ol>li>ol>li:before {
-  transform: translateX(-100%);
-  @apply w-12 float-left -mr-12;
-}
-ol.list-custom>li>ol,
-ol.list-custom>li>ol>li>ol {
-  padding-left: 0px;
-  margin-left: -0.375em;
-}
-ol.list-custom>li>ol { counter-reset:ii; }
-ol.list-custom>li:before{
-    counter-increment:i;
-    content:counter(i) " ";
-}
-ol.list-custom>li>ol>li:before {
-    counter-increment:ii;
-    content:counter(i) "." counter(ii) " ";
-}
-ol.list-custom>li>ol>li>ol { counter-reset:iii; }
-ol.list-custom>li>ol>li>ol>li:before {
-    counter-increment:iii;
-    content:counter(i) "." counter(ii) "." counter(iii) " ";
-}
+  ol.list-custom {
+    counter-reset: i;
+    list-style-type: none;
+    @apply pl-12;
+  }
+  ol.list-custom > li,
+  ol.list-custom > li > ol > li,
+  ol.list-custom > li > ol > li > ol > li {
+    list-style-type: none;
+  }
+  ol.list-custom > li:before,
+  ol.list-custom > li > ol > li:before,
+  ol.list-custom > li > ol > li > ol > li:before {
+    transform: translateX(-100%);
+    @apply w-12 float-left -mr-12;
+  }
+  ol.list-custom > li > ol,
+  ol.list-custom > li > ol > li > ol {
+    padding-left: 0px;
+    margin-left: -0.375em;
+  }
+  ol.list-custom > li > ol {
+    counter-reset: ii;
+  }
+  ol.list-custom > li:before {
+    counter-increment: i;
+    content: counter(i) " ";
+  }
+  ol.list-custom > li > ol > li:before {
+    counter-increment: ii;
+    content: counter(i) "." counter(ii) " ";
+  }
+  ol.list-custom > li > ol > li > ol {
+    counter-reset: iii;
+  }
+  ol.list-custom > li > ol > li > ol > li:before {
+    counter-increment: iii;
+    content: counter(i) "." counter(ii) "." counter(iii) " ";
+  }
   .text-stroke-yellow-darkest {
     color: transparent;
     -webkit-text-stroke: 1.5px #c58c41;
@@ -144,7 +149,8 @@ ol.list-custom>li>ol>li>ol>li:before {
 .prose {
   @apply prose-headings2:font-serif prose-headings2:text-secondary prose-headings2:font-bold prose-a:link max-w-screen-md prose-p:my-3;
 }
-.prose table td,.prose table th {
+.prose table td,
+.prose table th {
   @apply whitespace-normal;
 }
 
