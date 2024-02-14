@@ -1,30 +1,23 @@
 //Resources
 import { Link, Redirect, useHistory } from "react-router-dom";
-import {
-  UIEvent,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
 import { AuthContext } from "../providers/AuthProvider";
-import { userPurge, userUpdate } from "../api/user";
+import { userPurge } from "../api/user";
 import { ToastContext } from "../providers/ToastProvider";
 import ChainsList from "../components/ChainsList";
 import { useEscape } from "../util/escape.hooks";
 import { Chain } from "../api/types";
-import { TermsOfHostsHTML } from "./TermsOfHosts";
-import { useDebouncedCallback } from "use-debounce";
+import PopupLegal from "../components/PopupLegal";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const { authUser, authUserRefresh } = useContext(AuthContext);
   const { addModal } = useContext(ToastContext);
   const [chains, setChains] = useState<Chain[]>([]);
+  const [tmpAcceptedToh, setTmpAcceptedToh] = useState(false);
   const history = useHistory();
 
   const isChainAdmin = useMemo(
@@ -95,102 +88,22 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    if (authUser && isChainAdmin && authUser.accepted_toh === false) {
-      console.log("You have not accepted the Terms of Hosts!");
-      addModal({
-        message: t("acceptTohTitle"),
-        content: () => {
-          const ref = useRef<HTMLDivElement>(null);
-          const getElBtn = () =>
-            ref.current?.parentElement?.parentElement?.parentElement?.querySelectorAll(
-              "div:nth-child(3) > button"
-            ) as NodeListOf<HTMLButtonElement>;
-          const scrollingCheck = useDebouncedCallback(
-            (e: UIEvent<HTMLDivElement>) => {
-              let target = e.target as HTMLDivElement;
-              // if scrolled to the bottom of the page
-              if (
-                target.scrollTop + target.clientHeight + 200 >
-                target.scrollHeight
-              ) {
-                getElBtn().forEach((el) => el.removeAttribute("disabled"));
-              }
-            },
-            300,
-            {
-              trailing: true,
-            }
-          );
-
-          useEffect(() => {
-            getElBtn().forEach((el) => el.setAttribute("disabled", "disabled"));
-          }, []);
-
-          const scrollUp = () => {
-            ref.current?.scrollTo({
-              top: ref.current!.scrollHeight,
-              left: 0,
-              behavior: "smooth",
-            });
-          };
-          return (
-            <div>
-              <p className="-mt-4 mb-4 text-sm">{t("acceptTohSubtitle")}</p>
-              <div className="relative">
-                <div
-                  ref={ref}
-                  className="border border-grey overflow-y-auto h-[33.333vh] text-xs py-0.5 px-2 bg-grey-light"
-                  onScroll={scrollingCheck}
-                >
-                  <TermsOfHostsHTML className="prose text-xs prose-terms-modal" />
-                </div>
-                <button
-                  onClick={scrollUp}
-                  className="absolute bottom-2 ltr:right-2 rtl:left-2 btn btn-circle btn-sm btn-secondary text-white opacity-50 hover:opacity-90 tooltip ltr:tooltip-left rtl:tooltip-right before:font-normal before:text-sm"
-                  data-tip="Scroll to the bottom."
-                >
-                  <span className="feather feather-arrow-down font-bold" />
-                </button>
-              </div>
-              <p className="text-xs mt-3 leading-relaxed">
-                {t("youMustScrollToAcceptToh")}
-                <br />
-                <span className="text-red font-semibold">
-                  {t("ifClickDenyTohSetHost")}
-                </span>
-              </p>
-            </div>
-          );
-        },
-        actions: [
-          {
-            type: "primary",
-            text: t("accept"),
-            fn: () => {
-              userUpdate({
-                user_uid: authUser.uid,
-                accepted_toh: true,
-              }).then(() => {
-                authUserRefresh();
-              });
-            },
-            submit: true,
-          },
-          {
-            type: "error",
-            text: t("deny"),
-            fn: () => {
-              userUpdate({
-                user_uid: authUser.uid,
-                accepted_toh: false,
-              }).then(() => {
-                authUserRefresh();
-              });
-            },
-            submit: true,
-          },
-        ],
-        forceOpen: true,
+    if (
+      authUser &&
+      isChainAdmin &&
+      (authUser.accepted_toh === false || authUser.accepted_dpa === false)
+    ) {
+      if (authUser.accepted_toh)
+        console.log("You have not accepted the Terms of Hosts!");
+      if (authUser.accepted_dpa)
+        console.log("You have not accepted the Data Protection Agreement!");
+      PopupLegal({
+        t,
+        authUserRefresh,
+        addModal,
+        authUser,
+        tmpAcceptedToh,
+        setTmpAcceptedToh,
       });
     }
   }, [authUser, isChainAdmin]);

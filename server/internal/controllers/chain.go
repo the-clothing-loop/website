@@ -96,7 +96,7 @@ func ChainCreate(c *gin.Context) {
 		return
 	}
 
-	if err := user.AcceptTOH(db); err != nil {
+	if err := user.AcceptLegal(db); err != nil {
 		goscope.Log.Errorf("Unable to set toh to true, during chain creation: %v", err)
 	}
 

@@ -211,6 +211,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Latitude:        body.User.Latitude,
 		Longitude:       body.User.Longitude,
 		AcceptedTOH:     true,
+		AcceptedDPA:     true,
 	}
 	if err := db.Create(user).Error; err != nil {
 		goscope.Log.Warningf("User already exists: %v", err)

@@ -15,6 +15,7 @@ export interface User {
   longitude?: number;
   latitude?: number;
   accepted_toh?: boolean;
+  accepted_dpa?: boolean;
 }
 
 export interface Bag {

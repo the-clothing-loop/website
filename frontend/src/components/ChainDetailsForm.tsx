@@ -23,6 +23,7 @@ interface Props {
   initialValues?: RegisterChainForm;
   showBack?: boolean;
   showAllowedTOH: boolean;
+  showAllowedDPA: boolean;
 }
 
 export type RegisterChainForm = Omit<
@@ -71,6 +72,7 @@ export default function ChainDetailsForm({
   initialValues,
   showBack,
   showAllowedTOH,
+  showAllowedDPA,
 }: Props) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -289,6 +291,33 @@ export default function ChainDetailsForm({
                       "1": (
                         <a
                           href="/terms-of-hosts"
+                          target="_blank"
+                          className="link"
+                        ></a>
+                      ),
+                    }}
+                  ></Trans>
+                </span>
+                <input
+                  type="checkbox"
+                  required
+                  className="checkbox border-black"
+                  name="toh"
+                />
+              </label>
+            </div>
+          ) : null}
+
+          {showAllowedDPA ? (
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">
+                  <Trans
+                    i18nKey="iAccept<1>Dpa</1>Star"
+                    components={{
+                      "1": (
+                        <a
+                          href="/data-protection-agreement"
                           target="_blank"
                           className="link"
                         ></a>
