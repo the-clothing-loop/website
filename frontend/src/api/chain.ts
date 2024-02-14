@@ -6,7 +6,6 @@ export function chainGet(
   o: {
     addTotals?: boolean;
     addIsAppDisabled?: boolean;
-    addRoutePrivacy?: boolean;
   } = {}
 ) {
   return window.axios.get<Chain>("/v2/chain", {
@@ -14,7 +13,6 @@ export function chainGet(
       chain_uid: chainUID,
       add_totals: o.addTotals || false,
       add_is_app_disabled: o.addIsAppDisabled || false,
-      add_route_privacy: o.addRoutePrivacy || false,
     },
   });
 }
