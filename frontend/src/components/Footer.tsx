@@ -222,9 +222,9 @@ export default function Footer() {
             </Link>
             <Link
               className="btn btn-ghost text-white text-base font-normal"
-              to="/data-protection-agreement"
+              to="/data-processing-agreement"
             >
-              {t("dataProtectionAgreement")}
+              {t("dataProcessingAgreement")}
             </Link>
             <Link
               className="btn btn-ghost text-white text-base font-normal"

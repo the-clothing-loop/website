@@ -317,7 +317,7 @@ export default function ChainDetailsForm({
                     components={{
                       "1": (
                         <a
-                          href="/data-protection-agreement"
+                          href="/data-processing-agreement"
                           target="_blank"
                           className="link"
                         ></a>

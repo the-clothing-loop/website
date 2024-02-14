@@ -3,7 +3,7 @@ import { User } from "../api/types";
 import { useContext } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 
-export default function DataProtectionAgreement() {
+export default function DataProcessingAgreement() {
   const { authUser } = useContext(AuthContext);
   return (
     <>
@@ -16,7 +16,7 @@ export default function DataProtectionAgreement() {
           {"Data Processing Agreement - The Clothing Loop"}
         </h1>
 
-        <DataProtectionAgreementHTML
+        <DataProcessingAgreementHTML
           className="prose"
           authUser={authUser?.accepted_dpa === true ? authUser : null}
         />
@@ -25,13 +25,13 @@ export default function DataProtectionAgreement() {
   );
 }
 
-interface DataProtectionAgreementHTMLProps {
+interface DataProcessingAgreementHTMLProps {
   className: string;
   authUser: User | undefined | null;
 }
 
-export function DataProtectionAgreementHTML(
-  props: DataProtectionAgreementHTMLProps
+export function DataProcessingAgreementHTML(
+  props: DataProcessingAgreementHTMLProps
 ) {
   return (
     <div className={props.className}>

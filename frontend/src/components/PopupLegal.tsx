@@ -6,7 +6,7 @@ import { userUpdate } from "../api/user";
 import { UserRefreshState } from "../providers/AuthProvider";
 import { Modal } from "../providers/ToastProvider";
 import { User } from "../api/types";
-import { DataProtectionAgreementHTML } from "../pages/DataProtectionAgreement";
+import { DataProcessingAgreementHTML } from "../pages/DataProcessingAgreement";
 
 interface Props {
   t: TFunction;
@@ -103,7 +103,7 @@ export default function PopupLegal({
                   className="border border-grey overflow-y-auto h-[33.333vh] text-xs py-0.5 px-2 bg-grey-light"
                   onScroll={scrollingCheck}
                 >
-                  <DataProtectionAgreementHTML
+                  <DataProcessingAgreementHTML
                     authUser={authUser}
                     className="prose text-xs prose-terms-modal"
                   />

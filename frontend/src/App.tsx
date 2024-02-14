@@ -46,8 +46,8 @@ const About = React.lazy(() => import("./pages/About"));
 const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfUse = React.lazy(() => import("./pages/TermsOfUse"));
 const TermsOfHosts = React.lazy(() => import("./pages/TermsOfHosts"));
-const DataProtectionAgreement = React.lazy(
-  () => import("./pages/DataProtectionAgreement")
+const DataProcessingAgreement = React.lazy(
+  () => import("./pages/DataProcessingAgreement")
 );
 const FAQ = React.lazy(() => import("./pages/FAQ"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
@@ -214,8 +214,8 @@ export default function App() {
                     />
                     <Route
                       exact
-                      path={`${base}/data-protection-agreement`}
-                      component={DataProtectionAgreement}
+                      path={`${base}/data-processing-agreement`}
+                      component={DataProcessingAgreement}
                     />
                     <Route
                       exact
