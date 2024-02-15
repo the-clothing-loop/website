@@ -198,6 +198,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		CountryCode:      body.Chain.CountryCode,
 		Sizes:            body.Chain.Sizes,
 		Genders:          body.Chain.Genders,
+		RoutePrivacy:     2, // default route_privacy
 	}
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
