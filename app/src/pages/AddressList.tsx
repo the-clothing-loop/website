@@ -60,7 +60,7 @@ export default function AddressList() {
                 href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}
                 color={
                   isThemeDefault
-                    ? "tw-text-red  dark:tw-text-red-contrast"
+                    ? "tw-text-red dark:tw-text-red-contrast"
                     : "primary"
                 }
               >
@@ -77,7 +77,11 @@ export default function AddressList() {
             <IonToolbar>
               <IonTitle
                 size="large"
-                className="tw-font-serif tw-text-red dark:tw-text-red-contrast"
+                className={"tw-font-serif".concat(
+                  isThemeDefault
+                    ? " tw-text-red dark:tw-text-red-contrast"
+                    : "",
+                )}
               >
                 {t("addresses")}
               </IonTitle>

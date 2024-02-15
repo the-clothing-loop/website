@@ -262,7 +262,12 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar className="tw-bg-transparent">
-            <IonTitle size="large" className="tw-text-green tw-font-serif">
+            <IonTitle
+              size="large"
+              className={"tw-font-serif".concat(
+                isThemeDefault ? " tw-text-green" : "",
+              )}
+            >
               {t("whereIsTheBag")}
             </IonTitle>
           </IonToolbar>

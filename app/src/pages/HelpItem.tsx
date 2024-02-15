@@ -47,7 +47,7 @@ export default function HelpItem({
   match,
 }: RouteComponentProps<{ index: string }>) {
   const { t } = useTranslation();
-  const { chain } = useContext(StoreContext);
+  const { chain, isThemeDefault } = useContext(StoreContext);
 
   const item = useMemo<FaqListItem>(() => {
     let index = parseInt(match.params.index, 10);
@@ -65,7 +65,11 @@ export default function HelpItem({
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton className="tw-text-red dark:tw-text-red-contrast">
+            <IonBackButton
+              className={
+                isThemeDefault ? "tw-text-red dark:tw-text-red-contrast" : ""
+              }
+            >
               {t("back")}
             </IonBackButton>
           </IonButtons>
@@ -74,7 +78,11 @@ export default function HelpItem({
       <IonContent className="ion-padding">
         <div className="tw-min-h-full tw-flex tw-flex-col">
           <IonText className="tw-flex-grow">
-            <h1 className="tw-mt-0 tw-text-3xl tw-font-bold tw-font-serif tw-text-red dark:tw-text-red-contrast">
+            <h1
+              className={"tw-mt-0 tw-text-3xl tw-font-bold tw-font-serif".concat(
+                isThemeDefault ? " tw-text-red dark:tw-text-red-contrast" : "",
+              )}
+            >
               {item.title}
             </h1>
             {item.content.split("\n").map((s, i) => (
