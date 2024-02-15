@@ -3,6 +3,7 @@
 package integration_tests
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"testing"
@@ -16,8 +17,9 @@ import (
 
 func TestLoginAppStoreReviewer(t *testing.T) {
 	var token string
+	var email string
 	t.Run("Login email", func(t *testing.T) {
-		email := app.Config.APPSTORE_REVIEWER_EMAIL
+		email = app.Config.APPSTORE_REVIEWER_EMAIL
 		c, resultFunc := mocks.MockGinContext(db, http.MethodGet, "/v2/login/email", &gin.H{
 			"app":   true,
 			"email": email,
@@ -33,7 +35,8 @@ func TestLoginAppStoreReviewer(t *testing.T) {
 	})
 
 	t.Run("Validate token", func(t *testing.T) {
-		c, resultFunc := mocks.MockGinContext(db, http.MethodGet, fmt.Sprintf("/v2/login/validate?apiKey=%s", token), nil, token)
+		emailEncoded := base64.StdEncoding.EncodeToString([]byte(email))
+		c, resultFunc := mocks.MockGinContext(db, http.MethodGet, fmt.Sprintf("/v2/login/validate?u=%s&t=%s", emailEncoded, token), nil, "")
 		controllers.LoginValidate(c)
 		result := resultFunc()
 		assert.Equal(t, http.StatusOK, result.Response.StatusCode, result)

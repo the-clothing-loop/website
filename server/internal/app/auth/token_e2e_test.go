@@ -40,7 +40,7 @@ LIMIT 1
 	assert.NotNilf(t, err, "Unverified token (%s) should not be useable", token)
 
 	// verify token
-	_, newToken, err := auth.OtpVerify(db, user.UID, token)
+	_, newToken, err := auth.OtpVerify(db, user.Email.String, token)
 	assert.Nil(t, err, "Token should pass verification (%s) %v", token, err)
 
 	// ensure verified token is usable for authenticate

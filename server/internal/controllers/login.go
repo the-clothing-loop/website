@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/base64"
 	"net/http"
 
 	"github.com/golang/glog"
@@ -58,15 +59,20 @@ func LoginValidate(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		OTP      string `form:"t,required"`
-		UserUID  string `form:"u,required"`
-		ChainUID string `form:"c" binding:"omitempty,uuid"`
+		OTP          string `form:"t,required"`
+		EmailEncoded string `form:"u,required"`
+		ChainUID     string `form:"c" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		c.String(http.StatusBadRequest, "Malformed url: apiKey required")
+		c.String(http.StatusBadRequest, "Malformed url: one time password required")
 		return
 	}
-	user, newToken, err := auth.OtpVerify(db, query.UserUID, query.OTP)
+	userEmail, err := base64.StdEncoding.DecodeString(query.EmailEncoded)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Malformed url: email required")
+		return
+	}
+	user, newToken, err := auth.OtpVerify(db, string(userEmail), query.OTP)
 	if err != nil {
 		c.String(http.StatusUnauthorized, "Invalid token")
 		return

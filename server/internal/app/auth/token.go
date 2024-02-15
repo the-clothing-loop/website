@@ -56,15 +56,15 @@ func OtpCreate(db *gorm.DB, userID uint) (string, error) {
 }
 
 // Returns the user before it was verified
-func OtpVerify(db *gorm.DB, userUID, otp string) (*models.User, string, error) {
+func OtpVerify(db *gorm.DB, userEmail, otp string) (*models.User, string, error) {
 	// check if otp is valid
 	userToken := &models.UserToken{}
 	db.Raw(`
 SELECT ut.* FROM user_tokens AS ut
 JOIN users AS u ON ut.user_id = u.id
-WHERE ut.token = ? AND u.uid = ?
+WHERE ut.token = ? AND u.email = ?
 LIMIT 1
-	`, otp, userUID).Scan(userToken)
+	`, otp, userEmail).Scan(userToken)
 	if userToken.ID == 0 {
 		return nil, "", fmt.Errorf("User token not found in database")
 	}
@@ -99,6 +99,15 @@ WHERE email = ?
 	}
 
 	// generate new jwt
+	tokenString, err := JwtGenerate(user)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return user, tokenString, nil
+}
+
+func JwtGenerate(user *models.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyJwtClaims{
 		Pepper: user.JwtTokenPepper,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -110,10 +119,9 @@ WHERE email = ?
 
 	tokenString, err := token.SignedString([]byte(app.Config.JWT_SECRET))
 	if err != nil {
-		return nil, "", err
+		return "", err
 	}
-
-	return user, tokenString, nil
+	return tokenString, nil
 }
 
 func JwtAuthenticate(db *gorm.DB, tokenString string) (user *models.User, err error) {
