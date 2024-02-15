@@ -81,6 +81,20 @@ WHERE uc.is_chain_admin = TRUE
 	AND COALESCE(u.accepted_toh, 0) != TRUE
 
 -- Set all the hosts who have not accepted the toh, in a Loop where +1 hosts have accepted toh, as participant.
+-- ! Collect all the host user id first
+SELECT uc.user_id FROM user_chains AS uc
+	JOIN users AS u ON u.id = uc.user_id
+	WHERE uc.is_chain_admin = TRUE
+		AND uc.is_approved = TRUE
+		AND COALESCE(u.accepted_toh, 0) != TRUE
+		AND (
+			SELECT COUNT(uc2.user_id) FROM user_chains AS uc2
+			JOIN users AS u2 ON uc2.user_id = u2.id
+			WHERE uc2.chain_id = uc.chain_id
+				AND uc2.is_chain_admin = TRUE
+				AND u2.accepted_toh = TRUE
+	) > 0
+-- Then set them to participant
 UPDATE user_chains AS uc3 SET uc3.is_chain_admin = FALSE
 WHERE uc3.user_id IN (
 	SELECT uc.user_id FROM user_chains AS uc
