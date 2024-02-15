@@ -36,7 +36,7 @@ func LoginEmail(c *gin.Context) {
 		return
 	}
 
-	token, err := auth.TokenCreateUnverified(db, user.ID)
+	token, err := auth.OtpCreate(db, user.ID)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
@@ -58,22 +58,21 @@ func LoginValidate(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		Key      string `form:"apiKey,required"`
+		OTP      string `form:"t,required"`
+		UserUID  string `form:"u,required"`
 		ChainUID string `form:"c" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, "Malformed url: apiKey required")
 		return
 	}
-	token := query.Key
-
-	ok, user, newToken := auth.TokenVerify(db, token)
-	if !ok {
+	user, newToken, err := auth.OtpVerify(db, query.UserUID, query.OTP)
+	if err != nil {
 		c.String(http.StatusUnauthorized, "Invalid token")
 		return
 	}
 
-	err := user.AddUserChainsToObject(db)
+	err = user.AddUserChainsToObject(db)
 	if err != nil {
 		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
 		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
@@ -232,7 +231,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Verified: false,
 	})
 
-	token, err := auth.TokenCreateUnverified(db, user.ID)
+	token, err := auth.OtpCreate(db, user.ID)
 	if err != nil {
 		goscope.Log.Errorf("Unable to create token: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to create token")
@@ -306,7 +305,7 @@ func RegisterBasicUser(c *gin.Context) {
 		n.CreateOrUpdate(db)
 	}
 
-	token, err := auth.TokenCreateUnverified(db, user.ID)
+	token, err := auth.OtpCreate(db, user.ID)
 	if err != nil {
 		goscope.Log.Errorf("Unable to create token: %v", err)
 		c.String(http.StatusInternalServerError, "Unable to create token")
@@ -316,14 +315,11 @@ func RegisterBasicUser(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
-	db := getDB(c)
-
-	token, ok := auth.TokenReadFromRequest(c)
+	_, ok := auth.TokenReadFromRequest(c)
 	if !ok {
 		c.String(http.StatusBadRequest, "No token received")
 		return
 	}
 
-	auth.TokenDelete(db, token)
 	auth.CookieRemove(c)
 }

@@ -36,8 +36,9 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 		return false, nil, nil
 	}
 
-	authUser, ok = TokenAuthenticate(db, token)
-	if !ok {
+	var err error
+	authUser, err = JwtAuthenticate(db, token)
+	if err != nil {
 		c.String(http.StatusUnauthorized, "Invalid token")
 		return false, nil, nil
 	}
@@ -54,7 +55,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	chain = &models.Chain{}
-	err := db.Raw(`SELECT * FROM chains WHERE chains.uid = ? AND chains.deleted_at IS NULL LIMIT 1`, chainUID).Scan(chain).Error
+	err = db.Raw(`SELECT * FROM chains WHERE chains.uid = ? AND chains.deleted_at IS NULL LIMIT 1`, chainUID).Scan(chain).Error
 	if err != nil {
 		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return false, nil, nil

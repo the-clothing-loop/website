@@ -10,6 +10,8 @@ cookie_https_only: false
 stripe_secret_key: "secret"
 stripe_webhook: "secret"
 
+jwt_secret: "secret"
+
 db_host: "db"
 db_port: 3306
 db_name: "clothingloop"

@@ -1,15 +1,22 @@
 package auth
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
 	"github.com/GGP1/atoll"
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/gorm"
 )
+
+type MyJwtClaims struct {
+	jwt.RegisteredClaims
+	Pepper int `json:"pepper"`
+}
 
 func TokenReadFromRequest(c *gin.Context) (string, bool) {
 	token, ok := cookieRead(c)
@@ -27,7 +34,7 @@ func TokenReadFromRequest(c *gin.Context) (string, bool) {
 	return token, true
 }
 
-func TokenCreateUnverified(db *gorm.DB, userID uint) (string, error) {
+func OtpCreate(db *gorm.DB, userID uint) (string, error) {
 	// create token
 	tokenB, err := atoll.NewPassword(8, []atoll.Level{atoll.Digit})
 	if err != nil {
@@ -49,37 +56,36 @@ func TokenCreateUnverified(db *gorm.DB, userID uint) (string, error) {
 }
 
 // Returns the user before it was verified
-func TokenVerify(db *gorm.DB, token string) (bool, *models.User, string) {
-	newToken := uuid.NewV4().String()
-	if res := db.Exec(`
-UPDATE user_tokens
-SET user_tokens.verified = TRUE,
-	user_tokens.token = ?
-WHERE user_tokens.token = ?
-	AND user_tokens.verified = FALSE
-	AND user_tokens.created_at > ADDDATE(NOW(), INTERVAL -24 HOUR)
-	`, newToken, token); res.Error != nil || res.RowsAffected == 0 {
-		return false, nil, ""
+func OtpVerify(db *gorm.DB, userUID, otp string) (*models.User, string, error) {
+	// check if otp is valid
+	userToken := &models.UserToken{}
+	db.Raw(`
+SELECT ut.* FROM user_tokens AS ut
+JOIN users AS u ON ut.user_id = u.id
+WHERE ut.token = ? AND u.uid = ?
+LIMIT 1
+	`, otp, userUID).Scan(userToken)
+	if userToken.ID == 0 {
+		return nil, "", fmt.Errorf("User token not found in database")
 	}
+
+	db.Delete(userToken)
 
 	user := &models.User{}
-	db.Raw(`
-SELECT users.*
-FROM user_tokens
-LEFT JOIN users ON user_tokens.user_id = users.id
-WHERE user_tokens.token = ?
-LIMIT 1
-	`, newToken).Scan(user)
+	db.Raw(`SELECT * FROM users WHERE id = ? LIMIT 1`, userToken.UserID).Scan(user)
 	if user.ID == 0 {
-		return false, nil, ""
+		return nil, "", fmt.Errorf("User not found in database")
 	}
 
-	if res := db.Exec(`
+	// setup user as verified
+	if !user.IsEmailVerified {
+		if db.Exec(`
 UPDATE users
 SET is_email_verified = TRUE
 WHERE id = ?
-	`, user.ID); res.Error != nil {
-		return false, nil, ""
+	`, user.ID).Error != nil {
+			return nil, "", fmt.Errorf("Unable to update user to verified email")
+		}
 	}
 
 	if user.Email.Valid {
@@ -88,28 +94,54 @@ UPDATE newsletters
 SET verified = TRUE
 WHERE email = ?
 	`, user.Email.String); res.Error != nil {
-			return false, nil, ""
+			return nil, "", fmt.Errorf("Unable to allow sending newsletters to user")
 		}
 	}
 
-	return true, user, newToken
+	// generate new jwt
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyJwtClaims{
+		Pepper: user.JwtTokenPepper,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    user.UID,
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(2 * 24 * time.Hour)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	})
+
+	tokenString, err := token.SignedString([]byte(app.Config.JWT_SECRET))
+	if err != nil {
+		return nil, "", err
+	}
+
+	return user, tokenString, nil
 }
 
-func TokenAuthenticate(db *gorm.DB, token string) (user *models.User, ok bool) {
+func JwtAuthenticate(db *gorm.DB, tokenString string) (user *models.User, err error) {
+	token, err := jwt.ParseWithClaims(tokenString, &MyJwtClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(app.Config.JWT_SECRET), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	claims, ok := token.Claims.(*MyJwtClaims)
+	if !ok {
+		return nil, fmt.Errorf("invalid claims")
+	}
+
 	user = &models.User{}
-	err := db.Raw(`
-SELECT users.*
-FROM user_tokens
-LEFT JOIN users ON user_tokens.user_id = users.id
-WHERE user_tokens.token = ? AND user_tokens.verified = TRUE
-LIMIT 1
-	`, token).Scan(user).Error
+	err = db.Raw(`SELECT * FROM users WHERE uid = ? LIMIT 1`, claims.Issuer).Scan(user).Error
 	if err != nil || user.ID == 0 {
-		return nil, false
+		fmt.Print(err)
+		return nil, fmt.Errorf("Unable to find user in database (%s)", claims.Issuer)
+	}
+
+	if user.JwtTokenPepper != claims.Pepper {
+		return nil, fmt.Errorf("pepper incorrect: %d vs %d\n", user.JwtTokenPepper, claims.Pepper)
 	}
 
 	shouldUpdateLastSignedInAt := true
 	if user.LastSignedInAt.Valid {
+		// if user last signed in earlier than an hour ago, we should update last signed in value
 		shouldUpdateLastSignedInAt = user.LastSignedInAt.Time.Before(time.Now().Add(time.Duration(-1 * time.Hour)))
 	}
 	if shouldUpdateLastSignedInAt {
@@ -120,12 +152,12 @@ WHERE users.id = ?
 	`, user.ID)
 	}
 
-	return user, true
+	return user, nil
 }
 
-func TokenDelete(db *gorm.DB, token string) {
+func OtpDeleteOld(db *gorm.DB, token string) {
 	db.Exec(`
 DELETE FROM user_tokens
-WHERE token = ?
+WHERE created_at < ADDDATE(NOW(), INTERVAL -2 DAY)
 	`, token)
 }

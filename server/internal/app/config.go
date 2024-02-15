@@ -24,6 +24,7 @@ var Config struct {
 	SITE_BASE_URL_FE        string `yaml:"site_base_url_fe"`
 	COOKIE_DOMAIN           string `yaml:"cookie_domain"`
 	COOKIE_HTTPS_ONLY       bool   `yaml:"cookie_https_only"`
+	JWT_SECRET              string `yaml:"jwt_secret"`
 	STRIPE_SECRET_KEY       string `yaml:"stripe_secret_key"`
 	STRIPE_WEBHOOK          string `yaml:"stripe_webhook"`
 	DB_HOST                 string `yaml:"db_host"`
