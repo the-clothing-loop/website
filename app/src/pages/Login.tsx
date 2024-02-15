@@ -110,7 +110,8 @@ export default function Login(props: { isLoggedIn: boolean }) {
 
     (async () => {
       try {
-        await login(token + "");
+        const email = inputEmail.current?.value + "";
+        await login(email, token + "");
         setVerifyState(State.success);
         modal.current?.dismiss("success");
         history.replace("/settings", "select-loop");

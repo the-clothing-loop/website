@@ -50,7 +50,7 @@ export const StoreContext = createContext({
   setChain: (chainUID: UID | null | undefined, user: User | null) =>
     Promise.reject<void>(),
   authenticate: () => Promise.resolve(IsAuthenticated.Unknown),
-  login: (token: string) => Promise.reject<void>(),
+  login: (email: string,token: string) => Promise.reject<void>(),
   logout: () => Promise.reject<void>(),
   init: () => Promise.reject<void>(),
   refresh: (tab: string) => Promise.reject<void>(),
@@ -142,8 +142,9 @@ export function StoreProvider({
     setBagListView("dynamic");
   }
 
-  async function _login(token: string) {
-    const res = await loginValidate(token);
+  async function _login(email: string, token: string) {
+    let emailBase64 = btoa(email);
+    const res = await loginValidate(emailBase64, token);
     window.axios.defaults.auth = "Bearer " + res.data.token;
     await storage.set("auth", {
       user_uid: res.data.user.uid,
