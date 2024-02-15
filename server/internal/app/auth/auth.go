@@ -37,10 +37,20 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	var err error
-	authUser, err = JwtAuthenticate(db, token)
+	var usedOldToken bool
+	authUser, usedOldToken, err = AuthenticateToken(db, token)
 	if err != nil {
 		c.String(http.StatusUnauthorized, "Invalid token")
 		return false, nil, nil
+	}
+
+	if usedOldToken {
+		token, err := JwtGenerate(authUser)
+		if err != nil {
+			c.String(http.StatusUnauthorized, "Invalid token")
+			return false, nil, nil
+		}
+		CookieSet(c, token)
 	}
 
 	// 1. User of a different/unknown chain
@@ -69,34 +79,34 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	// 4. Root User
-	if authUser.IsRootAdmin {
-		return true, authUser, chain
-	}
+	isRootUser := authUser.IsRootAdmin
 
 	// 1. User of a different/unknown chain
-	if minimumAuthState == AuthState1AnyUser {
-		return true, authUser, chain
-	}
+	isUserOfUnknownChain := minimumAuthState == AuthState1AnyUser
 
+	isUserParticipantOfChain := false
+	isUserAdminOfChain := false
 	if minimumAuthState == AuthState2UserOfChain || minimumAuthState == AuthState3AdminChainUser {
 		for _, userChain := range authUser.Chains {
 			if userChain.ChainID == chain.ID {
-				// 2. User connected to the chain in question
 				if minimumAuthState == AuthState2UserOfChain {
-					return true, authUser, chain
-				}
-
-				// 3. Admin User of the chain in question
-				if minimumAuthState == AuthState3AdminChainUser && userChain.IsChainAdmin {
-					return true, authUser, chain
+					// 2. User connected to the chain in question
+					isUserParticipantOfChain = true
+				} else if minimumAuthState == AuthState3AdminChainUser && userChain.IsChainAdmin {
+					// 3. Admin User of the chain in question
+					isUserAdminOfChain = true
 				}
 				break
 			}
 		}
 	}
 
-	c.String(http.StatusUnauthorized, "User role not high enough")
-	return false, nil, nil
+	if !(isRootUser || isUserOfUnknownChain || isUserParticipantOfChain || isUserAdminOfChain) {
+		c.String(http.StatusUnauthorized, "User role not high enough")
+		return false, nil, nil
+	}
+
+	return true, authUser, chain
 }
 
 // This runs Authenticate and defines minimumAuthState depending on the input

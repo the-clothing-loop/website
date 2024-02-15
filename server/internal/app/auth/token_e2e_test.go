@@ -36,7 +36,7 @@ LIMIT 1
 	assert.Equalf(t, user.ID, userToken.UserID, "New token (%s) not found in search", userToken)
 
 	// ensure unverified token is not usable for authenticate
-	_, err = auth.JwtAuthenticate(db, token)
+	_, _, err = auth.AuthenticateToken(db, token)
 	assert.NotNilf(t, err, "Unverified token (%s) should not be useable", token)
 
 	// verify token
@@ -44,7 +44,7 @@ LIMIT 1
 	assert.Nil(t, err, "Token should pass verification (%s) %v", token, err)
 
 	// ensure verified token is usable for authenticate
-	_, err = auth.JwtAuthenticate(db, newToken)
+	_, _, err = auth.AuthenticateToken(db, newToken)
 	assert.Nil(t, err, "Verified token should be useable (%s) %v", token, err)
 
 	// check that user token is removed

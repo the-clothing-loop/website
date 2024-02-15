@@ -7,11 +7,14 @@ import (
 
 	"github.com/GGP1/atoll"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/gorm"
 )
+
+var validate = validator.New()
 
 type MyJwtClaims struct {
 	jwt.RegisteredClaims
@@ -124,27 +127,16 @@ func JwtGenerate(user *models.User) (string, error) {
 	return tokenString, nil
 }
 
-func JwtAuthenticate(db *gorm.DB, tokenString string) (user *models.User, err error) {
-	token, err := jwt.ParseWithClaims(tokenString, &MyJwtClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(app.Config.JWT_SECRET), nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	claims, ok := token.Claims.(*MyJwtClaims)
-	if !ok {
-		return nil, fmt.Errorf("invalid claims")
-	}
-
-	user = &models.User{}
-	err = db.Raw(`SELECT * FROM users WHERE uid = ? LIMIT 1`, claims.Issuer).Scan(user).Error
-	if err != nil || user.ID == 0 {
-		fmt.Print(err)
-		return nil, fmt.Errorf("Unable to find user in database (%s)", claims.Issuer)
-	}
-
-	if user.JwtTokenPepper != claims.Pepper {
-		return nil, fmt.Errorf("pepper incorrect: %d vs %d\n", user.JwtTokenPepper, claims.Pepper)
+func AuthenticateToken(db *gorm.DB, tokenString string) (*models.User, bool, error) {
+	usedOldToken := false
+	user, err := authenticateOldToken(db, tokenString)
+	if err == nil {
+		usedOldToken = true
+	} else {
+		user, err = authenticateJwt(db, tokenString)
+		if err != nil {
+			return nil, false, err
+		}
 	}
 
 	shouldUpdateLastSignedInAt := true
@@ -158,6 +150,54 @@ UPDATE users
 SET users.last_signed_in_at = NOW()
 WHERE users.id = ?
 	`, user.ID)
+	}
+
+	return user, usedOldToken, nil
+}
+
+func authenticateJwt(db *gorm.DB, tokenString string) (*models.User, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &MyJwtClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(app.Config.JWT_SECRET), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	claims, ok := token.Claims.(*MyJwtClaims)
+	if !ok {
+		return nil, fmt.Errorf("invalid claims")
+	}
+
+	user := &models.User{}
+	err = db.Raw(`SELECT * FROM users WHERE uid = ? LIMIT 1`, claims.Issuer).Scan(user).Error
+	if err != nil || user.ID == 0 {
+		fmt.Print(err)
+		return nil, fmt.Errorf("Unable to find user in database (%s)", claims.Issuer)
+	}
+
+	if user.JwtTokenPepper != claims.Pepper {
+		return nil, fmt.Errorf("pepper incorrect: %d vs %d\n", user.JwtTokenPepper, claims.Pepper)
+	}
+
+	return user, nil
+}
+func authenticateOldToken(db *gorm.DB, token string) (*models.User, error) {
+	if len(token) != 36 {
+		return nil, fmt.Errorf("Not the length of a uuid")
+	}
+	err := validate.Var(token, "uuid")
+	if err != nil {
+		return nil, fmt.Errorf("No a uuid by standards of validator/v10")
+	}
+
+	user := &models.User{}
+	db.Raw(`
+SELECT u.* FROM user_tokens AS ut
+JOIN users AS u ON ut.user_id = u.id
+WHERE ut.token = ? AND ut.verified = TRUE
+LIMIT 1
+	`, token).Scan(user)
+	if user.ID == 0 {
+		return nil, fmt.Errorf("User not fount in database")
 	}
 
 	return user, nil
