@@ -72,7 +72,7 @@ export default function AddressList() {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <div className="tw-relative tw-min-h-full">
+        <div className="tw-relative tw-min-h-full tw-flex tw-flex-col">
           <IonHeader collapse="condense">
             <IonToolbar>
               <IonTitle
@@ -83,7 +83,9 @@ export default function AddressList() {
               </IonTitle>
             </IonToolbar>
           </IonHeader>
-          <IonList className={shouldBlur ? "tw-blur" : ""}>
+          <IonList
+            className={"tw-flex-grow".concat(shouldBlur ? " tw-blur" : "")}
+          >
             {route.map((userUID, i) => {
               const user = chainUsers.find((u) => u.uid === userUID);
               if (!user) return null;
