@@ -185,22 +185,25 @@ export function StoreProvider({
     // at this point it is safe to assume _isAuthenticated is LoggedIn
 
     window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
-
+    let chainUID: string | null = null;
     try {
-      const chainUID: string | null = await storage.get("chain_uid");
-      if (chainUID) {
-        await _setChain(chainUID, _authUser);
-      } else if (chainUID) {
+      chainUID = await storage.get("chain_uid");
+      // if empty get the first in the list
+      const approvedChains = _authUser.chains.filter((uc) => uc.is_approved);
+      if (!chainUID && approvedChains.length > 0) {
+        chainUID = approvedChains[0].chain_uid;
+      }
+
+      if (!chainUID) {
         console.info("Authenticated but has no selected chain_uid");
       }
+      await _setChain(chainUID, _authUser);
     } catch (err: any) {
       console.error(err);
-      await storage.set("chain_uid", null);
       return err?.isAuthenticated || IsAuthenticated.OfflineLoggedIn;
     }
 
     setAuthUser(_authUser);
-    setIsChainAdmin(_isChainAdmin);
     setIsAuthenticated(_isAuthenticated);
     return _isAuthenticated;
   }
