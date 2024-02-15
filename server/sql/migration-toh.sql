@@ -111,3 +111,9 @@ SELECT DISTINCT(uc.chain_id)
 			WHERE u2.last_signed_in_at > (NOW() - INTERVAL 90 DAY)
 				AND uc2.is_chain_admin = TRUE
 		)
+
+-- Logout all hosts
+DELETE FROM user_tokens WHERE user_tokens.user_id IN (
+	SELECT DISTINCT(uc.user_id) FROM user_chains AS uc
+	WHERE uc.is_chain_admin = TRUE
+);
