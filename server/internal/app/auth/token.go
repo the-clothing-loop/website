@@ -200,12 +200,14 @@ LIMIT 1
 		return nil, fmt.Errorf("User not fount in database")
 	}
 
+	db.Exec(`DELETE FROM user_tokens WHERE token = ?`, token)
+
 	return user, nil
 }
 
-func OtpDeleteOld(db *gorm.DB, token string) {
-	db.Exec(`
-DELETE FROM user_tokens
-WHERE created_at < ADDDATE(NOW(), INTERVAL -2 DAY)
-	`, token)
-}
+// func OtpDeleteOld(db *gorm.DB, token string) {
+// 	db.Exec(`
+// DELETE FROM user_tokens
+// WHERE created_at < ADDDATE(NOW(), INTERVAL -2 DAY)
+// 	`, token)
+// }
