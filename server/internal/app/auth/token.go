@@ -62,7 +62,7 @@ func OtpVerify(db *gorm.DB, userEmail, otp string) (*models.User, string, error)
 	db.Raw(`
 SELECT ut.* FROM user_tokens AS ut
 JOIN users AS u ON ut.user_id = u.id
-WHERE ut.token = ? AND u.email = ?
+WHERE ut.token = ? AND u.email = ? AND ut.verified = FALSE
 LIMIT 1
 	`, otp, userEmail).Scan(userToken)
 	if userToken.ID == 0 {

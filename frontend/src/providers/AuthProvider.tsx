@@ -26,7 +26,8 @@ export type AuthProps = {
   // ? Should loading only be used for authentication or also for login & logout?
   loading: boolean;
   authLoginValidate: (
-    apiKey: string,
+    emailBase64: string,
+    otp: string,
     chainUID: string
   ) => Promise<undefined | User>;
   authLogout: () => Promise<void>;
@@ -36,7 +37,7 @@ export type AuthProps = {
 export const AuthContext = createContext<AuthProps>({
   authUser: undefined,
   loading: true,
-  authLoginValidate: (apiKey, c) => Promise.reject(),
+  authLoginValidate: (u, t, c) => Promise.reject(),
   authLogout: () => Promise.reject(),
   authUserRefresh: () => Promise.reject(UserRefreshState.NeverLoggedIn),
 });
@@ -51,12 +52,16 @@ const cookieOptions: Cookies.CookieAttributes = {
 export function AuthProvider({ children }: PropsWithChildren<{}>) {
   const [user, setUser] = useState<AuthProps["authUser"]>(undefined);
   const [loading, setLoading] = useState(true);
-  function authLoginValidate(apiKey: string, chainUID: string) {
+  function authLoginValidate(
+    emailBase64: string,
+    otp: string,
+    chainUID: string
+  ) {
     setLoading(true);
     return (async () => {
       let _user: User | null | undefined = undefined;
       try {
-        _user = (await apiLogin(apiKey, chainUID)).data.user;
+        _user = (await apiLogin(emailBase64, otp, chainUID)).data.user;
         Cookies.set(KEY_USER_UID, _user.uid, cookieOptions);
       } catch (err) {
         setUser(null);

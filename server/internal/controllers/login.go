@@ -59,7 +59,7 @@ func LoginValidate(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		OTP          string `form:"t,required"`
+		OTP          string `form:"apiKey,required"`
 		EmailEncoded string `form:"u,required"`
 		ChainUID     string `form:"c" binding:"omitempty,uuid"`
 	}

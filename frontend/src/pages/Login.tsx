@@ -49,7 +49,7 @@ export default function Login() {
     setActive(true);
 
     (async () => {
-      let apiKey: string | undefined;
+      let otp: string | undefined;
       try {
         let res: Response<unknown>;
         if (chainUID) {
@@ -59,7 +59,7 @@ export default function Login() {
         }
 
         if (res.data && (res.data + "").length) {
-          apiKey = res.data + "";
+          otp = res.data + "";
         } else {
           addToast({
             type: "success",
@@ -78,8 +78,10 @@ export default function Login() {
         addToastError(GinParseErrors(t, err), err?.status);
       }
 
-      if (apiKey) {
-        history.replace("/users/login/validate?apiKey=" + apiKey);
+      if (otp) {
+        let emailBase64 = btoa(email);
+
+        history.replace(`/users/login/validate?u=${emailBase64}&apiKey=${otp}`);
       }
     })();
   }
