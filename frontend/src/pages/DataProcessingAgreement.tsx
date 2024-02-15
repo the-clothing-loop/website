@@ -995,7 +995,6 @@ export function DataProcessingAgreementHTML(
         </li>
       </ol>
 
-      <p className="text-center">[SIGNATURE PAGE TO FOLLOW]</p>
       <p className="text-base-300 text-center tracking-widest">7/7</p>
       <hr id="dpa-page-schedule-1" className="-mx-10" />
 
