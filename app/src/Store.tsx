@@ -50,7 +50,7 @@ export const StoreContext = createContext({
   setChain: (chainUID: UID | null | undefined, user: User | null) =>
     Promise.reject<void>(),
   authenticate: () => Promise.resolve(IsAuthenticated.Unknown),
-  login: (email: string,token: string) => Promise.reject<void>(),
+  login: (email: string, token: string) => Promise.reject<void>(),
   logout: () => Promise.reject<void>(),
   init: () => Promise.reject<void>(),
   refresh: (tab: string) => Promise.reject<void>(),
