@@ -36,7 +36,7 @@ func TestLoginAppStoreReviewer(t *testing.T) {
 
 	t.Run("Validate token", func(t *testing.T) {
 		emailEncoded := base64.StdEncoding.EncodeToString([]byte(email))
-		c, resultFunc := mocks.MockGinContext(db, http.MethodGet, fmt.Sprintf("/v2/login/validate?u=%s&t=%s", emailEncoded, token), nil, "")
+		c, resultFunc := mocks.MockGinContext(db, http.MethodGet, fmt.Sprintf("/v2/login/validate?u=%s&apiKey=%s", emailEncoded, token), nil, "")
 		controllers.LoginValidate(c)
 		result := resultFunc()
 		assert.Equal(t, http.StatusOK, result.Response.StatusCode, result)
