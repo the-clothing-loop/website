@@ -104,3 +104,7 @@
 - Add options to change the bag view; dynamic, list & card
 - Update map in onboarding
 - Always get updated data
+
+# v2.0
+
+- The new look complementing our websites design guidelines
