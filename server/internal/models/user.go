@@ -27,6 +27,7 @@ type User struct {
 	Sizes           []string        `json:"sizes" gorm:"serializer:json"`
 	LastSignedInAt  zero.Time       `json:"-"`
 	LastPokeAt      zero.Time       `json:"-"`
+	UserToken       []UserToken     `json:"-"`
 	Event           []Event         `json:"-"`
 	Chains          []UserChain     `json:"chains"`
 	UserOnesignal   []UserOnesignal `json:"-"`

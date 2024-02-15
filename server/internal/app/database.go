@@ -31,12 +31,66 @@ func DatabaseInit() *gorm.DB {
 }
 
 func DatabaseAutoMigrate(db *gorm.DB) {
-	// Remove User Tokens
+	hadIsApprovedColumn := db.Migrator().HasColumn(&models.UserChain{}, "is_approved")
+
+	// User Tokens
 	if db.Migrator().HasTable("user_tokens") {
-		if db.Migrator().HasConstraint("user_tokens", "fk_users_user_token") {
-			db.Exec(`ALTER TABLE user_tokens DROP FOREIGN KEY fk_users_user_token`)
+		columnTypes, err := db.Migrator().ColumnTypes("user_tokens")
+		if err == nil {
+			for _, ct := range columnTypes {
+				if ct.Name() == "created_at" {
+					t, _ := ct.ColumnType()
+					if t == "bigint(20)" {
+						tx := db.Begin()
+
+						if !db.Migrator().HasColumn(&models.UserToken{}, "new_created_at") {
+							err := tx.Exec(`ALTER TABLE user_tokens ADD new_created_at datetime(3) DEFAULT NULL`).Error
+							if err != nil {
+								tx.Rollback()
+								break
+							}
+						}
+						err = tx.Exec(`UPDATE user_tokens SET new_created_at = FROM_UNIXTIME(created_at)`).Error
+						if err != nil {
+							tx.Rollback()
+							break
+						}
+						err = tx.Exec(`ALTER TABLE user_tokens DROP created_at`).Error
+						if err != nil {
+							tx.Rollback()
+							break
+						}
+						err = tx.Exec(`ALTER TABLE user_tokens RENAME COLUMN new_created_at TO created_at`).Error
+						if err != nil {
+							tx.Rollback()
+							break
+						}
+
+						tx.Commit()
+					}
+					break
+				}
+			}
 		}
-		db.Migrator().DropTable("user_tokens")
+	}
+	// Bags
+	if db.Migrator().HasTable("bags") {
+		columnTypes, err := db.Migrator().ColumnTypes("bags")
+		if err == nil {
+			for _, ct := range columnTypes {
+				if ct.Name() == "number" {
+					t, _ := ct.ColumnType()
+					if t == "bigint(20)" {
+						fmt.Printf("column number found in bags")
+						db.Exec(`ALTER TABLE bags MODIFY number longtext`)
+					}
+				}
+			}
+		}
+	}
+	// Mail removed
+	if db.Migrator().HasTable("mails") {
+		db.Exec(`DROP TABLE mails`)
 	}
 
 	db.AutoMigrate(
@@ -44,6 +98,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.Newsletter{},
 		&models.User{},
 		&models.Event{},
+		&models.UserToken{},
 		&models.UserChain{},
 		&models.UserOnesignal{},
 		&models.Bag{},
@@ -51,4 +106,29 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.Payment{},
 		&models.Mail{},
 	)
+
+	if !db.Migrator().HasConstraint("user_chains", "uci_user_id_chain_id") {
+		db.Exec(`
+ALTER TABLE user_chains
+ADD CONSTRAINT uci_user_id_chain_id
+UNIQUE (user_id, chain_id)
+		`)
+	}
+	if !hadIsApprovedColumn {
+		db.Exec(`
+UPDATE user_chains SET is_approved = TRUE WHERE id IN (
+	SELECT uc.id FROM user_chains AS uc
+	LEFT JOIN users AS u ON u.id = uc.user_id
+	WHERE u.is_email_verified = TRUE && uc.is_approved IS NULL 
+)
+		`)
+
+		db.Exec(`
+UPDATE user_chains SET is_approved = FALSE WHERE id IN (
+	SELECT uc.id FROM user_chains AS uc
+	LEFT JOIN users AS u ON u.id = uc.user_id
+	WHERE u.is_email_verified = FALSE && uc.is_approved IS NULL 
+)
+		`)
+	}
 }
