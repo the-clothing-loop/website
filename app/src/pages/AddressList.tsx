@@ -12,7 +12,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useContext } from "react";
+import { useContext, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
 import {
@@ -25,10 +25,12 @@ import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
+import EditHeaders from "../components/EditHeaders";
 
 export default function AddressList() {
   const {
     chain,
+    setChain,
     chainUsers,
     route,
     authUser,
@@ -38,6 +40,22 @@ export default function AddressList() {
     shouldBlur,
   } = useContext(StoreContext);
   const { t } = useTranslation();
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
+
+  const header = useMemo(() => {
+    if (chain?.headers_override) {
+      const headers = JSON.parse(chain.headers_override).addressList;
+      return headers.addressList as string;
+    }
+    return t("addresses");
+  }, [chain]);
+
+  function updateChain() {
+    setChain(chain?.uid, authUser);
+  }
+  function handleClickChange() {
+    headerSheetModal.current?.present();
+  }
 
   return (
     <IonPage>
@@ -45,7 +63,7 @@ export default function AddressList() {
       <OverlayAppDisabled />
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("addresses")}</IonTitle>
+          <IonTitle>{header}</IonTitle>
           {isChainAdmin ? (
             <IonButtons
               slot="end"
@@ -55,6 +73,8 @@ export default function AddressList() {
                   : "primary"
               }`}
             >
+              {" "}
+              <IonButton onClick={handleClickChange}>{t("change")}</IonButton>
               <IonButton
                 target="_blank"
                 href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}
@@ -79,7 +99,7 @@ export default function AddressList() {
                 size="large"
                 className="tw-font-serif tw-text-red dark:tw-text-red-contrast"
               >
-                {t("addresses")}
+                {header}
               </IonTitle>
             </IonToolbar>
           </IonHeader>
@@ -171,6 +191,12 @@ export default function AddressList() {
               );
             })}
           </IonList>
+          <EditHeaders
+            modal={headerSheetModal}
+            didDismiss={updateChain}
+            page={"addressList"}
+            initalHeader={t("whereIsTheBag")}
+          />
           <IonIcon
             aria-hidden="true"
             icon="/the_clothing_loop_logo_cropped.svg"

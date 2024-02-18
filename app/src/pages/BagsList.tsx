@@ -55,7 +55,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID, User } from "../api";
 import CreateBag from "../components/CreateUpdateBag";
-import EditHeaders from "../components/EditHeaders"
+import EditHeaders from "../components/EditHeaders";
 import { StoreContext } from "../Store";
 import dayjs from "../dayjs";
 import { Sleep } from "../utils/sleep";
@@ -98,13 +98,11 @@ export default function BagsList() {
 
   const header = useMemo(() => {
     if (chain?.headers_override) {
-      return JSON.parse(chain.headers_override || "") as string;
+      const headers = JSON.parse(chain.headers_override);
+      return headers.bagsList as string;
     }
-    return t("whereIsTheBag")
+    return t("whereIsTheBag");
   }, [chain]);
-
-  useEffect(() => {
-  },[sheetModalUserUID])
 
   const [bagsCard, bagsList] = useMemo(() => {
     if (!authUser) return [[], []];
@@ -481,7 +479,8 @@ export default function BagsList() {
         />
         <EditHeaders
           modal={headerSheetModal}
-          didDismiss={handleDidDismissSheetModal}
+          didDismiss={refreshBags}
+          page={"bagsList"}
           initalHeader={t("whereIsTheBag")}
         />
         <div className="relative">
