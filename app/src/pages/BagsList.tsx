@@ -105,7 +105,7 @@ export default function BagsList() {
     }
     return t("whereIsTheBag");
   }, [chain]);
-  console.log(chain);
+
   const [bagsCard, bagsList] = useMemo(() => {
     if (!authUser) return [[], []];
     let authRouteIndex = authUser ? route.indexOf(authUser.uid) : -1;

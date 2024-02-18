@@ -23,6 +23,7 @@ import { useContext, useMemo, useRef } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
 import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
 import { User } from "../api";
+import EditHeaders from "../components/EditHeaders";
 
 interface MediaIcon {
   icon: string;
@@ -69,6 +70,17 @@ export default function HelpList() {
     isThemeDefault,
   } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
+
+  const header = useMemo(() => {
+    if (chain?.headers_override) {
+      const headers = JSON.parse(chain.headers_override);
+      return headers.helpList
+        ? (headers.helpList as string)
+        : t("howDoesItWork");
+    }
+    return t("howDoesItWork");
+  }, [chain]);
 
   const rules = useMemo<FaqListItem[]>(() => {
     if (chain?.rules_override) {
@@ -90,17 +102,27 @@ export default function HelpList() {
   function refreshChain() {
     setChain(chain?.uid, authUser);
   }
+  function handleClickEdit() {
+    headerSheetModal.current?.present();
+  }
 
   return (
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
-            {t("howDoesItWork")}
+            {header}
           </IonTitle>
 
           {isChainAdmin ? (
             <IonButtons slot="end">
+              <IonButton
+                onClick={handleClickEdit}
+                className={isThemeDefault ? "!tw-text-purple" : ""}
+              >
+                {t("edit")}
+              </IonButton>
+
               <IonButton
                 onClick={handleClickChange}
                 className={isThemeDefault ? "!tw-text-purple" : ""}
@@ -123,7 +145,7 @@ export default function HelpList() {
                 isThemeDefault ? "tw-text-purple " : ""
               }`}
             >
-              {t("howDoesItWork")}
+              {header}
             </IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -183,7 +205,12 @@ export default function HelpList() {
             modal={modal}
             didDismiss={refreshChain}
           />
-
+          <EditHeaders
+            modal={headerSheetModal}
+            didDismiss={refreshChain}
+            page={"helpList"}
+            initalHeader={t("howDoesItWork")}
+          />
           <IonIcon
             aria-hidden="true"
             icon="/v2_o.svg"

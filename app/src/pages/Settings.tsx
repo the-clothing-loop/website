@@ -33,7 +33,14 @@ import {
   IonModalCustomEvent,
   OverlayEventDetail,
 } from "@ionic/core";
-import { RefObject, useContext, useEffect, useRef, useState } from "react";
+import {
+  RefObject,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import { Trans, useTranslation } from "react-i18next";
@@ -59,6 +66,7 @@ import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
 import Theme from "../components/Theme";
 import { useLocation } from "react-router";
+import EditHeaders from "../components/EditHeaders";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -92,6 +100,22 @@ export default function Settings() {
     }
   }, [authUser, state]);
 
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
+
+  const header = useMemo(() => {
+    if (chain?.headers_override) {
+      const headers = JSON.parse(chain.headers_override);
+      return headers.settings ? (headers.settings as string) : t("account");
+    }
+    return t("account");
+  }, [chain]);
+  function refreshChain() {
+    setChain(chain?.uid, authUser);
+  }
+
+  function handleClickEditHeader() {
+    headerSheetModal.current?.present();
+  }
   function handleChainSelect(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
   ) {
@@ -202,7 +226,15 @@ export default function Settings() {
             isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
           }`}
         >
-          {t("account")}
+          {header}
+          <IonButton
+            fill="clear"
+            onClick={handleClickEditHeader}
+            className="tw-absolute tw-top tw-right-16 tw-normal-case tw-mr-8 tw-text-base"
+          >
+            {t("editHeader")}
+          </IonButton>
+
           <IonButton
             fill="clear"
             className="tw-absolute tw-top tw-right-0 tw-normal-case tw-mr-8 tw-text-base"
@@ -420,7 +452,6 @@ export default function Settings() {
             </IonList>
           </IonCard>
         </IonList>
-
         <div className="ion-padding tw-mt-4">
           <IonButton id="settings-logout-btn" expand="block" color="danger">
             {t("logout")}
@@ -503,7 +534,13 @@ export default function Settings() {
               </p>
             </IonLabel>
           </IonItem>
-        </IonList>
+        </IonList>{" "}
+        <EditHeaders
+          modal={headerSheetModal}
+          didDismiss={refreshChain}
+          page={"settings"}
+          initalHeader={t("account")}
+        />
       </IonContent>
     </IonPage>
   );
