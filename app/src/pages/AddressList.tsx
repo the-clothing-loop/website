@@ -44,8 +44,10 @@ export default function AddressList() {
 
   const header = useMemo(() => {
     if (chain?.headers_override) {
-      const headers = JSON.parse(chain.headers_override).addressList;
-      return headers.addressList as string;
+      const headers = JSON.parse(chain.headers_override);
+      return headers.addressList
+        ? (headers.addressList as string)
+        : t("addresses");
     }
     return t("addresses");
   }, [chain]);
@@ -53,7 +55,7 @@ export default function AddressList() {
   function updateChain() {
     setChain(chain?.uid, authUser);
   }
-  function handleClickChange() {
+  function handleClickEdit() {
     headerSheetModal.current?.present();
   }
 
@@ -74,7 +76,7 @@ export default function AddressList() {
               }`}
             >
               {" "}
-              <IonButton onClick={handleClickChange}>{t("change")}</IonButton>
+              <IonButton onClick={handleClickEdit}>{t("edit")}</IonButton>
               <IonButton
                 target="_blank"
                 href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}

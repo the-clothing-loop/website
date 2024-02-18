@@ -99,7 +99,9 @@ export default function BagsList() {
   const header = useMemo(() => {
     if (chain?.headers_override) {
       const headers = JSON.parse(chain.headers_override);
-      return headers.bagsList as string;
+      return headers.bagsList
+        ? (headers.bagsList as string)
+        : t("whereIsTheBag");
     }
     return t("whereIsTheBag");
   }, [chain]);
@@ -213,7 +215,7 @@ export default function BagsList() {
     if (isChainAdmin) setOpenCard(bagID);
   }
 
-  function handleClickChange() {
+  function handleClickEditHeader() {
     headerSheetModal.current?.present();
   }
 
@@ -269,7 +271,7 @@ export default function BagsList() {
 
           {isChainAdmin ? (
             <IonButtons slot="end">
-              <IonButton onClick={handleClickChange}>{t("change")}</IonButton>
+              <IonButton onClick={handleClickEditHeader}>{t("edit")}</IonButton>
               <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
             </IonButtons>
           ) : null}
