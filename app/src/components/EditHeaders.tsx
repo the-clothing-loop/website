@@ -3,12 +3,15 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
   IonInput,
   IonItem,
+  IonLabel,
   IonList,
   IonModal,
   IonTitle,
   IonToolbar,
+  useIonAlert,
   useIonToast,
 } from "@ionic/react";
 
@@ -19,6 +22,7 @@ import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-com
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { chainUpdate } from "../api";
+import { refreshOutline } from "ionicons/icons";
 
 export default function EditHeaders(props: {
   initalHeader: string | null;
@@ -31,6 +35,8 @@ export default function EditHeaders(props: {
   const { chain } = useContext(StoreContext);
 
   const [present] = useIonToast();
+  const [presentAlert] = useIonAlert();
+
   const [header, setHeader] = useState(props.initalHeader);
   const [headers, setHeaders] = useState({});
 
@@ -72,6 +78,32 @@ export default function EditHeaders(props: {
       setError(err.status);
       toastError(present, err);
     }
+  }
+
+  function reset() {
+    if (!chain?.uid) return;
+    const handler = () => {
+      chainUpdate({
+        uid: chain.uid,
+        headers_override: "",
+      });
+      props.modal.current?.dismiss();
+    };
+
+    presentAlert({
+      header: t("resetHeaders"),
+      subHeader: t("areYouSureYouWantToResetHeaders"),
+      buttons: [
+        {
+          text: t("cancel"),
+        },
+        {
+          role: "destructive",
+          text: t("delete"),
+          handler,
+        },
+      ],
+    });
   }
 
   return (
@@ -122,6 +154,18 @@ export default function EditHeaders(props: {
             color={error === "holder" ? "danger" : undefined}
           ></IonItem>
         </IonList>
+        {chain?.headers_override ? (
+          <IonItem lines="full" color="dark" key="reset">
+            <IonIcon icon={refreshOutline} className="tw-ml-0.5 tw-mr-5" />
+            <IonLabel className="ion-text-wrap">
+              <h3>{t("resetHeaders")}</h3>
+              <p>{t("resetHeadersDescription")}</p>
+            </IonLabel>
+            <IonButton slot="end" onClick={reset} color="danger">
+              {t("reset")}
+            </IonButton>
+          </IonItem>
+        ) : null}
       </IonContent>
     </IonModal>
   );
