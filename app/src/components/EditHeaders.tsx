@@ -2,31 +2,18 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonFabButton,
   IonHeader,
-  IonIcon,
   IonInput,
   IonItem,
-  IonLabel,
   IonList,
   IonModal,
-  IonSelect,
-  IonSelectOption,
-  IonText,
   IonTitle,
   IonToolbar,
-  SelectChangeEventDetail,
   useIonToast,
 } from "@ionic/react";
 
-import type {
-  IonSelectCustomEvent,
-  IonModalCustomEvent,
-  IonInputCustomEvent,
-} from "@ionic/core";
-import { checkmarkCircle, ellipse } from "ionicons/icons";
-import { RefObject, useContext, useState } from "react";
-import { Bag, bagColors, bagPut, UID } from "../api";
+import type { IonModalCustomEvent } from "@ionic/core";
+import { RefObject, useContext, useEffect, useState } from "react";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
@@ -34,33 +21,49 @@ import { useTranslation } from "react-i18next";
 import { chainUpdate } from "../api";
 
 export default function EditHeaders(props: {
-    initalHeader: string | null;
-    modal: RefObject<HTMLIonModalElement>;
-    didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
-  }) {
+  initalHeader: string | null;
+  page: string;
+  modal: RefObject<HTMLIonModalElement>;
+  didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
+}) {
   const { t } = useTranslation();
   const [error, setError] = useState("");
   const { chain } = useContext(StoreContext);
 
-  const [header, setHeader] = useState(props.initalHeader);
   const [present] = useIonToast();
+  const [header, setHeader] = useState(props.initalHeader);
+  const [headers, setHeaders] = useState({});
 
-  //const [subheader, setSubheader] = useState("");
   function modalInit() {
     setError("");
   }
+  useEffect(() => {
+    updateHeader();
+  }, [headers]);
 
   function cancel() {
     props.modal.current?.dismiss();
   }
-  async function updateHeader() {
 
+  function handleSave() {
+    const page = props.page;
+    const prevHeaders = chain?.headers_override
+      ? JSON.parse(chain.headers_override)
+      : "";
+
+    setHeaders(() => ({
+      ...prevHeaders,
+      [page]: header,
+    }));
+  }
+
+  async function updateHeader() {
     if (!chain?.uid) return;
 
     try {
       await chainUpdate({
         uid: chain.uid,
-        headers_override: JSON.stringify(header),
+        headers_override: JSON.stringify(headers),
       });
       setError("");
 
@@ -87,7 +90,7 @@ export default function EditHeaders(props: {
           <IonTitle>{t("updateHeaders")}</IonTitle>
           <IonButtons slot="end">
             <IonButton
-              onClick={updateHeader}
+              onClick={handleSave}
               color={!error ? "primary" : "danger"}
             >
               {t("save")}
