@@ -14,22 +14,68 @@ type ToTranslate = {
   val: string;
   dest: string | null;
 };
+type FileFunc = (l: string) => string;
 
-async function run() {
-  let lang = "de";
-  let fp = (l: string) => "frontend/public/locales/" + l + "/translation.json";
-  let contents = await getFileJson(fp(lang));
+// Init code
+// ----------------------------------------------------------------
+const lang = "ar";
+// prettier-ignore
+const files = [
+  (l: string) => "frontend/public/locales/"+l+"/translation.json",
+  (l: string) => "frontend/public/locales/"+l+"/about.json",
+  (l: string) => "frontend/public/locales/"+l+"/faq.json",
+  (l: string) => "frontend/public/locales/"+l+"/testimonials.json",
+  (l: string) => "server/internal/views/emails/"+l+"/account_deleted_successfully.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/an_admin_approved_your_join_request.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/an_admin_denied_your_join_request.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/approve_reminder.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/contact_confirmation.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/contact_received.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/do_you_want_to_be_host.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/is_your_loop_still_active.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/login_verification.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/loop_is_deleted.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/poke.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/register_verification.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/someone_is_interested_in_joining_your_loop.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/someone_left_loop.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/someone_waiting_to_be_accepted.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/subscribed_to_newsletter.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/translations.json",
+  (l: string) => "server/internal/views/emails/"+l+"/you_created_a_new_loop.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/you_signed_up_for_loop.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/your_loop_deleted_next_month.gohtml",
+  (l: string) => "server/internal/views/emails/"+l+"/your_loop_deleted_next_week.gohtml",
+];
+for (let i = 0; i < files.length; i++) {
+  const fileFunc = files[i];
 
-  let contentsEn = await getFileJson(fp("en"));
-
-  let toTranslate = await walk(contents, contentsEn, lang);
-
-  await setToTranslate(lang, toTranslate);
-
-  await setFileJson(fp(lang), contents);
+  console.log("Running lang [%s] file: %s", lang, fileFunc(lang));
+  await run(lang, fileFunc);
+  console.log("Completed lang [%s] file: %s", lang, fileFunc(lang));
 }
+console.log("Done");
 
-await run();
+// ----------------------------------------------------------------
+
+async function run(lang: string, fp: FileFunc) {
+  let isJSON = fp(lang).endsWith(".json");
+  let force = true;
+
+  if (isJSON) {
+    let contents = await getFileJson(fp(lang));
+    let contentsEn = await getFileJson(fp("en"));
+    let toTranslate = await walkJson(contents, contentsEn, force);
+    let obj = await setToTranslate(lang, toTranslate);
+    await setFileJson(fp(lang), obj);
+  } else {
+    // let contents = await getFileStr(fp(lang));
+    let contentsEn = await getFileStr(fp("en"));
+    let res = await translate(lang, contentsEn);
+    if (!Array.isArray(res)) res = [res];
+    await setFileStr(fp(lang), res[0]);
+  }
+}
 
 async function translate(
   lang: string,
@@ -55,6 +101,18 @@ async function translate(
   return j["translatedText"];
 }
 
+async function getFileStr(fp: string): Promise<string> {
+  let filepath = path.join(__dirname, "../../", fp);
+
+  let f = await fs.readFile(filepath);
+  return f.toString();
+}
+
+async function setFileStr(fp: string, contents: string): Promise<void> {
+  let filepath = path.join(__dirname, "../../", fp);
+  await fs.writeFile(filepath, contents);
+}
+
 async function getFileJson(fp: string): Promise<string> {
   let filepath = path.join(__dirname, "../../", fp);
 
@@ -62,19 +120,20 @@ async function getFileJson(fp: string): Promise<string> {
   let str = f.toString();
   return JSON.parse(str);
 }
+
 async function setFileJson(fp: string, obj: any): Promise<void> {
   let filepath = path.join(__dirname, "../../", fp);
   await fs.writeFile(filepath, JSON.stringify(obj, null, 2));
 }
 
-async function walk(jsonIn: any, jsonEn: any, lang: string) {
+async function walkJson(jsonIn: any, jsonEn: any, force: boolean) {
   let toTranslate: ToTranslate[] = [];
 
   walker.walker(jsonIn, (node) => {
     if (typeof node.val === "string" || node.val === null) {
       // if val is english string
       let enVal = get(jsonEn, node.path);
-      if (enVal === node.val) {
+      if (enVal === node.val || force) {
         toTranslate.push({
           obj: jsonIn,
           path: node.path,
@@ -89,6 +148,7 @@ async function walk(jsonIn: any, jsonEn: any, lang: string) {
 }
 
 async function setToTranslate(lang: string, toTranslate: ToTranslate[]) {
+  if (toTranslate.length === 0) return {};
   let i = 0;
   let arrIn: string[] = [];
   for (let item of toTranslate) {
@@ -107,4 +167,6 @@ async function setToTranslate(lang: string, toTranslate: ToTranslate[]) {
     set(item.obj, item.path, item.dest);
     i++;
   }
+
+  return toTranslate[0].obj;
 }

@@ -50,11 +50,14 @@ export default function ChainsList({ chains, setChains }: Props) {
             await chainGetAll({
               filter_out_unpublished: false,
               add_rules: true,
+              add_headers: true,
             })
           ).data;
         } else {
           let data = await Promise.all(
-            authUser.chains.map((uc) => chainGet(uc.chain_uid, true))
+            authUser.chains.map((uc) =>
+              chainGet(uc.chain_uid, { addTotals: true })
+            )
           );
           _chains = data.map((d) => d.data);
         }

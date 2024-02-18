@@ -185,22 +185,25 @@ export function StoreProvider({
     // at this point it is safe to assume _isAuthenticated is LoggedIn
 
     window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
-
+    let chainUID: string | null = null;
     try {
-      const chainUID: string | null = await storage.get("chain_uid");
-      if (chainUID) {
-        await _setChain(chainUID, _authUser);
-      } else if (chainUID) {
+      chainUID = await storage.get("chain_uid");
+      // if empty get the first in the list
+      const approvedChains = _authUser.chains.filter((uc) => uc.is_approved);
+      if (!chainUID && approvedChains.length > 0) {
+        chainUID = approvedChains[0].chain_uid;
+      }
+
+      if (!chainUID) {
         console.info("Authenticated but has no selected chain_uid");
       }
+      await _setChain(chainUID, _authUser);
     } catch (err: any) {
       console.error(err);
-      await storage.set("chain_uid", null);
       return err?.isAuthenticated || IsAuthenticated.OfflineLoggedIn;
     }
 
     setAuthUser(_authUser);
-    setIsChainAdmin(_isChainAdmin);
     setIsAuthenticated(_isAuthenticated);
     return _isAuthenticated;
   }
@@ -218,7 +221,12 @@ export function StoreProvider({
     if (_chainUID && _authUser) {
       try {
         const res = await Promise.all([
-          chainGet(_chainUID, true, true, true),
+          chainGet(_chainUID, {
+            addRules: true,
+            addHeaders: true,
+            addTheme: true,
+            addIsAppDisabled: true,
+          }),
           userGetAllByChain(_chainUID),
           routeGetOrder(_chainUID),
           bagGetAllByChain(_chainUID, _authUser.uid),
@@ -294,7 +302,12 @@ export function StoreProvider({
       if (tab === "help") {
         if (!chain) throw errLoopMustBeSelected;
 
-        let _chain = await chainGet(chain.uid, true, true, true);
+        let _chain = await chainGet(chain.uid, {
+          addRules: true,
+          addHeaders: true,
+          addTheme: true,
+          addIsAppDisabled: true,
+        });
         setChain(_chain.data);
       } else if (tab === "address" || tab === "bags") {
         if (!chain) throw errLoopMustBeSelected;
@@ -309,7 +322,6 @@ export function StoreProvider({
         setBags(_bags.data);
       } else if (tab === "bulky-items") {
         if (!chain) throw errLoopMustBeSelected;
-
         const [_chainUsers, _bulkyItems] = await Promise.all([
           userGetAllByChain(chain.uid),
           bulkyItemGetAllByChain(chain.uid, __authUser!.uid),
@@ -324,15 +336,15 @@ export function StoreProvider({
             .filter((uc) => uc.is_approved)
             .map((uc) => {
               const isCurrentChain = uc.chain_uid === chain?.uid;
-              return chainGet(
-                uc.chain_uid,
-                isCurrentChain,
-                isCurrentChain,
-                true,
-              );
+              return chainGet(uc.chain_uid, {
+                addRules: isCurrentChain,
+                addHeaders: isCurrentChain,
+                addTheme: isCurrentChain,
+                addIsAppDisabled: true,
+              });
             }),
-        ).then((chains) =>
-          chains.map((c) => {
+        ).then((resp) =>
+          resp.map((c) => {
             if (c.data.uid === chain?.uid) {
               _chain = c.data;
             }

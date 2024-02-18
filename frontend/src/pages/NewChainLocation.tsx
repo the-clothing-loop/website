@@ -132,6 +132,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
             //submitError={error}
             showBack={!state.only_create_chain}
             showAllowedTOH={!authUser?.accepted_toh}
+            showAllowedDPA={!authUser?.accepted_dpa}
           />
         </div>
       </main>

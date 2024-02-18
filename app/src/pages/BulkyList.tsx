@@ -181,9 +181,9 @@ export default function BulkyList() {
           <IonToolbar className="tw-bg-transparent">
             <IonTitle
               size="large"
-              className={
-                isThemeDefault ? "tw-text-blue tw-font-serif tw-font-bold" : ""
-              }
+              className={"tw-font-serif tw-font-bold".concat(
+                isThemeDefault ? " tw-text-blue" : "",
+              )}
             >
               {t("bulkyItemsTitle")}
             </IonTitle>

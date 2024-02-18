@@ -105,7 +105,7 @@ export default function BagsList() {
     }
     return t("whereIsTheBag");
   }, [chain]);
-
+  console.log(chain);
   const [bagsCard, bagsList] = useMemo(() => {
     if (!authUser) return [[], []];
     let authRouteIndex = authUser ? route.indexOf(authUser.uid) : -1;
@@ -280,7 +280,12 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar className="tw-bg-transparent">
-            <IonTitle size="large" className="tw-text-green tw-font-serif">
+            <IonTitle
+              size="large"
+              className={"tw-font-serif".concat(
+                isThemeDefault ? " tw-text-green" : "",
+              )}
+            >
               {header}
             </IonTitle>
           </IonToolbar>

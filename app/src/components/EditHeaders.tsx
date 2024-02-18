@@ -44,6 +44,7 @@ export default function EditHeaders(props: {
     setError("");
   }
   useEffect(() => {
+    console.log(headers)
     updateHeader();
   }, [headers]);
 
@@ -52,6 +53,7 @@ export default function EditHeaders(props: {
   }
 
   function handleSave() {
+    console.log("am i gere?")
     const page = props.page;
     const prevHeaders = chain?.headers_override
       ? JSON.parse(chain.headers_override)
@@ -64,6 +66,7 @@ export default function EditHeaders(props: {
   }
 
   async function updateHeader() {
+    console.log("inside updateHeader", headers)
     if (!chain?.uid) return;
 
     try {
@@ -72,7 +75,7 @@ export default function EditHeaders(props: {
         headers_override: JSON.stringify(headers),
       });
       setError("");
-
+      console.log(chain)
       props.modal.current?.dismiss("", "confirm");
     } catch (err: any) {
       setError(err.status);

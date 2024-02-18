@@ -15,11 +15,11 @@
    -> **Build Settings**
    -> **Versioning**
    -> **Marketing Version**
-5. Run app on mobile device
-6. Archive the running app, from **Run** => **Archive**
+5. Run app on mobile device **Product** => **Run**
+6. Archive the running app, from **Product** => **Archive**
 7. Open archives from **Window** => **Organizer**
 
-`**Google Play Store**
+**Google Play Store**
 
 2. Edit in `code -a ./android/app/build.gradle` the following: `versionCode` & `versionName`
 3. Open a terminal in the app directory

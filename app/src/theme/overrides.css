@@ -72,6 +72,7 @@ ion-tab-bar {
   background: var(--ion-color-primary);
 }
 body[data-theme="default"] ion-tab-bar {
+  background: var(--ion-color-light);
   --ion-tab-bar-background: var(--ion-color-light);
   --color: var(--ion-color-light-contrast);
 }

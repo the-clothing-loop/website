@@ -198,6 +198,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		CountryCode:      body.Chain.CountryCode,
 		Sizes:            body.Chain.Sizes,
 		Genders:          body.Chain.Genders,
+		RoutePrivacy:     2, // default route_privacy
 	}
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
@@ -211,6 +212,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		Latitude:        body.User.Latitude,
 		Longitude:       body.User.Longitude,
 		AcceptedTOH:     true,
+		AcceptedDPA:     true,
 	}
 	if err := db.Create(user).Error; err != nil {
 		goscope.Log.Warningf("User already exists: %v", err)

@@ -207,7 +207,7 @@ export default function Footer() {
 
       <div className="bg-teal text-white">
         <div className="container mx-auto px-1 md:px-20 py-4 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex flex-col sm:flex-row sm:flex-wrap mb-2 md:mb-0">
+          <div className="flex flex-col md:flex-row sm:flex-wrap mb-2 md:mb-0">
             <Link
               className="btn btn-ghost text-white text-base font-normal"
               to="/terms-of-use"
@@ -219,6 +219,12 @@ export default function Footer() {
               to="/terms-of-hosts"
             >
               {t("termsOfHosts")}
+            </Link>
+            <Link
+              className="btn btn-ghost text-white text-base font-normal"
+              to="/data-processing-agreement"
+            >
+              {t("dataProcessingAgreement")}
             </Link>
             <Link
               className="btn btn-ghost text-white text-base font-normal"
