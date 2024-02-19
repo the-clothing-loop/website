@@ -217,7 +217,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                         {(isUserAdmin && userChain?.is_approved) ||
                         authUser?.is_root_admin ? (
                           <Link
-                            className={`btn btn-primary justify-between sm:w-28 max-xs:btn-sm ${
+                            className={`btn btn-primary justify-between relative sm:w-28 max-xs:btn-sm ${
                               chains?.length > 5 ? "btn-sm" : ""
                             }`}
                             to={`/loops/${chain.uid}/members`}
@@ -225,6 +225,9 @@ export default function ChainsList({ chains, setChains }: Props) {
                             <span className="max-xs:hidden">{t("view")}</span>
                             <span className="feather feather-arrow-left sm:mr-3 ltr:hidden"></span>
                             <span className="feather feather-arrow-right sm:ml-3 rtl:hidden"></span>
+                            {authUser.notification_chain_uids?.length ? (
+                              <div className="block bg-red rounded-full w-2.5 h-2.5 absolute -top-1 -right-1"></div>
+                            ) : null}
                           </Link>
                         ) : null}
                         <div className="dropdown dropdown-left">

@@ -72,7 +72,7 @@ export default function UserEdit() {
     if (!userUID) return;
     (async () => {
       try {
-        const _user = (await userGetByUID(chainUID, userUID)).data;
+        const _user = (await userGetByUID(chainUID, userUID, {})).data;
         setUser(_user);
       } catch (error) {
         console.warn(error);

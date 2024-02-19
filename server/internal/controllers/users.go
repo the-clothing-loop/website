@@ -36,9 +36,10 @@ func UserGet(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UserUID        string `form:"user_uid" binding:"omitempty,uuid"`
-		ChainUID       string `form:"chain_uid" binding:"omitempty,uuid"`
-		AddApprovedTOH bool   `form:"add_approved_toh" binding:"omitempty"`
+		UserUID         string `form:"user_uid" binding:"omitempty,uuid"`
+		ChainUID        string `form:"chain_uid" binding:"omitempty,uuid"`
+		AddApprovedTOH  bool   `form:"add_approved_toh" binding:"omitempty"`
+		AddNotification bool   `form:"add_notification" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -83,6 +84,14 @@ func UserGet(c *gin.Context) {
 		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
 		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
 		return
+	}
+
+	if query.AddNotification && (isMe || authUser.IsRootAdmin) {
+		err := user.AddNotificationChainUIDs(db)
+		if err != nil {
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
 	}
 
 	if query.AddApprovedTOH {
