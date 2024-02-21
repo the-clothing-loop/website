@@ -17,8 +17,8 @@ import {
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
-import { chatbubbleEllipsesSharp } from "ionicons/icons";
-import { Fragment, useContext, useRef, useState } from "react";
+import { chatbubbleEllipsesSharp, pencilOutline } from "ionicons/icons";
+import { Fragment, useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
 import { bulkyItemRemove, BulkyItem, User } from "../api";
@@ -27,6 +27,8 @@ import { StoreContext } from "../Store";
 import { Clipboard } from "@capacitor/clipboard";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
+import EditHeaders from "../components/EditHeaders";
+import { useLongPress } from "use-long-press";
 
 export default function BulkyList() {
   const { t } = useTranslation();
@@ -47,6 +49,24 @@ export default function BulkyList() {
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
   const [modalDesc, setModalDesc] = useState({ title: "", message: "" });
   const refModalDesc = useRef<HTMLIonModalElement>(null);
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
+
+  const longPressHeader = useLongPress(() => {
+    headerSheetModal.current?.present();
+  });
+
+  const header = useMemo(() => {
+    if (chain?.headers_override) {
+      const headers = JSON.parse(chain.headers_override);
+      return headers.bulkyList
+        ? (headers.bulkyList as string)
+        : t("bulkyItemsTitle");
+    }
+    return t("bulkyItemsTitle");
+  }, [chain]);
+  function refreshChain() {
+    setChain(chain?.uid, authUser);
+  }
 
   function handleClickDelete(id: number) {
     const handler = async () => {
@@ -184,8 +204,15 @@ export default function BulkyList() {
               className={"tw-font-serif tw-font-bold".concat(
                 isThemeDefault ? " tw-text-blue" : "",
               )}
+              {...(isChainAdmin ? { ...longPressHeader() } : "")}
             >
-              {t("bulkyItemsTitle")}
+              {header}
+              {isChainAdmin ? (
+                <IonIcon
+                  icon={pencilOutline}
+                  className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+                />
+              ) : null}
             </IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -328,6 +355,12 @@ export default function BulkyList() {
             ))}
           </div>
         </IonModal>
+        <EditHeaders
+          modal={headerSheetModal}
+          didDismiss={refreshChain}
+          page={"bulkyList"}
+          initalHeader={header}
+        />
         <div className="relative">
           {/* Background SVGs */}
           <IonIcon
