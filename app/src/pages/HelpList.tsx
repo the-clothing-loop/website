@@ -135,22 +135,33 @@ export default function HelpList() {
       >
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle
-              size="large"
-              className={`tw-font-serif tw-font-bold ${
-                isThemeDefault ? "tw-text-purple " : ""
-              }`}
-              {...(isChainAdmin ? { ...longPressHeader() } : "")}
-            >
-              {header}
+            {isChainAdmin ? (
+              <IonTitle
+                size="large"
+                className={`tw-font-serif tw-font-bold ${
+                  isThemeDefault ? "tw-text-purple " : ""
+                }`}
+                {...(isChainAdmin ? { ...longPressHeader() } : "")}
+              >
+                {header}
 
-              {isChainAdmin ? (
-                <IonIcon
-                  icon={pencilOutline}
-                  className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-                />
-              ) : null}
-            </IonTitle>
+                {isChainAdmin ? (
+                  <IonIcon
+                    icon={pencilOutline}
+                    className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+                  />
+                ) : null}
+              </IonTitle>
+            ) : (
+              <IonTitle
+                size="large"
+                className={`tw-font-serif tw-font-bold ${
+                  isThemeDefault ? "tw-text-purple " : ""
+                }`}
+              >
+                {header}
+              </IonTitle>
+            )}
           </IonToolbar>
         </IonHeader>
         <IonList>
@@ -209,12 +220,14 @@ export default function HelpList() {
             modal={modal}
             didDismiss={refreshChain}
           />
-          <EditHeaders
-            modal={headerSheetModal}
-            didDismiss={refreshChain}
-            page={"helpList"}
-            initalHeader={header}
-          />
+          {isChainAdmin ? (
+            <EditHeaders
+              modal={headerSheetModal}
+              didDismiss={refreshChain}
+              page={"helpList"}
+              initalHeader={header}
+            />
+          ) : null}
           <IonIcon
             aria-hidden="true"
             icon="/v2_o.svg"

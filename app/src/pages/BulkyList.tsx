@@ -199,21 +199,31 @@ export default function BulkyList() {
       >
         <IonHeader collapse="condense">
           <IonToolbar className="tw-bg-transparent">
-            <IonTitle
-              size="large"
-              className={"tw-font-serif tw-font-bold".concat(
-                isThemeDefault ? " tw-text-blue" : "",
-              )}
-              {...(isChainAdmin ? { ...longPressHeader() } : "")}
-            >
-              {header}
-              {isChainAdmin ? (
+            {isChainAdmin ? (
+              <IonTitle
+                size="large"
+                className={"tw-font-serif tw-font-bold".concat(
+                  isThemeDefault ? " tw-text-blue" : "",
+                )}
+                {...longPressHeader()}
+              >
+                {header}
+
                 <IonIcon
                   icon={pencilOutline}
                   className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
                 />
-              ) : null}
-            </IonTitle>
+              </IonTitle>
+            ) : (
+              <IonTitle
+                size="large"
+                className={"tw-font-serif tw-font-bold".concat(
+                  isThemeDefault ? " tw-text-blue" : "",
+                )}
+              >
+                {header}
+              </IonTitle>
+            )}
           </IonToolbar>
         </IonHeader>
         {bulkyItems.map((bulkyItem, i) => {
@@ -355,12 +365,15 @@ export default function BulkyList() {
             ))}
           </div>
         </IonModal>
-        <EditHeaders
-          modal={headerSheetModal}
-          didDismiss={refreshChain}
-          page={"bulkyList"}
-          initalHeader={header}
-        />
+
+        {isChainAdmin ? (
+          <EditHeaders
+            modal={headerSheetModal}
+            didDismiss={refreshChain}
+            page={"bulkyList"}
+            initalHeader={header}
+          />
+        ) : null}
         <div className="relative">
           {/* Background SVGs */}
           <IonIcon

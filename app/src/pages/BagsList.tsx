@@ -279,21 +279,31 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar className="tw-bg-transparent">
-            <IonTitle
-              size="large"
-              className={"tw-font-serif".concat(
-                isThemeDefault ? " tw-text-green" : "",
-              )}
-              {...(isChainAdmin ? { ...longPressHeader() } : "")}
-            >
-              {header}
-              {isChainAdmin ? (
+            {isChainAdmin ? (
+              <IonTitle
+                size="large"
+                className={"tw-font-serif".concat(
+                  isThemeDefault ? " tw-text-green" : "",
+                )}
+                {...longPressHeader()}
+              >
+                {header}
+
                 <IonIcon
                   icon={pencilOutline}
                   className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
                 />
-              ) : null}
-            </IonTitle>
+              </IonTitle>
+            ) : (
+              <IonTitle
+                size="large"
+                className={"tw-font-serif".concat(
+                  isThemeDefault ? " tw-text-green" : "",
+                )}
+              >
+                {header}
+              </IonTitle>
+            )}
           </IonToolbar>
         </IonHeader>
         <IonText color="medium" className="ion-margin">
@@ -490,12 +500,14 @@ export default function BagsList() {
           bagID={sheetModalBagID}
           didDismiss={handleDidDismissSheetModal}
         />
-        <EditHeaders
-          modal={headerSheetModal}
-          didDismiss={refreshBags}
-          page={"bagsList"}
-          initalHeader={header}
-        />
+        {isChainAdmin ? (
+          <EditHeaders
+            modal={headerSheetModal}
+            didDismiss={refreshBags}
+            page={"bagsList"}
+            initalHeader={header}
+          />
+        ) : null}
         <div className="relative">
           {/* Background SVG */}
           <IonIcon

@@ -98,23 +98,35 @@ export default function AddressList() {
         <div className="tw-relative tw-min-h-full tw-flex tw-flex-col">
           <IonHeader collapse="condense">
             <IonToolbar>
-              <IonTitle
-                size="large"
-                className={"tw-font-serif".concat(
-                  isThemeDefault
-                    ? " tw-text-red dark:tw-text-red-contrast"
-                    : "",
-                )}
-                {...(isChainAdmin ? { ...longPressHeader() } : "")}
-              >
-                {header}
-                {isChainAdmin ? (
-                <IonIcon
-                  icon={pencilOutline}
-                  className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-                />
-              ) : null}
-              </IonTitle>
+              {isChainAdmin ? (
+                <IonTitle
+                  size="large"
+                  className={"tw-font-serif".concat(
+                    isThemeDefault
+                      ? " tw-text-red dark:tw-text-red-contrast"
+                      : "",
+                  )}
+                  {...longPressHeader()}
+                >
+                  {header}
+
+                  <IonIcon
+                    icon={pencilOutline}
+                    className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+                  />
+                </IonTitle>
+              ) : (
+                <IonTitle
+                  size="large"
+                  className={"tw-font-serif".concat(
+                    isThemeDefault
+                      ? " tw-text-red dark:tw-text-red-contrast"
+                      : "",
+                  )}
+                >
+                  {header}
+                </IonTitle>
+              )}
             </IonToolbar>
           </IonHeader>
           <IonList
@@ -207,12 +219,14 @@ export default function AddressList() {
               );
             })}
           </IonList>
-          <EditHeaders
-            modal={headerSheetModal}
-            didDismiss={updateChain}
-            page={"addressList"}
-            initalHeader={header}
-          />
+          {isChainAdmin ? (
+            <EditHeaders
+              modal={headerSheetModal}
+              didDismiss={updateChain}
+              page={"addressList"}
+              initalHeader={header}
+            />
+          ) : null}
           <IonIcon
             aria-hidden="true"
             icon="/the_clothing_loop_logo_cropped.svg"
