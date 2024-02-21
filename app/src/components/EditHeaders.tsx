@@ -11,7 +11,6 @@ import {
   IonModal,
   IonTitle,
   IonToolbar,
-  createAnimation,
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
@@ -23,7 +22,7 @@ import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-com
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { chainUpdate } from "../api";
-import { handRight, refreshOutline } from "ionicons/icons";
+import { refreshOutline } from "ionicons/icons";
 
 export default function EditHeaders(props: {
   initalHeader: string | null;
@@ -42,6 +41,7 @@ export default function EditHeaders(props: {
   const [headers, setHeaders] = useState({});
 
   function modalInit() {
+    setHeader("");
     setError("");
   }
   useEffect(() => {
@@ -53,7 +53,6 @@ export default function EditHeaders(props: {
   }
 
   function handleSave() {
-    console.log("am i gere?");
     const page = props.page;
     const prevHeaders = chain?.headers_override
       ? JSON.parse(chain.headers_override)
@@ -74,7 +73,6 @@ export default function EditHeaders(props: {
         headers_override: JSON.stringify(headers),
       });
       setError("");
-      console.log(chain);
       props.modal.current?.dismiss("", "confirm");
     } catch (err: any) {
       setError(err.status);
@@ -101,7 +99,7 @@ export default function EditHeaders(props: {
         },
         {
           role: "destructive",
-          text: t("delete"),
+          text: t("reset"),
           handler,
         },
       ],
@@ -126,6 +124,7 @@ export default function EditHeaders(props: {
             <IonButton
               onClick={handleSave}
               color={!error ? "primary" : "danger"}
+              disabled={header?.length == 0}
             >
               {t("save")}
             </IonButton>
