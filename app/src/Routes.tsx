@@ -84,7 +84,7 @@ export default function Routes() {
     bags,
     chain,
     authUser,
-    isChainAdmin,
+    connError,
   } = useContext(StoreContext);
   const history = useHistory();
   let location = useLocation();
@@ -100,13 +100,6 @@ export default function Routes() {
       }
       await auth();
     })();
-
-    // const root = document.getElementById("#root");
-    // root?.addEventListener("store-error", eventCatchStoreErr);
-
-    // return () => {
-    //   root?.removeEventListener("store-error", eventCatchStoreErr);
-    // };
   }, []);
 
   // set the chain theme, and change when selected chain is changed
@@ -122,13 +115,15 @@ export default function Routes() {
 
   async function auth() {
     let success = IsAuthenticated.Unknown;
+    let err: Error | undefined;
     try {
       await init();
       success = await authenticate();
-    } catch (err) {
-      console.warn(err);
+    } catch (e: any) {
+      err = e;
     }
     SplashScreen.hide();
+    if (err) return connError(err);
 
     if (
       success === IsAuthenticated.LoggedIn ||
@@ -248,29 +243,3 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
     </IonTabs>
   );
 }
-
-interface CssVars {
-  light: string;
-  lightShade: string;
-  lightTint: string;
-  medium: string;
-  mediumShade: string;
-  mediumTint: string;
-}
-const THEME_TO_CSS_VARS = {
-  grey: { "": "", color: "#a5a5a5" },
-  leafGreen: { "": "", color: "#a6c665" },
-  green: { "": "", color: "#66926e" },
-  yellow: { "": "", color: "#f4b63f" },
-  orange: { "": "", color: "#ef953d" },
-  redLight: { "": "", color: "#e39aa1" },
-  red: { "": "", color: "#c73643" },
-  pinkLight: { "": "", color: "#ecbbd0" },
-  pink: { "": "", color: "#dc77a3" },
-  lilacLight: { "": "", color: "#dab5d6" },
-  lilac: { "": "", color: "#b76dac" },
-  purple: { "": "", color: "#a899c2" },
-  skyBlue: { "": "", color: "#7ecfe0" },
-  blueLight: { "": "", color: "#89b3d9" },
-  blue: { "": "", color: "#1467b3" },
-};
