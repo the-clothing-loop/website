@@ -11,6 +11,7 @@ import {
   IonModal,
   IonTitle,
   IonToolbar,
+  createAnimation,
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
@@ -22,7 +23,7 @@ import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-com
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { chainUpdate } from "../api";
-import { refreshOutline } from "ionicons/icons";
+import { handRight, refreshOutline } from "ionicons/icons";
 
 export default function EditHeaders(props: {
   initalHeader: string | null;
@@ -44,7 +45,6 @@ export default function EditHeaders(props: {
     setError("");
   }
   useEffect(() => {
-    console.log(headers)
     updateHeader();
   }, [headers]);
 
@@ -53,7 +53,7 @@ export default function EditHeaders(props: {
   }
 
   function handleSave() {
-    console.log("am i gere?")
+    console.log("am i gere?");
     const page = props.page;
     const prevHeaders = chain?.headers_override
       ? JSON.parse(chain.headers_override)
@@ -66,7 +66,6 @@ export default function EditHeaders(props: {
   }
 
   async function updateHeader() {
-    console.log("inside updateHeader", headers)
     if (!chain?.uid) return;
 
     try {
@@ -75,7 +74,7 @@ export default function EditHeaders(props: {
         headers_override: JSON.stringify(headers),
       });
       setError("");
-      console.log(chain)
+      console.log(chain);
       props.modal.current?.dismiss("", "confirm");
     } catch (err: any) {
       setError(err.status);
@@ -135,6 +134,29 @@ export default function EditHeaders(props: {
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
+          {chain?.headers_override ? (
+            <IonItem
+              lines="full"
+              color="dark"
+              key="reset"
+              className="tw-bottom-0"
+            >
+              <IonIcon icon={refreshOutline} className="tw-ml-0.5 tw-mr-5" />
+              <IonLabel className="ion-text-wrap">
+                <h3>{t("restHeaders")}</h3>
+                <p>{t("resetHeadersDesc")}</p>
+              </IonLabel>
+              <IonButton slot="end" onClick={reset} color="danger">
+                {t("reset")}
+              </IonButton>
+            </IonItem>
+          ) : null}
+          <IonItem
+            lines="none"
+            color={error === "number" ? "danger" : undefined}
+          >
+            {t("updateHeaderDesc")}
+          </IonItem>
           <IonItem
             lines="none"
             color={error === "number" ? "danger" : undefined}
@@ -152,23 +174,7 @@ export default function EditHeaders(props: {
               onIonInput={(e) => setHeader(e.detail.value + "")}
             />
           </IonItem>
-          <IonItem
-            lines="none"
-            color={error === "holder" ? "danger" : undefined}
-          ></IonItem>
         </IonList>
-        {chain?.headers_override ? (
-          <IonItem lines="full" color="dark" key="reset">
-            <IonIcon icon={refreshOutline} className="tw-ml-0.5 tw-mr-5" />
-            <IonLabel className="ion-text-wrap">
-              <h3>{t("resetHeaders")}</h3>
-              <p>{t("resetHeadersDescription")}</p>
-            </IonLabel>
-            <IonButton slot="end" onClick={reset} color="danger">
-              {t("reset")}
-            </IonButton>
-          </IonItem>
-        ) : null}
       </IonContent>
     </IonModal>
   );
