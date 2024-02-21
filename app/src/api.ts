@@ -134,11 +134,12 @@ export function loginEmail(email: string) {
   );
 }
 
-export function loginValidate(key: string) {
-  return window.axios.get<{ user: User; token: string }>(
-    `/v2/login/validate?apiKey=${key}`,
-    { auth: undefined, withCredentials: false },
-  );
+export function loginValidate(u: string, apiKey: string) {
+  return window.axios.get<{ user: User; token: string }>("/v2/login/validate", {
+    auth: undefined,
+    withCredentials: false,
+    params: { apiKey, u },
+  });
 }
 
 export function logout() {

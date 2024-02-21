@@ -1,7 +1,7 @@
 import pkg from "nlf";
 import * as fs from "fs";
 
-pkg.find({ directory: "./", reach: 1 }, function (err, data) {
+pkg.find({ directory: "../", reach: 1 }, function (err, data) {
   let result = {};
   data.forEach((d) => {
     d?.licenseSources.package.sources.forEach((ls) => {
@@ -24,7 +24,7 @@ pkg.find({ directory: "./", reach: 1 }, function (err, data) {
   }
 
   fs.writeFile(
-    "public/open_source_licenses.json",
+    "../public/open_source_licenses.json",
     JSON.stringify(licenses, null, 4),
     { flag: "w" },
     function (err) {
