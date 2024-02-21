@@ -6,6 +6,7 @@ import { User } from "../api/types";
 import { userGetByUID, userUpdate } from "../api/user";
 import Cookies from "js-cookie";
 import i18n from "../i18n";
+import { Sleep } from "../util/sleep";
 
 const IS_DEV_MODE = import.meta.env.DEV;
 
@@ -13,6 +14,7 @@ export enum UserRefreshState {
   NeverLoggedIn,
   LoggedIn,
   ForceLoggedOut,
+  Offline,
 }
 
 export type AuthProps = {
@@ -113,10 +115,12 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
             i18n: i18n.language,
           });
         }
-      } catch (err) {
-        await authLogout().catch((err) => {
-          console.error("force logout failed:", err);
-        });
+      } catch (err: any) {
+        if (err?.status === 401) {
+          await authLogout().catch((err) => {
+            console.error("force logout failed:", err);
+          });
+        }
         console.info("force logout");
         return UserRefreshState.ForceLoggedOut;
       }
