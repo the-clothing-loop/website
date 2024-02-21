@@ -73,7 +73,7 @@ export function StoreProvider({
   onIsOffline: (err: any) => void;
 }) {
   const [authUser, setAuthUser] = useState<User | null>(null);
-  const [chain, setChain] = useState<Chain | null>(null);
+  const [chain, _setChain] = useState<Chain | null>(null);
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
   const [listOfChains, setListOfChains] = useState<Array<Chain>>([]);
   const [route, setRoute] = useState<UID[]>([]);
@@ -85,7 +85,7 @@ export function StoreProvider({
   );
   const [isChainAdmin, setIsChainAdmin] = useState(false);
   const [overlayState, setOverlayState] = useState(OverlayState.OPEN_ALL);
-  const [bagListView, setBagListView] = useState<BagListView>("dynamic");
+  const [bagListView, _setBagListView] = useState<BagListView>("dynamic");
 
   const shouldBlur = useMemo(() => {
     let isAppDisabledPopup =
@@ -111,18 +111,18 @@ export function StoreProvider({
   }, [chain]);
 
   // Get storage from IndexedDB or LocalStorage
-  async function _init() {
+  async function init() {
     const _storage = await storage.create();
 
     const version = (await _storage.get("version")) as number | null;
     if (version !== 1) {
       await _storage.set("version", 1);
     }
-    setBagListView((await _storage.get("bag_list_view")) || "dynamic");
+    _setBagListView((await _storage.get("bag_list_view")) || "dynamic");
     setStorage(_storage);
   }
 
-  async function _logout() {
+  async function logout() {
     window.plugins?.OneSignal?.removeExternalUserId();
     await logout().catch((err) => {
       console.warn(err);
@@ -132,17 +132,17 @@ export function StoreProvider({
     await storage.set("auth", "");
     await storage.set("chain_uid", "");
     setAuthUser(null);
-    setChain(null);
+    _setChain(null);
     setListOfChains([]);
     setRoute([]);
     setBags([]);
     setBulkyItems([]);
     setIsAuthenticated(IsAuthenticated.LoggedOut);
     setIsChainAdmin(false);
-    setBagListView("dynamic");
+    _setBagListView("dynamic");
   }
 
-  async function _login(email: string, token: string) {
+  async function login(email: string, token: string) {
     let emailBase64 = btoa(email);
     const res = await loginValidate(emailBase64, token);
     window.axios.defaults.auth = "Bearer " + res.data.token;
@@ -152,11 +152,11 @@ export function StoreProvider({
     } as StorageAuth);
     setAuthUser(res.data.user);
     setIsAuthenticated(IsAuthenticated.LoggedIn);
-    _refresh("settings", res.data.user);
+    refresh("settings", res.data.user);
   }
 
   // Will set the isAuthenticated value and directly return it as well (no need to run setIsAuthenticated)
-  async function _authenticate(): Promise<IsAuthenticated> {
+  async function authenticate(): Promise<IsAuthenticated> {
     console.log("run authenticate");
     const auth = (await storage.get("auth")) as StorageAuth | null;
 
@@ -179,7 +179,7 @@ export function StoreProvider({
         return _isAuthenticated;
       }
     } catch (err: any) {
-      _isAuthenticated = await _connError(err);
+      _isAuthenticated = await connError(err);
       return _isAuthenticated;
     }
 
@@ -198,7 +198,7 @@ export function StoreProvider({
       if (!chainUID) {
         console.info("Authenticated but has no selected chain_uid");
       }
-      await _setChain(chainUID, _authUser);
+      await setChain(chainUID, _authUser);
     } catch (err: any) {
       console.error(err);
       return err?.isAuthenticated || IsAuthenticated.OfflineLoggedIn;
@@ -209,7 +209,7 @@ export function StoreProvider({
     return _isAuthenticated;
   }
 
-  async function _setChain(
+  async function setChain(
     _chainUID: UID | null | undefined,
     _authUser: User | null,
   ) {
@@ -245,12 +245,13 @@ export function StoreProvider({
         }
         err.isAuthenticated = _isAuthenticated;
         setIsAuthenticated(_isAuthenticated);
-        throw err;
+        onIsOffline(err);
+        return;
       }
     }
 
     await storage.set("chain_uid", _chainUID ? _chainUID : null);
-    setChain(_chain);
+    _setChain(_chain);
     setChainUsers(_chainUsers);
     setRoute(_route);
     setBags(_bags);
@@ -258,19 +259,19 @@ export function StoreProvider({
     setIsChainAdmin(_isChainAdmin);
   }
 
-  async function _setTheme(c: string) {
+  async function setTheme(c: string) {
     if (!chain) throw Error("No loop selected");
     const oldTheme = chain.theme;
-    setChain((s) => ({ ...(s as Chain), theme: c }));
+    _setChain((s) => ({ ...(s as Chain), theme: c }));
     chainUpdate({
       uid: chain.uid,
       theme: c,
     }).catch((e) => {
-      setChain((s) => ({ ...(s as Chain), theme: oldTheme }));
+      _setChain((s) => ({ ...(s as Chain), theme: oldTheme }));
     });
   }
 
-  async function _setPause(pause: Date | boolean) {
+  async function setPause(pause: Date | boolean) {
     if (!authUser) return;
 
     let pauseUntil = dayjs();
@@ -294,8 +295,8 @@ export function StoreProvider({
     }
   }
 
-  async function _refresh(tab: string, __authUser: User | null): Promise<void> {
-    if (!__authUser) _logout();
+  async function refresh(tab: string, __authUser: User | null): Promise<void> {
+    if (!__authUser) logout();
 
     try {
       if (tab === "help") {
@@ -306,7 +307,7 @@ export function StoreProvider({
           addTheme: true,
           addIsAppDisabled: true,
         });
-        setChain(_chain.data);
+        _setChain(_chain.data);
       } else if (tab === "address" || tab === "bags") {
         if (!chain) throw errLoopMustBeSelected;
 
@@ -351,13 +352,13 @@ export function StoreProvider({
 
         setAuthUser(_authUser.data);
         setListOfChains(_listOfChains);
-        setChain(_chain);
+        _setChain(_chain);
       }
     } catch (err: any) {
       if (err === errLoopMustBeSelected) {
         throw err;
       } else {
-        await _connError(err);
+        await connError(err);
       }
     }
   }
@@ -376,14 +377,14 @@ export function StoreProvider({
     );
   }
 
-  function _setBagListView(v: BagListView) {
-    setBagListView(v);
+  function setBagListView(v: BagListView) {
+    _setBagListView(v);
     storage.set("bag_list_view", v);
   }
 
-  async function _connError(err: any) {
+  async function connError(err: any) {
     if (err?.status === 401) {
-      await _logout();
+      await logout();
       return IsAuthenticated.LoggedOut;
     }
     console.log("Connection error");
@@ -395,8 +396,8 @@ export function StoreProvider({
     <StoreContext.Provider
       value={{
         authUser,
-        setPause: _setPause,
-        setTheme: _setTheme,
+        setPause,
+        setTheme,
         route,
         bags,
         bulkyItems,
@@ -404,19 +405,19 @@ export function StoreProvider({
         isThemeDefault,
         chainUsers,
         listOfChains,
-        setChain: _setChain,
+        setChain,
         isAuthenticated,
         isChainAdmin,
-        logout: _logout,
-        authenticate: _authenticate,
-        login: _login,
-        init: _init,
-        refresh: (t) => _refresh(t, authUser),
+        logout,
+        authenticate,
+        login,
+        init,
+        refresh: (t) => refresh(t, authUser),
         overlayState,
         closeOverlay,
         bagListView,
-        setBagListView: _setBagListView,
-        connError: _connError,
+        setBagListView,
+        connError,
         shouldBlur,
       }}
     >
