@@ -4,7 +4,7 @@
 
 Mijn Clothing Loop
 
-## Short description
+## Short description (Promotional Text)
 
 Ruil kleding met anderen in je buurt via een ruiltas
 
@@ -22,7 +22,7 @@ In deze (besloten) app kun je bijhouden waar de ruiltassen zich bevinden op jouw
 
 My Clothing Loop
 
-## Short description
+## Short description (Promotional Text)
 
 Empowers people to swap clothes with others in their neighbourhood via a swapbag
 
