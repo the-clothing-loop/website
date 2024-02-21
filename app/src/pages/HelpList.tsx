@@ -16,14 +16,16 @@ import {
   logoInstagram,
   logoLinkedin,
   mail,
+  pencilOutline,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IsChainAdmin, StoreContext } from "../Store";
-import { useContext, useMemo, useRef } from "react";
+import { useContext, useMemo, useRef, useState } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
 import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
 import { User } from "../api";
 import EditHeaders from "../components/EditHeaders";
+import { useLongPress } from "use-long-press";
 
 interface MediaIcon {
   icon: string;
@@ -72,6 +74,10 @@ export default function HelpList() {
   const modal = useRef<HTMLIonModalElement>(null);
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
 
+  const longPressHeader = useLongPress(() => {
+    headerSheetModal.current?.present();
+  });
+
   const header = useMemo(() => {
     if (chain?.headers_override) {
       const headers = JSON.parse(chain.headers_override);
@@ -117,13 +123,6 @@ export default function HelpList() {
           {isChainAdmin ? (
             <IonButtons slot="end">
               <IonButton
-                onClick={handleClickEdit}
-                className={isThemeDefault ? "!tw-text-purple" : ""}
-              >
-                {t("edit")}
-              </IonButton>
-
-              <IonButton
                 onClick={handleClickChange}
                 className={isThemeDefault ? "!tw-text-purple" : ""}
               >
@@ -144,8 +143,13 @@ export default function HelpList() {
               className={`tw-font-serif tw-font-bold ${
                 isThemeDefault ? "tw-text-purple " : ""
               }`}
+              {...(isChainAdmin ? { ...longPressHeader() } : "")}
             >
               {header}
+              <IonIcon
+                icon={pencilOutline}
+                className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+              />
             </IonTitle>
           </IonToolbar>
         </IonHeader>

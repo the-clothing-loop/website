@@ -37,6 +37,7 @@ import {
   gridOutline,
   list,
   pauseCircle,
+  pencilOutline,
 } from "ionicons/icons";
 import type {
   DatetimeChangeEventDetail,
@@ -94,7 +95,10 @@ export default function BagsList() {
   const [updateBag, setUpdateBag] = useState<Bag | null>(null);
   const [sheetModalUserUID, setSheetModalUserUID] = useState("");
   const [sheetModalBagID, setSheetModalBagID] = useState(0);
-  const [bagColor, setBagColor] = useState("");
+
+  const longPressHeader = useLongPress(() => {
+    headerSheetModal.current?.present();
+  });
 
   const header = useMemo(() => {
     if (chain?.headers_override) {
@@ -215,10 +219,6 @@ export default function BagsList() {
     if (isChainAdmin) setOpenCard(bagID);
   }
 
-  function handleClickEditHeader() {
-    headerSheetModal.current?.present();
-  }
-
   return (
     <IonPage>
       <OverlayPaused />
@@ -271,7 +271,6 @@ export default function BagsList() {
 
           {isChainAdmin ? (
             <IonButtons slot="end">
-              <IonButton onClick={handleClickEditHeader}>{t("edit")}</IonButton>
               <IonButton onClick={handleClickCreate}>{t("create")}</IonButton>
             </IonButtons>
           ) : null}
@@ -285,8 +284,13 @@ export default function BagsList() {
               className={"tw-font-serif".concat(
                 isThemeDefault ? " tw-text-green" : "",
               )}
+              {...(isChainAdmin ? { ...longPressHeader() } : "")}
             >
               {header}
+              <IonIcon
+                icon={pencilOutline}
+                className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+              />
             </IonTitle>
           </IonToolbar>
         </IonHeader>

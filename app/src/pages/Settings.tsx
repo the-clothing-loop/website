@@ -55,6 +55,7 @@ import {
   logoAndroid,
   logoApple,
   openOutline,
+  pencilOutline,
   shareOutline,
   sparkles,
   warningOutline,
@@ -67,6 +68,7 @@ import { Clipboard } from "@capacitor/clipboard";
 import Theme from "../components/Theme";
 import { useLocation } from "react-router";
 import EditHeaders from "../components/EditHeaders";
+import { useLongPress } from "use-long-press";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -101,7 +103,9 @@ export default function Settings() {
   }, [authUser, state]);
 
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
-
+  const longPressHeader = useLongPress(() => {
+    headerSheetModal.current?.present();
+  });
   const header = useMemo(() => {
     if (chain?.headers_override) {
       const headers = JSON.parse(chain.headers_override);
@@ -109,13 +113,11 @@ export default function Settings() {
     }
     return t("account");
   }, [chain]);
+
   function refreshChain() {
     setChain(chain?.uid, authUser);
   }
 
-  function handleClickEditHeader() {
-    headerSheetModal.current?.present();
-  }
   function handleChainSelect(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
   ) {
@@ -214,6 +216,14 @@ export default function Settings() {
           >
             {t("information")}
           </IonTitle>
+          {isChainAdmin ? (
+            <IonButtons
+              slot="end"
+              className={`${
+                isThemeDefault ? "tw-text-orange tw-bg-orange-shade" : "primary"
+              }`}
+            ></IonButtons>
+          ) : null}
         </IonToolbar>
       </IonHeader>
 
@@ -225,15 +235,13 @@ export default function Settings() {
           className={`tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-font-serif tw-font-bold ${
             isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
           }`}
+          {...(isChainAdmin ? { ...longPressHeader() } : "")}
         >
           {header}
-          <IonButton
-            fill="clear"
-            onClick={handleClickEditHeader}
-            className="tw-absolute tw-top tw-right-16 tw-normal-case tw-mr-8 tw-text-base"
-          >
-            {t("editHeader")}
-          </IonButton>
+          <IonIcon
+            icon={pencilOutline}
+            className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+          />
 
           <IonButton
             fill="clear"

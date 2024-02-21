@@ -19,6 +19,7 @@ import {
   bagHandle,
   openOutline,
   pauseCircleSharp,
+  pencilOutline,
   shield,
 } from "ionicons/icons";
 import isPaused from "../utils/is_paused";
@@ -26,6 +27,7 @@ import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 import EditHeaders from "../components/EditHeaders";
+import { useLongPress } from "use-long-press";
 
 export default function AddressList() {
   const {
@@ -40,7 +42,11 @@ export default function AddressList() {
     shouldBlur,
   } = useContext(StoreContext);
   const { t } = useTranslation();
+
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
+  const longPressHeader = useLongPress(() => {
+    headerSheetModal.current?.present();
+  });
 
   const header = useMemo(() => {
     if (chain?.headers_override) {
@@ -54,9 +60,6 @@ export default function AddressList() {
 
   function updateChain() {
     setChain(chain?.uid, authUser);
-  }
-  function handleClickEdit() {
-    headerSheetModal.current?.present();
   }
 
   return (
@@ -75,8 +78,6 @@ export default function AddressList() {
                   : "primary"
               }`}
             >
-              {" "}
-              <IonButton onClick={handleClickEdit}>{t("edit")}</IonButton>
               <IonButton
                 target="_blank"
                 href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}
@@ -104,8 +105,13 @@ export default function AddressList() {
                     ? " tw-text-red dark:tw-text-red-contrast"
                     : "",
                 )}
+                {...(isChainAdmin ? { ...longPressHeader() } : "")}
               >
                 {header}
+                <IonIcon
+                  icon={pencilOutline}
+                  className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+                />
               </IonTitle>
             </IonToolbar>
           </IonHeader>
