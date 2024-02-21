@@ -33,14 +33,7 @@ import {
   IonModalCustomEvent,
   OverlayEventDetail,
 } from "@ionic/core";
-import {
-  RefObject,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { RefObject, useContext, useEffect, useRef, useState } from "react";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import { Trans, useTranslation } from "react-i18next";
@@ -55,7 +48,6 @@ import {
   logoAndroid,
   logoApple,
   openOutline,
-  pencilOutline,
   shareOutline,
   sparkles,
   warningOutline,
@@ -67,8 +59,6 @@ import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
 import Theme from "../components/Theme";
 import { useLocation } from "react-router";
-import EditHeaders from "../components/EditHeaders";
-import { useLongPress } from "use-long-press";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -101,22 +91,6 @@ export default function Settings() {
       refChainSelect.current?.open();
     }
   }, [authUser, state]);
-
-  const headerSheetModal = useRef<HTMLIonModalElement>(null);
-  const longPressHeader = useLongPress(() => {
-    headerSheetModal.current?.present();
-  });
-  const header = useMemo(() => {
-    if (chain?.headers_override) {
-      const headers = JSON.parse(chain.headers_override);
-      return headers.settings ? (headers.settings as string) : t("account");
-    }
-    return t("account");
-  }, [chain]);
-
-  function refreshChain() {
-    setChain(chain?.uid, authUser);
-  }
 
   function handleChainSelect(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
@@ -216,14 +190,6 @@ export default function Settings() {
           >
             {t("information")}
           </IonTitle>
-          {isChainAdmin ? (
-            <IonButtons
-              slot="end"
-              className={`${
-                isThemeDefault ? "tw-text-orange tw-bg-orange-shade" : "primary"
-              }`}
-            ></IonButtons>
-          ) : null}
         </IonToolbar>
       </IonHeader>
 
@@ -235,14 +201,8 @@ export default function Settings() {
           className={`tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-font-serif tw-font-bold ${
             isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
           }`}
-          {...(isChainAdmin ? { ...longPressHeader() } : "")}
         >
-          {header}
-          <IonIcon
-            icon={pencilOutline}
-            className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-          />
-
+          {t("account")}
           <IonButton
             fill="clear"
             className="tw-absolute tw-top tw-right-0 tw-normal-case tw-mr-8 tw-text-base"
@@ -345,7 +305,7 @@ export default function Settings() {
                     icon={isIos ? logoApple : logoAndroid}
                   />
                   <span className="ion-margin-end tw-ms-1.5">
-                    {t("loopIsNotUsingThisApp", { name: chain.name })}
+                    {t("loopIsNotUsingThisApp")}
                   </span>
                 </IonItem>
               ) : null}
@@ -460,6 +420,7 @@ export default function Settings() {
             </IonList>
           </IonCard>
         </IonList>
+
         <div className="ion-padding tw-mt-4">
           <IonButton id="settings-logout-btn" expand="block" color="danger">
             {t("logout")}
@@ -542,13 +503,7 @@ export default function Settings() {
               </p>
             </IonLabel>
           </IonItem>
-        </IonList>{" "}
-        <EditHeaders
-          modal={headerSheetModal}
-          didDismiss={refreshChain}
-          page={"settings"}
-          initalHeader={t("account")}
-        />
+        </IonList>
       </IonContent>
     </IonPage>
   );
