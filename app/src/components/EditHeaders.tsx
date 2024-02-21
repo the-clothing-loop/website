@@ -57,11 +57,12 @@ export default function EditHeaders(props: {
     const prevHeaders = chain?.headers_override
       ? JSON.parse(chain.headers_override)
       : "";
-
-    setHeaders(() => ({
-      ...prevHeaders,
-      [page]: header,
-    }));
+    if (header) {
+      setHeaders(() => ({
+        ...prevHeaders,
+        [page]: header,
+      }));
+    }
   }
 
   async function updateHeader() {
