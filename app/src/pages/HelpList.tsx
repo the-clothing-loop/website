@@ -108,9 +108,6 @@ export default function HelpList() {
   function refreshChain() {
     setChain(chain?.uid, authUser);
   }
-  function handleClickEdit() {
-    headerSheetModal.current?.present();
-  }
 
   return (
     <IonPage>
@@ -146,10 +143,13 @@ export default function HelpList() {
               {...(isChainAdmin ? { ...longPressHeader() } : "")}
             >
               {header}
-              <IonIcon
-                icon={pencilOutline}
-                className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-              />
+
+              {isChainAdmin ? (
+                <IonIcon
+                  icon={pencilOutline}
+                  className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+                />
+              ) : null}
             </IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -213,7 +213,7 @@ export default function HelpList() {
             modal={headerSheetModal}
             didDismiss={refreshChain}
             page={"helpList"}
-            initalHeader={t("howDoesItWork")}
+            initalHeader={header}
           />
           <IonIcon
             aria-hidden="true"

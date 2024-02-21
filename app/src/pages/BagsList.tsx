@@ -287,10 +287,12 @@ export default function BagsList() {
               {...(isChainAdmin ? { ...longPressHeader() } : "")}
             >
               {header}
-              <IonIcon
-                icon={pencilOutline}
-                className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-              />
+              {isChainAdmin ? (
+                <IonIcon
+                  icon={pencilOutline}
+                  className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+                />
+              ) : null}
             </IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -492,7 +494,7 @@ export default function BagsList() {
           modal={headerSheetModal}
           didDismiss={refreshBags}
           page={"bagsList"}
-          initalHeader={t("whereIsTheBag")}
+          initalHeader={header}
         />
         <div className="relative">
           {/* Background SVG */}

@@ -108,10 +108,12 @@ export default function AddressList() {
                 {...(isChainAdmin ? { ...longPressHeader() } : "")}
               >
                 {header}
+                {isChainAdmin ? (
                 <IonIcon
                   icon={pencilOutline}
                   className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
                 />
+              ) : null}
               </IonTitle>
             </IonToolbar>
           </IonHeader>
@@ -209,7 +211,7 @@ export default function AddressList() {
             modal={headerSheetModal}
             didDismiss={updateChain}
             page={"addressList"}
-            initalHeader={t("whereIsTheBag")}
+            initalHeader={header}
           />
           <IonIcon
             aria-hidden="true"
