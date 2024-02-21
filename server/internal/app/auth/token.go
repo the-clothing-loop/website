@@ -115,7 +115,7 @@ func JwtGenerate(user *models.User) (string, error) {
 		Pepper: user.JwtTokenPepper,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    user.UID,
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(2 * 24 * time.Hour)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(52 * 7 * 24 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	})
@@ -186,7 +186,7 @@ func authenticateOldToken(db *gorm.DB, token string) (*models.User, error) {
 	}
 	err := validate.Var(token, "uuid")
 	if err != nil {
-		return nil, fmt.Errorf("No a uuid by standards of validator/v10")
+		return nil, fmt.Errorf("Not a uuid by standards of validator/v10")
 	}
 
 	user := &models.User{}
