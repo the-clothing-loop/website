@@ -239,7 +239,6 @@ export function StoreProvider({
         _bulkyItems = res[4].data;
         _isChainAdmin = IsChainAdmin(_authUser, _chainUID);
       } catch (err: any) {
-        throwError(err);
         let _isAuthenticated = IsAuthenticated.OfflineLoggedIn;
         if (err?.status === 401) {
           _isAuthenticated = IsAuthenticated.LoggedOut;
@@ -423,14 +422,6 @@ export function StoreProvider({
     >
       {children}
     </StoreContext.Provider>
-  );
-}
-
-function throwError(err: any) {
-  document.getElementById("root")?.dispatchEvent(
-    new CustomEvent("store-error", {
-      detail: err,
-    }),
   );
 }
 
