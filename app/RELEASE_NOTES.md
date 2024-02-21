@@ -108,3 +108,7 @@
 # v2.0
 
 - The new look complementing our websites design guidelines
+
+# v2.1
+
+- Fix bug that shows a blank address list

@@ -1,0 +1,13 @@
+{
+  "name": "generate-contribs",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "generate-open-source-page.js",
+  "scripts": {
+    "start": "node ./generate-open-source-page.js"
+  },
+  "dependencies": {
+    "nlf": "^2.1.1"
+  }
+}
