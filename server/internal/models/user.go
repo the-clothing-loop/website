@@ -4,7 +4,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/samber/lo"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 
@@ -70,9 +69,12 @@ WHERE users.id = ?
 }
 
 func (u *User) AddNotificationChainUIDs(db *gorm.DB) error {
-	userChainIDs := lo.Map(u.Chains, func(item UserChain, i int) uint {
-		return item.ChainID
-	})
+	userChainIDs := []uint{}
+	for _, uc := range u.Chains {
+		if uc.IsChainAdmin {
+			userChainIDs = append(userChainIDs, uc.ChainID)
+		}
+	}
 	notificationChainUIDs := []string{}
 	err := db.Raw(`
 SELECT
@@ -80,9 +82,10 @@ SELECT
 	FROM chains AS c
 WHERE c.id IN ?
 	AND (
-		SELECT COUNT(id)
+		SELECT COUNT(uc.id)
 		FROM user_chains AS uc
-		WHERE uc.chain_id = c.id AND uc.is_approved = FALSE
+		JOIN users AS u ON u.id = uc.user_id
+		WHERE uc.chain_id = c.id AND uc.is_approved = FALSE AND u.is_email_verified = TRUE
 	) > 0
 	`, userChainIDs).Pluck("uid", &notificationChainUIDs).Error
 	if err != nil {

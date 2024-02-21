@@ -473,6 +473,9 @@ export default function ChainMemberList() {
       setPublished(chainData.data.published);
       setOpenToNewMembers(chainData.data.open_to_new_members);
       setIsAppDisabled(chainData.data?.is_app_disabled || false);
+      if (!firstPageLoad && _unapprovedUsers.length === 0) {
+        authUserRefresh();
+      }
     } catch (err: any) {
       if (Array.isArray(err)) err = err[0];
       if (err?.status === 401) {
