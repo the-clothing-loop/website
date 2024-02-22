@@ -213,7 +213,7 @@ export default function HelpList() {
             rules={chain?.rules_override || null}
             modal={modal}
             didDismiss={refreshChain}
-          />            
+          />
           {isChainAdmin ? (
             <EditHeaders
               modal={headerSheetModal}

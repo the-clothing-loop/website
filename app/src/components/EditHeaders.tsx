@@ -24,8 +24,7 @@ import { useTranslation } from "react-i18next";
 import { Chain, chainUpdate } from "../api";
 import { refreshOutline } from "ionicons/icons";
 
-
-export function getHeader(chain: Chain | null, headerKey: string){
+export function getHeader(chain: Chain | null, headerKey: string) {
   if (chain?.headers_override) {
     const headers = JSON.parse(chain.headers_override);
     return headers[headerKey] as string;
