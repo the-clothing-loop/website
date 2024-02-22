@@ -15,7 +15,8 @@ export default function LoginEmailFinished() {
 
   const search = useLocation().search;
   const query = new URLSearchParams(search);
-  const apiKey = query.get("apiKey");
+  const otp = query.get("apiKey");
+  const emailBase64 = query.get("u");
   const chainUID = query.get("c") || "";
   const { authLoginValidate } = useContext(AuthContext);
   const { addToast, addToastError } = useContext(ToastContext);
@@ -24,10 +25,13 @@ export default function LoginEmailFinished() {
     (async () => {
       let user: User | undefined;
       try {
-        if (!apiKey) {
-          throw "apiKey does not exist";
+        if (!otp) {
+          throw "One time password does not exist";
         }
-        user = await authLoginValidate(apiKey!, chainUID);
+        if (!emailBase64) {
+          throw "Email is not included in request";
+        }
+        user = await authLoginValidate(emailBase64, otp!, chainUID);
         addToast({
           message: t("userIsLoggedIn"),
           type: "success",
@@ -48,7 +52,7 @@ export default function LoginEmailFinished() {
         history.replace("/");
       }
     })();
-  }, [apiKey]);
+  }, [otp]);
 
   return (
     <>
