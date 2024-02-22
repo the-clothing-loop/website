@@ -33,7 +33,7 @@ import {
   IonModalCustomEvent,
   OverlayEventDetail,
 } from "@ionic/core";
-import { RefObject, useContext, useEffect, useRef, useState } from "react";
+import { RefObject, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import { Trans, useTranslation } from "react-i18next";
@@ -59,6 +59,8 @@ import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
 import Theme from "../components/Theme";
 import { useLocation } from "react-router";
+import { useLongPress } from "use-long-press";
+import { getHeader } from "../components/EditHeaders";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -81,6 +83,8 @@ export default function Settings() {
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
   const refSelectPauseExpiryModal = useRef<HTMLIonModalElement>(null);
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
+  const subHeaderSheetModal = useRef<HTMLIonModalElement>(null);
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
   const [isIos] = useState(isPlatform("ios"));
@@ -91,6 +95,27 @@ export default function Settings() {
       refChainSelect.current?.open();
     }
   }, [authUser, state]);
+
+
+  const longPressHeader = useLongPress(() => {
+    headerSheetModal.current?.present();
+  });
+  const longPressSubHeader = useLongPress(() => {
+    subHeaderSheetModal.current?.present();
+  });
+
+
+  const headerKey = "settings";
+  const subHeaderKey = "settingsSub";
+
+  const header = useMemo(() => {
+    return getHeader(chain, headerKey) || t("account");
+  }, [chain]);
+
+  const subHeader = useMemo(() => {
+    return getHeader(chain, subHeaderKey) || t("loopInformation");
+  }, [chain]);
+
 
   function handleChainSelect(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
@@ -202,7 +227,7 @@ export default function Settings() {
             isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
           }`}
         >
-          {t("account")}
+          {header}
           <IonButton
             fill="clear"
             className="tw-absolute tw-top tw-right-0 tw-normal-case tw-mr-8 tw-text-base"
@@ -269,7 +294,7 @@ export default function Settings() {
             className={`ion-margin-start tw-bg-transparent tw-text-2xl tw-font-serif tw-font-bold
             ${isThemeDefault ? "tw-text-orange" : ""}`}
           >
-            {t("loopInformation")}
+            {subHeader}
           </IonItemDivider>
           <IonCard
             className={`tw-mt-1.5 tw-rounded-none ${

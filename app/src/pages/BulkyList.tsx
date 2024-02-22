@@ -3,8 +3,6 @@ import {
   IonButtons,
   IonCard,
   IonCardContent,
-  IonCardSubtitle,
-  IonCardTitle,
   IonContent,
   IonHeader,
   IonIcon,
@@ -27,7 +25,7 @@ import { StoreContext } from "../Store";
 import { Clipboard } from "@capacitor/clipboard";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
-import EditHeaders from "../components/EditHeaders";
+import EditHeaders, { getHeader } from "../components/EditHeaders";
 import { useLongPress } from "use-long-press";
 
 export default function BulkyList() {
@@ -55,15 +53,12 @@ export default function BulkyList() {
     headerSheetModal.current?.present();
   });
 
+  const headerKey = "bulkyList";
+
   const header = useMemo(() => {
-    if (chain?.headers_override) {
-      const headers = JSON.parse(chain.headers_override);
-      return headers.bulkyList
-        ? (headers.bulkyList as string)
-        : t("bulkyItemsTitle");
-    }
-    return t("bulkyItemsTitle");
+    return getHeader(chain, headerKey) || t("bulkyItemsTitle");
   }, [chain]);
+
   function refreshChain() {
     setChain(chain?.uid, authUser);
   }
@@ -370,7 +365,7 @@ export default function BulkyList() {
           <EditHeaders
             modal={headerSheetModal}
             didDismiss={refreshChain}
-            page={"bulkyList"}
+            headerKey={headerKey}
             initalHeader={header}
           />
         ) : null}

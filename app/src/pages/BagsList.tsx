@@ -56,7 +56,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID, User } from "../api";
 import CreateBag from "../components/CreateUpdateBag";
-import EditHeaders from "../components/EditHeaders";
+import EditHeaders, { getHeader } from "../components/EditHeaders";
 import { StoreContext } from "../Store";
 import dayjs from "../dayjs";
 import { Sleep } from "../utils/sleep";
@@ -87,6 +87,8 @@ export default function BagsList() {
   const modal = useRef<HTMLIonModalElement>(null);
   const sheetModal = useRef<HTMLIonModalElement>(null);
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
+  const subHeaderSheetModal = useRef<HTMLIonModalElement>(null);
+
   const [presentAlert] = useIonAlert();
 
   // -1: nothing is shown
@@ -99,15 +101,19 @@ export default function BagsList() {
   const longPressHeader = useLongPress(() => {
     headerSheetModal.current?.present();
   });
+  const longPressSubHeader = useLongPress(() => {
+    subHeaderSheetModal.current?.present();
+  });
+
+  const headerKey = "bagsList";
+  const subHeaderKey = "bagsListSub";
 
   const header = useMemo(() => {
-    if (chain?.headers_override) {
-      const headers = JSON.parse(chain.headers_override);
-      return headers.bagsList
-        ? (headers.bagsList as string)
-        : t("whereIsTheBag");
-    }
-    return t("whereIsTheBag");
+    return getHeader(chain, headerKey) || t("whereIsTheBag");
+  }, [chain]);
+
+  const subHeader = useMemo(() => {
+    return getHeader(chain, subHeaderKey) || t("clickOnBagToChangeHolder");
   }, [chain]);
 
   const [bagsCard, bagsList] = useMemo(() => {
@@ -306,9 +312,25 @@ export default function BagsList() {
             )}
           </IonToolbar>
         </IonHeader>
-        <IonText color="medium" className="ion-margin">
-          {t("clickOnBagToChangeHolder")}
-        </IonText>
+
+        {isChainAdmin ? (
+          <IonText
+            color="medium"
+            className="ion-margin"
+            {...longPressSubHeader()}
+          >
+            {subHeader}
+            <IonIcon
+              icon={pencilOutline}
+              className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+            />
+          </IonText>
+        ) : (
+          <IonText color="medium" className="ion-margin">
+            {subHeader}
+          </IonText>
+        )}
+
         <div>
           <IonRefresher
             slot="fixed"
@@ -501,12 +523,20 @@ export default function BagsList() {
           didDismiss={handleDidDismissSheetModal}
         />
         {isChainAdmin ? (
-          <EditHeaders
-            modal={headerSheetModal}
-            didDismiss={refreshBags}
-            page={"bagsList"}
-            initalHeader={header}
-          />
+          <div>
+            <EditHeaders
+              modal={headerSheetModal}
+              didDismiss={refreshBags}
+              headerKey={headerKey}
+              initalHeader={header}
+            />
+            <EditHeaders
+              modal={subHeaderSheetModal}
+              didDismiss={refreshBags}
+              headerKey={subHeaderKey}
+              initalHeader={subHeader}
+            />
+          </div>
         ) : null}
         <div className="relative">
           {/* Background SVG */}

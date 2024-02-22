@@ -24,7 +24,7 @@ import { useContext, useMemo, useRef, useState } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
 import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
 import { User } from "../api";
-import EditHeaders from "../components/EditHeaders";
+import EditHeaders, { getHeader } from "../components/EditHeaders";
 import { useLongPress } from "use-long-press";
 
 interface MediaIcon {
@@ -78,14 +78,10 @@ export default function HelpList() {
     headerSheetModal.current?.present();
   });
 
+  const headerKey = "helpList";
+
   const header = useMemo(() => {
-    if (chain?.headers_override) {
-      const headers = JSON.parse(chain.headers_override);
-      return headers.helpList
-        ? (headers.helpList as string)
-        : t("howDoesItWork");
-    }
-    return t("howDoesItWork");
+    return getHeader(chain, headerKey) || t("howDoesItWork");
   }, [chain]);
 
   const rules = useMemo<FaqListItem[]>(() => {
@@ -141,16 +137,14 @@ export default function HelpList() {
                 className={`tw-font-serif tw-font-bold ${
                   isThemeDefault ? "tw-text-purple " : ""
                 }`}
-                {...(isChainAdmin ? { ...longPressHeader() } : "")}
+                {...longPressHeader()}
               >
                 {header}
 
-                {isChainAdmin ? (
-                  <IonIcon
-                    icon={pencilOutline}
-                    className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-                  />
-                ) : null}
+                <IonIcon
+                  icon={pencilOutline}
+                  className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+                />
               </IonTitle>
             ) : (
               <IonTitle
@@ -219,12 +213,12 @@ export default function HelpList() {
             rules={chain?.rules_override || null}
             modal={modal}
             didDismiss={refreshChain}
-          />
+          />            
           {isChainAdmin ? (
             <EditHeaders
               modal={headerSheetModal}
               didDismiss={refreshChain}
-              page={"helpList"}
+              headerKey={headerKey}
               initalHeader={header}
             />
           ) : null}

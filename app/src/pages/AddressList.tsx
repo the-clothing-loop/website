@@ -26,7 +26,7 @@ import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
-import EditHeaders from "../components/EditHeaders";
+import EditHeaders, { getHeader } from "../components/EditHeaders";
 import { useLongPress } from "use-long-press";
 
 export default function AddressList() {
@@ -48,14 +48,10 @@ export default function AddressList() {
     headerSheetModal.current?.present();
   });
 
+  const headerKey = "addressList";
+
   const header = useMemo(() => {
-    if (chain?.headers_override) {
-      const headers = JSON.parse(chain.headers_override);
-      return headers.addressList
-        ? (headers.addressList as string)
-        : t("addresses");
-    }
-    return t("addresses");
+    return getHeader(chain, headerKey) || t("addresses");
   }, [chain]);
 
   function updateChain() {
@@ -223,7 +219,7 @@ export default function AddressList() {
             <EditHeaders
               modal={headerSheetModal}
               didDismiss={updateChain}
-              page={"addressList"}
+              headerKey={headerKey}
               initalHeader={header}
             />
           ) : null}

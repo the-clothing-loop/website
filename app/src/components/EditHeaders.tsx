@@ -21,12 +21,20 @@ import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
-import { chainUpdate } from "../api";
+import { Chain, chainUpdate } from "../api";
 import { refreshOutline } from "ionicons/icons";
+
+
+export function getHeader(chain: Chain | null, headerKey: string){
+  if (chain?.headers_override) {
+    const headers = JSON.parse(chain.headers_override);
+    return headers[headerKey] as string;
+  }
+}
 
 export default function EditHeaders(props: {
   initalHeader: string | null;
-  page: string;
+  headerKey: string;
   modal: RefObject<HTMLIonModalElement>;
   didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
 }) {
@@ -53,14 +61,14 @@ export default function EditHeaders(props: {
   }
 
   function handleSave() {
-    const page = props.page;
+    const _headerKey = props.headerKey;
     const prevHeaders = chain?.headers_override
       ? JSON.parse(chain.headers_override)
       : "";
     if (header) {
       setHeaders(() => ({
         ...prevHeaders,
-        [page]: header,
+        [_headerKey]: header,
       }));
     }
   }
