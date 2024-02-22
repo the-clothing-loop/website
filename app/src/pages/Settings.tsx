@@ -375,7 +375,7 @@ export default function Settings() {
                     icon={isIos ? logoApple : logoAndroid}
                   />
                   <span className="ion-margin-end tw-ms-1.5">
-                    {t("loopIsNotUsingThisApp")}
+                    {t("loopIsNotUsingThisApp", { name: chain.name })}
                   </span>
                 </IonItem>
               ) : null}
