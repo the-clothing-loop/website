@@ -46,6 +46,7 @@ import { Sleep } from "../util/sleep";
 import PopoverOnHover from "../components/Popover";
 import DOMPurify from "dompurify";
 import RouteMapPopup from "../components/RouteMap/RouteMapPopup";
+import isTouchDevice from "../util/is_touch";
 
 enum LoadingState {
   idle,
@@ -1417,6 +1418,7 @@ function RouteTable(props: {
   onGoToEditTableItem: (uid: UID) => void;
 }) {
   const { t } = useTranslation();
+  const [isDraggable, setIsDraggable] = useState(true);
   const [dragging, setDragging] = useState<string>("");
   const [dragTarget, setDragTarget] = useState<string>("");
 
@@ -1436,6 +1438,12 @@ function RouteTable(props: {
     const fromIndex = props.route.indexOf(uid);
     setRoute(reOrder(props.route, fromIndex, toIndex));
   }
+
+  useEffect(() => {
+    if (isTouchDevice()) {
+      setIsDraggable(false);
+    }
+  }, []);
 
   return (
     <>
@@ -1492,7 +1500,7 @@ function RouteTable(props: {
                     onDrag={() => setDragging(u.uid)}
                     onDragEnd={draggingEnd}
                     onDragOver={() => setDragTarget(u.uid)}
-                    draggable
+                    draggable={isDraggable}
                     className="[&>td]:hover:bg-base-200/[0.6] group"
                   >
                     <td className={`${classTdDragging} text-center`}>
