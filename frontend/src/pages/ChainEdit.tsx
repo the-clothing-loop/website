@@ -74,6 +74,7 @@ export default function ChainEdit() {
           initialValues={chain}
           showAllowedTOH={!authUser?.accepted_toh}
           showAllowedDPA={!authUser?.accepted_dpa}
+          submitText={t("save")}
         />
       </main>
     </>

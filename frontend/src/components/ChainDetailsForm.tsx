@@ -24,6 +24,7 @@ interface Props {
   showBack?: boolean;
   showAllowedTOH: boolean;
   showAllowedDPA: boolean;
+  submitText: string;
 }
 
 export type RegisterChainForm = Omit<
@@ -73,6 +74,7 @@ export default function ChainDetailsForm({
   showBack,
   showAllowedTOH,
   showAllowedDPA,
+  submitText,
 }: Props) {
   const { t } = useTranslation();
   const { addToastError } = useContext(ToastContext);
@@ -374,7 +376,7 @@ export default function ChainDetailsForm({
               </button>
             )}
             <button type="submit" className="btn btn-primary">
-              {t("submit")}
+              {submitText}
               <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
               <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
             </button>

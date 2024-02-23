@@ -133,6 +133,7 @@ const NewChainLocation = ({ location }: { location: any }) => {
             showBack={!state.only_create_chain}
             showAllowedTOH={!authUser?.accepted_toh}
             showAllowedDPA={!authUser?.accepted_dpa}
+            submitText={t("submit")}
           />
         </div>
       </main>
