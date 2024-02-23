@@ -76,6 +76,10 @@ func ConfigInit(path string) {
 		panic(fmt.Errorf("error reading config: %s", err))
 	}
 
+	if Config.JWT_SECRET == "" {
+		panic(fmt.Errorf("no jwt secret in config file: %s", fpath))
+	}
+
 	Config.ENV = env
 	stripe.Key = Config.STRIPE_SECRET_KEY
 }
