@@ -26,6 +26,7 @@ import { ToastProvider } from "./providers/ToastProvider";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import Contribute from "./pages/Contribute";
+import { Helmet } from "react-helmet";
 
 // Lazy
 const FindChain = React.lazy(() => import("./pages/FindChain"));
@@ -232,6 +233,11 @@ export default function App() {
                       path={`${base}/admin/dashboard`}
                       component={AdminDashboard}
                     />
+                    <Route
+                      exact
+                      path={`${base}/500`}
+                      component={InternalServerError}
+                    />
                     <Route path={`${base}/*`} component={FileNotFound} />
                     <Route path="*" component={I18nRedirect} />
                   </Switch>
@@ -263,13 +269,50 @@ function I18nRedirect() {
 
 function FileNotFound() {
   return (
-    <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
-      <h1 className="font-serif text-secondary text-4xl font-bold my-10">
-        404 File not found
-      </h1>
-      <Link to="/" className="btn btn-primary">
-        {t("home")}
-      </Link>
-    </div>
+    <>
+      <Helmet>
+        <title>The Clothing Loop | 404</title>
+        <meta name="description" content="File not found" />
+      </Helmet>
+      <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
+        <h1 className="font-serif text-secondary text-4xl font-bold my-10">
+          404 File not found
+        </h1>
+        <Link to="/" className="btn btn-primary">
+          {t("home")}
+        </Link>
+      </div>
+    </>
+  );
+}
+
+function InternalServerError() {
+  const l = useLocation<{ err?: any }>();
+
+  let err = l.state?.err;
+  if (err !== undefined && typeof err !== "string") {
+    if (typeof err?.message === "string") {
+      err = err.message;
+    }
+    if (typeof err?.data === "string") {
+      err = err.data;
+    }
+  }
+  return (
+    <>
+      <Helmet>
+        <title>The Clothing Loop | 500</title>
+        <meta name="description" content="Internal server error" />
+      </Helmet>
+      <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
+        <h1 className="font-serif text-secondary text-4xl font-bold my-10">
+          500 Internal server error
+        </h1>
+        {err ? <p className="-mt-6 mb-10">{err}</p> : null}
+        <Link to="/" className="btn btn-primary">
+          {t("home")}
+        </Link>
+      </div>
+    </>
   );
 }

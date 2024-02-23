@@ -12,6 +12,7 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-co-op/gocron v1.29.0
 	github.com/go-playground/validator/v10 v10.14.1
+	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/golang/glog v1.1.1
 	github.com/jaswdr/faker v1.18.0
 	github.com/lil5/goscope2 v1.4.2
