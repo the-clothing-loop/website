@@ -196,7 +196,7 @@ export default function HelpList() {
               modal={headerSheetModal}
               didDismiss={refreshChain}
               headerKey={headerKey}
-              initalHeader={headerText}
+              initialHeader={headerText}
             />
           ) : null}
           <IonIcon

@@ -342,7 +342,7 @@ export default function BulkyList() {
             modal={headerSheetModal}
             didDismiss={refreshChain}
             headerKey={headerKey}
-            initalHeader={headerText}
+            initialHeader={headerText}
           />
         ) : null}
         <div className="relative">

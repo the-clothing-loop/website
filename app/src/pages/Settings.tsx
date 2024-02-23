@@ -547,13 +547,13 @@ export default function Settings() {
               modal={headerSheetModal}
               didDismiss={refreshBags}
               headerKey={headerKey}
-              initalHeader={headerText}
+              initialHeader={headerText}
             />
             <EditHeaders
               modal={subHeaderSheetModal}
               didDismiss={refreshBags}
               headerKey={subHeaderKey}
-              initalHeader={subHeader}
+              initialHeader={subHeader}
             />
           </div>
         ) : null}

@@ -195,7 +195,7 @@ export default function AddressList() {
               modal={headerSheetModal}
               didDismiss={updateChain}
               headerKey={headerKey}
-              initalHeader={headerText}
+              initialHeader={headerText}
             />
           ) : null}
           <IonIcon
