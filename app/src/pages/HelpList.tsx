@@ -16,16 +16,14 @@ import {
   logoInstagram,
   logoLinkedin,
   mail,
-  pencilOutline,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IsChainAdmin, StoreContext } from "../Store";
-import { useContext, useMemo, useRef, useState } from "react";
+import { useContext, useMemo, useRef } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
 import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
 import { User } from "../api";
-import EditHeaders, { getHeader } from "../components/EditHeaders";
-import { useLongPress } from "use-long-press";
+import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
 
 interface MediaIcon {
@@ -75,10 +73,6 @@ export default function HelpList() {
   } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
-
-  const longPressHeader = useLongPress(() => {
-    headerSheetModal.current?.present();
-  });
 
   const headerKey = "helpList";
 

@@ -15,18 +15,15 @@ import {
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
-import { chatbubbleEllipsesSharp, pencilOutline } from "ionicons/icons";
 import { Fragment, useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
 import { bulkyItemRemove, BulkyItem, User } from "../api";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
-import { Clipboard } from "@capacitor/clipboard";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
-import EditHeaders, { getHeader } from "../components/EditHeaders";
-import { useLongPress } from "use-long-press";
+import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
 
 export default function BulkyList() {
@@ -50,10 +47,6 @@ export default function BulkyList() {
   const [modalDesc, setModalDesc] = useState({ title: "", message: "" });
   const refModalDesc = useRef<HTMLIonModalElement>(null);
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
-
-  const longPressHeader = useLongPress(() => {
-    headerSheetModal.current?.present();
-  });
 
   const headerKey = "bulkyList";
 

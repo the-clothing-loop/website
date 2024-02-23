@@ -33,19 +33,11 @@ import {
   IonModalCustomEvent,
   OverlayEventDetail,
 } from "@ionic/core";
-import {
-  RefObject,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { RefObject, useContext, useEffect, useRef, useState } from "react";
 import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import { Trans, useTranslation } from "react-i18next";
 import {
-  alertCircleOutline,
   compassOutline,
   construct,
   copyOutline,
@@ -56,7 +48,6 @@ import {
   logoAndroid,
   logoApple,
   openOutline,
-  pencilOutline,
   shareOutline,
   sparkles,
   warningOutline,
@@ -69,7 +60,7 @@ import { Clipboard } from "@capacitor/clipboard";
 import Theme from "../components/Theme";
 import { useLocation } from "react-router";
 import { useLongPress } from "use-long-press";
-import EditHeaders, { getHeader } from "../components/EditHeaders";
+import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
@@ -80,7 +71,6 @@ export default function Settings() {
   const {
     authUser,
     chain,
-    isAuthenticated,
     setPause,
     logout,
     getChainHeader,

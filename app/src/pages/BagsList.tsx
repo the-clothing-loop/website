@@ -38,7 +38,6 @@ import {
   gridOutline,
   list,
   pauseCircle,
-  pencilOutline,
 } from "ionicons/icons";
 import type {
   DatetimeChangeEventDetail,
@@ -52,12 +51,11 @@ import {
   MouseEvent,
   RefObject,
   useMemo,
-  useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID, User } from "../api";
 import CreateBag from "../components/CreateUpdateBag";
-import EditHeaders, { getHeader } from "../components/EditHeaders";
+import EditHeaders from "../components/EditHeaders";
 import { StoreContext } from "../Store";
 import dayjs from "../dayjs";
 import { Sleep } from "../utils/sleep";
@@ -101,9 +99,6 @@ export default function BagsList() {
   const [sheetModalUserUID, setSheetModalUserUID] = useState("");
   const [sheetModalBagID, setSheetModalBagID] = useState(0);
 
-  const longPressHeader = useLongPress(() => {
-    headerSheetModal.current?.present();
-  });
   const longPressSubHeader = useLongPress(() => {
     subHeaderSheetModal.current?.present();
   });
