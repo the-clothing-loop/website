@@ -16,6 +16,7 @@ import {
   bulkyItemGetAllByChain,
   userUpdate,
   chainUpdate,
+  ChainHeaders,
 } from "./api";
 import dayjs from "./dayjs";
 import { OverlayContainsState, OverlayState } from "./utils/overlay_open";
@@ -43,6 +44,7 @@ export const StoreContext = createContext({
   setTheme: (c: string) => {},
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
+  getChainHeader: (key: string, override: string) => override,
   listOfChains: [] as Array<Chain>,
   route: [] as UID[],
   bags: [] as Bag[],
@@ -74,6 +76,9 @@ export function StoreProvider({
 }) {
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chain, _setChain] = useState<Chain | null>(null);
+  const [chainHeaders, setChainHeaders] = useState<ChainHeaders | undefined>(
+    undefined,
+  );
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
   const [listOfChains, setListOfChains] = useState<Array<Chain>>([]);
   const [route, setRoute] = useState<UID[]>([]);
@@ -133,6 +138,7 @@ export function StoreProvider({
     await storage.set("chain_uid", "");
     setAuthUser(null);
     _setChain(null);
+    setChainHeaders(undefined);
     setListOfChains([]);
     setRoute([]);
     setBags([]);
@@ -215,6 +221,7 @@ export function StoreProvider({
   ) {
     let _chain: typeof chain = null;
     let _chainUsers: typeof chainUsers = [];
+    let _chainHeaders: typeof chainHeaders = undefined;
     let _route: typeof route = [];
     let _bags: typeof bags = [];
     let _isChainAdmin: typeof isChainAdmin = false;
@@ -234,6 +241,7 @@ export function StoreProvider({
           bulkyItemGetAllByChain(_chainUID, _authUser.uid),
         ]);
         _chain = res[0].data;
+        _chainHeaders = ChainReadHeaders(_chain);
         _chainUsers = res[1].data;
         _route = res[2].data;
         _bags = res[3].data;
@@ -253,6 +261,7 @@ export function StoreProvider({
 
     await storage.set("chain_uid", _chainUID ? _chainUID : null);
     _setChain(_chain);
+    setChainHeaders(_chainHeaders);
     setChainUsers(_chainUsers);
     setRoute(_route);
     setBags(_bags);
@@ -356,6 +365,7 @@ export function StoreProvider({
         setAuthUser(_authUser.data);
         setListOfChains(_listOfChains);
         _setChain(_chain);
+        setChainHeaders(ChainReadHeaders(_chain));
       }
     } catch (err: any) {
       if (err === errLoopMustBeSelected) {
@@ -395,6 +405,14 @@ export function StoreProvider({
     return IsAuthenticated.OfflineLoggedIn;
   }
 
+  function getChainHeader(key: string, override: string): string {
+    if (chainHeaders && chainHeaders[key]) {
+      return chainHeaders[key];
+    }
+
+    return override;
+  }
+
   return (
     <StoreContext.Provider
       value={{
@@ -407,6 +425,7 @@ export function StoreProvider({
         chain,
         isThemeDefault,
         chainUsers,
+        getChainHeader,
         listOfChains,
         setChain,
         isAuthenticated,
@@ -437,4 +456,12 @@ export function IsChainAdmin(
     ? user?.chains.find((uc) => uc.chain_uid === chainUID)
     : undefined;
   return userChain?.is_chain_admin || false;
+}
+
+function ChainReadHeaders(
+  chain: Chain | null | undefined,
+): ChainHeaders | undefined {
+  if (chain?.headers_override) {
+    return JSON.parse(chain.headers_override);
+  }
 }

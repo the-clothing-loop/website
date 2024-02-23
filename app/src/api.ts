@@ -65,6 +65,8 @@ export interface UserChain {
   created_at: string;
 }
 
+export type ChainHeaders = Record<string, string>;
+
 export interface Chain {
   uid: UID;
   name: string;

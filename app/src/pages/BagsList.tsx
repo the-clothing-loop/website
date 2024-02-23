@@ -65,6 +65,7 @@ import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-com
 import OverlayPaused from "../components/OverlayPaused";
 import { Dayjs } from "dayjs";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
+import HeaderTitle from "../components/HeaderTitle";
 
 const MIN_BAG_LIST = 9;
 const MIN_USERS_FOR_SEARCH = 15;
@@ -108,7 +109,7 @@ export default function BagsList() {
   const headerKey = "bagsList";
   const subHeaderKey = "bagsListSub";
 
-  const header = useMemo(() => {
+  const headerText = useMemo(() => {
     return getHeader(chain, headerKey) || t("whereIsTheBag");
   }, [chain]);
 
@@ -273,7 +274,7 @@ export default function BagsList() {
             </IonPopover>
           </IonButtons>
 
-          <IonTitle>{header}</IonTitle>
+          <IonTitle>{headerText}</IonTitle>
 
           {isChainAdmin ? (
             <IonButtons slot="end">
@@ -285,31 +286,14 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar className="tw-bg-transparent">
-            {isChainAdmin ? (
-              <IonTitle
-                size="large"
-                className={"tw-font-serif".concat(
-                  isThemeDefault ? " tw-text-green" : "",
-                )}
-                {...longPressHeader()}
-              >
-                {header}
-
-                <IonIcon
-                  icon={pencilOutline}
-                  className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-                />
-              </IonTitle>
-            ) : (
-              <IonTitle
-                size="large"
-                className={"tw-font-serif".concat(
-                  isThemeDefault ? " tw-text-green" : "",
-                )}
-              >
-                {header}
-              </IonTitle>
-            )}
+            <HeaderTitle
+              headerText={headerText}
+              onEdit={() => headerSheetModal.current?.present()}
+              isChainAdmin={isChainAdmin}
+              className={"tw-font-serif".concat(
+                isThemeDefault ? " tw-text-green" : "",
+              )}
+            />
           </IonToolbar>
         </IonHeader>
 
@@ -528,7 +512,7 @@ export default function BagsList() {
               modal={headerSheetModal}
               didDismiss={refreshBags}
               headerKey={headerKey}
-              initalHeader={header}
+              initalHeader={headerText}
             />
             <EditHeaders
               modal={subHeaderSheetModal}

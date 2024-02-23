@@ -27,6 +27,7 @@ import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 import EditHeaders, { getHeader } from "../components/EditHeaders";
 import { useLongPress } from "use-long-press";
+import HeaderTitle from "../components/HeaderTitle";
 
 export default function BulkyList() {
   const { t } = useTranslation();
@@ -55,7 +56,7 @@ export default function BulkyList() {
 
   const headerKey = "bulkyList";
 
-  const header = useMemo(() => {
+  const headerText = useMemo(() => {
     return getHeader(chain, headerKey) || t("bulkyItemsTitle");
   }, [chain]);
 
@@ -174,7 +175,7 @@ export default function BulkyList() {
       <OverlayAppDisabled />
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("bulkyItemsTitle")}</IonTitle>
+          <IonTitle>{headerText}</IonTitle>
           <IonButtons
             slot="end"
             className={`${isThemeDefault ? "tw-text-blue" : "primary"}`}
@@ -194,31 +195,14 @@ export default function BulkyList() {
       >
         <IonHeader collapse="condense">
           <IonToolbar className="tw-bg-transparent">
-            {isChainAdmin ? (
-              <IonTitle
-                size="large"
-                className={"tw-font-serif tw-font-bold".concat(
-                  isThemeDefault ? " tw-text-blue" : "",
-                )}
-                {...longPressHeader()}
-              >
-                {header}
-
-                <IonIcon
-                  icon={pencilOutline}
-                  className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-                />
-              </IonTitle>
-            ) : (
-              <IonTitle
-                size="large"
-                className={"tw-font-serif tw-font-bold".concat(
-                  isThemeDefault ? " tw-text-blue" : "",
-                )}
-              >
-                {header}
-              </IonTitle>
-            )}
+            <HeaderTitle
+              headerText={headerText}
+              onEdit={() => headerSheetModal.current?.present()}
+              isChainAdmin={isChainAdmin}
+              className={"tw-font-serif tw-font-bold".concat(
+                isThemeDefault ? " tw-text-blue" : "",
+              )}
+            />
           </IonToolbar>
         </IonHeader>
         {bulkyItems.map((bulkyItem, i) => {
@@ -366,7 +350,7 @@ export default function BulkyList() {
             modal={headerSheetModal}
             didDismiss={refreshChain}
             headerKey={headerKey}
-            initalHeader={header}
+            initalHeader={headerText}
           />
         ) : null}
         <div className="relative">

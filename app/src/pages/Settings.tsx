@@ -69,6 +69,7 @@ import Theme from "../components/Theme";
 import { useLocation } from "react-router";
 import { useLongPress } from "use-long-press";
 import EditHeaders, { getHeader } from "../components/EditHeaders";
+import HeaderTitle from "../components/HeaderTitle";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -117,7 +118,7 @@ export default function Settings() {
   function refreshBags() {
     setChain(chain?.uid, authUser);
   }
-  const header = useMemo(() => {
+  const headerText = useMemo(() => {
     return getHeader(chain, headerKey) || t("account");
   }, [chain]);
 
@@ -231,31 +232,14 @@ export default function Settings() {
         class={isThemeDefault ? "tw-bg-orange-contrast" : ""}
       >
         <IonItemDivider className="ion-margin-top tw-bg-transparent">
-          {isChainAdmin ? (
-            <IonTitle
-              size="large"
-              className={`tw-relative tw-text-4xl tw-font-serif tw-font-bold ${
-                isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
-              }`}
-              {...longPressHeader()}
-            >
-              {header}
-
-              <IonIcon
-                icon={pencilOutline}
-                className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-              />
-            </IonTitle>
-          ) : (
-            <IonTitle
-              size="large"
-              className={`tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-font-serif tw-font-bold ${
-                isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
-              }`}
-            >
-              {header}
-            </IonTitle>
-          )}
+          <HeaderTitle
+            headerText={headerText}
+            onEdit={() => headerSheetModal.current?.present()}
+            isChainAdmin={isChainAdmin}
+            className={`tw-relative tw-text-4xl tw-font-serif tw-font-bold ${
+              isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
+            }`}
+          />
 
           <IonButton
             fill="clear"
@@ -579,7 +563,7 @@ export default function Settings() {
               modal={headerSheetModal}
               didDismiss={refreshBags}
               headerKey={headerKey}
-              initalHeader={header}
+              initalHeader={headerText}
             />
             <EditHeaders
               modal={subHeaderSheetModal}

@@ -28,11 +28,13 @@ import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 import EditHeaders, { getHeader } from "../components/EditHeaders";
 import { useLongPress } from "use-long-press";
+import HeaderTitle from "../components/HeaderTitle";
 
 export default function AddressList() {
   const {
     chain,
     setChain,
+    getChainHeader,
     chainUsers,
     route,
     authUser,
@@ -44,15 +46,13 @@ export default function AddressList() {
   const { t } = useTranslation();
 
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
-  const longPressHeader = useLongPress(() => {
-    headerSheetModal.current?.present();
-  });
 
   const headerKey = "addressList";
 
-  const header = useMemo(() => {
-    return getHeader(chain, headerKey) || t("addresses");
-  }, [chain]);
+  const headerText = getChainHeader("addressList", t("addresses"));
+  // useMemo(() => {
+  //   return || t("addresses");
+  // }, [chain]);
 
   function updateChain() {
     setChain(chain?.uid, authUser);
@@ -64,7 +64,7 @@ export default function AddressList() {
       <OverlayAppDisabled />
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{header}</IonTitle>
+          <IonTitle>{headerText}</IonTitle>
           {isChainAdmin ? (
             <IonButtons
               slot="end"
@@ -94,35 +94,16 @@ export default function AddressList() {
         <div className="tw-relative tw-min-h-full tw-flex tw-flex-col">
           <IonHeader collapse="condense">
             <IonToolbar>
-              {isChainAdmin ? (
-                <IonTitle
-                  size="large"
-                  className={"tw-font-serif".concat(
-                    isThemeDefault
-                      ? " tw-text-red dark:tw-text-red-contrast"
-                      : "",
-                  )}
-                  {...longPressHeader()}
-                >
-                  {header}
-
-                  <IonIcon
-                    icon={pencilOutline}
-                    className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-                  />
-                </IonTitle>
-              ) : (
-                <IonTitle
-                  size="large"
-                  className={"tw-font-serif".concat(
-                    isThemeDefault
-                      ? " tw-text-red dark:tw-text-red-contrast"
-                      : "",
-                  )}
-                >
-                  {header}
-                </IonTitle>
-              )}
+              <HeaderTitle
+                headerText={headerText}
+                onEdit={() => headerSheetModal.current?.present()}
+                isChainAdmin={isChainAdmin}
+                className={"tw-font-serif".concat(
+                  isThemeDefault
+                    ? " tw-text-red dark:tw-text-red-contrast"
+                    : "",
+                )}
+              />
             </IonToolbar>
           </IonHeader>
           <IonList
@@ -220,7 +201,7 @@ export default function AddressList() {
               modal={headerSheetModal}
               didDismiss={updateChain}
               headerKey={headerKey}
-              initalHeader={header}
+              initalHeader={headerText}
             />
           ) : null}
           <IonIcon

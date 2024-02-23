@@ -26,6 +26,7 @@ import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
 import { User } from "../api";
 import EditHeaders, { getHeader } from "../components/EditHeaders";
 import { useLongPress } from "use-long-press";
+import HeaderTitle from "../components/HeaderTitle";
 
 interface MediaIcon {
   icon: string;
@@ -80,7 +81,7 @@ export default function HelpList() {
 
   const headerKey = "helpList";
 
-  const header = useMemo(() => {
+  const headerText = useMemo(() => {
     return getHeader(chain, headerKey) || t("howDoesItWork");
   }, [chain]);
 
@@ -110,7 +111,7 @@ export default function HelpList() {
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
-            {header}
+            {headerText}
           </IonTitle>
 
           {isChainAdmin ? (
@@ -131,31 +132,14 @@ export default function HelpList() {
       >
         <IonHeader collapse="condense">
           <IonToolbar>
-            {isChainAdmin ? (
-              <IonTitle
-                size="large"
-                className={`tw-font-serif tw-font-bold ${
-                  isThemeDefault ? "tw-text-purple " : ""
-                }`}
-                {...longPressHeader()}
-              >
-                {header}
-
-                <IonIcon
-                  icon={pencilOutline}
-                  className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
-                />
-              </IonTitle>
-            ) : (
-              <IonTitle
-                size="large"
-                className={`tw-font-serif tw-font-bold ${
-                  isThemeDefault ? "tw-text-purple " : ""
-                }`}
-              >
-                {header}
-              </IonTitle>
-            )}
+            <HeaderTitle
+              headerText={headerText}
+              onEdit={() => headerSheetModal.current?.present()}
+              isChainAdmin={isChainAdmin}
+              className={`tw-font-serif tw-font-bold ${
+                isThemeDefault ? "tw-text-purple " : ""
+              }`}
+            />
           </IonToolbar>
         </IonHeader>
         <IonList>
@@ -219,7 +203,7 @@ export default function HelpList() {
               modal={headerSheetModal}
               didDismiss={refreshChain}
               headerKey={headerKey}
-              initalHeader={header}
+              initalHeader={headerText}
             />
           ) : null}
           <IonIcon
