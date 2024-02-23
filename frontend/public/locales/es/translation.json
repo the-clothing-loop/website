@@ -209,6 +209,7 @@
   "privacy": "Privacidad",
   "iAmNotAMinor<1>Tos</1>And<2>PrivacyPolicy</2>Star": "No soy menor y estoy de acuerdo y acepto las <1>Condiciones de uso</1> y la <2>Política de privacidad</2>*",
   "iAccept<1>Toh</1>Star": "Acepto y estoy de acuerdo con los <1>Términos de Hosts</1>*",
+  "iAccept<1>Dpa</1>Star": "I accept and agree to the <1>Data Processing Agreement</1>*",
   "thankYouForBeingHere": "Gracias por estar aquí, juntos estamos haciendo del mundo un lugar más sostenible, un Loop a la vez!",
   "goToTheToolkitFolder": "Vaya a la carpeta Toolkit, que incluye nuestro Manual, Impact Report y más.",
   "readOurImpactReport": "Lea nuestro informe de impacto",
