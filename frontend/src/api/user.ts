@@ -3,15 +3,17 @@ import { UID, User } from "./types";
 export function userGetByUID(
   chainUID: string | undefined,
   userUID: string,
-  addApprovedTOH = false
+  { addApprovedTOH = false, addNotification = false }
 ) {
   let params: {
     user_uid: string;
     chain_uid?: string;
     add_approved_toh?: boolean;
+    add_notification?: boolean;
   } = { user_uid: userUID };
   if (chainUID) params.chain_uid = chainUID;
   if (addApprovedTOH) params.add_approved_toh = true;
+  if (addNotification) params.add_notification = true;
 
   return window.axios.get<User>("/v2/user", { params });
 }

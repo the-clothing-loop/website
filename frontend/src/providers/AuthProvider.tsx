@@ -99,7 +99,12 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
       }
 
       try {
-        const user = (await userGetByUID(undefined, oldUserUID, true)).data;
+        const user = (
+          await userGetByUID(undefined, oldUserUID, {
+            addApprovedTOH: true,
+            addNotification: true,
+          })
+        ).data;
         setUser(user);
 
         Cookies.set(KEY_USER_UID, user.uid, cookieOptions);

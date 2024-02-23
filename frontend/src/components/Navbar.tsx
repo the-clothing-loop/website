@@ -89,9 +89,12 @@ function Navbar() {
             <Link
               onClick={onClickMobileNavLink}
               to="/admin/dashboard"
-              className="mb-3 btn btn-ghost text-base"
+              className="mb-3 btn btn-ghost text-base relative"
             >
               {t("account")}
+              {authUser.notification_chain_uids?.length ? (
+                <div className="block bg-red rounded-full w-2.5 h-2.5 absolute top-1.5 right-1.5"></div>
+              ) : null}
             </Link>
           ) : (
             <Link
@@ -146,8 +149,14 @@ function Navbar() {
           </Link>
 
           {authUser ? (
-            <Link to="/admin/dashboard" className="btn btn-ghost text-base">
+            <Link
+              to="/admin/dashboard"
+              className="btn btn-ghost text-base relative"
+            >
               {t("account")}
+              {authUser.notification_chain_uids?.length ? (
+                <div className="block bg-red rounded-full w-2.5 h-2.5 absolute top-1.5 right-1.5"></div>
+              ) : null}
             </Link>
           ) : (
             <Link to="/users/login" className="btn btn-ghost text-base">

@@ -16,6 +16,7 @@ export interface User {
   latitude?: number;
   accepted_toh?: boolean;
   accepted_dpa?: boolean;
+  notification_chain_uids?: string[];
 }
 
 export interface Bag {

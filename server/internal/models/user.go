@@ -14,33 +14,34 @@ var ErrUserNotFound = errors.New("User not found")
 var ErrAddUserChainsToObject = errors.New("Unable to add associated loops to user")
 
 type User struct {
-	ID              uint            `json:"-"`
-	UID             string          `json:"uid" gorm:"uniqueIndex"`
-	FID             zero.String     `json:"-" gorm:"column:fid"`
-	Email           zero.String     `json:"email" gorm:"unique"`
-	IsEmailVerified bool            `json:"is_email_verified"`
-	IsRootAdmin     bool            `json:"is_root_admin"`
-	PausedUntil     null.Time       `json:"paused_until"`
-	Name            string          `json:"name"`
-	PhoneNumber     string          `json:"phone_number"`
-	Address         string          `json:"address"`
-	Sizes           []string        `json:"sizes" gorm:"serializer:json"`
-	LastSignedInAt  zero.Time       `json:"-"`
-	LastPokeAt      zero.Time       `json:"-"`
-	UserToken       []UserToken     `json:"-"`
-	Event           []Event         `json:"-"`
-	Chains          []UserChain     `json:"chains"`
-	UserOnesignal   []UserOnesignal `json:"-"`
-	CreatedAt       time.Time       `json:"-"`
-	UpdatedAt       time.Time       `json:"-"`
-	I18n            string          `json:"i18n"`
-	JwtTokenPepper  int             `json:"-" `
-	Latitude        float64         `json:"-"`
-	Longitude       float64         `json:"-"`
-	AcceptedTOH     bool            `json:"-"`
-	AcceptedDPA     bool            `json:"-"`
-	AcceptedTOHJSON *bool           `json:"accepted_toh,omitempty" gorm:"-:migration;<-:false"`
-	AcceptedDPAJSON *bool           `json:"accepted_dpa,omitempty" gorm:"-:migration;<-:false"`
+	ID                    uint            `json:"-"`
+	UID                   string          `json:"uid" gorm:"uniqueIndex"`
+	FID                   zero.String     `json:"-" gorm:"column:fid"`
+	Email                 zero.String     `json:"email" gorm:"unique"`
+	IsEmailVerified       bool            `json:"is_email_verified"`
+	IsRootAdmin           bool            `json:"is_root_admin"`
+	PausedUntil           null.Time       `json:"paused_until"`
+	Name                  string          `json:"name"`
+	PhoneNumber           string          `json:"phone_number"`
+	Address               string          `json:"address"`
+	Sizes                 []string        `json:"sizes" gorm:"serializer:json"`
+	LastSignedInAt        zero.Time       `json:"-"`
+	LastPokeAt            zero.Time       `json:"-"`
+	UserToken             []UserToken     `json:"-"`
+	Event                 []Event         `json:"-"`
+	Chains                []UserChain     `json:"chains"`
+	UserOnesignal         []UserOnesignal `json:"-"`
+	CreatedAt             time.Time       `json:"-"`
+	UpdatedAt             time.Time       `json:"-"`
+	I18n                  string          `json:"i18n"`
+	JwtTokenPepper        int             `json:"-" `
+	Latitude              float64         `json:"-"`
+	Longitude             float64         `json:"-"`
+	AcceptedTOH           bool            `json:"-"`
+	AcceptedDPA           bool            `json:"-"`
+	AcceptedTOHJSON       *bool           `json:"accepted_toh,omitempty" gorm:"-:migration;<-:false"`
+	AcceptedDPAJSON       *bool           `json:"accepted_dpa,omitempty" gorm:"-:migration;<-:false"`
+	NotificationChainUIDs []string        `json:"notification_chain_uids,omitempty" gorm:"-"`
 }
 
 func (u *User) AddUserChainsToObject(db *gorm.DB) error {
@@ -65,6 +66,35 @@ WHERE users.id = ?
 	}
 
 	u.Chains = userChains
+	return nil
+}
+
+func (u *User) AddNotificationChainUIDs(db *gorm.DB) error {
+	userChainIDs := []uint{}
+	for _, uc := range u.Chains {
+		if uc.IsChainAdmin {
+			userChainIDs = append(userChainIDs, uc.ChainID)
+		}
+	}
+	notificationChainUIDs := []string{}
+	err := db.Raw(`
+SELECT
+	c.uid
+	FROM chains AS c
+WHERE c.id IN ?
+	AND (
+		SELECT COUNT(uc.id)
+		FROM user_chains AS uc
+		JOIN users AS u ON u.id = uc.user_id
+		WHERE uc.chain_id = c.id AND uc.is_approved = FALSE AND u.is_email_verified = TRUE
+	) > 0
+	`, userChainIDs).Pluck("uid", &notificationChainUIDs).Error
+	if err != nil {
+		return err
+	}
+
+	u.NotificationChainUIDs = notificationChainUIDs
+
 	return nil
 }
 
