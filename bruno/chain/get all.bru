@@ -13,3 +13,10 @@ get {
 query {
   add_totals: true
 }
+
+tests {
+  test("should include total members of more than one", function() {
+    const data = res.getBody();
+    expect(data.find(d=>d.total_members>1)).to.exist;
+  });
+}

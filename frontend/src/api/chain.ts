@@ -23,6 +23,7 @@ interface RequestChainGetAllParams {
   filter_out_unpublished?: boolean;
   add_rules?: boolean;
   add_headers?: boolean;
+  add_totals?: boolean;
 }
 export function chainGetAll(params?: RequestChainGetAllParams) {
   return window.axios.get<Chain[]>("/v2/chain/all", { params });

@@ -51,6 +51,7 @@ export default function ChainsList({ chains, setChains }: Props) {
               filter_out_unpublished: false,
               add_rules: true,
               add_headers: true,
+              add_totals: true,
             })
           ).data;
         } else {
@@ -170,6 +171,11 @@ export default function ChainsList({ chains, setChains }: Props) {
                     dayjs().subtract(7, "days")
                   );
                 let shareLink = `${VITE_BASE_URL}/loops/${chain.uid}/users/signup`;
+                let hasNotification = authUser.notification_chain_uids?.length
+                  ? !!authUser.notification_chain_uids.find(
+                      (uid) => chain.uid === uid
+                    )
+                  : false;
 
                 return (
                   <tr
@@ -190,7 +196,9 @@ export default function ChainsList({ chains, setChains }: Props) {
                       align="right"
                       className="whitespace-normal max-xs:hidden"
                     >
-                      {userChain?.is_approved ? chain.total_members : "-"}
+                      {userChain?.is_approved || authUser?.is_root_admin
+                        ? chain.total_members
+                        : "-"}
                     </td>
                     <td align="center" className="max-xs:hidden">
                       {userChain?.is_approved ||
@@ -226,7 +234,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                             <span className="max-xs:hidden">{t("view")}</span>
                             <span className="feather feather-arrow-left sm:mr-3 ltr:hidden"></span>
                             <span className="feather feather-arrow-right sm:ml-3 rtl:hidden"></span>
-                            {authUser.notification_chain_uids?.length ? (
+                            {hasNotification ? (
                               <div className="block bg-red rounded-full w-3.5 h-3.5 absolute -top-1.5 -right-1.5"></div>
                             ) : null}
                           </Link>
