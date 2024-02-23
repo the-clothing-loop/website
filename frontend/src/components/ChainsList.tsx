@@ -177,6 +177,14 @@ export default function ChainsList({ chains, setChains }: Props) {
                     )
                   : false;
 
+                let members = "-";
+                if (userChain?.is_approved) {
+                  members = chain.total_members + "";
+                } else if (authUser?.is_root_admin) {
+                  members =
+                    "(" + chain.total_hosts + ") " + chain.total_members;
+                }
+
                 return (
                   <tr
                     key={chain.uid}
@@ -194,11 +202,20 @@ export default function ChainsList({ chains, setChains }: Props) {
                     </td>
                     <td
                       align="right"
-                      className="whitespace-normal max-xs:hidden"
+                      className="whitespace-normal max-xs:hidden font-mono"
                     >
-                      {userChain?.is_approved || authUser?.is_root_admin
-                        ? chain.total_members
-                        : "-"}
+                      {userChain?.is_approved || authUser.is_root_admin ? (
+                        <>
+                          <span>{chain.total_members}</span>
+                          {authUser.is_root_admin ? (
+                            <span className="inline-block ms-2">
+                              {"(" + chain.total_hosts + ")"}
+                            </span>
+                          ) : null}
+                        </>
+                      ) : (
+                        "-"
+                      )}
                     </td>
                     <td align="center" className="max-xs:hidden">
                       {userChain?.is_approved ||

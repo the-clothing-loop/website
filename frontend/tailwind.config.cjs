@@ -80,6 +80,7 @@ module.exports = {
     fontFamily: {
       sans: ["Montserrat", ...defaultTheme.fontFamily.sans],
       serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
+      mono: defaultTheme.fontFamily.mono,
     },
     listStyleType: {
       none: "none",
