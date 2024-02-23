@@ -1468,10 +1468,11 @@ function RouteTable(props: {
                   const orderTarget = props.route.indexOf(dragTarget);
                   const orderDrag = props.route.indexOf(dragging);
 
-                  if (orderTarget < orderDrag) {
-                    classTdDragging += " border-t-2 border-t-grey";
+                  if (orderTarget == orderDrag) {
+                  } else if (orderTarget < orderDrag) {
+                    classTdDragging += " border-t-4 border-t-grey";
                   } else {
-                    classTdDragging += " border-b-2 border-b-grey";
+                    classTdDragging += " border-b-4 border-b-grey";
                   }
                 }
 
