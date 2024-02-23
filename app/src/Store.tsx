@@ -17,6 +17,7 @@ import {
   userUpdate,
   chainUpdate,
   RespPatchGetOrJoinRoom,
+  ChainHeaders,
 } from "./api";
 import dayjs from "./dayjs";
 import { OverlayContainsState, OverlayState } from "./utils/overlay_open";
@@ -46,6 +47,8 @@ export const StoreContext = createContext({
   setTheme: (c: string) => {},
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
+  chainHeaders: undefined as ChainHeaders | undefined,
+  getChainHeader: (key: string, override: string) => override,
   listOfChains: [] as Array<Chain>,
   route: [] as UID[],
   bags: [] as Bag[],
@@ -53,7 +56,7 @@ export const StoreContext = createContext({
   setChain: (chainUID: UID | null | undefined, user: User | null) =>
     Promise.reject<void>(),
   authenticate: () => Promise.resolve(IsAuthenticated.Unknown),
-  login: (token: string) => Promise.reject<void>(),
+  login: (email: string, token: string) => Promise.reject<void>(),
   logout: () => Promise.reject<void>(),
   init: () => Promise.reject<void>(),
   refresh: (tab: string) => Promise.reject<void>(),
@@ -78,7 +81,10 @@ export function StoreProvider({
   onIsOffline: (err: any) => void;
 }) {
   const [authUser, setAuthUser] = useState<User | null>(null);
-  const [chain, setChain] = useState<Chain | null>(null);
+  const [chain, _setChain] = useState<Chain | null>(null);
+  const [chainHeaders, setChainHeaders] = useState<ChainHeaders | undefined>(
+    undefined,
+  );
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
   const [mmData, setMmData] = useState<MmData>({});
   const [listOfChains, setListOfChains] = useState<Array<Chain>>([]);
@@ -91,7 +97,7 @@ export function StoreProvider({
   );
   const [isChainAdmin, setIsChainAdmin] = useState(false);
   const [overlayState, setOverlayState] = useState(OverlayState.OPEN_ALL);
-  const [bagListView, setBagListView] = useState<BagListView>("dynamic");
+  const [bagListView, _setBagListView] = useState<BagListView>("dynamic");
 
   const shouldBlur = useMemo(() => {
     let isAppDisabledPopup =
@@ -117,7 +123,7 @@ export function StoreProvider({
   }, [chain]);
 
   // Get storage from IndexedDB or LocalStorage
-  async function _init() {
+  async function init() {
     const _storage = await storage.create();
 
     const version = (await _storage.get("version")) as number | null;
@@ -130,10 +136,11 @@ export function StoreProvider({
       s.chat_token = _mmToken;
       return { ...s };
     });
+    _setBagListView((await _storage.get("bag_list_view")) || "dynamic");
     setStorage(_storage);
   }
 
-  async function _logout() {
+  async function logout() {
     window.plugins?.OneSignal?.removeExternalUserId();
     await logout().catch((err) => {
       console.warn(err);
@@ -144,18 +151,21 @@ export function StoreProvider({
     await storage.set("chain_uid", "");
     await storage.set("mm_token", "");
     setMmData({});
-    setChain(null);
+    setAuthUser(null);
+    _setChain(null);
+    setChainHeaders(undefined);
     setListOfChains([]);
     setRoute([]);
     setBags([]);
     setBulkyItems([]);
     setIsAuthenticated(IsAuthenticated.LoggedOut);
     setIsChainAdmin(false);
-    setBagListView("dynamic");
+    _setBagListView("dynamic");
   }
 
-  async function _login(token: string) {
-    const res = await loginValidate(token);
+  async function login(email: string, token: string) {
+    let emailBase64 = btoa(email);
+    const res = await loginValidate(emailBase64, token);
     window.axios.defaults.auth = "Bearer " + res.data.token;
     await storage.set("auth", {
       user_uid: res.data.user.uid,
@@ -163,11 +173,11 @@ export function StoreProvider({
     } as StorageAuth);
     setAuthUser(res.data.user);
     setIsAuthenticated(IsAuthenticated.LoggedIn);
-    _refresh("settings", res.data.user);
+    refresh("settings", res.data.user);
   }
 
   // Will set the isAuthenticated value and directly return it as well (no need to run setIsAuthenticated)
-  async function _authenticate(): Promise<IsAuthenticated> {
+  async function authenticate(): Promise<IsAuthenticated> {
     console.log("run authenticate");
     const auth = (await storage.get("auth")) as StorageAuth | null;
 
@@ -190,37 +200,41 @@ export function StoreProvider({
         return _isAuthenticated;
       }
     } catch (err: any) {
-      _isAuthenticated = await _connError(err);
+      _isAuthenticated = await connError(err);
       return _isAuthenticated;
     }
 
     window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
-
+    let chainUID: string | null = null;
     try {
-      const chainUID: string | null = await storage.get("chain_uid");
-      if (chainUID) {
-        await _setChain(chainUID, _authUser);
-      } else if (chainUID) {
+      chainUID = await storage.get("chain_uid");
+      // if empty get the first in the list
+      const approvedChains = _authUser.chains.filter((uc) => uc.is_approved);
+      if (!chainUID && approvedChains.length > 0) {
+        chainUID = approvedChains[0].chain_uid;
+      }
+
+      if (!chainUID) {
         console.info("Authenticated but has no selected chain_uid");
       }
+      await setChain(chainUID, _authUser);
     } catch (err: any) {
       console.error(err);
-      await storage.set("chain_uid", null);
       return err?.isAuthenticated || IsAuthenticated.OfflineLoggedIn;
     }
 
     setAuthUser(_authUser);
-    setIsChainAdmin(_isChainAdmin);
     setIsAuthenticated(_isAuthenticated);
     return _isAuthenticated;
   }
 
-  async function _setChain(
+  async function setChain(
     _chainUID: UID | null | undefined,
     _authUser: User | null,
   ) {
     let _chain: typeof chain = null;
     let _chainUsers: typeof chainUsers = [];
+    let _chainHeaders: typeof chainHeaders = undefined;
     let _route: typeof route = [];
     let _bags: typeof bags = [];
     let _isChainAdmin: typeof isChainAdmin = false;
@@ -230,6 +244,7 @@ export function StoreProvider({
         const res = await Promise.all([
           chainGet(_chainUID, {
             addRules: true,
+            addHeaders: true,
             addTheme: true,
             addIsAppDisabled: true,
           }),
@@ -239,25 +254,27 @@ export function StoreProvider({
           bulkyItemGetAllByChain(_chainUID, _authUser.uid),
         ]);
         _chain = res[0].data;
+        _chainHeaders = ChainReadHeaders(_chain);
         _chainUsers = res[1].data;
         _route = res[2].data;
         _bags = res[3].data;
         _bulkyItems = res[4].data;
         _isChainAdmin = IsChainAdmin(_authUser, _chainUID);
       } catch (err: any) {
-        throwError(err);
         let _isAuthenticated = IsAuthenticated.OfflineLoggedIn;
         if (err?.status === 401) {
           _isAuthenticated = IsAuthenticated.LoggedOut;
         }
         err.isAuthenticated = _isAuthenticated;
         setIsAuthenticated(_isAuthenticated);
-        throw err;
+        onIsOffline(err);
+        return;
       }
     }
 
     await storage.set("chain_uid", _chainUID ? _chainUID : null);
-    setChain(_chain);
+    _setChain(_chain);
+    setChainHeaders(_chainHeaders);
     setChainUsers(_chainUsers);
     setRoute(_route);
     setBags(_bags);
@@ -265,19 +282,19 @@ export function StoreProvider({
     setIsChainAdmin(_isChainAdmin);
   }
 
-  async function _setTheme(c: string) {
+  async function setTheme(c: string) {
     if (!chain) throw Error("No loop selected");
     const oldTheme = chain.theme;
-    setChain((s) => ({ ...(s as Chain), theme: c }));
+    _setChain((s) => ({ ...(s as Chain), theme: c }));
     chainUpdate({
       uid: chain.uid,
       theme: c,
     }).catch((e) => {
-      setChain((s) => ({ ...(s as Chain), theme: oldTheme }));
+      _setChain((s) => ({ ...(s as Chain), theme: oldTheme }));
     });
   }
 
-  async function _setPause(pause: Date | boolean) {
+  async function setPause(pause: Date | boolean) {
     if (!authUser) return;
 
     let pauseUntil = dayjs();
@@ -301,8 +318,8 @@ export function StoreProvider({
     }
   }
 
-  async function _refresh(tab: string, __authUser: User | null): Promise<void> {
-    if (!__authUser) _logout();
+  async function refresh(tab: string, __authUser: User | null): Promise<void> {
+    if (!__authUser) logout();
 
     try {
       if (tab === "help") {
@@ -310,10 +327,11 @@ export function StoreProvider({
 
         let _chain = await chainGet(chain.uid, {
           addRules: true,
+          addHeaders: true,
           addTheme: true,
           addIsAppDisabled: true,
         });
-        setChain(_chain.data);
+        _setChain(_chain.data);
       } else if (tab === "address" || tab === "bags") {
         if (!chain) throw errLoopMustBeSelected;
 
@@ -343,6 +361,7 @@ export function StoreProvider({
               const isCurrentChain = uc.chain_uid === chain?.uid;
               return chainGet(uc.chain_uid, {
                 addRules: isCurrentChain,
+                addHeaders: isCurrentChain,
                 addTheme: isCurrentChain,
                 addIsAppDisabled: true,
               });
@@ -358,13 +377,14 @@ export function StoreProvider({
 
         setAuthUser(_authUser.data);
         setListOfChains(_listOfChains);
-        setChain(_chain);
+        _setChain(_chain);
+        setChainHeaders(ChainReadHeaders(_chain));
       }
     } catch (err: any) {
       if (err === errLoopMustBeSelected) {
         throw err;
       } else {
-        await _connError(err);
+        await connError(err);
       }
     }
   }
@@ -383,14 +403,14 @@ export function StoreProvider({
     );
   }
 
-  function _setBagListView(v: BagListView) {
-    setBagListView(v);
+  function setBagListView(v: BagListView) {
+    _setBagListView(v);
     storage.set("bag_list_view", v);
   }
 
-  async function _connError(err: any) {
+  async function connError(err: any) {
     if (err?.status === 401) {
-      await _logout();
+      await logout();
       return IsAuthenticated.LoggedOut;
     }
     console.log("Connection error");
@@ -398,32 +418,42 @@ export function StoreProvider({
     return IsAuthenticated.OfflineLoggedIn;
   }
 
+  function getChainHeader(key: string, override: string): string {
+    if (chainHeaders && chainHeaders[key]) {
+      return chainHeaders[key];
+    }
+
+    return override;
+  }
+
   return (
     <StoreContext.Provider
       value={{
         authUser,
-        setPause: _setPause,
-        setTheme: _setTheme,
+        setPause,
+        setTheme,
         route,
         bags,
         bulkyItems,
         chain,
+        chainHeaders,
         isThemeDefault,
         chainUsers,
+        getChainHeader,
         listOfChains,
-        setChain: _setChain,
+        setChain,
         isAuthenticated,
         isChainAdmin,
-        logout: _logout,
-        authenticate: _authenticate,
-        login: _login,
-        init: _init,
-        refresh: (t) => _refresh(t, authUser),
+        logout,
+        authenticate,
+        login,
+        init,
+        refresh: (t) => refresh(t, authUser),
         overlayState,
         closeOverlay,
         bagListView,
-        setBagListView: _setBagListView,
-        connError: _connError,
+        setBagListView,
+        connError,
         shouldBlur,
         mmData,
         setMmData,
@@ -431,14 +461,6 @@ export function StoreProvider({
     >
       {children}
     </StoreContext.Provider>
-  );
-}
-
-function throwError(err: any) {
-  document.getElementById("root")?.dispatchEvent(
-    new CustomEvent("store-error", {
-      detail: err,
-    }),
   );
 }
 
@@ -450,4 +472,12 @@ export function IsChainAdmin(
     ? user?.chains.find((uc) => uc.chain_uid === chainUID)
     : undefined;
   return userChain?.is_chain_admin || false;
+}
+
+function ChainReadHeaders(
+  chain: Chain | null | undefined,
+): ChainHeaders | undefined {
+  if (chain?.headers_override) {
+    return JSON.parse(chain.headers_override);
+  }
 }

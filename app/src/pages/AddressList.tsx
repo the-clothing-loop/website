@@ -4,7 +4,6 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonImg,
   IonItem,
   IonList,
   IonPage,
@@ -12,7 +11,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
 import {
@@ -25,10 +24,14 @@ import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
+import EditHeaders from "../components/EditHeaders";
+import HeaderTitle from "../components/HeaderTitle";
 
 export default function AddressList() {
   const {
     chain,
+    setChain,
+    getChainHeader,
     chainUsers,
     route,
     authUser,
@@ -39,13 +42,23 @@ export default function AddressList() {
   } = useContext(StoreContext);
   const { t } = useTranslation();
 
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
+
+  const headerKey = "addressList";
+
+  const headerText = getChainHeader("addressList", t("addresses"));
+
+  function updateChain() {
+    setChain(chain?.uid, authUser);
+  }
+
   return (
     <IonPage>
       <OverlayPaused />
       <OverlayAppDisabled />
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("addresses")}</IonTitle>
+          <IonTitle>{headerText}</IonTitle>
           {isChainAdmin ? (
             <IonButtons
               slot="end"
@@ -60,7 +73,7 @@ export default function AddressList() {
                 href={`https://www.clothingloop.org/loops/${chain?.uid}/members`}
                 color={
                   isThemeDefault
-                    ? "tw-text-red  dark:tw-text-red-contrast"
+                    ? "tw-text-red dark:tw-text-red-contrast"
                     : "primary"
                 }
               >
@@ -72,18 +85,24 @@ export default function AddressList() {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <div className="tw-relative tw-min-h-full">
+        <div className="tw-relative tw-min-h-full tw-flex tw-flex-col">
           <IonHeader collapse="condense">
             <IonToolbar>
-              <IonTitle
-                size="large"
-                className="tw-font-serif tw-text-red dark:tw-text-red-contrast"
-              >
-                {t("addresses")}
-              </IonTitle>
+              <HeaderTitle
+                headerText={headerText}
+                onEdit={() => headerSheetModal.current?.present()}
+                isChainAdmin={isChainAdmin}
+                className={"tw-font-serif".concat(
+                  isThemeDefault
+                    ? " tw-text-red dark:tw-text-red-contrast"
+                    : "",
+                )}
+              />
             </IonToolbar>
           </IonHeader>
-          <IonList className={shouldBlur ? "tw-blur" : ""}>
+          <IonList
+            className={"tw-flex-grow".concat(shouldBlur ? " tw-blur" : "")}
+          >
             {route.map((userUID, i) => {
               const user = chainUsers.find((u) => u.uid === userUID);
               if (!user) return null;
@@ -171,6 +190,14 @@ export default function AddressList() {
               );
             })}
           </IonList>
+          {isChainAdmin ? (
+            <EditHeaders
+              modal={headerSheetModal}
+              didDismiss={updateChain}
+              headerKey={headerKey}
+              initialHeader={headerText}
+            />
+          ) : null}
           <IonIcon
             aria-hidden="true"
             icon="/the_clothing_loop_logo_cropped.svg"

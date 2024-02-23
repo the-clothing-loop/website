@@ -34,10 +34,13 @@ type User struct {
 	CreatedAt       time.Time       `json:"-"`
 	UpdatedAt       time.Time       `json:"-"`
 	I18n            string          `json:"i18n"`
+	JwtTokenPepper  int             `json:"-" `
 	Latitude        float64         `json:"-"`
 	Longitude       float64         `json:"-"`
 	AcceptedTOH     bool            `json:"-"`
+	AcceptedDPA     bool            `json:"-"`
 	AcceptedTOHJSON *bool           `json:"accepted_toh,omitempty" gorm:"-:migration;<-:false"`
+	AcceptedDPAJSON *bool           `json:"accepted_dpa,omitempty" gorm:"-:migration;<-:false"`
 	ChatUserID      null.String     `json:"-"`
 	ChatUser        null.String     `json:"-"`
 	ChatPass        null.String     `json:"-"`
@@ -119,13 +122,14 @@ LIMIT 1
 	return e, nil
 }
 
-func (u *User) SetAcceptedTOH() {
+func (u *User) SetAcceptedLegal() {
 	u.AcceptedTOHJSON = &u.AcceptedTOH
+	u.AcceptedDPAJSON = &u.AcceptedDPA
 }
 
-func (u *User) AcceptTOH(db *gorm.DB) error {
-	if !u.AcceptedTOH {
-		return db.Exec(`UPDATE users SET accepted_toh = TRUE WHERE id = ?`, u.ID).Error
+func (u *User) AcceptLegal(db *gorm.DB) error {
+	if !u.AcceptedTOH || !u.AcceptedDPA {
+		return db.Exec(`UPDATE users SET accepted_toh = TRUE, accepted_dpa = TRUE WHERE id = ?`, u.ID).Error
 	}
 	return nil
 }

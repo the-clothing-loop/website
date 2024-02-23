@@ -10,6 +10,7 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/samber/lo"
+	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 
@@ -83,6 +84,15 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		})
 	}
 
+	userTokens := []models.UserToken{}
+	token = uuid.NewV4().String()
+	if o.IsNotTokenVerified {
+		userTokens = append(userTokens, models.UserToken{
+			Token:    token,
+			Verified: !o.IsNotTokenVerified,
+		})
+	}
+
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
 		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), lo.Ternary(o.OnlyEmailExampleCom, "example.com", faker.Internet().FreeEmailDomain()))),
@@ -94,13 +104,8 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		Address:         faker.Address().Address(),
 		Latitude:        latitude,
 		Longitude:       longitude,
-		UserToken: []models.UserToken{
-			{
-				Token:    uuid.NewV4().String(),
-				Verified: !o.IsNotTokenVerified,
-			},
-		},
-		Chains: chains,
+		UserToken:       userTokens,
+		Chains:          chains,
 	}
 
 	if o.IsNotActive {
@@ -109,6 +114,14 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 
 	if err := db.Create(user).Error; err != nil {
 		glog.Fatalf("Unable to create testUser: %v", err)
+	}
+
+	if !o.IsNotTokenVerified {
+		var err error
+		token, err = auth.JwtGenerate(user)
+		if err != nil {
+			glog.Fatalf("Unable to generate token: %v", err)
+		}
 	}
 
 	t.Cleanup(func() {
@@ -122,7 +135,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		tx.Commit()
 	})
 
-	return user, user.UserToken[0].Token
+	return user, token
 }
 
 func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (chain *models.Chain, user *models.User, token string) {

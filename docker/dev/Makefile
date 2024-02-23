@@ -29,6 +29,7 @@ server-start:
 test:
 	cd ../../server && make test
 	cd ../../app && npm run test
+	cd ../../frontend && npm run lint:test
 
 .PHONY: db-setup
 db-setup:

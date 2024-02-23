@@ -1,4 +1,5 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
+const plugin = require("tailwindcss/plugin");
 
 const colors = {
   transparent: "transparent",
@@ -80,6 +81,13 @@ module.exports = {
       sans: ["Montserrat", ...defaultTheme.fontFamily.sans],
       serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
     },
+    listStyleType: {
+      none: "none",
+      disc: "disc",
+      decimal: "decimal",
+      roman: "roman",
+      letter: "letter",
+    },
     extend: {
       keyframes: {
         "max-h": {
@@ -137,7 +145,13 @@ module.exports = {
       },
     },
   },
-  plugins: [require("daisyui"), require("@tailwindcss/typography")],
+  plugins: [
+    require("daisyui"),
+    plugin(({ addVariant }) => {
+      addVariant("prose-headings2", `& :is(h1,h2,h3,h4,h5,h6)`);
+    }),
+    require("@tailwindcss/typography"),
+  ],
   daisyui: {
     themes: [
       {

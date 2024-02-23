@@ -23,6 +23,8 @@ import { useContext, useMemo, useRef } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
 import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
 import { User } from "../api";
+import EditHeaders from "../components/EditHeaders";
+import HeaderTitle from "../components/HeaderTitle";
 
 interface MediaIcon {
   icon: string;
@@ -64,11 +66,17 @@ export default function HelpList() {
     authUser,
     chain,
     chainUsers,
+    getChainHeader,
     setChain,
     isChainAdmin,
     isThemeDefault,
   } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
+
+  const headerKey = "helpList";
+
+  const headerText = getChainHeader(headerKey, t("howDoesItWork"));
 
   const rules = useMemo<FaqListItem[]>(() => {
     if (chain?.rules_override) {
@@ -96,7 +104,7 @@ export default function HelpList() {
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
-            {t("howDoesItWork")}
+            {headerText}
           </IonTitle>
 
           {isChainAdmin ? (
@@ -117,14 +125,14 @@ export default function HelpList() {
       >
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle
-              size="large"
+            <HeaderTitle
+              headerText={headerText}
+              onEdit={() => headerSheetModal.current?.present()}
+              isChainAdmin={isChainAdmin}
               className={`tw-font-serif tw-font-bold ${
                 isThemeDefault ? "tw-text-purple " : ""
               }`}
-            >
-              {t("howDoesItWork")}
-            </IonTitle>
+            />
           </IonToolbar>
         </IonHeader>
         <IonList>
@@ -183,7 +191,14 @@ export default function HelpList() {
             modal={modal}
             didDismiss={refreshChain}
           />
-
+          {isChainAdmin ? (
+            <EditHeaders
+              modal={headerSheetModal}
+              didDismiss={refreshChain}
+              headerKey={headerKey}
+              initialHeader={headerText}
+            />
+          ) : null}
           <IonIcon
             aria-hidden="true"
             icon="/v2_o.svg"

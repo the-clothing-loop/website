@@ -23,7 +23,6 @@ export interface RequestRegisterChain {
   open_to_new_members: boolean;
   sizes: Array<Sizes | string> | null;
   genders: Array<Sizes | string> | null;
-  route_privacy?: number;
   allow_toh: boolean;
 }
 
@@ -58,14 +57,12 @@ export function loginEmailAndAddToChain(email: string, chainUID: UID) {
   });
 }
 
-export function loginValidate(key: string, chainUID: UID) {
-  let params: Record<string, string> = {
-    apiKey: key,
-  };
+export function loginValidate(u: string, apiKey: string, chainUID: UID) {
+  let params: Record<string, string> = { u, apiKey };
   if (chainUID) {
     params["c"] = chainUID;
   }
-  return window.axios.get<{ user: User }>(`/v2/login/validate?apiKey=${key}`, {
+  return window.axios.get<{ user: User }>(`/v2/login/validate`, {
     params,
   });
 }

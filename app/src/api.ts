@@ -65,6 +65,8 @@ export interface UserChain {
   created_at: string;
 }
 
+export type ChainHeaders = Record<string, string>;
+
 export interface Chain {
   uid: UID;
   name: string;
@@ -78,6 +80,7 @@ export interface Chain {
   published: boolean;
   open_to_new_members: boolean;
   rules_override?: string;
+  headers_override?: string;
   theme?: string;
   is_app_disabled?: boolean;
 }
@@ -102,22 +105,22 @@ export interface BulkyItem {
 
 export const bagColors = [
   "#C9843E",
-  "#f4b63f",
+  "#AD8F22",
   "#79A02D",
-  "#66926e",
+  "#66926E",
   "#199FBA",
   "#6494C2",
-  "#1467b3",
-  "#a899c2",
+  "#1467B3",
+  "#A899C2",
   "#513484",
   "#B37EAD",
-  "#b76dac",
+  "#B76DAC",
   "#F57BB0",
   "#A35C7B",
   "#E38C95",
-  "#c73643",
+  "#C73643",
   "#7D7D7D",
-  "#3c3c3b",
+  "#3C3C3B",
 ];
 
 window.axios = redaxios.create({
@@ -133,11 +136,12 @@ export function loginEmail(email: string) {
   );
 }
 
-export function loginValidate(key: string) {
-  return window.axios.get<{ user: User; token: string }>(
-    `/v2/login/validate?apiKey=${key}`,
-    { auth: undefined, withCredentials: false },
-  );
+export function loginValidate(u: string, apiKey: string) {
+  return window.axios.get<{ user: User; token: string }>("/v2/login/validate", {
+    auth: undefined,
+    withCredentials: false,
+    params: { apiKey, u },
+  });
 }
 
 export function logout() {
@@ -155,6 +159,7 @@ export function chainGet(
   chainUID: UID,
   o: {
     addRules?: boolean;
+    addHeaders?: boolean;
     addTheme?: boolean;
     addIsAppDisabled?: boolean;
   } = {},
@@ -163,6 +168,7 @@ export function chainGet(
     params: {
       chain_uid: chainUID,
       add_rules: o.addRules || false,
+      add_headers: o.addHeaders || false,
       add_theme: o.addTheme || false,
       add_is_app_disabled: o.addIsAppDisabled || false,
     },

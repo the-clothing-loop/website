@@ -21,8 +21,8 @@
   "imInterestedInThisBulkyItem": "I'm interested in your {{name}}, is it still available? When could I pick it up?",
   "selectALoop": "Select a Loop",
   "selectADifferentLoop": "Select a different Loop",
-  "loopIsNotPublished": "Loop is not published",
-  "loopIsNotUsingThisApp": "Loop is not using this App",
+  "loopIsNotPublished": "Loop '{{name}}' is not published",
+  "loopIsNotUsingThisApp": "Loop '{{name}}' is not using this App",
   "editLoop": "Edit Loop",
   "hide": "Hide",
   "pleaseContactYourLoopHost": "The host(s) of the Loop have decided not to use the My Clothing Loop app. Please contact your Loop Host for further information.",
@@ -115,5 +115,10 @@
   "day_other": "{{count}} days",
   "untilITurnItBackOn": "Until I turn it back on",
   "selectPauseDuration": "Select pause duration",
-  "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation"
+  "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation",
+  "updateHeader": "Edit this page's header",
+  "updateHeaderDesc": "This change will be visible to all loop members.",
+  "restHeaders": "Rest headers",
+  "resetHeadersDesc": "Reset your loop's headers to the default headers.",
+  "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?"
 }

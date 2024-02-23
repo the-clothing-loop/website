@@ -38,8 +38,8 @@ import { StoreContext } from "../Store";
 import UserCard from "../components/UserCard";
 import { Trans, useTranslation } from "react-i18next";
 import {
-  alertCircleOutline,
   compassOutline,
+  construct,
   copyOutline,
   ellipsisHorizontal,
   eyeOffOutline,
@@ -59,6 +59,9 @@ import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
 import Theme from "../components/Theme";
 import { useLocation } from "react-router";
+import { useLongPress } from "use-long-press";
+import EditHeaders from "../components/EditHeaders";
+import HeaderTitle from "../components/HeaderTitle";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -68,9 +71,9 @@ export default function Settings() {
   const {
     authUser,
     chain,
-    isAuthenticated,
     setPause,
     logout,
+    getChainHeader,
     setChain,
     isChainAdmin,
     isThemeDefault,
@@ -81,6 +84,8 @@ export default function Settings() {
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
   const refSelectPauseExpiryModal = useRef<HTMLIonModalElement>(null);
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
+  const subHeaderSheetModal = useRef<HTMLIonModalElement>(null);
   const refChainSelect = useRef<HTMLIonSelectElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
   const [isIos] = useState(isPlatform("ios"));
@@ -91,6 +96,19 @@ export default function Settings() {
       refChainSelect.current?.open();
     }
   }, [authUser, state]);
+
+  const longPressSubHeader = useLongPress(() => {
+    subHeaderSheetModal.current?.present();
+  });
+
+  const headerKey = "settings";
+  const subHeaderKey = "settingsSub";
+
+  function refreshBags() {
+    setChain(chain?.uid, authUser);
+  }
+  const headerText = getChainHeader(headerKey, t("account"));
+  const subHeader = getChainHeader(subHeaderKey, t("loopInformation"));
 
   function handleChainSelect(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
@@ -197,12 +215,16 @@ export default function Settings() {
         fullscreen
         class={isThemeDefault ? "tw-bg-orange-contrast" : ""}
       >
-        <IonItemDivider
-          className={`tw-relative ion-margin-start ion-margin-top tw-bg-transparent tw-text-4xl tw-font-serif tw-font-bold ${
-            isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
-          }`}
-        >
-          {t("account")}
+        <IonItemDivider className="ion-margin-top tw-bg-transparent">
+          <HeaderTitle
+            headerText={headerText}
+            onEdit={() => headerSheetModal.current?.present()}
+            isChainAdmin={isChainAdmin}
+            className={`tw-relative tw-text-4xl tw-font-serif tw-font-bold ${
+              isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
+            }`}
+          />
+
           <IonButton
             fill="clear"
             className="tw-absolute tw-top tw-right-0 tw-normal-case tw-mr-8 tw-text-base"
@@ -265,12 +287,28 @@ export default function Settings() {
           </IonList>
         </IonCard>
         <IonList style={{ "--ion-item-background": "transparent" }}>
-          <IonItemDivider
-            className={`ion-margin-start tw-bg-transparent tw-text-2xl tw-font-serif tw-font-bold
+          {isChainAdmin ? (
+            <IonItemDivider
+              className={`ion-margin-start tw-bg-transparent tw-text-2xl tw-font-serif tw-font-bold
+          ${isThemeDefault ? "tw-text-orange" : ""}`}
+              {...longPressSubHeader()}
+            >
+              {subHeader}
+              <IonIcon
+                icon={construct}
+                onClick={() => subHeaderSheetModal.current?.present()}
+                className="tw-text-sm tw-ml-1.5 !tw-text-blue tw-cursor-pointer"
+              />
+            </IonItemDivider>
+          ) : (
+            <IonItemDivider
+              className={`ion-margin-start tw-bg-transparent tw-text-2xl tw-font-serif tw-font-bold
             ${isThemeDefault ? "tw-text-orange" : ""}`}
-          >
-            {t("loopInformation")}
-          </IonItemDivider>
+            >
+              {subHeader}
+            </IonItemDivider>
+          )}
+
           <IonCard
             className={`tw-mt-1.5 tw-rounded-none ${
               isThemeDefault ? "tw-bg-orange-contrast" : "tw-bg-background"
@@ -305,7 +343,7 @@ export default function Settings() {
                     icon={isIos ? logoApple : logoAndroid}
                   />
                   <span className="ion-margin-end tw-ms-1.5">
-                    {t("loopIsNotUsingThisApp")}
+                    {t("loopIsNotUsingThisApp", { name: chain.name })}
                   </span>
                 </IonItem>
               ) : null}
@@ -420,7 +458,6 @@ export default function Settings() {
             </IonList>
           </IonCard>
         </IonList>
-
         <div className="ion-padding tw-mt-4">
           <IonButton id="settings-logout-btn" expand="block" color="danger">
             {t("logout")}
@@ -504,6 +541,22 @@ export default function Settings() {
             </IonLabel>
           </IonItem>
         </IonList>
+        {isChainAdmin ? (
+          <div>
+            <EditHeaders
+              modal={headerSheetModal}
+              didDismiss={refreshBags}
+              headerKey={headerKey}
+              initialHeader={headerText}
+            />
+            <EditHeaders
+              modal={subHeaderSheetModal}
+              didDismiss={refreshBags}
+              headerKey={subHeaderKey}
+              initialHeader={subHeader}
+            />
+          </div>
+        ) : null}
       </IonContent>
     </IonPage>
   );

@@ -31,6 +31,7 @@ import {
 import {
   chevronForwardOutline,
   closeOutline,
+  construct,
   ellipsisHorizontal,
   ellipsisHorizontalCircleOutline,
   flashOutline,
@@ -54,6 +55,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Bag, bagPut, bagRemove, UID, User } from "../api";
 import CreateBag from "../components/CreateUpdateBag";
+import EditHeaders from "../components/EditHeaders";
 import { StoreContext } from "../Store";
 import dayjs from "../dayjs";
 import { Sleep } from "../utils/sleep";
@@ -62,6 +64,7 @@ import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-com
 import OverlayPaused from "../components/OverlayPaused";
 import { Dayjs } from "dayjs";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
+import HeaderTitle from "../components/HeaderTitle";
 
 const MIN_BAG_LIST = 9;
 const MIN_USERS_FOR_SEARCH = 15;
@@ -74,6 +77,7 @@ export default function BagsList() {
     chainUsers,
     bags,
     setChain,
+    getChainHeader,
     authUser,
     route,
     bagListView,
@@ -83,6 +87,9 @@ export default function BagsList() {
   } = useContext(StoreContext);
   const modal = useRef<HTMLIonModalElement>(null);
   const sheetModal = useRef<HTMLIonModalElement>(null);
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
+  const subHeaderSheetModal = useRef<HTMLIonModalElement>(null);
+
   const [presentAlert] = useIonAlert();
 
   // -1: nothing is shown
@@ -91,7 +98,19 @@ export default function BagsList() {
   const [updateBag, setUpdateBag] = useState<Bag | null>(null);
   const [sheetModalUserUID, setSheetModalUserUID] = useState("");
   const [sheetModalBagID, setSheetModalBagID] = useState(0);
-  const [bagColor, setBagColor] = useState("");
+
+  const longPressSubHeader = useLongPress(() => {
+    subHeaderSheetModal.current?.present();
+  });
+
+  const headerKey = "bagsList";
+  const subHeaderKey = "bagsListSub";
+
+  const headerText = getChainHeader(headerKey, t("whereIsTheBag"));
+  const subHeaderText = getChainHeader(
+    subHeaderKey,
+    t("clickOnBagToChangeHolder"),
+  );
 
   const [bagsCard, bagsList] = useMemo(() => {
     if (!authUser) return [[], []];
@@ -250,7 +269,7 @@ export default function BagsList() {
             </IonPopover>
           </IonButtons>
 
-          <IonTitle>{t("whereIsTheBag")}</IonTitle>
+          <IonTitle>{headerText}</IonTitle>
 
           {isChainAdmin ? (
             <IonButtons slot="end">
@@ -262,14 +281,36 @@ export default function BagsList() {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar className="tw-bg-transparent">
-            <IonTitle size="large" className="tw-text-green tw-font-serif">
-              {t("whereIsTheBag")}
-            </IonTitle>
+            <HeaderTitle
+              headerText={headerText}
+              onEdit={() => headerSheetModal.current?.present()}
+              isChainAdmin={isChainAdmin}
+              className={"tw-font-serif".concat(
+                isThemeDefault ? " tw-text-green" : "",
+              )}
+            />
           </IonToolbar>
         </IonHeader>
-        <IonText color="medium" className="ion-margin">
-          {t("clickOnBagToChangeHolder")}
-        </IonText>
+
+        {isChainAdmin ? (
+          <IonText
+            color="medium"
+            className="ion-margin"
+            {...longPressSubHeader()}
+          >
+            {subHeaderText}
+            <IonIcon
+              icon={construct}
+              className="tw-text-sm tw-ml-1.5 !tw-text-blue tw-cursor-pointer"
+              onClick={() => subHeaderSheetModal.current?.present()}
+            />
+          </IonText>
+        ) : (
+          <IonText color="medium" className="ion-margin">
+            {subHeaderText}
+          </IonText>
+        )}
+
         <div>
           <IonRefresher
             slot="fixed"
@@ -461,6 +502,22 @@ export default function BagsList() {
           bagID={sheetModalBagID}
           didDismiss={handleDidDismissSheetModal}
         />
+        {isChainAdmin ? (
+          <div>
+            <EditHeaders
+              modal={headerSheetModal}
+              didDismiss={refreshBags}
+              headerKey={headerKey}
+              initialHeader={headerText}
+            />
+            <EditHeaders
+              modal={subHeaderSheetModal}
+              didDismiss={refreshBags}
+              headerKey={subHeaderKey}
+              initialHeader={subHeaderText}
+            />
+          </div>
+        ) : null}
         <div className="relative">
           {/* Background SVG */}
           <IonIcon

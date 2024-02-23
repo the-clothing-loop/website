@@ -86,7 +86,7 @@ func UserGet(c *gin.Context) {
 	}
 
 	if query.AddApprovedTOH {
-		user.SetAcceptedTOH()
+		user.SetAcceptedLegal()
 	}
 
 	c.JSON(200, user)
@@ -181,18 +181,18 @@ func UserUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		ChainUID    string     `json:"chain_uid,omitempty" binding:"omitempty,uuid"`
-		UserUID     string     `json:"user_uid,omitempty" binding:"uuid"`
-		Name        *string    `json:"name,omitempty"`
-		PhoneNumber *string    `json:"phone_number,omitempty"`
-		Newsletter  *bool      `json:"newsletter,omitempty"`
-		PausedUntil *time.Time `json:"paused_until,omitempty"`
-		Sizes       *[]string  `json:"sizes,omitempty"`
-		Address     *string    `json:"address,omitempty"`
-		I18n        *string    `json:"i18n,omitempty"`
-		Latitude    *float64   `json:"latitude,omitempty"`
-		Longitude   *float64   `json:"longitude,omitempty"`
-		AcceptedTOH *bool      `json:"accepted_toh,omitempty"`
+		ChainUID      string     `json:"chain_uid,omitempty" binding:"omitempty,uuid"`
+		UserUID       string     `json:"user_uid,omitempty" binding:"uuid"`
+		Name          *string    `json:"name,omitempty"`
+		PhoneNumber   *string    `json:"phone_number,omitempty"`
+		Newsletter    *bool      `json:"newsletter,omitempty"`
+		PausedUntil   *time.Time `json:"paused_until,omitempty"`
+		Sizes         *[]string  `json:"sizes,omitempty"`
+		Address       *string    `json:"address,omitempty"`
+		I18n          *string    `json:"i18n,omitempty"`
+		Latitude      *float64   `json:"latitude,omitempty"`
+		Longitude     *float64   `json:"longitude,omitempty"`
+		AcceptedLegal *bool      `json:"accepted_legal,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -243,9 +243,10 @@ func UserUpdate(c *gin.Context) {
 		if body.I18n != nil {
 			userChanges["i18n"] = *body.I18n
 		}
-		if body.AcceptedTOH != nil {
-			userChanges["accepted_toh"] = *body.AcceptedTOH
-			if !*body.AcceptedTOH {
+		if body.AcceptedLegal != nil {
+			userChanges["accepted_toh"] = *body.AcceptedLegal
+			userChanges["accepted_dpa"] = *body.AcceptedLegal
+			if !*body.AcceptedLegal {
 				// set as participant for all connected chains
 				db.Exec(`UPDATE user_chains SET is_chain_admin = FALSE WHERE user_id = ?`, user.ID)
 				// find chains that don't have 1+ host and if connected to this user set to draft

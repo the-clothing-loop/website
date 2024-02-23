@@ -3,6 +3,7 @@ package views
 import (
 	"bytes"
 	"embed"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -324,10 +325,15 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB,
 	m := app.MailCreate()
 	m.ToName = name
 	m.ToAddress = email
+
 	// This is a hack to add the chain param to the url
 	// Changing this in the template would be more work in combination with Crowdin
-	if chainUID != "" {
-		token += "&c=" + chainUID
+	if !isApp {
+		emailBase64 := base64.StdEncoding.EncodeToString([]byte(email))
+		token += "&u=" + emailBase64
+		if chainUID != "" {
+			token += "&c=" + chainUID
+		}
 	}
 	err := emailGenerateMessage(m, i18n, "login_verification", gin.H{
 		"Name":    name,

@@ -12,6 +12,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/controllers"
+	"github.com/the-clothing-loop/website/server/pkg/throttle"
 )
 
 var Scheduler *cron.Scheduler
@@ -79,6 +80,11 @@ func Routes() *gin.Engine {
 	)
 	r.Use(controllers.MiddlewareSetDB(db))
 
+	thr := throttle.Policy(&throttle.Quota{
+		Limit:  20,
+		Within: 24 * time.Hour,
+	})
+
 	// router groups
 	v2 := r.Group("/v2")
 
@@ -95,7 +101,7 @@ func Routes() *gin.Engine {
 	v2.POST("/register/orphaned-user", controllers.RegisterBasicUser)
 	v2.POST("/register/chain-admin", controllers.RegisterChainAdmin)
 	v2.POST("/login/email", controllers.LoginEmail)
-	v2.GET("/login/validate", controllers.LoginValidate)
+	v2.GET("/login/validate", thr, controllers.LoginValidate)
 	v2.DELETE("/logout", controllers.Logout)
 
 	// payments

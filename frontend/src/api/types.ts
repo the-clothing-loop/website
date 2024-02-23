@@ -15,6 +15,7 @@ export interface User {
   longitude?: number;
   latitude?: number;
   accepted_toh?: boolean;
+  accepted_dpa?: boolean;
 }
 
 export interface Bag {
@@ -50,6 +51,7 @@ export interface Chain {
   total_hosts?: number;
   route_privacy?: number;
   rules_override?: string;
+  headers_override?: string;
   theme?: string;
   is_app_disabled?: boolean;
 }
