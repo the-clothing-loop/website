@@ -252,7 +252,6 @@ func ChainGetAll(c *gin.Context) {
 	if len(whereOrSql) > 0 {
 		sql = fmt.Sprintf("%s WHERE %s", sql, strings.Join(whereOrSql, " OR "))
 	}
-	db = db.Debug()
 	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
 		goscope.Log.Warningf("Chain not found: %v", err)
 		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
