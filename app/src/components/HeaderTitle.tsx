@@ -1,11 +1,5 @@
 import { IonIcon, IonTitle } from "@ionic/react";
-import {
-  construct,
-  constructOutline,
-  constructSharp,
-  ellipsisHorizontalCircleOutline,
-  ellipsisHorizontalSharp,
-} from "ionicons/icons";
+import { construct } from "ionicons/icons";
 import { useLongPress } from "use-long-press";
 
 interface Props {

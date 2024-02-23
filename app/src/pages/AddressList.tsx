@@ -4,7 +4,6 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonImg,
   IonItem,
   IonList,
   IonPage,
@@ -12,22 +11,20 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useContext, useMemo, useRef } from "react";
+import { useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../Store";
 import {
   bagHandle,
   openOutline,
   pauseCircleSharp,
-  pencilOutline,
   shield,
 } from "ionicons/icons";
 import isPaused from "../utils/is_paused";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
-import EditHeaders, { getHeader } from "../components/EditHeaders";
-import { useLongPress } from "use-long-press";
+import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
 
 export default function AddressList() {
@@ -50,9 +47,6 @@ export default function AddressList() {
   const headerKey = "addressList";
 
   const headerText = getChainHeader("addressList", t("addresses"));
-  // useMemo(() => {
-  //   return || t("addresses");
-  // }, [chain]);
 
   function updateChain() {
     setChain(chain?.uid, authUser);

@@ -37,6 +37,7 @@ export default function BulkyList() {
     bulkyItems,
     setChain,
     authUser,
+    getChainHeader,
     isChainAdmin,
     isThemeDefault,
     refresh,
@@ -56,9 +57,7 @@ export default function BulkyList() {
 
   const headerKey = "bulkyList";
 
-  const headerText = useMemo(() => {
-    return getHeader(chain, headerKey) || t("bulkyItemsTitle");
-  }, [chain]);
+  const headerText = getChainHeader(headerKey, t("bulkyItemsTitle"));
 
   function refreshChain() {
     setChain(chain?.uid, authUser);

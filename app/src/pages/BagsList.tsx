@@ -31,6 +31,7 @@ import {
 import {
   chevronForwardOutline,
   closeOutline,
+  construct,
   ellipsisHorizontal,
   ellipsisHorizontalCircleOutline,
   flashOutline,
@@ -78,6 +79,7 @@ export default function BagsList() {
     chainUsers,
     bags,
     setChain,
+    getChainHeader,
     authUser,
     route,
     bagListView,
@@ -109,13 +111,11 @@ export default function BagsList() {
   const headerKey = "bagsList";
   const subHeaderKey = "bagsListSub";
 
-  const headerText = useMemo(() => {
-    return getHeader(chain, headerKey) || t("whereIsTheBag");
-  }, [chain]);
-
-  const subHeader = useMemo(() => {
-    return getHeader(chain, subHeaderKey) || t("clickOnBagToChangeHolder");
-  }, [chain]);
+  const headerText = getChainHeader(headerKey, t("whereIsTheBag"));
+  const subHeaderText = getChainHeader(
+    subHeaderKey,
+    t("clickOnBagToChangeHolder"),
+  );
 
   const [bagsCard, bagsList] = useMemo(() => {
     if (!authUser) return [[], []];
@@ -303,15 +303,16 @@ export default function BagsList() {
             className="ion-margin"
             {...longPressSubHeader()}
           >
-            {subHeader}
+            {subHeaderText}
             <IonIcon
-              icon={pencilOutline}
-              className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+              icon={construct}
+              className="tw-text-sm tw-ml-1.5 !tw-text-blue tw-cursor-pointer"
+              onClick={() => subHeaderSheetModal.current?.present()}
             />
           </IonText>
         ) : (
           <IonText color="medium" className="ion-margin">
-            {subHeader}
+            {subHeaderText}
           </IonText>
         )}
 
@@ -518,7 +519,7 @@ export default function BagsList() {
               modal={subHeaderSheetModal}
               didDismiss={refreshBags}
               headerKey={subHeaderKey}
-              initalHeader={subHeader}
+              initalHeader={subHeaderText}
             />
           </div>
         ) : null}

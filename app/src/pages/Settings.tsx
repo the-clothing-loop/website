@@ -47,6 +47,7 @@ import { Trans, useTranslation } from "react-i18next";
 import {
   alertCircleOutline,
   compassOutline,
+  construct,
   copyOutline,
   ellipsisHorizontal,
   eyeOffOutline,
@@ -82,6 +83,7 @@ export default function Settings() {
     isAuthenticated,
     setPause,
     logout,
+    getChainHeader,
     setChain,
     isChainAdmin,
     isThemeDefault,
@@ -105,9 +107,6 @@ export default function Settings() {
     }
   }, [authUser, state]);
 
-  const longPressHeader = useLongPress(() => {
-    headerSheetModal.current?.present();
-  });
   const longPressSubHeader = useLongPress(() => {
     subHeaderSheetModal.current?.present();
   });
@@ -118,13 +117,8 @@ export default function Settings() {
   function refreshBags() {
     setChain(chain?.uid, authUser);
   }
-  const headerText = useMemo(() => {
-    return getHeader(chain, headerKey) || t("account");
-  }, [chain]);
-
-  const subHeader = useMemo(() => {
-    return getHeader(chain, subHeaderKey) || t("loopInformation");
-  }, [chain]);
+  const headerText = getChainHeader(headerKey, t("account"));
+  const subHeader = getChainHeader(subHeaderKey, t("loopInformation"));
 
   function handleChainSelect(
     e: IonSelectCustomEvent<SelectChangeEventDetail<any>>,
@@ -310,16 +304,16 @@ export default function Settings() {
               {...longPressSubHeader()}
             >
               {subHeader}
-
               <IonIcon
-                icon={pencilOutline}
-                className="tw-text-sm tw-ml-1.5 tw-mb-3.5"
+                icon={construct}
+                onClick={() => subHeaderSheetModal.current?.present()}
+                className="tw-text-sm tw-ml-1.5 !tw-text-blue tw-cursor-pointer"
               />
             </IonItemDivider>
           ) : (
             <IonItemDivider
               className={`ion-margin-start tw-bg-transparent tw-text-2xl tw-font-serif tw-font-bold
-              ${isThemeDefault ? "tw-text-orange" : ""}`}
+            ${isThemeDefault ? "tw-text-orange" : ""}`}
             >
               {subHeader}
             </IonItemDivider>

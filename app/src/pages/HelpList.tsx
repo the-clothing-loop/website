@@ -68,6 +68,7 @@ export default function HelpList() {
     authUser,
     chain,
     chainUsers,
+    getChainHeader,
     setChain,
     isChainAdmin,
     isThemeDefault,
@@ -81,9 +82,7 @@ export default function HelpList() {
 
   const headerKey = "helpList";
 
-  const headerText = useMemo(() => {
-    return getHeader(chain, headerKey) || t("howDoesItWork");
-  }, [chain]);
+  const headerText = getChainHeader(headerKey, t("howDoesItWork"));
 
   const rules = useMemo<FaqListItem[]>(() => {
     if (chain?.rules_override) {
