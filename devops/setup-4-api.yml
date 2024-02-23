@@ -45,6 +45,7 @@
         api_config_imgbb_key: "{{ imgbb_key }}"
         api_onesignal_app_id: "{{ onesignal_app_id }}"
         api_onesignal_rest_api_key: "{{ onesignal_rest_api_key }}"
+        api_config_jwt_secret: "{{ acceptance_jwt_secret }}"
       ansible.builtin.template:
         src: templates/config.yml.j2
         dest: /home/clothingloop/opt/config.acc.yml
@@ -73,6 +74,7 @@
         api_config_imgbb_key: "{{ imgbb_key }}"
         api_onesignal_app_id: "{{ onesignal_app_id }}"
         api_onesignal_rest_api_key: "{{ onesignal_rest_api_key }}"
+        api_config_jwt_secret: "{{ production_jwt_secret }}"
       ansible.builtin.template:
         src: templates/config.yml.j2
         dest: /home/clothingloop/opt/config.prod.yml

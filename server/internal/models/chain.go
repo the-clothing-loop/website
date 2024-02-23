@@ -28,6 +28,7 @@ type Chain struct {
 	Published                     bool
 	OpenToNewMembers              bool
 	RulesOverride                 string
+	HeadersOverride               string
 	Sizes                         []string `gorm:"serializer:json"`
 	Genders                       []string `gorm:"serializer:json"`
 	UserChains                    []UserChain
@@ -56,6 +57,7 @@ type ChainResponse struct {
 	TotalMembers     *int     `json:"total_members,omitempty"`
 	TotalHosts       *int     `json:"total_hosts,omitempty"`
 	RulesOverride    *string  `json:"rules_override,omitempty"`
+	HeadersOverride  *string  `json:"headers_override,omitempty"`
 	Theme            *string  `json:"theme,omitempty"`
 	IsAppDisabled    *bool    `json:"is_app_disabled,omitempty"`
 	RoutePrivacy     *int     `json:"route_privacy,omitempty"`

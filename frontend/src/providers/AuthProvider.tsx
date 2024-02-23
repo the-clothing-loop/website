@@ -6,6 +6,7 @@ import { User } from "../api/types";
 import { userGetByUID, userUpdate } from "../api/user";
 import Cookies from "js-cookie";
 import i18n from "../i18n";
+import { Sleep } from "../util/sleep";
 
 const IS_DEV_MODE = import.meta.env.DEV;
 
@@ -13,6 +14,7 @@ export enum UserRefreshState {
   NeverLoggedIn,
   LoggedIn,
   ForceLoggedOut,
+  Offline,
 }
 
 export type AuthProps = {
@@ -26,7 +28,8 @@ export type AuthProps = {
   // ? Should loading only be used for authentication or also for login & logout?
   loading: boolean;
   authLoginValidate: (
-    apiKey: string,
+    emailBase64: string,
+    otp: string,
     chainUID: string
   ) => Promise<undefined | User>;
   authLogout: () => Promise<void>;
@@ -36,7 +39,7 @@ export type AuthProps = {
 export const AuthContext = createContext<AuthProps>({
   authUser: undefined,
   loading: true,
-  authLoginValidate: (apiKey, c) => Promise.reject(),
+  authLoginValidate: (u, t, c) => Promise.reject(),
   authLogout: () => Promise.reject(),
   authUserRefresh: () => Promise.reject(UserRefreshState.NeverLoggedIn),
 });
@@ -51,12 +54,16 @@ const cookieOptions: Cookies.CookieAttributes = {
 export function AuthProvider({ children }: PropsWithChildren<{}>) {
   const [user, setUser] = useState<AuthProps["authUser"]>(undefined);
   const [loading, setLoading] = useState(true);
-  function authLoginValidate(apiKey: string, chainUID: string) {
+  function authLoginValidate(
+    emailBase64: string,
+    otp: string,
+    chainUID: string
+  ) {
     setLoading(true);
     return (async () => {
       let _user: User | null | undefined = undefined;
       try {
-        _user = (await apiLogin(apiKey, chainUID)).data.user;
+        _user = (await apiLogin(emailBase64, otp, chainUID)).data.user;
         Cookies.set(KEY_USER_UID, _user.uid, cookieOptions);
       } catch (err) {
         setUser(null);
@@ -113,10 +120,12 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
             i18n: i18n.language,
           });
         }
-      } catch (err) {
-        await authLogout().catch((err) => {
-          console.error("force logout failed:", err);
-        });
+      } catch (err: any) {
+        if (err?.status === 401) {
+          await authLogout().catch((err) => {
+            console.error("force logout failed:", err);
+          });
+        }
         console.info("force logout");
         return UserRefreshState.ForceLoggedOut;
       }

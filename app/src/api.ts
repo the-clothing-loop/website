@@ -65,6 +65,8 @@ export interface UserChain {
   created_at: string;
 }
 
+export type ChainHeaders = Record<string, string>;
+
 export interface Chain {
   uid: UID;
   name: string;
@@ -78,6 +80,7 @@ export interface Chain {
   published: boolean;
   open_to_new_members: boolean;
   rules_override?: string;
+  headers_override?: string;
   theme?: string;
   is_app_disabled?: boolean;
 }
@@ -156,6 +159,7 @@ export function chainGet(
   chainUID: UID,
   o: {
     addRules?: boolean;
+    addHeaders?: boolean;
     addTheme?: boolean;
     addIsAppDisabled?: boolean;
   } = {},
@@ -164,6 +168,7 @@ export function chainGet(
     params: {
       chain_uid: chainUID,
       add_rules: o.addRules || false,
+      add_headers: o.addHeaders || false,
       add_theme: o.addTheme || false,
       add_is_app_disabled: o.addIsAppDisabled || false,
     },
