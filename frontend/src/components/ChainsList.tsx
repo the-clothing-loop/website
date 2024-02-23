@@ -50,6 +50,7 @@ export default function ChainsList({ chains, setChains }: Props) {
             await chainGetAll({
               filter_out_unpublished: false,
               add_rules: true,
+              add_headers: true,
             })
           ).data;
         } else {

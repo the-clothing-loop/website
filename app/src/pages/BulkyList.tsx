@@ -3,8 +3,6 @@ import {
   IonButtons,
   IonCard,
   IonCardContent,
-  IonCardSubtitle,
-  IonCardTitle,
   IonContent,
   IonHeader,
   IonIcon,
@@ -17,16 +15,16 @@ import {
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
-import { chatbubbleEllipsesSharp } from "ionicons/icons";
-import { Fragment, useContext, useRef, useState } from "react";
+import { Fragment, useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
 import { bulkyItemRemove, BulkyItem, User } from "../api";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
-import { Clipboard } from "@capacitor/clipboard";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
+import EditHeaders from "../components/EditHeaders";
+import HeaderTitle from "../components/HeaderTitle";
 
 export default function BulkyList() {
   const { t } = useTranslation();
@@ -36,6 +34,7 @@ export default function BulkyList() {
     bulkyItems,
     setChain,
     authUser,
+    getChainHeader,
     isChainAdmin,
     isThemeDefault,
     refresh,
@@ -47,6 +46,15 @@ export default function BulkyList() {
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
   const [modalDesc, setModalDesc] = useState({ title: "", message: "" });
   const refModalDesc = useRef<HTMLIonModalElement>(null);
+  const headerSheetModal = useRef<HTMLIonModalElement>(null);
+
+  const headerKey = "bulkyList";
+
+  const headerText = getChainHeader(headerKey, t("bulkyItemsTitle"));
+
+  function refreshChain() {
+    setChain(chain?.uid, authUser);
+  }
 
   function handleClickDelete(id: number) {
     const handler = async () => {
@@ -159,7 +167,7 @@ export default function BulkyList() {
       <OverlayAppDisabled />
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>{t("bulkyItemsTitle")}</IonTitle>
+          <IonTitle>{headerText}</IonTitle>
           <IonButtons
             slot="end"
             className={`${isThemeDefault ? "tw-text-blue" : "primary"}`}
@@ -179,14 +187,14 @@ export default function BulkyList() {
       >
         <IonHeader collapse="condense">
           <IonToolbar className="tw-bg-transparent">
-            <IonTitle
-              size="large"
+            <HeaderTitle
+              headerText={headerText}
+              onEdit={() => headerSheetModal.current?.present()}
+              isChainAdmin={isChainAdmin}
               className={"tw-font-serif tw-font-bold".concat(
                 isThemeDefault ? " tw-text-blue" : "",
               )}
-            >
-              {t("bulkyItemsTitle")}
-            </IonTitle>
+            />
           </IonToolbar>
         </IonHeader>
         {bulkyItems.map((bulkyItem, i) => {
@@ -328,6 +336,15 @@ export default function BulkyList() {
             ))}
           </div>
         </IonModal>
+
+        {isChainAdmin ? (
+          <EditHeaders
+            modal={headerSheetModal}
+            didDismiss={refreshChain}
+            headerKey={headerKey}
+            initialHeader={headerText}
+          />
+        ) : null}
         <div className="relative">
           {/* Background SVGs */}
           <IonIcon
