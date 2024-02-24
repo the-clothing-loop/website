@@ -1,4 +1,4 @@
---- List loop hosts and the pending participants older than 60 days
+-- List loop hosts and the pending participants older than 60 days
 
 SELECT
     u2.id,
@@ -25,7 +25,7 @@ WHERE
 GROUP BY u2.id
 ORDER BY uc.chain_id ASC;
 
---- List participants older than 60 days
+-- List participants older than 60 days
 
 SELECT
     u.id,

@@ -1,6 +1,6 @@
---- * You can run this in PhpMyAdmin when you are ready
---- * Export to CSV & download it
---- * Then in https://my.sendinblue.com/users/upload-user-contacts upload the file
+-- * You can run this in PhpMyAdmin when you are ready
+-- * Export to CSV & download it
+-- * Then in https://my.sendinblue.com/users/upload-user-contacts upload the file
 
 SELECT 
 	u.email AS EMAIL,

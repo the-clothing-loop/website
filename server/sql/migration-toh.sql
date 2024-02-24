@@ -1,4 +1,4 @@
---- Migrations for Terms of Hosts (should be run 40 days after ToH start)
+-- Migrations for Terms of Hosts (should be run 40 days after ToH start)
 
 -- After ToH start there will be steps to ease the migration:
 -- Day 14 & 21: Email all unaccepted hosts to accept the toh.
@@ -13,7 +13,7 @@
 -- Day 56: Send a reminder to hosts from loops, where all have not accepted toh
 -- Day 65: Send an email to all participants asking if they what to become host for this loop.
 
---- Draft all Loops where all the hosts have not accepted the toh
+-- Draft all Loops where all the hosts have not accepted the toh
 UPDATE chains AS c2 SET c2.published = FALSE, c2.open_to_new_members = FALSE
 WHERE c2.id IN ( 
 	SELECT c.id FROM chains AS c
@@ -34,7 +34,7 @@ WHERE c2.id IN (
 	) = 0
 );
 
---- List Loops where only some hosts have not accepted the toh
+-- List Loops where only some hosts have not accepted the toh
 SELECT c.id, c.name,
    JSON_ARRAYAGG(CONCAT("host id: ",h.id," name: ", h.name," accepted_toh: ", COALESCE(accepted_toh, 0))) AS hosts
 FROM chains AS c
