@@ -110,7 +110,7 @@ WHERE c.published = TRUE
 	) > 0;
 
 -- List
-SELECT u.id, u.name AS user_name, c.id as chain_id, c.name AS chain_name,
+SELECT u.id, u.name AS user_name, u.email, c.id as chain_id, c.name AS chain_name,
 	COALESCE(u.accepted_toh, 0) AS accepted_toh
 FROM users AS u
 JOIN user_chains AS uc ON u.id = uc.user_id AND uc.is_chain_admin = TRUE
