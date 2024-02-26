@@ -6,7 +6,6 @@ import { User } from "../api/types";
 import { userGetByUID, userUpdate } from "../api/user";
 import Cookies from "js-cookie";
 import i18n from "../i18n";
-import { Sleep } from "../util/sleep";
 
 const IS_DEV_MODE = import.meta.env.DEV;
 
@@ -89,7 +88,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     setLoading(true);
     console.info("trying to login");
     return (async () => {
-      let oldUserUID = getOldStorageUserUID();
+      let oldUserUID = getStorageUserUID();
       // without a user uid authentication is not possible
       if (!oldUserUID) {
         setUser(null);
@@ -174,13 +173,18 @@ function runGoatCounter(history: History) {
   });
 }
 
-function getOldStorageUserUID(): string | null | undefined {
-  let oldUserUID: string | null | undefined =
-    window.localStorage.getItem(KEY_USER_UID);
+function getStorageUserUID(): string | undefined {
+  const oldUserUID = window.localStorage.getItem(KEY_USER_UID);
   if (oldUserUID) {
     window.localStorage.removeItem(KEY_USER_UID);
-  } else {
-    oldUserUID = Cookies.get(KEY_USER_UID);
   }
-  return oldUserUID;
+  let userUID = Cookies.get(KEY_USER_UID);
+
+  // if converting from old to new storage set cookie
+  if (!!oldUserUID && !userUID) {
+    let userUID = oldUserUID;
+    Cookies.set(KEY_USER_UID, userUID, cookieOptions);
+  }
+
+  return userUID;
 }
