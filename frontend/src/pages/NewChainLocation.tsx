@@ -54,17 +54,22 @@ const NewChainLocation = ({ location }: { location: any }) => {
       addToastError(t("required") + ": " + t("loopLocation"), 400);
       return;
     }
-    
-    let nearbyChains = (await chainGetNear({
+
+    let nearbyChains = (
+      await chainGetNear({
         latitude: values.latitude,
         longitude: values.longitude,
-        radius: 3
+        radius: 3,
       })
     ).data;
-    
-    if(nearbyChains.length>0){
-      if (!window.confirm('There is already another Loop existing in your area, are you sure you want to create a new Loop?')) {
-        return
+
+    if (nearbyChains.length > 0) {
+      if (
+        !window.confirm(
+          "There is already another Loop existing in your area, are you sure you want to create a new Loop?"
+        )
+      ) {
+        return;
       }
     }
 
