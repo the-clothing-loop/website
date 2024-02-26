@@ -16,6 +16,7 @@ import { AuthContext } from "../providers/AuthProvider";
 import { chainCreate } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
+import { chainGetNear } from "../api/chain";
 
 export interface State {
   only_create_chain: boolean;
@@ -52,6 +53,19 @@ const NewChainLocation = ({ location }: { location: any }) => {
     if (!(newChain.address?.length > 5)) {
       addToastError(t("required") + ": " + t("loopLocation"), 400);
       return;
+    }
+    
+    let nearbyChains = (await chainGetNear({
+        latitude: values.latitude,
+        longitude: values.longitude,
+        radius: 3
+      })
+    ).data;
+    
+    if(nearbyChains.length>0){
+      if (!window.confirm('There is already another Loop existing in your area, are you sure you want to create a new Loop?')) {
+        return
+      }
     }
 
     console.log(`creating chain: ${JSON.stringify(newChain)}`);
