@@ -14,6 +14,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"github.com/the-clothing-loop/website/server/pkg/tsp"
+	"gopkg.in/guregu/null.v3/zero"
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -546,6 +547,14 @@ func ChainRemoveUser(c *gin.Context) {
 	}
 
 	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
+
+	// if the user is removed by an admin, do not send an email to this one
+	var excludedEmail zero.String
+	if _, isChainAdmin := authUser.IsPartOfChain(chain.UID); isChainAdmin {
+		excludedEmail = authUser.Email
+	}
+	// send email to chain admins
+	services.EmailLoopAdminsOnUserLeft(db, user, chain.ID, excludedEmail)
 }
 
 func ChainApproveUser(c *gin.Context) {
