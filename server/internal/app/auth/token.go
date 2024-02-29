@@ -22,19 +22,22 @@ type MyJwtClaims struct {
 }
 
 func TokenReadFromRequest(c *gin.Context) (string, bool) {
-	token, ok := cookieRead(c)
-	if !ok {
-		prefix := "Bearer "
-		// fallback to bearer token for testing
-		a := c.Request.Header.Get("Authorization")
-		_, t, ok := strings.Cut(a, prefix)
-		if !ok {
-			return "", false
-		}
-		token = t
+	// read cookie first
+	prefix := "Bearer "
+	// fallback to bearer token for testing
+	a := c.Request.Header.Get("Authorization")
+	_, token, ok := strings.Cut(a, prefix)
+	if ok {
+		return token, true
 	}
 
-	return token, true
+	// if no cookie set then read authorization header
+	token, ok = cookieRead(c)
+	if ok {
+		return token, true
+	}
+
+	return "", false
 }
 
 func OtpCreate(db *gorm.DB, userID uint) (string, error) {
