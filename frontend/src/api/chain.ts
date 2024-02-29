@@ -30,9 +30,9 @@ export function chainGetAll(params?: RequestChainGetAllParams) {
 }
 
 interface RequestChainGetNearParams {
-  latitude?: number;
-  longitude?: number;
-  radius?: number;
+  latitude: number;
+  longitude: number;
+  radius: number;
 }
 
 export function chainGetNear(params?: RequestChainGetNearParams) {
