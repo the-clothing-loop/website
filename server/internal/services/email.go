@@ -6,7 +6,6 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
-	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 )
 
@@ -46,9 +45,10 @@ func EmailLoopAdminsOnUserJoin(db *gorm.DB, user *models.User, chainIDs ...uint)
 	return nil
 }
 
-func EmailLoopAdminsOnUserLeft(db *gorm.DB, user *models.User, chainIDs uint, excludedEmail zero.String) error {
+// excludedEmail can be an empty string
+func EmailLoopAdminsOnUserLeft(db *gorm.DB, removedUserName, removedUserEmail, excludedEmail string, chainIDs ...uint) error {
 	// find admin users related to the chain to email
-	admins, err := models.UserGetAdminsByChain(db, chainIDs)
+	admins, err := models.UserGetAdminsByChain(db, chainIDs...)
 	if err != nil {
 		return err
 	}
@@ -60,14 +60,14 @@ func EmailLoopAdminsOnUserLeft(db *gorm.DB, user *models.User, chainIDs uint, ex
 
 	for _, admin := range admins {
 		email := admin.Email
-		if !email.Valid || email.String == excludedEmail.String || email.String == user.Email.String {
+		if !email.Valid || excludedEmail == email.String || removedUserEmail == email.String {
 			continue
 		}
 		views.EmailSomeoneLeftLoop(db, admin.I18n,
 			admin.Name,
 			admin.Email.String,
 			admin.ChainName,
-			user.Name,
+			removedUserName,
 		)
 	}
 
