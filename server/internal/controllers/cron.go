@@ -8,6 +8,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"gorm.io/gorm"
@@ -23,6 +24,7 @@ func CronMonthly(db *gorm.DB) {
 func CronDaily(db *gorm.DB) {
 	emailSendAgain(db)
 	emailAbandonedChainRecruitment(db)
+	auth.OtpDeleteOld(db)
 }
 
 func CronHourly(db *gorm.DB) {
