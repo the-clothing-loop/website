@@ -43,6 +43,9 @@ WHERE (
 			AND uc.chain_id = c.id
 	) = 1;
 SELECT * FROM TempTable;
+DELETE FROM bags WHERE user_chain_id IN (
+	SELECT uc.id FROM user_chains AS uc WHERE uc.chain_id IN (SELECT id FROM TempTable)
+);
 DELETE FROM user_chains WHERE user_chains.chain_id IN (SELECT id FROM TempTable);
 DELETE FROM chains WHERE chains.id IN (SELECT id FROM TempTable);
 DROP TABLE TempTable;
@@ -119,15 +122,14 @@ WHERE c.id IN (SELECT id FROM TempTable)
 	AND COALESCE(u.accepted_toh, 0) != TRUE;
 
 -- Update
--- UPDATE user_chains SET is_chain_admin = FALSE
--- SET is_chain_admin = TRUE
--- WHERE id IN (
--- 	SELECT id FROM user_chains AS uc
--- 	JOIN users AS u ON uc.user_id = u.id
--- 	WHERE uc.is_chain_admin = TRUE
--- 		AND COALESCE(h.accepted_toh, 0) != TRUE
--- 		AND uc.chain_id IN (SELECT id FROM TempTable);
--- );
+UPDATE user_chains SET is_chain_admin = FALSE
+WHERE id IN (
+	SELECT uc.id FROM user_chains AS uc
+	JOIN users AS u ON uc.user_id = u.id
+	WHERE uc.is_chain_admin = TRUE
+		AND COALESCE(u.accepted_toh, 0) != TRUE
+		AND uc.chain_id IN (SELECT id FROM TempTable)
+);
 
 DROP TABLE TempTable;
 
