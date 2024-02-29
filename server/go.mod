@@ -1,6 +1,6 @@
 module github.com/the-clothing-loop/website/server
 
-go 1.20
+go 1.22
 
 require (
 	github.com/0xch4z/selectr v0.2.0

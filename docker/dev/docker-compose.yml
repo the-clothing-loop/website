@@ -22,7 +22,7 @@ services:
     stdin_open: true
     tty: true
   server:
-    image: golang:1.20-alpine
+    image: golang:1.22-alpine
     ports:
       - 8084:8084
     volumes:
