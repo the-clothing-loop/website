@@ -29,6 +29,16 @@ export function chainGetAll(params?: RequestChainGetAllParams) {
   return window.axios.get<Chain[]>("/v2/chain/all", { params });
 }
 
+interface RequestChainGetNearParams {
+  latitude: number;
+  longitude: number;
+  radius: number;
+}
+
+export function chainGetNear(params?: RequestChainGetNearParams) {
+  return window.axios.get<Chain[]>("/v2/chain/near", { params });
+}
+
 export function chainCreate(chain: RequestRegisterChain) {
   return window.axios.post<never>("/v2/chain", chain);
 }

@@ -16,18 +16,21 @@ import { AuthContext } from "../providers/AuthProvider";
 import { chainCreate } from "../api/chain";
 import { ToastContext } from "../providers/ToastProvider";
 import { GinParseErrors } from "../util/gin-errors";
+import { chainGetNear } from "../api/chain";
 
 export interface State {
   only_create_chain: boolean;
   register_user?: RequestRegisterUser;
 }
 
+const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const NewChainLocation = ({ location }: { location: any }) => {
   const history = useHistory();
   const { t } = useTranslation();
   const state = location.state as State | undefined;
   const { authUser, authUserRefresh } = useContext(AuthContext);
-  const { addToastError } = useContext(ToastContext);
+  const { addToastError, addModal } = useContext(ToastContext);
 
   const onSubmit = async (values: RegisterChainForm) => {
     let user = state!.only_create_chain ? authUser : state!.register_user;
@@ -54,55 +57,105 @@ const NewChainLocation = ({ location }: { location: any }) => {
       return;
     }
 
-    console.log(`creating chain: ${JSON.stringify(newChain)}`);
-    if (state!.only_create_chain) {
-      try {
-        await chainCreate(newChain);
-        await authUserRefresh();
+    let nearbyChains = (
+      await chainGetNear({
+        latitude: values.latitude,
+        longitude: values.longitude,
+        radius: 3,
+      })
+    ).data;
 
-        window.goatcounter?.count({
-          path: "new-chain",
-          title: "New chain",
-          event: true,
-        });
-        history.replace("/loops/new/confirmation?name=" + newChain.name);
-      } catch (err: any) {
-        console.error("Error creating chain:", err, newChain);
-        addToastError(GinParseErrors(t, err), err?.status);
-      }
-    } else {
-      console.info("creating user: ", user);
-      try {
-        await registerChainAdmin(
-          {
-            name: user.name,
-            email: user.email,
-            address: user.address,
-            phone_number: user.phone_number,
-            newsletter: state!.register_user?.newsletter || false,
-            sizes: values.sizes || [],
-            latitude: user.latitude || 0,
-            longitude: user.longitude || 0,
-          },
-          newChain
-        );
-        if (window.goatcounter) {
-          window.goatcounter.count({
-            path: "new-chain",
-            title: "New chain",
-            event: true,
-          });
-          window.goatcounter.count({
-            path: "new-user",
-            title: "New user",
-            event: true,
-          });
+    const funcCreateChain = state!.only_create_chain
+      ? async () => {
+          try {
+            await chainCreate(newChain);
+            await authUserRefresh();
+
+            window.goatcounter?.count({
+              path: "new-chain",
+              title: "New chain",
+              event: true,
+            });
+            history.replace("/loops/new/confirmation?name=" + newChain.name);
+          } catch (err: any) {
+            console.error("Error creating chain:", err, newChain);
+            addToastError(GinParseErrors(t, err), err?.status);
+          }
         }
-        history.replace("/loops/new/confirmation?name=" + newChain.name);
-      } catch (err: any) {
-        console.error(`Error creating user and chain: ${JSON.stringify(err)}`);
-        addToastError(GinParseErrors(t, err), err?.status);
-      }
+      : async () => {
+          console.info("creating user: ", user);
+          try {
+            if (!user)
+              throw "Could not find user when running the create user function";
+            await registerChainAdmin(
+              {
+                name: user.name,
+                email: user.email,
+                address: user.address,
+                phone_number: user.phone_number,
+                newsletter: state!.register_user?.newsletter || false,
+                sizes: values.sizes || [],
+                latitude: user.latitude || 0,
+                longitude: user.longitude || 0,
+              },
+              newChain
+            );
+            if (window.goatcounter) {
+              window.goatcounter.count({
+                path: "new-chain",
+                title: "New chain",
+                event: true,
+              });
+              window.goatcounter.count({
+                path: "new-user",
+                title: "New user",
+                event: true,
+              });
+            }
+            history.replace("/loops/new/confirmation?name=" + newChain.name);
+          } catch (err: any) {
+            console.error(
+              `Error creating user and chain: ${JSON.stringify(err)}`
+            );
+            addToastError(GinParseErrors(t, err), err?.status);
+          }
+        };
+    if (nearbyChains.length > 0) {
+      addModal({
+        message: t("similarLoopNearby"),
+        content: () => (
+          <ul
+            className={`text-sm font-semibold mx-8 ${
+              nearbyChains.length > 1 ? "list-disc" : "list-none text-center"
+            }`}
+          >
+            {nearbyChains.map((c) => (
+              <li key={c.uid}>
+                <a
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  target="_blank"
+                  href={`${VITE_BASE_URL}/loops/${c.uid}/users/signup`}
+                >
+                  {c.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        ),
+        actions: [
+          {
+            text: t("create"),
+            type: "primary",
+            fn: () => {
+              funcCreateChain();
+            },
+          },
+        ],
+      });
+    } else {
+      await funcCreateChain();
     }
   };
 
