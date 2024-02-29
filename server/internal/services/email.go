@@ -13,7 +13,6 @@ import (
 Given a user and a list of ChainIds, this method performs the following actions:
 - searchs all admin from the given chains
 - sends them an email with the new user's information.
-- Also, it sends an email to the user for every loop he intends to join.
 */
 func EmailLoopAdminsOnUserJoin(db *gorm.DB, user *models.User, chainIDs ...uint) error {
 	// find admin users related to the chain to email
@@ -40,6 +39,35 @@ func EmailLoopAdminsOnUserJoin(db *gorm.DB, user *models.User, chainIDs ...uint)
 			user.PhoneNumber,
 			user.Address,
 			user.Sizes,
+		)
+	}
+
+	return nil
+}
+
+// excludedEmail can be an empty string
+func EmailLoopAdminsOnUserLeft(db *gorm.DB, removedUserName, removedUserEmail, excludedEmail string, chainIDs ...uint) error {
+	// find admin users related to the chain to email
+	admins, err := models.UserGetAdminsByChain(db, chainIDs...)
+	if err != nil {
+		return err
+	}
+
+	if len(admins) == 0 {
+		goscope.Log.Errorf("Empty chain that is still public: ChainID: %d", chainIDs)
+		return fmt.Errorf("No admins exist for this loop")
+	}
+
+	for _, admin := range admins {
+		email := admin.Email
+		if !email.Valid || excludedEmail == email.String || removedUserEmail == email.String {
+			continue
+		}
+		views.EmailSomeoneLeftLoop(db, admin.I18n,
+			admin.Name,
+			admin.Email.String,
+			admin.ChainName,
+			removedUserName,
 		)
 	}
 
