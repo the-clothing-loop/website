@@ -244,7 +244,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		return
 	}
 
-	go views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
+	go views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token, chain.UID)
 }
 
 func RegisterBasicUser(c *gin.Context) {
@@ -317,7 +317,7 @@ func RegisterBasicUser(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token)
+	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token, body.ChainUID)
 }
 
 func Logout(c *gin.Context) {

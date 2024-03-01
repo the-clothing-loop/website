@@ -397,7 +397,8 @@ func EmailPoke(db *gorm.DB, lng,
 func EmailRegisterVerification(c *gin.Context, db *gorm.DB,
 	name,
 	email,
-	token string,
+	token,
+	chainUID string,
 ) error {
 	i18n := getI18nGin(c)
 	m := app.MailCreate()
@@ -407,6 +408,9 @@ func EmailRegisterVerification(c *gin.Context, db *gorm.DB,
 
 	emailBase64 := base64.StdEncoding.EncodeToString([]byte(email))
 	token += "&u=" + emailBase64
+	if chainUID != "" {
+		token += "&c=" + chainUID
+	}
 
 	err := emailGenerateMessage(m, i18n, "register_verification", gin.H{
 		"Name":    name,
