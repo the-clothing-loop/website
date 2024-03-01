@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import AdminDashboardPage from "../../components/react/pages/AdminDashboard";
+import Base from "../../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Account">
+  <AdminDashboardPage client:only="react" />
+</Base>

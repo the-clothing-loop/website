@@ -1,17 +1,44 @@
-# Vite Frontend
+# Astro Starter Kit: Basics
 
-## Development install
+```sh
+npm create astro@latest -- --template basics
+```
 
-1. Install NodeJS, this project tries to stay on the latest LTS version (v18 as of writing)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
+[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
 
-   For Windows or Mac: https://nodejs.org/en/
-   For Linux: https://nodejs.org/en/download/package-manager/
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
-2. `cd` into the frontend directory.
-3. Copy the env file `cp .env-example .env`.
-4. Run `npm i` to install all necessary dependencies.
-5. Ensure that the api server is running.
-6. Run `npm run start`
+![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+
+## 🚀 Project Structure
+
+Inside of your Astro project, you'll see the following folders and files:
+
+```text
+/
+├── public/
+│   └── favicon.svg
+├── src/
+│   ├── components/
+│   │   └── Card.astro
+│   ├── layouts/
+│   │   └── Layout.astro
+│   └── pages/
+│       └── index.astro
+└── package.json
+```
+
+Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+
+There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+
+Any static assets, like images, can be placed in the `public/` directory.
+
+## 👀 Want to learn more?
+
+Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
 
 ## Commands
 

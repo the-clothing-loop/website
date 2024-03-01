@@ -1,4 +1,3 @@
-import "goscope2-sdk-js/sdk/js";
 import Axios from "redaxios";
 
 interface GoatCounter {

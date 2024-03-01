@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import UserEditPage from "../../components/react/pages/UserEdit";
+import Base from "../../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Edit user">
+  <UserEditPage client:only="react" />
+</Base>

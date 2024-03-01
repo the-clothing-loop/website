@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import DataProcessingAgreementPage from "../components/react/pages/DataProcessingAgreement";
+import Base from "../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Data Processing Agreement">
+  <DataProcessingAgreementPage client:load />
+</Base>

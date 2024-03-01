@@ -1,4 +1,5 @@
-import { Event, UID } from "./types";
+import type { Event, UID } from "./types";
+import axios from "./index";
 
 interface EventGetAllParams {
   latitude: number;
@@ -28,35 +29,35 @@ export type EventUpdateBody = Partial<EventCreateBody> & { uid: UID };
 export const EVENT_IMAGE_EXPIRATION = 60 * 60 * 24 * 30 * 5;
 
 export function eventGetAll(params?: EventGetAllParams) {
-  return window.axios.get<Event[]>("/v2/event/all", { params });
+  return axios.get<Event[]>("/v2/event/all", { params });
 }
 export interface EventGetPreviousResponse {
   previous_events: Event[];
   previous_total: number;
 }
 export function eventGetPrevious(
-  params?: EventGetAllParams & { include_total?: boolean }
+  params?: EventGetAllParams & { include_total?: boolean },
 ) {
-  return window.axios.get<EventGetPreviousResponse>("/v2/event/previous", {
+  return axios.get<EventGetPreviousResponse>("/v2/event/previous", {
     params,
   });
 }
 export function eventGet(uid: UID) {
-  return window.axios.get<Event>(`/v2/event/${uid}`);
+  return axios.get<Event>(`/v2/event/${uid}`);
 }
 
 export function eventCreate(event: EventCreateBody) {
-  return window.axios.post<{ uid: UID }>("/v2/event", event);
+  return axios.post<{ uid: UID }>("/v2/event", event);
 }
 
 export function eventUpdate(event: EventUpdateBody) {
-  return window.axios.patch<never>("/v2/event", event);
+  return axios.patch<never>("/v2/event", event);
 }
 
 export function eventDelete(uid: UID) {
-  return window.axios.delete<never>(`/v2/event/${uid}`);
+  return axios.delete<never>(`/v2/event/${uid}`);
 }
 
 export function eventICalURL(uid: UID): string {
-  return `${window.axios.defaults.baseURL}/v2/event/${uid}/ical`;
+  return `${axios.defaults.baseURL}/v2/event/${uid}/ical`;
 }

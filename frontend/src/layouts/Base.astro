@@ -1,0 +1,58 @@
+---
+import Footer from "../components/react/components/Footer";
+import Navbar from "../components/react/components/Navbar";
+import i18next from "i18next";
+import { getLanguageFlags } from "../languages";
+import { HeadHrefLangs } from "astro-i18next/components";
+import "../tailwind.css";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+
+interface Props {
+  title: string;
+}
+
+const isRtl =
+  getLanguageFlags(false).find((f) => f.lng === i18next.language)?.rtl || false;
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang={i18next.language} dir={isRtl ? "rtl" : "ltr"}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/logo192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/logo512.png" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Circulate and reuse clothing with The Clothing Loop!"
+    />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+
+    <HeadHrefLangs />
+
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/icons/feather/style.css" />
+    <link rel="stylesheet" href="/fonts/montserrat/style.css" />
+    <link rel="stylesheet" href="/fonts/playfair-display/style.css" />
+
+    <script async type="module" src="/goatcounter.js"></script>
+
+    <title>{title} | The Clothing Loop</title>
+  </head>
+
+  <body>
+    <div id="root">
+      <Navbar client:visible pathname={Astro.url.pathname} />
+      <slot />
+      <Footer client:visible pathname={Astro.url.pathname} />
+    </div>
+  </body>
+</html>
