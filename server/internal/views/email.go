@@ -404,10 +404,14 @@ func EmailRegisterVerification(c *gin.Context, db *gorm.DB,
 	m.MaxRetryAttempts = models.MAIL_RETRY_TWO_DAYS
 	m.ToName = name
 	m.ToAddress = email
+
+	emailBase64 := base64.StdEncoding.EncodeToString([]byte(email))
+	token += "&u=" + emailBase64
+
 	err := emailGenerateMessage(m, i18n, "register_verification", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
-		"Token":   token,
+		"Token":   template.URL(token),
 	})
 	if err != nil {
 		return err
