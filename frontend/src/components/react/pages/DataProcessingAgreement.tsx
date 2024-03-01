@@ -1,22 +1,20 @@
-
 import { useStore } from "@nanostores/react";
-import type  { User } from "../../../api/types";
+import type { User } from "../../../api/types";
 import { $authUser } from "../../../stores/auth";
-
 
 export default function DataProcessingAgreement() {
   const authUser = useStore($authUser);
   return (
-      <div className="container mx-auto px-4 md:px-20 py-10">
-        <h1 className="font-serif text-secondary font-bold text-5xl mb-4">
-          {"Data Processing Agreement - The Clothing Loop"}
-        </h1>
+    <div className="container mx-auto px-4 md:px-20 py-10">
+      <h1 className="font-serif text-secondary font-bold text-5xl mb-4">
+        {"Data Processing Agreement - The Clothing Loop"}
+      </h1>
 
-        <DataProcessingAgreementHTML
-          className="prose"
-          authUser={authUser?.accepted_dpa === true ? authUser : null}
-        />
-      </div>
+      <DataProcessingAgreementHTML
+        className="prose"
+        authUser={authUser?.accepted_dpa === true ? authUser : null}
+      />
+    </div>
   );
 }
 
@@ -26,7 +24,7 @@ interface DataProcessingAgreementHTMLProps {
 }
 
 export function DataProcessingAgreementHTML(
-  props: DataProcessingAgreementHTMLProps
+  props: DataProcessingAgreementHTMLProps,
 ) {
   return (
     <div className={props.className}>

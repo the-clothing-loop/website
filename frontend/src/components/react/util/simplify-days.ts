@@ -4,7 +4,7 @@ import type { TFunction, i18n } from "i18next";
 export default function simplifyDays(
   t: TFunction,
   i18n: i18n,
-  date: string
+  date: string,
 ): string {
   const numDays = dayjs().diff(dayjs(date), "days");
 

@@ -23,7 +23,7 @@ const clothingCategories: ICategories = {
 };
 
 export const allSizes = Object.values(clothingCategories).reduce(
-  (prev, current) => prev.concat(current)
+  (prev, current) => prev.concat(current),
 );
 
 export default clothingCategories;

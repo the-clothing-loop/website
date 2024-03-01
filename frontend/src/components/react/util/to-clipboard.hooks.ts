@@ -1,5 +1,5 @@
 import type { TFunction } from "i18next";
-import { useState,type MouseEvent,type Attributes } from "react";
+import { useState, type MouseEvent, type Attributes } from "react";
 
 export default function useToClipboard() {
   const [copying, setCopying] = useState("");
@@ -22,7 +22,7 @@ export default function useToClipboard() {
     t: TFunction,
     id: string,
     moreClasses = "",
-    text?: string
+    text?: string,
   ) {
     return {
       id: id,

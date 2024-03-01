@@ -1,4 +1,4 @@
-import { type CSSProperties,type FC, useEffect, useState } from "react";
+import { type CSSProperties, type FC, useEffect, useState } from "react";
 
 interface IProps {
   end: number;
@@ -12,7 +12,7 @@ const SingleCount: FC<IProps> = ({ end, step }: IProps) => {
     val: number,
     end: number,
     setter: (value: number) => void,
-    step: number
+    step: number,
   ) => {
     if (val > end) {
       setter(end);

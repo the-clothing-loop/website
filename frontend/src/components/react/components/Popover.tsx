@@ -8,7 +8,7 @@ export default function PopoverOnHover({ message, className }: IProps) {
     <div
       tabIndex={0}
       className={"tooltip focus:tooltip-open btn-sm btn-circle btn-ghost flex items-center justify-center z-20 ".concat(
-        className || ""
+        className || "",
       )}
       aria-label={message}
       data-tip={message}

@@ -3,13 +3,13 @@ import dayjs from "./dayjs";
 
 export function useSepDateTime(
   dateTime: string,
-  setDateTime: (d: string) => void
+  setDateTime: (d: string) => void,
 ) {
   const [valueDate, _setValueDate] = useState(() =>
-    dayjs(dateTime).format("YYYY-MM-DD")
+    dayjs(dateTime).format("YYYY-MM-DD"),
   );
   const [valueTime, _setValueTime] = useState(() =>
-    dayjs(dateTime).format("HH:mm")
+    dayjs(dateTime).format("HH:mm"),
   );
 
   function setValueDate(e: ChangeEvent<HTMLInputElement>) {
