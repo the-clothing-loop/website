@@ -225,6 +225,7 @@ func TestEmailRegisterVerification(t *testing.T) {
 			lng+" "+faker.Person().Name(),
 			faker.Person().Contact().Email,
 			faker.UUID().V4(),
+			faker.UUID().V4(),
 		)
 		assert.Nil(t, err)
 	})
