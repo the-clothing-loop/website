@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import ContributePage from "../components/react/pages/Contribute";
+import Base from "../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="How to Contribute">
+  <ContributePage client:load />
+</Base>

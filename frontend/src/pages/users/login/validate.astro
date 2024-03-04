@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import LoginEmailFinishedPage from "../../../components/react/pages/LoginEmailFinished";
+import Base from "../../../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Login finishing">
+  <LoginEmailFinishedPage client:load />
+</Base>

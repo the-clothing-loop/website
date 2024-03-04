@@ -65,7 +65,8 @@
 
   .bg-instagram {
     background: rgb(224, 13, 171);
-    background: -webkit-radial-gradient(
+    background:
+      -webkit-radial-gradient(
         32% 106%,
         circle cover,
         rgb(255, 225, 125) 0%,
@@ -76,7 +77,8 @@
       ),
       -webkit-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190)
             58%);
-    background: -moz-radial-gradient(
+    background:
+      -moz-radial-gradient(
         32% 106%,
         circle cover,
         rgb(255, 225, 125) 0%,
@@ -86,7 +88,8 @@
         transparent 82%
       ),
       -moz-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
-    background: -ms-radial-gradient(
+    background:
+      -ms-radial-gradient(
         32% 106%,
         circle cover,
         rgb(255, 225, 125) 0%,
@@ -96,7 +99,8 @@
         transparent 82%
       ),
       -ms-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
-    background: -o-radial-gradient(
+    background:
+      -o-radial-gradient(
         32% 106%,
         circle cover,
         rgb(255, 225, 125) 0%,

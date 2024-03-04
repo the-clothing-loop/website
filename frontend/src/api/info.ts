@@ -1,3 +1,4 @@
+import axios from "./index";
 export interface InfoBody {
   total_chains: number;
   total_users: number;
@@ -5,5 +6,5 @@ export interface InfoBody {
 }
 
 export function infoGet() {
-  return window.axios.get<InfoBody>("/v2/info");
+  return axios.get<InfoBody>("/v2/info");
 }

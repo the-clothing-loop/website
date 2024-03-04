@@ -1,9 +1,10 @@
+import axios from "./index";
 export function contactNewsletterSet(
   name: string,
   email: string,
-  subscribe: boolean
+  subscribe: boolean,
 ) {
-  return window.axios.post<never>("/v2/contact/newsletter", {
+  return axios.post<never>("/v2/contact/newsletter", {
     name,
     email,
     subscribe,
@@ -11,7 +12,7 @@ export function contactNewsletterSet(
 }
 
 export function contactMailSend(name: string, email: string, message: string) {
-  return window.axios.post<never>("/v2/contact/email", {
+  return axios.post<never>("/v2/contact/email", {
     name,
     email,
     message,

@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import DonationCompletedPage from "../../components/react/pages/DonationCompleted";
+import Base from "../../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Home">
+  <DonationCompletedPage client:load />
+</Base>
