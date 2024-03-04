@@ -42,7 +42,7 @@ export default function NewChainLocation() {
   const clientValues = useHydrated(() => {
     let registerUserObj: RequestRegisterUser | undefined;
     if (registerUserQ) {
-      registerUserObj = JSON.parse(registerUserQ);
+      registerUserObj = JSON.parse(decodeURI(registerUserQ));
     }
     return {
       isOnlyCreateChain: isOnlyCreateChainQ == "true",

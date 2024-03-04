@@ -40,7 +40,7 @@ export default function Signup() {
 
     if (registerUser) {
       window.location.href = localizePath(
-        "/loops/new?register_user=" + JSON.stringify(registerUser),
+        "/loops/new?register_user=" + encodeURI(JSON.stringify(registerUser)),
       );
     }
   }
