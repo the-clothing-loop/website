@@ -282,7 +282,6 @@ export default function Home() {
                 autoPlay
                 loop
                 muted
-                webkit-playsinline
                 playsInline
                 className="object-cover object-top w-full max-h-[600px]"
                 title="pages of the impact report"
