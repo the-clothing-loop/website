@@ -13,8 +13,12 @@ interface Props {
   title: string;
 }
 
+const IS_PRODUCTION =
+  import.meta.env.PUBLIC_BASE_URL === "https://www.clothingloop.org";
+
 const isRtl =
-  getLanguageFlags(false).find((f) => f.lng === i18next.language)?.rtl || false;
+  getLanguageFlags(IS_PRODUCTION).find((f) => f.lng === i18next.language)
+    ?.rtl || false;
 
 const { title } = Astro.props;
 ---

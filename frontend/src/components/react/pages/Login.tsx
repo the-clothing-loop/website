@@ -15,6 +15,9 @@ import getQuery from "../util/query";
 import useLocalizePath from "../util/localize_path.hooks";
 import getLanguages from "../../../languages";
 
+const IS_PRODUCTION =
+  import.meta.env.PUBLIC_BASE_URL === "https://www.clothingloop.org";
+
 //media
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
@@ -97,7 +100,7 @@ export default function Login() {
       //@ts-ignore
       var browserLang = navigator.language || navigator.userLanguage;
       let lang = $authUser.get()?.i18n || browserLang || "en";
-      if (!getLanguages(false).find((l) => l === lang)) lang = "en";
+      if (!getLanguages(IS_PRODUCTION).find((l) => l === lang)) lang = "en";
 
       window.location.href = localizePath("/admin/dashboard", lang);
     }
