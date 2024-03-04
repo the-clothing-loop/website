@@ -78,8 +78,8 @@ func Routes() *gin.Engine {
 	r.Use(controllers.MiddlewareSetDB(db))
 
 	thr := throttle.Policy(&throttle.Quota{
-		Limit:  20,
-		Within: 24 * time.Hour,
+		Limit:  5,
+		Within: 2 * time.Hour,
 	})
 
 	// router groups
