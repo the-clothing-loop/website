@@ -27,7 +27,7 @@ export default function EventEdit() {
     })
       .then(() => {
         window.location.href = localizePath(
-          "/events/details?event=" + eventUID,
+          "/events/details/?event=" + eventUID,
         );
       })
       .catch((err: any) => {

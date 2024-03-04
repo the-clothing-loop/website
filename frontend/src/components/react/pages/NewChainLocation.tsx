@@ -107,7 +107,7 @@ export default function NewChainLocation() {
               event: true,
             });
             window.location.href = localizePath(
-              "/loops/new/confirmation?name=" + newChain.name,
+              "/loops/new/confirmation/?name=" + newChain.name,
             );
           } catch (err: any) {
             console.error("Error creating chain:", err, newChain);
@@ -145,7 +145,7 @@ export default function NewChainLocation() {
               });
             }
             window.location.href = localizePath(
-              "/loops/new/confirmation?name=" + newChain.name,
+              "/loops/new/confirmation/?name=" + newChain.name,
             );
           } catch (err: any) {
             console.error(
@@ -172,7 +172,7 @@ export default function NewChainLocation() {
                   target="_blank"
                   href={
                     PUBLIC_BASE_URL +
-                    localizePath("/loops/users/signup?chain=" + c.uid)
+                    localizePath("/loops/users/signup/?chain=" + c.uid)
                   }
                 >
                   {c.name}

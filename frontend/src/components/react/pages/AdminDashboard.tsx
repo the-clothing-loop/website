@@ -156,7 +156,7 @@ export default function AdminDashboard() {
               <div className="flex flex-col sm:flex-row flex-wrap rtl:sm:-mr-4">
                 <a
                   className="btn btn-sm btn-secondary btn-outline bg-white mb-4 sm:mr-4"
-                  href={localizePath("/users/edit?user=me")}
+                  href={localizePath("/users/edit/?user=me")}
                 >
                   {t("editAccount")}
                   <span className="feather feather-edit ml-2 rtl:ml-0 rtl:mr-2"></span>

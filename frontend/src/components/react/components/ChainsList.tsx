@@ -173,7 +173,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                   );
                 const shareLink =
                   PUBLIC_BASE_URL +
-                  localizePath("/loops/users/signup?chain=" + chain.uid);
+                  localizePath("/loops/users/signup/?chain=" + chain.uid);
                 let hasNotification = authUser.notification_chain_uids?.length
                   ? !!authUser.notification_chain_uids.find(
                       (uid) => chain.uid === uid,
@@ -250,7 +250,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                               chains?.length > 5 ? "btn-sm" : ""
                             }`}
                             href={localizePath(
-                              "/loops/members?chain=" + chain.uid,
+                              "/loops/members/?chain=" + chain.uid,
                             )}
                           >
                             <span className="max-xs:hidden">{t("view")}</span>

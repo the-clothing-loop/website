@@ -216,7 +216,7 @@ export default function Signup() {
                                 className="font-small"
                                 href={localizePath(
                                   chainUID
-                                    ? "/loops/users/login?chain=" + chainUID
+                                    ? "/loops/users/login/?chain=" + chainUID
                                     : "/users/login",
                                 )}
                               />

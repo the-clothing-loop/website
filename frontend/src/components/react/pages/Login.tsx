@@ -85,7 +85,7 @@ export default function Login() {
       if (otp) {
         let emailBase64 = btoa(email);
 
-        window.location.href = `/users/login/validate?u=${emailBase64}&apiKey=${otp}`;
+        window.location.href = `/users/login/validate/?u=${emailBase64}&apiKey=${otp}`;
       }
     })();
   }
@@ -163,7 +163,7 @@ export default function Login() {
                           className="font-medium"
                           href={localizePath(
                             chainUID
-                              ? "/loops/users/signup?chain=" + chainUID
+                              ? "/loops/users/signup/?chain=" + chainUID
                               : "/users/signup",
                           )}
                         />

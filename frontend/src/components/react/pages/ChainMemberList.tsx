@@ -420,7 +420,7 @@ export default function ChainMemberList() {
   }
 
   const shareLink =
-    PUBLIC_BASE_URL + localizePath("/loops/users/signup?chain=" + chainUID);
+    PUBLIC_BASE_URL + localizePath("/loops/users/signup/?chain=" + chainUID);
 
   let userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
 
@@ -542,7 +542,7 @@ export default function ChainMemberList() {
                   <div className="flex flex-col md:flex-row justify-center pt-4 gap-4">
                     <a
                       className="btn btn-sm btn-secondary w-full md:w-auto"
-                      href={localizePath("/loops/edit?chain=" + chainUID)}
+                      href={localizePath("/loops/edit/?chain=" + chainUID)}
                     >
                       {t("editLoop")}
                       <span
@@ -751,7 +751,7 @@ function HostTable(props: {
   function getEditLocation(u: User): string {
     if (!u.uid) return "#";
 
-    return localizePath(`/users/edit?user=${u.uid}&chain=${props.chain.uid}`);
+    return localizePath(`/users/edit/?user=${u.uid}&chain=${props.chain.uid}`);
   }
 
   function onDemote(e: MouseEvent, u: User) {
@@ -1061,7 +1061,7 @@ function ParticipantsTable(props: {
     }
 
     return localizePath(
-      `/users/edit?user=${user.uid}&chain=${props.chain.uid}`,
+      `/users/edit/?user=${user.uid}&chain=${props.chain.uid}`,
     );
   }
 

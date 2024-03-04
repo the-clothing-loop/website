@@ -15,7 +15,7 @@ export default function Signup() {
   const authUser = useStore($authUser);
 
   if (authUser) {
-    window.location.href = localizePath("/loops/new?only_create_chain=true");
+    window.location.href = localizePath("/loops/new/?only_create_chain=true");
   }
 
   function onSubmit(values: ValuesForm) {
@@ -40,7 +40,7 @@ export default function Signup() {
 
     if (registerUser) {
       window.location.href = localizePath(
-        "/loops/new?register_user=" + encodeURI(JSON.stringify(registerUser)),
+        "/loops/new/?register_user=" + encodeURI(JSON.stringify(registerUser)),
       );
     }
   }
@@ -54,7 +54,7 @@ export default function Signup() {
           text: t("login"),
           type: "default",
           fn: () => {
-            let url = `/users/login?email=${email}`;
+            let url = `/users/login/?email=${email}`;
             window.location.href = url;
           },
         },

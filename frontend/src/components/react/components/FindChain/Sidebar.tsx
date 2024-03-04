@@ -50,7 +50,7 @@ export default function SideBar({
     setOpen(false);
   }
   function handleClickViewChain(chain: Chain) {
-    window.location.href = localizePath("/loops/members?chain=" + chain.uid);
+    window.location.href = localizePath("/loops/members/?chain=" + chain.uid);
   }
   function handleClickFocusChain(chain: Chain) {
     setFocusedChain(chain);
@@ -81,7 +81,7 @@ export default function SideBar({
       });
     } else {
       window.location.href = localizePath(
-        "/loops/users/signup?chain=" + chain.uid,
+        "/loops/users/signup/?chain=" + chain.uid,
       );
     }
   }

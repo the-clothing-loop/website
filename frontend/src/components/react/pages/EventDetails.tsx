@@ -323,7 +323,7 @@ export default function EventDetails() {
                       {event.chain_uid ? (
                         <a
                           href={localizePath(
-                            "/loops/users/signup?chain=" + event.chain_uid,
+                            "/loops/users/signup/?chain=" + event.chain_uid,
                           )}
                           key="loop"
                           className="group block mb-1"

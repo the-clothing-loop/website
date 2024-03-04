@@ -335,7 +335,7 @@ function EventItem({ event }: { event: Event }) {
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
   const date = dayjs(event.date);
-  const eventURL = localizePath("/events/details?event=" + event.uid);
+  const eventURL = localizePath("/events/details/?event=" + event.uid);
 
   const eventPriceValue =
     event.price_value % 1 === 0
