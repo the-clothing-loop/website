@@ -51,7 +51,7 @@ const { title } = Astro.props;
 
   <body>
     <div id="root">
-      <Navbar client:visible pathname={Astro.url.pathname} />
+      <Navbar client:load pathname={Astro.url.pathname} />
       <slot />
       <Footer client:visible pathname={Astro.url.pathname} />
     </div>
