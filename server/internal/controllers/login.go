@@ -147,7 +147,7 @@ func LoginValidate(c *gin.Context) {
 	user.IsEmailVerified = true
 
 	// set token as cookie
-	auth.CookieSet(c, newToken)
+	auth.CookieSet(c, user.UID, newToken)
 	c.JSON(200, gin.H{
 		"user":  user,
 		"token": newToken,
@@ -343,5 +343,5 @@ func RefreshToken(c *gin.Context) {
 		c.String(http.StatusUnauthorized, "Invalid token")
 		return
 	}
-	auth.CookieSet(c, token)
+	auth.CookieSet(c, authUser.UID, token)
 }

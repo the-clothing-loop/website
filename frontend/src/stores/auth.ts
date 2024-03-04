@@ -37,7 +37,6 @@ export function authLoginValidate(
       console.error(err);
       return undefined;
     }
-    cookieUserUID.set(user.uid);
     sessionAuthUser.set(user);
     $authUser.set(user);
     $loading.set(false);
@@ -100,7 +99,6 @@ export function authUserRefresh(force = false): Promise<UserRefreshState> {
       sessionAuthUser.set(user);
     }
     $authUser.set(user);
-    cookieUserUID.set(user.uid);
     $loading.set(false);
     console.log("logged in");
     return UserRefreshState.LoggedIn;
