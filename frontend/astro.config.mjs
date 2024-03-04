@@ -6,6 +6,7 @@ import tailwind from "@astrojs/tailwind";
 // https://astro.build/config
 export default defineConfig({
   output: "static",
+  site: import.meta.env.PUBLIC_BASE_URL,
   integrations: [react(), astroI18next(), tailwind()],
   server: { port: 3000 },
   outDir: "build",
