@@ -30,14 +30,11 @@ export default function LoginEmailFinished() {
           type: "success",
         });
 
-        if (user?.i18n) {
-          i18n.changeLanguage(user.i18n);
-        }
-
+        const locale = user?.i18n || "en";
         if (chainUID) {
-          window.location.href = localizePath("/thankyou/");
+          window.location.href = localizePath("/thankyou/", locale);
         } else {
-          window.location.href = localizePath("/admin/dashboard");
+          window.location.href = localizePath("/admin/dashboard", locale);
         }
       } catch (err: any) {
         addToastError(t("errorLoggingIn"), 401);

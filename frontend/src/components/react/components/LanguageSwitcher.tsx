@@ -32,21 +32,21 @@ export default function LanguageSwitcher(props: {
 
   function handleChange(e: MouseEvent, lng: string) {
     e.preventDefault();
-    dayjs.locale(lng);
-    i18n.changeLanguage(lng);
-    window.location.href = localizePath(
-      window.location.pathname + window.location.search,
-      lng,
-    );
-    dropdown.setOpen(false);
-
-    if (authUser) {
-      // Update the value of i18n in the database
-      userUpdate({
-        user_uid: authUser.uid,
-        i18n: lng,
-      });
-    }
+    (async () => {
+      if (authUser) {
+        // Update the value of i18n in the database
+        await userUpdate({
+          user_uid: authUser.uid,
+          i18n: lng,
+        }).catch((e) => {
+          console.error(e);
+        });
+      }
+      window.location.href = localizePath(
+        window.location.pathname + window.location.search,
+        lng,
+      );
+    })();
   }
 
   function onToggle(e: MouseEvent<HTMLLabelElement>) {
