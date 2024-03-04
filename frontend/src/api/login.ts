@@ -71,3 +71,7 @@ export function loginValidate(u: string, apiKey: string, chainUID: UID) {
 export function logout() {
   return axios.delete<never>("/v2/logout");
 }
+
+export function refreshToken() {
+  return axios.post<never>("/v2/refresh-token");
+}

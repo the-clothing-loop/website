@@ -329,3 +329,19 @@ func Logout(c *gin.Context) {
 
 	auth.CookieRemove(c)
 }
+
+func RefreshToken(c *gin.Context) {
+	db := getDB(c)
+
+	ok, authUser, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
+	if !ok {
+		return
+	}
+
+	token, err := auth.JwtGenerate(authUser)
+	if err != nil {
+		c.String(http.StatusUnauthorized, "Invalid token")
+		return
+	}
+	auth.CookieSet(c, token)
+}

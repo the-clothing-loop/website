@@ -1,6 +1,6 @@
 import { atom } from "nanostores";
 import type { User } from "../api/types";
-import { loginValidate, logout } from "../api/login";
+import { loginValidate, logout, refreshToken } from "../api/login";
 import { userGetByUID } from "../api/user";
 import {
   cookieUserUID,
@@ -62,9 +62,7 @@ export function authUserRefresh(force = false): Promise<UserRefreshState> {
     console.info("attempting to retrieve details from session storage");
     let user = sessionAuthUser.get();
     const hasLoginSession = !!user;
-    if (hasLoginSession) {
-      console.info("has session storage");
-    }
+    if (hasLoginSession) console.info("has session storage");
 
     console.info("retrieve user uid from cookie");
     let userUID = cookieUserUID.get();
@@ -77,6 +75,7 @@ export function authUserRefresh(force = false): Promise<UserRefreshState> {
     }
     if (!user || force) {
       try {
+        await refreshToken();
         user = (
           await userGetByUID(undefined, userUID, {
             addApprovedTOH: true,
