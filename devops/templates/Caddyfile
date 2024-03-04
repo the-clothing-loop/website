@@ -5,7 +5,7 @@
 (astro_url) {
 	# /event/:uid/ -> /event/?event=
 	@oldevent path_regexp eventp ^/(\w{2}/)?events/([\w-]{36})/?$
-	redir @oldevent /{re.eventp.1}events/?event={re.eventp.2} 302
+	redir @oldevent /{re.eventp.1}events/details/?event={re.eventp.2} 302
 
 	# /loops/:uid/members -> /loops/members?chain=
 	@oldmembers path_regexp membersp ^/(\w{2}/)?loops/([\w-]{36})/members/?$
@@ -20,8 +20,9 @@
 	redir @olduserslogin /{re.usersloginp.1}loops/users/login/?chain={re.usersloginp.2} 302
 
 	# /users/login/validate?apiKey= -> /users/login/validate/?apiKey=
-	@olduserslogin path_regexp usersvalidp ^/(\w{2}/)?users/login/validate(\?.*)?$
-	redir @olduserslogin /{re.usersvalidp.1}users/login/validate/{re.usersvalidp.2} 302
+	# https://acc.clothingloop.org/users/login/validate?apiKey=74932015&u=aG9zdEBleGFtcGxlLmNvbQ%3D%3D
+	@oldusersvalidp path_regexp usersvalidp ^/(\w{2}/)?users/login/validate$
+	redir @oldusersvalidp /{re.usersvalidp.1}users/login/validate/?{query} 302
 
 	file_server
 	try_files {path} {path}/ =404
@@ -155,10 +156,6 @@ acc.clothingloop.org {
 		import astro_url
 		root * /var/caddy/acc.clothingloop.org
 	}
-
-	# handle_errors {
-	# 	file_server
-	# }
 }
 
 acc.app.clothingloop.org {
