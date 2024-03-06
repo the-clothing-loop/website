@@ -71,10 +71,16 @@ WHERE users.id = ?
 
 func (u *User) AddNotificationChainUIDs(db *gorm.DB) error {
 	userChainIDs := []uint{}
+	if len(u.Chains) == 0 {
+		return nil
+	}
 	for _, uc := range u.Chains {
 		if uc.IsChainAdmin {
 			userChainIDs = append(userChainIDs, uc.ChainID)
 		}
+	}
+	if len(userChainIDs) == 0 {
+		return nil
 	}
 	notificationChainUIDs := []string{}
 	err := db.Raw(`
