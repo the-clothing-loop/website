@@ -78,7 +78,7 @@ func Routes() *gin.Engine {
 	r.Use(controllers.MiddlewareSetDB(db))
 
 	thr := throttle.Policy(&throttle.Quota{
-		Limit:  5,
+		Limit:  30,
 		Within: 2 * time.Hour,
 	})
 
