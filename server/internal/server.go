@@ -80,6 +80,10 @@ func Routes() *gin.Engine {
 	thr := throttle.Policy(&throttle.Quota{
 		Limit:  30,
 		Within: 2 * time.Hour,
+	}, &throttle.Options{
+		IdentificationFunction: func(c *gin.Context) string {
+			return c.Query("u")
+		},
 	})
 
 	// router groups
