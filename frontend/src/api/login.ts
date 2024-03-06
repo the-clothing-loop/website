@@ -1,5 +1,6 @@
 import { Sizes } from "./enums";
-import { UID, User } from "./types";
+import type { UID, User } from "./types";
+import axios from "./index";
 
 export interface RequestRegisterUser {
   name: string;
@@ -28,30 +29,30 @@ export interface RequestRegisterChain {
 
 export function registerChainAdmin(
   user: RequestRegisterUser,
-  chain: RequestRegisterChain
+  chain: RequestRegisterChain,
 ) {
-  return window.axios.post<never>("/v2/register/chain-admin", { user, chain });
+  return axios.post<never>("/v2/register/chain-admin", { user, chain });
 }
 
 export function registerBasicUser(user: RequestRegisterUser, chainUID: UID) {
-  return window.axios.post<never>("/v2/register/basic-user", {
+  return axios.post<never>("/v2/register/basic-user", {
     user,
     chain_uid: chainUID,
   });
 }
 
 export function registerOrphanedUser(user: RequestRegisterUser) {
-  return window.axios.post<never>("/v2/register/orphaned-user", {
+  return axios.post<never>("/v2/register/orphaned-user", {
     user,
   });
 }
 
 export function loginEmail(email: string) {
-  return window.axios.post<unknown>("/v2/login/email", { email });
+  return axios.post<unknown>("/v2/login/email", { email });
 }
 
 export function loginEmailAndAddToChain(email: string, chainUID: UID) {
-  return window.axios.post<unknown>("/v2/login/email", {
+  return axios.post<unknown>("/v2/login/email", {
     email,
     chain_uid: chainUID,
   });
@@ -62,11 +63,15 @@ export function loginValidate(u: string, apiKey: string, chainUID: UID) {
   if (chainUID) {
     params["c"] = chainUID;
   }
-  return window.axios.get<{ user: User }>(`/v2/login/validate`, {
+  return axios.get<{ user: User }>(`/v2/login/validate`, {
     params,
   });
 }
 
 export function logout() {
-  return window.axios.delete<never>("/v2/logout");
+  return axios.delete<never>("/v2/logout");
+}
+
+export function refreshToken() {
+  return axios.post<never>("/v2/refresh-token");
 }

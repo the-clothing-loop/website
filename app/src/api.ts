@@ -148,6 +148,10 @@ export function logout() {
   return window.axios.delete<never>("/v2/logout");
 }
 
+export function refreshToken() {
+  return window.axios.post<never>("/v2/refresh-token");
+}
+
 export function userGetByUID(chainUID: string | undefined, userUID: string) {
   let params: { user_uid: string; chain_uid?: string } = { user_uid: userUID };
   if (chainUID) params.chain_uid = chainUID;

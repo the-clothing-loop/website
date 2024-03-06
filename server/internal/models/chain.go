@@ -45,24 +45,24 @@ type Chain struct {
 }
 
 type ChainResponse struct {
-	UID              string       `json:"uid"`
-	Name             string       `json:"name"`
-	Description      string       `json:"description"`
-	Address          string       `json:"address"`
-	Latitude         float64      `json:"latitude"`
-	Longitude        float64      `json:"longitude"`
-	Radius           float32      `json:"radius"`
-	Sizes            []string     `json:"sizes"`
-	Genders          []string     `json:"genders"`
-	Published        bool         `json:"published"`
-	OpenToNewMembers bool         `json:"open_to_new_members"`
-	TotalMembers     *int         `json:"total_members,omitempty"`
-	TotalHosts       *int         `json:"total_hosts,omitempty"`
-	RulesOverride    *string      `json:"rules_override,omitempty"`
-	HeadersOverride  *string      `json:"headers_override,omitempty"`
-	Theme            *string      `json:"theme,omitempty"`
-	IsAppDisabled    *bool        `json:"is_app_disabled,omitempty"`
-	RoutePrivacy     *int         `json:"route_privacy,omitempty"`
+	UID              string       `json:"uid" gorm:"chains.uid"`
+	Name             string       `json:"name" gorm:"chains.name"`
+	Description      string       `json:"description" gorm:"chains.description"`
+	Address          string       `json:"address" gorm:"chains.address"`
+	Latitude         float64      `json:"latitude" gorm:"chains.latitude"`
+	Longitude        float64      `json:"longitude" gorm:"chains.longitude"`
+	Radius           float32      `json:"radius" gorm:"chains.radius"`
+	Sizes            []string     `json:"sizes" gorm:"chains.sizes;serializer:json"`
+	Genders          []string     `json:"genders" gorm:"chains.genders;serializer:json"`
+	Published        bool         `json:"published" gorm:"chains.published"`
+	OpenToNewMembers bool         `json:"open_to_new_members" gorm:"chains.open_to_new_members"`
+	TotalMembers     *int         `json:"total_members,omitempty" gorm:"total_members"`
+	TotalHosts       *int         `json:"total_hosts,omitempty" gorm:"total_hosts"`
+	RulesOverride    *string      `json:"rules_override,omitempty" gorm:"chains.rules_override"`
+	HeadersOverride  *string      `json:"headers_override,omitempty" gorm:"chains.headers_override"`
+	Theme            *string      `json:"theme,omitempty" gorm:"chains.theme"`
+	IsAppDisabled    *bool        `json:"is_app_disabled,omitempty" gorm:"chains.is_app_disabled"`
+	RoutePrivacy     *int         `json:"route_privacy,omitempty" gorm:"chains.route_privacy"`
 	ChatRoomID       *null.String `json:"chat_room_id,omitempty"`
 }
 

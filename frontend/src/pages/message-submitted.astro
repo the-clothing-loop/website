@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import MessageSubmittedPage from "../components/react/pages/MessageSubmitted";
+import Base from "../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Message Submitted">
+  <MessageSubmittedPage client:load />
+</Base>

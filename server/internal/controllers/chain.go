@@ -209,11 +209,7 @@ func ChainGetAll(c *gin.Context) {
 		return
 	}
 
-	chains := []struct {
-		models.Chain
-		TotalMembers int `gorm:"total_members"`
-		TotalHosts   int `gorm:"total_hosts"`
-	}{}
+	chains := []*models.ChainResponse{}
 	sql := models.ChainResponseSQLSelect
 	whereOrSql := []string{}
 	args := []any{}
@@ -266,29 +262,7 @@ func ChainGetAll(c *gin.Context) {
 		return
 	}
 
-	chainsJson := []*models.ChainResponse{}
-	for _, chain := range chains {
-		cJSON := &models.ChainResponse{
-			UID:              chain.UID,
-			Name:             chain.Name,
-			Description:      chain.Description,
-			Address:          chain.Address,
-			Latitude:         chain.Latitude,
-			Longitude:        chain.Longitude,
-			Radius:           chain.Radius,
-			Sizes:            chain.Sizes,
-			Genders:          chain.Genders,
-			Published:        chain.Published,
-			OpenToNewMembers: chain.OpenToNewMembers,
-		}
-		if query.AddTotals {
-			cJSON.TotalMembers = &chain.TotalMembers
-			cJSON.TotalHosts = &chain.TotalHosts
-		}
-		chainsJson = append(chainsJson, cJSON)
-	}
-
-	c.JSON(200, chainsJson)
+	c.JSON(200, chains)
 }
 
 func ChainGetNear(c *gin.Context) {
@@ -576,6 +550,14 @@ func ChainRemoveUser(c *gin.Context) {
 	}
 
 	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
+
+	// if the user is removed by an admin, do not send an email to this one
+	var excludedEmail string
+	if _, isChainAdmin := authUser.IsPartOfChain(chain.UID); isChainAdmin {
+		excludedEmail = authUser.Email.String
+	}
+	// send email to chain admins
+	services.EmailLoopAdminsOnUserLeft(db, user.Name, user.Email.String, excludedEmail, chain.ID)
 }
 
 func ChainApproveUser(c *gin.Context) {

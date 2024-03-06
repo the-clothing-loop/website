@@ -2,7 +2,6 @@ package auth
 
 import (
 	"net/http"
-	"net/url"
 
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -20,7 +19,7 @@ func cookieRead(c *gin.Context) (string, bool) {
 func CookieRemove(c *gin.Context) {
 	http.SetCookie(c.Writer, &http.Cookie{
 		Name:     "token",
-		Value:    url.QueryEscape(""),
+		Value:    "",
 		MaxAge:   -1,
 		Path:     "/",
 		Domain:   "",
@@ -28,17 +27,39 @@ func CookieRemove(c *gin.Context) {
 		Secure:   app.Config.COOKIE_HTTPS_ONLY,
 		HttpOnly: true,
 	})
+
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "user_uid",
+		Value:    "",
+		MaxAge:   -1,
+		Path:     "/",
+		Domain:   "",
+		SameSite: http.SameSiteStrictMode,
+		Secure:   app.Config.COOKIE_HTTPS_ONLY,
+		HttpOnly: false,
+	})
 }
 
-func CookieSet(c *gin.Context, token string) {
+func CookieSet(c *gin.Context, userUID, token string) {
 	http.SetCookie(c.Writer, &http.Cookie{
 		Name:     "token",
-		Value:    url.QueryEscape(token),
+		Value:    token,
 		MaxAge:   cookieMaxAge,
 		Path:     "/",
 		Domain:   app.Config.COOKIE_DOMAIN,
 		SameSite: http.SameSiteStrictMode,
 		Secure:   app.Config.COOKIE_HTTPS_ONLY,
 		HttpOnly: true,
+	})
+
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "user_uid",
+		Value:    userUID,
+		MaxAge:   cookieMaxAge,
+		Path:     "/",
+		Domain:   app.Config.COOKIE_DOMAIN,
+		SameSite: http.SameSiteStrictMode,
+		Secure:   app.Config.COOKIE_HTTPS_ONLY,
+		HttpOnly: false,
 	})
 }

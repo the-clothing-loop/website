@@ -18,6 +18,7 @@ import {
   chainUpdate,
   RespPatchGetOrJoinRoom,
   ChainHeaders,
+  refreshToken,
 } from "./api";
 import dayjs from "./dayjs";
 import { OverlayContainsState, OverlayState } from "./utils/overlay_open";
@@ -185,9 +186,8 @@ export function StoreProvider({
     let _isAuthenticated: typeof isAuthenticated = IsAuthenticated.Unknown;
     let _isChainAdmin: typeof isChainAdmin = false;
     try {
-      if (auth && auth.user_uid && auth.token) {
-        window.axios.defaults.auth = "Bearer " + auth.token;
-
+      if (auth && auth.user_uid) {
+        await refreshToken();
         _authUser = (await userGetByUID(undefined, auth.user_uid)).data;
 
         _isAuthenticated = IsAuthenticated.LoggedIn;

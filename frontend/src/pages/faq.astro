@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import FAQPage from "../components/react/pages/FAQ";
+import Base from "../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="FAQ's">
+  <FAQPage client:load />
+</Base>

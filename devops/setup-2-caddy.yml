@@ -47,11 +47,6 @@
         owner: root
         group: root
         mode: "0644"
-    - name: Disable caddy-api service
-      ansible.builtin.service:
-        name: caddy-api
-        enabled: false
-        state: stopped
     - name: Create caddy server files
       file:
         path: "{{ item }}"

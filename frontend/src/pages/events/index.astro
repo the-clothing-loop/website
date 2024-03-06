@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import EventsPage from "../../components/react/pages/Events";
+import Base from "../../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Home">
+  <EventsPage client:load />
+</Base>

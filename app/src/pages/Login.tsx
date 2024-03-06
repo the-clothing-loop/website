@@ -21,14 +21,14 @@ import {
   mailUnreadOutline,
   sendOutline,
 } from "ionicons/icons";
-import { Keyboard } from "@capacitor/keyboard";
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
+import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import toastError from "../../toastError";
 import { loginEmail } from "../api";
 import { StoreContext } from "../Store";
 import { AppLauncher } from "@capacitor/app-launcher";
+import getKeyboard from "../utils/capacitor_keyboard";
 
 enum State {
   idle,
@@ -38,6 +38,8 @@ enum State {
 }
 
 const KEYCODE_ENTER = 13;
+
+getKeyboard();
 
 export default function Login(props: { isLoggedIn: boolean }) {
   const { t } = useTranslation();
@@ -77,7 +79,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             1000 * 60 /* 1 min */,
           ) as any,
         );
-        Keyboard.hide();
+        window.Keyboard?.hide();
       } catch (err: any) {
         setSentState(State.error);
         toastError(present, err?.statusText || err?.message);

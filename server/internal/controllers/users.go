@@ -12,6 +12,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"github.com/the-clothing-loop/website/server/pkg/noderoute"
 	"gopkg.in/guregu/null.v3"
@@ -36,9 +37,10 @@ func UserGet(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UserUID        string `form:"user_uid" binding:"omitempty,uuid"`
-		ChainUID       string `form:"chain_uid" binding:"omitempty,uuid"`
-		AddApprovedTOH bool   `form:"add_approved_toh" binding:"omitempty"`
+		UserUID         string `form:"user_uid" binding:"omitempty,uuid"`
+		ChainUID        string `form:"chain_uid" binding:"omitempty,uuid"`
+		AddApprovedTOH  bool   `form:"add_approved_toh" binding:"omitempty"`
+		AddNotification bool   `form:"add_notification" binding:"omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -83,6 +85,14 @@ func UserGet(c *gin.Context) {
 		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
 		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
 		return
+	}
+
+	if query.AddNotification && (isMe || authUser.IsRootAdmin) {
+		err := user.AddNotificationChainUIDs(db)
+		if err != nil {
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
 	}
 
 	if query.AddApprovedTOH {
@@ -335,6 +345,19 @@ func UserPurge(c *gin.Context) {
 		}
 	}
 
+	err := user.AddUserChainsToObject(db)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	// notify connected hosts, send email to chain admins
+	chainIDs := []uint{}
+	for _, uc := range user.Chains {
+		chainIDs = append(chainIDs, uc.ChainID)
+	}
+	services.EmailLoopAdminsOnUserLeft(db, user.Name, user.Email.String, "", chainIDs...)
+
 	// find chains where user is the last chain admin
 	chainIDsToDelete := []uint{}
 	db.Raw(`
@@ -351,7 +374,7 @@ HAVING COUNT(uc.id) = 1
 
 	tx := db.Begin()
 
-	err := user.DeleteUserChainDependenciesAllChains(tx)
+	err = user.DeleteUserChainDependenciesAllChains(tx)
 	if err != nil {
 		tx.Rollback()
 		goscope.Log.Errorf("UserPurge: %v", err)

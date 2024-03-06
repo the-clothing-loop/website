@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import EventCreatePage from "../../components/react/pages/EventCreate";
+import Base from "../../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Create New Event">
+  <EventCreatePage client:only="react" />
+</Base>

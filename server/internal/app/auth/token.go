@@ -22,19 +22,22 @@ type MyJwtClaims struct {
 }
 
 func TokenReadFromRequest(c *gin.Context) (string, bool) {
+	// read cookie first
 	token, ok := cookieRead(c)
-	if !ok {
-		prefix := "Bearer "
-		// fallback to bearer token for testing
-		a := c.Request.Header.Get("Authorization")
-		_, t, ok := strings.Cut(a, prefix)
-		if !ok {
-			return "", false
-		}
-		token = t
+	if ok {
+		return token, true
 	}
 
-	return token, true
+	// if no cookie set then read authorization header
+	prefix := "Bearer "
+	a := c.Request.Header.Get("Authorization")
+	_, token, ok = strings.Cut(a, prefix)
+	if ok {
+		return token, true
+	}
+
+	// none found
+	return "", false
 }
 
 func OtpCreate(db *gorm.DB, userID uint) (string, error) {
@@ -65,7 +68,10 @@ func OtpVerify(db *gorm.DB, userEmail, otp string) (*models.User, string, error)
 	db.Raw(`
 SELECT ut.* FROM user_tokens AS ut
 JOIN users AS u ON ut.user_id = u.id
-WHERE ut.token = ? AND u.email = ? AND ut.verified = FALSE
+WHERE ut.token = ?
+	AND u.email = ?
+	AND ut.verified = FALSE
+	AND ut.created_at > ADDDATE(NOW(), INTERVAL -2 DAY)
 LIMIT 1
 	`, otp, userEmail).Scan(userToken)
 	if userToken.ID == 0 {
@@ -205,9 +211,10 @@ LIMIT 1
 	return user, nil
 }
 
-// func OtpDeleteOld(db *gorm.DB, token string) {
-// 	db.Exec(`
-// DELETE FROM user_tokens
-// WHERE created_at < ADDDATE(NOW(), INTERVAL -2 DAY)
-// 	`, token)
-// }
+func OtpDeleteOld(db *gorm.DB) {
+	db.Exec(`
+DELETE FROM user_tokens
+WHERE created_at < ADDDATE(NOW(), INTERVAL -2 DAY)
+	AND verified = FALSE
+	`)
+}

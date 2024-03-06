@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import HomePage from "../components/react/pages/Home";
+import Base from "../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Home">
+  <HomePage client:load />
+</Base>

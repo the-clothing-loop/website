@@ -43,7 +43,7 @@ type Options struct {
 
 	// The function used to identify the requester
 	// Defaults to IP identification
-	IdentificationFunction func(*http.Request) string
+	IdentificationFunction func(*gin.Context) string
 
 	// The key prefix to use in any key value store
 	// defaults to "throttle"
@@ -203,8 +203,8 @@ func newController(quota *Quota, store *cache.Cache) *controller {
 }
 
 // Identify via the given Identification Function
-func (o *Options) Identify(req *http.Request) string {
-	return o.IdentificationFunction(req)
+func (o *Options) Identify(c *gin.Context) string {
+	return o.IdentificationFunction(c)
 }
 
 // A throttling Policy
@@ -223,7 +223,7 @@ func Policy(quota *Quota, options ...*Options) gin.HandlerFunc {
 	controller := newController(quota, o.Store)
 
 	return func(c *gin.Context) {
-		id := makeKey(o.KeyPrefix, quota.KeyId(), o.Identify(c.Request))
+		id := makeKey(o.KeyPrefix, quota.KeyId(), o.Identify(c))
 
 		if controller.DeniesAccess(id) {
 			msg := newAccessMessage(o.StatusCode, o.Message)
@@ -249,14 +249,14 @@ func setRateLimitHeaders(resp http.ResponseWriter, controller *controller, id st
 }
 
 // The default identifier function. Identifies a client by IP
-func defaultIdentify(req *http.Request) string {
-	if forwardedFor := req.Header.Get(forwardedForHeader); forwardedFor != "" {
+func defaultIdentify(c *gin.Context) string {
+	if forwardedFor := c.Request.Header.Get(forwardedForHeader); forwardedFor != "" {
 		if ipParsed := net.ParseIP(forwardedFor); ipParsed != nil {
 			return ipParsed.String()
 		}
 	}
 
-	ip, _, err := net.SplitHostPort(req.RemoteAddr)
+	ip, _, err := net.SplitHostPort(c.Request.RemoteAddr)
 	if err != nil {
 		panic(err.Error())
 	}

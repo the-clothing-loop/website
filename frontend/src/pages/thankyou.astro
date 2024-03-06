@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import { JoinLoopConfirmation as JoinLoopConfirmationPage } from "../components/react/pages/Thankyou";
+import Base from "../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Thank you for joining">
+  <JoinLoopConfirmationPage client:load />
+</Base>

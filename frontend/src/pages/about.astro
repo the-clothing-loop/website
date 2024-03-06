@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import AboutPagePage from "../components/react/pages/About";
+import Base from "../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="About">
+  <AboutPagePage />
+</Base>

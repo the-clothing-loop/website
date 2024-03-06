@@ -51,17 +51,17 @@ func Routes() *gin.Engine {
 	if app.Config.ENV != app.EnvEnumTesting {
 		Scheduler = cron.NewScheduler(time.UTC)
 
-		// At 03:03 on day-of-month 1.
+		// At 08:03 on day-of-month 1.
 		// https://crontab.guru/#3_3_1_*_*
-		Scheduler.Cron("3 3 1 * *").Do(controllers.CronMonthly, db)
+		Scheduler.Cron("3 8 1 * *").Do(controllers.CronMonthly, db)
 
 		// At minute 31.
 		// https://crontab.guru/#31_*_*_*_*
 		Scheduler.Cron("31 * * * *").Do(controllers.CronHourly, db)
 
-		// At 02:08.
-		// https://crontab.guru/#8_2_*_*_*
-		Scheduler.Cron("8 2 * * *").Do(controllers.CronDaily, db)
+		// At 08:08.
+		// https://crontab.guru/#8_8_*_*_*
+		Scheduler.Cron("8 8 * * *").Do(controllers.CronDaily, db)
 
 		Scheduler.StartAsync()
 
@@ -81,8 +81,12 @@ func Routes() *gin.Engine {
 	r.Use(controllers.MiddlewareSetDB(db))
 
 	thr := throttle.Policy(&throttle.Quota{
-		Limit:  20,
-		Within: 24 * time.Hour,
+		Limit:  30,
+		Within: 2 * time.Hour,
+	}, &throttle.Options{
+		IdentificationFunction: func(c *gin.Context) string {
+			return c.Query("u")
+		},
 	})
 
 	// router groups
@@ -103,6 +107,7 @@ func Routes() *gin.Engine {
 	v2.POST("/login/email", controllers.LoginEmail)
 	v2.GET("/login/validate", thr, controllers.LoginValidate)
 	v2.DELETE("/logout", controllers.Logout)
+	v2.POST("/refresh-token", controllers.RefreshToken)
 
 	// payments
 	v2.POST("/payment/initiate", controllers.PaymentsInitiate)

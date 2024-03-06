@@ -1,6 +1,6 @@
---- Latitude Longitude have been added incorrectly
+-- Latitude Longitude have been added incorrectly
 
---- Users
+-- Users
 ALTER TABLE users ADD COLUMN longitude_migration double AFTER longitude;
 ALTER TABLE users ADD COLUMN latitude_migration double AFTER latitude;
 

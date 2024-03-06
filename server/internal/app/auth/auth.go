@@ -50,7 +50,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 			c.String(http.StatusUnauthorized, "Invalid token")
 			return false, nil, nil
 		}
-		CookieSet(c, token)
+		CookieSet(c, authUser.UID, token)
 	}
 
 	// 1. User of a different/unknown chain

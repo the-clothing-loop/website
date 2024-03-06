@@ -1,0 +1,11 @@
+---
+import { changeLanguage } from "i18next";
+import TermsOfUsePage from "../components/react/pages/TermsOfUse";
+import Base from "../layouts/Base.astro";
+
+changeLanguage("en");
+---
+
+<Base title="Terms of Use">
+  <TermsOfUsePage client:load />
+</Base>

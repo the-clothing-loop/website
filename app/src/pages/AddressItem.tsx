@@ -7,6 +7,9 @@ import {
   IonButtons,
   IonItem,
   IonLabel,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from "@ionic/react";
 import { useContext, useMemo } from "react";
 import { RouteComponentProps } from "react-router";
@@ -15,16 +18,23 @@ import { StoreContext } from "../Store";
 import isPaused from "../utils/is_paused";
 import { t } from "i18next";
 import Badges from "../components/SizeBadge";
+import { useBagTooOld } from "../components/Bags/bag.hook";
+import AddressBagCard from "../components/Bags/AddressBagCard";
 
 export default function AddressItem({
   match,
 }: RouteComponentProps<{ uid: string }>) {
-  const { chainUsers, chain, isChainAdmin } = useContext(StoreContext);
+  const { chainUsers, chain, isChainAdmin, bags, authUser } =
+    useContext(StoreContext);
   const user = useMemo(() => {
     let userUID = match.params.uid;
     return chainUsers.find((u) => u.uid === userUID) || null;
   }, [match.params.uid, chainUsers]);
   const isUserPaused = isPaused(user?.paused_until || null);
+
+  const userBags = useMemo(() => {
+    return bags.filter((b) => b.user_uid === user?.uid);
+  }, [bags, authUser]);
 
   return (
     <IonPage>
@@ -57,6 +67,21 @@ export default function AddressItem({
             </div>
           </IonItem>
         ) : null}
+        <IonGrid>
+          <IonRow>
+            {userBags.map((bag) => {
+              return (
+                <IonCol size="6" key={"inRoute" + bag.id}>
+                  <AddressBagCard
+                    authUser={authUser}
+                    isChainAdmin={isChainAdmin}
+                    bag={bag}
+                  />
+                </IonCol>
+              );
+            })}
+          </IonRow>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

@@ -1,0 +1,21 @@
+---
+import Base from "../layouts/Base.astro";
+import { t, changeLanguage } from "i18next";
+//@ts-ignore;
+import { localizePath } from "astro-i18next";
+
+changeLanguage("en");
+---
+
+<Base title="404">
+  <div
+    class="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center"
+  >
+    <h1 class="font-serif text-secondary text-4xl font-bold my-10">
+      404 File not found
+    </h1>
+    <a href={localizePath("/")} class="btn btn-primary">
+      {t("home")}
+    </a>
+  </div>
+</Base>
