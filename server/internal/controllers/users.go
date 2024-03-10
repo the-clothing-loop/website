@@ -724,8 +724,11 @@ func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUse
 		user := &users[d.userIndex]
 		hasBulkyItem := d.hasBulkyItem
 		isChainAdmin := d.isChainAdmin
+		isCurrentlyPaused := lo.IfF(user.PausedUntil.Valid, func() bool {
+			return user.PausedUntil.Time.After(time.Now())
+		}).Else(false)
 
-		if user.PausedUntil.Valid {
+		if isCurrentlyPaused {
 			hideUserInformation(false, user)
 		} else {
 			if routePrivacy > 0 {
