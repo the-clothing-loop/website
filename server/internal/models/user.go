@@ -71,7 +71,9 @@ WHERE users.id = ?
 
 func (u *User) AddNotificationChainUIDs(db *gorm.DB) error {
 	userChainIDs := []uint{}
+	notificationChainUIDs := []string{}
 	if len(u.Chains) == 0 {
+		u.NotificationChainUIDs = notificationChainUIDs
 		return nil
 	}
 	for _, uc := range u.Chains {
@@ -80,9 +82,9 @@ func (u *User) AddNotificationChainUIDs(db *gorm.DB) error {
 		}
 	}
 	if len(userChainIDs) == 0 {
+		u.NotificationChainUIDs = notificationChainUIDs
 		return nil
 	}
-	notificationChainUIDs := []string{}
 	err := db.Raw(`
 SELECT
 	c.uid
