@@ -71,7 +71,7 @@ JOIN users AS u ON ut.user_id = u.id
 WHERE ut.token = ?
 	AND u.email = ?
 	AND ut.verified = FALSE
-	AND ut.created_at > ADDDATE(NOW(), INTERVAL -2 DAY)
+	AND ut.created_at > (NOW() - INTERVAL 2 DAY)
 LIMIT 1
 	`, otp, userEmail).Scan(userToken)
 	if userToken.ID == 0 {
@@ -214,7 +214,7 @@ LIMIT 1
 func OtpDeleteOld(db *gorm.DB) {
 	db.Exec(`
 DELETE FROM user_tokens
-WHERE created_at < ADDDATE(NOW(), INTERVAL -2 DAY)
+WHERE created_at < (NOW() - INTERVAL 2 DAY)
 	AND verified = FALSE
 	`)
 }
