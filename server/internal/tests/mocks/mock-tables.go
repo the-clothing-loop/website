@@ -109,7 +109,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	}
 
 	if o.IsNotActive {
-		user.PausedUntil = null.NewTime(time.Now().Add(7), true)
+		user.PausedUntil = null.NewTime(time.Now().Add(7*time.Hour), true)
 	}
 
 	if err := db.Create(user).Error; err != nil {
