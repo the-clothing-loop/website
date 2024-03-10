@@ -13,6 +13,7 @@ func TestUserNotificationChainUIDs(t *testing.T) {
 	t.Run("Is not approved", func(t *testing.T) {
 		chain, user1, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
 			RouteOrderIndex: 1,
+			IsChainAdmin:    true,
 		})
 		mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{
 			RouteOrderIndex: 2,
@@ -34,6 +35,7 @@ func TestUserNotificationChainUIDs(t *testing.T) {
 	t.Run("Is approved", func(t *testing.T) {
 		chain, user1, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
 			RouteOrderIndex: 1,
+			IsChainAdmin:    true,
 		})
 		mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{
 			RouteOrderIndex: 2,
