@@ -67,6 +67,7 @@ import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 import BagSVG from "../components/Bags/Svg";
 import { useBagTooOld } from "../components/Bags/bag.hook";
 import { useLocation } from "react-router";
+import BagCardDate from "../components/Bags/BagCardDate";
 
 type State = { bag_id?: number } | undefined;
 
@@ -382,17 +383,11 @@ export default function BagsList() {
                           <IonIcon icon={ellipsisHorizontal} />
                         </IonButton>
                       ) : null}
-                      <div
-                        key="old"
-                        className={`tw-text-sm tw-block tw-absolute tw-z-10 tw-top-[5px] tw-left-[10px] ${
-                          isBagTooOldMe ? "tw-text-[#fdaab5]" : "tw-text-[#fff]"
-                        }`}
-                      >
-                        {bagUpdatedAt.toDate().toLocaleDateString()}
-                        {isBagTooOldMe || isBagTooOldHost ? (
-                          <span className="tw-bg-danger tw-h-2 tw-w-2 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
-                        ) : null}
-                      </div>
+                      <BagCardDate
+                        bagUpdatedAt={bagUpdatedAt}
+                        isBagTooOldMe={isBagTooOldMe}
+                        isBagTooOldHost={isBagTooOldHost}
+                      />
                       <div
                         className="tw-relative tw-p-0 tw-pt-0 tw-overflow-hidden"
                         onClick={() => handleClickItem(bag.id, bag.user_uid)}
@@ -448,18 +443,12 @@ export default function BagsList() {
                             }
                           >
                             <span className="!tw-font-bold">{bag.number}</span>
-                            <span
-                              className={`tw-block tw-text-base tw-mt-[3px] ${
-                                isBagTooOldMe
-                                  ? "tw-text-danger"
-                                  : "tw-text-medium"
-                              }`}
-                            >
-                              {bagUpdatedAt.toDate().toLocaleDateString()}
-                              {isBagTooOldMe || isBagTooOldHost ? (
-                                <span className="tw-bg-danger tw-h-2 tw-w-2 tw-rounded-full tw-inline-block tw-ms-[3px] tw-mb-[1px]"></span>
-                              ) : null}
-                            </span>
+                            <BagCardDate
+                              bagUpdatedAt={bagUpdatedAt}
+                              isBagTooOldMe={isBagTooOldMe}
+                              isBagTooOldHost={isBagTooOldHost}
+                              classNameOverride="tw-block tw-text-base tw-mt-[3px] tw-text-medium"
+                            />
                           </div>
                         </div>
 

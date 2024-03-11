@@ -77,15 +77,8 @@ setupIonicReact({
 });
 
 export default function Routes() {
-  const {
-    isAuthenticated,
-    init,
-    authenticate,
-    bags,
-    chain,
-    authUser,
-    connError,
-  } = useContext(StoreContext);
+  const { isAuthenticated, init, authenticate, chain, connError } =
+    useContext(StoreContext);
   const history = useHistory();
   let location = useLocation();
 
@@ -133,32 +126,17 @@ export default function Routes() {
     else history.replace("/onboarding");
   }
 
-  const hasOldBag = useMemo(() => {
-    if (!bags.length) return false;
-
-    return bags.some((b) => {
-      if (!(b.user_uid === authUser?.uid)) return false;
-      const updatedAt = dayjs(b.updated_at);
-      const now = dayjs();
-      return updatedAt.isBefore(now.add(-7, "days"));
-    });
-  }, [bags]);
-
   return (
     <IonApp>
       <Switch location={location}>
         <Redirect exact from="/login" to="/onboarding/3" />
         <Route path="/onboarding" component={OnboardingRoute} />
         <PrivateRoute isAuthenticated={isAuthenticated}>
-          <AppRoute hasOldBag={hasOldBag} />
+          <AppRoute />
         </PrivateRoute>
       </Switch>
     </IonApp>
   );
-}
-
-function eventCatchStoreErr(e: any) {
-  console.log(e);
 }
 
 function OnboardingRoute() {
@@ -179,9 +157,33 @@ function OnboardingRoute() {
 
 const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
 
-function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
+function AppRoute() {
   const { t } = useTranslation();
-  const { refresh } = useContext(StoreContext);
+  const { refresh, bags, authUser, isChainAdmin } = useContext(StoreContext);
+
+  const { hasBagTooOldMe, hasBagTooOldHost } = useMemo(() => {
+    let hasBagTooOldMe = false;
+    let hasBagTooOldHost = false;
+    for (let b of bags) {
+      const updatedAt = dayjs(b.updated_at);
+      const now = dayjs();
+      if (!updatedAt.isBefore(now.add(-7, "days"))) {
+        // skip if bag is newer than 7 days old
+        continue;
+      }
+      if (b.user_uid === authUser?.uid) {
+        hasBagTooOldMe = true;
+      } else if (isChainAdmin) {
+        hasBagTooOldHost = true;
+      }
+      if (hasBagTooOldMe && hasBagTooOldHost) {
+        // no need to iterate anymore
+        break;
+      }
+    }
+
+    return { hasBagTooOldMe, hasBagTooOldHost };
+  }, [bags]);
 
   function handleTabsWillChange(e: CustomEvent<{ tab: string }>) {
     const tab = e.detail.tab;
@@ -224,8 +226,12 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
         </IonTabButton>
         <IonTabButton tab="bags" href="/bags">
           <IonIcon aria-hidden="true" icon={bagHandleOutline} />
-          {hasOldBag ? (
-            <div className="tw-bg-danger tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)]"></div>
+          {hasBagTooOldHost || hasBagTooOldMe ? (
+            <div
+              className={"tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1".concat(
+                hasBagTooOldMe ? " tw-bg-danger" : " tw-bg-warning",
+              )}
+            ></div>
           ) : null}
           <IonLabel>{t("bags")}</IonLabel>
         </IonTabButton>
