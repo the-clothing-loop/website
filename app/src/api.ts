@@ -125,21 +125,15 @@ export const bagColors = [
 
 window.axios = redaxios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "",
-  withCredentials: false,
+  withCredentials: true,
 });
 
 export function loginEmail(email: string) {
-  return window.axios.post<unknown>(
-    "/v2/login/email",
-    { email, app: true },
-    { auth: undefined, withCredentials: false },
-  );
+  return window.axios.post<unknown>("/v2/login/email", { email, app: true });
 }
 
 export function loginValidate(u: string, apiKey: string) {
   return window.axios.get<{ user: User; token: string }>("/v2/login/validate", {
-    auth: undefined,
-    withCredentials: false,
     params: { apiKey, u },
   });
 }

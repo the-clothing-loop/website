@@ -5,7 +5,7 @@ import {
   userGetByUID,
   User,
   Chain,
-  logout,
+  logout as logoutApi,
   loginValidate,
   userGetAllByChain,
   UID,
@@ -21,6 +21,7 @@ import {
 } from "./api";
 import dayjs from "./dayjs";
 import { OverlayContainsState, OverlayState } from "./utils/overlay_open";
+import Cookies from "js-cookie";
 
 interface StorageAuth {
   user_uid: string;
@@ -131,13 +132,14 @@ export function StoreProvider({
 
   async function logout() {
     window.plugins?.OneSignal?.removeExternalUserId();
-    await logout().catch((err) => {
+    await logoutApi().catch((err) => {
       console.warn(err);
     });
     window.axios.defaults.auth = undefined;
 
-    await storage.set("auth", "");
-    await storage.set("chain_uid", "");
+    Cookies.remove("user_uid");
+    await storage.remove("auth");
+    await storage.remove("chain_uid");
     setAuthUser(null);
     _setChain(null);
     setChainHeaders(undefined);
@@ -153,11 +155,6 @@ export function StoreProvider({
   async function login(email: string, token: string) {
     let emailBase64 = btoa(email);
     const res = await loginValidate(emailBase64, token);
-    window.axios.defaults.auth = "Bearer " + res.data.token;
-    await storage.set("auth", {
-      user_uid: res.data.user.uid,
-      token: res.data.token,
-    } as StorageAuth);
     setAuthUser(res.data.user);
     setIsAuthenticated(IsAuthenticated.LoggedIn);
     refresh("settings", res.data.user);
@@ -166,20 +163,22 @@ export function StoreProvider({
   // Will set the isAuthenticated value and directly return it as well (no need to run setIsAuthenticated)
   async function authenticate(): Promise<IsAuthenticated> {
     console.log("run authenticate");
-    const auth = (await storage.get("auth")) as StorageAuth | null;
+    let userUID = Cookies.get("user_uid");
+    if (!userUID) {
+      console.info("cookie user_uid is not set");
+      const auth = (await storage.get("auth")) as StorageAuth | null;
+      userUID = auth?.user_uid;
+      if (userUID) console.info("user_uid set from storage as fallback");
+    }
 
     let _authUser: typeof authUser = null;
     let _isAuthenticated: typeof isAuthenticated = IsAuthenticated.Unknown;
-    let _isChainAdmin: typeof isChainAdmin = false;
     try {
-      if (auth && auth.user_uid) {
-        await refreshToken();
-        _authUser = (await userGetByUID(undefined, auth.user_uid)).data;
-
+      if (userUID) {
+        _authUser = (await userGetByUID(undefined, userUID)).data;
         _isAuthenticated = IsAuthenticated.LoggedIn;
       } else {
-        // logout without clearing empty token
-        console.log("logout without clearing empty token");
+        console.info("logout without clearing empty token");
         _isAuthenticated = IsAuthenticated.LoggedOut;
         window.axios.defaults.auth = undefined;
         setIsAuthenticated(_isAuthenticated);
