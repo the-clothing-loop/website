@@ -48,6 +48,8 @@ import { useStore } from "@nanostores/react";
 import { $authUser, authUserRefresh } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
+import { loginSuperAsGenerateLink } from "../../../api/login";
+import { TextForm } from "../components/FormFields";
 
 enum LoadingState {
   idle,
@@ -1053,6 +1055,7 @@ function ParticipantsTable(props: {
 }) {
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
+  const addCopyAttributes = useToClipboard();
 
   function getEditLocation(user: User): string {
     if (!user.uid) {
@@ -1179,6 +1182,80 @@ function ParticipantsTable(props: {
     props.setSortBy(props.sortBy !== _sortBy ? _sortBy : "date");
   }
 
+  async function loginAsUser(u: User) {
+    const linkInit = (await loginSuperAsGenerateLink(u.uid, false)).data;
+    addModal({
+      message: `Login as "${u.name}"`,
+      content() {
+        // const [activeTab, _setActiveTab] = useState<"website" | "app">(
+        //   "website",
+        // );
+        // const [activeLink, _setActiveLink] = useState(linkInit);
+        // const setActiveTab = async (
+        //   tab: Parameters<typeof _setActiveTab>[0],
+        // ) => {
+        //   const link = (await loginSuperAsGenerateLink(u.uid, tab === "app"))
+        //     .data;
+        //   _setActiveLink(link);
+        //   _setActiveTab(tab);
+        // };
+        let activeLink = linkInit;
+        return (
+          <div>
+            <p className="mb-2">
+              Click the text field to copy the url, then open a private window
+              and go to the page link
+            </p>
+            <div className="flex flex-col items-center">
+              {/* <div className="tabs tabs-boxed mb-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("website")}
+                  className={"tab".concat(
+                    activeTab === "website" ? " tab-active" : "",
+                  )}
+                >
+                  Website
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("app")}
+                  className={"tab".concat(
+                    activeTab === "app" ? " tab-active" : "",
+                  )}
+                >
+                  App
+                </button>
+              </div> */}
+              <label className="input-group justify-center">
+                <input
+                  type="text"
+                  value={activeLink}
+                  onClick={(e) => (e.target as HTMLInputElement).select()}
+                  onChangeCapture={(e) => e.preventDefault()}
+                  className="input input-bordered"
+                />
+                <button
+                  type="button"
+                  {...addCopyAttributes(
+                    t,
+                    "input-login-as-" + u.uid,
+                    undefined,
+                    activeLink,
+                  )}
+                  className="btn btn-outline"
+                >
+                  {t("copy")}
+                </button>
+              </label>
+            </div>
+          </div>
+        );
+      },
+      actions: [],
+    });
+  }
+
   return (
     <>
       <div className="mt-6 relative overflow-hidden">
@@ -1259,6 +1336,17 @@ function ParticipantsTable(props: {
                           className="text-red"
                         >
                           {t("copy")}
+                        </button>,
+                      ]
+                    : []),
+                  ...(props.authUser?.is_root_admin
+                    ? [
+                        <button
+                          type="button"
+                          className="text-purple"
+                          onClick={() => loginAsUser(u)}
+                        >
+                          Login as {u.name}
                         </button>,
                       ]
                     : []),

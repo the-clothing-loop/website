@@ -75,3 +75,10 @@ export function logout() {
 export function refreshToken() {
   return axios.post<never>("/v2/refresh-token");
 }
+
+export function loginSuperAsGenerateLink(userUID: UID, isApp: boolean) {
+  return axios.post<string>("/v2/login/super/as", {
+    user_uid: userUID,
+    is_app: isApp,
+  });
+}

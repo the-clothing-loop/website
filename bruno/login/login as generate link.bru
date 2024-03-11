@@ -1,0 +1,26 @@
+meta {
+  name: login as generate link
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{base}}/v2/login/super/as
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "user_uid": "{{userUID}}",
+    "is_app": false
+  }
+}
+
+vars:pre-request {
+  userUID: 90e16fc5-1b9c-4295-9d40-58853ffc3753
+}
+
+tests {
+  //  
+}

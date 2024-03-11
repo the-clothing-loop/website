@@ -58,17 +58,19 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 		return true, authUser, nil
 	}
 
-	if chainUID == "" {
+	if chainUID == "" && minimumAuthState != AuthState4RootUser {
 		goscope.Log.Errorf("ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen")
 		c.String(http.StatusNotImplemented, "ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen")
 		return false, nil, nil
 	}
 
 	chain = &models.Chain{}
-	err = db.Raw(`SELECT * FROM chains WHERE chains.uid = ? AND chains.deleted_at IS NULL LIMIT 1`, chainUID).Scan(chain).Error
-	if err != nil {
-		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
-		return false, nil, nil
+	if chainUID != "" {
+		err = db.Raw(`SELECT * FROM chains WHERE chains.uid = ? AND chains.deleted_at IS NULL LIMIT 1`, chainUID).Scan(chain).Error
+		if err != nil {
+			c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
+			return false, nil, nil
+		}
 	}
 
 	err = authUser.AddUserChainsToObject(db)
@@ -86,17 +88,19 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	isUserParticipantOfChain := false
 	isUserAdminOfChain := false
-	if minimumAuthState == AuthState2UserOfChain || minimumAuthState == AuthState3AdminChainUser {
-		for _, userChain := range authUser.Chains {
-			if userChain.ChainID == chain.ID {
-				if minimumAuthState == AuthState2UserOfChain {
-					// 2. User connected to the chain in question
-					isUserParticipantOfChain = true
-				} else if minimumAuthState == AuthState3AdminChainUser && userChain.IsChainAdmin {
-					// 3. Admin User of the chain in question
-					isUserAdminOfChain = true
+	if chainUID != "" {
+		if minimumAuthState == AuthState2UserOfChain || minimumAuthState == AuthState3AdminChainUser {
+			for _, userChain := range authUser.Chains {
+				if userChain.ChainID == chain.ID {
+					if minimumAuthState == AuthState2UserOfChain {
+						// 2. User connected to the chain in question
+						isUserParticipantOfChain = true
+					} else if minimumAuthState == AuthState3AdminChainUser && userChain.IsChainAdmin {
+						// 3. Admin User of the chain in question
+						isUserAdminOfChain = true
+					}
+					break
 				}
-				break
 			}
 		}
 	}

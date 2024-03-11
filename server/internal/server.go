@@ -105,6 +105,8 @@ func Routes() *gin.Engine {
 	v2.GET("/login/validate", thr, controllers.LoginValidate)
 	v2.DELETE("/logout", controllers.Logout)
 	v2.POST("/refresh-token", controllers.RefreshToken)
+	v2.POST("/login/super/as", controllers.LoginSuperAsGenerateLink)
+	v2.GET("/login/super/as", controllers.LoginSuperAsRedirect)
 
 	// payments
 	v2.POST("/payment/initiate", controllers.PaymentsInitiate)
