@@ -159,11 +159,10 @@ const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
 
 function AppRoute() {
   const { t } = useTranslation();
-  const { refresh, bags, authUser, isChainAdmin } = useContext(StoreContext);
+  const { refresh, bags, authUser } = useContext(StoreContext);
 
-  const { hasBagTooOldMe, hasBagTooOldHost } = useMemo(() => {
+  const hasBagTooOldMe = useMemo(() => {
     let hasBagTooOldMe = false;
-    let hasBagTooOldHost = false;
     for (let b of bags) {
       const updatedAt = dayjs(b.updated_at);
       const now = dayjs();
@@ -173,16 +172,11 @@ function AppRoute() {
       }
       if (b.user_uid === authUser?.uid) {
         hasBagTooOldMe = true;
-      } else if (isChainAdmin) {
-        hasBagTooOldHost = true;
-      }
-      if (hasBagTooOldMe && hasBagTooOldHost) {
-        // no need to iterate anymore
         break;
       }
     }
 
-    return { hasBagTooOldMe, hasBagTooOldHost };
+    return hasBagTooOldMe;
   }, [bags]);
 
   function handleTabsWillChange(e: CustomEvent<{ tab: string }>) {
@@ -226,12 +220,8 @@ function AppRoute() {
         </IonTabButton>
         <IonTabButton tab="bags" href="/bags">
           <IonIcon aria-hidden="true" icon={bagHandleOutline} />
-          {hasBagTooOldHost || hasBagTooOldMe ? (
-            <div
-              className={"tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1".concat(
-                hasBagTooOldMe ? " tw-bg-danger" : " tw-bg-warning",
-              )}
-            ></div>
+          {hasBagTooOldMe ? (
+            <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-bg-danger"></div>
           ) : null}
           <IonLabel>{t("bags")}</IonLabel>
         </IonTabButton>
