@@ -23,3 +23,13 @@ prod.env
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/src/pages/en
+/src/pages/nl
+/src/pages/de
+/src/pages/fr
+/src/pages/es
+/src/pages/sv
+/src/pages/he
+/src/pages/it
+/src/pages/pt
