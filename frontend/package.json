@@ -5,8 +5,8 @@
   "scripts": {
     "start": "npm run build:i18n && astro dev",
     "start:lan": "npm run build:i18n && astro dev --host=0.0.0.0",
-    "lint": "prettier --write .",
-    "lint:test": "prettier --check .",
+    "lint": "astro check && prettier --write .",
+    "lint:test": "astro check && prettier --check .",
     "build": "npm run build:i18n && astro check && astro build",
     "build:i18n": "npx astro-i18next generate",
     "build:acceptance": "cp .env-acceptance .env; npm run build",

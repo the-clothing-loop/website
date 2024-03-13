@@ -14,7 +14,7 @@ import { GinParseErrors } from "../util/gin-errors";
 import dayjs from "../util/dayjs";
 import useToClipboard from "../util/to-clipboard.hooks";
 
-import { uploadImage } from "../../../api/imgbb";
+import { uploadImageFile } from "../../../api/imgbb";
 import SanitizedHtml from "../components/SanitizedHtml";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@nanostores/react";
@@ -85,7 +85,7 @@ export default function EventDetails() {
 
     (async () => {
       try {
-        const res = await uploadImage(file, 800, EVENT_IMAGE_EXPIRATION);
+        const res = await uploadImageFile(file, 800, EVENT_IMAGE_EXPIRATION);
         await eventUpdate({
           uid: event.uid,
           image_url: res.data.image,

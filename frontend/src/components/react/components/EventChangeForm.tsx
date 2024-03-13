@@ -7,7 +7,7 @@ import useForm from "../util/form.hooks";
 import GeocoderSelector from "./GeocoderSelector";
 import CategoriesDropdown from "./CategoriesDropdown";
 import type { Chain } from "../../../api/types";
-import { deleteImage, uploadImage } from "../../../api/imgbb";
+import { deleteImage, uploadImageFile } from "../../../api/imgbb";
 import {
   type ChangeEvent,
   type FormEvent,
@@ -151,7 +151,7 @@ export default function EventChangeForm(props: {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const res = await uploadImage(file, 800, EVENT_IMAGE_EXPIRATION);
+    const res = await uploadImageFile(file, 800, EVENT_IMAGE_EXPIRATION);
     console.log(res.data);
     setValue("image_url", res.data.image);
     setDeleteImageUrl(res.data.delete);
