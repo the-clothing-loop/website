@@ -130,6 +130,9 @@ export default function AdminDashboard() {
           <div className="relative container mx-auto px-5 md:px-20">
             <div className="z-10 flex flex-col items-between py-8">
               <div className="flex-grow max-w-screen-xs">
+                <span className="block mb-1 text-xs text-teal/60">
+                  {authUser.email}
+                </span>
                 <h1 className="font-serif font-bold text-4xl text-secondary mb-3">
                   {t("helloN", { n: authUser.name })}
                 </h1>
