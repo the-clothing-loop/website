@@ -8,8 +8,6 @@ import {
   sessionAuthUser,
 } from "./browser_storage";
 
-const IS_DEV_MODE = import.meta.env.DEV;
-
 export enum UserRefreshState {
   NeverLoggedIn,
   LoggedIn,

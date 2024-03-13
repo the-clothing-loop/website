@@ -49,8 +49,8 @@ import { $authUser, authUserRefresh } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 import { loginSuperAsGenerateLink } from "../../../api/login";
-import { TextForm } from "../components/FormFields";
 import ChainDescription from "../components/FindChain/ChainDescription";
+import { useLegal } from "../util/user.hooks";
 
 enum LoadingState {
   idle,
@@ -121,6 +121,8 @@ export default function ChainMemberList() {
       route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1,
     );
   }, [users, route]);
+
+  useLegal(t, authUser);
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
