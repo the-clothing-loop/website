@@ -17,6 +17,9 @@ export function chainGet(
       chain_uid: chainUID,
       add_totals: o.addTotals || false,
       add_is_app_disabled: o.addIsAppDisabled || false,
+      add_rules: o.addRules || false,
+      add_theme: o.addTheme || false,
+      add_headers: o.addHeaders || false,
     },
   });
 }

@@ -56,7 +56,7 @@ export default function Login() {
         if (chainUID) {
           res = await loginEmailAndAddToChain(email, chainUID);
         } else {
-          res = await loginEmail(email, true);
+          res = await loginEmail(email, false);
         }
 
         if (res.data && (res.data + "").length) {
