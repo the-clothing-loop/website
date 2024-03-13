@@ -20,13 +20,24 @@ func cookieRead(c *gin.Context) (string, bool) {
 func CookieRemove(c *gin.Context) {
 	http.SetCookie(c.Writer, &http.Cookie{
 		Name:     "token",
-		Value:    url.QueryEscape(""),
+		Value:    "",
 		MaxAge:   -1,
 		Path:     "/",
 		Domain:   "",
 		SameSite: http.SameSiteStrictMode,
 		Secure:   app.Config.COOKIE_HTTPS_ONLY,
 		HttpOnly: true,
+	})
+
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "user_uid",
+		Value:    "",
+		MaxAge:   -1,
+		Path:     "/",
+		Domain:   "",
+		SameSite: http.SameSiteStrictMode,
+		Secure:   app.Config.COOKIE_HTTPS_ONLY,
+		HttpOnly: false,
 	})
 }
 

@@ -466,6 +466,8 @@ UPDATE events SET user_id = (
 	}
 
 	tx.Commit()
+
+	auth.CookieRemove(c)
 }
 
 func UserTransferChain(c *gin.Context) {
