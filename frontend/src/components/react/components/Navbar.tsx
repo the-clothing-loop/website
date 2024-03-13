@@ -148,7 +148,11 @@ function Navbar(props: { pathname: string }) {
               {t("events")}
             </a>
 
-            {authUser ? (
+            {authUser === undefined ? (
+              <div className="opacity-10 btn btn-disabled bg-transparent relative">
+                <div className="block bg-black animate-pulse h-6 w-16"></div>
+              </div>
+            ) : authUser ? (
               <a
                 href={localizePath("/admin/dashboard")}
                 className="btn btn-ghost text-base relative"
