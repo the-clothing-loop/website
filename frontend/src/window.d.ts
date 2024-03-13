@@ -1,4 +1,4 @@
-import Axios from "redaxios";
+import redaxios from "redaxios";
 
 interface GoatCounter {
   path: string | ((p: string) => string | null);
@@ -36,9 +36,9 @@ interface GoatCounter {
 }
 
 declare global {
+  var axios: typeof redaxios;
   interface Window {
     MapboxGeocoder: MapboxGeocoder;
     goatcounter?: GoatCounter;
-    axios: typeof Axios;
   }
 }

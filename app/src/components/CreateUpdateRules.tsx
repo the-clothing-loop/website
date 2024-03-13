@@ -35,7 +35,7 @@ import {
   refreshOutline,
 } from "ionicons/icons";
 import { RefObject, useContext, useState } from "react";
-import { chainUpdate } from "../api";
+import { chainUpdate } from "../api/chain";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";

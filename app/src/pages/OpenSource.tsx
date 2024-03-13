@@ -18,7 +18,20 @@ import {
 import { useTranslation } from "react-i18next";
 import { openOutline } from "ionicons/icons";
 import { useEffect, useMemo, useState } from "react";
-import { OpenSourceLicense, getOpenSouceLicenses } from "../api";
+
+interface OpenSourceLicense {
+  name: string;
+  modules: Array<string>;
+}
+
+function getOpenSouceLicenses() {
+  return globalThis.axios.get<OpenSourceLicense[]>(
+    "/open_source_licenses.json",
+    {
+      baseURL: "",
+    },
+  );
+}
 
 export default function OpenSource() {
   const { t } = useTranslation();

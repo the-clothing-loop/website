@@ -18,7 +18,8 @@ import {
 import { Fragment, useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
-import { bulkyItemRemove, BulkyItem, User } from "../api";
+import {  BulkyItem, User } from "../api/types";
+import { bulkyItemRemove} from "../api/bulky";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
 import OverlayPaused from "../components/OverlayPaused";

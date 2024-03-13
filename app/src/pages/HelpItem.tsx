@@ -6,7 +6,6 @@ import {
   IonPage,
   IonBackButton,
   IonButtons,
-  IonImg,
   IonIcon,
 } from "@ionic/react";
 import { useContext, useMemo } from "react";

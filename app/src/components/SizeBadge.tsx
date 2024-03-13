@@ -1,5 +1,5 @@
 import { IonBadge, IonIcon, IonImg } from "@ionic/react";
-import { Chain } from "../api";
+import { Chain } from "../api/types";
 
 type ICategories = Record<Genders, Sizes[]>;
 

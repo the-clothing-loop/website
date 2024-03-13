@@ -25,7 +25,7 @@ import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import toastError from "../../toastError";
-import { loginEmail } from "../api";
+import { loginEmail } from "../api/login";
 import { StoreContext } from "../Store";
 import { AppLauncher } from "@capacitor/app-launcher";
 import getKeyboard from "../utils/capacitor_keyboard";
@@ -67,7 +67,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
 
     (async () => {
       try {
-        const res = await loginEmail(email + "");
+        const res = await loginEmail(email + "", true);
         if (res.data && (res.data + "").length) {
           setTokenOverride(res.data + "");
         }

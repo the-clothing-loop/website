@@ -1,27 +1,19 @@
 import { createContext, useMemo, useState } from "react";
 import { Storage } from "@ionic/storage";
-import {
-  chainGet,
-  userGetByUID,
-  User,
-  Chain,
-  logout as logoutApi,
-  loginValidate,
-  userGetAllByChain,
-  UID,
-  routeGetOrder,
-  Bag,
-  bagGetAllByChain,
-  BulkyItem,
-  bulkyItemGetAllByChain,
-  userUpdate,
-  chainUpdate,
-  ChainHeaders,
-  refreshToken,
-} from "./api";
+
 import dayjs from "./dayjs";
 import { OverlayContainsState, OverlayState } from "./utils/overlay_open";
+import { Bag, BulkyItem, Chain, UID, User } from "./api/types";
+import { bagGetAllByChain } from "./api/bag";
+import { bulkyItemGetAllByChain } from "./api/bulky";
+import { chainGet, chainUpdate } from "./api/chain";
+import { loginValidate, logout as logoutApi, refreshToken } from "./api/login";
+import { routeGetOrder } from "./api/route";
+import { userGetByUID, userGetAllByChain, userUpdate } from "./api/user";
 import Cookies from "js-cookie";
+import { IS_WEB } from "./utils/is_web";
+
+type ChainHeaders = Record<string, string>;
 
 interface StorageAuth {
   user_uid: string;
@@ -132,12 +124,10 @@ export function StoreProvider({
 
   async function logout() {
     window.plugins?.OneSignal?.removeExternalUserId();
-    await logoutApi().catch((err) => {
+    await logoutApi().catch((err: any) => {
       console.warn(err);
     });
     window.axios.defaults.auth = undefined;
-
-    Cookies.remove("user_uid");
     await storage.remove("auth");
     await storage.remove("chain_uid");
     setAuthUser(null);
@@ -155,6 +145,13 @@ export function StoreProvider({
   async function login(email: string, token: string) {
     let emailBase64 = btoa(email);
     const res = await loginValidate(emailBase64, token);
+    if (!IS_WEB) {
+      window.axios.defaults.auth = "Bearer " + res.data.token;
+      await storage.set("auth", {
+        user_uid: res.data.user.uid,
+        token: res.data.token,
+      } as StorageAuth);
+    }
     setAuthUser(res.data.user);
     setIsAuthenticated(IsAuthenticated.LoggedIn);
     refresh("settings", res.data.user);
@@ -163,19 +160,32 @@ export function StoreProvider({
   // Will set the isAuthenticated value and directly return it as well (no need to run setIsAuthenticated)
   async function authenticate(): Promise<IsAuthenticated> {
     console.log("run authenticate");
-    let userUID = Cookies.get("user_uid");
-    if (!userUID) {
-      console.info("cookie user_uid is not set");
+    let userUID: string | undefined;
+    if (IS_WEB) {
+      userUID = Cookies.get("user_uid");
+    } else {
       const auth = (await storage.get("auth")) as StorageAuth | null;
-      userUID = auth?.user_uid;
-      if (userUID) console.info("user_uid set from storage as fallback");
+      if (auth) {
+        userUID = auth.user_uid;
+        window.axios.defaults.auth = "Bearer " + auth.token;
+      }
     }
 
     let _authUser: typeof authUser = null;
     let _isAuthenticated: typeof isAuthenticated = IsAuthenticated.Unknown;
     try {
       if (userUID) {
-        _authUser = (await userGetByUID(undefined, userUID)).data;
+        const res = await refreshToken();
+        _authUser = res.data.user;
+        if (IS_WEB) {
+          await storage.remove("auth");
+        } else {
+          await storage.set("auth", {
+            user_uid: res.data.user.uid,
+            token: res.data.token,
+          });
+          window.axios.defaults.auth = "Bearer " + res.data.token;
+        }
         _isAuthenticated = IsAuthenticated.LoggedIn;
       } else {
         console.info("logout without clearing empty token");
@@ -296,7 +306,7 @@ export function StoreProvider({
       user_uid: authUser.uid,
       paused_until: pauseUntil.format(),
     });
-    const _authUser = (await userGetByUID(undefined, authUser.uid)).data;
+    const _authUser = (await userGetByUID(undefined, authUser.uid, {})).data;
     setAuthUser(_authUser);
 
     if (chain) {
@@ -339,7 +349,7 @@ export function StoreProvider({
         setChainUsers(_chainUsers.data);
         setBulkyItems(_bulkyItems.data);
       } else if (tab === "settings") {
-        const _authUser = await userGetByUID(undefined, __authUser!.uid);
+        const _authUser = await userGetByUID(undefined, __authUser!.uid, {});
         let _chain: Chain | null = null;
         const _listOfChains = await Promise.all(
           _authUser.data.chains

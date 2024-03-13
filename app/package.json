@@ -16,6 +16,7 @@
     "build:android:production": "npm run build:production && ionic capacitor copy --no-build android; echo 'open android studio and build a bundle\nBuild -> Generate Signed Bundle/APK -> Android App Bundle -> '",
     "build:ios:production": "npm run build:production && ionic capacitor copy --no-build ios; echo 'open xcode and build a bundle\nRun -> Archive -> Submit -> '",
     "build:generate-open-source-page": "cd generate-oss; npm ci --no-audit; npm run start",
+    "setup:sync-api": "rsync -a src/api/ ../frontend/src/api/ && rsync -a ../frontend/src/api/ src/api/",
     "preview": "vite preview",
     "generate:icons": "npx capacitor-assets generate",
     "lint:test": "prettier --check .",

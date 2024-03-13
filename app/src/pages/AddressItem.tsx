@@ -18,7 +18,6 @@ import { StoreContext } from "../Store";
 import isPaused from "../utils/is_paused";
 import { t } from "i18next";
 import Badges from "../components/SizeBadge";
-import { useBagTooOld } from "../components/Bags/bag.hook";
 import AddressBagCard from "../components/Bags/AddressBagCard";
 
 export default function AddressItem({

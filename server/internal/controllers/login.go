@@ -345,7 +345,14 @@ func RefreshToken(c *gin.Context) {
 		c.String(http.StatusUnauthorized, "Invalid token")
 		return
 	}
+
+	authUser.AddUserChainsToObject(db)
+
 	auth.CookieSet(c, authUser.UID, token)
+	c.JSON(http.StatusOK, gin.H{
+		"token": token,
+		"user":  authUser,
+	})
 }
 
 func LoginSuperAsGenerateLink(c *gin.Context) {

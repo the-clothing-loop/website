@@ -54,7 +54,8 @@ import {
   useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Bag, bagPut, bagRemove, UID, User } from "../api";
+import { Bag, UID, User } from "../api/types";
+import { bagPut, bagRemove } from "../api/bag";
 import CreateBag from "../components/CreateUpdateBag";
 import EditHeaders from "../components/EditHeaders";
 import { StoreContext } from "../Store";
@@ -104,7 +105,6 @@ export default function BagsList() {
   const [updateBag, setUpdateBag] = useState<Bag | null>(null);
   const [sheetModalUserUID, setSheetModalUserUID] = useState("");
   const [sheetModalBagID, setSheetModalBagID] = useState(0);
-  const [focusedBag, setFocusedBag] = useState("");
 
   const longPressSubHeader = useLongPress(() => {
     subHeaderSheetModal.current?.present();
@@ -178,15 +178,15 @@ export default function BagsList() {
     if (bagListView === "card") {
       idPrefix = "bag-card-";
     }
-    const el = document.getElementById(idPrefix + state?.bag_id);
-    // Sleep(700).then(() => {
+    const el =
+      document.getElementById("bag-card-" + state?.bag_id) ||
+      document.getElementById("bag-list-" + state?.bag_id);
     el?.scrollIntoView({
       behavior: "instant",
       block: "center",
       inline: "center",
     });
     setTimeout(() => el?.focus(), 0);
-    // });
   }, [state]);
 
   function refreshBags() {
@@ -367,7 +367,7 @@ export default function BagsList() {
                       }
                       onClickEdit={() => handleClickEdit(bag)}
                       tabIndex={-1}
-                      className="ion-no-margin tw-relative tw-overflow-visible tw-rounded-none tw-text-[0px] tw-group/bcf"
+                      className="ion-no-margin tw-relative tw-overflow-visible tw-rounded-none tw-text-[0px] tw-outline tw-outline-0 focus:tw-outline-1 tw-outline-primary tw-transition-colors"
                     >
                       {isChainAdmin ? (
                         <IonButton
@@ -398,7 +398,7 @@ export default function BagsList() {
                       </div>
                       <IonRouterLink
                         routerLink={"/address/" + user.uid}
-                        className="tw-py-3 tw-px-2 tw-block tw-bg-light group-focus/bcf:tw-bg-warning"
+                        className="tw-py-3 tw-px-2 tw-block tw-bg-light"
                       >
                         <UserLink user={user} routeIndex={routeIndex} />
                       </IonRouterLink>
@@ -421,7 +421,7 @@ export default function BagsList() {
                     className="tw-py-0.5 tw-px-[5px]"
                   >
                     <IonCard
-                      className="ion-no-margin focus:tw-bg-warning"
+                      className="ion-no-margin tw-rounded-none tw-outline tw-outline-0 focus:tw-outline-1 tw-outline-primary tw-transition-colors"
                       id={"bag-list-" + bag.id}
                       tabIndex={-1}
                     >

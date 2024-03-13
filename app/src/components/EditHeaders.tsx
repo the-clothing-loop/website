@@ -19,7 +19,7 @@ import { RefObject, useContext, useState } from "react";
 import { StoreContext } from "../Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import { useTranslation } from "react-i18next";
-import { chainUpdate } from "../api";
+import { chainUpdate } from "../api/chain";
 import { refreshOutline } from "ionicons/icons";
 
 export default function EditHeaders(props: {

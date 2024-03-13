@@ -18,7 +18,7 @@ import {
   shield,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { Chain, User } from "../api";
+import { Chain, User } from "../api/types";
 import IsPrivate from "../utils/is_private";
 import { IsChainAdmin } from "../Store";
 import { useMemo, useRef, useState } from "react";

@@ -1,4 +1,4 @@
-import { Bag } from "../../api";
+import { Bag } from "../../api/types";
 
 export default function BagSVG({
   bag,
