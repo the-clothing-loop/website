@@ -1,4 +1,5 @@
 import redaxios from "redaxios";
+import type { Severity } from "goscope2-sdk-js";
 
 interface GoatCounter {
   path: string | ((p: string) => string | null);
@@ -40,5 +41,11 @@ declare global {
   interface Window {
     MapboxGeocoder: MapboxGeocoder;
     goatcounter?: GoatCounter;
+    goscope2?: {
+      token: string;
+      baseUrl: string;
+      New(token: string, baseUrl: string): void;
+      Log(severity: Severity, message: string): void;
+    };
   }
 }

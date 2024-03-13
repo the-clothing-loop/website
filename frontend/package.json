@@ -35,6 +35,7 @@
     "mapbox-gl": "^2.11.0",
     "nanostores": "^0.10.0",
     "react": "^18.2.0",
+    "goscope2-sdk-js": "github:lil5/goscope2#v1.4.2",
     "react-csv": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.50.1",

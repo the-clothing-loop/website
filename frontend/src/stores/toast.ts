@@ -44,6 +44,8 @@ export function addToastError(msg: string, status = 999) {
   if (typeof msg === "object") {
     msg = JSON.stringify(msg);
   }
+  if (status >= 500)
+    globalThis?.window?.goscope2?.Log(status < 600 ? "ERROR" : "FATAL", msg);
   msg = msg + "";
   addToast({
     type: "error",
