@@ -50,6 +50,7 @@ import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 import { loginSuperAsGenerateLink } from "../../../api/login";
 import { TextForm } from "../components/FormFields";
+import ChainDescription from "../components/FindChain/ChainDescription";
 
 enum LoadingState {
   idle,
@@ -469,7 +470,7 @@ export default function ChainMemberList() {
               <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl break-words">
                 {chain.name}
               </h1>
-              <p className="text-lg mb-6 break-words">{chain.description}</p>
+              <ChainDescription description={chain.description} />
 
               <dl>
                 <dt className="font-bold mb-1">{t("sizes")}</dt>

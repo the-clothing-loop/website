@@ -1,4 +1,4 @@
-import { type MouseEvent, useMemo } from "react";
+import { useMemo } from "react";
 import type { User, Chain } from "../../../../api/types";
 import { $authUser, authUserRefresh } from "../../../../stores/auth";
 
@@ -10,6 +10,7 @@ import { SizeBadges } from "../Badges";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import useLocalizePath from "../../util/localize_path.hooks";
+import ChainDescription from "./ChainDescription";
 
 enum ListChainType {
   Focused,
@@ -172,14 +173,6 @@ function SideBarChainItem(props: {
   onClickFocusChain: (c: Chain) => void;
   type: ListChainType;
 }) {
-  function handleClickShortenedDesc(e: MouseEvent) {
-    let input = (e.target as HTMLParagraphElement).parentElement?.querySelector(
-      "input",
-    );
-
-    if (input) input.checked = true;
-  }
-
   const handleClickEnlarge = () => props.onClickFocusChain(props.chain);
   const handleClickViewChain = () => props.onClickViewChain(props.chain);
   const handleClickJoin = () => props.onClickJoin(props.chain);
@@ -220,41 +213,7 @@ function SideBarChainItem(props: {
         </h1>
 
         {props.chain.description && isLarge ? (
-          props.chain.description.length > 200 ? (
-            <div className="mb-3">
-              <input
-                type="checkbox"
-                className="hidden peer"
-                id={"checkbox-desc-more-" + props.chain.uid}
-              />
-              <p
-                className="overflow-hidden peer-checked:max-h-fit text-sm break-words max-h-12 relative before:block before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-white/90 before:to-transparent before:bottom-0 peer-checked:before:hidden"
-                tabIndex={0}
-                onClick={handleClickShortenedDesc}
-              >
-                {props.chain.description.split("\n").map((s, i) => {
-                  if (i === 0) return s;
-
-                  return (
-                    <>
-                      <br />
-                      {s}
-                    </>
-                  );
-                })}
-              </p>
-              <label
-                htmlFor={"checkbox-desc-more-" + props.chain.uid}
-                aria-label="expand"
-                className="btn btn-xs btn-ghost bg-teal-light feather feather-more-horizontal peer-checked:hidden"
-                onClick={handleClickShortenedDesc}
-              ></label>
-            </div>
-          ) : (
-            <p className="mb-3 text-sm break-words">
-              {props.chain.description}
-            </p>
-          )
+          <ChainDescription description={props.chain.description} />
         ) : null}
 
         <div
