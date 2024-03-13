@@ -15,11 +15,11 @@ import {
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
-import { Fragment, useContext, useMemo, useRef, useState } from "react";
+import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
-import {  BulkyItem, User } from "../api/types";
-import { bulkyItemRemove} from "../api/bulky";
+import { BulkyItem, User } from "../api/types";
+import { bulkyItemRemove } from "../api/bulky";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../Store";
 import OverlayPaused from "../components/OverlayPaused";
