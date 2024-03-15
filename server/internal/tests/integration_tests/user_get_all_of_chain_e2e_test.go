@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 	"github.com/the-clothing-loop/website/server/internal/controllers"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -283,5 +285,40 @@ func TestUserGetAllOfChainRoutePrivacyEqualMinusOne(t *testing.T) {
 		assert.Equal(t, expectedUser.Email.String, actualUser.Email.String)
 		assert.Equal(t, expectedUser.PhoneNumber, actualUser.PhoneNumber)
 		assert.Equal(t, expectedUser.Address, actualUser.Address)
+	}
+}
+
+func TestUserGetAllOfChainRoutePrivacyMutiple0(t *testing.T) {
+
+	route_privacy := 2
+
+	// logged user
+	chain, user, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{RoutePrivacy: &route_privacy, RouteOrderIndex: 1})
+	user1, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 1})
+	user2, token := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 0, IsChainAdmin: true})
+	user3, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 4})
+
+	expectedUsers := []*models.User{user, user1, user2, user3}
+
+	url := fmt.Sprintf("/v2/user/all-chain?&chain_uid=%s", chain.UID)
+	c, resultFunc := mocks.MockGinContext(db, http.MethodGet, url, nil, token)
+
+	controllers.UserGetAllOfChain(c)
+	result := resultFunc()
+	actualUsers := &[]*models.User{}
+	json.Unmarshal([]byte(result.Body), actualUsers)
+
+	// testing Route Privacy. The user should see all participants
+
+	actualUserUIDs := lo.Map(*actualUsers, func(user *models.User, _ int) string {
+		return user.UID
+	})
+	for _, expectedUser := range expectedUsers {
+		_, ok := lo.Find(*actualUsers, func(actualUser *models.User) bool {
+			return actualUser.UID == expectedUser.UID
+		})
+		if !ok {
+			assert.Truef(t, ok, "expected user %s not in %s", strings.Join(actualUserUIDs, ", "))
+		}
 	}
 }
