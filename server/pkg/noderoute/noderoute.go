@@ -2,8 +2,8 @@ package noderoute
 
 import "fmt"
 
-func New(keys []string) *NodeKeys {
-	return &NodeKeys{
+func New[K uint | string | int](keys []K) *NodeKeys[K] {
+	return &NodeKeys[K]{
 		Keys: keys,
 	}
 }
@@ -14,12 +14,12 @@ type Node struct {
 	Next     *Node
 }
 
-type NodeKeys struct {
-	Keys []string
+type NodeKeys[K uint | string | int] struct {
+	Keys []K
 }
 
 // Add more traveler keys but keey the list unique
-func (nk *NodeKeys) AddKeys(keys []string) {
+func (nk *NodeKeys[K]) AddKeys(keys []K) {
 LOOP_NEW_KEYS:
 	for _, newKey := range keys {
 		for _, key := range nk.Keys {
@@ -31,7 +31,37 @@ LOOP_NEW_KEYS:
 	}
 }
 
-func (nk *NodeKeys) NewNodeRoute(routeByKeys []string) []*Node {
+func (nk *NodeKeys[K]) Key(n *Node) K {
+	return get(nk.Keys, n.KeyIndex)
+}
+
+func (nk *NodeKeys[K]) FindDistancePrevF(n *Node, f func(itrNode, n *Node) (found, stop bool)) (bool, *Node) {
+	return nk.findDistanceF(n, true, f)
+}
+func (nk *NodeKeys[K]) FindDistanceNextF(n *Node, f func(itrNode, n *Node) (found, stop bool)) (bool, *Node) {
+	return nk.findDistanceF(n, false, f)
+}
+func (nk *NodeKeys[K]) findDistanceF(n *Node, isPrev bool, f func(itrNode, n *Node) (found, stop bool)) (bool, *Node) {
+	itr := n
+	for range nk.Keys {
+		found, stop := f(itr, n)
+		if found {
+			return true, itr
+		}
+		if stop {
+			break
+		}
+		if isPrev {
+			itr = itr.Prev
+		} else {
+			itr = itr.Next
+		}
+	}
+
+	return false, nil
+}
+
+func (nk *NodeKeys[K]) NewNodeRoute(routeByKeys []K) []*Node {
 	routeLen := len(routeByKeys)
 	nodeRoute := make([]*Node, routeLen)
 	nodeLast := &Node{KeyIndex: nk.GetIndexByKey(get(routeByKeys, -1))}
@@ -56,13 +86,20 @@ func (nk *NodeKeys) NewNodeRoute(routeByKeys []string) []*Node {
 	return nodeRoute
 }
 
-func (nk *NodeKeys) GetIndexByKey(key string) int {
+func (nk *NodeKeys[K]) GetIndexByKey(key K) int {
 	for i, v := range nk.Keys {
 		if v == key {
 			return i
 		}
 	}
 	panic(fmt.Errorf("invalid key %v", key))
+}
+
+func (nk *NodeKeys[K]) Iterate(f func(node *Node)) {
+	nr := nk.NewNodeRoute(nk.Keys)
+	for _, n := range nr {
+		f(n)
+	}
 }
 
 // Try to get an item from an array without crashing
@@ -76,11 +113,4 @@ func get[V any](arr []V, index int) V {
 	}
 
 	return arr[index]
-}
-
-type NodeWithInformation[T any] struct {
-	Key  string
-	Data T
-	Prev *NodeWithInformation[T]
-	Next *NodeWithInformation[T]
 }
