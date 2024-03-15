@@ -8,6 +8,8 @@ import {
   type MouseEventHandler,
   type ReactElement,
   type DragEvent,
+  lazy,
+  Suspense,
 } from "react";
 
 import dayjs from "../util/dayjs";
@@ -40,7 +42,6 @@ import useToClipboard from "../util/to-clipboard.hooks";
 import { bagGetAllByChain } from "../../../api/bag";
 import PopoverOnHover from "../components/Popover";
 import DOMPurify from "dompurify";
-import RouteMapPopup from "../components/RouteMap/RouteMapPopup";
 import isTouchDevice from "../util/is_touch";
 import { useTranslation } from "react-i18next";
 import getQuery from "../util/query";
@@ -51,6 +52,9 @@ import useLocalizePath from "../util/localize_path.hooks";
 import { loginSuperAsGenerateLink } from "../../../api/login";
 import ChainDescription from "../components/FindChain/ChainDescription";
 import { useLegal } from "../util/user.hooks";
+const RouteMapPopup = lazy(
+  () => import("../components/RouteMap/RouteMapPopup"),
+);
 
 enum LoadingState {
   idle,
@@ -584,13 +588,17 @@ export default function ChainMemberList() {
                 refresh={refresh}
               />
               {isOpenRouteMapPopup ? (
-                <RouteMapPopup
-                  chain={chain}
-                  route={route}
-                  closeFunc={() => setIsOpenRouteMapPopup(false)}
-                  optimizeRoute={() => optimizeRoute(chain.uid)}
-                  returnToPreviousRoute={() => returnToPreviousRoute(chain.uid)}
-                />
+                <Suspense fallback={null}>
+                  <RouteMapPopup
+                    chain={chain}
+                    route={route}
+                    closeFunc={() => setIsOpenRouteMapPopup(false)}
+                    optimizeRoute={() => optimizeRoute(chain.uid)}
+                    returnToPreviousRoute={() =>
+                      returnToPreviousRoute(chain.uid)
+                    }
+                  />
+                </Suspense>
               ) : null}
             </div>
           </section>
