@@ -11,11 +11,24 @@ export default function ChainDescription(props: Props) {
   return (
     <div className="mb-3">
       <p
-        className={"overflow-hidden text-sm break-words max-h-12 relative before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-black/10 before:to-transparent before:bottom-0".concat(
-          props.description.length > 200 && isOpenDesc
-            ? " max-h-fit before:hidden"
-            : " before:block",
-        )}
+        onClick={
+          isOpenDesc
+            ? undefined
+            : () => {
+                setIsOpenDesc(true);
+              }
+        }
+        className={"text-sm break-words"
+          .concat(
+            props.description.length > 200
+              ? " overflow-hidden max-h-12 relative before:absolute before:h-8 before:w-full before:bg-gradient-to-t before:from-black/10 before:to-transparent before:bottom-0"
+              : "",
+          )
+          .concat(
+            props.description.length > 200 && isOpenDesc
+              ? " max-h-fit before:hidden"
+              : " before:block cursor-pointer",
+          )}
         tabIndex={0}
       >
         {props.description.split("\n").map((s, i) => {
