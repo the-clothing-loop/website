@@ -28,7 +28,6 @@ LOOP_NEW_KEYS:
 			}
 		}
 		nk.Keys = append(nk.Keys, newKey)
-
 	}
 }
 

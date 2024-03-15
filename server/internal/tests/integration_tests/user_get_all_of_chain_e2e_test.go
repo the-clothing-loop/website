@@ -318,7 +318,7 @@ func TestUserGetAllOfChainRoutePrivacyMutiple0(t *testing.T) {
 			return actualUser.UID == expectedUser.UID
 		})
 		if !ok {
-			assert.Truef(t, ok, "expected user %s not in %s", strings.Join(actualUserUIDs, ", "))
+			assert.Failf(t, "expected user %s not in %s", strings.Join(actualUserUIDs, ", "))
 		}
 	}
 }

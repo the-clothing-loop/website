@@ -69,4 +69,10 @@ func TestIndexCircular(t *testing.T) {
 
 	v = get(arr, -1)
 	assert.Equal(t, "c", v)
+
+	v = get(arr, 1)
+	assert.Equal(t, "b", v)
+
+	v = get(arr, 0)
+	assert.Equal(t, "a", v)
 }

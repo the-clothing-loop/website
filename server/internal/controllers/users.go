@@ -723,6 +723,10 @@ func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUse
 
 	checkNode := func(currentNode *noderoute.NodeWithInformation[userData], routePrivacy int) int {
 		d := currentNode.Data
+		_, err := lo.Nth(users, d.userIndex)
+		if err != nil {
+			return 0
+		}
 		user := &users[d.userIndex]
 		hasBulkyItem := d.hasBulkyItem
 		isChainAdmin := d.isChainAdmin
