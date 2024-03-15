@@ -1,10 +1,10 @@
 import { Newsletter } from "./Newsletter";
 import useToClipboard from "../util/to-clipboard.hooks";
 import { useTranslation } from "react-i18next";
-import { useStore } from "@nanostores/react";
 import { $authUser } from "../../../stores/auth";
 import useLocalizePath from "../util/localize_path.hooks";
 import useHydrated from "../util/hydrated.hooks";
+import { useStore } from "@nanostores/react";
 
 enum MobileOS {
   ANDROID = "android",
@@ -33,9 +33,7 @@ export default function Footer(props: { pathname: string }) {
       mobileOS = MobileOS.IOS;
     }
 
-    let isLoggedIn = !!$authUser.get();
-
-    return { mobileOS, isLoggedIn };
+    return { mobileOS };
   });
 
   const isFindPage = props.pathname.includes("/loops/find");
@@ -97,7 +95,7 @@ export default function Footer(props: { pathname: string }) {
                 >
                   {t("startingALoop")}
                 </a>
-                {clientValues?.isLoggedIn ? (
+                {clientValues && !!authUser ? (
                   <a
                     className="link link-hover mb-1"
                     href={localizePath("/users/logout")}
