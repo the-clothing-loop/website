@@ -62,8 +62,8 @@ export function authUserRefresh(force = false): Promise<UserRefreshState> {
     const hasLoginSession = !!user;
     if (hasLoginSession) console.info("has session storage");
 
-    console.info("retrieve user uid from cookie");
     let userUID = cookieUserUID.get();
+    if (userUID) console.info("retrieved user uid from cookie");
 
     if (!userUID) {
       $authUser.set(null);

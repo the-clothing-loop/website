@@ -77,6 +77,23 @@ func Routes() *gin.Engine {
 	)
 	r.Use(controllers.MiddlewareSetDB(db))
 
+	r.Use(func(c *gin.Context) {
+		var cookieToken = "token"
+		var cookieUser = "user_uid"
+
+		switch app.Config.ENV {
+		case app.EnvEnumProduction:
+		case app.EnvEnumAcceptance:
+			cookieToken += "_acc"
+			cookieUser += "_acc"
+		default:
+			cookieToken += "_dev"
+			cookieUser += "_dev"
+		}
+		c.Set("cookie_token", cookieToken)
+		c.Set("cookie_user", cookieUser)
+	})
+
 	thr := throttle.Policy(&throttle.Quota{
 		Limit:  30,
 		Within: 2 * time.Hour,
