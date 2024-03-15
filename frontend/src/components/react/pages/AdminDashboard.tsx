@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@nanostores/react";
+import Cookies from "js-cookie";
 
 import { userPurge } from "../../../api/user";
 import ChainsList from "../components/ChainsList";
@@ -60,6 +61,8 @@ export default function AdminDashboard() {
           type: "error",
           fn: () => {
             userPurge(authUser!.uid).then(() => {
+              // Remove legacy cookies
+              Cookies.remove("user_uid");
               window.location.href = localizePath("/users/logout");
             });
           },

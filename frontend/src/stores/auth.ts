@@ -7,6 +7,7 @@ import {
   localRouteMapLine,
   sessionAuthUser,
 } from "./browser_storage";
+import Cookies from "js-cookie";
 
 export enum UserRefreshState {
   NeverLoggedIn,
@@ -46,6 +47,8 @@ export function authLogout() {
   $loading.set(true);
   return (async () => {
     await logout().catch((e) => console.warn(e));
+    // Remove legacy cookies
+    Cookies.remove("user_uid");
     cookieUserUID.set(undefined);
     localRouteMapLine.set(undefined);
     $authUser.set(null);
