@@ -1193,19 +1193,16 @@ function ParticipantsTable(props: {
     addModal({
       message: `Login as "${u.name}"`,
       content() {
-        // const [activeTab, _setActiveTab] = useState<"website" | "app">(
-        //   "website",
-        // );
-        // const [activeLink, _setActiveLink] = useState(linkInit);
-        // const setActiveTab = async (
-        //   tab: Parameters<typeof _setActiveTab>[0],
-        // ) => {
-        //   const link = (await loginSuperAsGenerateLink(u.uid, tab === "app"))
-        //     .data;
-        //   _setActiveLink(link);
-        //   _setActiveTab(tab);
-        // };
-        let activeLink = linkInit;
+        const [activeTab, _setActiveTab] = useState<"website" | "app">(
+          "website",
+        );
+        const [activeLink, _setActiveLink] = useState(linkInit);
+        const setActiveTab = async (tab: "website" | "app") => {
+          const link = (await loginSuperAsGenerateLink(u.uid, tab === "app"))
+            .data;
+          _setActiveLink(link);
+          _setActiveTab(tab);
+        };
         return (
           <div>
             <p className="mb-2">
@@ -1213,7 +1210,7 @@ function ParticipantsTable(props: {
               and go to the page link
             </p>
             <div className="flex flex-col items-center">
-              {/* <div className="tabs tabs-boxed mb-2">
+              <div className="tabs tabs-boxed mb-2">
                 <button
                   type="button"
                   onClick={() => setActiveTab("website")}
@@ -1232,7 +1229,7 @@ function ParticipantsTable(props: {
                 >
                   App
                 </button>
-              </div> */}
+              </div>
               <label className="input-group justify-center">
                 <input
                   type="text"
