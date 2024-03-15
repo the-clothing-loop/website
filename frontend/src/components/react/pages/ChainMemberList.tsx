@@ -359,31 +359,30 @@ export default function ChainMemberList() {
       : Promise.reject("authUser not set");
 
     try {
-      let _hostChains: Chain[];
-      if (authUser.is_root_admin) {
-        _hostChains = (
-          await chainGetAll({ filter_out_unpublished: false })
-        ).data.filter((c) => c.uid !== chainUID);
-      } else {
-        _hostChains = (
-          await Promise.all(
-            authUser?.chains
-              .filter((uc) => uc.is_chain_admin && uc.chain_uid !== chainUID)
-              .map((uc) => chainGet(uc.chain_uid)) || [],
-          )
-        ).map((c) => c.data);
-      }
-      setHostChains(_hostChains.sort((a, b) => a.name.localeCompare(b.name)));
-
-      const [chainData, chainUsers, routeData, bagData] = await Promise.all([
-        chainGet(chainUID, {
-          addTotals: true,
-          addIsAppDisabled: true,
-        }),
-        userGetAllByChain(chainUID),
-        routeGetOrder(chainUID),
-        bagGetAll,
-      ]);
+      const [_hostChains, chainData, chainUsers, routeData, bagData] =
+        await Promise.all([
+          authUser.is_root_admin
+            ? chainGetAll({ filter_out_unpublished: false }).then((res) =>
+                res.data.filter((c) => c.uid !== chainUID),
+              )
+            : Promise.all(
+                authUser?.chains
+                  .filter(
+                    (uc) => uc.is_chain_admin && uc.chain_uid !== chainUID,
+                  )
+                  .map((uc) => chainGet(uc.chain_uid)) || [],
+              ).then((res) => res.map((c) => c.data)),
+          chainGet(chainUID, {
+            addTotals: true,
+            addIsAppDisabled: true,
+          }),
+          userGetAllByChain(chainUID),
+          routeGetOrder(chainUID),
+          bagGetAll,
+        ]);
+      setHostChains(
+        _hostChains.toSorted((a, b) => a.name.localeCompare(b.name)),
+      );
       setChain(chainData.data);
       setRoute(routeData.data || []);
       setUsers(
