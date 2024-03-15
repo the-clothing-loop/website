@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import type { Event } from "../../../api/types";
@@ -13,13 +13,13 @@ import useForm from "../util/form.hooks";
 import { GinParseErrors } from "../util/gin-errors";
 
 import dayjs from "../util/dayjs";
-import LocationModal from "../components/LocationModal";
 import type { LocationValues } from "../components/LocationModal";
 import { useDebouncedCallback } from "use-debounce";
 import { useStore } from "@nanostores/react";
 import { $authUser } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
+const LocationModal = lazy(() => import("../components/LocationModal"));
 
 interface SearchValues {
   genders: string[];
@@ -117,12 +117,16 @@ export default function Events() {
     addModal({
       message: "Select your location",
       content: () => (
-        <LocationModal
-          setValues={setLocationValues}
-          latitude={values.latitude}
-          longitude={values.longitude}
-          radius={values.distance}
-        />
+        <div>
+          <Suspense fallback={null}>
+            <LocationModal
+              setValues={setLocationValues}
+              latitude={values.latitude}
+              longitude={values.longitude}
+              radius={values.distance}
+            />
+          </Suspense>
+        </div>
       ),
       actions: [
         {
