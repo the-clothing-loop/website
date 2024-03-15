@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Fragment } from "react";
 
 interface Props {
   description: string;
@@ -35,10 +35,10 @@ export default function ChainDescription(props: Props) {
           if (i === 0) return s;
 
           return (
-            <>
+            <Fragment key={i}>
               <br />
               {s}
-            </>
+            </Fragment>
           );
         })}
       </p>
