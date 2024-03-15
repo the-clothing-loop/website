@@ -7,7 +7,6 @@ import {
   type MouseEvent,
   type MouseEventHandler,
   type ReactElement,
-  type DragEvent,
   lazy,
   Suspense,
 } from "react";

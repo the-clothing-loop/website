@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 
-import type { UID, User } from "../../../api/types";
+import type { User } from "../../../api/types";
 import {
   userGetByUID,
   userUpdate,
