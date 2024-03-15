@@ -78,7 +78,7 @@ export default function ChainsList({ chains, setChains }: Props) {
     if (!authUser) return;
 
     chainPoke(chainUID)
-      .then((res) => {
+      .then(() => {
         addToast({ type: "success", message: t("reminderEmailSent") });
         Cookies.set("poke", authUser.uid, { expires: 7 });
         setIsPokeable(false);
@@ -179,14 +179,6 @@ export default function ChainsList({ chains, setChains }: Props) {
                       (uid) => chain.uid === uid,
                     )
                   : false;
-
-                let members = "-";
-                if (userChain?.is_approved) {
-                  members = chain.total_members + "";
-                } else if (authUser?.is_root_admin) {
-                  members =
-                    "(" + chain.total_hosts + ") " + chain.total_members;
-                }
 
                 return (
                   <tr

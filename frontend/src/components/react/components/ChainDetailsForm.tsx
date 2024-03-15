@@ -82,7 +82,7 @@ export default function ChainDetailsForm({
 
   const mapRef = useRef<any>();
   const [map, setMap] = useState<mapboxgl.Map>();
-  const [values, setValue, setValues] = useForm<RegisterChainForm>({
+  const [values, setValue] = useForm<RegisterChainForm>({
     name: "",
     description: "",
     address: "",

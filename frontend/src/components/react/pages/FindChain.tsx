@@ -71,7 +71,7 @@ function createFilterFunc(
   genders: string[],
   sizes: string[],
 ): (c: Chain) => boolean {
-  let filterFunc = (c: Chain) => true;
+  let filterFunc = (_: Chain) => true;
   if (sizes?.length) {
     filterFunc = (c) => {
       for (let s of sizes) {

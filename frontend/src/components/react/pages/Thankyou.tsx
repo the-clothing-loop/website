@@ -69,7 +69,7 @@ export function NewLoopConfirmation() {
   );
 }
 
-export function JoinLoopConfirmation(props: any) {
+export function JoinLoopConfirmation() {
   const { t } = useTranslation();
 
   return (

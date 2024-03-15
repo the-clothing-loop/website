@@ -1,4 +1,4 @@
-import { type CSSProperties, type FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 
 interface IProps {
   end: number;

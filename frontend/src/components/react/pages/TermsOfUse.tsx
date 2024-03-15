@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import useLocalizePath from "../util/localize_path.hooks";
 
 export default function TermsOfUse() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
   return (
     <>

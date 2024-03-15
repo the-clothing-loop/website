@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { User } from "../../../api/types";
 import PopupLegal from "../components/PopupLegal";
 import type { TFunction } from "i18next";

@@ -117,7 +117,7 @@ export default function Contribute() {
       if (play) {
         await video.play();
       } else {
-        await video.pause();
+        video.pause();
       }
     } catch (err) {
       console.log(err);

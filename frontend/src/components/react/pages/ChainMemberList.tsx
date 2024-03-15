@@ -63,9 +63,6 @@ enum LoadingState {
   success,
 }
 
-interface Params {
-  chainUID: string;
-}
 type SelectedTable = "route" | "participants" | "unapproved";
 
 const PUBLIC_BASE_URL = import.meta.env.PUBLIC_BASE_URL;
@@ -77,7 +74,7 @@ export default function ChainMemberList() {
   const authUser = useStore($authUser);
 
   const [hostChains, setHostChains] = useState<Chain[]>([]);
-  const [loadingTransfer, setLoadingTransfer] = useState(LoadingState.idle);
+  const [loadingTransfer] = useState(LoadingState.idle);
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
   const [bags, setBags] = useState<Bag[] | null>(null);
@@ -335,7 +332,7 @@ export default function ChainMemberList() {
     refresh(true);
   }, [authUser]);
 
-  const [filteredUsersHost, filteredUsersNotHost] = useMemo(() => {
+  const [filteredUsersHost /*filteredUsersNotHost*/] = useMemo(() => {
     let host: User[] = [];
     let notHost: User[] = [];
     users?.forEach((u) => {
@@ -619,7 +616,7 @@ export default function ChainMemberList() {
                   name="table-type"
                   value="route"
                   checked={selectedTable === "route"}
-                  onChange={(e) => setSelectedTable("route")}
+                  onChange={() => setSelectedTable("route")}
                   className="hidden peer"
                 />
                 <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black ltr:pr-3 rtl:pl-3 ltr:mr-3 rtl:ml-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
@@ -633,7 +630,7 @@ export default function ChainMemberList() {
                   name="table-type"
                   value="participants"
                   checked={selectedTable === "participants"}
-                  onChange={(e) => setSelectedTable("participants")}
+                  onChange={() => setSelectedTable("participants")}
                   className="hidden peer"
                 />
                 <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black px-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
@@ -648,7 +645,7 @@ export default function ChainMemberList() {
                   name="table-type"
                   value="unapproved"
                   checked={selectedTable === "unapproved"}
-                  onChange={(e) => {
+                  onChange={() => {
                     if (unapprovedUsers.length) setSelectedTable("unapproved");
                   }}
                   disabled={!unapprovedUsers.length}
@@ -1435,7 +1432,7 @@ function RouteTable(props: {
     routeSetOrder(props.chain.uid, r);
     props.setRoute(r);
   }
-  function draggingEnd(e: DragEvent<HTMLTableRowElement>) {
+  function draggingEnd(/*e: DragEvent<HTMLTableRowElement>*/) {
     const fromIndex = props.route.indexOf(dragging);
     const toIndex = props.route.indexOf(dragTarget);
 

@@ -49,7 +49,7 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
 
         _map.addSource("route-poly", {
           type: "geojson",
-          data: mapToGeoJSONPolygonCoords(coords, props.route),
+          data: mapToGeoJSONPolygonCoords(coords /*props.route*/),
         });
 
         const showLine = lineType !== "dot";
@@ -110,7 +110,9 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
       if (!routeSource) return;
       const coords = (await routeCoordinates(props.chain.uid)).data;
       routeSource.setData(mapToGeoJSONCoords(coords, props.route));
-      routePolySource.setData(mapToGeoJSONPolygonCoords(coords, props.route));
+      routePolySource.setData(
+        mapToGeoJSONPolygonCoords(coords /*props.route*/),
+      );
     },
     2e3,
     {},
@@ -235,7 +237,7 @@ function mapToGeoJSONCoords(
 
 function mapToGeoJSONPolygonCoords(
   coords: RouteCoordinate[],
-  route: UID[],
+  // route: UID[],
 ): Feature {
   return {
     type: "Feature",

@@ -41,8 +41,6 @@ const defaultValues: EventCreateBody = {
   image_url: "",
 };
 
-const INVALID_DATE_STRING = "Invalid Date";
-
 const currencies = [
   "€",
   "$",
@@ -97,7 +95,7 @@ export default function EventChangeForm(props: {
   const authUser = useStore($authUser);
   const refFileInput = useRef<HTMLInputElement>(null);
 
-  const [values, setValue, setValues] = useForm<EventCreateBody>(
+  const [values, setValue] = useForm<EventCreateBody>(
     props.initialValues || defaultValues,
   );
   const sepDate = useSepDateTime(values.date, (d) => setValue("date", d));

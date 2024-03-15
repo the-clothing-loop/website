@@ -1,12 +1,11 @@
-import dayjs from "../util/dayjs";
-import { useMemo, type MouseEvent, type MouseEventHandler } from "react";
+import { useMemo, type MouseEvent } from "react";
+import { useStore } from "@nanostores/react";
+import { useTranslation } from "react-i18next";
 
 import { useDropdown } from "../util/dropdown.hooks";
 import { getLanguageFlags } from "../../../languages";
 import { userUpdate } from "../../../api/user";
-import { useStore } from "@nanostores/react";
 import { $authUser } from "../../../stores/auth";
-import { useTranslation } from "react-i18next";
 import useLocalizePath from "../util/localize_path.hooks";
 
 const IS_PRODUCTION =

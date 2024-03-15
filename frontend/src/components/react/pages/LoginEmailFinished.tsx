@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import type { User } from "../../../api/types";
 import { useTranslation } from "react-i18next";

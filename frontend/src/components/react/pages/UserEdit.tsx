@@ -15,14 +15,6 @@ import { $authUser } from "../../../stores/auth";
 import getQuery from "../util/query";
 import useLocalizePath from "../util/localize_path.hooks";
 
-interface Params {
-  userUID: UID;
-}
-
-interface State {
-  chainUID?: UID;
-}
-
 export default function UserEdit() {
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);

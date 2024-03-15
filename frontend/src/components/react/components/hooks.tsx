@@ -7,10 +7,7 @@ export default function useIntersectionObserver(
 ) {
   const [isIntersecting, setIsIntersecting] = useState(initialIsIntersecting);
 
-  function callback(
-    entries: IntersectionObserverEntry[],
-    observer: IntersectionObserver,
-  ) {
+  function callback(entries: IntersectionObserverEntry[]) {
     const [entry] = entries;
     setIsIntersecting(entry.isIntersecting);
   }

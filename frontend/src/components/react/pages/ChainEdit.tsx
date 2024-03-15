@@ -18,10 +18,6 @@ import { $authUser } from "../../../stores/auth";
 import getQuery from "../util/query";
 import { addToastError } from "../../../stores/toast";
 
-interface Params {
-  chainUID: string;
-}
-
 export default function ChainEdit() {
   const { t } = useTranslation();
 

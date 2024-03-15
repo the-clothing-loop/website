@@ -24,7 +24,7 @@ export default function Footer(props: { pathname: string }) {
   const currentYear = new Date().getFullYear();
 
   const clientValues = useHydrated(() => {
-    const userAgent = navigator.userAgent || navigator.vendor;
+    const userAgent = navigator.userAgent;
     let mobileOS = MobileOS.OTHER;
     if (/android/i.test(userAgent)) {
       mobileOS = MobileOS.ANDROID;
