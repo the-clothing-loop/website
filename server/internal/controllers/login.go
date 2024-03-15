@@ -326,7 +326,6 @@ func Logout(c *gin.Context) {
 	_, ok := auth.TokenReadFromRequest(c)
 	if !ok {
 		c.String(http.StatusBadRequest, "No token received")
-		return
 	}
 
 	auth.CookieRemove(c)

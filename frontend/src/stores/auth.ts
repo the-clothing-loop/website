@@ -7,7 +7,6 @@ import {
   localRouteMapLine,
   sessionAuthUser,
 } from "./browser_storage";
-import Cookies from "js-cookie";
 
 export enum UserRefreshState {
   NeverLoggedIn,
@@ -48,7 +47,6 @@ export function authLogout() {
   return (async () => {
     await logout().catch((e) => console.warn(e));
     // Remove legacy cookies
-    Cookies.remove("user_uid");
     cookieUserUID.set(undefined);
     localRouteMapLine.set(undefined);
     $authUser.set(null);
@@ -103,30 +101,5 @@ export function authUserRefresh(force = false): Promise<UserRefreshState> {
     $loading.set(false);
     console.log("logged in");
     return UserRefreshState.LoggedIn;
-
-    // // Astro will set the i18n by path only
-    // // The home/admin page will redirect to the user's preferred language only
-    //   Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
-    //   $loading.set(false);
-    //   const isChanged = user.i18n ? user.i18n !== i18n.language : false;
-    //   const isUnset = !user.i18n;
-    //   if (!isUnset && isChanged) {
-    //     i18n.changeLanguage(user.i18n);
-    //   }
-    //   if (isUnset || isChanged) {
-    //     userUpdate({
-    //       user_uid: user.uid,
-    //       i18n: i18n.language,
-    //     });
-    //   }
-    // } catch (err: any) {
-    //   if (err?.status === 401) {
-    //     await authLogout().catch((err) => {
-    //       console.error("force logout failed:", err);
-    //     });
-    //   }
-    //   console.info("force logout");
-    //   return UserRefreshState.ForceLoggedOut;
-    // }
   })();
 }
