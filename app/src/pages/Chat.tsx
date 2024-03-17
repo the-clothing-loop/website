@@ -18,6 +18,7 @@ import { patchGetOrJoinRoom } from "../api";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
 import { Sleep } from "../utils/sleep";
 import { Post, PostList } from "@mattermost/types/posts";
+import { User } from "../api";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
 
@@ -52,6 +53,9 @@ export default function Chat() {
     prev_post_id: "",
     first_inaccessible_post_time: 0,
   });
+  const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
+
+  console.log(authUser?.uid)
 
   useEffect(() => {
     if (chain && !mmClient) {
@@ -178,25 +182,46 @@ export default function Chat() {
         <div className="tw-flex tw-flex-col tw-h-full">
           <div className="tw-flex-grow tw-overflow-y-auto tw-flex tw-flex-col-reverse">
             {postList.order.map((item) => {
+              console.log(postList.posts[item].user_id);
               let post = postList.posts[item];
               return (
                 <div>
-                  <IonItem lines="full" key={post.id}>
-                    {post.message}
+                  <IonItem
+                    color="light"
+                    key={post.id}
+                    className="tw-rounded-xl tw-mb-2 tw-ml-8 tw-mr-2 tw-float-right"
+                  >
+                    <div className="tw-py-2">{post.message}</div>
                   </IonItem>
                 </div>
               );
             })}
           </div>
           <div>
-            <IonItem disabled={sendingMsg == SendingMsgState.SENDING}>
+            <IonItem
+              color="light"
+              disabled={sendingMsg == SendingMsgState.SENDING}
+            >
               <IonInput
+                placeholder="Send Message"
                 value={message}
                 disabled={sendingMsg == SendingMsgState.SENDING}
                 onIonInput={(e) => setMessage(e.detail.value as string)}
+                className="tw-ml-2"
               />
-              <IonButton slot="end" onClick={sendMessage} shape="round">
-                <IonIcon icon={sendOutline} />
+              <IonButton
+                slot="end"
+                onClick={sendMessage}
+                shape="round"
+                disabled={message == ""}
+                color="light"
+                className="tw-mr-0"
+              >
+                <IonIcon
+                  icon={sendOutline}
+                  color="primary"
+                  className="tw-text-2xl"
+                />
               </IonButton>
             </IonItem>
           </div>
