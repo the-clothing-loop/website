@@ -178,6 +178,7 @@ export default function Settings() {
   let isUserPaused = isPaused(authUser?.paused_until || null);
   let pausedDayjs = isUserPaused ? dayjs(authUser!.paused_until) : null;
   let showExpandButton = (chain?.description.length || 0) > 200;
+  let emptyDescription = (chain?.description.length || 0) == 0;
   let pausedFromNow = "";
   {
     const now = dayjs();
@@ -430,31 +431,33 @@ export default function Settings() {
                   ) : null}
                 </div>
               </IonItem>
-              <IonItem lines="none">
-                <IonLabel>
-                  <h3>{t("description")}</h3>
-                  <p
-                    className={`tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
-                      !expandedDescription && showExpandButton
-                        ? "tw-max-h-[60px]"
-                        : ""
-                    }`}
-                  >
-                    {chain?.description}
-                  </p>
-                  {!expandedDescription && showExpandButton ? (
-                    <IonButton
-                      onClick={() => setExpandedDescription((s) => !s)}
-                      size="small"
-                      color="clear"
-                      expand="block"
-                      className="-tw-mt-1.5 tw-ps-0"
+              {!emptyDescription ? (
+                <IonItem lines="none">
+                  <IonLabel>
+                    <h3>{t("description")}</h3>
+                    <p
+                      className={`tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
+                        !expandedDescription && showExpandButton
+                          ? "tw-max-h-[60px]"
+                          : ""
+                      }`}
                     >
-                      <IonIcon icon={ellipsisHorizontal} color="primary" />
-                    </IonButton>
-                  ) : null}
-                </IonLabel>
-              </IonItem>
+                      {chain?.description}
+                    </p>
+                    {!expandedDescription && showExpandButton ? (
+                      <IonButton
+                        onClick={() => setExpandedDescription((s) => !s)}
+                        size="small"
+                        color="clear"
+                        expand="block"
+                        className="-tw-mt-1.5 tw-ps-0"
+                      >
+                        <IonIcon icon={ellipsisHorizontal} color="primary" />
+                      </IonButton>
+                    ) : null}
+                  </IonLabel>
+                </IonItem>
+              ) : null}
             </IonList>
           </IonCard>
         </IonList>
