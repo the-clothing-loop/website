@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/views"
 )
 
@@ -64,7 +64,7 @@ WHERE uc.is_chain_admin = TRUE AND u.email IS NOT NULL AND uc.chain_id IN (
 	}
 
 	if err := user.SetLastPokeToNow(db); err != nil {
-		goscope.Log.Errorf("Unable to poke this Loop: %v", err)
+		sentry.CaptureException(err)
 		c.String(http.StatusInternalServerError, "Unable to poke this Loop")
 		return
 	}

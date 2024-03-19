@@ -3,7 +3,7 @@ package services
 import (
 	"fmt"
 
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+	"github.com/getsentry/sentry-go"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"gorm.io/gorm"
@@ -22,7 +22,7 @@ func EmailLoopAdminsOnUserJoin(db *gorm.DB, user *models.User, chainIDs ...uint)
 	}
 
 	if len(results) == 0 {
-		goscope.Log.Errorf("Empty chain that is still public: ChainID: %d", chainIDs)
+		sentry.CaptureException(err)
 		return fmt.Errorf("No admins exist for this loop")
 	}
 
@@ -54,7 +54,7 @@ func EmailLoopAdminsOnUserLeft(db *gorm.DB, removedUserName, removedUserEmail, e
 	}
 
 	if len(admins) == 0 {
-		goscope.Log.Errorf("Empty chain that is still public: ChainID: %d", chainIDs)
+		sentry.CaptureException(err)
 		return fmt.Errorf("No admins exist for this loop")
 	}
 

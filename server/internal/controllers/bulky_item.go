@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/OneSignal/onesignal-go-api"
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
 )
@@ -50,7 +50,7 @@ WHERE user_chain_id IN (
 )
 	`, chain.ID).Scan(&bulkyItems).Error
 	if err != nil {
-		goscope.Log.Errorf("Unable to find bulky items: %v", err)
+		sentry.CaptureException(err)
 		c.String(http.StatusInternalServerError, "Unable to find bulky items")
 		return
 	}
@@ -135,7 +135,7 @@ LIMIT 1
 		err = db.Updates(*bulkyItem).Error
 	}
 	if err != nil {
-		goscope.Log.Errorf("Unable to create or update bulky item: %v", err)
+		sentry.CaptureException(err)
 		c.String(http.StatusInternalServerError, "Unable to create or update bulky item")
 		return
 	}
@@ -166,7 +166,7 @@ WHERE id = ? AND user_chain_id IN (
 )
 	`, query.ID, chain.ID).Error
 	if err != nil {
-		goscope.Log.Errorf("Bulky Item could not be removed: %v", err)
+		sentry.CaptureException(err)
 		c.String(http.StatusInternalServerError, "Bulky Item could not be removed")
 		return
 	}

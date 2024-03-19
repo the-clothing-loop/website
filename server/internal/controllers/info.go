@@ -3,10 +3,10 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"github.com/patrickmn/go-cache"
 	"github.com/the-clothing-loop/website/server/internal/app"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 )
 
 func InfoGet(c *gin.Context) {
@@ -45,7 +45,7 @@ SELECT (
 ) as total_countries;
 		`).Scan(&data).Error
 		if err != nil {
-			goscope.Log.Errorf("Unable to retrieve information: %v", err)
+			sentry.CaptureException(err)
 			c.String(http.StatusInternalServerError, "Unable to retrieve information")
 			return
 		}

@@ -10,7 +10,6 @@ import (
 	cron "github.com/go-co-op/gocron"
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/controllers"
 	"github.com/the-clothing-loop/website/server/pkg/throttle"
 )
@@ -18,6 +17,8 @@ import (
 var Scheduler *cron.Scheduler
 
 func Routes() *gin.Engine {
+	sentryGin := app.SentryInit()
+
 	// initialization
 	db := app.DatabaseInit()
 	app.MailInit()
@@ -70,11 +71,8 @@ func Routes() *gin.Engine {
 
 	// router
 	r := gin.New()
+	r.Use(sentryGin)
 	r.Use(gin.Logger())
-	goscope.GoScope2Init(r, db,
-		app.Config.GOSCOPE2_USER,
-		app.Config.GOSCOPE2_PASS,
-	)
 	r.Use(controllers.MiddlewareSetDB(db))
 
 	r.Use(func(c *gin.Context) {

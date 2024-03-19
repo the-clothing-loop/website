@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/getsentry/sentry-go"
+	"github.com/gin-gonic/gin"
 	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
-
-	"github.com/gin-gonic/gin"
 )
 
 func ContactNewsletter(c *gin.Context) {
@@ -50,7 +49,7 @@ func ContactNewsletter(c *gin.Context) {
 	}
 	err := n.CreateOrUpdate(db)
 	if err != nil {
-		goscope.Log.Errorf(err.Error())
+		sentry.CaptureException(err)
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		return
 	}

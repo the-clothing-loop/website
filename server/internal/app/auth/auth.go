@@ -1,12 +1,12 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
 
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
-	"github.com/the-clothing-loop/website/server/internal/models"
-
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
+	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/gorm"
 )
 
@@ -59,7 +59,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	if chainUID == "" && minimumAuthState != AuthState4RootUser {
-		goscope.Log.Errorf("ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen")
+		sentry.CaptureMessage("ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen")
 		c.String(http.StatusNotImplemented, "ChainUID must not be empty _and_ require a minimum auth state of AuthState2UserOfChain (2), this is should never happen")
 		return false, nil, nil
 	}
@@ -75,7 +75,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	err = authUser.AddUserChainsToObject(db)
 	if err != nil {
-		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
+		sentry.CaptureException(fmt.Errorf("%s: %w", models.ErrAddUserChainsToObject, err))
 		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
 		return false, nil, nil
 	}
@@ -142,7 +142,7 @@ func AuthenticateUserOfChain(c *gin.Context, db *gorm.DB, chainUID, userUID stri
 		err = user.AddUserChainsToObject(db)
 	}
 	if err != nil {
-		goscope.Log.Errorf("%v", err)
+		sentry.CaptureException(err)
 		c.String(http.StatusBadRequest, "user UID must be set if chain UID is set")
 		return false, nil, nil, nil
 	}
@@ -182,7 +182,7 @@ func AuthenticateEvent(c *gin.Context, db *gorm.DB, eventUID string) (ok bool, a
 	} else if event.ChainUID.Valid {
 		err = authUser.AddUserChainsToObject(db)
 		if err != nil {
-			goscope.Log.Errorf("%v", err)
+			sentry.CaptureException(err)
 			c.String(http.StatusInternalServerError, "Unable to retrieve user related loops")
 			return false, nil, nil
 		}

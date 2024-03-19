@@ -7,11 +7,11 @@ import (
 	"time"
 
 	ics "github.com/arran4/golang-ical"
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/pkg/imgbb"
 	"gopkg.in/guregu/null.v3"
@@ -339,7 +339,7 @@ func EventUpdate(c *gin.Context) {
 
 	err := db.Save(event).Error
 	if err != nil {
-		goscope.Log.Errorf("Unable to update loop values: %v", err)
+		sentry.CaptureException(err)
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to update loop values"))
 		return
 	}

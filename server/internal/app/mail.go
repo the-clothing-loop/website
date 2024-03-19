@@ -8,11 +8,10 @@ import (
 	"net/mail"
 	"os"
 
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+	"github.com/getsentry/sentry-go"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"gorm.io/gorm"
-
 	gomail "github.com/wneessen/go-mail"
+	"gorm.io/gorm"
 )
 
 var smtpClient *gomail.Client
@@ -53,7 +52,7 @@ func MailSend(db *gorm.DB, m *models.Mail) error {
 		err = mailSendBySmtp(m)
 	}
 	if err != nil {
-		goscope.Log.Errorf("Unable to send email: %v", err)
+		sentry.CaptureException(err)
 
 		// Ensure that the email is not sent infinitely by the retry mechanism
 		if m.NextRetryAttempt == 0 && m.MaxRetryAttempts > models.MAIL_RETRY_NEVER {

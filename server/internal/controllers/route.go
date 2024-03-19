@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/pkg/tsp"
 	"gorm.io/gorm"
@@ -144,7 +144,7 @@ func retrieveChainUsersAsTspCities(db *gorm.DB, chainID uint) []tsp.City[string]
 	ORDER BY user_chains.route_order ASC`, "`", "`"), chainID).Scan(allUserChains).Error
 
 	if err != nil {
-		goscope.Log.Errorf("Unable to retrieve associations between a loop and its users: %v", err)
+		sentry.CaptureException(err)
 		return nil
 	}
 

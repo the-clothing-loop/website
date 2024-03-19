@@ -8,10 +8,10 @@ import (
 	"net/http"
 
 	"github.com/disintegration/imaging"
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/pkg/imgbb"
 )
 
@@ -67,13 +67,13 @@ func ImageUpload(c *gin.Context) {
 
 	res, err := imgBBupload(c, query.Size, query.Expiration)
 	if err != nil {
-		goscope.Log.Warningf("Unable to upload image: %v", err)
+		sentry.CaptureException(err)
 		c.String(http.StatusBadRequest, "Unable to upload image")
 		return
 	}
 
 	if !res.Success {
-		goscope.Log.Warningf("Unable to upload image: %+v", res)
+		sentry.CaptureException(err)
 		c.String(http.StatusBadRequest, "Unable to upload image")
 		return
 	}

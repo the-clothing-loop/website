@@ -11,7 +11,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
+
 	"github.com/the-clothing-loop/website/server/internal/models"
 
 	Faker "github.com/jaswdr/faker"
@@ -170,7 +170,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 	}
 
 	if err := db.Create(&chain).Error; err != nil {
-		goscope.Log.Fatalf("Unable to create testChain: %v", err)
+		glog.Fatalf("Unable to create testChain: %v", err)
 	}
 
 	// Cleanup runs FiLo
