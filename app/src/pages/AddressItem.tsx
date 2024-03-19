@@ -14,7 +14,7 @@ import {
 import { useContext, useMemo } from "react";
 import { RouteComponentProps } from "react-router";
 import UserCard from "../components/UserCard";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import isPaused from "../utils/is_paused";
 import { t } from "i18next";
 import Badges from "../components/SizeBadge";

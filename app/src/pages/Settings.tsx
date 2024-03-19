@@ -34,7 +34,7 @@ import {
   OverlayEventDetail,
 } from "@ionic/core";
 import { RefObject, useContext, useEffect, useRef, useState } from "react";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import UserCard from "../components/UserCard";
 import { Trans, useTranslation } from "react-i18next";
 import {

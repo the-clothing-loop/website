@@ -1,7 +1,7 @@
 import { IonButton, IonCard, IonCardContent, IonIcon } from "@ionic/react";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { IsChainAdmin, StoreContext } from "../Store";
+import { IsChainAdmin, StoreContext } from "../stores/Store";
 import { User } from "../api/types";
 import { openOutline } from "ionicons/icons";
 import { useHistory } from "react-router";

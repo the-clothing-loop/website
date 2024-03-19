@@ -13,7 +13,7 @@ import {
 } from "@ionic/react";
 import { useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import {
   bagHandle,
   openOutline,

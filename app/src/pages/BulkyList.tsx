@@ -21,7 +21,7 @@ import toastError from "../../toastError";
 import { BulkyItem, User } from "../api/types";
 import { bulkyItemRemove } from "../api/bulky";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 import EditHeaders from "../components/EditHeaders";

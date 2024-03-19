@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
 
-import { IsAuthenticated } from "../../Store";
+import { IsAuthenticated } from "../../stores/Store";
 import Loading from "./Loading";
 
 type PrivateRouteProps = PropsWithChildren<{

@@ -47,7 +47,7 @@ import "./theme/utilities.css";
 import "./theme/overrides.css";
 /* Theme changes for development */
 // import "./theme/dev.css";
-import { IsAuthenticated, StoreContext } from "./Store";
+import { IsAuthenticated, StoreContext } from "./stores/Store";
 import { useContext, useEffect, useMemo } from "react";
 
 import HelpList from "./pages/HelpList";

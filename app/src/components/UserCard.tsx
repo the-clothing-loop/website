@@ -20,7 +20,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Chain, User } from "../api/types";
 import IsPrivate from "../utils/is_private";
-import { IsChainAdmin } from "../Store";
+import { IsChainAdmin } from "../stores/Store";
 import { useMemo, useRef, useState } from "react";
 import { Share } from "@capacitor/share";
 import { isPlatform } from "@ionic/core";

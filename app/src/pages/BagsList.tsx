@@ -58,7 +58,7 @@ import { Bag, UID, User } from "../api/types";
 import { bagPut, bagRemove } from "../api/bag";
 import CreateBag from "../components/CreateUpdateBag";
 import EditHeaders from "../components/EditHeaders";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import { Sleep } from "../utils/sleep";
 import { useLongPress } from "use-long-press";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";

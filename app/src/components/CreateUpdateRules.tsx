@@ -36,7 +36,7 @@ import {
 } from "ionicons/icons";
 import { RefObject, useContext, useState } from "react";
 import { chainUpdate } from "../api/chain";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";

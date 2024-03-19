@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import toastError from "../../toastError";
 import { loginEmail } from "../api/login";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import { AppLauncher } from "@capacitor/app-launcher";
 import getKeyboard from "../utils/capacitor_keyboard";
 

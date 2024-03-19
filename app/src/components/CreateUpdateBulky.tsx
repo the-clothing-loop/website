@@ -27,7 +27,7 @@ import {
 import { ChangeEvent, RefObject, useContext, useState } from "react";
 import { bulkyItemPut } from "../api/bulky";
 import { BulkyItem } from "../api/types";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";

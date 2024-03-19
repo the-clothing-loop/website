@@ -18,7 +18,7 @@ import {
   mail,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { IsChainAdmin, StoreContext } from "../Store";
+import { IsChainAdmin, StoreContext } from "../stores/Store";
 import { useContext, useMemo, useRef } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
 import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";

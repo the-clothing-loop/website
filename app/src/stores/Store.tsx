@@ -1,17 +1,17 @@
 import { createContext, useMemo, useState } from "react";
 import { Storage } from "@ionic/storage";
 
-import dayjs from "./dayjs";
-import { OverlayContainsState, OverlayState } from "./utils/overlay_open";
-import { Bag, BulkyItem, Chain, UID, User } from "./api/types";
-import { bagGetAllByChain } from "./api/bag";
-import { bulkyItemGetAllByChain } from "./api/bulky";
-import { chainGet, chainUpdate } from "./api/chain";
-import { loginValidate, logout as logoutApi, refreshToken } from "./api/login";
-import { routeGetOrder } from "./api/route";
-import { userGetByUID, userGetAllByChain, userUpdate } from "./api/user";
-import Cookies from "js-cookie";
-import { IS_WEB } from "./utils/is_web";
+import dayjs from "../dayjs";
+import { OverlayContainsState, OverlayState } from "../utils/overlay_open";
+import { Bag, BulkyItem, Chain, UID, User } from "../api/types";
+import { bagGetAllByChain } from "../api/bag";
+import { bulkyItemGetAllByChain } from "../api/bulky";
+import { chainGet, chainUpdate } from "../api/chain";
+import { loginValidate, logout as logoutApi, refreshToken } from "../api/login";
+import { routeGetOrder } from "../api/route";
+import { userGetByUID, userGetAllByChain, userUpdate } from "../api/user";
+import { IS_WEB } from "../utils/is_web";
+import { cookieUserUID } from "./browser_storage";
 
 type ChainHeaders = Record<string, string>;
 
@@ -159,10 +159,10 @@ export function StoreProvider({
 
   // Will set the isAuthenticated value and directly return it as well (no need to run setIsAuthenticated)
   async function authenticate(): Promise<IsAuthenticated> {
-    console.log("run authenticate");
+    console.log("run authenticate", "is_web:", IS_WEB);
     let userUID: string | undefined;
     if (IS_WEB) {
-      userUID = Cookies.get("user_uid");
+      userUID = cookieUserUID.get() || undefined;
     } else {
       const auth = (await storage.get("auth")) as StorageAuth | null;
       if (auth) {
