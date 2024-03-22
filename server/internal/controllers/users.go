@@ -7,16 +7,13 @@ import (
 	"time"
 
 	"github.com/golang/glog"
-	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
-	"github.com/the-clothing-loop/website/server/pkg/noderoute"
 	"gopkg.in/guregu/null.v3"
-	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
@@ -152,7 +149,7 @@ func UserGetAllOfChain(c *gin.Context) {
 
 	// omit user data from participants
 	if !isAuthState3AdminChainUser {
-		users, err = omitUserData(db, chain, users, authUser.UID)
+		users, err = models.UserOmitData(db, chain, users, authUser.ID)
 
 		if err != nil {
 			goscope.Log.Errorf("Unable to omit user data: %v", err)
@@ -623,133 +620,4 @@ func UserCheckIfEmailExists(c *gin.Context) {
 		return
 	}
 	c.JSON(200, found)
-}
-
-func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUserUID string) ([]models.User, error) {
-
-	routePrivacy := chain.RoutePrivacy
-
-	// Show all users information
-	if routePrivacy == -1 {
-		return users, nil
-	}
-
-	// Hide all users information
-	if routePrivacy == 0 {
-		for i, user := range users {
-			if user.UID != authUserUID {
-				_, isChainAdmin := user.IsPartOfChain(chain.UID)
-				hideUserInformation(isChainAdmin, &users[i])
-			}
-		}
-		return users, nil
-	}
-
-	userIDsWithBulkyItems := []uint{}
-	db.Raw(`
-			SELECT u.id
-			FROM users AS u
-			JOIN user_chains AS uc on uc.user_id = u.id
-			JOIN bulky_items AS bi ON uc.id = bi.user_chain_id
-			WHERE uc.chain_id = ? AND bi.id IS NOT NULL
-		`, chain.ID).Pluck("id", &userIDsWithBulkyItems)
-	userIDsChainAdmin := []uint{}
-	userIDsPaused := []uint{}
-	lo.ForEach(users, func(u models.User, i int) {
-		_, isChainAdmin := u.IsPartOfChain(chain.UID)
-		if isChainAdmin {
-			userIDsWithBulkyItems = append(userIDsWithBulkyItems, u.ID)
-		}
-
-		isCurrentlyPaused := lo.IfF(u.PausedUntil.Valid, func() bool {
-			return u.PausedUntil.Time.After(time.Now())
-		}).Else(false)
-		if isCurrentlyPaused {
-			userIDsPaused = append(userIDsPaused, u.ID)
-		}
-	})
-
-	routeUIDs, err := chain.GetRouteOrderByUserUID(db)
-	if err != nil {
-		return nil, err
-	}
-	// list of indexes for users list
-	route := []int{}
-	var uIndexMe int
-	for _, uid := range routeUIDs {
-		u, uIndex, ok := lo.FindIndexOf(users, func(u models.User) bool {
-			return u.UID == uid
-		})
-		if ok {
-			if u.UID == authUserUID {
-				uIndexMe = uIndex
-			}
-			route = append(route, uIndex)
-		}
-	}
-	nk := noderoute.New(route)
-	// Iterates over the noderoute and returns early for each user that matches:
-	// 1. the current user
-	// 2. users with a bulky item
-	// 3. users close by with a max distance defined by the route privacy
-	//    paused users are skipped
-	nk.Iterate(func(node *noderoute.Node) {
-		uIndex := nk.Key(node)
-		// 1. the current user
-		if uIndex == uIndexMe {
-			return
-		}
-
-		user := &users[uIndex]
-
-		// 2. users with a bulky item
-		hasBulkyItem := lo.Contains(userIDsWithBulkyItems, user.ID)
-		if hasBulkyItem {
-			return
-		}
-
-		// 3. users close by with a max distance defined by the route privacy
-		//    paused users are skipped
-		i := 0
-		predicate := func(itrNode, node *noderoute.Node) (found, stop bool) {
-			if i > routePrivacy {
-				return false, true
-			}
-			itrUserIndex := nk.Key(itrNode)
-			if itrUserIndex == uIndexMe {
-				return true, true
-			}
-
-			itrUser := users[itrUserIndex]
-			isPaused := lo.Contains(userIDsPaused, itrUser.ID)
-			if !isPaused {
-				i++
-			}
-
-			return false, false
-		}
-
-		closeBy, _ := nk.FindDistanceNextF(node, predicate)
-		if !closeBy {
-			i = 0
-			closeBy, _ = nk.FindDistancePrevF(node, predicate)
-		}
-		if closeBy {
-			return
-		}
-
-		isChainAdmin := lo.Contains(userIDsChainAdmin, user.ID)
-
-		hideUserInformation(isChainAdmin, user)
-	})
-
-	return users, nil
-}
-
-func hideUserInformation(isChainAdmin bool, user *models.User) {
-	if !isChainAdmin {
-		user.Email = zero.StringFrom("***")
-		user.PhoneNumber = "***"
-	}
-	user.Address = "***"
 }

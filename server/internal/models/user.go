@@ -2,8 +2,12 @@ package models
 
 import (
 	"errors"
+	// "log/slog"
 	"time"
 
+	"github.com/samber/lo"
+	"github.com/the-clothing-loop/website/server/pkg/ring_ext"
+	"golang.design/x/go2generics/ring"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 
@@ -261,4 +265,149 @@ func UserCheckEmail(db *gorm.DB, userEmail string) (userID uint, found bool, err
 		return 0, false, err
 	}
 	return row.ID, true, nil
+}
+
+func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]User, error) {
+	routePrivacy := chain.RoutePrivacy
+
+	// Show all users information
+	if routePrivacy == -1 {
+		// slog.Info("Show all users information")
+		return users, nil
+	}
+
+	// Hide all users information
+	if routePrivacy == 0 {
+		// slog.Info("Hide all users information")
+		for i, user := range users {
+			if user.ID != authUserID {
+				_, isChainAdmin := user.IsPartOfChain(chain.UID)
+				hideUserInformation(isChainAdmin, &users[i])
+			}
+		}
+		return users, nil
+	}
+
+	// slog.Info("Hide out of bounds information")
+	userIDsWithBulkyItems := []uint{}
+	db.Raw(`
+			SELECT u.id
+			FROM users AS u
+			JOIN user_chains AS uc on uc.user_id = u.id
+			JOIN bulky_items AS bi ON uc.id = bi.user_chain_id
+			WHERE uc.chain_id = ? AND bi.id IS NOT NULL
+		`, chain.ID).Pluck("id", &userIDsWithBulkyItems)
+	userIDsChainAdmin := []uint{}
+	userIDsPaused := []uint{}
+
+	routeUIDs, err := chain.GetRouteOrderByUserUID(db)
+	if err != nil {
+		return nil, err
+	}
+
+	lo.ForEach(users, func(u User, i int) {
+		_, isChainAdmin := u.IsPartOfChain(chain.UID)
+		if isChainAdmin {
+			userIDsChainAdmin = append(userIDsChainAdmin, u.ID)
+		}
+
+		isCurrentlyPaused := lo.IfF(u.PausedUntil.Valid, func() bool {
+			return u.PausedUntil.Time.After(time.Now())
+		}).Else(false)
+		if isCurrentlyPaused {
+			userIDsPaused = append(userIDsPaused, u.ID)
+		}
+	})
+
+	route := []uint{}
+	for _, uid := range routeUIDs {
+		user, ok := lo.Find(users, func(u User) bool { return u.UID == uid })
+		if !ok {
+			continue
+		}
+		route = append(route, user.ID)
+	}
+
+	r := ring_ext.NewWithValues(route)
+	// slog.Info("ring", "length", r.Len())
+
+	// Iterates over the noderoute and returns early for each user that matches:
+	// 1. the current user
+	// 2. users with a bulky item
+	// 3. users close by with a max distance defined by the route privacy
+	//    paused users are skipped
+
+	userIDsCloseBy := []uint{}
+	ring_ext.Each(r, func(p *ring.Ring[uint]) {
+		if lo.Contains(userIDsPaused, p.Value) {
+			return
+		}
+
+		distance := findCloseBy(p, authUserID, userIDsPaused, routePrivacy)
+		if distance == -1 {
+			return
+		}
+
+		userIDsCloseBy = append(userIDsCloseBy, p.Value)
+	})
+
+	// slog.Info("User IDs",
+	// 	"bulkyItems", userIDsWithBulkyItems,
+	// 	"closeBy", userIDsCloseBy,
+	// 	"chainAdmin", userIDsChainAdmin,
+	// )
+
+	for i := range users {
+		uID := users[i].ID
+		if authUserID == uID {
+			continue
+		}
+		if lo.Contains(userIDsWithBulkyItems, uID) {
+			continue
+		}
+		if lo.Contains(userIDsCloseBy, uID) {
+			continue
+		}
+		isChainAdmin := lo.Contains(userIDsChainAdmin, uID)
+
+		hideUserInformation(isChainAdmin, &users[i])
+	}
+
+	return users, nil
+}
+
+func hideUserInformation(isChainAdmin bool, user *User) {
+	if !isChainAdmin {
+		user.Email = zero.StringFrom("***")
+		user.PhoneNumber = "***"
+	}
+	user.Address = "***"
+}
+
+func findCloseBy(r *ring.Ring[uint], needle uint, pausedIDs []uint, routePrivacy int) int {
+	i := 0
+	distance := -1
+
+	f := func(v uint) bool {
+		if i >= routePrivacy {
+			return true
+		}
+		if !lo.Contains(pausedIDs, v) {
+			i++
+		}
+		if needle == v {
+			distance = i
+			return true
+		}
+
+		return false
+	}
+
+	ring_ext.SomeNext(r, f)
+	if distance == -1 {
+		i = 0
+		ring_ext.SomePrev(r, f)
+	}
+
+	return distance
 }
