@@ -60,9 +60,7 @@ export default function AddressItem({
               {t("interestedSizes")}
             </IonLabel>
             <div className="ion-margin-top ion-margin-bottom" slot="end">
-              {chain ? (
-                <Badges genders={chain.genders} sizes={chain.sizes} />
-              ) : null}
+              {user ? <Badges genders={[]} sizes={user.sizes} /> : null}
             </div>
           </IonItem>
         ) : null}
