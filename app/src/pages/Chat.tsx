@@ -55,7 +55,7 @@ export default function Chat() {
   });
   const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
 
-  console.log(authUser?.uid)
+  console.log(authUser?.uid);
 
   useEffect(() => {
     if (chain && !mmClient) {
@@ -171,7 +171,7 @@ export default function Chat() {
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
-            {t("howDoesItWork")}
+            {chain?.name} 
           </IonTitle>
         </IonToolbar>
       </IonHeader>
