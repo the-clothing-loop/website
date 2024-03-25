@@ -62,6 +62,8 @@ import { useLocation } from "react-router";
 import { useLongPress } from "use-long-press";
 import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
+import RoutePrivacyInput from "../components/Settings/RoutePrivacyInput";
+import { chainUpdate } from "../api/chain";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -158,6 +160,16 @@ export default function Settings() {
         ],
       });
     }
+  }
+
+  async function handleChangeRoutePrivacy(rp: number) {
+    if (!chain) return;
+    await chainUpdate({
+      uid: chain.uid,
+      route_privacy: rp,
+    });
+
+    await setChain(chain.uid, authUser);
   }
 
   function handleShareLoop() {
@@ -384,7 +396,7 @@ export default function Settings() {
                   )}
                 </IonItem>
               ) : null}
-              {isChainAdmin && chain ? (
+              {isChainAdmin && chain && authUser ? (
                 <>
                   <IonItem
                     lines="none"
@@ -407,6 +419,11 @@ export default function Settings() {
                     <IonLabel>{t("goToAdminPortal")}</IonLabel>
                     <IonIcon icon={compassOutline} />
                   </IonItem>
+                  <RoutePrivacyInput
+                    chain={chain}
+                    authUser={authUser}
+                    onChange={handleChangeRoutePrivacy}
+                  />
                 </>
               ) : null}
               {chain?.published ? (

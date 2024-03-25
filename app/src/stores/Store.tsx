@@ -244,6 +244,7 @@ export function StoreProvider({
             addHeaders: true,
             addTheme: true,
             addIsAppDisabled: true,
+            addRoutePrivacy: true,
           }),
           userGetAllByChain(_chainUID),
           routeGetOrder(_chainUID),
@@ -327,6 +328,7 @@ export function StoreProvider({
           addHeaders: true,
           addTheme: true,
           addIsAppDisabled: true,
+          addRoutePrivacy: true,
         });
         _setChain(_chain.data);
       } else if (tab === "address" || tab === "bags") {
@@ -360,6 +362,7 @@ export function StoreProvider({
                 addRules: isCurrentChain,
                 addHeaders: isCurrentChain,
                 addTheme: isCurrentChain,
+                addRoutePrivacy: isCurrentChain,
                 addIsAppDisabled: true,
               });
             }),
