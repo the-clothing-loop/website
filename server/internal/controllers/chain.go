@@ -138,6 +138,10 @@ func ChainGet(c *gin.Context) {
 		sql += `,
 		chains.is_app_disabled`
 	}
+	if query.AddRoutePrivacy {
+		sql += `,
+		chains.route_privacy`
+	}
 	sql += ` FROM chains WHERE uid = ? LIMIT 1`
 	err := db.Raw(sql, query.ChainUID).Scan(chain).Error
 	if err != nil || chain.ID == 0 {

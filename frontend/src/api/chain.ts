@@ -10,6 +10,7 @@ export function chainGet(
     addRules?: boolean;
     addHeaders?: boolean;
     addTheme?: boolean;
+    addRoutePrivacy?: boolean;
   } = {},
 ) {
   return axios.get<Chain>("/v2/chain", {
@@ -20,6 +21,7 @@ export function chainGet(
       add_rules: o.addRules || false,
       add_theme: o.addTheme || false,
       add_headers: o.addHeaders || false,
+      add_route_privacy: o.addRoutePrivacy || false,
     },
   });
 }
