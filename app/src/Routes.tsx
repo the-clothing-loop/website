@@ -67,6 +67,7 @@ import { OneSignalInitCap } from "./onesignal";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import OpenSource from "./pages/OpenSource";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import BagSVG from "./components/Bags/Svg";
 
 SplashScreen.show({
   autoHide: true,
@@ -219,11 +220,13 @@ function AppRoute() {
           <IonLabel>{t("route")}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="bags" href="/bags">
-          <IonIcon aria-hidden="true" icon={bagHandleOutline} />
+          <div className="tw-w-[30px] tw-h-[30px]">
+            <BagSVG bag={{ number: "", color: "currentColor" }} isList />
+          </div>
           {hasBagTooOldMe ? (
             <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-bg-danger"></div>
           ) : null}
-          <IonLabel>{t("bags")}</IonLabel>
+          <IonLabel className="tw-text-[10px]">{t("bags")}</IonLabel>
         </IonTabButton>
 
         <IonTabButton tab="bulky-items" href="/bulky-items">

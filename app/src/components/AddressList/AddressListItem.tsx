@@ -3,6 +3,7 @@ import { t } from "i18next";
 import { shield, pauseCircleSharp, bagHandle } from "ionicons/icons";
 import { Bag, User } from "../../api/types";
 import isPaused from "../../utils/is_paused";
+import BagSVG from "../Bags/Svg";
 
 interface Props {
   user: User;
@@ -79,12 +80,9 @@ export default function AddressListItem({
         className="tw-flex tw-flex-col tw-h-10 tw-flex-wrap-reverse tw-items-end"
       >
         {bags.map((b) => (
-          <IonIcon
-            icon={bagHandle}
-            style={{ color: b.color }}
-            className="tw-m-0.5"
-            key={b.id}
-          />
+          <div className="tw-w-4 tw-h-4">
+            <BagSVG bag={{ number: "", color: b.color }} isList />
+          </div>
         ))}
       </div>
     </IonItem>
