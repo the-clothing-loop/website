@@ -33,7 +33,6 @@ export default function ToastManager() {
           <ToastComponent toast={t} closeFunc={closeToast} key={t.id} />
         ))}
       </ol>
-      ;
       {$openModal ? (
         <ModalComponent modal={$openModal} closeFunc={closeModal} key="modal" />
       ) : null}
