@@ -175,7 +175,7 @@ export default function EventDetails() {
                 {isOrganizer ? (
                   <>
                     <a
-                      href={`/events/` + event.uid + `/edit`}
+                      href={localizePath("/events/edit/?event=" + event.uid)}
                       className="btn btn-secondary btn-outline sm:me-4"
                     >
                       <span className="feather feather-edit mr-3 rtl:mr-0 rtl:ml-3"></span>

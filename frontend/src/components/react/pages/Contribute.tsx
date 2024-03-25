@@ -96,7 +96,9 @@ export default function Contribute() {
 
         <div className="m-4 mb-2">
           <h2 className="text-xl text-teal font-bold">
-            <a href={"/events/" + event.uid}>{event.name}</a>
+            <a href={localizePath("/events/details/?event=" + event.uid)}>
+              {event.name}
+            </a>
           </h2>
         </div>
         <div className="flex-grow mx-4 mb-2">
