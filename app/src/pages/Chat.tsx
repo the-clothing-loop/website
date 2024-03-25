@@ -185,10 +185,10 @@ export default function Chat() {
                   <IonItem
                     color="light"
                     key={post.id}
-                    className={`tw-rounded-tl-xl tw-rounded-tr-xl tw-mb-4 ${
+                    className={`tw-rounded-tl-2xl tw-rounded-tr-2xl tw-mb-2 ${
                       post.user_id == authUser?.uid
-                        ? "tw-rounded-bl-xl tw-float-right tw-ml-8 tw-mr-4"
-                        : "tw-rounded-br-xl tw-mr-8 tw-ml-4 tw-float-left"
+                        ? "tw-rounded-bl-2xl tw-float-right tw-ml-8 tw-mr-4"
+                        : "tw-rounded-br-2xl tw-mr-8 tw-ml-4 tw-float-left"
                     }`}
                   >
                     <div className="tw-py-2">
