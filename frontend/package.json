@@ -44,7 +44,7 @@
     "redaxios": "^0.5.1",
     "sanitize-html": "^2.12.1",
     "sitemap": "^7.1.1",
-    "tinymce": "^6.8.3",
+    "tinymce": "^7.0.0",
     "use-debounce": "^10.0.0",
     "use-query-params": "^2.2.1"
   },
