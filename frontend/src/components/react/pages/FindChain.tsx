@@ -20,6 +20,8 @@ import {
 import clothingCategories from "../util/categories";
 import { Genders, Sizes } from "../../../api/enums";
 import { addToastError } from "../../../stores/toast";
+import { useStore } from "@nanostores/react";
+import { $chains } from "../../../stores/chains";
 
 const MAPBOX_TOKEN = import.meta.env.PUBLIC_MAPBOX_KEY;
 
@@ -99,8 +101,9 @@ function createFilterFunc(
 export default function FindChain() {
   const urlParams = new URLSearchParams(location.search);
 
-  const [chains, setChains] = useState<Chain[]>();
+  const chains = useStore($chains);
   const [map, setMap] = useState<mapboxgl.Map>();
+  const [marker, setMarker] = useState<mapboxgl.Marker>();
   const { zoom, setZoom, mapZoom } = useMapZoom(4, MIN_ZOOM, MAX_ZOOM);
   const [locationLoading, setLocationLoading] = useState(false);
   const [mapClickedChains, setMapClickedChains] = useState<Chain[]>([]);
@@ -131,6 +134,9 @@ export default function FindChain() {
         ? _center
         : [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
       style: "mapbox://styles/mapbox/light-v11",
+    });
+    const _marker = new mapboxgl.Marker({
+      color: "#518d7e",
     });
 
     setZoom(4);
@@ -243,10 +249,6 @@ export default function FindChain() {
           },
         });
 
-        const _marker = new mapboxgl.Marker({
-          color: "#518d7e",
-        });
-
         // Initalize chainsInView
         _map.on("idle", () => {
           getVisibleChains(_map, _chains);
@@ -335,10 +337,11 @@ export default function FindChain() {
           }
         });
       });
-      setChains(_chains);
+      $chains.set(_chains);
     });
 
     setMap(_map);
+    setMarker(_marker);
 
     return () => {
       _map.remove();
@@ -442,6 +445,9 @@ export default function FindChain() {
     if (longLat) {
       map.setCenter(longLat as mapboxgl.LngLatLike);
       map.setZoom(10);
+      marker?.setLngLat(longLat as mapboxgl.LngLatLike).addTo(map);
+
+      // TODO: pointer
     }
 
     window.history.replaceState(

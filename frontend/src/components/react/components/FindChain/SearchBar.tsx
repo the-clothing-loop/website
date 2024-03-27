@@ -11,6 +11,15 @@ import {
   GEOJSON_LONGITUDE_INDEX,
 } from "../../util/maps";
 import { useTranslation } from "react-i18next";
+import type {
+  FeatureCollection,
+  Geometry,
+  GeoJsonProperties,
+  Feature,
+} from "geojson";
+import type { Chain } from "../../../../api/types";
+import { $chains } from "../../../../stores/chains";
+import MiniSearch, { type SearchResult } from "minisearch";
 
 export interface SearchValues {
   searchTerm: string;
@@ -44,7 +53,11 @@ export function toUrlSearchParams(
   }
   return "?" + queryParams.toString();
 }
-
+type MSearchChain = Pick<
+  Chain,
+  "uid" | "name" | "address" | "longitude" | "latitude"
+>;
+const LOOP_SEARCH_PREFIX = "Loop: ";
 export default function SearchBar(props: Props) {
   const { t } = useTranslation();
   const [longLat, setLongLat] = useState<GeoJSON.Position>();
@@ -65,6 +78,55 @@ export default function SearchBar(props: Props) {
       preventScroll: true,
       focusVisible: true,
     } as any);
+  }
+
+  async function externalGeocoder(
+    searchInput: string,
+    features: FeatureCollection<Geometry, GeoJsonProperties>,
+  ): Promise<FeatureCollection<Geometry, GeoJsonProperties>> {
+    // find 4 chains with a name likeness then stop early
+    console.log("external geocoder");
+    const chains = $chains.get();
+
+    if (searchInput.startsWith(LOOP_SEARCH_PREFIX)) {
+      searchInput = searchInput.substring(LOOP_SEARCH_PREFIX.length);
+    }
+
+    const mSearch = new MiniSearch<MSearchChain>({
+      idField: "uid",
+      fields: ["name"],
+      storeFields: ["uid", "name", "address", "longitude", "latitude"],
+    });
+    mSearch.addAll(chains);
+    console.log("added chains to mSearch");
+    let likeChains = mSearch.search(searchInput, {
+      fields: ["name"],
+      fuzzy: 0.05,
+    }) as Array<SearchResult & MSearchChain>;
+    console.log("like chains", likeChains);
+
+    let o = likeChains
+      .filter((_, i) => i < 3)
+      .map((c, i) => {
+        return {
+          id: c.uid,
+          type: "Feature",
+          place_type: ["place"],
+          relevance: i,
+          place_name: LOOP_SEARCH_PREFIX + c.name,
+          address: c.address,
+          center: [c.longitude, c.latitude],
+          geometry: {
+            type: "Point",
+            coordinates: [c.longitude, c.latitude],
+          },
+          context: [],
+        } as any as Feature<Geometry, GeoJsonProperties>;
+      });
+
+    console.log("features: ", features);
+
+    return [...o, ...(features as any)] as any;
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -96,6 +158,7 @@ export default function SearchBar(props: Props) {
           onResult={handleSearchChange}
           onSelectResult={handleSearchSelected}
           placeholder={t("location")!}
+          externalGeocoder={externalGeocoder}
           types={[
             "country",
             "region",
