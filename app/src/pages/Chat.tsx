@@ -52,6 +52,7 @@ export default function Chat() {
     prev_post_id: "",
     first_inaccessible_post_time: 0,
   });
+  const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
 
   useEffect(() => {
     if (chain && !mmClient) {
@@ -167,7 +168,7 @@ export default function Chat() {
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
-            {t("howDoesItWork")}
+            {chain?.name}
           </IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -181,22 +182,49 @@ export default function Chat() {
               let post = postList.posts[item];
               return (
                 <div>
-                  <IonItem lines="full" key={post.id}>
-                    {post.message}
+                  <IonItem
+                    color="light"
+                    key={post.id}
+                    className={`tw-rounded-tl-2xl tw-rounded-tr-2xl tw-mb-2 ${
+                      post.user_id == authUser?.uid
+                        ? "tw-rounded-bl-2xl tw-float-right tw-ml-8 tw-mr-4"
+                        : "tw-rounded-br-2xl tw-mr-8 tw-ml-4 tw-float-left"
+                    }`}
+                  >
+                    <div className="tw-py-2">
+                      <div className="tw-font-bold">{post.props.username}</div>
+                      <div>{post.message}</div>
+                    </div>
                   </IonItem>
                 </div>
               );
             })}
           </div>
           <div>
-            <IonItem disabled={sendingMsg == SendingMsgState.SENDING}>
+            <IonItem
+              color="light"
+              disabled={sendingMsg == SendingMsgState.SENDING}
+            >
               <IonInput
+                placeholder="Send Message"
                 value={message}
                 disabled={sendingMsg == SendingMsgState.SENDING}
                 onIonInput={(e) => setMessage(e.detail.value as string)}
+                className="tw-ml-2"
               />
-              <IonButton slot="end" onClick={sendMessage} shape="round">
-                <IonIcon icon={sendOutline} />
+              <IonButton
+                slot="end"
+                onClick={sendMessage}
+                shape="round"
+                disabled={message == ""}
+                color="light"
+                className="tw-mr-0"
+              >
+                <IonIcon
+                  icon={sendOutline}
+                  color="primary"
+                  className="tw-text-2xl"
+                />
               </IonButton>
             </IonItem>
           </div>
