@@ -483,13 +483,9 @@ export default function FindChain() {
       }
     }
 
-    window.history.replaceState(
-      {},
-      "",
-      window.location.origin +
-        window.location.href +
-        toUrlSearchParams(search, longLat),
-    );
+    const urlSearch = toUrlSearchParams(search, longLat);
+    console.log(urlSearch);
+    window.history.replaceState(null, "", window.location.pathname + urlSearch);
 
     setMapClickedChains([]);
   }
