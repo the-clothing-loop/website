@@ -22,7 +22,6 @@ import { Genders, Sizes } from "../../../api/enums";
 import { addToastError } from "../../../stores/toast";
 import { useStore } from "@nanostores/react";
 import { $chains } from "../../../stores/chains";
-import { set } from "react-hook-form";
 
 const MAPBOX_TOKEN = import.meta.env.PUBLIC_MAPBOX_KEY;
 
@@ -264,7 +263,6 @@ export default function FindChain() {
             );
 
             if (searchChain) {
-              console.log("found");
               setSidebarOpen(true);
               setFocusedChain(searchChain);
             }

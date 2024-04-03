@@ -98,12 +98,10 @@ export default function SearchBar(props: Props) {
       storeFields: ["uid", "name", "address", "longitude", "latitude"],
     });
     mSearch.addAll(chains);
-    console.log("added chains to mSearch");
     let likeChains = mSearch.search(searchInput, {
       fields: ["name"],
       fuzzy: 0.05,
     }) as Array<SearchResult & MSearchChain>;
-    console.log("like chains", likeChains);
 
     let o = likeChains
       .filter((_, i) => i < 3)
@@ -123,8 +121,6 @@ export default function SearchBar(props: Props) {
           context: [],
         } as any as Feature<Geometry, GeoJsonProperties>;
       });
-
-    console.log("features: ", features);
 
     return [...o, ...(features as any)] as any;
   }
