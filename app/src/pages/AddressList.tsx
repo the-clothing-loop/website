@@ -4,21 +4,31 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonItem,
+  IonLabel,
   IonList,
+  IonModal,
   IonPage,
+  IonRadio,
+  IonRadioGroup,
+  IonSearchbar,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useContext, useRef } from "react";
+import { useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../stores/Store";
-import { openOutline } from "ionicons/icons";
+import { ellipsisHorizontalCircleOutline, openOutline } from "ionicons/icons";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
-import AddressListItem from "../components/AddressList/AddressListItem";
+import AddressListItem, {
+  AddressListItemProps,
+} from "../components/AddressList/AddressListItem";
+import wrapIndex from "../utils/wrap_index";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function AddressList() {
   const {
@@ -32,9 +42,12 @@ export default function AddressList() {
     isChainAdmin,
     isThemeDefault,
     shouldBlur,
+    routeListView,
+    setRouteListView,
   } = useContext(StoreContext);
   const { t } = useTranslation();
-
+  const [sortRouteType, setSortRouteType] = useState("");
+  const optionsSheetModal = useRef<HTMLIonModalElement>(null);
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
 
   const headerKey = "addressList";
@@ -45,12 +58,133 @@ export default function AddressList() {
     setChain(chain?.uid, authUser);
   }
 
+  const [search, setSearch] = useState("");
+  const slowSearch = useDebounce(search, 500);
+  const routeListItems = useMemo(() => {
+    const routeLength = route.length;
+    if (!chain || routeLength === 0) return [];
+    let meRouteIndex = -1;
+    if (authUser) {
+      meRouteIndex = route.findIndex((uid) => uid === authUser.uid);
+    }
+    let topRouteIndex = 0;
+    if (routeListView === "dynamic") {
+      const routePrivacy = chain.route_privacy || 2;
+      if (routePrivacy * 2 < routeLength) {
+        topRouteIndex = wrapIndex(
+          meRouteIndex - (routePrivacy <= 3 ? routePrivacy : 3),
+          routeLength,
+        );
+      }
+      console.log("topRouteIndex", topRouteIndex);
+    }
+
+    let arr = [] as AddressListItemProps[];
+    let i = topRouteIndex;
+    do {
+      const userUID = route[i];
+      const user = chainUsers.find((u) => u.uid === userUID);
+      if (!user) return [];
+
+      if (
+        slowSearch
+          ? user.name.toLowerCase().includes(slowSearch.toLowerCase())
+          : true
+      ) {
+        const isMe = user.uid === authUser?.uid;
+        const userBags = bags.filter((b) => b.user_uid === user.uid);
+        const isHost =
+          user.chains.find((uc) => uc.chain_uid === chain?.uid)
+            ?.is_chain_admin || false;
+
+        const isPrivate = IsPrivate(user.email);
+        const isAddressPrivate = IsPrivate(user.address);
+
+        arr.push({
+          user,
+          bags: userBags,
+          isMe,
+          isHost,
+          isAddressPrivate,
+          number: i + 1,
+          routerLink: isPrivate ? undefined : "/address/" + user.uid,
+        });
+      }
+
+      i = wrapIndex(i + 1, routeLength);
+    } while (i !== topRouteIndex);
+    return arr;
+  }, [route, chainUsers, routeListView, slowSearch]);
+
   return (
     <IonPage>
       <OverlayPaused />
       <OverlayAppDisabled />
       <IonHeader translucent>
         <IonToolbar>
+          <IonButtons>
+            {isChainAdmin ? (
+              <IonButton id="sheet-address-options">
+                <IonIcon icon={ellipsisHorizontalCircleOutline} />
+                {slowSearch ? (
+                  <div className="tw-rounded-full tw-w-2 tw-h-2 tw-absolute tw-bottom-1 tw-right-0 tw-bg-danger"></div>
+                ) : null}
+              </IonButton>
+            ) : null}
+            <IonModal
+              ref={optionsSheetModal}
+              trigger="sheet-address-options"
+              initialBreakpoint={0.25}
+              breakpoints={[0, 0.25]}
+            >
+              <IonContent color="light">
+                <IonList>
+                  <IonItem lines="full">
+                    <IonSearchbar
+                      onIonInput={(e) => setSearch(e.detail.value as string)}
+                      onIonClear={() => setSearch("")}
+                      value={search}
+                      placeholder="Search"
+                    ></IonSearchbar>
+                  </IonItem>
+                  <IonItem lines="full" color="light">
+                    <p className="tw-font-bold">Sort</p>
+                  </IonItem>
+                  <IonRadioGroup
+                    value={routeListView}
+                    onIonChange={(e: any) => setRouteListView(e.detail.value)}
+                  >
+                    <IonItem lines="full">
+                      <IonLabel>
+                        <h2
+                          className={`tw-text-lg ${
+                            routeListView === "dynamic"
+                              ? "!tw-font-semibold"
+                              : ""
+                          }`}
+                        >
+                          {t("automatic")}
+                        </h2>
+                      </IonLabel>
+                      <IonRadio slot="end" value="dynamic" />
+                    </IonItem>
+                    <IonItem lines="full">
+                      <IonLabel>
+                        <h2
+                          className={`tw-text-lg ${
+                            routeListView === "list" ? "!tw-font-semibold" : ""
+                          }`}
+                        >
+                          {t("list")}
+                        </h2>
+                      </IonLabel>
+                      <IonRadio slot="end" value="list" />
+                    </IonItem>
+                  </IonRadioGroup>
+                </IonList>
+              </IonContent>
+            </IonModal>
+          </IonButtons>
           <IonTitle>{headerText}</IonTitle>
           {isChainAdmin ? (
             <IonButtons
@@ -96,29 +230,8 @@ export default function AddressList() {
           <IonList
             className={"tw-flex-grow".concat(shouldBlur ? " tw-blur" : "")}
           >
-            {route.map((userUID, i) => {
-              const user = chainUsers.find((u) => u.uid === userUID);
-              if (!user) return null;
-              const isMe = user.uid === authUser?.uid;
-              const userBags = bags.filter((b) => b.user_uid === user.uid);
-              const isUserHost =
-                user.chains.find((uc) => uc.chain_uid === chain?.uid)
-                  ?.is_chain_admin || false;
-
-              const isPrivate = IsPrivate(user.email);
-              const isAddressPrivate = IsPrivate(user.address);
-              return (
-                <AddressListItem
-                  user={user}
-                  isMe={isMe}
-                  bags={userBags}
-                  isHost={isUserHost}
-                  isAddressPrivate={isAddressPrivate}
-                  number={i + 1}
-                  key={user.uid}
-                  routerLink={isPrivate ? undefined : "/address/" + user.uid}
-                />
-              );
+            {routeListItems.map((props) => {
+              return <AddressListItem {...props} key={props.user.uid} />;
             })}
           </IonList>
           {isChainAdmin ? (

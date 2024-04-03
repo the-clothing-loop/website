@@ -28,6 +28,7 @@ export enum IsAuthenticated {
 }
 
 type BagListView = "dynamic" | "list" | "card";
+type RouteListView = "dynamic" | "list";
 
 export const StoreContext = createContext({
   isAuthenticated: IsAuthenticated.Unknown,
@@ -55,6 +56,8 @@ export const StoreContext = createContext({
   closeOverlay: (s: OverlayState) => {},
   bagListView: "dynamic" as BagListView,
   setBagListView: (v: BagListView) => {},
+  routeListView: "dynamic" as RouteListView,
+  setRouteListView: (v: RouteListView) => {},
   connError: (err: any) => Promise.resolve(IsAuthenticated.Unknown),
   shouldBlur: false,
 });
@@ -86,6 +89,7 @@ export function StoreProvider({
   const [isChainAdmin, setIsChainAdmin] = useState(false);
   const [overlayState, setOverlayState] = useState(OverlayState.OPEN_ALL);
   const [bagListView, _setBagListView] = useState<BagListView>("dynamic");
+  const [routeListView, _setRouteListView] = useState<RouteListView>("dynamic");
 
   const shouldBlur = useMemo(() => {
     let isAppDisabledPopup =
@@ -119,6 +123,7 @@ export function StoreProvider({
       await _storage.set("version", 1);
     }
     _setBagListView((await _storage.get("bag_list_view")) || "dynamic");
+    _setRouteListView((await _storage.get("route_list_view")) || "dynamic");
     setStorage(_storage);
   }
 
@@ -140,6 +145,7 @@ export function StoreProvider({
     setIsAuthenticated(IsAuthenticated.LoggedOut);
     setIsChainAdmin(false);
     _setBagListView("dynamic");
+    _setRouteListView("dynamic");
   }
 
   async function login(email: string, token: string) {
@@ -407,6 +413,10 @@ export function StoreProvider({
     _setBagListView(v);
     storage.set("bag_list_view", v);
   }
+  function setRouteListView(v: RouteListView) {
+    _setRouteListView(v);
+    storage.set("route_list_view", v);
+  }
 
   async function connError(err: any) {
     if (err?.status === 401) {
@@ -453,6 +463,8 @@ export function StoreProvider({
         closeOverlay,
         bagListView,
         setBagListView,
+        routeListView,
+        setRouteListView,
         connError,
         shouldBlur,
       }}

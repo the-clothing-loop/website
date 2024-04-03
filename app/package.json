@@ -43,6 +43,7 @@
     "@ionic/storage": "^4.0.0",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
+    "@uidotdev/usehooks": "^2.4.1",
     "autoprefixer": "^10.4.15",
     "beautiful-react-hooks": "^5.0.0",
     "dayjs": "^1.11.9",

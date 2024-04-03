@@ -5,7 +5,7 @@ import { Bag, User } from "../../api/types";
 import isPaused from "../../utils/is_paused";
 import BagSVG from "../Bags/Svg";
 
-interface Props {
+export interface AddressListItemProps {
   user: User;
   bags: Bag[];
   isMe: boolean;
@@ -22,7 +22,7 @@ export default function AddressListItem({
   isAddressPrivate,
   number,
   routerLink,
-}: Props) {
+}: AddressListItemProps) {
   const isUserPaused = isPaused(user.paused_until);
   return (
     <IonItem
