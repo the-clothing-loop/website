@@ -123,8 +123,8 @@ export default function SideBar({
 
   return (
     <div
-      className={`absolute w-full sm:w-72 top-0 left-0 right-0 max-h-[90%] sm:max-h-full sm:right-auto
-        glass sm:bg-transparent shadow-lg sm:shadow-none z-40
+      className={`z-10 absolute w-full sm:w-72 top-0 left-0 right-0 max-h-[90%] sm:max-h-full sm:right-auto
+        glass sm:bg-transparent shadow-lg sm:shadow-none
          overflow-auto `.concat(open ? "" : "hidden")}
       tabIndex={-1}
     >
