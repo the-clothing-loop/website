@@ -84,7 +84,7 @@ export default function CreateUpdateBag({
         highestNumber++;
       }
 
-      setBagNumber(`${t("bag")} ${highestNumber}`);
+      setBagNumber(highestNumber.toString());
     } else {
       setBagNumber(bag.number);
     }
