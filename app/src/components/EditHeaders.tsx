@@ -123,7 +123,7 @@ export default function EditHeaders(props: {
             >
               <IonIcon icon={refreshOutline} className="tw-ml-0.5 tw-mr-5" />
               <IonLabel className="ion-text-wrap">
-                <h3>{t("restHeaders")}</h3>
+                <h3>{t("resetHeaders")}</h3>
                 <p>{t("resetHeadersDesc")}</p>
               </IonLabel>
               <IonButton slot="end" onClick={reset} color="danger">
@@ -135,7 +135,7 @@ export default function EditHeaders(props: {
             lines="none"
             color={error === "number" ? "danger" : undefined}
           >
-            {t("updateHeaderDesc")}
+            <p className="tw-my-1">{t("updateHeaderDesc")}</p>
           </IonItem>
           <IonItem
             lines="none"

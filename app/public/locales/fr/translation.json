@@ -125,7 +125,7 @@
   "setTimerForACoupleOfWeeks": "Select how many weeks you want to pause your participation",
   "updateHeader": "Edit this page's header",
   "updateHeaderDesc": "This change will be visible to all loop members.",
-  "restHeaders": "Rest headers",
+  "resetHeaders": "Reset headers",
   "resetHeadersDesc": "Reset your loop's headers to the default headers.",
   "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?"
 }
