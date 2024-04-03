@@ -4,8 +4,6 @@ import {
   IonCard,
   IonCol,
   IonContent,
-  IonDatetime,
-  IonDatetimeButton,
   IonGrid,
   IonHeader,
   IonIcon,
@@ -14,7 +12,6 @@ import {
   IonList,
   IonModal,
   IonPage,
-  IonPopover,
   IonRadio,
   IonRadioGroup,
   IonRefresher,
@@ -29,33 +26,23 @@ import {
   useIonAlert,
 } from "@ionic/react";
 import {
-  chevronForwardOutline,
   closeOutline,
   construct,
   ellipsisHorizontal,
   ellipsisHorizontalCircleOutline,
-  flashOutline,
-  gridOutline,
-  list,
-  pauseCircle,
 } from "ionicons/icons";
-import type {
-  DatetimeChangeEventDetail,
-  IonDatetimeCustomEvent,
-  IonModalCustomEvent,
-} from "@ionic/core/components";
+import type { IonModalCustomEvent } from "@ionic/core/components";
 import {
   useContext,
   useRef,
   useState,
   MouseEvent,
-  RefObject,
   useMemo,
   useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Bag, UID, User } from "../api/types";
-import { bagPut, bagRemove } from "../api/bag";
+import { Bag, UID } from "../api/types";
+import { bagRemove } from "../api/bag";
 import CreateBag from "../components/CreateUpdateBag";
 import EditHeaders from "../components/EditHeaders";
 import { StoreContext } from "../stores/Store";
@@ -69,11 +56,14 @@ import BagSVG from "../components/Bags/Svg";
 import { useBagTooOld } from "../components/Bags/bag.hook";
 import { useLocation } from "react-router";
 import BagCardDate from "../components/Bags/BagCardDate";
+import wrapIndex from "../utils/wrap_index";
+import UserLink from "../components/Bags/UserLink";
+import SelectUserModal from "../components/Bags/SelectUserModal";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type State = { bag_id?: number } | undefined;
 
 const MIN_BAG_LIST = 9;
-const MIN_USERS_FOR_SEARCH = 15;
 
 export default function BagsList() {
   const { state } = useLocation<State>();
@@ -119,6 +109,8 @@ export default function BagsList() {
     t("clickOnBagToChangeHolder"),
   );
 
+  const [search, setSearch] = useState("");
+  const slowSearch = useDebounce(search, 500);
   const [bagsCard, bagsList] = useMemo(() => {
     if (!authUser) return [[], []];
     let authRouteIndex = authUser ? route.indexOf(authUser.uid) : -1;
@@ -127,34 +119,35 @@ export default function BagsList() {
     const routeLength = route.length;
     if (authRouteIndex !== -1) {
       indexAllowed = [
-        authRouteIndex - 2,
-        authRouteIndex - 1,
+        wrapIndex(authRouteIndex - 2, routeLength),
+        wrapIndex(authRouteIndex - 1, routeLength),
         authRouteIndex,
-        authRouteIndex + 1,
-        authRouteIndex + 2,
+        wrapIndex(authRouteIndex + 1, routeLength),
+        wrapIndex(authRouteIndex + 2, routeLength),
       ];
+    }
 
-      // ensure that the index overflows to the end or beginning
-      indexAllowed.forEach((i, index) => {
-        if (index < 0) {
-          indexAllowed[i] = (index % routeLength) + routeLength;
-        } else if (index >= routeLength) {
-          indexAllowed[i] = index % routeLength;
-        }
-      });
+    let filteredBags = bags;
+    if (search) {
+      filteredBags = bags.filter((bag) =>
+        bag.number
+          .toLowerCase()
+          .replaceAll(" ", "")
+          .includes(slowSearch.toLowerCase().replaceAll(" ", "")),
+      );
     }
 
     let _bagsCard: Bag[] = [];
     let _bagsList: Bag[] = [];
     if (bagListView === "card") {
-      _bagsCard = bags;
+      _bagsCard = filteredBags;
     } else if (bagListView === "list") {
-      _bagsList = bags;
+      _bagsList = filteredBags;
     } else {
-      if (bags.length < MIN_BAG_LIST) {
-        _bagsCard = bags;
+      if (filteredBags.length < MIN_BAG_LIST) {
+        _bagsCard = filteredBags;
       } else {
-        bags.forEach((bag) => {
+        filteredBags.forEach((bag) => {
           let isMe = authUser?.uid === bag.user_uid;
           let routeIndex = route.indexOf(bag.user_uid);
           let isClosest = indexAllowed.indexOf(routeIndex) !== -1;
@@ -164,11 +157,11 @@ export default function BagsList() {
           }
         });
 
-        _bagsList = bags;
+        _bagsList = filteredBags;
       }
     }
     return [_bagsCard, _bagsList];
-  }, [bags, route, bagListView]);
+  }, [bags, route, bagListView, slowSearch]);
 
   useEffect(() => {
     let bagID = state?.bag_id;
@@ -254,45 +247,52 @@ export default function BagsList() {
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons>
-            <IonButton id="popover-bag-view">
+            <IonButton id="sheet-bags-options">
               <IonIcon icon={ellipsisHorizontalCircleOutline} />
+              {slowSearch ? (
+                <div className="tw-rounded-full tw-w-2 tw-h-2 tw-absolute tw-bottom-1 tw-right-0 tw-bg-danger"></div>
+              ) : null}
             </IonButton>
-            <IonPopover trigger="popover-bag-view" dismissOnSelect={true}>
-              <IonContent>
+            <IonModal
+              trigger="sheet-bags-options"
+              initialBreakpoint={0.4}
+              breakpoints={[0, 0.4, 0.8]}
+            >
+              <IonContent color="light">
                 <IonList>
-                  <IonItem
-                    button={true}
-                    detail={false}
-                    lines="full"
-                    color={bagListView === "dynamic" ? "primary" : undefined}
-                    onClick={() => setBagListView("dynamic")}
-                  >
-                    <IonIcon slot="start" icon={flashOutline}></IonIcon>
-                    {t("automatic")}
+                  <IonItem lines="full">
+                    <IonSearchbar
+                      onIonInput={(e) => setSearch(e.detail.value as string)}
+                      onIonClear={() => setSearch("")}
+                      value={search}
+                      placeholder={t("search")}
+                    ></IonSearchbar>
                   </IonItem>
-                  <IonItem
-                    button={true}
-                    detail={false}
-                    lines="full"
-                    color={bagListView === "list" ? "primary" : undefined}
-                    onClick={() => setBagListView("list")}
-                  >
-                    <IonIcon slot="start" icon={list}></IonIcon>
-                    {t("list")}
+                  <IonItem lines="full" color="light">
+                    <p className="tw-font-bold">{t("display")}</p>
                   </IonItem>
-                  <IonItem
-                    button={true}
-                    detail={false}
-                    lines="none"
-                    color={bagListView === "card" ? "primary" : undefined}
-                    onClick={() => setBagListView("card")}
+                  <IonRadioGroup
+                    value={bagListView}
+                    onIonChange={(e: any) => setBagListView(e.detail.value)}
                   >
-                    <IonIcon slot="start" icon={gridOutline}></IonIcon>
-                    {t("card")}
-                  </IonItem>
+                    {["dynamic", "list", "card"].map((v) => (
+                      <IonItem lines="full" key={v}>
+                        <IonLabel>
+                          <h2
+                            className={`tw-text-lg ${
+                              bagListView === v ? "!tw-font-semibold" : ""
+                            }`}
+                          >
+                            {v === "dynamic" ? t("automatic") : t(v)}
+                          </h2>
+                        </IonLabel>
+                        <IonRadio slot="end" value={v} />
+                      </IonItem>
+                    ))}
+                  </IonRadioGroup>
                 </IonList>
               </IonContent>
-            </IonPopover>
+            </IonModal>
           </IonButtons>
 
           <IonTitle>{headerText}</IonTitle>
@@ -615,194 +615,5 @@ function Card({
         </div>
       ) : null}
     </IonCard>
-  );
-}
-
-function SelectUserModal({
-  didDismiss,
-  selectedUserUID,
-  bagID,
-  modal,
-}: {
-  selectedUserUID: UID;
-  bagID: number | null;
-  modal: RefObject<HTMLIonModalElement>;
-  didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
-}) {
-  const { chain, chainUsers, route, authUser, setChain } =
-    useContext(StoreContext);
-  const { t, i18n } = useTranslation();
-
-  const [selectedOverride, setSelected] = useState("");
-  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
-  const [search, setSearch] = useState("");
-  const sortedRoute = useMemo(() => {
-    const indexSelected = route.indexOf(selectedUserUID);
-    const routeWithIndex = route.map<[string, number]>((r, i) => [r, i]);
-    let arr = [...routeWithIndex];
-    arr.splice(0, indexSelected);
-    let arrTop = [...routeWithIndex];
-    arrTop.splice(indexSelected);
-    arr.push(...arrTop);
-    // console.log("arr", [...arr], "indexSelected", indexSelected);
-
-    if (arr.length > 4) {
-      let arrBot = [arr.pop()!, arr.pop()!];
-      arrBot.reverse();
-      arr.unshift(...arrBot);
-      // console.log("arrBot", [...arrBot]);
-    }
-    return arr;
-  }, [selectedUserUID, route, authUser, chainUsers]);
-
-  async function submit(userUID: string) {
-    console.log("user:", userUID, " bag:", bagID);
-
-    if ((typeof userUID !== "string" || !userUID) && !bagID) return;
-    modal.current?.dismiss(userUID, "success");
-    await bagPut({
-      chain_uid: chain!.uid,
-      user_uid: authUser!.uid,
-      holder_uid: userUID,
-      bag_id: bagID!,
-      ...(updatedAt === null
-        ? {}
-        : {
-            updated_at: updatedAt.toISOString(),
-          }),
-    });
-    await setChain(chain?.uid, authUser);
-  }
-
-  function handleChangeDatetime(
-    e: IonDatetimeCustomEvent<DatetimeChangeEventDetail>,
-  ) {
-    let datetime = new Date(e.detail.value + "");
-    setUpdatedAt(datetime);
-  }
-
-  function willPresent() {
-    setUpdatedAt(null);
-  }
-
-  function _didDismiss(e: IonModalCustomEvent<OverlayEventDetail<any>>) {
-    setSelected("");
-    if (didDismiss) didDismiss(e);
-  }
-
-  let selected = selectedOverride || selectedUserUID;
-  return (
-    <IonModal
-      ref={modal}
-      initialBreakpoint={0.5}
-      breakpoints={[0, 0.5, 0.75, 1]}
-      onIonModalDidDismiss={_didDismiss}
-      onIonModalWillPresent={willPresent}
-    >
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonButton onClick={() => modal.current?.dismiss(null, "dismiss")}>
-              {t("close")}
-            </IonButton>
-          </IonButtons>
-          <IonTitle>{t("changeBagHolder")}</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={() => submit(selected)}>
-              {t("change")}
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent>
-        <IonList>
-          <IonItem lines="full">
-            <IonLabel>{t("dateOfDelivery")}</IonLabel>
-            <div slot="end">
-              <IonDatetimeButton datetime="datetime"></IonDatetimeButton>
-              <IonModal keepContentsMounted={true}>
-                <IonDatetime
-                  firstDayOfWeek={1}
-                  id="datetime"
-                  presentation="date"
-                  locale={i18n.language}
-                  onIonChange={handleChangeDatetime}
-                ></IonDatetime>
-              </IonModal>
-            </div>
-          </IonItem>
-          {sortedRoute.length > MIN_USERS_FOR_SEARCH ? (
-            <IonItem lines="full" color="light">
-              <IonSearchbar
-                placeholder={t("search")}
-                onIonInput={(e) => setSearch(e.detail.value as string)}
-                onIonClear={() => setSearch("")}
-              />
-            </IonItem>
-          ) : null}
-        </IonList>
-        <IonList>
-          <IonRadioGroup
-            value={selected}
-            onIonChange={(e) => setSelected(e.detail.value)}
-          >
-            {sortedRoute.map(([r, i]) => {
-              const user = chainUsers?.find((u) => u.uid === r);
-              if (!user) return null;
-              let found =
-                search !== "" ? RegExp(search, "i").test(user.name) : true;
-              if (!found) return null;
-
-              const isSelected = selected === user.uid;
-              const isMe = user.uid === authUser?.uid;
-              return (
-                <IonItem lines="full" key={user.uid}>
-                  <span slot="start" className="!tw-font-bold">{`#${
-                    i + 1
-                  }`}</span>
-                  <IonLabel>
-                    <h2
-                      className={`tw-text-lg ${isMe ? "tw-text-primary" : ""} ${
-                        isSelected ? "!tw-font-semibold" : ""
-                      }`}
-                    >
-                      {user.name}
-                    </h2>
-                  </IonLabel>
-                  <IonRadio slot="end" value={user.uid} />
-                </IonItem>
-              );
-            })}
-          </IonRadioGroup>
-        </IonList>
-      </IonContent>
-    </IonModal>
-  );
-}
-
-function UserLink({ user, routeIndex }: { user: User; routeIndex: number }) {
-  const { t } = useTranslation();
-  return (
-    <div className="!tw-font-bold tw-text-medium tw-flex tw-flex-row tw-items-baseline tw-text-xs tw-w-full">
-      {user.paused_until ? (
-        <IonIcon
-          className="tw-translate-y-px tw-w-4 tw-h-4 tw-min-w-[16px] tw-me-[3px]"
-          icon={pauseCircle}
-        />
-      ) : (
-        <span className="tw-me-[3px]">{"#" + (routeIndex + 1)}</span>
-      )}
-      <span
-        className={`ion-text-ellipsis tw-text-sm tw-flex-grow tw-block ${
-          user.paused_until ? "tw-text-medium" : "tw-text-dark"
-        }`}
-      >
-        {user.name}
-      </span>
-      <IonIcon
-        icon={chevronForwardOutline}
-        className="tw-translate-y-0.5 tw-px-0.5 tw-min-w-[12px] tw-w-3"
-      ></IonIcon>
-    </div>
   );
 }

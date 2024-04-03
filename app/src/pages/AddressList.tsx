@@ -46,8 +46,6 @@ export default function AddressList() {
     setRouteListView,
   } = useContext(StoreContext);
   const { t } = useTranslation();
-  const [sortRouteType, setSortRouteType] = useState("");
-  const optionsSheetModal = useRef<HTMLIonModalElement>(null);
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
 
   const headerKey = "addressList";
@@ -132,10 +130,9 @@ export default function AddressList() {
               </IonButton>
             ) : null}
             <IonModal
-              ref={optionsSheetModal}
               trigger="sheet-address-options"
-              initialBreakpoint={0.25}
-              breakpoints={[0, 0.25]}
+              initialBreakpoint={0.4}
+              breakpoints={[0, 0.4, 0.8]}
             >
               <IonContent color="light">
                 <IonList>
