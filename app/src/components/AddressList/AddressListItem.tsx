@@ -1,6 +1,6 @@
 import { IonItem, IonText, IonIcon } from "@ionic/react";
 import { t } from "i18next";
-import { shield, pauseCircleSharp, bagHandle } from "ionicons/icons";
+import { shield, pauseCircleSharp } from "ionicons/icons";
 import { Bag, User } from "../../api/types";
 import isPaused from "../../utils/is_paused";
 import BagSVG from "../Bags/Svg";
