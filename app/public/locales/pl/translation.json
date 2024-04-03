@@ -91,6 +91,8 @@
   "customLoopRules": "Custom Loop rules",
   "createNewRule": "Create new rule",
   "removeRule": "Remove rule",
+  "sort": "Sort",
+  "display": "Display",
   "back": "Back",
   "howDoesItWork": "How does it work?",
   "loading": "Loading...",
