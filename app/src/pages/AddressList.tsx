@@ -82,7 +82,11 @@ export default function AddressList() {
     do {
       const userUID = route[i];
       const user = chainUsers.find((u) => u.uid === userUID);
-      if (!user) return [];
+      if (!user) {
+        console.error("User not found in chainUsers", userUID);
+        i = wrapIndex(i + 1, routeLength);
+        continue;
+      }
 
       if (
         slowSearch
