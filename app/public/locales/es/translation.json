@@ -120,6 +120,8 @@
   "pauseParticipation": "Pausar participación",
   "pauseUntil": "Pausar hasta",
   "paused": "Pausado",
+  "onlyForThisLoop": "Only for this loop",
+  "pauseOnlyLoop": "Pause for this loop",
   "unPause": "Reanudar",
   "areYouSureUnPause": "¿Estás seguro de que quieres reanudar?",
   "yourParticipationIsPausedClick": "Tu participación está pausada. Haz clic en el botón para volver a unirte.",
