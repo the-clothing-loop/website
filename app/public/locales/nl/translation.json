@@ -120,6 +120,8 @@
   "pauseParticipation": "Pauzeer deelname",
   "pauseUntil": "Pauzeer tot",
   "paused": "Pauze",
+  "onlyForThisLoop": "Only for this loop",
+  "pauseOnlyLoop": "Pause for this loop",
   "unPause": "Hervatten",
   "areYouSureUnPause": "Weet je zeker dat je wilt doorgaan?",
   "yourParticipationIsPausedClick": "Je deelname is gepauzeerd. Klik op de knop om weer mee te doen.",
