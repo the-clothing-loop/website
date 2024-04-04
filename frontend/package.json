@@ -36,6 +36,7 @@
     "mapbox-gl": "^2.11.0",
     "minisearch": "^6.3.0",
     "nanostores": "^0.10.0",
+    "pell": "^1.0.6",
     "react": "^18.2.0",
     "react-csv": "^2.2.2",
     "react-dom": "^18.2.0",
@@ -45,7 +46,6 @@
     "redaxios": "^0.5.1",
     "sanitize-html": "^2.12.1",
     "sitemap": "^7.1.1",
-    "tinymce": "^6.8.3",
     "use-debounce": "^10.0.0",
     "use-query-params": "^2.2.1"
   },
@@ -57,6 +57,7 @@
     "@types/js-cookie": "^3.0.6",
     "@types/mapbox__mapbox-gl-geocoder": "^4.7.1",
     "@types/node": "^20.11.23",
+    "@types/pell": "^1.0.4",
     "@types/react": "^18.2.61",
     "@types/react-csv": "^1.1.10",
     "@types/react-dom": "^18.2.19",

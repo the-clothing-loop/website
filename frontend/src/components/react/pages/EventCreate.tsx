@@ -63,7 +63,7 @@ export default function EventCreate() {
     return null;
   } else if (submitted) {
     window.location.href = localizePath("/events/details/?event=" + submitted);
-    return;
+    return null;
   } else {
     return (
       <>

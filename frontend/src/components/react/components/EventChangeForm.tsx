@@ -14,6 +14,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useMemo,
 } from "react";
 import dayjs from "../util/dayjs";
 import { $authUser } from "../../../stores/auth";
@@ -21,7 +22,7 @@ import { GinParseErrors } from "../util/gin-errors";
 import { chainGet } from "../../../api/chain";
 import { addToastError } from "../../../stores/toast";
 import { useSepDateTime } from "../util/sep-date-time.hooks";
-import { TinyMCE } from "./TinyMCE";
+import Editor from "./Editor";
 import { GEOJSON_LATITUDE_INDEX, GEOJSON_LONGITUDE_INDEX } from "../util/maps";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@nanostores/react";
@@ -121,7 +122,11 @@ export default function EventChangeForm(props: {
     _setEventPriceText(text);
   };
   const [eventPriceCurrency, _setEventPriceCurrency] = useState(
-    () => values.price_currency || "",
+    () => values.price_currency || defaultValues.price_currency!,
+  );
+  const isValidPrice = useMemo(
+    () => validatePrice(eventPriceText),
+    [eventPriceText],
   );
   const [chains, setChains] = useState<Chain[]>([]);
 
@@ -196,8 +201,6 @@ export default function EventChangeForm(props: {
       addToastError(GinParseErrors(t, err), err?.status);
     }
   }
-
-  const isValidPrice = validatePrice(eventPriceText);
 
   console.log("initial values: ", props.initialValues);
   console.log("Date values: ", values.date);
@@ -304,16 +307,14 @@ export default function EventChangeForm(props: {
           </div>
         </div>
         <div className="form-control">
-          <label>
-            <div className="label">
-              <span className="label-text">{t("description")}</span>
-            </div>
-            <TinyMCE
-              name="description"
-              value={values.description}
-              onChange={(value) => setValue("description", value)}
-            />
-          </label>
+          <div className="label">
+            <span className="label-text">{t("description")}</span>
+          </div>
+          <Editor
+            // name="description"
+            value={values.description || ""}
+            onChange={(value) => setValue("description", value)}
+          />
         </div>
         <div>
           <div className="mb-4">
@@ -336,7 +337,6 @@ export default function EventChangeForm(props: {
             <div className="input-group">
               <select
                 name="chain_uid"
-                defaultValue="EUR"
                 onChange={setEventPriceCurrency}
                 value={eventPriceCurrency}
                 className="select select-secondary select-outlined"
@@ -368,7 +368,7 @@ export default function EventChangeForm(props: {
 
           <div className="mb-4">
             <TextForm
-              label={t("eventLink") + "*"}
+              label={t("eventLink")}
               name="link"
               type="url"
               value={values.link}
