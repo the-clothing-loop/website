@@ -60,8 +60,16 @@ import wrapIndex from "../utils/wrap_index";
 import UserLink from "../components/Bags/UserLink";
 import SelectUserModal from "../components/Bags/SelectUserModal";
 import { useDebounce } from "@uidotdev/usehooks";
+import dayjs from "../dayjs";
 
 type State = { bag_id?: number } | undefined;
+
+type Sort =
+  | "1ToN"
+  | "aToZ"
+  | "dateCreated"
+  | "dateLastSwapped"
+  | "dateLastSwappedRev";
 
 const MIN_BAG_LIST = 9;
 
@@ -95,6 +103,7 @@ export default function BagsList() {
   const [updateBag, setUpdateBag] = useState<Bag | null>(null);
   const [sheetModalUserUID, setSheetModalUserUID] = useState("");
   const [sheetModalBagID, setSheetModalBagID] = useState(0);
+  const [sort, setSort] = useState<Sort>("1ToN");
 
   const longPressSubHeader = useLongPress(() => {
     subHeaderSheetModal.current?.present();
@@ -139,7 +148,28 @@ export default function BagsList() {
 
     let _bagsCard: Bag[] = [];
     let _bagsList: Bag[] = [];
-    if (bagListView === "card") {
+    if (sort !== "1ToN") {
+      switch (sort) {
+        case "aToZ":
+          _bagsList = filteredBags.toSorted((a, b) =>
+            a.number.localeCompare(b.number),
+          );
+          break;
+        case "dateCreated":
+          _bagsList = filteredBags.toSorted((a, b) => (a.id > b.id ? 1 : 0));
+          break;
+        case "dateLastSwapped":
+          _bagsList = filteredBags.toSorted((a, b) =>
+            dayjs(b.updated_at).diff(a.updated_at),
+          );
+          break;
+        case "dateLastSwappedRev":
+          _bagsList = filteredBags.toSorted((a, b) =>
+            dayjs(a.updated_at).diff(b.updated_at),
+          );
+          break;
+      }
+    } else if (bagListView === "card") {
       _bagsCard = filteredBags;
     } else if (bagListView === "list") {
       _bagsList = filteredBags;
@@ -161,7 +191,7 @@ export default function BagsList() {
       }
     }
     return [_bagsCard, _bagsList];
-  }, [bags, route, bagListView, slowSearch]);
+  }, [bags, route, bagListView, slowSearch, sort]);
 
   useEffect(() => {
     let bagID = state?.bag_id;
@@ -255,12 +285,12 @@ export default function BagsList() {
             </IonButton>
             <IonModal
               trigger="sheet-bags-options"
-              initialBreakpoint={0.4}
-              breakpoints={[0, 0.4, 0.8]}
+              initialBreakpoint={0.8}
+              breakpoints={[0, 0.4, 0.8, 1]}
             >
               <IonContent color="light">
                 <IonList>
-                  <IonItem lines="full">
+                  <IonItem lines="full" className="tw-mt-2">
                     <IonSearchbar
                       onIonInput={(e) => setSearch(e.detail.value as string)}
                       onIonClear={() => setSearch("")}
@@ -284,6 +314,42 @@ export default function BagsList() {
                             }`}
                           >
                             {v === "dynamic" ? t("automatic") : t(v)}
+                          </h2>
+                        </IonLabel>
+                        <IonRadio
+                          slot="end"
+                          value={v}
+                          disabled={sort !== "1ToN"}
+                        />
+                      </IonItem>
+                    ))}
+                  </IonRadioGroup>
+                  <IonItem lines="full" color="light">
+                    <p className="tw-font-bold">{t("sort")}</p>
+                  </IonItem>
+                  <IonRadioGroup
+                    value={sort}
+                    onIonChange={(e: any) => {
+                      setSort(e.detail.value);
+                    }}
+                  >
+                    {(
+                      [
+                        "1ToN",
+                        "dateLastSwapped",
+                        "dateLastSwappedRev",
+                        "aToZ",
+                        "dateCreated",
+                      ] as Sort[]
+                    ).map((v) => (
+                      <IonItem lines="full" key={v}>
+                        <IonLabel>
+                          <h2
+                            className={`tw-text-lg ${
+                              sort === v ? "!tw-font-semibold" : ""
+                            }`}
+                          >
+                            {t(v)}
                           </h2>
                         </IonLabel>
                         <IonRadio slot="end" value={v} />
