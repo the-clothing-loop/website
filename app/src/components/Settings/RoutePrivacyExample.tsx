@@ -89,6 +89,7 @@ export default function RoutePrivacyExample(props: {
               bags={[] as Bag[]}
               isHost={user.uid === "7"}
               isAddressPrivate={isPrivate}
+              isUserPaused={user.paused_until !== null}
               number={i + 5}
               routerLink={undefined}
             />
