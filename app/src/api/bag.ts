@@ -1,21 +1,31 @@
 import type { Bag, UID } from "./types";
 import axios from "./axios";
 
-const regxBag = /(\d+)/;
+const regxBag = /^(\d+)/;
+export function sortBags(bags: Bag[]) {
+  return bags.sort((a, z) => {
+    const matchA = regxBag.exec(a.number);
+    const matchZ = regxBag.exec(z.number);
+    const noA = matchA?.at(1) ? parseInt(matchA[1]) : NaN;
+    const noZ = matchZ?.at(1) ? parseInt(matchZ[1]) : NaN;
+
+    if (Number.isNaN(noA) && Number.isNaN(noZ)) {
+      const compare = a.number.localeCompare(z.number, "kn");
+      return compare < 0 ? -1 : compare > 0 ? 1 : 0;
+    }
+    if (Number.isNaN(noA)) return 1;
+    if (Number.isNaN(noZ)) return -1;
+    return noA < noZ ? -1 : 1;
+  });
+}
+
 export function bagGetAllByChain(chainUID: UID, userUID: UID) {
   return axios
     .get<Bag[]>("/v2/bag/all", {
       params: { chain_uid: chainUID, user_uid: userUID },
     })
     .then((res) => {
-      res.data.sort((a, b) => {
-        const matchA = regxBag.exec(a.number);
-        const matchB = regxBag.exec(b.number);
-        const noA = matchA?.at(1) ? parseInt(matchA[1]) : 0;
-        const noB = matchB?.at(1) ? parseInt(matchB[1]) : 0;
-
-        return noA - noB;
-      });
+      sortBags(res.data);
       return res;
     });
 }

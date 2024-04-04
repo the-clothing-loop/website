@@ -45,7 +45,7 @@ import { Bag, UID } from "../api/types";
 import { bagRemove } from "../api/bag";
 import CreateBag from "../components/CreateUpdateBag";
 import EditHeaders from "../components/EditHeaders";
-import { StoreContext } from "../stores/Store";
+import { BagSort, StoreContext } from "../stores/Store";
 import { Sleep } from "../utils/sleep";
 import { useLongPress } from "use-long-press";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
@@ -64,13 +64,6 @@ import dayjs from "../dayjs";
 
 type State = { bag_id?: number } | undefined;
 
-type Sort =
-  | "1ToN"
-  | "aToZ"
-  | "dateCreated"
-  | "dateLastSwapped"
-  | "dateLastSwappedRev";
-
 const MIN_BAG_LIST = 9;
 
 export default function BagsList() {
@@ -87,6 +80,8 @@ export default function BagsList() {
     route,
     bagListView,
     setBagListView,
+    setBagSort,
+    bagSort,
     isThemeDefault,
     shouldBlur,
   } = useContext(StoreContext);
@@ -103,7 +98,6 @@ export default function BagsList() {
   const [updateBag, setUpdateBag] = useState<Bag | null>(null);
   const [sheetModalUserUID, setSheetModalUserUID] = useState("");
   const [sheetModalBagID, setSheetModalBagID] = useState(0);
-  const [sort, setSort] = useState<Sort>("1ToN");
 
   const longPressSubHeader = useLongPress(() => {
     subHeaderSheetModal.current?.present();
@@ -146,30 +140,32 @@ export default function BagsList() {
       );
     }
 
-    let _bagsCard: Bag[] = [];
-    let _bagsList: Bag[] = [];
-    if (sort !== "1ToN") {
-      switch (sort) {
-        case "aToZ":
-          _bagsList = filteredBags.toSorted((a, b) =>
-            a.number.localeCompare(b.number),
-          );
+    if (bagSort !== "aToZ") {
+      switch (bagSort) {
+        case "zToA":
+          filteredBags = filteredBags.toReversed();
           break;
         case "dateCreated":
-          _bagsList = filteredBags.toSorted((a, b) => (a.id > b.id ? 1 : 0));
+          filteredBags = filteredBags.toSorted((a, b) => (a.id > b.id ? 1 : 0));
           break;
         case "dateLastSwapped":
-          _bagsList = filteredBags.toSorted((a, b) =>
+          filteredBags = filteredBags.toSorted((a, b) =>
             dayjs(b.updated_at).diff(a.updated_at),
           );
           break;
         case "dateLastSwappedRev":
-          _bagsList = filteredBags.toSorted((a, b) =>
+          filteredBags = filteredBags.toSorted((a, b) =>
             dayjs(a.updated_at).diff(b.updated_at),
           );
           break;
       }
-    } else if (bagListView === "card") {
+    }
+
+    console.log("sorted bags: ", filteredBags.map((b) => b.number).join(","));
+
+    let _bagsCard: Bag[] = [];
+    let _bagsList: Bag[] = [];
+    if (bagListView === "card") {
       _bagsCard = filteredBags;
     } else if (bagListView === "list") {
       _bagsList = filteredBags;
@@ -191,7 +187,7 @@ export default function BagsList() {
       }
     }
     return [_bagsCard, _bagsList];
-  }, [bags, route, bagListView, slowSearch, sort]);
+  }, [bags, route, bagListView, slowSearch, bagSort]);
 
   useEffect(() => {
     let bagID = state?.bag_id;
@@ -316,11 +312,7 @@ export default function BagsList() {
                             {v === "dynamic" ? t("automatic") : t(v)}
                           </h2>
                         </IonLabel>
-                        <IonRadio
-                          slot="end"
-                          value={v}
-                          disabled={sort !== "1ToN"}
-                        />
+                        <IonRadio slot="end" value={v} />
                       </IonItem>
                     ))}
                   </IonRadioGroup>
@@ -328,25 +320,25 @@ export default function BagsList() {
                     <p className="tw-font-bold">{t("sort")}</p>
                   </IonItem>
                   <IonRadioGroup
-                    value={sort}
+                    value={bagSort}
                     onIonChange={(e: any) => {
-                      setSort(e.detail.value);
+                      setBagSort(e.detail.value);
                     }}
                   >
                     {(
                       [
-                        "1ToN",
+                        "aToZ",
+                        "zToA",
                         "dateLastSwapped",
                         "dateLastSwappedRev",
-                        "aToZ",
                         "dateCreated",
-                      ] as Sort[]
+                      ] as BagSort[]
                     ).map((v) => (
                       <IonItem lines="full" key={v}>
                         <IonLabel>
                           <h2
                             className={`tw-text-lg ${
-                              sort === v ? "!tw-font-semibold" : ""
+                              bagSort === v ? "!tw-font-semibold" : ""
                             }`}
                           >
                             {t(v)}

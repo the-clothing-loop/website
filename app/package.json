@@ -66,6 +66,7 @@
   },
   "devDependencies": {
     "@capacitor/cli": "5.1.1",
+    "@faker-js/faker": "^8.4.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.1.0",
     "@testing-library/user-event": "^14.4.3",
