@@ -179,7 +179,7 @@ export default function AddressList() {
                             routeListView === "list" ? "!tw-font-semibold" : ""
                           }`}
                         >
-                          {t("list")}
+                          {t("routeOrder")}
                         </h2>
                       </IonLabel>
                       <IonRadio slot="end" value="list" />
