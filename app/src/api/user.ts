@@ -38,6 +38,7 @@ export interface UserUpdateBody {
   longitude?: number;
   latitude?: number;
   accepted_legal?: boolean;
+  chain_paused?: boolean;
 }
 export function userUpdate(user: UserUpdateBody) {
   return axios.patch<never>("/v2/user", user);

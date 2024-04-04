@@ -2,7 +2,6 @@ import { IonItem, IonText, IonIcon } from "@ionic/react";
 import { t } from "i18next";
 import { shield, pauseCircleSharp } from "ionicons/icons";
 import { Bag, User } from "../../api/types";
-import isPaused from "../../utils/is_paused";
 import BagSVG from "../Bags/Svg";
 
 export interface AddressListItemProps {
@@ -13,6 +12,7 @@ export interface AddressListItemProps {
   isAddressPrivate: boolean;
   number: number;
   routerLink: string | undefined;
+  isUserPaused: boolean;
 }
 export default function AddressListItem({
   user,
@@ -22,8 +22,8 @@ export default function AddressListItem({
   isAddressPrivate,
   number,
   routerLink,
+  isUserPaused,
 }: AddressListItemProps) {
-  const isUserPaused = isPaused(user.paused_until);
   return (
     <IonItem
       lines="full"
@@ -80,7 +80,7 @@ export default function AddressListItem({
         className="tw-flex tw-flex-col tw-h-10 tw-flex-wrap-reverse tw-items-end"
       >
         {bags.map((b) => (
-          <div className="tw-w-4 tw-h-4">
+          <div className="tw-w-4 tw-h-4" key={b.id}>
             <BagSVG bag={{ number: "", color: b.color }} isList />
           </div>
         ))}

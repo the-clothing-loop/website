@@ -194,6 +194,7 @@ func UserUpdate(c *gin.Context) {
 		PhoneNumber   *string    `json:"phone_number,omitempty"`
 		Newsletter    *bool      `json:"newsletter,omitempty"`
 		PausedUntil   *time.Time `json:"paused_until,omitempty"`
+		ChainPaused   *bool      `json:"chain_paused,omitempty"`
 		Sizes         *[]string  `json:"sizes,omitempty"`
 		Address       *string    `json:"address,omitempty"`
 		I18n          *string    `json:"i18n,omitempty"`
@@ -206,7 +207,7 @@ func UserUpdate(c *gin.Context) {
 		return
 	}
 
-	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
 	if !ok {
 		return
 	}
@@ -242,6 +243,9 @@ func UserUpdate(c *gin.Context) {
 			} else {
 				userChanges["paused_until"] = null.Time{}
 			}
+		}
+		if body.ChainPaused != nil && chain != nil {
+			db.Exec(`UPDATE user_chains SET is_paused = ? WHERE user_id = ? AND chain_id = ?`, *body.ChainPaused, user.ID, chain.ID)
 		}
 		if body.Sizes != nil {
 			j, _ := json.Marshal(body.Sizes)

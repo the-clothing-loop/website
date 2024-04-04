@@ -35,7 +35,7 @@ export const StoreContext = createContext({
   isChainAdmin: false,
   isThemeDefault: true,
   authUser: null as null | User,
-  setPause: (date: Date | boolean) => {},
+  setPause: (date: Date | boolean, onlyChainUID?: UID) => {},
   setTheme: (c: string) => {},
   chain: null as Chain | null,
   chainUsers: [] as Array<User>,
@@ -298,21 +298,33 @@ export function StoreProvider({
     });
   }
 
-  async function setPause(pause: Date | boolean) {
+  async function setPause(pause: Date | boolean, onlyChainUID?: UID) {
     if (!authUser) return;
 
-    let pauseUntil = dayjs();
-    if (pause === true) {
-      pauseUntil = pauseUntil.add(100, "years");
-    } else if (pause === false || pause < new Date()) {
-      pauseUntil = pauseUntil.add(-1, "week");
+    if (onlyChainUID) {
+      if (typeof pause !== "boolean") {
+        console.error("Invalid pause value", pause, onlyChainUID);
+        return;
+      }
+      await userUpdate({
+        user_uid: authUser.uid,
+        chain_uid: onlyChainUID,
+        chain_paused: pause,
+      });
     } else {
-      pauseUntil = dayjs(pause);
+      let pauseUntil = dayjs();
+      if (pause === true) {
+        pauseUntil = pauseUntil.add(100, "years");
+      } else if (pause === false || pause < new Date()) {
+        pauseUntil = pauseUntil.add(-1, "week");
+      } else {
+        pauseUntil = dayjs(pause);
+      }
+      await userUpdate({
+        user_uid: authUser.uid,
+        paused_until: pauseUntil.format(),
+      });
     }
-    await userUpdate({
-      user_uid: authUser.uid,
-      paused_until: pauseUntil.format(),
-    });
     const _authUser = (await userGetByUID(undefined, authUser.uid, {})).data;
     setAuthUser(_authUser);
 

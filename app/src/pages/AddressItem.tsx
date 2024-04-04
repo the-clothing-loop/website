@@ -29,7 +29,7 @@ export default function AddressItem({
     let userUID = match.params.uid;
     return chainUsers.find((u) => u.uid === userUID) || null;
   }, [match.params.uid, chainUsers]);
-  const isUserPaused = isPaused(user?.paused_until || null);
+  const isUserPaused = isPaused(user, chain?.uid);
 
   const userBags = useMemo(() => {
     return bags.filter((b) => b.user_uid === user?.uid);

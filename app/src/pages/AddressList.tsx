@@ -29,6 +29,7 @@ import AddressListItem, {
 } from "../components/AddressList/AddressListItem";
 import wrapIndex from "../utils/wrap_index";
 import { useDebounce } from "@uidotdev/usehooks";
+import isPaused from "../utils/is_paused";
 
 export default function AddressList() {
   const {
@@ -101,6 +102,7 @@ export default function AddressList() {
 
         const isPrivate = IsPrivate(user.email);
         const isAddressPrivate = IsPrivate(user.address);
+        const isUserPaused = isPaused(user, chain.uid);
 
         arr.push({
           user,
@@ -109,6 +111,7 @@ export default function AddressList() {
           isHost,
           isAddressPrivate,
           number: i + 1,
+          isUserPaused,
           routerLink: isPrivate ? undefined : "/address/" + user.uid,
         });
       }
@@ -232,7 +235,7 @@ export default function AddressList() {
             className={"tw-flex-grow".concat(shouldBlur ? " tw-blur" : "")}
           >
             {routeListItems.map((props) => {
-              return <AddressListItem {...props} key={props.user.uid} />;
+              return <AddressListItem {...props} key={props.number} />;
             })}
           </IonList>
           {isChainAdmin ? (

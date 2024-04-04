@@ -130,7 +130,16 @@ export default function Settings() {
         },
         {
           text: t("unPause"),
-          handler: () => setPause(false),
+          handler: () => {
+            const uc = authUser?.chains.find(
+              (uc) => uc.chain_uid === chain?.uid,
+            );
+            if (uc && chain && uc.is_paused) {
+              setPause(false, chain.uid);
+            } else {
+              setPause(false);
+            }
+          },
           role: "destructive",
         },
       ]);
@@ -146,6 +155,10 @@ export default function Settings() {
                 () => refSelectPauseExpiryModal.current?.present(),
                 100,
               ),
+          },
+          {
+            text: t("pauseOnlyLoop"),
+            handler: () => setPause(true, chain!.uid),
           },
           {
             text: t("untilITurnItBackOn"),
@@ -187,7 +200,7 @@ export default function Settings() {
     Share.share({ url });
   }
 
-  let isUserPaused = isPaused(authUser?.paused_until || null);
+  let isUserPaused = isPaused(authUser, chain?.uid);
   let pausedDayjs = isUserPaused ? dayjs(authUser!.paused_until) : null;
   let showExpandButton = (chain?.description.length || 0) > 200;
   let emptyDescription = (chain?.description.length || 0) == 0;
@@ -203,6 +216,9 @@ export default function Settings() {
             count: pausedDayjs.diff(now, "week"),
           });
         }
+      }
+      if (authUser?.paused_until === null) {
+        pausedFromNow = t("onlyForThisLoop");
       } else {
         pausedFromNow = t("untilITurnItBackOn");
       }

@@ -59,6 +59,7 @@ SELECT
 	users.uid                  AS user_uid,
 	user_chains.is_chain_admin AS is_chain_admin,
 	user_chains.created_at     AS created_at,
+	user_chains.is_paused   AS is_paused,
 	user_chains.is_approved    AS is_approved
 FROM user_chains
 LEFT JOIN chains ON user_chains.chain_id = chains.id
@@ -311,9 +312,16 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 			userIDsChainAdmin = append(userIDsChainAdmin, u.ID)
 		}
 
-		isCurrentlyPaused := lo.IfF(u.PausedUntil.Valid, func() bool {
-			return u.PausedUntil.Time.After(time.Now())
-		}).Else(false)
+		isCurrentlyPaused := false
+		if u.PausedUntil.Valid {
+			isCurrentlyPaused = u.PausedUntil.Time.After(time.Now())
+		}
+		if !isCurrentlyPaused {
+			uc, ok := lo.Find(u.Chains, func(uc UserChain) bool { return uc.UserID == u.ID })
+			if ok && uc.IsPaused {
+				isCurrentlyPaused = true
+			}
+		}
 		if isCurrentlyPaused {
 			userIDsPaused = append(userIDsPaused, u.ID)
 		}
