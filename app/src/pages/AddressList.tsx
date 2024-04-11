@@ -128,14 +128,12 @@ export default function AddressList() {
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons>
-            {isChainAdmin ? (
-              <IonButton id="sheet-address-options">
-                <IonIcon icon={ellipsisHorizontalCircleOutline} />
-                {slowSearch ? (
-                  <div className="tw-rounded-full tw-w-2 tw-h-2 tw-absolute tw-bottom-1 tw-right-0 tw-bg-danger"></div>
-                ) : null}
-              </IonButton>
-            ) : null}
+            <IonButton id="sheet-address-options">
+              <IonIcon icon={ellipsisHorizontalCircleOutline} />
+              {slowSearch ? (
+                <div className="tw-rounded-full tw-w-2 tw-h-2 tw-absolute tw-bottom-1 tw-right-0 tw-bg-danger"></div>
+              ) : null}
+            </IonButton>
             <IonModal
               trigger="sheet-address-options"
               initialBreakpoint={0.4}
