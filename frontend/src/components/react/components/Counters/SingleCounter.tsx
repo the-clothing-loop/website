@@ -8,27 +8,21 @@ interface IProps {
 const SingleCount: FC<IProps> = ({ end, step }: IProps) => {
   const [state, setState] = useState(0);
 
-  const counter = (
-    val: number,
-    end: number,
-    setter: (value: number) => void,
-    step: number,
-  ) => {
-    if (val > end) {
-      setter(end);
-      return;
-    }
-    setter(val);
-    setTimeout(() => {
-      counter(val + step, end, setter, step);
-    }, 40);
-  };
+  function counter() {
+    setState((s) => {
+      if (s + step > end) return end;
+      setTimeout(() => {
+        counter();
+      }, 40);
+      return s + step;
+    });
+  }
 
   useEffect(() => {
-    counter(0, end, setState, step);
+    counter();
   }, []);
 
-  return <div>{state}</div>;
+  return state;
 };
 
 export default SingleCount;
