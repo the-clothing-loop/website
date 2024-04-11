@@ -677,7 +677,7 @@ export default function ChainMemberList() {
               {selectedTable === "route" ? (
                 <button
                   type="button"
-                  className={`btn hidden lg:inline-flex me-4 ${
+                  className={`btn inline-flex me-4 ${
                     isOpenRouteMapPopup
                       ? "btn-outline"
                       : "btn-accent text-white"
