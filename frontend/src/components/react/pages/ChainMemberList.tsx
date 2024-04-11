@@ -256,8 +256,6 @@ export default function ChainMemberList() {
 
       // saving current rooute before changing in the database
       setPreviousRoute(route);
-      // set new order
-      routeSetOrder(chainUID, optimal_path);
       setRoute(optimal_path);
     } catch (err: any) {
       addToastError(GinParseErrors(t, err), err?.status);
@@ -266,9 +264,19 @@ export default function ChainMemberList() {
     }
   }
 
-  function returnToPreviousRoute(chainUID: UID) {
+  function returnToPreviousRoute() {
     setRoute(previousRoute);
-    routeSetOrder(chainUID, previousRoute!);
+    setPreviousRoute(null);
+  }
+
+  function closeOptimizeRoutePopup(save: boolean) {
+    if (save && route) {
+      routeSetOrder(chainUID, route);
+    } else {
+      setRoute(previousRoute);
+    }
+    setPreviousRoute(null);
+    setIsOpenRouteMapPopup(false);
   }
 
   function handleClickDeleteLoop() {
@@ -588,11 +596,10 @@ export default function ChainMemberList() {
                   <RouteMapPopup
                     chain={chain}
                     route={route}
-                    closeFunc={() => setIsOpenRouteMapPopup(false)}
+                    shouldSave={!!previousRoute}
+                    closeFunc={closeOptimizeRoutePopup}
                     optimizeRoute={() => optimizeRoute(chain.uid)}
-                    returnToPreviousRoute={() =>
-                      returnToPreviousRoute(chain.uid)
-                    }
+                    returnToPreviousRoute={returnToPreviousRoute}
                   />
                 </Suspense>
               ) : null}

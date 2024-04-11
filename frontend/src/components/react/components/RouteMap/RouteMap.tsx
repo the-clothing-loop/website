@@ -41,15 +41,15 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
           setZoom(e.target.getZoom());
         });
 
-        const coords = (await routeCoordinates(props.chain.uid)).data;
+        const coords = await getSortedCoordinates(props.chain.uid, props.route);
         _map.addSource("route", {
           type: "geojson",
-          data: mapToGeoJSONCoords(coords, props.route),
+          data: mapToGeoJSONCoords(coords),
         });
 
         _map.addSource("route-poly", {
           type: "geojson",
-          data: mapToGeoJSONPolygonCoords(coords /*props.route*/),
+          data: mapToGeoJSONPolygonCoords(coords),
         });
 
         const showLine = lineType !== "dot";
@@ -122,13 +122,11 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
       const routeSource = map!.getSource("route") as GeoJSONSource;
       const routePolySource = map!.getSource("route-poly") as GeoJSONSource;
       if (!routeSource) return;
-      const coords = (await routeCoordinates(props.chain.uid)).data;
-      routeSource.setData(mapToGeoJSONCoords(coords, props.route));
-      routePolySource.setData(
-        mapToGeoJSONPolygonCoords(coords /*props.route*/),
-      );
+      const coords = await getSortedCoordinates(props.chain.uid, props.route);
+      routeSource.setData(mapToGeoJSONCoords(coords));
+      routePolySource.setData(mapToGeoJSONPolygonCoords(coords));
     },
-    2e3,
+    1e3,
     {},
   );
   useEffect(() => {
@@ -231,14 +229,10 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
   );
 }
 
-function mapToGeoJSONCoords(
-  coords: RouteCoordinate[],
-  route: UID[],
-): FeatureCollection {
+function mapToGeoJSONCoords(coords: SortedCoordinate[]): FeatureCollection {
   return {
     type: "FeatureCollection",
     features: coords.map((coord) => {
-      const route_order = route.indexOf(coord.user_uid) + 1;
       return {
         type: "Feature",
         geometry: {
@@ -247,17 +241,14 @@ function mapToGeoJSONCoords(
         },
         properties: {
           uid: coord.user_uid,
-          route_order,
+          route_order: coord.route_index + 1,
         },
       };
     }),
   };
 }
 
-function mapToGeoJSONPolygonCoords(
-  coords: RouteCoordinate[],
-  // route: UID[],
-): Feature {
+function mapToGeoJSONPolygonCoords(coords: SortedCoordinate[]): Feature {
   return {
     type: "Feature",
     geometry: {
@@ -266,4 +257,24 @@ function mapToGeoJSONPolygonCoords(
     } as Polygon,
     properties: {},
   };
+}
+
+interface SortedCoordinate extends RouteCoordinate {
+  route_index: number;
+}
+
+function getSortedCoordinates(chainUID: UID, route: UID[]) {
+  return routeCoordinates(chainUID).then((res) => {
+    const sortedCoords: SortedCoordinate[] = [];
+    for (let i = 0; i < route.length; i++) {
+      const user_uid = route[i];
+      const coord = res.data.find((c) => c.user_uid === user_uid);
+      if (!coord) continue;
+      sortedCoords.push({
+        ...coord,
+        route_index: i,
+      });
+    }
+    return sortedCoords;
+  });
 }
