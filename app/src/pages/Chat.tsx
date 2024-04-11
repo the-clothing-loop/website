@@ -14,7 +14,14 @@ import { sendOutline } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { MmData, StoreContext } from "../Store";
 import { useContext, useEffect, useState } from "react";
-import { patchGetOrJoinRoom } from "../api";
+import {
+  Chain,
+  User,
+  chainGet,
+  patchGetOrJoinRoom,
+  userGetAllByChain,
+  userGetByUID,
+} from "../api";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
 import { Sleep } from "../utils/sleep";
 import { Post, PostList } from "@mattermost/types/posts";
@@ -44,7 +51,10 @@ export default function Chat() {
   const [mmWsClient, setMmWsClient] = useState<WebSocketClient | null>(null);
   const [message, setMessage] = useState("");
   const [sendingMsg, setSendingMsg] = useState(SendingMsgState.DEFAULT);
+  const [chatRooms, setChatRooms] = useState<User[] | null>(null);
   const [mmClient, setMmClient] = useState<Client4 | null>(null);
+  // const [, setMessage] = useState("");
+
   const [postList, setPostList] = useState<PostList>({
     order: [],
     posts: {},
@@ -101,6 +111,7 @@ export default function Chat() {
         setMmData(_mmData);
       });
     }
+    getUsersChatrooms();
   }, [mmData, chain]);
 
   async function handlePostedMessage(
@@ -163,6 +174,27 @@ export default function Chat() {
     }
   }
 
+  async function getUsersChatrooms() {
+    if (authUser) {
+      try {
+        let _users: User[][];
+
+        let data = await Promise.all(
+          authUser.chains.map((uc) => userGetAllByChain(uc.chain_uid)),
+        );
+        console.log(data);
+        _users = data.map((d) => d.data);
+
+        console.log(_users, _users[1]);
+
+        setChatRooms(_users[1]);
+      } catch (err: any) {
+        console.error("Unable to load chains", err);
+        //addToastError(GinParseErrors(t, err), err.status);
+      }
+    }
+  }
+
   return (
     <IonPage>
       <IonHeader translucent>
@@ -176,31 +208,48 @@ export default function Chat() {
         fullscreen
         class={isThemeDefault ? " tw-bg-purple-contrast" : ""}
       >
-        <div className="tw-flex tw-flex-col tw-h-full">
-          <div className="tw-flex-grow tw-overflow-y-auto tw-flex tw-flex-col-reverse">
-            {postList.order.map((item) => {
-              let post = postList.posts[item];
-              return (
-                <div>
-                  <IonItem
-                    color="light"
-                    key={post.id}
-                    className={`tw-rounded-tl-2xl tw-rounded-tr-2xl tw-mb-2 ${
-                      post.user_id == authUser?.uid
-                        ? "tw-rounded-bl-2xl tw-float-right tw-ml-8 tw-mr-4"
-                        : "tw-rounded-br-2xl tw-mr-8 tw-ml-4 tw-float-left"
-                    }`}
-                  >
-                    <div className="tw-py-2">
-                      <div className="tw-font-bold">{post.props.username}</div>
-                      <div>{post.message}</div>
-                    </div>
-                  </IonItem>
-                </div>
-              );
-            })}
+        <div>
+          <div className="tw-fixed tw-bg-[#f7f4fb] tw-z-10 tw-w-full">
+            <div className="tw-flex tw-ml-5 tw-mb-2 tw-mt-2 ">
+              {chatRooms?.map((cr) => {
+                let initials = "";
+                cr.name.split(" ").forEach((word) => {
+                  initials += word[0];
+                });
+                return (
+                  <div className="tw-rounded-full tw-w-14 tw-h-14 tw-mr-4 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
+                    <div className="tw-font-bold">{initials}</div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div>
+          <div className="">
+            <div className="tw-flex tw-flex-col-reverse">
+              {postList.order.map((item) => {
+                let post = postList.posts[item];
+                return (
+                  <div>
+                    <IonItem
+                      color="light"
+                      key={post.id}
+                      className={`tw-rounded-tl-2xl tw-rounded-tr-2xl tw-mb-2 ${
+                        post.user_id == authUser?.uid
+                          ? "tw-rounded-bl-2xl tw-float-right tw-ml-8 tw-mr-4"
+                          : "tw-rounded-br-2xl tw-mr-8 tw-ml-4 tw-float-left"
+                      }`}
+                    >
+                      <div className="tw-py-2">
+                        <div className="tw-font-bold">
+                          {post.props.username}
+                        </div>
+                        <div>{post.message}</div>
+                      </div>
+                    </IonItem>
+                  </div>
+                );
+              })}
+            </div>
             <IonItem
               color="light"
               disabled={sendingMsg == SendingMsgState.SENDING}
