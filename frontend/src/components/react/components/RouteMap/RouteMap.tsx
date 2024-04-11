@@ -61,10 +61,24 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
           source: "route-poly",
           paint: {
             "line-color": ["rgba", 0, 0, 0, 0.4],
-            "line-width": 2,
+            "line-width": 1,
           },
           layout: {
             visibility: showLine ? "visible" : "none",
+          },
+        });
+
+        _map.addLayer({
+          id: "point-dot",
+          type: "circle",
+          source: "route",
+          paint: {
+            "circle-color": "#909090", // #a899c2
+            "circle-radius": 3,
+            "circle-stroke-width": 0,
+          },
+          layout: {
+            visibility: lineType === "line" ? "visible" : "none",
           },
         });
 
@@ -154,6 +168,11 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
       "outline",
       "visibility",
       showLine ? "visible" : "none",
+    );
+    map?.setLayoutProperty(
+      "point-dot",
+      "visibility",
+      next === "line" ? "visible" : "none",
     );
   }
 
