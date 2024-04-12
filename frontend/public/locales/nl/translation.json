@@ -71,7 +71,7 @@
   "login": "Inloggen",
   "name": "Naam",
   "newsletter": "Nieuwsbrief",
-  "phoneNumber": "Telefoonnummer",
+  "phoneNumber": "Phone number (incl. country code)",
   "page": "Pagina",
   "logout": "Uitloggen",
   "loginEmailSent": "Een e-mail is verstuurd waarmee je in kan loggen",
