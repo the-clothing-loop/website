@@ -29,7 +29,7 @@ import {
   closeOutline,
   construct,
   ellipsisHorizontal,
-  ellipsisHorizontalCircleOutline,
+  searchOutline,
 } from "ionicons/icons";
 import type { IonModalCustomEvent } from "@ionic/core/components";
 import {
@@ -274,7 +274,7 @@ export default function BagsList() {
         <IonToolbar>
           <IonButtons>
             <IonButton id="sheet-bags-options">
-              <IonIcon icon={ellipsisHorizontalCircleOutline} />
+              <IonIcon icon={searchOutline} />
               {slowSearch ? (
                 <div className="tw-rounded-full tw-w-2 tw-h-2 tw-absolute tw-bottom-1 tw-right-0 tw-bg-danger"></div>
               ) : null}

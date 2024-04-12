@@ -220,7 +220,7 @@ function AppRoute() {
           <IonLabel>{t("route")}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="bags" href="/bags" disabled={!chain}>
-          <div className="tw-w-[30px] tw-h-[30px] tw-mt-1 tw-mb-0">
+          <div className="tw-w-[30px] tw-h-[30px] tw-mt-1 tw-mb-0.5">
             <BagSVG bag={{ number: "", color: "currentColor" }} isList />
           </div>
           {hasBagTooOldMe ? (

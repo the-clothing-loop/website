@@ -18,7 +18,7 @@ import {
 import { useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../stores/Store";
-import { ellipsisHorizontalCircleOutline, openOutline } from "ionicons/icons";
+import { openOutline, searchOutline } from "ionicons/icons";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
@@ -129,7 +129,7 @@ export default function AddressList() {
         <IonToolbar>
           <IonButtons>
             <IonButton id="sheet-address-options">
-              <IonIcon icon={ellipsisHorizontalCircleOutline} />
+              <IonIcon icon={searchOutline} />
               {slowSearch ? (
                 <div className="tw-rounded-full tw-w-2 tw-h-2 tw-absolute tw-bottom-1 tw-right-0 tw-bg-danger"></div>
               ) : null}

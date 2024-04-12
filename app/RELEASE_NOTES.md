@@ -117,3 +117,9 @@
 
 - Change the bag icon to align with branding
 - Add bag shortcut in address item page
+
+# v2.3
+
+- Add sorting, search for Route & Bags
+- Button to leave Loop
+- Default to automatic sort of address list
