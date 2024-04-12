@@ -71,7 +71,7 @@
   "login": "Iniciar sesión",
   "name": "Nombre",
   "newsletter": "Boletín Informativo",
-  "phoneNumber": "Teléfono",
+  "phoneNumber": "Phone number (incl. country code)",
   "page": "Página",
   "logout": "Cerrar sesión",
   "loginEmailSent": "Se te ha enviado un correo electrónico que te permite iniciar sesión",
