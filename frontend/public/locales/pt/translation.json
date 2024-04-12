@@ -71,7 +71,7 @@
   "login": "Login",
   "name": "Name",
   "newsletter": "Newsletter",
-  "phoneNumber": "Phone number",
+  "phoneNumber": "Phone number (incl. country code)",
   "page": "Page",
   "logout": "Logout",
   "loginEmailSent": "An e-mail has been sent to you allowing you to login",
