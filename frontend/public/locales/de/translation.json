@@ -71,7 +71,7 @@
   "login": "Anmelden",
   "name": "Name",
   "newsletter": "Newsletter",
-  "phoneNumber": "Telefonnummer",
+  "phoneNumber": "Phone number (incl. country code)",
   "page": "Seite",
   "logout": "Ausloggen",
   "loginEmailSent": "Eine E-Mail wurde an Dich gesendet, um Dich anzumelden",
