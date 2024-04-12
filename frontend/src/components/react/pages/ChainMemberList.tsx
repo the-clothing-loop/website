@@ -272,7 +272,7 @@ export default function ChainMemberList() {
   function closeOptimizeRoutePopup(save: boolean) {
     if (save && route) {
       routeSetOrder(chainUID, route);
-    } else {
+    } else if (previousRoute) {
       setRoute(previousRoute);
     }
     setPreviousRoute(null);
