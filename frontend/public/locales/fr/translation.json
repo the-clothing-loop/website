@@ -71,7 +71,7 @@
   "login": "Connexion",
   "name": "Nom",
   "newsletter": "Newsletter",
-  "phoneNumber": "Numéro de téléphone",
+  "phoneNumber": "Phone number (incl. country code)",
   "page": "Page",
   "logout": "Déconnexion",
   "loginEmailSent": "Un e-mail vous a été envoyé vous permettant de vous connecter",
