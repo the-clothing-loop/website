@@ -75,6 +75,7 @@ export default function Settings() {
     chain,
     setPause,
     logout,
+    leaveLoop,
     getChainHeader,
     setChain,
     isChainAdmin,
@@ -498,6 +499,16 @@ export default function Settings() {
           <IonButton id="settings-logout-btn" expand="block" color="danger">
             {t("logout")}
           </IonButton>
+          {!isChainAdmin ? (
+            <IonButton
+              id="settings-leaveloop-btn"
+              expand="block"
+              color="danger"
+              className="tw-mt-4"
+            >
+              {t("leaveLoop")}
+            </IonButton>
+          ) : null}
         </div>
         <div className="relative">
           {/* Background SVGs */}
@@ -532,6 +543,21 @@ export default function Settings() {
               text: t("logout"),
               role: "destructive",
               handler: logout,
+            },
+          ]}
+        ></IonAlert>
+        <IonAlert
+          trigger="settings-leaveloop-btn"
+          header={t("leaveLoop")!}
+          message={t("areYouSureYouWantToLeaveN", { name: chain?.name })!}
+          buttons={[
+            {
+              text: t("cancel"),
+            },
+            {
+              text: t("leaveLoop"),
+              role: "destructive",
+              handler: leaveLoop,
             },
           ]}
         ></IonAlert>

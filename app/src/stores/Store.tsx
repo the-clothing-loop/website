@@ -10,6 +10,7 @@ import { chainGet, chainUpdate } from "../api/chain";
 import { loginValidate, logout as logoutApi, refreshToken } from "../api/login";
 import { routeGetOrder } from "../api/route";
 import { userGetByUID, userGetAllByChain, userUpdate } from "../api/user";
+import { chainRemoveUser } from "../api/chain";
 import { IS_WEB } from "../utils/is_web";
 import { cookieUserUID } from "./browser_storage";
 
@@ -56,6 +57,7 @@ export const StoreContext = createContext({
   authenticate: () => Promise.resolve(IsAuthenticated.Unknown),
   login: (email: string, token: string) => Promise.reject<void>(),
   logout: () => Promise.reject<void>(),
+  leaveLoop: () => Promise.reject<void>(),
   init: () => Promise.reject<void>(),
   refresh: (tab: string) => Promise.reject<void>(),
   overlayState: OverlayState.OPEN_ALL,
@@ -157,6 +159,15 @@ export function StoreProvider({
     _setBagListView("dynamic");
     _setBagSort("aToZ");
     _setRouteListView("dynamic");
+  }
+
+  async function leaveLoop() {
+    if (!chain || !authUser) return;
+    await chainRemoveUser(chain.uid, authUser.uid).catch((err: any) => {
+      console.warn(err);
+    });
+    setChain(null, authUser);
+    refresh("settings", authUser);
   }
 
   async function login(email: string, token: string) {
@@ -482,6 +493,7 @@ export function StoreProvider({
         isAuthenticated,
         isChainAdmin,
         logout,
+        leaveLoop,
         authenticate,
         login,
         init,
