@@ -160,7 +160,7 @@ const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
 
 function AppRoute() {
   const { t } = useTranslation();
-  const { refresh, bags, authUser } = useContext(StoreContext);
+  const { refresh, bags, authUser, chain } = useContext(StoreContext);
 
   const hasBagTooOldMe = useMemo(() => {
     let hasBagTooOldMe = false;
@@ -215,11 +215,11 @@ function AppRoute() {
           <IonIcon aria-hidden="true" icon={bookOutline} />
           <IonLabel>{t("rules")}</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="address" href="/address">
+        <IonTabButton tab="address" href="/address" disabled={!chain}>
           <IonIcon aria-hidden="true" icon={homeOutline} />
           <IonLabel>{t("route")}</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="bags" href="/bags">
+        <IonTabButton tab="bags" href="/bags" disabled={!chain}>
           <div className="tw-w-[30px] tw-h-[30px] tw-mt-1 tw-mb-0">
             <BagSVG bag={{ number: "", color: "currentColor" }} isList />
           </div>
@@ -229,7 +229,7 @@ function AppRoute() {
           <IonLabel className="tw-text-[10px]">{t("bags")}</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="bulky-items" href="/bulky-items">
+        <IonTabButton tab="bulky-items" href="/bulky-items" disabled={!chain}>
           <IonIcon aria-hidden="true" icon={cubeOutline} />
           <IonLabel>{t("bulkyItems")}</IonLabel>
         </IonTabButton>
