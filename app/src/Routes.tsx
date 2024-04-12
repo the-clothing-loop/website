@@ -48,7 +48,7 @@ import "./theme/utilities.css";
 import "./theme/overrides.css";
 /* Theme changes for development */
 // import "./theme/dev.css";
-import { IsAuthenticated, StoreContext } from "./Store";
+import { IsAuthenticated, StoreContext } from "./stores/Store";
 import { useContext, useEffect, useMemo } from "react";
 
 import HelpList from "./pages/HelpList";
@@ -69,6 +69,7 @@ import { OneSignalInitCap } from "./onesignal";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import OpenSource from "./pages/OpenSource";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import BagSVG from "./components/Bags/Svg";
 
 SplashScreen.show({
   autoHide: true,
@@ -79,15 +80,8 @@ setupIonicReact({
 });
 
 export default function Routes() {
-  const {
-    isAuthenticated,
-    init,
-    authenticate,
-    bags,
-    chain,
-    authUser,
-    connError,
-  } = useContext(StoreContext);
+  const { isAuthenticated, init, authenticate, chain, connError } =
+    useContext(StoreContext);
   const history = useHistory();
   let location = useLocation();
 
@@ -135,32 +129,17 @@ export default function Routes() {
     else history.replace("/onboarding");
   }
 
-  const hasOldBag = useMemo(() => {
-    if (!bags.length) return false;
-
-    return bags.some((b) => {
-      if (!(b.user_uid === authUser?.uid)) return false;
-      const updatedAt = dayjs(b.updated_at);
-      const now = dayjs();
-      return updatedAt.isBefore(now.add(-7, "days"));
-    });
-  }, [bags]);
-
   return (
     <IonApp>
       <Switch location={location}>
         <Redirect exact from="/login" to="/onboarding/3" />
         <Route path="/onboarding" component={OnboardingRoute} />
         <PrivateRoute isAuthenticated={isAuthenticated}>
-          <AppRoute hasOldBag={hasOldBag} />
+          <AppRoute />
         </PrivateRoute>
       </Switch>
     </IonApp>
   );
-}
-
-function eventCatchStoreErr(e: any) {
-  console.log(e);
 }
 
 function OnboardingRoute() {
@@ -181,9 +160,27 @@ function OnboardingRoute() {
 
 const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
 
-function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
+function AppRoute() {
   const { t } = useTranslation();
-  const { refresh } = useContext(StoreContext);
+  const { refresh, bags, authUser, chain } = useContext(StoreContext);
+
+  const hasBagTooOldMe = useMemo(() => {
+    let hasBagTooOldMe = false;
+    for (let b of bags) {
+      const updatedAt = dayjs(b.updated_at);
+      const now = dayjs();
+      if (!updatedAt.isBefore(now.add(-7, "days"))) {
+        // skip if bag is newer than 7 days old
+        continue;
+      }
+      if (b.user_uid === authUser?.uid) {
+        hasBagTooOldMe = true;
+        break;
+      }
+    }
+
+    return hasBagTooOldMe;
+  }, [bags]);
 
   function handleTabsWillChange(e: CustomEvent<{ tab: string }>) {
     const tab = e.detail.tab;
@@ -221,19 +218,20 @@ function AppRoute({ hasOldBag }: { hasOldBag: boolean }) {
           <IonIcon aria-hidden="true" icon={bookOutline} />
           <IonLabel>{t("rules")}</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="address" href="/address">
+        <IonTabButton tab="address" href="/address" disabled={!chain}>
           <IonIcon aria-hidden="true" icon={homeOutline} />
           <IonLabel>{t("route")}</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="bags" href="/bags">
-          <IonIcon aria-hidden="true" icon={bagHandleOutline} />
-          {hasOldBag ? (
-            <div className="tw-bg-danger tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)]"></div>
+        <IonTabButton tab="bags" href="/bags" disabled={!chain}>
+          <div className="tw-w-[30px] tw-h-[30px] tw-mt-1 tw-mb-0.5">
+            <BagSVG bag={{ number: "", color: "currentColor" }} isList />
+          </div>
+          {hasBagTooOldMe ? (
+            <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-bg-danger"></div>
           ) : null}
-          <IonLabel>{t("bags")}</IonLabel>
+          <IonLabel className="tw-text-[10px]">{t("bags")}</IonLabel>
         </IonTabButton>
-
-        <IonTabButton tab="chat" href="/chat">
+        <IonTabButton tab="chat" href="/chat" disabled={!chain}>
           <IonIcon aria-hidden="true" icon={chatbubblesOutline} />
           <IonLabel>{t("chat")}</IonLabel>
         </IonTabButton>

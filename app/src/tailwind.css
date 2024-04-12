@@ -82,3 +82,27 @@
     );
   }
 }
+
+ion-radio::part(container) {
+  @apply tw-border-2 tw-border-solid tw-border-medium tw-rounded-full tw-w-6 tw-h-6;
+}
+
+ion-radio::part(mark) {
+  @apply tw-bg-none tw-transition-none tw-transform-none tw-rounded-none;
+}
+
+ion-radio.radio-checked::part(container) {
+  @apply tw-border-transparent tw-bg-primary;
+  /* background: #6815ec; */
+}
+
+ion-radio.radio-checked::part(mark) {
+  width: 6px;
+  height: 10px;
+
+  border-width: 0px 2px 2px 0px;
+  border-style: solid;
+  border-color: #fff;
+
+  transform: rotate(45deg);
+}

@@ -21,11 +21,32 @@ import {
 import type { IonSelectCustomEvent, IonModalCustomEvent } from "@ionic/core";
 import { checkmarkCircle, ellipse } from "ionicons/icons";
 import { RefObject, useContext, useState } from "react";
-import { Bag, bagColors, bagPut, UID } from "../api";
-import { StoreContext } from "../Store";
+import { Bag, UID } from "../api/types";
+import { bagPut } from "../api/bag";
+import { StoreContext } from "../stores/Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
+
+const bagColors = [
+  "#C9843E",
+  "#AD8F22",
+  "#79A02D",
+  "#66926E",
+  "#199FBA",
+  "#6494C2",
+  "#1467B3",
+  "#A899C2",
+  "#513484",
+  "#B37EAD",
+  "#B76DAC",
+  "#F57BB0",
+  "#A35C7B",
+  "#E38C95",
+  "#C73643",
+  "#7D7D7D",
+  "#3C3C3B",
+];
 
 export default function CreateUpdateBag({
   bag,
@@ -63,7 +84,7 @@ export default function CreateUpdateBag({
         highestNumber++;
       }
 
-      setBagNumber(`${t("bag")} ${highestNumber}`);
+      setBagNumber(highestNumber.toString());
     } else {
       setBagNumber(bag.number);
     }

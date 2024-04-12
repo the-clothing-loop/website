@@ -34,7 +34,7 @@ import {
   OverlayEventDetail,
 } from "@ionic/core";
 import { RefObject, useContext, useEffect, useRef, useState } from "react";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import UserCard from "../components/UserCard";
 import { Trans, useTranslation } from "react-i18next";
 import {
@@ -62,6 +62,8 @@ import { useLocation } from "react-router";
 import { useLongPress } from "use-long-press";
 import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
+import RoutePrivacyInput from "../components/Settings/RoutePrivacyInput";
+import { chainUpdate } from "../api/chain";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -73,6 +75,7 @@ export default function Settings() {
     chain,
     setPause,
     logout,
+    leaveLoop,
     getChainHeader,
     setChain,
     isChainAdmin,
@@ -128,7 +131,16 @@ export default function Settings() {
         },
         {
           text: t("unPause"),
-          handler: () => setPause(false),
+          handler: () => {
+            const uc = authUser?.chains.find(
+              (uc) => uc.chain_uid === chain?.uid,
+            );
+            if (uc && chain && uc.is_paused) {
+              setPause(false, chain.uid);
+            } else {
+              setPause(false);
+            }
+          },
           role: "destructive",
         },
       ]);
@@ -146,6 +158,10 @@ export default function Settings() {
               ),
           },
           {
+            text: t("pauseOnlyLoop"),
+            handler: () => setPause(true, chain!.uid),
+          },
+          {
             text: t("untilITurnItBackOn"),
             handler: () => {
               setPause(true);
@@ -158,6 +174,16 @@ export default function Settings() {
         ],
       });
     }
+  }
+
+  async function handleChangeRoutePrivacy(rp: number) {
+    if (!chain) return;
+    await chainUpdate({
+      uid: chain.uid,
+      route_privacy: rp,
+    });
+
+    await setChain(chain.uid, authUser);
   }
 
   function handleShareLoop() {
@@ -175,9 +201,10 @@ export default function Settings() {
     Share.share({ url });
   }
 
-  let isUserPaused = isPaused(authUser?.paused_until || null);
+  let isUserPaused = isPaused(authUser, chain?.uid);
   let pausedDayjs = isUserPaused ? dayjs(authUser!.paused_until) : null;
   let showExpandButton = (chain?.description.length || 0) > 200;
+  let emptyDescription = (chain?.description.length || 0) == 0;
   let pausedFromNow = "";
   {
     const now = dayjs();
@@ -190,6 +217,9 @@ export default function Settings() {
             count: pausedDayjs.diff(now, "week"),
           });
         }
+      }
+      if (authUser?.paused_until === null) {
+        pausedFromNow = t("onlyForThisLoop");
       } else {
         pausedFromNow = t("untilITurnItBackOn");
       }
@@ -336,125 +366,145 @@ export default function Settings() {
                   })}
                 </IonSelect>
               </IonItem>
-              {chain && chain.is_app_disabled ? (
-                <IonItem lines="none" color="danger">
-                  <IonIcon
-                    size="small"
-                    icon={isIos ? logoApple : logoAndroid}
-                  />
-                  <span className="ion-margin-end tw-ms-1.5">
-                    {t("loopIsNotUsingThisApp", { name: chain.name })}
-                  </span>
-                </IonItem>
-              ) : null}
-              {chain && (!chain.open_to_new_members || !chain.published) ? (
-                <IonItem
-                  lines="none"
-                  color={
-                    chain.published
-                      ? "warning"
-                      : chain.is_app_disabled
-                      ? "medium"
-                      : "danger"
-                  }
-                >
-                  {!chain.open_to_new_members ? (
-                    <>
-                      <IonIcon size="small" icon={lockClosedOutline} />
-                      <span key="closed" className="ion-margin-end tw-ms-1.5">
-                        {t("closed")}
+              {chain ? (
+                <>
+                  {chain.is_app_disabled ? (
+                    <IonItem lines="none" color="danger">
+                      <IonIcon
+                        size="small"
+                        icon={isIos ? logoApple : logoAndroid}
+                      />
+                      <span className="ion-margin-end tw-ms-1.5">
+                        {t("loopIsNotUsingThisApp", { name: chain.name })}
                       </span>
+                    </IonItem>
+                  ) : null}
+                  {chain.open_to_new_members || chain.published ? (
+                    <IonItem
+                      lines="none"
+                      color={
+                        chain.published
+                          ? "warning"
+                          : chain.is_app_disabled
+                          ? "medium"
+                          : "danger"
+                      }
+                    >
+                      {chain.open_to_new_members ? (
+                        <>
+                          <IonIcon size="small" icon={lockClosedOutline} />
+                          <span
+                            key="closed"
+                            className="ion-margin-end tw-ms-1.5"
+                          >
+                            {t("closed")}
+                          </span>
+                        </>
+                      ) : null}
+                      {chain.published ? (
+                        <>
+                          <IonIcon size="small" icon={eyeOffOutline} />
+                          <span key="closed" className="tw-ms-1.5">
+                            {t("draft")}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <IonIcon size="small" icon={eyeOutline} />
+                          <span key="visible" className="tw-ms-1.5">
+                            {t("visible")}
+                          </span>
+                        </>
+                      )}
+                    </IonItem>
+                  ) : null}
+                  {isChainAdmin && authUser ? (
+                    <>
+                      <IonItem
+                        lines="none"
+                        button
+                        id="open-modal-theme"
+                        detail={false}
+                      >
+                        <IonLabel>{t("setLoopTheme")}</IonLabel>
+                        <IonIcon slot="end" icon={sparkles} color="primary" />
+                      </IonItem>
+                      <Theme />
+
+                      <IonItem
+                        lines="none"
+                        button
+                        detail={false}
+                        target="_blank"
+                        href={`https://www.clothingloop.org/loops/${chain.uid}/members`}
+                      >
+                        <IonLabel>{t("goToAdminPortal")}</IonLabel>
+                        <IonIcon icon={compassOutline} />
+                      </IonItem>
+                      <RoutePrivacyInput
+                        chain={chain}
+                        authUser={authUser}
+                        onChange={handleChangeRoutePrivacy}
+                      />
                     </>
                   ) : null}
-                  {!chain.published ? (
-                    <>
-                      <IonIcon size="small" icon={eyeOffOutline} />
-                      <span key="closed" className="tw-ms-1.5">
-                        {t("draft")}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <IonIcon size="small" icon={eyeOutline} />
-                      <span key="visible" className="tw-ms-1.5">
-                        {t("visible")}
-                      </span>
-                    </>
-                  )}
-                </IonItem>
-              ) : null}
-              {isChainAdmin && chain ? (
-                <>
-                  <IonItem
-                    lines="none"
-                    button
-                    id="open-modal-theme"
-                    detail={false}
-                  >
-                    <IonLabel>{t("setLoopTheme")}</IonLabel>
-                    <IonIcon slot="end" icon={sparkles} color="primary" />
+                  {chain.published ? (
+                    <IonItem
+                      lines="none"
+                      button
+                      detail={false}
+                      onClick={handleShareLoop}
+                    >
+                      <IonLabel>{t("shareLoop")}</IonLabel>
+                      <IonIcon
+                        slot="end"
+                        icon={isCapacitor ? shareOutline : copyOutline}
+                      />
+                    </IonItem>
+                  ) : null}
+                  <IonItem lines="none" className="ion-align-items-start">
+                    <IonLabel>{t("interestedSizes")}</IonLabel>
+                    <div
+                      className="ion-margin-top ion-margin-bottom"
+                      slot="end"
+                    >
+                      {chain ? (
+                        <Badges genders={chain.genders} sizes={chain.sizes} />
+                      ) : null}
+                    </div>
                   </IonItem>
-                  <Theme />
-
-                  <IonItem
-                    lines="none"
-                    button
-                    detail={false}
-                    target="_blank"
-                    href={`https://www.clothingloop.org/loops/${chain.uid}/members`}
-                  >
-                    <IonLabel>{t("goToAdminPortal")}</IonLabel>
-                    <IonIcon icon={compassOutline} />
-                  </IonItem>
+                  {!emptyDescription ? (
+                    <IonItem lines="none">
+                      <IonLabel>
+                        <h3>{t("description")}</h3>
+                        <p
+                          className={`tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
+                            !expandedDescription && showExpandButton
+                              ? "tw-max-h-[60px]"
+                              : ""
+                          }`}
+                        >
+                          {chain?.description}
+                        </p>
+                        {!expandedDescription && showExpandButton ? (
+                          <IonButton
+                            onClick={() => setExpandedDescription((s) => !s)}
+                            size="small"
+                            color="clear"
+                            expand="block"
+                            className="-tw-mt-1.5 tw-ps-0"
+                          >
+                            <IonIcon
+                              icon={ellipsisHorizontal}
+                              color="primary"
+                            />
+                          </IonButton>
+                        ) : null}
+                      </IonLabel>
+                    </IonItem>
+                  ) : null}
                 </>
               ) : null}
-              {chain?.published ? (
-                <IonItem
-                  lines="none"
-                  button
-                  detail={false}
-                  onClick={handleShareLoop}
-                >
-                  <IonLabel>{t("shareLoop")}</IonLabel>
-                  <IonIcon
-                    slot="end"
-                    icon={isCapacitor ? shareOutline : copyOutline}
-                  />
-                </IonItem>
-              ) : null}
-              <IonItem lines="none" className="ion-align-items-start">
-                <IonLabel>{t("interestedSizes")}</IonLabel>
-                <div className="ion-margin-top ion-margin-bottom" slot="end">
-                  {chain ? (
-                    <Badges genders={chain.genders} sizes={chain.sizes} />
-                  ) : null}
-                </div>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel>
-                  <h3>{t("description")}</h3>
-                  <p
-                    className={`tw-whitespace-pre-wrap tw-overflow-hidden tw-block ${
-                      !expandedDescription && showExpandButton
-                        ? "tw-max-h-[60px]"
-                        : ""
-                    }`}
-                  >
-                    {chain?.description}
-                  </p>
-                  {!expandedDescription && showExpandButton ? (
-                    <IonButton
-                      onClick={() => setExpandedDescription((s) => !s)}
-                      size="small"
-                      color="clear"
-                      expand="block"
-                      className="-tw-mt-1.5 tw-ps-0"
-                    >
-                      <IonIcon icon={ellipsisHorizontal} color="primary" />
-                    </IonButton>
-                  ) : null}
-                </IonLabel>
-              </IonItem>
             </IonList>
           </IonCard>
         </IonList>
@@ -462,6 +512,16 @@ export default function Settings() {
           <IonButton id="settings-logout-btn" expand="block" color="danger">
             {t("logout")}
           </IonButton>
+          {chain && !isChainAdmin ? (
+            <IonButton
+              id="settings-leaveloop-btn"
+              expand="block"
+              color="danger"
+              className="tw-mt-4"
+            >
+              {t("leaveLoop")}
+            </IonButton>
+          ) : null}
         </div>
         <div className="relative">
           {/* Background SVGs */}
@@ -496,6 +556,21 @@ export default function Settings() {
               text: t("logout"),
               role: "destructive",
               handler: logout,
+            },
+          ]}
+        ></IonAlert>
+        <IonAlert
+          trigger="settings-leaveloop-btn"
+          header={t("leaveLoop")!}
+          message={t("areYouSureYouWantToLeaveN", { name: chain?.name })!}
+          buttons={[
+            {
+              text: t("cancel"),
+            },
+            {
+              text: t("leaveLoop"),
+              role: "destructive",
+              handler: leaveLoop,
             },
           ]}
         ></IonAlert>

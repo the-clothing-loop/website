@@ -1,12 +1,13 @@
-import type { Chain, UID } from "../../../../api/types";
+import type { Chain, UID, User } from "../../../../api/types";
 import { useRef, type MouseEvent, useState } from "react";
 import RouteMap from "./RouteMap";
 import { useTranslation } from "react-i18next";
 
 export default function RouteMapPopup(props: {
   chain: Chain;
-  closeFunc: () => void;
+  closeFunc: (save: boolean) => void;
   route: UID[];
+  shouldSave: boolean;
   optimizeRoute: () => Promise<void>;
   returnToPreviousRoute: () => void;
 }) {
@@ -35,14 +36,15 @@ export default function RouteMapPopup(props: {
     e.preventDefault();
     if (window.innerWidth > 900) {
       if (e.target === e.currentTarget) {
-        props.closeFunc();
+        props.closeFunc(false);
       }
     }
   }
 
   return (
-    <div className="absolute inset-0 px-4 bg-white/30 hidden lg:block">
+    <div className="fixed w-screen lg:w-full h-screen lg:h-full lg:absolute z-[70] inset-0 px-4 bg-white/30 lg:block">
       <dialog
+        id="routemappopup"
         open
         className="relative w-full h-full flex p-0 shadow-lg"
         ref={ref}
@@ -76,15 +78,40 @@ export default function RouteMapPopup(props: {
                 <span className="feather feather-zap ms-2" />
               </button>
             )}
-            <button
-              key="close"
-              type="reset"
-              ref={refButtonClose}
-              className="btn btn-sm btn-ghost"
-              onClick={() => props.closeFunc()}
-            >
-              {t("close")}
-            </button>
+            <div>
+              {props.shouldSave ? (
+                <>
+                  <button
+                    key="save"
+                    type="reset"
+                    ref={refButtonClose}
+                    className="btn btn-sm btn-success me-2"
+                    onClick={() => props.closeFunc(true)}
+                  >
+                    {t("save")}
+                  </button>
+                  <button
+                    key="cancel"
+                    type="reset"
+                    ref={refButtonClose}
+                    className="btn btn-sm btn-ghost"
+                    onClick={() => props.closeFunc(false)}
+                  >
+                    {t("cancel")}
+                  </button>
+                </>
+              ) : (
+                <button
+                  key="close"
+                  type="reset"
+                  ref={refButtonClose}
+                  className="btn btn-sm btn-ghost"
+                  onClick={() => props.closeFunc(false)}
+                >
+                  {t("close")}
+                </button>
+              )}
+            </div>
           </div>
         </form>
       </dialog>

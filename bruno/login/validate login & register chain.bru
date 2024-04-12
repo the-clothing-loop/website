@@ -5,23 +5,29 @@ meta {
 }
 
 get {
-  url: {{base}}/v2/login/validate?apiKey={{thisApiKey}}&c={{thisChainUID}}
+  url: {{base}}/v2/login/validate?apiKey={{apiKey}}&c={{c}}&u={{emailBase64}}
   body: none
   auth: none
 }
 
 query {
-  apiKey: {{thisApiKey}}
-  c: {{thisChainUID}}
+  apiKey: {{apiKey}}
+  c: {{c}}
+  u: {{emailBase64}}
 }
 
 vars:pre-request {
-  thisApiKey: 1234897
-  thisChainUID: 6c2564a8-3997-4775-b2ad-6c4b06e8c8d9
+  apiKey: 1234897
+  c: 6c2564a8-3997-4775-b2ad-6c4b06e8c8d9
+  email: li@last.nl
 }
 
 script:pre-request {
-  //  
+  const btoa = require("btoa");
+  const email = bru.getVar("email");
+  const emailBase64 = btoa(email);
+  
+  bru.setVar("emailBase64", emailBase64);
 }
 
 tests {

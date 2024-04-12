@@ -6,8 +6,6 @@ import {
   type SetStateAction,
 } from "react";
 
-import Cookies from "js-cookie";
-
 import { $authUser, authUserRefresh } from "../../../stores/auth";
 import {
   chainGet,
@@ -23,6 +21,7 @@ import useToClipboard from "../util/to-clipboard.hooks";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import useLocalizePath from "../util/localize_path.hooks";
+import { cookiePoke } from "../../../stores/browser_storage";
 
 const PUBLIC_BASE_URL = import.meta.env.PUBLIC_BASE_URL;
 
@@ -69,7 +68,7 @@ export default function ChainsList({ chains, setChains }: Props) {
         addToastError(GinParseErrors(t, err), err.status);
       }
 
-      setIsPokeable(!(Cookies.get("poke") === authUser.uid));
+      setIsPokeable(!(cookiePoke.get() === authUser.uid));
     }
   }
 
@@ -78,16 +77,16 @@ export default function ChainsList({ chains, setChains }: Props) {
     if (!authUser) return;
 
     chainPoke(chainUID)
-      .then((res) => {
+      .then(() => {
         addToast({ type: "success", message: t("reminderEmailSent") });
-        Cookies.set("poke", authUser.uid, { expires: 7 });
+        cookiePoke.set(authUser.uid, 7);
         setIsPokeable(false);
       })
       .catch((err) => {
         addToastError(GinParseErrors(t, err), err.status);
         if (err.status === 429) {
           // hide for a day
-          Cookies.set("poke", authUser.uid, { expires: 1 });
+          cookiePoke.set(authUser.uid, 1);
           setIsPokeable(false);
         }
       });
@@ -179,14 +178,6 @@ export default function ChainsList({ chains, setChains }: Props) {
                       (uid) => chain.uid === uid,
                     )
                   : false;
-
-                let members = "-";
-                if (userChain?.is_approved) {
-                  members = chain.total_members + "";
-                } else if (authUser?.is_root_admin) {
-                  members =
-                    "(" + chain.total_hosts + ") " + chain.total_members;
-                }
 
                 return (
                   <tr

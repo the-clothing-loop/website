@@ -21,35 +21,25 @@ export default function Counters() {
     threshold: 0.5,
   });
 
+  if (!info) return null;
+
   return (
     <div className="px-4">
       <div ref={containerRef} className="grid grid-cols-2 gap-3">
-        <div className="">
+        <div>
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
             {isVisible ? (
-              <SingleCounter end={info?.total_chains || 0} step={193} />
+              <SingleCounter end={info.total_chains || 0} step={193} />
             ) : (
               "0"
             )}
           </div>
           <div className="opacity-80">{t("Loops")}</div>
         </div>
-
-        <div className="">
+        <div>
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
             {isVisible ? (
-              <SingleCounter end={info?.total_users || 0} step={397} />
-            ) : (
-              "0"
-            )}
-          </div>
-          <div className="opacity-80">{t("participants")}</div>
-        </div>
-
-        <div className="">
-          <div className="h-20 text-6xl font-serif text-stroke-base-100">
-            {isVisible ? (
-              <SingleCounter end={info?.total_countries || 0} step={1} />
+              <SingleCounter end={info.total_countries || 0} step={1} />
             ) : (
               "0"
             )}
@@ -57,7 +47,57 @@ export default function Counters() {
           <div className="opacity-80">{t("countries")}</div>
         </div>
 
-        <div className="">
+        <div>
+          <div className="h-20 text-6xl font-serif text-stroke-base-100">
+            {isVisible ? (
+              <SingleCounter end={info.total_users || 0} step={397} />
+            ) : (
+              "0"
+            )}
+          </div>
+          <div className="opacity-80">{t("addresses")}</div>
+        </div>
+        <div>
+          <div className="h-20 text-5xl font-serif text-stroke-base-100">
+            {isVisible ? (
+              <SingleCounter end={info ? info.total_users * 2 : 0} step={397} />
+            ) : (
+              "0"
+            )}
+          </div>
+          <div className="opacity-80">{t("participants")}</div>
+        </div>
+
+        <div className="col-span-2 xl:col-span-1">
+          <div className="h-20 text-4xl font-serif flex items-center">
+            <span>
+              <span className="text-stroke-base-100 tracking-wide">
+                {isVisible ? <SingleCounter end={1197375} step={9000} /> : "0"}
+              </span>
+
+              <span className="text-lg ms-1">&nbsp;{t("nCo2")}</span>
+            </span>
+          </div>
+          <div className="opacity-80">{t("co2EmissionAvoided")}</div>
+        </div>
+
+        <div className="col-span-2 xl:col-span-1">
+          <div className="h-20 text-4xl font-serif flex items-center">
+            <span>
+              <span className="text-stroke-base-100 tracking-wide">
+                {isVisible ? (
+                  <SingleCounter end={580544000} step={9375000} />
+                ) : (
+                  "0"
+                )}
+              </span>
+              <span className="text-lg ms-1">&nbsp;{t("nLiters")}</span>
+            </span>
+          </div>
+          <div className="opacity-80">{t("lWaterAvoided")}</div>
+        </div>
+
+        <div>
           <div className="h-20 text-6xl font-serif text-stroke-base-100 flex items-center">
             <a
               href="https://heyzine.com/flip-book/0c17a4fe2a.html"

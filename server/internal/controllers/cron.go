@@ -225,7 +225,7 @@ SELECT b.number as bag_number, u.uid as user_uid, b.id as bag_id
 FROM bags as b
 JOIN user_chains as uc ON b.user_chain_id = uc.id
 JOIN users as u ON uc.user_id = u.id
-WHERE b.updated_at < ADDDATE(NOW(), INTERVAL -7 DAY)
+WHERE b.updated_at < (NOW() - INTERVAL 7 DAY)
 AND b.last_notified_at IS NULL
 	`).Scan(res)
 

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import useLocalizePath from "../util/localize_path.hooks";
 
-export default function MessageSubmitted(props: any) {
+export default function MessageSubmitted() {
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
 

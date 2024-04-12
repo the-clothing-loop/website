@@ -20,6 +20,8 @@ import {
 import clothingCategories from "../util/categories";
 import { Genders, Sizes } from "../../../api/enums";
 import { addToastError } from "../../../stores/toast";
+import { useStore } from "@nanostores/react";
+import { $chains } from "../../../stores/chains";
 
 const MAPBOX_TOKEN = import.meta.env.PUBLIC_MAPBOX_KEY;
 
@@ -71,7 +73,7 @@ function createFilterFunc(
   genders: string[],
   sizes: string[],
 ): (c: Chain) => boolean {
-  let filterFunc = (c: Chain) => true;
+  let filterFunc = (_: Chain) => true;
   if (sizes?.length) {
     filterFunc = (c) => {
       for (let s of sizes) {
@@ -99,14 +101,16 @@ function createFilterFunc(
 export default function FindChain() {
   const urlParams = new URLSearchParams(location.search);
 
-  const [chains, setChains] = useState<Chain[]>();
+  const chains = useStore($chains);
   const [map, setMap] = useState<mapboxgl.Map>();
+  const [marker, setMarker] = useState<mapboxgl.Marker>();
   const { zoom, setZoom, mapZoom } = useMapZoom(4, MIN_ZOOM, MAX_ZOOM);
   const [locationLoading, setLocationLoading] = useState(false);
   const [mapClickedChains, setMapClickedChains] = useState<Chain[]>([]);
   const [visibleChains, setVisibleChains] = useState<Chain[]>([]);
   const [focusedChain, setFocusedChain] = useState<Chain | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const mapRef = useRef<any>();
 
@@ -131,6 +135,9 @@ export default function FindChain() {
         ? _center
         : [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
       style: "mapbox://styles/mapbox/light-v11",
+    });
+    const _marker = new mapboxgl.Marker({
+      color: "#518d7e",
     });
 
     setZoom(4);
@@ -243,13 +250,25 @@ export default function FindChain() {
           },
         });
 
-        const _marker = new mapboxgl.Marker({
-          color: "#518d7e",
-        });
-
         // Initalize chainsInView
         _map.on("idle", () => {
-          getVisibleChains(_map, _chains);
+          console.info("idle");
+          const visibleChains = getVisibleChains(_map, _chains);
+          if (isSearching) {
+            console.log("searching");
+            const latitude = Number.parseFloat(urlParams.get("la") || "");
+            const longitude = Number.parseFloat(urlParams.get("lo") || "");
+            const searchChain = visibleChains.find(
+              (c) => c.latitude === latitude && c.longitude === longitude,
+            );
+
+            if (searchChain) {
+              setSidebarOpen(true);
+              setFocusedChain(searchChain);
+            }
+          }
+
+          setIsSearching(false);
         });
 
         _map.on("moveend", () => {
@@ -335,10 +354,11 @@ export default function FindChain() {
           }
         });
       });
-      setChains(_chains);
+      $chains.set(_chains);
     });
 
     setMap(_map);
+    setMarker(_marker);
 
     return () => {
       _map.remove();
@@ -382,7 +402,7 @@ export default function FindChain() {
       });
   }
 
-  function getVisibleChains(map: mapboxgl.Map, chains: Chain[]) {
+  function getVisibleChains(map: mapboxgl.Map, chains: Chain[]): Chain[] {
     const center = map.getCenter();
     const features = map!.queryRenderedFeatures(undefined, {
       layers: ["chain-cluster", "chain-single"],
@@ -421,6 +441,7 @@ export default function FindChain() {
       .filter((c) => c) as Chain[];
 
     setVisibleChains(ans);
+    return ans;
   }
 
   // https://docs.mapbox.com/mapbox-gl-js/style-spec/other/#set-membership-filters
@@ -442,15 +463,27 @@ export default function FindChain() {
     if (longLat) {
       map.setCenter(longLat as mapboxgl.LngLatLike);
       map.setZoom(10);
+      marker?.setLngLat(longLat as mapboxgl.LngLatLike).addTo(map);
+      if (search.searchTerm.startsWith("Loop: ")) {
+        const name = search.searchTerm.slice(6);
+        const foundChains = chains.filter(
+          (c) =>
+            c.latitude === longLat[1] &&
+            c.longitude === longLat[0] &&
+            c.name === name,
+        );
+        if (foundChains.length) {
+          setMapClickedChains(foundChains);
+          if (foundChains.length === 1) setFocusedChain(foundChains[0]);
+          else setFocusedChain(null);
+        }
+        setSidebarOpen(true);
+      }
     }
 
-    window.history.replaceState(
-      {},
-      "",
-      window.location.origin +
-        window.location.href +
-        toUrlSearchParams(search, longLat),
-    );
+    const urlSearch = toUrlSearchParams(search, longLat);
+    console.log(urlSearch);
+    window.history.replaceState(null, "", window.location.pathname + urlSearch);
 
     setMapClickedChains([]);
   }

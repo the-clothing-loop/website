@@ -11,29 +11,29 @@ import (
 const cookieMaxAge = 3600 * 24 * 365
 
 func cookieRead(c *gin.Context) (string, bool) {
-	token, err := c.Cookie("token")
+	token, err := c.Cookie(c.GetString("cookie_token"))
 
 	return token, err == nil
 }
 
 func CookieRemove(c *gin.Context) {
 	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     "token",
+		Name:     c.GetString("cookie_token"),
 		Value:    "",
 		MaxAge:   -1,
 		Path:     "/",
-		Domain:   "",
+		Domain:   app.Config.COOKIE_DOMAIN,
 		SameSite: http.SameSiteStrictMode,
 		Secure:   app.Config.COOKIE_HTTPS_ONLY,
 		HttpOnly: true,
 	})
 
 	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     "user_uid",
+		Name:     c.GetString("cookie_user"),
 		Value:    "",
 		MaxAge:   -1,
 		Path:     "/",
-		Domain:   "",
+		Domain:   app.Config.COOKIE_DOMAIN,
 		SameSite: http.SameSiteStrictMode,
 		Secure:   app.Config.COOKIE_HTTPS_ONLY,
 		HttpOnly: false,
@@ -42,7 +42,7 @@ func CookieRemove(c *gin.Context) {
 
 func CookieSet(c *gin.Context, userUID, token string) {
 	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     "token",
+		Name:     c.GetString("cookie_token"),
 		Value:    token,
 		MaxAge:   cookieMaxAge,
 		Path:     "/",
@@ -53,7 +53,7 @@ func CookieSet(c *gin.Context, userUID, token string) {
 	})
 
 	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     "user_uid",
+		Name:     c.GetString("cookie_user"),
 		Value:    userUID,
 		MaxAge:   cookieMaxAge,
 		Path:     "/",

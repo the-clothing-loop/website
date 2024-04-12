@@ -6,14 +6,13 @@ import {
   IonPage,
   IonBackButton,
   IonButtons,
-  IonImg,
   IonIcon,
 } from "@ionic/react";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { TOptionsBase } from "i18next";
 import { RouteComponentProps } from "react-router";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 
 export interface FaqListItem {
   title: string;

@@ -62,8 +62,8 @@ export default function EventCreate() {
   if (!authUser) {
     return null;
   } else if (submitted) {
-    window.location.href = localizePath("/events/detail/?event=" + submitted);
-    return;
+    window.location.href = localizePath("/events/details/?event=" + submitted);
+    return null;
   } else {
     return (
       <>

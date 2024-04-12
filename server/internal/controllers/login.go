@@ -2,9 +2,11 @@ package controllers
 
 import (
 	"encoding/base64"
+	"fmt"
 	"net/http"
 
 	"github.com/golang/glog"
+	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
@@ -324,7 +326,6 @@ func Logout(c *gin.Context) {
 	_, ok := auth.TokenReadFromRequest(c)
 	if !ok {
 		c.String(http.StatusBadRequest, "No token received")
-		return
 	}
 
 	auth.CookieRemove(c)
@@ -343,5 +344,93 @@ func RefreshToken(c *gin.Context) {
 		c.String(http.StatusUnauthorized, "Invalid token")
 		return
 	}
+
+	authUser.AddUserChainsToObject(db)
+
 	auth.CookieSet(c, authUser.UID, token)
+	c.JSON(http.StatusOK, gin.H{
+		"token": token,
+		"user":  authUser,
+	})
+}
+
+func LoginSuperAsGenerateLink(c *gin.Context) {
+	db := getDB(c)
+
+	var body struct {
+		UserUID string `json:"user_uid" binding:"required,uuid"`
+		IsApp   bool   `json:"is_app"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	ok, _, _ := auth.Authenticate(c, db, auth.AuthState4RootUser, "")
+	if !ok {
+		return
+	}
+
+	user, err := models.UserGetByUID(db, body.UserUID, true)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	token, err := auth.JwtGenerate(user)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, fmt.Errorf("Unable to generate token"))
+		return
+	}
+
+	tokenBase64 := base64.URLEncoding.EncodeToString([]byte(token))
+
+	openInPrivateWindowLink := fmt.Sprintf("%s/api/v2/login/super/as?u=%s&t=%s", getBaseUrl(body.IsApp), user.UID, tokenBase64)
+	if body.IsApp {
+		openInPrivateWindowLink += "&app=true"
+	}
+
+	c.JSON(http.StatusOK, openInPrivateWindowLink)
+}
+
+func LoginSuperAsRedirect(c *gin.Context) {
+	var query struct {
+		UserUID string `form:"u" binding:"required,uuid"`
+		Token   string `form:"t" binding:"required,base64url"`
+		IsApp   bool   `form:"app"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	b, err := base64.URLEncoding.DecodeString(query.Token)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+	token := string(b)
+
+	db := getDB(c)
+
+	_, err = models.UserGetByUID(db, query.UserUID, true)
+	if err != nil {
+		c.AbortWithError(http.StatusExpectationFailed, err)
+		return
+	}
+
+	auth.CookieSet(c, query.UserUID, token)
+	c.Redirect(http.StatusTemporaryRedirect, fmt.Sprintf("%s/", getBaseUrl(query.IsApp)))
+}
+
+func getBaseUrl(isApp bool) (baseUrl string) {
+	switch app.Config.ENV {
+	case app.EnvEnumProduction:
+		baseUrl = lo.If(isApp, "https://app.clothingloop.org").Else("https://www.clothingloop.org")
+	case app.EnvEnumAcceptance:
+		baseUrl = lo.If(isApp, "https://acc.app.clothingloop.org").Else("https://acc.clothingloop.org")
+	default:
+		baseUrl = lo.If(isApp, "http://localhost:5173").Else("http://localhost:3000")
+	}
+	return baseUrl
 }

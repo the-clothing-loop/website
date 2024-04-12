@@ -1,4 +1,5 @@
-import Axios from "redaxios";
+import redaxios from "redaxios";
+import type { Severity } from "goscope2-sdk-js";
 
 interface GoatCounter {
   path: string | ((p: string) => string | null);
@@ -36,9 +37,15 @@ interface GoatCounter {
 }
 
 declare global {
+  var axios: typeof redaxios;
   interface Window {
     MapboxGeocoder: MapboxGeocoder;
     goatcounter?: GoatCounter;
-    axios: typeof Axios;
+    goscope2?: {
+      token: string;
+      baseUrl: string;
+      New(token: string, baseUrl: string): void;
+      Log(severity: Severity, message: string): void;
+    };
   }
 }

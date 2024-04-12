@@ -1,5 +1,5 @@
 import { type TFunction } from "i18next";
-import { useState, type MouseEvent, useEffect, useMemo } from "react";
+import { useState, type MouseEvent, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 interface AccordionFaqTranslation {

@@ -4,7 +4,7 @@ import "time"
 
 type UserToken struct {
 	ID        uint
-	Token     string `gorm:"unique"`
+	Token     string
 	Verified  bool
 	UserID    uint
 	CreatedAt time.Time

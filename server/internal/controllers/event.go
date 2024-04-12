@@ -270,7 +270,7 @@ func EventUpdate(c *gin.Context) {
 			return
 		}
 
-		if *body.ChainUID != "" {
+		if *body.ChainUID != "" && !user.IsRootAdmin {
 			found := false
 			for _, uc := range user.Chains {
 				if uc.ChainUID == *body.ChainUID {

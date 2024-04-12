@@ -85,3 +85,8 @@ ion-button {
 .ion-cloned-element.ios.title-large {
   @apply tw-font-serif;
 }
+
+ion-tab-button.tab-disabled {
+  --color: var(--ion-color-medium-tint);
+  @apply tw-opacity-100;
+}

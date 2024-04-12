@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import useLocalizePath from "../util/localize_path.hooks";
 

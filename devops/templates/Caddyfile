@@ -100,10 +100,8 @@ www.clothingloop.org {
 	}
 
 	handle {
+		import astro_url
 		root * /var/caddy/clothingloop.org
-		file_server
-		encode zstd gzip
-		try_files {path} /index.html
 	}
 }
 

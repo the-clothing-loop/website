@@ -3,8 +3,7 @@ import Footer from "../components/react/components/Footer";
 import Navbar from "../components/react/components/Navbar";
 import i18next from "i18next";
 import { getLanguageFlags } from "../languages";
-// // @ts-ignore
-// import { HeadHrefLangs } from "astro-i18next/components";
+import { HeadHrefLangs } from "astro-i18next/components";
 import "../tailwind.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
@@ -41,17 +40,31 @@ const { title } = Astro.props;
     />
     <link rel="apple-touch-icon" href="/logo192.png" />
 
-    <!-- <HeadHrefLangs /> -->
+    <HeadHrefLangs />
 
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/icons/feather/style.css" />
-    <link rel="stylesheet" href="/fonts/montserrat/style.css" />
-    <link rel="stylesheet" href="/fonts/playfair-display/style.css" />
+    <link rel="preconnect" href="https://images.clothingloop.org" />
+    <link rel="preconnect" href="https://fonts.bunny.net" />
+    <link
+      href="https://fonts.bunny.net/css?family=montserrat:400,400i,600,600i,700,700i|playfair-display:400,400i,600,600i,700,700i"
+      rel="stylesheet"
+    />
 
     <script
+      is:inline
       data-goatcounter="https://clothingloop.goatcounter.com/count"
       async
       src="https://gc.zgo.at/count.js"></script>
+
+    <script
+      is:inline
+      src="https://cdn.jsdelivr.net/gh/lil5/goscope2@1.4.2/sdk/js/index.js"
+    ></script>
+    <script>
+      const token = import.meta.env.PUBLIC_GOSCOPE2_TOKEN;
+      if (token && window) window.goscope2.New(token, "/api");
+    </script>
 
     <title>{title} | The Clothing Loop</title>
   </head>

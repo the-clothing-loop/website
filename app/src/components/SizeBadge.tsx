@@ -1,5 +1,5 @@
 import { IonBadge, IonIcon, IonImg } from "@ionic/react";
-import { Chain } from "../api";
+import { Chain } from "../api/types";
 
 type ICategories = Record<Genders, Sizes[]>;
 
@@ -55,16 +55,16 @@ export const SizeLetters: Record<Sizes | string, string> = {
 };
 function BadgeItem({ sizes, icon }: { sizes: string[]; icon: string }) {
   return (
-    <IonBadge color="light" className="tw-flex-row-reverse tw-flex">
-      <IonImg
-        src={`/categories/${icon}-50.png`}
-        className="dark:tw-invert-1 tw-w-4 tw-h-4"
-      />
+    <IonBadge color="light" className="tw-flex-row tw-flex">
       {sizes.map((s) => (
         <span className="tw-m-0.5" key={s}>
           {SizeLetters[s]}
         </span>
       ))}
+      <IonImg
+        src={`/categories/${icon}-50.png`}
+        className="dark:tw-invert-1 tw-w-4 tw-h-4"
+      />
     </IonBadge>
   );
 }

@@ -9,7 +9,7 @@ export default function useIntersectionObserver(
 
   function callback(
     entries: IntersectionObserverEntry[],
-    observer: IntersectionObserver,
+    _: IntersectionObserver,
   ) {
     const [entry] = entries;
     setIsIntersecting(entry.isIntersecting);

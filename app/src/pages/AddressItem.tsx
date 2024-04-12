@@ -14,11 +14,10 @@ import {
 import { useContext, useMemo } from "react";
 import { RouteComponentProps } from "react-router";
 import UserCard from "../components/UserCard";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import isPaused from "../utils/is_paused";
 import { t } from "i18next";
 import Badges from "../components/SizeBadge";
-import { useBagTooOld } from "../components/Bags/bag.hook";
 import AddressBagCard from "../components/Bags/AddressBagCard";
 
 export default function AddressItem({
@@ -30,7 +29,7 @@ export default function AddressItem({
     let userUID = match.params.uid;
     return chainUsers.find((u) => u.uid === userUID) || null;
   }, [match.params.uid, chainUsers]);
-  const isUserPaused = isPaused(user?.paused_until || null);
+  const isUserPaused = isPaused(user, chain?.uid);
 
   const userBags = useMemo(() => {
     return bags.filter((b) => b.user_uid === user?.uid);
@@ -61,9 +60,7 @@ export default function AddressItem({
               {t("interestedSizes")}
             </IonLabel>
             <div className="ion-margin-top ion-margin-bottom" slot="end">
-              {chain ? (
-                <Badges genders={chain.genders} sizes={chain.sizes} />
-              ) : null}
+              {user ? <Badges genders={[]} sizes={user.sizes} /> : null}
             </div>
           </IonItem>
         ) : null}

@@ -8,8 +8,6 @@ import {
   sessionAuthUser,
 } from "./browser_storage";
 
-const IS_DEV_MODE = import.meta.env.DEV;
-
 export enum UserRefreshState {
   NeverLoggedIn,
   LoggedIn,
@@ -48,6 +46,7 @@ export function authLogout() {
   $loading.set(true);
   return (async () => {
     await logout().catch((e) => console.warn(e));
+    // Remove legacy cookies
     cookieUserUID.set(undefined);
     localRouteMapLine.set(undefined);
     $authUser.set(null);
@@ -63,8 +62,8 @@ export function authUserRefresh(force = false): Promise<UserRefreshState> {
     const hasLoginSession = !!user;
     if (hasLoginSession) console.info("has session storage");
 
-    console.info("retrieve user uid from cookie");
     let userUID = cookieUserUID.get();
+    if (userUID) console.info("retrieved user uid from cookie");
 
     if (!userUID) {
       $authUser.set(null);
@@ -102,30 +101,5 @@ export function authUserRefresh(force = false): Promise<UserRefreshState> {
     $loading.set(false);
     console.log("logged in");
     return UserRefreshState.LoggedIn;
-
-    // // Astro will set the i18n by path only
-    // // The home/admin page will redirect to the user's preferred language only
-    //   Cookies.set(KEY_USER_UID, user.uid, cookieOptions);
-    //   $loading.set(false);
-    //   const isChanged = user.i18n ? user.i18n !== i18n.language : false;
-    //   const isUnset = !user.i18n;
-    //   if (!isUnset && isChanged) {
-    //     i18n.changeLanguage(user.i18n);
-    //   }
-    //   if (isUnset || isChanged) {
-    //     userUpdate({
-    //       user_uid: user.uid,
-    //       i18n: i18n.language,
-    //     });
-    //   }
-    // } catch (err: any) {
-    //   if (err?.status === 401) {
-    //     await authLogout().catch((err) => {
-    //       console.error("force logout failed:", err);
-    //     });
-    //   }
-    //   console.info("force logout");
-    //   return UserRefreshState.ForceLoggedOut;
-    // }
   })();
 }

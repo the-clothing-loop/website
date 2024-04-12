@@ -80,6 +80,23 @@ func Routes() *gin.Engine {
 	)
 	r.Use(controllers.MiddlewareSetDB(db))
 
+	r.Use(func(c *gin.Context) {
+		var cookieToken = "token"
+		var cookieUser = "user_uid"
+
+		switch app.Config.ENV {
+		case app.EnvEnumProduction:
+		case app.EnvEnumAcceptance:
+			cookieToken += "_acc"
+			cookieUser += "_acc"
+		default:
+			cookieToken += "_dev"
+			cookieUser += "_dev"
+		}
+		c.Set("cookie_token", cookieToken)
+		c.Set("cookie_user", cookieUser)
+	})
+
 	thr := throttle.Policy(&throttle.Quota{
 		Limit:  30,
 		Within: 2 * time.Hour,
@@ -108,6 +125,8 @@ func Routes() *gin.Engine {
 	v2.GET("/login/validate", thr, controllers.LoginValidate)
 	v2.DELETE("/logout", controllers.Logout)
 	v2.POST("/refresh-token", controllers.RefreshToken)
+	v2.POST("/login/super/as", controllers.LoginSuperAsGenerateLink)
+	v2.GET("/login/super/as", controllers.LoginSuperAsRedirect)
 
 	// payments
 	v2.POST("/payment/initiate", controllers.PaymentsInitiate)

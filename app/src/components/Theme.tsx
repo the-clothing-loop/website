@@ -11,7 +11,7 @@ import {
 import { checkmarkCircle, checkmarkSharp, ellipse } from "ionicons/icons";
 import { useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import type {
   IonModalCustomEvent,
   OverlayEventDetail,

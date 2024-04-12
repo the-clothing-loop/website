@@ -8,12 +8,6 @@ import { useTranslation } from "react-i18next";
 import { addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 
-interface FormValues {
-  name: string;
-  email: string;
-  message: string;
-}
-
 const Contacts = () => {
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);

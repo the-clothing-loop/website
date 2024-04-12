@@ -1,5 +1,5 @@
 import type { Bag, UID } from "./types";
-import axios from "./index";
+import axios from "./axios";
 
 export function bagGetAllByChain(chainUID: UID, userUID: UID) {
   return axios.get<Bag[]>("/v2/bag/all", {

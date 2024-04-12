@@ -1,9 +1,9 @@
 // Remove the old service workers for this website
-self.addEventListener("install", function (e) {
+self.addEventListener("install", function (_) {
   self.skipWaiting();
 });
 
-self.addEventListener("activate", function (e) {
+self.addEventListener("activate", function (_) {
   self.registration
     .unregister()
     .then(function () {

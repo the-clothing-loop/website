@@ -1,5 +1,5 @@
 import type { UID, User } from "./types";
-import axios from "./index";
+import axios from "./axios";
 
 export function userGetByUID(
   chainUID: string | undefined,
@@ -33,7 +33,7 @@ export interface UserUpdateBody {
   newsletter?: boolean;
   sizes?: string[];
   address?: string;
-  pause_until?: string;
+  paused_until?: string;
   i18n?: string;
   longitude?: number;
   latitude?: number;

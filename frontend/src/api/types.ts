@@ -10,7 +10,7 @@ export interface User {
   address: string;
   sizes: string[];
   is_root_admin: boolean;
-  pause_until: string | null;
+  paused_until: string | null;
   i18n: string;
   longitude?: number;
   latitude?: number;
@@ -26,6 +26,16 @@ export interface Bag {
   chain_uid: UID;
   user_uid: UID;
   updated_at: string;
+}
+
+export interface BulkyItem {
+  id: number;
+  title: string;
+  message: string;
+  image_url: string;
+  chain_uid: UID;
+  user_uid: UID;
+  created_at: string;
 }
 
 export interface UserChain {

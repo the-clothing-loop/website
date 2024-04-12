@@ -50,7 +50,7 @@ WHERE user_chain_id IN (
 	SELECT uc2.id FROM user_chains AS uc2
 	WHERE uc2.chain_id = ?
 )
-ORDER BY id ASC
+ORDER BY bags.id ASC
 	`, "`", "`", "`", "`"), chain.ID).Scan(&bags).Error
 	if err != nil {
 		goscope.Log.Errorf("Unable to find bags: %v", err)

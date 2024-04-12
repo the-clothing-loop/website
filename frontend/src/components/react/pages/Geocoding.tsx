@@ -29,6 +29,7 @@ interface Props {
   className?: string;
   types: MapboxType[];
   placeholder?: string;
+  externalGeocoder?: MapboxGeocoder.GeocoderOptions["externalGeocoder"];
 }
 
 export default function Geocoding(props: Props) {
@@ -42,6 +43,7 @@ export default function Geocoding(props: Props) {
         accessToken: MAPBOX_TOKEN,
         placeholder: props.placeholder,
         types: props.types.join(","), //"country,region,place,postcode,locality,neighborhood",
+        externalGeocoder: props.externalGeocoder,
       });
 
       if (geoRef) {

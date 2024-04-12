@@ -25,12 +25,14 @@ import {
   imageOutline,
 } from "ionicons/icons";
 import { ChangeEvent, RefObject, useContext, useState } from "react";
-import { BulkyItem, uploadImage, bulkyItemPut } from "../api";
-import { StoreContext } from "../Store";
+import { bulkyItemPut } from "../api/bulky";
+import { BulkyItem } from "../api/types";
+import { StoreContext } from "../stores/Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { Camera, CameraResultType } from "@capacitor/camera";
+import { uploadImage } from "../api/imgbb";
 
 enum State {
   idle,

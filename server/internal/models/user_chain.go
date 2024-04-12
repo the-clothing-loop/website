@@ -20,6 +20,7 @@ type UserChain struct {
 	IsApproved                 bool        `json:"is_approved"`
 	LastNotifiedIsUnapprovedAt zero.Time   `json:"-"`
 	RouteOrder                 int         `json:"-"`
+	IsPaused                   bool        `json:"is_paused"`
 	Bags                       []Bag       `json:"-"`
 	Bulky                      []BulkyItem `json:"-"`
 }
@@ -127,6 +128,7 @@ func UserChainGetIndirectByChain(db *gorm.DB, chainID uint) ([]UserChain, error)
 		users.uid                  AS user_uid,
 		user_chains.is_chain_admin AS is_chain_admin,
 		user_chains.created_at     AS created_at,
+		user_chains.is_paused      AS is_paused,
 		user_chains.is_approved    AS is_approved
 	FROM user_chains
 	LEFT JOIN chains ON user_chains.chain_id = chains.id

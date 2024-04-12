@@ -1,8 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { t, changeLanguage } from "i18next";
-//@ts-ignore;
-import { localizePath } from "astro-i18next";
+import { localizePath } from "../../node_modules/astro-i18next/src/index";
 
 changeLanguage("en");
 ---

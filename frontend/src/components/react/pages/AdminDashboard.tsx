@@ -1,18 +1,15 @@
-//Resources
-
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useStore } from "@nanostores/react";
 
 import { userPurge } from "../../../api/user";
-
 import ChainsList from "../components/ChainsList";
 import { useEscape } from "../util/escape.hooks";
 import type { Chain } from "../../../api/types";
-import PopupLegal from "../components/PopupLegal";
-import { useTranslation } from "react-i18next";
-import { useStore } from "@nanostores/react";
-import { $authUser, authUserRefresh } from "../../../stores/auth";
+import { $authUser } from "../../../stores/auth";
 import { addModal } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
+import { useLegal } from "../util/user.hooks";
 
 export default function AdminDashboard() {
   const { t, i18n } = useTranslation();
@@ -20,7 +17,6 @@ export default function AdminDashboard() {
   const authUser = useStore($authUser);
 
   const [chains, setChains] = useState<Chain[]>([]);
-  const [tmpAcceptedToh, setTmpAcceptedToh] = useState(false);
 
   const isChainAdmin = useMemo(
     () => !!authUser?.chains.find((uc) => uc.is_chain_admin),
@@ -87,26 +83,7 @@ export default function AdminDashboard() {
     });
   }
 
-  useEffect(() => {
-    if (
-      authUser &&
-      isChainAdmin &&
-      (authUser.accepted_toh === false || authUser.accepted_dpa === false)
-    ) {
-      if (authUser.accepted_toh)
-        console.log("You have not accepted the Terms of Hosts!");
-      if (authUser.accepted_dpa)
-        console.log("You have not accepted the Data Processing Agreement!");
-      PopupLegal({
-        t,
-        authUserRefresh: () => authUserRefresh(true),
-        addModal,
-        authUser,
-        tmpAcceptedToh,
-        setTmpAcceptedToh,
-      });
-    }
-  }, [authUser, isChainAdmin]);
+  useLegal(t, authUser);
 
   useEscape(() => {
     let el = document.getElementById(
@@ -130,6 +107,9 @@ export default function AdminDashboard() {
           <div className="relative container mx-auto px-5 md:px-20">
             <div className="z-10 flex flex-col items-between py-8">
               <div className="flex-grow max-w-screen-xs">
+                <span className="block mb-1 text-xs text-teal/60">
+                  {authUser.email}
+                </span>
                 <h1 className="font-serif font-bold text-4xl text-secondary mb-3">
                   {t("helloN", { n: authUser.name })}
                 </h1>

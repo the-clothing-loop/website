@@ -1,10 +1,10 @@
-import { Bag } from "../../api";
+import { Bag } from "../../api/types";
 
 export default function BagSVG({
   bag,
   isList,
 }: {
-  bag: Bag;
+  bag: { color: string; number: string };
   isList?: boolean;
 }) {
   let fontSize = (bag.number.length > 10 ? 10 : bag.number.length) * -1 + 40;

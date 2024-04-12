@@ -16,10 +16,10 @@ import {
 
 import type { IonModalCustomEvent } from "@ionic/core";
 import { RefObject, useContext, useState } from "react";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../stores/Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import { useTranslation } from "react-i18next";
-import { chainUpdate } from "../api";
+import { chainUpdate } from "../api/chain";
 import { refreshOutline } from "ionicons/icons";
 
 export default function EditHeaders(props: {
@@ -123,7 +123,7 @@ export default function EditHeaders(props: {
             >
               <IonIcon icon={refreshOutline} className="tw-ml-0.5 tw-mr-5" />
               <IonLabel className="ion-text-wrap">
-                <h3>{t("restHeaders")}</h3>
+                <h3>{t("resetHeaders")}</h3>
                 <p>{t("resetHeadersDesc")}</p>
               </IonLabel>
               <IonButton slot="end" onClick={reset} color="danger">
@@ -135,7 +135,7 @@ export default function EditHeaders(props: {
             lines="none"
             color={error === "number" ? "danger" : undefined}
           >
-            {t("updateHeaderDesc")}
+            <p className="tw-my-1">{t("updateHeaderDesc")}</p>
           </IonItem>
           <IonItem
             lines="none"

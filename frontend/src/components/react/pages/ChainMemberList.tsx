@@ -7,7 +7,8 @@ import {
   type MouseEvent,
   type MouseEventHandler,
   type ReactElement,
-  type DragEvent,
+  lazy,
+  Suspense,
 } from "react";
 
 import dayjs from "../util/dayjs";
@@ -40,7 +41,6 @@ import useToClipboard from "../util/to-clipboard.hooks";
 import { bagGetAllByChain } from "../../../api/bag";
 import PopoverOnHover from "../components/Popover";
 import DOMPurify from "dompurify";
-import RouteMapPopup from "../components/RouteMap/RouteMapPopup";
 import isTouchDevice from "../util/is_touch";
 import { useTranslation } from "react-i18next";
 import getQuery from "../util/query";
@@ -48,6 +48,12 @@ import { useStore } from "@nanostores/react";
 import { $authUser, authUserRefresh } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
+import { loginSuperAsGenerateLink } from "../../../api/login";
+import ChainDescription from "../components/FindChain/ChainDescription";
+import { useLegal } from "../util/user.hooks";
+const RouteMapPopup = lazy(
+  () => import("../components/RouteMap/RouteMapPopup"),
+);
 
 enum LoadingState {
   idle,
@@ -56,9 +62,6 @@ enum LoadingState {
   success,
 }
 
-interface Params {
-  chainUID: string;
-}
 type SelectedTable = "route" | "participants" | "unapproved";
 
 const PUBLIC_BASE_URL = import.meta.env.PUBLIC_BASE_URL;
@@ -70,7 +73,7 @@ export default function ChainMemberList() {
   const authUser = useStore($authUser);
 
   const [hostChains, setHostChains] = useState<Chain[]>([]);
-  const [loadingTransfer, setLoadingTransfer] = useState(LoadingState.idle);
+  const [loadingTransfer] = useState(LoadingState.idle);
   const [chain, setChain] = useState<Chain | null>(null);
   const [users, setUsers] = useState<User[] | null>(null);
   const [bags, setBags] = useState<Bag[] | null>(null);
@@ -118,6 +121,8 @@ export default function ChainMemberList() {
       route.indexOf(a.uid) < route.indexOf(b.uid) ? -1 : 1,
     );
   }, [users, route]);
+
+  useLegal(t, authUser);
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
@@ -251,8 +256,6 @@ export default function ChainMemberList() {
 
       // saving current rooute before changing in the database
       setPreviousRoute(route);
-      // set new order
-      routeSetOrder(chainUID, optimal_path);
       setRoute(optimal_path);
     } catch (err: any) {
       addToastError(GinParseErrors(t, err), err?.status);
@@ -261,9 +264,19 @@ export default function ChainMemberList() {
     }
   }
 
-  function returnToPreviousRoute(chainUID: UID) {
+  function returnToPreviousRoute() {
     setRoute(previousRoute);
-    routeSetOrder(chainUID, previousRoute!);
+    setPreviousRoute(null);
+  }
+
+  function closeOptimizeRoutePopup(save: boolean) {
+    if (save && route) {
+      routeSetOrder(chainUID, route);
+    } else if (previousRoute) {
+      setRoute(previousRoute);
+    }
+    setPreviousRoute(null);
+    setIsOpenRouteMapPopup(false);
   }
 
   function handleClickDeleteLoop() {
@@ -326,7 +339,7 @@ export default function ChainMemberList() {
     refresh(true);
   }, [authUser]);
 
-  const [filteredUsersHost, filteredUsersNotHost] = useMemo(() => {
+  const [filteredUsersHost /*filteredUsersNotHost*/] = useMemo(() => {
     let host: User[] = [];
     let notHost: User[] = [];
     users?.forEach((u) => {
@@ -354,31 +367,30 @@ export default function ChainMemberList() {
       : Promise.reject("authUser not set");
 
     try {
-      let _hostChains: Chain[];
-      if (authUser.is_root_admin) {
-        _hostChains = (
-          await chainGetAll({ filter_out_unpublished: false })
-        ).data.filter((c) => c.uid !== chainUID);
-      } else {
-        _hostChains = (
-          await Promise.all(
-            authUser?.chains
-              .filter((uc) => uc.is_chain_admin && uc.chain_uid !== chainUID)
-              .map((uc) => chainGet(uc.chain_uid)) || [],
-          )
-        ).map((c) => c.data);
-      }
-      setHostChains(_hostChains.sort((a, b) => a.name.localeCompare(b.name)));
-
-      const [chainData, chainUsers, routeData, bagData] = await Promise.all([
-        chainGet(chainUID, {
-          addTotals: true,
-          addIsAppDisabled: true,
-        }),
-        userGetAllByChain(chainUID),
-        routeGetOrder(chainUID),
-        bagGetAll,
-      ]);
+      const [_hostChains, chainData, chainUsers, routeData, bagData] =
+        await Promise.all([
+          authUser.is_root_admin
+            ? chainGetAll({ filter_out_unpublished: false }).then((res) =>
+                res.data.filter((c) => c.uid !== chainUID),
+              )
+            : Promise.all(
+                authUser?.chains
+                  .filter(
+                    (uc) => uc.is_chain_admin && uc.chain_uid !== chainUID,
+                  )
+                  .map((uc) => chainGet(uc.chain_uid)) || [],
+              ).then((res) => res.map((c) => c.data)),
+          chainGet(chainUID, {
+            addTotals: true,
+            addIsAppDisabled: true,
+          }),
+          userGetAllByChain(chainUID),
+          routeGetOrder(chainUID),
+          bagGetAll,
+        ]);
+      setHostChains(
+        _hostChains.toSorted((a, b) => a.name.localeCompare(b.name)),
+      );
       setChain(chainData.data);
       setRoute(routeData.data || []);
       setUsers(
@@ -467,7 +479,7 @@ export default function ChainMemberList() {
               <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl break-words">
                 {chain.name}
               </h1>
-              <p className="text-lg mb-6 break-words">{chain.description}</p>
+              <ChainDescription description={chain.description} />
 
               <dl>
                 <dt className="font-bold mb-1">{t("sizes")}</dt>
@@ -580,13 +592,16 @@ export default function ChainMemberList() {
                 refresh={refresh}
               />
               {isOpenRouteMapPopup ? (
-                <RouteMapPopup
-                  chain={chain}
-                  route={route}
-                  closeFunc={() => setIsOpenRouteMapPopup(false)}
-                  optimizeRoute={() => optimizeRoute(chain.uid)}
-                  returnToPreviousRoute={() => returnToPreviousRoute(chain.uid)}
-                />
+                <Suspense fallback={null}>
+                  <RouteMapPopup
+                    chain={chain}
+                    route={route}
+                    shouldSave={!!previousRoute}
+                    closeFunc={closeOptimizeRoutePopup}
+                    optimizeRoute={() => optimizeRoute(chain.uid)}
+                    returnToPreviousRoute={returnToPreviousRoute}
+                  />
+                </Suspense>
               ) : null}
             </div>
           </section>
@@ -607,7 +622,7 @@ export default function ChainMemberList() {
                   name="table-type"
                   value="route"
                   checked={selectedTable === "route"}
-                  onChange={(e) => setSelectedTable("route")}
+                  onChange={() => setSelectedTable("route")}
                   className="hidden peer"
                 />
                 <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black ltr:pr-3 rtl:pl-3 ltr:mr-3 rtl:ml-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
@@ -621,7 +636,7 @@ export default function ChainMemberList() {
                   name="table-type"
                   value="participants"
                   checked={selectedTable === "participants"}
-                  onChange={(e) => setSelectedTable("participants")}
+                  onChange={() => setSelectedTable("participants")}
                   className="hidden peer"
                 />
                 <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black px-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
@@ -636,7 +651,7 @@ export default function ChainMemberList() {
                   name="table-type"
                   value="unapproved"
                   checked={selectedTable === "unapproved"}
-                  onChange={(e) => {
+                  onChange={() => {
                     if (unapprovedUsers.length) setSelectedTable("unapproved");
                   }}
                   disabled={!unapprovedUsers.length}
@@ -669,7 +684,7 @@ export default function ChainMemberList() {
               {selectedTable === "route" ? (
                 <button
                   type="button"
-                  className={`btn hidden lg:inline-flex me-4 ${
+                  className={`btn inline-flex me-4 ${
                     isOpenRouteMapPopup
                       ? "btn-outline"
                       : "btn-accent text-white"
@@ -1053,6 +1068,7 @@ function ParticipantsTable(props: {
 }) {
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
+  const addCopyAttributes = useToClipboard();
 
   function getEditLocation(user: User): string {
     if (!user.uid) {
@@ -1179,6 +1195,77 @@ function ParticipantsTable(props: {
     props.setSortBy(props.sortBy !== _sortBy ? _sortBy : "date");
   }
 
+  async function loginAsUser(u: User) {
+    const linkInit = (await loginSuperAsGenerateLink(u.uid, false)).data;
+    addModal({
+      message: `Login as "${u.name}"`,
+      content() {
+        const [activeTab, _setActiveTab] = useState<"website" | "app">(
+          "website",
+        );
+        const [activeLink, _setActiveLink] = useState(linkInit);
+        const setActiveTab = async (tab: "website" | "app") => {
+          const link = (await loginSuperAsGenerateLink(u.uid, tab === "app"))
+            .data;
+          _setActiveLink(link);
+          _setActiveTab(tab);
+        };
+        return (
+          <div>
+            <p className="mb-2">
+              Click the text field to copy the url, then open a private window
+              and go to the page link
+            </p>
+            <div className="flex flex-col items-center">
+              <div className="tabs tabs-boxed mb-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("website")}
+                  className={"tab".concat(
+                    activeTab === "website" ? " tab-active" : "",
+                  )}
+                >
+                  Website
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("app")}
+                  className={"tab".concat(
+                    activeTab === "app" ? " tab-active" : "",
+                  )}
+                >
+                  App
+                </button>
+              </div>
+              <label className="input-group justify-center">
+                <input
+                  type="text"
+                  value={activeLink}
+                  onClick={(e) => (e.target as HTMLInputElement).select()}
+                  onChangeCapture={(e) => e.preventDefault()}
+                  className="input input-bordered"
+                />
+                <button
+                  type="button"
+                  {...addCopyAttributes(
+                    t,
+                    "input-login-as-" + u.uid,
+                    undefined,
+                    activeLink,
+                  )}
+                  className="btn btn-outline"
+                >
+                  {t("copy")}
+                </button>
+              </label>
+            </div>
+          </div>
+        );
+      },
+      actions: [],
+    });
+  }
+
   return (
     <>
       <div className="mt-6 relative overflow-hidden">
@@ -1234,7 +1321,7 @@ function ParticipantsTable(props: {
                     {t("removeFromLoop")}
                   </button>,
                   <a href={getEditLocation(u)}>{t("edit")}</a>,
-                  ...(!userChain.is_chain_admin || props.authUser?.is_root_admin
+                  ...(!userChain.is_chain_admin
                     ? [
                         <button type="button" onClick={() => onAddCoHost(u)}>
                           {t("addCoHost")}
@@ -1259,6 +1346,17 @@ function ParticipantsTable(props: {
                           className="text-red"
                         >
                           {t("copy")}
+                        </button>,
+                      ]
+                    : []),
+                  ...(props.authUser?.is_root_admin
+                    ? [
+                        <button
+                          type="button"
+                          className="text-purple"
+                          onClick={() => loginAsUser(u)}
+                        >
+                          Login as {u.name}
                         </button>,
                       ]
                     : []),
@@ -1337,7 +1435,7 @@ function RouteTable(props: {
     routeSetOrder(props.chain.uid, r);
     props.setRoute(r);
   }
-  function draggingEnd(e: DragEvent<HTMLTableRowElement>) {
+  function draggingEnd(/*e: DragEvent<HTMLTableRowElement>*/) {
     const fromIndex = props.route.indexOf(dragging);
     const toIndex = props.route.indexOf(dragTarget);
 

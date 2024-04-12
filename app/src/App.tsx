@@ -1,9 +1,9 @@
 import { useIonAlert } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { useTranslation } from "react-i18next";
-import { StoreProvider } from "./Store";
+import { StoreProvider } from "./stores/Store";
 import Routes from "./Routes";
-import { logout } from "./api";
+import { logout } from "./api/login";
 
 export default function App() {
   const [presentAlert] = useIonAlert();

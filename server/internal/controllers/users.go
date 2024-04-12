@@ -7,16 +7,13 @@ import (
 	"time"
 
 	"github.com/golang/glog"
-	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
-	"github.com/the-clothing-loop/website/server/pkg/noderoute"
 	"gopkg.in/guregu/null.v3"
-	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
@@ -152,7 +149,7 @@ func UserGetAllOfChain(c *gin.Context) {
 
 	// omit user data from participants
 	if !isAuthState3AdminChainUser {
-		users, err = omitUserData(db, chain, users, authUser.UID)
+		users, err = models.UserOmitData(db, chain, users, authUser.ID)
 
 		if err != nil {
 			goscope.Log.Errorf("Unable to omit user data: %v", err)
@@ -197,6 +194,7 @@ func UserUpdate(c *gin.Context) {
 		PhoneNumber   *string    `json:"phone_number,omitempty"`
 		Newsletter    *bool      `json:"newsletter,omitempty"`
 		PausedUntil   *time.Time `json:"paused_until,omitempty"`
+		ChainPaused   *bool      `json:"chain_paused,omitempty"`
 		Sizes         *[]string  `json:"sizes,omitempty"`
 		Address       *string    `json:"address,omitempty"`
 		I18n          *string    `json:"i18n,omitempty"`
@@ -209,7 +207,7 @@ func UserUpdate(c *gin.Context) {
 		return
 	}
 
-	ok, user, _, _ := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
 	if !ok {
 		return
 	}
@@ -245,6 +243,9 @@ func UserUpdate(c *gin.Context) {
 			} else {
 				userChanges["paused_until"] = null.Time{}
 			}
+		}
+		if body.ChainPaused != nil && chain != nil {
+			db.Exec(`UPDATE user_chains SET is_paused = ? WHERE user_id = ? AND chain_id = ?`, *body.ChainPaused, user.ID, chain.ID)
 		}
 		if body.Sizes != nil {
 			j, _ := json.Marshal(body.Sizes)
@@ -466,6 +467,8 @@ UPDATE events SET user_id = (
 	}
 
 	tx.Commit()
+
+	auth.CookieRemove(c)
 }
 
 func UserTransferChain(c *gin.Context) {
@@ -621,155 +624,4 @@ func UserCheckIfEmailExists(c *gin.Context) {
 		return
 	}
 	c.JSON(200, found)
-}
-
-func omitUserData(db *gorm.DB, chain *models.Chain, users []models.User, authUserUID string) ([]models.User, error) {
-
-	routePrivacy := chain.RoutePrivacy
-
-	// Show all users information
-	if routePrivacy == -1 {
-		return users, nil
-	}
-
-	usersWithBulkyItems := []uint{}
-	db.Raw(`
-			SELECT u.id
-			FROM users AS u
-			LEFT JOIN user_chains AS uc on uc.user_id = u.id
-			LEFT JOIN bulky_items AS bi ON uc.id = bi.user_chain_id
-			WHERE uc.chain_id = ? AND bi.id IS NOT NULL
-		   `, chain.ID).Scan(&usersWithBulkyItems)
-
-	if routePrivacy == 0 {
-		for i, user := range users {
-			if user.UID != authUserUID {
-				_, isChainAdmin := user.IsPartOfChain(chain.UID)
-
-				// check if the user has bulkyItems
-				_, _, hasBulkyItems := lo.FindIndexOf[uint](usersWithBulkyItems, func(item uint) bool {
-					return item == user.ID
-				})
-				if hasBulkyItems {
-					continue
-				}
-				hideUserInformation(isChainAdmin, &users[i])
-			}
-		}
-		return users, nil
-	}
-
-	route, err := chain.GetRouteOrderByUserUID(db)
-	if err != nil {
-		return nil, err
-	}
-
-	_, authUserRouteOrder, _ := lo.FindIndexOf[string](route, func(item string) bool {
-		return item == authUserUID
-	})
-
-	type userData struct {
-		userIndex    int
-		hasBulkyItem bool
-		isChainAdmin bool
-	}
-
-	var head, iterator, currentUserNode *noderoute.NodeWithInformation[userData]
-
-	// Building the noderoute data structure
-	for routeOrder, userUID := range route {
-
-		// find user in users slice
-		user, userIndex, _ := lo.FindIndexOf[models.User](users, func(item models.User) bool {
-			return item.UID == userUID
-		})
-		// check if the user has bulkyItems
-		_, _, hasBulkyItems := lo.FindIndexOf[uint](usersWithBulkyItems, func(item uint) bool {
-			return item == user.ID
-		})
-
-		// check if is admin
-		_, isChainAdmin := user.IsPartOfChain(chain.UID)
-
-		// create the nodeRoute with the user information
-		node := &noderoute.NodeWithInformation[userData]{
-			Key: user.UID,
-			Data: userData{
-				userIndex:    userIndex,
-				hasBulkyItem: hasBulkyItems,
-				isChainAdmin: isChainAdmin,
-			},
-		}
-
-		if head == nil {
-			head = node
-			iterator = head
-		} else {
-			iterator.Next = node
-			node.Prev = iterator
-			iterator = node
-		}
-
-		// save the position of the authUser
-		if authUserRouteOrder == routeOrder {
-			currentUserNode = node
-		}
-	}
-	// link last node with head and the head node with the last node, to create a circular list
-	iterator.Next = head
-	head.Prev = iterator
-
-	checkNode := func(currentNode *noderoute.NodeWithInformation[userData], routePrivacy int) int {
-		d := currentNode.Data
-		user := &users[d.userIndex]
-		hasBulkyItem := d.hasBulkyItem
-		isChainAdmin := d.isChainAdmin
-
-		if user.PausedUntil.Valid {
-			hideUserInformation(false, user)
-		} else {
-			if routePrivacy > 0 {
-				routePrivacy--
-			} else {
-				if !hasBulkyItem {
-					hideUserInformation(isChainAdmin, user)
-				}
-			}
-		}
-		return routePrivacy
-	}
-
-	// iterate all users starting from the AuthUser back and forward
-	forward := currentUserNode.Next
-	backward := currentUserNode.Prev
-
-	routePrivacyForward := chain.RoutePrivacy
-	routePrivacyBackward := chain.RoutePrivacy
-
-	for {
-		// if the user is paused, dont show the personal information
-		routePrivacyForward = checkNode(forward, routePrivacyForward)
-		routePrivacyBackward = checkNode(backward, routePrivacyBackward)
-
-		if forward == backward {
-			checkNode(forward, routePrivacyForward+routePrivacyBackward)
-			break // break cycle
-		}
-
-		if forward.Next == backward {
-			break
-		}
-
-		forward = forward.Next
-		backward = backward.Prev
-	}
-	return users, nil
-}
-
-func hideUserInformation(isChainAdmin bool, user *models.User) {
-	if !isChainAdmin {
-		user.Email = zero.StringFrom("***")
-		user.PhoneNumber = "***"
-	}
-	user.Address = "***"
 }
