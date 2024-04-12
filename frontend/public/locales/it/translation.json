@@ -71,7 +71,7 @@
   "login": "Accedi",
   "name": "Nome",
   "newsletter": "Newsletter",
-  "phoneNumber": "Numero di telefono",
+  "phoneNumber": "Phone number (incl. country code)",
   "page": "Pagina",
   "logout": "Esci",
   "loginEmailSent": "Ti è stata inviata un' email che ti permette di accedere",
