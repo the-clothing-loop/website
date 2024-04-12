@@ -208,73 +208,76 @@ export default function Chat() {
         fullscreen
         class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
       >
-        <div className="tw-fixed tw-bg-light tw-z-10 tw-w-full">
-          <div className="tw-flex tw-ml-5 tw-mb-2 tw-mt-2 ">
-            {chatRooms?.map((cr) => {
-              let initials = "";
-              cr.name.split(" ").forEach((word) => {
-                initials += word[0];
-              });
-              return (
-                <div className="tw-rounded-full tw-w-14 tw-h-14 tw-mr-4 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
-                  <div className="tw-font-bold">{initials}</div>
-                </div>
-              );
-            })}
+        <div className="tw-relative tw-h-full">
+          <div className="tw-fixed tw-z-10 tw-w-full tw-bg-[#f4f1f9]">
+            <div className="tw-flex tw-ml-5 tw-mb-2 tw-mt-2 ">
+              {chatRooms?.map((cr) => {
+                let initials = "";
+                cr.name.split(" ").forEach((word) => {
+                  initials += word[0];
+                });
+                return (
+                  <div className="tw-rounded-full tw-w-14 tw-h-14 tw-mr-4 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
+                    <div className="tw-font-bold">{initials}</div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-
-        <div className="tw-flex tw-flex-col tw-h-full">
-          <div className="tw-flex-grow tw-overflow-y-auto tw-flex tw-flex-col-reverse">
-            {postList.order.map((item) => {
-              let post = postList.posts[item];
-              return (
-                <div>
-                  <IonItem
-                    color="light"
-                    key={post.id}
-                    className={`tw-rounded-tl-2xl tw-rounded-tr-2xl tw-mb-2 ${
-                      post.user_id == authUser?.uid
-                        ? "tw-rounded-bl-2xl tw-float-right tw-ml-8 tw-mr-4"
-                        : "tw-rounded-br-2xl tw-mr-8 tw-ml-4 tw-float-left"
-                    }`}
-                  >
-                    <div className="tw-py-2">
-                      <div className="tw-font-bold">{post.props.username}</div>
-                      <div>{post.message}</div>
-                    </div>
-                  </IonItem>
-                </div>
-              );
-            })}
-          </div>
-          <div>
-            <IonItem
-              color="light"
-              disabled={sendingMsg == SendingMsgState.SENDING}
-            >
-              <IonInput
-                placeholder="Send Message"
-                value={message}
-                disabled={sendingMsg == SendingMsgState.SENDING}
-                onIonInput={(e) => setMessage(e.detail.value as string)}
-                className="tw-ml-2"
-              />
-              <IonButton
-                slot="end"
-                onClick={sendMessage}
-                shape="round"
-                disabled={message == ""}
+          <div className="tw-flex tw-flex-col tw-absolute tw-bottom-0 tw-max-h-[75vh]">
+            <div className="tw-flex-grow tw-overflow-y-auto tw-flex tw-flex-col-reverse">
+              {postList.order.map((item) => {
+                let post = postList.posts[item];
+                return (
+                  <div>
+                    <IonItem
+                      color="light"
+                      key={post.id}
+                      className={`tw-rounded-tl-2xl tw-rounded-tr-2xl tw-mb-2 ${
+                        post.user_id == authUser?.uid
+                          ? "tw-rounded-bl-2xl tw-float-right tw-ml-8 tw-mr-4"
+                          : "tw-rounded-br-2xl tw-mr-8 tw-ml-4 tw-float-left"
+                      }`}
+                    >
+                      <div className="tw-py-2">
+                        <div className="tw-font-bold">
+                          {post.props.username}
+                        </div>
+                        <div>{post.message}</div>
+                      </div>
+                    </IonItem>
+                  </div>
+                );
+              })}
+            </div>
+            <div>
+              <IonItem
                 color="light"
-                className="tw-mr-0"
+                disabled={sendingMsg == SendingMsgState.SENDING}
               >
-                <IonIcon
-                  icon={sendOutline}
-                  color="primary"
-                  className="tw-text-2xl"
+                <IonInput
+                  placeholder="Send Message"
+                  value={message}
+                  disabled={sendingMsg == SendingMsgState.SENDING}
+                  onIonInput={(e) => setMessage(e.detail.value as string)}
+                  className="tw-ml-2"
                 />
-              </IonButton>
-            </IonItem>
+                <IonButton
+                  slot="end"
+                  onClick={sendMessage}
+                  shape="round"
+                  disabled={message == ""}
+                  color="light"
+                  className="tw-mr-0"
+                >
+                  <IonIcon
+                    icon={sendOutline}
+                    color="primary"
+                    className="tw-text-2xl"
+                  />
+                </IonButton>
+              </IonItem>
+            </div>
           </div>
         </div>
       </IonContent>
