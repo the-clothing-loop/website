@@ -71,7 +71,7 @@
   "login": "Logga in",
   "name": "Namn",
   "newsletter": "Nyhetsbrev",
-  "phoneNumber": "Telefonnummer",
+  "phoneNumber": "Phone number (incl. country code)",
   "page": "Sida",
   "logout": "Logga ut",
   "loginEmailSent": "Ett e-postmeddelande har skickats till dig som tillåter dig att logga in",
