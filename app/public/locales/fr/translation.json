@@ -108,6 +108,8 @@
   "passcode": "Passcode",
   "logout": "Logout",
   "areYouSureYouWantToLogout": "Are you sure you want to logout?",
+  "leaveLoop": "Leave Loop",
+  "areYouSureYouWantToLeaveN": "Are you sure you want to leave {{name}}?",
   "privacyPolicy": "Privacy Policy",
   "openSource": "Open Source",
   "stayTuned": "Stay tuned",
