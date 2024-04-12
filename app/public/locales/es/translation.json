@@ -108,6 +108,8 @@
   "passcode": "Contraseña",
   "logout": "Cerrar sesión",
   "areYouSureYouWantToLogout": "¿Estás seguro de que quieres cerrar sesión?",
+  "leaveLoop": "Leave Loop",
+  "areYouSureYouWantToLeaveN": "Are you sure you want to leave {{name}}?",
   "privacyPolicy": "Política de privacidad",
   "openSource": "Código abierto",
   "stayTuned": "Permanecer atento",
