@@ -1321,7 +1321,7 @@ function ParticipantsTable(props: {
                     {t("removeFromLoop")}
                   </button>,
                   <a href={getEditLocation(u)}>{t("edit")}</a>,
-                  ...(!userChain.is_chain_admin || props.authUser?.is_root_admin
+                  ...(!userChain.is_chain_admin
                     ? [
                         <button type="button" onClick={() => onAddCoHost(u)}>
                           {t("addCoHost")}
