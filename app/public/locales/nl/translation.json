@@ -108,6 +108,8 @@
   "passcode": "Toegangscode",
   "logout": "Log uit",
   "areYouSureYouWantToLogout": "Weet je zeker dat je wilt uitloggen?",
+  "leaveLoop": "Leave Loop",
+  "areYouSureYouWantToLeaveN": "Are you sure you want to leave {{name}}?",
   "privacyPolicy": "Privacybeleid",
   "openSource": "Open source",
   "stayTuned": "Blijf kijken.",
