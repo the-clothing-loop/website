@@ -34,9 +34,7 @@ func TestMailSend(t *testing.T) {
 	app.MailSend(db, m)
 }
 
-// TODO: change back to testing all languages after next crowdin PR
-// var languages = []string{"en", "nl"}
-var languages = []string{"en"}
+var languages = []string{"en", "nl", "de", "fr", "es", "sv", "he"}
 
 func runOnAllLanguages(t *testing.T, run func(t *testing.T, c *gin.Context, lng string)) {
 	for i := range languages {

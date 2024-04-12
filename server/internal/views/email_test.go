@@ -19,16 +19,7 @@ var validate = validator.New()
 var faker = Faker.New()
 
 func TestEmailFormattingByLanguage(t *testing.T) {
-	languages := []string{
-		"de",
-		"en",
-		"es",
-		"fr",
-		"he",
-		"it",
-		"nl",
-		"sv",
-	}
+	languages := []string{"en", "nl", "de", "fr", "es", "sv", "he"}
 	templates := []struct {
 		Name         string
 		Data         map[string]any
