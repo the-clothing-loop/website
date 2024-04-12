@@ -195,6 +195,42 @@ export default function Chat() {
     }
   }
 
+  function plusSVG() {
+    return (
+      <span className="tw-justify-self-end">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="feather feather-plus"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        <line
+          xmlns="http://www.w3.org/2000/svg"
+          x1="5"
+          y1="12"
+          x2="19"
+          y2="12"
+        />
+        <line
+          xmlns="http://www.w3.org/2000/svg"
+          x1="5"
+          y1="12"
+          x2="19"
+          y2="12"
+        />{" "}
+      </span>
+    );
+  }
+
   return (
     <IonPage>
       <IonHeader translucent>
@@ -210,14 +246,17 @@ export default function Chat() {
       >
         <div className="tw-relative tw-h-full">
           <div className="tw-fixed tw-z-10 tw-w-full tw-bg-[#f4f1f9]">
-            <div className="tw-flex tw-ml-5 tw-mb-2 tw-mt-2 ">
+            <div className="tw-flex tw-ml-5 tw-mb-2 tw-mt-2 tw-overflow-x-auto">
+              <div className="tw-shrink-0   tw-rounded-full tw-w-14 tw-h-14 tw-mr-4 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
+                {plusSVG()}
+              </div>
               {chatRooms?.map((cr) => {
                 let initials = "";
                 cr.name.split(" ").forEach((word) => {
                   initials += word[0];
                 });
                 return (
-                  <div className="tw-rounded-full tw-w-14 tw-h-14 tw-mr-4 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
+                  <div className="tw-shrink-0 tw-rounded-full tw-w-14 tw-h-14 tw-mr-4 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
                     <div className="tw-font-bold">{initials}</div>
                   </div>
                 );
