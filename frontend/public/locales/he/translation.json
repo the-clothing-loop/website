@@ -71,7 +71,7 @@
   "login": "התחבר",
   "name": "שם",
   "newsletter": "ניוזלטר",
-  "phoneNumber": "מספר טלפון",
+  "phoneNumber": "Phone number (incl. country code)",
   "page": "עמוד",
   "logout": "התנתק",
   "loginEmailSent": "דואר אלקטרוני נשלח אליך המאפשר לך להיכנס",
