@@ -29,25 +29,34 @@ export default function Counters() {
         <div>
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
             {isVisible ? (
-              <SingleCounter end={info?.total_chains || 0} step={193} />
+              <SingleCounter end={info.total_chains || 0} step={193} />
             ) : (
               "0"
             )}
           </div>
           <div className="opacity-80">{t("Loops")}</div>
         </div>
+        <div>
+          <div className="h-20 text-6xl font-serif text-stroke-base-100">
+            {isVisible ? (
+              <SingleCounter end={info.total_countries || 0} step={1} />
+            ) : (
+              "0"
+            )}
+          </div>
+          <div className="opacity-80">{t("countries")}</div>
+        </div>
 
         <div>
           <div className="h-20 text-6xl font-serif text-stroke-base-100">
             {isVisible ? (
-              <SingleCounter end={info?.total_users || 0} step={397} />
+              <SingleCounter end={info.total_users || 0} step={397} />
             ) : (
               "0"
             )}
           </div>
           <div className="opacity-80">{t("addresses")}</div>
         </div>
-
         <div>
           <div className="h-20 text-5xl font-serif text-stroke-base-100">
             {isVisible ? (
@@ -57,16 +66,6 @@ export default function Counters() {
             )}
           </div>
           <div className="opacity-80">{t("participants")}</div>
-        </div>
-        <div>
-          <div className="h-20 text-6xl font-serif text-stroke-base-100">
-            {isVisible ? (
-              <SingleCounter end={info?.total_countries || 0} step={1} />
-            ) : (
-              "0"
-            )}
-          </div>
-          <div className="opacity-80">{t("countries")}</div>
         </div>
 
         <div className="col-span-2 xl:col-span-1">

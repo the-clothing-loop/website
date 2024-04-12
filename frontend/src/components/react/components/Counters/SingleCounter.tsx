@@ -22,7 +22,7 @@ const SingleCount: FC<IProps> = ({ end, step }: IProps) => {
     counter();
   }, []);
 
-  return state;
+  return new Intl.NumberFormat().format(state);
 };
 
 export default SingleCount;
