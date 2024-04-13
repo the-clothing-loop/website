@@ -185,9 +185,9 @@ export default function Chat() {
         console.log(data);
         _users = data.map((d) => d.data);
 
-        console.log(_users, _users[1]);
+        console.log(_users, _users[0]);
 
-        setChatRooms(_users[1]);
+        setChatRooms(_users[0]);
       } catch (err: any) {
         console.error("Unable to load chains", err);
         //addToastError(GinParseErrors(t, err), err.status);
@@ -226,7 +226,7 @@ export default function Chat() {
           y1="12"
           x2="19"
           y2="12"
-        />{" "}
+        />
       </span>
     );
   }
@@ -256,8 +256,11 @@ export default function Chat() {
                   initials += word[0];
                 });
                 return (
-                  <div className="tw-shrink-0 tw-rounded-full tw-w-14 tw-h-14 tw-mr-4 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
-                    <div className="tw-font-bold">{initials}</div>
+                  <div className="tw-mr-4 tw-w-14">
+                    <div className="tw-shrink-0 tw-rounded-full tw-h-14 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
+                      <div className="tw-font-bold">{initials}</div>
+                    </div>
+                    <div className="tw-text-xs tw-text-center tw-truncate">{cr.name}</div>
                   </div>
                 );
               })}
