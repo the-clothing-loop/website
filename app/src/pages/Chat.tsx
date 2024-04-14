@@ -14,14 +14,7 @@ import { sendOutline } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { MmData, StoreContext } from "../Store";
 import { useContext, useEffect, useState } from "react";
-import {
-  Chain,
-  User,
-  chainGet,
-  patchGetOrJoinRoom,
-  userGetAllByChain,
-  userGetByUID,
-} from "../api";
+import { User, patchGetOrJoinRoom, userGetAllByChain } from "../api";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
 import { Sleep } from "../utils/sleep";
 import { Post, PostList } from "@mattermost/types/posts";
@@ -54,7 +47,6 @@ export default function Chat() {
   const [sendingMsg, setSendingMsg] = useState(SendingMsgState.DEFAULT);
   const [chatRooms, setChatRooms] = useState<User[] | null>(null);
   const [mmClient, setMmClient] = useState<Client4 | null>(null);
-  // const [, setMessage] = useState("");
 
   const [postList, setPostList] = useState<PostList>({
     order: [],
@@ -178,20 +170,14 @@ export default function Chat() {
   async function getUsersChatrooms() {
     if (authUser) {
       try {
-        let _users: User[][];
-
-        let data = await Promise.all(
-          authUser.chains.map((uc) => userGetAllByChain(uc.chain_uid)),
-        );
-        console.log(data);
-        _users = data.map((d) => d.data);
-
-        console.log(_users, _users[0]);
-
+        let _users = (
+          await Promise.all(
+            authUser.chains.map((uc) => userGetAllByChain(uc.chain_uid)),
+          )
+        ).map((d) => d.data);
         setChatRooms(_users[0]);
       } catch (err: any) {
         console.error("Unable to load chains", err);
-        //addToastError(GinParseErrors(t, err), err.status);
       }
     }
   }
@@ -216,10 +202,10 @@ export default function Chat() {
                 <IonIcon className="tw-text-2xl" src={addOutline} />
               </div>
               {chatRooms?.map((cr) => {
-                let initials = "";
-                cr.name.split(" ").forEach((word) => {
-                  initials += word[0];
-                });
+                let initials = cr.name
+                  .split(" ")
+                  .map((word) => word[0])
+                  .join("");
                 return (
                   <div className="tw-mr-4 tw-w-14">
                     <div className="tw-shrink-0 tw-rounded-full tw-h-14 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
