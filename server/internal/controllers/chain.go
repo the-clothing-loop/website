@@ -442,7 +442,7 @@ func ChainDelete(c *gin.Context) {
 
 	httperr := services.ChainDelete(db, chain)
 	if httperr != nil {
-		c.AbortWithError(httperr.Status, httperr)
+		httperr.StatusWithError(c)
 		return
 	}
 }
