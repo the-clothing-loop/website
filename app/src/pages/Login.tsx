@@ -28,7 +28,6 @@ import toastError from "../../toastError";
 import { loginEmail } from "../api/login";
 import { StoreContext } from "../stores/Store";
 import { AppLauncher } from "@capacitor/app-launcher";
-import getKeyboard from "../utils/capacitor_keyboard";
 
 enum State {
   idle,
@@ -38,8 +37,6 @@ enum State {
 }
 
 const KEYCODE_ENTER = 13;
-
-getKeyboard();
 
 export default function Login(props: { isLoggedIn: boolean }) {
   const { t } = useTranslation();
@@ -79,7 +76,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             1000 * 60 /* 1 min */,
           ) as any,
         );
-        window.Keyboard?.hide();
+        inputEmail.current?.blur();
       } catch (err: any) {
         setSentState(State.error);
         toastError(present, err?.statusText || err?.message);

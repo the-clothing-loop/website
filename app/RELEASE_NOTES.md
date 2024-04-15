@@ -123,3 +123,8 @@
 - Add sorting, search for Route & Bags
 - Button to leave Loop
 - Default to automatic sort of address list
+
+# v2.4
+
+- Fix incorrect Loop status
+- Fix keyboard error

@@ -379,18 +379,18 @@ export default function Settings() {
                       </span>
                     </IonItem>
                   ) : null}
-                  {chain.open_to_new_members || chain.published ? (
+                  {!chain.open_to_new_members || !chain.published ? (
                     <IonItem
                       lines="none"
                       color={
-                        chain.published
+                        !chain.published
                           ? "warning"
-                          : chain.is_app_disabled
+                          : !chain.is_app_disabled
                           ? "medium"
                           : "danger"
                       }
                     >
-                      {chain.open_to_new_members ? (
+                      {!chain.open_to_new_members ? (
                         <>
                           <IonIcon size="small" icon={lockClosedOutline} />
                           <span
@@ -403,16 +403,16 @@ export default function Settings() {
                       ) : null}
                       {chain.published ? (
                         <>
-                          <IonIcon size="small" icon={eyeOffOutline} />
-                          <span key="closed" className="tw-ms-1.5">
-                            {t("draft")}
+                          <IonIcon size="small" icon={eyeOutline} />
+                          <span key="visible" className="tw-ms-1.5">
+                            {t("visible")}
                           </span>
                         </>
                       ) : (
                         <>
-                          <IonIcon size="small" icon={eyeOutline} />
-                          <span key="visible" className="tw-ms-1.5">
-                            {t("visible")}
+                          <IonIcon size="small" icon={eyeOffOutline} />
+                          <span key="closed" className="tw-ms-1.5">
+                            {t("draft")}
                           </span>
                         </>
                       )}

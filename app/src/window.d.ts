@@ -1,6 +1,5 @@
 import redaxios from "redaxios";
 import type { OneSignalPlugin } from "onesignal-cordova-plugin";
-import { type Keyboard } from "@capacitor/keyboard";
 import { type Capacitor } from "@capacitor";
 
 declare global {
@@ -10,7 +9,6 @@ declare global {
     plugins?: {
       OneSignal?: OneSignalPlugin;
     };
-    Keyboard?: Keyboard;
     Capacitor?: Capacitor;
   }
 }
