@@ -22,6 +22,7 @@ import { addOutline } from "ionicons/icons";
 import { userGetAllByChain } from "../api/user";
 import { User } from "../api/types";
 import ChatInput, { SendingMsgState } from "../components/Chat/ChatInput";
+import ChatPost from "../components/Chat/ChatPost";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
 
@@ -222,26 +223,10 @@ export default function Chat() {
             </button>
           </div>
           <div className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto">
-            {postList.order.map((item) => {
-              let post = postList.posts[item];
-              return (
-                <div>
-                  <IonItem
-                    color="light"
-                    key={post.id}
-                    className={`tw-rounded-tl-2xl tw-rounded-tr-2xl tw-mb-2 ${
-                      post.user_id == authUser?.uid
-                        ? "tw-rounded-bl-2xl tw-float-right tw-ml-8 tw-mr-4"
-                        : "tw-rounded-br-2xl tw-mr-8 tw-ml-4 tw-float-left"
-                    }`}
-                  >
-                    <div className="tw-py-2">
-                      <div className="tw-font-bold">{post.props.username}</div>
-                      <div>{post.message}</div>
-                    </div>
-                  </IonItem>
-                </div>
-              );
+            {postList.order.map((item, i) => {
+              const post = postList.posts[item];
+              const isMe = post.user_id === authUser?.uid;
+              return <ChatPost post={post} key={post.id} isMe={isMe} />;
             })}
           </div>
           <ChatInput

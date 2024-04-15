@@ -19,9 +19,18 @@ export default function ChatInput({
   setMessage,
   sendMessage,
 }: Props) {
+  function onSubmit(e: any) {
+    e.preventDefault();
+    sendMessage();
+  }
+
   return (
-    <div className="tw-flex-shrink-0">
-      <IonItem color="light" disabled={sendingMsg == SendingMsgState.SENDING}>
+    <form className="tw-flex-shrink-0" onSubmit={onSubmit}>
+      <IonItem
+        lines="none"
+        color="light"
+        disabled={sendingMsg == SendingMsgState.SENDING}
+      >
         <IonInput
           placeholder="Send Message"
           value={message}
@@ -31,15 +40,15 @@ export default function ChatInput({
         />
         <IonButton
           slot="end"
-          onClick={sendMessage}
           shape="round"
           disabled={message == ""}
           color="light"
           className="tw-mr-0"
+          type="submit"
         >
           <IonIcon icon={sendOutline} color="primary" className="tw-text-2xl" />
         </IonButton>
       </IonItem>
-    </div>
+    </form>
   );
 }
