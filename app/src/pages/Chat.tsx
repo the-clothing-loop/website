@@ -13,7 +13,7 @@ import {
 import { sendOutline } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { MmData, StoreContext } from "../stores/Store";
-import { useContext, useEffect, useState } from "react";
+import { SetStateAction, useContext, useEffect, useState } from "react";
 import { patchGetOrJoinRoom } from "../api/chat";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
 import { Sleep } from "../utils/sleep";
@@ -21,14 +21,9 @@ import { Post, PostList } from "@mattermost/types/posts";
 import { addOutline } from "ionicons/icons";
 import { userGetAllByChain } from "../api/user";
 import { User } from "../api/types";
+import ChatInput, { SendingMsgState } from "../components/Chat/ChatInput";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
-
-enum SendingMsgState {
-  DEFAULT,
-  SENDING,
-  ERROR,
-}
 
 type WebSocketMessagePosted = WebSocketMessage<{
   channel_display_name: string;
@@ -249,34 +244,12 @@ export default function Chat() {
               );
             })}
           </div>
-          <div className="tw-flex-shrink-0">
-            <IonItem
-              color="light"
-              disabled={sendingMsg == SendingMsgState.SENDING}
-            >
-              <IonInput
-                placeholder="Send Message"
-                value={message}
-                disabled={sendingMsg == SendingMsgState.SENDING}
-                onIonInput={(e) => setMessage(e.detail.value as string)}
-                className="tw-ml-2"
-              />
-              <IonButton
-                slot="end"
-                onClick={sendMessage}
-                shape="round"
-                disabled={message == ""}
-                color="light"
-                className="tw-mr-0"
-              >
-                <IonIcon
-                  icon={sendOutline}
-                  color="primary"
-                  className="tw-text-2xl"
-                />
-              </IonButton>
-            </IonItem>
-          </div>
+          <ChatInput
+            sendingMsg={sendingMsg}
+            message={message}
+            setMessage={setMessage}
+            sendMessage={sendMessage}
+          />
         </div>
       </IonContent>
     </IonPage>
