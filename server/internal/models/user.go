@@ -47,7 +47,6 @@ type User struct {
 	AcceptedDPAJSON       *bool           `json:"accepted_dpa,omitempty" gorm:"-:migration;<-:false"`
 	NotificationChainUIDs []string        `json:"notification_chain_uids,omitempty" gorm:"-"`
 	ChatUserID            null.String     `json:"-"`
-	ChatUser              null.String     `json:"-"`
 	ChatPass              null.String     `json:"-"`
 }
 

@@ -8,6 +8,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/services"
+	"github.com/the-clothing-loop/website/server/pkg/httperror"
 )
 
 func ChatGetOrJoinChainChatRoom(c *gin.Context) {
@@ -39,9 +40,9 @@ func ChatGetOrJoinChainChatRoom(c *gin.Context) {
 		return
 	}
 
-	token, err := services.ChatPatchUser(db, app.ChatTeamId, user, query.RenewToken)
+	token, err := services.ChatPatchUser(db, c.Request.Context(), app.ChatTeamId, user, query.RenewToken)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		httperror.New(http.StatusInternalServerError, err).StatusWithError(c)
 		return
 	}
 	if token == "" && query.RenewToken {
@@ -49,9 +50,9 @@ func ChatGetOrJoinChainChatRoom(c *gin.Context) {
 		return
 	}
 
-	_, err = services.ChatJoinRoom(db, chain, user, isChainAdmin)
+	_, err = services.ChatJoinRoom(db, c.Request.Context(), chain, user, isChainAdmin)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		httperror.New(http.StatusInternalServerError, err).StatusWithError(c)
 		return
 	}
 
