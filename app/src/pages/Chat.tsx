@@ -12,9 +12,9 @@ import {
 } from "@ionic/react";
 import { sendOutline } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { MmData, StoreContext } from "../Store";
+import { MmData, StoreContext } from "../stores/Store";
 import { useContext, useEffect, useState } from "react";
-import { patchGetOrJoinRoom } from "../api";
+import { patchGetOrJoinRoom } from "../api/chat";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
 import { Sleep } from "../utils/sleep";
 import { Post, PostList } from "@mattermost/types/posts";
