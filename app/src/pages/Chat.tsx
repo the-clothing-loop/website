@@ -197,8 +197,8 @@ export default function Chat() {
         fullscreen
         class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
       >
-        <div className="tw-relative tw-h-full">
-          <div className="w-full tw-flex tw-px-4 tw-py-2 tw-gap-2 tw-overflow-x-auto tw-bg-[#f4f1f9]">
+        <div className="tw-relative tw-h-full tw-flex tw-flex-col">
+          <div className="tw-shrink-0 w-full tw-flex tw-px-4 tw-py-2 tw-gap-2 tw-overflow-y-auto tw-bg-[#f4f1f9]">
             {chatRooms?.map((cr) => {
               let initials = cr.name
                 .split(" ")
@@ -226,60 +226,56 @@ export default function Chat() {
               <IonIcon className="tw-text-2xl" src={addOutline} />
             </button>
           </div>
-          <div className="tw-flex tw-flex-col tw-absolute tw-bottom-0 tw-max-h-[75vh]">
-            <div className="tw-flex-grow tw-overflow-y-auto tw-flex tw-flex-col-reverse">
-              {postList.order.map((item) => {
-                let post = postList.posts[item];
-                return (
-                  <div>
-                    <IonItem
-                      color="light"
-                      key={post.id}
-                      className={`tw-rounded-tl-2xl tw-rounded-tr-2xl tw-mb-2 ${
-                        post.user_id == authUser?.uid
-                          ? "tw-rounded-bl-2xl tw-float-right tw-ml-8 tw-mr-4"
-                          : "tw-rounded-br-2xl tw-mr-8 tw-ml-4 tw-float-left"
-                      }`}
-                    >
-                      <div className="tw-py-2">
-                        <div className="tw-font-bold">
-                          {post.props.username}
-                        </div>
-                        <div>{post.message}</div>
-                      </div>
-                    </IonItem>
-                  </div>
-                );
-              })}
-            </div>
-            <div>
-              <IonItem
-                color="light"
+          <div className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto">
+            {postList.order.map((item) => {
+              let post = postList.posts[item];
+              return (
+                <div>
+                  <IonItem
+                    color="light"
+                    key={post.id}
+                    className={`tw-rounded-tl-2xl tw-rounded-tr-2xl tw-mb-2 ${
+                      post.user_id == authUser?.uid
+                        ? "tw-rounded-bl-2xl tw-float-right tw-ml-8 tw-mr-4"
+                        : "tw-rounded-br-2xl tw-mr-8 tw-ml-4 tw-float-left"
+                    }`}
+                  >
+                    <div className="tw-py-2">
+                      <div className="tw-font-bold">{post.props.username}</div>
+                      <div>{post.message}</div>
+                    </div>
+                  </IonItem>
+                </div>
+              );
+            })}
+          </div>
+          <div className="tw-flex-shrink-0">
+            <IonItem
+              color="light"
+              disabled={sendingMsg == SendingMsgState.SENDING}
+            >
+              <IonInput
+                placeholder="Send Message"
+                value={message}
                 disabled={sendingMsg == SendingMsgState.SENDING}
+                onIonInput={(e) => setMessage(e.detail.value as string)}
+                className="tw-ml-2"
+              />
+              <IonButton
+                slot="end"
+                onClick={sendMessage}
+                shape="round"
+                disabled={message == ""}
+                color="light"
+                className="tw-mr-0"
               >
-                <IonInput
-                  placeholder="Send Message"
-                  value={message}
-                  disabled={sendingMsg == SendingMsgState.SENDING}
-                  onIonInput={(e) => setMessage(e.detail.value as string)}
-                  className="tw-ml-2"
+                <IonIcon
+                  icon={sendOutline}
+                  color="primary"
+                  className="tw-text-2xl"
                 />
-                <IonButton
-                  slot="end"
-                  onClick={sendMessage}
-                  shape="round"
-                  disabled={message == ""}
-                  color="light"
-                  className="tw-mr-0"
-                >
-                  <IonIcon
-                    icon={sendOutline}
-                    color="primary"
-                    className="tw-text-2xl"
-                  />
-                </IonButton>
-              </IonItem>
-            </div>
+              </IonButton>
+            </IonItem>
           </div>
         </div>
       </IonContent>
