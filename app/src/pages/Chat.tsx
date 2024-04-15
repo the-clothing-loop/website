@@ -198,28 +198,33 @@ export default function Chat() {
         class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
       >
         <div className="tw-relative tw-h-full">
-          <div className="tw-fixed tw-z-10 tw-w-full tw-bg-[#f4f1f9]">
-            <div className="tw-flex tw-ml-5 tw-mb-2 tw-mt-2 tw-overflow-x-auto">
-              <div className="tw-rounded-full tw-w-14 tw-h-14 tw-mr-4 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
-                <IonIcon className="tw-text-2xl" src={addOutline} />
-              </div>
-              {chatRooms?.map((cr) => {
-                let initials = cr.name
-                  .split(" ")
-                  .map((word) => word[0])
-                  .join("");
-                return (
-                  <div className="tw-mr-4 tw-w-14">
-                    <div className="tw-shrink-0 tw-rounded-full tw-h-14 tw-bg-purple-shade tw-flex tw-items-center tw-justify-center">
-                      <div className="tw-font-bold">{initials}</div>
-                    </div>
-                    <div className="tw-text-xs tw-text-center tw-truncate">
-                      {cr.name}
-                    </div>
+          <div className="w-full tw-flex tw-px-4 tw-py-2 tw-gap-2 tw-overflow-x-auto tw-bg-[#f4f1f9]">
+            {chatRooms?.map((cr) => {
+              let initials = cr.name
+                .split(" ")
+                .map((word) => word[0])
+                .join("");
+              let name = cr.name;
+              return (
+                <button
+                  className="tw-w-14 tw-flex tw-flex-col tw-items-center"
+                  key={name}
+                >
+                  <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade  tw-flex tw-items-center tw-justify-center">
+                    {initials}
                   </div>
-                );
-              })}
-            </div>
+                  <div className="tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]">
+                    {name}
+                  </div>
+                </button>
+              );
+            })}
+            <button
+              key="plus"
+              className="tw-rounded-full tw-w-12 tw-h-12 tw-mr-4 tw-bg-light-shade tw-flex tw-shrink-0 tw-items-center tw-justify-center"
+            >
+              <IonIcon className="tw-text-2xl" src={addOutline} />
+            </button>
           </div>
           <div className="tw-flex tw-flex-col tw-absolute tw-bottom-0 tw-max-h-[75vh]">
             <div className="tw-flex-grow tw-overflow-y-auto tw-flex tw-flex-col-reverse">
