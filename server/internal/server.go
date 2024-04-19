@@ -155,7 +155,9 @@ func Routes() *gin.Engine {
 	v2.GET("/chain/near", controllers.ChainGetNear)
 
 	// chat
-	v2.PATCH("/chat/:uid/room", controllers.ChatGetOrJoinChainChatRoom)
+	v2.PATCH("/chat/user", controllers.ChatPatchUser)
+	v2.POST("/chat/channel/create", controllers.ChatCreateChannel)
+	v2.POST("/chat/channels/join", controllers.ChatJoinChannels)
 
 	// bag
 	v2.GET("/bag/all", controllers.BagGetAll)

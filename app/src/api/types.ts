@@ -66,6 +66,7 @@ export interface Chain {
   headers_override?: string;
   theme?: string;
   is_app_disabled?: boolean;
+  chat_room_ids?: string[];
 }
 
 export interface Event {

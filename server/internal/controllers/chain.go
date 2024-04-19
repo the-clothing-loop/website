@@ -14,7 +14,6 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"github.com/the-clothing-loop/website/server/pkg/tsp"
-	"gopkg.in/guregu/null.v3"
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -138,7 +137,7 @@ func ChainGet(c *gin.Context) {
 	if query.AddIsAppDisabled {
 		sql += `,
 		chains.is_app_disabled,
-		chains.chat_room_id`
+		chains.chat_room_ids`
 	}
 	if query.AddRoutePrivacy {
 		sql += `,
@@ -181,8 +180,7 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddIsAppDisabled {
 		body.IsAppDisabled = &chain.IsAppDisabled
-		chatRoomID := null.StringFrom(chain.ChatRoomID.String)
-		body.ChatRoomID = &chatRoomID
+		body.ChatRoomIDs = chain.ChatRoomIDs
 	}
 	if query.AddRoutePrivacy {
 		body.RoutePrivacy = &chain.RoutePrivacy

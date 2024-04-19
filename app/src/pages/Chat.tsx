@@ -14,7 +14,7 @@ import { sendOutline } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { MmData, StoreContext } from "../stores/Store";
 import { SetStateAction, useContext, useEffect, useState } from "react";
-import { patchGetOrJoinRoom } from "../api/chat";
+import * as apiChat from "../api/chat";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
 import { Sleep } from "../utils/sleep";
 import { Post, PostList } from "@mattermost/types/posts";
@@ -23,6 +23,10 @@ import { userGetAllByChain } from "../api/user";
 import { User } from "../api/types";
 import ChatInput, { SendingMsgState } from "../components/Chat/ChatInput";
 import ChatPost from "../components/Chat/ChatPost";
+import RoomNotReady from "../components/Chat/RoomNotReady";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { Channel } from "@mattermost/types/channels";
+import ChatWindow from "../components/Chat/ChatWindow";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
 
@@ -43,8 +47,11 @@ export default function Chat() {
   const [mmWsClient, setMmWsClient] = useState<WebSocketClient | null>(null);
   const [message, setMessage] = useState("");
   const [sendingMsg, setSendingMsg] = useState(SendingMsgState.DEFAULT);
-  const [chatRooms, setChatRooms] = useState<User[] | null>(null);
-  const [mmClient, setMmClient] = useState<Client4 | null>(null);
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
+  const [mmClient, setMmClient] = useState<Client4 | null | undefined>(
+    undefined,
+  );
 
   const [postList, setPostList] = useState<PostList>({
     order: [],
@@ -56,136 +63,149 @@ export default function Chat() {
   const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
 
   useEffect(() => {
-    if (chain && !mmClient) {
-      patchGetOrJoinRoom(chain.uid, !mmData.chat_token).then(async (resp) => {
-        console.log(
-          "chat token:\n\tNew: %s\n\tOld: %s\n",
-          resp.data.chat_token,
-          mmData.chat_token,
-        );
+    let _mmData = mmData;
+    let _mmClient = mmClient;
+    if (chain && !_mmClient) {
+      apiChat
+        .chatPatchUser(chain.uid, !mmData.chat_token)
+        .then(async (resp) => {
+          console.log(
+            "chat token:\n\tNew: %s\n\tOld: %s\n",
+            resp.data.chat_token,
+            mmData.chat_token,
+          );
 
-        let _mmData: MmData = {
-          chat_token: mmData.chat_token || resp.data.chat_token,
-          ...resp.data,
-        };
-        console.log("chat token", _mmData.chat_token);
-        if (!_mmData.chat_token) throw new Error("mmData not found");
-        // Start client
-        let _mmClient = new Client4();
-        _mmClient.setUrl("http://localhost:5173/mm");
-        _mmClient.setToken(_mmData.chat_token!);
+          _mmData = {
+            chat_token: mmData.chat_token || resp.data.chat_token,
+            ...resp.data,
+          };
+          console.log("chat token", _mmData.chat_token);
+          if (!_mmData.chat_token) throw new Error("mmData not found");
+          // Start client
+          _mmClient = new Client4();
+          _mmClient.setUrl("http://localhost:5173/mm");
+          _mmClient.setToken(_mmData.chat_token!);
 
-        // Get initial post data
-        await reqPostList(_mmClient, _mmData).catch((err) => {
-          patchGetOrJoinRoom(chain.uid, true).then((resp) => {
-            _mmData = resp.data;
-            _mmClient.setToken(_mmData.chat_token!);
+          // Join channels
+          await apiChat.chatJoinChannels(chain.uid);
 
-            return reqPostList(_mmClient, _mmData);
+          // Start websocket
+          let _mmWsClient = new WebSocketClient();
+          let url = _mmClient.getWebSocketUrl().replace("http", "ws");
+          _mmWsClient.initialize(url, _mmData.chat_token);
+
+          _mmWsClient.addMessageListener((msg) => {
+            console.log("message listen:", msg);
+            if (msg.event === "posted") {
+              // handlePostedMessage(_mmClient!, _mmData, msg);
+            }
           });
+
+          setMmClient(_mmClient);
+          setMmWsClient(_mmWsClient);
+          setMmData(_mmData);
+        })
+        .catch((err) => {
+          console.error("error mmclient", err);
+          setMmClient(null);
         });
-
-        // Start websocket
-        let _mmWsClient = new WebSocketClient();
-        let url = _mmClient.getWebSocketUrl().replace("http", "ws");
-        _mmWsClient.initialize(url, _mmData.chat_token);
-
-        _mmWsClient.addMessageListener((msg) => {
-          console.log("message listen:", msg);
-          if (msg.event === "posted") {
-            handlePostedMessage(_mmClient, _mmData, msg);
-          }
-        });
-
-        setMmClient(_mmClient);
-        setMmWsClient(_mmWsClient);
-        setMmData(_mmData);
-      });
-    }
-    getUsersChatrooms();
-  }, [mmData, chain]);
-
-  async function handlePostedMessage(
-    _mmClient: Client4,
-    _mmData: MmData,
-    msg: WebSocketMessagePosted,
-  ) {
-    if (msg.broadcast.channel_id !== _mmData.chat_channel) {
-      // console.log("post channel not the same");
-      return;
     }
 
-    let newPosts = await _mmClient?.getPostsAfter(
-      _mmData.chat_channel!,
-      postList.next_post_id,
-    );
-    if (!newPosts) {
-      console.log("No more new posts");
-      return;
-    }
-
-    // merge postlists
-    setPostList((s) => ({
-      order: [...newPosts!.order, ...s.order],
-      posts: {
-        ...newPosts!.posts,
-        ...s.posts,
-      },
-      next_post_id: newPosts!.next_post_id,
-      prev_post_id: s.prev_post_id,
-      first_inaccessible_post_time: newPosts!.first_inaccessible_post_time,
-    }));
-
-    // const postList = await mmClient?.getPosts(mmData.chat_channel);
-
-    // if (!postList) return;
-    // setPostList(postList);
-  }
-
-  async function reqPostList(_mmClient: Client4, _mmData: MmData) {
-    const _postlist = await _mmClient.getPosts(_mmData.chat_channel!, 0, 20);
-    setPostList(_postlist);
-  }
-
-  async function sendMessage() {
-    if (!mmData.chat_channel) return;
-    setSendingMsg(SendingMsgState.SENDING);
-    try {
-      await mmClient?.createPost({
-        channel_id: mmData.chat_channel,
-        message: message,
-      } as Partial<Post> as Post);
-      setMessage("");
-      setSendingMsg(SendingMsgState.DEFAULT);
-    } catch (e: any) {
-      console.error("Error creating post", e);
-      setSendingMsg(SendingMsgState.ERROR);
-      await Sleep(1000);
-      setSendingMsg(SendingMsgState.DEFAULT);
-    }
-  }
-
-  async function getUsersChatrooms() {
-    if (authUser) {
-      try {
-        let _users = (
-          await Promise.all(
-            authUser.chains.map((uc) => userGetAllByChain(uc.chain_uid)),
-          )
-        ).map((d) => d.data);
-        setChatRooms(_users[0]);
-      } catch (err: any) {
-        console.error("Unable to load chains", err);
+    if (_mmClient && chain) {
+      if (chain.chat_room_ids?.length) {
+        getChannels(_mmClient, _mmData, chain.chat_room_ids);
       }
     }
+  }, [mmData, chain]);
+
+  /** Sets the channels state and return it too */
+  async function getChannels(
+    _mmClient: Client4,
+    _mmData: MmData,
+    chatRoomIDs: string[],
+  ): Promise<Channel[]> {
+    if (!_mmData.chat_team) throw "Not logged in to chat";
+
+    const _channels: Channel[] = [];
+    for (const id of chatRoomIDs) {
+      const _channel = await _mmClient.getChannel(id);
+      _channels.push(_channel);
+    }
+
+    setChannels(_channels);
+    if (_channels.length > 0) {
+      setSelectedChannel(_channels[0]);
+    }
+    return _channels;
   }
+
+  // async function handlePostedMessage(
+  //   _mmClient: Client4,
+  //   _mmData: MmData,
+  //   msg: WebSocketMessagePosted,
+  // ) {
+  //   if (msg.broadcast.channel_id !== _mmData.chat_channel) {
+  //     // console.log("post channel not the same");
+  //     return;
+  //   }
+
+  //   let newPosts = await _mmClient?.getPostsAfter(
+  //     _mmData.chat_channel!,
+  //     postList.next_post_id,
+  //   );
+  //   if (!newPosts) {
+  //     console.log("No more new posts");
+  //     return;
+  //   }
+
+  //   // merge postlists
+  //   setPostList((s) => ({
+  //     order: [...newPosts!.order, ...s.order],
+  //     posts: {
+  //       ...newPosts!.posts,
+  //       ...s.posts,
+  //     },
+  //     next_post_id: newPosts!.next_post_id,
+  //     prev_post_id: s.prev_post_id,
+  //     first_inaccessible_post_time: newPosts!.first_inaccessible_post_time,
+  //   }));
+
+  //   // const postList = await mmClient?.getPosts(mmData.chat_channel);
+
+  //   // if (!postList) return;
+  //   // setPostList(postList);
+  // }
+
+  // async function reqPostList(_mmClient: Client4, _mmData: MmData) {
+  //   _mmClient.getChannels(mmData.chat_channels)
+  //   const _postlist = await _mmClient.getPosts(_mmData.chat_channel!, 0, 20);
+  //   setPostList(_postlist);
+  // }
+
+  // async function sendMessage() {
+  //   if (!mmData.chat_channel) return;
+  //   setSendingMsg(SendingMsgState.SENDING);
+  //   try {
+  //     await mmClient?.createPost({
+  //       channel_id: mmData.chat_channel,
+  //       message: message,
+  //     } as Partial<Post> as Post);
+  //     setMessage("");
+  //     setSendingMsg(SendingMsgState.DEFAULT);
+  //   } catch (e: any) {
+  //     console.error("Error creating post", e);
+  //     setSendingMsg(SendingMsgState.ERROR);
+  //     await Sleep(1000);
+  //     setSendingMsg(SendingMsgState.DEFAULT);
+  //   }
+  // }
 
   return (
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
-            {chain?.name}
+            Chat
           </IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -193,49 +213,13 @@ export default function Chat() {
         fullscreen
         class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
       >
-        <div className="tw-relative tw-h-full tw-flex tw-flex-col">
-          <div className="tw-shrink-0 w-full tw-flex tw-px-4 tw-py-2 tw-gap-2 tw-overflow-y-auto tw-bg-[#f4f1f9]">
-            {chatRooms?.map((cr) => {
-              let initials = cr.name
-                .split(" ")
-                .map((word) => word[0])
-                .join("");
-              let name = cr.name;
-              return (
-                <button
-                  className="tw-w-14 tw-flex tw-flex-col tw-items-center"
-                  key={name}
-                >
-                  <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade  tw-flex tw-items-center tw-justify-center">
-                    {initials}
-                  </div>
-                  <div className="tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]">
-                    {name}
-                  </div>
-                </button>
-              );
-            })}
-            <button
-              key="plus"
-              className="tw-rounded-full tw-w-12 tw-h-12 tw-mr-4 tw-bg-light-shade tw-flex tw-shrink-0 tw-items-center tw-justify-center"
-            >
-              <IonIcon className="tw-text-2xl" src={addOutline} />
-            </button>
-          </div>
-          <div className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto">
-            {postList.order.map((item, i) => {
-              const post = postList.posts[item];
-              const isMe = post.user_id === authUser?.uid;
-              return <ChatPost post={post} key={post.id} isMe={isMe} />;
-            })}
-          </div>
-          <ChatInput
-            sendingMsg={sendingMsg}
-            message={message}
-            setMessage={setMessage}
-            sendMessage={sendMessage}
-          />
-        </div>
+        {mmClient === null ? (
+          <RoomNotReady isChainAdmin={isChainAdmin} onClickEnable={() => {}} />
+        ) : mmClient === undefined ? (
+          <RoomNotReady isChainAdmin={isChainAdmin} onClickEnable={() => {}} />
+        ) : (
+          <ChatWindow channels={channels} selectedChannel={selectedChannel} />
+        )}
       </IonContent>
     </IonPage>
   );

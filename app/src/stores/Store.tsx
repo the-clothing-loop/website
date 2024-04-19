@@ -13,7 +13,7 @@ import { userGetByUID, userGetAllByChain, userUpdate } from "../api/user";
 import { chainRemoveUser } from "../api/chain";
 import { IS_WEB } from "../utils/is_web";
 import { cookieUserUID } from "./browser_storage";
-import { RespPatchGetOrJoinRoom } from "../api/chat";
+import { RespChatPatchUser } from "../api/chat";
 
 type ChainHeaders = Record<string, string>;
 
@@ -22,7 +22,7 @@ interface StorageAuth {
   token: string;
 }
 
-export type MmData = Partial<RespPatchGetOrJoinRoom>;
+export type MmData = Partial<RespChatPatchUser>;
 
 export enum IsAuthenticated {
   Unknown,

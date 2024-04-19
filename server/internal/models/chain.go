@@ -2,11 +2,11 @@ package models
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 )
@@ -41,29 +41,29 @@ type Chain struct {
 	RoutePrivacy                  int
 	LastAbandonedAt               sql.NullTime
 	LastAbandonedRecruitmentEmail sql.NullTime
-	ChatRoomID                    sql.NullString
+	ChatRoomIDs                   []string `gorm:"column:chat_room_ids;serializer:json"`
 }
 
 type ChainResponse struct {
-	UID              string       `json:"uid" gorm:"chains.uid"`
-	Name             string       `json:"name" gorm:"chains.name"`
-	Description      string       `json:"description" gorm:"chains.description"`
-	Address          string       `json:"address" gorm:"chains.address"`
-	Latitude         float64      `json:"latitude" gorm:"chains.latitude"`
-	Longitude        float64      `json:"longitude" gorm:"chains.longitude"`
-	Radius           float32      `json:"radius" gorm:"chains.radius"`
-	Sizes            []string     `json:"sizes" gorm:"chains.sizes;serializer:json"`
-	Genders          []string     `json:"genders" gorm:"chains.genders;serializer:json"`
-	Published        bool         `json:"published" gorm:"chains.published"`
-	OpenToNewMembers bool         `json:"open_to_new_members" gorm:"chains.open_to_new_members"`
-	TotalMembers     *int         `json:"total_members,omitempty" gorm:"total_members"`
-	TotalHosts       *int         `json:"total_hosts,omitempty" gorm:"total_hosts"`
-	RulesOverride    *string      `json:"rules_override,omitempty" gorm:"chains.rules_override"`
-	HeadersOverride  *string      `json:"headers_override,omitempty" gorm:"chains.headers_override"`
-	Theme            *string      `json:"theme,omitempty" gorm:"chains.theme"`
-	IsAppDisabled    *bool        `json:"is_app_disabled,omitempty" gorm:"chains.is_app_disabled"`
-	RoutePrivacy     *int         `json:"route_privacy,omitempty" gorm:"chains.route_privacy"`
-	ChatRoomID       *null.String `json:"chat_room_id,omitempty"`
+	UID              string   `json:"uid" gorm:"chains.uid"`
+	Name             string   `json:"name" gorm:"chains.name"`
+	Description      string   `json:"description" gorm:"chains.description"`
+	Address          string   `json:"address" gorm:"chains.address"`
+	Latitude         float64  `json:"latitude" gorm:"chains.latitude"`
+	Longitude        float64  `json:"longitude" gorm:"chains.longitude"`
+	Radius           float32  `json:"radius" gorm:"chains.radius"`
+	Sizes            []string `json:"sizes" gorm:"chains.sizes;serializer:json"`
+	Genders          []string `json:"genders" gorm:"chains.genders;serializer:json"`
+	Published        bool     `json:"published" gorm:"chains.published"`
+	OpenToNewMembers bool     `json:"open_to_new_members" gorm:"chains.open_to_new_members"`
+	TotalMembers     *int     `json:"total_members,omitempty" gorm:"total_members"`
+	TotalHosts       *int     `json:"total_hosts,omitempty" gorm:"total_hosts"`
+	RulesOverride    *string  `json:"rules_override,omitempty" gorm:"chains.rules_override"`
+	HeadersOverride  *string  `json:"headers_override,omitempty" gorm:"chains.headers_override"`
+	Theme            *string  `json:"theme,omitempty" gorm:"chains.theme"`
+	IsAppDisabled    *bool    `json:"is_app_disabled,omitempty" gorm:"chains.is_app_disabled"`
+	RoutePrivacy     *int     `json:"route_privacy,omitempty" gorm:"chains.route_privacy"`
+	ChatRoomIDs      []string `json:"chat_room_ids,omitempty" gorm:"chains.chat_room_ids"`
 }
 
 // Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members
@@ -287,4 +287,12 @@ func ChainCheckIfExist(db *gorm.DB, ChainUID string, checkIfIsOpenToNewMembers b
 	}
 
 	return row.ID, true, nil
+}
+
+func (c *Chain) SaveChannelIDs(db *gorm.DB) error {
+	b, err := json.Marshal(c.ChatRoomIDs)
+	if err != nil {
+		return err
+	}
+	return db.Exec(`INSERT INTO chains (chat_room_ids) VALUES (?) WHERE id = ?`, b, c.ID).Error
 }

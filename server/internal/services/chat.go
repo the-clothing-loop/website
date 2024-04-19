@@ -2,13 +2,13 @@ package services
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"regexp"
 	"strings"
 
 	"github.com/GGP1/atoll"
+	"github.com/google/uuid"
 	"github.com/mattermost/mattermost/server/public/model"
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -75,55 +75,84 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 	return token, nil
 }
 
-func ChatJoinRoom(db *gorm.DB, ctx context.Context, chain *models.Chain, user *models.User, isChainAdmin bool) (ChatRoomID string, err error) {
+func ChatCreateChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mmUserId, name string) (*model.Channel, error) {
+	newChannel := &model.Channel{
+		TeamId:      app.ChatTeamId,
+		Name:        fmt.Sprint("%d-%d", chain.ID, lo.Must(uuid.NewRandom()).String()),
+		DisplayName: name,
+		Type:        model.ChannelTypePrivate,
+	}
+
+	newChannel, _, err := app.ChatClient.CreateChannel(ctx, newChannel)
+	if err != nil {
+		return nil, err
+	}
+
+	err = chatChannelAddUser(ctx, newChannel.Id, mmUserId, true)
+	if err != nil {
+		return nil, err
+	}
+
+	chain.ChatRoomIDs = append(chain.ChatRoomIDs, newChannel.Id)
+	err = chain.SaveChannelIDs(db)
+	if err != nil {
+		return nil, err
+	}
+	return newChannel, nil
+}
+
+func chatChannelAddUser(ctx context.Context, mmChannelId string, mmUserId string, setRoleAdmin bool) error {
+	member, _, err := app.ChatClient.AddChannelMember(ctx, mmChannelId, mmUserId)
+	if err != nil {
+		return err
+	}
+	err = chatChannelSetMemberRole(ctx, mmChannelId, member, setRoleAdmin)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func chatChannelSetMemberRole(ctx context.Context, mmChannelId string, member *model.ChannelMember, setRoleAdmin bool) error {
+	expectedRole := lo.Ternary(setRoleAdmin, model.ChannelAdminRoleId, model.ChannelUserRoleId)
+	if member.Roles != expectedRole {
+		_, err := app.ChatClient.UpdateChannelRoles(ctx, mmChannelId, member.UserId, expectedRole)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func ChatJoinChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, user *models.User, isChainAdmin bool, mmChannelId string) error {
 	if user.ChatUserID.String == "" {
-		return "", fmt.Errorf("You must be registered on our chat server before joining a room")
+		return fmt.Errorf("You must be registered on our chat server before joining a room")
 	}
 
-	if !chain.ChatRoomID.Valid {
-		// If chat room is not valid
-		if !isChainAdmin {
-			return "", errors.New("The loop host needs to enable this chat first.")
-		}
+	if len(chain.ChatRoomIDs) == 0 || !lo.Contains(chain.ChatRoomIDs, mmChannelId) {
+		return fmt.Errorf("Channel does not exist in this Loop")
+	}
 
-		// Create a new chat room
-		mmChannel, _, err := app.ChatClient.CreateChannel(ctx, &model.Channel{
-			TeamId:      app.ChatTeamId,
-			Name:        chain.UID,
-			DisplayName: chain.Name,
-			Type:        model.ChannelTypePrivate,
+	// Check if room already contains user
+	mmChannelMembers, _, _ := app.ChatClient.GetChannelMembersByIds(ctx, mmChannelId, []string{user.ChatUserID.String})
+	if len(mmChannelMembers) != 0 {
+		member, ok := lo.Find(mmChannelMembers, func(member model.ChannelMember) bool {
+			return member.UserId == user.ChatUserID.String
 		})
-		if err != nil {
-			return "", fmt.Errorf("Unable to create a channel %v", err)
-		}
-		chain.ChatRoomID.String = mmChannel.Id
-		db.Exec(`UPDATE chains SET chat_room_id = ? WHERE id = ?`, mmChannel.Id, chain.ID)
-
-		// Add user to new chat room
-		_, _, err = app.ChatClient.AddChannelMember(ctx, mmChannel.Id, user.ChatUserID.String)
-		if err != nil {
-			return "", fmt.Errorf("Unable to add user %v to chat room %v\nerr: %v", user.ChatUserID, mmChannel.Id, err)
-		}
-	} else {
-		// Check if room contains user
-		mmChannelMembers, _, err := app.ChatClient.GetChannelMembersByIds(ctx, chain.ChatRoomID.String, []string{user.ChatUserID.String})
-		if err != nil {
-			return "", fmt.Errorf("Unable to get channel members %v", err)
-		}
-
-		// Add user if not already added to chat room
-		_, found := lo.Find(mmChannelMembers, func(mmMember model.ChannelMember) bool {
-			return mmMember.UserId == user.ChatUserID.String
-		})
-		if !found {
-			_, _, err := app.ChatClient.AddChannelMember(ctx, chain.ChatRoomID.String, user.ChatUserID.String)
-			if err != nil {
-				return "", fmt.Errorf("Unable to add channel member %v", err)
-			}
+		if ok {
+			chatChannelSetMemberRole(ctx, mmChannelId, &member, isChainAdmin)
+			return nil
 		}
 	}
 
-	return chain.ChatRoomID.String, nil
+	// Add user if not already added to chat room
+	err := chatChannelAddUser(ctx, mmChannelId, user.ChatUserID.String, isChainAdmin)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 var reChatValidateUniqueName = regexp.MustCompile("[^a-z0-9]")
