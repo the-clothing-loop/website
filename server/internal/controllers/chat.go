@@ -53,9 +53,9 @@ func ChatCreateChannel(c *gin.Context) {
 
 	var body struct {
 		ChainUID string `json:"chain_uid" binding:"required,uuid"`
-		Name     string `json:"name" binding:"required,name"`
+		Name     string `json:"name" binding:"required"`
 	}
-	if err := c.ShouldBindUri(&body); err != nil {
+	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}

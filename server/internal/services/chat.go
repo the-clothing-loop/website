@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/GGP1/atoll"
-	"github.com/google/uuid"
 	"github.com/mattermost/mattermost/server/public/model"
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -78,7 +77,7 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 func ChatCreateChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mmUserId, name string) (*model.Channel, error) {
 	newChannel := &model.Channel{
 		TeamId:      app.ChatTeamId,
-		Name:        fmt.Sprint("%d-%d", chain.ID, lo.Must(uuid.NewRandom()).String()),
+		Name:        fmt.Sprintf("%dr%d%s", chain.ID, len(chain.ChatRoomIDs)+1, lo.RandomString(5, lo.LowerCaseLettersCharset)),
 		DisplayName: name,
 		Type:        model.ChannelTypePrivate,
 	}

@@ -76,7 +76,7 @@ export default function Chat() {
           );
 
           _mmData = {
-            chat_token: mmData.chat_token || resp.data.chat_token,
+            chat_token: resp.data.chat_token || mmData.chat_token,
             ...resp.data,
           };
           console.log("chat token", _mmData.chat_token);
@@ -113,7 +113,13 @@ export default function Chat() {
 
     if (_mmClient && chain) {
       if (chain.chat_room_ids?.length) {
-        getChannels(_mmClient, _mmData, chain.chat_room_ids);
+        getChannels(_mmClient, _mmData, chain.chat_room_ids).then(
+          (_channels) => {
+            if (_channels.length > 0) {
+              setSelectedChannel(_channels[0]);
+            }
+          },
+        );
       }
     }
   }, [mmData, chain]);
@@ -127,16 +133,39 @@ export default function Chat() {
     if (!_mmData.chat_team) throw "Not logged in to chat";
 
     const _channels: Channel[] = [];
-    for (const id of chatRoomIDs) {
-      const _channel = await _mmClient.getChannel(id);
-      _channels.push(_channel);
+    const _mychannels = await _mmClient.getMyChannels(_mmData.chat_team, false);
+    for (const ch of _mychannels) {
+      if (chatRoomIDs?.includes(ch.id)) {
+        _channels.push(ch);
+      }
     }
 
     setChannels(_channels);
-    if (_channels.length > 0) {
-      setSelectedChannel(_channels[0]);
-    }
     return _channels;
+  }
+
+  async function onCreateChannel(name: string) {
+    if (!chain || !mmClient) {
+      if (!chain) console.error("chain not found");
+      if (!mmClient) console.error("mmClient not found");
+      return;
+    }
+    try {
+      console.info("Creating channel", name);
+      const res = await apiChat.chatCreateChannel(chain.uid, name);
+      const id = res.data.chat_channel;
+      const _channels = await getChannels(mmClient, mmData, [
+        ...(chain.chat_room_ids || []),
+        id,
+      ]);
+      setSelectedChannel(_channels.at(-1) || null);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function onSelectChannel(channelIndex: number) {
+    setSelectedChannel(channels.at(channelIndex) || null);
   }
 
   // async function handlePostedMessage(
@@ -218,7 +247,12 @@ export default function Chat() {
         ) : mmClient === undefined ? (
           <RoomNotReady isChainAdmin={isChainAdmin} onClickEnable={() => {}} />
         ) : (
-          <ChatWindow channels={channels} selectedChannel={selectedChannel} />
+          <ChatWindow
+            channels={channels}
+            selectedChannel={selectedChannel}
+            onCreateChannel={onCreateChannel}
+            onSelectChannel={onSelectChannel}
+          />
         )}
       </IonContent>
     </IonPage>

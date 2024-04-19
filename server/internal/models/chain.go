@@ -294,5 +294,5 @@ func (c *Chain) SaveChannelIDs(db *gorm.DB) error {
 	if err != nil {
 		return err
 	}
-	return db.Exec(`INSERT INTO chains (chat_room_ids) VALUES (?) WHERE id = ?`, b, c.ID).Error
+	return db.Exec(`UPDATE chains SET chat_room_ids = ? WHERE id = ?`, string(b), c.ID).Error
 }
