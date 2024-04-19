@@ -40,13 +40,12 @@ type WebSocketMessagePosted = WebSocketMessage<{
   set_online: true;
 }>;
 
+// This follows the controller / view component pattern
 export default function Chat() {
   const { t } = useTranslation();
   const { chain, mmData, setMmData, isThemeDefault } = useContext(StoreContext);
 
   const [mmWsClient, setMmWsClient] = useState<WebSocketClient | null>(null);
-  const [message, setMessage] = useState("");
-  const [sendingMsg, setSendingMsg] = useState(SendingMsgState.DEFAULT);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const [mmClient, setMmClient] = useState<Client4 | null | undefined>(
@@ -211,23 +210,13 @@ export default function Chat() {
   //   setPostList(_postlist);
   // }
 
-  // async function sendMessage() {
-  //   if (!mmData.chat_channel) return;
-  //   setSendingMsg(SendingMsgState.SENDING);
-  //   try {
-  //     await mmClient?.createPost({
-  //       channel_id: mmData.chat_channel,
-  //       message: message,
-  //     } as Partial<Post> as Post);
-  //     setMessage("");
-  //     setSendingMsg(SendingMsgState.DEFAULT);
-  //   } catch (e: any) {
-  //     console.error("Error creating post", e);
-  //     setSendingMsg(SendingMsgState.ERROR);
-  //     await Sleep(1000);
-  //     setSendingMsg(SendingMsgState.DEFAULT);
-  //   }
-  // }
+  async function onSendMessage(message: string) {
+    if (!selectedChannel) return;
+    await mmClient?.createPost({
+      channel_id: selectedChannel.id,
+      message: message,
+    } as Partial<Post> as Post);
+  }
 
   return (
     <IonPage>
@@ -252,6 +241,7 @@ export default function Chat() {
             selectedChannel={selectedChannel}
             onCreateChannel={onCreateChannel}
             onSelectChannel={onSelectChannel}
+            onSendMessage={onSendMessage}
           />
         )}
       </IonContent>

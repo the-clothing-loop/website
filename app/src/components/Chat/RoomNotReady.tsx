@@ -3,6 +3,7 @@ interface Props {
   onClickEnable: () => void;
 }
 
+// This follows the controller / view component pattern
 export default function RoomNotReady(props: Props) {
   return (
     <div className="tw-flex tw-justify-center tw-items-center">

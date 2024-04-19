@@ -1,5 +1,7 @@
 import { IonButton, IonIcon, IonInput, IonItem } from "@ionic/react";
 import { sendOutline } from "ionicons/icons";
+import { useState } from "react";
+import { Sleep } from "../../utils/sleep";
 
 export enum SendingMsgState {
   DEFAULT,
@@ -7,18 +9,28 @@ export enum SendingMsgState {
   ERROR,
 }
 interface Props {
-  sendingMsg: SendingMsgState;
-  message: string;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
-  sendMessage: () => Promise<void>;
+  onSendMessage: (msg: string) => Promise<void>;
 }
 
-export default function ChatInput({
-  sendingMsg,
-  message,
-  setMessage,
-  sendMessage,
-}: Props) {
+// This follows the controller / view component pattern
+export default function ChatInput(props: Props) {
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState(SendingMsgState.DEFAULT);
+
+  async function sendMessage() {
+    setStatus(SendingMsgState.SENDING);
+    try {
+      await props.onSendMessage(message);
+      setMessage("");
+      setStatus(SendingMsgState.DEFAULT);
+    } catch (e: any) {
+      console.error("Error creating post", e);
+      setStatus(SendingMsgState.ERROR);
+      await Sleep(1000);
+      setStatus(SendingMsgState.DEFAULT);
+    }
+  }
+
   function onSubmit(e: any) {
     e.preventDefault();
     sendMessage();
@@ -29,19 +41,19 @@ export default function ChatInput({
       <IonItem
         lines="none"
         color="light"
-        disabled={sendingMsg == SendingMsgState.SENDING}
+        disabled={status == SendingMsgState.SENDING}
       >
         <IonInput
           placeholder="Send Message"
           value={message}
-          disabled={sendingMsg == SendingMsgState.SENDING}
+          disabled={status == SendingMsgState.SENDING}
           onIonInput={(e) => setMessage(e.detail.value as string)}
           className="tw-ml-2"
         />
         <IonButton
           slot="end"
           shape="round"
-          disabled={message == ""}
+          disabled={status !== SendingMsgState.DEFAULT}
           color="light"
           className="tw-mr-0"
           type="submit"

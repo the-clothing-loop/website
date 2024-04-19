@@ -12,8 +12,10 @@ interface Props {
   selectedChannel: Channel | null;
   onCreateChannel: (n: string) => void;
   onSelectChannel: (index: number) => void;
+  onSendMessage: (msg: string) => Promise<void>;
 }
 
+// This follows the controller / view component pattern
 export default function ChatWindow(props: Props) {
   const { t } = useTranslation();
 
@@ -85,12 +87,7 @@ export default function ChatWindow(props: Props) {
       return <ChatPost post={post} key={post.id} isMe={isMe} />;
     })} */}
       </div>
-      {/* <ChatInput
-    sendingMsg={sendingMsg}
-    message={message}
-    setMessage={setMessage}
-    sendMessage={sendMessage}
-  /> */}
+      <ChatInput onSendMessage={props.onSendMessage} />
     </div>
   );
 }
