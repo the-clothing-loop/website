@@ -18,8 +18,8 @@ import {
 import {
   arrowBack,
   arrowForwardOutline,
+  mailOutline,
   mailUnreadOutline,
-  sendOutline,
 } from "ionicons/icons";
 import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -213,7 +213,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 {sentState === State.success ? (
                   <IonIcon slot="end" icon={mailUnreadOutline} />
                 ) : sentState === State.loading ? null : (
-                  <IonIcon slot="end" icon={sendOutline} />
+                  <IonIcon slot="end" icon={mailOutline} />
                 )}
               </IonButton>
             </IonItem>
