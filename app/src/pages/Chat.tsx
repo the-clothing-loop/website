@@ -17,7 +17,7 @@ import { SetStateAction, useContext, useEffect, useState } from "react";
 import * as apiChat from "../api/chat";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
 import { Sleep } from "../utils/sleep";
-import { Post, PostList } from "@mattermost/types/posts";
+import { PaginatedPostList, Post, PostList } from "@mattermost/types/posts";
 import { addOutline } from "ionicons/icons";
 import { userGetAllByChain } from "../api/user";
 import { User } from "../api/types";
@@ -27,6 +27,7 @@ import RoomNotReady from "../components/Chat/RoomNotReady";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Channel } from "@mattermost/types/channels";
 import ChatWindow from "../components/Chat/ChatWindow";
+import Loading from "../components/PrivateRoute/Loading";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
 
@@ -51,14 +52,15 @@ export default function Chat() {
   const [mmClient, setMmClient] = useState<Client4 | null | undefined>(
     undefined,
   );
-
-  const [postList, setPostList] = useState<PostList>({
+  const [postList, setPostList] = useState<PaginatedPostList>({
     order: [],
     posts: {},
     next_post_id: "",
     prev_post_id: "",
     first_inaccessible_post_time: 0,
+    has_next: true,
   });
+  const [loadingPostList, setLoadingPostList] = useState(false);
   const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
 
   useEffect(() => {
@@ -66,24 +68,25 @@ export default function Chat() {
     let _mmClient = mmClient;
     if (chain && !_mmClient) {
       apiChat
-        .chatPatchUser(chain.uid, !mmData.chat_token)
+        .chatPatchUser(chain.uid)
         .then(async (resp) => {
           console.log(
             "chat token:\n\tNew: %s\n\tOld: %s\n",
-            resp.data.chat_token,
-            mmData.chat_token,
+            resp.data.chat_pass,
+            mmData.chat_pass,
           );
 
-          _mmData = {
-            chat_token: resp.data.chat_token || mmData.chat_token,
-            ...resp.data,
-          };
-          console.log("chat token", _mmData.chat_token);
-          if (!_mmData.chat_token) throw new Error("mmData not found");
+          _mmData = resp.data;
+          console.log("chat token", _mmData.chat_pass);
+          if (!_mmData.chat_pass || !_mmData.chat_user)
+            throw new Error("mmData not found");
           // Start client
           _mmClient = new Client4();
           _mmClient.setUrl("http://localhost:5173/mm");
-          _mmClient.setToken(_mmData.chat_token!);
+          // _mmClient.setToken(_mmData.chat_pass!);
+          await _mmClient.login(authUser!.email, _mmData.chat_pass);
+          let me = await _mmClient.getMe();
+          console.log("me", me);
 
           // Join channels
           await apiChat.chatJoinChannels(chain.uid);
@@ -91,7 +94,7 @@ export default function Chat() {
           // Start websocket
           let _mmWsClient = new WebSocketClient();
           let url = _mmClient.getWebSocketUrl().replace("http", "ws");
-          _mmWsClient.initialize(url, _mmData.chat_token);
+          _mmWsClient.initialize(url, _mmClient.getToken());
 
           _mmWsClient.addMessageListener((msg) => {
             console.log("message listen:", msg);
@@ -111,11 +114,14 @@ export default function Chat() {
     }
 
     if (_mmClient && chain) {
+      console.log("client");
       if (chain.chat_room_ids?.length) {
+        console.log("get channels");
         getChannels(_mmClient, _mmData, chain.chat_room_ids).then(
           (_channels) => {
-            if (_channels.length > 0) {
-              setSelectedChannel(_channels[0]);
+            console.log("get channels", _channels);
+            if (_channels.length > 0 && _mmClient) {
+              onSelectChannel(_channels.at(0)!, _mmClient);
             }
           },
         );
@@ -157,65 +163,99 @@ export default function Chat() {
         ...(chain.chat_room_ids || []),
         id,
       ]);
-      setSelectedChannel(_channels.at(-1) || null);
+      setChannels(_channels);
+      const _channel = _channels.at(-1) || null;
+      setSelectedChannel(_channel);
+      if (!_channel) return;
+      reqPostList(mmClient, _channel, "");
     } catch (err) {
       console.error(err);
     }
   }
 
-  function onSelectChannel(channelIndex: number) {
-    setSelectedChannel(channels.at(channelIndex) || null);
+  function onSelectChannel(channel: Channel, _mmClient?: Client4) {
+    setSelectedChannel(channel);
+
+    reqPostList(_mmClient || mmClient!, channel, "");
   }
 
-  // async function handlePostedMessage(
-  //   _mmClient: Client4,
-  //   _mmData: MmData,
-  //   msg: WebSocketMessagePosted,
-  // ) {
-  //   if (msg.broadcast.channel_id !== _mmData.chat_channel) {
-  //     // console.log("post channel not the same");
-  //     return;
-  //   }
+  async function reqPostList(
+    _mmClient: Client4,
+    _selectedChannel: Channel,
+    lastPostId: string,
+  ) {
+    console.log(
+      "reqPostList",
+      _selectedChannel.id,
+      "next",
+      postList.next_post_id,
+    );
+    if (loadingPostList) return;
+    // Don't ask for more posts than the last post
+    if (postList.prev_post_id === "" && lastPostId !== "") return;
+    setLoadingPostList(true);
 
-  //   let newPosts = await _mmClient?.getPostsAfter(
-  //     _mmData.chat_channel!,
-  //     postList.next_post_id,
-  //   );
-  //   if (!newPosts) {
-  //     console.log("No more new posts");
-  //     return;
-  //   }
+    const newPosts = (await _mmClient.getPostsBefore(
+      _selectedChannel.id,
+      lastPostId,
+      0,
+      20,
+      false,
+      false,
+    )) as PaginatedPostList;
 
-  //   // merge postlists
-  //   setPostList((s) => ({
-  //     order: [...newPosts!.order, ...s.order],
-  //     posts: {
-  //       ...newPosts!.posts,
-  //       ...s.posts,
-  //     },
-  //     next_post_id: newPosts!.next_post_id,
-  //     prev_post_id: s.prev_post_id,
-  //     first_inaccessible_post_time: newPosts!.first_inaccessible_post_time,
-  //   }));
+    if (lastPostId === "") {
+      const newPosts = (await _mmClient.getPosts(
+        _selectedChannel.id,
+        0,
+        20,
+        false,
+        false,
+        false,
+      )) as PaginatedPostList;
+      setPostList(newPosts);
+    } else {
+      console.log("reqPostList merge", "next post id: ", lastPostId);
 
-  //   // const postList = await mmClient?.getPosts(mmData.chat_channel);
+      // merge postlists
+      setPostList((s) => ({
+        order: [...s.order, ...newPosts.order],
+        posts: {
+          ...newPosts.posts,
+          ...s.posts,
+        },
+        next_post_id: s.next_post_id,
+        prev_post_id: newPosts.prev_post_id,
+        first_inaccessible_post_time: newPosts.first_inaccessible_post_time,
+        has_next: newPosts.has_next,
+      }));
+    }
+    setLoadingPostList(false);
+  }
 
-  //   // if (!postList) return;
-  //   // setPostList(postList);
-  // }
+  function onScrollTop(lastPostId: string) {
+    if (!mmClient || !selectedChannel) return;
+    reqPostList(mmClient, selectedChannel, lastPostId);
+  }
 
-  // async function reqPostList(_mmClient: Client4, _mmData: MmData) {
-  //   _mmClient.getChannels(mmData.chat_channels)
-  //   const _postlist = await _mmClient.getPosts(_mmData.chat_channel!, 0, 20);
-  //   setPostList(_postlist);
-  // }
-
-  async function onSendMessage(message: string) {
-    if (!selectedChannel) return;
-    await mmClient?.createPost({
+  async function onSendMessage(message: string, callback: Function) {
+    if (!selectedChannel || !mmClient) return;
+    console.log("reqPostList", selectedChannel.id);
+    await mmClient.createPost({
       channel_id: selectedChannel.id,
       message: message,
     } as Partial<Post> as Post);
+
+    reqPostList(mmClient, selectedChannel, "").then(() => callback());
+  }
+
+  function onClickEnableChat() {
+    if (!chain) return;
+    apiChat.chatPatchUser(chain.uid);
+  }
+
+  if (mmClient === undefined || !authUser) {
+    return <Loading />;
   }
 
   return (
@@ -232,9 +272,10 @@ export default function Chat() {
         class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
       >
         {mmClient === null ? (
-          <RoomNotReady isChainAdmin={isChainAdmin} onClickEnable={() => {}} />
-        ) : mmClient === undefined ? (
-          <RoomNotReady isChainAdmin={isChainAdmin} onClickEnable={() => {}} />
+          <RoomNotReady
+            isChainAdmin={isChainAdmin}
+            onClickEnable={onClickEnableChat}
+          />
         ) : (
           <ChatWindow
             channels={channels}
@@ -242,6 +283,9 @@ export default function Chat() {
             onCreateChannel={onCreateChannel}
             onSelectChannel={onSelectChannel}
             onSendMessage={onSendMessage}
+            onScrollTop={onScrollTop}
+            postList={postList}
+            authUser={authUser}
           />
         )}
       </IonContent>

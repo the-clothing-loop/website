@@ -15,8 +15,7 @@ func ChatPatchUser(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		ChainUID   string `json:"chain_uid" binding:"required,uuid"`
-		RenewToken bool   `json:"renew_token,omitempty"`
+		ChainUID string `json:"chain_uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -28,22 +27,20 @@ func ChatPatchUser(c *gin.Context) {
 		return
 	}
 
-	token, err := services.ChatPatchUser(db, c.Request.Context(), app.ChatTeamId, user, body.RenewToken)
+	err := services.ChatPatchUser(db, c.Request.Context(), app.ChatTeamId, user)
 	if err != nil {
 		httperror.New(http.StatusInternalServerError, err).StatusWithError(c)
 		return
 	}
-	if token == "" && body.RenewToken {
-		c.AbortWithError(http.StatusTeapot, fmt.Errorf("token is not set"))
+	if user.ChatPass.String == "" {
+		c.AbortWithError(http.StatusTeapot, fmt.Errorf("password is not set"))
 		return
 	}
 
 	json := gin.H{
 		"chat_team": app.ChatTeamId,
 		"chat_user": user.ChatUserID.String,
-	}
-	if token != "" {
-		json["chat_token"] = token
+		"chat_pass": user.ChatPass.String,
 	}
 	c.JSON(http.StatusOK, json)
 }

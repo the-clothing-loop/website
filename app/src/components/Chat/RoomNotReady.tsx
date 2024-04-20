@@ -1,3 +1,5 @@
+import { IonButton } from "@ionic/react";
+
 interface Props {
   isChainAdmin: boolean;
   onClickEnable: () => void;
@@ -6,21 +8,22 @@ interface Props {
 // This follows the controller / view component pattern
 export default function RoomNotReady(props: Props) {
   return (
-    <div className="tw-flex tw-justify-center tw-items-center">
+    <div className="tw-flex tw-flex-col tw-h-full tw-justify-center tw-items-center">
       <h1>Room is not enabled</h1>
       {props.isChainAdmin ? (
         <>
           <p>Allow members to chat with each other</p>
-          <button
+          <IonButton
             type="button"
-            className="btn btn-purple"
+            color="light"
+            className="tw-mt-4"
             onClick={props.onClickEnable}
           >
             Enable
-          </button>
+          </IonButton>
         </>
       ) : (
-        <p>The Loop host needs to enable chat</p>
+        <p>Ask your Loop host to enable chat</p>
       )}
     </div>
   );

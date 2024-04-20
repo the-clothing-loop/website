@@ -3,13 +3,10 @@ import axios from "./axios";
 export interface RespChatPatchUser {
   chat_team: string;
   chat_user: string;
-  chat_token?: string;
+  chat_pass: string;
 }
-export function chatPatchUser(chain_uid: string, renew_token: boolean) {
-  return axios.patch<RespChatPatchUser>(`/v2/chat/user`, {
-    chain_uid,
-    renew_token,
-  });
+export function chatPatchUser(chain_uid: string) {
+  return axios.patch<RespChatPatchUser>(`/v2/chat/user`, { chain_uid });
 }
 
 export interface RespChatCreateChannel {

@@ -17,7 +17,7 @@ import (
 )
 
 // Checks if the user is registered on the matrix server if not they are registered
-func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *models.User, renewToken bool) (string, error) {
+func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *models.User) error {
 	var mmUser *model.User
 	var err error
 	// check if user exists properly
@@ -42,12 +42,12 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 			Email:    user.Email.String,
 		})
 		if err != nil {
-			return "", err
+			return err
 		}
 
 		_, _, err = app.ChatClient.AddTeamMember(ctx, mmTeamId, mmUser.Id)
 		if err != nil {
-			return "", err
+			return err
 		}
 
 		// Update database
@@ -59,19 +59,7 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 			user.ID)
 	}
 
-	token := ""
-
-	if renewToken {
-		cliUser := model.NewAPIv4Client(app.ChatClient.URL)
-		_, _, err := cliUser.LoginById(ctx, user.ChatUserID.String, user.ChatPass.String)
-		if err != nil {
-			slog.Info("user", "mmUser", mmUser)
-			return "", err
-		}
-		token = cliUser.AuthToken
-	}
-
-	return token, nil
+	return nil
 }
 
 func ChatCreateChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mmUserId, name string) (*model.Channel, error) {
@@ -114,9 +102,20 @@ func chatChannelAddUser(ctx context.Context, mmChannelId string, mmUserId string
 }
 
 func chatChannelSetMemberRole(ctx context.Context, mmChannelId string, member *model.ChannelMember, setRoleAdmin bool) error {
-	expectedRole := lo.Ternary(setRoleAdmin, model.ChannelAdminRoleId, model.ChannelUserRoleId)
-	if member.Roles != expectedRole {
-		_, err := app.ChatClient.UpdateChannelRoles(ctx, mmChannelId, member.UserId, expectedRole)
+	slog.Info("chatChannelSetMemberRole", "roles", member.Roles)
+	roles := strings.Split(member.Roles, " ")
+
+	isRolesContainsAdmin := lo.Contains(roles, model.ChannelAdminRoleId)
+	shouldUpdateRoles := isRolesContainsAdmin != setRoleAdmin
+	if shouldUpdateRoles {
+		if setRoleAdmin {
+			roles = append(roles, model.ChannelAdminRoleId)
+		} else {
+			roles = lo.Filter(roles, func(r string, i int) bool {
+				return r != model.ChannelAdminRoleId
+			})
+		}
+		_, err := app.ChatClient.UpdateChannelRoles(ctx, mmChannelId, member.UserId, strings.Join(roles, " "))
 		if err != nil {
 			return err
 		}

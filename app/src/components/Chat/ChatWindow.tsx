@@ -6,23 +6,57 @@ import { IonAlert, IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IonAlertCustomEvent } from "@ionic/core";
+import { PostList } from "@mattermost/types/posts";
+import { User } from "../../api/types";
+import ChatPost from "./ChatPost";
+import { useIntersectionObserver } from "@uidotdev/usehooks";
+import { useEffect, useRef } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 interface Props {
   channels: Channel[];
   selectedChannel: Channel | null;
+  postList: PostList;
+  authUser: User;
   onCreateChannel: (n: string) => void;
-  onSelectChannel: (index: number) => void;
-  onSendMessage: (msg: string) => Promise<void>;
+  onSelectChannel: (c: Channel) => void;
+  onScrollTop: (topPostId: string) => void;
+  onSendMessage: (msg: string, callback: Function) => Promise<void>;
 }
 
 // This follows the controller / view component pattern
 export default function ChatWindow(props: Props) {
   const { t } = useTranslation();
+  const slowTriggerScrollTop = useDebouncedCallback(() => {
+    const lastPostId = props.postList.order.at(-1);
+    if (lastPostId) {
+      console.log("last post", lastPostId);
+      props.onScrollTop(lastPostId);
+    }
+  }, 1000);
+  const refScrollRoot = useRef<HTMLDivElement>(null);
+  const [refScrollTop, entry] = useIntersectionObserver({
+    root: refScrollRoot.current,
+  });
+  useEffect(() => {
+    if (entry?.isIntersecting) {
+      console.log("Intersecting");
+      slowTriggerScrollTop();
+    }
+  }, [entry?.isIntersecting]);
 
   function onCreateChannelSubmit(e: IonAlertCustomEvent<any>) {
     if (e?.detail?.role === "submit" && e.detail?.data?.values?.name) {
       props.onCreateChannel(e.detail.data.values.name);
     }
+  }
+
+  function onSendMessageWithCallback(topPostId: string) {
+    return props.onSendMessage(topPostId, () => {
+      refScrollRoot.current?.scrollTo({
+        top: 0,
+      });
+    });
   }
 
   return (
@@ -40,7 +74,7 @@ export default function ChatWindow(props: Props) {
                 isSelected ? " tw-bg-light" : " tw-group",
               )}
               key={cr.id}
-              onClick={isSelected ? undefined : () => props.onSelectChannel(i)}
+              onClick={isSelected ? undefined : () => props.onSelectChannel(cr)}
             >
               <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade  tw-flex tw-items-center tw-justify-center tw-ring tw-ring-transparent group-hover:tw-ring-purple tw-transition-colors">
                 {initials}
@@ -80,14 +114,19 @@ export default function ChatWindow(props: Props) {
           ]}
         ></IonAlert>
       </div>
-      <div className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto">
-        {/* {postList.order.map((item, i) => {
-      const post = postList.posts[item];
-      const isMe = post.user_id === authUser?.uid;
-      return <ChatPost post={post} key={post.id} isMe={isMe} />;
-    })} */}
+      <div
+        ref={refScrollRoot}
+        className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto"
+      >
+        {props.postList.order.map((item, i) => {
+          const post = props.postList.posts[item];
+          const isMe = post.user_id === props.authUser.uid;
+          return <ChatPost post={post} key={post.id} isMe={isMe} />;
+          // return <span>{post.id}</span>;
+        })}
+        <span key="top" ref={refScrollTop}></span>
       </div>
-      <ChatInput onSendMessage={props.onSendMessage} />
+      <ChatInput onSendMessage={onSendMessageWithCallback} />
     </div>
   );
 }
