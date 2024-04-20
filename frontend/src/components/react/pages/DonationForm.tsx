@@ -346,7 +346,8 @@ export default function DonationForm() {
     const stripePromise = loadStripe(stripePublicKey);
 
     return (
-      <div className="max-w-screen-sm mx-auto px-4">
+      <div className="container mx-auto px-5 md:px-20 grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
           <h1 className="text-4xl text-secondary font-serif font-bold mb-6">
             {t("donateToTheClothingLoop")}
           </h1>
@@ -360,6 +361,38 @@ export default function DonationForm() {
           <Elements stripe={stripePromise}>
             <DonationFormContent />
           </Elements>
+        </div>
+        <div className="prose prose-sm bg-blue-light/20 p-4">
+          <img
+            alt="anbi logo"
+            className="w-28 lg:w-32 lg:ml-auto"
+            src="https://images.clothingloop.org/0x0/anbi_fc_blauw.jpg"
+          />
+
+          <ul>
+            <li>
+              An ANBI does not pay donation tax over donations that are used for
+              general interest. The maximum amount of the exemption for donation
+              tax in 2021 is € 3.244.
+            </li>
+            <li>
+              An ANBI does not pay inheritance tax over inheritances that are
+              used as contributions to the mission of the organization. The
+              maximum amount of the exemption in inheritance tax is € 2.244.
+            </li>
+            <li>An ANBI can be entitled to a return of the energy tax.</li>
+            <li>
+              The work done by volunteers for an institution with an ANBI-status
+              can be seen as a gift under certain conditions for the tax
+              assessment.
+            </li>
+            <li>
+              Donors that make donations to an ANBI can - if the donation is
+              recorded - deduct that donation in their assessment income- or
+              partnership tax.
+            </li>
+          </ul>
+        </div>
       </div>
     );
   }
