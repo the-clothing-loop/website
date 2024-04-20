@@ -222,7 +222,7 @@
   "readOurImpactReport": "Läs vår impact report",
   "thankYou": "Tack!",
   "youAretheSpecialTypeOfPersonThatLiftsPeopleUp": "Du är den speciella typen av person som lyfter upp människor och gör världen till en bättre plats. Var säker på att varje donation får oss att göra en liten dans på vårt (hemma)kontor. Vi har mycket arbete framför oss, och din donation har gjort det så mycket lättare att få saker gjorda och drivit oss framåt mot en mer hållbar värld. Tack så mycket för din önskan att hjälpa The Clothing Loop att lyckas.",
-  "byDonatingYouAgreeWithOur": "Genom att donera godkänner du vår ",
+  "byDonatingYouAgreeWithOur": "Genom att donera godkänner du vår  <1>Privacy Policy</1>.",
   "accessTokenNotConfigured": "Åtkomsttoken inte konfigurerad",
   "dontHaveACreditCardChooseSepa": "Har du inget kreditkort? Välj \"SEPA Autogiro\" i nästa steg.",
   "donateToTheClothingLoop": "Skänka till The Clothing Loop",

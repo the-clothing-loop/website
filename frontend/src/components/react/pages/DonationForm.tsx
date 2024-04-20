@@ -6,7 +6,7 @@ import { paymentInitiate, priceIDs } from "../../../api/payment";
 
 import { GinParseErrors } from "../util/gin-errors";
 import useForm from "../util/form.hooks";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 
@@ -312,15 +312,18 @@ function DonationFormContent() {
         </div>
 
         <p className="text-xs mb-2">
-          {t("byDonatingYouAgreeWithOur")}
-          <a
-            href={localizePath("/privacy-policy")}
-            target="_blank"
-            className="link"
-          >
-            {t("privacyPolicy")}
-          </a>
-          .
+          <Trans
+            i18nKey="byDonatingYouAgreeWithOur"
+            components={{
+              "1": (
+                <a
+                  href={localizePath("/privacy-policy")}
+                  target="_blank"
+                  className="link"
+                />
+              ),
+            }}
+          />
         </p>
 
         <ul className="flex flex-row mb-2">
@@ -344,19 +347,19 @@ export default function DonationForm() {
 
     return (
       <div className="max-w-screen-sm mx-auto px-4">
-        <h1 className="text-4xl text-secondary font-serif font-bold mb-6">
-          {t("donateToTheClothingLoop")}
-        </h1>
-        <div
-          className="leading-relaxed mb-6"
-          dangerouslySetInnerHTML={{
-            __html: t("thanksForConsideringADonation")!,
-          }}
-        ></div>
+          <h1 className="text-4xl text-secondary font-serif font-bold mb-6">
+            {t("donateToTheClothingLoop")}
+          </h1>
+          <div
+            className="leading-relaxed mb-6"
+            dangerouslySetInnerHTML={{
+              __html: t("thanksForConsideringADonation")!,
+            }}
+          ></div>
 
-        <Elements stripe={stripePromise}>
-          <DonationFormContent />
-        </Elements>
+          <Elements stripe={stripePromise}>
+            <DonationFormContent />
+          </Elements>
       </div>
     );
   }

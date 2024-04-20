@@ -222,7 +222,7 @@
   "readOurImpactReport": "Lea nuestro informe de impacto",
   "thankYou": "¡Gracias!",
   "youAretheSpecialTypeOfPersonThatLiftsPeopleUp": "Usted es el tipo especial de persona que eleva a la gente y hace del mundo un lugar mejor. Estén seguros de que cada donación nos hace bailar un poco en nuestra oficina (en casa). Tenemos mucho trabajo por delante, y su donación ha hecho que sea mucho más fácil hacer las cosas y impulsarnos hacia un mundo más sostenible. Muchas gracias por su deseo de ayudar a que The Clothing Loop sea un éxito.",
-  "byDonatingYouAgreeWithOur": "Al proceder, aceptas nuestra ",
+  "byDonatingYouAgreeWithOur": "Al proceder, aceptas nuestra  <1>Privacy Policy</1>.",
   "accessTokenNotConfigured": "Token de acceso no creado",
   "dontHaveACreditCardChooseSepa": "¿No tiene tarjeta de crédito? Elija 'Débito Directo SEPA' en el siguiente paso.",
   "donateToTheClothingLoop": "Donar a The Clothing Loop",
