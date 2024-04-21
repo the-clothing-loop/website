@@ -1,5 +1,7 @@
 import {
+  IonAlert,
   IonButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
@@ -258,6 +260,10 @@ export default function Chat() {
     return <Loading />;
   }
 
+  function onDeleteChannel() {
+    console.log("delete channel");
+  }
+
   return (
     <IonPage>
       <IonHeader translucent>
@@ -265,8 +271,28 @@ export default function Chat() {
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
             Chat
           </IonTitle>
+          {isChainAdmin ? (
+            <IonButtons slot="end">
+              <IonButton
+                className={isThemeDefault ? "!tw-text-purple" : ""}
+                id="delete_channel_btn"
+              >
+                {"Delete Channel"}
+              </IonButton>
+            </IonButtons>
+          ) : null}
         </IonToolbar>
       </IonHeader>
+      <IonAlert
+        onIonAlertDidDismiss={onDeleteChannel}
+        trigger="delete_channel_btn"
+        header="Delete Channel"
+        subHeader="Are you sure you want to delete this channel?"
+        buttons={[
+          { text: t("cancel"), role: "cancel" },
+          { text: t("delete"), role: "destructive" },
+        ]}
+      ></IonAlert>
       <IonContent
         fullscreen
         class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
