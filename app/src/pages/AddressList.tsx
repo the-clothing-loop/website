@@ -29,7 +29,7 @@ import AddressListItem, {
 } from "../components/AddressList/AddressListItem";
 import wrapIndex from "../utils/wrap_index";
 import { useDebounce } from "@uidotdev/usehooks";
-import isPaused from "../utils/is_paused";
+import IsPaused from "../utils/is_paused";
 
 export default function AddressList() {
   const {
@@ -102,7 +102,7 @@ export default function AddressList() {
 
         const isPrivate = IsPrivate(user.email);
         const isAddressPrivate = IsPrivate(user.address);
-        const isUserPaused = isPaused(user, chain.uid);
+        const isUserPaused = IsPaused(user, chain.uid);
 
         arr.push({
           user,

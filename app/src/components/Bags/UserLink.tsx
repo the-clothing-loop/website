@@ -5,12 +5,13 @@ import { User } from "../../api/types";
 interface Props {
   user: User;
   routeIndex: number;
+  isPaused: boolean;
 }
 
-export default function UserLink({ user, routeIndex }: Props) {
+export default function UserLink({ user, routeIndex, isPaused }: Props) {
   return (
     <div className="!tw-font-bold tw-text-medium tw-flex tw-flex-row tw-items-baseline tw-text-xs tw-w-full">
-      {user.paused_until ? (
+      {isPaused ? (
         <IonIcon
           className="tw-translate-y-px tw-w-4 tw-h-4 tw-min-w-[16px] tw-me-[3px]"
           icon={pauseCircle}
@@ -20,7 +21,7 @@ export default function UserLink({ user, routeIndex }: Props) {
       )}
       <span
         className={`ion-text-ellipsis tw-text-sm tw-flex-grow tw-block ${
-          user.paused_until ? "tw-text-medium" : "tw-text-dark"
+          isPaused ? "tw-text-medium" : "tw-text-dark"
         }`}
       >
         {user.name}

@@ -1,7 +1,7 @@
 import { UID, User } from "../api/types";
 import dayjs from "../dayjs";
 
-export default function isPaused(
+export default function IsPaused(
   user: User | null,
   currentChainUID: UID | undefined,
 ): boolean {

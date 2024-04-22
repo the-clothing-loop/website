@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
-import isPaused from "./is_paused";
+import IsPaused from "./is_paused";
 import dayjs from "../dayjs";
 
 function TestIsPausedByDate(date: string | null) {
-  return isPaused({ chains: [], paused_until: date } as any, "");
+  return IsPaused({ chains: [], paused_until: date } as any, "");
 }
 
 test("should is pause be a date in the past then return true", () => {
@@ -24,7 +24,7 @@ test("should is pause be null then return false", () => {
 
 test("should be paused when the current user chain is paused", () => {
   expect(
-    isPaused(
+    IsPaused(
       { chains: [{ chain_uid: "test", is_paused: true }] } as any,
       "test",
     ),
