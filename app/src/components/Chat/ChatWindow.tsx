@@ -2,16 +2,39 @@ import { Client4 } from "@mattermost/client";
 import { MmData } from "../../stores/Store";
 import ChatInput, { SendingMsgState } from "./ChatInput";
 import { Channel } from "@mattermost/types/channels";
-import { IonAlert, IonIcon } from "@ionic/react";
-import { addOutline } from "ionicons/icons";
+import {
+  IonAlert,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
+  IonPopover,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
+import {
+  addOutline,
+  compassOutline,
+  copyOutline,
+  refreshOutline,
+  shareOutline,
+  text,
+} from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IonAlertCustomEvent } from "@ionic/core";
 import { PostList } from "@mattermost/types/posts";
 import { User } from "../../api/types";
 import ChatPost from "./ChatPost";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { useLongPress } from "use-long-press";
 
 interface Props {
   channels: Channel[];
@@ -38,6 +61,14 @@ export default function ChatWindow(props: Props) {
   const [refScrollTop, entry] = useIntersectionObserver({
     root: refScrollRoot.current,
   });
+  const refChannelOptions = useRef<HTMLIonModalElement>(null);
+  const [renameOpen, setRenameOpen] = useState(false);
+  const [currentChannelName, setCurrentChannelName] = useState(
+    props.selectedChannel?.name,
+  );
+
+  console.log("name from props is: ", props.selectedChannel?.name);
+
   useEffect(() => {
     if (entry?.isIntersecting) {
       console.log("Intersecting");
@@ -59,6 +90,21 @@ export default function ChatWindow(props: Props) {
     });
   }
 
+  const longPressChannel = useLongPress(
+    (e) => {
+      refChannelOptions.current?.present();
+    },
+    { onCancel: (e) => {} },
+  );
+
+  function onDeleteChannel() {
+    console.log("delete channel");
+  }
+
+  function handleCloseModal() {
+    refChannelOptions.current?.dismiss();
+    setRenameOpen(false);
+  }
   return (
     <div className="tw-relative tw-h-full tw-flex tw-flex-col">
       <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-y-auto tw-bg-[#f4f1f9]">
@@ -69,24 +115,76 @@ export default function ChatWindow(props: Props) {
             .join("");
           const isSelected = cr.id === props.selectedChannel?.id;
           return (
-            <button
-              className={"tw-p-2 tw-flex tw-flex-col tw-items-center".concat(
-                isSelected ? " tw-bg-light" : " tw-group",
-              )}
-              key={cr.id}
-              onClick={isSelected ? undefined : () => props.onSelectChannel(cr)}
-            >
-              <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade  tw-flex tw-items-center tw-justify-center tw-ring tw-ring-transparent group-hover:tw-ring-purple tw-transition-colors">
-                {initials}
-              </div>
-              <div
-                className={"tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]".concat(
-                  isSelected ? " tw-font-bold" : "",
+            <div>
+              <button
+                className={"tw-p-2 tw-flex tw-flex-col tw-items-center".concat(
+                  isSelected ? " tw-bg-light" : " tw-group",
                 )}
+                key={cr.id}
+                onClick={
+                  isSelected ? undefined : () => props.onSelectChannel(cr)
+                }
+                {...longPressChannel()}
               >
-                {cr.display_name}
-              </div>
-            </button>
+                <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade  tw-flex tw-items-center tw-justify-center tw-ring tw-ring-transparent group-hover:tw-ring-purple tw-transition-colors">
+                  {initials}
+                </div>
+                <div
+                  className={"tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]".concat(
+                    isSelected ? " tw-font-bold" : "",
+                  )}
+                >
+                  {cr.display_name}
+                </div>
+              </button>
+
+              <IonModal
+                ref={refChannelOptions}
+                initialBreakpoint={0.25}
+                breakpoints={[0, 0.5, 0.75, 1]}
+              >
+                {renameOpen ? (
+                  <div>
+                    <IonHeader>
+                      <IonToolbar>
+                        <IonButtons slot="start">
+                          <IonButton onClick={handleCloseModal}>
+                            {t("cancel")}
+                          </IonButton>
+                        </IonButtons>
+                        <IonTitle>{"Change Channel Name"}</IonTitle>
+                      </IonToolbar>
+                    </IonHeader>
+                    <IonList>
+                      <IonItem>
+                        <IonInput
+                          label="Enter New Channel Name"
+                          value={currentChannelName}
+                          labelPlacement="stacked"
+                        ></IonInput>
+                      </IonItem>
+                    </IonList>
+                  </div>
+                ) : (
+                  <div>
+                    <IonHeader>
+                      <IonToolbar>
+                        <IonButtons slot="end">
+                          <IonButton>{t("cancel")}</IonButton>
+                        </IonButtons>
+                        <IonTitle>{"Make Changes"}</IonTitle>
+                      </IonToolbar>
+                    </IonHeader>
+                    <IonList>
+                      <IonItem onClick={() => setRenameOpen(true)}>
+                        Rename Channel
+                      </IonItem>
+                      <IonItem routerLink={"/delete"}>Delete Channel</IonItem>
+                    </IonList>
+                  </div>
+                )}
+              </IonModal>
+            </div>
           );
         })}
         <div key="plus" className="tw-p-2 tw-me-4 tw-flex tw-shrink-0">
