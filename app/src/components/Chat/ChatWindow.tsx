@@ -43,6 +43,8 @@ interface Props {
   authUser: User;
   onCreateChannel: (n: string) => void;
   onSelectChannel: (c: Channel) => void;
+  onUpdateChannelName: (n: string) => void;
+  onDeleteChannel: (n: string) => void;
   onScrollTop: (topPostId: string) => void;
   onSendMessage: (msg: string, callback: Function) => Promise<void>;
 }
@@ -62,12 +64,11 @@ export default function ChatWindow(props: Props) {
     root: refScrollRoot.current,
   });
   const refChannelOptions = useRef<HTMLIonModalElement>(null);
-  const [renameOpen, setRenameOpen] = useState(false);
-  const [currentChannelName, setCurrentChannelName] = useState(
-    props.selectedChannel?.name,
-  );
+  const [modalState, setModalState] = useState("default");
 
-  console.log("name from props is: ", props.selectedChannel?.name);
+  const [channelName, setChannelName] = useState(props.selectedChannel?.name);
+
+  console.log("channelName: ", props.selectedChannel?.name, channelName);
 
   useEffect(() => {
     if (entry?.isIntersecting) {
@@ -80,6 +81,20 @@ export default function ChatWindow(props: Props) {
     if (e?.detail?.role === "submit" && e.detail?.data?.values?.name) {
       props.onCreateChannel(e.detail.data.values.name);
     }
+  }
+
+  function onUpdateChannelName() {
+    console.log("inside update channel name in chatwindow");
+    if (channelName) props.onUpdateChannelName(channelName);
+    refChannelOptions.current?.dismiss();
+    setModalState("default");
+  }
+
+  function onDeleteChannel() {
+    console.log("inside delete channel  in chatwindow");
+    if (channelName) props.onDeleteChannel(channelName);
+    refChannelOptions.current?.dismiss();
+    setModalState("default");
   }
 
   function onSendMessageWithCallback(topPostId: string) {
@@ -97,14 +112,11 @@ export default function ChatWindow(props: Props) {
     { onCancel: (e) => {} },
   );
 
-  function onDeleteChannel() {
-    console.log("delete channel");
+  function handleCloseModal() {
+    setModalState("default");
+    refChannelOptions.current?.dismiss();
   }
 
-  function handleCloseModal() {
-    refChannelOptions.current?.dismiss();
-    setRenameOpen(false);
-  }
   return (
     <div className="tw-relative tw-h-full tw-flex tw-flex-col">
       <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-y-auto tw-bg-[#f4f1f9]">
@@ -143,45 +155,71 @@ export default function ChatWindow(props: Props) {
                 initialBreakpoint={0.25}
                 breakpoints={[0, 0.5, 0.75, 1]}
               >
-                {renameOpen ? (
-                  <div>
-                    <IonHeader>
-                      <IonToolbar>
-                        <IonButtons slot="start">
-                          <IonButton onClick={handleCloseModal}>
-                            {t("cancel")}
-                          </IonButton>
-                        </IonButtons>
-                        <IonTitle>{"Change Channel Name"}</IonTitle>
-                      </IonToolbar>
-                    </IonHeader>
-                    <IonList>
-                      <IonItem>
-                        <IonInput
-                          label="Enter New Channel Name"
-                          value={currentChannelName}
-                          labelPlacement="stacked"
-                        ></IonInput>
-                      </IonItem>
-                    </IonList>
-                  </div>
+                <IonHeader>
+                  <IonToolbar>
+                    {modalState != "default" ? (
+                    <IonButtons slot="start">
+                      <IonButton onClick={() => setModalState("default")}>
+                        {t("back")}
+                      </IonButton>
+                    </IonButtons>): null}
+                    <IonButtons slot="end">
+                      <IonButton onClick={handleCloseModal}>
+                        {t("close")}
+                      </IonButton>
+                    </IonButtons>
+                    <IonTitle>{modalState}</IonTitle>
+                  </IonToolbar>
+                </IonHeader>
+
+                {modalState == "rename" ? (
+                  <IonContent>
+                    <IonItem>
+                      <IonInput
+                        label="Enter New Channel Name"
+                        value={channelName}
+                        labelPlacement="stacked"
+                        onIonInput={(e) =>
+                          setChannelName(e.detail.value?.toString() || "")
+                        }
+                      ></IonInput>
+                    </IonItem>
+                    <IonItem lines="none">
+                      <IonButtons slot="end">
+                        <IonButton onClick={onUpdateChannelName} size="default">
+                          {t("Rename")}
+                        </IonButton>
+                      </IonButtons>
+                    </IonItem>
+                  </IonContent>
+                ) : modalState == "delete" ? (
+                  <IonContent>
+                    <IonItem lines="none">
+                      Are you sure you want to delete channel?
+                    </IonItem>
+                    <IonItem lines="none">
+                      <IonButtons slot="end">
+                        <IonButton
+                          onClick={onDeleteChannel}
+                          color="danger"
+                          size="default"
+                        >
+                          {t("delete")}
+                        </IonButton>
+                      </IonButtons>
+                    </IonItem>
+                  </IonContent>
                 ) : (
-                  <div>
-                    <IonHeader>
-                      <IonToolbar>
-                        <IonButtons slot="end">
-                          <IonButton>{t("cancel")}</IonButton>
-                        </IonButtons>
-                        <IonTitle>{"Make Changes"}</IonTitle>
-                      </IonToolbar>
-                    </IonHeader>
+                  <IonContent>
                     <IonList>
-                      <IonItem onClick={() => setRenameOpen(true)}>
+                      <IonItem onClick={() => setModalState("rename")} >
                         Rename Channel
                       </IonItem>
-                      <IonItem routerLink={"/delete"}>Delete Channel</IonItem>
+                      <IonItem onClick={() => setModalState("delete")} >
+                        Delete Channel
+                      </IonItem>
                     </IonList>
-                  </div>
+                  </IonContent>
                 )}
               </IonModal>
             </div>
