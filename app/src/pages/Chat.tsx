@@ -175,6 +175,34 @@ export default function Chat() {
     }
   }
 
+  async function onUpdateChannelName(name: string) {
+    if (!chain || !mmClient) {
+      if (!chain) console.error("chain not found");
+      if (!mmClient) console.error("mmClient not found");
+      return;
+    }
+    try {
+      console.info("Updating channel name", name);
+      // Update channel name
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function onDeleteChannel(name: string) {
+    if (!chain || !mmClient) {
+      if (!chain) console.error("chain not found");
+      if (!mmClient) console.error("mmClient not found");
+      return;
+    }
+    try {
+      console.info("Deleting channel", name);
+      // Delete function
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   function onSelectChannel(channel: Channel, _mmClient?: Client4) {
     setSelectedChannel(channel);
 
@@ -260,10 +288,6 @@ export default function Chat() {
     return <Loading />;
   }
 
-  function onDeleteChannel() {
-    console.log("delete channel");
-  }
-
   return (
     <IonPage>
       <IonHeader translucent>
@@ -271,28 +295,8 @@ export default function Chat() {
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
             Chat
           </IonTitle>
-          {isChainAdmin ? (
-            <IonButtons slot="end">
-              <IonButton
-                className={isThemeDefault ? "!tw-text-purple" : ""}
-                id="delete_channel_btn"
-              >
-                {"Delete Channel"}
-              </IonButton>
-            </IonButtons>
-          ) : null}
         </IonToolbar>
       </IonHeader>
-      <IonAlert
-        onIonAlertDidDismiss={onDeleteChannel}
-        trigger="delete_channel_btn"
-        header="Delete Channel"
-        subHeader="Are you sure you want to delete this channel?"
-        buttons={[
-          { text: t("cancel"), role: "cancel" },
-          { text: t("delete"), role: "destructive" },
-        ]}
-      ></IonAlert>
       <IonContent
         fullscreen
         class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
@@ -308,6 +312,8 @@ export default function Chat() {
             selectedChannel={selectedChannel}
             onCreateChannel={onCreateChannel}
             onSelectChannel={onSelectChannel}
+            onUpdateChannelName={onUpdateChannelName}
+            onDeleteChannel={onDeleteChannel}
             onSendMessage={onSendMessage}
             onScrollTop={onScrollTop}
             postList={postList}
