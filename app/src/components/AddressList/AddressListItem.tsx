@@ -13,6 +13,7 @@ export interface AddressListItemProps {
   number: number;
   routerLink: string | undefined;
   isUserPaused: boolean;
+  isChainAdmin: boolean;
 }
 export default function AddressListItem({
   user,
@@ -23,6 +24,7 @@ export default function AddressListItem({
   number,
   routerLink,
   isUserPaused,
+  isChainAdmin,
 }: AddressListItemProps) {
   return (
     <IonItem
@@ -48,7 +50,9 @@ export default function AddressListItem({
         </h5>
         <span className="tw-opacity-60">
           {isUserPaused ? (
-            <small>{t("paused")}</small>
+            isChainAdmin ? (
+              <small>{user.address}</small>
+            ) : null
           ) : isAddressPrivate ? (
             <small>&nbsp;</small>
           ) : (
