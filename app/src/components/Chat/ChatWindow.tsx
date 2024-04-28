@@ -15,8 +15,10 @@ import {
   IonList,
   IonModal,
   IonPopover,
+  IonRippleEffect,
   IonTitle,
   IonToolbar,
+  useIonAlert,
 } from "@ionic/react";
 import {
   addOutline,
@@ -44,7 +46,7 @@ interface Props {
   onCreateChannel: (n: string) => void;
   onSelectChannel: (c: Channel) => void;
   onUpdateChannelName: (n: string) => void;
-  onDeleteChannel: (n: string) => void;
+  onDeleteChannelSubmit: (n: string) => void;
   onScrollTop: (topPostId: string) => void;
   onSendMessage: (msg: string, callback: Function) => Promise<void>;
 }
@@ -67,6 +69,8 @@ export default function ChatWindow(props: Props) {
   const [modalState, setModalState] = useState("default");
 
   const [channelName, setChannelName] = useState(props.selectedChannel?.name);
+  const [presentDeleteAlert] = useIonAlert();
+  const [presentRenameAlert] = useIonAlert();
 
   console.log("channelName: ", props.selectedChannel?.name, channelName);
 
@@ -90,9 +94,9 @@ export default function ChatWindow(props: Props) {
     setModalState("default");
   }
 
-  function onDeleteChannel() {
-    console.log("inside delete channel  in chatwindow");
-    if (channelName) props.onDeleteChannel(channelName);
+  function onDeleteChannelSubmit() {
+    console.log("inside delete channel in chatwindow");
+    if (channelName) props.onDeleteChannelSubmit(channelName);
     refChannelOptions.current?.dismiss();
     setModalState("default");
   }
@@ -115,6 +119,21 @@ export default function ChatWindow(props: Props) {
   function handleCloseModal() {
     setModalState("default");
     refChannelOptions.current?.dismiss();
+  }
+
+  function clickDelete() {
+    presentDeleteAlert({
+      header: t("delete"),
+      buttons: [
+        {
+          text: t("cancel"),
+        },
+        {
+          role: "destructive",
+          text: t("delete"),
+        },
+      ],
+    });
   }
 
   return (
@@ -149,7 +168,6 @@ export default function ChatWindow(props: Props) {
                   {cr.display_name}
                 </div>
               </button>
-
               <IonModal
                 ref={refChannelOptions}
                 initialBreakpoint={0.25}
@@ -157,12 +175,13 @@ export default function ChatWindow(props: Props) {
               >
                 <IonHeader>
                   <IonToolbar>
-                    {modalState != "default" ? (
-                    <IonButtons slot="start">
-                      <IonButton onClick={() => setModalState("default")}>
-                        {t("back")}
-                      </IonButton>
-                    </IonButtons>): null}
+                    {modalState == "rename" ? (
+                      <IonButtons slot="start">
+                        <IonButton onClick={() => setModalState("default")}>
+                          {t("back")}
+                        </IonButton>
+                      </IonButtons>
+                    ) : null}
                     <IonButtons slot="end">
                       <IonButton onClick={handleCloseModal}>
                         {t("close")}
@@ -172,7 +191,32 @@ export default function ChatWindow(props: Props) {
                   </IonToolbar>
                 </IonHeader>
 
-                {modalState == "rename" ? (
+                {modalState == "default" ? (
+                  <IonContent>
+                    <IonList>
+                      <div>
+                        <IonItem
+                          onClick={() => setModalState("rename")}
+                          className="ion-activatable ripple-parent tw-relative tw-p-0 tw-overflow-hidden"
+                          lines="full"
+                        >
+                          Rename chat rooms
+                        </IonItem>
+                        <IonRippleEffect></IonRippleEffect>
+                      </div>
+                      <div>
+                        <IonItem
+                          lines="full"
+                          className="ion-activatable ripple-parent tw-relative tw-overflow-hidden"
+                          onClick={clickDelete}
+                        >
+                          Delete chat room
+                        </IonItem>
+                        <IonRippleEffect></IonRippleEffect>
+                      </div>
+                    </IonList>
+                  </IonContent>
+                ) : (
                   <IonContent>
                     <IonItem>
                       <IonInput
@@ -185,40 +229,15 @@ export default function ChatWindow(props: Props) {
                       ></IonInput>
                     </IonItem>
                     <IonItem lines="none">
-                      <IonButtons slot="end">
-                        <IonButton onClick={onUpdateChannelName} size="default">
-                          {t("Rename")}
-                        </IonButton>
-                      </IonButtons>
+                      <IonButton
+                        onClick={onUpdateChannelName}
+                        size="default"
+                        slot="end"
+                        className="tw-mt-4"
+                      >
+                        {t("Rename")}
+                      </IonButton>
                     </IonItem>
-                  </IonContent>
-                ) : modalState == "delete" ? (
-                  <IonContent>
-                    <IonItem lines="none">
-                      Are you sure you want to delete channel?
-                    </IonItem>
-                    <IonItem lines="none">
-                      <IonButtons slot="end">
-                        <IonButton
-                          onClick={onDeleteChannel}
-                          color="danger"
-                          size="default"
-                        >
-                          {t("delete")}
-                        </IonButton>
-                      </IonButtons>
-                    </IonItem>
-                  </IonContent>
-                ) : (
-                  <IonContent>
-                    <IonList>
-                      <IonItem onClick={() => setModalState("rename")} >
-                        Rename Channel
-                      </IonItem>
-                      <IonItem onClick={() => setModalState("delete")} >
-                        Delete Channel
-                      </IonItem>
-                    </IonList>
                   </IonContent>
                 )}
               </IonModal>

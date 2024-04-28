@@ -313,7 +313,7 @@ export default function Chat() {
             onCreateChannel={onCreateChannel}
             onSelectChannel={onSelectChannel}
             onUpdateChannelName={onUpdateChannelName}
-            onDeleteChannel={onDeleteChannel}
+            onDeleteChannelSubmit={onDeleteChannel}
             onSendMessage={onSendMessage}
             onScrollTop={onScrollTop}
             postList={postList}
