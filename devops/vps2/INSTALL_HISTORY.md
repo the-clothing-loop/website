@@ -64,6 +64,7 @@ sudo chmod +x /usr/local/bin/task-services
 sudo apt install phpmyadmin -y
 
 # mattermost
+# https://docs.mattermost.com/install/installing-ubuntu-2004-LTS.html
 wget releases.mattermost.com/9.7.2/mattermost-9.7.2-linux-amd64.tar.gz
 tar -xvzf mattermost*.gz
 sudo mv mattermost /opt
@@ -71,9 +72,12 @@ sudo mkdir /opt/mattermost/data
 sudo useradd --system --user-group mattermost
 sudo chown -R mattermost:mattermost /opt/mattermost
 sudo chmod -R g+w /opt/mattermost
+sudo touch /lib/systemd/system/mattermost.service
+sudo systemctl daemon-reload
 
 
 # setup services
+sudo systemctl enable mattermost
 sudo systemctl disable nginx
 sudo systemctl stop nginx
 sudo systemctl enable caddy
