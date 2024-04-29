@@ -28,8 +28,8 @@ jobs:
       - name: Install SSH key
         uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
-          private-key: ${{ secrets.VPS1_PRIVKEY }}
-          known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
+          private-key: ${{ secrets.VPS2_PRIVKEY }}
+          known-hosts: ${{ secrets.VPS2_KNOWNHOSTS }}
       - name: Send public files to vps
         run: |
           rsync -az --delete ./app/build/ admin@vps2.vps.webdock.cloud:/home/admin/acc.app.clothingloop.org/
