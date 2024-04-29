@@ -41,6 +41,8 @@
     "@ionic/react": "^7.1.2",
     "@ionic/react-router": "^7.1.2",
     "@ionic/storage": "^4.0.0",
+    "@mattermost/client": "9.7.0-0",
+    "@mattermost/types": "9.7.0-0",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
     "@uidotdev/usehooks": "^2.4.1",
@@ -60,6 +62,7 @@
     "react-router": "*",
     "react-router-dom": "*",
     "react-transition-group": "^4.4.5",
+    "use-debounce": "^10.0.0",
     "redaxios": "^0.5.1",
     "tailwindcss": "^3.3.3",
     "use-long-press": "^3.1.5"
@@ -82,5 +85,13 @@
     "vite": "^4.5.3",
     "vite-plugin-pwa": "^0.16.4",
     "vitest": "^0.34.6"
+  },
+  "overrides": {
+    "@mattermost/client": {
+      "@mattermost/types": "$@mattermost/types"
+    },
+    "@mattermost/types": {
+      "typescript": "$typescript"
+    }
   }
 }

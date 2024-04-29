@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"time"
 
@@ -40,6 +41,7 @@ type Chain struct {
 	RoutePrivacy                  int
 	LastAbandonedAt               sql.NullTime
 	LastAbandonedRecruitmentEmail sql.NullTime
+	ChatRoomIDs                   []string `gorm:"column:chat_room_ids;serializer:json"`
 }
 
 type ChainResponse struct {
@@ -61,6 +63,7 @@ type ChainResponse struct {
 	Theme            *string  `json:"theme,omitempty" gorm:"chains.theme"`
 	IsAppDisabled    *bool    `json:"is_app_disabled,omitempty" gorm:"chains.is_app_disabled"`
 	RoutePrivacy     *int     `json:"route_privacy,omitempty" gorm:"chains.route_privacy"`
+	ChatRoomIDs      []string `json:"chat_room_ids,omitempty" gorm:"chains.chat_room_ids"`
 }
 
 // Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members
@@ -284,4 +287,12 @@ func ChainCheckIfExist(db *gorm.DB, ChainUID string, checkIfIsOpenToNewMembers b
 	}
 
 	return row.ID, true, nil
+}
+
+func (c *Chain) SaveChannelIDs(db *gorm.DB) error {
+	b, err := json.Marshal(c.ChatRoomIDs)
+	if err != nil {
+		return err
+	}
+	return db.Exec(`UPDATE chains SET chat_room_ids = ? WHERE id = ?`, string(b), c.ID).Error
 }

@@ -22,6 +22,9 @@ func Routes() *gin.Engine {
 	db := app.DatabaseInit()
 	app.MailInit()
 
+	app.ChatInit(app.Config.MM_URL, app.Config.MM_TOKEN)
+	app.ChatSetDefaultSettings(app.ChatClient)
+
 	if app.Config.ENV == app.EnvEnumProduction || (app.Config.SENDINBLUE_API_KEY != "" && app.Config.ENV == app.EnvEnumDevelopment) {
 		app.BrevoInit()
 	}
@@ -150,6 +153,11 @@ func Routes() *gin.Engine {
 	v2.DELETE("/chain/unapproved-user", controllers.ChainDeleteUnapproved)
 	v2.POST("/chain/poke", controllers.Poke)
 	v2.GET("/chain/near", controllers.ChainGetNear)
+
+	// chat
+	v2.PATCH("/chat/user", controllers.ChatPatchUser)
+	v2.POST("/chat/channel/create", controllers.ChatCreateChannel)
+	v2.POST("/chat/channels/join", controllers.ChatJoinChannels)
 
 	// bag
 	v2.GET("/bag/all", controllers.BagGetAll)

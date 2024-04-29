@@ -46,6 +46,8 @@ type User struct {
 	AcceptedTOHJSON       *bool           `json:"accepted_toh,omitempty" gorm:"-:migration;<-:false"`
 	AcceptedDPAJSON       *bool           `json:"accepted_dpa,omitempty" gorm:"-:migration;<-:false"`
 	NotificationChainUIDs []string        `json:"notification_chain_uids,omitempty" gorm:"-"`
+	ChatUserID            null.String     `json:"-"`
+	ChatPass              null.String     `json:"-"`
 }
 
 func (u *User) AddUserChainsToObject(db *gorm.DB) error {

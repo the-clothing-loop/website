@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/golang/glog"
@@ -16,9 +17,11 @@ func main() {
 	if app.Config.ENV == app.EnvEnumProduction || app.Config.ENV == app.EnvEnumAcceptance {
 		flag.Set("log_dir", "/var/log/clothingloop-api/")
 		flag.Set("alsologtostderr", "true")
+		slog.SetLogLoggerLevel(slog.LevelWarn)
 	} else {
 		flag.Set("log_dir", "./")
 		flag.Set("logtostderr", "true")
+		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
 	flag.Parse()
 	defer glog.Flush()

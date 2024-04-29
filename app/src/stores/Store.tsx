@@ -13,6 +13,7 @@ import { userGetByUID, userGetAllByChain, userUpdate } from "../api/user";
 import { chainRemoveUser } from "../api/chain";
 import { IS_WEB } from "../utils/is_web";
 import { cookieUserUID } from "./browser_storage";
+import { RespChatPatchUser } from "../api/chat";
 
 type ChainHeaders = Record<string, string>;
 
@@ -20,6 +21,8 @@ interface StorageAuth {
   user_uid: string;
   token: string;
 }
+
+export type MmData = Partial<RespChatPatchUser>;
 
 export enum IsAuthenticated {
   Unknown,
@@ -70,6 +73,8 @@ export const StoreContext = createContext({
   setRouteListView: (v: RouteListView) => {},
   connError: (err: any) => Promise.resolve(IsAuthenticated.Unknown),
   shouldBlur: false,
+  mmData: {} as MmData,
+  setMmData: (d: MmData) => {},
 });
 
 const errLoopMustBeSelected =
@@ -88,6 +93,7 @@ export function StoreProvider({
     undefined,
   );
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
+  const [mmData, setMmData] = useState<MmData>({});
   const [listOfChains, setListOfChains] = useState<Array<Chain>>([]);
   const [route, setRoute] = useState<UID[]>([]);
   const [bags, setBags] = useState<Bag[]>([]);
@@ -133,6 +139,12 @@ export function StoreProvider({
     if (version !== 1) {
       await _storage.set("version", 1);
     }
+    setBagListView((await _storage.get("bag_list_view")) || "dynamic");
+    let _mmToken = (await _storage.get("mm_token")) || "";
+    setMmData((s) => {
+      s.chat_token = _mmToken;
+      return { ...s };
+    });
     _setBagListView((await _storage.get("bag_list_view")) || "dynamic");
     _setBagSort((await _storage.get("bag_sort")) || "aToZ");
     _setRouteListView((await _storage.get("route_list_view")) || "dynamic");
@@ -147,6 +159,8 @@ export function StoreProvider({
     window.axios.defaults.auth = undefined;
     await storage.remove("auth");
     await storage.remove("chain_uid");
+    await storage.remove("mm_token");
+    setMmData({});
     setAuthUser(null);
     _setChain(null);
     setChainHeaders(undefined);
@@ -226,8 +240,6 @@ export function StoreProvider({
       _isAuthenticated = await connError(err);
       return _isAuthenticated;
     }
-
-    // at this point it is safe to assume _isAuthenticated is LoggedIn
 
     window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
     let chainUID: string | null = null;
@@ -508,6 +520,8 @@ export function StoreProvider({
         setRouteListView,
         connError,
         shouldBlur,
+        mmData,
+        setMmData,
       }}
     >
       {children}

@@ -136,7 +136,8 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddIsAppDisabled {
 		sql += `,
-		chains.is_app_disabled`
+		chains.is_app_disabled,
+		chains.chat_room_ids`
 	}
 	if query.AddRoutePrivacy {
 		sql += `,
@@ -179,6 +180,7 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddIsAppDisabled {
 		body.IsAppDisabled = &chain.IsAppDisabled
+		body.ChatRoomIDs = chain.ChatRoomIDs
 	}
 	if query.AddRoutePrivacy {
 		body.RoutePrivacy = &chain.RoutePrivacy
@@ -438,7 +440,7 @@ func ChainDelete(c *gin.Context) {
 
 	httperr := services.ChainDelete(db, chain)
 	if httperr != nil {
-		c.AbortWithError(httperr.Status, httperr)
+		httperr.StatusWithError(c)
 		return
 	}
 }
