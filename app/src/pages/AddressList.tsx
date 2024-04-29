@@ -113,6 +113,7 @@ export default function AddressList() {
           number: i + 1,
           isUserPaused,
           routerLink: isPrivate ? undefined : "/address/" + user.uid,
+          isChainAdmin,
         });
       }
 
