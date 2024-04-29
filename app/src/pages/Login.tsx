@@ -18,8 +18,8 @@ import {
 import {
   arrowBack,
   arrowForwardOutline,
+  mailOutline,
   mailUnreadOutline,
-  sendOutline,
 } from "ionicons/icons";
 import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,6 +28,8 @@ import toastError from "../../toastError";
 import { loginEmail } from "../api/login";
 import { StoreContext } from "../stores/Store";
 import { AppLauncher } from "@capacitor/app-launcher";
+
+const VERSION = import.meta.env.VITE_APP_VERSION;
 
 enum State {
   idle,
@@ -211,7 +213,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 {sentState === State.success ? (
                   <IonIcon slot="end" icon={mailUnreadOutline} />
                 ) : sentState === State.loading ? null : (
-                  <IonIcon slot="end" icon={sendOutline} />
+                  <IonIcon slot="end" icon={mailOutline} />
                 )}
               </IonButton>
             </IonItem>
@@ -260,6 +262,12 @@ export default function Login(props: { isLoggedIn: boolean }) {
                 </IonItem>
               </Fragment>
             ) : null}
+            <div
+              className="tw-text-center tw-mt-2 -tw-mb-4 tw-text-medium"
+              key="version"
+            >
+              {VERSION}
+            </div>
           </div>
           <div className="tw-relative tw-flex-grow -tw-m-4 tw-mt-8 tw-inset-0 -tw-z-10 tw-bg-green tw-overflow-hidden">
             <div className="tw-absolute tw-overflow-hidden tw-inset-0 -tw-z-10">

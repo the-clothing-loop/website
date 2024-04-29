@@ -1,4 +1,4 @@
-/group_vars/all.yml
-/templates/maint/style.min.css
-/templates/imageproxy
-/images
+/vps1/group_vars/all.yml
+/vps1/templates/maint/style.min.css
+/vps1/templates/imageproxy
+/*/images

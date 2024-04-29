@@ -92,6 +92,7 @@ export default function RoutePrivacyExample(props: {
               isUserPaused={user.paused_until !== null}
               number={i + 5}
               routerLink={undefined}
+              isChainAdmin={true}
             />
           </div>
         );

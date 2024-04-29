@@ -8,7 +8,7 @@ import {
   IonButtons,
   IonIcon,
 } from "@ionic/react";
-import { useContext, useMemo } from "react";
+import { Fragment, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { TOptionsBase } from "i18next";
 import { RouteComponentProps } from "react-router";
@@ -84,9 +84,14 @@ export default function HelpItem({
             >
               {item.title}
             </h1>
-            {item.content.split("\n").map((s, i) => (
-              <p key={i}>{s}</p>
-            ))}
+            <p>
+              {item.content.split("\n").map((s, i) => (
+                <Fragment key={i}>
+                  {s === "" ? null : <span>{s}</span>}
+                  <br />
+                </Fragment>
+              ))}
+            </p>
           </IonText>
           <IonIcon
             aria-hidden="true"

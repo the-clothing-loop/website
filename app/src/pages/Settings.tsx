@@ -53,7 +53,7 @@ import {
   warningOutline,
 } from "ionicons/icons";
 import dayjs from "../dayjs";
-import isPaused from "../utils/is_paused";
+import IsPaused from "../utils/is_paused";
 import Badges from "../components/SizeBadge";
 import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
@@ -201,7 +201,7 @@ export default function Settings() {
     Share.share({ url });
   }
 
-  let isUserPaused = isPaused(authUser, chain?.uid);
+  let isUserPaused = IsPaused(authUser, chain?.uid);
   let pausedDayjs = isUserPaused ? dayjs(authUser!.paused_until) : null;
   let showExpandButton = (chain?.description.length || 0) > 200;
   let emptyDescription = (chain?.description.length || 0) == 0;

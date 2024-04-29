@@ -15,7 +15,7 @@ import { useContext, useMemo } from "react";
 import { RouteComponentProps } from "react-router";
 import UserCard from "../components/UserCard";
 import { StoreContext } from "../stores/Store";
-import isPaused from "../utils/is_paused";
+import IsPaused from "../utils/is_paused";
 import { t } from "i18next";
 import Badges from "../components/SizeBadge";
 import AddressBagCard from "../components/Bags/AddressBagCard";
@@ -29,7 +29,7 @@ export default function AddressItem({
     let userUID = match.params.uid;
     return chainUsers.find((u) => u.uid === userUID) || null;
   }, [match.params.uid, chainUsers]);
-  const isUserPaused = isPaused(user, chain?.uid);
+  const isUserPaused = IsPaused(user, chain?.uid);
 
   const userBags = useMemo(() => {
     return bags.filter((b) => b.user_uid === user?.uid);

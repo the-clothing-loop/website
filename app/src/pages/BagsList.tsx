@@ -61,6 +61,7 @@ import UserLink from "../components/Bags/UserLink";
 import SelectUserModal from "../components/Bags/SelectUserModal";
 import { useDebounce } from "@uidotdev/usehooks";
 import dayjs from "../dayjs";
+import IsPaused from "../utils/is_paused";
 
 type State = { bag_id?: number } | undefined;
 
@@ -408,6 +409,7 @@ export default function BagsList() {
               {bagsCard.map((bag) => {
                 const user = chainUsers.find((u) => u.uid === bag.user_uid);
                 if (!user) return null;
+                const isPaused = IsPaused(user, chain?.uid);
                 let routeIndex = route.indexOf(user.uid);
                 if (routeIndex === -1) return null;
                 const { bagUpdatedAt, isBagTooOldMe, isBagTooOldHost } =
@@ -458,7 +460,11 @@ export default function BagsList() {
                         routerLink={"/address/" + user.uid}
                         className="tw-py-3 tw-px-2 tw-block tw-bg-light"
                       >
-                        <UserLink user={user} routeIndex={routeIndex} />
+                        <UserLink
+                          user={user}
+                          routeIndex={routeIndex}
+                          isPaused={isPaused}
+                        />
                       </IonRouterLink>
                     </Card>
                   </IonCol>
@@ -472,6 +478,7 @@ export default function BagsList() {
                 const { bagUpdatedAt, isBagTooOldMe, isBagTooOldHost } =
                   useBagTooOld(authUser, isChainAdmin, bag);
                 let isOpen = openCard == bag.id;
+                const isPaused = IsPaused(user, chain?.uid);
                 return (
                   <IonCol
                     size="12"
@@ -536,7 +543,11 @@ export default function BagsList() {
                             routerLink={"/address/" + user.uid}
                             className="tw-w-[115px] tw-h-[35px]"
                           >
-                            <UserLink user={user} routeIndex={routeIndex} />
+                            <UserLink
+                              user={user}
+                              routeIndex={routeIndex}
+                              isPaused={isPaused}
+                            />
                           </IonButton>
                         )}
                         {isChainAdmin ? (

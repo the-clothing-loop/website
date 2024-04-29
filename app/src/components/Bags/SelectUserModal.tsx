@@ -20,12 +20,15 @@ import {
   IonSearchbar,
   IonRadioGroup,
   IonRadio,
+  IonIcon,
 } from "@ionic/react";
 import { RefObject, useContext, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { bagPut } from "../../api/bag";
 import { UID } from "../../api/types";
 import { StoreContext } from "../../stores/Store";
+import IsPaused from "../../utils/is_paused";
+import { pauseCircleSharp } from "ionicons/icons";
 
 const MIN_USERS_FOR_SEARCH = 15;
 
@@ -40,7 +43,7 @@ export default function SelectUserModal({
   modal: RefObject<HTMLIonModalElement>;
   didDismiss?: (e: IonModalCustomEvent<OverlayEventDetail<any>>) => void;
 }) {
-  const { chain, chainUsers, route, authUser, setChain } =
+  const { chain, chainUsers, route, authUser, setChain, isChainAdmin } =
     useContext(StoreContext);
   const { t, i18n } = useTranslation();
 
@@ -166,11 +169,23 @@ export default function SelectUserModal({
 
               const isSelected = selected === user.uid;
               const isMe = user.uid === authUser?.uid;
+              const isPaused = IsPaused(user, chain?.uid);
               return (
-                <IonItem lines="full" key={user.uid}>
-                  <span slot="start" className="!tw-font-bold">{`#${
-                    i + 1
-                  }`}</span>
+                <IonItem
+                  disabled={isPaused && !isChainAdmin}
+                  lines="full"
+                  key={user.uid}
+                >
+                  <div slot="start" className="tw-flex tw-items-center">
+                    {isPaused ? (
+                      <IonIcon
+                        icon={pauseCircleSharp}
+                        className="tw-w-6 tw-h-6"
+                      />
+                    ) : (
+                      <span className="!tw-font-bold">{`#${i + 1}`}</span>
+                    )}
+                  </div>
                   <IonLabel>
                     <h2
                       className={`tw-text-lg ${isMe ? "tw-text-primary" : ""} ${

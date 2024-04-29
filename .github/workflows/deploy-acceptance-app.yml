@@ -28,13 +28,13 @@ jobs:
       - name: Install SSH key
         uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
-          private-key: ${{ secrets.VPS1_PRIVKEY }}
-          known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
+          private-key: ${{ secrets.VPS2_PRIVKEY }}
+          private-key-name: id_ed25519
+          known-hosts: ${{ secrets.VPS2_KNOWNHOSTS }}
       - name: Send public files to vps
         run: |
-          ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-app-acceptance"
-          rsync -az --delete ./app/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-app-acceptance/
-          ssh admin@vpsnode1.vps.webdock.cloud "\
-          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-app-acceptance/ /var/caddy/acc.app.clothingloop.org/; \
+          rsync -az --delete ./app/build/ admin@vps2.vps.webdock.cloud:/home/admin/acc.app.clothingloop.org/
+          ssh admin@vps2.vps.webdock.cloud "\
+          sudo chmod -R 0775 /home/admin/acc.app.clothingloop.org/; \
           sudo systemctl reload caddy"
           echo "done"

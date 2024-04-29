@@ -6,7 +6,7 @@ import { paymentInitiate, priceIDs } from "../../../api/payment";
 
 import { GinParseErrors } from "../util/gin-errors";
 import useForm from "../util/form.hooks";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 
@@ -312,15 +312,18 @@ function DonationFormContent() {
         </div>
 
         <p className="text-xs mb-2">
-          {t("byDonatingYouAgreeWithOur")}
-          <a
-            href={localizePath("/privacy-policy")}
-            target="_blank"
-            className="link"
-          >
-            {t("privacyPolicy")}
-          </a>
-          .
+          <Trans
+            i18nKey="byDonatingYouAgreeWithOur"
+            components={{
+              "1": (
+                <a
+                  href={localizePath("/privacy-policy")}
+                  target="_blank"
+                  className="link"
+                />
+              ),
+            }}
+          />
         </p>
 
         <ul className="flex flex-row mb-2">
@@ -343,20 +346,61 @@ export default function DonationForm() {
     const stripePromise = loadStripe(stripePublicKey);
 
     return (
-      <div className="max-w-screen-sm mx-auto px-4">
-        <h1 className="text-4xl text-secondary font-serif font-bold mb-6">
-          {t("donateToTheClothingLoop")}
-        </h1>
-        <div
-          className="leading-relaxed mb-6"
-          dangerouslySetInnerHTML={{
-            __html: t("thanksForConsideringADonation")!,
-          }}
-        ></div>
+      <div className="container mx-auto px-5 md:px-20 grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <h1 className="text-4xl text-secondary font-serif font-bold mb-6">
+            {t("donateToTheClothingLoop")}
+          </h1>
+          <div
+            className="leading-relaxed mb-6"
+            dangerouslySetInnerHTML={{
+              __html: t("thanksForConsideringADonation")!,
+            }}
+          ></div>
 
-        <Elements stripe={stripePromise}>
-          <DonationFormContent />
-        </Elements>
+          <Elements stripe={stripePromise}>
+            <DonationFormContent />
+          </Elements>
+        </div>
+        <div>
+          <div className="prose prose-sm bg-blue-light/20 p-4">
+            <a
+              target="_blank"
+              href="https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/bijzondere_regelingen/goede_doelen/algemeen_nut_beogende_instellingen/wat_is_een_anbi"
+              className="inline-block rounded lg:ml-auto ring ring-transparent hover:ring-blue-light transition-colors"
+            >
+              <img
+                alt="anbi logo"
+                className="w-28 lg:w-32 m-0"
+                src="https://images.clothingloop.org/0x0/anbi_fc_blauw.jpg"
+              />
+            </a>
+
+            <ul>
+              <li>
+                An ANBI does not pay donation tax over donations that are used
+                for general interest. The maximum amount of the exemption for
+                donation tax in 2021 is € 3.244.
+              </li>
+              <li>
+                An ANBI does not pay inheritance tax over inheritances that are
+                used as contributions to the mission of the organization. The
+                maximum amount of the exemption in inheritance tax is € 2.244.
+              </li>
+              <li>An ANBI can be entitled to a return of the energy tax.</li>
+              <li>
+                The work done by volunteers for an institution with an
+                ANBI-status can be seen as a gift under certain conditions for
+                the tax assessment.
+              </li>
+              <li>
+                Donors that make donations to an ANBI can - if the donation is
+                recorded - deduct that donation in their assessment income- or
+                partnership tax.
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     );
   }

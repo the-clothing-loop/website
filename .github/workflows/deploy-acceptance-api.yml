@@ -23,21 +23,18 @@ jobs:
       - name: Build binary
         run: make build-server
         working-directory: ./server
-      - name: Rename binary
-        run: mv server cl-api-acceptance
-        working-directory: ./server
       - name: Install SSH key
         uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
-          private-key: ${{ secrets.VPS1_PRIVKEY }}
-          known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
+          private-key: ${{ secrets.VPS2_PRIVKEY }}
+          private-key-name: id_ed25519
+          known-hosts: ${{ secrets.VPS2_KNOWNHOSTS }}
       - name: Send binary to vps and restart service
         run: |
-          rsync -az --delete ./server/cl-api-acceptance admin@vpsnode1.vps.webdock.cloud:/home/admin/
-          ssh admin@vpsnode1.vps.webdock.cloud "\
-          sudo rm /home/clothingloop/opt/api-acceptance; \
-          sudo cp /home/admin/cl-api-acceptance /home/clothingloop/opt/api-acceptance; \
-          sudo chown root:root /home/clothingloop/opt/api-acceptance; \
-          sudo chmod 0775 /home/clothingloop/opt/api-acceptance; \
-          sudo systemctl restart cl-api-acceptance"
+          rsync -az --delete ./server/server admin@vps2.vps.webdock.cloud:/home/admin/acc.api.clothingloop.org/server.next
+          ssh admin@vps2.vps.webdock.cloud "\
+          task-services stop my_api_acc; \
+          sudo mv /home/admin/acc.api.clothingloop.org/server.next /home/admin/acc.api.clothingloop.org/server; \
+          sudo chmod +x /home/admin/acc.api.clothingloop.org/server; \
+          task-services start my_api_acc;"
           echo "done"

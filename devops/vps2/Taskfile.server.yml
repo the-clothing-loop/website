@@ -1,0 +1,18 @@
+version: "3"
+
+tasks:
+  service:caddy:reload: sudo systemctl reload caddy
+  service:caddy:restart: sudo systemctl restart caddy
+  service:mm:restart: sudo systemctl restart mattermost
+  
+services:
+  my_imageproxy: /usr/local/bin/imageproxy -cache memory:200:8h -addr localhost:8083 -allowHosts images.clothingloop.org -baseURL https://images.clothingloop.org/original/
+  my_mailpit: /usr/local/bin/mailpit --smtp 127.0.0.1:8084 --listen 127.0.0.1:8085 --smtp-auth-allow-insecure --smtp-auth-accept-any --webroot /mailpit/
+  my_api_prod: 
+    cmd: /home/admin/api.clothingloop.org/server
+    dir: /home/admin/api.clothingloop.org/
+    env: SERVER_ENV=production 
+  my_api_acc:
+    cmd: /home/admin/acc.api.clothingloop.org/server
+    dir: /home/admin/acc.api.clothingloop.org/
+    env: SERVER_ENV=acceptance
