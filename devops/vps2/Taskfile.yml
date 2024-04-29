@@ -1,0 +1,62 @@
+version: "3"
+
+tasks:
+  publish:taskfileserver:
+    - rsync -av ./Taskfile.server.yml vps2.clothingloop.org:/home/admin/Taskfile.yml
+
+  publish:imageproxy:sync:
+    - rsync -av vps2.clothingloop.org:/home/admin/images.clothingloop.org/ ./images/
+    - rsync -av ./images/ vps2.clothingloop.org:/home/admin/images.clothingloop.org/
+  publish:imageproxy:restart:
+    - ssh vps2.clothingloop.org /bin/bash -c "cd /home/admin; task-services restart my_imageproxy"
+  
+  publish:config:prod:
+    - rsync -av ./configs/config.prod.yml vps2.clothingloop.org:/home/admin/api.clothingloop.org/config.prod.yml
+  publish:config:acc:
+    - rsync -av ./configs/config.acc.yml vps2.clothingloop.org:/home/admin/acc.api.clothingloop.org/config.acc.yml
+  publish:caddy:
+    dotenv: 
+      - "configs/.env-caddy"
+    cmds:
+      - rm configs/Caddyfile.tmp || true
+      - cp configs/Caddyfile configs/Caddyfile.tmp
+      - sed -i '' -e 's/TUFJTFBJVF9QQVNTV09SRA==/'"$MAILPIT_PASSWORD_BCRYPT"'/' configs/Caddyfile.tmp
+      - sed -i '' -e 's/PRERENDER_TOKEN/'"$PRERENDER_TOKEN"'/' configs/Caddyfile.tmp
+      - caddy validate --config ./configs/Caddyfile.tmp || exit 1
+      - rsync -av ./configs/Caddyfile.tmp vps2.clothingloop.org:/home/admin/
+      - ssh -t vps2.clothingloop.org "sudo chown caddy:sudo /home/admin/Caddyfile.tmp"
+      - ssh -t vps2.clothingloop.org "sudo mv /home/admin/Caddyfile.tmp /etc/caddy/Caddyfile"
+      - ssh -t vps2.clothingloop.org "sudo systemctl reload caddy"
+
+  publish:api:prod:
+    - cd ../../server; GOOS=linux GOARCH=amd64 CGO_ENABLED=0 make build-server
+    - rsync -av ../../server/server vps2.clothingloop.org:/home/admin/api.clothingloop.org/server
+    - ssh vps2.clothingloop.org /bin/bash -c "cd /home/admin; task-services stop my_api_prod || true"
+    - ssh vps2.clothingloop.org /bin/bash -c "cd /home/admin; task-services start my_api_prod || true"
+  publish:api:acc:
+    - cd ../../server; GOOS=linux GOARCH=amd64 CGO_ENABLED=0 make build-server
+    - ssh vps2.clothingloop.org /bin/bash -c "cd /home/admin; task-services stop my_api_acc || true"
+    - rsync -av ../../server/server vps2.clothingloop.org:/home/admin/acc.api.clothingloop.org/server
+    - ssh vps2.clothingloop.org /bin/bash -c "cd /home/admin; task-services start my_api_acc || true"
+
+  publish:fe:prod:
+    - cd ../../frontend; npm run build:production
+    - rsync -av --delete ../../frontend/build/ vps2.clothingloop.org:/home/admin/www.clothingloop.org/
+    - ssh vps2.clothingloop.org "sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/www.clothingloop.org/ /var/www/www.clothingloop.org/"
+    - ssh vps2.clothingloop.org "sudo systemctl reload caddy"
+  publish:fe:acc:
+    - cd ../../frontend; npm run build:acceptance
+    - rsync -av --delete ../../frontend/build/ vps2.clothingloop.org:/home/admin/acc.clothingloop.org/
+    - ssh vps2.clothingloop.org "sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/acc.clothingloop.org/ /var/www/acc.clothingloop.org/"
+    - ssh vps2.clothingloop.org "sudo systemctl reload caddy"
+
+  publish:app:prod:
+    - cd ../../app; npm run build:production
+    - rsync -av ../../app/build/ vps2.clothingloop.org:/home/admin/app.clothingloop.org/
+    - ssh vps2.clothingloop.org "sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/app.clothingloop.org/ /var/www/app.clothingloop.org/"
+    - ssh vps2.clothingloop.org "sudo systemctl reload caddy"
+  publish:app:acc:
+    - cd ../../app; npm run build:acceptance
+    - rsync -av --delete ../../app/build/ vps2.clothingloop.org:/home/admin/acc.app.clothingloop.org/
+    - ssh vps2.clothingloop.org "sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/acc.app.clothingloop.org/ /var/www/acc.app.clothingloop.org/"
+    - ssh vps2.clothingloop.org "sudo systemctl reload caddy"

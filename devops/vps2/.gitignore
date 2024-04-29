@@ -1,0 +1,5 @@
+/bin
+/configs/config.acc.yml
+/configs/config.prod.yml
+/configs/*.tmp
+/configs/.env-caddy

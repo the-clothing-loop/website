@@ -32,9 +32,8 @@ jobs:
           known-hosts: ${{ secrets.VPS1_KNOWNHOSTS }}
       - name: Send public files to vps
         run: |
-          ssh admin@vpsnode1.vps.webdock.cloud "mkdir -p /home/admin/cl-app-acceptance"
-          rsync -az --delete ./app/build/ admin@vpsnode1.vps.webdock.cloud:/home/admin/cl-app-acceptance/
+          rsync -az --delete ./app/build/ admin@vps2.vps.webdock.cloud:/home/admin/acc.app.clothingloop.org/
           ssh admin@vpsnode1.vps.webdock.cloud "\
-          sudo rsync -z -rlt --chown=caddy:caddy --chmod=0775 --delete /home/admin/cl-app-acceptance/ /var/caddy/acc.app.clothingloop.org/; \
+          sudo chmod -R 0775 /home/admin/acc.app.clothingloop.org/; \
           sudo systemctl reload caddy"
           echo "done"
