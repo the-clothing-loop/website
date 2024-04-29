@@ -13,7 +13,7 @@ export default function PopoverOnHover({ message, className }: IProps) {
       aria-label={message}
       data-tip={message}
     >
-      <span className="feather feather-help-circle text-lg" />
+      <span className="icon-help-circle text-lg" />
     </div>
   );
 }

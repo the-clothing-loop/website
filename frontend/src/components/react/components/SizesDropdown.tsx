@@ -43,8 +43,8 @@ export default function SizesDropdown(props: {
       >
         <span className="truncate">{btnLabel}</span>
         <span
-          className={`ltr:pl-2 rtl:pr-2 feather ${
-            dropdown.open ? "feather-arrow-up" : "feather-arrow-down"
+          className={`ltr:pl-2 rtl:pr-2 ${
+            dropdown.open ? "icon-arrow-up" : "icon-arrow-down"
           }`}
         ></span>
       </label>

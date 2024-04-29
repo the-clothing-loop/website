@@ -102,7 +102,7 @@ export default function Contribute() {
           </h2>
         </div>
         <div className="flex-grow mx-4 mb-2">
-          <span className="feather feather-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+          <span className="icon-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
           <address className="inline">{event.address}</address>
         </div>
         <div className="m-4 mt-0">
@@ -169,7 +169,7 @@ export default function Contribute() {
                 href={localizePath("/donate")}
               >
                 <span>{t("donate")}</span>
-                <span className="ms-3 feather feather-heart text-base font-bold" />
+                <span className="ms-3 icon-heart text-base font-bold" />
               </a>
               <h2 className="text-xl md:text-2xl font-bold text-secondary mb-4">
                 <Trans i18nKey="startALoop" ns="contribute" />
@@ -182,8 +182,8 @@ export default function Contribute() {
                 className="btn btn-primary w-full sm:w-auto btn-outline text-black md:mb-8"
               >
                 {t("startNewLoop", { ns: "translation" })}
-                <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
-                <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
+                <span className="icon-arrow-right ml-3 rtl:hidden"></span>
+                <span className="icon-arrow-left mr-3 ltr:hidden"></span>
               </a>
             </div>
             <a
@@ -255,7 +255,7 @@ export default function Contribute() {
                   className="max-xs:w-full btn btn-accent text-white mb-8"
                   href={localizePath("/events")}
                 >
-                  <span className="feather feather-calendar me-3 text-xl" />
+                  <span className="icon-calendar me-3 text-xl" />
                   {t("events", { ns: "translation" })}
                 </a>
               </div>
@@ -295,7 +295,7 @@ export default function Contribute() {
               <div className="mb-8">
                 <div className="inline-flex w-auto">
                   <a
-                    className="btn btn-square bg-instagram text-white feather feather-instagram text-2xl"
+                    className="btn btn-square bg-instagram text-white icon-instagram text-2xl"
                     href="https://www.instagram.com/theclothingloop/"
                     target="_blank"
                   ></a>
@@ -343,7 +343,7 @@ export default function Contribute() {
                   target="_blank"
                   href="https://github.com/the-clothing-loop/website/issues"
                 >
-                  <span className="feather feather-git-branch me-2" />
+                  <span className="icon-git-branch me-2" />
                   <span>Github</span>
                 </a>
                 <a
@@ -351,7 +351,7 @@ export default function Contribute() {
                   href="mailto:hello@clothingloop.org"
                   aria-label="Our email address"
                 >
-                  <span className="feather feather-mail text-lg"></span>
+                  <span className="icon-mail text-lg"></span>
                 </a>
               </div>
             </div>
@@ -421,8 +421,8 @@ export default function Contribute() {
                 className="btn btn-secondary btn-outline"
               >
                 {t("contactUs", { ns: "translation" })}
-                <span className="feather feather-arrow-right ml-4 rtl:hidden" />
-                <span className="feather feather-arrow-left mr-4 ltr:hidden" />
+                <span className="icon-arrow-right ml-4 rtl:hidden" />
+                <span className="icon-arrow-left mr-4 ltr:hidden" />
               </a>
             </div>
             <div
@@ -446,7 +446,7 @@ export default function Contribute() {
                   type="video/mp4"
                 />
               </video>
-              <div className="absolute bottom-6 left-7 text-white leading-none text-2xl feather feather-play group-hover:opacity-0 transition-opacity"></div>
+              <div className="absolute bottom-6 left-7 text-white leading-none text-2xl icon-play group-hover:opacity-0 transition-opacity"></div>
             </div>
           </div>
         </div>

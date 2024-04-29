@@ -150,6 +150,11 @@
   --btn-text-case: default;
 }
 
+[class^="icon-"],
+[class*=" icon-"] {
+  font-weight: normal !important;
+}
+
 .prose {
   @apply prose-headings2:font-serif prose-headings2:text-secondary prose-headings2:font-bold prose-a:link max-w-screen-md prose-p:my-3;
 }

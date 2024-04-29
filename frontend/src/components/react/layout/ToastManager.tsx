@@ -45,23 +45,23 @@ function ToastComponent(props: {
   closeFunc: (id: number) => void;
 }) {
   let classes = "p-4 shadow-lg border";
-  let icon = "mr-3 feather";
+  let icon = "mr-3 icon";
   switch (props.toast.type) {
     case "info":
-      icon += " feather-info";
+      icon += " icon-info";
       classes += " bg-base-100 border-teal";
       break;
     case "success":
       classes += " bg-success border-success";
-      icon += " feather-check-circle";
+      icon += " icon-check-circle";
       break;
     case "warning":
       classes += " bg-yellow border-yellow";
-      icon += " feather-alert-triangle";
+      icon += " icon-alert-triangle";
       break;
     case "error":
       classes += " bg-error border-error";
-      icon += " feather-alert-octagon";
+      icon += " icon-alert-octagon";
       break;
   }
 

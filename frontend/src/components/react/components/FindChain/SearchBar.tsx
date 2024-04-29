@@ -195,7 +195,7 @@ export default function SearchBar(props: Props) {
 
         <button type="submit" className="grow btn btn-primary" ref={refSubmit}>
           <span className="hidden sm:inline">{t("search")}</span>
-          <span className="sm:hidden inline feather feather-search"></span>
+          <span className="sm:hidden inline icon-search"></span>
         </button>
       </div>
     </form>

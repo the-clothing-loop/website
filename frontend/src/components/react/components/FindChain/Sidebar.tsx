@@ -141,9 +141,9 @@ export default function SideBar({
             onClick={handleClose}
             className="absolute top-0 sm:top-2 right-2 rtl:right-auto rtl:left-2 btn btn-md sm:btn-sm text-2xl btn-circle btn-accent tooltip tooltip-left flex justify-center"
           >
-            <span className="feather feather-arrow-left hidden sm:ltr:block"></span>
-            <span className="feather feather-arrow-right hidden sm:rtl:block"></span>
-            <span className="feather feather-x sm:hidden"></span>
+            <span className="icon-arrow-left hidden sm:ltr:block"></span>
+            <span className="icon-arrow-right hidden sm:rtl:block"></span>
+            <span className="icon-x sm:hidden"></span>
           </button>
         </div>
 
@@ -241,7 +241,7 @@ function SideBarChainItem(props: {
                   onClick={handleClickViewChain}
                 >
                   {t("viewLoop")}
-                  <span className="feather feather-shield ml-3"></span>
+                  <span className="icon-shield ml-3"></span>
                 </button>
               ) : null}
             </div>
@@ -252,12 +252,12 @@ function SideBarChainItem(props: {
           userChain.is_approved ? (
             <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 inline-flex items-center">
               {t("joined")}
-              <span className="feather feather-check ml-3"></span>
+              <span className="icon-check ml-3"></span>
             </p>
           ) : (
             <p className="px-3 font-semibold text-sm border border-secondary h-8 inline-flex items-center text-secondary">
               {t("pendingApproval")}
-              <span className="feather feather-user-check ml-3"></span>
+              <span className="icon-user-check ml-3"></span>
             </p>
           )
         ) : props.chain.open_to_new_members ? (
@@ -268,8 +268,8 @@ function SideBarChainItem(props: {
               className="btn btn-sm btn-primary"
             >
               {t("join")}
-              <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
-              <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
+              <span className="icon-arrow-right ml-3 rtl:hidden"></span>
+              <span className="icon-arrow-left mr-3 ltr:hidden"></span>
             </button>
           ) : (
             <p className="bg-primary px-3 font-semibold text-sm border border-primary h-8 inline-flex items-center">
@@ -279,7 +279,7 @@ function SideBarChainItem(props: {
         ) : (
           <p className="px-3 font-semibold text-sm border border-secondary h-8 inline-flex items-center text-secondary">
             {t("closed")}
-            <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
+            <span className="icon-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
           </p>
         )}
       </div>

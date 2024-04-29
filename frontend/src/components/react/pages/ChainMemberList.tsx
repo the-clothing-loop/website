@@ -469,7 +469,7 @@ export default function ChainMemberList() {
                   )}
                   href={shareLink}
                 >
-                  <span className="feather feather-share text-lg" />
+                  <span className="icon-share text-lg" />
                   <span className="absolute top-full end-0 lg:end-auto -mt-1 group-hover:mt-1 text-xs bg-secondary shadow-lg rounded-sm py-1 px-2  whitespace-nowrap group-hover:bg-secondary-focus transition-all opacity-40 group-hover:opacity-100">
                     {t("shareLink")}
                   </span>
@@ -558,7 +558,7 @@ export default function ChainMemberList() {
                     >
                       {t("editLoop")}
                       <span
-                        className="ltr:ml-2 rtl:mr-2 feather feather-edit-2"
+                        className="ltr:ml-2 rtl:mr-2 icon-edit-2"
                         aria-hidden
                       />
                     </a>
@@ -570,7 +570,7 @@ export default function ChainMemberList() {
                     >
                       {t("deleteLoop")}
                       <span
-                        className="ltr:ml-2 rtl:mr-2 feather feather-trash"
+                        className="ltr:ml-2 rtl:mr-2 icon-trash"
                         aria-hidden
                       />
                     </button>
@@ -693,8 +693,8 @@ export default function ChainMemberList() {
                 >
                   {t("map")}
                   <span
-                    className={`feather ${
-                      isOpenRouteMapPopup ? "feather-x" : "feather-map"
+                    className={`${
+                      isOpenRouteMapPopup ? "icon-x" : "icon-map"
                     } ms-3`}
                   />
                 </button>
@@ -1108,7 +1108,7 @@ function ParticipantsTable(props: {
       message: t("addCoHost"),
       content: () => (
         <p className="text-center">
-          <span className="feather feather-user inline-block mr-1" />
+          <span className="icon-user inline-block mr-1" />
           {user.name}
         </p>
       ),
@@ -1143,11 +1143,11 @@ function ParticipantsTable(props: {
               className="absolute top-5 ltr:right-4 rtl:left-4 tooltip-left"
             />
             <p className="mb-4">
-              <span className="feather feather-user inline-block mr-1" />
+              <span className="icon-user inline-block mr-1" />
               {user.name}
             </p>
             <p className="mb-1 font-semibold text-sm">{props.chain.name}</p>
-            <span className="feather feather-arrow-down inline-block mb-1" />
+            <span className="icon-arrow-down inline-block mb-1" />
           </div>
           <select
             className="w-full select select-sm rounded-none disabled:text-base-300 border-2 border-black"
@@ -1529,7 +1529,7 @@ function RouteTable(props: {
                       <div
                         tabIndex={0}
                         aria-label="drag"
-                        className="hidden lg:inline-block p-1 ml-2 rounded-full hover:bg-white cursor-grab active:cursor-grabbing feather feather-maximize-2 -rotate-45"
+                        className="hidden lg:inline-block p-1 ml-2 rounded-full hover:bg-white cursor-grab active:cursor-grabbing icon-maximize-2 -rotate-45"
                       ></div>
                     </td>
                     <td
@@ -1553,7 +1553,7 @@ function RouteTable(props: {
                     <td className={`${classTdDragging} text-right`}>
                       <button
                         aria-label="go to edit"
-                        className="btn btn-circle btn-sm btn-ghost bg-base-100 feather feather-info"
+                        className="btn btn-circle btn-sm btn-ghost bg-base-100 icon-info"
                         onClick={() => props.onGoToEditTableItem(u.uid)}
                       ></button>
                     </td>
@@ -1583,7 +1583,7 @@ function SortButton(props: {
     <button
       aria-label={t("sort")!}
       className={
-        "btn btn-xs btn-circle feather feather-chevrons-down " +
+        "btn btn-xs btn-circle icon-chevrons-down " +
         props.className +
         " " +
         classIcon
@@ -1597,7 +1597,7 @@ function DropdownMenu(props: { items: ReactElement[]; classes: string }) {
   return (
     <div className={"dropdown ".concat(props.classes)}>
       <label tabIndex={0} className="btn btn-ghost">
-        <span className="text-xl feather feather-more-vertical" />
+        <span className="text-xl icon-more-vertical" />
       </label>
       <ul
         tabIndex={0}
@@ -1678,7 +1678,7 @@ function BagsColumn(props: { bags: Bag[] }) {
     bagsJSX.push(
       <div
         key={0}
-        className="relative w-8 h-8 flex items-center justify-center feather feather-shopping-bag scale-[0.9] text-xl text-white rounded-full cursor-pointer transition-transform group-active/bag:scale-[0.7]"
+        className="relative w-8 h-8 flex items-center justify-center icon-shopping-bag scale-[0.9] text-xl text-white rounded-full cursor-pointer transition-transform group-active/bag:scale-[0.7]"
         style={{
           backgroundColor: firstBag.color,
         }}

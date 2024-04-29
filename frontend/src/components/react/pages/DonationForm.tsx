@@ -298,7 +298,7 @@ function DonationFormContent() {
 
         <div className="mb-2">
           {loading ? (
-            <span className="feather feather-loader animate-spin" />
+            <span className="icon-loader animate-spin" />
           ) : (
             <button
               type="submit"

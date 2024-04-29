@@ -99,8 +99,8 @@ export const Newsletter = () => {
                 type="submit"
               >
                 {t("submit")}
-                <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
-                <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
+                <span className="icon-arrow-right ml-3 rtl:hidden"></span>
+                <span className="icon-arrow-left mr-3 ltr:hidden"></span>
               </button>
             </div>
           </div>

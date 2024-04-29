@@ -66,7 +66,7 @@ export default function RouteMapPopup(props: {
                 onClick={returnToPreviousRoute}
               >
                 {t("routeUndoOptimize")}
-                <span className="feather feather-corner-left-up ms-2" />
+                <span className="icon-corner-left-up ms-2" />
               </button>
             ) : (
               <button
@@ -75,7 +75,7 @@ export default function RouteMapPopup(props: {
                 onClick={optimizeRoute}
               >
                 {t("routeOptimize")}
-                <span className="feather feather-zap ms-2" />
+                <span className="icon-zap ms-2" />
               </button>
             )}
             <div>

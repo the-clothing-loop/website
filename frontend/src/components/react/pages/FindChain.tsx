@@ -529,10 +529,10 @@ export default function FindChain() {
               onClick={() => handleLocation()}
             >
               <span
-                className={`feather text-base-content text-lg ${
+                className={`text-base-content text-lg ${
                   locationLoading
-                    ? "feather-loader animate-spin"
-                    : "feather-navigation"
+                    ? "icon-loader animate-spin"
+                    : "icon-navigation"
                 }`}
               />
             </button>
@@ -545,7 +545,7 @@ export default function FindChain() {
                 }`}
                 onClick={() => mapZoom(map, "+")}
               >
-                <span className="feather feather-plus text-base-content text-lg" />
+                <span className="icon-plus text-base-content text-lg" />
               </button>
               <button
                 className={`btn rounded-b-full p-0 w-12 h-12 ${
@@ -555,7 +555,7 @@ export default function FindChain() {
                 }`}
                 onClick={() => mapZoom(map, "-")}
               >
-                <span className="feather feather-minus text-base-content text-lg" />
+                <span className="icon-minus text-base-content text-lg" />
               </button>
             </div>
           </div>

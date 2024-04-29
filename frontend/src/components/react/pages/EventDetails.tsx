@@ -167,8 +167,8 @@ export default function EventDetails() {
                   className="btn btn-primary sm:me-4"
                 >
                   <span className="relative mr-4 rtl:mr-1 rtl:ml-3" aria-hidden>
-                    <span className="inline-block feather feather-calendar relative transform scale-125"></span>
-                    <span className="absolute -bottom-2 -right-2.5 transform scale-90 feather feather-download"></span>
+                    <span className="inline-block icon-calendar relative transform scale-125"></span>
+                    <span className="absolute -bottom-2 -right-2.5 transform scale-90 icon-download"></span>
                   </span>
                   {t("addToCalendar")}
                 </a>
@@ -178,7 +178,7 @@ export default function EventDetails() {
                       href={localizePath("/events/edit/?event=" + event.uid)}
                       className="btn btn-secondary btn-outline sm:me-4"
                     >
-                      <span className="feather feather-edit mr-3 rtl:mr-0 rtl:ml-3"></span>
+                      <span className="icon-edit mr-3 rtl:mr-0 rtl:ml-3"></span>
                       {t("edit")}
                     </a>
                     <button
@@ -187,7 +187,7 @@ export default function EventDetails() {
                       aria-label={t("delete")!}
                       onClick={handleDeleteEvent}
                     >
-                      <span className="feather feather-trash"></span>
+                      <span className="icon-trash"></span>
                     </button>
                   </>
                 ) : null}
@@ -206,7 +206,7 @@ export default function EventDetails() {
                         </dt>
                         <dd className="mb-1 ltr:ml-4 rtl:mr-4">
                           <span
-                            className="ltr:mr-2 rtl:ml-2 inline-block feather feather-clock"
+                            className="ltr:mr-2 rtl:ml-2 inline-block icon-clock"
                             aria-hidden
                           ></span>
                           {dateEnd ? (
@@ -220,11 +220,11 @@ export default function EventDetails() {
                                   {date?.format("LT")}
                                 </span>
                                 <span
-                                  className="inline-block feather feather-arrow-right mx-2 rtl:hidden"
+                                  className="inline-block icon-arrow-right mx-2 rtl:hidden"
                                   aria-hidden
                                 ></span>{" "}
                                 <span
-                                  className="inline-block feather feather-arrow-left mx-2 ltr:hidden"
+                                  className="inline-block icon-arrow-left mx-2 ltr:hidden"
                                   aria-hidden
                                 ></span>
                                 <span className="font-sans text-lg">
@@ -238,11 +238,11 @@ export default function EventDetails() {
                                 </span>
                                 <br />
                                 <span
-                                  className="block feather feather-arrow-down"
+                                  className="block icon-arrow-down"
                                   aria-hidden
                                 ></span>
                                 <span
-                                  className="ltr:mr-2 rtl:ml-2 inline-block feather feather-clock rotate-90"
+                                  className="ltr:mr-2 rtl:ml-2 inline-block icon-clock rotate-90"
                                   aria-hidden
                                 ></span>
                                 <span className="font-sans text-lg">
@@ -262,7 +262,7 @@ export default function EventDetails() {
                       {t("price") + ":"}
                     </dt>
                     <dd className="mb-1 ltr:ml-4 rtl:mr-4">
-                      <span className="ltr:mr-2 rtl:ml-2 inline-block feather feather-tag"></span>
+                      <span className="ltr:mr-2 rtl:ml-2 inline-block icon-tag"></span>
                       {event.price_currency ? (
                         <span className="font-sans text-lg" key="price">
                           {event.price_currency + " " + eventPriceValue}
@@ -280,7 +280,7 @@ export default function EventDetails() {
                         </dt>
                         <dd className="mb-1 ltr:ml-4 rtl:mr-4">
                           <span
-                            className="ltr:mr-2 rtl:ml-2 feather feather-map-pin"
+                            className="ltr:mr-2 rtl:ml-2 icon-map-pin"
                             aria-hidden
                           ></span>
                           <address
@@ -330,11 +330,11 @@ export default function EventDetails() {
                         >
                           <span className="ltr:mr-2 rtl:ml-2 inline-block relative">
                             <span
-                              className="block feather feather-circle"
+                              className="block icon-circle"
                               aria-hidden
                             ></span>
                             <span
-                              className="absolute top-1 left-0 block feather feather-circle"
+                              className="absolute top-1 left-0 block icon-circle"
                               aria-hidden
                             ></span>
                           </span>
@@ -351,7 +351,7 @@ export default function EventDetails() {
                           target="_blank"
                         >
                           <span
-                            className="ltr:mr-2 rtl:ml-2 inline-block feather feather-external-link"
+                            className="ltr:mr-2 rtl:ml-2 inline-block icon-external-link"
                             aria-hidden
                           ></span>
                           <span className="group-hover:underline">
@@ -405,7 +405,7 @@ export default function EventDetails() {
                             onInput={handleUploadImage}
                           />
                           <div
-                            className="btn btn-ghost bg-white/90 hover:bg-white btn-sm btn-square feather feather-upload"
+                            className="btn btn-ghost bg-white/90 hover:bg-white btn-sm btn-square icon-upload"
                             aria-label="Upload image"
                           ></div>
                         </label>

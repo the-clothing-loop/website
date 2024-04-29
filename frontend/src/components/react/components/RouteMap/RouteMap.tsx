@@ -174,13 +174,13 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
     );
   }
 
-  let lineTypeIcon = "feather-git-commit";
+  let lineTypeIcon = "icon-git-commit";
   let lineTypeHoverText = t("showRouteOrder");
   if (lineType === "line") {
-    lineTypeIcon = "feather-minus";
+    lineTypeIcon = "icon-minus";
     lineTypeHoverText = t("showRoute");
   } else if (lineType === "dot") {
-    lineTypeIcon = "feather-circle";
+    lineTypeIcon = "icon-circle";
     lineTypeHoverText = t("showAddress");
   }
   return (
@@ -195,9 +195,7 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
           onClick={() => handleNextLineType()}
           data-tip={lineTypeHoverText}
         >
-          <span
-            className={`feather text-base-content text-lg ${lineTypeIcon}`}
-          />
+          <span className={`text-base-content text-lg ${lineTypeIcon}`} />
         </button>
 
         <div className="btn-group btn-group-vertical">
@@ -210,7 +208,7 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
             }`}
             onClick={() => handleMapZoom("+")}
           >
-            <span className="feather feather-plus text-base-content text-lg" />
+            <span className="icon-plus text-base-content text-lg" />
           </button>
           <button
             type="button"
@@ -221,7 +219,7 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
             }`}
             onClick={() => handleMapZoom("-")}
           >
-            <span className="feather feather-minus text-base-content text-lg" />
+            <span className="icon-minus text-base-content text-lg" />
           </button>
         </div>
       </div>

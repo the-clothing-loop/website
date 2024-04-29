@@ -331,7 +331,7 @@ export default function AddressForm(props: {
               {openCheckAddress ? (
                 loading ? (
                   <div className="flex items-center justify-center h-36">
-                    <div className="feather feather-loader animate-spin text-2xl py-12" />
+                    <div className="icon-loader animate-spin text-2xl py-12" />
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">

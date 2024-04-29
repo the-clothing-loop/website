@@ -281,14 +281,14 @@ function SubmitButton({
         return (
           <p className="bg-primary px-3 font-semibold text-sm border border-primary h-12 inline-flex items-center">
             {t("joined")}
-            <span className="feather feather-check ml-3 rtl:ml-0 rtl:mr-3"></span>
+            <span className="icon-check ml-3 rtl:ml-0 rtl:mr-3"></span>
           </p>
         );
       } else {
         return (
           <p className="px-3 font-semibold text-sm border border-secondary h-12 inline-flex items-center text-secondary">
             {t("pendingApproval")}
-            <span className="feather feather-user-check ml-3 rtl:ml-0 rtl:mr-3"></span>
+            <span className="icon-user-check ml-3 rtl:ml-0 rtl:mr-3"></span>
           </p>
         );
       }
@@ -298,7 +298,7 @@ function SubmitButton({
     return (
       <p className="px-3 font-semibold text-sm border border-secondary h-12 inline-flex items-center text-secondary">
         {t("closed")}
-        <span className="feather feather-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
+        <span className="icon-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
       </p>
     );
   }
@@ -306,8 +306,8 @@ function SubmitButton({
   return (
     <button type="submit" className="btn btn-primary" form="address-form">
       {t("join")}
-      <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
-      <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
+      <span className="icon-arrow-right ml-4 rtl:hidden"></span>
+      <span className="icon-arrow-left mr-4 ltr:hidden"></span>
     </button>
   );
 }
