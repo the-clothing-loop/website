@@ -27,6 +27,7 @@ jobs:
         uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
           private-key: ${{ secrets.VPS2_PRIVKEY }}
+          private-key-name: id_ed25519
           known-hosts: ${{ secrets.VPS2_KNOWNHOSTS }}
       - name: Send binary to vps and restart service
         run: |
