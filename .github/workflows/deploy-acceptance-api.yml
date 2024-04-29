@@ -32,7 +32,7 @@ jobs:
       - name: Send binary to vps and restart service
         run: |
           rsync -az --delete ./server/server admin@vps2.vps.webdock.cloud:/home/admin/acc.api.clothingloop.org/server.next
-          ssh admin@vpsnode1.vps.webdock.cloud "\
+          ssh admin@vps2.vps.webdock.cloud "\
           task-services stop my_api_acc; \
           sudo mv /home/admin/acc.api.clothingloop.org/server.next /home/admin/acc.api.clothingloop.org/server; \
           sudo chmod +x /home/admin/acc.api.clothingloop.org/server; \
