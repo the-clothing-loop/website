@@ -128,3 +128,9 @@
 
 - Fix incorrect Loop status
 - Fix keyboard error
+
+# v2.5
+
+- Fix automatic listing of addresses
+- Fix sms button on missing phonenumber
+- Add version to login page
