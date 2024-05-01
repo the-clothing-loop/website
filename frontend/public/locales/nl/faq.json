@@ -34,14 +34,14 @@
       "answer": "Je hebt eerder al een account aangemaakt bij de Clothing Loop. Om je bij een nieuwe Loop aan te melden, moet je eerst inloggen:<ol><li>Klik in de rechterbovenhoek om in te loggen.</li><li>Voer jouw e-mailadres in dat je hebt gebruikt om uw Loop te registreren.</li><li>Controleer jouw e-mail (en spamfolder!) voor onze verificatielink. We gebruiken een link in plaats van een wachtwoord!</li><li>Daarna kan jij je aanmelden bij de desbetreffende nieuwe Loop.</li></ol>"
     }
   },
-  "faqForApp": "FAQ for the App",
+  "faqForApp": "Veelgestelde vragen over de App",
   "arrApp": {
     "0": {
       "question": "What is the Clothing Loop App?",
       "answer": "<strong>The Clothing Loop App is made to make organizing a Loop easier.</strong> You can start using the app, if you are part of a Loop. A host can decide together with the participants if they want to start using the app to organize their Loop.<br/>In the app: you can find the rules of your local Loop, you can find out who to bring the bag to next, where the bags are and post bulky items that do not fit into the bag."
     },
     "1": {
-      "question": "Where can I find the app?",
+      "question": "Waar kan ik de app vinden?",
       "answer": "You can find the app in <a target='_blank' href='https://play.google.com/store/apps/details?id=org.clothingloop.app'>Google Playstore</a>, <a target='_blank' href='https://apps.apple.com/us/app/my-clothing-loop/id6451443500'>Apple Appstore</a>, or as web-version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>"
     },
     "2": {
@@ -49,11 +49,11 @@
       "answer": "Yes, <strong>as a host you are able to change, adjust, and add rules in the App</strong>. Participants are not able to change the rules. To change the rules, click in the upper right corner on Change. After you have changed the rules, click on Save to save your changes."
     },
     "3": {
-      "question": "Which addresses can I see?",
+      "question": "Welke adressen kan ik zien?",
       "answer": "As a host, you can see everybody's information in your Loop. As a participant, you can only see the information of the two participants before and after you. A participant is also able to see the information of a host."
     },
     "4": {
-      "question": "How to set a bag to my name?",
+      "question": "Hoe zet ik een tas op mijn naam?",
       "answer": "If you have received a bag, you can set a bag to your name in the tab of Bags. Click on the picture of the Bag and search for your name. Also, note the date of when the bag arrived. It is important to note that you have received the bag every time."
     },
     "5": {
@@ -65,7 +65,7 @@
       "answer": "Yes, you can use the app while you are involved in multiple Loops. If you go to Info, you can switch between Loops, after you click on the name of the Loop."
     },
     "7": {
-      "question": "Why do I only see an SMS button?",
+      "question": "Waarom zie ik alleen een SMS-knop?",
       "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
     }
   },
@@ -116,7 +116,7 @@
       "answer": "Vooral wanneer groepen groter worden, is het belangrijk om ervoor te zorgen dat mensen niet worden gebombardeerd met (irrelevante) berichten. Je kunt enkele regels instellen voor wat wel en niet gedeeld mag worden via de app van de groep. Bijvoorbeeld:<br /><br /><span>Ja,</span> in de app:<ul><li>Selfies met leuke items uit de tas</li><li>Complimenten aan anderen (gebruik de emotican functie!</li><li>Logistiek en organisatorische relevante updates</li></ul><span>Nee,</span> niet in de app:<ul><li>Alles ongerelateerd aan de Clothing Loop (verzoeken voor enquêtes, uitnodigingen voor nieuwe groepen, fondswerving, memes, enz.). Als je van iedereen iets wilt vragen, gebruik dan de poll functie van Whatsapp of bijvoorbeeld LouLou. </li></ul>"
     },
     "8_5": {
-      "question": "Why don’t I see a participant that signed up?",
+      "question": "Waarom zie ik geen gebruiker die zich aangemeld heeft?",
       "answer": "When you know a participant has signed up, but you don’t see them in the participant’s list in Account and you haven’t received the automatic email from us. It’s probably because the participant’s email address hasn’t been verified. <strong>Please ask a new participant to log in.</strong> Once they’ve logged in, their account is verified. Now you’ll receive the email and see them in the New list."
     },
     "9": {
