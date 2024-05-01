@@ -5,6 +5,7 @@ import { useStore } from "@nanostores/react";
 import useLocalizePath from "../util/localize_path.hooks";
 import useHydrated from "../util/hydrated.hooks";
 import ToastManager from "../layout/ToastManager";
+import PopupForm from "./PopupForm";
 
 function Navbar(props: { pathname: string }) {
   const { t, i18n } = useTranslation();
@@ -21,6 +22,7 @@ function Navbar(props: { pathname: string }) {
   return (
     <>
       <ToastManager />
+      <PopupForm/>
       <div className="container mx-auto z-50 bg-white flex flex-row justify-between lg:justify-start items-center md:px-20 shadow-none">
         <a
           aria-label="Clothing Loop logo"
