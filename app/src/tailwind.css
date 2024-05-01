@@ -87,9 +87,8 @@
   .tw-shadow-bags::before {
     @apply tw-block tw-w-full tw-h-full tw-absolute -tw-z-10;
     content: "";
-    outline: 2px solid #fff;
+    transform: scale(1.15);
     border-radius: 100%;
-    outline-offset: -0.3px;
     background-color: #fff;
   }
 }
