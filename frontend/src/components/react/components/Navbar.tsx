@@ -22,7 +22,7 @@ function Navbar(props: { pathname: string }) {
   return (
     <>
       <ToastManager />
-      <PopupForm/>
+      <PopupForm />
       <div className="container mx-auto z-50 bg-white flex flex-row justify-between lg:justify-start items-center md:px-20 shadow-none">
         <a
           aria-label="Clothing Loop logo"
