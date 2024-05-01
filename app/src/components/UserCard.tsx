@@ -82,7 +82,7 @@ export default function UserCard({
 }) {
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
-  const isEmailPrivate = IsPrivate(user.email);
+  const isPhonePrivate = !user.phone_number || IsPrivate(user.phone_number);
   const isUserAdmin = useMemo(
     () => IsChainAdmin(user, chain?.uid),
     [user, chain],
@@ -158,7 +158,7 @@ export default function UserCard({
         </IonText>
       </div>
       <IonList>
-        {isEmailPrivate && !user.phone_number ? null : (
+        {isPhonePrivate ? null : (
           <>
             <IonItem
               lines="none"

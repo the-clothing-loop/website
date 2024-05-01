@@ -48,7 +48,7 @@ export default function Counters() {
         </div>
 
         <div>
-          <div className="h-20 text-6xl font-serif text-stroke-base-100">
+          <div className="h-20 text-5xl font-serif text-stroke-base-100">
             {isVisible ? (
               <SingleCounter end={info.total_users || 0} step={397} />
             ) : (
@@ -72,7 +72,7 @@ export default function Counters() {
           <div className="h-20 text-4xl font-serif flex items-center">
             <span>
               <span className="text-stroke-base-100 tracking-wide">
-                {isVisible ? <SingleCounter end={1197375} step={9000} /> : "0"}
+                {new Intl.NumberFormat().format(1197375)}
               </span>
 
               <span className="text-lg ms-1">&nbsp;{t("nCo2")}</span>
@@ -85,11 +85,7 @@ export default function Counters() {
           <div className="h-20 text-4xl font-serif flex items-center">
             <span>
               <span className="text-stroke-base-100 tracking-wide">
-                {isVisible ? (
-                  <SingleCounter end={580544000} step={9375000} />
-                ) : (
-                  "0"
-                )}
+                {new Intl.NumberFormat().format(580544000)}
               </span>
               <span className="text-lg ms-1">&nbsp;{t("nLiters")}</span>
             </span>

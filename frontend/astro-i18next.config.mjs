@@ -5,7 +5,14 @@ const languages = getLanguages(false);
 /** @type {import('astro-i18next').AstroI18nextConfig} */
 export default {
   locales: languages,
-  namespaces: ["about", "faq", "testimonials", "translation", "contribute"],
+  namespaces: [
+    "about",
+    "faq",
+    "testimonials",
+    "translation",
+    "contribute",
+    "survey",
+  ],
   defaultNamespace: "translation",
   load: ["server", "client"], // load i18next server and client side
   i18nextServerPlugins: {

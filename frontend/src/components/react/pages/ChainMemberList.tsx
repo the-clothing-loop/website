@@ -9,10 +9,12 @@ import {
   type ReactElement,
   lazy,
   Suspense,
+  useRef,
 } from "react";
 
 import dayjs from "../util/dayjs";
 import simplifyDays from "../util/simplify-days";
+import QrCode from "qrcode";
 
 import { UserDataExport } from "../components/DataExport";
 import {
@@ -51,6 +53,7 @@ import useLocalizePath from "../util/localize_path.hooks";
 import { loginSuperAsGenerateLink } from "../../../api/login";
 import ChainDescription from "../components/FindChain/ChainDescription";
 import { useLegal } from "../util/user.hooks";
+import isSSR from "../util/is_ssr";
 const RouteMapPopup = lazy(
   () => import("../components/RouteMap/RouteMapPopup"),
 );
@@ -91,6 +94,9 @@ export default function ChainMemberList() {
   const [error, setError] = useState("");
   const [selectedTable, setSelectedTable] = useState<SelectedTable>("route");
   const addCopyAttributes = useToClipboard();
+  const refQrCode = useRef<HTMLCanvasElement>(null);
+  const refQrCodeDialog = useRef<HTMLDialogElement>(null);
+  const [openQrCode, setOpenQrCode] = useState(false);
 
   const participantsSortUsers = useMemo(() => {
     if (!users || !chainUID) return [];
@@ -152,6 +158,10 @@ export default function ChainMemberList() {
       setPublished(oldValue);
       setOpenToNewMembers(oldValueOpenToNewMembers);
     }
+  }
+
+  function toggleDialog() {
+    setOpenQrCode((s) => !s);
   }
 
   async function handleChangeOpenToNewMembers(
@@ -339,6 +349,18 @@ export default function ChainMemberList() {
     refresh(true);
   }, [authUser]);
 
+  useEffect(() => {
+    if (isSSR()) return;
+    const shareLink =
+      PUBLIC_BASE_URL + localizePath("/loops/users/signup/?chain=" + chainUID);
+    console.log("sharelink", shareLink);
+    QrCode.toCanvas(refQrCode.current, shareLink, {
+      width: 300,
+    }).catch((err) => {
+      console.error(err);
+    });
+  });
+
   const [filteredUsersHost /*filteredUsersNotHost*/] = useMemo(() => {
     let host: User[] = [];
     let notHost: User[] = [];
@@ -455,7 +477,7 @@ export default function ChainMemberList() {
         <div className="flex flex-col lg:flex-row max-w-screen-xl mx-auto pt-4 lg:mb-6">
           <section className="lg:w-1/3">
             <div className="relative bg-teal-light p-8">
-              <label
+              <div
                 className={`absolute top-4 end-4 ${
                   chain.published || authUser?.is_root_admin ? "" : "hidden"
                 }`}
@@ -470,11 +492,38 @@ export default function ChainMemberList() {
                   href={shareLink}
                 >
                   <span className="icon-share text-lg" />
-                  <span className="absolute top-full end-0 lg:end-auto -mt-1 group-hover:mt-1 text-xs bg-secondary shadow-lg rounded-sm py-1 px-2  whitespace-nowrap group-hover:bg-secondary-focus transition-all opacity-40 group-hover:opacity-100">
+                  <span className="absolute -top-8 end-0 lg:end-auto text-sm bg-secondary shadow-lg rounded-sm py-1 px-2 whitespace-nowrap group-hover:opacity-0 transition-opacity opacity-60 ">
                     {t("shareLink")}
                   </span>
                 </a>
-              </label>
+                <button
+                  type="button"
+                  onClick={toggleDialog}
+                  className={"mx-auto mt-4 btn btn-circle btn-sm tooltip tooltip-left lg:!tooltip-top flex group focus:ring-4".concat(
+                    openQrCode ? " btn-outline" : " btn-secondary",
+                  )}
+                >
+                  <span
+                    className={"text-lg".concat(
+                      openQrCode ? " icon-x" : " icon-qr-code",
+                    )}
+                  />
+                </button>
+                <dialog
+                  open={openQrCode}
+                  ref={refQrCodeDialog}
+                  className="absolute z-20 top-0 ltr:right-full rtl:left-full me-4 p-4 w-[300px] box-content bg-white shadow-lg"
+                >
+                  <canvas
+                    dir="ltr"
+                    ref={refQrCode}
+                    className=" aspect-square"
+                  />
+                  <p className="text-xs select-all break-all leading-snug bg-grey-light/30 p-1">
+                    {shareLink}
+                  </p>
+                </dialog>
+              </div>
 
               <h1 className="font-serif font-bold text-secondary mb-6 pr-10 text-4xl break-words">
                 {chain.name}

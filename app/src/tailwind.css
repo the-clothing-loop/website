@@ -81,6 +81,16 @@
       rgba(255, 213, 52, 1) 40px
     );
   }
+  .tw-shadow-bags {
+    @apply tw-relative;
+  }
+  .tw-shadow-bags::before {
+    @apply tw-block tw-w-full tw-h-full tw-absolute -tw-z-10;
+    content: "";
+    transform: scale(1.15);
+    border-radius: 100%;
+    background-color: #fff;
+  }
 }
 
 ion-radio::part(container) {
@@ -105,4 +115,10 @@ ion-radio.radio-checked::part(mark) {
   border-color: #fff;
 
   transform: rotate(45deg);
+}
+
+ion-item.ion-color-primary::part(detail-icon) {
+  --detail-icon-color: var(--ion-color-light) !important;
+  --detail-icon-opacity: 0.8;
+  /* display: none !important; */
 }
