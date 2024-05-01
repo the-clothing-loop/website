@@ -81,6 +81,11 @@
       rgba(255, 213, 52, 1) 40px
     );
   }
+  .tw-shadow-bags {
+    box-shadow: 0px 0px 3px 2px #fff;
+    border-radius: 5px;
+    background-color: #fff;
+  }
 }
 
 ion-radio::part(container) {
@@ -105,4 +110,10 @@ ion-radio.radio-checked::part(mark) {
   border-color: #fff;
 
   transform: rotate(45deg);
+}
+
+ion-item.ion-color-primary::part(detail-icon) {
+  --detail-icon-color: var(--ion-color-light) !important;
+  --detail-icon-opacity: 0.8;
+  /* display: none !important; */
 }
