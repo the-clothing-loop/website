@@ -7,7 +7,7 @@ const maxDate = new Date(2024, 6, 1);
 const url = "http://google.com";
 
 export default function PopupForm() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("survey");
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (isSSR()) return;
@@ -40,28 +40,23 @@ export default function PopupForm() {
       <div className="bg-white">
         <form className="bg-purple/10 border-2 max-w-screen-xs md:border-e-0 border-purple shadow-lg p-4">
           <h1 className="text-lg font-bold text-purple font-serif mb-2">
-            Lorem, ipsum dolor sit amet consectetur
+            {t("title")}
           </h1>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloribus,
-            aperiam eligendi neque aliquam error voluptatibus commodi,
-            distinctio hic facere in vitae facilis vero magnam similique!
-            Mollitia saepe blanditiis veritatis magnam.
-          </p>
+          <p>{t("body")}</p>
           <div className="flex flex-col md:flex-row justify-between md:justify-start gap-2 mt-4">
             <button
               type="button"
               className="btn md:btn-sm bg-purple text-white"
               onClick={submit}
             >
-              Form
+              {t("btnSubmit")}
             </button>
             <button
               type="button"
               className="btn md:btn-sm btn-ghost bg-white"
               onClick={close}
             >
-              {t("close")}
+              {t("close", { ns: "translation" })}
             </button>
           </div>
         </form>
