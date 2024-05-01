@@ -61,7 +61,7 @@ function ToastComponent(props: {
       break;
     case "error":
       classes += " bg-error border-error";
-      icon += " icon-alert-octagon";
+      icon += " icon-octagon-alert";
       break;
   }
 

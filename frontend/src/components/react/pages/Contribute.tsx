@@ -343,7 +343,7 @@ export default function Contribute() {
                   target="_blank"
                   href="https://github.com/the-clothing-loop/website/issues"
                 >
-                  <span className="icon-git-branch me-2" />
+                  <span className="icon-github me-2" />
                   <span>Github</span>
                 </a>
                 <a

@@ -607,7 +607,7 @@ export default function ChainMemberList() {
                     >
                       {t("editLoop")}
                       <span
-                        className="ltr:ml-2 rtl:mr-2 icon-edit-2"
+                        className="ltr:ml-2 rtl:mr-2 icon-pencil-2"
                         aria-hidden
                       />
                     </a>
@@ -1646,7 +1646,7 @@ function DropdownMenu(props: { items: ReactElement[]; classes: string }) {
   return (
     <div className={"dropdown ".concat(props.classes)}>
       <label tabIndex={0} className="btn btn-ghost">
-        <span className="text-xl icon-more-vertical" />
+        <span className="text-xl icon-ellipsis-vertical" />
       </label>
       <ul
         tabIndex={0}

@@ -139,7 +139,7 @@ export default function AdminDashboard() {
                   href={localizePath("/users/edit/?user=me")}
                 >
                   {t("editAccount")}
-                  <span className="icon-edit ml-2 rtl:ml-0 rtl:mr-2"></span>
+                  <span className="icon-pencil ml-2 rtl:ml-0 rtl:mr-2"></span>
                 </a>
                 <button
                   className="btn btn-sm btn-secondary btn-outline bg-white h-auto mb-4 sm:mr-4 text-black group"
@@ -154,7 +154,7 @@ export default function AdminDashboard() {
                   onClick={deleteClicked}
                 >
                   <span className="text-danger">{t("deleteUserBtn")}</span>
-                  <span className="icon-alert-octagon ml-2 rtl:ml-0 rtl:mr-2"></span>
+                  <span className="icon-octagon-alert ml-2 rtl:ml-0 rtl:mr-2"></span>
                 </button>
               </div>
             </div>

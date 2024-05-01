@@ -178,7 +178,7 @@ export default function EventDetails() {
                       href={localizePath("/events/edit/?event=" + event.uid)}
                       className="btn btn-secondary btn-outline sm:me-4"
                     >
-                      <span className="icon-edit mr-3 rtl:mr-0 rtl:ml-3"></span>
+                      <span className="icon-pencil mr-3 rtl:mr-0 rtl:ml-3"></span>
                       {t("edit")}
                     </a>
                     <button

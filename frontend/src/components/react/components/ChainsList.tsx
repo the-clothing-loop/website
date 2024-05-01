@@ -259,7 +259,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                               chains?.length > 5 ? "btn-sm" : ""
                             } ${userChain ? "" : "btn-disabled"}`}
                           >
-                            <span className="text-xl icon-more-vertical" />
+                            <span className="text-xl icon-ellipsis-vertical" />
                           </label>
                           {userChain ? (
                             <ul

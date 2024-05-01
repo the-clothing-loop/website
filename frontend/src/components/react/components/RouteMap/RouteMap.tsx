@@ -174,7 +174,7 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
     );
   }
 
-  let lineTypeIcon = "icon-git-commit";
+  let lineTypeIcon = "icon-git-commit-horizontal";
   let lineTypeHoverText = t("showRouteOrder");
   if (lineType === "line") {
     lineTypeIcon = "icon-minus";
