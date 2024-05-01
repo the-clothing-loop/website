@@ -82,8 +82,14 @@
     );
   }
   .tw-shadow-bags {
-    box-shadow: 0px 0px 3px 2px #fff;
-    border-radius: 5px;
+    @apply tw-relative;
+  }
+  .tw-shadow-bags::before {
+    @apply tw-block tw-w-full tw-h-full tw-absolute -tw-z-10;
+    content: "";
+    outline: 2px solid #fff;
+    border-radius: 100%;
+    outline-offset: -0.3px;
     background-color: #fff;
   }
 }

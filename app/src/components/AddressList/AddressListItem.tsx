@@ -95,12 +95,14 @@ export default function AddressListItem({
           >
             {bags.map((b) => (
               <div
-                className={"tw-w-4 tw-h-4 tw-mb-0.5".concat(
+                className={"tw-w-4 tw-h-4".concat(
                   isMe ? " tw-shadow-bags" : "",
                 )}
                 key={b.id}
               >
-                <BagSVG bag={{ number: "", color: b.color }} isList />
+                <div className="-tw-translate-y-px">
+                  <BagSVG bag={{ number: "", color: b.color }} isList />
+                </div>
               </div>
             ))}
           </div>
