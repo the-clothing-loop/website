@@ -68,7 +68,7 @@ export default function AddressListItem({
             {user.name}
           </h5>
           <span
-            className={"tw-inline-block tw-mt-0.5 ion-text-ellipsis tw-max-w-[220px] tw-text-xs ".concat(
+            className={"tw-inline-block tw-mt-0.5 ion-text-ellipsis tw-h-4 tw-max-w-[220px] tw-text-xs ".concat(
               isMe ? "tw-text-light" : "tw-opacity-60",
             )}
           >
@@ -77,7 +77,7 @@ export default function AddressListItem({
                 <span>{user.address}</span>
               ) : null
             ) : isAddressPrivate ? (
-              <span>&nbsp;</span>
+             null
             ) : (
               <span>{user.address}</span>
             )}
