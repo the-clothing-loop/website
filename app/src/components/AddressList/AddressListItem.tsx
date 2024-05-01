@@ -76,9 +76,7 @@ export default function AddressListItem({
               isChainAdmin ? (
                 <span>{user.address}</span>
               ) : null
-            ) : isAddressPrivate ? (
-             null
-            ) : (
+            ) : isAddressPrivate ? null : (
               <span>{user.address}</span>
             )}
           </span>
