@@ -12,12 +12,12 @@ import {
   addOutline
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { IonAlertCustomEvent, SelectChangeEventDetail } from "@ionic/core";
+import { IonAlertCustomEvent } from "@ionic/core";
 import { PostList } from "@mattermost/types/posts";
 import { User } from "../../api/types";
 import ChatPost from "./ChatPost";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { useLongPress } from "use-long-press";
 import { c } from "vitest/dist/reporters-5f784f42";
