@@ -189,7 +189,8 @@ export default function Chat() {
     }
   }
 
-  async function onDeleteChannel(name: string) {
+  async function onDeleteChannel() {
+    console.log(selectedChannel);
     if (!chain || !mmClient) {
       if (!chain) console.error("chain not found");
       if (!mmClient) console.error("mmClient not found");
@@ -197,7 +198,7 @@ export default function Chat() {
     }
     try {
       console.info("Deleting channel", name);
-      // Delete function
+      // Delete channel
     } catch (err) {
       console.error(err);
     }
@@ -313,7 +314,7 @@ export default function Chat() {
             onCreateChannel={onCreateChannel}
             onSelectChannel={onSelectChannel}
             onRenameChannel={onRenameChannel}
-            onDeleteChannelSubmit={onDeleteChannel}
+            onDeleteChannel={onDeleteChannel}
             onSendMessage={onSendMessage}
             onScrollTop={onScrollTop}
             postList={postList}

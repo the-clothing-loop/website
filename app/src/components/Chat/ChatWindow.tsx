@@ -50,7 +50,7 @@ interface Props {
   onCreateChannel: (n: string) => void;
   onSelectChannel: (c: Channel) => void;
   onRenameChannel: (n: string) => void;
-  onDeleteChannelSubmit: (n: string) => void;
+  onDeleteChannel: () => void;
   onScrollTop: (topPostId: string) => void;
   onSendMessage: (msg: string, callback: Function) => Promise<void>;
 }
@@ -69,13 +69,9 @@ export default function ChatWindow(props: Props) {
   const [refScrollTop, entry] = useIntersectionObserver({
     root: refScrollRoot.current,
   });
-  // const refChannelOptions = useRef<HTMLIonActionSheetElement>(null);
 
-  const [channelName, setChannelName] = useState(props.selectedChannel?.name);
-  const [presentAlert] = useIonAlert();
   const [isActionSheetOpen, setIsActionSheetOpen] = useState(false);
-
-  console.log("channelName: ", props.selectedChannel?.name, channelName);
+  const [presentAlert] = useIonAlert();
 
   useEffect(() => {
     if (entry?.isIntersecting) {
@@ -91,13 +87,11 @@ export default function ChatWindow(props: Props) {
   }
 
   function onRenameChannelSubmit(name: string) {
-    console.log("inside update channel name ");
-    if (channelName) props.onRenameChannel(name);
+    props.onRenameChannel(name);
   }
 
   function onDeleteChannelSubmit() {
-    console.log("inside delete channel in chatwindow");
-    if (channelName) props.onDeleteChannelSubmit(channelName);
+    if (props.selectedChannel) props.onDeleteChannel();
   }
 
   function onSendMessageWithCallback(topPostId: string) {
@@ -110,8 +104,7 @@ export default function ChatWindow(props: Props) {
 
   const longPressChannel = useLongPress(
     (e) => {
-      console.log(e);
-      if (e) setIsActionSheetOpen(true);
+      setIsActionSheetOpen(true);
     },
     {
       onCancel: (e) => {
@@ -120,10 +113,8 @@ export default function ChatWindow(props: Props) {
     },
   );
 
-  function handleOptionSelect(value: SelectChangeEventDetail<any>) {
-    console.log(value);
-
-    if (value.toString() == "delete") {
+  function handleOptionSelect(value: string) {
+    if (value == "delete") {
       const handler = () => {
         onDeleteChannelSubmit();
       };
@@ -140,7 +131,7 @@ export default function ChatWindow(props: Props) {
           },
         ],
       });
-    } else if (value.toString() == "rename") {
+    } else if (value == "rename") {
       const handler = (newChannelName: string) => {
         onRenameChannelSubmit(newChannelName);
       };
@@ -158,7 +149,7 @@ export default function ChatWindow(props: Props) {
         ],
         inputs: [
           {
-            placeholder: channelName,
+            placeholder: props.selectedChannel?.name,
             name: "newChannelName",
           },
         ],
@@ -208,31 +199,23 @@ export default function ChatWindow(props: Props) {
           );
         })}
         <IonActionSheet
+          header={t("chatRoomOptions")}
           isOpen={isActionSheetOpen}
-          header="Actions"
+          onDidDismiss={() => setIsActionSheetOpen(false)}
           buttons={[
             {
               text: "Rename",
-              data: {
-                action: "share",
-              },
+              handler: () => handleOptionSelect("rename"),
             },
             {
               text: "Delete",
-              role: "destructive",
-              data: {
-                action: "delete",
-              },
+              handler: () => handleOptionSelect("delete"),
             },
             {
               text: "Cancel",
               role: "cancel",
-              data: {
-                action: "cancel",
-              },
             },
           ]}
-          onDidDismiss={() => setIsActionSheetOpen(false)}
         ></IonActionSheet>
         <div key="plus" className="tw-p-2 tw-me-4 tw-flex tw-shrink-0">
           <button
