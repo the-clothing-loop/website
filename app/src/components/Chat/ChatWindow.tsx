@@ -1,23 +1,16 @@
 import { Client4 } from "@mattermost/client";
-import { MmData } from "../../stores/Store";
+import { IsChainAdmin, MmData, StoreContext } from "../../stores/Store";
 import ChatInput, { SendingMsgState } from "./ChatInput";
 import { Channel } from "@mattermost/types/channels";
-import {
-  IonActionSheet,
-  IonAlert,
-  IonIcon,
-  useIonAlert,
-} from "@ionic/react";
-import {
-  addOutline
-} from "ionicons/icons";
+import { IonActionSheet, IonAlert, IonIcon, useIonAlert } from "@ionic/react";
+import { addOutline } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IonAlertCustomEvent } from "@ionic/core";
 import { PostList } from "@mattermost/types/posts";
 import { User } from "../../api/types";
 import ChatPost from "./ChatPost";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { useLongPress } from "use-long-press";
 import { c } from "vitest/dist/reporters-5f784f42";
@@ -38,6 +31,7 @@ interface Props {
 // This follows the controller / view component pattern
 export default function ChatWindow(props: Props) {
   const { t } = useTranslation();
+  const { isChainAdmin } = useContext(StoreContext);
   const slowTriggerScrollTop = useDebouncedCallback(() => {
     const lastPostId = props.postList.order.at(-1);
     if (lastPostId) {
@@ -178,25 +172,27 @@ export default function ChatWindow(props: Props) {
             </div>
           );
         })}
-        <IonActionSheet
-          header={t("chatRoomOptions")}
-          isOpen={isActionSheetOpen}
-          onDidDismiss={() => setIsActionSheetOpen(false)}
-          buttons={[
-            {
-              text: "Rename",
-              handler: () => handleOptionSelect("rename"),
-            },
-            {
-              text: "Delete",
-              handler: () => handleOptionSelect("delete"),
-            },
-            {
-              text: "Cancel",
-              role: "cancel",
-            },
-          ]}
-        ></IonActionSheet>
+        {isChainAdmin ? (
+          <IonActionSheet
+            header={t("chatRoomOptions")}
+            isOpen={isActionSheetOpen}
+            onDidDismiss={() => setIsActionSheetOpen(false)}
+            buttons={[
+              {
+                text: "Rename",
+                handler: () => handleOptionSelect("rename"),
+              },
+              {
+                text: "Delete",
+                handler: () => handleOptionSelect("delete"),
+              },
+              {
+                text: "Cancel",
+                role: "cancel",
+              },
+            ]}
+          ></IonActionSheet>
+        ) : null}
         <div key="plus" className="tw-p-2 tw-me-4 tw-flex tw-shrink-0">
           <button
             id="create_channel_btn"
