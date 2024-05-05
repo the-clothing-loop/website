@@ -3,6 +3,7 @@ import { MmData } from "../../stores/Store";
 import ChatInput, { SendingMsgState } from "./ChatInput";
 import { Channel } from "@mattermost/types/channels";
 import {
+  IonActionSheet,
   IonAlert,
   IonButton,
   IonButtons,
@@ -36,7 +37,7 @@ import { PostList } from "@mattermost/types/posts";
 import { User } from "../../api/types";
 import ChatPost from "./ChatPost";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
-import { useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { useLongPress } from "use-long-press";
 import { c } from "vitest/dist/reporters-5f784f42";
@@ -68,10 +69,11 @@ export default function ChatWindow(props: Props) {
   const [refScrollTop, entry] = useIntersectionObserver({
     root: refScrollRoot.current,
   });
-  const refChannelOptions = useRef<HTMLIonSelectElement>(null);
+  // const refChannelOptions = useRef<HTMLIonActionSheetElement>(null);
 
   const [channelName, setChannelName] = useState(props.selectedChannel?.name);
   const [presentAlert] = useIonAlert();
+  const [isActionSheetOpen, setIsActionSheetOpen] = useState(false);
 
   console.log("channelName: ", props.selectedChannel?.name, channelName);
 
@@ -89,7 +91,7 @@ export default function ChatWindow(props: Props) {
   }
 
   function onRenameChannelSubmit(name: string) {
-    console.log("inside update channel name ", );
+    console.log("inside update channel name ");
     if (channelName) props.onRenameChannel(name);
   }
 
@@ -108,9 +110,14 @@ export default function ChatWindow(props: Props) {
 
   const longPressChannel = useLongPress(
     (e) => {
-      refChannelOptions.current?.open();
+      console.log(e);
+      if (e) setIsActionSheetOpen(true);
     },
-    { onCancel: (e) => {} },
+    {
+      onCancel: (e) => {
+        setIsActionSheetOpen(false);
+      },
+    },
   );
 
   function handleOptionSelect(value: SelectChangeEventDetail<any>) {
@@ -152,7 +159,7 @@ export default function ChatWindow(props: Props) {
         inputs: [
           {
             placeholder: channelName,
-            name: 'newChannelName',
+            name: "newChannelName",
           },
         ],
       });
@@ -170,62 +177,63 @@ export default function ChatWindow(props: Props) {
           const isSelected = cr.id === props.selectedChannel?.id;
           return (
             <div>
-              <button
-                className={"tw-p-2 tw-flex tw-flex-col tw-items-center".concat(
-                  isSelected ? " tw-bg-light" : " tw-group",
-                )}
-                key={cr.id}
-                onClick={
-                  isSelected ? undefined : () => props.onSelectChannel(cr)
-                }
-                {...longPressChannel()}
-              >
-                <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade  tw-flex tw-items-center tw-justify-center tw-ring tw-ring-transparent group-hover:tw-ring-purple tw-transition-colors">
-                  {initials}
-                </div>
-                <div
-                  className={"tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]".concat(
-                    isSelected ? " tw-font-bold" : "",
-                  )}
+              {isSelected ? (
+                <button
+                  className="tw-p-2 tw-flex tw-flex-col tw-items-center tw-bg-light"
+                  key={cr.id}
+                  {...longPressChannel(isSelected)}
                 >
-                  {cr.display_name}
-                </div>
-              </button>
-
-              <IonItem lines="none" className="tw-hidden">
-                <IonSelect
-                  ref={refChannelOptions}
-                  aria-label={t("selectALoop")}
-                  className="tw-text-2xl"
-                  labelPlacement="floating"
-                  justify="space-between"
-                  //value={chain?.uid || ""}
-                  onIonChange={(e) => handleOptionSelect(e.detail.value)}
-                  interface="action-sheet"
+                  <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade  tw-flex tw-items-center tw-justify-center tw-ring tw-ring-transparent group-hover:tw-ring-purple tw-transition-colors">
+                    {initials}
+                  </div>
+                  <div className="tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem] tw-font-bold">
+                    {cr.display_name}
+                  </div>
+                </button>
+              ) : (
+                <button
+                  className="tw-p-2 tw-flex tw-flex-col tw-items-center tw-group"
+                  key={cr.id}
+                  onClick={() => props.onSelectChannel(cr)}
                 >
-                  <IonSelectOption value={"rename"}>
-                    <IonItem
-                      className="ion-activatable ripple-parent tw-relative tw-p-0 tw-overflow-hidden"
-                      lines="full"
-                    >
-                      Rename chat rooms
-                    </IonItem>
-                  </IonSelectOption>
-
-                  <IonSelectOption value={"delete"}>
-                    <IonItem
-                      lines="full"
-                      className="ion-activatable ripple-parent tw-relative tw-overflow-hidden"
-                      id="delete"
-                    >
-                      Delete chat room
-                    </IonItem>
-                  </IonSelectOption>
-                </IonSelect>
-              </IonItem>
+                  <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade tw-flex tw-items-center tw-justify-center tw-ring tw-ring-transparent group-hover:tw-ring-purple tw-transition-colors">
+                    {initials}
+                  </div>
+                  <div className="tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]">
+                    {cr.display_name}
+                  </div>
+                </button>
+              )}
             </div>
           );
         })}
+        <IonActionSheet
+          isOpen={isActionSheetOpen}
+          header="Actions"
+          buttons={[
+            {
+              text: "Rename",
+              data: {
+                action: "share",
+              },
+            },
+            {
+              text: "Delete",
+              role: "destructive",
+              data: {
+                action: "delete",
+              },
+            },
+            {
+              text: "Cancel",
+              role: "cancel",
+              data: {
+                action: "cancel",
+              },
+            },
+          ]}
+          onDidDismiss={() => setIsActionSheetOpen(false)}
+        ></IonActionSheet>
         <div key="plus" className="tw-p-2 tw-me-4 tw-flex tw-shrink-0">
           <button
             id="create_channel_btn"
