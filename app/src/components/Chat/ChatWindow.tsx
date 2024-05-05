@@ -5,31 +5,11 @@ import { Channel } from "@mattermost/types/channels";
 import {
   IonActionSheet,
   IonAlert,
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonHeader,
   IonIcon,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonModal,
-  IonPopover,
-  IonRippleEffect,
-  IonSelect,
-  IonSelectOption,
-  IonTitle,
-  IonToolbar,
   useIonAlert,
 } from "@ionic/react";
 import {
-  addOutline,
-  compassOutline,
-  copyOutline,
-  refreshOutline,
-  shareOutline,
-  text,
+  addOutline
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IonAlertCustomEvent, SelectChangeEventDetail } from "@ionic/core";
