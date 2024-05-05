@@ -16,6 +16,8 @@ import {
   IonModal,
   IonPopover,
   IonRippleEffect,
+  IonSelect,
+  IonSelectOption,
   IonTitle,
   IonToolbar,
   useIonAlert,
@@ -29,7 +31,7 @@ import {
   text,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { IonAlertCustomEvent } from "@ionic/core";
+import { IonAlertCustomEvent, SelectChangeEventDetail } from "@ionic/core";
 import { PostList } from "@mattermost/types/posts";
 import { User } from "../../api/types";
 import ChatPost from "./ChatPost";
@@ -37,6 +39,7 @@ import { useIntersectionObserver } from "@uidotdev/usehooks";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { useLongPress } from "use-long-press";
+import { c } from "vitest/dist/reporters-5f784f42";
 
 interface Props {
   channels: Channel[];
@@ -45,7 +48,7 @@ interface Props {
   authUser: User;
   onCreateChannel: (n: string) => void;
   onSelectChannel: (c: Channel) => void;
-  onUpdateChannelName: (n: string) => void;
+  onRenameChannel: (n: string) => void;
   onDeleteChannelSubmit: (n: string) => void;
   onScrollTop: (topPostId: string) => void;
   onSendMessage: (msg: string, callback: Function) => Promise<void>;
@@ -65,12 +68,10 @@ export default function ChatWindow(props: Props) {
   const [refScrollTop, entry] = useIntersectionObserver({
     root: refScrollRoot.current,
   });
-  const refChannelOptions = useRef<HTMLIonModalElement>(null);
-  const [modalState, setModalState] = useState("default");
+  const refChannelOptions = useRef<HTMLIonSelectElement>(null);
 
   const [channelName, setChannelName] = useState(props.selectedChannel?.name);
-  const [presentDeleteAlert] = useIonAlert();
-  const [presentRenameAlert] = useIonAlert();
+  const [presentAlert] = useIonAlert();
 
   console.log("channelName: ", props.selectedChannel?.name, channelName);
 
@@ -87,18 +88,14 @@ export default function ChatWindow(props: Props) {
     }
   }
 
-  function onUpdateChannelName() {
-    console.log("inside update channel name in chatwindow");
-    if (channelName) props.onUpdateChannelName(channelName);
-    refChannelOptions.current?.dismiss();
-    setModalState("default");
+  function onRenameChannelSubmit(name: string) {
+    console.log("inside update channel name ", );
+    if (channelName) props.onRenameChannel(name);
   }
 
   function onDeleteChannelSubmit() {
     console.log("inside delete channel in chatwindow");
     if (channelName) props.onDeleteChannelSubmit(channelName);
-    refChannelOptions.current?.dismiss();
-    setModalState("default");
   }
 
   function onSendMessageWithCallback(topPostId: string) {
@@ -111,29 +108,55 @@ export default function ChatWindow(props: Props) {
 
   const longPressChannel = useLongPress(
     (e) => {
-      refChannelOptions.current?.present();
+      refChannelOptions.current?.open();
     },
     { onCancel: (e) => {} },
   );
 
-  function handleCloseModal() {
-    setModalState("default");
-    refChannelOptions.current?.dismiss();
-  }
+  function handleOptionSelect(value: SelectChangeEventDetail<any>) {
+    console.log(value);
 
-  function clickDelete() {
-    presentDeleteAlert({
-      header: t("delete"),
-      buttons: [
-        {
-          text: t("cancel"),
-        },
-        {
-          role: "destructive",
-          text: t("delete"),
-        },
-      ],
-    });
+    if (value.toString() == "delete") {
+      const handler = () => {
+        onDeleteChannelSubmit();
+      };
+      presentAlert({
+        header: "Delete chat room?",
+        buttons: [
+          {
+            text: t("cancel"),
+          },
+          {
+            role: "destructive",
+            text: t("delete"),
+            handler,
+          },
+        ],
+      });
+    } else if (value.toString() == "rename") {
+      const handler = (newChannelName: string) => {
+        onRenameChannelSubmit(newChannelName);
+      };
+      presentAlert({
+        header: "Rename chat room?",
+        buttons: [
+          {
+            text: t("cancel"),
+          },
+          {
+            role: "submit",
+            text: t("submit"),
+            handler,
+          },
+        ],
+        inputs: [
+          {
+            placeholder: channelName,
+            name: 'newChannelName',
+          },
+        ],
+      });
+    }
   }
 
   return (
@@ -168,79 +191,38 @@ export default function ChatWindow(props: Props) {
                   {cr.display_name}
                 </div>
               </button>
-              <IonModal
-                ref={refChannelOptions}
-                initialBreakpoint={0.25}
-                breakpoints={[0, 0.5, 0.75, 1]}
-              >
-                <IonHeader>
-                  <IonToolbar>
-                    {modalState == "rename" ? (
-                      <IonButtons slot="start">
-                        <IonButton onClick={() => setModalState("default")}>
-                          {t("back")}
-                        </IonButton>
-                      </IonButtons>
-                    ) : null}
-                    <IonButtons slot="end">
-                      <IonButton onClick={handleCloseModal}>
-                        {t("close")}
-                      </IonButton>
-                    </IonButtons>
-                    <IonTitle>{modalState}</IonTitle>
-                  </IonToolbar>
-                </IonHeader>
 
-                {modalState == "default" ? (
-                  <IonContent>
-                    <IonList>
-                      <div>
-                        <IonItem
-                          onClick={() => setModalState("rename")}
-                          className="ion-activatable ripple-parent tw-relative tw-p-0 tw-overflow-hidden"
-                          lines="full"
-                        >
-                          Rename chat rooms
-                        </IonItem>
-                        <IonRippleEffect></IonRippleEffect>
-                      </div>
-                      <div>
-                        <IonItem
-                          lines="full"
-                          className="ion-activatable ripple-parent tw-relative tw-overflow-hidden"
-                          onClick={clickDelete}
-                        >
-                          Delete chat room
-                        </IonItem>
-                        <IonRippleEffect></IonRippleEffect>
-                      </div>
-                    </IonList>
-                  </IonContent>
-                ) : (
-                  <IonContent>
-                    <IonItem>
-                      <IonInput
-                        label="Enter New Channel Name"
-                        value={channelName}
-                        labelPlacement="stacked"
-                        onIonInput={(e) =>
-                          setChannelName(e.detail.value?.toString() || "")
-                        }
-                      ></IonInput>
+              <IonItem lines="none" className="tw-hidden">
+                <IonSelect
+                  ref={refChannelOptions}
+                  aria-label={t("selectALoop")}
+                  className="tw-text-2xl"
+                  labelPlacement="floating"
+                  justify="space-between"
+                  //value={chain?.uid || ""}
+                  onIonChange={(e) => handleOptionSelect(e.detail.value)}
+                  interface="action-sheet"
+                >
+                  <IonSelectOption value={"rename"}>
+                    <IonItem
+                      className="ion-activatable ripple-parent tw-relative tw-p-0 tw-overflow-hidden"
+                      lines="full"
+                    >
+                      Rename chat rooms
                     </IonItem>
-                    <IonItem lines="none">
-                      <IonButton
-                        onClick={onUpdateChannelName}
-                        size="default"
-                        slot="end"
-                        className="tw-mt-4"
-                      >
-                        {t("Rename")}
-                      </IonButton>
+                  </IonSelectOption>
+
+                  <IonSelectOption value={"delete"}>
+                    <IonItem
+                      lines="full"
+                      className="ion-activatable ripple-parent tw-relative tw-overflow-hidden"
+                      id="delete"
+                    >
+                      Delete chat room
                     </IonItem>
-                  </IonContent>
-                )}
-              </IonModal>
+                  </IonSelectOption>
+                </IonSelect>
+              </IonItem>
             </div>
           );
         })}

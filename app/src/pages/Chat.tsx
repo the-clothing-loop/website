@@ -175,7 +175,7 @@ export default function Chat() {
     }
   }
 
-  async function onUpdateChannelName(name: string) {
+  async function onRenameChannel(name: string) {
     if (!chain || !mmClient) {
       if (!chain) console.error("chain not found");
       if (!mmClient) console.error("mmClient not found");
@@ -312,7 +312,7 @@ export default function Chat() {
             selectedChannel={selectedChannel}
             onCreateChannel={onCreateChannel}
             onSelectChannel={onSelectChannel}
-            onUpdateChannelName={onUpdateChannelName}
+            onRenameChannel={onRenameChannel}
             onDeleteChannelSubmit={onDeleteChannel}
             onSendMessage={onSendMessage}
             onScrollTop={onScrollTop}
