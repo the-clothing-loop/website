@@ -491,30 +491,32 @@ export default function ChainMemberList() {
                 <dialog
                   open={openQrCode}
                   ref={refQrCodeDialog}
-                  className="group peer-hover:md:block opacity-10 open:opacity-100 transition-opacity absolute z-20 top-0 ltr:sm:right-full max-sm:mt-14 rtl:sm:left-full me-0 sm:me-4 p-4 w-[300px] box-content bg-white shadow-lg"
+                  className="group peer-hover:md:block opacity-10 open:opacity-100 transition-opacity absolute z-20 top-0 ltr:sm:right-full max-sm:mt-14 rtl:sm:left-full me-0 sm:me-4"
                 >
                   <div
                     className="group-open:fixed inset-0 bg-white/30 -z-10"
                     onClick={toggleDialog}
                   />
-                  <div className="bg-grey-light/30 p-1 flex flex-row mb-4">
-                    <p className="text-xs select-all break-all leading-snug">
-                      {shareLink}
-                    </p>
+                  <div className="relative z-0 bg-white shadow-lg p-4">
+                    <div className="bg-grey-light/30 p-1 flex flex-row mb-4">
+                      <p className="text-xs select-all break-all leading-snug">
+                        {shareLink}
+                      </p>
 
-                    <a
-                      {...addCopyAttributes(
-                        t,
-                        "loop-detail-share",
-                        "btn btn-square btn-sm btn-secondary btn-outline tooltip tooltip-left lg:!tooltip-top flex items-center",
-                        shareLink,
-                      )}
-                      href={shareLink}
-                    >
-                      <span className="icon-copy"></span>
-                    </a>
+                      <a
+                        {...addCopyAttributes(
+                          t,
+                          "loop-detail-share",
+                          "btn btn-square btn-sm btn-secondary btn-outline tooltip tooltip-left lg:!tooltip-top flex items-center",
+                          shareLink,
+                        )}
+                        href={shareLink}
+                      >
+                        <span className="icon-copy"></span>
+                      </a>
+                    </div>
+                    <QrCode data={shareLink} chainName={chain.name} />
                   </div>
-                  <QrCode data={shareLink} />
                 </dialog>
               </div>
 
