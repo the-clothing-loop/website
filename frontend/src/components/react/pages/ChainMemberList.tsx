@@ -14,7 +14,6 @@ import {
 
 import dayjs from "../util/dayjs";
 import simplifyDays from "../util/simplify-days";
-import QrCode from "qrcode";
 
 import { UserDataExport } from "../components/DataExport";
 import {
@@ -53,7 +52,7 @@ import useLocalizePath from "../util/localize_path.hooks";
 import { loginSuperAsGenerateLink } from "../../../api/login";
 import ChainDescription from "../components/FindChain/ChainDescription";
 import { useLegal } from "../util/user.hooks";
-import isSSR from "../util/is_ssr";
+import QrCode from "../components/LoopMembers/QrCode";
 const RouteMapPopup = lazy(
   () => import("../components/RouteMap/RouteMapPopup"),
 );
@@ -349,18 +348,6 @@ export default function ChainMemberList() {
     refresh(true);
   }, [authUser]);
 
-  useEffect(() => {
-    if (isSSR()) return;
-    const shareLink =
-      PUBLIC_BASE_URL + localizePath("/loops/users/signup/?chain=" + chainUID);
-    console.log("sharelink", shareLink);
-    QrCode.toCanvas(refQrCode.current, shareLink, {
-      width: 300,
-    }).catch((err) => {
-      console.error(err);
-    });
-  });
-
   const [filteredUsersHost /*filteredUsersNotHost*/] = useMemo(() => {
     let host: User[] = [];
     let notHost: User[] = [];
@@ -453,8 +440,7 @@ export default function ChainMemberList() {
     return null;
   }
 
-  const shareLink =
-    PUBLIC_BASE_URL + localizePath("/loops/users/signup/?chain=" + chainUID);
+  const shareLink = PUBLIC_BASE_URL + "/loops/users/signup/?chain=" + chainUID;
 
   let userChain = authUser?.chains.find((uc) => uc.chain_uid === chain.uid);
 
@@ -482,46 +468,53 @@ export default function ChainMemberList() {
                   chain.published || authUser?.is_root_admin ? "" : "hidden"
                 }`}
               >
-                <a
-                  {...addCopyAttributes(
-                    t,
-                    "loop-detail-share",
-                    "relative btn btn-circle btn-secondary tooltip tooltip-left lg:!tooltip-top flex group",
-                    shareLink,
-                  )}
-                  href={shareLink}
-                >
-                  <span className="icon-share text-lg" />
-                  <span className="absolute -top-8 end-0 lg:end-auto text-sm bg-secondary shadow-lg rounded-sm py-1 px-2 whitespace-nowrap group-hover:opacity-0 transition-opacity opacity-60 ">
-                    {t("shareLink")}
-                  </span>
-                </a>
                 <button
                   type="button"
                   onClick={toggleDialog}
-                  className={"mx-auto mt-4 btn btn-circle btn-sm tooltip tooltip-left lg:!tooltip-top flex group focus:ring-4".concat(
+                  className={"peer relative z-30 btn btn-circle flex group focus:ring-4 ring-purple-light".concat(
                     openQrCode ? " btn-outline" : " btn-secondary",
                   )}
                 >
                   <span
                     className={"text-lg".concat(
-                      openQrCode ? " icon-x" : " icon-qr-code",
+                      openQrCode ? " icon-x" : " icon-share-2",
                     )}
                   />
+                  <span
+                    className={"absolute -top-8 end-0 lg:end-auto text-sm bg-secondary text-white shadow-lg rounded-sm py-1 px-2 whitespace-nowrap group-hover:opacity-100 transition-opacity".concat(
+                      openQrCode ? " opacity-100" : " opacity-60",
+                    )}
+                  >
+                    {t("shareLink")}
+                  </span>
                 </button>
                 <dialog
                   open={openQrCode}
                   ref={refQrCodeDialog}
-                  className="absolute z-20 top-0 ltr:right-full rtl:left-full me-4 p-4 w-[300px] box-content bg-white shadow-lg"
+                  className="group peer-hover:md:block opacity-10 open:opacity-100 transition-opacity absolute z-20 top-0 ltr:sm:right-full max-sm:mt-14 rtl:sm:left-full me-0 sm:me-4 p-4 w-[300px] box-content bg-white shadow-lg"
                 >
-                  <canvas
-                    dir="ltr"
-                    ref={refQrCode}
-                    className=" aspect-square"
+                  <div
+                    className="group-open:fixed inset-0 bg-white/30 -z-10"
+                    onClick={toggleDialog}
                   />
-                  <p className="text-xs select-all break-all leading-snug bg-grey-light/30 p-1">
-                    {shareLink}
-                  </p>
+                  <div className="bg-grey-light/30 p-1 flex flex-row mb-4">
+                    <p className="text-xs select-all break-all leading-snug">
+                      {shareLink}
+                    </p>
+
+                    <a
+                      {...addCopyAttributes(
+                        t,
+                        "loop-detail-share",
+                        "btn btn-square btn-sm btn-secondary btn-outline tooltip tooltip-left lg:!tooltip-top flex items-center",
+                        shareLink,
+                      )}
+                      href={shareLink}
+                    >
+                      <span className="icon-copy"></span>
+                    </a>
+                  </div>
+                  <QrCode data={shareLink} />
                 </dialog>
               </div>
 
