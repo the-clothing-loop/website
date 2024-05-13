@@ -173,6 +173,35 @@ export default function Chat() {
     }
   }
 
+  async function onRenameChannel(name: string) {
+    if (!chain || !mmClient) {
+      if (!chain) console.error("chain not found");
+      if (!mmClient) console.error("mmClient not found");
+      return;
+    }
+    try {
+      console.info("Updating channel name", name);
+      // Update channel name
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function onDeleteChannel() {
+    console.log(selectedChannel);
+    if (!chain || !mmClient) {
+      if (!chain) console.error("chain not found");
+      if (!mmClient) console.error("mmClient not found");
+      return;
+    }
+    try {
+      console.info("Deleting channel", name);
+      // Delete channel
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   function onSelectChannel(channel: Channel, _mmClient?: Client4) {
     setSelectedChannel(channel);
 
@@ -282,6 +311,8 @@ export default function Chat() {
             selectedChannel={selectedChannel}
             onCreateChannel={onCreateChannel}
             onSelectChannel={onSelectChannel}
+            onRenameChannel={onRenameChannel}
+            onDeleteChannel={onDeleteChannel}
             onSendMessage={onSendMessage}
             onScrollTop={onScrollTop}
             postList={postList}

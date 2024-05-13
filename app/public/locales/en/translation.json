@@ -138,5 +138,6 @@
   "updateHeaderDesc": "This change will be visible to all loop members.",
   "resetHeaders": "Reset headers",
   "resetHeadersDesc": "Reset your loop's headers to the default headers.",
-  "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?"
+  "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?",
+  "chatRoomOptions": "Chat Room Options"
 }

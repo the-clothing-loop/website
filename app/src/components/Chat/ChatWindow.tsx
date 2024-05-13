@@ -1,8 +1,8 @@
 import { Client4 } from "@mattermost/client";
-import { MmData } from "../../stores/Store";
+import { IsChainAdmin, MmData, StoreContext } from "../../stores/Store";
 import ChatInput, { SendingMsgState } from "./ChatInput";
 import { Channel } from "@mattermost/types/channels";
-import { IonAlert, IonIcon } from "@ionic/react";
+import { IonActionSheet, IonAlert, IonIcon, useIonAlert } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IonAlertCustomEvent } from "@ionic/core";
@@ -10,8 +10,10 @@ import { PostList } from "@mattermost/types/posts";
 import { User } from "../../api/types";
 import ChatPost from "./ChatPost";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { useLongPress } from "use-long-press";
+import { c } from "vitest/dist/reporters-5f784f42";
 
 interface Props {
   channels: Channel[];
@@ -20,6 +22,8 @@ interface Props {
   authUser: User;
   onCreateChannel: (n: string) => void;
   onSelectChannel: (c: Channel) => void;
+  onRenameChannel: (n: string) => void;
+  onDeleteChannel: () => void;
   onScrollTop: (topPostId: string) => void;
   onSendMessage: (msg: string, callback: Function) => Promise<void>;
 }
@@ -27,6 +31,7 @@ interface Props {
 // This follows the controller / view component pattern
 export default function ChatWindow(props: Props) {
   const { t } = useTranslation();
+  const { isChainAdmin } = useContext(StoreContext);
   const slowTriggerScrollTop = useDebouncedCallback(() => {
     const lastPostId = props.postList.order.at(-1);
     if (lastPostId) {
@@ -38,6 +43,10 @@ export default function ChatWindow(props: Props) {
   const [refScrollTop, entry] = useIntersectionObserver({
     root: refScrollRoot.current,
   });
+
+  const [isActionSheetOpen, setIsActionSheetOpen] = useState(false);
+  const [presentAlert] = useIonAlert();
+
   useEffect(() => {
     if (entry?.isIntersecting) {
       console.log("Intersecting");
@@ -51,12 +60,75 @@ export default function ChatWindow(props: Props) {
     }
   }
 
+  function onRenameChannelSubmit(name: string) {
+    props.onRenameChannel(name);
+  }
+
+  function onDeleteChannelSubmit() {
+    if (props.selectedChannel) props.onDeleteChannel();
+  }
+
   function onSendMessageWithCallback(topPostId: string) {
     return props.onSendMessage(topPostId, () => {
       refScrollRoot.current?.scrollTo({
         top: 0,
       });
     });
+  }
+
+  const longPressChannel = useLongPress(
+    (e) => {
+      setIsActionSheetOpen(true);
+    },
+    {
+      onCancel: (e) => {
+        setIsActionSheetOpen(false);
+      },
+    },
+  );
+
+  function handleOptionSelect(value: string) {
+    if (value == "delete") {
+      const handler = () => {
+        onDeleteChannelSubmit();
+      };
+      presentAlert({
+        header: "Delete chat room?",
+        buttons: [
+          {
+            text: t("cancel"),
+          },
+          {
+            role: "destructive",
+            text: t("delete"),
+            handler,
+          },
+        ],
+      });
+    } else if (value == "rename") {
+      const handler = (newChannelName: string) => {
+        onRenameChannelSubmit(newChannelName);
+      };
+      presentAlert({
+        header: "Rename chat room?",
+        buttons: [
+          {
+            text: t("cancel"),
+          },
+          {
+            role: "submit",
+            text: t("submit"),
+            handler,
+          },
+        ],
+        inputs: [
+          {
+            placeholder: props.selectedChannel?.name,
+            name: "newChannelName",
+          },
+        ],
+      });
+    }
   }
 
   return (
@@ -69,26 +141,58 @@ export default function ChatWindow(props: Props) {
             .join("");
           const isSelected = cr.id === props.selectedChannel?.id;
           return (
-            <button
-              className={"tw-p-2 tw-flex tw-flex-col tw-items-center".concat(
-                isSelected ? " tw-bg-light" : " tw-group",
+            <div>
+              {isSelected ? (
+                <button
+                  className="tw-p-2 tw-flex tw-flex-col tw-items-center tw-bg-light"
+                  key={cr.id}
+                  {...longPressChannel(isSelected)}
+                >
+                  <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade  tw-flex tw-items-center tw-justify-center tw-ring tw-ring-transparent group-hover:tw-ring-purple tw-transition-colors">
+                    {initials}
+                  </div>
+                  <div className="tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem] tw-font-bold">
+                    {cr.display_name}
+                  </div>
+                </button>
+              ) : (
+                <button
+                  className="tw-p-2 tw-flex tw-flex-col tw-items-center tw-group"
+                  key={cr.id}
+                  onClick={() => props.onSelectChannel(cr)}
+                >
+                  <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade tw-flex tw-items-center tw-justify-center tw-ring tw-ring-transparent group-hover:tw-ring-purple tw-transition-colors">
+                    {initials}
+                  </div>
+                  <div className="tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]">
+                    {cr.display_name}
+                  </div>
+                </button>
               )}
-              key={cr.id}
-              onClick={isSelected ? undefined : () => props.onSelectChannel(cr)}
-            >
-              <div className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade  tw-flex tw-items-center tw-justify-center tw-ring tw-ring-transparent group-hover:tw-ring-purple tw-transition-colors">
-                {initials}
-              </div>
-              <div
-                className={"tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]".concat(
-                  isSelected ? " tw-font-bold" : "",
-                )}
-              >
-                {cr.display_name}
-              </div>
-            </button>
+            </div>
           );
         })}
+        {isChainAdmin ? (
+          <IonActionSheet
+            header={t("chatRoomOptions")}
+            isOpen={isActionSheetOpen}
+            onDidDismiss={() => setIsActionSheetOpen(false)}
+            buttons={[
+              {
+                text: "Rename",
+                handler: () => handleOptionSelect("rename"),
+              },
+              {
+                text: "Delete",
+                handler: () => handleOptionSelect("delete"),
+              },
+              {
+                text: "Cancel",
+                role: "cancel",
+              },
+            ]}
+          ></IonActionSheet>
+        ) : null}
         <div key="plus" className="tw-p-2 tw-me-4 tw-flex tw-shrink-0">
           <button
             id="create_channel_btn"
