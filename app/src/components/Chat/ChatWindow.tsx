@@ -22,7 +22,7 @@ interface Props {
   onCreateChannel: (n: string) => void;
   onSelectChannel: (c: Channel) => void;
   onRenameChannel: (c: Channel, n: string) => void;
-  onDeleteChannel: () => void;
+  onDeleteChannel: (id: string) => void;
   onScrollTop: (topPostId: string) => void;
   onSendMessage: (msg: string, callback: Function) => Promise<void>;
 }
@@ -73,7 +73,8 @@ export default function ChatWindow(props: Props) {
   }
 
   function onDeleteChannelSubmit() {
-    if (props.selectedChannel) props.onDeleteChannel();
+    if (!props.selectedChannel) return;
+    if (props.selectedChannel) props.onDeleteChannel(props.selectedChannel.id);
   }
 
   function onSendMessageWithCallback(topPostId: string) {

@@ -198,7 +198,7 @@ export default function Chat() {
     }
   }
 
-  async function onDeleteChannel() {
+  async function onDeleteChannel(channelID: string) {
     console.log(selectedChannel);
     if (!chain || !mmClient) {
       if (!chain) console.error("chain not found");
@@ -206,8 +206,18 @@ export default function Chat() {
       return;
     }
     try {
-      console.info("Deleting channel", name);
-      // Delete channel
+      console.info("Deleting channel", channelID);
+      await apiChat.chatDeleteChannel(chain.uid, channelID);
+
+      const _channels = channels.filter((c) => c.id != channelID);
+      const _channel = _channels.at(-1) || null;
+
+      setChannels(_channels);
+      setSelectedChannel(_channel);
+      // update chain object from server to update chain.room_ids value
+      await setChain(chain.uid, authUser);
+      if (!_channel) return;
+      reqPostList(mmClient, _channel, "");
     } catch (err) {
       console.error(err);
     }
