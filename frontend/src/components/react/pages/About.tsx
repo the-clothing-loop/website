@@ -56,8 +56,8 @@ export default function About() {
                     href={localizePath("/faq")}
                   >
                     {t("faq", { ns: "translation" })}
-                    <span className="feather feather-arrow-left ltr:hidden ms-2"></span>
-                    <span className="feather feather-arrow-right rtl:hidden ms-2"></span>
+                    <span className="icon-arrow-left ltr:hidden ms-2"></span>
+                    <span className="icon-arrow-right rtl:hidden ms-2"></span>
                   </a>
                 </div>
               </div>

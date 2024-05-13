@@ -15,7 +15,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useContext, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../stores/Store";
 import { openOutline, searchOutline } from "ionicons/icons";
@@ -59,6 +59,16 @@ export default function AddressList() {
 
   const [search, setSearch] = useState("");
   const slowSearch = useDebounce(search, 500);
+
+  useEffect(() => {
+    if (authUser) {
+      const el = document.querySelector("ali-" + authUser.uid);
+      el?.scrollIntoView({
+        block: "center",
+      });
+    }
+  }, []);
+
   const routeListItems = useMemo(() => {
     const routeLength = route.length;
     if (!chain || routeLength === 0) return [];
@@ -68,13 +78,10 @@ export default function AddressList() {
     }
     let topRouteIndex = 0;
     if (routeListView === "dynamic") {
-      const routePrivacy = chain.route_privacy || 2;
-      if (routePrivacy * 2 < routeLength) {
-        topRouteIndex = wrapIndex(
-          meRouteIndex - (routePrivacy <= 3 ? routePrivacy : 3),
-          routeLength,
-        );
-      }
+      topRouteIndex =
+        routeLength < 6
+          ? routeLength - 1
+          : wrapIndex(meRouteIndex - 6, routeLength);
       console.log("topRouteIndex", topRouteIndex);
     }
 

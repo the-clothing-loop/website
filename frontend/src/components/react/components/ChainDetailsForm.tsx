@@ -377,8 +377,8 @@ export default function ChainDetailsForm({
             )}
             <button type="submit" className="btn btn-primary">
               {submitText}
-              <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
-              <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
+              <span className="icon-arrow-right ml-4 rtl:hidden"></span>
+              <span className="icon-arrow-left mr-4 ltr:hidden"></span>
             </button>
           </div>
         </form>

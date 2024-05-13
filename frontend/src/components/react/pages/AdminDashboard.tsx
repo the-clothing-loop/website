@@ -129,7 +129,7 @@ export default function AdminDashboard() {
                     href="https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27"
                   >
                     {t("toolkitFolder")}
-                    <span className="feather feather-external-link ml-2 rtl:ml-0 rtl:mr-2"></span>
+                    <span className="icon-external-link ml-2 rtl:ml-0 rtl:mr-2"></span>
                   </a>
                 </div>
               ) : null}
@@ -139,14 +139,14 @@ export default function AdminDashboard() {
                   href={localizePath("/users/edit/?user=me")}
                 >
                   {t("editAccount")}
-                  <span className="feather feather-edit ml-2 rtl:ml-0 rtl:mr-2"></span>
+                  <span className="icon-pencil ml-2 rtl:ml-0 rtl:mr-2"></span>
                 </a>
                 <button
                   className="btn btn-sm btn-secondary btn-outline bg-white h-auto mb-4 sm:mr-4 text-black group"
                   onClick={logoutClicked}
                 >
                   {t("logout")}
-                  <span className="feather feather-log-out text-red group-hover:text-white ml-2 rtl:ml-0 rtl:mr-2"></span>
+                  <span className="icon-log-out text-red group-hover:text-white ml-2 rtl:ml-0 rtl:mr-2"></span>
                 </button>
 
                 <button
@@ -154,7 +154,7 @@ export default function AdminDashboard() {
                   onClick={deleteClicked}
                 >
                   <span className="text-danger">{t("deleteUserBtn")}</span>
-                  <span className="feather feather-alert-octagon ml-2 rtl:ml-0 rtl:mr-2"></span>
+                  <span className="icon-octagon-alert ml-2 rtl:ml-0 rtl:mr-2"></span>
                 </button>
               </div>
             </div>
@@ -179,7 +179,7 @@ export default function AdminDashboard() {
               aria-label="close"
               htmlFor="modal-circle-loop"
             >
-              <div className="btn btn-sm btn-square absolute right-2 top-2 feather feather-x"></div>
+              <div className="btn btn-sm btn-square absolute right-2 top-2 icon-x"></div>
               <img
                 className="max-h-full"
                 src="https://images.clothingloop.org/x1080/circle_loop.jpg"

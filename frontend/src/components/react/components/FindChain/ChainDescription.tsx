@@ -46,8 +46,8 @@ export default function ChainDescription(props: Props) {
         <button
           type="button"
           aria-label="expand"
-          className={"sticky bottom-0 btn btn-xs btn-secondary feather ".concat(
-            isOpenDesc ? "feather-chevron-up" : "feather-chevron-down",
+          className={"sticky bottom-0 btn btn-xs btn-secondary ".concat(
+            isOpenDesc ? "icon-chevron-up" : "icon-chevron-down",
           )}
           onClick={handleClickShortenedDesc}
         ></button>

@@ -216,11 +216,11 @@ export default function ChainsList({ chains, setChains }: Props) {
                       (!userChain && authUser?.is_root_admin) ? (
                         chain.published ? (
                           <div className="tooltip" data-tip="published">
-                            <span className="feather feather-eye text-lg text-green" />
+                            <span className="icon-eye text-lg text-green" />
                           </div>
                         ) : (
                           <div className="tooltip" data-tip="draft">
-                            <span className="feather feather-eye-off text-lg text-red" />
+                            <span className="icon-eye-off text-lg text-red" />
                           </div>
                         )
                       ) : (
@@ -228,7 +228,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                           className="tooltip"
                           data-tip={t("pendingApproval")}
                         >
-                          <span className="feather btn-circle btn-lg feather-user-check text-yellow-darkest" />
+                          <span className="btn-circle btn-lg icon-user-check text-yellow-darkest" />
                         </div>
                       )}
                     </td>
@@ -245,8 +245,8 @@ export default function ChainsList({ chains, setChains }: Props) {
                             )}
                           >
                             <span className="max-xs:hidden">{t("view")}</span>
-                            <span className="feather feather-arrow-left sm:mr-3 ltr:hidden"></span>
-                            <span className="feather feather-arrow-right sm:ml-3 rtl:hidden"></span>
+                            <span className="icon-arrow-left sm:mr-3 ltr:hidden"></span>
+                            <span className="icon-arrow-right sm:ml-3 rtl:hidden"></span>
                             {hasNotification ? (
                               <div className="block bg-red rounded-full w-3.5 h-3.5 absolute -top-1.5 -right-1.5"></div>
                             ) : null}
@@ -259,7 +259,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                               chains?.length > 5 ? "btn-sm" : ""
                             } ${userChain ? "" : "btn-disabled"}`}
                           >
-                            <span className="text-xl feather feather-more-vertical" />
+                            <span className="text-xl icon-ellipsis-vertical" />
                           </label>
                           {userChain ? (
                             <ul
@@ -319,7 +319,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                                       <span className="opacity-50">
                                         {t("remindHost")}
                                       </span>
-                                      <i className="feather feather-slash ml-1 rtl:ml-0 rtl:mr-1"></i>
+                                      <i className="icon-slash ml-1 rtl:ml-0 rtl:mr-1"></i>
                                     </span>
                                     <span
                                       className="text-xs"

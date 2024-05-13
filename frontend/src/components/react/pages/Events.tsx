@@ -190,7 +190,7 @@ export default function Events() {
                 href={localizePath("/events/create")}
                 className="btn btn-primary mb-4 md:mb-0 "
               >
-                <span className="pr-2 rtl:pr-0 rtl:pl-2 feather feather-plus" />
+                <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
                 {t("createEvent")}
               </a>
             ) : (
@@ -218,7 +218,7 @@ export default function Events() {
                   })
                 }
               >
-                <span className="pr-2 rtl:pr-0 rtl:pl-2 feather feather-plus" />
+                <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
                 {t("createEvent")}
               </div>
             )}
@@ -407,7 +407,7 @@ function EventItem({ event }: { event: Event }) {
         </h2>
       </div>
       <div className="flex-grow mx-4 mb-2">
-        <span className="feather feather-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+        <span className="icon-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
         <address className="inline">{event.address}</address>
       </div>
       <div className="m-4 mt-0">

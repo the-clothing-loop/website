@@ -139,8 +139,8 @@ export default function Home() {
                   href={localizePath("/loops/find")}
                 >
                   {t("findALoop")}
-                  <span className="feather feather-arrow-right ml-3 rtl:hidden" />
-                  <span className="feather feather-arrow-left mr-3 ltr:hidden" />
+                  <span className="icon-arrow-right ml-3 rtl:hidden" />
+                  <span className="icon-arrow-left mr-3 ltr:hidden" />
                 </a>
               </div>
             </div>
@@ -205,8 +205,8 @@ export default function Home() {
                   className="hidden md:flex btn btn-outline btn-circle btn-secondary mt-6"
                   aria-label="find loop"
                 >
-                  <span className="feather feather-arrow-right rtl:hidden"></span>
-                  <span className="feather feather-arrow-left ltr:hidden"></span>
+                  <span className="icon-arrow-right rtl:hidden"></span>
+                  <span className="icon-arrow-left ltr:hidden"></span>
                 </a>
               </div>
             </div>

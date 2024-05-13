@@ -2,11 +2,13 @@ import {
   IonButton,
   IonContent,
   IonHeader,
+  IonIcon,
   IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
 import { t } from "i18next";
+import { cloudOfflineOutline } from "ionicons/icons";
 
 export default function Offline() {
   const handleClickRefresh = () => window.location.reload();
@@ -21,7 +23,7 @@ export default function Offline() {
       <IonContent fullscreen color="light">
         <div className="tw-flex tw-items-center tw-h-full tw-justify-center">
           <div className="">
-            <span className="feather feather-offline" />
+            <IonIcon icon={cloudOfflineOutline} />
             <p>Offline</p>
 
             <IonButton onClick={handleClickRefresh}>Refresh</IonButton>

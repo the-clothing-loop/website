@@ -5,6 +5,7 @@ import { useStore } from "@nanostores/react";
 import useLocalizePath from "../util/localize_path.hooks";
 import useHydrated from "../util/hydrated.hooks";
 import ToastManager from "../layout/ToastManager";
+import PopupForm from "./PopupForm";
 
 function Navbar(props: { pathname: string }) {
   const { t, i18n } = useTranslation();
@@ -21,6 +22,7 @@ function Navbar(props: { pathname: string }) {
   return (
     <>
       <ToastManager />
+      <PopupForm />
       <div className="container mx-auto z-50 bg-white flex flex-row justify-between lg:justify-start items-center md:px-20 shadow-none">
         <a
           aria-label="Clothing Loop logo"
@@ -37,8 +39,8 @@ function Navbar(props: { pathname: string }) {
           className="mr-3 btn-lg btn-circle btn-ghost hover:bg-base-200 peer-checked:text-secondary peer-checked:animate-[spin-quarter_150ms_linear] flex justify-center items-center lg:hidden relative z-[60] checked:ring-2 checked:ring-offset-2 ring-teal peer-[:checked_>:nth-of-type(1)]:hidden peer-[:checked_>:nth-of-type(2)]:block cursor-pointer"
           aria-label="Menu"
         >
-          <span className="feather feather-menu text-2xl block"></span>
-          <span className="feather feather-x text-2xl hidden"></span>
+          <span className="icon-menu text-2xl block"></span>
+          <span className="icon-x text-2xl hidden"></span>
         </label>
         <div className="hidden peer-checked:block fixed inset-0 lg:!hidden z-50 bg-white"></div>
         <div className="hidden peer-checked:block absolute inset-0 lg:!hidden z-50">
@@ -56,7 +58,7 @@ function Navbar(props: { pathname: string }) {
               href={localizePath("/loops/new/users/signup")}
               className="mb-3 btn btn-primary btn-outline"
             >
-              <span className="feather feather-arrow-left mr-3"></span>
+              <span className="icon-arrow-left mr-3"></span>
               {t("startNewLoop")}
             </a>
             <a
@@ -64,8 +66,8 @@ function Navbar(props: { pathname: string }) {
               className="mb-3 btn btn-primary btn-outline"
             >
               {t("findLoops")}
-              <span className="feather feather-arrow-right ml-3 rtl:hidden"></span>
-              <span className="feather feather-arrow-left mr-3 ltr:hidden"></span>
+              <span className="icon-arrow-right ml-3 rtl:hidden"></span>
+              <span className="icon-arrow-left mr-3 ltr:hidden"></span>
             </a>
 
             <a
@@ -129,8 +131,8 @@ function Navbar(props: { pathname: string }) {
                 className="ltr:mr-4 rtl:ml-4 btn btn-primary btn-outline"
               >
                 {t("findLoops")}
-                <span className="feather feather-arrow-right ml-4 rtl:hidden"></span>
-                <span className="feather feather-arrow-left mr-4 ltr:hidden"></span>
+                <span className="icon-arrow-right ml-4 rtl:hidden"></span>
+                <span className="icon-arrow-left mr-4 ltr:hidden"></span>
               </a>
             )}
 

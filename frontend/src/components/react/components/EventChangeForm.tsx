@@ -414,7 +414,7 @@ export default function EventChangeForm(props: {
                     className="btn btn-error"
                     onClick={onImageDelete}
                   >
-                    <span className="feather feather-trash" />
+                    <span className="icon-trash" />
                   </button>
                 ) : null}
                 <button
@@ -424,7 +424,7 @@ export default function EventChangeForm(props: {
                   onClick={() => refFileInput.current?.click()}
                 >
                   {t("uploadImage")}
-                  <span className="feather feather-upload ltr:ml-4 rtl:mr-4"></span>
+                  <span className="icon-upload ltr:ml-4 rtl:mr-4"></span>
                 </button>
               </div>
               {values.image_url ? (
@@ -439,7 +439,7 @@ export default function EventChangeForm(props: {
           <div className="flex justify-end">
             <button type="submit" className="btn btn-primary">
               {t("submit")}
-              <span className="feather feather-arrow-right ltr:ml-4 rtl:mr-4"></span>
+              <span className="icon-arrow-right ltr:ml-4 rtl:mr-4"></span>
             </button>
           </div>
         </div>

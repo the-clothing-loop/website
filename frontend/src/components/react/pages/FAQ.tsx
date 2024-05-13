@@ -158,8 +158,8 @@ function AccordionFaq(props: {
       >
         <span className="p-3 w-full">{props.item.question}</span>
         <span
-          className={`feather p-3 ${
-            props.open && !props.prevActive ? "feather-minus" : "feather-plus"
+          className={`p-3 ${
+            props.open && !props.prevActive ? "icon-minus" : "icon-plus"
           }`}
         />
       </summary>

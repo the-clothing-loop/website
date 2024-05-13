@@ -298,7 +298,7 @@ function DonationFormContent() {
 
         <div className="mb-2">
           {loading ? (
-            <span className="feather feather-loader animate-spin" />
+            <span className="icon-loader animate-spin" />
           ) : (
             <button
               type="submit"
@@ -338,6 +338,8 @@ function DonationFormContent() {
   );
 }
 
+const anbiUrl =
+  "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/bijzondere_regelingen/goede_doelen/algemeen_nut_beogende_instellingen/wat_is_een_anbi";
 export default function DonationForm() {
   const { t } = useTranslation();
 
@@ -366,7 +368,7 @@ export default function DonationForm() {
           <div className="prose prose-sm bg-blue-light/20 p-4">
             <a
               target="_blank"
-              href="https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/bijzondere_regelingen/goede_doelen/algemeen_nut_beogende_instellingen/wat_is_een_anbi"
+              href={anbiUrl}
               className="inline-block rounded lg:ml-auto ring ring-transparent hover:ring-blue-light transition-colors"
             >
               <img
@@ -375,6 +377,20 @@ export default function DonationForm() {
                 src="https://images.clothingloop.org/0x0/anbi_fc_blauw.jpg"
               />
             </a>
+
+            <div className="text-xs">
+              Stichting Slow Fashion Movement is recognised by the Dutch tax
+              authorities as an ANBI. This stands for “Algemeen Nut Beogende
+              Instelling”, which translates to{" "}
+              <a
+                target="_blank"
+                href={anbiUrl}
+                className="hover:text-blue focus:text-blue"
+              >
+                Public Benefit Organisation
+              </a>
+              .
+            </div>
 
             <ul>
               <li>

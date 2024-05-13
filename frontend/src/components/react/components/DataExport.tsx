@@ -66,7 +66,7 @@ export function UserDataExport(props: {
       data-tip={t("exportToSpreadsheet")}
     >
       {t("exportData")}
-      <span className="feather feather-download ms-3" />
+      <span className="icon-download ms-3" />
     </CSVLink>
   );
 }

@@ -4,6 +4,7 @@ import Navbar from "../components/react/components/Navbar";
 import i18next from "i18next";
 import { getLanguageFlags } from "../languages";
 import { HeadHrefLangs } from "astro-i18next/components";
+// import "lucide-static/font/Lucide.css"
 import "../tailwind.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
@@ -43,7 +44,7 @@ const { title } = Astro.props;
     <HeadHrefLangs />
 
     <link rel="manifest" href="/manifest.json" />
-    <link rel="stylesheet" href="/icons/feather/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.376.0/font/lucide.css" />
     <link rel="preconnect" href="https://images.clothingloop.org" />
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link

@@ -75,28 +75,28 @@ export default function Testimonials() {
             onClick={() => click(CarouselOperation.MINUS)}
             aria-label="previous testimonial"
           >
-            <span className="feather feather-arrow-left" />
+            <span className="icon-arrow-left" />
           </button>
           <button
             className="btn btn-circle btn-secondary opacity-70 rtl:hidden ml-4"
             onClick={() => click(CarouselOperation.PLUS)}
             aria-label="next testimonial"
           >
-            <span className="feather feather-arrow-right" />
+            <span className="icon-arrow-right" />
           </button>
           <button
             className="btn btn-circle btn-secondary opacity-70 ltr:hidden"
             onClick={() => click(CarouselOperation.MINUS_RTL)}
             aria-label="previous testimonial"
           >
-            <span className="feather feather-arrow-right" />
+            <span className="icon-arrow-right" />
           </button>
           <button
             className="btn btn-circle btn-secondary opacity-70 ltr:hidden mr-4"
             onClick={() => click(CarouselOperation.PLUS_RTL)}
             aria-label="next testimonial"
           >
-            <span className="feather feather-arrow-left" />
+            <span className="icon-arrow-left" />
           </button>
         </div>
       </div>

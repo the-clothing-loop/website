@@ -139,7 +139,11 @@ acc.clothingloop.org {
 	}
 
 	handle_path /api/* {
-		reverse_proxy 127.0.0.1:8082
+		reverse_proxy 127.0.0.1:8082 {
+			health_uri /v2/ping
+			lb_try_duration 30s
+			max_fails 2
+		}
 	}
 
 	redir /mailpit /mailpit/
@@ -148,7 +152,11 @@ acc.clothingloop.org {
 			hello@clothingloop.org TUFJTFBJVF9QQVNTV09SRA==
 		}
 		rewrite * /mailpit{path}
-		reverse_proxy 127.0.0.1:8085
+		reverse_proxy 127.0.0.1:8085 {
+			health_uri /api/v1/info
+			lb_try_duration 30s
+			max_fails 2
+		}
 	}
 
 	handle {
@@ -172,7 +180,11 @@ acc.app.clothingloop.org {
 	}
 
 	handle_path /api/* {
-		reverse_proxy 127.0.0.1:8082
+		reverse_proxy 127.0.0.1:8082 {
+			health_uri /v2/ping
+			lb_try_duration 30s
+			max_fails 2
+		}
 	}
 
 	handle {

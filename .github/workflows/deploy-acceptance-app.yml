@@ -34,7 +34,5 @@ jobs:
       - name: Send public files to vps
         run: |
           rsync -az --delete ./app/build/ admin@vps2.vps.webdock.cloud:/home/admin/acc.app.clothingloop.org/
-          ssh admin@vps2.vps.webdock.cloud "\
-          sudo chmod -R 0775 /home/admin/acc.app.clothingloop.org/; \
-          sudo systemctl reload caddy"
+          ssh admin@vps2.vps.webdock.cloud "sudo rsync -z -rlt --chown=www-data:www-data --chmod=0775 --delete /home/admin/acc.app.clothingloop.org/ /var/www/acc.app.clothingloop.org/"
           echo "done"
