@@ -30,7 +30,7 @@ interface Props {
 // This follows the controller / view component pattern
 export default function ChatWindow(props: Props) {
   const { t } = useTranslation();
-  const { isChainAdmin, chain } = useContext(StoreContext);
+  const { isChainAdmin, chain, chainUsers } = useContext(StoreContext);
   const slowTriggerScrollTop = useDebouncedCallback(() => {
     const lastPostId = props.postList.order.at(-1);
     if (lastPostId) {
@@ -187,27 +187,25 @@ export default function ChatWindow(props: Props) {
             </button>
           );
         })}
-        {isChainAdmin ? (
-          <IonActionSheet
-            header={t("chatRoomOptions")}
-            isOpen={isActionSheetOpen}
-            onDidDismiss={() => setIsActionSheetOpen(false)}
-            buttons={[
-              {
-                text: "Rename",
-                handler: () => handleOptionSelect("rename"),
-              },
-              {
-                text: "Delete",
-                handler: () => handleOptionSelect("delete"),
-              },
-              {
-                text: "Cancel",
-                role: "cancel",
-              },
-            ]}
-          ></IonActionSheet>
-        ) : null}
+        <IonActionSheet
+          header={t("chatRoomOptions")}
+          isOpen={isActionSheetOpen}
+          onDidDismiss={() => setIsActionSheetOpen(false)}
+          buttons={[
+            {
+              text: "Rename",
+              handler: () => handleOptionSelect("rename"),
+            },
+            {
+              text: "Delete",
+              handler: () => handleOptionSelect("delete"),
+            },
+            {
+              text: "Cancel",
+              role: "cancel",
+            },
+          ]}
+        ></IonActionSheet>
         <div key="plus" className="tw-p-2 tw-me-4 tw-flex tw-shrink-0">
           <button
             id="create_channel_btn"
@@ -239,8 +237,18 @@ export default function ChatWindow(props: Props) {
       >
         {props.postList.order.map((item, i) => {
           const post = props.postList.posts[item];
+          const prevPostID = props.postList.order.at(i - 1);
+          const prevPost = prevPostID ? props.postList.posts[prevPostID] : null;
           const isMe = post.user_id === props.authUser.uid;
-          return <ChatPost post={post} key={post.id} isMe={isMe} />;
+          return (
+            <ChatPost
+              post={post}
+              prevPost={prevPost}
+              key={post.id}
+              isMe={isMe}
+              users={chainUsers}
+            />
+          );
           // return <span>{post.id}</span>;
         })}
         <span key="top" ref={refScrollTop}></span>
