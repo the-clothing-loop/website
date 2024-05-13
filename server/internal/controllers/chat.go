@@ -22,7 +22,7 @@ func ChatPatchUser(c *gin.Context) {
 		return
 	}
 
-	ok, user, _ := auth.Authenticate(c, db, auth.AuthState2UserOfChain, body.ChainUID)
+	ok, user, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, body.ChainUID)
 	if !ok {
 		return
 	}
@@ -35,6 +35,18 @@ func ChatPatchUser(c *gin.Context) {
 	if user.ChatPass.String == "" {
 		c.AbortWithError(http.StatusTeapot, fmt.Errorf("password is not set"))
 		return
+	}
+
+	// Create a new channel if none exists
+	if len(chain.ChatRoomIDs) == 0 {
+		_, isChainAdmin := user.IsPartOfChain(chain.UID)
+		if isChainAdmin {
+			_, err := services.ChatCreateChannel(db, c.Request.Context(), chain, user.ChatUserID.String, "General")
+			if err != nil {
+				c.String(http.StatusInternalServerError, err.Error())
+				return
+			}
+		}
 	}
 
 	json := gin.H{
