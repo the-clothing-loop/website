@@ -44,7 +44,8 @@ type WebSocketMessagePosted = WebSocketMessage<{
 // This follows the controller / view component pattern
 export default function Chat() {
   const { t } = useTranslation();
-  const { chain, mmData, setMmData, isThemeDefault } = useContext(StoreContext);
+  const { chain, setChain, mmData, setMmData, isThemeDefault } =
+    useContext(StoreContext);
 
   const [mmWsClient, setMmWsClient] = useState<WebSocketClient | null>(null);
   const [channels, setChannels] = useState<Channel[]>([]);
@@ -163,9 +164,12 @@ export default function Chat() {
         ...(chain.chat_room_ids || []),
         id,
       ]);
+      const _channel = _channels.find((c) => c.id == id) || null;
+
       setChannels(_channels);
-      const _channel = _channels.at(-1) || null;
       setSelectedChannel(_channel);
+      // update chain object from server to update chain.room_ids value
+      await setChain(chain.uid, authUser);
       if (!_channel) return;
       reqPostList(mmClient, _channel, "");
     } catch (err) {
@@ -173,7 +177,7 @@ export default function Chat() {
     }
   }
 
-  async function onRenameChannel(name: string) {
+  async function onRenameChannel(channel: Channel, name: string) {
     if (!chain || !mmClient) {
       if (!chain) console.error("chain not found");
       if (!mmClient) console.error("mmClient not found");
@@ -181,7 +185,14 @@ export default function Chat() {
     }
     try {
       console.info("Updating channel name", name);
-      // Update channel name
+      channel.display_name = name;
+      await mmClient.updateChannel(channel);
+      const _channels = await getChannels(
+        mmClient,
+        mmData,
+        chain?.chat_room_ids || [],
+      );
+      setChannels(_channels);
     } catch (err) {
       console.error(err);
     }

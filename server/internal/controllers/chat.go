@@ -85,6 +85,32 @@ func ChatCreateChannel(c *gin.Context) {
 	})
 }
 
+func ChatDeleteChannel(c *gin.Context) {
+	db := getDB(c)
+
+	var body struct {
+		ChainUID  string `json:"chain_uid" binding:"required,uuid"`
+		ChannelID string `json:"channel_id" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+	if !ok {
+		return
+	}
+
+	err := services.ChatDeleteChannel(db, c.Request.Context(), chain, body.ChannelID)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
 func ChatJoinChannels(c *gin.Context) {
 	db := getDB(c)
 

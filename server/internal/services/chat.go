@@ -88,6 +88,22 @@ func ChatCreateChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mm
 	return newChannel, nil
 }
 
+func ChatDeleteChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mmChannelID string) error {
+	_, err := app.ChatClient.DeleteChannel(ctx, mmChannelID)
+	if err != nil {
+		return err
+	}
+
+	chain.ChatRoomIDs = lo.Filter(chain.ChatRoomIDs, func(roomID string, _ int) bool {
+		return roomID != mmChannelID
+	})
+	err = chain.SaveChannelIDs(db)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func chatChannelAddUser(ctx context.Context, mmChannelId string, mmUserId string, setRoleAdmin bool) error {
 	member, _, err := app.ChatClient.AddChannelMember(ctx, mmChannelId, mmUserId)
 	if err != nil {
