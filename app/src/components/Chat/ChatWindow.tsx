@@ -6,23 +6,27 @@ import { IonActionSheet, IonAlert, IonIcon, useIonAlert } from "@ionic/react";
 import { addOutline, build as buildFilled } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IonAlertCustomEvent } from "@ionic/core";
-import { PostList } from "@mattermost/types/posts";
+import type { PostList, Post } from "@mattermost/types/posts";
 import { User } from "../../api/types";
-import ChatPost from "./ChatPost";
+import ChatPost, { ChatPostProps } from "./ChatPost";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { useLongPress } from "use-long-press";
+import dayjs from "dayjs";
+import { UserProfile } from "@mattermost/types/users";
 
 interface Props {
   channels: Channel[];
   selectedChannel: Channel | null;
   postList: PostList;
   authUser: User;
+  getMmUser: (id: string) => Promise<UserProfile>;
   onCreateChannel: (n: string) => void;
   onSelectChannel: (c: Channel) => void;
   onRenameChannel: (c: Channel, n: string) => void;
   onDeleteChannel: (id: string) => void;
+  onDeletePost: (id: string) => void;
   onScrollTop: (topPostId: string) => void;
   onSendMessage: (msg: string, callback: Function) => Promise<void>;
 }
@@ -30,7 +34,8 @@ interface Props {
 // This follows the controller / view component pattern
 export default function ChatWindow(props: Props) {
   const { t } = useTranslation();
-  const { isChainAdmin, chain, chainUsers } = useContext(StoreContext);
+  const { authUser, isChainAdmin, chain, chainUsers } =
+    useContext(StoreContext);
   const slowTriggerScrollTop = useDebouncedCallback(() => {
     const lastPostId = props.postList.order.at(-1);
     if (lastPostId) {
@@ -43,7 +48,11 @@ export default function ChatWindow(props: Props) {
     root: refScrollRoot.current,
   });
 
-  const [isActionSheetOpen, setIsActionSheetOpen] = useState(false);
+  const [isChannelActionSheetOpen, setIsChannelActionSheetOpen] =
+    useState(false);
+  const [isPostActionSheetOpen, setIsPostActionSheetOpen] = useState<
+    string | null
+  >(null);
   const [presentAlert] = useIonAlert();
 
   useEffect(() => {
@@ -56,9 +65,7 @@ export default function ChatWindow(props: Props) {
   const chainChannels = useMemo(() => {
     if (!chain || !chain.chat_room_ids) return [];
     console.log("chainChannels", props.channels);
-    return props.channels
-      .filter((c) => chain.chat_room_ids?.includes(c.id))
-      .sort((a, b) => (a.create_at > b.create_at ? 1 : 0));
+    return props.channels.sort((a, b) => (a.create_at > b.create_at ? 1 : 0));
   }, [props.channels, chain]);
 
   function onCreateChannelSubmit(e: IonAlertCustomEvent<any>) {
@@ -87,16 +94,36 @@ export default function ChatWindow(props: Props) {
 
   const longPressChannel = useLongPress(
     (e) => {
-      setIsActionSheetOpen(true);
+      setIsChannelActionSheetOpen(true);
     },
     {
       onCancel: (e) => {
-        setIsActionSheetOpen(false);
+        setIsChannelActionSheetOpen(false);
       },
     },
   );
 
-  function handleOptionSelect(value: string) {
+  function handlePostOptionSelect(value: "delete") {
+    if (value == "delete") {
+      const postID = isPostActionSheetOpen;
+      if (!postID) return;
+      presentAlert({
+        header: "Delete post?",
+        buttons: [
+          {
+            text: t("cancel"),
+          },
+          {
+            role: "destructive",
+            text: t("delete"),
+            handler: () => props.onDeletePost(postID),
+          },
+        ],
+      });
+    }
+  }
+
+  function handleChannelOptionSelect(value: "delete" | "rename") {
     if (value == "delete") {
       const handler = () => {
         onDeleteChannelSubmit();
@@ -189,19 +216,20 @@ export default function ChatWindow(props: Props) {
         })}
         <IonActionSheet
           header={t("chatRoomOptions")}
-          isOpen={isActionSheetOpen}
-          onDidDismiss={() => setIsActionSheetOpen(false)}
+          isOpen={isChannelActionSheetOpen}
+          onDidDismiss={() => setIsChannelActionSheetOpen(false)}
           buttons={[
             {
-              text: "Rename",
-              handler: () => handleOptionSelect("rename"),
+              text: t("rename"),
+              handler: () => handleChannelOptionSelect("rename"),
             },
             {
-              text: "Delete",
-              handler: () => handleOptionSelect("delete"),
+              text: t("delete"),
+              role: "destructive",
+              handler: () => handleChannelOptionSelect("delete"),
             },
             {
-              text: "Cancel",
+              text: t("cancel"),
               role: "cancel",
             },
           ]}
@@ -235,25 +263,40 @@ export default function ChatWindow(props: Props) {
         ref={refScrollRoot}
         className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto"
       >
-        {props.postList.order.map((item, i) => {
-          const post = props.postList.posts[item];
-          const prevPostID = props.postList.order.at(i - 1);
-          const prevPost = prevPostID ? props.postList.posts[prevPostID] : null;
-          const isMe = post.user_id === props.authUser.uid;
+        {props.postList.order.map((postID, i) => {
+          const post = props.postList.posts[postID];
+          // const prevPostID = props.postList.order[i + 1];
+          // const prevPost = prevPostID ? props.postList.posts[prevPostID] : null;
           return (
             <ChatPost
+              isChainAdmin={isChainAdmin}
+              authUser={authUser}
+              onLongPress={(id) => setIsPostActionSheetOpen(id)}
               post={post}
-              prevPost={prevPost}
+              getMmUser={props.getMmUser}
               key={post.id}
-              isMe={isMe}
               users={chainUsers}
             />
           );
-          // return <span>{post.id}</span>;
         })}
         <span key="top" ref={refScrollTop}></span>
       </div>
       <ChatInput onSendMessage={onSendMessageWithCallback} />
+      <IonActionSheet
+        isOpen={isPostActionSheetOpen !== null}
+        onDidDismiss={() => setIsPostActionSheetOpen(null)}
+        buttons={[
+          {
+            text: t("delete"),
+            role: "destructive",
+            handler: () => handlePostOptionSelect("delete"),
+          },
+          {
+            text: t("cancel"),
+            role: "cancel",
+          },
+        ]}
+      ></IonActionSheet>
     </div>
   );
 }

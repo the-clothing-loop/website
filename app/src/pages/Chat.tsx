@@ -1,33 +1,21 @@
 import {
-  IonButton,
   IonContent,
   IonHeader,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonList,
   IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { sendOutline } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { MmData, StoreContext } from "../stores/Store";
-import { SetStateAction, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as apiChat from "../api/chat";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
-import { Sleep } from "../utils/sleep";
-import { PaginatedPostList, Post, PostList } from "@mattermost/types/posts";
-import { addOutline } from "ionicons/icons";
-import { userGetAllByChain } from "../api/user";
-import { User } from "../api/types";
-import ChatInput, { SendingMsgState } from "../components/Chat/ChatInput";
-import ChatPost from "../components/Chat/ChatPost";
+import { PaginatedPostList, Post } from "@mattermost/types/posts";
 import RoomNotReady from "../components/Chat/RoomNotReady";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import { Channel } from "@mattermost/types/channels";
 import ChatWindow from "../components/Chat/ChatWindow";
 import Loading from "../components/PrivateRoute/Loading";
+import { UserProfile } from "@mattermost/types/users";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
 
@@ -50,6 +38,7 @@ export default function Chat() {
   const [mmWsClient, setMmWsClient] = useState<WebSocketClient | null>(null);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
+  const [mmUser, setMmUser] = useState<Record<string, UserProfile>>({});
   const [mmClient, setMmClient] = useState<Client4 | null | undefined>(
     undefined,
   );
@@ -65,6 +54,7 @@ export default function Chat() {
   const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
 
   useEffect(() => {
+    if (!chain || !mmData) return;
     let _mmData = mmData;
     let _mmClient = mmClient;
     if (chain && !_mmClient) {
@@ -84,8 +74,7 @@ export default function Chat() {
           // Start client
           _mmClient = new Client4();
           _mmClient.setUrl("http://localhost:5173/mm");
-          // _mmClient.setToken(_mmData.chat_pass!);
-          await _mmClient.login(authUser!.email, _mmData.chat_pass);
+          await _mmClient.loginById(_mmData.chat_user, _mmData.chat_pass);
           let me = await _mmClient.getMe();
           console.log("me", me);
 
@@ -97,16 +86,13 @@ export default function Chat() {
           let url = _mmClient.getWebSocketUrl().replace("http", "ws");
           _mmWsClient.initialize(url, _mmClient.getToken());
 
-          _mmWsClient.addMessageListener((msg) => {
-            console.log("message listen:", msg);
-            if (msg.event === "posted") {
-              // handlePostedMessage(_mmClient!, _mmData, msg);
-            }
-          });
-
           setMmClient(_mmClient);
           setMmWsClient(_mmWsClient);
           setMmData(_mmData);
+          if (chain.chat_room_ids?.length) {
+            console.log("get channels");
+            await getChannels(_mmClient, _mmData, chain.chat_room_ids);
+          }
         })
         .catch((err) => {
           console.error("error mmclient", err);
@@ -116,19 +102,36 @@ export default function Chat() {
 
     if (_mmClient && chain) {
       console.log("client");
-      if (chain.chat_room_ids?.length) {
-        console.log("get channels");
-        getChannels(_mmClient, _mmData, chain.chat_room_ids).then(
-          (_channels) => {
-            console.log("get channels", _channels);
-            if (_channels.length > 0 && _mmClient) {
-              onSelectChannel(_channels.at(0)!, _mmClient);
-            }
-          },
-        );
-      }
     }
   }, [mmData, chain]);
+
+  useEffect(() => {
+    console.log("selected channel", selectedChannel);
+    if (!selectedChannel || !mmClient) return;
+
+    reqPostList(mmClient, selectedChannel, "");
+
+    // _mmWsClient.addMessageListener((msg) => {
+    //   console.log("message listen:", msg);
+    //   if (msg.event === "posted") {
+    //     console.log(
+    //       "posted",
+    //       "selectedChannel",
+    //       selectedChannel,
+    //       "posted channel",
+    //       msg.data.channel_id,
+    //     );
+    //     if (
+    //       mmClient &&
+    //       selectedChannel &&
+    //       msg.data.channel_name === selectedChannel?.name
+    //     ) {
+    //       reqPostList(mmClient, selectedChannel, "");
+    //     }
+    //     // handlePostedMessage(_mmClient!, _mmData, msg);
+    //   }
+    // });
+  }, [selectedChannel]);
 
   /** Sets the channels state and return it too */
   async function getChannels(
@@ -144,6 +147,14 @@ export default function Chat() {
       if (chatRoomIDs?.includes(ch.id)) {
         _channels.push(ch);
       }
+    }
+    _channels.sort((a, b) => (a.create_at > b.create_at ? 1 : 0));
+
+    // if no channels are selected select the oldest
+    if (!selectedChannel) {
+      const _selectedChannel = _channels.at(0) || null;
+      console.log("selectedChannel", _selectedChannel?.display_name);
+      setSelectedChannel(_selectedChannel);
     }
 
     setChannels(_channels);
@@ -223,6 +234,15 @@ export default function Chat() {
     }
   }
 
+  function onDeletePost(postID: string) {
+    if (!mmClient) return;
+
+    console.info("deleting post", postID);
+    return mmClient.deletePost(postID).finally(() => {
+      reqPostList(mmClient, selectedChannel!, "");
+    });
+  }
+
   function onSelectChannel(channel: Channel, _mmClient?: Client4) {
     setSelectedChannel(channel);
 
@@ -258,7 +278,7 @@ export default function Chat() {
       const newPosts = (await _mmClient.getPosts(
         _selectedChannel.id,
         0,
-        20,
+        40,
         false,
         false,
         false,
@@ -304,6 +324,19 @@ export default function Chat() {
     apiChat.chatPatchUser(chain.uid);
   }
 
+  async function getMmUser(mmUserID: string): Promise<UserProfile> {
+    const found = mmUser[mmUserID];
+    if (found) return found;
+
+    const res = await mmClient?.getUser(mmUserID);
+    if (!res) throw "Unable to find user";
+    setMmUser((s) => ({
+      [res.id]: res,
+      ...s,
+    }));
+    return res;
+  }
+
   if (mmClient === undefined || !authUser) {
     return <Loading />;
   }
@@ -328,12 +361,14 @@ export default function Chat() {
           />
         ) : (
           <ChatWindow
+            getMmUser={getMmUser}
             channels={channels}
             selectedChannel={selectedChannel}
             onCreateChannel={onCreateChannel}
             onSelectChannel={onSelectChannel}
             onRenameChannel={onRenameChannel}
             onDeleteChannel={onDeleteChannel}
+            onDeletePost={onDeletePost}
             onSendMessage={onSendMessage}
             onScrollTop={onScrollTop}
             postList={postList}

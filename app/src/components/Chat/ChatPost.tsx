@@ -1,56 +1,69 @@
-import { IonItem } from "@ionic/react";
 import { Post } from "@mattermost/types/posts";
 import { User } from "../../api/types";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { UserProfile } from "@mattermost/types/users";
+import { useLongPress } from "use-long-press";
+import { IonButton, IonIcon } from "@ionic/react";
+import { ellipsisHorizontal } from "ionicons/icons";
 
-interface Props {
+export interface ChatPostProps {
   post: Post;
-  isMe: boolean;
   users: User[];
-  prevPost: Post | null;
+  authUser: User | null | undefined;
+  getMmUser: (id: string) => Promise<UserProfile>;
+  isChainAdmin: boolean;
+  onLongPress: (id: string) => void;
 }
 
-export default function ChatPost({ post, isMe, users, prevPost }: Props) {
-  const { username, message } = useMemo(() => {
-    let username = post.props.username;
-    let message = post.message;
-    for (let user of users) {
-      if (user.uid === post.props.username) {
-        username = user.name;
-      }
+export default function ChatPost(props: ChatPostProps) {
+  const longPress = useLongPress((e) => {
+    props.onLongPress(props.post.id);
+  });
+  const [username, setUsername] = useState("");
+  const [isMe, setIsMe] = useState(false);
+  const message = useMemo(() => {
+    props.getMmUser(props.post.user_id).then((res) => {
+      const user = props.users.find((u) => res.username === u.uid);
+      setUsername(user ? user.name : res.username);
+      setIsMe(user?.uid === props.authUser?.uid);
+    });
+
+    let message = props.post.message;
+    for (let user of props.users) {
       message = message.replaceAll(user.uid, user.name);
     }
-    return { username, message };
-  }, [users, post]);
+    return message;
+  }, [props.users, props.post]);
 
-  const isSameUserAsPrev = post.user_id === prevPost?.user_id;
-
-  return (
-    <>
-      {!isSameUserAsPrev ? (
-        <div className="tw-sticky tw-top-0 tw-font-bold tw-text-center tw-bg-[#ffffffa0]">
-          {username}
-        </div>
-      ) : null}
-      {post.type != "" ? (
-        <div className="tw-flex tw-justify-center">
-          <div className="tw-rounded tw-bg-light tw-max-w-xs tw-text-center tw-p-1 tw-my-2">
-            {message}
-          </div>
-        </div>
-      ) : (
-        <div className={` tw-shrink-0  ${post.is_following ? "" : "tw-mb-2"} `}>
-          <div
-            className={`tw-rounded-tl-2xl tw-rounded-tr-2xl tw-bg-light tw-p-2 ${
-              isMe
-                ? "tw-rounded-bl-2xl tw-float-right tw-ml-8 tw-mr-4"
-                : "tw-rounded-br-2xl tw-mr-8 tw-ml-4 tw-float-left"
-            }`}
-          >
-            {message}
-          </div>
-        </div>
-      )}
-    </>
+  return props.post.type != "" ? (
+    <div className="tw-flex tw-justify-center">
+      <div
+        className="tw-rounded tw-max-w-xs tw-text-center tw-text-sm tw-p-1 tw-my-2 tw-opacity-70 focus:tw-opacity-100 tw-bg-light"
+        tabIndex={-1}
+      >
+        {message}
+      </div>
+    </div>
+  ) : (
+    <div className="tw-mb-2" {...(props.isChainAdmin ? longPress : {})}>
+      <div
+        className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-ml-4".concat(
+          isMe ? " tw-bg-purple-shade" : " tw-bg-light",
+        )}
+      >
+        {username ? (
+          <div className="tw-text-xs tw-font-bold">{username}</div>
+        ) : null}
+        <div>{message}</div>
+      </div>
+      <IonButton
+        onClick={() => props.onLongPress(props.post.id)}
+        color="transparent"
+        className="tw-opacity-70"
+        type="button"
+      >
+        <IonIcon color="dark" icon={ellipsisHorizontal} />
+      </IonButton>
+    </div>
   );
 }
