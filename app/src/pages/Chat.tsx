@@ -1,4 +1,6 @@
 import {
+  IonButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonPage,
@@ -7,7 +9,7 @@ import {
 } from "@ionic/react";
 import { useTranslation } from "react-i18next";
 import { MmData, StoreContext } from "../stores/Store";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import * as apiChat from "../api/chat";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
 import { PaginatedPostList, Post } from "@mattermost/types/posts";
@@ -16,6 +18,8 @@ import { Channel } from "@mattermost/types/channels";
 import ChatWindow from "../components/Chat/ChatWindow";
 import Loading from "../components/PrivateRoute/Loading";
 import { UserProfile } from "@mattermost/types/users";
+import { BulkyItem } from "../api/types";
+import CreateUpdateBulky from "../components/CreateUpdateBulky";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
 
@@ -32,7 +36,7 @@ type WebSocketMessagePosted = WebSocketMessage<{
 // This follows the controller / view component pattern
 export default function Chat() {
   const { t } = useTranslation();
-  const { chain, setChain, mmData, setMmData, isThemeDefault } =
+  const { chain, setChain, mmData, setMmData, isThemeDefault, refresh } =
     useContext(StoreContext);
 
   const [mmWsClient, setMmWsClient] = useState<WebSocketClient | null>(null);
@@ -52,6 +56,8 @@ export default function Chat() {
   });
   const [loadingPostList, setLoadingPostList] = useState(false);
   const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
+  const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
+  const modal = useRef<HTMLIonModalElement>(null);
 
   useEffect(() => {
     if (!chain || !mmData) return;
@@ -308,6 +314,34 @@ export default function Chat() {
     reqPostList(mmClient, selectedChannel, lastPostId);
   }
 
+  async function onSendMessageWithImage(
+    message: string,
+    callback: Function,
+    image: string,
+  ) {
+    if (!selectedChannel || !mmClient) return;
+    console.log("reqPostList", selectedChannel.id);
+
+    const ch_id = selectedChannel.id;
+    console.log(selectedChannel.id, ch_id);
+
+    await mmClient.uploadFile({
+      channel_id: ch_id,
+      message: message,
+      files: [image],
+    });
+
+    reqPostList(mmClient, selectedChannel, "").then(() => callback());
+  }
+
+  async function getFile(fileId: string, timestamp: number) {
+    if (!selectedChannel || !mmClient) return;
+    const fileUrl = await mmClient.getFileUrl(fileId, timestamp);
+    return fileUrl.toString();
+
+    // reqPostList(mmClient, selectedChannel, "").then(() => callback());
+  }
+
   async function onSendMessage(message: string, callback: Function) {
     if (!selectedChannel || !mmClient) return;
     console.log("reqPostList", selectedChannel.id);
@@ -341,6 +375,11 @@ export default function Chat() {
     return <Loading />;
   }
 
+  function handleClickCreate() {
+    setUpdateBulky(null);
+    modal.current?.present();
+  }
+
   return (
     <IonPage>
       <IonHeader translucent>
@@ -348,6 +387,9 @@ export default function Chat() {
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
             Chat
           </IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={handleClickCreate}>Bulky Item</IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent
@@ -360,20 +402,29 @@ export default function Chat() {
             onClickEnable={onClickEnableChat}
           />
         ) : (
-          <ChatWindow
-            getMmUser={getMmUser}
-            channels={channels}
-            selectedChannel={selectedChannel}
-            onCreateChannel={onCreateChannel}
-            onSelectChannel={onSelectChannel}
-            onRenameChannel={onRenameChannel}
-            onDeleteChannel={onDeleteChannel}
-            onDeletePost={onDeletePost}
-            onSendMessage={onSendMessage}
-            onScrollTop={onScrollTop}
-            postList={postList}
-            authUser={authUser}
-          />
+          <>
+            <ChatWindow
+              getMmUser={getMmUser}
+              channels={channels}
+              selectedChannel={selectedChannel}
+              onCreateChannel={onCreateChannel}
+              onSelectChannel={onSelectChannel}
+              onRenameChannel={onRenameChannel}
+              onDeleteChannel={onDeleteChannel}
+              onDeletePost={onDeletePost}
+              getFile={getFile}
+              onSendMessage={onSendMessage}
+              onScrollTop={onScrollTop}
+              postList={postList}
+              authUser={authUser}
+            />
+            <CreateUpdateBulky
+              modal={modal}
+              didDismiss={() => refresh("bulky-items")}
+              bulky={updateBulky}
+              onSendBulkyItem={onSendMessageWithImage}
+            />
+          </>
         )}
       </IonContent>
     </IonPage>

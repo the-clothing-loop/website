@@ -22,6 +22,7 @@ interface Props {
   postList: PostList;
   authUser: User;
   getMmUser: (id: string) => Promise<UserProfile>;
+  getFile: (fileId: string, timestamp: number) => void;
   onCreateChannel: (n: string) => void;
   onSelectChannel: (c: Channel) => void;
   onRenameChannel: (c: Channel, n: string) => void;
@@ -274,6 +275,7 @@ export default function ChatWindow(props: Props) {
               onLongPress={(id) => setIsPostActionSheetOpen(id)}
               post={post}
               getMmUser={props.getMmUser}
+              getFile={props.getFile}
               key={post.id}
               users={chainUsers}
             />
