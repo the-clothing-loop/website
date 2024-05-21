@@ -227,7 +227,7 @@ function AppRoute() {
             <BagSVG bag={{ number: "", color: "currentColor" }} isList />
           </div>
           {hasBagTooOldMe ? (
-            <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-bg-danger"></div>
+            <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-ring-text tw-bg-danger"></div>
           ) : null}
           <IonLabel className="tw-text-[10px]">{t("bags")}</IonLabel>
         </IonTabButton>
