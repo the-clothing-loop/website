@@ -73,7 +73,7 @@ export default function Chat() {
             throw new Error("mmData not found");
           // Start client
           _mmClient = new Client4();
-          _mmClient.setUrl("http://localhost:5173/mm");
+          _mmClient.setUrl(VITE_CHAT_URL);
           await _mmClient.loginById(_mmData.chat_user, _mmData.chat_pass);
           let me = await _mmClient.getMe();
           console.log("me", me);
@@ -107,30 +107,35 @@ export default function Chat() {
 
   useEffect(() => {
     console.log("selected channel", selectedChannel);
-    if (!selectedChannel || !mmClient) return;
+    if (!selectedChannel || !mmClient || !mmWsClient) return;
+
+    mmClient.getTeamMembers(selectedChannel.id).then((res) => {
+      console.log(
+        "view",
+        res[0].mention_count_root,
+        "channel id",
+        selectedChannel.id,
+        "user id",
+        mmUser.id,
+      );
+    });
 
     reqPostList(mmClient, selectedChannel, "");
+    const listener = (msg: WebSocketMessage) => {
+      console.log("message listen:", msg?.event, msg);
+      if (msg.event === "posted") {
+        if (!mmClient || !selectedChannel) return;
 
-    // _mmWsClient.addMessageListener((msg) => {
-    //   console.log("message listen:", msg);
-    //   if (msg.event === "posted") {
-    //     console.log(
-    //       "posted",
-    //       "selectedChannel",
-    //       selectedChannel,
-    //       "posted channel",
-    //       msg.data.channel_id,
-    //     );
-    //     if (
-    //       mmClient &&
-    //       selectedChannel &&
-    //       msg.data.channel_name === selectedChannel?.name
-    //     ) {
-    //       reqPostList(mmClient, selectedChannel, "");
-    //     }
-    //     // handlePostedMessage(_mmClient!, _mmData, msg);
-    //   }
-    // });
+        if (msg.data.channel_name === selectedChannel.name) {
+          reqPostList(mmClient, selectedChannel, "");
+        }
+      }
+    };
+
+    mmWsClient.addMessageListener(listener);
+    return () => {
+      mmWsClient.removeMessageListener(listener);
+    };
   }, [selectedChannel]);
 
   /** Sets the channels state and return it too */
@@ -246,7 +251,9 @@ export default function Chat() {
   function onSelectChannel(channel: Channel, _mmClient?: Client4) {
     setSelectedChannel(channel);
 
-    reqPostList(_mmClient || mmClient!, channel, "");
+    _mmClient = _mmClient || mmClient!;
+
+    reqPostList(_mmClient, channel, "");
   }
 
   async function reqPostList(
