@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	"github.com/mattermost/mattermost/server/public/model"
 	"github.com/samber/lo"
@@ -41,18 +42,45 @@ func ChatSetDefaultSettings(client *model.Client4) {
 		}
 	}
 
-	client.PatchConfig(context.TODO(), &model.Config{
+	_, _, err = client.PatchConfig(context.TODO(), &model.Config{
 		ServiceSettings: model.ServiceSettings{
 			EnableUserAccessTokens: lo.ToPtr(true),
+			EnableOutgoingWebhooks: lo.ToPtr(true),
 		},
 		TeamSettings: model.TeamSettings{
-			SiteName:           lo.ToPtr("Clothing Loop Chat"),
-			MaxUsersPerTeam:    lo.ToPtr(99_999),
-			MaxChannelsPerTeam: lo.ToPtr[int64](999_999),
+			SiteName:              lo.ToPtr("Clothing Loop Chat"),
+			CustomDescriptionText: lo.ToPtr("Open the MyClothingLoop app"),
+			MaxUsersPerTeam:       lo.ToPtr(99_999),
+			MaxChannelsPerTeam:    lo.ToPtr[int64](999_999),
 		},
 		EmailSettings: model.EmailSettings{
 			EnableSignUpWithEmail:    lo.ToPtr(false),
 			RequireEmailVerification: lo.ToPtr(false),
+			SendEmailNotifications:   lo.ToPtr(true),
+			FeedbackName:             lo.ToPtr("The Clothing Loop"),
+			FeedbackEmail:            lo.ToPtr("noreply@clothingloop.org"),
+			EnableEmailBatching:      lo.ToPtr(true),
+			EmailBatchingInterval:    lo.ToPtr(5 * 30 /* seconds */),
+			ReplyToAddress:           lo.ToPtr("hello@clothingloop.org"),
+			SMTPUsername:             &Config.SMTP_USER,
+			SMTPPassword:             &Config.SMTP_PASS,
+			SMTPServer:               &Config.SMTP_HOST,
+			SMTPPort:                 lo.ToPtr(fmt.Sprint(Config.SMTP_PORT)),
+			EnableSMTPAuth:           lo.ToPtr(Config.SMTP_PASS != ""),
+			ConnectionSecurity:       lo.ToPtr(lo.Ternary(Config.SMTP_PASS != "", model.ConnSecurityTLS, model.ConnSecurityNone)),
+		},
+		PluginSettings: model.PluginSettings{
+			PluginStates: map[string]*model.PluginState{
+				"com+mattermost+nps": {
+					Enable: false,
+				},
+				"com+mattermost+calls": {
+					Enable: false,
+				},
+			},
+		},
+		SupportSettings: model.SupportSettings{
+			SupportEmail: lo.ToPtr("hello@clothingloop.org"),
 		},
 		PrivacySettings: model.PrivacySettings{
 			ShowEmailAddress: lo.ToPtr(false),
@@ -64,6 +92,13 @@ func ChatSetDefaultSettings(client *model.Client4) {
 			AndroidAppDownloadLink: lo.ToPtr("https://play.google.com/store/apps/details?id=org.clothingloop.app"),
 		},
 	})
+
+	if err != nil {
+		slog.Error("unable to set mattermost configuration")
+		panic(err)
+	}
+
+	// client.web
 
 	ChatTeamId = mmTeam.Id
 }
