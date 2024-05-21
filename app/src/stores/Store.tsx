@@ -140,11 +140,6 @@ export function StoreProvider({
       await _storage.set("version", 1);
     }
     setBagListView((await _storage.get("bag_list_view")) || "dynamic");
-    let _mmToken = (await _storage.get("mm_token")) || "";
-    setMmData((s) => {
-      s.chat_token = _mmToken;
-      return { ...s };
-    });
     _setBagListView((await _storage.get("bag_list_view")) || "dynamic");
     _setBagSort((await _storage.get("bag_sort")) || "aToZ");
     _setRouteListView((await _storage.get("route_list_view")) || "dynamic");
