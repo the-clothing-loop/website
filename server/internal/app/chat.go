@@ -42,7 +42,12 @@ func ChatSetDefaultSettings(client *model.Client4) {
 		}
 	}
 
-	_, _, err = client.PatchConfig(context.TODO(), &model.Config{
+	emailBatchingInterval := 5 * 60 // seconds
+	if Config.ENV == EnvEnumDevelopment {
+		emailBatchingInterval = 60
+	}
+
+	config := &model.Config{
 		ServiceSettings: model.ServiceSettings{
 			EnableUserAccessTokens: lo.ToPtr(true),
 			EnableOutgoingWebhooks: lo.ToPtr(true),
@@ -60,14 +65,8 @@ func ChatSetDefaultSettings(client *model.Client4) {
 			FeedbackName:             lo.ToPtr("The Clothing Loop"),
 			FeedbackEmail:            lo.ToPtr("noreply@clothingloop.org"),
 			EnableEmailBatching:      lo.ToPtr(true),
-			EmailBatchingInterval:    lo.ToPtr(5 * 30 /* seconds */),
+			EmailBatchingInterval:    lo.ToPtr(emailBatchingInterval),
 			ReplyToAddress:           lo.ToPtr("hello@clothingloop.org"),
-			SMTPUsername:             &Config.SMTP_USER,
-			SMTPPassword:             &Config.SMTP_PASS,
-			SMTPServer:               &Config.SMTP_HOST,
-			SMTPPort:                 lo.ToPtr(fmt.Sprint(Config.SMTP_PORT)),
-			EnableSMTPAuth:           lo.ToPtr(Config.SMTP_PASS != ""),
-			ConnectionSecurity:       lo.ToPtr(lo.Ternary(Config.SMTP_PASS != "", model.ConnSecurityTLS, model.ConnSecurityNone)),
 		},
 		PluginSettings: model.PluginSettings{
 			PluginStates: map[string]*model.PluginState{
@@ -91,14 +90,22 @@ func ChatSetDefaultSettings(client *model.Client4) {
 			IosAppDownloadLink:     lo.ToPtr("https://apps.apple.com/us/app/my-clothing-loop/id6451443500"),
 			AndroidAppDownloadLink: lo.ToPtr("https://play.google.com/store/apps/details?id=org.clothingloop.app"),
 		},
-	})
+	}
+
+	if Config.MM_SMTP_HOST != "" {
+		config.EmailSettings.SMTPUsername = lo.ToPtr("")
+		config.EmailSettings.SMTPPassword = lo.ToPtr("")
+		config.EmailSettings.SMTPServer = &Config.MM_SMTP_HOST
+		config.EmailSettings.SMTPPort = &Config.MM_SMTP_PORT
+		config.EmailSettings.EnableSMTPAuth = lo.ToPtr(false)
+		config.EmailSettings.ConnectionSecurity = lo.ToPtr(model.ConnSecurityNone)
+	}
+	_, _, err = client.PatchConfig(context.TODO(), config)
 
 	if err != nil {
 		slog.Error("unable to set mattermost configuration")
 		panic(err)
 	}
-
-	// client.web
 
 	ChatTeamId = mmTeam.Id
 }

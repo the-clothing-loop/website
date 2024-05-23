@@ -46,6 +46,8 @@ var Config struct {
 	APPSTORE_REVIEWER_EMAIL string `yaml:"appstore_reviewer_email"`
 	MM_URL                  string `yaml:"mattermost_url"`
 	MM_TOKEN                string `yaml:"mattermost_token"`
+	MM_SMTP_HOST            string `yaml:"mattermost_smtp_host"`
+	MM_SMTP_PORT            string `yaml:"mattermost_smtp_port"`
 }
 
 func ConfigInit(path string) {

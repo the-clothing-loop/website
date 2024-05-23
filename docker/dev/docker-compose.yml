@@ -28,6 +28,16 @@ services:
     working_dir: /app
     stdin_open: true
     tty: true
+  mm-mail:
+    image: golang:1.22-alpine
+    ports:
+      - 2525:2525
+    depends_on:
+      - db    
+    volumes:
+      - ../../server:/app
+    working_dir: /app
+    command: go run cmd/mm-mail/main.go
   mail:
     image: axllent/mailpit
     ports:
@@ -62,6 +72,8 @@ services:
     image: mattermost/mattermost-preview
     ports:
       - 8065:8065
+    depends_on:
+      - mm-mail
     hostname: mattermost
 
 volumes:
