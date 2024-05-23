@@ -3,9 +3,18 @@ import { User } from "../../api/types";
 import { useEffect, useMemo, useState } from "react";
 import { UserProfile } from "@mattermost/types/users";
 import { useLongPress } from "use-long-press";
-import { IonButton, IonIcon } from "@ionic/react";
+import {
+  IonButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonIcon,
+  IonItem,
+  IonRoute,
+  IonText,
+} from "@ionic/react";
 import { ellipsisHorizontal, time } from "ionicons/icons";
-import { c } from "vitest/dist/reporters-5f784f42";
+import { useTranslation } from "react-i18next";
 
 export interface ChatPostProps {
   post: Post;
@@ -18,13 +27,17 @@ export interface ChatPostProps {
 }
 
 export default function ChatPost(props: ChatPostProps) {
+  const { t } = useTranslation();
+
   const longPress = useLongPress((e) => {
     props.onLongPress(props.post.id);
   });
   const [username, setUsername] = useState("");
   const [isMe, setIsMe] = useState(false);
   const [imageURL, setImageURL] = useState("");
+  //const [user, setUser] = useState(User)
   const message = useMemo(() => {
+    console.log(props.post);
     props.getMmUser(props.post.user_id).then((res) => {
       const user = props.users.find((u) => res.username === u.uid);
       setUsername(user ? user.name : res.username);
@@ -60,6 +73,7 @@ export default function ChatPost(props: ChatPostProps) {
       }
     }
   }
+  let shouldExpandText = message.length > 50 || message.split("\n").length > 4;
 
   return props.post.type != "" ? (
     <div className="tw-flex tw-justify-center">
@@ -73,15 +87,48 @@ export default function ChatPost(props: ChatPostProps) {
   ) : imageURL ? (
     <div className="tw-mb-2" {...(props.isChainAdmin ? longPress : {})}>
       <div
-        className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-ml-4".concat(
+        className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-mx-4".concat(
           isMe ? " tw-bg-purple-shade" : " tw-bg-light",
         )}
       >
         {username ? (
           <div className="tw-text-xs tw-font-bold">{username}</div>
         ) : null}
-        <div>{message}</div>
-        <img src={imageURL}></img>
+        <img className="tw-mb-4" src={imageURL}></img>
+        <IonItem
+          lines="none"
+          routerLink={"/address/" + props.authUser?.uid}
+          className="tw-my-0 -tw-mx-4"
+          color="background"
+        >
+          <IonText>
+            <div className="tw-mb-4">
+              <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
+                {t("address")}
+              </h3>
+              <p className="ion-text-wrap tw-opacity-60">
+                {props.authUser?.address}
+              </p>
+            </div>
+            {shouldExpandText ? (
+              <span className="tw-mt-[-3px] tw-text-sm tw-leading-5 tw-font-semibold tw-block tw-text-primary">
+                {t("readMore")}
+              </span>
+            ) : null}
+            <div className="tw-mb-4">
+              <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
+                {t("description")}
+              </h3>
+              <p
+                className={`ion-text-wrap tw-opacity-60  ${
+                  shouldExpandText ? "tw-max-h-[46px]" : ""
+                }`}
+              >
+                {message}
+              </p>
+            </div>
+          </IonText>
+        </IonItem>
       </div>
       <IonButton
         onClick={() => props.onLongPress(props.post.id)}
@@ -95,7 +142,7 @@ export default function ChatPost(props: ChatPostProps) {
   ) : (
     <div className="tw-mb-2" {...(props.isChainAdmin ? longPress : {})}>
       <div
-        className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-ml-4".concat(
+        className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-mx-4".concat(
           isMe ? " tw-bg-purple-shade" : " tw-bg-light",
         )}
       >
