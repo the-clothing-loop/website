@@ -58,7 +58,8 @@ export default function Chat() {
   const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
   const modal = useRef<HTMLIonModalElement>(null);
-
+  const [url, setUrl] = useState("");
+  
   useEffect(() => {
     if (!chain || !mmData) return;
     let _mmData = mmData;
@@ -317,19 +318,30 @@ export default function Chat() {
   async function onSendMessageWithImage(
     message: string,
     callback: Function,
-    image: string,
+    image: File,
   ) {
     if (!selectedChannel || !mmClient) return;
     console.log("reqPostList", selectedChannel.id);
 
-    const ch_id = selectedChannel.id;
-    console.log(selectedChannel.id, ch_id);
+    const formData = new FormData();
+    formData.append("channel_id", selectedChannel.id);
+    formData.append("files", image);
 
-    await mmClient.uploadFile({
-      channel_id: ch_id,
-      message: message,
-      files: [image],
-    });
+    try {
+      const res = await mmClient.uploadFile(formData);
+      console.log(res);
+      const file_id = res.file_infos[0].id;
+      await mmClient.createPost({
+        channel_id: selectedChannel.id,
+        message: message,
+        file_ids: [file_id],
+      } as Partial<Post> as Post);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+
+    if (!selectedChannel || !mmClient) return;
 
     reqPostList(mmClient, selectedChannel, "").then(() => callback());
   }
@@ -337,9 +349,8 @@ export default function Chat() {
   async function getFile(fileId: string, timestamp: number) {
     if (!selectedChannel || !mmClient) return;
     const fileUrl = await mmClient.getFileUrl(fileId, timestamp);
+    //reqPostList(mmClient, selectedChannel, "").then(() => callback());
     return fileUrl.toString();
-
-    // reqPostList(mmClient, selectedChannel, "").then(() => callback());
   }
 
   async function onSendMessage(message: string, callback: Function) {

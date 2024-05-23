@@ -23,8 +23,7 @@ export default function ChatPost(props: ChatPostProps) {
   });
   const [username, setUsername] = useState("");
   const [isMe, setIsMe] = useState(false);
-  const [image, setImage] = useState("");
-
+  const [imageURL, setImageURL] = useState("");
   const message = useMemo(() => {
     props.getMmUser(props.post.user_id).then((res) => {
       const user = props.users.find((u) => res.username === u.uid);
@@ -41,7 +40,7 @@ export default function ChatPost(props: ChatPostProps) {
   useEffect(() => {
     fetchImage()
       .then((im) => {
-        if (im) setImage(im);
+        if (im) setImageURL(im);
       })
       .catch((err) => {
         console.error(err);
@@ -54,7 +53,7 @@ export default function ChatPost(props: ChatPostProps) {
       const timestamp = props.post.create_at;
       try {
         const _image = await props.getFile(fileid, timestamp);
-        return _image as unknown as string; // Ensure _image is treated as string
+        return _image as unknown as string;
       } catch (err) {
         console.error(err);
         throw err;
@@ -71,7 +70,7 @@ export default function ChatPost(props: ChatPostProps) {
         {message}
       </div>
     </div>
-  ) : image ? (
+  ) : imageURL ? (
     <div className="tw-mb-2" {...(props.isChainAdmin ? longPress : {})}>
       <div
         className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-ml-4".concat(
@@ -82,7 +81,7 @@ export default function ChatPost(props: ChatPostProps) {
           <div className="tw-text-xs tw-font-bold">{username}</div>
         ) : null}
         <div>{message}</div>
-        <img src={image}></img>
+        <img src={imageURL}></img>
       </div>
       <IonButton
         onClick={() => props.onLongPress(props.post.id)}

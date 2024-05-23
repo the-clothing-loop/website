@@ -24,7 +24,7 @@ import {
   hourglassOutline,
   imageOutline,
 } from "ionicons/icons";
-import { ChangeEvent, RefObject, useContext, useState } from "react";
+import { ChangeEvent, RefObject, useContext, useRef, useState } from "react";
 import { bulkyItemPut } from "../api/bulky";
 import { BulkyItem } from "../api/types";
 import { StoreContext } from "../stores/Store";
@@ -33,6 +33,7 @@ import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { uploadImage } from "../api/imgbb";
+import { useIntersectionObserver } from "@uidotdev/usehooks";
 
 enum State {
   idle,
@@ -45,12 +46,18 @@ export default function CreateUpdateBulky({
   bulky,
   didDismiss,
   modal,
+  onSendBulkyItem,
 }: {
   bulky: BulkyItem | null;
   modal: RefObject<HTMLIonModalElement>;
   didDismiss?: (
     e: IonModalCustomEvent<OverlayEventDetail<BulkyItem | null>>,
   ) => void;
+  onSendBulkyItem: (
+    message: string,
+    callback: Function,
+    image: File,
+  ) => Promise<void>;
 }) {
   const { t } = useTranslation();
   const { chain, authUser } = useContext(StoreContext);
@@ -61,6 +68,10 @@ export default function CreateUpdateBulky({
   const [isCapacitor] = useState(() => isPlatform("capacitor"));
   const [loadingUpload, setLoadingUpload] = useState(State.loading);
   const [present] = useIonToast();
+  const refScrollRoot = useRef<HTMLDivElement>(null);
+
+
+  const [imageFile, setImageFile] = useState<File>();
 
   function modalInit() {
     setBulkyTitle(bulky?.title || "");
@@ -89,7 +100,18 @@ export default function CreateUpdateBulky({
       setError("image-url");
       return;
     }
+
+    if (!imageFile) return;
     try {
+      onSendBulkyItem(
+        bulkyMessage,
+        () => {
+          refScrollRoot.current?.scrollTo({
+            top: 0,
+          });
+        },
+        imageFile,
+      );
       let body: Parameters<typeof bulkyItemPut>[0] = {
         chain_uid: chain!.uid,
         user_uid: bulky?.user_uid || authUser!.uid,
@@ -99,7 +121,6 @@ export default function CreateUpdateBulky({
       };
       if (bulky) body.id = bulky.id;
       await bulkyItemPut(body);
-
       setError("");
 
       modal.current?.dismiss("", "confirm");
@@ -133,6 +154,7 @@ export default function CreateUpdateBulky({
 
   function handleWebUpload(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    if (file) setImageFile(file);
     if (!file) return;
 
     setLoadingUpload(State.loading);
