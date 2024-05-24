@@ -43,14 +43,6 @@ export default function ChatPost(props: ChatPostProps) {
       setUsername(user ? user.name : res.username);
       setIsMe(user?.uid === props.authUser?.uid);
     });
-
-    let message = props.post.message;
-    for (let user of props.users) {
-      message = message.replaceAll(user.uid, user.name);
-    }
-    return message;
-  }, [props.users, props.post]);
-  useEffect(() => {
     fetchImage()
       .then((im) => {
         if (im) setImageURL(im);
@@ -58,7 +50,12 @@ export default function ChatPost(props: ChatPostProps) {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+    let message = props.post.message;
+    for (let user of props.users) {
+      message = message.replaceAll(user.uid, user.name);
+    }
+    return message;
+  }, [props.users, props.post]);
 
   async function fetchImage() {
     if (props.post.file_ids) {
@@ -87,47 +84,52 @@ export default function ChatPost(props: ChatPostProps) {
   ) : imageURL ? (
     <div className="tw-mb-2" {...(props.isChainAdmin ? longPress : {})}>
       <div
-        className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-mx-4".concat(
+        className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-rounded-br-xl tw-mx-4 tw-relative".concat(
           isMe ? " tw-bg-purple-shade" : " tw-bg-light",
         )}
       >
+        <img
+          className="tw-mb-4 -tw-px-2 tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-max-h-96"
+          src={imageURL}
+        ></img>
         {username ? (
-          <div className="tw-text-xs tw-font-bold">{username}</div>
+          <div className="tw-text-xs tw-font-bold tw-px-2 tw-absolute tw-bottom-32 tw-text-white">
+            {username}
+          </div>
         ) : null}
-        <img className="tw-mb-4" src={imageURL}></img>
         <IonItem
           lines="none"
           routerLink={"/address/" + props.authUser?.uid}
-          className="tw-my-0 -tw-mx-4"
+          className="tw-my-0 -tw-mx-4 tw-p-2 "
           color="background"
         >
-          <IonText>
-            <div className="tw-mb-4">
-              <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
+          <div>
+            <div className="tw-mb-2">
+              <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
                 {t("address")}
               </h3>
-              <p className="ion-text-wrap tw-opacity-60">
+              <p className="ion-text-wrap tw-opacity-60 tw-text-xs">
                 {props.authUser?.address}
               </p>
             </div>
             {shouldExpandText ? (
-              <span className="tw-mt-[-3px] tw-text-sm tw-leading-5 tw-font-semibold tw-block tw-text-primary">
+              <span className="tw-mt-[-3px] tw-text-xs tw-leading-5 tw-font-semibold tw-block tw-text-primary">
                 {t("readMore")}
               </span>
             ) : null}
-            <div className="tw-mb-4">
-              <h3 className="ion-no-margin !tw-font-bold tw-text-lg tw-leading-5">
+            <div className="tw-mb-2">
+              <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
                 {t("description")}
               </h3>
               <p
-                className={`ion-text-wrap tw-opacity-60  ${
+                className={`ion-text-wrap tw-opacity-60 tw-text-xs ${
                   shouldExpandText ? "tw-max-h-[46px]" : ""
                 }`}
               >
                 {message}
               </p>
             </div>
-          </IonText>
+          </div>
         </IonItem>
       </div>
       <IonButton
