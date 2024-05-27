@@ -11,9 +11,12 @@ import {
   IonPage,
   IonRadio,
   IonRadioGroup,
+  IonRefresher,
+  IonRefresherContent,
   IonSearchbar,
   IonTitle,
   IonToolbar,
+  RefresherEventDetail,
 } from "@ionic/react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -30,6 +33,7 @@ import AddressListItem, {
 import wrapIndex from "../utils/wrap_index";
 import { useDebounce } from "@uidotdev/usehooks";
 import IsPaused from "../utils/is_paused";
+import { Sleep } from "../utils/sleep";
 
 export default function AddressList() {
   const {
@@ -129,6 +133,14 @@ export default function AddressList() {
     return arr;
   }, [route, chainUsers, routeListView, slowSearch]);
 
+  function handleRefresh(e: CustomEvent<RefresherEventDetail>) {
+    const refreshPromise = setChain(chain?.uid, authUser);
+    const sleepPromise = Sleep(500);
+    Promise.all([refreshPromise, sleepPromise]).then(() => {
+      e.detail.complete();
+    });
+  }
+
   return (
     <IonPage>
       <OverlayPaused />
@@ -222,6 +234,13 @@ export default function AddressList() {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
+        <IonRefresher
+          slot="fixed"
+          onIonRefresh={handleRefresh}
+          className="tw-z-0"
+        >
+          <IonRefresherContent />
+        </IonRefresher>
         <div className="tw-relative tw-min-h-full tw-flex tw-flex-col">
           <IonHeader collapse="condense">
             <IonToolbar>
