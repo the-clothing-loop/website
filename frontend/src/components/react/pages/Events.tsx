@@ -362,7 +362,13 @@ function EventItem({ event }: { event: Event }) {
               </span>
               <span>{" " + date.format("D")}</span>
             </p>
-            {event.price_currency ? (
+            {event.price_type === "free" ? (
+              <p className="py-1 px-3 bg-white/90 text-black">
+                <span className="inline-block pr-1 font-semibold">
+                  {t("priceFree")}
+                </span>
+              </p>
+            ) : event.price_type === "entrance" ? (
               <p className="py-1 px-3 bg-yellow-dark text-black">
                 <span className="inline-block pr-1 font-bold">
                   {event.price_currency}
@@ -371,13 +377,19 @@ function EventItem({ event }: { event: Event }) {
                   {eventPriceValue}
                 </span>
               </p>
-            ) : (
-              <p className="py-1 px-3 bg-white/90 text-black">
-                <span className="inline-block pr-1 font-semibold">
-                  {t("priceFree")}
+            ) : event.price_type === "donation" ? (
+              <p className="py-1 px-3 bg-purple-lighter/90 text-black">
+                <span className="inline-block pr-1 font-bold">
+                  {t(PRICE_TYPE_I18N["donation"])}
                 </span>
               </p>
-            )}
+            ) : event.price_type === "perswap" ? (
+              <p className="py-1 px-3 bg-lilac-light/90 text-black">
+                <span className="inline-block pr-1 font-bold">
+                  {t(PRICE_TYPE_I18N["perswap"])}
+                </span>
+              </p>
+            ) : null}
           </div>
           <img
             src={image}

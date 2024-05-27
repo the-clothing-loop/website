@@ -30,6 +30,12 @@ require (
 )
 
 require (
+	github.com/aymerick/douceur v0.2.0 // indirect
+	github.com/gorilla/css v1.0.0 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.26 // indirect
+)
+
+require (
 	github.com/antihax/optional v1.0.0 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect

@@ -3,40 +3,40 @@ package models
 import (
 	"time"
 
+	"github.com/microcosm-cc/bluemonday"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 )
 
-type EventPrice struct {
-	Value    float64 `json:"value"`
-	Currency string  `json:"currency"`
-}
+// ENUM(free, entrance, donation, perswap)
+type EventPriceType string
 
 type Event struct {
-	ID             uint        `json:"-"`
-	UID            string      `gorm:"uniqueIndex" json:"uid"`
-	Name           string      `json:"name"`
-	Description    string      `json:"description"`
-	Latitude       float64     `json:"latitude"`
-	Longitude      float64     `json:"longitude"`
-	Address        string      `json:"address"`
-	PriceValue     float64     `json:"price_value"`
-	PriceCurrency  zero.String `json:"price_currency"`
-	Link           string      `json:"link"`
-	Date           time.Time   `json:"date"`
-	DateEnd        null.Time   `json:"date_end"`
-	Genders        []string    `gorm:"serializer:json" json:"genders"`
-	ChainID        zero.Int    `json:"-"`
-	ChainUID       zero.String `json:"chain_uid" gorm:"-:migration;<-:false"`
-	UserID         uint        `json:"-"`
-	CreatedAt      time.Time   `json:"-"`
-	UpdatedAt      time.Time   `json:"-"`
-	UserUID        zero.String `json:"user_uid" gorm:"-:migration;<-:false"`
-	UserName       zero.String `json:"user_name" gorm:"-:migration;<-:false"`
-	UserEmail      zero.String `json:"user_email" gorm:"-:migration;<-:false"`
-	ImageUrl       string      `json:"image_url"`
-	ImageDeleteUrl string      `json:"-"`
-	ChainName      zero.String `json:"chain_name" gorm:"-:migration;<-:false"`
+	ID             uint               `json:"-"`
+	UID            string             `gorm:"uniqueIndex" json:"uid"`
+	Name           string             `json:"name"`
+	Description    string             `json:"description"`
+	Latitude       float64            `json:"latitude"`
+	Longitude      float64            `json:"longitude"`
+	Address        string             `json:"address"`
+	PriceValue     float64            `json:"price_value"`
+	PriceCurrency  zero.String        `json:"price_currency"`
+	PriceType      NullEventPriceType `json:"price_type"`
+	Link           string             `json:"link"`
+	Date           time.Time          `json:"date"`
+	DateEnd        null.Time          `json:"date_end"`
+	Genders        []string           `gorm:"serializer:json" json:"genders"`
+	ChainID        zero.Int           `json:"-"`
+	ChainUID       zero.String        `json:"chain_uid" gorm:"-:migration;<-:false"`
+	UserID         uint               `json:"-"`
+	CreatedAt      time.Time          `json:"-"`
+	UpdatedAt      time.Time          `json:"-"`
+	UserUID        zero.String        `json:"user_uid" gorm:"-:migration;<-:false"`
+	UserName       zero.String        `json:"user_name" gorm:"-:migration;<-:false"`
+	UserEmail      zero.String        `json:"user_email" gorm:"-:migration;<-:false"`
+	ImageUrl       string             `json:"image_url"`
+	ImageDeleteUrl string             `json:"-"`
+	ChainName      zero.String        `json:"chain_name" gorm:"-:migration;<-:false"`
 }
 
 const EventGetSql = `SELECT
@@ -49,6 +49,7 @@ events.longitude             AS longitude,
 events.address               AS address,
 events.price_value           AS price_value,
 events.price_currency        AS price_currency,
+events.price_type            AS price_type,
 events.link                  AS link,
 events.date                  AS date,
 events.date_end              AS date_end,
@@ -67,3 +68,8 @@ FROM events
 LEFT JOIN chains ON chains.id = chain_id
 LEFT JOIN users ON users.id = user_id
 `
+
+func (e *Event) ValidateDescription() {
+	p := bluemonday.UGCPolicy()
+	e.Description = p.Sanitize(e.Description)
+}

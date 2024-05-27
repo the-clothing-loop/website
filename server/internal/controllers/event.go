@@ -8,6 +8,7 @@ import (
 
 	ics "github.com/arran4/golang-ical"
 	"github.com/gin-gonic/gin"
+	"github.com/samber/lo"
 	uuid "github.com/satori/go.uuid"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
@@ -22,20 +23,21 @@ func EventCreate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		Name           string    `json:"name" binding:"required"`
-		Description    string    `json:"description"`
-		Latitude       float64   `json:"latitude" binding:"required,latitude"`
-		Longitude      float64   `json:"longitude" binding:"required,longitude"`
-		Address        string    `json:"address" binding:"required"`
-		PriceValue     float64   `json:"price_value" binding:"required_with=PriceCurrency"`
-		PriceCurrency  string    `json:"price_currency"`
-		Link           string    `json:"link"`
-		Date           time.Time `json:"date" binding:"required"`
-		DateEnd        null.Time `json:"date_end" binding:"omitempty"`
-		Genders        []string  `json:"genders" binding:"required"`
-		ChainUID       string    `json:"chain_uid,omitempty" binding:"omitempty"`
-		ImageUrl       string    `json:"image_url" binding:"required,url"`
-		ImageDeleteUrl string    `json:"image_delete_url" binding:"omitempty,url"`
+		Name           string                `json:"name" binding:"required"`
+		Description    string                `json:"description"`
+		Latitude       float64               `json:"latitude" binding:"required,latitude"`
+		Longitude      float64               `json:"longitude" binding:"required,longitude"`
+		Address        string                `json:"address" binding:"required"`
+		PriceValue     float64               `json:"price_value" binding:"required_with=PriceCurrency"`
+		PriceCurrency  string                `json:"price_currency"`
+		PriceType      models.EventPriceType `json:"price_type" binding:"required"`
+		Link           string                `json:"link"`
+		Date           time.Time             `json:"date" binding:"required"`
+		DateEnd        null.Time             `json:"date_end" binding:"omitempty"`
+		Genders        []string              `json:"genders" binding:"required"`
+		ChainUID       string                `json:"chain_uid,omitempty" binding:"omitempty"`
+		ImageUrl       string                `json:"image_url" binding:"required,url"`
+		ImageDeleteUrl string                `json:"image_delete_url" binding:"omitempty,url"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -71,7 +73,13 @@ func EventCreate(c *gin.Context) {
 		UserID:         user.ID,
 		ImageUrl:       body.ImageUrl,
 		ImageDeleteUrl: body.ImageDeleteUrl,
+		PriceType: models.NullEventPriceType{
+			EventPriceType: body.PriceType,
+			Valid:          true,
+			Set:            true,
+		},
 	}
+	event.ValidateDescription()
 	if body.ChainUID != "" && chain != nil {
 		event.ChainID = zero.NewInt(int64(chain.ID), true)
 	}
@@ -181,7 +189,7 @@ func EventGetPrevious(c *gin.Context) {
 	}
 	if query.IncludeTotal {
 		total := 0
-		db.Raw(`SELECT COUNT(*) FROM events WHERE date < NOW()`).Scan(&total)
+		err = db.Raw(`SELECT COUNT(*) FROM events WHERE date < NOW()`).Scan(&total).Error
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
 			return
@@ -229,21 +237,22 @@ func EventUpdate(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
-		UID            string     `json:"uid" binding:"required,uuid"`
-		Name           *string    `json:"name,omitempty"`
-		Description    *string    `json:"description,omitempty"`
-		Address        *string    `json:"address,omitempty"`
-		Link           *string    `json:"link,omitempty"`
-		PriceValue     *float64   `json:"price_value,omitempty"`
-		PriceCurrency  *string    `json:"price_currency,omitempty"`
-		Latitude       *float64   `json:"latitude,omitempty" binding:"omitempty,latitude"`
-		Longitude      *float64   `json:"longitude,omitempty" binding:"omitempty,longitude"`
-		Date           *time.Time `json:"date,omitempty"`
-		DateEnd        *time.Time `json:"date_end,omitempty"`
-		Genders        *[]string  `json:"genders,omitempty"`
-		ImageUrl       *string    `json:"image_url,omitempty"`
-		ImageDeleteUrl *string    `json:"image_delete_url,omitempty"`
-		ChainUID       *string    `json:"chain_uid,omitempty"`
+		UID            string                 `json:"uid" binding:"required,uuid"`
+		Name           *string                `json:"name,omitempty"`
+		Description    *string                `json:"description,omitempty"`
+		Address        *string                `json:"address,omitempty"`
+		Link           *string                `json:"link,omitempty"`
+		PriceValue     *float64               `json:"price_value,omitempty"`
+		PriceCurrency  *string                `json:"price_currency,omitempty"`
+		PriceType      *models.EventPriceType `json:"price_type,omitempty"`
+		Latitude       *float64               `json:"latitude,omitempty" binding:"omitempty,latitude"`
+		Longitude      *float64               `json:"longitude,omitempty" binding:"omitempty,longitude"`
+		Date           *time.Time             `json:"date,omitempty"`
+		DateEnd        *time.Time             `json:"date_end,omitempty"`
+		Genders        *[]string              `json:"genders,omitempty"`
+		ImageUrl       *string                `json:"image_url,omitempty"`
+		ImageDeleteUrl *string                `json:"image_delete_url,omitempty"`
+		ChainUID       *string                `json:"chain_uid,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -290,6 +299,7 @@ func EventUpdate(c *gin.Context) {
 	}
 	if body.Description != nil {
 		event.Description = *(body.Description)
+		event.ValidateDescription()
 	}
 	if body.Link != nil {
 		event.Link = *(body.Link)
@@ -328,6 +338,13 @@ func EventUpdate(c *gin.Context) {
 		}
 	}
 	if body.PriceCurrency != nil && body.PriceValue != nil {
+		if body.PriceType == nil {
+			if *body.PriceCurrency == "" {
+				body.PriceType = lo.ToPtr(models.EventPriceTypeEntrance)
+			} else {
+				body.PriceType = lo.ToPtr(models.EventPriceTypeFree)
+			}
+		}
 		if *body.PriceCurrency == "" {
 			event.PriceCurrency = zero.String{}
 			event.PriceValue = 0

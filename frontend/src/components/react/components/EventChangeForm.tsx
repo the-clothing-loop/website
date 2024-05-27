@@ -1,6 +1,7 @@
 import {
   type EventCreateBody,
   EVENT_IMAGE_EXPIRATION,
+  type EventPriceType,
 } from "../../../api/event";
 import { TextForm } from "./FormFields";
 import useForm from "../util/form.hooks";
@@ -35,6 +36,7 @@ const defaultValues: EventCreateBody = {
   address: "",
   price_currency: "€",
   price_value: 0,
+  price_type: "donation",
   link: "",
   date: dayjs().minute(0).second(0).format(),
   date_end: null,
@@ -88,6 +90,14 @@ const currencies = [
   "₫",
 ];
 
+const priceType: EventPriceType[] = ["free", "entrance", "donation", "perswap"];
+export const PRICE_TYPE_I18N: Record<EventPriceType, string> = {
+  free: "priceFree",
+  entrance: "entranceFee",
+  donation: "donation",
+  perswap: "Per swap",
+};
+
 export default function EventChangeForm(props: {
   initialValues?: EventCreateBody;
   onSubmit: (v: EventCreateBody) => void;
@@ -124,6 +134,9 @@ export default function EventChangeForm(props: {
   const [eventPriceCurrency, _setEventPriceCurrency] = useState(
     () => values.price_currency || defaultValues.price_currency!,
   );
+  const [eventPriceType, _setEventPriceType] = useState<EventPriceType>(
+    () => values.price_type || defaultValues.price_type!,
+  );
   const isValidPrice = useMemo(
     () => validatePrice(eventPriceText),
     [eventPriceText],
@@ -141,6 +154,7 @@ export default function EventChangeForm(props: {
 
     if (v === "") {
       _setEventPriceCurrency("");
+      _setEventPriceType("free");
       setEventPriceText("0");
       return;
     } else if (eventPriceValue === 0) {
@@ -148,6 +162,19 @@ export default function EventChangeForm(props: {
     }
 
     _setEventPriceCurrency(v);
+  }
+  function setEventPriceType(e: ChangeEvent<HTMLSelectElement>) {
+    const v = e.target.value as EventPriceType;
+
+    if (v === "free") {
+      _setEventPriceCurrency("");
+      setEventPriceText("0");
+    } else if (eventPriceType === "free" && eventPriceValue === 0) {
+      setEventPriceText("1");
+      _setEventPriceCurrency("€");
+    }
+
+    _setEventPriceType(v);
   }
 
   async function onImageUpload(e: ChangeEvent<HTMLInputElement>) {
@@ -209,8 +236,8 @@ export default function EventChangeForm(props: {
 
   return (
     <div className="w-full">
-      <form onSubmit={submit} className="grid gap-x-4 sm:grid-cols-2">
-        <div className="col-span-1 sm:col-span-2">
+      <form onSubmit={submit} className="grid gap-x-4 md:grid-cols-2">
+        <div className="col-span-1 md:col-span-2">
           <TextForm
             min={2}
             required
@@ -260,9 +287,9 @@ export default function EventChangeForm(props: {
             onChange={sepDate.time.onChange}
           />
         </div>
-        <div className="col-span-1 sm:col-span-2">
+        <div className="col-span-1 md:col-span-2">
           <div className={`mb-3 mt-5 ${hasEndDate ? "bg-base-100" : ""}`}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 -mt-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 -mt-2">
               <label className="inline-flex cursor-pointer p-4 transition-colors bg-base-100 bg-opacity-0 hover:bg-opacity-70">
                 <input
                   type="checkbox"
@@ -336,7 +363,7 @@ export default function EventChangeForm(props: {
             </div>
             <div className="input-group">
               <select
-                name="chain_uid"
+                name="event_price_currency"
                 onChange={setEventPriceCurrency}
                 value={eventPriceCurrency}
                 className="select select-secondary select-outlined"
@@ -351,7 +378,7 @@ export default function EventChangeForm(props: {
                 ))}
               </select>
               <input
-                className={`input ltr:border-l-0 rtl:border-r-0  w-full flex-grow ${
+                className={`input [appearance:textfield] ltr:border-l-0 rtl:border-r-0  w-full flex-grow ${
                   isValidPrice ? "input-secondary" : "input-error"
                 }`}
                 disabled={eventPriceCurrency === ""}
@@ -363,6 +390,18 @@ export default function EventChangeForm(props: {
                 value={eventPriceText}
                 onChange={(e) => setEventPriceText(e.target.value)}
               />
+              <select
+                name="event_price_type"
+                onChange={setEventPriceType}
+                value={eventPriceType}
+                className="select select-secondary select-outlined"
+              >
+                {priceType.map((v, i) => (
+                  <option value={v} key={v} defaultChecked={i === 2}>
+                    {t(PRICE_TYPE_I18N[v])}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -398,7 +437,7 @@ export default function EventChangeForm(props: {
             </label>
           </div>
 
-          <div className="mb-6 flex sm:justify-center">
+          <div className="mb-6 flex md:justify-center">
             <input
               type="file"
               className="hidden"

@@ -7,6 +7,7 @@ interface EventGetAllParams {
   radius: number;
 }
 
+export type EventPriceType = "free" | "entrance" | "donation" | "perswap";
 export interface EventCreateBody {
   name: string;
   description?: string;
@@ -15,6 +16,7 @@ export interface EventCreateBody {
   address: string;
   price_currency: string | null;
   price_value: number;
+  price_type: EventPriceType;
   link: string;
   date: string;
   date_end: string | null;
