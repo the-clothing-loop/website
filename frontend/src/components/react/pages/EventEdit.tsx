@@ -46,6 +46,7 @@ export default function EventEdit() {
         address: res.data.address,
         price_currency: res.data.price_currency,
         price_value: res.data.price_value,
+        price_type: res.data.price_type,
         link: res.data.link,
         date: res.data.date,
         date_end: res.data.date_end,
