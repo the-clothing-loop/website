@@ -53,6 +53,7 @@ import { loginSuperAsGenerateLink } from "../../../api/login";
 import ChainDescription from "../components/FindChain/ChainDescription";
 import { useLegal } from "../util/user.hooks";
 import QrCode from "../components/LoopMembers/QrCode";
+import ChainMemberListLoading from "../components/LoopMembers/LoopMembersLoading";
 const RouteMapPopup = lazy(
   () => import("../components/RouteMap/RouteMapPopup"),
 );
@@ -432,12 +433,11 @@ export default function ChainMemberList() {
   if (authUser === null) {
     console.info("Please redirect to /users/login", authUser);
     window.location.href = localizePath("/users/login");
-    return null;
   }
 
-  if (!(chain && users && unapprovedUsers && route && bags)) {
+  if (!(authUser && chain && users && unapprovedUsers && route && bags)) {
     // console.log(chain, users, unapprovedUsers, route, bags);
-    return null;
+    return <ChainMemberListLoading />;
   }
 
   const shareLink = PUBLIC_BASE_URL + "/loops/users/signup/?chain=" + chainUID;
