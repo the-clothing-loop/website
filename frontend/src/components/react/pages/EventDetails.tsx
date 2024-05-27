@@ -34,7 +34,7 @@ export default function EventDetails() {
   const localizePath = useLocalizePath(i18n);
 
   const authUser = useStore($authUser);
-  const [event, setEvent] = useState<Event>();
+  const [event, setEvent] = useState<Event | null>();
   const [eventUID] = getQuery("event");
 
   const addCopyAttributes = useToClipboard();
@@ -72,6 +72,7 @@ export default function EventDetails() {
         setEvent(res.data);
       });
     } catch (err: any) {
+      setEvent(null);
       console.error(err);
       addToastError(GinParseErrors(t, err), err.status);
     }
@@ -125,21 +126,25 @@ export default function EventDetails() {
   }
 
   if (!event) {
-    return (
-      <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
-        <h1 className="font-serif text-secondary text-4xl font-bold my-10">
-          {t("eventNotFound")}
-        </h1>
-        <div className="flex">
-          <a href={localizePath("/")} className="btn btn-primary mx-4">
-            {t("home")}
-          </a>
-          <a href={localizePath("/events")} className="btn btn-primary mx-4">
-            {t("events")}
-          </a>
+    if (event === null) {
+      return (
+        <div className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center">
+          <h1 className="font-serif text-secondary text-4xl font-bold my-10">
+            {t("eventNotFound")}
+          </h1>
+          <div className="flex">
+            <a href={localizePath("/")} className="btn btn-primary mx-4">
+              {t("home")}
+            </a>
+            <a href={localizePath("/events")} className="btn btn-primary mx-4">
+              {t("events")}
+            </a>
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return <EventDetailsLoading />;
+    }
   } else {
     const icalURL = eventICalURL(event.uid);
     const icalFilename = `${event.name}.ics`;
@@ -459,4 +464,49 @@ export default function EventDetails() {
       </>
     );
   }
+}
+
+function EventDetailsLoading() {
+  return (
+    <main>
+      <div className="bg-teal-light">
+        <div className="max-w-screen-xl mx-auto py-6 px-6 md:px-20">
+          <div className="font-serif font-bold text-secondary h-10 md:h-16 mb-6 px-0 bg-turquoise/50 w-52 animate-pulse"></div>
+          <div className="flex flex-col sm:flex-row md:mt-6 space-y-4 sm:space-y-0">
+            <span
+              className="btn btn-primary sm:me-4 animate-pulse"
+              style={{ width: "250px" }}
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-screen-xl mx-auto pt-6 px-6 md:px-20">
+        <div className="flex flex-col md:flex-row-reverse">
+          <div className="w-full md:w-3/5 md:-mt-20 mb-4 md:mb-0 ml-0 md:ml-12 lg:ml-20 rtl:ml-0 rtl:md:mr-12 rtl:lg:mr-20">
+            <div className="relative">
+              <dl
+                className="z-10 relative bg-grey-light md:bg-white md:shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] md:py-10 md:px-8 animate-pulse"
+                style={{ height: "450px" }}
+              ></dl>
+
+              <img
+                src={CirclesFrame}
+                aria-hidden
+                className="absolute -bottom-10  ltr:-right-10 rtl:-left-10 hidden md:block"
+              />
+            </div>
+          </div>
+          <div className="w-full animate-pulse">
+            <div className="bg-turquoise/50 w-52 h-8 mb-4 px-0"></div>
+
+            <div className="aspect-[4/3] mb-4 ltr:mr-0 rtl:ml-0 relative transtion-[postion] mt-8 sm:w-64 sm:float-right rtl:sm:float-left sm:m-4 bg-grey-light"></div>
+
+            {[60, 140, 140, 0, 60].map((v, i) => (
+              <div className="bg-grey-light h-8" style={{ width: v }} key={i} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </main>
+  );
 }

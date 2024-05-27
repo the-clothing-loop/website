@@ -81,6 +81,12 @@ export function SizeBadges({
   );
 }
 
+export function SizeBadgeLoading() {
+  return (
+    <div className="inline-flex flex-row mb-1 mr-1 rtl:mr-0 rtl:ml-1 rounded-full w-9 h-7 px-2 bg-orange-light"></div>
+  );
+}
+
 function SizeCatBadges({
   t,
   ...props

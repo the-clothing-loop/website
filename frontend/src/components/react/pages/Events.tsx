@@ -8,7 +8,7 @@ import {
   eventGetPrevious,
 } from "../../../api/event";
 import CategoriesDropdown from "../components/CategoriesDropdown";
-import { SizeBadges } from "../components/Badges";
+import { SizeBadgeLoading, SizeBadges } from "../components/Badges";
 import useForm from "../util/form.hooks";
 import { GinParseErrors } from "../util/gin-errors";
 
@@ -19,6 +19,7 @@ import { useStore } from "@nanostores/react";
 import { $authUser } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
+import { PRICE_TYPE_I18N } from "../components/EventChangeForm";
 const LocationModal = lazy(() => import("../components/LocationModal"));
 
 interface SearchValues {
@@ -41,7 +42,7 @@ export default function Events() {
   const localizePath = useLocalizePath(i18n);
 
   const authUser = useStore($authUser);
-  const [events, setEvents] = useState<Event[] | null>(null);
+  const [events, setEvents] = useState<Event[] | null | undefined>();
   const [prevEvents, setPrevEvents] = useState<EventGetPreviousResponse | null>(
     null,
   );
@@ -94,11 +95,9 @@ export default function Events() {
         eventGetAll({ latitude, longitude, radius }),
         eventGetPrevious({ latitude, longitude, radius, include_total: true }),
       ]);
-
       const filterFunc = createFilterFunc(filterGenders);
       setEvents(allData.data?.filter(filterFunc));
       setPrevEvents(prevData.data);
-
       {
         let nMorePrevEvents = 0;
         if (prevData.data?.previous_events) {
@@ -109,6 +108,7 @@ export default function Events() {
         setNMorePrevEvents(nMorePrevEvents);
       }
     } catch (err: any) {
+      setEvents(null);
       addToastError(GinParseErrors(t, err), err.status);
     }
   }
@@ -224,7 +224,7 @@ export default function Events() {
             )}
           </div>
 
-          {!events ? (
+          {events === null ? (
             <div
               className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center"
               key="noevent"
@@ -243,6 +243,15 @@ export default function Events() {
                   {t("allEvents")}
                 </a>
               </div>
+            </div>
+          ) : events === undefined ? (
+            <div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              key="eventloading"
+            >
+              {[1, 2, 3, 4].map((v) => (
+                <EventItemLoading key={v} />
+              ))}
             </div>
           ) : (
             <div
@@ -424,6 +433,34 @@ function EventItem({ event }: { event: Event }) {
       </div>
       <div className="m-4 mt-0">
         {event.genders?.length ? <SizeBadges g={event.genders} /> : null}
+      </div>
+    </article>
+  );
+}
+
+function EventItemLoading() {
+  return (
+    <article className="flex flex-col bg-teal-light opacity-80">
+      <div className="relative flex">
+        <div className="relative aspect-[4/3] w-full bg-grey-light animate-pulse">
+          <div className="text-md absolute mt-4 right-4 text-center z-10">
+            <div className="bg-teal h-10 w-24 py-2 px-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <div className="m-4 mb-2">
+        <div className="h-[26px] w-44 bg-teal animate-pulse"></div>
+      </div>
+      <div className="flex-grow mx-4 mb-8">
+        <span className="icon-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+        <span
+          className="inline-block w-8 bg-grey animate-pulse"
+          style={{ height: "21px" }}
+        />
+      </div>
+      <div className="m-4 mt-0 animate-pulse">
+        <SizeBadgeLoading />
       </div>
     </article>
   );

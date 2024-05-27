@@ -437,14 +437,14 @@ export default function EventChangeForm(props: {
             </label>
           </div>
 
-          <div className="mb-6 flex md:justify-center">
+          <div className="mb-6 flex flex-col md:justify-center border-2 border-secondary">
             <input
               type="file"
               className="hidden"
               onChange={onImageUpload}
               ref={refFileInput}
             />
-            <div className="relative w-full sm:w-96 aspect-[4/3] border-2 border-secondary flex justify-end items-top">
+            <div className="relative w-full aspect-[4/3] flex justify-end items-top">
               <div className="absolute z-10 flex flex-row">
                 {deleteImageUrl ? (
                   <button
@@ -474,6 +474,13 @@ export default function EventChangeForm(props: {
                 />
               ) : null}
             </div>
+            <input
+              type="url"
+              placeholder={t("uploadImageLink")!}
+              className="input input-xs w-full border-0 border-t border-secondary"
+              value={values.image_url}
+              onChange={(e) => setValue("image_url", e.target.value)}
+            />
           </div>
           <div className="flex justify-end">
             <button type="submit" className="btn btn-primary">
