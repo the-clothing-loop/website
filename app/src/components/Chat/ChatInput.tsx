@@ -59,23 +59,28 @@ export default function ChatInput(props: Props) {
     sendMessage();
   }
   function handleClickPlus() {
-    //setUpdateBulky(null);
     addBulkyItem.current?.open();
   }
   return (
     <>
-    <div className="tw-bg-light">
-          <IonFab slot="fixed" vertical="bottom" horizontal="start" color="light">
-            <IonFabButton className="tw-h-7 tw-w-7 ">
-              <IonIcon icon={addOutline}></IonIcon>
+      <div className="tw-bg-light">
+        <IonFab
+          slot="fixed"
+          vertical="bottom"
+          horizontal="start"
+          color="light"
+          className="-tw-ml-3 -tw-mb-4"
+        >
+          <IonFabButton size="small">
+            <IonIcon icon={addOutline}></IonIcon>
+          </IonFabButton>
+          <IonFabList side="top">
+            <IonFabButton size="small">
+              <IonIcon icon={shirtOutline}></IonIcon>
             </IonFabButton>
-            <IonFabList side="top" className="tw-my-10 tw-h-7 tw-w-7 ">
-              <IonFabButton size="small" className="tw-h-7 tw-w-7">
-                <IonIcon icon={shirtOutline}></IonIcon>
-              </IonFabButton>
-            </IonFabList>
-          </IonFab>
-        <form className="tw-flex-shrink-0 tw-ml-6" onSubmit={onSubmit}>
+          </IonFabList>
+        </IonFab>
+        <form className="tw-flex-shrink-0 tw-ml-8" onSubmit={onSubmit}>
           <IonItem
             lines="none"
             color="light"
@@ -103,7 +108,8 @@ export default function ChatInput(props: Props) {
               />
             </IonButton>
           </IonItem>
-        </form></div>
+        </form>
+      </div>
     </>
   );
 }
