@@ -1,28 +1,21 @@
 import {
   IonButton,
-  IonContent,
   IonFab,
   IonFabButton,
   IonFabList,
-  IonHeader,
   IonIcon,
   IonInput,
   IonItem,
-  IonSelect,
-  IonSelectOption,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
-import {
-  chevronDownCircle,
-  colorPalette,
-  globe,
-  sendOutline,
-  shirt,
-} from "ionicons/icons";
-import { useRef, useState } from "react";
+import { sendOutline } from "ionicons/icons";
+import { useContext, useRef, useState } from "react";
 import { Sleep } from "../../utils/sleep";
-import { shirtOutline, add, addOutline } from "ionicons/icons";
+import { addOutline } from "ionicons/icons";
+import CreateUpdateBulky from "../CreateUpdateBulky";
+import { BulkyItem } from "../../api/types";
+import { StoreContext } from "../../stores/Store";
+import BagSVG from "../../components/Bags/Svg";
+import { useTranslation } from "react-i18next";
 
 export enum SendingMsgState {
   DEFAULT,
@@ -31,14 +24,17 @@ export enum SendingMsgState {
 }
 interface Props {
   onSendMessage: (msg: string) => Promise<void>;
+  onSendMessageWithImage: (msg: string) => Promise<void>;
 }
 
 // This follows the controller / view component pattern
 export default function ChatInput(props: Props) {
+  const { t } = useTranslation();
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState(SendingMsgState.DEFAULT);
   const modal = useRef<HTMLIonModalElement>(null);
-  const addBulkyItem = useRef<HTMLIonSelectElement>(null);
+  const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
+  const { refresh } = useContext(StoreContext);
 
   async function sendMessage() {
     setStatus(SendingMsgState.SENDING);
@@ -58,8 +54,10 @@ export default function ChatInput(props: Props) {
     e.preventDefault();
     sendMessage();
   }
+
   function handleClickPlus() {
-    addBulkyItem.current?.open();
+    setUpdateBulky(null);
+    modal.current?.present();
   }
   return (
     <>
@@ -75,8 +73,13 @@ export default function ChatInput(props: Props) {
             <IonIcon icon={addOutline}></IonIcon>
           </IonFabButton>
           <IonFabList side="top">
-            <IonFabButton size="small">
-              <IonIcon icon={shirtOutline}></IonIcon>
+            <IonFabButton onClick={handleClickPlus} className="tw-mb-4 ">
+              <div className="tw-w-8 tw-h-8 tw-mb-1.5">
+                <BagSVG
+                  bag={{ number: "", color: "var(--ion-color-primary)" }}
+                  isList
+                />
+              </div>
             </IonFabButton>
           </IonFabList>
         </IonFab>
@@ -110,6 +113,12 @@ export default function ChatInput(props: Props) {
           </IonItem>
         </form>
       </div>
+      <CreateUpdateBulky
+        modal={modal}
+        didDismiss={() => refresh("bulky-items")}
+        bulky={updateBulky}
+        onSendBulkyItem={props.onSendMessageWithImage}
+      />
     </>
   );
 }
