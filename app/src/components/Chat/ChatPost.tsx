@@ -37,7 +37,7 @@ export default function ChatPost(props: ChatPostProps) {
   const [imageURL, setImageURL] = useState("");
   //const [user, setUser] = useState(User)
   const message = useMemo(() => {
-    console.log(props.post);
+   // console.log(props.post);
     props.getMmUser(props.post.user_id).then((res) => {
       const user = props.users.find((u) => res.username === u.uid);
       setUsername(user ? user.name : res.username);
@@ -89,11 +89,11 @@ export default function ChatPost(props: ChatPostProps) {
         )}
       >
         <img
-          className="tw-mb-4 -tw-px-2 tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-max-h-96"
+          className="-tw-px-2 tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-max-h-96"
           src={imageURL}
         ></img>
         {username ? (
-          <div className="tw-text-xs tw-font-bold tw-px-2 tw-absolute tw-bottom-32 tw-text-white">
+          <div className="tw-text-xs tw-font-bold tw-px-2 tw-absolute tw-bottom-28 tw-text-white">
             {username}
           </div>
         ) : null}

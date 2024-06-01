@@ -55,8 +55,8 @@ export default function CreateUpdateBulky({
   ) => void;
   onSendBulkyItem: (
     message: string,
-    callback: Function,
     image: File,
+    callback: Function,
   ) => Promise<void>;
 }) {
   const { t } = useTranslation();
@@ -105,12 +105,12 @@ export default function CreateUpdateBulky({
     try {
       onSendBulkyItem(
         bulkyMessage,
+        imageFile,
         () => {
           refScrollRoot.current?.scrollTo({
             top: 0,
           });
         },
-        imageFile,
       );
       let body: Parameters<typeof bulkyItemPut>[0] = {
         chain_uid: chain!.uid,
