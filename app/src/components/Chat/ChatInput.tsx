@@ -72,7 +72,7 @@ export default function ChatInput(props: Props) {
           <IonFabButton size="small">
             <IonIcon icon={addOutline}></IonIcon>
           </IonFabButton>
-          <IonFabList side="top">
+          <IonFabList side="top" className="tw-mb-14">
             <IonFabButton onClick={handleClickPlus} className="tw-mb-4 ">
               <div className="tw-w-8 tw-h-8 tw-mb-1.5">
                 <BagSVG
