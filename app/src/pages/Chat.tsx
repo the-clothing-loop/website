@@ -309,6 +309,11 @@ export default function Chat() {
     if (!mmClient || !selectedChannel) return;
     reqPostList(mmClient, selectedChannel, lastPostId);
   }
+  async function getFile(fileId: string, timestamp: number) {
+    if (!selectedChannel || !mmClient) return;
+    const fileUrl = await mmClient.getFileUrl(fileId, timestamp);
+    return fileUrl.toString();
+  }
 
   async function onSendMessageWithImage(
     message: string,
@@ -338,13 +343,6 @@ export default function Chat() {
     if (!selectedChannel || !mmClient) return;
 
     reqPostList(mmClient, selectedChannel, "").then(() => callback());
-  }
-
-  async function getFile(fileId: string, timestamp: number) {
-    if (!selectedChannel || !mmClient) return;
-    const fileUrl = await mmClient.getFileUrl(fileId, timestamp);
-    //reqPostList(mmClient, selectedChannel, "").then(() => callback());
-    return fileUrl.toString();
   }
 
   async function onSendMessage(message: string, callback: Function) {

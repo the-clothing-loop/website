@@ -362,7 +362,7 @@ export default function BulkyList() {
         modal={modal}
         didDismiss={() => refresh("bulky-items")}
         bulky={updateBulky}
-        />
+      />
     </IonPage>
   );
 }

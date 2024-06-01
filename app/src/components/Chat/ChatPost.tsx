@@ -3,17 +3,8 @@ import { User } from "../../api/types";
 import { useEffect, useMemo, useState } from "react";
 import { UserProfile } from "@mattermost/types/users";
 import { useLongPress } from "use-long-press";
-import {
-  IonButton,
-  IonButtons,
-  IonCard,
-  IonCardContent,
-  IonIcon,
-  IonItem,
-  IonRoute,
-  IonText,
-} from "@ionic/react";
-import { ellipsisHorizontal, time } from "ionicons/icons";
+import { IonButton, IonIcon, IonItem } from "@ionic/react";
+import { ellipsisHorizontal } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 
 export interface ChatPostProps {
@@ -37,19 +28,11 @@ export default function ChatPost(props: ChatPostProps) {
   const [imageURL, setImageURL] = useState("");
   //const [user, setUser] = useState(User)
   const message = useMemo(() => {
-   // console.log(props.post);
     props.getMmUser(props.post.user_id).then((res) => {
       const user = props.users.find((u) => res.username === u.uid);
       setUsername(user ? user.name : res.username);
       setIsMe(user?.uid === props.authUser?.uid);
     });
-    fetchImage()
-      .then((im) => {
-        if (im) setImageURL(im);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
     let message = props.post.message;
     for (let user of props.users) {
       message = message.replaceAll(user.uid, user.name);
@@ -57,19 +40,29 @@ export default function ChatPost(props: ChatPostProps) {
     return message;
   }, [props.users, props.post]);
 
-  async function fetchImage() {
-    if (props.post.file_ids) {
-      const fileid = props.post.file_ids[0];
-      const timestamp = props.post.create_at;
-      try {
-        const _image = await props.getFile(fileid, timestamp);
-        return _image as unknown as string;
-      } catch (err) {
+  useEffect(() => {
+    fetchPostImage()
+      .then((im) => {
+        if (im) setImageURL(im);
+      })
+      .catch((err) => {
         console.error(err);
-        throw err;
-      }
+      });
+  }, [props.users, props.post]);
+
+  async function fetchPostImage() {
+    if (!props.post.file_ids) return;
+    const fileid = props.post.file_ids[0];
+    const timestamp = props.post.create_at;
+    try {
+      const _image = await props.getFile(fileid, timestamp);
+      return _image as unknown as string;
+    } catch (err) {
+      console.error("Error retrieving image from post", err);
+      throw err;
     }
   }
+
   let shouldExpandText = message.length > 50 || message.split("\n").length > 4;
 
   return props.post.type != "" ? (

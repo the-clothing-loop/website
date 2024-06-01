@@ -33,7 +33,6 @@ import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { uploadImage } from "../api/imgbb";
-import { useIntersectionObserver } from "@uidotdev/usehooks";
 
 enum State {
   idle,
@@ -70,7 +69,6 @@ export default function CreateUpdateBulky({
   const [present] = useIonToast();
   const refScrollRoot = useRef<HTMLDivElement>(null);
 
-
   const [imageFile, setImageFile] = useState<File>();
 
   function modalInit() {
@@ -103,15 +101,11 @@ export default function CreateUpdateBulky({
 
     if (!imageFile) return;
     try {
-      onSendBulkyItem(
-        `${bulkyTitle}: ${bulkyMessage}`,
-        imageFile,
-        () => {
-          refScrollRoot.current?.scrollTo({
-            top: 0,
-          });
-        },
-      );
+      onSendBulkyItem(`${bulkyTitle}: ${bulkyMessage}`, imageFile, () => {
+        refScrollRoot.current?.scrollTo({
+          top: 0,
+        });
+      });
       let body: Parameters<typeof bulkyItemPut>[0] = {
         chain_uid: chain!.uid,
         user_uid: bulky?.user_uid || authUser!.uid,
@@ -121,6 +115,7 @@ export default function CreateUpdateBulky({
       };
       if (bulky) body.id = bulky.id;
       await bulkyItemPut(body);
+
       setError("");
 
       modal.current?.dismiss("", "confirm");
@@ -154,8 +149,8 @@ export default function CreateUpdateBulky({
 
   function handleWebUpload(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (file) setImageFile(file);
     if (!file) return;
+    setImageFile(file);
 
     setLoadingUpload(State.loading);
 
