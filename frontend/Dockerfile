@@ -3,11 +3,8 @@ WORKDIR /app/
 COPY package.json package-lock.json ./
 RUN npm ci
 
-ARG ENV
-
 RUN if [ "$ENV" = "production" ] ; then npm run build:production; fi
 RUN if [ "$ENV" = "acceptance" ] ; then npm run build:acceptance; fi
-RUN if [ "$ENV" = "" ] ; then echo 'invalid env';exit 1; fi
 
 FROM caddy:alpine
 WORKDIR /app/
