@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/cloudinary/cloudinary-go"
+	"github.com/cloudinary/cloudinary-go/api/uploader"
 	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -15,8 +17,13 @@ import (
 	"github.com/the-clothing-loop/website/server/pkg/imgbb"
 )
 
-// @param expiration (optional): Enable this if you want to force uploads to be auto deleted after certain time (in seconds 60-15552000)
-func imgBBupload(c *gin.Context, size int, expiration int) (imgRes *imgbb.ImgbbResponse, err error) {
+type ImageUploadResponse struct {
+	Delete    string `json:"delete"`
+	Thumbnail string `json:"thumbnail"`
+	Image     string `json:"image"`
+}
+
+func imgBBupload(c *gin.Context, size int, expiration int) (imgRes *ImageUploadResponse, err error) {
 	if app.Config.IMGBB_KEY == "" {
 		return nil, errors.New("Api key to found")
 	}
@@ -35,20 +42,47 @@ func imgBBupload(c *gin.Context, size int, expiration int) (imgRes *imgbb.ImgbbR
 		return nil, fmt.Errorf("Unable to encode to jpeg: %v", err)
 	}
 
-	bStr := base64.StdEncoding.EncodeToString(buf.Bytes())
-	// bStr = fmt.Sprintf("data:image/jpeg;base64,%s", bStr)
-	// os.WriteFile("test.jpg", buf.Bytes(), 775)
-	// os.WriteFile("test.jpg.base64", []byte(bStr), 0775)
-
-	// c.String(http.StatusTeapot, "image", bStr)
-	// fmt.Print(bStr)
-	// return nil, fmt.Errorf("test")
-
-	image, err := imgbb.Upload(app.Config.IMGBB_KEY, bStr, expiration, "")
+	cld, err := cloudinary.NewFromParams("dr5iag9id", "532794798513218", app.Config.IMGBB_KEY)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to upload to ImgBB: %v", err)
+		return nil, fmt.Errorf("Unable to setup Cloudinary: %v", err)
 	}
-	return image, nil
+	resUpload, err := cld.Upload.Upload(c.Request.Context(), buf, uploader.UploadParams{
+		DiscardOriginalFilename: true,
+		UniqueFilename:          true,
+		Folder:                  "upload",
+	})
+	if err != nil {
+		return nil, fmt.Errorf("Unable to upload to Cloudinary: %v", err)
+	}
+
+	res := &ImageUploadResponse{
+		Delete:    "",
+		Thumbnail: "",
+		Image:     "",
+	}
+	{
+		my_image, err := cld.Image(resUpload.PublicID)
+		if err != nil {
+			return nil, fmt.Errorf("Unable to create Cloudinary image from public id: %v", err)
+		}
+		res.Image, err = my_image.String()
+		if err != nil {
+			return nil, fmt.Errorf("Unable to create Cloudinary image url: %v", err)
+		}
+	}
+	{
+		my_image, err := cld.Image(resUpload.PublicID)
+		if err != nil {
+			return nil, fmt.Errorf("Unable to create Cloudinary image from public id: %v", err)
+		}
+		my_image.Transformation = "c_fill,h_180,w_180"
+		res.Thumbnail, err = my_image.String()
+		if err != nil {
+			return nil, fmt.Errorf("Unable to create Cloudinary image url: %v", err)
+		}
+	}
+
+	return res, nil
 }
 func ImageUpload(c *gin.Context) {
 	db := getDB(c)
@@ -72,17 +106,7 @@ func ImageUpload(c *gin.Context) {
 		return
 	}
 
-	if !res.Success {
-		goscope.Log.Warningf("Unable to upload image: %+v", res)
-		c.String(http.StatusBadRequest, "Unable to upload image")
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"delete": res.Data.DeleteURL,
-		"image":  res.Data.Image.Url,
-		"thumb":  res.Data.Thumb.Url,
-	})
+	c.JSON(http.StatusOK, res)
 }
 
 func ImageDelete(c *gin.Context) {
