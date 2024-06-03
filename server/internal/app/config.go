@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/base64"
 	"flag"
 	"fmt"
 	"log/slog"
@@ -25,7 +26,8 @@ var Config struct {
 	SITE_BASE_URL_FE        string `yaml:"site_base_url_fe" env:"SITE_BASE_URL_FE"`
 	COOKIE_DOMAIN           string `yaml:"cookie_domain" env:"COOKIE_DOMAIN"`
 	COOKIE_HTTPS_ONLY       bool   `yaml:"cookie_https_only" env:"COOKIE_HTTPS_ONLY"`
-	JWT_SECRET              string `yaml:"jwt_secret" env:"JWT_SECRET"`
+	JWT_SECRET              string `yaml:"jwt_secret" env:"-"`
+	JWT_SECRET_BASE64       string `yaml:"-" env:"JWT_SECRET"`
 	STRIPE_SECRET_KEY       string `yaml:"stripe_secret_key" env:"STRIPE_SECRET_KEY"`
 	STRIPE_WEBHOOK          string `yaml:"stripe_webhook" env:"STRIPE_WEBHOOK"`
 	DB_HOST                 string `yaml:"db_host" env:"DB_HOST"`
@@ -57,6 +59,15 @@ func ConfigInit(path string, files ...string) {
 	if err != nil {
 		slog.Error("Unable to set config", "err", err)
 		os.Exit(1)
+	}
+
+	if Config.JWT_SECRET_BASE64 != "" && Config.JWT_SECRET == "" {
+		b, err := base64.StdEncoding.DecodeString(Config.JWT_SECRET_BASE64)
+		if err != nil {
+			slog.Error("Unable to set jwt secret config from base 64", "err", err)
+			os.Exit(1)
+		}
+		Config.JWT_SECRET = string(b)
 	}
 
 	// var fname string
