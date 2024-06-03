@@ -1,44 +1,44 @@
 services:
-  app:
-    build: ./app/
-    environment:
-      - PORT=7001
-      - ENV=acceptance
-  frontend:
-    build: ./frontend/
-    environment:
-      - PORT=7002
-      - ENV=acceptance
-  server:
-    build: ./server/
-    environment:
-      - ENV=acceptance
-      - HOST=0.0.0.0
-      - PORT=80
-      - SITE_BASE_URL_API=https://acc.clothingloop.org/api
-      - SITE_BASE_URL_FE=https://acc.clothingloop.org
-      - COOKIE_DOMAIN=clothingloop.org
-      - COOKIE_HTTPS_ONLY=true
-      - JWT_SECRET=$JWT_SECRET
-      - STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
-      - STRIPE_WEBHOOK=$STRIPE_WEBHOOK
-      - DB_HOST=$DB_HOST
-      - DB_PORT=$DB_PORT
-      - DB_NAME=$DB_NAME
-      - DB_USER=$DB_USER
-      - DB_PASS=$DB_PASS
-      - SMTP_HOST=mail
-      - SMTP_PORT=1025
-      - SMTP_SENDER=$SMTP_SENDER
-      - SMTP_USER=$SMTP_USER
-      - SMTP_PASS=$SMTP_PASS
-      - GOSCOPE2_USER=$GOSCOPE2_USER
-      - GOSCOPE2_PASS=$GOSCOPE2_PASS
-      - SENDINBLUE_API_KEY=$SENDINBLUE_API_KEY
-      - IMGBB_KEY=$IMGBB_KEY
-      - ONESIGNAL_APP_ID=$ONESIGNAL_APP_ID
-      - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
-      - APPSTORE_REVIEWER_EMAIL=$APPSTORE_REVIEWER_EMAIL
+  # app:
+  #   build: ./app/
+  #   environment:
+  #     - PORT=7001
+  #     - ENV=acceptance
+  # frontend:
+  #   build: ./frontend/
+  #   environment:
+  #     - PORT=7002
+  #     - ENV=acceptance
+  # server:
+  #   build: ./server/
+  #   environment:
+  #     - ENV=acceptance
+  #     - HOST=0.0.0.0
+  #     - PORT=80
+  #     - SITE_BASE_URL_API=https://acc.clothingloop.org/api
+  #     - SITE_BASE_URL_FE=https://acc.clothingloop.org
+  #     - COOKIE_DOMAIN=clothingloop.org
+  #     - COOKIE_HTTPS_ONLY=true
+  #     - JWT_SECRET=$JWT_SECRET
+  #     - STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
+  #     - STRIPE_WEBHOOK=$STRIPE_WEBHOOK
+  #     - DB_HOST=$DB_HOST
+  #     - DB_PORT=$DB_PORT
+  #     - DB_NAME=$DB_NAME
+  #     - DB_USER=$DB_USER
+  #     - DB_PASS=$DB_PASS
+  #     - SMTP_HOST=mail
+  #     - SMTP_PORT=1025
+  #     - SMTP_SENDER=$SMTP_SENDER
+  #     - SMTP_USER=$SMTP_USER
+  #     - SMTP_PASS=$SMTP_PASS
+  #     - GOSCOPE2_USER=$GOSCOPE2_USER
+  #     - GOSCOPE2_PASS=$GOSCOPE2_PASS
+  #     - SENDINBLUE_API_KEY=$SENDINBLUE_API_KEY
+  #     - IMGBB_KEY=$IMGBB_KEY
+  #     - ONESIGNAL_APP_ID=$ONESIGNAL_APP_ID
+  #     - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
+  #     - APPSTORE_REVIEWER_EMAIL=$APPSTORE_REVIEWER_EMAIL
   mail:
     image: axllent/mailpit
     environment:
