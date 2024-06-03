@@ -16,10 +16,10 @@ services:
     build: ./server/
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost/ping || exit 1
-      interval: 5m
+      interval: 30s
       timeout: 5s
-      retries: 3
-      start_period: 2m
+      retries: 5
+      start_period: 1m
     environment:
       - ENV=acceptance
       - HOST=0.0.0.0
