@@ -4,11 +4,12 @@ services:
   #   environment:
   #     - PORT=7001
   #     - ENV=acceptance
-  # frontend:
-  #   build: ./frontend/
-  #   environment:
-  #     - PORT=7002
-  #     - ENV=acceptance
+  frontend:
+    build: ./frontend/
+    environment:
+      - PORT=7002
+      - ENV=acceptance
+      - MAILPIT_PASS=$MAILPIT_PASS
   server:
     build: ./server/
     healthcheck:
