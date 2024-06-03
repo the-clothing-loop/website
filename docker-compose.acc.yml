@@ -22,7 +22,7 @@ services:
       - JWT_SECRET=$JWT_SECRET
       - STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
       - STRIPE_WEBHOOK=$STRIPE_WEBHOOK
-      - DB_HOST=h4gwcss
+      - DB_HOST=$DB_HOST
       - DB_PORT=$DB_PORT
       - DB_NAME=$DB_NAME
       - DB_USER=$DB_USER
@@ -39,8 +39,6 @@ services:
       - ONESIGNAL_APP_ID=$ONESIGNAL_APP_ID
       - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
       - APPSTORE_REVIEWER_EMAIL=$APPSTORE_REVIEWER_EMAIL
-    networks:
-      - h4gwcss
   mail:
     image: axllent/mailpit
     environment:
