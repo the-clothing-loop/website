@@ -3,11 +3,10 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 
-	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
 
@@ -50,7 +49,7 @@ func ContactNewsletter(c *gin.Context) {
 	}
 	err := n.CreateOrUpdate(db)
 	if err != nil {
-		goscope.Log.Errorf(err.Error())
+		slog.Error(err.Error())
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
@@ -83,12 +82,12 @@ func ContactMail(c *gin.Context) {
 
 	err2 := views.EmailContactReceived(db, body.Name, body.Email, body.Message)
 	if err2 != nil {
-		glog.Errorf("Unable to send email: %v", err2)
+		slog.Error("Unable to send email", "err", err2)
 	}
 
 	err := views.EmailContactConfirmation(c, db, body.Name, body.Email, body.Message)
 	if err != nil {
-		glog.Errorf("Unable to send email: %v", err)
+		slog.Error("Unable to send email", "err", err)
 	}
 
 	if err2 != nil || err != nil {

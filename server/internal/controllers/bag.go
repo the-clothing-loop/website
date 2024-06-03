@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -10,7 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"gopkg.in/guregu/null.v3/zero"
@@ -53,7 +53,7 @@ WHERE user_chain_id IN (
 ORDER BY bags.id ASC
 	`, "`", "`", "`", "`"), chain.ID).Scan(&bags).Error
 	if err != nil {
-		goscope.Log.Errorf("Unable to find bags: %v", err)
+		slog.Error("Unable to find bags", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to find bags")
 		return
 	}
@@ -139,7 +139,7 @@ LIMIT 1
 		}
 	}
 	if err != nil {
-		goscope.Log.Errorf("Unable to create or update bag: %v", err)
+		slog.Error("Unable to create or update bag", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to create or update bag")
 		return
 	}
@@ -150,7 +150,7 @@ LIMIT 1
 			onesignal.StringMap{},
 		)
 		if err != nil {
-			goscope.Log.Errorf("Notification creation failed: %v", err)
+			slog.Error("Notification creation failed", "err", err)
 		}
 	}
 }
@@ -180,7 +180,7 @@ WHERE id = ? AND user_chain_id IN (
 )
 	`, query.BagID, chain.ID).Error
 	if err != nil {
-		goscope.Log.Errorf("Bag could not be removed: %v", err)
+		slog.Error("Bag could not be removed", "err", err)
 		c.String(http.StatusInternalServerError, "Bag could not be removed")
 		return
 	}

@@ -3,13 +3,12 @@ package controllers
 import (
 	"encoding/base64"
 	"fmt"
+	"log/slog"
 	"net/http"
 
-	"github.com/golang/glog"
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
@@ -51,7 +50,7 @@ func LoginEmail(c *gin.Context) {
 
 	err = views.EmailLoginVerification(c, db, user.Name, user.Email.String, token, body.IsApp, body.ChainUID)
 	if err != nil {
-		glog.Errorf("Unable to send email: %v", err)
+		slog.Error("Unable to send email", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to send email")
 		return
 	}
@@ -82,7 +81,7 @@ func LoginValidate(c *gin.Context) {
 
 	err = user.AddUserChainsToObject(db)
 	if err != nil {
-		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
+		slog.Error(models.ErrAddUserChainsToObject.Error(), "err", err)
 		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
 		return
 	}
@@ -107,7 +106,7 @@ func LoginValidate(c *gin.Context) {
 		if len(chainIDs) > 0 {
 			err = services.EmailLoopAdminsOnUserJoin(db, user, chainIDs...)
 			if err != nil {
-				goscope.Log.Errorf("Unable to send email to associated loop admins: %v", err)
+				slog.Error("Unable to send email to associated loop admins", "err", err)
 				// This doesn't return because it would be impossible to login if attempting to join a loop without admins.
 			}
 
@@ -117,7 +116,7 @@ func LoginValidate(c *gin.Context) {
 	} else if query.ChainUID != "" {
 		chainID, found, err := models.ChainCheckIfExist(db, query.ChainUID, true)
 		if err != nil {
-			goscope.Log.Errorf("Chain cannot be found: %v", err)
+			slog.Error("Chain cannot be found", "err", err)
 			c.String(http.StatusInternalServerError, "Loop does not exist")
 			return
 		}
@@ -127,7 +126,7 @@ func LoginValidate(c *gin.Context) {
 		}
 		_, found, err = models.UserChainCheckIfRelationExist(db, chainID, user.ID, false)
 		if err != nil {
-			goscope.Log.Errorf("Chain connection unable to lookup: %v", err)
+			slog.Error("Chain connection unable to lookup", "err", err)
 			c.String(http.StatusInternalServerError, "Loop connection unable to lookup")
 			return
 		}
@@ -222,7 +221,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		AcceptedDPA:     true,
 	}
 	if err := db.Create(user).Error; err != nil {
-		goscope.Log.Warningf("User already exists: %v", err)
+		slog.Warn("User already exists", "err", err)
 		c.String(http.StatusConflict, "User already exists")
 		return
 	}
@@ -241,7 +240,7 @@ func RegisterChainAdmin(c *gin.Context) {
 
 	token, err := auth.OtpCreate(db, user.ID)
 	if err != nil {
-		goscope.Log.Errorf("Unable to create token: %v", err)
+		slog.Error("Unable to create token", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
@@ -273,7 +272,7 @@ func RegisterBasicUser(c *gin.Context) {
 		err := db.Raw("SELECT id FROM chains WHERE uid = ? AND deleted_at IS NULL AND open_to_new_members = TRUE LIMIT 1", body.ChainUID).Scan(&row).Error
 		chainID = row.ID
 		if chainID == 0 {
-			goscope.Log.Warningf("Chain does not exist: %v", err)
+			slog.Warn("Chain does not exist", "err", err)
 			c.String(http.StatusBadRequest, "Chain does not exist")
 			return
 		}
@@ -292,7 +291,7 @@ func RegisterBasicUser(c *gin.Context) {
 		Longitude:       body.User.Longitude,
 	}
 	if res := db.Create(user); res.Error != nil {
-		goscope.Log.Warningf("User already exists: %v", res.Error)
+		slog.Warn("User already exists", "err", res.Error)
 		c.String(http.StatusConflict, "User already exists")
 		return
 	}
@@ -315,7 +314,7 @@ func RegisterBasicUser(c *gin.Context) {
 
 	token, err := auth.OtpCreate(db, user.ID)
 	if err != nil {
-		goscope.Log.Errorf("Unable to create token: %v", err)
+		slog.Error("Unable to create token", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}

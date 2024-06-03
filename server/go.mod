@@ -13,9 +13,7 @@ require (
 	github.com/go-co-op/gocron v1.29.0
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/golang-jwt/jwt/v5 v5.2.0
-	github.com/golang/glog v1.1.1
 	github.com/jaswdr/faker v1.18.0
-	github.com/lil5/goscope2 v1.4.2
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/samber/lo v1.38.1

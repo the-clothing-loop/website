@@ -7,8 +7,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"log/slog"
+	"os"
 
-	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/gorm"
@@ -64,13 +65,15 @@ func init() {
 	for _, l := range lang {
 		b, err := emailsFS.ReadFile(fmt.Sprintf("emails/%s/translations.json", l))
 		if err != nil {
-			glog.Fatalf("Translations not found: %v", err)
+			slog.Error("Translations not found", "err", err)
+			os.Exit(1)
 			return
 		}
 		var data map[string]string
 		err = json.Unmarshal(b, &data)
 		if err != nil {
-			glog.Fatalf("Translation invalid json: %v", err)
+			slog.Error("Translation invalid json", "err", err)
+			os.Exit(1)
 			return
 		}
 		emailsTranslations[l] = data

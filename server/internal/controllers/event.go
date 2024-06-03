@@ -3,6 +3,7 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -12,7 +13,6 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/pkg/imgbb"
 	"gopkg.in/guregu/null.v3"
@@ -356,7 +356,7 @@ func EventUpdate(c *gin.Context) {
 
 	err := db.Save(event).Error
 	if err != nil {
-		goscope.Log.Errorf("Unable to update loop values: %v", err)
+		slog.Error("Unable to update loop values", "err", err)
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to update loop values"))
 		return
 	}

@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"strings"
 
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
@@ -91,13 +91,13 @@ func ChainCreate(c *gin.Context) {
 		RoutePrivacy: 2, // default route_privacy
 	}
 	if err := db.Create(&chain).Error; err != nil {
-		goscope.Log.Warningf("Unable to create chain: %v", err)
+		slog.Warn("Unable to create chain", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to create chain")
 		return
 	}
 
 	if err := user.AcceptLegal(db); err != nil {
-		goscope.Log.Errorf("Unable to set toh to true, during chain creation: %v", err)
+		slog.Error("Unable to set toh to true, during chain creation", "err", err)
 	}
 
 	c.Status(200)
@@ -257,7 +257,7 @@ func ChainGetAll(c *gin.Context) {
 		sql = fmt.Sprintf("%s WHERE %s", sql, strings.Join(whereOrSql, " OR "))
 	}
 	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
-		goscope.Log.Warningf("Chain not found: %v", err)
+		slog.Warn("Chain not found", "err", err)
 		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return
 	}
@@ -286,7 +286,7 @@ func ChainGetNear(c *gin.Context) {
 	args = append(args, query.Latitude, query.Longitude, query.Radius)
 
 	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
-		goscope.Log.Warningf("Chain not found: %v", err)
+		slog.Warn("Chain not found", "err", err)
 		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return
 	}
@@ -407,7 +407,7 @@ func ChainUpdate(c *gin.Context) {
 	}
 	err := db.Model(chain).Updates(valuesToUpdate).Error
 	if err != nil {
-		goscope.Log.Errorf("Unable to update loop values: %v", err)
+		slog.Error("Unable to update loop values", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to update loop values")
 	}
 }
@@ -498,13 +498,13 @@ LIMIT 1
 			ChainID:      chain.ID,
 			IsChainAdmin: false,
 		}).Error; err != nil {
-			goscope.Log.Errorf("User could not be added to chain: %v", err)
+			slog.Error("User could not be added to chain", "err", err)
 			c.String(http.StatusInternalServerError, "User could not be added to chain due to unknown error")
 			return
 		}
 		err := services.EmailLoopAdminsOnUserJoin(db, user, chain.ID)
 		if err != nil {
-			goscope.Log.Errorf("Unable to send email to associated loop admins: %v", err)
+			slog.Error("Unable to send email to associated loop admins", "err", err)
 			c.String(http.StatusInternalServerError, err.Error())
 			return
 		}
@@ -535,7 +535,7 @@ func ChainRemoveUser(c *gin.Context) {
 			err := db.Raw(`SELECT COUNT(*) FROM user_chains WHERE chain_id = ? AND is_chain_admin = TRUE`, chain.ID).Scan(&amountChainAdmins).Error
 
 			if amountChainAdmins == 1 {
-				goscope.Log.Warningf("Unable to remove last host of loop: %v", err)
+				slog.Warn("Unable to remove last host of loop", "err", err)
 				c.String(http.StatusConflict, "Unable to remove last host of loop")
 				return
 			}
@@ -544,7 +544,7 @@ func ChainRemoveUser(c *gin.Context) {
 
 	err := chain.RemoveUser(db, user.ID)
 	if err != nil {
-		goscope.Log.Errorf("User could not be removed from chain: %v", err)
+		slog.Error("User could not be removed from chain", "err", err)
 		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
 		return
 	}
@@ -614,7 +614,7 @@ func ChainDeleteUnapproved(c *gin.Context) {
 
 	err := chain.RemoveUserUnapproved(db, user.ID)
 	if err != nil {
-		goscope.Log.Errorf("User could not be removed from chain: %v", err)
+		slog.Error("User could not be removed from chain", "err", err)
 		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
 		return
 	}
