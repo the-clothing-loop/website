@@ -77,7 +77,7 @@ export default function ChatPost(props: ChatPostProps) {
     refModalDesc.current?.present();
   }
 
-  let shouldExpandText = message.length > 50 || message.split("\n").length > 4;
+  let shouldExpandText = message.length > 150 || message.split("\n").length > 4;
 
   const bulkyTitle =
     message.indexOf("\n") != -1
