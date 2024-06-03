@@ -1,4 +1,6 @@
 import {
+  IonButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonPage,
@@ -7,7 +9,7 @@ import {
 } from "@ionic/react";
 import { useTranslation } from "react-i18next";
 import { MmData, StoreContext } from "../stores/Store";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import * as apiChat from "../api/chat";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
 import { PaginatedPostList, Post } from "@mattermost/types/posts";
@@ -314,6 +316,41 @@ export default function Chat() {
     if (!mmClient || !selectedChannel) return;
     reqPostList(mmClient, selectedChannel, lastPostId);
   }
+  async function getFile(fileId: string, timestamp: number) {
+    if (!selectedChannel || !mmClient) return;
+    const fileUrl = await mmClient.getFileUrl(fileId, timestamp);
+    return fileUrl.toString();
+  }
+
+  async function onSendMessageWithImage(
+    message: string,
+    image: File,
+    callback: Function,
+  ) {
+    if (!selectedChannel || !mmClient) return;
+    console.log("reqPostList", selectedChannel.id);
+
+    const formData = new FormData();
+    formData.append("channel_id", selectedChannel.id);
+    formData.append("files", image);
+
+    try {
+      const res = await mmClient.uploadFile(formData);
+      const file_id = res.file_infos[0].id;
+      await mmClient.createPost({
+        channel_id: selectedChannel.id,
+        message: message,
+        file_ids: [file_id],
+      } as Partial<Post> as Post);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+
+    if (!selectedChannel || !mmClient) return;
+
+    reqPostList(mmClient, selectedChannel, "").then(() => callback());
+  }
 
   async function onSendMessage(message: string, callback: Function) {
     if (!selectedChannel || !mmClient) return;
@@ -367,20 +404,24 @@ export default function Chat() {
             onClickEnable={onClickEnableChat}
           />
         ) : (
-          <ChatWindow
-            getMmUser={getMmUser}
-            channels={channels}
-            selectedChannel={selectedChannel}
-            onCreateChannel={onCreateChannel}
-            onSelectChannel={onSelectChannel}
-            onRenameChannel={onRenameChannel}
-            onDeleteChannel={onDeleteChannel}
-            onDeletePost={onDeletePost}
-            onSendMessage={onSendMessage}
-            onScrollTop={onScrollTop}
-            postList={postList}
-            authUser={authUser}
-          />
+          <>
+            <ChatWindow
+              getMmUser={getMmUser}
+              channels={channels}
+              selectedChannel={selectedChannel}
+              onCreateChannel={onCreateChannel}
+              onSelectChannel={onSelectChannel}
+              onRenameChannel={onRenameChannel}
+              onDeleteChannel={onDeleteChannel}
+              onDeletePost={onDeletePost}
+              getFile={getFile}
+              onSendMessage={onSendMessage}
+              onSendMessageWithImage={onSendMessageWithImage}
+              onScrollTop={onScrollTop}
+              postList={postList}
+              authUser={authUser}
+            />
+          </>
         )}
       </IonContent>
     </IonPage>
