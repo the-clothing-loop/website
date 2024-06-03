@@ -101,7 +101,7 @@ export default function CreateUpdateBulky({
 
     if (!imageFile) return;
     try {
-      onSendBulkyItem(`${bulkyTitle}: ${bulkyMessage}`, imageFile, () => {
+      onSendBulkyItem(`${bulkyTitle}\n\n${bulkyMessage}`, imageFile, () => {
         refScrollRoot.current?.scrollTo({
           top: 0,
         });

@@ -1,11 +1,20 @@
 import { Post } from "@mattermost/types/posts";
-import { User } from "../../api/types";
-import { useEffect, useMemo, useState } from "react";
+import { BulkyItem, User } from "../../api/types";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { UserProfile } from "@mattermost/types/users";
 import { useLongPress } from "use-long-press";
-import { IonButton, IonIcon, IonItem } from "@ionic/react";
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonIcon,
+  IonItem,
+  IonModal,
+  IonText,
+} from "@ionic/react";
 import { ellipsisHorizontal } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
+import { i } from "vitest/dist/reporters-5f784f42";
 
 export interface ChatPostProps {
   post: Post;
@@ -26,6 +35,7 @@ export default function ChatPost(props: ChatPostProps) {
   const [username, setUsername] = useState("");
   const [isMe, setIsMe] = useState(false);
   const [imageURL, setImageURL] = useState("");
+  const refModalDesc = useRef<HTMLIonModalElement>(null);
   //const [user, setUser] = useState(User)
   const message = useMemo(() => {
     props.getMmUser(props.post.user_id).then((res) => {
@@ -63,7 +73,20 @@ export default function ChatPost(props: ChatPostProps) {
     }
   }
 
+  function handleClickReadMore() {
+    refModalDesc.current?.present();
+  }
+
   let shouldExpandText = message.length > 50 || message.split("\n").length > 4;
+
+  const bulkyTitle =
+    message.indexOf("\n") != -1
+      ? message.substring(0, message.indexOf("\n")).trim()
+      : "";
+  const bulkyMessage =
+    message.indexOf("\n") != -1
+      ? message.substring(message.indexOf("\n")).trim()
+      : "";
 
   return props.post.type != "" ? (
     <div className="tw-flex tw-justify-center">
@@ -75,65 +98,89 @@ export default function ChatPost(props: ChatPostProps) {
       </div>
     </div>
   ) : imageURL ? (
-    <div className="tw-mb-2" {...(props.isChainAdmin ? longPress : {})}>
-      <div
-        className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-rounded-br-xl tw-mx-4 tw-relative".concat(
-          isMe ? " tw-bg-purple-shade" : " tw-bg-light",
-        )}
-      >
-        <img
-          className="-tw-px-2 tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-max-h-96"
-          src={imageURL}
-        ></img>
-        {username ? (
-          <div className="tw-text-xs tw-font-bold tw-px-2 tw-absolute tw-bottom-28 tw-text-white">
+    <>
+      <div className="tw-mb-2" {...(props.isChainAdmin ? longPress : {})}>
+        <div
+          className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-inline-block tw-mx-4 tw-relative".concat(
+            isMe ? " tw-bg-purple-shade" : " tw-bg-light",
+          )}
+        >
+          <div className="tw-my-1 tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-text-xs tw-font-bold tw-px-2 tw-text-white">
             {username}
           </div>
-        ) : null}
-        <IonItem
-          lines="none"
-          routerLink={"/address/" + props.authUser?.uid}
-          className="tw-my-0 -tw-mx-4 tw-p-2 "
-          color="background"
+          <img
+            className="-tw-px-2 tw-inline-block tw-max-h-60"
+            src={imageURL}
+            alt={bulkyTitle}
+          ></img>
+          {username ? (
+            <div className="tw-text-xs tw-font-bold tw-px-2 tw-absolute tw-top-56 tw-text-white">
+              {bulkyTitle}
+            </div>
+          ) : null}
+          <IonItem
+            lines="none"
+            routerLink={"/address/" + props.authUser?.uid}
+            className={`tw-my-0 -tw-mx-4 tw-px-2 ${
+              shouldExpandText ? "-tw-mb-3" : ""
+            } `}
+            color="background"
+          >
+            <div>
+              <div className="tw-mb-2">
+                <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
+                  {t("address")}
+                </h3>
+                <p className="ion-text-wrap tw-opacity-60 tw-text-xs">
+                  {props.authUser?.address}
+                </p>
+              </div>
+
+              <div className="tw-mb-2">
+                <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
+                  {t("description")}
+                </h3>
+                <p
+                  className={`ion-text-wrap tw-opacity-60 tw-text-xs tw-overflow-hidden ${
+                    shouldExpandText ? "tw-max-h-[48px]" : ""
+                  }`}
+                >
+                  {bulkyMessage}
+                </p>
+              </div>
+            </div>
+          </IonItem>
+          {shouldExpandText ? (
+            <IonText
+              onClick={
+                shouldExpandText ? () => handleClickReadMore() : undefined
+              }
+              className="tw-pt-2 tw-ml-2 2 tw-h-9 tw-align-middle tw-text-xs tw-leading-5 tw-font-semibold tw-block tw-text-primary"
+            >
+              {t("readMore")}
+            </IonText>
+          ) : null}
+        </div>
+        <IonButton
+          onClick={() => props.onLongPress(props.post.id)}
+          color="transparent"
+          className="tw-opacity-70"
+          type="button"
         >
-          <div>
-            <div className="tw-mb-2">
-              <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
-                {t("address")}
-              </h3>
-              <p className="ion-text-wrap tw-opacity-60 tw-text-xs">
-                {props.authUser?.address}
-              </p>
-            </div>
-            {shouldExpandText ? (
-              <span className="tw-mt-[-3px] tw-text-xs tw-leading-5 tw-font-semibold tw-block tw-text-primary">
-                {t("readMore")}
-              </span>
-            ) : null}
-            <div className="tw-mb-2">
-              <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
-                {t("description")}
-              </h3>
-              <p
-                className={`ion-text-wrap tw-opacity-60 tw-text-xs ${
-                  shouldExpandText ? "tw-max-h-[46px]" : ""
-                }`}
-              >
-                {message}
-              </p>
-            </div>
-          </div>
-        </IonItem>
+          <IonIcon color="dark" icon={ellipsisHorizontal} />
+        </IonButton>
       </div>
-      <IonButton
-        onClick={() => props.onLongPress(props.post.id)}
-        color="transparent"
-        className="tw-opacity-70"
-        type="button"
+      <IonModal
+        ref={refModalDesc}
+        initialBreakpoint={0.6}
+        breakpoints={[0, 0.6, 1]}
       >
-        <IonIcon color="dark" icon={ellipsisHorizontal} />
-      </IonButton>
-    </div>
+        <div className="ion-padding tw-text-lg tw-leading-6">
+          <h1 className="tw-mt-0">{bulkyTitle}</h1>
+          {bulkyMessage}
+        </div>
+      </IonModal>
+    </>
   ) : (
     <div className="tw-mb-2" {...(props.isChainAdmin ? longPress : {})}>
       <div
