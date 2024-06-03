@@ -9,8 +9,8 @@ RUN if [ "$ENV" = "acceptance" ] ; then npm run build:acceptance; fi
 
 FROM caddy:alpine
 WORKDIR /app/
-COPY ./Caddyfile-acc ./Caddyfile-prod /
-RUN if [ "$ENV" = "production" ] ; then cp /Caddyfile-prod /Caddyfile; fi
-RUN if [ "$ENV" = "acceptance" ] ; then cp /Caddyfile-acc /Caddyfile; fi
+COPY Caddyfile-acc Caddyfile-prod /etc/caddy/
+RUN if [ "$ENV" = "production" ] ; then cp /etc/caddy/Caddyfile-prod /etc/caddy/Caddyfile; fi
+RUN if [ "$ENV" = "acceptance" ] ; then cp /etc/caddy/Caddyfile-acc /etc/caddy/Caddyfile; fi
 COPY --from=build /app/build/ .
-CMD caddy run --config /Caddyfile
+CMD caddy run --config /etc/caddy/Caddyfile
