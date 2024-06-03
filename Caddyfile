@@ -1,0 +1,217 @@
+(hsts) {
+	header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+}
+
+(astro_url) {
+	# /event/:uid/ -> /event/?event=
+	@oldevent path_regexp eventp ^/(\w{2}/)?events/([\w-]{36})/?$
+	redir @oldevent /{re.eventp.1}events/details/?event={re.eventp.2} 302
+
+	# /loops/:uid/members -> /loops/members?chain=
+	@oldmembers path_regexp membersp ^/(\w{2}/)?loops/([\w-]{36})/members/?$
+	redir @oldmembers /{re.membersp.1}loops/members/?chain={re.membersp.2} 302
+
+	# /loops/:uid/users/signup -> /loops/users/signup/?chain=
+	@oldusersignup path_regexp userssignupp ^/(\w{2}/)?loops/([\w-]{36})/users/signup/?$
+	redir @oldusersignup /{re.userssignupp.1}loops/users/signup/?chain={re.userssignupp.2} 302
+
+	# /loops/:uid/users/login -> /loops/users/login/?chain=
+	@olduserslogin path_regexp usersloginp ^/(\w{2}/)?loops/([\w-]{36})/users/login/?$
+	redir @olduserslogin /{re.usersloginp.1}loops/users/login/?chain={re.usersloginp.2} 302
+
+	# /users/login/validate?apiKey= -> /users/login/validate/?apiKey=
+	# https://acc.clothingloop.org/users/login/validate?apiKey=74932015&u=aG9zdEBleGFtcGxlLmNvbQ%3D%3D
+	@oldusersvalidp path_regexp usersvalidp ^/(\w{2}/)?users/login/validate$
+	redir @oldusersvalidp /{re.usersvalidp.1}users/login/validate/?{query} 302
+
+	file_server
+	try_files {path} {path}/ =404
+	encode zstd gzip
+}
+
+clothingloop.org, www.clothingloop.be, clothingloop.be {
+	import hsts
+	redir https://www.clothingloop.org{uri}
+}
+
+www.clothingloop.org {
+	import hsts
+	log {
+		output file /var/log/caddy/api.clothingloop.org-error.log
+		format console
+		level ERROR
+	}
+
+	@searchbot {
+		header User-Agent googlebot
+		header User-Agent bingbot
+		header User-Agent yandex
+		header User-Agent baiduspider
+		header User-Agent facebookexternalhit
+		header User-Agent twitterbot
+		header User-Agent rogerbot
+		header User-Agent linkedinbot
+		header User-Agent embedly
+		header User-Agent "quora link preview"
+		header User-Agent showyoubot
+		header User-Agent outbrain
+		header User-Agent pinterest\/0\.
+		header User-Agent pinterestbot
+		header User-Agent slackbot
+		header User-Agent vkShare
+		header User-Agent W3C_Validator
+		header User-Agent whatsapp
+		header User-Agent redditbot
+		header User-Agent applebot
+		header User-Agent flipboard
+		header User-Agent tumblr
+		header User-Agent bitlybot
+		header User-Agent skypeuripreview
+		header User-Agent nuzzel
+		header User-Agent discordbot
+		header User-Agent "google page speed"
+		header User-Agent qwantify
+		header User-Agent "bitrix link preview"
+		header User-Agent xing-contenttabreceiver
+		header User-Agent chrome-lighthouse
+		header User-Agent telegrambot
+		not path_regexp .*?(\.js|\.css|\.xml|\.less|\.png|\.jpg|\.jpeg|\.gif|\.pdf|\.doc|\.txt|\.ico|\.rss|\.zip|\.mp3|\.rar|\.exe|\.wmv|\.doc|\.avi|\.ppt|\.mpg|\.mpeg|\.tif|\.wav|\.mov|\.psd|\.ai|\.xls|\.mp4|\.m4a|\.swf|\.dat|\.dmg|\.iso|\.flv|\.m4v|\.torrent|\.ttf|\.woff|\.svg)
+	}
+	@assets {
+		path /fonts/* /icons/* /images/*
+	}
+
+	header @assets Cache-Control "max-age=604800 must-revalidate"
+	header ?Cache-Control no-cache
+
+	handle_path /api/* {
+		reverse_proxy 127.0.0.1:8081
+		encode zstd gzip
+	}
+
+	handle_path /toolkit {
+		redir https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27
+	}
+
+	handle @searchbot {
+		request_header X-Prerender-Token PRERENDER_TOKEN
+		rewrite * /{scheme}://{host}{uri}
+		reverse_proxy https://service.prerender.io
+	}
+
+	handle {
+		import astro_url
+		root * /var/caddy/clothingloop.org
+	}
+}
+
+
+admin.clothingloop.org {
+	import hsts
+	log {
+		output file /var/log/caddy/phpmyadmin-error.log
+		format console
+		level ERROR
+	}
+	php_fastcgi unix//run/php/php-fpm.sock
+	root * /usr/share/phpmyadmin
+	file_server
+	try_files {path} /index.php
+}
+
+acc.clothingloop.org {
+	import hsts
+	log {
+		output file /var/log/caddy/acc.clothingloop.org-error.log
+		format console
+		level ERROR
+	}
+
+	header X-Robots-Tag noindex
+
+	route {
+		header Cache-Control no-cache
+	}
+
+	handle_path /api/* {
+		reverse_proxy 127.0.0.1:8082
+	}
+
+	redir /mailpit /mailpit/
+	handle_path /mailpit/* {
+		basicauth bcrypt {
+			hello@clothingloop.org TUFJTFBJVF9QQVNTV09SRA==
+			guest1 TUFJTFBJVF9QQVNTV09SRF9HVUVTVF8x
+		}
+		rewrite * /mailpit{path}
+		reverse_proxy 127.0.0.1:8085
+	}
+
+	handle {
+		import astro_url
+		root * /var/caddy/acc.clothingloop.org
+	}
+}
+
+acc.app.clothingloop.org {
+	import hsts
+	log {
+		output file /var/log/caddy/acc.clothingloop.org-error.log
+		format console
+		level ERROR
+	}
+
+	header X-Robots-Tag noindex
+
+	route {
+		header Cache-Control no-cache
+	}
+
+	handle_path /api/* {
+		reverse_proxy 127.0.0.1:8082
+	}
+
+	handle {
+		root * /var/caddy/acc.app.clothingloop.org
+		file_server
+		encode zstd gzip
+		try_files {path} /index.html
+	}
+}
+
+images.clothingloop.org {
+	import hsts
+	header Cache-Control max-age=1209600
+
+	handle_path /original/* {
+		root * /var/caddy/images.clothingloop.org
+		file_server
+	}
+	handle {
+		reverse_proxy 127.0.0.1:8083
+	}
+}
+
+app.clothingloop.org {
+	import hsts
+	header X-Robots-Tag noindex
+
+	handle_path /api/* {
+		@options {
+			method OPTIONS
+		}
+		respond @options 200
+
+		reverse_proxy 127.0.0.1:8081
+		header Access-Control-Allow-Origin "*"
+		header Access-Control-Allow-Methods "*"
+		header Access-Control-Allow-Headers "Content-Type, Origin, Authorization, X-Requested-With, Accept"
+	}
+
+	handle {
+		root * /var/caddy/app.clothingloop.org
+		file_server
+		encode zstd gzip
+		try_files {path} /index.html
+	}
+}

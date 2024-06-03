@@ -25,12 +25,12 @@ require (
 	github.com/wneessen/go-mail v0.3.9
 	golang.org/x/net v0.23.0
 	gopkg.in/guregu/null.v3 v3.5.0
-	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.1
 )
 
 require (
+	github.com/BurntSushi/toml v1.2.0 // indirect
 	github.com/antihax/optional v1.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
@@ -49,6 +49,7 @@ require (
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/gorilla/schema v1.2.0 // indirect
+	github.com/jinzhu/configor v1.2.2
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -73,4 +74,5 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
