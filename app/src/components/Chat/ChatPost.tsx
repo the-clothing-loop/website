@@ -122,13 +122,13 @@ export default function ChatPost(props: ChatPostProps) {
             lines="none"
             routerLink={"/address/" + props.authUser?.uid}
             className={`tw-my-0 -tw-mx-4 tw-px-2 ${
-              shouldExpandText ? "-tw-mb-3" : "tw-mb-1"
+              shouldExpandText ? "-tw-mb-3" : "tw-mb-2"
             } `}
             color="background"
           >
             <div>
               <div className="tw-mb-2">
-                <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
+                <h3 className="tw-pt-2 ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
                   {t("address")}
                 </h3>
                 <p className="ion-text-wrap tw-opacity-60 tw-text-xs">
