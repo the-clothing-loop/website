@@ -55,3 +55,7 @@ SELECT (
 
 	c.JSON(200, data)
 }
+
+func Ping(c *gin.Context) {
+	c.String(200, "pong")
+}

@@ -93,9 +93,8 @@ func Routes() *gin.Engine {
 	v2 := r.Group("/v2")
 
 	// ping
-	v2.Any("/ping", func(c *gin.Context) {
-		c.String(200, "pong")
-	})
+	r.GET("/ping", controllers.Ping)
+	v2.GET("/ping", controllers.Ping)
 
 	// info
 	v2.GET("/info", controllers.InfoGet)
