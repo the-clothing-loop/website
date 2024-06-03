@@ -122,7 +122,7 @@ export default function ChatPost(props: ChatPostProps) {
             lines="none"
             routerLink={"/address/" + props.authUser?.uid}
             className={`tw-my-0 -tw-mx-4 tw-px-2 ${
-              shouldExpandText ? "-tw-mb-3" : ""
+              shouldExpandText ? "-tw-mb-3" : "tw-mb-1"
             } `}
             color="background"
           >
