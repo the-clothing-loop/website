@@ -1,9 +1,14 @@
 services:
-  # app:
-  #   build: ./app/
-  #   environment:
-  #     - PORT=7001
-  #     - ENV=acceptance
+  app:
+    build:
+      context: ./app/
+      args:
+        - ENV=acceptance
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 5
   frontend:
     build:
       context: ./frontend/
@@ -14,7 +19,6 @@ services:
       interval: 30s
       timeout: 5s
       retries: 5
-      start_period: 1m
     environment:
       - MAILPIT_PASS=$MAILPIT_PASS
   server:

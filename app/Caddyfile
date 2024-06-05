@@ -1,7 +1,7 @@
 (hsts) {
 	header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
 }
-:${PORT} {
+:80 {
    import hsts
 	header X-Robots-Tag noindex
 
@@ -18,7 +18,7 @@
 	}
 
 	handle {
-		root * /app/
+		root * /srv/
 		file_server
 		encode zstd gzip
 		try_files {path} /index.html
