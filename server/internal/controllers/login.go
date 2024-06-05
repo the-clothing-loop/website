@@ -427,7 +427,7 @@ func getBaseUrl(isApp bool) (baseUrl string) {
 	case app.EnvEnumProduction:
 		baseUrl = lo.If(isApp, "https://app.clothingloop.org").Else("https://www.clothingloop.org")
 	case app.EnvEnumAcceptance:
-		baseUrl = lo.If(isApp, "https://acc.app.clothingloop.org").Else("https://acc.clothingloop.org")
+		baseUrl = lo.If(isApp, "https://app.acc.clothingloop.org").Else("https://acc.clothingloop.org")
 	default:
 		baseUrl = lo.If(isApp, "http://localhost:5173").Else("http://localhost:3000")
 	}
