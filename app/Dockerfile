@@ -13,4 +13,4 @@ WORKDIR /app/
 COPY --from=build /app/ .
 COPY Caddyfile /
 ENV PORT=80
-CMD caddy run --config=/Caddyfile
+ENTRYPOINT caddy run --config=/Caddyfile
