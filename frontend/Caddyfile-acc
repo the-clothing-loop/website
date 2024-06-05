@@ -29,7 +29,7 @@
 	encode zstd gzip
 }
 
-http://0.0.0.0:8080 {
+:80 {
 	import hsts
 	header X-Robots-Tag noindex
 	route {
@@ -41,7 +41,7 @@ http://0.0.0.0:8080 {
 	}
 	redir /mailpit /mailpit/
 	handle_path /mailpit/* {
-		basicauth bcrypt {
+		basic_auth bcrypt {
 			hello@clothingloop.org ${MAILPIT_PASS}
 		}
 		rewrite * /mailpit{path}
