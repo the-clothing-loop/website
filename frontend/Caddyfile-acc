@@ -45,7 +45,7 @@ http://0.0.0.0:80 {
 			hello@clothingloop.org ${MAILPIT_PASS}
 		}
 		rewrite * /mailpit{path}
-		reverse_proxy mailpit:80
+		reverse_proxy mailpit:8025
 	}
 	handle_path /toolkit {
 		redir https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27
