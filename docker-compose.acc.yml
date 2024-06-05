@@ -11,7 +11,6 @@ services:
         - ENV=acceptance
     environment:
       - MAILPIT_PASS=$MAILPIT_PASS
-      - PORT=80
   server:
     build: ./server/
     healthcheck:

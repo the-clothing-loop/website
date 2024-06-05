@@ -13,4 +13,4 @@ ARG ENV
 RUN if [ "$ENV" = "production" ] ; then cp /etc/caddy/Caddyfile-prod /etc/caddy/Caddyfile; fi
 RUN if [ "$ENV" = "acceptance" ] ; then cp /etc/caddy/Caddyfile-acc /etc/caddy/Caddyfile; fi
 COPY --from=build /app/build/ /srv/
-CMD caddy run
+CMD caddy run --config /etc/caddy/Caddyfile
