@@ -29,9 +29,9 @@
 	encode zstd gzip
 }
 
-:${PORT} {
+http://0.0.0.0:80 {
 	import hsts
-	
+
 	@searchbot {
 		header User-Agent googlebot
 		header User-Agent bingbot
@@ -72,7 +72,7 @@
 	}
 	header @assets Cache-Control "max-age=604800 must-revalidate"
 	header ?Cache-Control no-cache
-	
+
 	handle_path /api/* {
 		reverse_proxy server:80
 		encode zstd gzip
@@ -82,7 +82,7 @@
 	}
 	handle {
 		import astro_url
-		root * /app/
+		root * /srv/
 	}
 }
 

@@ -35,7 +35,7 @@ http://0.0.0.0:80 {
 	route {
 		header Cache-Control no-cache
 	}
-	
+
 	handle_path /api/* {
 		reverse_proxy server:80
 	}
@@ -52,6 +52,6 @@ http://0.0.0.0:80 {
 	}
 	handle {
 		import astro_url
-		root * /app/
+		root * /srv/
 	}
 }
