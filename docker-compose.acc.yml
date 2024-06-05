@@ -9,6 +9,12 @@ services:
       context: ./frontend/
       args:
         - ENV=acceptance
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8080/ping || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 1m
     environment:
       - MAILPIT_PASS=$MAILPIT_PASS
   server:
