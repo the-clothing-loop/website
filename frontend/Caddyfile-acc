@@ -29,7 +29,7 @@
 	encode zstd gzip
 }
 
-:${PORT} {
+http://0.0.0.0:80 {
 	import hsts
 	header X-Robots-Tag noindex
 	route {
