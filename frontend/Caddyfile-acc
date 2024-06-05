@@ -2,54 +2,51 @@
 	header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
 }
 
-# (astro_url) {
-# 	# /event/:uid/ -> /event/?event=
-# 	@oldevent path_regexp eventp ^/(\w{2}/)?events/([\w-]{36})/?$
-# 	redir @oldevent /{re.eventp.1}events/details/?event={re.eventp.2} 302
+(astro_url) {
+	# /event/:uid/ -> /event/?event=
+	@oldevent path_regexp eventp ^/(\w{2}/)?events/([\w-]{36})/?$
+	redir @oldevent /{re.eventp.1}events/details/?event={re.eventp.2} 302
 
-# 	# /loops/:uid/members -> /loops/members?chain=
-# 	@oldmembers path_regexp membersp ^/(\w{2}/)?loops/([\w-]{36})/members/?$
-# 	redir @oldmembers /{re.membersp.1}loops/members/?chain={re.membersp.2} 302
+	# /loops/:uid/members -> /loops/members?chain=
+	@oldmembers path_regexp membersp ^/(\w{2}/)?loops/([\w-]{36})/members/?$
+	redir @oldmembers /{re.membersp.1}loops/members/?chain={re.membersp.2} 302
 
-# 	# /loops/:uid/users/signup -> /loops/users/signup/?chain=
-# 	@oldusersignup path_regexp userssignupp ^/(\w{2}/)?loops/([\w-]{36})/users/signup/?$
-# 	redir @oldusersignup /{re.userssignupp.1}loops/users/signup/?chain={re.userssignupp.2} 302
+	# /loops/:uid/users/signup -> /loops/users/signup/?chain=
+	@oldusersignup path_regexp userssignupp ^/(\w{2}/)?loops/([\w-]{36})/users/signup/?$
+	redir @oldusersignup /{re.userssignupp.1}loops/users/signup/?chain={re.userssignupp.2} 302
 
-# 	# /loops/:uid/users/login -> /loops/users/login/?chain=
-# 	@olduserslogin path_regexp usersloginp ^/(\w{2}/)?loops/([\w-]{36})/users/login/?$
-# 	redir @olduserslogin /{re.usersloginp.1}loops/users/login/?chain={re.usersloginp.2} 302
+	# /loops/:uid/users/login -> /loops/users/login/?chain=
+	@olduserslogin path_regexp usersloginp ^/(\w{2}/)?loops/([\w-]{36})/users/login/?$
+	redir @olduserslogin /{re.usersloginp.1}loops/users/login/?chain={re.usersloginp.2} 302
 
-# 	# /users/login/validate?apiKey= -> /users/login/validate/?apiKey=
-# 	# https://acc.clothingloop.org/users/login/validate?apiKey=74932015&u=aG9zdEBleGFtcGxlLmNvbQ%3D%3D
-# 	@oldusersvalidp path_regexp usersvalidp ^/(\w{2}/)?users/login/validate$
-# 	redir @oldusersvalidp /{re.usersvalidp.1}users/login/validate/?{query} 302
-
-# 	file_server
-# 	try_files {path} {path}/ =404
-# 	encode zstd gzip
-# }
+	# /users/login/validate?apiKey= -> /users/login/validate/?apiKey=
+	# https://acc.clothingloop.org/users/login/validate?apiKey=74932015&u=aG9zdEBleGFtcGxlLmNvbQ%3D%3D
+	@oldusersvalidp path_regexp usersvalidp ^/(\w{2}/)?users/login/validate$
+	redir @oldusersvalidp /{re.usersvalidp.1}users/login/validate/?{query} 302
+}
 
 :80 {
 	import hsts
 	header X-Robots-Tag noindex
 	header Cache-Control no-cache
 
-	# handle_path /api/* {
-	# 	reverse_proxy server:80
-	# }
-	# redir /mailpit /mailpit/
-	# handle_path /mailpit/* {
-	# 	basic_auth bcrypt {
-	# 		hello@clothingloop.org ${MAILPIT_PASS}
-	# 	}
-	# 	rewrite * /mailpit{path}
-	# 	reverse_proxy mailpit:8025
-	# }
-	# handle_path /toolkit {
-	# 	redir https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27
-	# }
+	handle_path /api/* {
+		reverse_proxy server:80
+	}
+	redir /mailpit /mailpit/
+	handle_path /mailpit/* {
+		basic_auth bcrypt {
+			hello@clothingloop.org ${MAILPIT_PASS}
+		}
+		rewrite * /mailpit{path}
+		reverse_proxy mailpit:8025
+	}
+	handle_path /toolkit {
+		redir https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27
+	}
+	
 	handle {
-		# import astro_url
+		import astro_url
 		file_server
 		try_files {path} {path}/ =404
 		encode zstd gzip
