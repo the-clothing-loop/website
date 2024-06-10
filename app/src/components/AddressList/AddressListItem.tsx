@@ -2,7 +2,7 @@ import { IonItem, IonText, IonIcon } from "@ionic/react";
 import { t } from "i18next";
 import { shield, pauseCircleSharp, bag } from "ionicons/icons";
 import { Bag, User } from "../../api/types";
-import BagSVG from "../Bags/Svg";
+import TinyBagSvg from "./TinyBagSvg";
 
 export interface AddressListItemProps {
   user: User;
@@ -99,7 +99,7 @@ export default function AddressListItem({
                 key={b.id}
               >
                 <div className="-tw-translate-y-px">
-                  <BagSVG bag={{ number: "", color: b.color }} isList />
+                  <TinyBagSvg bag={b} />
                 </div>
               </div>
             ))}
