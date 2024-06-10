@@ -24,6 +24,10 @@
 	@oldusersvalidp path_regexp usersvalidp ^/(\w{2}/)?users/login/validate$
 	redir @oldusersvalidp /{re.usersvalidp.1}users/login/validate/?{query} 302
 
+	# /users/me/edit -> /users/edit/?user=me
+	@olduserseditme path_regexp userseditme ^/(\w{2}/)?users/me/edit$
+	redir @olduserseditme /{re.userseditme.1}users/edit/?user=me 302
+
 	file_server
 	try_files {path} {path}/ =404
 	encode zstd gzip
