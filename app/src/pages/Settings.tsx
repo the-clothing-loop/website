@@ -258,7 +258,7 @@ export default function Settings() {
           <IonButton
             fill="clear"
             className="tw-absolute tw-top tw-right-0 tw-normal-case tw-mr-8 tw-text-base"
-            href={`https://www.clothingloop.org/${i18n.resolvedLanguage}/users/me/edit`}
+            href={`https://www.clothingloop.org/${i18n.resolvedLanguage}/users/edit/?user=me`}
             target="_blank"
           >
             {t("edit")}
