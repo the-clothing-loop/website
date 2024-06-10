@@ -23,7 +23,7 @@ app-start:
 
 .PHONY: server-start
 server-start:
-	docker compose exec server sh -c 'go run cmd/server/main.go'
+	docker compose exec server sh -c 'go run cmd/server/main.go -c config.dev.yml'
 
 .PHONY: test
 test:
