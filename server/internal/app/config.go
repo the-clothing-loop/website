@@ -47,6 +47,7 @@ var Config struct {
 	ONESIGNAL_APP_ID        string `yaml:"onesignal_app_id" env:"ONESIGNAL_APP_ID"`
 	ONESIGNAL_REST_API_KEY  string `yaml:"onesignal_rest_api_key" env:"ONESIGNAL_REST_API_KEY"`
 	APPSTORE_REVIEWER_EMAIL string `yaml:"appstore_reviewer_email" env:"APPSTORE_REVIEWER_EMAIL"`
+	IMAGES_DIR              string `yaml:"images_dir" env:"IMAGES_DIR"`
 }
 
 func ConfigInit(path string, files ...string) {

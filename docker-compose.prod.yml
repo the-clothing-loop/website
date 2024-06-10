@@ -27,6 +27,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 1m
+    volumes:
+      - images_dir:/images/
     environment:
       - ENV=production
       - HOST=0.0.0.0
@@ -55,3 +57,7 @@ services:
       - ONESIGNAL_APP_ID=$ONESIGNAL_APP_ID
       - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
       - APPSTORE_REVIEWER_EMAIL=$APPSTORE_REVIEWER_EMAIL
+      - IMAGES_DIR=/images
+volumes:
+  images_dir:
+    external: true

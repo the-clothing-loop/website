@@ -13,3 +13,4 @@
 # spreadsheet migration
 /migration.xlsx
 *.log
+/images

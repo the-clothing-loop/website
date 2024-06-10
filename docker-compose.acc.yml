@@ -29,6 +29,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 1m
+    volumes:
+      - images_dir:/images/
     environment:
       - ENV=acceptance
       - HOST=0.0.0.0
@@ -57,8 +59,13 @@ services:
       - ONESIGNAL_APP_ID=$ONESIGNAL_APP_ID
       - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
       - APPSTORE_REVIEWER_EMAIL=$APPSTORE_REVIEWER_EMAIL
+      - IMAGES_DIR=/images
   mail:
     image: axllent/mailpit
     environment:
       - "MP_SMTP_AUTH_ACCEPT_ANY=true"
       - "MP_SMTP_AUTH_ALLOW_INSECURE=true"
+
+volumes:
+  images_dir:
+    external: true

@@ -148,7 +148,8 @@ func Routes() *gin.Engine {
 
 	// imgbb
 	v2.POST("/image", controllers.ImageUpload)
-	v2.DELETE("/image", controllers.ImageDelete)
+	v2.DELETE("/image", controllers.ImageDeleteDeprecated)
+	v2.GET("/image_purge", controllers.ImagePurge)
 
 	// route
 	v2.GET("/route/order", controllers.RouteOrderGet)
