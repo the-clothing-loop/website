@@ -7,9 +7,10 @@ import ChainsList from "../components/ChainsList";
 import { useEscape } from "../util/escape.hooks";
 import type { Chain } from "../../../api/types";
 import { $authUser } from "../../../stores/auth";
-import { addModal } from "../../../stores/toast";
+import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 import { useLegal } from "../util/user.hooks";
+import { GinParseErrors } from "../util/gin-errors";
 
 export default function AdminDashboard() {
   const { t, i18n } = useTranslation();
@@ -59,9 +60,14 @@ export default function AdminDashboard() {
           text: t("delete"),
           type: "error",
           fn: () => {
-            userPurge(authUser!.uid).then(() => {
-              window.location.href = localizePath("/users/logout");
-            });
+            userPurge(authUser!.uid)
+              .then(() => {
+                window.location.href = localizePath("/users/logout");
+              })
+              .catch((err: any) => {
+                console.error("Error purging user:", err);
+                addToastError(GinParseErrors(t, err), err?.status);
+              });
           },
         },
       ],

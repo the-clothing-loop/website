@@ -345,7 +345,16 @@ func UserPurge(c *gin.Context) {
 		}
 	}
 
-	err := user.AddUserChainsToObject(db)
+	amountOfBags, err := user.CountAttachedBags(db)
+	if err != nil || amountOfBags == 0 {
+		if err != nil {
+			slog.Error("Error getting bag count", "err", err)
+		}
+		c.String(http.StatusConflict, "Please give your bags to someone else, or delete them from the app")
+		return
+	}
+
+	err = user.AddUserChainsToObject(db)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
