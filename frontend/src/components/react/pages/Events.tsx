@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, lazy, Suspense, useMemo } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import type { Event } from "../../../api/types";
@@ -20,6 +20,7 @@ import { $authUser } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 import { PRICE_TYPE_I18N } from "../components/EventChangeForm";
+import { GenderI18nKeys, Genders } from "../../../api/enums";
 const LocationModal = lazy(() => import("../components/LocationModal"));
 
 interface SearchValues {
@@ -38,6 +39,7 @@ const DEFAULT_LATITUDE = 52.377956;
 const DEFAULT_LONGITUDE = 4.89707;
 
 export default function Events() {
+  const [instaView, setInstaView] = useState(false);
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
 
@@ -184,44 +186,72 @@ export default function Events() {
                 }}
               />
             </div>
-
-            {authUser ? (
-              <a
-                href={localizePath("/events/create")}
-                className="btn btn-primary mb-4 md:mb-0 "
-              >
-                <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
-                {t("createEvent")}
-              </a>
-            ) : (
-              <div
-                className="btn btn-primary mb-4 md:mb-0 "
-                onClick={() =>
-                  addModal({
-                    message: t("mustBeRegistered"),
-                    actions: [
-                      {
-                        text: t("signup"),
-                        type: "primary",
-                        fn: () => {
-                          window.location.href = localizePath("/users/signup");
+            <div className="mb-4 md:mb-0 flex justify-end">
+              {authUser?.is_root_admin ? (
+                <label
+                  key="btn-insa-toggle"
+                  className={"btn me-3".concat(
+                    instaView
+                      ? " bg-instagram"
+                      : " btn-outline border-blue hover:bg-blue-light/25",
+                  )}
+                >
+                  <input
+                    className={"checkbox me-3".concat(
+                      instaView ? " border-white" : " border-blue",
+                    )}
+                    type="checkbox"
+                    checked={instaView}
+                    onClick={() => setInstaView((s) => !s)}
+                  />
+                  <span
+                    className={"icon-instagram text-3xl ".concat(
+                      instaView ? "text-white" : "text-blue",
+                    )}
+                  />
+                </label>
+              ) : null}
+              {authUser ? (
+                <a
+                  key="btn-create-event"
+                  href={localizePath("/events/create")}
+                  className="btn btn-primary"
+                >
+                  <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
+                  {t("createEvent")}
+                </a>
+              ) : (
+                <div
+                  key="btn-reg-event"
+                  className="btn btn-primary"
+                  onClick={() =>
+                    addModal({
+                      message: t("mustBeRegistered"),
+                      actions: [
+                        {
+                          text: t("signup"),
+                          type: "primary",
+                          fn: () => {
+                            window.location.href =
+                              localizePath("/users/signup");
+                          },
                         },
-                      },
-                      {
-                        text: t("login"),
-                        type: "secondary",
-                        fn: () => {
-                          window.location.href = localizePath("/users/login");
+                        {
+                          text: t("login"),
+                          type: "secondary",
+                          fn: () => {
+                            window.location.href = localizePath("/users/login");
+                          },
                         },
-                      },
-                    ],
-                  })
-                }
-              >
-                <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
-                {t("createEvent")}
-              </div>
-            )}
+                      ],
+                    })
+                  }
+                >
+                  <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
+                  {t("createEvent")}
+                </div>
+              )}
+            </div>
           </div>
 
           {events === null ? (
@@ -255,14 +285,18 @@ export default function Events() {
             </div>
           ) : (
             <div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              className={`grid grid-cols-1 gap-8 ${instaView ? "justify-items-center lg:grid-cols-2 xl:grid-cols-3" : "md:grid-cols-2 lg:grid-cols-3"}`}
               key="event"
             >
               {events
                 .sort((a, b) => (new Date(a.date) > new Date(b.date) ? 1 : -1))
-                .map((event) => (
-                  <EventItem event={event} key={event.uid} />
-                ))}
+                .map((event) =>
+                  instaView ? (
+                    <EventItemInstagram event={event} key={event.uid} />
+                  ) : (
+                    <EventItem event={event} key={event.uid} />
+                  ),
+                )}
             </div>
           )}
           {prevEvents?.previous_events ? (
@@ -462,6 +496,110 @@ function EventItemLoading() {
       <div className="m-4 mt-0 animate-pulse">
         <SizeBadgeLoading />
       </div>
+    </article>
+  );
+}
+
+function EventItemInstagram({ event }: { event: Event }) {
+  // genders sorted by children, women then men
+  const genders = useMemo(() => {
+    return Object.keys(GenderI18nKeys).filter((g) =>
+      event.genders?.includes(g),
+    );
+  }, [event]);
+  const date = dayjs(event.date).format("DD-MM-YYYY");
+  const address = useMemo(() => {
+    if (!event.address) return "";
+    const re = / ?([^,]+,[^,]+)$/.exec(event.address);
+    return re?.at(1) || event.address;
+  }, [event]);
+  let genderColor = "bg-purple";
+  let genderColorLight = "bg-purple-lighter";
+  if (event.genders && event.genders.length === 1) {
+    if (event.genders[0] === Genders.children) {
+      genderColor = "bg-orange";
+      genderColorLight = "bg-orange-light";
+    }
+    if (event.genders[0] === Genders.women) {
+      genderColor = "bg-mint";
+      genderColorLight = "bg-mint-light";
+    }
+  }
+
+  return (
+    <article
+      className={`relative flex flex-col items-center ${genderColorLight}`}
+      style={{ width: 400, height: 700 }}
+    >
+      <div className="font-bold flex flex-col text-center text-purple">
+        <span className="mt-11 mb-3 font-serif text-4xl">
+          Upcoming <br />
+          Swap Event
+        </span>
+        <span className="mb-3 text-lg">{date}</span>
+      </div>
+      <div className={`py-5 px-6 w-full ${genderColor}`}>
+        <img
+          className="object-contain w-full"
+          style={{ height: 200 }}
+          src={event.image_url || ClothesImage}
+        />
+      </div>
+
+      <div className="">
+        <h2
+          className="my-4 font-bold text-purple uppercase text-ellipsis overflow-hidden whitespace-nowrap px-4 text-center"
+          style={{ width: 400 }}
+        >
+          {event.name}
+        </h2>
+      </div>
+
+      <div className="mb-4 flex flex-row gap-3">
+        {genders?.map((gender) => {
+          let src = "";
+          let alt = "";
+          switch (gender) {
+            case Genders.children:
+              src = "/images/categories/baby-50.png";
+              alt = "Baby";
+              break;
+            case Genders.women:
+              src = "/images/categories/woman-50.png";
+              alt = "Woman";
+              break;
+            case Genders.men:
+              alt = "Men";
+              src = "/images/categories/man-50.png";
+          }
+          return (
+            <img
+              src={src}
+              alt={alt}
+              className="h-9 bg-white rounded-full p-1"
+            />
+          );
+        })}
+      </div>
+      <div>
+        <span
+          className="block mb-2 px-4 text-lg text-ellipsis overflow-hidden whitespace-nowrap"
+          style={{ width: 400 }}
+        >
+          <i className="icon-map-pin" /> {address}
+        </span>
+      </div>
+      <div
+        className="block bg-white rounded-full"
+        style={{ width: 320, height: 50 }}
+      >
+        &nbsp;
+      </div>
+      <img
+        className="w-24"
+        alt="clothing loop logo"
+        src="https://images.clothingloop.org/original/the_clothing_loop_logo.png"
+      />
     </article>
   );
 }
