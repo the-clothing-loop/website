@@ -39,8 +39,8 @@
 	}
 	redir /mailpit /mailpit/
 	handle_path /mailpit/* {
-		basic_auth bcrypt {
-			hello@clothingloop.org ${MAILPIT_PASS}
+		basic_auth {
+			hello@clothingloop.org $2a$14$rmHLSQRk4PoqD8iIH1HXreOGSUXgQEmvMm82yaNe00feVWZntv/Ji
 		}
 		rewrite * /mailpit{path}
 		reverse_proxy mailpit:8025
