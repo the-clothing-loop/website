@@ -1,0 +1,17 @@
+:80 {
+   handle_path /api/* {
+		reverse_proxy server:8084
+	}
+
+   redir /mailpit /mailpit/
+	handle_path /mailpit/* {
+		rewrite * /mailpit{path}
+		reverse_proxy mailpit:8025
+	}
+	handle_path /toolkit {
+		redir https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27
+	}
+   handle {
+      reverse_proxy frontend:3000
+   }
+}

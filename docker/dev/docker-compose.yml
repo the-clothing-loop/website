@@ -28,7 +28,7 @@ services:
     working_dir: /app
     stdin_open: true
     tty: true
-  mail:
+  mailpit:
     image: axllent/mailpit
     ports:
       - 127.0.0.1:8025:8025
@@ -36,6 +36,7 @@ services:
     environment:
       - "MP_SMTP_AUTH_ACCEPT_ANY=true"
       - "MP_SMTP_AUTH_ALLOW_INSECURE=true"
+    command:  --webroot /mailpit/
   pma:
     image: phpmyadmin:apache
     ports:
@@ -57,6 +58,10 @@ services:
     volumes:
       - mysql:/var/lib/mysql
       - ../../server/sql:/scripts
-
+  caddy:
+    build:
+      context: ./caddy/
+    ports:
+      - 127.0.0.1:8086:80
 volumes:
   mysql:
