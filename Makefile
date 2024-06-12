@@ -36,3 +36,6 @@ db-setup:
 	docker compose -f docker-compose.dev.yml exec db sh -c 'mariadb -u root -pfb4aeaa6d860dbabe785675e --database clothingloop < /scripts/dev-purge.sql'
 	docker compose -f docker-compose.dev.yml exec server sh -c 'go run cmd/generate-fake-data/main.go 200'
 	docker compose -f docker-compose.dev.yml exec db sh -c 'mariadb -u root -pfb4aeaa6d860dbabe785675e --database clothingloop < /scripts/dev-setup-users.sql'
+
+test-prepush:
+	cd server && make lint-test test-ci && cd ../frontend && npm run lint:test && cd ../app && npm run test && npm run lint:test
