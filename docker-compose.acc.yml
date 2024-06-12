@@ -65,6 +65,7 @@ services:
     environment:
       - "MP_SMTP_AUTH_ACCEPT_ANY=true"
       - "MP_SMTP_AUTH_ALLOW_INSECURE=true"
+    command:  --webroot /mailpit/
 
 volumes:
   images_dir:
