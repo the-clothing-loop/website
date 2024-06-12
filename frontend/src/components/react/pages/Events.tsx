@@ -517,12 +517,12 @@ function EventItemInstagram({ event }: { event: Event }) {
   let genderColorLight = "bg-purple-lighter";
   if (event.genders && event.genders.length === 1) {
     if (event.genders[0] === Genders.children) {
-      genderColor = "bg-orange";
-      genderColorLight = "bg-orange-light";
-    }
-    if (event.genders[0] === Genders.women) {
       genderColor = "bg-mint";
       genderColorLight = "bg-mint-light";
+    }
+    if (event.genders[0] === Genders.women) {
+      genderColor = "bg-orange";
+      genderColorLight = "bg-orange-light";
     }
   }
 
