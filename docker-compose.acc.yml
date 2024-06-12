@@ -60,7 +60,7 @@ services:
       - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
       - APPSTORE_REVIEWER_EMAIL=$APPSTORE_REVIEWER_EMAIL
       - IMAGES_DIR=/images
-  mail:
+  mailpit:
     image: axllent/mailpit
     environment:
       - "MP_SMTP_AUTH_ACCEPT_ANY=true"
