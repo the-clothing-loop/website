@@ -626,3 +626,28 @@ func ChainDeleteUnapproved(c *gin.Context) {
 			query.Reason)
 	}
 }
+
+func ChainChangeUserNote(c *gin.Context) {
+	db := getDB(c)
+	var body struct {
+		UserUID  string `json:"user_uid" binding:"required,uuid"`
+		ChainUID string `json:"chain_uid" binding:"required,uuid"`
+		Note     string `json:"note" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	if !ok {
+		return
+	}
+
+	err := models.UserChainSetNote(db, user.ID, chain.ID, body.Note)
+	if err != nil {
+		slog.Error("Unable to change user note", "error", err)
+		c.String(http.StatusInternalServerError, "Unable to change user note")
+		return
+	}
+}

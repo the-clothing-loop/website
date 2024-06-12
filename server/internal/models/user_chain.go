@@ -21,11 +21,16 @@ type UserChain struct {
 	LastNotifiedIsUnapprovedAt zero.Time   `json:"-"`
 	RouteOrder                 int         `json:"-"`
 	IsPaused                   bool        `json:"is_paused"`
+	Note                       string      `json:"note"`
 	Bags                       []Bag       `json:"-"`
 	Bulky                      []BulkyItem `json:"-"`
 }
 
 var ErrRouteInvalid = errors.New("Invalid route")
+
+func UserChainSetNote(db *gorm.DB, userID, chainID uint, note string) error {
+	return db.Exec(`UPDATE user_chains SET note = ? WHERE user_id = ? AND chain_id = ?`, note, userID, chainID).Error
+}
 
 func ValidateAllRouteUserUIDs(db *gorm.DB, chainID uint, userUIDs []string) bool {
 	lengthIn := len(userUIDs)
