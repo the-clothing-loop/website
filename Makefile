@@ -13,17 +13,17 @@ docker-stop:
 docker-remove:
 	docker compose -f docker-compose.dev.yml down
 
-# .PHONY: frontend-start
-# frontend-start:
-# 	docker compose -f docker-compose.dev.yml exec frontend sh -c 'npm i; npm run start:lan'
+.PHONY: frontend-restart
+frontend-restart:
+	docker compose -f docker-compose.dev.yml restart frontend
 
-# .PHONY: app-start
-# app-start:
-# 	docker compose -f docker-compose.dev.yml exec app sh -c 'npm i; npm run dev:docker'
+.PHONY: app-restart
+app-restart:
+	docker compose -f docker-compose.dev.yml restart app
 
-# .PHONY: server-start
-# server-start:
-# 	docker compose -f docker-compose.dev.yml exec server sh -c 'go run cmd/server/main.go -c config.dev.yml'
+.PHONY: server-restart
+server-restart:
+	docker compose -f docker-compose.dev.yml restart server
 
 .PHONY: test
 test:
