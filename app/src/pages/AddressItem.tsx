@@ -99,7 +99,7 @@ export default function AddressItem({
         </IonGrid>
         <IonItem lines="none">
           <div className="tw-w-full tw-mt-2 tw-mb-4">
-            <IonLabel className="!tw-font-bold">Notes</IonLabel>
+            <IonLabel className="!tw-font-bold">{t("notes")}</IonLabel>
             <div className="tw-relative tw-border tw-border-green tw-bg-green-contrast dark:tw-bg-background">
               <IonTextarea
                 className="tw-px-2 !tw-min-h-[200px]"
