@@ -651,3 +651,27 @@ func ChainChangeUserNote(c *gin.Context) {
 		return
 	}
 }
+func ChainGetUserNote(c *gin.Context) {
+	db := getDB(c)
+	var query struct {
+		UserUID  string `form:"user_uid" binding:"required,uuid"`
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, query.ChainUID, query.UserUID)
+	if !ok {
+		return
+	}
+
+	note, err := models.UserChainGetNote(db, user.ID, chain.ID)
+	if err != nil {
+		slog.Error("Unable to change user note", "error", err)
+		c.String(http.StatusInternalServerError, "Unable to change user note")
+		return
+	}
+	c.String(http.StatusOK, note)
+}

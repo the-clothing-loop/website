@@ -1,0 +1,19 @@
+meta {
+  name: set user note
+  type: http
+  seq: 11
+}
+
+patch {
+  url: {{base}}/v2/chain/user/note
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "user_uid": "{{userUID}}",
+    "chain_uid": "{{chainUID}}",
+    "note": "Changed description"
+  }
+}

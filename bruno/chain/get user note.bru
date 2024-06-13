@@ -1,13 +1,18 @@
 meta {
   name: get user note
   type: http
-  seq: 11
+  seq: 12
 }
 
-patch {
-  url: {{base}}/v2/chain/user/note
+get {
+  url: {{base}}/v2/chain/user/note?user_uid={{userUID}}&chain_uid={{chainUID}}
   body: json
   auth: inherit
+}
+
+query {
+  user_uid: {{userUID}}
+  chain_uid: {{chainUID}}
 }
 
 body:json {
