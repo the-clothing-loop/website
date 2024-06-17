@@ -60,7 +60,9 @@ func Routes() *gin.Engine {
 
 	// router
 	r := gin.New()
-	r.Use(gin.Logger())
+	if app.Config.ENV != app.EnvEnumProduction {
+		r.Use(gin.Logger())
+	}
 	r.Use(controllers.MiddlewareSetDB(db))
 
 	r.Use(func(c *gin.Context) {
