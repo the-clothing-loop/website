@@ -35,7 +35,7 @@
 	header Cache-Control no-cache
 
 	handle_path /api/* {
-		reverse_proxy server:80
+		reverse_proxy acc_server:80
 	}
 	redir /mailpit /mailpit/
 	handle_path /mailpit/* {
@@ -43,7 +43,7 @@
 			hello@clothingloop.org $2a$14$rmHLSQRk4PoqD8iIH1HXreOGSUXgQEmvMm82yaNe00feVWZntv/Ji
 		}
 		rewrite * /mailpit{path}
-		reverse_proxy mailpit:8025
+		reverse_proxy acc_mailpit:8025
 	}
 	handle_path /toolkit {
 		redir https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27

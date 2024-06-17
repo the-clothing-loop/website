@@ -1,5 +1,5 @@
 services:
-  app:
+  acc_app:
     build:
       context: ./app/
       args:
@@ -9,7 +9,7 @@ services:
       interval: 30s
       timeout: 5s
       retries: 5
-  frontend:
+  acc_frontend:
     build:
       context: ./frontend/
       args:
@@ -21,7 +21,7 @@ services:
       retries: 5
     environment:
       - MAILPIT_PASS=$MAILPIT_PASS
-  server:
+  acc_server:
     build: ./server/
     depends_on:
       - mailpit
@@ -62,7 +62,7 @@ services:
       - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
       - APPSTORE_REVIEWER_EMAIL=$APPSTORE_REVIEWER_EMAIL
       - IMAGES_DIR=/images
-  mailpit:
+  acc_mailpit:
     image: axllent/mailpit
     environment:
       - "MP_SMTP_AUTH_ACCEPT_ANY=true"
