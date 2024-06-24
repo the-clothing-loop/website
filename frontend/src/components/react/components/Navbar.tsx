@@ -28,7 +28,7 @@ function Navbar(props: { pathname: string }) {
           className="bg-center w-32 md:w-40 h-20 md:h-28 bg-no-repeat relative z-[60] bg-[auto_120px] md:bg-[auto_139px]"
           style={{
             backgroundImage:
-              "url('https://images.clothingloop.org/x139/the_clothing_loop_logo.png')",
+              "url('https://images.clothingloop.org/x278/the_clothing_loop_logo_v2.png')",
           }}
         ></a>
         <input type="checkbox" className="hidden peer" id="header-hamburger" />
