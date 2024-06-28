@@ -10,7 +10,7 @@ import { registerBasicUser, registerOrphanedUser } from "../../../api/login";
 
 import { GinParseErrors } from "../util/gin-errors";
 import type { TFunction } from "i18next";
-import { Genders } from "../../../api/enums";
+import { Categories } from "../../../api/enums";
 import { useStore } from "@nanostores/react";
 import { $authUser, authUserRefresh } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
@@ -152,7 +152,7 @@ export default function Signup() {
     return <div></div>;
   } else {
     let image =
-      chain?.genders?.length && chain.genders[0] === Genders.men
+      chain?.genders?.length && chain.genders[0] === Categories.men
         ? {
             src: "https://images.clothingloop.org/cx585,cw2678,x600/mannen_amersfoort.jpg",
             alt: "Two men wearing jumpers, the left wearing a baseball cap, the right glasses, between them is a large blue bag with the number 11 taped on.",

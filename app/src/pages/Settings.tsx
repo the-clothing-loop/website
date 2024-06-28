@@ -469,7 +469,10 @@ export default function Settings() {
                       slot="end"
                     >
                       {chain ? (
-                        <Badges genders={chain.genders} sizes={chain.sizes} />
+                        <Badges
+                          categories={chain.genders}
+                          sizes={chain.sizes}
+                        />
                       ) : null}
                     </div>
                   </IonItem>

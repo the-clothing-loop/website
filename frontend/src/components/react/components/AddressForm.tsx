@@ -372,7 +372,7 @@ export default function AddressForm(props: {
             message={t("weWouldLikeToKnowThisEquallyRepresented")}
           />
           <SizesDropdown
-            filteredGenders={Object.keys(categories)}
+            filteredCategory={Object.keys(categories)}
             selectedSizes={values.sizes || []}
             className="w-full"
             handleChange={(v) => setValue("sizes", v)}

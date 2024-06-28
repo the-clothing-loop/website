@@ -17,8 +17,7 @@ import {
   circleRadiusKm,
   useMapZoom,
 } from "../util/maps";
-import clothingCategories from "../util/categories";
-import { Genders, Sizes } from "../../../api/enums";
+import { Categories, Sizes } from "../../../api/enums";
 import { addToastError } from "../../../stores/toast";
 import { useStore } from "@nanostores/react";
 import { $chains } from "../../../stores/chains";
@@ -73,29 +72,22 @@ function createFilterFunc(
   genders: string[],
   sizes: string[],
 ): (c: Chain) => boolean {
-  let filterFunc = (_: Chain) => true;
-  if (sizes?.length) {
-    filterFunc = (c) => {
-      for (let s of sizes) {
-        if (c.sizes?.includes(s)) return true;
+  if (!sizes?.length && !genders?.length) return (_: Chain) => true;
+
+  return (c: Chain) => {
+    for (let g of genders) {
+      if (!c.genders?.includes(g)) {
+        return false;
       }
-      return false;
-    };
-  } else if (genders?.length) {
-    filterFunc = (c) => {
-      for (let g of genders) {
-        if (c.genders?.includes(g)) return true;
-        if (
-          c.sizes?.find((s) =>
-            clothingCategories[g as Genders].includes(s as Sizes),
-          )
-        )
-          return true;
+    }
+    for (let s of sizes) {
+      if (!c.sizes?.includes(s)) {
+        return false;
       }
-      return false;
-    };
-  }
-  return filterFunc;
+    }
+
+    return true;
+  };
 }
 
 export default function FindChain() {

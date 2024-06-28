@@ -207,6 +207,8 @@ func MockGenders(zeroOrMore bool) (genders []string) {
 		models.GenderEnumChildren,
 		models.GenderEnumWomen,
 		models.GenderEnumMen,
+		models.GenderEnumToys,
+		models.GenderEnumBooks,
 	}, zeroOrMore)
 }
 

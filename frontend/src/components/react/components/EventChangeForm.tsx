@@ -351,7 +351,7 @@ export default function EventChangeForm(props: {
               </div>
               <CategoriesDropdown
                 className="w-full mr-4 md:mr-8 py-4 pb-2 md:py-0"
-                selectedGenders={values.genders}
+                selectedCategories={values.genders}
                 handleChange={(gs) => setValue("genders", gs)}
               />
             </label>

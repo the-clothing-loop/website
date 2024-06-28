@@ -1,12 +1,12 @@
 import { Fragment, useMemo } from "react";
 
 import categories from "../util/categories";
-import { GenderI18nKeys, SizeI18nKeys } from "../../../api/enums";
+import { CatI18nKeys, SizeI18nKeys } from "../../../api/enums";
 import { useDropdownCheckBox } from "../util/dropdown.hooks";
 import { useTranslation } from "react-i18next";
 
 export default function SizesDropdown(props: {
-  filteredGenders: string[];
+  filteredCategory: string[];
   selectedSizes: string[];
   className?: string;
   handleChange: (selectedSizes: string[]) => void;
@@ -53,8 +53,9 @@ export default function SizesDropdown(props: {
         tabIndex={0}
       >
         {Object.entries(categories).map(([gender, sizes]) => {
+          if (!sizes.length) return null;
           let disabled =
-            props.filteredGenders.find((g) => g === gender) === undefined;
+            props.filteredCategory.find((g) => g === gender) === undefined;
 
           return (
             <Fragment key={gender}>
@@ -64,7 +65,7 @@ export default function SizesDropdown(props: {
                   disabled ? "text-base-300" : ""
                 }`}
               >
-                {GenderI18nKeys[gender]}
+                {CatI18nKeys[gender]}
               </li>
               {sizes.map((size) => {
                 let checked = props.selectedSizes.includes(size);

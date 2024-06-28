@@ -20,7 +20,7 @@ import { $authUser } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 import { PRICE_TYPE_I18N } from "../components/EventChangeForm";
-import { GenderI18nKeys, Genders } from "../../../api/enums";
+import { CatI18nKeys, Categories } from "../../../api/enums";
 const LocationModal = lazy(() => import("../components/LocationModal"));
 
 interface SearchValues {
@@ -179,7 +179,7 @@ export default function Events() {
               </button>
               <CategoriesDropdown
                 className="w-[150px] md:w-[170px]"
-                selectedGenders={values.genders}
+                selectedCategories={values.genders}
                 handleChange={(gs) => {
                   setValue("genders", gs);
                   search();
@@ -503,9 +503,7 @@ function EventItemLoading() {
 function EventItemInstagram({ event }: { event: Event }) {
   // genders sorted by children, women then men
   const genders = useMemo(() => {
-    return Object.keys(GenderI18nKeys).filter((g) =>
-      event.genders?.includes(g),
-    );
+    return Object.keys(CatI18nKeys).filter((g) => event.genders?.includes(g));
   }, [event]);
   const date = dayjs(event.date).format("DD-MM-YYYY");
   const address = useMemo(() => {
@@ -516,11 +514,11 @@ function EventItemInstagram({ event }: { event: Event }) {
   let genderColor = "bg-purple";
   let genderColorLight = "bg-purple-lighter";
   if (event.genders && event.genders.length === 1) {
-    if (event.genders[0] === Genders.children) {
+    if (event.genders[0] === Categories.children) {
       genderColor = "bg-mint";
       genderColorLight = "bg-mint-light";
     }
-    if (event.genders[0] === Genders.women) {
+    if (event.genders[0] === Categories.women) {
       genderColor = "bg-orange";
       genderColorLight = "bg-orange-light";
     }
@@ -560,15 +558,15 @@ function EventItemInstagram({ event }: { event: Event }) {
           let src = "";
           let alt = "";
           switch (gender) {
-            case Genders.children:
+            case Categories.children:
               src = "/images/categories/baby-50.png";
               alt = "Baby";
               break;
-            case Genders.women:
+            case Categories.women:
               src = "/images/categories/woman-50.png";
               alt = "Woman";
               break;
-            case Genders.men:
+            case Categories.men:
               alt = "Men";
               src = "/images/categories/man-50.png";
           }
