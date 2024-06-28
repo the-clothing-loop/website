@@ -632,7 +632,7 @@ func ChainChangeUserNote(c *gin.Context) {
 	var body struct {
 		UserUID  string `json:"user_uid" binding:"required,uuid"`
 		ChainUID string `json:"chain_uid" binding:"required,uuid"`
-		Note     string `json:"note" binding:"required"`
+		Note     string `json:"note"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
