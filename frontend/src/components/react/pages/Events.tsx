@@ -436,7 +436,7 @@ function EventItem({ event }: { event: Event }) {
             ) : null}
           </div>
           <img
-            src={image}
+            src={image || ""}
             className="w-full h-full object-cover"
             alt="event cover image"
           />
