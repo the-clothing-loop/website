@@ -16,6 +16,7 @@ import { $authUser, authUserRefresh } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import getQuery from "../util/query";
 import useLocalizePath from "../util/localize_path.hooks";
+import OriginalImageToProxy from "../util/image_proxy";
 
 export default function Signup() {
   const { t, i18n } = useTranslation();
@@ -151,8 +152,13 @@ export default function Signup() {
     window.location.href = localizePath("/thankyou");
     return <div></div>;
   } else {
-    let image =
-      chain?.genders?.length && chain.genders[0] === Categories.men
+    let image = chain?.image
+      ? {
+          src: OriginalImageToProxy(chain.image, "x600")!,
+          alt: "Loop cover image",
+          credit: "",
+        }
+      : chain?.genders?.length && chain.genders[0] === Categories.men
         ? {
             src: "https://images.clothingloop.org/cx585,cw2678,x600/mannen_amersfoort.jpg",
             alt: "Two men wearing jumpers, the left wearing a baseball cap, the right glasses, between them is a large blue bag with the number 11 taped on.",
