@@ -154,6 +154,7 @@ func ChainGet(c *gin.Context) {
 		Name:             chain.Name,
 		Description:      chain.Description,
 		Address:          chain.Address,
+		Image:            chain.Image,
 		Latitude:         chain.Latitude,
 		Longitude:        chain.Longitude,
 		Radius:           chain.Radius,
@@ -311,6 +312,7 @@ func ChainUpdate(c *gin.Context) {
 		Name             *string   `json:"name,omitempty"`
 		Description      *string   `json:"description,omitempty"`
 		Address          *string   `json:"address,omitempty"`
+		Image            *string   `json:"image,omitempty"`
 		CountryCode      *string   `json:"country_code,omitempty"`
 		Latitude         *float32  `json:"latitude,omitempty"`
 		Longitude        *float32  `json:"longitude,omitempty"`
@@ -357,6 +359,10 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Address != nil {
 		valuesToUpdate["address"] = *(body.Address)
+	}
+	if body.Image != nil {
+		image := *(body.Image)
+		valuesToUpdate["image"] = sql.NullString{String: image, Valid: image != ""}
 	}
 	if body.CountryCode != nil {
 		valuesToUpdate["country_code"] = *(body.CountryCode)

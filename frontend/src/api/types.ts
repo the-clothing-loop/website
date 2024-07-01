@@ -53,6 +53,7 @@ export interface Chain {
   name: string;
   description: string;
   address: string;
+  image?: string;
   latitude: number;
   longitude: number;
   radius: number;
