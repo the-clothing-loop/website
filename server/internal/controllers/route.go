@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"log/slog"
+	"math"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -94,17 +95,26 @@ func GetRouteCoordinates(c *gin.Context) {
 
 	var query struct {
 		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+		UserUID  string `form:"user_uid" binding:"omitempty,uuid"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	// the authenticated user should be a chain admin
-	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+	var ok bool
+	var chain *models.Chain
+	var authUser *models.User
+	if query.UserUID == "" {
+		// the authenticated user should be a chain admin
+		ok, authUser, chain = auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+	} else {
+		ok, _, authUser, chain = auth.AuthenticateUserOfChain(c, db, query.ChainUID, query.UserUID)
+	}
 	if !ok {
 		return
 	}
+	_, isChainAdmin := authUser.IsPartOfChain(query.ChainUID)
 
 	cities := retrieveChainUsersAsTspCities(db, chain.ID)
 
@@ -116,12 +126,18 @@ func GetRouteCoordinates(c *gin.Context) {
 	}
 	response := []Response{}
 	for _, city := range cities {
-		response = append(response, Response{
+		item := Response{
 			UserUID:    city.Key,
 			Latitude:   city.Latitude,
 			Longitude:  city.Longitude,
 			RouteOrder: city.RouteOrder,
-		})
+		}
+		if !isChainAdmin && !authUser.IsRootAdmin {
+			item.UserUID = ""
+			item.Latitude = math.Round(city.Latitude*1000) / 1000
+			item.Longitude = math.Round(city.Longitude*1000) / 1000
+		}
+		response = append(response, item)
 	}
 
 	c.JSON(http.StatusOK, response)

@@ -2,6 +2,8 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonHeader,
   IonIcon,
   IonItem,
@@ -21,7 +23,7 @@ import {
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../stores/Store";
-import { openOutline, searchOutline } from "ionicons/icons";
+import { mapOutline, openOutline, searchOutline } from "ionicons/icons";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
@@ -34,6 +36,7 @@ import wrapIndex from "../utils/wrap_index";
 import { useDebounce } from "@uidotdev/usehooks";
 import IsPaused from "../utils/is_paused";
 import { Sleep } from "../utils/sleep";
+import RouteMapPopup from "../components/RouteMap/RouteMapPopup";
 
 export default function AddressList() {
   const {
@@ -263,6 +266,17 @@ export default function AddressList() {
               return <AddressListItem {...props} key={props.number} />;
             })}
           </IonList>
+          <IonFab className="tw-fixed" horizontal="end" vertical="bottom">
+            <IonFabButton
+              color={isThemeDefault ? "danger" : ""}
+              id="fab-open-map"
+            >
+              <IonIcon icon={mapOutline} />
+            </IonFabButton>
+          </IonFab>
+          {chain && authUser ? (
+            <RouteMapPopup chain={chain} authUserUID={authUser.uid} />
+          ) : null}
           {isChainAdmin ? (
             <EditHeaders
               modal={headerSheetModal}

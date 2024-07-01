@@ -1,3 +1,10 @@
+@import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+@import "mapbox-gl/dist/mapbox-gl.css";
+
+.mapboxgl-ctrl-attrib {
+  display: none !important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
