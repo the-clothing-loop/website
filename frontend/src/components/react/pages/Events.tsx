@@ -21,6 +21,7 @@ import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 import { PRICE_TYPE_I18N } from "../components/EventChangeForm";
 import { CatI18nKeys, Categories } from "../../../api/enums";
+import OriginalImageToProxy from "../util/image_proxy";
 const LocationModal = lazy(() => import("../components/LocationModal"));
 
 interface SearchValues {
@@ -32,7 +33,7 @@ interface SearchValues {
 
 // Media
 const ClothesImage =
-  "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
+  "https://images.clothingloop.org/600x/nichon_zelfportret.jpg";
 
 const MAX_RADIUS = 5000;
 const DEFAULT_LATITUDE = 52.377956;
@@ -392,8 +393,8 @@ function EventItem({ event }: { event: Event }) {
   let isSfSeason2024 =
     date.isAfter("2024-01-01") && date.isBefore("2024-03-01");
 
-  let image = ClothesImage;
-  if (event.image_url) image = event.image_url;
+  let image: string | null | undefined = ClothesImage;
+  if (event.image_url) image = OriginalImageToProxy(event.image_url, "600x");
   return (
     <article className="flex flex-col bg-teal-light">
       <div className="relative flex">
