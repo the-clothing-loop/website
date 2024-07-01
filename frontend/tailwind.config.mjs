@@ -49,6 +49,10 @@ const colors = {
     light: "#d2e2b3",
     DEFAULT: "#a6c665",
   },
+  mint: {
+    light: "#ceeee2",
+    DEFAULT: "#80d2af",
+  },
   green: {
     lighter: "#e8efe9",
     light: "#b1c8b6",

@@ -6,7 +6,6 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 
 	"gorm.io/gorm"
@@ -19,5 +18,4 @@ func TestMain(m *testing.M) {
 
 	flag.Set("logtostderr", "true")
 	flag.Parse()
-	defer glog.Flush()
 }

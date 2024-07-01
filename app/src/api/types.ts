@@ -59,6 +59,7 @@ export interface Chain {
   sizes: string[] | null;
   published: boolean;
   open_to_new_members: boolean;
+  image?: string;
   total_members?: number;
   total_hosts?: number;
   route_privacy?: number;

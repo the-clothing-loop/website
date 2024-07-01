@@ -3,13 +3,12 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
-	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
@@ -79,7 +78,7 @@ func UserGet(c *gin.Context) {
 
 	err = user.AddUserChainsToObject(db)
 	if err != nil {
-		goscope.Log.Errorf("%v: %v", models.ErrAddUserChainsToObject, err)
+		slog.Error(models.ErrAddUserChainsToObject.Error(), "err", err)
 		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
 		return
 	}
@@ -123,13 +122,13 @@ func UserGetAllOfChain(c *gin.Context) {
 	allUserChains, err := models.UserChainGetIndirectByChain(tx, chain.ID)
 
 	if err != nil {
-		goscope.Log.Errorf("Unable to retrieve associations between a loop and its users: %v", err)
+		slog.Error("Unable to retrieve associations between a loop and its users", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to retrieve associations between a loop and its users")
 		return
 	}
 	users, errUsersByChain := models.UserGetAllUsersByChain(tx, chain.ID)
 	if errUsersByChain != nil {
-		goscope.Log.Errorf("Unable to retrieve associated users of a loop: %v", err)
+		slog.Error("Unable to retrieve associated users of a loop", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to retrieve associated users of a loop")
 		return
 	}
@@ -152,7 +151,7 @@ func UserGetAllOfChain(c *gin.Context) {
 		users, err = models.UserOmitData(db, chain, users, authUser.ID)
 
 		if err != nil {
-			goscope.Log.Errorf("Unable to omit user data: %v", err)
+			slog.Error("Unable to omit user data", "err", err)
 			c.String(http.StatusInternalServerError, "Internal error hiding user information")
 			return
 		}
@@ -278,7 +277,7 @@ WHERE uc.user_id = ? AND c.id IN (
 		}
 		if len(userChanges) > 0 {
 			if err := db.Model(user).Updates(userChanges).Error; err != nil {
-				goscope.Log.Errorf("Unable to update user: %v", err)
+				slog.Error("Unable to update user", "err", err)
 				c.String(http.StatusInternalServerError, "Unable to update user")
 				return
 			}
@@ -295,7 +294,7 @@ WHERE uc.user_id = ? AND c.id IN (
 
 			err := n.CreateOrUpdate(db)
 			if err != nil {
-				goscope.Log.Errorf("%v", err)
+				slog.Error("", "err", err)
 				c.String(http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
@@ -307,7 +306,7 @@ WHERE uc.user_id = ? AND c.id IN (
 
 			err := db.Exec("DELETE FROM newsletters WHERE email = ?", user.Email).Error
 			if err != nil {
-				goscope.Log.Errorf("%v", err)
+				slog.Error("", "err", err)
 				c.String(http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
@@ -346,7 +345,16 @@ func UserPurge(c *gin.Context) {
 		}
 	}
 
-	err := user.AddUserChainsToObject(db)
+	amountOfBags, err := user.CountAttachedBags(db)
+	if err != nil || amountOfBags == 0 {
+		if err != nil {
+			slog.Error("Error getting bag count", "err", err)
+		}
+		c.String(http.StatusConflict, "Please give your bags to someone else, or delete them from the app")
+		return
+	}
+
+	err = user.AddUserChainsToObject(db)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -378,7 +386,7 @@ HAVING COUNT(uc.id) = 1
 	err = user.DeleteUserChainDependenciesAllChains(tx)
 	if err != nil {
 		tx.Rollback()
-		goscope.Log.Errorf("UserPurge: %v", err)
+		slog.Error("UserPurge", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to disconnect bag connections")
 		return
 	}
@@ -390,61 +398,61 @@ UPDATE events SET user_id = (
 	`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
-		goscope.Log.Errorf("UserPurge: Unable to remove event connections: %v", err)
+		slog.Error("UserPurge: Unable to remove event connections", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to remove event connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
-		goscope.Log.Errorf("UserPurge: Unable to remove loop connections: %v", err)
+		slog.Error("UserPurge: Unable to remove loop connections", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to remove loop connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM user_tokens WHERE user_id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
-		goscope.Log.Errorf("UserPurge: Unable to remove token connections: %v", err)
+		slog.Error("UserPurge: Unable to remove token connections", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to remove token connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM user_onesignals WHERE user_id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
-		goscope.Log.Errorf("UserPurge: Unable to remove onesignal connections: %v", err)
+		slog.Error("UserPurge: Unable to remove onesignal connections", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to remove onesignal connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
-		goscope.Log.Errorf("UserPurge: Unable to user: %v", err)
+		slog.Error("UserPurge: Unable to user", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to user")
 		return
 	}
 
-	glog.Infof("Purging chains %v", chainIDsToDelete)
+	slog.Info("Purging chains", "chainIDsToDelete", chainIDsToDelete)
 	if len(chainIDsToDelete) > 0 {
 		err := tx.Exec(`DELETE FROM bags WHERE user_chain_id IN (
 			SELECT id FROM user_chains WHERE chain_id IN ?
 		)`, chainIDsToDelete).Error
 		if err != nil {
 			tx.Rollback()
-			goscope.Log.Errorf("UserPurge: %v", err)
+			slog.Error("UserPurge", "err", err)
 			c.String(http.StatusInternalServerError, "Unable to disconnect all loop bag connections")
 			return
 		}
 		err = tx.Exec(`DELETE FROM user_chains WHERE chain_id IN ?`, chainIDsToDelete).Error
 		if err != nil {
 			tx.Rollback()
-			goscope.Log.Errorf("UserPurge: Unable to remove hosted loop connections: %v", err)
+			slog.Error("UserPurge: Unable to remove hosted loop connections", "err", err)
 			c.String(http.StatusInternalServerError, "Unable to remove hosted loop connections")
 			return
 		}
 		err = tx.Exec(`DELETE FROM chains WHERE id IN ?`, chainIDsToDelete).Error
 		if err != nil {
 			tx.Rollback()
-			goscope.Log.Errorf("UserPurge: Unable to remove hosted loop: %v", err)
+			slog.Error("UserPurge: Unable to remove hosted loop", "err", err)
 			c.String(http.StatusInternalServerError, "Unable to remove hosted loop")
 			return
 		}
@@ -454,7 +462,7 @@ UPDATE events SET user_id = (
 		err = tx.Exec(`DELETE FROM newsletters WHERE email = ?`, user.Email.String).Error
 		if err != nil {
 			tx.Rollback()
-			goscope.Log.Errorf("UserPurge: Unable to remove newsletter: %v", err)
+			slog.Error("UserPurge: Unable to remove newsletter", "err", err)
 			c.String(http.StatusInternalServerError, "Unable to remove newsletter")
 			return
 		}
@@ -501,7 +509,7 @@ func UserTransferChain(c *gin.Context) {
 
 	handleError := func(tx *gorm.DB, err error) {
 		tx.Rollback()
-		goscope.Log.Errorf("UserTransferChain: %v", err)
+		slog.Error("UserTransferChain", "err", err)
 		responseBody := "Unable transfer user from loop to loop"
 		if body.IsCopy {
 			responseBody = "Unable copy user from loop to loop"
@@ -586,7 +594,7 @@ LIMIT 1
 		}).Error
 		if err != nil {
 			tx.Rollback()
-			goscope.Log.Errorf("User could not be added to chain: %v", err)
+			slog.Error("User could not be added to chain", "err", err)
 			c.String(http.StatusInternalServerError, "User could not be added to chain due to unknown error")
 			return
 		}

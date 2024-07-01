@@ -6,46 +6,37 @@ services:
     ports:
       - 5173:5173
     volumes:
-      - ../../app:/app
+      - ./app:/app
     working_dir: /app
-    stdin_open: true
-    tty: true
+    command: sh -c 'npm i && npm run dev:docker'
   frontend:
     image: node:20-alpine
     ports:
       - 3000:3000
     volumes:
-      - ../../frontend:/app
+      - ./frontend:/app
     working_dir: /app
-    stdin_open: true
-    tty: true
+    command: sh -c 'npm i; npm run start:lan'
   server:
     image: golang:1.22-alpine
+    depends_on:
+      - db
+      - mailpit
     ports:
       - 8084:8084
     volumes:
-      - ../../server:/app
+      - ./server:/app
     working_dir: /app
-    stdin_open: true
-    tty: true
-  mm-mail:
-    image: golang:1.22-alpine
-    ports:
-      - 2525:2525
-    depends_on:
-      - db    
-    volumes:
-      - ../../server:/app
-    working_dir: /app
-    command: go run cmd/mm-mail/main.go
-  mail:
+    command: "go run cmd/server/main.go -c config.dev.yml"
+  mailpit:
     image: axllent/mailpit
-    ports:
-      - 127.0.0.1:8025:8025
-      - 127.0.0.1:8125:1025
+    # ports:
+    #   - 127.0.0.1:8025:8025
+    #   - 127.0.0.1:8125:1025
     environment:
       - "MP_SMTP_AUTH_ACCEPT_ANY=true"
       - "MP_SMTP_AUTH_ALLOW_INSECURE=true"
+      - "MP_WEBROOT=/mailpit/"
   pma:
     image: phpmyadmin:apache
     ports:
@@ -76,5 +67,11 @@ services:
       - mm-mail
     hostname: mattermost
 
+      - ./server/sql:/scripts
+  caddy:
+    build:
+      context: ./caddy/
+    ports:
+      - 127.0.0.1:8086:80
 volumes:
   mysql:

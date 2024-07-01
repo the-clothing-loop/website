@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/OneSignal/onesignal-go-api"
 	uuid "github.com/satori/go.uuid"
@@ -42,6 +43,9 @@ func OneSignalCreateNotification(db *gorm.DB, userUIDs []string, notificationTit
 	notification.SetIsAnyWeb(false)
 	notification.SetHeadings(notificationTitle)
 	notification.SetContents(notificationContent)
+	notification.SetData(map[string]any{
+		"user_uids": strings.Join(userUIDs, ","),
+	})
 
 	auth := oneSignalGetAuth()
 	_, resp, err := OneSignalClient.DefaultApi.CreateNotification(auth).Notification(*notification).Execute()

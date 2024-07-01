@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"time"
 
@@ -32,6 +33,7 @@ func DatabaseInit() *gorm.DB {
 
 func DatabaseAutoMigrate(db *gorm.DB) {
 	hadIsApprovedColumn := db.Migrator().HasColumn(&models.UserChain{}, "is_approved")
+	hadEventPriceTypeColumn := db.Migrator().HasColumn(&models.Event{}, "price_type")
 
 	// User Tokens
 	if db.Migrator().HasTable("user_tokens") {
@@ -112,6 +114,16 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 ALTER TABLE user_chains
 ADD CONSTRAINT uci_user_id_chain_id
 UNIQUE (user_id, chain_id)
+		`)
+	}
+	if !hadEventPriceTypeColumn {
+		slog.Info("Migration run: create event price type")
+		db.Exec(`
+UPDATE events SET price_type = CASE
+	WHEN price_value = 0 THEN "free"
+	ELSE "entrance"
+END
+WHERE price_type IS NULL
 		`)
 	}
 	if !hadIsApprovedColumn {

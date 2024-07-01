@@ -1,16 +1,12 @@
 package internal
 
 import (
-	"fmt"
-	"io"
-	"os"
+	"log/slog"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	cron "github.com/go-co-op/gocron"
-	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/controllers"
 	"github.com/the-clothing-loop/website/server/pkg/throttle"
 )
@@ -36,16 +32,10 @@ func Routes() *gin.Engine {
 	// set gin mode
 	if app.Config.ENV == app.EnvEnumProduction || app.Config.ENV == app.EnvEnumAcceptance {
 		gin.SetMode(gin.ReleaseMode)
-
-		// create log file if does not exist and write to it
-		logFilePath := fmt.Sprintf("/var/log/clothingloop-api/%s.log", app.Config.ENV)
-		f, err := os.Create(logFilePath)
-		if err != nil {
-			glog.Fatalf("could not create log file at '%s'", logFilePath)
-		}
-		gin.DefaultWriter = io.MultiWriter(f)
+		slog.SetLogLoggerLevel(slog.LevelError)
 	} else {
 		gin.SetMode(gin.DebugMode)
+		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
 
 	if app.Config.ENV != app.EnvEnumTesting {
@@ -73,11 +63,9 @@ func Routes() *gin.Engine {
 
 	// router
 	r := gin.New()
-	r.Use(gin.Logger())
-	goscope.GoScope2Init(r, db,
-		app.Config.GOSCOPE2_USER,
-		app.Config.GOSCOPE2_PASS,
-	)
+	if app.Config.ENV != app.EnvEnumProduction {
+		r.Use(gin.Logger())
+	}
 	r.Use(controllers.MiddlewareSetDB(db))
 
 	r.Use(func(c *gin.Context) {
@@ -110,9 +98,8 @@ func Routes() *gin.Engine {
 	v2 := r.Group("/v2")
 
 	// ping
-	v2.Any("/ping", func(c *gin.Context) {
-		c.String(200, "pong")
-	})
+	r.GET("/ping", controllers.Ping)
+	v2.GET("/ping", controllers.Ping)
 
 	// info
 	v2.GET("/info", controllers.InfoGet)
@@ -153,6 +140,8 @@ func Routes() *gin.Engine {
 	v2.DELETE("/chain/unapproved-user", controllers.ChainDeleteUnapproved)
 	v2.POST("/chain/poke", controllers.Poke)
 	v2.GET("/chain/near", controllers.ChainGetNear)
+	v2.PATCH("/chain/user/note", controllers.ChainChangeUserNote)
+	v2.GET("/chain/user/note", controllers.ChainGetUserNote)
 
 	// chat
 	v2.PATCH("/chat/user", controllers.ChatPatchUser)
@@ -172,7 +161,8 @@ func Routes() *gin.Engine {
 
 	// imgbb
 	v2.POST("/image", controllers.ImageUpload)
-	v2.DELETE("/image", controllers.ImageDelete)
+	v2.DELETE("/image", controllers.ImageDeleteDeprecated)
+	v2.GET("/image_purge", controllers.ImagePurge)
 
 	// route
 	v2.GET("/route/order", controllers.RouteOrderGet)

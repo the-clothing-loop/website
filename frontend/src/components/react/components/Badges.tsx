@@ -1,8 +1,8 @@
 import type { TFunction } from "i18next";
 
 import {
-  GenderI18nKeys,
-  Genders,
+  CatI18nKeys,
+  Categories,
   SizeI18nKeys,
   Sizes,
 } from "../../../api/enums";
@@ -28,56 +28,82 @@ export function SizeBadges({
   g,
 }: {
   s?: Array<string | Sizes> | null;
-  g?: Array<string | Genders> | null;
+  g?: Array<string | Categories> | null;
 }) {
   const { t } = useTranslation();
 
   const children =
     s
-      ?.filter((a) => categories[Genders.children].includes(a as Sizes))
+      ?.filter((a) => categories[Categories.children].includes(a as Sizes))
       .sort((a, z) => a.localeCompare(z)) || [];
   const women =
     s
-      ?.filter((a) => categories[Genders.women].includes(a as Sizes))
+      ?.filter((a) => categories[Categories.women].includes(a as Sizes))
       .sort((a, z) => a.localeCompare(z)) || [];
   const men =
     s
-      ?.filter((a) => categories[Genders.men].includes(a as Sizes))
+      ?.filter((a) => categories[Categories.men].includes(a as Sizes))
       .sort((a, z) => a.localeCompare(z)) || [];
 
   return (
     <ul className={`flex ${!!s ? "flex-col" : "flex-row"} items-start`}>
-      {women.length || g?.includes(Genders.women) ? (
+      {women.length || g?.includes(Categories.women) ? (
         <SizeCatBadges
           t={t}
           key="women"
-          gender={Genders.women}
+          category={Categories.women}
           sizes={women as Sizes[]}
           icon="/images/categories/woman-50.png"
           color="bg-orange-light"
         />
       ) : null}
-      {men.length || g?.includes(Genders.men) ? (
+      {men.length || g?.includes(Categories.men) ? (
         <SizeCatBadges
           t={t}
           key="men"
-          gender={Genders.men}
+          category={Categories.men}
           sizes={men as Sizes[]}
           icon="/images/categories/man-50.png"
           color="bg-purple-lighter"
         />
       ) : null}
-      {children.length || g?.includes(Genders.children) ? (
+      {children.length || g?.includes(Categories.children) ? (
         <SizeCatBadges
           t={t}
           key="children"
-          gender={Genders.children}
+          category={Categories.children}
           sizes={children as Sizes[]}
           icon="/images/categories/baby-50.png"
           color="bg-leafGreen-light"
         />
       ) : null}
+      {g?.indexOf(Categories.toys) ? (
+        <SizeCatBadges
+          t={t}
+          key="toys"
+          category={Categories.toys}
+          sizes={[]}
+          icon="/images/categories/toys-50.png"
+          color="bg-skyBlue-light"
+        />
+      ) : null}
+      {g?.indexOf(Categories.books) ? (
+        <SizeCatBadges
+          t={t}
+          key="books"
+          category={Categories.books}
+          sizes={[]}
+          icon="/images/categories/books-50.png"
+          color="bg-pink-light"
+        />
+      ) : null}
     </ul>
+  );
+}
+
+export function SizeBadgeLoading() {
+  return (
+    <div className="inline-flex flex-row mb-1 mr-1 rtl:mr-0 rtl:ml-1 rounded-full w-9 h-7 px-2 bg-orange-light"></div>
   );
 }
 
@@ -86,7 +112,7 @@ function SizeCatBadges({
   ...props
 }: {
   t: TFunction;
-  gender: Genders;
+  category: Categories;
   sizes: Sizes[];
   icon: string;
   color: string;
@@ -97,7 +123,7 @@ function SizeCatBadges({
     >
       <div
         className="tooltip tooltip-top before:text-xs font-semibold"
-        data-tip={t(GenderI18nKeys[props.gender as string])}
+        data-tip={t(CatI18nKeys[props.category as string])}
       >
         <img src={props.icon} className="h-5 my-1" />
       </div>

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"os"
 
-	"github.com/golang/glog"
 	server "github.com/the-clothing-loop/website/server/internal"
 	"github.com/the-clothing-loop/website/server/internal/app"
 )
@@ -24,11 +24,10 @@ func main() {
 		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
 	flag.Parse()
-	defer glog.Flush()
 
-	glog.Infof("Setup environment in: %s\n", app.Config.ENV)
-	glog.Infof("Listening to: %s:%d\n", app.Config.HOST, app.Config.PORT)
-	glog.Infof("Calling database at: %s:%d\n", app.Config.DB_HOST, app.Config.DB_PORT)
+	fmt.Printf("Setup environment in: %s\n", app.Config.ENV)
+	fmt.Printf("Listening to: %s:%d\n", app.Config.HOST, app.Config.PORT)
+	fmt.Printf("Calling database at: %s:%d\n", app.Config.DB_HOST, app.Config.DB_PORT)
 	router := server.Routes()
 
 	err := http.ListenAndServe(fmt.Sprintf("%s:%d", app.Config.HOST, app.Config.PORT), router)
@@ -36,6 +35,7 @@ func main() {
 		server.Scheduler.Stop()
 	}
 	if err != http.ErrServerClosed {
-		glog.Fatalf("error listen and serve: %s", err)
+		slog.Error("error listen and serve", "err", err)
+		os.Exit(1)
 	}
 }

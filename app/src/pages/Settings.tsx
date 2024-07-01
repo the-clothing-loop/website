@@ -8,6 +8,7 @@ import {
   IonDatetime,
   IonHeader,
   IonIcon,
+  IonImg,
   IonItem,
   IonItemDivider,
   IonLabel,
@@ -64,6 +65,7 @@ import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
 import RoutePrivacyInput from "../components/Settings/RoutePrivacyInput";
 import { chainUpdate } from "../api/chain";
+import OriginalImageToProxy from "../utils/image_proxy";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -226,6 +228,8 @@ export default function Settings() {
     }
   }
 
+  let chainImage = OriginalImageToProxy(chain?.image, "400x70,sc");
+
   return (
     <IonPage>
       <IonHeader collapse="fade">
@@ -258,7 +262,7 @@ export default function Settings() {
           <IonButton
             fill="clear"
             className="tw-absolute tw-top tw-right-0 tw-normal-case tw-mr-8 tw-text-base"
-            href={`https://www.clothingloop.org/${i18n.resolvedLanguage}/users/me/edit`}
+            href={`https://www.clothingloop.org/${i18n.resolvedLanguage}/users/edit/?user=me`}
             target="_blank"
           >
             {t("edit")}
@@ -346,6 +350,11 @@ export default function Settings() {
             color="background"
           >
             <IonList>
+              {chainImage ? (
+                <IonItem lines="none">
+                  <IonImg src={chainImage} className="tw-mt-4 tw-w-full" />
+                </IonItem>
+              ) : null}
               <IonItem lines="none">
                 <IonSelect
                   ref={refChainSelect}
@@ -469,7 +478,10 @@ export default function Settings() {
                       slot="end"
                     >
                       {chain ? (
-                        <Badges genders={chain.genders} sizes={chain.sizes} />
+                        <Badges
+                          categories={chain.genders}
+                          sizes={chain.sizes}
+                        />
                       ) : null}
                     </div>
                   </IonItem>

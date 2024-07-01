@@ -3,15 +3,15 @@ package mocks
 import (
 	"fmt"
 	"html/template"
+	"log/slog"
 	"math/rand"
+	"os"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/golang/glog"
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 
 	Faker "github.com/jaswdr/faker"
@@ -113,14 +113,16 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	}
 
 	if err := db.Create(user).Error; err != nil {
-		glog.Fatalf("Unable to create testUser: %v", err)
+		slog.Error("Unable to create testUser", "err", err)
+		os.Exit(1)
 	}
 
 	if !o.IsNotTokenVerified {
 		var err error
 		token, err = auth.JwtGenerate(user)
 		if err != nil {
-			glog.Fatalf("Unable to generate token: %v", err)
+			slog.Error("Unable to generate token", "err", err)
+			os.Exit(1)
 		}
 	}
 
@@ -170,7 +172,8 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 	}
 
 	if err := db.Create(&chain).Error; err != nil {
-		goscope.Log.Fatalf("Unable to create testChain: %v", err)
+		slog.Error("Unable to create testChain", "err", err)
+		panic(err)
 	}
 
 	// Cleanup runs FiLo
@@ -204,6 +207,8 @@ func MockGenders(zeroOrMore bool) (genders []string) {
 		models.GenderEnumChildren,
 		models.GenderEnumWomen,
 		models.GenderEnumMen,
+		models.GenderEnumToys,
+		models.GenderEnumBooks,
 	}, zeroOrMore)
 }
 
@@ -236,7 +241,8 @@ func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint) (event *models.E
 	}
 
 	if err := db.Create(&event).Error; err != nil {
-		glog.Fatalf("Unable to create testEvent: %v", err)
+		slog.Error("Unable to create testEvent", "err", err)
+		os.Exit(1)
 	}
 
 	// Cleanup runs FiLo
@@ -281,7 +287,8 @@ func MockMail(t *testing.T, db *gorm.DB, o MockMailOptions) (mail *models.Mail) 
 	}
 
 	if err := db.Create(mail).Error; err != nil {
-		glog.Fatalf("Unable to create testEvent: %v", err)
+		slog.Error("Unable to create testEvent", "err", err)
+		os.Exit(1)
 	}
 
 	t.Cleanup(func() {
@@ -329,7 +336,8 @@ func MockBag(t *testing.T, db *gorm.DB, chainID, userID uint, o MockBagOptions) 
 		UserChainID: userChainID,
 	}
 	if err := db.Create(bag).Error; err != nil {
-		glog.Fatalf("Unable to create testEvent: %v", err)
+		slog.Error("Unable to create testEvent", "err", err)
+		os.Exit(1)
 	}
 
 	t.Cleanup(func() {

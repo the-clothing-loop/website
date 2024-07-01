@@ -1,25 +1,28 @@
-import { Genders, Sizes } from "../../../api/enums";
+import { Categories, Sizes } from "../../../api/enums";
 
-type ICategories = Record<Genders, Sizes[]>;
+type ICategories = Record<Categories, Sizes[]>;
 
 const clothingCategories: ICategories = {
-  [Genders.children]: [
+  [Categories.children]: [
     Sizes["baby"],
     Sizes["1To4YearsOld"],
     Sizes["5To12YearsOld"],
   ],
-  [Genders.women]: [
+  [Categories.women]: [
     Sizes["womenSmall"],
     Sizes["womenMedium"],
     Sizes["womenLarge"],
     Sizes["womenPlusSize"],
+    Sizes["womenMaternity"],
   ],
-  [Genders.men]: [
+  [Categories.men]: [
     Sizes["menSmall"],
     Sizes["menMedium"],
     Sizes["menLarge"],
     Sizes["menPlusSize"],
   ],
+  [Categories.books]: [],
+  [Categories.toys]: [],
 };
 
 export const allSizes = Object.values(clothingCategories).reduce(

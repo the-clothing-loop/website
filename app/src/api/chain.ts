@@ -110,3 +110,21 @@ export function chainPoke(chainUID: UID) {
     chain_uid: chainUID,
   });
 }
+
+export function chainGetUserNote(chainUID: UID, userUID: UID): Promise<string> {
+  return axios
+    .get<string>("v2/chain/user/note", {
+      params: {
+        user_uid: userUID,
+        chain_uid: chainUID,
+      },
+    })
+    .then((res) => res.data);
+}
+export function chainChangeUserNote(chainUID: UID, userUID: UID, note: string) {
+  return axios.patch<never>("v2/chain/user/note", {
+    user_uid: userUID,
+    chain_uid: chainUID,
+    note,
+  });
+}

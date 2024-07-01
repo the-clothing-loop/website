@@ -138,6 +138,20 @@ func (u *User) IsAnyChainAdmin() (isAnyChainAdmin bool) {
 	return isAnyChainAdmin
 }
 
+func (u *User) CountAttachedBags(db *gorm.DB) (int, error) {
+	userChainIDs := []uint{}
+	for _, uc := range u.Chains {
+		userChainIDs = append(userChainIDs, uc.ID)
+	}
+
+	count := 0
+	err := db.Raw(`SELECT COUNT(*) FROM bags WHERE user_chain_id IN ?`, userChainIDs).Scan(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func (u *User) LastPokeTooRecent() bool {
 	if !u.LastPokeAt.Valid {
 		return false

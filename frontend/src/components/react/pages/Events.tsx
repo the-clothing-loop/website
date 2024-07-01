@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, lazy, Suspense, useMemo } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import type { Event } from "../../../api/types";
@@ -8,7 +8,7 @@ import {
   eventGetPrevious,
 } from "../../../api/event";
 import CategoriesDropdown from "../components/CategoriesDropdown";
-import { SizeBadges } from "../components/Badges";
+import { SizeBadgeLoading, SizeBadges } from "../components/Badges";
 import useForm from "../util/form.hooks";
 import { GinParseErrors } from "../util/gin-errors";
 
@@ -19,6 +19,9 @@ import { useStore } from "@nanostores/react";
 import { $authUser } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
+import { PRICE_TYPE_I18N } from "../components/EventChangeForm";
+import { CatI18nKeys, Categories } from "../../../api/enums";
+import OriginalImageToProxy from "../util/image_proxy";
 const LocationModal = lazy(() => import("../components/LocationModal"));
 
 interface SearchValues {
@@ -30,18 +33,19 @@ interface SearchValues {
 
 // Media
 const ClothesImage =
-  "https://images.clothingloop.org/768x/nichon_zelfportret.jpg";
+  "https://images.clothingloop.org/600x/nichon_zelfportret.jpg";
 
 const MAX_RADIUS = 5000;
 const DEFAULT_LATITUDE = 52.377956;
 const DEFAULT_LONGITUDE = 4.89707;
 
 export default function Events() {
+  const [instaView, setInstaView] = useState(false);
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
 
   const authUser = useStore($authUser);
-  const [events, setEvents] = useState<Event[] | null>(null);
+  const [events, setEvents] = useState<Event[] | null | undefined>();
   const [prevEvents, setPrevEvents] = useState<EventGetPreviousResponse | null>(
     null,
   );
@@ -94,11 +98,9 @@ export default function Events() {
         eventGetAll({ latitude, longitude, radius }),
         eventGetPrevious({ latitude, longitude, radius, include_total: true }),
       ]);
-
       const filterFunc = createFilterFunc(filterGenders);
       setEvents(allData.data?.filter(filterFunc));
       setPrevEvents(prevData.data);
-
       {
         let nMorePrevEvents = 0;
         if (prevData.data?.previous_events) {
@@ -109,6 +111,7 @@ export default function Events() {
         setNMorePrevEvents(nMorePrevEvents);
       }
     } catch (err: any) {
+      setEvents(null);
       addToastError(GinParseErrors(t, err), err.status);
     }
   }
@@ -177,54 +180,82 @@ export default function Events() {
               </button>
               <CategoriesDropdown
                 className="w-[150px] md:w-[170px]"
-                selectedGenders={values.genders}
+                selectedCategories={values.genders}
                 handleChange={(gs) => {
                   setValue("genders", gs);
                   search();
                 }}
               />
             </div>
-
-            {authUser ? (
-              <a
-                href={localizePath("/events/create")}
-                className="btn btn-primary mb-4 md:mb-0 "
-              >
-                <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
-                {t("createEvent")}
-              </a>
-            ) : (
-              <div
-                className="btn btn-primary mb-4 md:mb-0 "
-                onClick={() =>
-                  addModal({
-                    message: t("mustBeRegistered"),
-                    actions: [
-                      {
-                        text: t("signup"),
-                        type: "primary",
-                        fn: () => {
-                          window.location.href = localizePath("/users/signup");
+            <div className="mb-4 md:mb-0 flex justify-end">
+              {authUser?.is_root_admin ? (
+                <label
+                  key="btn-insa-toggle"
+                  className={"btn me-3".concat(
+                    instaView
+                      ? " bg-instagram"
+                      : " btn-outline border-blue hover:bg-blue-light/25",
+                  )}
+                >
+                  <input
+                    className={"checkbox me-3".concat(
+                      instaView ? " border-white" : " border-blue",
+                    )}
+                    type="checkbox"
+                    checked={instaView}
+                    onClick={() => setInstaView((s) => !s)}
+                  />
+                  <span
+                    className={"icon-instagram text-3xl ".concat(
+                      instaView ? "text-white" : "text-blue",
+                    )}
+                  />
+                </label>
+              ) : null}
+              {authUser ? (
+                <a
+                  key="btn-create-event"
+                  href={localizePath("/events/create")}
+                  className="btn btn-primary"
+                >
+                  <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
+                  {t("createEvent")}
+                </a>
+              ) : (
+                <div
+                  key="btn-reg-event"
+                  className="btn btn-primary"
+                  onClick={() =>
+                    addModal({
+                      message: t("mustBeRegistered"),
+                      actions: [
+                        {
+                          text: t("signup"),
+                          type: "primary",
+                          fn: () => {
+                            window.location.href =
+                              localizePath("/users/signup");
+                          },
                         },
-                      },
-                      {
-                        text: t("login"),
-                        type: "secondary",
-                        fn: () => {
-                          window.location.href = localizePath("/users/login");
+                        {
+                          text: t("login"),
+                          type: "secondary",
+                          fn: () => {
+                            window.location.href = localizePath("/users/login");
+                          },
                         },
-                      },
-                    ],
-                  })
-                }
-              >
-                <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
-                {t("createEvent")}
-              </div>
-            )}
+                      ],
+                    })
+                  }
+                >
+                  <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
+                  {t("createEvent")}
+                </div>
+              )}
+            </div>
           </div>
 
-          {!events ? (
+          {events === null ? (
             <div
               className="max-w-screen-sm mx-auto flex-grow flex flex-col justify-center items-center"
               key="noevent"
@@ -244,16 +275,29 @@ export default function Events() {
                 </a>
               </div>
             </div>
-          ) : (
+          ) : events === undefined ? (
             <div
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              key="eventloading"
+            >
+              {[1, 2, 3, 4].map((v) => (
+                <EventItemLoading key={v} />
+              ))}
+            </div>
+          ) : (
+            <div
+              className={`grid grid-cols-1 gap-8 ${instaView ? "justify-items-center lg:grid-cols-2 xl:grid-cols-3" : "md:grid-cols-2 lg:grid-cols-3"}`}
               key="event"
             >
               {events
                 .sort((a, b) => (new Date(a.date) > new Date(b.date) ? 1 : -1))
-                .map((event) => (
-                  <EventItem event={event} key={event.uid} />
-                ))}
+                .map((event) =>
+                  instaView ? (
+                    <EventItemInstagram event={event} key={event.uid} />
+                  ) : (
+                    <EventItem event={event} key={event.uid} />
+                  ),
+                )}
             </div>
           )}
           {prevEvents?.previous_events ? (
@@ -349,8 +393,8 @@ function EventItem({ event }: { event: Event }) {
   let isSfSeason2024 =
     date.isAfter("2024-01-01") && date.isBefore("2024-03-01");
 
-  let image = ClothesImage;
-  if (event.image_url) image = event.image_url;
+  let image: string | null | undefined = ClothesImage;
+  if (event.image_url) image = OriginalImageToProxy(event.image_url, "600x");
   return (
     <article className="flex flex-col bg-teal-light">
       <div className="relative flex">
@@ -362,7 +406,13 @@ function EventItem({ event }: { event: Event }) {
               </span>
               <span>{" " + date.format("D")}</span>
             </p>
-            {event.price_currency ? (
+            {event.price_type === "free" ? (
+              <p className="py-1 px-3 bg-white/90 text-black">
+                <span className="inline-block pr-1 font-semibold">
+                  {t("priceFree")}
+                </span>
+              </p>
+            ) : event.price_type === "entrance" ? (
               <p className="py-1 px-3 bg-yellow-dark text-black">
                 <span className="inline-block pr-1 font-bold">
                   {event.price_currency}
@@ -371,16 +421,22 @@ function EventItem({ event }: { event: Event }) {
                   {eventPriceValue}
                 </span>
               </p>
-            ) : (
-              <p className="py-1 px-3 bg-white/90 text-black">
-                <span className="inline-block pr-1 font-semibold">
-                  {t("priceFree")}
+            ) : event.price_type === "donation" ? (
+              <p className="py-1 px-3 bg-purple-lighter/90 text-black">
+                <span className="inline-block pr-1 font-bold">
+                  {t(PRICE_TYPE_I18N["donation"])}
                 </span>
               </p>
-            )}
+            ) : event.price_type === "perswap" ? (
+              <p className="py-1 px-3 bg-lilac-light/90 text-black">
+                <span className="inline-block pr-1 font-bold">
+                  {t(PRICE_TYPE_I18N["perswap"])}
+                </span>
+              </p>
+            ) : null}
           </div>
           <img
-            src={image}
+            src={image || ""}
             className="w-full h-full object-cover"
             alt="event cover image"
           />
@@ -413,6 +469,136 @@ function EventItem({ event }: { event: Event }) {
       <div className="m-4 mt-0">
         {event.genders?.length ? <SizeBadges g={event.genders} /> : null}
       </div>
+    </article>
+  );
+}
+
+function EventItemLoading() {
+  return (
+    <article className="flex flex-col bg-teal-light opacity-80">
+      <div className="relative flex">
+        <div className="relative aspect-[4/3] w-full bg-grey-light animate-pulse">
+          <div className="text-md absolute mt-4 right-4 text-center z-10">
+            <div className="bg-teal h-10 w-24 py-2 px-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <div className="m-4 mb-2">
+        <div className="h-[26px] w-44 bg-teal animate-pulse"></div>
+      </div>
+      <div className="flex-grow mx-4 mb-8">
+        <span className="icon-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+        <span
+          className="inline-block w-8 bg-grey animate-pulse"
+          style={{ height: "21px" }}
+        />
+      </div>
+      <div className="m-4 mt-0 animate-pulse">
+        <SizeBadgeLoading />
+      </div>
+    </article>
+  );
+}
+
+function EventItemInstagram({ event }: { event: Event }) {
+  // genders sorted by children, women then men
+  const genders = useMemo(() => {
+    return Object.keys(CatI18nKeys).filter((g) => event.genders?.includes(g));
+  }, [event]);
+  const date = dayjs(event.date).format("DD-MM-YYYY");
+  const address = useMemo(() => {
+    if (!event.address) return "";
+    const re = / ?([^,]+,[^,]+)$/.exec(event.address);
+    return re?.at(1) || event.address;
+  }, [event]);
+  let genderColor = "bg-purple";
+  let genderColorLight = "bg-purple-lighter";
+  if (event.genders && event.genders.length === 1) {
+    if (event.genders[0] === Categories.children) {
+      genderColor = "bg-mint";
+      genderColorLight = "bg-mint-light";
+    }
+    if (event.genders[0] === Categories.women) {
+      genderColor = "bg-orange";
+      genderColorLight = "bg-orange-light";
+    }
+  }
+
+  return (
+    <article
+      className={`relative flex flex-col items-center ${genderColorLight}`}
+      style={{ width: 400, height: 700 }}
+    >
+      <div className="font-bold flex flex-col text-center text-purple">
+        <span className="mt-11 mb-3 font-serif text-4xl">
+          Upcoming <br />
+          Swap Event
+        </span>
+        <span className="mb-3 text-lg">{date}</span>
+      </div>
+      <div className={`py-5 px-6 w-full ${genderColor}`}>
+        <img
+          className="object-contain w-full"
+          style={{ height: 200 }}
+          src={event.image_url || ClothesImage}
+        />
+      </div>
+
+      <div className="">
+        <h2
+          className="my-4 font-bold text-purple uppercase text-ellipsis overflow-hidden whitespace-nowrap px-4 text-center"
+          style={{ width: 400 }}
+        >
+          {event.name}
+        </h2>
+      </div>
+
+      <div className="mb-4 flex flex-row gap-3">
+        {genders?.map((gender) => {
+          let src = "";
+          let alt = "";
+          switch (gender) {
+            case Categories.children:
+              src = "/images/categories/baby-50.png";
+              alt = "Baby";
+              break;
+            case Categories.women:
+              src = "/images/categories/woman-50.png";
+              alt = "Woman";
+              break;
+            case Categories.men:
+              alt = "Men";
+              src = "/images/categories/man-50.png";
+          }
+          return (
+            <img
+              src={src}
+              alt={alt}
+              className="h-9 bg-white rounded-full p-1"
+            />
+          );
+        })}
+      </div>
+      <div>
+        <span
+          className="block mb-2 px-4 text-lg text-ellipsis overflow-hidden whitespace-nowrap"
+          style={{ width: 400 }}
+        >
+          <i className="icon-map-pin" /> {address}
+        </span>
+      </div>
+      <div
+        className="block bg-white rounded-full"
+        style={{ width: 320, height: 50 }}
+      >
+        &nbsp;
+      </div>
+      <img
+        className="w-24"
+        alt="clothing loop logo"
+        src="https://images.clothingloop.org/original/the_clothing_loop_logo.png"
+      />
     </article>
   );
 }

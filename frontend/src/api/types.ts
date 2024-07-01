@@ -1,3 +1,5 @@
+import type { EventPriceType } from "./event";
+
 export type UID = string;
 
 export interface User {
@@ -51,6 +53,7 @@ export interface Chain {
   name: string;
   description: string;
   address: string;
+  image?: string;
   latitude: number;
   longitude: number;
   radius: number;
@@ -73,6 +76,7 @@ export interface Event {
   description: string;
   price_currency: string | null;
   price_value: number;
+  price_type: EventPriceType;
   link: string;
   address: string;
   latitude: number;

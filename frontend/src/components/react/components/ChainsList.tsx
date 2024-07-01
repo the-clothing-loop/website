@@ -215,11 +215,11 @@ export default function ChainsList({ chains, setChains }: Props) {
                       {userChain?.is_approved ||
                       (!userChain && authUser?.is_root_admin) ? (
                         chain.published ? (
-                          <div className="tooltip" data-tip="published">
+                          <div className="tooltip" data-tip={t("published")}>
                             <span className="icon-eye text-lg text-green" />
                           </div>
                         ) : (
-                          <div className="tooltip" data-tip="draft">
+                          <div className="tooltip" data-tip={t("draft")}>
                             <span className="icon-eye-off text-lg text-red" />
                           </div>
                         )

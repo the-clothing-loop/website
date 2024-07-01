@@ -23,6 +23,7 @@ type Chain struct {
 	Description                   string
 	Address                       string
 	CountryCode                   string
+	Image                         *string
 	Latitude                      float64
 	Longitude                     float64
 	Radius                        float32
@@ -49,6 +50,7 @@ type ChainResponse struct {
 	Name             string   `json:"name" gorm:"chains.name"`
 	Description      string   `json:"description" gorm:"chains.description"`
 	Address          string   `json:"address" gorm:"chains.address"`
+	Image            *string  `json:"image" gorm:"chains.image"`
 	Latitude         float64  `json:"latitude" gorm:"chains.latitude"`
 	Longitude        float64  `json:"longitude" gorm:"chains.longitude"`
 	Radius           float32  `json:"radius" gorm:"chains.radius"`
@@ -72,6 +74,7 @@ chains.uid,
 chains.name,
 chains.description,
 chains.address,
+chains.image,
 chains.latitude,
 chains.longitude,
 chains.radius,

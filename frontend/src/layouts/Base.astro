@@ -32,6 +32,10 @@ const { title } = Astro.props;
     <link rel="icon" type="image/png" sizes="192x192" href="/logo192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/logo512.png" />
     <link rel="icon" href="/favicon.ico" />
+
+    <meta property="og:title" content={title+" | The Clothing Loop"} />
+    <meta property="og:image" content="https://images.clothingloop.org/0x0,jpeg/logo512.png" />
+
     <meta name="generator" content={Astro.generator} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />

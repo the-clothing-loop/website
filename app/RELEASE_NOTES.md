@@ -134,3 +134,8 @@
 - Fix automatic listing of addresses
 - Fix sms button on missing phonenumber
 - Add version to login page
+
+# 2.6
+
+- Add notes
+- Emoji bags get a different look in the route page

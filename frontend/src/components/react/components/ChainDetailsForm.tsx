@@ -11,7 +11,7 @@ import PopoverOnHover from "./Popover";
 import SizesDropdown from "../components/SizesDropdown";
 import CategoriesDropdown from "../components/CategoriesDropdown";
 import { type RequestRegisterChain } from "../../../api/login";
-import { Genders, Sizes } from "../../../api/enums";
+import { Categories, Sizes } from "../../../api/enums";
 import useForm from "../util/form.hooks";
 import { addToastError } from "../../../stores/toast";
 import { circleRadiusKm } from "../util/maps";
@@ -223,12 +223,12 @@ export default function ChainDetailsForm({
   }
 
   function handleCategoriesChange(selectedGenders: string[]) {
-    setValue("genders", selectedGenders as Genders[]);
+    setValue("genders", selectedGenders as Categories[]);
     // potentially remove some sizes if their parent category has been deselected
     const filteredSizes = (values.sizes || []).filter(
       (size) =>
         selectedGenders.filter((gender) =>
-          categories[gender as Genders].includes(size as Sizes),
+          categories[gender as Categories].includes(size as Sizes),
         ).length > 0,
     );
     setValue("sizes", filteredSizes);
@@ -341,7 +341,7 @@ export default function ChainDetailsForm({
             <div className="w-full sm:w-1/2 pb-4 sm:pb-0 sm:pr-4 rtl:sm:pr-0 rtl:sm:pl-4">
               <CategoriesDropdown
                 className="dropdown-top"
-                selectedGenders={values.genders || []}
+                selectedCategories={values.genders || []}
                 handleChange={handleCategoriesChange}
               />
             </div>
@@ -354,10 +354,10 @@ export default function ChainDetailsForm({
               </div>
               <SizesDropdown
                 className="dropdown-top"
-                filteredGenders={
+                filteredCategory={
                   values.genders?.length
                     ? values.genders
-                    : [Genders.children, Genders.women, Genders.men]
+                    : [Categories.children, Categories.women, Categories.men]
                 }
                 selectedSizes={values.sizes || []}
                 handleChange={(v) => setValue("sizes", v)}
