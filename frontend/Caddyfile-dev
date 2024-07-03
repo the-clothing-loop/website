@@ -15,3 +15,17 @@
       reverse_proxy frontend:3000
    }
 }
+
+:81 {
+	handle_path /api/* {
+		reverse_proxy server:8084
+	}
+
+	handle_path /mm/* {
+		reverse_proxy mattermost:8084
+	}
+
+	handle {
+		reverse_proxy app:5173
+	}
+}

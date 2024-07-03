@@ -33,10 +33,19 @@ func ChatSetDefaultSettings(client *model.Client4) {
 		team.DisplayName += " Dev"
 	}
 
-	mmTeam, _, err := client.GetTeamByName(context.TODO(), team.Name, "")
+	ctx := context.TODO()
+	_, _, err := client.GetPing(ctx)
+	if err != nil {
+		slog.Error("unable to ping mattermost", "err", err)
+		panic(err)
+	} else {
+		slog.Info("ping mattermost received")
+	}
+
+	mmTeam, _, err := client.GetTeamByName(ctx, team.Name, "")
 	if err != nil {
 		fmt.Println(err.Error())
-		mmTeam, _, err = client.CreateTeam(context.TODO(), team)
+		mmTeam, _, err = client.CreateTeam(ctx, team)
 		if err != nil {
 			panic(err)
 		}

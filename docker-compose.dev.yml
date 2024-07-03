@@ -3,16 +3,16 @@ name: cl-dev
 services:
   app:
     image: node:20-alpine
-    ports:
-      - 5173:5173
+    # ports:
+    #   - 5173:5173
     volumes:
       - ./app:/app
     working_dir: /app
     command: sh -c 'npm i && npm run dev:docker'
   frontend:
     image: node:20-alpine
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
     volumes:
       - ./frontend:/app
     working_dir: /app
@@ -22,8 +22,8 @@ services:
     depends_on:
       - db
       - mailpit
-    ports:
-      - 8084:8084
+    # ports:
+    #   - 8084:8084
     volumes:
       - ./server:/app
     working_dir: /app
@@ -40,7 +40,7 @@ services:
   pma:
     image: phpmyadmin:apache
     ports:
-      - 127.0.0.1:8085:80
+      - 127.0.0.1:8082:80
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=db
@@ -64,14 +64,26 @@ services:
     ports:
       - 8065:8065
     depends_on:
-      - mm-mail
+      - mailpit
     hostname: mattermost
-
-      - ./server/sql:/scripts
+  mm-mail:
+    image: golang:1.22-alpine
+    ports:
+      - 2525:2525
+    depends_on:
+      - db
+    volumes:
+      - ../../server:/app
+    working_dir: /app
+    command: go run cmd/mm-mail/main.go
   caddy:
     build:
-      context: ./caddy/
+      context: ./frontend/
+      dockerfile: dev.Dockerfile
     ports:
-      - 127.0.0.1:8086:80
+      # website
+      - 127.0.0.1:8080:80
+      # app
+      - 127.0.0.1:8081:81
 volumes:
   mysql:

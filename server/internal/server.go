@@ -14,6 +14,7 @@ import (
 var Scheduler *cron.Scheduler
 
 func Routes() *gin.Engine {
+	slog.SetLogLoggerLevel(slog.LevelDebug)
 	// initialization
 	db := app.DatabaseInit()
 	app.MailInit()
