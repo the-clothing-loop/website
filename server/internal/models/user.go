@@ -2,12 +2,13 @@ package models
 
 import (
 	"errors"
+	"log/slog"
+
 	// "log/slog"
 	"time"
 
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/pkg/ring_ext"
-	"golang.design/x/go2generics/ring"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 
@@ -350,34 +351,23 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 		route = append(route, user.ID)
 	}
 
-	r := ring_ext.NewWithValues(route)
-	// slog.Info("ring", "length", r.Len())
-
 	// Iterates over the noderoute and returns early for each user that matches:
 	// 1. the current user
 	// 2. users with a bulky item
 	// 3. users close by with a max distance defined by the route privacy
 	//    paused users are skipped
 
-	userIDsCloseBy := []uint{}
-	ring_ext.Each(r, func(p *ring.Ring[uint]) {
-		if lo.Contains(userIDsPaused, p.Value) {
-			return
-		}
-
-		distance := findCloseBy(p, authUserID, userIDsPaused, routePrivacy)
-		if distance == -1 {
-			return
-		}
-
-		userIDsCloseBy = append(userIDsCloseBy, p.Value)
+	routeWithoutPausedUsers := lo.Filter(route, func(item uint, i int) bool {
+		return !lo.Contains(userIDsPaused, item)
 	})
+	r := ring_ext.NewWithValues(routeWithoutPausedUsers)
+	userIDsCloseBy := ring_ext.GetSurroundingValues(r, authUserID, chain.RoutePrivacy)
 
-	// slog.Info("User IDs",
-	// 	"bulkyItems", userIDsWithBulkyItems,
-	// 	"closeBy", userIDsCloseBy,
-	// 	"chainAdmin", userIDsChainAdmin,
-	// )
+	slog.Info("User IDs",
+		"bulkyItems", userIDsWithBulkyItems,
+		"closeBy", userIDsCloseBy,
+		"chainAdmin", userIDsChainAdmin,
+	)
 
 	for i := range users {
 		uID := users[i].ID
@@ -404,32 +394,4 @@ func hideUserInformation(isChainAdmin bool, user *User) {
 		user.PhoneNumber = "***"
 	}
 	user.Address = "***"
-}
-
-func findCloseBy(r *ring.Ring[uint], needle uint, pausedIDs []uint, routePrivacy int) int {
-	i := 0
-	distance := -1
-
-	f := func(v uint) bool {
-		if i >= routePrivacy {
-			return true
-		}
-		if !lo.Contains(pausedIDs, v) {
-			i++
-		}
-		if needle == v {
-			distance = i
-			return true
-		}
-
-		return false
-	}
-
-	ring_ext.SomeNext(r, f)
-	if distance == -1 {
-		i = 0
-		ring_ext.SomePrev(r, f)
-	}
-
-	return distance
 }

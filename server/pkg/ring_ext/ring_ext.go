@@ -1,6 +1,7 @@
 package ring_ext
 
 import (
+	"github.com/samber/lo"
 	"golang.design/x/go2generics/ring"
 )
 
@@ -62,4 +63,35 @@ func NewWithValues[Val any](values []Val) *ring.Ring[Val] {
 	}
 
 	return r.Next()
+}
+
+func GetSurroundingValues[Val comparable](r *ring.Ring[Val], me Val, distance int) []Val {
+	meRing := Find(r, me)
+	if meRing == nil {
+		return nil
+	}
+	result := []Val{}
+	i := 1
+	SomeNext(meRing, func(val Val) bool {
+		if i > distance || val == me {
+			return true
+		}
+		result = append(result, val)
+
+		i++
+		return false
+	})
+	i = 1
+	SomePrev(meRing, func(val Val) bool {
+		if i > distance || val == me {
+			return true
+		}
+
+		result = append([]Val{val}, result...)
+
+		i++
+		return false
+	})
+	result = lo.Uniq(result)
+	return result
 }

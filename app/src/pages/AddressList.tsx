@@ -275,7 +275,11 @@ export default function AddressList() {
             </IonFabButton>
           </IonFab>
           {chain && authUser ? (
-            <RouteMapPopup chain={chain} authUserUID={authUser.uid} />
+            <RouteMapPopup
+              chain={chain}
+              authUserUID={authUser.uid}
+              isChainAdmin={isChainAdmin}
+            />
           ) : null}
           {isChainAdmin ? (
             <EditHeaders

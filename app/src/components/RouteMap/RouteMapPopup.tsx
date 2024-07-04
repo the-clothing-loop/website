@@ -15,6 +15,7 @@ import {
 export default function RouteMapPopup(props: {
   chain: Chain;
   authUserUID: UID;
+  isChainAdmin: boolean;
 }) {
   const { t } = useTranslation();
   const ref = useRef<HTMLIonModalElement>(null);
@@ -47,8 +48,20 @@ export default function RouteMapPopup(props: {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        {props.isChainAdmin ? null : (
+          <p
+            className="tw-absolute tw-top-0 tw-left-0 tw-z-20 tw-mx-4 tw-mt-1 tw-text-sm tw-text-medium"
+            key="map_not_accurate"
+          >
+            {t("mapNotAccurate")}
+          </p>
+        )}
         {showMap ? (
-          <RouteMap chain={props.chain} authUserUID={props.authUserUID} />
+          <RouteMap
+            chain={props.chain}
+            authUserUID={props.authUserUID}
+            key="route_map"
+          />
         ) : null}
       </IonContent>
     </IonModal>
