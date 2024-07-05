@@ -65,7 +65,6 @@ import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
 import RoutePrivacyInput from "../components/Settings/RoutePrivacyInput";
 import { chainUpdate } from "../api/chain";
-import OriginalImageToProxy from "../utils/image_proxy";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -228,8 +227,6 @@ export default function Settings() {
     }
   }
 
-  let chainImage = OriginalImageToProxy(chain?.image, "400x70,sc");
-
   return (
     <IonPage>
       <IonHeader collapse="fade">
@@ -350,11 +347,6 @@ export default function Settings() {
             color="background"
           >
             <IonList>
-              {chainImage ? (
-                <IonItem lines="none">
-                  <IonImg src={chainImage} className="tw-mt-4 tw-w-full" />
-                </IonItem>
-              ) : null}
               <IonItem lines="none">
                 <IonSelect
                   ref={refChainSelect}
