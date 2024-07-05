@@ -1,4 +1,4 @@
-import type { Chain, UID, User } from "../../../../api/types";
+import type { Chain, UID } from "../../../../api/types";
 import { useRef, type MouseEvent, useState } from "react";
 import RouteMap from "./RouteMap";
 import { useTranslation } from "react-i18next";

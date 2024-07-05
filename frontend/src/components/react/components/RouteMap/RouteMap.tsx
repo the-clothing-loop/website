@@ -261,18 +261,17 @@ interface SortedCoordinate extends RouteCoordinate {
   route_index: number;
 }
 
-function getSortedCoordinates(chainUID: UID, route: UID[]) {
-  return routeCoordinates(chainUID).then((res) => {
-    const sortedCoords: SortedCoordinate[] = [];
-    for (let i = 0; i < route.length; i++) {
-      const user_uid = route[i];
-      const coord = res.data.find((c) => c.user_uid === user_uid);
-      if (!coord) continue;
-      sortedCoords.push({
-        ...coord,
-        route_index: i,
-      });
-    }
-    return sortedCoords;
-  });
+async function getSortedCoordinates(chainUID: UID, route: UID[]) {
+  const res = await routeCoordinates(chainUID);
+  const sortedCoords: SortedCoordinate[] = [];
+  for (let i = 0; i < route.length; i++) {
+    const user_uid = route[i];
+    const coord = res.data.find((c) => c.user_uid === user_uid);
+    if (!coord) continue;
+    sortedCoords.push({
+      ...coord,
+      route_index: i,
+    });
+  }
+  return sortedCoords;
 }

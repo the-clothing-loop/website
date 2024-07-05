@@ -17,7 +17,6 @@ import {
   circleRadiusKm,
   useMapZoom,
 } from "../util/maps";
-import { Categories, Sizes } from "../../../api/enums";
 import { addToastError } from "../../../stores/toast";
 import { useStore } from "@nanostores/react";
 import { $chains } from "../../../stores/chains";

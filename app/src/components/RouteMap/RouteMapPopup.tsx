@@ -1,5 +1,5 @@
 import type { Chain, UID } from "../../api/types";
-import { RefObject, useContext, useRef, useState } from "react";
+import { RefObject, useContext, useState } from "react";
 import RouteMap from "./RouteMap";
 import { useTranslation } from "react-i18next";
 import {
@@ -55,21 +55,16 @@ export default function RouteMapPopup(props: {
         </IonToolbar>
       </IonHeader>
       {props.isChainAdmin ? (
-        <IonItem
-          lines="full"
-          detail={false}
-          button
-          onClick={onToggleAllowMap}
-        >
+        <IonItem lines="full" detail={false} button onClick={onToggleAllowMap}>
           <IonLabel className="ion-text-wrap">
             <h3>{t("allowMapTitle")}</h3>
-            <p>
-              {t(
-                "allowMapBody",
-              )}
-            </p>
+            <p>{t("allowMapBody")}</p>
           </IonLabel>
-          <IonToggle aria-label={t("allowMapTitle")} slot="end" checked={props.chain.allow_map || false} />
+          <IonToggle
+            aria-label={t("allowMapTitle")}
+            slot="end"
+            checked={props.chain.allow_map || false}
+          />
         </IonItem>
       ) : null}
       <IonContent>

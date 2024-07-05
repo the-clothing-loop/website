@@ -98,7 +98,6 @@ export default function ChainMemberList() {
   const [error, setError] = useState("");
   const [selectedTable, setSelectedTable] = useState<SelectedTable>("route");
   const addCopyAttributes = useToClipboard();
-  const refQrCode = useRef<HTMLCanvasElement>(null);
   const refQrCodeDialog = useRef<HTMLDialogElement>(null);
   const [openQrCode, setOpenQrCode] = useState(false);
 
