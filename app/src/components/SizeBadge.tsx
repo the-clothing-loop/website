@@ -1,4 +1,5 @@
 import { IonBadge, IonImg } from "@ionic/react";
+import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 
 type ICategories = Record<Categories, Sizes[]>;
@@ -46,8 +47,10 @@ const categories: ICategories = {
   [Categories.toys]: [],
   [Categories.books]: [],
 };
-export const SizeLetters: Record<Sizes | string, string> = {
-  "1": "Baby",
+export const SizeLetters: (t: TFunction) => Record<Sizes | string, string> = (
+  t,
+) => ({
+  "1": t("baby"),
   "2": "≤4",
   "3": "5-12",
   "4": "(X)S",
@@ -58,15 +61,24 @@ export const SizeLetters: Record<Sizes | string, string> = {
   "9": "M",
   A: "(X)L",
   B: "XL≤",
-  C: "Maternity",
-};
-function BadgeItem({ sizes, icon }: { sizes: string[]; icon: string }) {
+  C: t("womenMaternity"),
+});
+function BadgeItem({
+  sizes,
+  icon,
+  t,
+}: {
+  sizes: string[];
+  icon: string;
+  t: TFunction;
+}) {
+  const sizeLetters = SizeLetters(t);
   return (
     <IonBadge color="light" className="tw-flex-row tw-flex">
       <div className="tw-flex tw-flex-row tw-flex-wrap tw-justify-end tw-max-w-[120px]">
         {sizes.map((s) => (
           <span className="tw-m-0.5" key={s}>
-            {SizeLetters[s]}
+            {sizeLetters[s]}
           </span>
         ))}
       </div>
@@ -114,13 +126,13 @@ export default function Badges(props: {
   return (
     <div className="tw-flex tw-flex-col tw-items-end tw-gap-1">
       {women?.length || props.categories?.includes(Categories.women) ? (
-        <BadgeItem sizes={women} icon="woman" key="women" />
+        <BadgeItem t={t} sizes={women} icon="woman" key="women" />
       ) : null}
       {men?.length || props.categories?.includes(Categories.men) ? (
-        <BadgeItem sizes={men} icon="man" key="men" />
+        <BadgeItem t={t} sizes={men} icon="man" key="men" />
       ) : null}
       {children?.length || props.categories?.includes(Categories.children) ? (
-        <BadgeItem sizes={children} icon="baby" key="children" />
+        <BadgeItem t={t} sizes={children} icon="baby" key="children" />
       ) : null}
       {props.categories?.includes(Categories.toys) ? (
         <BadgeItemSingle text={t("toys")} icon="toys" key="toys" />

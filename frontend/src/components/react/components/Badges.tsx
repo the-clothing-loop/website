@@ -9,8 +9,10 @@ import {
 import categories from "../util/categories";
 import { useTranslation } from "react-i18next";
 
-export const SizeLetters: Record<Sizes | string, string> = {
-  "1": "Baby",
+export const SizeLetters: (t: TFunction) => Record<Sizes | string, string> = (
+  t,
+) => ({
+  "1": t("baby"),
   "2": "≤4",
   "3": "5-12",
   "4": "(X)S",
@@ -21,7 +23,8 @@ export const SizeLetters: Record<Sizes | string, string> = {
   "9": "M",
   A: "(X)L",
   B: "XL≤",
-};
+  C: t("womenMaternity"),
+});
 
 export function SizeBadges({
   s,
@@ -117,6 +120,7 @@ function SizeCatBadges({
   icon: string;
   color: string;
 }) {
+  const sizeLetters = SizeLetters(t);
   return (
     <li
       className={`inline-flex flex-row mb-1 mr-1 rtl:mr-0 rtl:ml-1 rounded-full px-2 ${props.color}`}
@@ -135,7 +139,7 @@ function SizeCatBadges({
               data-tip={t(SizeI18nKeys[s])}
               key={s}
             >
-              {SizeLetters[s]}
+              {sizeLetters[s]}
             </li>
           );
         })}
