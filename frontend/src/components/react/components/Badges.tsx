@@ -80,7 +80,7 @@ export function SizeBadges({
           color="bg-leafGreen-light"
         />
       ) : null}
-      {g?.indexOf(Categories.toys) ? (
+      {g?.includes(Categories.toys) ? (
         <BadgeItemSingle
           key="toys"
           text={t("toys")}
@@ -88,7 +88,7 @@ export function SizeBadges({
           color="bg-skyBlue-light"
         />
       ) : null}
-      {g?.indexOf(Categories.books) ? (
+      {g?.includes(Categories.books) ? (
         <BadgeItemSingle
           key="books"
           text={t("books")}
