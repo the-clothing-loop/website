@@ -23,7 +23,7 @@ import {
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../stores/Store";
-import { mapOutline, openOutline, searchOutline } from "ionicons/icons";
+import { mapOutline, openOutline, searchOutline, shield } from "ionicons/icons";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
@@ -146,7 +146,7 @@ export default function AddressList() {
   }
 
   function onClickFab() {
-    refRouteMapPopup.current?.present()
+    refRouteMapPopup.current?.present();
   }
 
   return (
@@ -274,8 +274,17 @@ export default function AddressList() {
           {isChainAdmin || chain?.allow_map ? (
             <IonFab className="tw-fixed" horizontal="end" vertical="bottom">
               <IonFabButton
-                color={isThemeDefault ? "danger" : ""}
+                color={chain?.allow_map && isThemeDefault ? "danger" : ""}
                 onClick={onClickFab}
+                style={
+                  chain?.allow_map
+                    ? {}
+                    : {
+                        "--background": "var(--ion-color-blue-contrast)",
+                        "--background-hover": "var(--ion-color-light-shade)",
+                        "--color": "var(--ion-color-blue)",
+                      }
+                }
               >
                 <IonIcon icon={mapOutline} />
               </IonFabButton>
