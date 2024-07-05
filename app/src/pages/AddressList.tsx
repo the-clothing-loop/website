@@ -2,6 +2,8 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonHeader,
   IonIcon,
   IonItem,
@@ -21,7 +23,7 @@ import {
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../stores/Store";
-import { openOutline, searchOutline } from "ionicons/icons";
+import { mapOutline, openOutline, searchOutline } from "ionicons/icons";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
@@ -34,6 +36,7 @@ import wrapIndex from "../utils/wrap_index";
 import { useDebounce } from "@uidotdev/usehooks";
 import IsPaused from "../utils/is_paused";
 import { Sleep } from "../utils/sleep";
+import RouteMapPopup from "../components/RouteMap/RouteMapPopup";
 
 export default function AddressList() {
   const {
@@ -52,6 +55,7 @@ export default function AddressList() {
   } = useContext(StoreContext);
   const { t } = useTranslation();
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
+  const refRouteMapPopup = useRef<HTMLIonModalElement>(null);
 
   const headerKey = "addressList";
 
@@ -139,6 +143,10 @@ export default function AddressList() {
     Promise.all([refreshPromise, sleepPromise]).then(() => {
       e.detail.complete();
     });
+  }
+
+  function onClickFab() {
+    refRouteMapPopup.current?.present()
   }
 
   return (
@@ -263,6 +271,24 @@ export default function AddressList() {
               return <AddressListItem {...props} key={props.number} />;
             })}
           </IonList>
+          {isChainAdmin || chain?.allow_map ? (
+            <IonFab className="tw-fixed" horizontal="end" vertical="bottom">
+              <IonFabButton
+                color={isThemeDefault ? "danger" : ""}
+                onClick={onClickFab}
+              >
+                <IonIcon icon={mapOutline} />
+              </IonFabButton>
+            </IonFab>
+          ) : null}
+          {chain && authUser ? (
+            <RouteMapPopup
+              chain={chain}
+              modal={refRouteMapPopup}
+              authUserUID={authUser.uid}
+              isChainAdmin={isChainAdmin}
+            />
+          ) : null}
           {isChainAdmin ? (
             <EditHeaders
               modal={headerSheetModal}

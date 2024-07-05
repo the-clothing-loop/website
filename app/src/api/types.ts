@@ -63,6 +63,7 @@ export interface Chain {
   total_members?: number;
   total_hosts?: number;
   route_privacy?: number;
+  allow_map?: boolean;
   rules_override?: string;
   headers_override?: string;
   theme?: string;

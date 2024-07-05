@@ -70,6 +70,7 @@ export const StoreContext = createContext({
   setRouteListView: (v: RouteListView) => {},
   connError: (err: any) => Promise.resolve(IsAuthenticated.Unknown),
   shouldBlur: false,
+  toggleChainAllowMap: () => Promise.resolve(),
 });
 
 const errLoopMustBeSelected =
@@ -429,6 +430,21 @@ export function StoreProvider({
     }
   }
 
+  async function toggleChainAllowMap() {
+    if (!chain) return;
+    await chainUpdate({
+      uid: chain.uid,
+      allow_map: !chain.allow_map,
+    });
+    _setChain((s) => {
+      if (!s) return null;
+      return {
+        ...s,
+        allow_map: !chain.allow_map,
+      };
+    });
+  }
+
   function closeOverlay(sTo: OverlayState) {
     setOverlayState((s) => {
       let newTo = s + sTo;
@@ -508,6 +524,7 @@ export function StoreProvider({
         setRouteListView,
         connError,
         shouldBlur,
+        toggleChainAllowMap,
       }}
     >
       {children}

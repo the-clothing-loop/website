@@ -1,16 +1,16 @@
 meta {
-  name: coordinates
+  name: coordinates host
   type: http
-  seq: 4
+  seq: 5
 }
 
 get {
   url: {{base}}/v2/route/coordinates?chain_uid={{chainUID}}
-  body: json
-  auth: none
+  body: none
+  auth: inherit
 }
 
-query {
+params:query {
   chain_uid: {{chainUID}}
 }
 
