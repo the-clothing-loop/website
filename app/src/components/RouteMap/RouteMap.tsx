@@ -17,11 +17,12 @@ import {
 type LineType = "mixed" | "line" | "dot";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
-const MAX_ZOOM = 18;
+const MAX_ZOOM = 16;
+const MAX_ZOOM_HOST = 18;
 const MIN_ZOOM = 4;
 const KEY_ROUTE_MAP_LINE = "route_map_line";
 
-export default function RouteMap(props: { chain: Chain; authUserUID: UID }) {
+export default function RouteMap(props: { chain: Chain; authUserUID: UID, isChainAdmin: boolean}) {
   const [map, setMap] = useState<mapboxjs.Map>();
   const { zoom, setZoom, mapZoom } = useMapZoom(11, MIN_ZOOM, MAX_ZOOM);
   const [id] = useState(() => window.crypto.randomUUID());
@@ -38,7 +39,7 @@ export default function RouteMap(props: { chain: Chain; authUserUID: UID }) {
       center: [props.chain.longitude, props.chain.latitude],
       zoom: 11,
       minZoom: MIN_ZOOM,
-      maxZoom: MAX_ZOOM,
+      maxZoom: props.isChainAdmin? MAX_ZOOM_HOST:MAX_ZOOM,
     });
     setZoom(11);
     _map.on("load", () => {

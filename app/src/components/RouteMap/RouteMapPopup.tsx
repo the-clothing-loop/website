@@ -80,6 +80,7 @@ export default function RouteMapPopup(props: {
           <RouteMap
             chain={props.chain}
             authUserUID={props.authUserUID}
+            isChainAdmin={props.isChainAdmin}
             key="route_map"
           />
         ) : null}
