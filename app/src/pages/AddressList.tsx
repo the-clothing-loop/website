@@ -55,6 +55,7 @@ export default function AddressList() {
   } = useContext(StoreContext);
   const { t } = useTranslation();
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
+  const refRouteMapPopup = useRef<HTMLIonModalElement>(null);
 
   const headerKey = "addressList";
 
@@ -142,6 +143,10 @@ export default function AddressList() {
     Promise.all([refreshPromise, sleepPromise]).then(() => {
       e.detail.complete();
     });
+  }
+
+  function onClickFab() {
+    refRouteMapPopup.current?.present()
   }
 
   return (
@@ -266,17 +271,20 @@ export default function AddressList() {
               return <AddressListItem {...props} key={props.number} />;
             })}
           </IonList>
-          <IonFab className="tw-fixed" horizontal="end" vertical="bottom">
-            <IonFabButton
-              color={isThemeDefault ? "danger" : ""}
-              id="fab-open-map"
-            >
-              <IonIcon icon={mapOutline} />
-            </IonFabButton>
-          </IonFab>
+          {isChainAdmin || chain?.allow_map ? (
+            <IonFab className="tw-fixed" horizontal="end" vertical="bottom">
+              <IonFabButton
+                color={isThemeDefault ? "danger" : ""}
+                onClick={onClickFab}
+              >
+                <IonIcon icon={mapOutline} />
+              </IonFabButton>
+            </IonFab>
+          ) : null}
           {chain && authUser ? (
             <RouteMapPopup
               chain={chain}
+              modal={refRouteMapPopup}
               authUserUID={authUser.uid}
               isChainAdmin={isChainAdmin}
             />

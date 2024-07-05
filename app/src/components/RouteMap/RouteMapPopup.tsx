@@ -1,5 +1,5 @@
 import type { Chain, UID } from "../../api/types";
-import { useRef, useState } from "react";
+import { RefObject, useContext, useRef, useState } from "react";
 import RouteMap from "./RouteMap";
 import { useTranslation } from "react-i18next";
 import {
@@ -7,23 +7,28 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonItem,
+  IonLabel,
   IonModal,
   IonTitle,
+  IonToggle,
   IonToolbar,
 } from "@ionic/react";
+import { StoreContext } from "../../stores/Store";
 
 export default function RouteMapPopup(props: {
   chain: Chain;
   authUserUID: UID;
   isChainAdmin: boolean;
+  modal: RefObject<HTMLIonModalElement>;
 }) {
   const { t } = useTranslation();
-  const ref = useRef<HTMLIonModalElement>(null);
   const [showMap, setShowMap] = useState(false);
+  const { toggleChainAllowMap } = useContext(StoreContext);
 
   function onClose() {
     setShowMap(false);
-    ref.current?.dismiss();
+    props.modal.current?.dismiss();
   }
   function onDidPresent() {
     setShowMap(true);
@@ -31,11 +36,13 @@ export default function RouteMapPopup(props: {
   function onDidDismiss() {
     setShowMap(false);
   }
+  function onToggleAllowMap() {
+    toggleChainAllowMap();
+  }
 
   return (
     <IonModal
-      ref={ref}
-      trigger="fab-open-map"
+      ref={props.modal}
       onDidDismiss={onDidDismiss}
       onDidPresent={onDidPresent}
     >
@@ -47,6 +54,24 @@ export default function RouteMapPopup(props: {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
+      {props.isChainAdmin ? (
+        <IonItem
+          lines="full"
+          detail={false}
+          button
+          onClick={onToggleAllowMap}
+        >
+          <IonLabel className="ion-text-wrap">
+            <h3>{t("Allow participants to view this map")}</h3>
+            <p>
+              {t(
+                "For privacy reasons, accuracy is limited on the map participants see",
+              )}
+            </p>
+          </IonLabel>
+          <IonToggle aria-label={t("Allow participants to view this map")} slot="end" checked={props.chain.allow_map || false} />
+        </IonItem>
+      ) : null}
       <IonContent>
         {props.isChainAdmin ? null : (
           <p

@@ -132,7 +132,8 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddTheme {
 		sql += `,
-		chains.theme`
+		chains.theme,
+		chains.allow_map`
 	}
 	if query.AddIsAppDisabled {
 		sql += `,
@@ -170,8 +171,10 @@ func ChainGet(c *gin.Context) {
 	if query.AddHeaders {
 		body.HeadersOverride = &chain.HeadersOverride
 	}
+	// this is used on all app requests
 	if query.AddTheme {
 		body.Theme = &chain.Theme
+		body.AllowMap = &chain.AllowMap
 	}
 	if query.AddTotals {
 		result := chain.GetTotals(db)
@@ -325,6 +328,7 @@ func ChainUpdate(c *gin.Context) {
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 		Theme            *string   `json:"theme,omitempty"`
 		RoutePrivacy     *int      `json:"route_privacy"`
+		AllowMap         *bool     `json:"allow_map,omitempty"`
 		IsAppDisabled    *bool     `json:"is_app_disabled,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -375,6 +379,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Radius != nil {
 		valuesToUpdate["radius"] = *(body.Radius)
+	}
+	if body.AllowMap != nil {
+		valuesToUpdate["allow_map"] = *(body.AllowMap)
 	}
 	if body.Sizes != nil {
 		j, _ := json.Marshal(body.Sizes)
