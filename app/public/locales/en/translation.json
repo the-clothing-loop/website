@@ -41,6 +41,8 @@
   "open": "Open",
   "routeOrder": "Route Order",
   "mapNotAccurate": "For privacy reasons accuracy is limited",
+  "allowMapTitle": "Allow participants to view this map",
+  "allowMapBody": "For privacy reasons, accuracy will be limited on the map participants see",
   "draft": "Draft",
   "description": "Description",
   "goToAdminPortal": "Go to Admin Portal",

@@ -62,14 +62,14 @@ export default function RouteMapPopup(props: {
           onClick={onToggleAllowMap}
         >
           <IonLabel className="ion-text-wrap">
-            <h3>{t("Allow participants to view this map")}</h3>
+            <h3>{t("allowMapTitle")}</h3>
             <p>
               {t(
-                "For privacy reasons, accuracy is limited on the map participants see",
+                "allowMapBody",
               )}
             </p>
           </IonLabel>
-          <IonToggle aria-label={t("Allow participants to view this map")} slot="end" checked={props.chain.allow_map || false} />
+          <IonToggle aria-label={t("allowMapTitle")} slot="end" checked={props.chain.allow_map || false} />
         </IonItem>
       ) : null}
       <IonContent>
