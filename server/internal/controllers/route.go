@@ -118,6 +118,10 @@ func GetRouteCoordinates(c *gin.Context) {
 		return
 	}
 	_, isChainAdmin := authUser.IsPartOfChain(query.ChainUID)
+	if !(isChainAdmin || authUser.IsRootAdmin) && !chain.AllowMap {
+		c.String(http.StatusNotAcceptable, "Map is hidden by the loop host")
+		return
+	}
 
 	cities := retrieveChainUsersAsTspCities(db, chain.ID)
 
