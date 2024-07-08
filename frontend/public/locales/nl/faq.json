@@ -69,15 +69,15 @@
       "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
     }
   },
-  "faqForHosts": "FAQ voor Beheerders",
+  "faqForHosts": "FAQ for Hosts",
   "arrHosts": {
     "0": {
       "question": "Hoe kan ik de app gebruiken?",
-      "answer": "U kunt de app kopiëren en deze gebruiken binnen uw groep. U hoeft alleen de adreslijst in te vullen in onze sjabloon. Het is super eenvoudig! We hebben een video tutorial en slide dek gemaakt om je aan de slag te helpen. Neem contact op als je nog steeds in de problemen komt!"
+      "answer": "Je kunt de app kopiëren en deze gebruiken binnen uw groep. Je hoeft alleen de adreslijst in te vullen in onze sjabloon. Het is super eenvoudig! We hebben een video tutorial en slide dek gemaakt om je aan de slag te helpen. Neem contact op als je nog steeds in de problemen komt!"
     },
     "1": {
       "question": "Zijn er grafische sjablonen die we kunnen gebruiken?",
-      "answer": "Start small! Ask friends and acquaintances in your direct environment like your sports club or dance school. When you have a small crowd gathered, you can ask everyone to invite at least one more person, then the group will grow organically. You can also send out a press release to your local media. We already drafted you a <a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'>template</a> to fill in!"
+      "answer": "Start small! <strong>Ask friends and acquaintances in your direct environment</strong> like your sports club or dance school. When you have a small crowd gathered, you can ask everyone to invite at least one more person, then the group will grow organically. You can also send out a press release to your local media. We already drafted you a <a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'>template</a> to fill in!"
     },
     "2": {
       "question": "Introductie van een \"Spooktas\" in de Loop",

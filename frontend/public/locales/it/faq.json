@@ -1,12 +1,12 @@
 {
-  "faqForParticipants": "FAQ per i Partecipanti",
+  "faqForParticipants": "Domande frequenti per i Partecipanti",
   "arrParticipants": {
     "0": {
-      "question": "Ci sono regole su quanto si può prendere, e devi donare la stessa quantità di vestiti che si toglie?",
+      "question": "Mi sono iscritto, quando sarò aggiunto al percorso?",
       "answer": "No, non ci sono regole qui. A volte si prende un po' di più, a volte si dà più. Per favore, non aggiungere vestiti alle borse che non sono di buona qualità, solo per aggiungere qualcosa! È meglio avere una borsa piena a metà di tesori, che avere una borsa piena di qualità minore."
     },
     "1": {
-      "question": "Tutte le taglie di abbigliamento possono essere nella stessa borsa?",
+      "question": "Ci sono regole su quanti capi puoi prendere dalla borsa?",
       "answer": "No, non ci sono regole fisse qui, ma tieni a mente il sistema funziona meglio quando in equilibrio. <b>Ogni borsa è diversa.</b> Delle volte trova qualcosa d'interessante, a volte non si trova nulla. Ma ogni volta che un capo viene indossato di nuovo è una piccola gran vittoria!"
     },
     "2": {
@@ -18,7 +18,7 @@
       "answer": "Gli oggetti grandi possono essere fotografati e condivisi tramite il canale di comunicazione, o tramite l'app Glide. In un messaggio privato, le persone possono rispondere e organizzare il pick up."
     },
     "4": {
-      "question": "Posso mettere anche le scarpe nella borsa?",
+      "question": "Come evitare \"Chi trova tiene, chi perde piange\"?",
       "answer": "La risposta breve è sì, ma tieni a mente: le scarpe sono più difficili da passare dei vestiti. Ci sono molte più taglie, e mostrano segni di usura molto più velocemente degli indumenti. Quindi sii molto selettivo con le scarpe! Aggiungi solo paia “come nuove” e non più di 2 paia per borsa."
     },
     "5": {
@@ -69,27 +69,27 @@
       "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
     }
   },
-  "faqForHosts": "FAQ per gli Hosts",
+  "faqForHosts": "Domande frequenti per gli host",
   "arrHosts": {
     "0": {
-      "question": "Come posso iniziare ad utilizzare l'app?",
-      "answer": "Puoi copiare l'app e usarla all'interno del tuo gruppo. Devi solo compilare l'elenco degli indirizzi nel nostro modello scaricabile. È molto facile! Abbiamo creato un video tutorial e una presentazione per aiutarti ad iniziare. Non esitare a contattarci qui se hai ancora problemi!"
+      "question": "Come faccio ad avviare un ciclo?",
+      "answer": "Ci pensiamo noi! Abbiamo scritto un semplice manuale con tutte le istruzioni che possono essere trovate nel nostro <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Trai vantaggio dalle lezioni che abbiamo imparato nei molti anni di esperienza fatta!"
     },
     "1": {
-      "question": "Ci sono modelli grafici che possiamo utilizzare?",
+      "question": "Come trovare persone per unirsi al mio Loop?",
       "answer": "Assolutamente, ti abbiamo fatto una cartella dove puoi trovare modelli di logo, manuali e tutto. Usane quanti vuoi!"
     },
     "2": {
-      "question": "Introduzione di una borsa “fantasma” nel Loop",
+      "question": "Quanto tempo mi serve per gestire un ciclo?",
       "answer": "Una volta che il tuo Loop è in corso da un po', potresti voler cambiare un po' le cose! Puoi quindi introdurre una borsa “fantasma” che viaggia nell'altra direzione, così tutto ad un tratto si hanno altre persone prima nel percorso, e anche altri stili nella borsa. In tal caso, fai sapere alle persone che non dovrebbero mettere alcun oggetto nella borsa “fantasma” che hanno precedentemente preso da una borsa regolare. E mantieni il numero di borse fantasma limitato a 1 o 2, per mantenerlo speciale ma anche semplice."
     },
     "3": {
-      "question": "Come gestire un grande gruppo di persone nel canale di comunicazione?",
-      "answer": "Soprattutto quando i gruppi diventano più grandi, è importante assicurarsi che le persone non siano bombardate con messaggi (irrilevanti). È possibile impostare alcune regole per ciò che dovrebbe e non dovrebbe essere condiviso tramite l'app del gruppo. Per esempio:<br /><br /><span>Sì,</span> nell'app:<ul><li>Selfie con cose carine che hai trovato nella borsa o di cose carine che gli stai aggiungendo.</li><li>Complimenti ad altri</li><li>Logistica e aggiornamenti organizzativi rilevanti</li></ul><span>No,</span> non nell'app:<ul><li>Tutto ciò che non è correlato al Clothing Loop (richieste di sondaggi, inviti per nuovi gruppi, raccolta di fondi, meme, ecc). Se vuoi chiedere a tutti l'input su qualcosa, usa invece un'app di sondaggio come LouLou</li></ul>"
+      "question": "Come posso iscrivermi a un nuovo Loop?",
+      "answer": "Ti abbiamo fatto <a target='_blank' href='https://drive.google.com/drive/folders/1UiokapMTKu6nrX5sg6s8FFkS8jDTtu86'>una semplice guida</a> con screenshot di ogni passaggio. Hai ancora problemi? Inviaci una email!"
     },
     "4": {
-      "question": "E se non avessi più tempo per gestire il Clothing Loop che ho iniziato?",
-      "answer": "Usa il gruppo! Chiedi se qualcun altro vuole prendere il posto e gestire il Loop."
+      "question": "Come faccio ad accedere al sito?",
+      "answer": "<ol><li>Clicca  sul login, nell'angolo in alto a destra</li><li>Inserisci l'indirizzo email usato per registrare il tuo Loop </li><li>Controlla la tua email (e la cartella spam!) per il nostro link di verifica. Usiamo un link invece di una password!</li><li>Ora hai effettuato l'accesso e puoi visualizzare e modificare i tuoi cicli e vedere i nuovi partecipanti.</li></ol>"
     },
     "5": {
       "question": "How can I start using the App?",
@@ -100,12 +100,12 @@
       "answer": "You can make a route in the admin page of your Account. Click on Route and you will find an Optimize Route Button. Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. New participants will be placed in the most logical spot in the current list."
     },
     "6": {
-      "question": "Qual è la dimensione ideale di un gruppo?",
-      "answer": "Consigliamo di avere un minimo di 20 persone in un gruppo: dopo 20 indirizzi di solito non riconosci più nulla nella borsa, in modo da poter continuare a scambiare. Non c'è un vero massimo, sta a te decidere quello che ancora funziona! Nei Paesi Bassi un Loop è in media 45 persone. Ma ci sono Loop che funzionano senza problemi con 130 persone!"
+      "question": "Ci sono immagini o modelli grafici che possiamo usare?",
+      "answer": "Assolutamente, ti abbiamo fatto un <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a> dove puoi trovare loghi, immagini e modelli. Usa tutti quelli che vuoi!"
     },
     "7": {
-      "question": "Cosa fare se il Clothing Loop non funziona bene?",
-      "answer": "Se la qualità dell'abbigliamento non è abbastanza elevata, la gente potrebbe lasciare il Loop. Assicurati che tutti condividano la responsabilità di aggiungere solo oggetti di buona qualità.<br/><br/>Hai trovato qualcosa che non dovrebbe essere nel Loop? Toglilo e donalo a un contenitore di abbigliamento. In questo modo può ancora essere riciclato. In caso di dubbio, chiedi alla persona dopo te se è d'accordo e poi decidi.<br/><br/>Un rasoio per tessuto può prolungare enormemente la vita di un oggetto di abbigliamento! Puoi condividere questo consiglio all'interno della tua comunità.<br/><br/>E ultimo ma non meno importante, dai il buon esempio; condividi alcune belle foto e incoraggia gli altri a fare lo stesso!"
+      "question": "Introduzione di una borsa “fantasma” nel Loop",
+      "answer": "Una volta che il tuo Loop è in corso da un po', potresti voler cambiare un po' le cose! Puoi quindi introdurre una borsa “fantasma” che viaggia nell'altra direzione, così tutto ad un tratto si hanno altre persone prima nel percorso, e anche altri stili nella borsa. In tal caso, fai sapere alle persone che non dovrebbero mettere alcun oggetto nella borsa “fantasma” che hanno precedentemente preso da una borsa regolare. E mantieni il numero di borse fantasma limitato a 1 o 2, per mantenerlo speciale ma anche semplice."
     },
     "7_5": {
       "question": "Introducing a “Bunny Bag” in the Loop",
