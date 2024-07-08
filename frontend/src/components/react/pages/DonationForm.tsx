@@ -415,6 +415,9 @@ export default function DonationForm() {
                 partnership tax.
               </li>
             </ul>
+            <p className="inline-block text-xs !my-0">
+              RSIN number: 8635 12 896
+            </p>
           </div>
         </div>
       </div>
