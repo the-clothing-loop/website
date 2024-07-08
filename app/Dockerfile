@@ -14,6 +14,8 @@ WORKDIR /srv/
 COPY --from=build /app/build/ .
 COPY Caddyfile-acc Caddyfile-prod /etc/caddy/
 
+ARG ENV
+
 RUN if [ "$ENV" = "production" ] ; then cp /etc/caddy/Caddyfile-prod /etc/caddy/Caddyfile; fi
 RUN if [ "$ENV" = "acceptance" ] ; then cp /etc/caddy/Caddyfile-acc  /etc/caddy/Caddyfile; fi
 
