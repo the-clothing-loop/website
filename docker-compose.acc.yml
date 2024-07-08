@@ -2,7 +2,7 @@ services:
   acc_app:
     build:
       context: ./app/
-      environment:
+      args:
         - ENV=acceptance
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
@@ -12,7 +12,7 @@ services:
   acc_frontend:
     build:
       context: ./frontend/
-      environment:
+      args:
         - ENV=acceptance
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
