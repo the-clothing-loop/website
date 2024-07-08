@@ -29,6 +29,7 @@ export default function AddressListItem({
     <IonItem
       lines="full"
       routerLink={routerLink}
+      detail={routerLink !== undefined}
       color={isMe ? "primary" : isUserPaused ? "light" : undefined}
       id={"ali-" + user.uid}
     >
