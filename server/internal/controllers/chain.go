@@ -675,8 +675,13 @@ func ChainGetUserNote(c *gin.Context) {
 		return
 	}
 
-	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, query.ChainUID, query.UserUID)
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
 	if !ok {
+		return
+	}
+	user, err := models.UserGetByUID(db, query.UserUID, true)
+	if err != nil {
+		c.String(http.StatusExpectationFailed, "Could not get user")
 		return
 	}
 
