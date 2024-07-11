@@ -1,4 +1,5 @@
 import OriginalImageToProxy from "./image_proxy";
+import { expect, test } from "vitest";
 
 test("should replace the original url with the proxied url", () => {
   const expected = "https://images.clothingloop.org/900x/kirsten_en_rosan.jpg";

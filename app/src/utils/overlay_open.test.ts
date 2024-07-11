@@ -1,4 +1,4 @@
-import { expect, test, vi } from "vitest";
+import { expect, test } from "vitest";
 import { OverlayContainsState, OverlayState } from "./overlay_open";
 
 test("should binary be in value", () => {
