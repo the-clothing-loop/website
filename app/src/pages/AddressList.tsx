@@ -271,25 +271,6 @@ export default function AddressList() {
               return <AddressListItem {...props} key={props.number} />;
             })}
           </IonList>
-          {isChainAdmin || chain?.allow_map ? (
-            <IonFab className="tw-fixed" horizontal="end" vertical="bottom">
-              <IonFabButton
-                color={chain?.allow_map && isThemeDefault ? "danger" : ""}
-                onClick={onClickFab}
-                style={
-                  chain?.allow_map
-                    ? {}
-                    : {
-                        "--background": "var(--ion-color-blue-contrast)",
-                        "--background-hover": "var(--ion-color-light-shade)",
-                        "--color": "var(--ion-color-blue)",
-                      }
-                }
-              >
-                <IonIcon icon={mapOutline} />
-              </IonFabButton>
-            </IonFab>
-          ) : null}
           {chain && authUser ? (
             <RouteMapPopup
               chain={chain}
@@ -313,6 +294,25 @@ export default function AddressList() {
             className="tw-w-full -tw-mb-2 tw-invert-[60%] tw-overflow-hidden tw-stroke-text dark:tw-stroke-light-tint"
           />
         </div>
+        {isChainAdmin || chain?.allow_map ? (
+          <IonFab slot="fixed" horizontal="end" vertical="bottom">
+            <IonFabButton
+              color={chain?.allow_map && isThemeDefault ? "danger" : ""}
+              onClick={onClickFab}
+              style={
+                chain?.allow_map
+                  ? {}
+                  : {
+                      "--background": "var(--ion-color-blue-contrast)",
+                      "--background-hover": "var(--ion-color-light-shade)",
+                      "--color": "var(--ion-color-blue)",
+                    }
+              }
+            >
+              <IonIcon icon={mapOutline} />
+            </IonFabButton>
+          </IonFab>
+        ) : null}
       </IonContent>
     </IonPage>
   );
