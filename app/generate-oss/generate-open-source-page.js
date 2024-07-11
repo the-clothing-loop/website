@@ -5,7 +5,7 @@ import { sub } from "date-fns";
 try {
   const stat = fs.statSync("../public/open_source_licenses.json");
   if (stat.isFile()) {
-    if (stat.birthtime < sub(new Date(), { days: 30 })) {
+    if (stat.mtime > sub(new Date(), { days: 30 })) {
       console.log("skipping open source license generation");
       process.exit(0);
     }
