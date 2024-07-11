@@ -8,6 +8,7 @@
     "start": "node ./generate-open-source-page.js"
   },
   "dependencies": {
+    "date-fns": "^3.6.0",
     "nlf": "^2.1.1"
   }
 }
