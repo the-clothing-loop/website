@@ -15,6 +15,10 @@ import (
 var Cache *cache.Cache
 
 func DatabaseInit() *gorm.DB {
+	if Config.DB_HOST == "" {
+		panic(fmt.Errorf("database is not specified in config"))
+	}
+
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", Config.DB_USER, Config.DB_PASS, Config.DB_HOST, Config.DB_PORT, Config.DB_NAME)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

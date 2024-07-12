@@ -58,24 +58,25 @@ services:
     volumes:
       - mysql:/var/lib/mysql
       - ../../server/sql:/scripts
-  mattermost:
+  mattermost_preview:
     platform: linux/amd64
     image: mattermost/mattermost-preview
-    ports:
-      - 8065:8065
-    depends_on:
-      - mailpit
-    hostname: mattermost
-  mm-mail:
-    image: golang:1.22-alpine
+    ports: 
+      - 127.0.0.1:8065:8065
+    volumes:
+      - mattermost_prev_db:/var/lib/postgresql/data
+      - mattermost_prev_config:/mm/mattermost/config
+      - mattermost_prev_data:/mm/mattermost-data
+  mattermost_mail:
+    image: golang:alpine
     ports:
       - 2525:2525
     depends_on:
       - db
     volumes:
-      - ../../server:/app
+      - ./server:/app
     working_dir: /app
-    command: go run cmd/mm-mail/main.go
+    command: "go run cmd/mm-mail/main.go -c config.dev.yml"
   caddy:
     build:
       context: ./frontend/
@@ -87,3 +88,6 @@ services:
       - 127.0.0.1:8081:81
 volumes:
   mysql:
+  mattermost_prev_db:
+  mattermost_prev_config:
+  mattermost_prev_data:

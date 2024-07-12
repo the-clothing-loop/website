@@ -4,6 +4,6 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -o server cmd/server/main.go
+RUN go build -o mmmail cmd/mm-mail/main.go
 
-ENTRYPOINT ./server
+ENTRYPOINT ./mmmail

@@ -3,7 +3,6 @@ package app
 import (
 	"encoding/base64"
 	"flag"
-	"fmt"
 	"log/slog"
 	"os"
 
@@ -75,9 +74,6 @@ func ConfigInit(path string, files ...string) {
 		Config.JWT_SECRET = string(b)
 	}
 
-	if Config.JWT_SECRET == "" {
-		panic(fmt.Errorf("no jwt secret in config file: %s", *fFile))
-	}
 	stripe.Key = Config.STRIPE_SECRET_KEY
 }
 
