@@ -357,12 +357,12 @@ export default function BulkyList() {
           />
         </div>
       </IonContent>
-
+      {/*}
       <CreateUpdateBulky
         modal={modal}
         didDismiss={() => refresh("bulky-items")}
         bulky={updateBulky}
-      />
+        />*/}
     </IonPage>
   );
 }

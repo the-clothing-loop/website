@@ -22,6 +22,7 @@ interface Props {
   postList: PostList;
   authUser: User;
   getMmUser: (id: string) => Promise<UserProfile>;
+  getFile: (fileId: string, timestamp: number) => void;
   onCreateChannel: (n: string) => void;
   onSelectChannel: (c: Channel) => void;
   onRenameChannel: (c: Channel, n: string) => void;
@@ -29,6 +30,11 @@ interface Props {
   onDeletePost: (id: string) => void;
   onScrollTop: (topPostId: string) => void;
   onSendMessage: (msg: string, callback: Function) => Promise<void>;
+  onSendMessageWithImage: (
+    msg: string,
+    image: File,
+    callback: Function,
+  ) => Promise<void>;
 }
 
 // This follows the controller / view component pattern
@@ -86,6 +92,14 @@ export default function ChatWindow(props: Props) {
 
   function onSendMessageWithCallback(topPostId: string) {
     return props.onSendMessage(topPostId, () => {
+      refScrollRoot.current?.scrollTo({
+        top: 0,
+      });
+    });
+  }
+
+  function onSendMessageWithImage(topPostId: string, image: File) {
+    return props.onSendMessageWithImage(topPostId, image, () => {
       refScrollRoot.current?.scrollTo({
         top: 0,
       });
@@ -274,6 +288,7 @@ export default function ChatWindow(props: Props) {
               onLongPress={(id) => setIsPostActionSheetOpen(id)}
               post={post}
               getMmUser={props.getMmUser}
+              getFile={props.getFile}
               key={post.id}
               users={chainUsers}
             />
@@ -281,7 +296,10 @@ export default function ChatWindow(props: Props) {
         })}
         <span key="top" ref={refScrollTop}></span>
       </div>
-      <ChatInput onSendMessage={onSendMessageWithCallback} />
+      <ChatInput
+        onSendMessage={onSendMessageWithCallback}
+        onSendMessageWithImage={onSendMessageWithImage}
+      />
       <IonActionSheet
         isOpen={isPostActionSheetOpen !== null}
         onDidDismiss={() => setIsPostActionSheetOpen(null)}
