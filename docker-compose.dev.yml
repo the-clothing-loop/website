@@ -3,7 +3,8 @@ name: cl-dev
 services:
   app:
     image: node:20-alpine
-    # ports:
+    ports:
+      - 127.0.0.1:8081:8081
     #   - 5173:5173
     volumes:
       - ./app:/app
@@ -26,6 +27,8 @@ services:
     #   - 8084:8084
     volumes:
       - ./server:/app
+    environment:
+      - ENV=development
     working_dir: /app
     command: "go run cmd/server/main.go -c config.dev.yml"
   mailpit:
@@ -58,11 +61,12 @@ services:
     volumes:
       - mysql:/var/lib/mysql
       - ../../server/sql:/scripts
-  mattermost_preview:
+  mattermost:
     platform: linux/amd64
-    image: mattermost/mattermost-preview
+    image: mattermost/mattermost-preview:9.8.3-rc1
     ports: 
       - 127.0.0.1:8065:8065
+      - 127.0.0.1:5432:5432
     volumes:
       - mattermost_prev_db:/var/lib/postgresql/data
       - mattermost_prev_config:/mm/mattermost/config
@@ -84,8 +88,6 @@ services:
     ports:
       # website
       - 127.0.0.1:8080:80
-      # app
-      - 127.0.0.1:8081:81
 volumes:
   mysql:
   mattermost_prev_db:

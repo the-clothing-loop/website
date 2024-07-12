@@ -1,5 +1,5 @@
 services:
-  mattermost_preview:
+  mattermost:
     platform: linux/amd64
     image: mattermost/mattermost-preview
     # ports: 
