@@ -38,6 +38,7 @@ func DatabaseInit() *gorm.DB {
 func DatabaseAutoMigrate(db *gorm.DB) {
 	hadIsApprovedColumn := db.Migrator().HasColumn(&models.UserChain{}, "is_approved")
 	hadEventPriceTypeColumn := db.Migrator().HasColumn(&models.Event{}, "price_type")
+	hadAllowMapColumn := db.Migrator().HasColumn(&models.Chain{}, "allow_map")
 
 	// User Tokens
 	if db.Migrator().HasTable("user_tokens") {
@@ -146,5 +147,9 @@ UPDATE user_chains SET is_approved = FALSE WHERE id IN (
 	WHERE u.is_email_verified = FALSE && uc.is_approved IS NULL 
 )
 		`)
+	}
+	if !hadAllowMapColumn {
+		slog.Info("Migration run: set new allow_map column to true")
+		db.Exec("UPDATE chains SET allow_map = 1")
 	}
 }

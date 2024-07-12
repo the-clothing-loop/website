@@ -139,3 +139,4 @@
 
 - Add notes
 - Emoji bags get a different look in the route page
+- Map is available from the a route page

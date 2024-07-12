@@ -1,4 +1,4 @@
-import { expect, test, vi } from "vitest";
+import { expect, test } from "vitest";
 import wrapIndex from "./wrap_index";
 
 test("should wrap index correctly", () => {

@@ -75,6 +75,7 @@ export const StoreContext = createContext({
   shouldBlur: false,
   mmData: {} as MmData,
   setMmData: (d: MmData) => {},
+  toggleChainAllowMap: () => Promise.resolve(),
 });
 
 const errLoopMustBeSelected =
@@ -436,6 +437,21 @@ export function StoreProvider({
     }
   }
 
+  async function toggleChainAllowMap() {
+    if (!chain) return;
+    await chainUpdate({
+      uid: chain.uid,
+      allow_map: !chain.allow_map,
+    });
+    _setChain((s) => {
+      if (!s) return null;
+      return {
+        ...s,
+        allow_map: !chain.allow_map,
+      };
+    });
+  }
+
   function closeOverlay(sTo: OverlayState) {
     setOverlayState((s) => {
       let newTo = s + sTo;
@@ -517,6 +533,7 @@ export function StoreProvider({
         shouldBlur,
         mmData,
         setMmData,
+        toggleChainAllowMap,
       }}
     >
       {children}

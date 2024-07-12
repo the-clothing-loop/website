@@ -353,7 +353,6 @@ export default function ChainDetailsForm({
                 />
               </div>
               <SizesDropdown
-                className="dropdown-top"
                 filteredCategory={
                   values.genders?.length
                     ? values.genders

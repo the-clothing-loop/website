@@ -1,24 +1,34 @@
-import mapboxjs, { GeoJSONSource } from "mapbox-gl";
+import mapboxjs from "mapbox-gl";
 import { useEffect, useState } from "react";
-import { type RouteCoordinate, routeCoordinates } from "../../../../api/route";
-import type { Chain, UID } from "../../../../api/types";
+import { type RouteCoordinate, routeCoordinates } from "../../api/route";
+import type { Chain, UID } from "../../api/types";
 import type { FeatureCollection, Polygon, Feature } from "geojson";
-import { useDebouncedCallback } from "use-debounce";
-import { useMapZoom } from "../../util/maps";
-import { useTranslation } from "react-i18next";
+import { useMapZoom } from "./utils";
+
+import { IonFab, IonFabButton, IonIcon } from "@ionic/react";
+import {
+  addOutline,
+  ellipseOutline,
+  gitCommitOutline,
+  removeOutline,
+} from "ionicons/icons";
 
 type LineType = "mixed" | "line" | "dot";
 
-const MAPBOX_TOKEN = import.meta.env.PUBLIC_MAPBOX_KEY;
-const MAX_ZOOM = 18;
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_KEY;
+const MAX_ZOOM = 16;
+const MAX_ZOOM_HOST = 18;
 const MIN_ZOOM = 4;
 const KEY_ROUTE_MAP_LINE = "route_map_line";
 
-export default function RouteMap(props: { chain: Chain; route: UID[] }) {
+export default function RouteMap(props: {
+  chain: Chain;
+  authUserUID: UID;
+  isChainAdmin: boolean;
+}) {
   const [map, setMap] = useState<mapboxjs.Map>();
   const { zoom, setZoom, mapZoom } = useMapZoom(11, MIN_ZOOM, MAX_ZOOM);
   const [id] = useState(() => window.crypto.randomUUID());
-  const { t } = useTranslation();
   const [lineType, setLineType] = useState(
     () =>
       (window.localStorage.getItem(KEY_ROUTE_MAP_LINE) || "mixed") as LineType,
@@ -32,7 +42,7 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
       center: [props.chain.longitude, props.chain.latitude],
       zoom: 11,
       minZoom: MIN_ZOOM,
-      maxZoom: MAX_ZOOM,
+      maxZoom: props.isChainAdmin ? MAX_ZOOM_HOST : MAX_ZOOM,
     });
     setZoom(11);
     _map.on("load", () => {
@@ -41,7 +51,15 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
           setZoom(e.target.getZoom());
         });
 
-        const coords = await getSortedCoordinates(props.chain.uid, props.route);
+        const coords = await routeCoordinates(
+          props.chain.uid,
+          props.authUserUID,
+        ).then((res) => {
+          return res.data.map((item, i) => {
+            (item as SortedCoordinate).route_index = i;
+            return item;
+          }) as SortedCoordinate[];
+        });
         _map.addSource("route", {
           type: "geojson",
           data: mapToGeoJSONCoords(coords),
@@ -117,23 +135,6 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
     };
   }, []);
 
-  const debouncedUpdateSource = useDebouncedCallback(
-    async () => {
-      const routeSource = map!.getSource("route") as GeoJSONSource;
-      const routePolySource = map!.getSource("route-poly") as GeoJSONSource;
-      if (!routeSource) return;
-      const coords = await getSortedCoordinates(props.chain.uid, props.route);
-      routeSource.setData(mapToGeoJSONCoords(coords));
-      routePolySource.setData(mapToGeoJSONPolygonCoords(coords));
-    },
-    1e3,
-    {},
-  );
-  useEffect(() => {
-    if (!map) return;
-    debouncedUpdateSource();
-  }, [props.chain, props.route]);
-
   function handleMapZoom(o: "+" | "-") {
     mapZoom(map, o);
   }
@@ -174,57 +175,42 @@ export default function RouteMap(props: { chain: Chain; route: UID[] }) {
     );
   }
 
-  let lineTypeIcon = "icon-git-commit-horizontal";
-  let lineTypeHoverText = t("showRouteOrder");
+  let lineTypeIcon = gitCommitOutline;
   if (lineType === "line") {
-    lineTypeIcon = "icon-minus";
-    lineTypeHoverText = t("showRoute");
+    lineTypeIcon = removeOutline;
   } else if (lineType === "dot") {
-    lineTypeIcon = "icon-circle";
-    lineTypeHoverText = t("showAddress");
+    lineTypeIcon = ellipseOutline;
   }
   return (
-    <div className="w-full h-full relative">
-      <div id={id} className="w-full h-full"></div>
-      <div className="flex flex-col absolute z-30 bottom-8 right-2.5 rtl:right-auto rtl:left-2.5">
-        <button
-          type="button"
-          className={`no-animation btn btn-sm mb-4 p-0 w-8 h-8 glass bg-purple-light/80 hover:bg-purple-light btn-outline tooltip tooltip-left ${
-            props.route.length > 1 ? "" : "hidden"
-          }`}
-          onClick={() => handleNextLineType()}
-          data-tip={lineTypeHoverText}
+    <div className="tw-w-full tw-h-full tw-relative">
+      <IonFab className="tw-mb-16" horizontal="end" vertical="bottom">
+        <IonFabButton size="small" onClick={() => handleNextLineType()}>
+          <IonIcon icon={lineTypeIcon} />
+        </IonFabButton>
+        <IonFabButton
+          size="small"
+          color="light"
+          disabled={zoom >= MAX_ZOOM}
+          onClick={() => handleMapZoom("+")}
         >
-          <span className={`text-base-content text-lg ${lineTypeIcon}`} />
-        </button>
-
-        <div className="btn-group btn-group-vertical">
-          <button
-            type="button"
-            className={`btn btn-sm p-0 w-8 h-8 ${
-              zoom >= MAX_ZOOM
-                ? "btn-disabled bg-white/30"
-                : "glass bg-white/60 hover:bg-white/90 btn-outline"
-            }`}
-            onClick={() => handleMapZoom("+")}
-          >
-            <span className="icon-plus text-base-content text-lg" />
-          </button>
-          <button
-            type="button"
-            className={`btn btn-sm p-0 w-8 h-8 ${
-              zoom <= MIN_ZOOM
-                ? "btn-disabled bg-white/30"
-                : "glass bg-white/60 hover:bg-white/90 btn-outline"
-            }`}
-            onClick={() => handleMapZoom("-")}
-          >
-            <span className="icon-minus text-base-content text-lg" />
-          </button>
-        </div>
-      </div>
+          <IonIcon icon={addOutline} />
+        </IonFabButton>
+        <IonFabButton
+          size="small"
+          color="light"
+          disabled={zoom <= MIN_ZOOM}
+          onClick={() => handleMapZoom("-")}
+        >
+          <IonIcon icon={removeOutline} />
+        </IonFabButton>
+      </IonFab>
+      <div id={id} className="tw-w-full tw-h-full"></div>
     </div>
   );
+}
+
+interface SortedCoordinate extends RouteCoordinate {
+  route_index: number;
 }
 
 function mapToGeoJSONCoords(coords: SortedCoordinate[]): FeatureCollection {
@@ -246,7 +232,7 @@ function mapToGeoJSONCoords(coords: SortedCoordinate[]): FeatureCollection {
   };
 }
 
-function mapToGeoJSONPolygonCoords(coords: SortedCoordinate[]): Feature {
+function mapToGeoJSONPolygonCoords(coords: RouteCoordinate[]): Feature {
   return {
     type: "Feature",
     geometry: {
@@ -255,23 +241,4 @@ function mapToGeoJSONPolygonCoords(coords: SortedCoordinate[]): Feature {
     } as Polygon,
     properties: {},
   };
-}
-
-interface SortedCoordinate extends RouteCoordinate {
-  route_index: number;
-}
-
-async function getSortedCoordinates(chainUID: UID, route: UID[]) {
-  const res = await routeCoordinates(chainUID);
-  const sortedCoords: SortedCoordinate[] = [];
-  for (let i = 0; i < route.length; i++) {
-    const user_uid = route[i];
-    const coord = res.data.find((c) => c.user_uid === user_uid);
-    if (!coord) continue;
-    sortedCoords.push({
-      ...coord,
-      route_index: i,
-    });
-  }
-  return sortedCoords;
 }

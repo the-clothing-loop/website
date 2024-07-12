@@ -77,7 +77,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	err = authUser.AddUserChainsToObject(db)
 	if err != nil {
-		slog.Error(models.ErrAddUserChainsToObject.Error(), err)
+		slog.Error(models.ErrAddUserChainsToObject.Error(), "err", err)
 		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
 		return false, nil, nil
 	}

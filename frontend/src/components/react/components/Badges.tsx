@@ -9,8 +9,10 @@ import {
 import categories from "../util/categories";
 import { useTranslation } from "react-i18next";
 
-export const SizeLetters: Record<Sizes | string, string> = {
-  "1": "Baby",
+export const SizeLetters: (t: TFunction) => Record<Sizes | string, string> = (
+  t,
+) => ({
+  "1": t("baby"),
   "2": "≤4",
   "3": "5-12",
   "4": "(X)S",
@@ -21,7 +23,8 @@ export const SizeLetters: Record<Sizes | string, string> = {
   "9": "M",
   A: "(X)L",
   B: "XL≤",
-};
+  C: t("womenMaternity"),
+});
 
 export function SizeBadges({
   s,
@@ -77,22 +80,18 @@ export function SizeBadges({
           color="bg-leafGreen-light"
         />
       ) : null}
-      {g?.indexOf(Categories.toys) ? (
-        <SizeCatBadges
-          t={t}
+      {g?.includes(Categories.toys) ? (
+        <BadgeItemSingle
           key="toys"
-          category={Categories.toys}
-          sizes={[]}
+          text={t("toys")}
           icon="/images/categories/toys-50.png"
           color="bg-skyBlue-light"
         />
       ) : null}
-      {g?.indexOf(Categories.books) ? (
-        <SizeCatBadges
-          t={t}
+      {g?.includes(Categories.books) ? (
+        <BadgeItemSingle
           key="books"
-          category={Categories.books}
-          sizes={[]}
+          text={t("books")}
           icon="/images/categories/books-50.png"
           color="bg-pink-light"
         />
@@ -107,6 +106,19 @@ export function SizeBadgeLoading() {
   );
 }
 
+function BadgeItemSingle(props: { color: string; icon: string; text: string }) {
+  return (
+    <li
+      className={`inline-flex items-center flex-row mb-1 me-1 rounded-full px-2 ${props.color}`}
+    >
+      <div className="flex-shrink-0 before:text-xs font-semibold me-1">
+        <img src={props.icon} className="h-5 my-1" />
+      </div>
+      <span className="text-sm font-semibold">{props.text}</span>
+    </li>
+  );
+}
+
 function SizeCatBadges({
   t,
   ...props
@@ -117,12 +129,13 @@ function SizeCatBadges({
   icon: string;
   color: string;
 }) {
+  const sizeLetters = SizeLetters(t);
   return (
     <li
-      className={`inline-flex flex-row mb-1 mr-1 rtl:mr-0 rtl:ml-1 rounded-full px-2 ${props.color}`}
+      className={`inline-flex flex-row mb-1 me-1 rounded-full px-2 ${props.color}`}
     >
       <div
-        className="tooltip tooltip-top before:text-xs font-semibold"
+        className="flex-shrink-0 tooltip tooltip-top before:text-xs font-semibold"
         data-tip={t(CatI18nKeys[props.category as string])}
       >
         <img src={props.icon} className="h-5 my-1" />
@@ -135,7 +148,7 @@ function SizeCatBadges({
               data-tip={t(SizeI18nKeys[s])}
               key={s}
             >
-              {SizeLetters[s]}
+              {sizeLetters[s]}
             </li>
           );
         })}

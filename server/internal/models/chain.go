@@ -31,6 +31,7 @@ type Chain struct {
 	OpenToNewMembers              bool
 	RulesOverride                 string
 	HeadersOverride               string
+	AllowMap                      bool
 	Sizes                         []string `gorm:"serializer:json"`
 	Genders                       []string `gorm:"serializer:json"`
 	UserChains                    []UserChain
@@ -66,6 +67,7 @@ type ChainResponse struct {
 	IsAppDisabled    *bool    `json:"is_app_disabled,omitempty" gorm:"chains.is_app_disabled"`
 	RoutePrivacy     *int     `json:"route_privacy,omitempty" gorm:"chains.route_privacy"`
 	ChatRoomIDs      []string `json:"chat_room_ids,omitempty" gorm:"chains.chat_room_ids"`
+	AllowMap         *bool    `json:"allow_map,omitempty" gorm:"chains.allow_map"`
 }
 
 // Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members

@@ -85,7 +85,7 @@ func BulkyPut(c *gin.Context) {
 			FROM users AS u
 			JOIN user_chains AS uc ON uc.user_id = u.id
 			JOIN chains AS c ON c.id = uc.chain_id
-			WHERE c.uid = ? AND u.uid != ?`, body.ChainUID, body.UserUID).Scan(&userUIDs)
+			WHERE c.uid = ? AND u.uid != ? AND uc.is_approved = TRUE`, body.ChainUID, body.UserUID).Scan(&userUIDs)
 
 		if len(userUIDs) > 0 {
 			err := app.OneSignalCreateNotification(db, userUIDs,

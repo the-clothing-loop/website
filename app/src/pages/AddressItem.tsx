@@ -13,7 +13,7 @@ import {
   IonTextarea,
   IonIcon,
 } from "@ionic/react";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import UserCard from "../components/UserCard";
 import { StoreContext } from "../stores/Store";
@@ -22,8 +22,11 @@ import { t } from "i18next";
 import Badges from "../components/SizeBadge";
 import AddressBagCard from "../components/Bags/AddressBagCard";
 import { chainChangeUserNote, chainGetUserNote } from "../api/chain";
-import { useDebounce } from "@uidotdev/usehooks";
 import { checkmarkCircle } from "ionicons/icons";
+import {
+  IonTextareaCustomEvent,
+  TextareaInputEventDetail,
+} from "@ionic/core/dist/types/components";
 
 export default function AddressItem({
   match,
@@ -39,19 +42,37 @@ export default function AddressItem({
   const userBags = useMemo(() => {
     return bags.filter((b) => b.user_uid === user?.uid);
   }, [bags, authUser]);
+  const [timer, setTimer] = useState<number | null>(null);
+  const [showSaved, setShowSaved] = useState(false);
+  const ref = useRef<HTMLIonTextareaElement>(null);
 
   const isNoteEditable =
     isChainAdmin || authUser?.uid === user?.uid || authUser?.is_root_admin;
   const [note, setNote] = useState("");
   useEffect(() => {
     if (!chain || !user) return;
-    chainGetUserNote(chain.uid, user.uid).then(setNote);
-  }, [user]);
-  const slowNote = useDebounce(note, 1300);
-  useEffect(() => {
-    if (!chain || !user || !isNoteEditable) return;
-    chainChangeUserNote(chain.uid, user.uid, note);
-  }, [slowNote]);
+    chainGetUserNote(chain.uid, user.uid).then((n) => {
+      setShowSaved(true);
+      if (timer) clearTimeout(timer);
+      setNote(n);
+    });
+  }, [user?.uid]);
+  function onChangeNoteInput(
+    e: IonTextareaCustomEvent<TextareaInputEventDetail>,
+  ) {
+    setShowSaved(false);
+    setNote(e.detail.value as any);
+    if (!isNoteEditable) false;
+    if (timer) clearTimeout(timer);
+    setTimer(
+      setTimeout(() => {
+        if (!chain || !user) return;
+        const note = ref.current?.value || "";
+        chainChangeUserNote(chain.uid, user.uid, note);
+        setShowSaved(true);
+      }, 1300) as any,
+    );
+  }
 
   return (
     <IonPage>
@@ -97,30 +118,35 @@ export default function AddressItem({
             })}
           </IonRow>
         </IonGrid>
-        <IonItem lines="none">
-          <div className="tw-w-full tw-mt-2 tw-mb-4">
-            <IonLabel className="!tw-font-bold">{t("notes")}</IonLabel>
-            <div className="tw-relative tw-border tw-border-green tw-bg-green-contrast dark:tw-bg-background">
-              <IonTextarea
-                className="tw-px-2 !tw-min-h-[200px]"
-                value={note}
-                readonly={!isNoteEditable}
-                onIonInput={(e) => setNote(e.detail.value as string)}
-                autoGrow
-                autocapitalize="sentences"
-              />
-              <div className="tw-absolute tw-bottom-0 tw-right-0">
-                {note === slowNote && isNoteEditable ? (
-                  <IonIcon
-                    className="tw-block tw-m-1"
-                    size="small"
-                    icon={checkmarkCircle}
-                  />
-                ) : null}
+        {note || isNoteEditable ? (
+          <IonItem lines="none">
+            <div className="tw-w-full tw-mt-2 tw-mb-4">
+              <IonLabel className="!tw-font-bold !tw-max-w-full">
+                {t("notes")} <small>({t("visibleForAllLoop")})</small>
+              </IonLabel>
+              <div className="tw-relative tw-border tw-border-green tw-bg-green-contrast dark:tw-bg-background">
+                <IonTextarea
+                  ref={ref}
+                  className="tw-px-2 !tw-min-h-[200px]"
+                  value={note}
+                  readonly={!isNoteEditable}
+                  onIonInput={onChangeNoteInput}
+                  autoGrow
+                  autocapitalize="sentences"
+                />
+                <div className="tw-absolute tw-bottom-0 tw-right-0">
+                  {showSaved && isNoteEditable ? (
+                    <IonIcon
+                      className="tw-block tw-m-1"
+                      size="small"
+                      icon={checkmarkCircle}
+                    />
+                  ) : null}
+                </div>
               </div>
             </div>
-          </div>
-        </IonItem>
+          </IonItem>
+        ) : null}
       </IonContent>
     </IonPage>
   );

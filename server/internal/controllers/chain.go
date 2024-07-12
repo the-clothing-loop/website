@@ -132,7 +132,8 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddTheme {
 		sql += `,
-		chains.theme`
+		chains.theme,
+		chains.allow_map`
 	}
 	if query.AddIsAppDisabled {
 		sql += `,
@@ -171,8 +172,10 @@ func ChainGet(c *gin.Context) {
 	if query.AddHeaders {
 		body.HeadersOverride = &chain.HeadersOverride
 	}
+	// this is used on all app requests
 	if query.AddTheme {
 		body.Theme = &chain.Theme
+		body.AllowMap = &chain.AllowMap
 	}
 	if query.AddTotals {
 		result := chain.GetTotals(db)
@@ -327,6 +330,7 @@ func ChainUpdate(c *gin.Context) {
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 		Theme            *string   `json:"theme,omitempty"`
 		RoutePrivacy     *int      `json:"route_privacy"`
+		AllowMap         *bool     `json:"allow_map,omitempty"`
 		IsAppDisabled    *bool     `json:"is_app_disabled,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -377,6 +381,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Radius != nil {
 		valuesToUpdate["radius"] = *(body.Radius)
+	}
+	if body.AllowMap != nil {
+		valuesToUpdate["allow_map"] = *(body.AllowMap)
 	}
 	if body.Sizes != nil {
 		j, _ := json.Marshal(body.Sizes)
@@ -595,7 +602,7 @@ WHERE user_id = ? AND chain_id = ?
 
 	// Given a ChainID and the UID of the new user returns the list of UserUIDs of the chain considering the addition of the new user
 	cities := retrieveChainUsersAsTspCities(db, chain.ID)
-	newRoute, _ := tsp.RunAddOptimalOrderNewCity[string](cities, user.UID)
+	newRoute, _ := tsp.RunAddOptimalOrderNewCity(cities.ToTspCities(), user.UID)
 	chain.SetRouteOrderByUserUIDs(db, newRoute) // update the route order
 
 	if user.Email.Valid {
@@ -670,8 +677,13 @@ func ChainGetUserNote(c *gin.Context) {
 		return
 	}
 
-	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, query.ChainUID, query.UserUID)
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
 	if !ok {
+		return
+	}
+	user, err := models.UserGetByUID(db, query.UserUID, true)
+	if err != nil {
+		c.String(http.StatusExpectationFailed, "Could not get user")
 		return
 	}
 

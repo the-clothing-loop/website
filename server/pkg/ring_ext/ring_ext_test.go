@@ -81,3 +81,26 @@ func TestSomePrev(t *testing.T) {
 		})
 	}
 }
+
+func TestGetSurroundingValues(t *testing.T) {
+	f := func(arr []string, me string, distance int, expected []string) {
+		t.Helper()
+
+		r := NewWithValues(arr)
+		result := GetSurroundingValues(r, me, distance)
+		assert.Len(t, result, len(expected))
+		for _, v := range expected {
+			assert.Contains(t, result, v)
+		}
+	}
+
+	t.Run("get 1 surrounding values", func(t *testing.T) {
+		f([]string{"a", "b", "c", "d"}, "b", 1, []string{"a", "c"})
+	})
+	t.Run("get 2 surrounding values in a 1 len arr", func(t *testing.T) {
+		f([]string{"a"}, "a", 2, []string{})
+	})
+	t.Run("get 4 surrounding values to test overflow", func(t *testing.T) {
+		f([]string{"a", "b", "c", "d"}, "b", 4, []string{"a", "c", "d"})
+	})
+}
