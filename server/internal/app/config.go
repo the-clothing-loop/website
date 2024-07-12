@@ -75,6 +75,10 @@ func ConfigInit(path string, files ...string) {
 	}
 
 	stripe.Key = Config.STRIPE_SECRET_KEY
+	if Config.ENV == "" {
+		slog.Error("Config ENV is empty")
+		os.Exit(1)
+	}
 }
 
 func ConfigTestInit(path string) {

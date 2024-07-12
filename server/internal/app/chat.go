@@ -58,8 +58,11 @@ func ChatSetDefaultSettings(client *model.Client4) {
 
 	config := &model.Config{
 		ServiceSettings: model.ServiceSettings{
-			EnableUserAccessTokens: lo.ToPtr(true),
-			EnableOutgoingWebhooks: lo.ToPtr(true),
+			EnableUserAccessTokens:            lo.ToPtr(true),
+			EnableOutgoingWebhooks:            lo.ToPtr(true),
+			AllowCorsFrom:                     lo.ToPtr("https://app.clothingloop.org,https://app.acc.clothingloop.org,https://mm.clothingloop.org,http://localhost:8081,http://localhost:8080,http://localhost:8065,http://localhost:8065,http://mattermost:8065"),
+			CorsAllowCredentials:              lo.ToPtr(true),
+			EnableInsecureOutgoingConnections: lo.ToPtr(true),
 		},
 		TeamSettings: model.TeamSettings{
 			SiteName:              lo.ToPtr("Clothing Loop Chat"),
