@@ -1,6 +1,7 @@
 {
   "genericError": "Okänt fel har inträffat",
   "removeFromLoop": "Ta bort från Loop",
+  "allowHostsToKnowYourEmailDuringDelete": "Allow hosts to know your email during deletion",
   "leave": "Lämna",
   "leaveLoop": "Lämna Loop",
   "areYouSureLeaveLoop": "Är du säkert du vill ta bort \"{{ name }}\" från “{{ chain }}” Loop?",
