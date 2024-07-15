@@ -1,6 +1,7 @@
 {
   "genericError": "Une erreur inconnue est survenue",
   "removeFromLoop": "Supprimer du Loop",
+  "allowHostsToKnowYourEmailDuringDelete": "Allow hosts to know your email during deletion",
   "leave": "Quitter",
   "leaveLoop": "Quitter le Loop",
   "areYouSureLeaveLoop": "Vous êtes sûr que vous voulez que \"{{ name }}\" quitte le Loop \"{{ chain }}\" ?",
