@@ -23,6 +23,7 @@ services:
     depends_on:
       - db
       - mailpit
+      - mattermost
     # ports:
     #   - 8084:8084
     volumes:
