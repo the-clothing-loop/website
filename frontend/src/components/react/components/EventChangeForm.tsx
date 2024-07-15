@@ -36,7 +36,7 @@ const defaultValues: EventCreateBody = {
   address: "",
   price_currency: "€",
   price_value: 0,
-  price_type: "donation",
+  price_type: "free",
   link: "",
   date: dayjs().minute(0).second(0).format(),
   date_end: null,
@@ -95,7 +95,7 @@ export const PRICE_TYPE_I18N: Record<EventPriceType, string> = {
   free: "priceFree",
   entrance: "entranceFee",
   donation: "donation",
-  perswap: "Per swap",
+  perswap: "perSwap",
 };
 
 export default function EventChangeForm(props: {
@@ -169,9 +169,6 @@ export default function EventChangeForm(props: {
     if (v === "free") {
       _setEventPriceCurrency("");
       setEventPriceText("0");
-    } else if (eventPriceType === "free" && eventPriceValue === 0) {
-      setEventPriceText("1");
-      _setEventPriceCurrency("€");
     }
 
     _setEventPriceType(v);
@@ -198,17 +195,9 @@ export default function EventChangeForm(props: {
     e.preventDefault();
 
     values.date_end = hasEndDate ? dateEnd : null;
+    values.price_value = eventPriceValue;
+    values.price_currency = eventPriceCurrency;
 
-    if (eventPriceCurrency && eventPriceValue == 0) {
-      values.price_value = 0;
-      values.price_currency = "";
-    } else if (eventPriceCurrency && eventPriceValue != 0) {
-      values.price_value = eventPriceValue;
-      values.price_currency = eventPriceCurrency;
-    } else {
-      values.price_value = 0;
-      values.price_currency = "";
-    }
     props.onSubmit(values);
   }
 
