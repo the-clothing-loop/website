@@ -10,6 +10,7 @@ export default defineConfig((mode) => {
   return {
     plugins: [react(), VitePWA({ registerType: "autoUpdate" })],
     server: {
+      port: IS_DOCKER ? 8081 : 5173,
       proxy: {
         "/api": {
           target: IS_DOCKER ? "http://server:8084" : "http://127.0.0.1:8084",
