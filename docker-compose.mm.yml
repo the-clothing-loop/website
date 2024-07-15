@@ -1,0 +1,10 @@
+services:
+  mattermost:
+    platform: linux/amd64
+    image: mattermost/mattermost-preview:9.9.1
+    # ports:
+    #   - 127.0.0.1:8065:8065
+    volumes:
+      - mattermost_prev_db:/var/lib/postgresql/data
+      - mattermost_prev_config:/mm/mattermost/config
+      - mattermost_prev_data:/mm/mattermost-data
