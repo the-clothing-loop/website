@@ -4,15 +4,16 @@ services:
   app:
     image: node:20-alpine
     ports:
-      - 5173:5173
+      - 127.0.0.1:8081:8081
+    #   - 5173:5173
     volumes:
       - ./app:/app
     working_dir: /app
     command: sh -c 'npm i && npm run dev:docker'
   frontend:
     image: node:20-alpine
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
     volumes:
       - ./frontend:/app
     working_dir: /app
@@ -22,10 +23,12 @@ services:
     depends_on:
       - db
       - mailpit
-    ports:
-      - 8084:8084
+    # ports:
+    #   - 8084:8084
     volumes:
       - ./server:/app
+    environment:
+      - ENV=development
     working_dir: /app
     command: "go run cmd/server/main.go -c config.dev.yml"
   mailpit:
@@ -40,7 +43,7 @@ services:
   pma:
     image: phpmyadmin:apache
     ports:
-      - 127.0.0.1:8085:80
+      - 127.0.0.1:8082:80
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=db
@@ -57,11 +60,13 @@ services:
       - MYSQL_PASSWORD=72bd3937e91363a747f810e7
     volumes:
       - mysql:/var/lib/mysql
-      - ./server/sql:/scripts
+      - ../../server/sql:/scripts
   caddy:
     build:
-      context: ./caddy/
+      context: ./frontend/
+      dockerfile: dev.Dockerfile
     ports:
-      - 127.0.0.1:8086:80
+      # website
+      - 127.0.0.1:8080:80
 volumes:
   mysql:
