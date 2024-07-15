@@ -1,8 +1,8 @@
 services:
   mattermost:
     platform: linux/amd64
-    image: mattermost/mattermost-preview
-    # ports: 
+    image: mattermost/mattermost-preview:9.9.1
+    # ports:
     #   - 127.0.0.1:8065:8065
     volumes:
       - mattermost_prev_db:/var/lib/postgresql/data
@@ -29,6 +29,3 @@ services:
       - MM_SMTP_PORT=2525
       - ONESIGNAL_APP_ID=$ONESIGNAL_APP_ID
       - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
-
-
-    
