@@ -278,7 +278,7 @@ export default function EventDetails() {
                         </span>
                       ) : (
                         <span className="font-sans text-lg" key="free">
-                          {t("priceFree")}
+                          {t(PRICE_TYPE_I18N[event.price_type])}
                         </span>
                       )}
                     </dd>

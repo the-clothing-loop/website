@@ -34,7 +34,7 @@ const defaultValues: EventCreateBody = {
   latitude: 0,
   longitude: 0,
   address: "",
-  price_currency: "€",
+  price_currency: "",
   price_value: 0,
   price_type: "free",
   link: "",
@@ -157,8 +157,6 @@ export default function EventChangeForm(props: {
       _setEventPriceType("free");
       setEventPriceText("0");
       return;
-    } else if (eventPriceValue === 0) {
-      setEventPriceText("1");
     }
 
     _setEventPriceCurrency(v);
@@ -169,6 +167,8 @@ export default function EventChangeForm(props: {
     if (v === "free") {
       _setEventPriceCurrency("");
       setEventPriceText("0");
+    } else if (eventPriceType === "free") {
+      _setEventPriceCurrency("€");
     }
 
     _setEventPriceType(v);
