@@ -31,36 +31,60 @@ export default function AdminDashboard() {
       : (authUser.chains
           .filter((uc) => uc.is_chain_admin)
           .map((uc) => chains.find((c) => c.uid === uc.chain_uid))
-          .filter((c) => c && c.total_hosts && c.total_hosts === 1)
+          .filter((c) => c && c.total_hosts)
           .map((c) => c!.name) as string[]);
+
+    console.log(
+      "show content",
+      "chainNames",
+      chainNames,
+      "authUser.is_root_admin",
+      authUser.is_root_admin,
+      "authUser.chains",
+      authUser.chains,
+      "authUser.chains filtered",
+      authUser.chains
+        .filter((uc) => uc.is_chain_admin)
+        .map((uc) => chains.find((c) => c.uid === uc.chain_uid)),
+    );
 
     addModal({
       message: t("deleteAccount"),
-      content:
-        chainNames && chainNames.length
-          ? () => (
-              <>
-                <p className="mb-2">{t("deleteAccountWithLoops")}</p>
-                <ul
-                  className={`text-sm font-semibold mx-8 ${
-                    chainNames.length > 1
-                      ? "list-disc"
-                      : "list-none text-center"
-                  }`}
-                >
-                  {chainNames.map((name) => (
-                    <li key={name}>{name}</li>
-                  ))}
-                </ul>
-              </>
-            )
-          : undefined,
+      content: () => {
+        if (!(chainNames && chainNames.length)) return <></>;
+        return (
+          <div className="space-y-2">
+            <p className="">{t("deleteAccountWithLoops")}</p>
+            <ul
+              className={`text-sm font-semibold mx-8 ${
+                chainNames.length > 1 ? "list-disc" : "list-none text-center"
+              }`}
+            >
+              {chainNames.map((name) => (
+                <li key={name}>{name}</li>
+              ))}
+            </ul>
+            <label className="flex items-center text-xs">
+              <input
+                name="allowHostsToKnowYourEmailDuringDelete"
+                type="checkbox"
+                className="checkbox me-3 checkbox-xs"
+                defaultChecked
+              />
+              {t("allowHostsToKnowYourEmailDuringDelete")}
+            </label>
+          </div>
+        );
+      },
       actions: [
         {
           text: t("delete"),
           type: "error",
-          fn: () => {
-            userPurge(authUser!.uid)
+          fn: (e) => {
+            const showHostsEmail = Boolean(
+              e?.allowHostsToKnowYourEmailDuringDelete,
+            );
+            userPurge(authUser!.uid, showHostsEmail)
               .then(() => {
                 window.location.href = localizePath("/users/logout");
               })
