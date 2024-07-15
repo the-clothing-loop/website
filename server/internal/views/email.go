@@ -494,6 +494,7 @@ func EmailSomeoneLeftLoop(db *gorm.DB, lng,
 	name,
 	email,
 	chainName,
+	participantEmail,
 	participantName string,
 ) error {
 	lng = getI18n(lng)
@@ -502,9 +503,10 @@ func EmailSomeoneLeftLoop(db *gorm.DB, lng,
 	m.ToName = name
 	m.ToAddress = email
 	err := emailGenerateMessage(m, lng, "someone_left_loop", gin.H{
-		"Name":            name,
-		"ParticipantName": participantName,
-		"ChainName":       chainName,
+		"Name":             name,
+		"ParticipantName":  participantName,
+		"ParticipantEmail": participantEmail,
+		"ChainName":        chainName,
 	})
 	if err != nil {
 		return err

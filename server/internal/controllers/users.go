@@ -321,7 +321,8 @@ func UserPurge(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UserUID string `form:"user_uid" binding:"required,uuid"`
+		UserUID              string `form:"user_uid" binding:"required,uuid"`
+		ShowHostsPurgedEmail bool   `form:"show_hosts_purged_email"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -365,7 +366,16 @@ func UserPurge(c *gin.Context) {
 	for _, uc := range user.Chains {
 		chainIDs = append(chainIDs, uc.ChainID)
 	}
-	services.EmailLoopAdminsOnUserLeft(db, user.Name, user.Email.String, "", chainIDs...)
+	removedUserEmail := ""
+	if query.ShowHostsPurgedEmail {
+		removedUserEmail = user.Email.String
+	}
+
+	services.EmailLoopAdminsOnUserLeft(db,
+		user.Name,
+		removedUserEmail,
+		user.Email.String,
+		chainIDs...)
 
 	// find chains where user is the last chain admin
 	chainIDsToDelete := []uint{}

@@ -570,7 +570,12 @@ func ChainRemoveUser(c *gin.Context) {
 		excludedEmail = authUser.Email.String
 	}
 	// send email to chain admins
-	services.EmailLoopAdminsOnUserLeft(db, user.Name, user.Email.String, excludedEmail, chain.ID)
+	services.EmailLoopAdminsOnUserLeft(db,
+		user.Name,
+		user.Email.String,
+		excludedEmail,
+		chain.ID,
+	)
 }
 
 func ChainApproveUser(c *gin.Context) {

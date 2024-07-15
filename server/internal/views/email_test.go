@@ -193,11 +193,12 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 		{
 			Name: "someone_left_loop",
 			Data: map[string]any{
-				"Name":            faker.Person().Name(),
-				"ParticipantName": faker.Person().Name(),
-				"ChainName":       faker.Company().Name(),
+				"Name":             faker.Person().Name(),
+				"ParticipantName":  faker.Person().Name(),
+				"ParticipantEmail": faker.Internet().Email(),
+				"ChainName":        faker.Company().Name(),
 			},
-			DataExpected: []string{"Name", "ParticipantName", "ChainName"},
+			DataExpected: []string{"Name", "ParticipantName", "ParticipantEmail", "ChainName"},
 			Args:         []any{},
 		},
 		{

@@ -126,15 +126,15 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
       className="fixed overflow-visible inset-0 z-50 open:flex justify-center items-center p-0 shadow-lg backdrop:bg-white/30"
       ref={refDisplay}
       tabIndex={-1}
-      onClick={handleBackgroundClick}
       onCancel={handleEsc}
     >
+      <div className="fixed inset-0 z-0" onClick={handleBackgroundClick}></div>
       <form
         className="bg-white max-w-screen-sm p-6 z-10"
         style={{ "--tw-shadow": "#333" } as any}
       >
         <h5 className="text-lg mb-6 min-w-[300px]">{props.modal.message}</h5>
-        {props.modal.content ? <props.modal.content /> : null}
+        {props.modal.content ? props.modal.content() : null}
         <div
           className={
             props.modal.actions.length === 1 && !props.modal.forceOpen
