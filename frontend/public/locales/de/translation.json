@@ -1,6 +1,7 @@
 {
   "genericError": "Unbekannter Fehler aufgetreten",
   "removeFromLoop": "Aus Loop entfernen",
+  "allowHostsToKnowYourEmailDuringDelete": "Allow hosts to know your email during deletion",
   "leave": "Verlassen",
   "leaveLoop": "Loop verlassen",
   "areYouSureLeaveLoop": "Sind Sie sicher, dass Sie “{{ name }}” verlassen möchten “{{ chain }}” Loop?",
