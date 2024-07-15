@@ -100,6 +100,7 @@ func Routes() *gin.Engine {
 
 	// info
 	v2.GET("/info", controllers.InfoGet)
+	v2.GET("/info/top-ten", controllers.InfoTopTen)
 
 	// login
 	v2.POST("/register/basic-user", controllers.RegisterBasicUser)
