@@ -50,26 +50,26 @@
     },
     "3": {
       "question": "Welke adressen kan ik zien?",
-      "answer": "As a host, you can see everybody's information in your Loop. As a participant, you can only see the information of the two participants before and after you. A participant is also able to see the information of a host."
+      "answer": "Als host kun je de informatie van iedereen in je Loop zien. Als deelnemer kun je alleen de informatie zien van de twee deelnemers voor en na jou. Een deelnemer kan ook de informatie van een host zien."
     },
     "4": {
       "question": "Hoe zet ik een tas op mijn naam?",
-      "answer": "If you have received a bag, you can set a bag to your name in the tab of Bags. Click on the picture of the Bag and search for your name. Also, note the date of when the bag arrived. It is important to note that you have received the bag every time."
+      "answer": "Als je een tas hebt ontvangen, kun je een tas op jouw naam zetten in het tabblad Tassen. Klik op de afbeelding van de tas en zoek naar je naam. Noteer ook de datum waarop de tas is aangekomen. Het is belangrijk om elke keer te noteren dat je de tas hebt ontvangen."
     },
     "5": {
-      "question": "What are Bulky Items (like winter coats)?",
+      "question": "Wat zijn grote artikelen (zoals winterjassen)?",
       "answer": "<strong>Big items that are too big for the bag can be photographed and shared.</strong> Click on Create, make a title and description, and create a new Bulky Item. Other participants then can click on your name to find your information. In a private message, participants can respond and organize pick-up. After the pick-up, a Bulky Item has to be removed from the list."
     },
     "6": {
-      "question": "Can I use the app as I partake in multiple Loops?",
-      "answer": "Yes, you can use the app while you are involved in multiple Loops. If you go to Info, you can switch between Loops, after you click on the name of the Loop."
+      "question": "Kan ik de app gebruiken als ik deelneem aan meerdere Loops?",
+      "answer": "Ja, je kunt de app gebruiken als je in meerdere Loops zit. Als je naar Info gaat, kun je tussen Loops wisselen nadat je op de naam van de Loop hebt geklikt."
     },
     "7": {
       "question": "Waarom zie ik alleen een SMS-knop?",
       "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
     }
   },
-  "faqForHosts": "FAQ for Hosts",
+  "faqForHosts": "FAQ voor Hosts",
   "arrHosts": {
     "0": {
       "question": "Hoe kan ik de app gebruiken?",
