@@ -1,29 +1,29 @@
 {
-  "testimonials": "Testimonials",
+  "testimonials": "Anbefalinger",
   "arrTestimonials": [
     {
       "name": "Roos",
-      "message": "I think it's great to be able to 'shop' regularly without burdening my wallet or the environment."
+      "message": "Jeg synes det er flott å kunne «butikken» regelmessig uten å ha innbyrd min lommebok eller miljø."
     },
     {
-      "name": "Unknown",
-      "message": "Never too young to learn! My daughters, aged 13 and 16, regularly pick something cool from the bags. I love how this teaches them that clothes can very well be found second-hand. In my opinion, sustainability and environmental awareness should be an important part of any education!"
+      "name": "Ukjent",
+      "message": "Aldri for ung til å lære! Mine døtre, 13 og 16 år plukker regelmessig noe kult fra vesken. Jeg elsker hvordan dette lærer dem at klær kan finnes veldig godt for hverandre. Bærekraftighet og miljøbevissthet bør etter min mening være en viktig del av utdanningen!"
     },
     {
-      "name": "Participant in Barendrecht",
-      "message": "Someone in my Loop landed a new job. Guess who's dress she wore to her interview?"
+      "name": "Deltaker i Barendrecht",
+      "message": "Noen i løkken min landet en ny jobb. Gjett hvem som er med å lage intervjuet hennes?"
     },
     {
       "name": "Nienke",
-      "message": "The best part is being able to try clothes that you would never pick in the store, and realizing that you really like them."
+      "message": "Den beste delen kan prøve klær du aldri ville velge i butikken og innse at du virkelig liker dem."
     },
     {
       "name": "Lia",
-      "message": "A nice bonus is that you get to know people in your neighborhood, usually neighbors with pretty green hearts as well. As a result, it is a small step – if you really need something but would rather not buy it – to toss a loan request into the Loop, such as for ski pants or a costume for a theme party!"
+      "message": "En fin bonus er at du blir kjent med personer i nærmiljøet ditt, vanligvis naboer med ganske grønne hjerter. Som et resultat det er et lite skritt – hvis du virkelig trenger noe, men ikke ville kjøpe det – for å sjef en låneforespørsel i løkken slike som for ski-paneler eller en drakt for en temamateriell!"
     },
     {
       "name": "Ella",
-      "message": "After receiving the third bag, it hits me just what an incredible amount of clothes we have in our closets!"
+      "message": "Etter å ha fått den tredje posen, treffer den meg akkurat det som en utrolig mengde klær vi har i næringene våre!"
     }
   ]
 }
