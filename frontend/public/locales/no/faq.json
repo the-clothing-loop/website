@@ -1,142 +1,142 @@
 {
-  "faqForParticipants": "FAQ for Participants",
+  "faqForParticipants": "FAQ for deltakere",
   "arrParticipants": {
     "0": {
-      "question": "I signed up, when will I be added to the route?",
-      "answer": "If you have verified your email address, your request to join the Loop has come through successfully! <strong>The host of the Loop has been notified</strong> and will contact you to add you to the route.<br/>This can sometimes take a little while as all hosts manage the Loop in their spare time. Most hosts add new members once every 2 to 4 weeks."
+      "question": "Jeg registrerte meg når vil jeg bli lagt til i ruten?",
+      "answer": "Hvis du har bekreftet e-postadressen din, så har forespørselen din om å bli med i løkken gått gjennom! <strong>Verten av løkka er varslet</strong> og vil kontakte deg for å legge deg til i ruten.<br/>Dette kan av og til ta litt tid så alle verter administrerer løkken på fritiden. De fleste verter legger til nye medlemmer én gang hver 2. til 4. uke."
     },
     "1": {
-      "question": "Are there rules on how much you can keep?",
+      "question": "Finnes det regler for hvor mye du kan holde?",
       "answer": "No, there are <strong>no hard rules</strong> here, but keep in mind the system works best when in balance. <b>Every bag is different.</b> Sometimes you find more, sometimes you don’t find anything. Every garment that is worn again is a win!"
     },
     "2": {
-      "question": "Do you have to donate the same amount of clothes as you take out?",
-      "answer": "Not necessarily, but do keep in mind that the system works best if there is a nice balance between gifting and taking. Clothes that are worn out, stained or damaged are never welcome."
+      "question": "Må du donere samme mengde klær som du tar ut?",
+      "answer": "Ikke nødvendig, men husk at systemet fungerer best dersom det er fin balanse mellom hver hver gang det tas i bruk. Kapper som er utslitt, farget eller skadet er aldri velkomne."
     },
     "3": {
-      "question": "Can all sizes of clothing be in the same bag?",
-      "answer": "<strong>Mixed bags work perfectly well usually</strong>, as sizes vary per brand and all people’s proportions are different.<br/>We recommend having a mix of items from size 36 - 42 (S, M and (X)L, and starting separate Loops especially for smaller or bigger sizes."
+      "question": "Kan alle størrelser av klær være i samme pose?",
+      "answer": "<strong>Blandede poser arbeider perfekt godt</strong>, ettersom størrelsene varierer per merke, og alle bestanddelene er forskjellige.<br/>Vi anbefaler å ha en blanding av gjenstander fra størrelse 36 - 42 (S, M og (X)L, og start separate løkker spesielt for mindre eller større størrelser."
     },
     "4": {
-      "question": "How to avoid “Finders keepers, losers weepers”?",
-      "answer": "There are <strong>no guarantees that you will find something you like</strong>. Sometimes a few bags will pass your house that do not hold an item for you.<br/>But remember: finding one dream item is more worth than having 10 items in your wardrobe that you don’t wear. And making someone else very happy with something that was collecting dust in your wardrobe is also a significant (and fun!) part of the Clothing Loop mentality!"
+      "question": "Hvordan unngå \"Fengslere - tapere bærer\"?",
+      "answer": "Det er <strong>ingen garantier for at du vil finne noe du liker</strong>. Noen ganger kan noen få poser passere huset ditt som ikke holder noe for deg.<br/>Men husk: å finne en drømmegjenstand er mer verdt enn å ha 10 gjenstander i din wardrobe som du ikke har i øye. Og å gjøre noen andre veldig fornøyd med noe som har samlet støv i garderoben din er også et vesentlig (og gøy! del av Clothing Loop mentalitet!"
     },
     "5": {
-      "question": "What to do with bulky clothes (like winter coats) that don’t fit in the bag?",
-      "answer": "Big items can be photographed and shared via your communication channel, or in the Clothing Loop App. In a private message, people can respond and organize pick-up."
+      "question": "Hva skal gjøres med store klær (som vinterbelegger) som ikke passer inn i posen?",
+      "answer": "Store gjenstander kan fotograferes og deles via kommunikasjonskanalen din, eller i Clothing Loop App. I en privat melding kan folk svare på og organisere hentingen."
     },
     "6": {
-      "question": "Can I put shoes in the bag as well?",
-      "answer": "That is up <strong>to your local host to decide</strong>. If your Loop allows you to add shoes to the bag, only add “as good as new” pairs, and <b>no more than 2 pairs per bag</b>. And please wrap them in a separate bag to avoid them touching the clothes. "
+      "question": "Kan jeg legge sko i sekken også?",
+      "answer": "Det er opp fra <strong>til din lokale vert for å bestemme</strong>. Hvis en løkke tillater deg å legge til sko til vesken, bare legg til \"så gode som nytt\"-par, og <b>trenger ikke mer enn 2 par per pose</b>. Og legg dem i en egen pose for å unngå dem som berører klærne. "
     },
     "7": {
-      "question": "I get the error: “your account already exists”.",
+      "question": "Jeg får feilen: \"Din konto eksisterer allerede\".",
       "answer": "Previously, <strong>you have created an account at the Clothing Loop already.</strong> To sign up for a new Loop, you will need to log in first. Click in the top right corner on login, Enter the email address you used to register your Loop.<br/>Check your email (and spam folder!) for our verification link. We use a link instead of a password! Then you will be able to sign up for a new Loop."
     }
   },
-  "faqForApp": "FAQ for the App",
+  "faqForApp": "FAQ for appen",
   "arrApp": {
     "0": {
-      "question": "What is the Clothing Loop App?",
+      "question": "Hva er Clothing Loop appen?",
       "answer": "<strong>The Clothing Loop App is made to make organizing a Loop easier.</strong> You can start using the app, if you are part of a Loop. A host can decide together with the participants if they want to start using the app to organize their Loop.<br/>In the app: you can find the rules of your local Loop, you can find out who to bring the bag to next, where the bags are and post bulky items that do not fit into the bag."
     },
     "1": {
-      "question": "Where can I find the app?",
-      "answer": "You can find the app in <a target='_blank' href='https://play.google.com/store/apps/details?id=org.clothingloop.app'>Google Playstore</a>, <a target='_blank' href='https://apps.apple.com/us/app/my-clothing-loop/id6451443500'>Apple Appstore</a>, or as web-version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>"
+      "question": "Hvor kan jeg finne appen?",
+      "answer": "Du finner appen i <a target='_blank' href='https://play.google.com/store/apps/details?id=org.clothingloop.app'>Google Playstore</a>, <a target='_blank' href='https://apps.apple.com/us/app/my-clothing-loop/id6451443500'>Apple Appstore</a>, eller som nettversjon: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>"
     },
     "2": {
-      "question": "Can I change the Rules in the App?",
-      "answer": "Yes, <strong>as a host you are able to change, adjust, and add rules in the App</strong>. Participants are not able to change the rules. To change the rules, click in the upper right corner on Change. After you have changed the rules, click on Save to save your changes."
+      "question": "Kan jeg endre reglene i Appen?",
+      "answer": "Ja, <strong>som vert du kan endre, justere og legge til regler i App</strong>. Deltakerne kan ikke endre reglene. For å endre reglene, klikk i det øvre høyre hjørnet på Enre. Etter du har endret reglene, klikk på Lagre for å lagre endringene."
     },
     "3": {
-      "question": "Which addresses can I see?",
-      "answer": "As a host, you can see everybody's information in your Loop. As a participant, you can only see the information of the two participants before and after you. A participant is also able to see the information of a host."
+      "question": "Hvilke adresser kan jeg se?",
+      "answer": "Som vert kan du se alle opplysninger i løkken din. Som deltaker kan du kun se informasjonen til de to deltakerne før og etter deg. En deltaker kan også se informasjon om en vert."
     },
     "4": {
-      "question": "How to set a bag to my name?",
-      "answer": "If you have received a bag, you can set a bag to your name in the tab of Bags. Click on the picture of the Bag and search for your name. Also, note the date of when the bag arrived. It is important to note that you have received the bag every time."
+      "question": "Hvordan angir du en pose til mitt navn?",
+      "answer": "Hvis du har mottatt en kurv kan du sette en pose til navnet ditt i fanen Bags. Klikk på bildet av kurven og søk etter navnet ditt. Vær også oppmerksom på datoen når bagdelen ankommer. Det er viktig å legge merke til at du har mottatt posen hver gang."
     },
     "5": {
-      "question": "What are Bulky Items (like winter coats)?",
-      "answer": "<strong>Big items that are too big for the bag can be photographed and shared.</strong> Click on Create, make a title and description, and create a new Bulky Item. Other participants then can click on your name to find your information. In a private message, participants can respond and organize pick-up. After the pick-up, a Bulky Item has to be removed from the list."
+      "question": "Hva er bulklære ting (som vinterbelegg)",
+      "answer": "Store <strong>gjenstander som er for store for store for bagdelen kan fotograferes og deles.</strong> Klikk på opprette, lag en tittel og en beskrivelse og opprett et nytt Bulky Item. Andre deltakere kan deretter klikke på navnet ditt for å finne informasjonen din. I en privat melding kan deltakerne svare og organisere hentingen. Etter at plukket opp må Bulky Item fjernes fra listen."
     },
     "6": {
-      "question": "Can I use the app as I partake in multiple Loops?",
-      "answer": "Yes, you can use the app while you are involved in multiple Loops. If you go to Info, you can switch between Loops, after you click on the name of the Loop."
+      "question": "Kan jeg bruke appen som jeg analyserer i flere løkker?",
+      "answer": "Ja, du kan bruke appen mens du er involvert i flere løkker. Hvis du drar til Info, kan du bytte mellom løkker, etter at du har klikket på navnet på Løkken."
     },
     "7": {
-      "question": "Why do I only see an SMS button?",
+      "question": "Hvorfor ser jeg bare en sms knapp?",
       "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
     }
   },
-  "faqForHosts": "FAQ for Hosts",
+  "faqForHosts": "FAQ for verter",
   "arrHosts": {
     "0": {
-      "question": "How do I start a Loop?",
-      "answer": "We got you covered! We wrote a simple manual with all the instructions that can be found in our <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Please benefit from the lessons we learned in the many years we have been doing this!"
+      "question": "Hvordan starter jeg en løkke?",
+      "answer": "Vi har deg dekket! Vi skriver en enkel manual med alle instruksjoner som du finner i vår <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Vennligst tjent med lærdom vi har lært i de mange årene vi har gjort dette!"
     },
     "1": {
-      "question": "How to find people to join my Loop?",
-      "answer": "Start small! <strong>Ask friends and acquaintances in your direct environment</strong> like your sports club or dance school. When you have a small crowd gathered, you can ask everyone to invite at least one more person, then the group will grow organically. You can also send out a press release to your local media. We already drafted you a <a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'>template</a> to fill in!"
+      "question": "Hvordan finne folk å bli med i løkken min?",
+      "answer": "Begynn i det minste ! <strong>Spør venner og bekjentskap i ditt direkte miljø</strong> som din sportsklubb eller dansegulv. Når du har samlet en liten flod, kan du be alle om å invitere minst én person til, så vil gruppen vokse økologisk. Du kan også sende ut en pressemelding til dine lokale medier. Vi har allerede laget utkast til en <a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'>mal</a> for å fylle ut !"
     },
     "2": {
-      "question": "How much time will hosting a Loop cost me?",
-      "answer": "Our volunteers say they spend on average <strong>1&#189; hours per month</strong> on hosting the Loop."
+      "question": "Hvor mye tid koster en løkke meg?",
+      "answer": "Våre frivillige sier de bruker i gjennomsnitt <strong>1&#189; timer per måned</strong> på Løkka."
     },
     "3": {
-      "question": "How do I sign up a new Loop?",
-      "answer": "We made you <a target='_blank' href='https://drive.google.com/drive/folders/1UiokapMTKu6nrX5sg6s8FFkS8jDTtu86'>a simple guide</a> with screenshots of every step. Still run into an issue? Send us an email!"
+      "question": "Hvordan registrerer jeg en ny løkke?",
+      "answer": "Vi lagde deg <a target='_blank' href='https://drive.google.com/drive/folders/1UiokapMTKu6nrX5sg6s8FFkS8jDTtu86'>en enkel guide</a> med skjermbilder av hvert trinn. Kjører vi fortsatt i et problem? Send oss en e-post!"
     },
     "4": {
-      "question": "How do I sign in on the website?",
-      "answer": "<ol><li>Click in the top right corner on login</li><li>Enter the email address you used to register your Loop.</li><li>Check your email (and spam folder!) for our verification link. We use a link instead of a password!</li><li>Now you are signed in and can view and edit your Loop(s) and see new participants.</li></ol>"
+      "question": "Hvordan logger jeg inn på nettsiden?",
+      "answer": "<ol><li>Klikk i det øverste høyre hjørnet ved innlogging</li><li>Skriv inn e-postadressen du brukte for å registrere dine Løop.</li><li>Sjekk e-posten din (og spam-mappen!) for vår verifiseringslenke. Vi bruker en link i stedet for et passord!</li><li>Nå er du logget inn og kan se og redigere løkken(e) og se nye deltakere.</li></ol>"
     },
     "5": {
-      "question": "How can I start using the App?",
-      "answer": "Yes! We made an app that you can very easily set up for your Loop. The app is available for iOS, Android and as web version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />You can <strong>download the app and use it within your group</strong>. It is super easy! You can find a more detailed guide on how to use the app in our <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
+      "question": "Hvordan kan jeg begynne å bruke appen?",
+      "answer": "Ja! Vi lagde en app som du veldig enkelt kan sette opp for løken din. Appen er tilgjengelig for iOS, Android og som nettversjon: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />Du kan <strong>laste ned appen og bruke den i din gruppe</strong>. Det er superlett! Du finner en mer detaljert veiledning om hvordan du kan bruke appen i vårt <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit for Loop Hosts</a>."
     },
     "5_5": {
-      "question": "How to make a route?",
+      "question": "Hvordan lage en rute?",
       "answer": "You can make a route in the admin page of your Account. <strong>Click on Route and you will find an Optimize Route Button.</strong> Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. <strong>New participants will be placed in the most logical spot in the current list.</strong>"
     },
     "6": {
-      "question": "Are there images or graphic templates we can use?",
-      "answer": "Absolutely, we made you a <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a> where you can find logos, pictures and templates. Use as many as you like!"
+      "question": "Er det bilder eller grafiske maler vi kan bruke?",
+      "answer": "Absolutt har vi gjort deg til en <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a> hvor du kan finne logoer, bilder og maler. Bruk så mange som du vil!"
     },
     "7": {
-      "question": "Introducing a “Ghost rider” in the Loop",
+      "question": "Vi innfører en \"Spøkelsesdråpe\" i løkken",
       "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! <b>You can then introduce a “ghost rider” bag that travels in the other direction,</b> so all of a sudden you have other people before you in the route, and also other styles in the bag. If you do so, please make people aware that they shouldn’t put any items in the “ghost rider” bag that they have previously taken out of a regular bag. And keep the number of ghost rider bags limited to 1 or 2, to keep it special and simple. "
     },
     "7_5": {
-      "question": "Introducing a “Bunny Bag” in the Loop",
+      "question": "Introduserer en «Kanin Bunny Bag» på Løkken",
       "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! <b>You can then introduce a “Bunny Bag” that always skips an address,</b> so all of a sudden you have other people before you on the route, and also a few other styles in the bag. Keep the number of bunny bags limited to 1 or 2, to keep it special and simple."
     },
     "8": {
-      "question": "How to manage a large group of people in the communication channel?",
-      "answer": "Especially when groups get bigger, it is important to make sure people aren’t bombarded with (irrelevant) messages. You can set up some rules for what should and shouldn’t be shared via the group app. For example:<ul class='list-none'><li><b>Yes,</b> in the app:<ul><li>Selfies of nice things you took from the bag or nice things that you are putting in</li><li>Compliments to others</li><li>Logistics and organizational relevant updates from the host</li></ul></li><li><b>No,</b> not in the app:<ul><li>Everything unrelated to the Clothing Loop (requests for surveys, invites for new groups, Fund raising, memes, etc). If you want to ask everyone’s input on something, use a polling function</li><li>Use the private message function when your message only concerns one person.</li></ul></li></ul>"
+      "question": "Hvordan styre en stor gruppe mennesker i kommunikasjonskanalen?",
+      "answer": "Særlig når grupper blir større, er det viktig å sikre at folk ikke bombardert med (urelevante) meldinger. Du kan sette opp noen regler for hva som bør og ikke skal deles via gruppeappen. For eksempel:<ul class='list-none'><li><b>Ja,</b> i appen:<ul><li>Velger av fine ting du har tatt fra kurven eller gode ting som du setter i</li><li>komplienter til andre</li><li>Logistikk og organisatoriske relevante oppdateringer fra verten</li></ul></li><li><b>Nei, Nei,</b> ikke i appen:<ul><li>Alt som ikke er relatert til Clothing Loop (forespørsler om undersøkelser, inviterer til nye grupper, anerkjennelse av fondets notater etc). Hvis du vil spørre alle bidrag på noe, bruk polling-funksjonen</li><li>Bruk privat melding funksjonen når meldingen bare gjelder én person.</li></ul></li></ul>"
     },
     "8_5": {
-      "question": "Why don’t I see a participant that signed up?",
-      "answer": "When you know a participant has signed up, but you don’t see them in the participant’s list in Account and you haven’t received the automatic email from us. It’s probably because the participant’s email address hasn’t been verified. <strong>Please ask a new participant to log in.</strong> Once they’ve logged in, their account is verified. Now you’ll receive the email and see them in the New list."
+      "question": "Hvorfor ser jeg ikke en deltaker som er registrert?",
+      "answer": "Når du vet at en deltaker har registrert seg, men du har ikke sett de i deltakerens kontoliste og har ikke mottatt oss den automatiske e-posten. Det er nok fordi deltakerens e-postadresse ikke er bekreftet. <strong>Be en ny deltaker om å logge inn.</strong> Når de har logget inn, blir deres konto verifisert. Nå mottar du e-posten og ser dem på den nye listen."
     },
     "9": {
-      "question": "What if I no longer have time to manage the Clothing Loop I started?",
-      "answer": "Use the group! <strong>Ask if someone else wants to help out hosting the Loop.</strong> Over time they may want to take over completely."
+      "question": "Hva om jeg ikke lenger har tid til å administrere Clothing Loop jeg har startet?",
+      "answer": "Bruk gruppen! <strong>Spør om noen andre vil hjelpe til med å arrangere løkken.</strong> over tid vil de kunne ta over helt."
     },
     "10": {
-      "question": "What if someone wants to join but lives too far away?",
-      "answer": "If someone signed up for your Loop but lives too far outside of your Loop area, <strong>it is up to you to decide if they may join</strong>. If they cannot, please send them an email to let them know. When in doubt: one thing you can do to decrease the distance between addresses, is to ask that person to find other participants between their area and the original Loop location."
+      "question": "Hva om noen vil bli med, men livet for langt unna?",
+      "answer": "Hvis noen har registrert seg for din løkke men bor for langt utenfor området ditt <strong>det er opp til deg å avgjøre om de kan bli med på</strong>. Hvis de ikke kan det, kan du sende dem en e-post for å fortelle dem. Når du er i tvil: én ting du kan gjøre for å redusere avstanden mellom adresser, Det er å spørre personen om å finne andre deltakere mellom området sitt og den opprinnelige Løkkeplassen."
     },
     "11": {
-      "question": "What is an ideal group size?",
-      "answer": "We’d recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognise anything in the bag anymore, so you can continue swapping. <b>There is no real maximum</b>, it is up to you what still works! In the Netherlands an average Loop is 45 people. But there are Loops running smoothly with over 180 people!"
+      "question": "Hva er en ideell gruppestørrelse?",
+      "answer": "Vi anbefaler å ha minst 20 personer i en gruppe: etter 20 adresser du vanligvis ikke gjenkjenner noe i posen. så du kan fortsette å svinge. <b>Det er ikke noe reelt maksimum</b>, det er opp til deg hva som fortsatt fungerer! I Nederland er en gjennomsnittlig løkke på 45 personer. Men løkker kjører jevnt med over 180 mennesker!"
     },
     "12": {
-      "question": "What if somebody moves house and wants to join in another area?",
-      "answer": "You as Loop host can remove them from your Loop when signed in on our website. If they want to join again in their new neighborhood, ask them to simply sign up again with their new address.<br/><strong>Participants can login on our website, and edit their account details</strong> in their account page. Meaning: they can leave a Loop and sign up for another one."
+      "question": "Hva om noen flytter hus og ønsker å bli med i et annet område?",
+      "answer": "Du som løkke vert kan fjerne dem fra løkken din når du er logget på nettsiden vår. Hvis de ønsker å bli med igjen i sitt nye nabolag, be dem om å melde seg på igjen med sin nye adresse.<br/><strong>deltakere kan logge inn på nettsiden vår, og redigere kontodetaljene</strong> på sin kontoside. Mening: De kan legge igjen en løkke og registrere seg på en annen."
     },
     "13": {
-      "question": "What to do if the Clothing Loop doesn’t work well?",
+      "question": "Hva skal gjøres hvis kladdløkka ikke fungerer bra?",
       "answer": "Make sure that <strong>everyone shares the responsibility for only adding good quality items.</strong><br/><br/>Do you see something that shouldn’t be in a bag? Try to donate it to your local textile recycling program. If in doubt, ask the person next to you on the address list  if they agree. It is good to have a few people function as ‘checkpoints’ along the route, to make sure the bags stay in good condition. Because if the quality of the clothing isn’t high enough, people might leave the Loop and that would be a shame!<br/><br/>A <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>fabric shaver</a> can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, <strong>set a good example yourself: share some nice photos and encourage others to do the same!</strong> Seeing where items end up is a huge motivation for people to donate nice items."
     }
   }
