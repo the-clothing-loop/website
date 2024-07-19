@@ -8,7 +8,11 @@ import {
   eventGetPrevious,
 } from "../../../api/event";
 import CategoriesDropdown from "../components/CategoriesDropdown";
-import { SizeBadgeLoading, SizeBadges } from "../components/Badges";
+import {
+  BadgesEventInstagram,
+  SizeBadgeLoading,
+  SizeBadges,
+} from "../components/Badges";
 import useForm from "../util/form.hooks";
 import { GinParseErrors } from "../util/gin-errors";
 
@@ -467,7 +471,9 @@ function EventItem({ event }: { event: Event }) {
         <address className="inline">{event.address}</address>
       </div>
       <div className="m-4 mt-0">
-        {event.genders?.length ? <SizeBadges g={event.genders} /> : null}
+        {event.genders?.length ? (
+          <SizeBadges g={event.genders} categoryOnly />
+        ) : null}
       </div>
     </article>
   );
@@ -555,30 +561,7 @@ function EventItemInstagram({ event }: { event: Event }) {
       </div>
 
       <div className="mb-4 flex flex-row gap-3">
-        {genders?.map((gender) => {
-          let src = "";
-          let alt = "";
-          switch (gender) {
-            case Categories.children:
-              src = "/images/categories/baby-50.png";
-              alt = "Baby";
-              break;
-            case Categories.women:
-              src = "/images/categories/woman-50.png";
-              alt = "Woman";
-              break;
-            case Categories.men:
-              alt = "Men";
-              src = "/images/categories/man-50.png";
-          }
-          return (
-            <img
-              src={src}
-              alt={alt}
-              className="h-9 bg-white rounded-full p-1"
-            />
-          );
-        })}
+        {BadgesEventInstagram(genders)}
       </div>
       <div>
         <span
