@@ -46,6 +46,7 @@ export interface UserChain {
   is_chain_admin: boolean;
   is_approved: boolean;
   created_at: string;
+  flag: boolean;
 }
 
 export interface Chain {

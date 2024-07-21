@@ -25,9 +25,14 @@ type UserChain struct {
 	Note                       sql.NullString `json:"-" gorm:"->:false;<-:create"`
 	Bags                       []Bag          `json:"-"`
 	Bulky                      []BulkyItem    `json:"-"`
+	Flag                       bool           `json:"flag,omitempty"`
 }
 
 var ErrRouteInvalid = errors.New("Invalid route")
+
+func UserChainSetFlag(db *gorm.DB, userID, chainID uint, flag bool) error {
+	return db.Exec(`UPDATE user_chains SET flag = ? WHERE user_id = ? AND chain_id = ?`, flag, userID, chainID).Error
+}
 
 func UserChainSetNote(db *gorm.DB, userID, chainID uint, note string) error {
 	return db.Exec(`UPDATE user_chains SET note = ? WHERE user_id = ? AND chain_id = ?`, sql.NullString{Valid: note != "", String: note}, userID, chainID).Error

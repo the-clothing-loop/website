@@ -12,6 +12,7 @@ import {
   IonCol,
   IonTextarea,
   IonIcon,
+  IonButton,
 } from "@ionic/react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
@@ -21,12 +22,13 @@ import IsPaused from "../utils/is_paused";
 import { t } from "i18next";
 import Badges from "../components/SizeBadge";
 import AddressBagCard from "../components/Bags/AddressBagCard";
-import { chainChangeUserNote, chainGetUserNote } from "../api/chain";
+import { chainChangeUserNote, chainGetUserNote, chainChangeUserFlag } from "../api/chain";
 import { checkmarkCircle } from "ionicons/icons";
 import {
   IonTextareaCustomEvent,
   TextareaInputEventDetail,
 } from "@ionic/core/dist/types/components";
+import { UserUpdateBody, userUpdate } from "../api/user";
 
 export default function AddressItem({
   match,
@@ -73,7 +75,23 @@ export default function AddressItem({
       }, 1300) as any,
     );
   }
+  async function assignFlag() {
+   
+    if (!user) return;
+      try {
+        let userUpdateBody: UserUpdateBody = {
+          user_uid: user.uid,
+         // flag: true,
+        };
+        if (!chain || !user) return;
 
+        chainChangeUserFlag(chain.uid, user.uid, true);
+       // await userUpdate(userUpdateBody).then(() => console.log(user));
+      } catch (err: any) {
+        //addToastError((t, err), err?.status);
+      }
+  
+  }
   return (
     <IonPage>
       <IonHeader translucent>
@@ -81,6 +99,11 @@ export default function AddressItem({
           <IonButtons slot="start">
             <IonBackButton defaultHref="/address">{t("back")}</IonBackButton>
           </IonButtons>
+          {isChainAdmin ? (
+            <IonButtons slot="end">
+              <IonButton onClick={assignFlag}>Assign Flag</IonButton>
+            </IonButtons>
+          ) : null}
         </IonToolbar>
       </IonHeader>
       <IonContent>
