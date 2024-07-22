@@ -31,35 +31,47 @@ export default function AdminDashboard() {
       : (authUser.chains
           .filter((uc) => uc.is_chain_admin)
           .map((uc) => chains.find((c) => c.uid === uc.chain_uid))
-          .filter((c) => c && c.total_hosts && c.total_hosts === 1)
+          .filter((c) => c && c.total_hosts)
           .map((c) => c!.name) as string[]);
+
+    console.log(
+      "show content",
+      "chainNames",
+      chainNames,
+      "authUser.is_root_admin",
+      authUser.is_root_admin,
+      "authUser.chains",
+      authUser.chains,
+      "authUser.chains filtered",
+      authUser.chains
+        .filter((uc) => uc.is_chain_admin)
+        .map((uc) => chains.find((c) => c.uid === uc.chain_uid)),
+    );
 
     addModal({
       message: t("deleteAccount"),
-      content:
-        chainNames && chainNames.length
-          ? () => (
-              <>
-                <p className="mb-2">{t("deleteAccountWithLoops")}</p>
-                <ul
-                  className={`text-sm font-semibold mx-8 ${
-                    chainNames.length > 1
-                      ? "list-disc"
-                      : "list-none text-center"
-                  }`}
-                >
-                  {chainNames.map((name) => (
-                    <li key={name}>{name}</li>
-                  ))}
-                </ul>
-              </>
-            )
-          : undefined,
+      content: () => {
+        if (!(chainNames && chainNames.length)) return <></>;
+        return (
+          <div className="space-y-2">
+            <p className="">{t("deleteAccountWithLoops")}</p>
+            <ul
+              className={`text-sm font-semibold mx-8 ${
+                chainNames.length > 1 ? "list-disc" : "list-none text-center"
+              }`}
+            >
+              {chainNames.map((name) => (
+                <li key={name}>{name}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      },
       actions: [
         {
           text: t("delete"),
           type: "error",
-          fn: () => {
+          fn: (e) => {
             userPurge(authUser!.uid)
               .then(() => {
                 window.location.href = localizePath("/users/logout");
@@ -153,11 +165,11 @@ export default function AdminDashboard() {
               </button>
 
               <button
-                className="btn btn-sm btn-error btn-outline bg-white/60 mb-4 sm:mr-4"
+                className=" btn btn-sm opacity-70 btn-ghost mb-4 sm:mr-4"
                 onClick={deleteClicked}
               >
-                <span className="text-danger">{t("deleteUserBtn")}</span>
-                <span className="icon-octagon-alert ml-2 rtl:ml-0 rtl:mr-2"></span>
+                <span className="">{t("deleteUserBtn")}</span>
+                <span className="icon-octagon-alert ms-1 !text-red"></span>
               </button>
             </div>
           </div>

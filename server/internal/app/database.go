@@ -35,6 +35,22 @@ func DatabaseInit() *gorm.DB {
 	return db
 }
 
+func CacheFindOrUpdate[V any](key string, duration time.Duration, update func() (*V, error)) (*V, error) {
+	if c, found := Cache.Get(key); found {
+		d, ok := c.(V)
+		if ok {
+			return &d, nil
+		}
+	}
+
+	d, err := update()
+	if err != nil {
+		return nil, err
+	}
+	Cache.Add(key, *d, duration)
+	return d, nil
+}
+
 func DatabaseAutoMigrate(db *gorm.DB) {
 	hadIsApprovedColumn := db.Migrator().HasColumn(&models.UserChain{}, "is_approved")
 	hadEventPriceTypeColumn := db.Migrator().HasColumn(&models.Event{}, "price_type")

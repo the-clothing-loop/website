@@ -365,7 +365,12 @@ func UserPurge(c *gin.Context) {
 	for _, uc := range user.Chains {
 		chainIDs = append(chainIDs, uc.ChainID)
 	}
-	services.EmailLoopAdminsOnUserLeft(db, user.Name, user.Email.String, "", chainIDs...)
+
+	services.EmailLoopAdminsOnUserLeft(db,
+		user.Name,
+		user.Email.String,
+		user.Email.String,
+		chainIDs...)
 
 	// find chains where user is the last chain admin
 	chainIDsToDelete := []uint{}

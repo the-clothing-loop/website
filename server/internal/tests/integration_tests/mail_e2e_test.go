@@ -252,6 +252,7 @@ func TestEmailSomeoneLeftLoop(t *testing.T) {
 			faker.Person().Contact().Email,
 			faker.Company().Name(),
 			faker.Person().Name(),
+			faker.Person().Contact().Email,
 		)
 		assert.Nil(t, err)
 	})

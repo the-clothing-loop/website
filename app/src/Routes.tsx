@@ -20,10 +20,10 @@ import { SplashScreen } from "@capacitor/splash-screen";
 import {
   bookOutline,
   homeOutline,
-  bagHandleOutline,
   cubeOutline,
   peopleCircleOutline,
   chatbubblesOutline,
+  pauseCircleOutline,
 } from "ionicons/icons";
 
 /* Core CSS required for Ionic components to work properly */
@@ -70,6 +70,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import OpenSource from "./pages/OpenSource";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import BagSVG from "./components/Bags/Svg";
+import IsPaused from "./utils/is_paused";
 
 SplashScreen.show({
   autoHide: true,
@@ -163,6 +164,7 @@ const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
 function AppRoute() {
   const { t } = useTranslation();
   const { refresh, bags, authUser, chain } = useContext(StoreContext);
+  const isPaused = IsPaused(authUser, chain?.uid);
 
   const hasBagTooOldMe = useMemo(() => {
     let hasBagTooOldMe = false;
@@ -219,7 +221,15 @@ function AppRoute() {
           <IonLabel>{t("rules")}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="address" href="/address" disabled={!chain}>
-          <IonIcon aria-hidden="true" icon={homeOutline} />
+          {isPaused ? (
+            <IonIcon
+              aria-hidden="true"
+              icon={pauseCircleOutline}
+              color="medium"
+            />
+          ) : (
+            <IonIcon aria-hidden="true" icon={homeOutline} />
+          )}
           <IonLabel>{t("route")}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="bags" href="/bags" disabled={!chain}>

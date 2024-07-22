@@ -5,30 +5,30 @@
   color: var(--ion-text-color-rgb);
 }
 
-.ion-ce:not(.plt-hybrid) body #root > .ion-page {
-  display: flex;
-  background-color: var(--ion-color-light);
-  justify-content: center;
-  align-items: center;
-}
-.ion-ce:not(.plt-hybrid) body #root > .ion-page > .ion-page {
-  position: relative;
+html.plt-desktop body #root > .ion-page > .ion-page {
   width: 375px;
   height: 812px;
+}
+html.plt-desktop ion-modal {
+  --width: 375px !important;
+  --height: 812px !important;
+}
+html.plt-desktop body .ion-cloned-element {
+  display: none !important;
+}
+html.plt-desktop body {
+  width: 375px;
+  height: 812px;
+  overflow: hidden;
+  margin: calc(50vh - 406px) calc(50vw - 187px);
   box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
-  .ion-ce:not(.plt-hybrid) body #root > .ion-page {
+  html.plt-desktop body {
     background-color: var(--ion-color-light);
-  }
-  .ion-ce:not(.plt-hybrid) body #root > .ion-page > .ion-page {
     box-shadow: 0px 0px 5px 3px rgba(255, 255, 255, 0.13);
   }
-}
-
-.ion-ce:not.plt-hybrid.plt-android body #root ion-tab-bar {
-  padding-bottom: 12px;
 }
 
 .ion-icon[slot="end"] {

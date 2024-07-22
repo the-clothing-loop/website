@@ -60,7 +60,7 @@ func EmailLoopAdminsOnUserLeft(db *gorm.DB, removedUserName, removedUserEmail, e
 
 	for _, admin := range admins {
 		email := admin.Email
-		if !email.Valid || excludedEmail == email.String || removedUserEmail == email.String {
+		if !email.Valid || excludedEmail == email.String {
 			continue
 		}
 		views.EmailSomeoneLeftLoop(db, admin.I18n,
@@ -68,6 +68,7 @@ func EmailLoopAdminsOnUserLeft(db *gorm.DB, removedUserName, removedUserEmail, e
 			admin.Email.String,
 			admin.ChainName,
 			removedUserName,
+			removedUserEmail,
 		)
 	}
 
