@@ -23,8 +23,8 @@ services:
     depends_on:
       - db
       - mailpit
-    # ports:
-    #   - 8084:8084
+    ports:
+      - 8084:8084
     volumes:
       - ./server:/app
     environment:
