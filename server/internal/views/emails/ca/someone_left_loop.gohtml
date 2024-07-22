@@ -1,6 +1,8 @@
 <p>Hi {{ .Name }},</p>
 
-<p>{{ .ParticipantName }} {{with .ParticipantEmail}}{{.}} {{end}} is no longer part of your Loop {{ .ChainName }}. The participant stopped being part of your Loop.<br/>
+<p>{{ .ParticipantName }} is no longer part of your Loop {{ .ChainName }}. The participant stopped being part of your Loop.<br/>
 You will no longer find the participant's information in your <a href="https://www.clothingloop.org/admin/dashboard">admin page</a>.</p>
+
+<p>If you need to reach out one more time, you can contact {{ .ParticipantName }} at {{ .ParticipantEmail }}.</p>
 
 <p>If you have saved {{ .ParticipantName }}’s information somewhere else, please delete their information. Thank you!</p>
