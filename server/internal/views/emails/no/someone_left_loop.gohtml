@@ -1,6 +1,8 @@
 <p>Hi {{ .Name }},</p>
 
-<p>{{ .ParticipantName }} {{with .ParticipantEmail}}{{.}} {{end}} er ikke lenger en del av din Loop {{ .ChainName }}. Deltakeren stoppet å være en del av din løkke.<br/>
+<p>{{ .ParticipantName }} er ikke lenger en del av din løkke {{ .ChainName }}. Deltakeren stoppet å være en del av din løkke.<br/>
 Du finner ikke lenger informasjon om deltakeren din <a href="https://www.clothingloop.org/admin/dashboard">admin side</a>.</p>
+
+<p>Hvis du trenger å nå ut en gang, kan du kontakte {{ .ParticipantName }} på {{ .ParticipantEmail }}.</p>
 
 <p>Dersom du har lagret {{ .ParticipantName }}sin informasjon et annet sted, vennligst slett deres informasjon. Tusen takk!</p>
