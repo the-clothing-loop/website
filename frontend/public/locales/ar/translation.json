@@ -1,7 +1,6 @@
 {
   "genericError": "حدث خطأ غير معروف",
   "removeFromLoop": "إزالة من الحلقة",
-  "allowHostsToKnowYourEmailDuringDelete": "السماح للمستضيفين بمعرفة بريدك الإلكتروني أثناء الحذف",
   "leave": "المغادرة",
   "leaveLoop": "ترك الحلقة",
   "areYouSureLeaveLoop": "هل أنت متأكد من أنك تريد \"{{ name }}\" أن تترك \"{{ chain }}\" حلقة ؟",
