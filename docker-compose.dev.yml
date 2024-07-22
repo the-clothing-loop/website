@@ -80,6 +80,8 @@ services:
       - db
     volumes:
       - ./server:/app
+    environment:
+      - ENV=development
     working_dir: /app
     command: "go run cmd/mm-mail/main.go -c config.dev.yml"
   caddy:
