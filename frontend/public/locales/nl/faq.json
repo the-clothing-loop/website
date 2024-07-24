@@ -85,59 +85,59 @@
     },
     "3": {
       "question": "Hoe maak ik een nieuwe Loop aan?",
-      "answer": "Vooral wanneer groepen groter worden, is het belangrijk om ervoor te zorgen dat mensen niet worden gebombardeerd met (irrelevante) berichten. Je kunt enkele regels instellen voor wat wel en niet gedeeld mag worden via de app van de groep. Bijvoorbeeld:<br /><br /><span>Ja,</span> in de app:<ul><li>Selfies van leuke dingen die je van de tas of leuke dingen die je doet meeneemt</li><li>Complimenten aan anderen</li><li>Logistiek en organisatorische relevante updates</li></ul><span>Nee,</span> niet in de app:<ul><li>Alles niet gerelateerd aan de Clothing Loop (verzoeken voor enquêtes, uitnodigingen voor nieuwe groepen, fondswerving, memes, enz.). Als je van iedereen iets wilt vragen, gebruik dan een polling-app zoals LouLou in plaats daarvan</li></ul>"
+      "answer": "We hebben een <a target='_blank' href='https://drive.google.com/drive/folders/1UiokapMTKu6nrX5sg6s8FFkS8jDTtu86'>eenvoudige handleiding</a> gemaakt met screenshots van elke stap. Loop je toch nog ergens tegenaan? Stuur ons een email!"
     },
     "4": {
-      "question": "Wat als ik geen tijd meer heb om een Loop te beheren die ik heb opgericht?",
-      "answer": "Gebruik de groep! Vraag of iemand anders de keten wil overnemen en beheren."
+      "question": "Hoe log ik in op de website?",
+      "answer": "<ol><li>Klik rechts bovenin op Inloggen.</li><li>Vul het emailadres in van je account.</li><li>Controleer je email (en spamfolder) voor onze verificatielink. Deze gebruiken we in plaats van een wachtwoord!</li><li>Nu ben je ingelogd en kun je bij Account je Loop terug vinden, en de (nieuwe) deelnemers.</li></ol>"
     },
     "5": {
       "question": "Hoe kan ik de app gaan gebruiken?",
-      "answer": "Ja! We hebben een app gemaakt die je heel makkelijk voor jouw Loop kunt gebruiken. De app is beschikbaar voor iOS, Android en als webversie: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />U kunt de app downloaden en binnen jouw Loop gebruiken. Het is super makkelijk! Je kunt een meer gedetailleerde handleiding vinden over het gebruik van de app in onze <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit voor Loop Hosts</a>."
+      "answer": "We hebben een app gemaakt die je heel makkelijk voor jouw Loop kunt gebruiken. De app is beschikbaar voor iOS, Android en als webversie: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br /> Het is super makkelijk! Je kunt een uitgebreide handleiding vinden over het gebruik van de app in onze <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit voor hosts</a>."
     },
     "5_5": {
       "question": "Hoe maak je een route?",
-      "answer": "Je kunt een route maken op de pagina van de beheerders van jouw Loop in Account. Klik op Route en je vindt een Optimaliseer routeknop. Zodra je op die knop klikt, worden alle adressen gereorganiseerd om de beste route te maken. Het is ook mogelijk om de adressen een voor een te veranderen, als dat in dat in jouw geval beter werkt. Nieuwe deelnemers worden automatisch op de meest logische plek in de huidige lijst worden geplaatst."
+      "answer": "Je kunt een route maken op de beheerderspagina van de website via Account. Klik op Route en je vindt een Optimaliseer-routeknop. Zodra je op die knop klikt, worden alle adressen gereorganiseerd om de beste route te maken. Nieuwe deelnemers worden na goedkeuring automatisch op de meest logische plek in de huidige lijst geplaatst. Maar het is ook mogelijk om de adressen een voor een te verslepen, als dat in jouw geval beter werkt. "
     },
     "6": {
-      "question": "Wat is een ideale groepsgrootte?",
-      "answer": "We raden aan om minimaal 20 personen in een groep te hebben: na 20 adressen herkent u meestal niets meer in de tas zodat u kunt blijven wisselen. Er is geen echt maximum, het is aan jou wat er nog steeds werkt! In Nederland ligt een Loop op gemiddeld 45 mensen. Maar met 130 mensen lopen Loops en probleem!"
+      "question": "Zijn er beelden of grafische templates die we kunnen gebruiken?",
+      "answer": "Absoluut, we hebben voor hosts een <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a> gemaakt waar je logo's, plaatjes en templates kunt vinden. Gebruik er zo veel als je wilt!"
     },
     "7": {
-      "question": "Wat moeten we doen als de Clothing Loop niet goed werkt?",
-      "answer": "Als de kwaliteit van de kleding niet hoog genoeg is, zouden mensen de Loop kunnen verlaten. Zorg ervoor dat iedereen de verantwoordelijkheid deelt om alleen producten van goede kwaliteit toe te voegen.<br/><br/>Zie je iets dat niet in de Loop zou moeten staan? Pak het uit en doneer het aan een kledingcontainer. Op die manier kan het nog steeds worden gerecycled. Vraag in geval van twijfel de persoon naast je of hen het daarmee eens is en dan een besluit neemt.<br/><br/>Een grondstofkleur kan de levensduur van een kledingstuk enorm verlengen! Je kan dit advies binnen jouw Loop delen.<br/><br/>Tot slot stel zelf een goed voorbeeld; deel een paar mooie foto's en moedig anderen aan hetzelfde te doen!"
+      "question": "Hoe introduceer ik een \"Spooktas\" in de Loop?",
+      "answer": "Als je Loop al een tijdje bezig is, kun je wat variatie aanbrengen door een \"Spooktas\" in te voeren die de andere richting op reist. Plotseling hebben deelnemers andere mensen voor zich in de route, en ook andere stijlen in de tas. Als je dat doet, maak mensen er dan van bewust dat ze geen kleding in de Spooktas moeten stoppen die ze eerder uit de normale tas hebben gehaald. Daarnaast raden wij aan om het aantal Spooktassen beperkt te houden zodat het niet te moeilijk is en het speciaal blijft."
     },
     "7_5": {
-      "question": "Introduceer een \"Konijnentas\" in de Loop",
-      "answer": "Zodra je Loop een tijdje loopt, kunt u dit een beetje veranderen! <b>Je kunt dan een \"Konijntas\" introduceren, deze slaat altijd een adres over</b>. Zodat je plotseling andere mensen voor je hebt in de route, en daardoor ook net andere stijlen hebt in het tas. Houd het aantal konijnentassen beperkt tot 1 of 2, om het speciaal en makkelijk te houden."
+      "question": "Hoe introduceer ik een \"Konijnentas\" in de Loop?",
+      "answer": "Als je Loop al een tijdje draait, kun je die een beetje veranderen! <b>Je kunt bijvoorbeeld een \"Konijntas\" introduceren. Deze tas slaat altijd een adres over</b>. Daardoor heeft een deelnemer plotseling andere mensen voor zich in de route, en andere stijlen in de tas. Houd het aantal Konijnentassen beperkt tot 1 of 2, om het speciaal en makkelijk te houden."
     },
     "8": {
-      "question": "Hoe organiseer je een grote groep mensen in de communicatiekanalen?",
-      "answer": "Vooral wanneer groepen groter worden, is het belangrijk om ervoor te zorgen dat mensen niet worden gebombardeerd met (irrelevante) berichten. Je kunt enkele regels instellen voor wat wel en niet gedeeld mag worden via de app van de groep. Bijvoorbeeld:<br /><br /><span>Ja,</span> in de app:<ul><li>Selfies met leuke items uit de tas</li><li>Complimenten aan anderen (gebruik de emotican functie!</li><li>Logistiek en organisatorische relevante updates</li></ul><span>Nee,</span> niet in de app:<ul><li>Alles ongerelateerd aan de Clothing Loop (verzoeken voor enquêtes, uitnodigingen voor nieuwe groepen, fondswerving, memes, enz.). Als je van iedereen iets wilt vragen, gebruik dan de poll functie van Whatsapp of bijvoorbeeld LouLou. </li></ul>"
+      "question": "Hoe beheer je een grote groep mensen in een communicatiekanaal?",
+      "answer": "Vooral wanneer groepen groter worden, is het belangrijk om ervoor te waken dat mensen niet worden gebombardeerd met (irrelevante) berichten. Je kunt enkele regels instellen voor wat wel en niet gedeeld mag worden via de app van de groep. Bijvoorbeeld:<br/><br /><span>Ja,</span> in de chat:<ul><li>Selfies met leuke items uit de tas</li><li>Complimenten aan anderen (gebruik de emoticon-functie!</li><li>Logistiek en organisatorische relevante updates</li></ul><span>Nee,</span> niet in de chat:<ul><li>Alles ongerelateerd aan de Clothing Loop (verzoeken voor enquêtes, uitnodigingen voor nieuwe groepen, fondswerving, memes, enz.).</li></ul><br><br>Als je aan iedereen iets wilt vragen, gebruik dan de poll-functie van Whatsapp, of bijvoorbeeld LouLou. "
     },
     "8_5": {
-      "question": "Waarom zie ik geen gebruiker die zich aangemeld heeft?",
-      "answer": "When you know a participant has signed up, but you don’t see them in the participant’s list in Account and you haven’t received the automatic email from us. It’s probably because the participant’s email address hasn’t been verified. <strong>Please ask a new participant to log in.</strong> Once they’ve logged in, their account is verified. Now you’ll receive the email and see them in the New list."
+      "question": "Waarom zie ik een deelnemer niet die zich wel aangemeld heeft?",
+      "answer": "Als je weet dat een deelnemer zich heeft aangemeld, maar je ziet die niet in de lijst via Account en je hebt geen automatische email ontvangen, dan heeft de deelnemer waarschijnlijk diens emailadres niet geverifieerd. <strong>Vraag de nieuwe deelnemer om in te loggen op de website.</strong> Eenmaal ingelogd, is ook hun account geverifieerd. Nu ontvang je een email en zie je diens naam in de lijst met nieuwe deelnemers."
     },
     "9": {
-      "question": "Wat als ik geen tijd meer heb om de Loop te beheren die ik heb opgericht?",
-      "answer": "Gebruik de groep! Vraag of iemand anders wil helpen met het hosten van de Loop. Na verloop van tijd wil hen mogelijk de Loop volledig overnemen."
+      "question": "Wat als ik geen tijd meer heb om de Loop die ik heb opgericht te beheren?",
+      "answer": "Gebruik de groep! Vraag of iemand anders wil helpen met het hosten van de Loop. Na verloop van tijd wil die mogelijk de Loop volledig overnemen."
     },
     "10": {
       "question": "Wat als iemand wil meedoen, maar te ver weg woont?",
-      "answer": "Als iemand heeft aangemeld voor je Loop maar te ver buiten je Loop woont, het is aan jou om te beslissen of  hen zich mag aansluiten bij jouw Loop. Eén ding dat je kan doen om de afstand tussen adressen te verkleinen, is om die persoon te vragen andere deelnemers te vinden tussen hun adres en de oorspronkelijke Loop locatie."
+      "answer": "Als iemand zich heeft aangemeld voor je Loop maar te ver weg woont, is het aan jou om te beslissen of die zich mag aansluiten bij jouw Loop. Om de afstand tussen adressen te verkleinen, zou je die persoon kunnen vragen om andere deelnemers te vinden tussen diens adres en de bestaande route."
     },
     "11": {
       "question": "Wat is een ideale groepsgrootte?",
-      "answer": "We raden aan om minimaal 20 personen in een groep te hebben: na 20 adressen herken je meestal niets meer in de tas zodat je kan blijven wisselen.  <b>Er is geen echt maximum <b>, het is aan jou wat er nog steeds werkt! In Nederland ligt een Loop op gemiddeld 45 mensen. Maar er zijn goed lopende Loops met meer dan 180 deelnemers!"
+      "answer": "We raden aan om minimaal 20 personen in een groep te hebben, want na 20 adressen herken je meestal geen kledingstukken meer in de tas. <b>Er is geen echt maximum<b>, het is aan jou wat je vindt dat werkt! In Nederland is een Loop gemiddeld zo'n 45 mensen. Maar er zijn goed lopende Loops met meer dan 180 deelnemers!"
     },
     "12": {
-      "question": "Wat als iemand verhuist en mee wilt doen in een hun nieuwe buurt?",
-      "answer": "Jij als Loop host kan hen uit jouw Loop verwijderen nadat je bent ingelogd op onze website. Als hen weer in hun nieuwe buurt wilt meedoen, vraag hen dan gewoon opnieuw aan te melden bij een Loop in diens buurt met hun nieuwe adres."
+      "question": "Wat als iemand verhuist en mee wilt doen in een diens nieuwe buurt?",
+      "answer": "Jij als host kunt de deelnemer uit je Loop verwijderen via de beheerpagina op onze website. Als de deelnemer in de nieuwe buurt weer wilt meedoen, vraag die dan om zich opnieuw aan te melden bij een Loop op het nieuwe adres."
     },
     "13": {
-      "question": "Wat moeten we doen als de Clothing Loop niet goed werkt?",
-      "answer": "Zorg ervoor dat iedereen de verantwoordelijkheid deelt om alleen kledingstukken van goede kwaliteit toe te voegen aan de tas.<br/><br/>Zie je iets dat niet in de tas zou moeten zitten? Probeer het te doneren aan je lokale textielrecyclingsprogramma. Vraag in geval van twijfel de persoon die naast jou op de adreslijst staat, of hen het daarmee eens is. Het is goed om een paar mensen te laten functioneren als ‘checkpoints’ langs de route, om ervoor te zorgen dat de tassen in goede staat blijven. Want als de kwaliteit van de kleding niet hoog genoeg is, kunnen mensen misschien de Loop verlaten en dat zou een schande zijn!<br/><br/>Een <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>pluizentondeuse</a> kan de levensduur van een kledingstuk enorm verlengen! Je kan deze tip delen in de groep.<br/><br/>En last but not least stel zelf een goed voorbeeld in: deel een paar mooie foto's en moedig anderen aan hetzelfde te doen! Het is voor mensen een enorme motivatie om dan leuke kledingstukken ook aan de tas te doneren."
+      "question": "Wat moet ik doen als de Loop niet goed werkt?",
+      "answer": "Zorg ervoor dat iedereen de verantwoordelijkheid voelt om alleen kleding van goede kwaliteit toe te voegen.<br/><br/>Zie je iets dat niet in de tas hoort? Probeer het te doneren aan je lokale textielrecyclingsprogramma. Vraag in geval van twijfel de vorige of volgende persoon op de route of die het daarmee eens is. Het is goed om een paar mensen te vragen als ‘checkpoints’ langs de route, zodat de tassen in goede staat blijven. Want als de kwaliteit van de kleding niet hoog is, kunnen mensen de Loop verlaten en dat zou zonde zijn!<br/><br/>Een <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'>pluizentondeuse</a> kan de levensduur van een kledingstuk enorm verlengen, dat is een tip om te delen in de groep.<br/><br/>En last but not least, stel zelf het goede voorbeeld en deel een paar mooie foto's van jezelf in geruilde kleding, en moedig anderen aan hetzelfde te doen! Dat werkt motiverend."
     }
   }
 }
