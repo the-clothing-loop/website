@@ -698,3 +698,57 @@ func ChainGetUserNote(c *gin.Context) {
 	}
 	c.String(http.StatusOK, note)
 }
+
+func ChainChangeUserFlag(c *gin.Context) {
+	db := getDB(c)
+	var body struct {
+		UserUID  string `json:"user_uid" binding:"required,uuid"`
+		ChainUID string `json:"chain_uid" binding:"required,uuid"`
+		Flag     bool   `json:"flag"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	if !ok {
+		return
+	}
+
+	err := models.UserChainSetFlag(db, user.ID, chain.ID, body.Flag)
+	if err != nil {
+		slog.Error("Unable to change user flag", "error", err)
+		c.String(http.StatusInternalServerError, "Unable to change user flag")
+		return
+	}
+}
+func ChainGetUserFlag(c *gin.Context) {
+	db := getDB(c)
+	var query struct {
+		UserUID  string `form:"user_uid" binding:"required,uuid"`
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
+	if !ok {
+		return
+	}
+	user, err := models.UserGetByUID(db, query.UserUID, true)
+	if err != nil {
+		c.String(http.StatusExpectationFailed, "Could not get user")
+		return
+	}
+
+	flag, err := models.UserChainGetFlag(db, user.ID, chain.ID)
+	if err != nil {
+		slog.Error("Unable to change user flag", "error", err)
+		c.String(http.StatusInternalServerError, "Unable to change user flag")
+		return
+	}
+	c.String(http.StatusOK, fmt.Sprintf("%t", flag))
+}

@@ -128,8 +128,18 @@ export function chainChangeUserNote(chainUID: UID, userUID: UID, note: string) {
     note,
   });
 }
+export function chainGetUserFlag(chainUID: UID, userUID: UID): Promise<boolean> {
+  return axios
+    .get<boolean>("v2/chain/user/flag", {
+      params: {
+        user_uid: userUID,
+        chain_uid: chainUID,
+      },
+    })
+    .then((res) => res.data);
+}
 export function chainChangeUserFlag(chainUID: UID, userUID: UID, flag: boolean) {
-  return axios.patch<never>("v2/chain/user/note", {
+  return axios.patch<never>("v2/chain/user/flag", {
     user_uid: userUID,
     chain_uid: chainUID,
     flag,

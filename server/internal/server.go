@@ -140,6 +140,8 @@ func Routes() *gin.Engine {
 	v2.GET("/chain/near", controllers.ChainGetNear)
 	v2.PATCH("/chain/user/note", controllers.ChainChangeUserNote)
 	v2.GET("/chain/user/note", controllers.ChainGetUserNote)
+	v2.PATCH("/chain/user/flag", controllers.ChainChangeUserFlag)
+	v2.GET("/chain/user/flag", controllers.ChainGetUserFlag)
 
 	// bag
 	v2.GET("/bag/all", controllers.BagGetAll)

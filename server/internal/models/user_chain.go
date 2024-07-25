@@ -30,10 +30,6 @@ type UserChain struct {
 
 var ErrRouteInvalid = errors.New("Invalid route")
 
-func UserChainSetFlag(db *gorm.DB, userID, chainID uint, flag bool) error {
-	return db.Exec(`UPDATE user_chains SET flag = ? WHERE user_id = ? AND chain_id = ?`, flag, userID, chainID).Error
-}
-
 func UserChainSetNote(db *gorm.DB, userID, chainID uint, note string) error {
 	return db.Exec(`UPDATE user_chains SET note = ? WHERE user_id = ? AND chain_id = ?`, sql.NullString{Valid: note != "", String: note}, userID, chainID).Error
 }
@@ -44,6 +40,19 @@ func UserChainGetNote(db *gorm.DB, userID, chainID uint) (string, error) {
 		return "", err
 	}
 	return note.String, nil
+}
+
+func UserChainSetFlag(db *gorm.DB, userID, chainID uint, flag bool) error {
+	return db.Exec(`UPDATE user_chains SET flag = ? WHERE user_id = ? AND chain_id = ?`, flag, userID, chainID).Error
+}
+
+func UserChainGetFlag(db *gorm.DB, userID, chainID uint) (bool, error) {
+	flag := false
+	err := db.Raw(`SELECT flag FROM user_chains WHERE user_id = ? AND chain_id = ?`, userID, chainID).Pluck("flag", &flag).Error
+	if err != nil {
+		return false, err
+	}
+	return flag, nil
 }
 
 func ValidateAllRouteUserUIDs(db *gorm.DB, chainID uint, userUIDs []string) bool {
