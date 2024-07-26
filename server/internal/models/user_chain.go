@@ -17,6 +17,7 @@ type UserChain struct {
 	ChainID                    uint           `json:"-"`
 	ChainUID                   string         `json:"chain_uid" gorm:"-:migration;<-:false"`
 	IsChainAdmin               bool           `json:"is_chain_admin"`
+	IsChainWarden              bool           `json:"is_chain_warden"`
 	CreatedAt                  time.Time      `json:"created_at"`
 	IsApproved                 bool           `json:"is_approved"`
 	LastNotifiedIsUnapprovedAt zero.Time      `json:"-"`
@@ -43,7 +44,7 @@ func UserChainGetNote(db *gorm.DB, userID, chainID uint) (string, error) {
 }
 
 func UserChainSetFlag(db *gorm.DB, userID, chainID uint, flag bool) error {
-	return db.Exec(`UPDATE user_chains SET flag = ? WHERE user_id = ? AND chain_id = ?`, flag, userID, chainID).Error
+	return db.Exec(`UPDATE user_chains SET is_chain_warden = ? WHERE user_id = ? AND chain_id = ?`, flag, userID, chainID).Error
 }
 
 func UserChainGetFlag(db *gorm.DB, userID, chainID uint) (bool, error) {
@@ -155,6 +156,7 @@ func UserChainGetIndirectByChain(db *gorm.DB, chainID uint) ([]UserChain, error)
 		user_chains.user_id        AS user_id,
 		users.uid                  AS user_uid,
 		user_chains.is_chain_admin AS is_chain_admin,
+		user_chains.is_chain_warden AS is_chain_warden,
 		user_chains.created_at     AS created_at,
 		user_chains.is_paused      AS is_paused,
 		user_chains.is_approved    AS is_approved

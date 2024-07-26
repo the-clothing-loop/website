@@ -1,13 +1,15 @@
 import { IonItem, IonText, IonIcon } from "@ionic/react";
-import { shield, pauseCircleSharp } from "ionicons/icons";
+import { shield, pauseCircleSharp, flag } from "ionicons/icons";
 import { Bag, User } from "../../api/types";
 import TinyBagSvg from "./TinyBagSvg";
+//import { Sword } from "lucide-static/"
 
 export interface AddressListItemProps {
   user: User;
   bags: Bag[];
   isMe: boolean;
   isHost: boolean;
+  isWarden: boolean;
   isAddressPrivate: boolean;
   number: number;
   routerLink: string | undefined;
@@ -19,6 +21,7 @@ export default function AddressListItem({
   isMe,
   bags,
   isHost,
+  isWarden,
   isAddressPrivate,
   number,
   routerLink,
@@ -42,6 +45,13 @@ export default function AddressListItem({
           <IonIcon
             icon={shield}
             color={isMe ? undefined : "medium"}
+            className="tw-absolute tw-top-1 tw-left-1 tw-w-4 tw-h-4 tw-m-0"
+          />
+        ) : null}
+        {isWarden ? (
+          <IonIcon
+            icon={flag}
+            color={"medium"}
             className="tw-absolute tw-top-1 tw-left-1 tw-w-4 tw-h-4 tw-m-0"
           />
         ) : null}

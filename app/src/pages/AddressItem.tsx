@@ -83,8 +83,10 @@ export default function AddressItem({
       }, 1300) as any,
     );
   }
-
+  let userUID = match.params.uid;
+  console.log(chainUsers.find((u) => u.uid === userUID) || null);
   function onChangeFlag(assign: boolean) {
+    console.log(assign)
     if (!chain || !user) return;
     setFlag(assign);
     chainChangeUserFlag(chain.uid, user.uid, assign);
