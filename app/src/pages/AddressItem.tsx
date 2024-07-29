@@ -13,6 +13,7 @@ import {
   IonTextarea,
   IonIcon,
   IonButton,
+  IonToggle,
 } from "@ionic/react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
@@ -83,10 +84,8 @@ export default function AddressItem({
       }, 1300) as any,
     );
   }
-  let userUID = match.params.uid;
-  console.log(chainUsers.find((u) => u.uid === userUID) || null);
+
   function onChangeFlag(assign: boolean) {
-    console.log(assign)
     if (!chain || !user) return;
     setFlag(assign);
     chainChangeUserFlag(chain.uid, user.uid, assign);
@@ -99,20 +98,6 @@ export default function AddressItem({
           <IonButtons slot="start">
             <IonBackButton defaultHref="/address">{t("back")}</IonBackButton>
           </IonButtons>
-          {isChainAdmin && !flag ? (
-            <IonButtons slot="end">
-              <IonButton onClick={() => onChangeFlag(true)}>
-                Assign Flag
-              </IonButton>
-            </IonButtons>
-          ) : null}
-          {isChainAdmin && flag ? (
-            <IonButtons slot="end">
-              <IonButton onClick={() => onChangeFlag(false)}>
-                Remove Flag
-              </IonButton>
-            </IonButtons>
-          ) : null}
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -150,6 +135,19 @@ export default function AddressItem({
             })}
           </IonRow>
         </IonGrid>
+        {isChainAdmin ? (
+          <IonItem lines="none">
+            <IonToggle
+              onClick={() => onChangeFlag(!flag)}
+              checked={flag}
+              color="primary"
+              justify="end"
+            >
+              {flag ? "Remove Warden" : "Assign Warden"}
+            </IonToggle>
+          </IonItem>
+        ) : null}
+
         {note || isNoteEditable ? (
           <IonItem lines="none">
             <div className="tw-w-full tw-mt-2 tw-mb-4">
