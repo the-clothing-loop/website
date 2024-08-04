@@ -723,32 +723,3 @@ func ChainChangeUserFlag(c *gin.Context) {
 		return
 	}
 }
-func ChainGetUserFlag(c *gin.Context) {
-	db := getDB(c)
-	var query struct {
-		UserUID  string `form:"user_uid" binding:"required,uuid"`
-		ChainUID string `form:"chain_uid" binding:"required,uuid"`
-	}
-	if err := c.ShouldBindQuery(&query); err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	ok, _, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
-	if !ok {
-		return
-	}
-	user, err := models.UserGetByUID(db, query.UserUID, true)
-	if err != nil {
-		c.String(http.StatusExpectationFailed, "Could not get user")
-		return
-	}
-
-	flag, err := models.UserChainGetFlag(db, user.ID, chain.ID)
-	if err != nil {
-		slog.Error("Unable to change user flag", "error", err)
-		c.String(http.StatusInternalServerError, "Unable to change user flag")
-		return
-	}
-	c.String(http.StatusOK, fmt.Sprintf("%t", flag))
-}

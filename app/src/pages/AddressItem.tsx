@@ -27,7 +27,6 @@ import {
   chainChangeUserNote,
   chainGetUserNote,
   chainChangeUserFlag,
-  chainGetUserFlag,
 } from "../api/chain";
 import { checkmarkCircle } from "ionicons/icons";
 import {
@@ -64,9 +63,11 @@ export default function AddressItem({
       if (timer) clearTimeout(timer);
       setNote(n);
     });
-    chainGetUserFlag(chain.uid, user.uid).then((f) => {
-      setFlag(f);
-    });
+
+    const isWarden =
+    user.chains.find((uc) => uc.chain_uid === chain?.uid)
+      ?.is_chain_warden || false;
+
   }, [user?.uid]);
   function onChangeNoteInput(
     e: IonTextareaCustomEvent<TextareaInputEventDetail>,
@@ -84,7 +85,7 @@ export default function AddressItem({
       }, 1300) as any,
     );
   }
-
+console.log(flag)
   function onChangeFlag(assign: boolean) {
     if (!chain || !user) return;
     setFlag(assign);
