@@ -26,7 +26,6 @@ type UserChain struct {
 	Note                       sql.NullString `json:"-" gorm:"->:false;<-:create"`
 	Bags                       []Bag          `json:"-"`
 	Bulky                      []BulkyItem    `json:"-"`
-	Flag                       bool           `json:"flag,omitempty"`
 }
 
 var ErrRouteInvalid = errors.New("Invalid route")
