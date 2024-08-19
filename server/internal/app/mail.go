@@ -67,7 +67,7 @@ func MailSend(db *gorm.DB, m *models.Mail) error {
 	return nil
 }
 
-func MailRemoveAllEmails() {
+func MailpitRemoveAllEmails() {
 	url := fmt.Sprintf("http://%s:8025/api/v1/messages", Config.SMTP_HOST)
 	req, _ := http.NewRequest(http.MethodDelete, url, nil)
 	_, err := http.DefaultClient.Do(req)
