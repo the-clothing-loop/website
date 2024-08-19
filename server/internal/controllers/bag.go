@@ -146,8 +146,10 @@ LIMIT 1
 
 	if body.UserUID != body.HolderUID {
 		err := app.OneSignalCreateNotification(db, []string{body.HolderUID},
-			*views.Notifications["bagHasBeenAssignedToYouTitle"],
-			onesignal.StringMap{},
+			*views.Notifications[views.NotificationEnumTitleBagAssignedYou],
+			onesignal.StringMap{
+				En: onesignal.PtrString(bag.Number),
+			},
 		)
 		if err != nil {
 			slog.Error("Notification creation failed", "err", err)

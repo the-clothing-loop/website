@@ -234,7 +234,7 @@ AND b.last_notified_at IS NULL
 		for i := range *res {
 			item := (*res)[i]
 			slog.Info("Create notification", "user", item.UserUID, "holding_bag", item.BagNumber)
-			app.OneSignalCreateNotification(db, []string{item.UserUID}, *views.Notifications["bagYouAreHoldingIsTooOldTitle"], onesignal.StringMap{
+			app.OneSignalCreateNotification(db, []string{item.UserUID}, *views.Notifications[views.NotificationEnumTitleBagTooOld], onesignal.StringMap{
 				En: onesignal.PtrString(item.BagNumber),
 			})
 
