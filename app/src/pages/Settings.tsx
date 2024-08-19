@@ -352,11 +352,14 @@ export default function Settings() {
             color="background"
           >
             <IonList>
+              <IonItemDivider className="tw-bg-transparent tw-font-normal tw-text-sm tw-pb-0 -tw-mb-9">
+                {t("selectALoop")}
+              </IonItemDivider>
               <IonItem lines="none">
                 <IonSelect
                   ref={refChainSelect}
                   aria-label={t("selectALoop")}
-                  className="tw-text-2xl"
+                  className="tw-text-2xl tw-relative tw-z-10 tw-mt-5"
                   labelPlacement="floating"
                   justify="space-between"
                   value={chain?.uid || ""}
