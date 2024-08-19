@@ -35,9 +35,9 @@ func (b *Bag) AddLastUserEmailToUpdateFifo(email string) {
 		}
 	}
 
-	// only keeps 3 emails in total, this remove the oldest
-	if len(list) >= 3 {
-		list = list[len(list)-2:]
+	// only keeps 4 emails in total, this remove the oldest
+	if len(list) >= 4 {
+		list = list[len(list)-3:]
 	}
 
 	list = append(list, email)
