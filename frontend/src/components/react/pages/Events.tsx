@@ -580,7 +580,7 @@ function EventItemInstagram({ event }: { event: Event }) {
       <img
         className="w-24"
         alt="clothing loop logo"
-        src="https://images.clothingloop.org/original/the_clothing_loop_logo.png"
+        src="https://images.clothingloop.org/192x/the_clothing_loop_logo_v2.png"
       />
     </article>
   );
