@@ -15,6 +15,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useLongPress } from "use-long-press";
 import dayjs from "dayjs";
 import { UserProfile } from "@mattermost/types/users";
+import { OnSendMessageWithImage } from "../../pages/Chat";
 
 interface Props {
   channels: Channel[];
@@ -29,12 +30,8 @@ interface Props {
   onDeleteChannel: (id: string) => void;
   onDeletePost: (id: string) => void;
   onScrollTop: (topPostId: string) => void;
-  onSendMessage: (msg: string, callback: Function) => Promise<void>;
-  onSendMessageWithImage: (
-    msg: string,
-    image: File,
-    callback: Function,
-  ) => Promise<void>;
+  onSendMessage: (msg: string) => Promise<void>;
+  onSendMessageWithImage: OnSendMessageWithImage;
 }
 
 // This follows the controller / view component pattern
@@ -90,16 +87,16 @@ export default function ChatWindow(props: Props) {
     if (props.selectedChannel) props.onDeleteChannel(props.selectedChannel.id);
   }
 
-  function onSendMessageWithCallback(topPostId: string) {
-    return props.onSendMessage(topPostId, () => {
+  function onSendMessageWithCallback(message: string) {
+    return props.onSendMessage(message).then(() => {
       refScrollRoot.current?.scrollTo({
         top: 0,
       });
     });
   }
 
-  function onSendMessageWithImage(topPostId: string, image: File) {
-    return props.onSendMessageWithImage(topPostId, image, () => {
+  function onSendMessageWithImage(message: string, image: File | string) {
+    return props.onSendMessageWithImage(message, image).then(() => {
       refScrollRoot.current?.scrollTo({
         top: 0,
       });

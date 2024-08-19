@@ -141,15 +141,15 @@ export default function Login(props: { isLoggedIn: boolean }) {
       </IonHeader>
       <IonContent fullscreen>
         <div className="tw-h-full tw-flex tw-flex-col ion-padding">
-          <div className="tw-shrink-0 md:tw-max-w-xl md:tw-mx-auto">
+          <div className="tw-shrink-0">
             <div className="tw-w-full tw-mb-16">
               <IonImg
                 src="/v2_logo_white.png"
-                className="tw-w-52 md:tw-w-72 tw-hidden dark:tw-block tw-mx-auto"
+                className="tw-w-52 tw-hidden dark:tw-block tw-mx-auto"
               />
               <IonImg
                 src="/v2_logo_black.png"
-                className="tw-w-52 md:tw-w-72 dark:tw-hidden tw-mx-auto"
+                className="tw-w-52 dark:tw-hidden tw-mx-auto"
               />
             </div>
             <IonHeader collapse="condense" className="ion-margin-bottom">
@@ -280,11 +280,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
             </div>
           </div>
         </div>
-        <IonFab
-          vertical="bottom"
-          horizontal="start"
-          className="md:tw-ml-20 md:tw-mb-20"
-        >
+        <IonFab vertical="bottom" horizontal="start">
           <IonFabButton
             color="light"
             onClick={() => history.replace("/onboarding/2")}

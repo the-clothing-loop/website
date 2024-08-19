@@ -90,9 +90,6 @@ module.exports = {
   prefix: "tw-",
   preflight: false,
   theme: {
-    screens: {
-      md: "768px",
-    },
     colors,
     fontFamily: {
       sans: ["Montserrat", ...defaultTheme.fontFamily.sans],

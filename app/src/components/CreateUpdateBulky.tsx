@@ -24,15 +24,13 @@ import {
   hourglassOutline,
   imageOutline,
 } from "ionicons/icons";
-import { ChangeEvent, RefObject, useContext, useRef, useState } from "react";
-import { bulkyItemPut } from "../api/bulky";
+import { ChangeEvent, RefObject, useRef, useState } from "react";
 import { BulkyItem } from "../api/types";
-import { StoreContext } from "../stores/Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { Camera, CameraResultType } from "@capacitor/camera";
-import { uploadImage } from "../api/imgbb";
+import { OnSendMessageWithImage } from "../pages/Chat";
 
 enum State {
   idle,
@@ -41,7 +39,7 @@ enum State {
   loading,
 }
 
-export default function CreateUpdateBulky({
+export default function CreateBulky({
   bulky,
   didDismiss,
   modal,
@@ -52,29 +50,21 @@ export default function CreateUpdateBulky({
   didDismiss?: (
     e: IonModalCustomEvent<OverlayEventDetail<BulkyItem | null>>,
   ) => void;
-  onSendBulkyItem: (
-    message: string,
-    image: File,
-    callback: Function,
-  ) => Promise<void>;
+  onSendBulkyItem: OnSendMessageWithImage;
 }) {
   const { t } = useTranslation();
-  const { chain, authUser } = useContext(StoreContext);
   const [bulkyTitle, setBulkyTitle] = useState("");
   const [bulkyMessage, setBulkyMessage] = useState("");
-  const [bulkyImageURL, setBulkyImageURL] = useState("");
+  const [imageData, setImageData] = useState<string>();
   const [error, setError] = useState("");
   const [isCapacitor] = useState(() => isPlatform("capacitor"));
   const [loadingUpload, setLoadingUpload] = useState(State.loading);
   const [present] = useIonToast();
   const refScrollRoot = useRef<HTMLDivElement>(null);
 
-  const [imageFile, setImageFile] = useState<File>();
-
   function modalInit() {
-    setBulkyTitle(bulky?.title || "");
-    setBulkyMessage(bulky?.message || "");
-    setBulkyImageURL(bulky?.image_url || "");
+    setBulkyTitle("");
+    setBulkyMessage("");
     setLoadingUpload(State.idle);
   }
 
@@ -82,7 +72,6 @@ export default function CreateUpdateBulky({
     modal.current?.dismiss();
     setBulkyTitle("");
     setBulkyMessage("");
-    setBulkyImageURL("");
     setLoadingUpload(State.idle);
   }
   async function createOrUpdate() {
@@ -94,30 +83,19 @@ export default function CreateUpdateBulky({
       setError("message");
       return;
     }
-    if (!bulkyImageURL) {
+    if (!imageData) {
       setError("image-url");
       return;
     }
 
-    if (!imageFile) return;
     try {
-      onSendBulkyItem(`${bulkyTitle}\n\n${bulkyMessage}`, imageFile, () => {
-        refScrollRoot.current?.scrollTo({
-          top: 0,
-        });
+      await onSendBulkyItem(`${bulkyTitle}\n\n${bulkyMessage}`, imageData);
+
+      refScrollRoot.current?.scrollTo({
+        top: 0,
       });
-      let body: Parameters<typeof bulkyItemPut>[0] = {
-        chain_uid: chain!.uid,
-        user_uid: bulky?.user_uid || authUser!.uid,
-        title: bulkyTitle,
-        message: bulkyMessage,
-        image_url: bulkyImageURL,
-      };
-      if (bulky) body.id = bulky.id;
-      await bulkyItemPut(body);
 
       setError("");
-
       modal.current?.dismiss("", "confirm");
     } catch (err: any) {
       setError(err.status);
@@ -150,10 +128,9 @@ export default function CreateUpdateBulky({
   function handleWebUpload(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setImageFile(file);
-
     setLoadingUpload(State.loading);
 
+    // https://pqina.nl/blog/convert-a-file-to-a-base64-string-with-javascript/#encoding-the-file-as-a-base-string
     function getBase64(file: File) {
       return new Promise<string>((resolve, reject) => {
         let reader = new FileReader();
@@ -167,11 +144,8 @@ export default function CreateUpdateBulky({
     }
 
     (async () => {
-      // https://pqina.nl/blog/convert-a-file-to-a-base64-string-with-javascript/#encoding-the-file-as-a-base-string
       const image64 = await getBase64(file);
-
-      const res = await uploadImage(image64, 800);
-      setBulkyImageURL(res.data.image);
+      setImageData(image64);
     })()
       .then(() => {
         setLoadingUpload(State.success);
@@ -188,10 +162,8 @@ export default function CreateUpdateBulky({
     const photo = await Camera.getPhoto({
       resultType: CameraResultType.Base64,
     });
-    if (!photo.base64String) throw "Image not found";
-
-    const res = await uploadImage(photo.base64String, 800);
-    setBulkyImageURL(res.data.image);
+    if (!photo.dataUrl) throw "Image not found";
+    setImageData(photo.dataUrl);
   }
 
   return (
@@ -257,7 +229,7 @@ export default function CreateUpdateBulky({
               <IonLabel className="tw-mt-2 tw-mb-0">{t("image")}</IonLabel>
 
               <div className="tw-text-center tw-w-full">
-                {!(loadingUpload === State.loading) && bulkyImageURL ? (
+                {!(loadingUpload === State.loading) && imageData ? (
                   <IonCard
                     onClick={handleClickUpload}
                     className={`tw-my-8 tw-mx-[50px] tw-border tw-border-solid ${
@@ -265,7 +237,7 @@ export default function CreateUpdateBulky({
                     }`}
                   >
                     <IonImg
-                      src={bulkyImageURL}
+                      src={imageData}
                       alt={t("loading")}
                       className="tw-max-w-full"
                     />

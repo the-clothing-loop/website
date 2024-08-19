@@ -1,6 +1,4 @@
 import {
-  IonButton,
-  IonButtons,
   IonContent,
   IonHeader,
   IonPage,
@@ -20,6 +18,11 @@ import Loading from "../components/PrivateRoute/Loading";
 import { UserProfile } from "@mattermost/types/users";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
+
+export type OnSendMessageWithImage = (
+  message: string,
+  file: File | string,
+) => Promise<void>;
 
 type WebSocketMessagePosted = WebSocketMessage<{
   channel_display_name: string;
@@ -324,9 +327,8 @@ export default function Chat() {
 
   async function onSendMessageWithImage(
     message: string,
-    image: File,
-    callback: Function,
-  ) {
+    image: File | string,
+  ): Promise<void> {
     if (!selectedChannel || !mmClient) return;
     console.log("reqPostList", selectedChannel.id);
 
@@ -349,10 +351,10 @@ export default function Chat() {
 
     if (!selectedChannel || !mmClient) return;
 
-    reqPostList(mmClient, selectedChannel, "").then(() => callback());
+    await reqPostList(mmClient, selectedChannel, "");
   }
 
-  async function onSendMessage(message: string, callback: Function) {
+  async function onSendMessage(message: string) {
     if (!selectedChannel || !mmClient) return;
     console.log("reqPostList", selectedChannel.id);
     await mmClient.createPost({
@@ -360,7 +362,7 @@ export default function Chat() {
       message: message,
     } as Partial<Post> as Post);
 
-    reqPostList(mmClient, selectedChannel, "").then(() => callback());
+    await reqPostList(mmClient, selectedChannel, "");
   }
 
   function onClickEnableChat() {

@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
 import { BulkyItem, User } from "../api/types";
 import { bulkyItemRemove } from "../api/bulky";
-import CreateUpdateBulky from "../components/CreateUpdateBulky";
+import CreateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../stores/Store";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";

@@ -20,16 +20,16 @@ export function OnboardingPageOne() {
         <div className="tw-absolute tw-top-1/4 tw-translate-x-0 -tw-translate-y-1/2 tw-w-full">
           <IonImg
             src="/v2_logo_white.png"
-            className="tw-w-52 md:tw-w-72 tw-hidden dark:tw-block tw-mx-auto"
+            className="tw-w-52 tw-hidden dark:tw-block tw-mx-auto"
           />
           <IonImg
             src="/v2_logo_black.png"
-            className="tw-w-52 md:tw-w-72 dark:tw-hidden tw-mx-auto"
+            className="tw-w-52 dark:tw-hidden tw-mx-auto"
           />
         </div>
 
         <h1
-          className="tw-z-10 tw-block tw-absolute tw-inset-x tw-top-[55%] -tw-mt-20 md:-tw-mt-36 tw-px-4 md:tw-pl-[4%] tw-text-secondary dark:tw-text-dark tw-font-serif tw-font-bold tw-text-accent tw-text-7xl md:tw-text-9xl rtl:tw-text-end"
+          className="tw-z-10 tw-block tw-absolute tw-inset-x tw-top-[55%] -tw-mt-20 tw-text-secondary dark:tw-text-dark tw-font-serif tw-font-bold tw-text-accent tw-text-7xl rtl:tw-text-end"
           dir="ltr"
         >
           Swap, <br />
@@ -46,11 +46,7 @@ export function OnboardingPageOne() {
             className="tw-absolute -tw-left-28 -tw-bottom-[170px] tw-text-green tw-opacity-70"
           />
         </div>
-        <IonFab
-          vertical="bottom"
-          horizontal="end"
-          className="md:tw-mr-20 md:tw-mb-20"
-        >
+        <IonFab vertical="bottom" horizontal="end">
           <IonFabButton
             className="ion-margin-bottom"
             color="light"
@@ -94,11 +90,7 @@ export function OnboardingPageTwo() {
             <IonIcon icon={mapOutline} className="ion-margin-start" />
           </IonButton>
         </div>
-        <IonFab
-          vertical="bottom"
-          horizontal="start"
-          className="md:tw-ml-20 md:tw-mb-20"
-        >
+        <IonFab vertical="bottom" horizontal="start">
           <IonFabButton
             color="clear"
             onClick={() => history.replace("/onboarding/1")}
@@ -107,11 +99,7 @@ export function OnboardingPageTwo() {
             <IonIcon icon={arrowBack}></IonIcon>
           </IonFabButton>
         </IonFab>
-        <IonFab
-          vertical="bottom"
-          horizontal="end"
-          className="md:tw-mr-20 md:tw-mb-20"
-        >
+        <IonFab vertical="bottom" horizontal="end">
           <IonFabButton
             color="light"
             onClick={() => history.push("/onboarding/3")}
