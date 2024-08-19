@@ -54,7 +54,7 @@ import {
   warningOutline,
 } from "ionicons/icons";
 import dayjs from "../dayjs";
-import IsPaused from "../utils/is_paused";
+import IsPaused, { IsPausedHow } from "../utils/is_paused";
 import Badges from "../components/SizeBadge";
 import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
@@ -65,6 +65,7 @@ import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
 import RoutePrivacyInput from "../components/Settings/RoutePrivacyInput";
 import { chainUpdate } from "../api/chain";
+import { el } from "@faker-js/faker";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -202,30 +203,34 @@ export default function Settings() {
     Share.share({ url });
   }
 
-  let isUserPaused = IsPaused(authUser, chain?.uid);
-  let pausedDayjs = isUserPaused ? dayjs(authUser!.paused_until) : null;
-  let showExpandButton = (chain?.description.length || 0) > 200;
-  let emptyDescription = (chain?.description.length || 0) == 0;
   let pausedFromNow = "";
-  {
-    const now = dayjs();
-    if (pausedDayjs) {
-      if (pausedDayjs.year() < now.add(20, "year").year()) {
+  const isUserPausedHow = IsPausedHow(authUser, chain?.uid);
+  const isUserPaused = isUserPausedHow.chain || Boolean(isUserPausedHow.user);
+  if (authUser && isUserPaused) {
+    let pausedDayjs = dayjs(authUser.paused_until);
+
+    if (isUserPausedHow.chain) {
+      pausedFromNow = t("onlyForThisLoop");
+    } else if (isUserPausedHow.user) {
+      const now = dayjs();
+      if (isUserPausedHow.user.year() < now.add(20, "year").year()) {
         if (pausedDayjs.isBefore(now.add(7, "day"))) {
-          pausedFromNow = t("day", { count: pausedDayjs.diff(now, "day") + 1 });
+          pausedFromNow = t("day", {
+            count: pausedDayjs.diff(now, "day") + 1,
+          });
         } else {
           pausedFromNow = t("week", {
             count: pausedDayjs.diff(now, "week"),
           });
         }
-      }
-      if (authUser?.paused_until === null) {
-        pausedFromNow = t("onlyForThisLoop");
       } else {
         pausedFromNow = t("untilITurnItBackOn");
       }
     }
   }
+
+  let showExpandButton = (chain?.description.length || 0) > 200;
+  let emptyDescription = (chain?.description.length || 0) == 0;
 
   return (
     <IonPage>
