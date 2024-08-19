@@ -365,6 +365,7 @@ export default function Settings() {
                   value={chain?.uid || ""}
                   onIonChange={handleChainSelect}
                   interface="action-sheet"
+                  interfaceOptions={{ header: t("selectALoop") }}
                 >
                   {listOfChains.map((c) => {
                     return (
