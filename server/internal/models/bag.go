@@ -27,6 +27,14 @@ func (b *Bag) AddLastUserEmailToUpdateFifo(email string) {
 	if b.LastUserEmailToUpdate != "" {
 		list = strings.Split(b.LastUserEmailToUpdate, ",")
 	}
+
+	if len(list) > 0 {
+		if email == list[len(list)-1] {
+			// Last user email is already there as the last updated user
+			return
+		}
+	}
+
 	// only keeps 3 emails in total, this remove the oldest
 	if len(list) >= 3 {
 		list = list[len(list)-2:]

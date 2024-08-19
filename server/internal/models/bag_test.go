@@ -21,4 +21,7 @@ func TestBagAddUpdatedUser(t *testing.T) {
 	f("old2@example.com,old@example.com", "old2@example.com,old@example.com,new@example.com")
 	f("old3@example.com,old2@example.com,old@example.com", "old2@example.com,old@example.com,new@example.com")
 	f("old4@example.com,old3@example.com,old2@example.com,old@example.com", "old2@example.com,old@example.com,new@example.com")
+
+	f("old2@example.com,old@example.com,new@example.com", "old2@example.com,old@example.com,new@example.com")
+	f("old2@example.com,new@example.com,old@example.com", "new@example.com,old@example.com,new@example.com")
 }
