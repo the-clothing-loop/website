@@ -71,7 +71,7 @@ export default function AdminDashboard() {
         {
           text: t("delete"),
           type: "error",
-          fn: (e) => {
+          fn: () => {
             userPurge(authUser!.uid)
               .then(() => {
                 window.location.href = localizePath("/users/logout");
