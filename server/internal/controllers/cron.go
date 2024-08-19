@@ -264,7 +264,7 @@ func emailSendAgain(db *gorm.DB) {
 		errr := m.UpdateNextRetryAttempt(db, err)
 
 		if errr != nil {
-			if errors.Is(models.ErrMailLastRetry, errr) {
+			if errors.Is(errr, models.ErrMailLastRetry) {
 				views.EmailRootAdminFailedLastRetry(db, m.ToAddress, m.Subject)
 			}
 		}
