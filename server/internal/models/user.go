@@ -332,7 +332,7 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 			isCurrentlyPaused = u.PausedUntil.Time.After(time.Now())
 		}
 		if !isCurrentlyPaused {
-			uc, ok := lo.Find(u.Chains, func(uc UserChain) bool { return uc.UserID == u.ID })
+			uc, ok := lo.Find(u.Chains, func(uc UserChain) bool { return uc.UserID == u.ID && uc.ChainID == chain.ID })
 			if ok && uc.IsPaused {
 				isCurrentlyPaused = true
 			}
