@@ -56,24 +56,29 @@ func TestUserNotificationChainUIDs(t *testing.T) {
 }
 
 func TestUserOmitData(t *testing.T) {
-	t.Run("Ensure everything is not omitted of authUser with a loop size of 1", func(t *testing.T) {
-		chain1, user1, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
-			RoutePrivacy:     lo.ToPtr(2),
-			RouteOrderIndex:  1,
-			IsPausedLoopOnly: false,
-		})
+	t.Run("Ensure everything is not omitted authUser with a loop size of 1", func(t *testing.T) {
+		f := func(t *testing.T, isPausedLoopOnly bool) {
+			t.Helper()
+			chain1, user1, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
+				RoutePrivacy:     lo.ToPtr(2),
+				RouteOrderIndex:  1,
+				IsPausedLoopOnly: isPausedLoopOnly,
+			})
 
-		res, err := models.UserOmitData(db, chain1, []models.User{*user1}, user1.ID)
-		assert.NoError(t, err)
-		assert.Len(t, res, 1)
-		for _, user := range res {
-			if user.ID == user1.ID {
-				assert.Equal(t, user.Address, user1.Address)
-				assert.NotEqual(t, "***", user.Address)
-			} else {
-				assert.Fail(t, "result should contain user 1")
+			res, err := models.UserOmitData(db, chain1, []models.User{*user1}, user1.ID)
+			assert.NoError(t, err)
+			assert.Len(t, res, 1)
+			for _, user := range res {
+				if user.ID == user1.ID {
+					assert.Equal(t, user.Address, user1.Address)
+					assert.NotEqual(t, "***", user.Address)
+				} else {
+					assert.Fail(t, "result should contain user 1")
+				}
 			}
 		}
+		f(t, true)
+		f(t, false)
 	})
 	t.Run("Ensure everything is not omitted of authUser with a loop size of 2", func(t *testing.T) {
 		chain1, user1, _ := mocks.MockChainAndUser(t, db, mocks.MockChainAndUserOptions{
