@@ -141,7 +141,7 @@ export function StoreProvider({
   }
 
   async function logout() {
-    window.plugins?.OneSignal?.removeExternalUserId();
+    window.plugins?.OneSignal?.logout();
     await logoutApi().catch((err: any) => {
       console.warn(err);
     });
@@ -230,7 +230,8 @@ export function StoreProvider({
 
     // at this point it is safe to assume _isAuthenticated is LoggedIn
 
-    window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
+    window.plugins?.OneSignal?.login(_authUser.uid);
+
     let chainUID: string | null = null;
     try {
       chainUID = await storage.get("chain_uid");

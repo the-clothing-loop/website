@@ -4,29 +4,20 @@ const ONE_SIGNAL_ID = import.meta.env.VITE_ONE_SIGNAL_ID;
 
 // Call this function when your app starts
 export function OneSignalInitCap(): Promise<string | boolean> {
-  // Uncomment to set OneSignal device logging to VERBOSE
-  // OneSignal.setLogLevel(6, 0);
   if (!ONE_SIGNAL_ID || !window.plugins?.OneSignal)
     return Promise.reject("No OneSignal ID");
 
   // NOTE: Update the setAppId value below with your OneSignal AppId.
-  window.plugins.OneSignal.setAppId(ONE_SIGNAL_ID);
-  window.plugins.OneSignal.setNotificationOpenedHandler(function (jsonData) {
-    console.log("notificationOpenedCallback: " + JSON.stringify(jsonData));
-  });
+  window.plugins.OneSignal.initialize(ONE_SIGNAL_ID);
 
-  return new Promise((resolve, reject) => {
-    // Prompts the user for notification permissions.
-    //    * Since this shows a generic native prompt, we recommend instead using an In-App Message to prompt for notification permission (See step 7) to better communicate to your users what notifications they will get.
-    window.plugins!.OneSignal!.promptForPushNotificationsWithUserResponse(
-      function (accepted) {
-        console.log("User accepted notifications: " + accepted);
-        if (accepted) {
-          resolve(true);
-        } else {
-          reject(false);
-        }
-      },
-    );
-  });
+  return window
+    .plugins!.OneSignal!.Notifications.requestPermission(true)
+    .then(function (accepted) {
+      console.log("User accepted notifications: " + accepted);
+      if (accepted) {
+        return true;
+      } else {
+        throw false;
+      }
+    });
 }
