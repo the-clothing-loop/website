@@ -64,15 +64,6 @@ export default function AdminDashboard() {
                 <li key={name}>{name}</li>
               ))}
             </ul>
-            <label className="flex items-center text-xs">
-              <input
-                name="allowHostsToKnowYourEmailDuringDelete"
-                type="checkbox"
-                className="checkbox me-3 checkbox-xs"
-                defaultChecked
-              />
-              {t("allowHostsToKnowYourEmailDuringDelete")}
-            </label>
           </div>
         );
       },
@@ -80,11 +71,8 @@ export default function AdminDashboard() {
         {
           text: t("delete"),
           type: "error",
-          fn: (e) => {
-            const showHostsEmail = Boolean(
-              e?.allowHostsToKnowYourEmailDuringDelete,
-            );
-            userPurge(authUser!.uid, showHostsEmail)
+          fn: () => {
+            userPurge(authUser!.uid)
               .then(() => {
                 window.location.href = localizePath("/users/logout");
               })
@@ -177,11 +165,11 @@ export default function AdminDashboard() {
               </button>
 
               <button
-                className="btn btn-sm btn-error btn-outline bg-white/60 mb-4 sm:mr-4"
+                className=" btn btn-sm opacity-70 btn-ghost mb-4 sm:mr-4"
                 onClick={deleteClicked}
               >
-                <span className="text-danger">{t("deleteUserBtn")}</span>
-                <span className="icon-octagon-alert ml-2 rtl:ml-0 rtl:mr-2"></span>
+                <span className="">{t("deleteUserBtn")}</span>
+                <span className="icon-octagon-alert ms-1 !text-red"></span>
               </button>
             </div>
           </div>

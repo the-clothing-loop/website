@@ -1,4 +1,4 @@
-import mapboxjs from "mapbox-gl";
+import mapboxjs, { type Map } from "mapbox-gl";
 import { useEffect, useState } from "react";
 import { type RouteCoordinate, routeCoordinates } from "../../api/route";
 import type { Chain, UID } from "../../api/types";
@@ -26,7 +26,7 @@ export default function RouteMap(props: {
   authUserUID: UID;
   isChainAdmin: boolean;
 }) {
-  const [map, setMap] = useState<mapboxjs.Map>();
+  const [map, setMap] = useState<Map>();
   const { zoom, setZoom, mapZoom } = useMapZoom(11, MIN_ZOOM, MAX_ZOOM);
   const [id] = useState(() => window.crypto.randomUUID());
   const [lineType, setLineType] = useState(

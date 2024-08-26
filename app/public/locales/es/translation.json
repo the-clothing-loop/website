@@ -143,6 +143,7 @@
   "untilITurnItBackOn": "Hasta que lo vuelva a activar",
   "selectPauseDuration": "Seleccionar duración de pausa",
   "setTimerForACoupleOfWeeks": "Selecciona cuántas semanas quieres pausar tu participación",
+  "enableNotifications": "Activar notificaciones",
   "updateHeader": "Edit this page's header",
   "updateHeaderDesc": "This change will be visible to all loop members.",
   "resetHeaders": "Reset headers",

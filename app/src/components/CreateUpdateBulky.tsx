@@ -288,10 +288,10 @@ export default function CreateUpdateBulky({
                   loadingUpload === State.idle
                     ? "primary"
                     : loadingUpload === State.loading
-                    ? "light"
-                    : loadingUpload === State.success
-                    ? "success"
-                    : "warning"
+                      ? "light"
+                      : loadingUpload === State.success
+                        ? "success"
+                        : "warning"
                 }
               >
                 <IonIcon
@@ -299,8 +299,8 @@ export default function CreateUpdateBulky({
                     loadingUpload === State.loading
                       ? hourglassOutline
                       : loadingUpload === State.success
-                      ? checkmarkOutline
-                      : cloudUploadOutline
+                        ? checkmarkOutline
+                        : cloudUploadOutline
                   }
                   className="tw-mr-2"
                   size="default"
@@ -308,10 +308,10 @@ export default function CreateUpdateBulky({
                 {loadingUpload === State.loading
                   ? t("loading")
                   : loadingUpload === State.error
-                  ? "Error"
-                  : loadingUpload === State.success
-                  ? t("uploaded")
-                  : t("upload")}
+                    ? "Error"
+                    : loadingUpload === State.success
+                      ? t("uploaded")
+                      : t("upload")}
               </IonButton>
               {isCapacitor ? null : (
                 <input

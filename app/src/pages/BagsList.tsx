@@ -304,16 +304,14 @@ export default function BagsList() {
                   >
                     {["dynamic", "list", "card"].map((v) => (
                       <IonItem lines="full" key={v}>
-                        <IonLabel>
-                          <h2
-                            className={`tw-text-lg ${
-                              bagListView === v ? "!tw-font-semibold" : ""
-                            }`}
-                          >
-                            {v === "dynamic" ? t("automatic") : t(v)}
-                          </h2>
-                        </IonLabel>
-                        <IonRadio slot="end" value={v} />
+                        <IonRadio
+                          className={`tw-text-lg ${
+                            bagListView === v ? "!tw-font-semibold" : ""
+                          }`}
+                          value={v}
+                        >
+                          {v === "dynamic" ? t("automatic") : t(v)}
+                        </IonRadio>
                       </IonItem>
                     ))}
                   </IonRadioGroup>
@@ -336,16 +334,14 @@ export default function BagsList() {
                       ] as BagSort[]
                     ).map((v) => (
                       <IonItem lines="full" key={v}>
-                        <IonLabel>
-                          <h2
-                            className={`tw-text-lg ${
-                              bagSort === v ? "!tw-font-semibold" : ""
-                            }`}
-                          >
-                            {t(v)}
-                          </h2>
-                        </IonLabel>
-                        <IonRadio slot="end" value={v} />
+                        <IonRadio
+                          className={`tw-text-lg ${
+                            bagSort === v ? "!tw-font-semibold" : ""
+                          }`}
+                          value={v}
+                        >
+                          {t(v)}
+                        </IonRadio>
                       </IonItem>
                     ))}
                   </IonRadioGroup>

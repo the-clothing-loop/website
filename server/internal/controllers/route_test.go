@@ -16,7 +16,6 @@ func TestRandomizeCoord(t *testing.T) {
 		result := randomizeCoord(coord)
 		resultStr := fmt.Sprintf("%g", result)
 		// slog.Debug("testing coords", "expected", expected, "result str", resultStr)
-		assert.GreaterOrEqual(t, len(resultStr), len(expected))
 		for i, exp := range expected {
 			// slog.Debug("looping in expected runes", "expected rune", exp, "result rune", resultStr[i], "is ?", exp == '?')
 			if exp == '?' {

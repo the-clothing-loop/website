@@ -59,7 +59,7 @@ var emailsTemplates = map[string]*template.Template{
 	"it": mustParseFS(emailsFS, "emails/it/*.gohtml"),
 }
 var emailLayoutTemplate = mustParseFS(emailsFS, "emails/layout.gohtml")
-var lang = []string{"en", "nl", "de", "fr", "es", "he", "sv", "it"}
+var lang = []string{"en", "nl", "de", "fr", "es", "it", "he", "sv", "it"}
 
 func init() {
 	for _, l := range lang {
@@ -86,7 +86,7 @@ func getI18nGin(c *gin.Context) string {
 }
 func getI18n(i18n string) string {
 	switch i18n {
-	case "nl", "de", "fr", "he", "es", "sv":
+	case "nl", "de", "fr", "it", "he", "es", "sv":
 	default:
 		i18n = "en"
 	}

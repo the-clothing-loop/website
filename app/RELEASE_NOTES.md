@@ -140,3 +140,9 @@
 - Add notes
 - Emoji bags get a different look in the route page
 - Map is available from the a route page
+
+# 2.7
+
+- Fix paused status when only paused in another loop
+- Add pause icon to navigation
+- Update to latest ionic version

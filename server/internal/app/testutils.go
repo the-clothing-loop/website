@@ -10,7 +10,7 @@ import (
 func RunTestMain(m *testing.M, dbP **gorm.DB, configPath string) {
 	// setup
 	ConfigTestInit(configPath)
-	MailRemoveAllEmails()
+	MailpitRemoveAllEmails()
 	*dbP = DatabaseInit()
 	MailInit()
 

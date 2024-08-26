@@ -50,11 +50,10 @@ export function userAddAsChainAdmin(chainUID: string, userUID: string) {
   });
 }
 
-export function userPurge(userUID: string, show_hosts_purged_email: boolean) {
+export function userPurge(userUID: string) {
   return axios.delete<never>("v2/user/purge", {
     params: {
       user_uid: userUID,
-      show_hosts_purged_email,
     },
   });
 }

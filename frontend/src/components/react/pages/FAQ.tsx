@@ -76,7 +76,7 @@ export default function FAQ() {
             <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">
               {t("faqForHosts")}
             </h1>
-            <AccordionFaqs arr={arrHosts} />
+            <AccordionFaqs arr={arrHosts} initialOpen={0} />
           </div>
           <div className={"mb-6 ".concat(appMarginCss)}>
             <h1 className="font-sans font-semibold text-secondary text-3xl mb-4">

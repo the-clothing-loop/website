@@ -29,27 +29,34 @@ export const SizeLetters: (t: TFunction) => Record<Sizes | string, string> = (
 export function SizeBadges({
   s,
   g,
+  categoryOnly,
 }: {
   s?: Array<string | Sizes> | null;
   g?: Array<string | Categories> | null;
+  categoryOnly?: boolean;
 }) {
   const { t } = useTranslation();
 
-  const children =
-    s
-      ?.filter((a) => categories[Categories.children].includes(a as Sizes))
-      .sort((a, z) => a.localeCompare(z)) || [];
-  const women =
-    s
-      ?.filter((a) => categories[Categories.women].includes(a as Sizes))
-      .sort((a, z) => a.localeCompare(z)) || [];
-  const men =
-    s
-      ?.filter((a) => categories[Categories.men].includes(a as Sizes))
-      .sort((a, z) => a.localeCompare(z)) || [];
+  let children: string[] = [];
+  let women: string[] = [];
+  let men: string[] = [];
+  if (!categoryOnly) {
+    children =
+      s
+        ?.filter((a) => categories[Categories.children].includes(a as Sizes))
+        .sort((a, z) => a.localeCompare(z)) || [];
+    women =
+      s
+        ?.filter((a) => categories[Categories.women].includes(a as Sizes))
+        .sort((a, z) => a.localeCompare(z)) || [];
 
+    men =
+      s
+        ?.filter((a) => categories[Categories.men].includes(a as Sizes))
+        .sort((a, z) => a.localeCompare(z)) || [];
+  }
   return (
-    <ul className={`flex ${!!s ? "flex-col" : "flex-row"} items-start`}>
+    <ul className={`flex ${!!s ? "flex-col" : "flex-row"} items-start gap-1`}>
       {women.length || g?.includes(Categories.women) ? (
         <SizeCatBadges
           t={t}
@@ -81,17 +88,23 @@ export function SizeBadges({
         />
       ) : null}
       {g?.includes(Categories.toys) ? (
-        <BadgeItemSingle
+        <SizeCatBadges
+          t={t}
           key="toys"
-          text={t("toys")}
+          text={categoryOnly ? undefined : (t("toys") as string)}
+          category={Categories.toys}
+          sizes={[]}
           icon="/images/categories/toys-50.png"
           color="bg-skyBlue-light"
         />
       ) : null}
       {g?.includes(Categories.books) ? (
-        <BadgeItemSingle
+        <SizeCatBadges
+          t={t}
           key="books"
-          text={t("books")}
+          text={categoryOnly ? undefined : (t("books") as string)}
+          category={Categories.books}
+          sizes={[]}
           icon="/images/categories/books-50.png"
           color="bg-pink-light"
         />
@@ -102,20 +115,7 @@ export function SizeBadges({
 
 export function SizeBadgeLoading() {
   return (
-    <div className="inline-flex flex-row mb-1 mr-1 rtl:mr-0 rtl:ml-1 rounded-full w-9 h-7 px-2 bg-orange-light"></div>
-  );
-}
-
-function BadgeItemSingle(props: { color: string; icon: string; text: string }) {
-  return (
-    <li
-      className={`inline-flex items-center flex-row mb-1 me-1 rounded-full px-2 ${props.color}`}
-    >
-      <div className="flex-shrink-0 before:text-xs font-semibold me-1">
-        <img src={props.icon} className="h-5 my-1" />
-      </div>
-      <span className="text-sm font-semibold">{props.text}</span>
-    </li>
+    <div className="inline-flex flex-row rounded-full w-9 h-7 px-2 bg-orange-light"></div>
   );
 }
 
@@ -126,21 +126,31 @@ function SizeCatBadges({
   t: TFunction;
   category: Categories;
   sizes: Sizes[];
+  text?: string;
   icon: string;
   color: string;
 }) {
   const sizeLetters = SizeLetters(t);
+  const tooltipClass = props.text ? "" : "tooltip tooltip-top before:text-xs";
+  const tooltipText = props.text
+    ? undefined
+    : t(CatI18nKeys[props.category as string]);
   return (
     <li
       className={`inline-flex flex-row mb-1 me-1 rounded-full px-2 ${props.color}`}
     >
       <div
-        className="flex-shrink-0 tooltip tooltip-top before:text-xs font-semibold"
-        data-tip={t(CatI18nKeys[props.category as string])}
+        className={`flex-shrink-0 ${tooltipClass} font-semibold`}
+        data-tip={tooltipText}
       >
         <img src={props.icon} className="h-5 my-1" />
       </div>
       <ul className="font-semibold flex flex-row text-sm cursor-default">
+        {props.text ? (
+          <li key="text" className="ml-1 py-1">
+            {props.text}
+          </li>
+        ) : null}
         {props.sizes.map((s) => {
           return (
             <li
@@ -155,4 +165,43 @@ function SizeCatBadges({
       </ul>
     </li>
   );
+}
+
+export function BadgesEventInstagram(genders: string[]) {
+  return genders?.map((gender) => {
+    let src = "";
+    let alt = "";
+    switch (gender) {
+      case Categories.children:
+        src = "/images/categories/baby-50.png";
+        alt = "Baby";
+        break;
+      case Categories.women:
+        src = "/images/categories/woman-50.png";
+        alt = "Woman";
+        break;
+      case Categories.men:
+        alt = "Men";
+        src = "/images/categories/man-50.png";
+        break;
+      case Categories.toys:
+        alt = "Toys";
+        src = "/images/categories/toys-50.png";
+        break;
+      case Categories.books:
+        alt = "Books";
+        src = "/images/categories/books-50.png";
+    }
+    return (
+      <div className="h-9 p-1 relative">
+        <div className="absolute inset-0 rounded-full bg-white" />
+        <img
+          key={gender}
+          src={src}
+          alt={alt}
+          className="relative z-10 h-full"
+        />
+      </div>
+    );
+  });
 }
