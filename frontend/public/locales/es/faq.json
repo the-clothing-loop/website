@@ -73,7 +73,7 @@
   "arrHosts": {
     "0": {
       "question": "¿Cómo inicio un Loop?",
-      "answer": "¡No te preocupes! Escribimos un manual sencillo con todas las instrucciones que puedes encontrar en nuestra <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Caja de herramientas</a>. ¡Esperamos que saques provecho de lo que hemos aprendido durante todos estos años!"
+      "answer": "¡Te hemos cubierto! Escribimos un manual sencillo con todas las instrucciones que puedes encontrar en nuestro <a class='font-semibold' target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. ¡Les ruego que se beneficien de las lecciones que hemos aprendido en los muchos años que hemos estado haciendo esto!"
     },
     "1": {
       "question": "¿Cómo encontrar gente para unirse a mi Loop?",
