@@ -186,16 +186,14 @@ export default function SelectUserModal({
                       <span className="!tw-font-bold">{`#${i + 1}`}</span>
                     )}
                   </div>
-                  <IonLabel>
-                    <h2
-                      className={`tw-text-lg ${isMe ? "tw-text-primary" : ""} ${
-                        isSelected ? "!tw-font-semibold" : ""
-                      }`}
-                    >
-                      {user.name}
-                    </h2>
-                  </IonLabel>
-                  <IonRadio slot="end" value={user.uid} />
+                  <IonRadio
+                    className={`tw-text-lg ${isMe ? "tw-text-primary" : ""} ${
+                      isSelected ? "!tw-font-semibold" : ""
+                    }`}
+                    value={user.uid}
+                  >
+                    {user.name}
+                  </IonRadio>
                 </IonItem>
               );
             })}

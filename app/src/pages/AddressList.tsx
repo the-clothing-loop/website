@@ -185,30 +185,25 @@ export default function AddressList() {
                     onIonChange={(e: any) => setRouteListView(e.detail.value)}
                   >
                     <IonItem lines="full">
-                      <IonLabel>
-                        <h2
-                          className={`tw-text-lg ${
-                            routeListView === "dynamic"
-                              ? "!tw-font-semibold"
-                              : ""
-                          }`}
-                        >
-                          {t("automatic")}
-                        </h2>
-                      </IonLabel>
-                      <IonRadio slot="end" value="dynamic" />
+                      <IonRadio
+                        value="dynamic"
+                        labelPlacement="start"
+                        className={`tw-text-lg ${
+                          routeListView === "dynamic" ? "!tw-font-semibold" : ""
+                        }`}
+                      >
+                        {t("automatic")}
+                      </IonRadio>
                     </IonItem>
                     <IonItem lines="full">
-                      <IonLabel>
-                        <h2
-                          className={`tw-text-lg ${
-                            routeListView === "list" ? "!tw-font-semibold" : ""
-                          }`}
-                        >
-                          {t("routeOrder")}
-                        </h2>
-                      </IonLabel>
-                      <IonRadio slot="end" value="list" />
+                      <IonRadio
+                        className={`tw-text-lg ${
+                          routeListView === "list" ? "!tw-font-semibold" : ""
+                        }`}
+                        value="list"
+                      >
+                        {t("routeOrder")}
+                      </IonRadio>
                     </IonItem>
                   </IonRadioGroup>
                 </IonList>

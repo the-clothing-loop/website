@@ -13,11 +13,11 @@
   --width: 375px !important;
   --height: 812px !important;
 }
-.plt-desktop:not(.plt-hybrid) {
-  display: none !important;
-}
 .plt-desktop:not(.plt-hybrid) body .ion-cloned-element {
   display: none !important;
+}
+.plt-desktop:not(.plt-hybrid) #root > .ion-page {
+  overflow: hidden;
 }
 .plt-desktop:not(.plt-hybrid) body {
   width: 375px;

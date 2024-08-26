@@ -145,3 +145,4 @@
 
 - Fix paused status when only paused in another loop
 - Add pause icon to navigation
+- Update to latest ionic version
