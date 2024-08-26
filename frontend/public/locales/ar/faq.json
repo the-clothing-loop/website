@@ -73,7 +73,7 @@
   "arrHosts": {
     "0": {
       "question": "كيف أبدأ حلقة؟",
-      "answer": "حصلنا على تغطية! كتبنا دليلا بسيطا مع جميع التعليمات التي يمكن العثور عليها في <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>مجموعة الأدوات</a>. يرجى الاستفادة من الدروس التي تعلمناها في السنوات العديدة التي كنا نفعل ذلك!"
+      "answer": "حصلنا على تغطية! كتبنا دليلا بسيطا مع جميع التعليمات التي يمكن العثور عليها في <a class='font-semibold' target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>مجموعة الأدوات</a>. يرجى الاستفادة من الدروس التي تعلمناها في السنوات العديدة التي كنا نفعل ذلك!"
     },
     "1": {
       "question": "كيف يمكن العثور على أشخاص للانضمام إلى دورتي؟",
