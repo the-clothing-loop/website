@@ -46,7 +46,6 @@ export interface UserChain {
   is_approved: boolean;
   is_paused: boolean;
   created_at: string;
-  flag: boolean;
 }
 
 export interface Chain {
