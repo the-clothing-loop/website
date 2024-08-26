@@ -34,7 +34,14 @@ import {
   IonModalCustomEvent,
   OverlayEventDetail,
 } from "@ionic/core";
-import { RefObject, useContext, useEffect, useRef, useState } from "react";
+import {
+  RefObject,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { StoreContext } from "../stores/Store";
 import UserCard from "../components/UserCard";
 import { Trans, useTranslation } from "react-i18next";
@@ -48,6 +55,7 @@ import {
   lockClosedOutline,
   logoAndroid,
   logoApple,
+  notificationsOutline,
   openOutline,
   shareOutline,
   sparkles,
@@ -66,6 +74,10 @@ import HeaderTitle from "../components/HeaderTitle";
 import RoutePrivacyInput from "../components/Settings/RoutePrivacyInput";
 import { chainUpdate } from "../api/chain";
 import { el } from "@faker-js/faker";
+import {
+  OneSignalCheckPermissions,
+  OneSignalRequestPermissions,
+} from "../onesignal";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -95,11 +107,26 @@ export default function Settings() {
   const [isCapacitor] = useState(isPlatform("capacitor"));
   const [isIos] = useState(isPlatform("ios"));
   const [expandedDescription, setExpandedDescription] = useState(false);
+  const [notificationPermission, setNotificationPermission] = useState<
+    null | boolean
+  >(null);
+
+  // Check notification permissions every 3 seconds
+  useEffect(() => {
+    let n = setInterval(() => {
+      OneSignalCheckPermissions().then(setNotificationPermission);
+    }, 3000);
+    return () => {
+      clearInterval(n);
+    };
+  }, []);
+
   useEffect(() => {
     if (!authUser) return;
     if (!chain || state?.openChainSelect) {
       refChainSelect.current?.open();
     }
+    OneSignalCheckPermissions().then(setNotificationPermission);
   }, [authUser, state]);
 
   const longPressSubHeader = useLongPress(() => {
@@ -122,6 +149,11 @@ export default function Settings() {
     const c = listOfChains.find((c) => c.uid === chainUID) || null;
 
     setChain(c?.uid, authUser);
+  }
+  function handleEnableNotifications() {
+    OneSignalRequestPermissions().finally(() => {
+      OneSignalCheckPermissions().then(setNotificationPermission);
+    });
   }
 
   function handlePauseButton(isUserPaused: boolean) {
@@ -320,6 +352,20 @@ export default function Settings() {
               modal={refSelectPauseExpiryModal}
               submit={(d) => setPause(d)}
             />
+            {notificationPermission === false ? (
+              <IonItem
+                onClick={handleEnableNotifications}
+                lines="none"
+                detail={false}
+              >
+                <IonLabel>{t("enableNotifications")}</IonLabel>
+                <IonIcon
+                  slot="end"
+                  icon={notificationsOutline}
+                  color="primary"
+                />
+              </IonItem>
+            ) : null}
           </IonList>
         </IonCard>
         <IonList style={{ "--ion-item-background": "transparent" }}>
