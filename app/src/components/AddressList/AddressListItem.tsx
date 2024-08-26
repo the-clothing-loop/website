@@ -2,7 +2,6 @@ import { IonItem, IonText, IonIcon } from "@ionic/react";
 import { shield, pauseCircleSharp, flag } from "ionicons/icons";
 import { Bag, User } from "../../api/types";
 import TinyBagSvg from "./TinyBagSvg";
-//import { Sword } from "lucide-static/"
 
 export interface AddressListItemProps {
   user: User;
