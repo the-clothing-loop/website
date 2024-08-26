@@ -1,0 +1,29 @@
+{
+  "testimonials": "Anbefalinger",
+  "arrTestimonials": [
+    {
+      "name": "Roos",
+      "message": "Jeg synes det er flott å kunne «butikken» regelmessig uten å ha innbyrd min lommebok eller miljø."
+    },
+    {
+      "name": "Ukjent",
+      "message": "Aldri for ung til å lære! Mine døtre, 13 og 16 år plukker regelmessig noe kult fra vesken. Jeg elsker hvordan dette lærer dem at klær kan finnes veldig godt for hverandre. Bærekraftighet og miljøbevissthet bør etter min mening være en viktig del av utdanningen!"
+    },
+    {
+      "name": "Deltaker i Barendrecht",
+      "message": "Noen i løkken min landet en ny jobb. Gjett hvem som er med å lage intervjuet hennes?"
+    },
+    {
+      "name": "Nienke",
+      "message": "Den beste delen kan prøve klær du aldri ville velge i butikken og innse at du virkelig liker dem."
+    },
+    {
+      "name": "Lia",
+      "message": "En fin bonus er at du blir kjent med personer i nærmiljøet ditt, vanligvis naboer med ganske grønne hjerter. Som et resultat det er et lite skritt – hvis du virkelig trenger noe, men ikke ville kjøpe det – for å sjef en låneforespørsel i løkken slike som for ski-paneler eller en drakt for en temamateriell!"
+    },
+    {
+      "name": "Ella",
+      "message": "Etter å ha fått den tredje posen, treffer den meg akkurat det som en utrolig mengde klær vi har i næringene våre!"
+    }
+  ]
+}

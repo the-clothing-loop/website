@@ -9,11 +9,9 @@ import (
 )
 
 func TestConfigInit(t *testing.T) {
-	ConfigTestInit("../..")
+	assert.NotPanics(t, func() {
+		ConfigTestInit("../..")
+	})
 	assert.NotEqual(t, 0, Config.DB_PORT, "db_port not set")
-}
-
-func TestConfigWithTestingEnv(t *testing.T) {
-	ConfigTestInit("../..")
 	assert.Equal(t, EnvEnumTesting, Config.ENV, "env is not set to testing")
 }

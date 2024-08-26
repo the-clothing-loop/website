@@ -564,16 +564,11 @@ func ChainRemoveUser(c *gin.Context) {
 
 	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
 
-	// if the user is removed by an admin, do not send an email to this one
-	var excludedEmail string
-	if _, isChainAdmin := authUser.IsPartOfChain(chain.UID); isChainAdmin {
-		excludedEmail = authUser.Email.String
-	}
 	// send email to chain admins
 	services.EmailLoopAdminsOnUserLeft(db,
 		user.Name,
 		user.Email.String,
-		excludedEmail,
+		user.Email.String,
 		chain.ID,
 	)
 }

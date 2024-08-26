@@ -1,60 +1,143 @@
 {
-  "faqForParticipants": "FAQ for Participants",
+  "faqForParticipants": "أسئلة متكررة للمشاركين",
   "arrParticipants": {
     "0": {
-      "question": "Are there rules on how much you can take out, and do you have to donate the same amount of clothes as you take out?",
-      "answer": "No, there are no rules here. Sometimes you take a bit more, sometimes you give more. Please don't add clothes to the bags that aren't of good quality, just to add something! It's better to have a bag half full of treasures, than to have a full bag that is of less quality."
+      "question": "لقد قمت بالتسجيل، متى ستضاف إلى الطريق؟",
+      "answer": "If you have verified your email address, your request to join the Loop has come through successfully! <strong>The host of the Loop has been notified</strong> and will contact you to add you to the route.<br/>This can sometimes take a little while as all hosts manage the Loop in their spare time. Most hosts add new members once every 2 to 4 weeks."
     },
     "1": {
-      "question": "Can all sizes of clothing be in the same bag?",
-      "answer": "Mixed bags work perfectly well usually, as sizes vary per brand and proportions are different as well. But this only works within a certain width. We recommend having a mix of items from size 36 - 42 (S, M and L) and starting a new Clothing Loop for smaller or bigger sizes."
+      "question": "هل هناك قواعد بشأن كم يمكنك الاحتفاظ به؟",
+      "answer": "No, there are <strong>no hard rules</strong> here, but keep in mind the system works best when in balance. <b>Every bag is different.</b> Sometimes you find more, sometimes you don’t find anything. Every garment that is worn again is a win!"
     },
     "2": {
-      "question": "How to avoid “Finders keepers, losers weepers”?",
-      "answer": "There are no guarantees that you will find something that you like. Sometimes a few bags will pass your house that may not have an item for you. But remember: finding one dream item is more worth than having 10 items in your wardrobe that you do not wear. And making someone else very happy with something that was collecting dust in your wardrobe is also a significant (and fun!) part of the Clothing Loop mentality!"
+      "question": "هل يجب عليك التبرع بنفس كمية الملابس التي تأخذها؟",
+      "answer": "ليس بالضرورة، ولكن لا يغيب عن البال أن النظام يعمل على أفضل وجه إذا كان هناك توازن جميل بين الهدايا والأخذ. والملابس الملطخة أو الملطخة أو المصابة بأضرار لا نرحب بها أبدا."
     },
     "3": {
-      "question": "What to do with bulky clothes (like winter coats) that don't fit in the bag?",
-      "answer": "Big items can be photographed and shared via the communication channel, or through the Glide app. In a private message, people can respond and organize pick up."
+      "question": "هل يمكن لجميع أحجام الملابس أن تكون في نفس الحقيبة؟",
+      "answer": "<strong>Mixed bags work perfectly well usually</strong>, as sizes vary per brand and all people’s proportions are different.<br/>We recommend having a mix of items from size 36 - 42 (S, M and (X)L, and starting separate Loops especially for smaller or bigger sizes."
     },
     "4": {
-      "question": "Can I put shoes in the bag as well?",
-      "answer": "The short answer is yes, but keep in mind: shoes are more difficult to pass along than clothes. There are many more sizes, and they show wear a lot quicker than garments. So please be very selective with shoes! Only add “as good as new” pairs, and have no more than 2 pairs per bag."
-    }
-  },
-  "faqForHosts": "FAQ for Hosts",
-  "arrHosts": {
-    "0": {
-      "question": "How can I start using the app?",
-      "answer": "You can copy the app and use it within your group. You only have to fill in the address list in our downloadable template. It is super easy! We created a video tutorial and slide deck to help you get started. Please get in touch here if you still run into trouble!"
-    },
-    "1": {
-      "question": "Are there graphic templates we can use?",
-      "answer": "Absolutely, we made you a folder where you can find logo's templates, manuals and all. Use as many as you like!"
-    },
-    "2": {
-      "question": "Introducing a “Ghost rider” in the Loop",
-      "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! You can then introduce a “ghost rider” bag that travels in the other direction, so all of a sudden you have other people before you in the route, and also other styles in the bag. If you do so, please make people aware that they shouldn't put any items in the “ghost rider” bag that they have previously taken out of a regular bag. And keep the number of ghost rider bags limited to 1 or 2, to keep it special and also simple."
-    },
-    "3": {
-      "question": "How to manage a large group of people in the communication channel?",
-      "answer": "Especially when groups get bigger, it is important to make sure people aren't bombarded with (irrelevant) messages. You can set up some rules for what should and shouldn't be shared via the group app. For example:<br /><br /><span>Yes,</span> in the app:<ul><li>Selfies of nice things you took from the bag or nice things that you are putting in</li><li>Compliments to others</li><li>Logistics and organizational relevant updates</li></ul><span>No,</span> not in the app:<ul><li>Everything unrelated to the Clothing Loop (requests for surveys, invites for new groups, Fund raising, memes, etc). If you want to ask everyone's input on something, use a polling app like LouLou instead</li></ul>"
-    },
-    "4": {
-      "question": "What if I no longer have time to manage the Clothing Loop I started?",
-      "answer": "Use the group! Ask if someone else wants to take over and host the loop."
+      "question": "كيف يمكن تجنب \"حفظة المحفزات وأسبوع الخاسرين\"؟",
+      "answer": "There are <strong>no guarantees that you will find something you like</strong>. Sometimes a few bags will pass your house that do not hold an item for you.<br/>But remember: finding one dream item is more worth than having 10 items in your wardrobe that you don’t wear. And making someone else very happy with something that was collecting dust in your wardrobe is also a significant (and fun!) part of the Clothing Loop mentality!"
     },
     "5": {
-      "question": "What if someone wants to join but lives too far away?",
-      "answer": "If someone signed up for your Loop but lives too far outside of your Loop area, it is up to you to decide if he/she/them may join. One thing you can do to decrease the distance between addresses, is to ask that person to find other participants between their area and the original Loop location."
+      "question": "ماذا نفعل مع الملابس الضخمة (مثل المعاطف الشتوية) التي لا تناسب الحقيبة؟",
+      "answer": "يمكن تصوير العناصر الكبيرة ومشاركتها عبر قناة الاتصال الخاصة بك، أو في تطبيق حلقات التكرار. في رسالة خاصة، يمكن للناس أن يستجيبوا وينظموا عملية التقطي."
     },
     "6": {
-      "question": "What is an ideal group size?",
-      "answer": "We'd recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognize anything in the bag anymore, so you can keep swapping. There is no real maximum, it is up to you what still works! In the Netherlands a loop is on average 45 people. But there are loops running smoothly with 130 people!"
+      "question": "هل يمكنني وضع الأحذية في الحقيبة أيضا؟",
+      "answer": "That is up <strong>to your local host to decide</strong>. If your Loop allows you to add shoes to the bag, only add “as good as new” pairs, and <b>no more than 2 pairs per bag</b>. And please wrap them in a separate bag to avoid them touching the clothes. "
     },
     "7": {
-      "question": "What to do if the Clothing Loop does not work well?",
-      "answer": "If the quality of the clothing isn't high enough, people might leave the Loop. Make sure that everyone shares the responsibility for only adding good quality items.<br/><br/>Do you see anything that shouldn't be in the Loop? Take it out and donate it to a clothing container. This way, it can still be recycled. If in doubt, ask the person next to you if he/she agrees and decide then.<br/><br/>A fabric shaver can extend the lifetime of a clothing item enormously! You can share this advice within your community.<br/><br/>And last but not least, set a good example yourself; share some nice photos and encourage others to do the same!"
+      "question": "أنا أحصل على الخطأ: \"حسابك موجود بالفعل\".",
+      "answer": "Previously, <strong>you have created an account at the Clothing Loop already.</strong> To sign up for a new Loop, you will need to log in first. Click in the top right corner on login, Enter the email address you used to register your Loop.<br/>Check your email (and spam folder!) for our verification link. We use a link instead of a password! Then you will be able to sign up for a new Loop."
+    }
+  },
+  "faqForApp": "أسئلة متكررة للتطبيق",
+  "arrApp": {
+    "0": {
+      "question": "ما هو تطبيق حلقة الملابس؟",
+      "answer": "<strong>The Clothing Loop App is made to make organizing a Loop easier.</strong> You can start using the app, if you are part of a Loop. A host can decide together with the participants if they want to start using the app to organize their Loop.<br/>In the app: you can find the rules of your local Loop, you can find out who to bring the bag to next, where the bags are and post bulky items that do not fit into the bag."
+    },
+    "1": {
+      "question": "أين يمكنني العثور على التطبيق؟",
+      "answer": "يمكنك العثور على التطبيق في <a target='_blank' href='https://play.google.com/store/apps/details?id=org.clothingloop.app'>Google Playstore</a>، <a target='_blank' href='https://apps.apple.com/us/app/my-clothing-loop/id6451443500'>Apple Appstore</a>، أو كـ web-version: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>"
+    },
+    "2": {
+      "question": "هل يمكنني تغيير القواعد في التطبيق؟",
+      "answer": "Yes, <strong>as a host you are able to change, adjust, and add rules in the App</strong>. Participants are not able to change the rules. To change the rules, click in the upper right corner on Change. After you have changed the rules, click on Save to save your changes."
+    },
+    "3": {
+      "question": "ما هي العناوين التي يمكنني رؤيتها؟",
+      "answer": "كمضيف، يمكنك رؤية معلومات الجميع في الحلقة الخاصة بك. وبصفتكم من المشاركين، لا يسعكم إلا أن تروا معلومات المشاركين من قبلكم وبعدكم. ويستطيع أحد المشاركين أيضا الاطلاع على معلومات مضيف."
+    },
+    "4": {
+      "question": "كيف تضبط حقيبة على اسمي؟",
+      "answer": "إذا كنت قد استلمت حقيبة، فيمكنك تعيين حقيبة على اسمك في علامة التبويب الأكياس انقر على صورة السلة والبحث عن اسمك. لاحظ أيضا تاريخ وصول الحقيبة. من المهم ملاحظة أنك استلمت الحقيبة في كل مرة."
+    },
+    "5": {
+      "question": "ما هي العناصر الضخمة (مثل معاطف الشتاء)؟",
+      "answer": "<strong>يمكن تصوير ومشاركة العناصر الكبيرة التي هي كبيرة جدا بالنسبة لسلة الحقيبة.</strong> انقر على الإنشاء، وقم بإنشاء عنوان ووصف، وقم بإنشاء عنصر كبير جديد. بعد ذلك يمكن للمشاركين الآخرين النقر على اسمك للعثور على معلوماتك. في رسالة خاصة، يمكن للمشاركين أن يستجيبوا وينظموا عملية الاختيار. بعد عملية الاختيار، يجب إزالة عنصر كبير من القائمة."
+    },
+    "6": {
+      "question": "هل يمكنني استخدام التطبيق كما أشارك في حلقات متعددة؟",
+      "answer": "نعم، يمكنك استخدام التطبيق أثناء مشاركتك في حلقات متعددة. إذا ذهبت إلى معلومات ، يمكنك التبديل بين الحلقات، بعد النقر فوق اسم الحلق."
+    },
+    "7": {
+      "question": "لماذا أرى فقط زر الرسائل القصيرة؟",
+      "answer": "يبدأ رقم الهاتف هذا بـ 06 وليس لديه رمز دولي (على سبيل المثال +31). إذا كان رقم الهاتف يحتوي على رمز دولي (+31 6…)، فستظهر أيضًا أزرار WhatsApp والإشارة وTelegram<br/>يمكنك تغيير رقم الهاتف الخاص بك في الحساب. الاستضافة قادرة أيضًا على تحرير معلومات المشترك"
+    }
+  },
+  "faqForHosts": "أسئلة متكررة للمضيفين",
+  "arrHosts": {
+    "0": {
+      "question": "كيف أبدأ حلقة؟",
+      "answer": "حصلنا على تغطية! كتبنا دليلا بسيطا مع جميع التعليمات التي يمكن العثور عليها في <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>مجموعة الأدوات</a>. يرجى الاستفادة من الدروس التي تعلمناها في السنوات العديدة التي كنا نفعل ذلك!"
+    },
+    "1": {
+      "question": "كيف يمكن العثور على أشخاص للانضمام إلى دورتي؟",
+      "answer": "ابدأ صغيرة! <strong>اسأل أصدقائك ومعارفهم في بيئتك المباشرة</strong> مثل نادي الرياضة أو مدرسة الرقص. عندما يكون لديك جمهور صغير، يمكنك أن تطلب من الجميع دعوة شخص آخر على الأقل، ثم تنمو المجموعة عضويا. يمكنك أيضًا إرسال بيان صحفي إلى وسائطك المحلية. لقد قمنا بالفعل بصياغة قالب <a target='_blank' href='https://docs.google.com/document/d/1fCYlkSEvcJyPcN44BLilfa62JILMo7cf_bqYKdCAdro/edit'></a> لملء هذا النموذج!"
+    },
+    "2": {
+      "question": "كم من الوقت سيستضيف حلقة تكلفني؟",
+      "answer": "ويقول متطوعونا إنهم يقضون في المتوسط <strong>1&#189; ساعة في الشهر</strong> على استضافة الحلق."
+    },
+    "3": {
+      "question": "كيف يمكنني تسجيل حلقة جديدة؟",
+      "answer": "لقد جعلناك <a target='_blank' href='https://drive.google.com/drive/folders/1UiokapMTKu6nrX5sg6s8FFkS8jDTtu86'>دليلا بسيطا</a> مع لقطات شاشة من كل خطوة. مازالت تواجه مشكلة؟ أرسل لنا رسالة بالبريد الإلكتروني!"
+    },
+    "4": {
+      "question": "كيف يمكنني تسجيل الدخول على الموقع؟",
+      "answer": "<ol><li>انقر في الزاوية اليمنى العليا عند تسجيل الدخول</li><li>أدخل عنوان البريد الإلكتروني الذي استخدمته لتسجيل الحلقة الخاصة بك.</li><li>تحقق من بريدك الإلكتروني (ومجلد البريد المزعج!) لرابط التحقق. نحن نستخدم رابط بدلاً من كلمة المرور!</li><li>أنت الآن مسجل الدخول ويمكنك عرض وتحرير الحلقات الخاصة بك ومشاهدة مشاركين جدد.</li></ol>"
+    },
+    "5": {
+      "question": "كيف يمكنني البدء باستخدام التطبيق؟",
+      "answer": "نعم! لقد قمنا بصنع تطبيق يمكنك إعداده بسهولة لدورتك. التطبيق متوفر على iOS و Android و كنسخة على الإنترنت: <a target='_blank' href='https://app.clothingloop.org'>app.clothingloop.org</a>.<br /><br />يمكنك <strong>تحميل التطبيق واستخدامه داخل مجموعتك</strong>. إنه سهل للغاية! يمكنك العثور على دليل أكثر تفصيلاً حول كيفية استخدام التطبيق في مجموعة الأدوات <a target='_blank' href='https://drive.google.com/open?id=1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>لمضيفي الحلقات</a>."
+    },
+    "5_5": {
+      "question": "كيف تصنع طريق؟",
+      "answer": "You can make a route in the admin page of your Account. <strong>Click on Route and you will find an Optimize Route Button.</strong> Once you click on that button, all addresses are reorganized to make the best route. It is also possible to change addresses around one by one if that works better in that case. <strong>New participants will be placed in the most logical spot in the current list.</strong>"
+    },
+    "6": {
+      "question": "هل هناك صور أو قوالب رسوم بيانية يمكننا استخدامها؟",
+      "answer": "بالتأكيد، قمنا بإعدادك <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>مجموعة أدوات</a> حيث يمكنك العثور على الشعارات والصور والقوالب. استخدم أكبر عدد تريده!"
+    },
+    "7": {
+      "question": "تقديم \"راكب الشبح\" في الحلقة",
+      "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! <b>You can then introduce a “ghost rider” bag that travels in the other direction,</b> so all of a sudden you have other people before you in the route, and also other styles in the bag. If you do so, please make people aware that they shouldn’t put any items in the “ghost rider” bag that they have previously taken out of a regular bag. And keep the number of ghost rider bags limited to 1 or 2, to keep it special and simple. "
+    },
+    "7_5": {
+      "question": "تقديم \"حقيبة مريحة\" في الحلقة",
+      "answer": "Once your Loop is ongoing for a while, you may want to change things up a little bit! <b>You can then introduce a “Bunny Bag” that always skips an address,</b> so all of a sudden you have other people before you on the route, and also a few other styles in the bag. Keep the number of bunny bags limited to 1 or 2, to keep it special and simple."
+    },
+    "8": {
+      "question": "كيف يمكن إدارة مجموعة كبيرة من الناس في قناة الاتصال؟",
+      "answer": "Especially when groups get bigger, it is important to make sure people aren’t bombarded with (irrelevant) messages. You can set up some rules for what should and shouldn’t be shared via the group app. For example:<ul class='list-none'><li><b>Yes,</b> in the app:<ul><li>Selfies of nice things you took from the bag or nice things that you are putting in</li><li>Compliments to others</li><li>Logistics and organizational relevant updates from the host</li></ul></li><li><b>No,</b> not in the app:<ul><li>Everything unrelated to the Clothing Loop (requests for surveys, invites for new groups, Fund raising, memes, etc). If you want to ask everyone’s input on something, use a polling function</li><li>Use the private message function when your message only concerns one person.</li></ul></li></ul>"
+    },
+    "8_5": {
+      "question": "لماذا لا أرى مشارك قام بالتسجيل؟",
+      "answer": "عندما تعلم أن أحد المشاركين قد سجل، لكنك لا تراها في قائمة المشاركين في الحساب ولم تستلم البريد الإلكتروني تلقائياً منا. ربما لأن عنوان البريد الإلكتروني للمشاركين لم يتم التحقق منه. <strong>يرجى طلب مشارك جديد لتسجيل الدخول.</strong> بمجرد تسجيل دخولهم، يتم التحقق من حسابهم. الآن ستتلقى البريد الإلكتروني وستراهم في القائمة الجديدة."
+    },
+    "9": {
+      "question": "ماذا لو لم يعد لدي الوقت لإدارة حلقة الملابس التي بدأت؟",
+      "answer": "استخدم المجموعة! <strong>اسأل إذا كان شخص آخر يريد المساعدة في استضافة الحلق.</strong> بمرور الوقت قد يرغب في تولي الأمر بالكامل."
+    },
+    "10": {
+      "question": "ماذا لو أراد أحدهم أن ينضم و يعيش بعيداً؟",
+      "answer": "If someone signed up for your Loop but lives too far outside of your Loop area, <strong>it is up to you to decide if they may join</strong>. If they cannot, please send them an email to let them know. When in doubt: one thing you can do to decrease the distance between addresses, is to ask that person to find other participants between their area and the original Loop location."
+    },
+    "11": {
+      "question": "ما هو حجم المجموعة المثالية؟",
+      "answer": "We’d recommend having a minimum of 20 people in a group: after 20 addresses you usually do not recognise anything in the bag anymore, so you can continue swapping. <b>There is no real maximum</b>, it is up to you what still works! In the Netherlands an average Loop is 45 people. But there are Loops running smoothly with over 180 people!"
+    },
+    "12": {
+      "question": "ماذا لو انتقل شخص ما إلى المنزل وأريد الانضمام إلى منطقة أخرى؟",
+      "answer": "يمكنك كمستضيف للحلقة إزالتها من الحلقة الخاصة بك عند تسجيل الدخول على موقعنا الإلكتروني. وإذا أرادوا أن ينضموا مرة أخرى إلى حيهم الجديد، فإنهم يطلبون منهم أن يسجلوا مرة أخرى بعنوانهم الجديد.<br/><strong>يمكن للمشاركين تسجيل الدخول إلى موقعنا على شبكة الإنترنت، وتعديل تفاصيل حسابهم</strong> في صفحة حسابهم. معنا: يمكنهم ترك حلقة والتسجيل للحصول على حلقة أخرى."
+    },
+    "13": {
+      "question": "ماذا نفعل إذا لم تعمل حلقة الملابس بشكل جيد؟",
+      "answer": "تأكد من أن <strong>الجميع يشاركون المسؤولية عن إضافة عناصر جيدة النوعية فقط.</strong><br/><br/>هل ترى شيئا لا ينبغي أن يكون في حقيبة؟ حاول التبرع به لبرنامج إعادة تدوير النسيج المحلي الخاص بك. إذا كان هناك شك، اسأل الشخص القريب منك على قائمة العناوين إذا وافق على ذلك. من الجيد أن يعمل عدد قليل من الناس كنقاط تفتيش على طول الطريق، للتأكد من أن الحقائب تبقى في حالة جيدة. لأنه إذا لم تكن نوعية الملابس عالية بما فيه الكفاية، فإن الناس قد يغادرون الحلقة وسيكون ذلك مخجزاً!<br/><br/>A <a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'><a target='_blank' href='https://www.philips.nl/c-p/GC026_00/ontpiller'> shaver</a> يمكن أن يطيل عمر عنصر الملابس بشكل هائل! بإمكانك تقاسم هذه المشورة مع مجتمعك.<br/><br/>وأخيرا وليس آخرا، <strong>ضبط مثالا جيدا بنفسك: شارك بعض الصور الجميلة وشجع الآخرين على فعل الشيء نفسه!</strong> رؤية حيث ينتهي الأمر بالسلع هو دافع كبير للناس للتبرع بسلع جميلة."
     }
   }
 }

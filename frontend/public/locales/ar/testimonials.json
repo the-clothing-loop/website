@@ -1,29 +1,29 @@
 {
-  "testimonials": "Testimonials",
+  "testimonials": "الشهادات",
   "arrTestimonials": [
     {
       "name": "Roos",
-      "message": "I think it's great to be able to 'shop' regularly without burdening my wallet or the environment."
+      "message": "أعتقد أنه من الرائع أن تكون قادراً على \"المتجر\" بشكل منتظم دون تحميل محفظتي أو البيئة."
     },
     {
-      "name": "Unknown",
-      "message": "Never too young to learn! My daughters, aged 13 and 16, regularly pick something cool from the bags. I love how this teaches them that clothes can very well be found second-hand. In my opinion, sustainability and environmental awareness should be an important part of any education!"
+      "name": "غير معروف",
+      "message": "لست صغيراً جداً لتعلم! بناتي في الثالثة عشرة والسادسة عشرة من عمرهن يخترن بانتظام شيئاً رائعاً من الأكياس أنا أحب كيف يعلمهم هذا أن الملابس يمكن العثور عليها باليد الثانية. وفي رأيي أن الاستدامة والوعي البيئي ينبغي أن يكونا جزءا هاما من أي تعليم!"
     },
     {
-      "name": "Participant in Barendrecht",
-      "message": "Someone in my Loop landed a new job. Guess who's dress she wore to her interview?"
+      "name": "مشارك في بارندريخت",
+      "message": "أحد في حلقتي هبط وظيفة جديدة. خمنوا من يرتدي ملابسها لمقابلتها؟"
     },
     {
       "name": "Nienke",
-      "message": "The best part is being able to try clothes that you would never pick in the store, and realizing that you really like them."
+      "message": "أفضل جزء هو أن تكون قادراً على تجربة الملابس التي لن تختارها أبدا في المتجر، وإدراك أنك تحبهم حقاً."
     },
     {
       "name": "Lia",
-      "message": "A nice bonus is that you get to know people in your neighborhood, usually neighbors with pretty green hearts as well. As a result, it is a small step – if you really need something but would rather not buy it – to toss a loan request into the Loop, such as for ski pants or a costume for a theme party!"
+      "message": "مكافأة جميلة هي أنك تعرف الناس في حيك، عادة جيران لديهم قلوب خضراء جميلة كذلك. ونتيجة لذلك، إنه لخطوة صغيرة ــ إذا كنت حقاً في حاجة إلى شيء ما ولكن بدلاً من ذلك لن تشتريه ــ لقذف طلب قرض إلى السلة، مثل بنطال التزلج أو المظهر لحفلة موضوع!"
     },
     {
       "name": "Ella",
-      "message": "After receiving the third bag, it hits me just what an incredible amount of clothes we have in our closets!"
+      "message": "بعد استقبال الحقيبة الثالثة، تضربني كمية لا تصدق من الملابس التي نملكها في أغلقنا!"
     }
   ]
 }

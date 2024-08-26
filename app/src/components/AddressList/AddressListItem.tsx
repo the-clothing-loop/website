@@ -82,7 +82,7 @@ export default function AddressListItem({
             )}
           >
             {isUserPaused ? (
-              isChainAdmin ? (
+              isChainAdmin || isMe ? (
                 <span>{user.address}</span>
               ) : null
             ) : isAddressPrivate ? null : (

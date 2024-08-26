@@ -83,7 +83,9 @@ export default function HelpList() {
       return JSON.parse(chain.rules_override) as FaqListItem[];
     }
 
-    return faqListKeys.map((k) => t(k, faqItemTranslationOption) as any);
+    return faqListKeys.map(
+      (k) => t(k, faqItemTranslationOption as string) as any,
+    );
   }, [chain]);
 
   const hosts = useMemo<User[]>(

@@ -1,0 +1,18 @@
+{
+  "howToContribute": "Bidrar til klødsløyfen",
+  "startALoop": "Start en løkke!",
+  "startALoopDesc": "Vurder å starte en løkke som en vert. Clothing Loop er <strong>fri til å bruke og en flott måte å få kontakt med folk</strong>. Hvis du vil bli med i en løkke og det er ikke en som allerede er i området ditt, ikke vær redd for å starte en!",
+  "shareSwapStory": "Del kladdøkke bytte historie",
+  "shareSwapStoryDesc": "If you've had a positive experience with the Clothing Loop and want to spread the word, tag us on social media. We are on <aInstagram>Instagram</aInstagram>, <aFacebook>Facebook</aFacebook>, and <aLinkedin>LinkedIn</aLinkedin>. <strong>We would love to hear how the Clothing Loop has impacted you!</strong>",
+  "crowdin": "Hjelp oss med <aCrowdin>Crowdin</aCrowdin>",
+  "crowdinDesc": "Vår nettapp kan nå deg i <strong>åtte forskjellige språk</strong> på grunn av de slags folk som tar tid til <strong>oversetter ved hjelp av <aCrowdin>Crowdin</aCrowdin></strong>. Vi vil gjerne at klesløken skal være tilgjengelig for så mange personer som mulig. og hvis du er flerspråklig og ønsker å bidra til Clothing Loop, vurder å legge til oversettelser på Crowdin.",
+  "swap": "Planlegg en Clothes swap-hendelse!",
+  "swapDesc": "En swap fest er en fin måte å bytte klær og få sjanse til å møte deg med venner og naboer og bytte klær! Også <strong>sjekk ut <aEvents>kommende hendelser</aEvents> i kalenderen vår.</strong>",
+  "feedback": "Send oss en tilbakemelding",
+  "feedbackDesc": "We are always excited to hear how the Clothing Loop has impacted our members or how we could improve. If you have <strong>improvement suggestions</strong> or want to <strong>share how the Clothing Loop has affected you</strong>, please don’t hesitate to share your thoughts with us!",
+  "website": "Bidra til hjemmesiden vår",
+  "websiteDesc": "<strong>Koder?</strong> Clothing Loop er en <strong>åpen kildekode nettside</strong>. Klikk <aGithub>her</aGithub> for å se våre åpne oppgaver på GitHub. Mens vi for det meste kommuniserer gjennom Slack, <aEmail>epost oss</aEmail> hvis du er interessert i å melde dine programmeringsferdigheter og bli med i våre ukentlige utviklermøter.",
+  "donate": "Doner",
+  "donateDesc": "Alle <aDonate>donasjoner</aDonate> til Clothing Loop er høyt verdsatt for å bidra til å kompensere for å beholde Clothing Loop <strong>gratis og tilgjengelig for alle brukere!</strong>",
+  "WhereToFindUs": "Hvor finner vi"
+}

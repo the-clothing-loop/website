@@ -78,7 +78,7 @@ export default function CreateUpdateRules(props: {
 
     if (!props.rules) {
       const data: FaqListItem[] = faqListKeys.map(
-        (k) => t(k, faqItemTranslationOption) as any,
+        (k) => t(k, faqItemTranslationOption as string) as any,
       );
       setRules(data);
     } else {

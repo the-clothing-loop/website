@@ -33,6 +33,7 @@ type MockChainAndUserOptions struct {
 	IsChainAdmin       bool
 	IsNotPublished     bool
 	IsOpenToNewMembers bool
+	IsPausedLoopOnly   bool
 	RoutePrivacy       *int
 	RouteOrderIndex    int
 
@@ -81,6 +82,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 			IsChainAdmin: o.IsChainAdmin,
 			IsApproved:   !o.IsNotApproved,
 			RouteOrder:   o.RouteOrderIndex,
+			IsPaused:     o.IsPausedLoopOnly,
 		})
 	}
 
@@ -185,6 +187,28 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 	user, token = MockUser(t, db, chain.ID, o)
 
 	return chain, user, token
+}
+
+func MockAddUserToChain(t *testing.T, db *gorm.DB, chainID uint, user *models.User, o MockChainAndUserOptions) *models.UserChain {
+	uc := &models.UserChain{
+		UserID:       user.ID,
+		ChainID:      chainID,
+		IsChainAdmin: o.IsChainAdmin,
+		IsApproved:   !o.IsNotApproved,
+		RouteOrder:   o.RouteOrderIndex,
+		IsPaused:     o.IsPausedLoopOnly,
+	}
+	err := db.Create(uc).Error
+	if err != nil {
+		slog.Error("Unable to create user chain")
+		panic(err)
+	}
+	user.Chains = append(user.Chains, *uc)
+	t.Cleanup(func() {
+		db.Exec(`DELETE FROM user_chains WHERE chain_id = ? OR user_id = ?`, chainID, user.ID)
+	})
+
+	return uc
 }
 
 func MockSizes(zeroOrMore bool) []string {

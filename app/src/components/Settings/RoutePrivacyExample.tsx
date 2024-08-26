@@ -60,14 +60,14 @@ export default function RoutePrivacyExample(props: {
           i < meIndex
             ? meIndex - i
             : i >= pausedIndex
-            ? i - meIndex - 1
-            : i - meIndex;
+              ? i - meIndex - 1
+              : i - meIndex;
         const isPrivate =
           i == meIndex
             ? false
             : props.routePrivacy == -1
-            ? false
-            : props.routePrivacy < distance;
+              ? false
+              : props.routePrivacy < distance;
         return (
           <div className="tw-relative tw-w-full" key={user.uid}>
             <div

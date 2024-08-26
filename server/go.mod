@@ -7,6 +7,7 @@ require (
 	github.com/GGP1/atoll v0.6.0
 	github.com/OneSignal/onesignal-go-api v1.0.4
 	github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c
+	github.com/cdfmlr/ellipsis v0.0.1
 	github.com/disintegration/imaging v1.6.2
 	github.com/getbrevo/brevo-go v1.0.0
 	github.com/gin-gonic/gin v1.9.1
@@ -14,13 +15,17 @@ require (
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/jaswdr/faker v1.18.0
+	github.com/jinzhu/configor v1.2.2
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/samber/lo v1.38.1
 	github.com/satori/go.uuid v1.2.0
+	github.com/shopspring/decimal v1.4.0
 	github.com/stretchr/testify v1.8.4
 	github.com/stripe/stripe-go/v73 v73.16.0
 	github.com/wneessen/go-mail v0.3.9
+	golang.design/x/go2generics v0.0.1
+	golang.org/x/crypto v0.21.0
 	golang.org/x/net v0.23.0
 	gopkg.in/guregu/null.v3 v3.5.0
 	gorm.io/driver/mysql v1.5.1
@@ -43,7 +48,6 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
-	github.com/jinzhu/configor v1.2.2
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -55,13 +59,10 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
-	github.com/shopspring/decimal v1.4.0
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	golang.design/x/go2generics v0.0.1
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.21.0
 	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	golang.org/x/image v0.18.0 // indirect
 	golang.org/x/oauth2 v0.9.0 // indirect

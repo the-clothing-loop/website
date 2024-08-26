@@ -27,12 +27,12 @@ export function getLanguageFlags(isProduction) {
     { lng: "de", title: "Deutsch", flag: "/images/flags/de.svg" },
     { lng: "fr", title: "Français", flag: "/images/flags/fr.svg" },
     { lng: "es", title: "Español", flag: "/images/flags/es.svg" },
+    { lng: "it", title: "Italiano", flag: "/images/flags/it.svg" },
     { lng: "sv", title: "svenska", flag: "/images/flags/se.svg" },
     { lng: "he", title: "עִברִית", flag: "/images/flags/il.svg", rtl: true },
   ];
   if (!isProduction) {
     flags = flags.concat([
-      { lng: "it", title: "Italiano", flag: "/images/flags/it.svg" },
       { lng: "pt", title: "Português", flag: "/images/flags/pt.svg" },
     ]);
   }
