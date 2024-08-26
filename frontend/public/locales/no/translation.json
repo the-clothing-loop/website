@@ -1,7 +1,6 @@
 {
   "genericError": "Ukjent feil oppstod",
   "removeFromLoop": "Fjern fra gjentakelse",
-  "allowHostsToKnowYourEmailDuringDelete": "Tillat verter å vite e-post under sletting",
   "leave": "Forlat",
   "leaveLoop": "Forlat sløyfe",
   "areYouSureLeaveLoop": "Er du sikker på at du vil “{{ name }}” legge igjen “{{ chain }}” løkke?",
