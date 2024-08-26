@@ -201,10 +201,10 @@ export default function Login(props: { isLoggedIn: boolean }) {
                   sentState === State.idle
                     ? "primary"
                     : sentState === State.success
-                    ? "success"
-                    : sentState === State.loading
-                    ? "medium"
-                    : "danger"
+                      ? "success"
+                      : sentState === State.loading
+                        ? "medium"
+                        : "danger"
                 }
                 disabled={sentState === State.success}
                 onClick={handleSendEmail}
@@ -243,10 +243,10 @@ export default function Login(props: { isLoggedIn: boolean }) {
                       verifyState === State.idle
                         ? "primary"
                         : verifyState === State.success
-                        ? "success"
-                        : verifyState === State.loading
-                        ? "medium"
-                        : "danger"
+                          ? "success"
+                          : verifyState === State.loading
+                            ? "medium"
+                            : "danger"
                     }
                     size="default"
                     disabled={verifyState === State.success}

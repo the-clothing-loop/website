@@ -442,8 +442,8 @@ export default function Settings() {
                         !chain.published
                           ? "warning"
                           : !chain.is_app_disabled
-                          ? "medium"
-                          : "danger"
+                            ? "medium"
+                            : "danger"
                       }
                     >
                       {!chain.open_to_new_members ? (
