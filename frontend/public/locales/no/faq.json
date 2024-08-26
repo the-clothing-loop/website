@@ -73,7 +73,7 @@
   "arrHosts": {
     "0": {
       "question": "Hvordan starter jeg en løkke?",
-      "answer": "Vi har deg dekket! Vi skriver en enkel manual med alle instruksjoner som du finner i vår <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Vennligst tjent med lærdom vi har lært i de mange årene vi har gjort dette!"
+      "answer": "Vi har deg dekket! Vi skriver en enkel manual med alle instruksjoner som du finner i vår <a class='font-semibold' target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Vennligst tjent med lærdom vi har lært i de mange årene vi har gjort dette!"
     },
     "1": {
       "question": "Hvordan finne folk å bli med i løkken min?",
