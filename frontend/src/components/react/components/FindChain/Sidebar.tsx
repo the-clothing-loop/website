@@ -208,7 +208,7 @@ function SideBarChainItem(props: {
       tabIndex={isLarge ? undefined : -1}
     >
       <div className="sm:mb-2">
-        <h1 className="font-semibold text-secondary mb-3 pr-10 rtl:pr-0 rtl:pl-10 break-words">
+        <h1 className="font-semibold text-secondary mb-3 pe-10 break-words">
           {props.chain.name}
         </h1>
 
@@ -279,7 +279,7 @@ function SideBarChainItem(props: {
         ) : (
           <p className="px-3 font-semibold text-sm border border-secondary h-8 inline-flex items-center text-secondary">
             {t("closed")}
-            <span className="icon-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
+            <span className="icon-lock ms-3"></span>
           </p>
         )}
       </div>

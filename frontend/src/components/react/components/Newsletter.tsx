@@ -59,7 +59,7 @@ export const Newsletter = () => {
         </div>
       ) : (
         <div className="flex flex-col sm:flex-row lg:flex-col max-w-screen-md mx-auto">
-          <div className="w-full sm:w-1/2 md:w-2/3 lg:w-full ltr:sm:pr-8 rtl:sm:pl-8">
+          <div className="w-full sm:w-1/2 md:w-2/3 lg:w-full sm:pe-8">
             <h2 className="font-serif text-secondary font-bold text-5xl mb-4 leading-snug">
               {t("keepUpWithOurLatestNews")}
             </h2>
@@ -70,10 +70,7 @@ export const Newsletter = () => {
 
           <div className="w-full sm:w-1/2 md:w-1/3 lg:w-full flex flex-col sm:pl-4 md:pl-0 justify-center">
             <div className="flex flex-col lg:flex-row lg:max-w-screen-xs">
-              <label
-                className="form-control mb-5 ltr:lg:mr-5 rtl:lg:ml-5"
-                aria-label="name"
-              >
+              <label className="form-control mb-5 lg:me-5" aria-label="name">
                 <input
                   type="text"
                   name="name"

@@ -115,13 +115,13 @@ export default function Home() {
       <div className="max-w-screen-xl mx-auto">
         <section className="mb-12 md:mb-24">
           <div className="hidden md:block overflow-hidden w-full absolute bg-teal-light left-0">
-            <div className="p-8 ml-[40%] rtl:ml-0 rtl:mr-[40%] pb-14 flex">
+            <div className="p-8 ms-[40%] pb-14 flex">
               <img src={CirclesFrame} alt="" />
               <img className="pl-2" src={CirclesFrame} alt="" />
             </div>
           </div>
           <div className="relative z-10 flex flex-col md:flex-row">
-            <div className="p-6 md:pt-20 md:pl-40 rtl:md:pl-20 md:pr-20 rtl:md:pr-40 md:w-1/2 flex justify-center md:justify-end">
+            <div className="p-6 md:pt-20 md:ps-40 md:pe-20 md:w-1/2 flex justify-center md:justify-end">
               <div className="max-w-screen-xs md:max-w-[500px]">
                 <h1
                   className="font-serif font-bold text-accent text-8xl md:text-9xl [&_span]:text-stroke-accent mb-8 rtl:text-end"
@@ -144,7 +144,7 @@ export default function Home() {
                 </a>
               </div>
             </div>
-            <div className="md:pt-16 md:pr-20 lg:pr-40 rtl:pr-0 rtl:md:pl-20 rtl:lg:pl-40 md:w-1/2">
+            <div className="md:pt-16 md:pe-20 lg:pe-40 md:w-1/2">
               <img
                 className="w-full lg:max-w-[600px] sm:h-96 md:h-auto object-cover object-top"
                 src="https://images.clothingloop.org/900x/kirsten_en_rosan.jpg"

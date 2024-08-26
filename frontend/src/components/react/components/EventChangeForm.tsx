@@ -282,7 +282,7 @@ export default function EventChangeForm(props: {
               <label className="inline-flex cursor-pointer p-4 transition-colors bg-base-100 bg-opacity-0 hover:bg-opacity-70">
                 <input
                   type="checkbox"
-                  className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3"
+                  className="checkbox checkbox-sm checkbox-secondary me-3"
                   checked={hasEndDate}
                   onChange={(e) => {
                     const checked = e.target.checked;
@@ -452,7 +452,7 @@ export default function EventChangeForm(props: {
                   onClick={() => refFileInput.current?.click()}
                 >
                   {t("uploadImage")}
-                  <span className="icon-upload ltr:ml-4 rtl:mr-4"></span>
+                  <span className="icon-upload ms-4"></span>
                 </button>
               </div>
               {values.image_url ? (
@@ -474,7 +474,7 @@ export default function EventChangeForm(props: {
           <div className="flex justify-end">
             <button type="submit" className="btn btn-primary">
               {t("submit")}
-              <span className="icon-arrow-right ltr:ml-4 rtl:mr-4"></span>
+              <span className="icon-arrow-right me-4"></span>
             </button>
           </div>
         </div>

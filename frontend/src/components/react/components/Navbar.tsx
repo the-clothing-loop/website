@@ -119,14 +119,14 @@ function Navbar(props: { pathname: string }) {
             -1 ? (
               <a
                 href={localizePath("/loops/new/users/signup")}
-                className="ltr:mr-4 rtl:ml-4 btn btn-primary btn-outline"
+                className="me-4 btn btn-primary btn-outline"
               >
                 {t("startNewLoop")}
               </a>
             ) : (
               <a
                 href={localizePath("/loops/find")}
-                className="ltr:mr-4 rtl:ml-4 btn btn-primary btn-outline"
+                className="me-4 btn btn-primary btn-outline"
               >
                 {t("findLoops")}
                 <span className="icon-arrow-right ml-4 rtl:hidden"></span>
@@ -178,10 +178,7 @@ function Navbar(props: { pathname: string }) {
               {t("about")}
             </a>
 
-            <LanguageSwitcher
-              pathname={props.pathname}
-              className="ltr:ml-4 rtl:mr-4"
-            />
+            <LanguageSwitcher pathname={props.pathname} className="ms-4" />
           </nav>
         </div>
       </div>

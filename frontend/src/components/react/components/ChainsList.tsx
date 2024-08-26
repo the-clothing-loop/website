@@ -252,7 +252,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                             ) : null}
                           </a>
                         ) : null}
-                        <div className="dropdown dropdown-left">
+                        <div className="dropdown ltr:dropdown-left rtl:!dropdown-right">
                           <label
                             tabIndex={0}
                             className={`btn btn-ghost max-xs:btn-sm ${
@@ -319,7 +319,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                                       <span className="opacity-50">
                                         {t("remindHost")}
                                       </span>
-                                      <i className="icon-slash ml-1 rtl:ml-0 rtl:mr-1"></i>
+                                      <i className="icon-slash ms-1"></i>
                                     </span>
                                     <span
                                       className="text-xs"

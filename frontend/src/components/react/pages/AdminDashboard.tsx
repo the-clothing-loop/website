@@ -144,7 +144,7 @@ export default function AdminDashboard() {
                   href="https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27"
                 >
                   {t("toolkitFolder")}
-                  <span className="icon-external-link ml-2 rtl:ml-0 rtl:mr-2"></span>
+                  <span className="icon-external-link ms-2"></span>
                 </a>
               </div>
             ) : null}
@@ -154,14 +154,14 @@ export default function AdminDashboard() {
                 href={localizePath("/users/edit/?user=me")}
               >
                 {t("editAccount")}
-                <span className="icon-pencil ml-2 rtl:ml-0 rtl:mr-2"></span>
+                <span className="icon-pencil ms-2"></span>
               </a>
               <button
                 className="btn btn-sm btn-secondary btn-outline bg-white h-auto mb-4 sm:mr-4 text-black group"
                 onClick={logoutClicked}
               >
                 {t("logout")}
-                <span className="icon-log-out text-red group-hover:text-white ml-2 rtl:ml-0 rtl:mr-2"></span>
+                <span className="icon-log-out text-red group-hover:text-white ms-2"></span>
               </button>
 
               <button

@@ -256,7 +256,7 @@ export default function AddressForm(props: {
 
               <input
                 type="checkbox"
-                className="checkbox checkbox-sm checkbox-secondary ltr:ml-3 rtl:mr-3"
+                className="checkbox checkbox-sm checkbox-secondary me-3"
                 checked={openAddress}
                 onChange={(e) => setOpenAddress(e.target.checked)}
               />
@@ -341,7 +341,7 @@ export default function AddressForm(props: {
                     <div className="flex flex-row justify-center sm:justify-start order-2 sm:order-3">
                       <input
                         type="checkbox"
-                        className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
+                        className="checkbox checkbox-sm checkbox-secondary me-3 mt-1"
                         checked={useUserInput}
                         onChange={() => setUseUserInput(true)}
                       />
@@ -352,7 +352,7 @@ export default function AddressForm(props: {
                     <div className="flex flex-row justify-center sm:justify-start order-4">
                       <input
                         type="checkbox"
-                        className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3 mt-1"
+                        className="checkbox checkbox-sm checkbox-secondary me-3 mt-1"
                         checked={!useUserInput}
                         onChange={() => setUseUserInput(false)}
                       />

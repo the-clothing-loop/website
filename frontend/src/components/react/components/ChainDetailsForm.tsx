@@ -235,10 +235,10 @@ export default function ChainDetailsForm({
   }
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="md:w-1/2 md:pr-4 rtl:md:pr-0 rtl:md:pl-4">
+      <div className="md:w-1/2 md:pe-4">
         <div className="aspect-square cursor-pointer" ref={mapRef} />
       </div>
-      <div className="md:w-1/2 md:pl-4 rtl:md:pl-0 rtl:md:pr-4">
+      <div className="md:w-1/2 md:ps-4">
         <form onSubmit={handleSubmit}>
           <p className="mb-2 text-sm">{t("clickToSetLoopLocation")}</p>
           <TextForm
@@ -368,7 +368,7 @@ export default function ChainDetailsForm({
             {showBack && (
               <button
                 type="button"
-                className="btn btn-secondary btn-outline mr-4 rtl:mr-0 rtl:ml-4"
+                className="btn btn-secondary btn-outline me-4"
                 onClick={() => window.history.back()}
               >
                 {t("back")}

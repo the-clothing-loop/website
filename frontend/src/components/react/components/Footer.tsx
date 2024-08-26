@@ -52,7 +52,7 @@ export default function Footer(props: { pathname: string }) {
           <Newsletter />
 
           <div className="container mx-auto lg:mx-0 lg:w-1/2 pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-center ltr:md:items-start rtl:md:items-end sm:justify-end text-center md:text-left lg:mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-start sm:justify-end text-center md:text-left lg:mt-8">
               <div className="flex flex-col items-center md:items-start px-3 pb-6 pt-0">
                 <span className="text-secondary font-bold text-2xl mb-3">
                   {t("learnMore")}
@@ -111,7 +111,7 @@ export default function Footer(props: { pathname: string }) {
                   </a>
                 )}
               </div>
-              <div className="md:row-span-2 lg:col-span-2  px-3 rtl:text-right md:mb-3 lg:mb-0">
+              <div className="md:row-span-2 lg:col-span-2 px-3 rtl:md:text-right md:mb-3 lg:mb-0">
                 <span className="block text-secondary font-bold text-2xl mb-3">
                   {t("findUs")}
                 </span>
@@ -120,7 +120,7 @@ export default function Footer(props: { pathname: string }) {
                     <a
                       href="mailto:hello@clothingloop.org"
                       aria-label="Our email address"
-                      className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center hover:bg-[#b464a8] icon-mail text-lg"
+                      className="btn btn-circle btn-outline me-3 flex justify-center hover:bg-[#b464a8] icon-mail text-lg"
                     ></a>
                     <span
                       {...addCopyAttributes(t, "footer-copy-email", "text-sm")}
@@ -133,7 +133,7 @@ export default function Footer(props: { pathname: string }) {
                       href="https://www.instagram.com/theclothingloop/"
                       target="_blank"
                       rel="noreferrer"
-                      className="btn btn-circle btn-outline icon-instagram text-lg mr-3 rtl:mr-0 rtl:ml-3 hover:bg-instagram"
+                      className="btn btn-circle btn-outline icon-instagram text-lg me-3 hover:bg-instagram"
                       aria-label="link to our instagram account"
                     ></a>
                     <span
@@ -153,7 +153,7 @@ export default function Footer(props: { pathname: string }) {
                       aria-label="Our Facebook page"
                       className="flex flex-row items-center group"
                     >
-                      <span className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-facebook icon-facebook text-lg"></span>
+                      <span className="btn btn-circle btn-outline me-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-facebook icon-facebook text-lg"></span>
                       <span className="text-sm lg:hidden">Facebook</span>
                     </a>
                   </li>
@@ -164,7 +164,7 @@ export default function Footer(props: { pathname: string }) {
                       aria-label="Our LinkedIn page"
                       className="flex flex-row items-center group"
                     >
-                      <span className="btn btn-circle btn-outline mr-3 rtl:mr-0 rtl:ml-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#0a66c2] icon-linkedin text-lg"></span>
+                      <span className="btn btn-circle btn-outline me-3 flex justify-center group-hover:text-white group-hover:border-base-content group-hover:bg-[#0a66c2] icon-linkedin text-lg"></span>
                       <span className="text-sm lg:hidden">LinkedIn</span>
                     </a>
                   </li>
