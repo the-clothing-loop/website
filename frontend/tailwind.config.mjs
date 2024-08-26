@@ -71,7 +71,7 @@ const colors = {
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx,astro,html}"],
-  safelist: ["list-none"],
+  safelist: ["list-none", "font-semibold"],
   theme: {
     screens: {
       xs: "481px",

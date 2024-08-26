@@ -73,7 +73,7 @@
   "arrHosts": {
     "0": {
       "question": "Hoe begin ik een Loop?",
-      "answer": "Geen probleem! We hebben een duidelijke handleiding geschreven met alle tips en trucs in onze <a target='_blank'<a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Maak handig gebruik van alle ervaring die wij in de afgelopen jaren hebben opgebouwd!"
+      "answer": "Geen probleem! We hebben een duidelijke handleiding geschreven met alle tips en trucs in onze <a class='font-semibold' target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Maak handig gebruik van alle ervaring die wij in de afgelopen jaren hebben opgebouwd!"
     },
     "1": {
       "question": "Hoe vind ik mensen die mee willen doen met mijn Loop?",
