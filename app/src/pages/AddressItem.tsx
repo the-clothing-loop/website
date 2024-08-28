@@ -26,7 +26,8 @@ import AddressBagCard from "../components/Bags/AddressBagCard";
 import {
   chainChangeUserNote,
   chainGetUserNote,
-  chainChangeUserFlag,
+  chainChangeUserWarden,
+  chainGetUserWarden,
 } from "../api/chain";
 import { checkmarkCircle } from "ionicons/icons";
 import {
@@ -51,11 +52,12 @@ export default function AddressItem({
   const [timer, setTimer] = useState<number | null>(null);
   const [showSaved, setShowSaved] = useState(false);
   const ref = useRef<HTMLIonTextareaElement>(null);
-  const [flag, setFlag] = useState(false);
 
   const isNoteEditable =
     isChainAdmin || authUser?.uid === user?.uid || authUser?.is_root_admin;
   const [note, setNote] = useState("");
+  const [warden, setWarden] = useState(false);
+
   useEffect(() => {
     if (!chain || !user) return;
     chainGetUserNote(chain.uid, user.uid).then((n) => {
@@ -63,12 +65,15 @@ export default function AddressItem({
       if (timer) clearTimeout(timer);
       setNote(n);
     });
-
-    const isWarden =
-    user.chains.find((uc) => uc.chain_uid === chain?.uid)
-      ?.is_chain_warden || false;
-
   }, [user?.uid]);
+
+  useEffect(() => {
+    if (!chain || !user) return;
+    chainGetUserWarden(chain.uid, user.uid).then((w) => {
+      setWarden(w);
+    });
+  }, [warden]);
+
   function onChangeNoteInput(
     e: IonTextareaCustomEvent<TextareaInputEventDetail>,
   ) {
@@ -85,11 +90,11 @@ export default function AddressItem({
       }, 1300) as any,
     );
   }
-console.log(flag)
-  function onChangeFlag(assign: boolean) {
+
+  async function onChangeWarden(assign: boolean) {
     if (!chain || !user) return;
-    setFlag(assign);
-    chainChangeUserFlag(chain.uid, user.uid, assign);
+    await chainChangeUserWarden(chain.uid, user.uid, assign);
+    setWarden(assign);
   }
 
   return (
@@ -139,12 +144,12 @@ console.log(flag)
         {isChainAdmin ? (
           <IonItem lines="none">
             <IonToggle
-              onClick={() => onChangeFlag(!flag)}
-              checked={flag}
+              onClick={() => onChangeWarden(!warden)}
+              checked={warden}
               color="primary"
               justify="end"
             >
-              {flag ? "Remove Warden" : "Assign Warden"}
+              {warden ? "Remove Warden" : "Assign Warden"}
             </IonToggle>
           </IonItem>
         ) : null}
