@@ -50,6 +50,7 @@ export default function AddressList() {
     authUser,
     bags,
     isChainAdmin,
+    isChainWarden,
     isThemeDefault,
     shouldBlur,
     routeListView,
@@ -62,7 +63,6 @@ export default function AddressList() {
   const headerKey = "addressList";
 
   const headerText = getChainHeader("addressList", t("addresses"));
-  const [isWardenDict, setisWardenDict] = useState<Record<string, boolean>>({});
 
   function updateChain() {
     setChain(chain?.uid, authUser);
@@ -81,36 +81,7 @@ export default function AddressList() {
   });
 
   useIonViewDidEnter(() => {
-    if (!chain || route.length === 0) return;
-
-    const fetchWardenStatuses = async () => {
-      const userChainsList = await Promise.all(
-        chainUsers.map(async (user) => {
-          const userChain = user.chains.find(
-            (uc) => uc.chain_uid === chain?.uid,
-          );
-
-          if (userChain) {
-            try {
-              const isWarden = await chainGetUserWarden(chain?.uid, user.uid);
-              return { [user.uid]: isWarden };
-            } catch (error) {
-              console.log(error);
-              return { [user.uid]: false };
-            }
-          }
-
-          return { [user.uid]: false };
-        }),
-      );
-      const userChains = userChainsList.reduce(
-        (acc, current) => ({ ...acc, ...current }),
-        {},
-      );
-      setisWardenDict(userChains);
-    };
-
-    fetchWardenStatuses();
+    updateChain();
   });
 
   const routeListItems = useMemo(() => {
@@ -150,11 +121,15 @@ export default function AddressList() {
         const isHost =
           user.chains.find((uc) => uc.chain_uid === chain?.uid)
             ?.is_chain_admin || false;
-        const isWarden = isWardenDict ? isWardenDict[user.uid] : false;
+
+        const isWarden =
+          user.chains.find((uc) => uc.chain_uid === chain?.uid)
+            ?.is_chain_warden || false;
+
         const isPrivate = IsPrivate(user.email);
         const isAddressPrivate = IsPrivate(user.address);
         const isUserPaused = IsPaused(user, chain.uid);
-        console.log("is warden ? ", isWarden);
+
         arr.push({
           user,
           bags: userBags,
@@ -172,7 +147,7 @@ export default function AddressList() {
       i = wrapIndex(i + 1, routeLength);
     } while (i !== topRouteIndex);
     return arr;
-  }, [route, chainUsers, routeListView, slowSearch, isWardenDict]);
+  }, [route, chainUsers, routeListView, slowSearch]);
 
   function handleRefresh(e: CustomEvent<RefresherEventDetail>) {
     const refreshPromise = setChain(chain?.uid, authUser);
