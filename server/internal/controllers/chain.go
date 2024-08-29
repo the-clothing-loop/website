@@ -707,6 +707,21 @@ func ChainChangeUserWarden(c *gin.Context) {
 	}
 
 	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+
+	userChain := &models.UserChain{}
+	if ok {
+		db.Raw(`
+		SELECT * FROM user_chains
+		WHERE user_id = ? AND chain_id = ?
+		LIMIT 1
+		`, user.ID, chain.ID).Scan(userChain)
+	}
+
+	if userChain.IsChainAdmin {
+		c.String(http.StatusInternalServerError, "Hosts cannot be assigned wardens")
+		return
+	}
+
 	if !ok {
 		return
 	}
@@ -718,4 +733,5 @@ func ChainChangeUserWarden(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to change user warden")
 		return
 	}
+
 }

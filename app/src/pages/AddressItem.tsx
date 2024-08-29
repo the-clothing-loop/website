@@ -56,7 +56,7 @@ export default function AddressItem({
     isChainAdmin || authUser?.uid === user?.uid || authUser?.is_root_admin;
   const [note, setNote] = useState("");
   const [isChainWarden, setIsChainWarden] = useState(false);
-
+  const [isChainHost, setIsChainHost] = useState(false);
   useEffect(() => {
     if (!chain || !user) return;
     chainGetUserNote(chain.uid, user.uid).then((n) => {
@@ -71,7 +71,12 @@ export default function AddressItem({
     const _isChainWarden =
       user.chains.find((uc) => uc.chain_uid === chain?.uid)?.is_chain_warden ||
       false;
+
     setIsChainWarden(_isChainWarden);
+    const _isChainHost =
+      user.chains.find((uc) => uc.chain_uid === chain?.uid)?.is_chain_admin ||
+      false;
+    setIsChainHost(_isChainHost);
   }, []);
 
   function onChangeNoteInput(
@@ -93,10 +98,12 @@ export default function AddressItem({
 
   function onChangeWarden(assign: boolean) {
     if (!chain || !user) return;
-    chainChangeUserWarden(chain.uid, user.uid, assign).then(() => {
-      setChain(chain?.uid, authUser);
-      setIsChainWarden(assign);
-    });
+    chainChangeUserWarden(chain.uid, user.uid, assign)
+      .then(() => {
+        setChain(chain?.uid, authUser);
+        setIsChainWarden(assign);
+      })
+      .catch((error) => console.log(error));
   }
 
   return (
@@ -143,10 +150,11 @@ export default function AddressItem({
             })}
           </IonRow>
         </IonGrid>
-        {isChainAdmin ? (
+        {isChainAdmin && !isChainHost ? (
           <IonItem
             lines="none"
             button
+            detail={false}
             onClick={() => onChangeWarden(!isChainWarden)}
           >
             <IonLabel>
