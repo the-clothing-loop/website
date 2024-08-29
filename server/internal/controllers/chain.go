@@ -694,12 +694,12 @@ func ChainGetUserNote(c *gin.Context) {
 	c.String(http.StatusOK, note)
 }
 
-func ChainChangeUserFlag(c *gin.Context) {
+func ChainChangeUserWarden(c *gin.Context) {
 	db := getDB(c)
 	var body struct {
 		UserUID  string `json:"user_uid" binding:"required,uuid"`
 		ChainUID string `json:"chain_uid" binding:"required,uuid"`
-		Flag     bool   `json:"flag"`
+		Warden   bool   `json:"warden"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -711,10 +711,11 @@ func ChainChangeUserFlag(c *gin.Context) {
 		return
 	}
 
-	err := models.UserChainSetFlag(db, user.ID, chain.ID, body.Flag)
+	err := models.UserChainSetWarden(db, user.ID, chain.ID, body.Warden)
+
 	if err != nil {
-		slog.Error("Unable to change user flag", "error", err)
-		c.String(http.StatusInternalServerError, "Unable to change user flag")
+		slog.Error("Unable to change user warden", "error", err)
+		c.String(http.StatusInternalServerError, "Unable to change user warden")
 		return
 	}
 }

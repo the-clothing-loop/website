@@ -27,7 +27,6 @@ import {
   chainChangeUserNote,
   chainGetUserNote,
   chainChangeUserWarden,
-  chainGetUserWarden,
 } from "../api/chain";
 import { checkmarkCircle } from "ionicons/icons";
 import {
@@ -56,7 +55,7 @@ export default function AddressItem({
   const isNoteEditable =
     isChainAdmin || authUser?.uid === user?.uid || authUser?.is_root_admin;
   const [note, setNote] = useState("");
-  const [warden, setWarden] = useState(false);
+  const [isChainWarden, setIsChainWarden] = useState(false);
 
   useEffect(() => {
     if (!chain || !user) return;
@@ -69,10 +68,11 @@ export default function AddressItem({
 
   useEffect(() => {
     if (!chain || !user) return;
-    chainGetUserWarden(chain.uid, user.uid).then((w) => {
-      setWarden(w);
-    });
-  }, [warden]);
+    const _isChainWarden =
+      user.chains.find((uc) => uc.chain_uid === chain?.uid)?.is_chain_warden ||
+      false;
+      setIsChainWarden(_isChainWarden);
+  }, []);
 
   function onChangeNoteInput(
     e: IonTextareaCustomEvent<TextareaInputEventDetail>,
@@ -91,10 +91,10 @@ export default function AddressItem({
     );
   }
 
-  async function onChangeWarden(assign: boolean) {
+  function onChangeWarden(assign: boolean) {
     if (!chain || !user) return;
-    await chainChangeUserWarden(chain.uid, user.uid, assign);
-    setWarden(assign);
+    chainChangeUserWarden(chain.uid, user.uid, assign);
+    setIsChainWarden(assign);
   }
 
   return (

@@ -7,7 +7,6 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
-  IonLabel,
   IonList,
   IonModal,
   IonPage,
@@ -38,7 +37,6 @@ import { useDebounce } from "@uidotdev/usehooks";
 import IsPaused from "../utils/is_paused";
 import { Sleep } from "../utils/sleep";
 import RouteMapPopup from "../components/RouteMap/RouteMapPopup";
-import { chainGetUserWarden } from "../api/chain";
 
 export default function AddressList() {
   const {
@@ -50,7 +48,6 @@ export default function AddressList() {
     authUser,
     bags,
     isChainAdmin,
-    isChainWarden,
     isThemeDefault,
     shouldBlur,
     routeListView,

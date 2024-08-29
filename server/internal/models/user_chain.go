@@ -42,17 +42,8 @@ func UserChainGetNote(db *gorm.DB, userID, chainID uint) (string, error) {
 	return note.String, nil
 }
 
-func UserChainSetFlag(db *gorm.DB, userID, chainID uint, flag bool) error {
-	return db.Exec(`UPDATE user_chains SET is_chain_warden = ? WHERE user_id = ? AND chain_id = ?`, flag, userID, chainID).Error
-}
-
-func UserChainGetFlag(db *gorm.DB, userID, chainID uint) (bool, error) {
-	flag := false
-	err := db.Raw(`SELECT flag FROM user_chains WHERE user_id = ? AND chain_id = ?`, userID, chainID).Pluck("flag", &flag).Error
-	if err != nil {
-		return false, err
-	}
-	return flag, nil
+func UserChainSetWarden(db *gorm.DB, userID, chainID uint, warden bool) error {
+	return db.Exec(`UPDATE user_chains SET is_chain_warden = ? WHERE user_id = ? AND chain_id = ?`, warden, userID, chainID).Error
 }
 
 func ValidateAllRouteUserUIDs(db *gorm.DB, chainID uint, userUIDs []string) bool {

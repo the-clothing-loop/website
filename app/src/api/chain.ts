@@ -129,10 +129,14 @@ export function chainChangeUserNote(chainUID: UID, userUID: UID, note: string) {
   });
 }
 
-export function chainChangeUserFlag(chainUID: UID, userUID: UID, flag: boolean) {
-  return axios.patch<never>("v2/chain/user/flag", {
+export function chainChangeUserWarden(
+  chainUID: UID,
+  userUID: UID,
+  warden: boolean,
+) {
+  return axios.patch<never>("v2/chain/user/warden", {
     user_uid: userUID,
     chain_uid: chainUID,
-    flag,
+    warden,
   });
 }
