@@ -16,6 +16,7 @@ import {
   pauseCircleSharp,
   shareOutline,
   shield,
+  flag,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { Chain, User } from "../api/types";
@@ -87,6 +88,9 @@ export default function UserCard({
     () => IsChainAdmin(user, chain?.uid),
     [user, chain],
   );
+  const isUserWarden =
+    user.chains.find((uc) => uc.chain_uid === chain?.uid)?.is_chain_warden ||
+    false;
   const refAddressPopup = useRef<HTMLIonPopoverElement>(null);
   const refPhoneNumberPopup = useRef<HTMLIonPopoverElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));
@@ -142,6 +146,12 @@ export default function UserCard({
             {isUserAdmin ? (
               <IonIcon
                 icon={shield}
+                color="primary"
+                className="tw-w-[18px] tw-h-[18px] tw-m-0 tw-ml-[5px] tw-align-text-top"
+              />
+            ) : isUserWarden ? (
+              <IonIcon
+                icon={flag}
                 color="primary"
                 className="tw-w-[18px] tw-h-[18px] tw-m-0 tw-ml-[5px] tw-align-text-top"
               />

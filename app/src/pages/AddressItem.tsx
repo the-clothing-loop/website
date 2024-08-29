@@ -37,7 +37,7 @@ import {
 export default function AddressItem({
   match,
 }: RouteComponentProps<{ uid: string }>) {
-  const { chainUsers, chain, isChainAdmin, bags, authUser } =
+  const { chainUsers, chain, isChainAdmin, bags, authUser, setChain } =
     useContext(StoreContext);
   const user = useMemo(() => {
     let userUID = match.params.uid;
@@ -71,7 +71,7 @@ export default function AddressItem({
     const _isChainWarden =
       user.chains.find((uc) => uc.chain_uid === chain?.uid)?.is_chain_warden ||
       false;
-      setIsChainWarden(_isChainWarden);
+    setIsChainWarden(_isChainWarden);
   }, []);
 
   function onChangeNoteInput(
@@ -93,8 +93,10 @@ export default function AddressItem({
 
   function onChangeWarden(assign: boolean) {
     if (!chain || !user) return;
-    chainChangeUserWarden(chain.uid, user.uid, assign);
-    setIsChainWarden(assign);
+    chainChangeUserWarden(chain.uid, user.uid, assign).then(() => {
+      setChain(chain?.uid, authUser);
+      setIsChainWarden(assign);
+    });
   }
 
   return (
@@ -144,12 +146,12 @@ export default function AddressItem({
         {isChainAdmin ? (
           <IonItem lines="none">
             <IonToggle
-              onClick={() => onChangeWarden(!warden)}
-              checked={warden}
+              onClick={() => onChangeWarden(!isChainWarden)}
+              checked={isChainWarden}
               color="primary"
               justify="end"
             >
-              {warden ? "Remove Warden" : "Assign Warden"}
+              {isChainWarden ? "Remove Warden" : "Assign Warden"}
             </IonToggle>
           </IonItem>
         ) : null}

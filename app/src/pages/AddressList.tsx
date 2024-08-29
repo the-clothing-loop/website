@@ -77,10 +77,6 @@ export default function AddressList() {
     }
   });
 
-  useIonViewDidEnter(() => {
-    updateChain();
-  });
-
   const routeListItems = useMemo(() => {
     const routeLength = route.length;
     if (!chain || routeLength === 0) return [];
@@ -118,11 +114,9 @@ export default function AddressList() {
         const isHost =
           user.chains.find((uc) => uc.chain_uid === chain?.uid)
             ?.is_chain_admin || false;
-
         const isWarden =
           user.chains.find((uc) => uc.chain_uid === chain?.uid)
             ?.is_chain_warden || false;
-
         const isPrivate = IsPrivate(user.email);
         const isAddressPrivate = IsPrivate(user.address);
         const isUserPaused = IsPaused(user, chain.uid);
