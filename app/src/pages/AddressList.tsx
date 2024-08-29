@@ -18,7 +18,6 @@ import {
   IonTitle,
   IonToolbar,
   RefresherEventDetail,
-  useIonViewDidEnter,
 } from "@ionic/react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -75,7 +74,7 @@ export default function AddressList() {
         block: "center",
       });
     }
-  });
+  }, []);
 
   const routeListItems = useMemo(() => {
     const routeLength = route.length;
@@ -114,6 +113,7 @@ export default function AddressList() {
         const isHost =
           user.chains.find((uc) => uc.chain_uid === chain?.uid)
             ?.is_chain_admin || false;
+
         const isWarden =
           user.chains.find((uc) => uc.chain_uid === chain?.uid)
             ?.is_chain_warden || false;
