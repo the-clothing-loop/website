@@ -144,15 +144,21 @@ export default function AddressItem({
           </IonRow>
         </IonGrid>
         {isChainAdmin ? (
-          <IonItem lines="none">
-            <IonToggle
-              onClick={() => onChangeWarden(!isChainWarden)}
-              checked={isChainWarden}
-              color="primary"
-              justify="end"
-            >
-              {isChainWarden ? "Remove Warden" : "Assign Warden"}
-            </IonToggle>
+          <IonItem
+            lines="none"
+            button
+            onClick={() => onChangeWarden(!isChainWarden)}
+          >
+            <IonLabel>
+              <h3 className="!tw-font-bold">{t("assignWarden")}</h3>
+              <IonToggle
+                checked={isChainWarden}
+                color="primary"
+                justify="space-between"
+              >
+                {isChainWarden ? t("removeWarden") : t("assignWarden")}
+              </IonToggle>
+            </IonLabel>
           </IonItem>
         ) : null}
 
